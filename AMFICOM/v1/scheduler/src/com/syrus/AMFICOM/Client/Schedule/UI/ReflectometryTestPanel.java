@@ -69,7 +69,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/07/20 11:02:56 $
+ * @version $Revision: 1.54 $, $Date: 2005/08/05 12:21:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -393,8 +393,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 								Parameter setParameter = Parameter.createInstance(this.pulswdLowResParameterType,
 									byteArray.getBytes());
 								parameters[i] = setParameter;
+								continue;
 							} catch (CreateObjectException e) {
 								AbstractMainFrame.showErrorMessage(this, e);
+								break;
 							}
 						}
 					} else if (codename.equals(this.pulswdLowResParameterType.getCodename())) {
@@ -408,8 +410,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 								Parameter setParameter = Parameter.createInstance(this.pulswdHiResParameterType,
 									byteArray.getBytes());
 								parameters[i] = setParameter;
+								continue;
 							} catch (CreateObjectException e) {
 								AbstractMainFrame.showErrorMessage(this, e);
+								break;
 							}
 						}
 					}
@@ -423,6 +427,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					} else if (codename.equals(this.lfdFlagParameterType.getCodename())) {
 						value = Boolean.toString(this.lfdOptionBox.isSelected());
 					}
+					
+					
 					String string = this.unchangedObjects.get(codename);
 					if (value != null && (string == null || !string.equals(value))) {
 						ByteArray byteArray = this.getByteArray(value.toString(), type);
@@ -432,7 +438,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 							AbstractMainFrame.showErrorMessage(this, e);
 						}
 					}
-				}
+				}				
 				set.setParameters(parameters);
 			}
 		}
@@ -773,8 +779,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						+ CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX + "|" //$NON-NLS-1$
 						+ CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX + ")"); //$NON-NLS-1$
 
-				 Log.debugMessage("ReflectometryTestPanel.setMonitoredElementId | characteristics.size() "
-				 + characteristics.size(), Level.FINEST);
+//				 Log.debugMessage("ReflectometryTestPanel.setMonitoredElementId | characteristics.size() "
+//				 + characteristics.size(), Level.FINEST);
 
 				for (Iterator it = characteristics.iterator(); it.hasNext();) {
 					// System.out.println();

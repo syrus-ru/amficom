@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.6 2005/07/11 08:19:42 bass Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.7 2005/08/05 12:21:06 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/11 08:19:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/08/05 12:21:06 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -59,9 +59,9 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 	public void populate(Item item) {
 			LinkedIdsCondition domainCondition = new LinkedIdsCondition(this.domainId,
 				ObjectEntities.KIS_CODE);
-			Set measurementPortTypeIds = new LinkedHashSet();
-			Map kisMeasurementTypes = new HashMap();
-			Map kisMeasurementPorts = new HashMap();
+			Set<Identifier> measurementPortTypeIds = new LinkedHashSet<Identifier>();
+			Map<KIS, List<Identifier>> kisMeasurementTypes = new HashMap<KIS, List<Identifier>>();
+			Map<KIS, Set<MeasurementPort>> kisMeasurementPorts = new HashMap<KIS, Set<MeasurementPort>>();
 			LinkedIdsCondition measurementPortCondition = null;
 			try {
 				Collection kiss = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true, true);
@@ -77,7 +77,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 					else
 						measurementPortCondition.setLinkedId(kis.getId());
 
-					Collection measurementPorts = StorableObjectPool.getStorableObjectsByCondition(
+					Set<MeasurementPort> measurementPorts = StorableObjectPool.getStorableObjectsByCondition(
 						measurementPortCondition, true, true);
 					kisMeasurementPorts.put(kis, measurementPorts);
 					for (Iterator it = measurementPorts.iterator(); it.hasNext();) {
@@ -94,7 +94,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 					Collection measurementTypesFormeasurementPortType = StorableObjectPool
 							.getStorableObjectsByCondition(linkedIdsCondition, true, true);
 					
-					List list = new ArrayList(measurementTypesFormeasurementPortType.size());
+					List<Identifier> list = new ArrayList<Identifier>(measurementTypesFormeasurementPortType.size());
 					for (Iterator iter = measurementTypesFormeasurementPortType.iterator(); iter.hasNext();) {
 						StorableObject storableObject = (StorableObject) iter.next();
 						list.add(storableObject.getId());
@@ -106,7 +106,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 				
 				for (Iterator iterator = kisMeasurementTypes.keySet().iterator(); iterator.hasNext();) {
 					KIS kis = (KIS) iterator.next();
-					Collection measurementTypesFormeasurementPortType = (Collection) kisMeasurementTypes.get(kis);
+					List<Identifier> measurementTypesFormeasurementPortType = kisMeasurementTypes.get(kis);
 //					Log.debugMessage("MeasurementTypeChildrenFactory.populate | " + ((Identifiable)item.getObject()).getId(), Log.FINEST);
 //					for (Iterator iter = measurementTypesFormeasurementPortType.iterator(); iter.hasNext();) {
 //						Log.debugMessage("MeasurementTypeChildrenFactory.populate | storableObject " + iter.next(), Log.FINEST);
@@ -117,7 +117,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 						kisItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_TESTING));
 						kisItem.setObject(kis.getId());
 						item.addChild(kisItem);
-						Collection measurementPort = (Collection) kisMeasurementPorts.get(kis);
+						Set<MeasurementPort> measurementPort = kisMeasurementPorts.get(kis);
 						for (Iterator measurementPortIterator = measurementPort.iterator(); measurementPortIterator
 								.hasNext();) {
 							MeasurementPort measurementPort2 = (MeasurementPort) measurementPortIterator.next();

@@ -141,10 +141,6 @@ public class TestLine extends TimeLine {
 
 	protected boolean	skip					= false;
 
-	long	lastRefreshTimeItemMs;
-
-	boolean	refreshTimeItemsRequire;
-
 	public TestLine(ApplicationContext aContext, String title, Identifier monitoredElementId) {
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		// this.schedulerModel.addTestsEditor(this);
@@ -273,14 +269,13 @@ public class TestLine extends TimeLine {
 
 		// Log.debugMessage("TestLine.updateTest | ", Log.FINEST);
 		// Test test = this.schedulerModel.getSelectedTest();
-		Set selectedTestIds2 = this.schedulerModel.getSelectedTestIds();
+		Set<Identifier> selectedTestIds2 = this.schedulerModel.getSelectedTestIds();
 		this.selectedItems.clear();
 		if (this.selectedTestIds != null) {
 			this.selectedTestIds.clear();
 		}
 		if (selectedTestIds2 != null) {
-			for (Iterator iterator = selectedTestIds2.iterator(); iterator.hasNext();) {
-				Identifier testId = (Identifier) iterator.next();
+			for (Identifier testId : selectedTestIds2) {
 				if (this.testIds.contains(testId)) {
 					if (this.selectedTestIds == null) {
 						this.selectedTestIds = new HashSet<Identifier>();
@@ -659,6 +654,16 @@ public class TestLine extends TimeLine {
 	}
 
 	@Override
+	public void setStart(long start) {
+		long oldValue = super.start;
+		super.start = start;
+		long diff = oldValue - this.start;
+		for(TestTimeItem testTimeItem : this.timeItems) {
+			testTimeItem.x += (int) (this.scale * diff);
+		}
+	}
+	
+	@Override
 	void refreshTimeItems() {
 		
 //		try {
@@ -686,13 +691,14 @@ public class TestLine extends TimeLine {
 		try {
 			for (Iterator iterator = StorableObjectPool.getStorableObjects(this.testIds, true).iterator(); iterator
 					.hasNext();) {
+				
 				Test test = (Test) iterator.next();
 
 				int i = 0;
 
 				List<TestTimeLine> testTimeLineList = this.measurements.get(test.getId());
 				if (testTimeLineList == null)
-					return;
+					continue;
 
 				Color selectedColor = null;
 				Color unselectedColor = null;

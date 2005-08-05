@@ -387,8 +387,9 @@ class PlanToolBar {
 		this.nowButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				PlanToolBar.this.dateSpinner.setValue(new Date(System.currentTimeMillis()));
-				PlanToolBar.this.timeSpinner.setValue(new Date(System.currentTimeMillis()));
+				Date date = new Date(System.currentTimeMillis());
+				PlanToolBar.this.dateSpinner.setValue(date);
+				PlanToolBar.this.timeSpinner.setValue(date);
 			}
 		});
 

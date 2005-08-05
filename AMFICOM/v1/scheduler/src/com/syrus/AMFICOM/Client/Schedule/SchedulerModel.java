@@ -647,6 +647,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.testIds.clear();
 		for (final Test test : tests) {
 			this.testIds.add(test.getId());
+			System.out.println("SchedulerModel.updateTests() | " + test.getId() + ", " + test.getVersion() + "v, " + test.getStartTime() + ", " + test.getStatus().value());
 		}
 
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
@@ -846,7 +847,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	}
 
 	public void commitChanges() throws ApplicationException {
-		StorableObjectPool.flush(ObjectEntities.MEASUREMENTSETUP_CODE, LoginManager.getUserId(), true);
 		StorableObjectPool.flush(ObjectEntities.TEST_CODE, LoginManager.getUserId(), true);
 		if (this.meTestGroup != null) {
 			this.meTestGroup.clear();
@@ -993,19 +993,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	}
 
 	public void moveSelectedTests(final Date startDate) {
-//
-//		try {
-//			throw new Exception();
-//		} catch (Exception e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}
-
-		Log.debugMessage("SchedulerModel.moveSelectedTests | startDate is " + startDate, Level.FINEST);
-		final long t0 = System.currentTimeMillis();
+//		Log.debugMessage("SchedulerModel.moveSelectedTests | startDate is " + startDate, Level.FINEST);
+//		final long t0 = System.currentTimeMillis();
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
 			try {
-				final SortedSet<Test> selectedTests = new TreeSet<Test>(new WrapperComparator(TestWrapper.getInstance(),
+				final SortedSet<Test> selectedTests = new TreeSet<Test>(new WrapperComparator<Test>(TestWrapper.getInstance(),
 						TestWrapper.COLUMN_START_TIME));
 				final Set<Test> tests = StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
 				selectedTests.addAll(tests);
@@ -1048,6 +1040,18 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 					}
 					if (moved) {
 						this.refreshTests();
+
+						// XXX - regenerate time line !!!
+
+						final Test selectedTest = this.getSelectedTest();
+						if (selectedTest.getGroupTestId().isVoid()) {
+							this.refreshTemporalStamps();
+						} else {
+							this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+									COMMAND_SET_START_GROUP_TIME,
+									null,
+									selectedTest.getStartTime()));
+						}
 					}
 				}
 			} catch (ApplicationException e) {
@@ -1057,20 +1061,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			}
 		}
 
-		// XXX - regenerate time line !!!
 
-		final Test selectedTest = this.getSelectedTest();
-		if (selectedTest.getGroupTestId().isVoid()) {
-			this.refreshTemporalStamps();
-		} else {
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-					COMMAND_SET_START_GROUP_TIME,
-					null,
-					selectedTest.getStartTime()));
-		}
-
-		final long t1 = System.currentTimeMillis();
-		Log.debugMessage("SchedulerModel.moveSelectedTests | time:" + (t1 - t0), Level.FINEST);
+//		final long t1 = System.currentTimeMillis();
+//		Log.debugMessage("SchedulerModel.moveSelectedTests | time:" + (t1 - t0), Level.FINEST);
 	}
 
 	private void addGroupTests() {
@@ -1128,7 +1121,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 					}
 				} else {
 
-					final SortedSet<Test> selectedTests = new TreeSet<Test>(new WrapperComparator(TestWrapper.getInstance(),
+					final SortedSet<Test> selectedTests = new TreeSet<Test>(new WrapperComparator<Test>(TestWrapper.getInstance(),
 							TestWrapper.COLUMN_START_TIME));
 					final Set<Test> tests = StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
 					selectedTests.addAll(tests);

@@ -15,7 +15,6 @@ import java.util.Calendar;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Set;
-import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
 import javax.swing.Box;
@@ -64,7 +63,6 @@ import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.AMFICOM.newFilter.DateSpinner;
 import com.syrus.AMFICOM.newFilter.TimeSpinner;
-import com.syrus.util.Log;
 
 public class TimeParametersFrame extends JInternalFrame {
 
@@ -316,6 +314,21 @@ public class TimeParametersFrame extends JInternalFrame {
 				box.add(this.startDateSpinner);
 				box.add(startDateButton);
 				box.add(Box.createHorizontalGlue());
+				final JButton	nowButton		= new JButton(UIStorage.TIME_ICON);
+				nowButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+				box.add(nowButton);
+				nowButton.setFocusable(false);
+				nowButton.setToolTipText(LangModelSchedule.getString("CurrentTime")); //$NON-NLS-1$
+				nowButton.addActionListener(new ActionListener() {
+
+					public void actionPerformed(ActionEvent e) {
+						Date date = new Date(System.currentTimeMillis());
+						TimeParametersPanel.this.startDateSpinner.setValue(date);
+						TimeParametersPanel.this.startTimeSpinner.setValue(date);
+					}
+				});
+				
+
 				CommonUIUtilities.fixHorizontalSize(this.startTimeSpinner);
 				box.add(this.startTimeSpinner);
 				box.add(this.startTimeButton);
@@ -1014,7 +1027,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			
 			if (test != null) {
 				TestTemporalType temporalType = test.getTemporalType();
-				Log.debugMessage("TimeParametersPanel.isTestAgree | temporalType.value() " + temporalType.value(), Level.FINEST);
+//				Log.debugMessage("TimeParametersPanel.isTestAgree | temporalType.value() " + temporalType.value(), Level.FINEST);
 				switch (temporalType.value()) {
 					case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 						result = this.oneRadioButton.isSelected();
@@ -1027,11 +1040,11 @@ public class TimeParametersFrame extends JInternalFrame {
 						break;
 				}
 				if (!test.getGroupTestId().isVoid()) {
-					Log.debugMessage("TimeParametersPanel.isTestAgree | " + test.getGroupTestId(), Level.FINEST);
+//					Log.debugMessage("TimeParametersPanel.isTestAgree | " + test.getGroupTestId(), Level.FINEST);
 					result = this.groupRadioButton.isSelected();
 				}
 			}
-			Log.debugMessage("TimeParametersPanel.isTestAgree | test " + (test != null ? test.getId() : null) + " , result " + result, Level.FINEST);
+//			Log.debugMessage("TimeParametersPanel.isTestAgree | test " + (test != null ? test.getId() : null) + " , result " + result, Level.FINEST);
 			return result;
 		}
 		

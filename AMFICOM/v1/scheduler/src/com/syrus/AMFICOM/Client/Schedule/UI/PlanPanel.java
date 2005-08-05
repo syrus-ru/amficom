@@ -119,9 +119,14 @@ ActionListener, PropertyChangeListener {
 	private Color selectionColor;
 
 	private Dispatcher	dispatcher;
+
+	private SchedulerModel	schedulerModel;
 	
 	public PlanPanel(JScrollPane parent, ApplicationContext aContext) {
 		this.aContext = aContext;
+		
+		
+		
 		this.parent = parent;
 		this.toolBar = new PlanToolBar(aContext, this);
 		this.dispatcher = aContext.getDispatcher();
@@ -129,7 +134,7 @@ ActionListener, PropertyChangeListener {
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TESTS, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);
 		
-		final SchedulerModel schedulerModel = (SchedulerModel) aContext.getApplicationModel();
+		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		
 		this.addComponentListener(new ComponentAdapter() {
 
@@ -595,6 +600,14 @@ ActionListener, PropertyChangeListener {
 	}
 
 	private void updateTest() {
+		Test selectedTest = this.schedulerModel.getSelectedTest();
+		if (selectedTest != null) {
+			Date startTime = selectedTest.getStartTime();
+			this.toolBar.dateSpinner.setValue(startTime);
+			this.toolBar.timeSpinner.setValue(startTime);
+		}
+
+		
 		for (final Identifier monitoredElementId : this.testLines.keySet()) {
 			final TestLine line = this.testLines.get(monitoredElementId);
 			line.updateTest();

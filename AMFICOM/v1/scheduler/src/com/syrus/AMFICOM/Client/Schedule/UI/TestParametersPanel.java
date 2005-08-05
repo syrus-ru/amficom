@@ -293,33 +293,35 @@ public class TestParametersPanel implements PropertyChangeListener {
 					
 					popup.add(msSummaryInfo);
 
-					final JMenuItem msRename = new JMenuItem(LangModelSchedule.getString("Rename Measurement setup"));					
-					msRename.addActionListener(new ActionListener() {
-
-						public void actionPerformed(ActionEvent e1) {
-							MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
-							String info = (String) wrapper.getValue(measurementSetup1,
-								MeasurementSetupWrapper.SUMMARY_INFO);
-							Object object = JOptionPane.showInputDialog(objList, 
-								LangModelSchedule.getString("Rename Measurement setup") + '\n'
-								+ measurementSetup1.getDescription() + "\n\n"
-								+ LangModelSchedule.getString("Measurement setup summary info") + '\n'
-								+ info + "\n\n" + LangModelSchedule.getString("New Measurement setup name") + ':',
-								LangModelSchedule.getString("Rename Measurement setup"),
-								JOptionPane.PLAIN_MESSAGE,
-			                    null,
-			                    null,
-			                    measurementSetup1.getDescription());
-							
-							if (object != null) {
-								measurementSetup1.setDescription((String) object);
-								WrapperedListModel wrapperedListModel = (WrapperedListModel) TestParametersPanel.this.testSetups.getModel();
-								wrapperedListModel.sort();
+					if (measurementSetup1.isChanged()) {
+						final JMenuItem msRename = new JMenuItem(LangModelSchedule.getString("Rename Measurement setup"));					
+						msRename.addActionListener(new ActionListener() {
+	
+							public void actionPerformed(ActionEvent e1) {
+								MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
+								String info = (String) wrapper.getValue(measurementSetup1,
+									MeasurementSetupWrapper.SUMMARY_INFO);
+								Object object = JOptionPane.showInputDialog(objList, 
+									LangModelSchedule.getString("Rename Measurement setup") + '\n'
+									+ measurementSetup1.getDescription() + "\n\n"
+									+ LangModelSchedule.getString("Measurement setup summary info") + '\n'
+									+ info + "\n\n" + LangModelSchedule.getString("New Measurement setup name") + ':',
+									LangModelSchedule.getString("Rename Measurement setup"),
+									JOptionPane.PLAIN_MESSAGE,
+				                    null,
+				                    null,
+				                    measurementSetup1.getDescription());
+								
+								if (object != null) {
+									measurementSetup1.setDescription((String) object);
+									WrapperedListModel wrapperedListModel = (WrapperedListModel) TestParametersPanel.this.testSetups.getModel();
+									wrapperedListModel.sort();
+								}
+	
 							}
-
-						}
-					});
+						});
 					popup.add(msRename);
+					}
 
 					popup.show(objList, e.getX(), e.getY());
 					
@@ -333,6 +335,12 @@ public class TestParametersPanel implements PropertyChangeListener {
 			public void valueChanged(ListSelectionEvent e) {
 				final MeasurementSetup measurementSetup1 = 
 					(MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
+				
+				TestParametersPanel.this.measurementSetupId = 
+					measurementSetup1 != null ? 
+							measurementSetup1.getId() : 
+							null;
+				
 				if (measurementSetup1 != null) {
 
 					Set<Identifier>  selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
@@ -490,12 +498,19 @@ public class TestParametersPanel implements PropertyChangeListener {
 						measurementSetup.getThresholdSet() != null) {
 					this.msListAnalysisOnly.add(measurementSetup);
 				}
+				
+				this.testSetups.setSelectedValue(measurementSetup, true);
 			}
 		}
 		
-		if (this.useAnalysisSetups.isSelected() && this.testSetups.getSelectedIndex() < 0
-				&& this.parametersTestPanel != null) {
+		boolean params = this.useAnalysisSetups.isSelected() && 
+			this.testSetups.getSelectedIndex() < 0;
+		if (params) {
 			this.useWOAnalysisSetups.doClick();
+			this.testSetups.setSelectedValue(measurementSetup, true);			
+		}
+		
+		if (params && this.parametersTestPanel != null) {
 			this.tabbedPane.setSelectedIndex(1);
 		} else {
 			this.tabbedPane.setSelectedIndex(0);
