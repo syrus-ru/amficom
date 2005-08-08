@@ -257,7 +257,7 @@ ActionListener, PropertyChangeListener {
 			switch (this.scale) {
 				case 4:
 				case 5:
-					this.cal.set(Calendar.HOUR_OF_DAY, 0);
+//					this.cal.set(Calendar.HOUR_OF_DAY, 0);
 				case 2:
 				case 3:
 					this.cal.set(Calendar.MINUTE, 0);

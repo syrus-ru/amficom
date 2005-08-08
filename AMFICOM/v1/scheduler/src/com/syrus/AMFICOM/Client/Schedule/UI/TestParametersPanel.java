@@ -57,8 +57,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.AnalysisTypeWrapper;
-import com.syrus.AMFICOM.measurement.EvaluationType;
-import com.syrus.AMFICOM.measurement.EvaluationTypeWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.ParameterSet;
@@ -72,7 +70,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 	WrapperedComboBox		analysisComboBox;
 
-	WrapperedComboBox		evaluationComboBox;
+//	WrapperedComboBox		evaluationComboBox;
 
 	JPanel					switchPanel;
 	List<MeasurementSetup>	msList;
@@ -133,9 +131,9 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.analysisComboBox = new WrapperedComboBox(AnalysisTypeWrapper.getInstance(),
 														StorableObjectWrapper.COLUMN_DESCRIPTION,
 														StorableObjectWrapper.COLUMN_ID);
-		this.evaluationComboBox = new WrapperedComboBox(EvaluationTypeWrapper.getInstance(),
-														StorableObjectWrapper.COLUMN_DESCRIPTION,
-														StorableObjectWrapper.COLUMN_ID);
+//		this.evaluationComboBox = new WrapperedComboBox(EvaluationTypeWrapper.getInstance(),
+//														StorableObjectWrapper.COLUMN_DESCRIPTION,
+//														StorableObjectWrapper.COLUMN_ID);
 		
 //		this.analysisComboBox.setEditable(true);
 //		this.evaluationComboBox.setEditable(true);
@@ -214,9 +212,9 @@ public class TestParametersPanel implements PropertyChangeListener {
 		final JLabel analysisLabel = new JLabel(LangModelSchedule.getString("Analysis")); //$NON-NLS-1$
 		patternPanel.add(analysisLabel, gbc);
 		patternPanel.add(this.analysisComboBox, gbc);
-		final JLabel evaluationLabel = new JLabel(LangModelSchedule.getString("Evaluation Analysis")); //$NON-NLS-1$
-		patternPanel.add(evaluationLabel, gbc);
-		patternPanel.add(this.evaluationComboBox, gbc);
+//		final JLabel evaluationLabel = new JLabel(LangModelSchedule.getString("Evaluation Analysis")); //$NON-NLS-1$
+//		patternPanel.add(evaluationLabel, gbc);
+//		patternPanel.add(this.evaluationComboBox, gbc);
 		patternPanel.add(new JLabel(LangModelSchedule.getString("Patterns")), gbc);
 
 		this.analysisComboBox.addActionListener(new ActionListener() {
@@ -242,28 +240,28 @@ public class TestParametersPanel implements PropertyChangeListener {
 			}
 		});
 
-		this.evaluationComboBox.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				WrapperedComboBox comboBox = (WrapperedComboBox) e.getSource();
-				EvaluationType evaluationType = (EvaluationType) comboBox.getSelectedItem();
-				Set selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
-				if (selectedTestIds != null && !selectedTestIds.isEmpty()
-						&& TestParametersPanel.this.propertyChangeEvent == null) {
-					try {
-						java.util.Set storableObjects = StorableObjectPool.getStorableObjects(selectedTestIds, true);
-						for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
-							Test test = (Test) iterator.next();
-							if (test.isChanged()) {
-								test.setEvaluationTypeId(evaluationType != null ? evaluationType.getId() : Identifier.VOID_IDENTIFIER);
-							}
-						}
-					} catch (ApplicationException e1) {
-						AbstractMainFrame.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
-					}
-				}
-			}
-		});
+//		this.evaluationComboBox.addActionListener(new ActionListener() {
+//
+//			public void actionPerformed(ActionEvent e) {
+//				WrapperedComboBox comboBox = (WrapperedComboBox) e.getSource();
+//				EvaluationType evaluationType = (EvaluationType) comboBox.getSelectedItem();
+//				Set selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
+//				if (selectedTestIds != null && !selectedTestIds.isEmpty()
+//						&& TestParametersPanel.this.propertyChangeEvent == null) {
+//					try {
+//						java.util.Set storableObjects = StorableObjectPool.getStorableObjects(selectedTestIds, true);
+//						for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
+//							Test test = (Test) iterator.next();
+//							if (test.isChanged()) {
+//								test.setEvaluationTypeId(evaluationType != null ? evaluationType.getId() : Identifier.VOID_IDENTIFIER);
+//							}
+//						}
+//					} catch (ApplicationException e1) {
+//						AbstractMainFrame.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
+//					}
+//				}
+//			}
+//		});
 
 		this.testSetups = new WrapperedList(MeasurementSetupWrapper.getInstance(),
 											StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_ID);
@@ -390,20 +388,20 @@ public class TestParametersPanel implements PropertyChangeListener {
 				if (TestParametersPanel.this.propertyChangeEvent == null) {
 					if (!enable) {
 						TestParametersPanel.this.selectComboBox(TestParametersPanel.this.analysisComboBox, null, false);
-						TestParametersPanel.this.selectComboBox(TestParametersPanel.this.evaluationComboBox, null,
-							false);
+//						TestParametersPanel.this.selectComboBox(TestParametersPanel.this.evaluationComboBox, null,
+//							false);
 					}
 				}
 				TestParametersPanel.this.analysisComboBox.setEnabled(enable);
-				evaluationLabel.setEnabled(enable);
-				TestParametersPanel.this.evaluationComboBox.setEnabled(enable);
+//				evaluationLabel.setEnabled(enable);
+//				TestParametersPanel.this.evaluationComboBox.setEnabled(enable);
 			}
 		});
 		// it's for set enabled status for analysisComboBox &
 		// evaluationComboBox
 
 		this.analysisComboBox.setEnabled(false);
-		this.evaluationComboBox.setEnabled(false);
+//		this.evaluationComboBox.setEnabled(false);
 
 		this.tabbedPane.addTab(LangModelSchedule.getString("Pattern"), null, patternPanel, LangModelSchedule
 				.getString("Use pattern"));
@@ -426,14 +424,14 @@ public class TestParametersPanel implements PropertyChangeListener {
 		return analysisTypeId;
 	}
 
-	public Identifier getEvaluationTypeId() {
-		Identifier evaluationTypeId = null;
-		if (this.tabbedPane.getSelectedIndex() == 0 && this.useAnalysisBox.isSelected()) {
-			Identifiable identifiable = (Identifiable) this.evaluationComboBox.getSelectedItem();
-			evaluationTypeId = identifiable != null ? identifiable.getId() : Identifier.VOID_IDENTIFIER;
-		}
-		return evaluationTypeId;
-	}
+//	public Identifier getEvaluationTypeId() {
+//		Identifier evaluationTypeId = null;
+//		if (this.tabbedPane.getSelectedIndex() == 0 && this.useAnalysisBox.isSelected()) {
+//			Identifiable identifiable = (Identifiable) this.evaluationComboBox.getSelectedItem();
+//			evaluationTypeId = identifiable != null ? identifiable.getId() : Identifier.VOID_IDENTIFIER;
+//		}
+//		return evaluationTypeId;
+//	}
 
 	public MeasurementSetup getMeasurementSetup() {
 		MeasurementSetup measurementSetup1 = null;
@@ -458,24 +456,27 @@ public class TestParametersPanel implements PropertyChangeListener {
 	}
 
 	public void setMeasurementSetup(final MeasurementSetup measurementSetup) {
-//		Log.debugMessage("TestParametersPanel.setMeasurementSetup | "
-//				+ (measurementSetup != null ? measurementSetup.getId() : null), Level.FINEST);		
+		Log.debugMessage("TestParametersPanel.setMeasurementSetup | "
+				+ (measurementSetup != null ? measurementSetup.getId() : null), Level.FINEST);		
 
 		this.testSetups.setSelectedValue(null, false);
 			
 //		System.out.println("TestParametersPanel.setMeasurementSetup() | " + this.testSetups.getSelectedIndex());
 		if (measurementSetup != null) {
 			this.testSetups.setSelectedValue(measurementSetup, true);
+			this.setSet(measurementSetup.getParameterSet());
 		}
 //		System.out.println("TestParametersPanel.setMeasurementSetup() | " + this.testSetups.getSelectedIndex());
 		
-		if (this.measurementSetupId != null && measurementSetup != null
-				&& this.measurementSetupId.equals(measurementSetup.getId()) || this.msList == null) {
+//		if (this.measurementSetupId != null && measurementSetup != null
+//				&& this.measurementSetupId.equals(measurementSetup.getId()) || this.msList == null) 
+		{
 //			 Log.debugMessage("TestParametersPanel.setMeasurementSetup | return ", Level.FINEST);
 			 if (this.msList == null) {
 				 this.measurementSetupId = measurementSetup.getId();
+				 return;
 			 }
-			return;
+			
 		}
 
 		this.measurementSetupId = measurementSetup.getId();
@@ -505,16 +506,16 @@ public class TestParametersPanel implements PropertyChangeListener {
 		
 		boolean params = this.useAnalysisSetups.isSelected() && 
 			this.testSetups.getSelectedIndex() < 0;
+		
+		System.out.println("TestParametersPanel.setMeasurementSetup() | " + params);
+		
 		if (params) {
 			this.useWOAnalysisSetups.doClick();
 			this.testSetups.setSelectedValue(measurementSetup, true);			
 		}
 		
-		if (params && this.parametersTestPanel != null) {
-			this.tabbedPane.setSelectedIndex(1);
-		} else {
-			this.tabbedPane.setSelectedIndex(0);
-		}
+		System.out.println("TestParametersPanel.setMeasurementSetup() | " + (this.useAnalysisSetups.isSelected() || this.parametersTestPanel == null));
+		this.tabbedPane.setSelectedIndex(this.useAnalysisSetups.isSelected() || this.parametersTestPanel == null ? 0 : 1);
 	}
 
 	public void setMeasurementSetups(Collection<MeasurementSetup> measurementSetups) {
@@ -585,10 +586,10 @@ public class TestParametersPanel implements PropertyChangeListener {
 		if (selectedItem != null) {
 			this.selectComboBox(this.analysisComboBox, ((Identifiable) selectedItem).getId(), true);
 		}
-		selectedItem = this.evaluationComboBox.getSelectedItem();
-		if (selectedItem != null) {
-			this.selectComboBox(this.evaluationComboBox, ((Identifiable) selectedItem).getId(), true);
-		}
+//		selectedItem = this.evaluationComboBox.getSelectedItem();
+//		if (selectedItem != null) {
+//			this.selectComboBox(this.evaluationComboBox, ((Identifiable) selectedItem).getId(), true);
+//		}
 	}
 
 //	public void updateMeasurementSetups() {
@@ -600,7 +601,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 	public void setSet(ParameterSet set) {
 		if (set != null && this.parametersTestPanel != null) {
-			// this.parametersTestPanel.setSet(set);
+			 this.parametersTestPanel.setSet(set);
 		}
 	}
 
@@ -619,21 +620,21 @@ public class TestParametersPanel implements PropertyChangeListener {
 		}
 	}
 
-	public void setEvaluationTypes(Collection evaluationTypes) {
-		boolean enable = this.evaluationComboBox.isEditable();
-		this.evaluationComboBox.setEditable(true);
-
-		WrapperedListModel model = (WrapperedListModel) TestParametersPanel.this.evaluationComboBox.getModel();
-		model.removeAllElements();
-		model.addElement(null);
-		for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
-			EvaluationType evaluationType = (EvaluationType) it.next();
-			model.addElement(evaluationType);
-		}
-		if (!enable) {
-			this.evaluationComboBox.setEditable(enable);
-		}
-	}
+//	public void setEvaluationTypes(Collection evaluationTypes) {
+//		boolean enable = this.evaluationComboBox.isEditable();
+//		this.evaluationComboBox.setEditable(true);
+//
+//		WrapperedListModel model = (WrapperedListModel) TestParametersPanel.this.evaluationComboBox.getModel();
+//		model.removeAllElements();
+//		model.addElement(null);
+//		for (Iterator it = evaluationTypes.iterator(); it.hasNext();) {
+//			EvaluationType evaluationType = (EvaluationType) it.next();
+//			model.addElement(evaluationType);
+//		}
+//		if (!enable) {
+//			this.evaluationComboBox.setEditable(enable);
+//		}
+//	}
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		this.propertyChangeEvent = evt;
@@ -667,9 +668,11 @@ public class TestParametersPanel implements PropertyChangeListener {
 			}
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_ANALYSIS_TYPE)) {
 			this.selectComboBox(this.analysisComboBox, (Identifier) newValue, true);
-		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_EVALUATION_TYPE)) {
-			this.selectComboBox(this.evaluationComboBox, (Identifier) newValue, true);
-		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP)) {
+		} 
+//		else if (propertyName.equals(SchedulerModel.COMMAND_SET_EVALUATION_TYPE)) {
+//			this.selectComboBox(this.evaluationComboBox, (Identifier) newValue, true);
+//		} 
+		else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP)) {
 			this.setMeasurementSetup((MeasurementSetup) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS)) {
 			this.setMeasurementSetups((Collection<MeasurementSetup>) newValue);
@@ -679,12 +682,14 @@ public class TestParametersPanel implements PropertyChangeListener {
 			Identifier analysisTypeId = this.getAnalysisTypeId();
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_ANALYSIS_TYPE,
 																		null, analysisTypeId));
-		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_EVALUATION_TYPE)) {
-			Identifier evaluationTypeId = this.getEvaluationTypeId();
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-																		SchedulerModel.COMMAND_SET_EVALUATION_TYPE,
-																		null, evaluationTypeId));
-		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP)) {
+		} 
+//		else if (propertyName.equals(SchedulerModel.COMMAND_GET_EVALUATION_TYPE)) {
+//			Identifier evaluationTypeId = this.getEvaluationTypeId();
+//			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+//																		SchedulerModel.COMMAND_SET_EVALUATION_TYPE,
+//																		null, evaluationTypeId));
+//		} 
+		else if (propertyName.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP)) {
 			MeasurementSetup measurementSetup1 = getMeasurementSetup();
 			if (measurementSetup1 != null) {
 				this.dispatcher
@@ -703,9 +708,10 @@ public class TestParametersPanel implements PropertyChangeListener {
 			this.tabbedPane.setSelectedIndex(1);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_ANALYSIS_TYPES)) {
 			this.setAnalysisTypes((Collection) newValue);
-		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_EVALUATION_TYPES)) {
-			this.setEvaluationTypes((Collection) newValue);
-		}
+		} 
+//		else if (propertyName.equals(SchedulerModel.COMMAND_SET_EVALUATION_TYPES)) {
+//			this.setEvaluationTypes((Collection) newValue);
+//		}
 
 		this.propertyChangeEvent = null;
 	}
@@ -774,19 +780,19 @@ public class TestParametersPanel implements PropertyChangeListener {
 //		System.out.println("TestParametersPanel.selectComboBox() | " + (this.evaluationComboBox.getSelectedItem() == null));
 //		System.out.println("TestParametersPanel.selectComboBox() | " + (this.analysisComboBox.getSelectedItem() == null));
 		
-		Object evaluationSelectedItem = this.evaluationComboBox.getSelectedItem();
+//		Object evaluationSelectedItem = this.evaluationComboBox.getSelectedItem();
 		Object analysisSelectedItem = this.analysisComboBox.getSelectedItem();
 		
-		if ((evaluationSelectedItem == null && analysisSelectedItem == null
-				&& this.useAnalysisBox.isSelected()) ||
-				((evaluationSelectedItem != null || analysisSelectedItem != null) && !this.useAnalysisBox.isSelected())) {
+		if (analysisSelectedItem == null
+				&& this.useAnalysisBox.isSelected() ||
+				(analysisSelectedItem != null && !this.useAnalysisBox.isSelected())) {
 //			System.out.println("TestParametersPanel.selectComboBox() | this.useAnalysisSetups.isSelected():" + this.useAnalysisSetups.isSelected());
 //			System.out.println("TestParametersPanel.selectComboBox() | this.useAnalysisBox.isSelected(): " + this.useAnalysisBox.isSelected());
 			if (!this.useAnalysisSetups.isSelected() && !this.useAnalysisBox.isSelected()) {
 //				System.out.println("TestParametersPanel.selectComboBox()");
 				this.useAnalysisSetups.doClick();
-			}
-			this.useAnalysisBox.doClick();
+			} 
+			this.useAnalysisBox.doClick();			
 		}
 	}
 

@@ -151,12 +151,12 @@ class PlanToolBar {
 		});
 		this.scaleComboBox.setSelectedItem(LangModelSchedule.getString("1 week"));
 
-		this.dateSpinner.addChangeListener(new ChangeListener() {
+		
+		ChangeListener timeListener = new ChangeListener() {
 
 			public void stateChanged(ChangeEvent e) {
-				DateSpinner spinner = (DateSpinner) e.getSource();
 				Calendar calDate = Calendar.getInstance();
-				calDate.setTime((Date) spinner.getModel().getValue());
+				calDate.setTime((Date) PlanToolBar.this.dateSpinner.getModel().getValue());
 				Calendar timeDate = Calendar.getInstance();
 				timeDate.setTime((Date) PlanToolBar.this.timeSpinner.getModel().getValue());
 				calDate.set(Calendar.HOUR_OF_DAY, timeDate.get(Calendar.HOUR_OF_DAY));
@@ -165,23 +165,11 @@ class PlanToolBar {
 				// panel.updateTests();
 				panel.updateTestLinesTimeRegion();
 			}
-		});
+		};
+		
+		this.dateSpinner.addChangeListener(timeListener);
 
-		this.timeSpinner.addChangeListener(new ChangeListener() {
-
-			public void stateChanged(ChangeEvent e) {
-				TimeSpinner spinner = (TimeSpinner) e.getSource();
-				Calendar timeDate = Calendar.getInstance();
-				timeDate.setTime((Date) spinner.getModel().getValue());
-				Calendar calDate = Calendar.getInstance();
-				calDate.setTime((Date) PlanToolBar.this.dateSpinner.getModel().getValue());
-				calDate.set(Calendar.HOUR_OF_DAY, timeDate.get(Calendar.HOUR_OF_DAY));
-				calDate.set(Calendar.MINUTE, timeDate.get(Calendar.MINUTE));
-				panel.setStartDate(calDate.getTime());
-				// panel.updateTests();
-				panel.updateTestLines();
-			}
-		});
+		this.timeSpinner.addChangeListener(timeListener);
 
 		this.dateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.dateButton.setFocusable(false);
