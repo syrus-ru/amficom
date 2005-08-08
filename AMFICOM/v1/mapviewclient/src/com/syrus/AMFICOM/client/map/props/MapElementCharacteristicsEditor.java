@@ -1,5 +1,5 @@
 /*
- * $Id: MapElementCharacteristicsEditor.java,v 1.15 2005/08/08 10:31:40 krupenn Exp $
+ * $Id: MapElementCharacteristicsEditor.java,v 1.16 2005/08/08 13:06:50 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/08/08 10:31:40 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/08 13:06:50 $
  * @module mapviewclient_v1
  */
 
@@ -51,7 +51,7 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 			if (mapElement != null
 					&& !(mapElement instanceof Selection)) {
 					super.setTypeSortMapping(
-							CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+							CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
 							mapElement,
 							mapElement.getId(), 
 							true);
@@ -67,7 +67,7 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 		else if(object instanceof SiteNodeType) {
 			SiteNodeType siteNodeType = (SiteNodeType)object;
 			super.setTypeSortMapping(
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
 					siteNodeType,
 					siteNodeType.getId(), 
 					true);
@@ -80,7 +80,7 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 		else if(object instanceof PhysicalLinkType) {
 			PhysicalLinkType physicalLinkType = (PhysicalLinkType)object;
 			super.setTypeSortMapping(
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
+					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPERATIONAL,
 					physicalLinkType,
 					physicalLinkType.getId(), 
 					true);
