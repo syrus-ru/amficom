@@ -459,7 +459,7 @@ public class TestLine extends TimeLine {
 						}
 						
 						if (Math.abs(e.getX() - minX) > width) {
-							System.out.println(".mouseDragged() | e.x:" + e.getX() + ", minX:" + minX);
+//							System.out.println(".mouseDragged() | e.x:" + e.getX() + ", minX:" + minX);
 							TestLine.this.startPoint = null;
 						}
 					}
@@ -547,6 +547,7 @@ public class TestLine extends TimeLine {
 									testTimeLine.testId = test.getId();
 									testTimeLine.startTime = measurement.getStartTime().getTime();
 									testTimeLine.duration = measurement.getDuration();
+//									System.out.println("TestLine.acquireTests() | " + measurement.getId() + ", " + measurement.getDuration());
 									testTimeLine.haveMeasurement = true;
 									measurementTestList.add(testTimeLine);
 								}
@@ -748,19 +749,19 @@ public class TestLine extends TimeLine {
 			// Log.debugMessage("TestLine.refreshTimeItems | timeItems.size " +
 			// timeItems.size(), Log.FINEST);
 
-//			TestTimeItem prevItem = null;
-//			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
-//				TestTimeItem testTimeItem = (TestTimeItem) it.next();
-//				if (prevItem != null && (testTimeItem.x - (prevItem.x + prevItem.getWidth())) < 0) {
-//					it.remove();
-////					 Log.debugMessage("TimeStampsEditor.refreshTimeItems | remove testTimeItem " + testTimeItem.object, Level.FINEST);
-//				} else {
-//					prevItem = testTimeItem;
-//				}
-//				// Log.debugMessage("TimeStampsEditor.refreshTimeItems | x:" +
-//				// testTimeItem.x +", " + testTimeItem.object, Log.FINEST);
-//
-//			}
+			TestTimeItem prevItem = null;
+			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
+				TestTimeItem testTimeItem = (TestTimeItem) it.next();
+				if (prevItem != null && (testTimeItem.x - prevItem.x) <= 1) {
+					it.remove();
+//					 Log.debugMessage("TimeStampsEditor.refreshTimeItems | remove testTimeItem " + testTimeItem.object, Level.FINEST);
+				} else {
+					prevItem = testTimeItem;
+				}
+				// Log.debugMessage("TimeStampsEditor.refreshTimeItems | x:" +
+				// testTimeItem.x +", " + testTimeItem.object, Log.FINEST);
+
+			}
 
 			this.unsavedTestTimeItems.clear();
 			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
