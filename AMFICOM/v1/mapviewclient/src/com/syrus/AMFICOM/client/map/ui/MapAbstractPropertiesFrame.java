@@ -1,5 +1,5 @@
 /**
- * $Id: MapAbstractPropertiesFrame.java,v 1.9 2005/07/20 13:25:40 krupenn Exp $
+ * $Id: MapAbstractPropertiesFrame.java,v 1.10 2005/08/08 10:21:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,8 +32,9 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- *  Окно отображения свойств элемента карты
- * @version $Revision: 1.9 $, $Date: 2005/07/20 13:25:40 $
+ * Окно отображения свойств элемента карты
+ * 
+ * @version $Revision: 1.10 $, $Date: 2005/08/08 10:21:33 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -52,6 +53,9 @@ public abstract class MapAbstractPropertiesFrame extends
 		if(this.aContext != null)
 			if(this.aContext.getDispatcher() != null) {
 				this.aContext.getDispatcher().removePropertyChangeListener(
+						MapEvent.OTHER_SELECTED,
+						this);
+				this.aContext.getDispatcher().removePropertyChangeListener(
 						MapEvent.SELECTION_CHANGED,
 						this);
 				this.aContext.getDispatcher().removePropertyChangeListener(
@@ -63,6 +67,9 @@ public abstract class MapAbstractPropertiesFrame extends
 			}
 		this.aContext = aContext;
 		if(aContext.getDispatcher() != null) {
+			aContext.getDispatcher().addPropertyChangeListener(
+					MapEvent.OTHER_SELECTED,
+					this);
 			aContext.getDispatcher().addPropertyChangeListener(
 					MapEvent.SELECTION_CHANGED,
 					this);
@@ -81,42 +88,50 @@ public abstract class MapAbstractPropertiesFrame extends
 		if(this.getParent() == null)
 			return;
 		if(pce.getPropertyName().equals(MapEvent.SELECTION_CHANGED)) {
-//			Map map = (Map )pce.getNewValue();
-//			Collection selection = map.getSelectedElements();
-			LogicalNetLayer lnl = MapDesktopCommand.findMapFrame((JDesktopPane)this.getParent()).getMapViewer().getLogicalNetLayer();
+			LogicalNetLayer lnl = MapDesktopCommand.findMapFrame(
+					(JDesktopPane )this.getParent()).getMapViewer()
+					.getLogicalNetLayer();
 			Collection selection = (Collection )pce.getNewValue();
 			MapElement mapElement;
+			// get selection object
 			if(selection.size() == 1) {
 				mapElement = (MapElement )selection.iterator().next();
 			}
 			else {
-				mapElement = lnl.getCurrentMapElement();// get selection object
+				mapElement = lnl.getCurrentMapElement();
 			}
 			VisualManager vm = MapVisualManager.getVisualManager(mapElement);
 			if(vm instanceof MarkerEditor) {
-				MarkerEditor markerEditor = (MarkerEditor)vm;
+				MarkerEditor markerEditor = (MarkerEditor )vm;
 				markerEditor.setLogicalNetLayer(lnl);
 			}
 			super.setVisualManager(vm);
 			if(this.editor != null)
 				this.editor.setObject(mapElement);
 		}
-		else
-			if(pce.getPropertyName().equals(MapEvent.MAP_SELECTED)) {
-				Map map = (Map )pce.getSource();
-				VisualManager vm = MapVisualManager.getInstance();
+		else if(pce.getPropertyName().equals(MapEvent.MAP_SELECTED)) {
+			Map map = (Map )pce.getSource();
+			VisualManager vm = MapVisualManager.getInstance();
+			super.setVisualManager(vm);
+			if(this.editor != null)
+				this.editor.setObject(map);
+		}
+		else if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_SELECTED)) {
+			MapView mapView = (MapView )pce.getSource();
+			VisualManager vm = MapViewVisualManager.getInstance();
+			super.setVisualManager(vm);
+			if(this.editor != null)
+				this.editor.setObject(mapView);
+		}
+		else if(pce.getPropertyName().equals(MapEvent.OTHER_SELECTED)) {
+			Object selectedObject = pce.getSource();
+			VisualManager vm = MapVisualManager.getVisualManager(selectedObject);
+			if(vm != null) {
 				super.setVisualManager(vm);
 				if(this.editor != null)
-					this.editor.setObject(map);
+					this.editor.setObject(selectedObject);
 			}
-			else
-				if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_SELECTED)) {
-					MapView mapView = (MapView )pce.getSource();
-					VisualManager vm = MapViewVisualManager.getInstance();
-					super.setVisualManager(vm);
-					if(this.editor != null)
-						this.editor.setObject(mapView);
-				}
+		}
 
 	}
 
@@ -128,17 +143,12 @@ public abstract class MapAbstractPropertiesFrame extends
 			if(object instanceof MapElement)
 				this.aContext.getDispatcher().firePropertyChange(
 						new MapEvent(object, MapEvent.MAP_CHANGED));
-			else
-				if(object instanceof Map)
-					this.aContext.getDispatcher().firePropertyChange(
-							new MapEvent(object, MapEvent.MAP_SELECTED));
-				else
-					if(object instanceof MapView)
-						this.aContext.getDispatcher()
-								.firePropertyChange(
-										new MapEvent(
-												object,
-												MapEvent.MAP_VIEW_CHANGED));
+			else if(object instanceof Map)
+				this.aContext.getDispatcher().firePropertyChange(
+						new MapEvent(object, MapEvent.MAP_SELECTED));
+			else if(object instanceof MapView)
+				this.aContext.getDispatcher().firePropertyChange(
+						new MapEvent(object, MapEvent.MAP_VIEW_CHANGED));
 			this.performProcessing = true;
 		}
 	}
