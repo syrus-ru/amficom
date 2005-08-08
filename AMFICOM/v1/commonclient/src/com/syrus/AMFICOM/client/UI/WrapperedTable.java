@@ -23,7 +23,7 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/27 16:18:28 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/08 15:32:53 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -132,7 +132,30 @@ public class WrapperedTable extends ATable {
 			}
 		}
 	}
+	
+	public void sortColumn(int mColIndex) {
+		WrapperedTableModel model = (WrapperedTableModel) this.getModel();
+		String s;
+		if (model.getSortOrder(mColIndex)) {
+			s = " ^ "; //$NON-NLS-1$
+		} else {
+			s = " v "; //$NON-NLS-1$
+		}
+		String columnName = model.getColumnName(mColIndex);
+		this.getColumnModel().getColumn(this.convertColumnIndexToView(mColIndex))
+				.setHeaderValue(s + (columnName == null ? "" : columnName) + s);
 
+		for (int i = 0; i < model.getColumnCount(); i++) {
+			if (i != mColIndex)
+				this.getColumnModel().getColumn(this.convertColumnIndexToView(i))
+						.setHeaderValue(model.getColumnName(i));
+		}
+
+		// Force the header to resize and repaint itself
+		this.getTableHeader().resizeAndRepaint();
+		model.sortRows(mColIndex);
+	}
+	
 	private void initialization() {
 		updateModel();
 		this.setColumnSelectionAllowed(false);
@@ -153,26 +176,8 @@ public class WrapperedTable extends ATable {
 				// clicked
 				int columnIndex = colModel.getColumnIndexAtX(evt.getX());
 				int mColIndex = table.convertColumnIndexToModel(columnIndex);
-				WrapperedTableModel model = (WrapperedTableModel) table.getModel();
-				String s;
-				if (model.getSortOrder(mColIndex)) {
-					s = " ^ "; //$NON-NLS-1$
-				} else {
-					s = " v "; //$NON-NLS-1$
-				}
-				String columnName = model.getColumnName(mColIndex);
-				table.getColumnModel().getColumn(columnIndex)
-						.setHeaderValue(s + (columnName == null ? "" : columnName) + s);
-
-				for (int i = 0; i < model.getColumnCount(); i++) {
-					if (i != mColIndex)
-						table.getColumnModel().getColumn(table.convertColumnIndexToView(i))
-								.setHeaderValue(model.getColumnName(i));
-				}
-
-				// Force the header to resize and repaint itself
-				header.resizeAndRepaint();
-				model.sortRows(mColIndex);
+				
+				sortColumn(mColIndex);
 
 				// Return if not clicked on any column header
 				if (columnIndex == -1) { return; }
