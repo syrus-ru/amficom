@@ -61,7 +61,7 @@ $(LIBNAME): .mach
 
 .mach: .corba .xml $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(LIBNAME_MAPXML):$(LIBNAME_GENERALXML):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
@@ -74,9 +74,9 @@ idlclean:
 .PHONY: corba
 corba: .corba
 
-.corba: $(CLASSDIR) $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML) .idl
+.corba: $(CLASSDIR) $(LIBNAME_MAPXML) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(LIBNAME_MAPXML):$(LIBNAME_GENERALXML):$(XMLBEANSCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML):$(XMLBEANSCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/map/corba/*.java
 	touch $@
@@ -86,18 +86,17 @@ corba: .corba
 .PHONY: xml
 xml: .xml
 
-.xml: $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML)
+.xml: $(LIBNAME_MAPXML)
 	touch $@
 
 .PHONY: xmlinstall
 xmlinstall: .xml $(LIBDIR)
-	install -m 0644 $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML) $(LIBDIR)
+	install -m 0644 $(LIBNAME_MAPXML) $(LIBDIR)
 
-$(LIBNAME_MAPXML): $(LIBNAME_GENERALXML)
+$(LIBNAME_MAPXML): 
 	$(RM) -r $(XMLCLASSDIR)/*
-	$(SCOMP) $(SCOMPFLAGS) -out $@ -cp $(XMLBEANSCLASSPATH):$(LIBNAME_GENERALXML) \
+	$(SCOMP) $(SCOMPFLAGS) -out $@ -cp $(XMLBEANSCLASSPATH):$(LIBDIR)/$(LIBNAME_GENERALXML) \
 		$(XMLDIR)/Map.xsd \
-		$(XMLDIR)/Characteristic.xsd \
 		$(XMLDIR)/Collector.xsd \
 		$(XMLDIR)/NodeLink.xsd \
 		$(XMLDIR)/PhysicalLink.xsd \
@@ -106,11 +105,6 @@ $(LIBNAME_MAPXML): $(LIBNAME_GENERALXML)
 		$(XMLDIR)/SiteNodeType.xsd \
 		$(XMLDIR)/TopologicalNode.xsd \
 		$(XMLDIR)/MapLibrary.xsd
-
-$(LIBNAME_GENERALXML):
-	$(RM) -r $(XMLCLASSDIR)/*
-	$(SCOMP) $(SCOMPFLAGS) -out $@ \
-		$(XMLDIR)/General.xsd
 
 .PHONY: clean
 clean: cleanmach cleancorba cleanxml
@@ -132,7 +126,7 @@ cleancorba: idlclean
 
 .PHONY: cleanxml xmlclean
 cleanxml xmlclean:
-	$(RM) $(LIBNAME_MAPXML) $(LIBNAME_GENERALXML)
+	$(RM) $(LIBNAME_MAPXML)
 	$(RM) -r $(XMLSRCDIR)/com/syrus/amficom
 	$(RM) -r $(XMLCLASSDIR)/com/syrus/amficom
 	$(RM) .xml
