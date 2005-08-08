@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.33 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.34 2005/08/08 12:12:28 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/08/08 11:35:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/08/08 12:12:28 $
+ * @author $Author: max $
  * @module map
  */
 public final class SiteNodeTypeDatabase extends StorableObjectDatabase<SiteNodeType> {
@@ -75,7 +75,7 @@ public final class SiteNodeTypeDatabase extends StorableObjectDatabase<SiteNodeT
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getImageId());
 		preparedStatement.setInt(++startParameterNumber, storableObject.isTopological() ? 1 : 0);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMapLibrary().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMapLibraryId());
 		return startParameterNumber;
 	}
 
@@ -87,7 +87,7 @@ public final class SiteNodeTypeDatabase extends StorableObjectDatabase<SiteNodeT
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getImageId()) + COMMA
 			+ (storableObject.isTopological() ? 1 : 0) + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getMapLibrary().getId());
+			+ DatabaseIdentifier.toSQLString(storableObject.getMapLibraryId());
 		return values;
 	}
 

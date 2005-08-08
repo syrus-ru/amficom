@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.62 2005/08/08 12:03:47 max Exp $
+ * $Id: SiteNodeType.java,v 1.63 2005/08/08 12:12:28 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: max $
- * @version $Revision: 1.62 $, $Date: 2005/08/08 12:03:47 $
+ * @version $Revision: 1.63 $, $Date: 2005/08/08 12:12:28 $
  * @module map
  * @todo make 'sort' persistent (update database scheme as well)
  * @todo make 'mapLibrary' persistent
@@ -117,7 +117,7 @@ public final class SiteNodeType extends StorableObjectType
 			final String description,
 			final Identifier imageId,
 			final boolean topological,
-			final MapLibrary mapLibrary) {
+			final Identifier mapLibraryId) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -130,7 +130,7 @@ public final class SiteNodeType extends StorableObjectType
 		this.imageId = imageId;
 		this.topological = topological;
 		this.sort = sort;
-		this.mapLibraryId = mapLibrary.getId();
+		this.mapLibraryId = mapLibraryId;
 	}
 
 	public static SiteNodeType createInstance(final Identifier creatorId,
@@ -140,7 +140,7 @@ public final class SiteNodeType extends StorableObjectType
 			final String description,
 			final Identifier imageId,
 			final boolean topological,
-			final MapLibrary mapLibrary) throws CreateObjectException {
+			final Identifier mapLibraryId) throws CreateObjectException {
 
 		assert creatorId != null 
 				&& codename != null 
@@ -148,7 +148,8 @@ public final class SiteNodeType extends StorableObjectType
 				&& description != null 
 				&& imageId != null 
 				&& sort != null
-				&& mapLibrary != null : ErrorMessages.NON_NULL_EXPECTED;
+				&& mapLibraryId != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert !mapLibraryId.isVoid() : ErrorMessages.NON_VOID_EXPECTED;
 
 		try {
 			final SiteNodeType siteNodeType = new SiteNodeType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_TYPE_CODE),
@@ -160,7 +161,7 @@ public final class SiteNodeType extends StorableObjectType
 					description,
 					imageId,
 					topological,
-					mapLibrary);
+					mapLibraryId);
 
 			assert siteNodeType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
