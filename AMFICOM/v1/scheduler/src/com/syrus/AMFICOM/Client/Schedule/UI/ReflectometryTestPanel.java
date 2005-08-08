@@ -24,7 +24,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,7 +68,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/08/08 10:37:49 $
+ * @version $Revision: 1.58 $, $Date: 2005/08/08 11:37:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -189,9 +188,11 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public synchronized ParameterSet getSet() {
 		ParameterSet set = null;
 		if (this.setId != null) {
+			System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " != null");
 			try {
 				set = (ParameterSet) StorableObjectPool.getStorableObject(this.setId, true);
 				if (!set.isChanged()) {
+					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " !set.isChanged()");
 					Parameter[] parameters = set.getParameters();
 					for (int i = 0; i < parameters.length; i++) {
 						ParameterType type = (ParameterType) parameters[i].getType();
@@ -233,16 +234,86 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 							break;
 						}
 					}
+				} else {
+					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " set.isChanged()");
+					Parameter[] parameters = set.getParameters();
+					for (int i = 0; i < parameters.length; i++) {
+						ParameterType type = (ParameterType) parameters[i].getType();
+						String codename = type.getCodename();
+						Object value = null;
+						// = parameters[i].getStringValue();
+						if (codename.equals(this.wvlenParameterType.getCodename())) {
+							value = this.waveLengthComboBox.getSelectedItem().toString();
+						} else if (codename.equals(this.trclenParameterType.getCodename())) {
+							value = this.maxDistanceComboBox.getSelectedItem();
+						} else if (codename.equals(this.resParameterType.getCodename())) {
+							value = this.resolutionComboBox.getSelectedItem();
+						} else if (codename.equals(this.pulswdHiResParameterType.getCodename())) {
+							if (this.pulseWidthCheckBox.isSelected()) {
+								value = this.pulseWidthHiResComboBox.getSelectedItem();
+							} else {
+								this.unchangedObjects.remove(codename);
+								value = this.pulseWidthLowResComboBox.getSelectedItem();
+								ByteArray byteArray = this.getByteArray(value.toString(), this.pulswdLowResParameterType);
+								try {
+									Parameter setParameter = Parameter.createInstance(this.pulswdLowResParameterType,
+										byteArray.getBytes());
+									parameters[i] = setParameter;
+									continue;
+								} catch (CreateObjectException e) {
+									AbstractMainFrame.showErrorMessage(this, e);
+									break;
+								}
+							}
+						} else if (codename.equals(this.pulswdLowResParameterType.getCodename())) {
+							if (!this.pulseWidthCheckBox.isSelected()) {
+								value = this.pulseWidthLowResComboBox.getSelectedItem();
+							} else {
+								this.unchangedObjects.remove(codename);
+								value = this.pulseWidthHiResComboBox.getSelectedItem();
+								ByteArray byteArray = this.getByteArray(value.toString(), this.pulswdHiResParameterType);
+								try {
+									Parameter setParameter = Parameter.createInstance(this.pulswdHiResParameterType,
+										byteArray.getBytes());
+									parameters[i] = setParameter;
+									continue;
+								} catch (CreateObjectException e) {
+									AbstractMainFrame.showErrorMessage(this, e);
+									break;
+								}
+							}
+						}
+
+						else if (codename.equals(this.iorParameterType.getCodename())) {
+							value = this.refractTextField.getText();
+						} else if (codename.equals(this.scansParameterType.getCodename())) {
+							value = this.averageQuantityComboBox.getSelectedItem();
+						} else if (codename.equals(this.gsFlagParameterType.getCodename())) {
+							value = Boolean.toString(this.gsOptionBox.isSelected());
+						} else if (codename.equals(this.lfdFlagParameterType.getCodename())) {
+							value = Boolean.toString(this.lfdOptionBox.isSelected());
+						}
+						
+						
+						String string = this.unchangedObjects.get(codename);
+						if (value != null && (string == null || !string.equals(value))) {
+							ByteArray byteArray = this.getByteArray(value.toString(), type);
+							try {
+								parameters[i] = Parameter.createInstance(type, byteArray.getBytes());
+							} catch (CreateObjectException e) {
+								AbstractMainFrame.showErrorMessage(this, e);
+							}
+						}
+					}				
+					set.setParameters(parameters);
+				
 				}
 			} catch (ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(this, e);
 				this.setId = null;
 			}
-		}
-
-		// Log.debugMessage("ReflectometryTestPanel.getSet | set id is " +
-		// this.setId, Log.FINEST);
-		if (this.setId == null) {
+		} else  {
+			System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " == null");
 			try {
 
 				this.refreshTitles();
@@ -357,6 +428,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				StorableObjectPool.putStorableObject(set);
 				this.setId = set.getId();
 
+				System.out.println("ReflectometryTestPanel.getSet() | newSet: " + this.setId);
 				// Log.debugMessage("ReflectometryTestPanel.getSet | ",
 				// Log.FINEST);
 			} catch (IllegalArgumentException e) {
@@ -366,82 +438,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				AbstractMainFrame.showErrorMessage(this, ae);
 				this.schedulerModel.setBreakData();
 			}
-		} else {
-			// Log.debugMessage("ReflectometryTestPanel.getSet | set.isChanged()
-			// " + set.isChanged(), Log.FINEST);
-			if (set.isChanged()) {
-				Parameter[] parameters = set.getParameters();
-				for (int i = 0; i < parameters.length; i++) {
-					ParameterType type = (ParameterType) parameters[i].getType();
-					String codename = type.getCodename();
-					Object value = null;
-					// = parameters[i].getStringValue();
-					if (codename.equals(this.wvlenParameterType.getCodename())) {
-						value = this.waveLengthComboBox.getSelectedItem().toString();
-					} else if (codename.equals(this.trclenParameterType.getCodename())) {
-						value = this.maxDistanceComboBox.getSelectedItem();
-					} else if (codename.equals(this.resParameterType.getCodename())) {
-						value = this.resolutionComboBox.getSelectedItem();
-					} else if (codename.equals(this.pulswdHiResParameterType.getCodename())) {
-						if (this.pulseWidthCheckBox.isSelected()) {
-							value = this.pulseWidthHiResComboBox.getSelectedItem();
-						} else {
-							this.unchangedObjects.remove(codename);
-							value = this.pulseWidthLowResComboBox.getSelectedItem();
-							ByteArray byteArray = this.getByteArray(value.toString(), this.pulswdLowResParameterType);
-							try {
-								Parameter setParameter = Parameter.createInstance(this.pulswdLowResParameterType,
-									byteArray.getBytes());
-								parameters[i] = setParameter;
-								continue;
-							} catch (CreateObjectException e) {
-								AbstractMainFrame.showErrorMessage(this, e);
-								break;
-							}
-						}
-					} else if (codename.equals(this.pulswdLowResParameterType.getCodename())) {
-						if (!this.pulseWidthCheckBox.isSelected()) {
-							value = this.pulseWidthLowResComboBox.getSelectedItem();
-						} else {
-							this.unchangedObjects.remove(codename);
-							value = this.pulseWidthHiResComboBox.getSelectedItem();
-							ByteArray byteArray = this.getByteArray(value.toString(), this.pulswdHiResParameterType);
-							try {
-								Parameter setParameter = Parameter.createInstance(this.pulswdHiResParameterType,
-									byteArray.getBytes());
-								parameters[i] = setParameter;
-								continue;
-							} catch (CreateObjectException e) {
-								AbstractMainFrame.showErrorMessage(this, e);
-								break;
-							}
-						}
-					}
-
-					else if (codename.equals(this.iorParameterType.getCodename())) {
-						value = this.refractTextField.getText();
-					} else if (codename.equals(this.scansParameterType.getCodename())) {
-						value = this.averageQuantityComboBox.getSelectedItem();
-					} else if (codename.equals(this.gsFlagParameterType.getCodename())) {
-						value = Boolean.toString(this.gsOptionBox.isSelected());
-					} else if (codename.equals(this.lfdFlagParameterType.getCodename())) {
-						value = Boolean.toString(this.lfdOptionBox.isSelected());
-					}
-					
-					
-					String string = this.unchangedObjects.get(codename);
-					if (value != null && (string == null || !string.equals(value))) {
-						ByteArray byteArray = this.getByteArray(value.toString(), type);
-						try {
-							parameters[i] = Parameter.createInstance(type, byteArray.getBytes());
-						} catch (CreateObjectException e) {
-							AbstractMainFrame.showErrorMessage(this, e);
-						}
-					}
-				}				
-				set.setParameters(parameters);
-			}
-		}
+		} 
 		return set;
 	}
 
@@ -967,7 +964,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		if (this.skip)
 			return;
 		
-		java.util.Set selectedTestIds = this.schedulerModel.getSelectedTestIds();
+		Set selectedTestIds = this.schedulerModel.getSelectedTestIds();
 		if (selectedTestIds != null && !selectedTestIds.isEmpty()) {
 			ParameterSet parameterSet = this.getSet();
 			if (parameterSet.isChanged()) {
@@ -1041,22 +1038,27 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			return;
 		}		
 		
-//		System.out.println("ReflectometryTestPanel.setSet() | " + set.getId());
+		System.out.println("ReflectometryTestPanel.setSet() | " + (set != null ? set.getId() : null));
 		
-//		if (this.setId != null && this.setId.equals(set.getId())) {
-//			return;
-//		}		
+		if (this.setId != null && set != null && this.setId.equals(set.getId())) {
+			return;
+		}
 		
 		this.skip = true;
 		if (this.unchangedObjects == null) {
 			this.unchangedObjects = new HashMap<String, String>();
 		} else {
 			this.unchangedObjects.clear();
-		}		
+		}
+		
+		if (set == null) {
+			this.setId = null;
+			return;
+		}
 
 		this.gsOptionBox.setSelected(false);
-		this.lfdOptionBox.setSelected(false);
-
+		this.lfdOptionBox.setSelected(false);	
+		
 		Parameter[] setParameters = set.getParameters();
 		for (int i = 0; i < setParameters.length; i++) {
 			StorableObjectType type = setParameters[i].getType();
@@ -1122,7 +1124,6 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		}
 		this.refreshUnchangedMap();
 		this.setId = set.getId();
-
 		this.skip = false;
 	}
 

@@ -697,7 +697,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.selectedTestIds.clear();
 		}
 		this.selectedFirstTestId = null;
+		this.measurementSetup = null;
+		this.set = null;
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TEST, null, null));
+		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP,
+			null, null));
 		// this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
 		// COMMAND_REFRESH_TEST, null, null));
 	}

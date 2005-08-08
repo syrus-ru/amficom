@@ -465,6 +465,12 @@ public class TestParametersPanel implements PropertyChangeListener {
 		if (measurementSetup != null) {
 			this.testSetups.setSelectedValue(measurementSetup, true);
 			this.setSet(measurementSetup.getParameterSet());
+		} else {
+			int selectedIndex = this.testSetups.getSelectedIndex();
+			System.out.println("TestParametersPanel.setMeasurementSetup() | " + selectedIndex);
+			this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);
+			this.setSet(null);
+			return;
 		}
 //		System.out.println("TestParametersPanel.setMeasurementSetup() | " + this.testSetups.getSelectedIndex());
 		
@@ -600,7 +606,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 //	}
 
 	public void setSet(ParameterSet set) {
-		if (set != null && this.parametersTestPanel != null) {
+		if (this.parametersTestPanel != null) {
 			 this.parametersTestPanel.setSet(set);
 		}
 	}
