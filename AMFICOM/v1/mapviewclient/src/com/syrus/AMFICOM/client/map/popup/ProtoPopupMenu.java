@@ -66,6 +66,7 @@ public final class ProtoPopupMenu extends MapPopupMenu {
 		SiteNodeTypeEditor prop = new SiteNodeTypeEditor();
 		if(prop == null)
 			return;
+		prop.setNetMapViewer(this.netMapViewer);
 		EditorDialog.showEditorDialog(
 				LangModelGeneral.getString("Properties"), 
 				this.proto,
