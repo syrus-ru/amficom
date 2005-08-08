@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.33 2005/08/02 07:40:47 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.34 2005/08/08 10:30:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.33 $, $Date: 2005/08/02 07:40:47 $
+ * @version $Revision: 1.34 $, $Date: 2005/08/08 10:30:00 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -92,6 +92,12 @@ public final class MapDropTargetListener implements DropTargetListener
 						for(Iterator iter = items.iterator(); iter.hasNext();) {
 							or = iter.next();
 							
+							if(or instanceof SiteNodeType) {
+								SiteNodeType snt = (SiteNodeType)or;
+								Identifier id = snt.getId();
+								SiteNodeType mpe = StorableObjectPool.getStorableObject(id, false);
+								mapElementDropped(mpe, point);
+							}
 							if(or instanceof SchemeElement) {
 								SchemeElement se = (SchemeElement )or;
 								Identifier id = se.getId();
