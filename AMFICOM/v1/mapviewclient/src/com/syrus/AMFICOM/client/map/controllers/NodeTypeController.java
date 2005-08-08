@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.35 2005/08/08 10:16:22 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.36 2005/08/08 13:06:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -44,7 +43,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.35 $, $Date: 2005/08/08 10:16:22 $
+ * @version $Revision: 1.36 $, $Date: 2005/08/08 13:06:24 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -225,7 +224,7 @@ public class NodeTypeController extends AbstractNodeController {
 						codename, 
 						NodeTypeController.getImageFileName(codename)),
 						isTopological,
-				mapLibrary);
+				mapLibrary.getId());
 				
 			StorableObjectPool.putStorableObject(type);
 			StorableObjectPool.flush(type, userId, true);

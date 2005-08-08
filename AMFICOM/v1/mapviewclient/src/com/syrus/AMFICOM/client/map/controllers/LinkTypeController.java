@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.41 2005/08/03 20:13:21 bass Exp $
+ * $Id: LinkTypeController.java,v 1.42 2005/08/08 13:06:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 
 /**
  * Контроллер типа линейного элемента карты.
- * @author $Author: bass $
- * @version $Revision: 1.41 $, $Date: 2005/08/03 20:13:21 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.42 $, $Date: 2005/08/08 13:06:24 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -602,7 +602,7 @@ public final class LinkTypeController extends AbstractLinkController {
 				"",
 				LinkTypeController.getBindDimension(codename),
 				topological,
-				mapLibrary);
+				mapLibrary.getId());
 
 			ltc.setLineSize(userId, type, LinkTypeController.getLineThickness(codename));
 			ltc.setColor(userId, type, LinkTypeController.getLineColor(codename));

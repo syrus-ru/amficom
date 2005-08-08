@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewSiteTypeCommand.java,v 1.3 2005/08/08 10:14:20 krupenn Exp $
+ * $Id: MapEditorNewSiteTypeCommand.java,v 1.4 2005/08/08 13:05:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 					"",
 					NodeTypeController.getDefaultImageId(),
 					true,
-					MapLibraryController.getDefaultMapLibrary());
+					MapLibraryController.getDefaultMapLibrary().getId());
 			siteNodeType.setCodename(siteNodeType.getId().toString());
 			SiteNodeTypeEditor siteNodeTypeEditor = new SiteNodeTypeEditor();
 			siteNodeTypeEditor.setNetMapViewer(mapFrame.getMapViewer());

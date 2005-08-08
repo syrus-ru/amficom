@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewLinkTypeCommand.java,v 1.3 2005/08/08 10:14:05 krupenn Exp $
+ * $Id: MapEditorNewLinkTypeCommand.java,v 1.4 2005/08/08 13:05:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 					"",
 					new IntDimension(1, 1),
 					true,
-					MapLibraryController.getDefaultMapLibrary());
+					MapLibraryController.getDefaultMapLibrary().getId());
 			physicalLinkType.setCodename(physicalLinkType.getId().toString());
 			PhysicalLinkTypeEditor physicalLinkTypeEditor = new PhysicalLinkTypeEditor();
 			physicalLinkTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
