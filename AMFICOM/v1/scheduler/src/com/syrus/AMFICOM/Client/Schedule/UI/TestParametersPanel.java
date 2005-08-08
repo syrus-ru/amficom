@@ -331,6 +331,9 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.testSetups.addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(ListSelectionEvent e) {
+				if (propertyChangeEvent != null)
+					return;
+				
 				final MeasurementSetup measurementSetup1 = 
 					(MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
 				
@@ -460,7 +463,15 @@ public class TestParametersPanel implements PropertyChangeListener {
 				+ (measurementSetup != null ? measurementSetup.getId() : null), Level.FINEST);		
 
 		this.testSetups.setSelectedValue(null, false);
+		
+//		try {
+//			throw new Exception();
+//		} catch (Exception e) {
+//			// TODO Auto-generated catch block
+//			e.printStackTrace();
+//		}
 			
+		this.measurementSetupId = measurementSetup != null ? measurementSetup.getId() : null;
 //		System.out.println("TestParametersPanel.setMeasurementSetup() | " + this.testSetups.getSelectedIndex());
 		if (measurementSetup != null) {
 			this.testSetups.setSelectedValue(measurementSetup, true);
@@ -479,13 +490,10 @@ public class TestParametersPanel implements PropertyChangeListener {
 		{
 //			 Log.debugMessage("TestParametersPanel.setMeasurementSetup | return ", Level.FINEST);
 			 if (this.msList == null) {
-				 this.measurementSetupId = measurementSetup.getId();
 				 return;
 			 }
 			
 		}
-
-		this.measurementSetupId = measurementSetup.getId();
 		
 //		Log.debugMessage("TestParametersPanel.setMeasurementSetup | measurementSetupId " + measurementSetupId, Log.FINEST);
 
@@ -526,7 +534,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 	public void setMeasurementSetups(Collection<MeasurementSetup> measurementSetups) {
 		
-//		Log.debugMessage("TestParametersPanel.setMeasurementSetups | ", Level.FINEST);
+		Log.debugMessage("TestParametersPanel.setMeasurementSetups | ", Level.FINEST);
 		
 		if (this.msList == null) {
 			this.msList = new LinkedList<MeasurementSetup>();
@@ -577,7 +585,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.useWOAnalysisSetups.setEnabled(true);
 
 		
-//		Log.debugMessage("TestParametersPanel.setMeasurementSetups | measurementSetupId " + measurementSetupId, Log.FINEST);
+		Log.debugMessage("TestParametersPanel.setMeasurementSetups | measurementSetupId " + measurementSetupId, Level.FINEST);
 		
 		if (this.measurementSetupId != null) {
 			try {
