@@ -1231,7 +1231,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 	public boolean isValid(final Date startDate, final Date endDate, final Identifier monitoredElementId) {
 		boolean result = true;
-		Log.debugMessage("SchedulerModel.isValid | ", Level.FINEST);
+//		Log.debugMessage("SchedulerModel.isValid | ", Level.FINEST);
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
 			for (final Test test : tests) {
@@ -1240,9 +1240,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				if (endTime == null) {
 					endTime = startTime;
 				}
-				Log.debugMessage("SchedulerModel.isValid | startDate " + startDate + ", endDate " + endDate, Level.FINEST);
+//				Log.debugMessage("SchedulerModel.isValid | startDate " + startDate + ", endDate " + endDate, Level.FINEST);
 
-				Log.debugMessage("SchedulerModel.isValid | startTime " + startTime + ", endTime " + endTime, Level.FINEST);
+//				Log.debugMessage("SchedulerModel.isValid | startTime " + startTime + ", endTime " + endTime, Level.FINEST);
 				if (test.getMonitoredElement().getId().equals(monitoredElementId)
 						&& ((endDate != null && endDate.after(startTime) && endDate.before(endTime)) || (startDate.after(startTime) && startDate.before(endTime)))) {
 					result = false;
@@ -1253,7 +1253,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		Log.debugMessage("SchedulerModel.isValid | result is " + result, Level.FINEST);
+//		Log.debugMessage("SchedulerModel.isValid | result is " + result, Level.FINEST);
 		return result;
 	}
 
