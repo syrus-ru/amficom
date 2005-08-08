@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.22 2005/08/08 14:24:41 arseniy Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.23 2005/08/08 15:34:55 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/08/08 14:24:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/08/08 15:34:55 $
+ * @author $Author: bob $
  * @module measurement
  */
 public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSetup> {
@@ -106,11 +107,15 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 		}
 		buffer.append(title);
 		buffer.append('\n');
+		
+		List<String> infoList = new ArrayList<String>(parameters.length);
+		
 		for (int i = 0; i < parameters.length; i++) {				
 			final String string = parameters[i].getStringValue();
 			if (string != null) {
 				final ParameterType parameterType = (ParameterType) parameters[i].getType();
-				buffer.append(parameterType.getDescription() + ": " + string);
+				String s = parameterType.getDescription() + ": " + string;
+//				buffer.append(parameterType.getDescription() + ": " + string);
 				Set<Characteristic> characteristics = null;
 				try {
 					characteristics = parameterType.getCharacteristics(false);
@@ -124,14 +129,20 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 						final StorableObjectType type = characteristic.getType();
 //						Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | characteristic type codename " + type.getCodename(), Level.FINEST);
 						if (type.getCodename().startsWith(CharacteristicTypeCodenames.UNITS_PREFIX)) {
-							buffer.append(' ' + characteristic.getValue());
+//							buffer.append(' ' + characteristic.getValue());
+							s = s + ' ' + characteristic.getValue();
 							/* TODO check for all codename ?*/
 							break;
 						}
 					}
 				}
-				buffer.append('\n');
+//				buffer.append('\n');
+				infoList.add(s);
 			}
+		}
+		Collections.sort(infoList);
+		for(String s : infoList) {
+			buffer.append(s + '\n');			
 		}
 		buffer.append('\n');
 	}
