@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceGenerator.java,v 1.4 2005/08/04 18:00:08 saa Exp $
+ * $Id: TraceGenerator.java,v 1.5 2005/08/08 13:35:05 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.io.BellcoreWriter;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/08/04 18:00:08 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 13:35:05 $
  * @module
  */
 public class TraceGenerator {
@@ -53,13 +53,15 @@ public class TraceGenerator {
 		public int wavelength; // длина волны [нм]
 		public int pulseWidth; // длина импульса [нс]
 		public double refactionIndex; // показатель преломления
+
+		/**
+		 * @return копию this-набора параметров
+		 */
 		public Parameters copy() {
 			return new Parameters(initialLevel, noiseLevel, darkLevel,
 					deltaX, distance, wavelength, pulseWidth, refactionIndex);
 		}
-		public Parameters() {
-			// no initialization; no check for correctness
-		}
+
 		/**
 		 * Создает набор параметров
 		 * @param initialLevel начальный уровень (по сути это примерно Po), дБ, отрицательное (Например, -5.0)
@@ -92,6 +94,11 @@ public class TraceGenerator {
 		}
 	}
 
+	/**
+	 * Создает генератор модельной рефлектограммы и выполняет собственно генерацию
+	 * @param pars Модельные параметры измерения
+	 * @param events Модельный список объектов
+	 */
 	public TraceGenerator(Parameters pars, ModelEvent[] events) {
 		this.pars = pars.copy(); // делаем копию, т.к. pars modifiable
 		this.events = events.clone(); // копируем только массив, т.к. events unmodifiable
@@ -114,6 +121,72 @@ public class TraceGenerator {
 		}
 	}
 
+	/**
+	 * Выполнить BoxCar-фильтрацию.
+	 * Вызывать перед {@link #getBellcore()} и {@link #getTraceData()}
+	 * @param width число точек усреднения, небольшое целое положительное
+	 */
+	public void performBoxCarFiltering(int width) {
+		if (width < 1) {
+			throw new IllegalArgumentException(
+					"performBoxCarFiltering: got non-positive width " + width);
+		}
+		// переводим в лин. масштаб
+		double[] tmp = new double[this.traceData.length];
+		for (int i = 0; i < tmp.length; i++) {
+			tmp[i] = log2lin(this.traceData[i]);
+		}
+		// усредняем и переводим в лог. масштаб
+		for (int i = 0; i < tmp.length; i++) {
+			double sum = 0;
+			int j0 = Math.max(i - width + 1, 0);
+			int j1 = i;
+			for (int j = j0; j <= j1; j++) {
+				sum += tmp[j];
+			}
+			this.traceData[i] = lin2log(sum / (j1 - j0 + 1));
+		}
+	}
+
+	/**
+	 * Выполнить RC-фильтрацию.
+	 * Вызывать перед {@link #getBellcore()} и {@link #getTraceData()}
+	 * @param tau ширина усреднения, положительное число
+	 */
+	public void performRCFiltering(double tau) {
+		if (tau <= 0 ) {
+			throw new IllegalArgumentException(
+					"performRCFiltering: got non-positive tau " + tau);
+		}
+		if (this.traceData.length == 0) {
+			return; // nothing to do
+		}
+		// переводим в лин. масштаб
+		double[] tmp = new double[this.traceData.length];
+		for (int i = 0; i < tmp.length; i++) {
+			tmp[i] = log2lin(this.traceData[i]);
+		}
+		// усредняем и переводим в лог. масштаб
+		double acc = tmp[0];
+		double wei = 1.0 - Math.exp(-1.0 / tau);
+		System.err.println("wei = " + wei);
+		for (int i = 0; i < tmp.length; i++) {
+			acc = acc * (1.0 - wei) + tmp[i] * wei;
+			this.traceData[i] = lin2log(acc);
+		}
+	}
+
+	/**
+	 * @return копия массива точек сгенерированной рефлектограммы
+	 */
+	public double[] getTraceData() {
+		return this.traceData.clone();
+	}
+
+	/**
+	 * Создает Bellcore для сгенерированной рефлектограммы
+	 * @return BellcoreStructure-объект сгенерированной рефлектограммы
+	 */
 	public BellcoreStructure getBellcore() {
 		BellcoreStructure bs = new BellcoreStructure();
 		BellcoreModelWriter bmw = new BellcoreModelWriter(bs);
@@ -134,6 +207,10 @@ public class TraceGenerator {
 		return bs;
 	}
 
+	/**
+	 * распечатывает кривую сгенерированной рефлектограммы в ASCII-формате
+	 * @param ps
+	 */
 	public void printTrace(PrintStream ps) {
 		for (int i = 0; i < traceData.length; i++) {
 			ps.println("" + i * pars.deltaX + " " + traceData[i]);
@@ -142,6 +219,7 @@ public class TraceGenerator {
 
 	/**
 	 * вычисляет нормально распределенное N(1,0) случайное число
+	 * XXX: performance: возможно ускорить в 1.5-2 раза за счет генерации парами
 	 */
 	private double normalRandom() {
 		double r1 = Math.random();
@@ -211,7 +289,7 @@ public class TraceGenerator {
 	 * @param rtau обратная постоянная "времени" (координаты) затухания в волокне
 	 * @return количество света в эаданном единичном временном интервале
 	 */
-	public static double calcExpPulseIntSlow(
+	protected static double calcExpPulseIntSlow(
 			double w,
 			double p0,
 			double p1,
@@ -250,7 +328,7 @@ public class TraceGenerator {
 	 * в {@link #calcExpPulseIntSlow}. Описание параметров и возвращаемого
 	 * значения см. там же.
 	 */
-	public static double calcExpPulseInt(
+	protected static double calcExpPulseInt(
 			double w,
 			double p0,
 			double p1,
@@ -355,8 +433,13 @@ public class TraceGenerator {
 		}
 		return data;
 	}
-	private static TraceGenerator myTestGenerator1() {
-		// create input data for modelling
+
+	/**
+	 * Пример создания модельной рефлектограммы
+	 * @return генератор модельной рефлектограммы
+	 */
+	protected static TraceGenerator myTestGenerator1() {
+		// Создаем набор моделируемых событий
 		ModelEvent me[] = new ModelEvent[] {
 				// начало
 				ModelEvent.createReflective(1.0, -20),
@@ -365,33 +448,43 @@ public class TraceGenerator {
 				//ModelEvent.createLinear(100.3, 1e-18),
 				ModelEvent.createLinear(200.4, 2e-4),
 				ModelEvent.createLinear(100.3, 1e-5),
-//				// сварка
-//				ModelEvent.createSlice(0.2),
-//				ModelEvent.createLinear(3000.0, 2e-4),
-//				// два близких отражения
-//				ModelEvent.createReflective(0.0, -80),
-//				ModelEvent.createLinear(80, 2e-4),
-//				ModelEvent.createReflective(1.0, -60),
-//				ModelEvent.createLinear(2000.0, 2e-4),
-//				// конец волокна
-//				ModelEvent.createReflective(1.0, -20)
+				// сварка
+				ModelEvent.createSlice(0.2),
+				ModelEvent.createLinear(3000.0, 2e-4),
+				// два близких отражения
+				ModelEvent.createReflective(0.0, -80),
+				ModelEvent.createLinear(80, 2e-4),
+				ModelEvent.createReflective(1.0, -60),
+				ModelEvent.createLinear(2000.0, 2e-4),
+				// конец волокна
+				ModelEvent.createReflective(1.0, -20)
 		};
-		Parameters pars = new Parameters(-5.0, -20.0, -30.0,
-				4.0, 500.0, 1625, 500, 1.468);
 
-		// perform modelling
+		// Создаем набор параметров тестирования
+		Parameters pars = new Parameters(-5.0, -20.0, -30.0,
+				4.0, 8000.0, 1625, 500, 1.468);
+
+		// Выполняем моделирование
 		return new TraceGenerator(pars, me);
 	}
 
-	private static TraceGenerator myTestGenerator2() {
+	/**
+	 * Пример создания модельной рефлектограммы по входному файлу с описаниями.
+	 * Формат входного файла недокументирован. В качестве примера использования
+	 * рекомендуется {@link #myTestGenerator1()}
+	 * @return генератор модельной рефлектограммы
+	 */
+	@Deprecated
+	protected static TraceGenerator myTestGenerator2() {
 		List<ModelEvent> events = new ArrayList<ModelEvent>();
 		try {
 			File f = new File("input.dat");
 			FileReader fr = new FileReader(f);
 			BufferedReader br = new BufferedReader(fr);
 			String s;
+			double prevLinLen = 0.0;
 			while ((s = br.readLine()) != null) {
-				ModelEvent.addEventsByString(events, s);
+				prevLinLen = ModelEvent.addEventsByString(events, s, prevLinLen);
 			}
 			br.close();
 		} catch (IOException e) {
@@ -404,17 +497,26 @@ public class TraceGenerator {
 		return new TraceGenerator(pars, me);
 	}
 
+	/**
+	 * пример использования генератора рефлектограммы
+	 */
 	public static void main(String[] args)
 	throws InternalError, IOException {
-		//TraceGenerator tg = myTestGenerator1();
-		TraceGenerator tg = myTestGenerator2();
+		// Пример создания генератора рефлектограммы (вместе с рефлектограммой).
+		// Именно в этом примере инициализируются все необходимые параметры.
+		TraceGenerator tg = myTestGenerator1();
+		//TraceGenerator tg = myTestGenerator2();
+
+		// При желании, проводим фильтрацию
+		tg.performRCFiltering(14);
+		tg.performBoxCarFiltering(9);
 
 		//tg.printTrace(new PrintStream(new File("dump.txt")));
 
-		// export to bellcore
+		// Сохраняем в Bellcore
 		BellcoreStructure bs = tg.getBellcore();
 
-		// save to file
+		// Записываем Bellcore в файл
 		BellcoreWriter bw = new BellcoreWriter();
 		byte[] bar = bw.write(bs);
 		File outFile = new File("./model.sor");
@@ -426,6 +528,8 @@ public class TraceGenerator {
 		BufferedOutputStream bos = new BufferedOutputStream(os);
 		bos.write(bar);
 		bos.close();
+
+		// Конец примера
 		System.out.println("Done!");
 	}
 }
