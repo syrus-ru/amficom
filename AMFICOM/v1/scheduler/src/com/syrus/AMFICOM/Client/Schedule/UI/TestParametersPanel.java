@@ -728,15 +728,15 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.dispatcher = dispatcher1;
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_CHANGE_ME_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_ANALYSIS_TYPE, this);
-		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_EVALUATION_TYPE, this);
+//		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_EVALUATION_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_ANALYSIS_TYPES, this);
-		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_EVALUATION_TYPES, this);
+//		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_EVALUATION_TYPES, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_SET, this);
 
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE, this);
-		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_EVALUATION_TYPE, this);
+//		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_EVALUATION_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_SET, this);
 

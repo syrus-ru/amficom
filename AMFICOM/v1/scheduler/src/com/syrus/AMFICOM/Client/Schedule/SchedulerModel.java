@@ -107,9 +107,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	public static final String	COMMAND_SET_ANALYSIS_TYPE			= "SetAnalysisType";
 	public static final String	COMMAND_SET_ANALYSIS_TYPES			= "SetAnalysisTypes";
 
-	public static final String	COMMAND_GET_EVALUATION_TYPE			= "GetEvaluationType";
-	public static final String	COMMAND_SET_EVALUATION_TYPE			= "SetEvaluationType";
-	public static final String	COMMAND_SET_EVALUATION_TYPES		= "SetEvaluationTypes";
+//	public static final String	COMMAND_GET_EVALUATION_TYPE			= "GetEvaluationType";
+//	public static final String	COMMAND_SET_EVALUATION_TYPE			= "SetEvaluationType";
+//	public static final String	COMMAND_SET_EVALUATION_TYPES		= "SetEvaluationTypes";
 
 	public static final String	COMMAND_GET_SET						= "GetSet";
 	public static final String	COMMAND_SET_SET						= "SetSet";
@@ -142,7 +142,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	private String				name								= null;
 	MonitoredElement			monitoredElement					= null;
 	private Identifier			analysisTypeId						= null;
-	private Identifier			evaluationTypeId					= null;
+//	private Identifier			evaluationTypeId					= null;
 	private ParameterSet		set									= null;
 	private MeasurementSetup	measurementSetup					= null;
 	private TestTemporalStamps	testTimeStamps						= null;
@@ -194,7 +194,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_MONITORED_ELEMENT, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_MEASUREMENT_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_MEASUREMENT_SETUP, this);
-		this.dispatcher.addPropertyChangeListener(COMMAND_SET_EVALUATION_TYPE, this);
+//		this.dispatcher.addPropertyChangeListener(COMMAND_SET_EVALUATION_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_ANALYSIS_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_REFRESH_TIME_STAMPS, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_GROUP_TEST, this);
@@ -296,10 +296,12 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		} else if (propertyName.equals(COMMAND_SET_ANALYSIS_TYPE)) {
 			this.analysisTypeId = (Identifier) evt.getNewValue();
 			// this.generateTest();
-		} else if (propertyName.equals(COMMAND_SET_EVALUATION_TYPE)) {
-			this.evaluationTypeId = (Identifier) evt.getNewValue();
-			// this.generateTest();
-		} else if (propertyName.equals(COMMAND_SET_MEASUREMENT_TYPE)) {
+		}
+//		else if (propertyName.equals(COMMAND_SET_EVALUATION_TYPE)) {
+//			this.evaluationTypeId = (Identifier) evt.getNewValue();
+//			// this.generateTest();
+//		} 
+		else if (propertyName.equals(COMMAND_SET_MEASUREMENT_TYPE)) {
 			this.measurementType = (MeasurementType) evt.getNewValue();
 			// this.generateTest();
 		} else if (propertyName.equals(COMMAND_SET_MONITORED_ELEMENT)) {
@@ -400,12 +402,12 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 					null,
 					StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.ANALYSIS_TYPE_CODE), true, true)));
 
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-					COMMAND_SET_EVALUATION_TYPES,
-					null,
-					StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.EVALUATION_TYPE_CODE),
-							true,
-							true)));
+//			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+//					COMMAND_SET_EVALUATION_TYPES,
+//					null,
+//					StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.EVALUATION_TYPE_CODE),
+//							true,
+//							true)));
 
 			// if (!monitoredElements.isEmpty()) {
 			// LinkedIdsCondition linkedIdsCondition;
@@ -447,10 +449,10 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MONITORED_ELEMENT, null, monitoredElement1));
 
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_ANALYSIS_TYPE, this, test.getAnalysisTypeId()));
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-					COMMAND_SET_EVALUATION_TYPE,
-					null,
-					test.getEvaluationTypeId()));
+//			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+//					COMMAND_SET_EVALUATION_TYPE,
+//					null,
+//					test.getEvaluationTypeId()));
 
 			final Set<Identifier> measurementSetupIds = test.getMeasurementSetupIds();
 			if (!measurementSetupIds.isEmpty()) {
@@ -545,9 +547,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_ANALYSIS_TYPE, null, null));
 		}
-		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_EVALUATION_TYPE, null, null));
-		}
+//		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
+//			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_EVALUATION_TYPE, null, null));
+//		}
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_SET, null, null));
 		}
@@ -903,7 +905,10 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 								temporalType,
 								this.measurementType.getId(),
 								this.analysisTypeId == null ? Identifier.VOID_IDENTIFIER : this.analysisTypeId,
-								this.evaluationTypeId == null ? Identifier.VOID_IDENTIFIER : this.evaluationTypeId,
+//								this.evaluationTypeId == null ? 
+										Identifier.VOID_IDENTIFIER 
+//										: this.evaluationTypeId
+										,
 								Identifier.VOID_IDENTIFIER,
 								this.monitoredElement,
 								this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
@@ -947,7 +952,10 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							this.measurementType.getId(),
 							this.analysisTypeId == null ? Identifier.VOID_IDENTIFIER : this.analysisTypeId,
 							test.getGroupTestId(),
-							this.evaluationTypeId == null ? Identifier.VOID_IDENTIFIER : this.evaluationTypeId,
+//							this.evaluationTypeId == null ? 
+									Identifier.VOID_IDENTIFIER 
+//									: this.evaluationTypeId
+									,
 							test.getStatus().value(),
 							this.monitoredElement,
 							this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
