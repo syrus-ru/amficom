@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementWrapper.java,v 1.16 2005/08/05 09:46:38 bob Exp $
+ * $Id: MonitoredElementWrapper.java,v 1.17 2005/08/08 13:24:41 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/05 09:46:38 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/08/08 13:24:41 $
+ * @author $Author: arseniy $
  * @module config
  */
 public final class MonitoredElementWrapper extends StorableObjectWrapper<MonitoredElement> {
@@ -91,9 +91,8 @@ public final class MonitoredElementWrapper extends StorableObjectWrapper<Monitor
 		return false;
 	}
 
-	public void setValue(final MonitoredElement monitoredElement,
-	                     final String key,
-	                     final Object value) {
+	@Override
+	public void setValue(final MonitoredElement monitoredElement, final String key, final Object value) {
 		if (monitoredElement != null) {
 			if (key.equals(COLUMN_NAME))
 				monitoredElement.setName((String) value);

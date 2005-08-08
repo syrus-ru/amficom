@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadWrapper.java,v 1.13 2005/08/05 09:46:38 bob Exp $
+ * $Id: CableThreadWrapper.java,v 1.14 2005/08/08 13:24:41 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/05 09:46:38 $
- * @author $Author: bob $
+ * @version $Revision: 1.14 $, $Date: 2005/08/08 13:24:41 $
+ * @author $Author: arseniy $
  * @module config
  */
 
@@ -66,6 +66,7 @@ public final class CableThreadWrapper extends StorableObjectWrapper<CableThread>
 		return false;
 	}
 
+	@Override
 	public void setValue(final CableThread cableThread, final String key, final Object value) {
 		if (cableThread != null) {
 			if (key.equals(COLUMN_NAME))

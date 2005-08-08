@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeWrapper.java,v 1.19 2005/08/05 09:46:38 bob Exp $
+ * $Id: PortTypeWrapper.java,v 1.20 2005/08/08 13:24:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/05 09:46:38 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/08/08 13:24:42 $
+ * @author $Author: arseniy $
  * @module config
  */
 public final class PortTypeWrapper extends StorableObjectWrapper<PortType> {
@@ -73,6 +73,7 @@ public final class PortTypeWrapper extends StorableObjectWrapper<PortType> {
 		return false;
 	}
 
+	@Override
 	public void setValue(final PortType object, final String key, final Object value) {
 		if (object != null) {
 			if (key.equals(COLUMN_NAME))

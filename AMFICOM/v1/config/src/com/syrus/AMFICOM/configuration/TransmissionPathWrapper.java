@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathWrapper.java,v 1.16 2005/08/05 09:46:38 bob Exp $
+ * $Id: TransmissionPathWrapper.java,v 1.17 2005/08/08 13:24:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/05 09:46:38 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/08/08 13:24:42 $
+ * @author $Author: arseniy $
  * @module config
  */
 public final class TransmissionPathWrapper extends StorableObjectWrapper<TransmissionPath> {
@@ -83,9 +83,8 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper<Transmi
 		return false;
 	}
 
-	public void setValue(final TransmissionPath transmissionPath, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(final TransmissionPath transmissionPath, final String key, final Object value) {
 		if (transmissionPath != null) {
 			if (key.equals(COLUMN_NAME))
 				transmissionPath.setName((String) value);
