@@ -120,7 +120,7 @@ ActionListener, PropertyChangeListener {
 
 	private Dispatcher	dispatcher;
 
-	private SchedulerModel	schedulerModel;
+	SchedulerModel	schedulerModel;
 
 	private SimpleDateFormat	sdf2;
 	
@@ -163,8 +163,13 @@ ActionListener, PropertyChangeListener {
 		this.addMouseListener(new MouseAdapter() {
 
 			@Override
+			public void mousePressed(MouseEvent e) {
+				this.mouseClicked(e);
+			}
+			
+			@Override
 			public void mouseClicked(MouseEvent e) {
-				schedulerModel.unselectTests();
+				PlanPanel.this.schedulerModel.unselectTests();
 			}
 			
 			@Override
@@ -187,6 +192,9 @@ ActionListener, PropertyChangeListener {
 
 			@Override
 			public void mouseDragged(MouseEvent e) {
+				
+//				System.out.println(".mouseDragged()");
+				
 				PlanPanel.this.currentPosition = e.getPoint();
 
 				if (PlanPanel.this.startPosition == null) {

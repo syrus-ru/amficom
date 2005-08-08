@@ -354,6 +354,11 @@ public class TestLine extends TimeLine {
 		this.addMouseListener(new MouseAdapter() {
 
 			@Override
+			public void mousePressed(MouseEvent e) {
+				this.mouseClicked(e);
+			}
+			
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				// Log.debugMessage("TimeStampsEditor.mouseClicked | ",
 				// Log.FINEST);
