@@ -63,7 +63,6 @@ public final class SiteNodeTypeEditor
 		} catch(Exception e) {
 			e.printStackTrace();
 		}
-
 	}
 
 	public void setNetMapViewer(NetMapViewer netMapViewer) {
@@ -292,7 +291,7 @@ public final class SiteNodeTypeEditor
 
 	void changeImage() throws ApplicationException {
 		
-		BitmapImageResource imageResource = StorableObjectPool.getStorableObject(this.imageId, true);
+		AbstractImageResource imageResource = StorableObjectPool.getStorableObject(this.imageId, true);
 		AbstractImageResource ir = ImagesDialog.showImageDialog(imageResource);
 
 		if(ir != null) {
