@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.64 2005/08/05 16:50:26 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.65 2005/08/08 10:10:27 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: arseniy $
- * @version $Revision: 1.64 $, $Date: 2005/08/05 16:50:26 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.65 $, $Date: 2005/08/08 10:10:27 $
  * @module map_v1
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -403,14 +403,12 @@ public final class PhysicalLinkType extends StorableObjectType
 		}
 	}
 
-	MapLibrary library;
-	
 	public void setParent(Library library) {
-		this.library = (MapLibrary)library;
+		this.mapLibrary = (MapLibrary)library;
 	}
 
 	public Library getParent() {
-		return this.library;
+		return this.mapLibrary;
 	}
 
 	public MapLibrary getMapLibrary() {
