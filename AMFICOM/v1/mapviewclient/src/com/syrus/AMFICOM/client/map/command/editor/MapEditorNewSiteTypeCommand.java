@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewSiteTypeCommand.java,v 1.2 2005/08/03 15:33:01 krupenn Exp $
+ * $Id: MapEditorNewSiteTypeCommand.java,v 1.3 2005/08/08 10:14:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ import javax.swing.JDesktopPane;
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
+import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.map.props.SiteNodeTypeEditor;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -44,13 +45,14 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 					"codename",
 					"Новый",
 					"",
-					null,//todo default ImageResource
+					NodeTypeController.getDefaultImageId(),
 					true,
 					MapLibraryController.getDefaultMapLibrary());
+			siteNodeType.setCodename(siteNodeType.getId().toString());
 			SiteNodeTypeEditor siteNodeTypeEditor = new SiteNodeTypeEditor();
 			siteNodeTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
 			if(EditorDialog.showEditorDialog(
-					LangModelMap.getString("type"),
+					LangModelMap.getString("sitenodetype"),
 					siteNodeType,
 					siteNodeTypeEditor) ) {
 				StorableObjectPool.flush(siteNodeType, LoginManager.getUserId(), true);
