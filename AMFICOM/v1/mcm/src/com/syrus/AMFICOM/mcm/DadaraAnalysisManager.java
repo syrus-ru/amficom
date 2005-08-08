@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.61 2005/08/08 11:46:55 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.62 2005/08/08 19:36:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/08/08 11:46:55 $
+ * @version $Revision: 1.62 $, $Date: 2005/08/08 19:36:40 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -227,7 +227,7 @@ public class DadaraAnalysisManager implements AnalysisManager {
 		}
 
 		// формируем результаты анализа
-		Parameter[] ret = new Parameter[outParameters.size()];
+		final Parameter[] ret = new Parameter[outParameters.size()];
 		int i = 0;
 		try {
 			for (final String codename : outParameters.keySet()) {
@@ -236,14 +236,15 @@ public class DadaraAnalysisManager implements AnalysisManager {
 				final ParameterType parameterType = (ParameterType) StorableObjectPool.getStorableObject(parameterTypeId, true);
 				if (parameterType != null) {
 					try {
-						ret[i] = Parameter.createInstance(parameterType, outParameters.get(codename));
+						ret[i++] = Parameter.createInstance(parameterType, outParameters.get(codename));
 					}
 					catch (CreateObjectException coe) {
 						throw new AnalysisException("Cannot create parameter -- " + coe.getMessage(), coe);
 					}
 				}
-				else
+				else {
 					throw new AnalysisException("Cannot find parameter type of codename: '" + codename + "'");
+				}
 			}
 		}
 		catch (ApplicationException ae) {
