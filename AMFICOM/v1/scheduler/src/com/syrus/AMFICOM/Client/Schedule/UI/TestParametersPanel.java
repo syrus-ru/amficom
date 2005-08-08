@@ -796,9 +796,10 @@ public class TestParametersPanel implements PropertyChangeListener {
 //			System.out.println("TestParametersPanel.selectComboBox() | this.useAnalysisBox.isSelected(): " + this.useAnalysisBox.isSelected());
 			if (!this.useAnalysisSetups.isSelected() && !this.useAnalysisBox.isSelected()) {
 //				System.out.println("TestParametersPanel.selectComboBox()");
-				this.useAnalysisSetups.doClick();
-			} 
-			this.useAnalysisBox.doClick();			
+//				this.useAnalysisSetups.doClick();
+			} else {
+				this.useAnalysisBox.doClick();
+			}
 		}
 	}
 
