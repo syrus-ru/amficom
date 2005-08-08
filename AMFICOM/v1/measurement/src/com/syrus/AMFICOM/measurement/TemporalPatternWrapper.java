@@ -1,5 +1,5 @@
 /*
- * $Id: TemporalPatternWrapper.java,v 1.11 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: TemporalPatternWrapper.java,v 1.12 2005/08/08 13:33:51 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/08 13:33:51 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -54,11 +54,12 @@ public class TemporalPatternWrapper extends StorableObjectWrapper<CronTemporalPa
 	public Object getValue(final CronTemporalPattern cronTemporalPattern, final String key) {
 		final Object value = super.getValue(cronTemporalPattern, key);
 		if (value == null && cronTemporalPattern != null) {
-			if (key.equals(COLUMN_DESCRIPTION))
+			if (key.equals(COLUMN_DESCRIPTION)) {
 				return cronTemporalPattern.getDescription();
-			if (key.equals(COLUMN_VALUE))
+			}
+			if (key.equals(COLUMN_VALUE)) {
 				return Arrays.asList(cronTemporalPattern.getCronStrings());
-
+			}
 		}
 		return value;
 	}
@@ -67,13 +68,12 @@ public class TemporalPatternWrapper extends StorableObjectWrapper<CronTemporalPa
 		return false;
 	}
 
-	public void setValue(final CronTemporalPattern cronTemporalPattern, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(final CronTemporalPattern cronTemporalPattern, final String key, final Object value) {
 		if (cronTemporalPattern != null) {
-			if (key.equals(COLUMN_DESCRIPTION))
+			if (key.equals(COLUMN_DESCRIPTION)) {
 				cronTemporalPattern.setDescription((String) value);
-			else if (key.equals(COLUMN_VALUE)) {
+			} else if (key.equals(COLUMN_VALUE)) {
 				List cronStrings = (List) value;
 				for (Iterator it = cronStrings.iterator(); it.hasNext();) {
 					cronTemporalPattern.addTemplate((String) it.next());
@@ -98,10 +98,12 @@ public class TemporalPatternWrapper extends StorableObjectWrapper<CronTemporalPa
 		if (clazz != null) {
 			return clazz;
 		}
-		if (key.equals(COLUMN_DESCRIPTION))
+		if (key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;
-		if (key.equals(COLUMN_VALUE))
+		}
+		if (key.equals(COLUMN_VALUE)) {
 			return List.class;
+		}
 		return null;
 	}
 

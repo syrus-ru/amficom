@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeWrapper.java,v 1.15 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: EvaluationTypeWrapper.java,v 1.16 2005/08/08 13:33:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/08 13:33:50 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -65,6 +65,7 @@ public class EvaluationTypeWrapper extends StorableObjectWrapper<EvaluationType>
 		return false;
 	}
 
+	@Override
 	public void setValue(final EvaluationType evaluationType, final String key, final Object value) {
 		if (evaluationType != null) {
 			if (key.equals(COLUMN_CODENAME))

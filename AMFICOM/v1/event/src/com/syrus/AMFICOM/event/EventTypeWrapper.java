@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeWrapper.java,v 1.16 2005/08/08 11:32:37 arseniy Exp $
+ * $Id: EventTypeWrapper.java,v 1.17 2005/08/08 13:36:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/08 11:32:37 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/08 13:36:20 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -70,6 +70,7 @@ public class EventTypeWrapper extends StorableObjectWrapper<EventType> {
 		return false;
 	}
 
+	@Override
 	public void setValue(final EventType eventType, final String key, final Object value) {
 		if (eventType != null) {
 			if (key.equals(COLUMN_CODENAME)) {
@@ -95,16 +96,16 @@ public class EventTypeWrapper extends StorableObjectWrapper<EventType> {
 
 	@Override
 	public Class getPropertyClass(final String key) {
-		final Class clazz = super.getPropertyClass(key); 
+		final Class clazz = super.getPropertyClass(key);
 		if (clazz != null) {
 			return clazz;
 		}
-		if (key.equals(COLUMN_CODENAME)
-				|| key.equals(COLUMN_DESCRIPTION))
+		if (key.equals(COLUMN_CODENAME) || key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;
-		if (key.equals(LINK_FIELD_PARAMETER_TYPES))
+		}
+		if (key.equals(LINK_FIELD_PARAMETER_TYPES)) {
 			return Set.class;
-		
+		}
 		return null;
 	}
 

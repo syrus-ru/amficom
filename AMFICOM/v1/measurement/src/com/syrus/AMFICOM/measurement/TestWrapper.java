@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.19 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: TestWrapper.java,v 1.20 2005/08/08 13:33:51 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/08 13:33:51 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -120,32 +120,45 @@ public class TestWrapper extends StorableObjectWrapper<Test> {
 		return false;
 	}
 
+	@Override
 	public void setValue(final Test test, final String key, final Object value) {
 		if (test != null) {
-			if (key.equals(COLUMN_TEMPORAL_TYPE))
+			if (key.equals(COLUMN_TEMPORAL_TYPE)) {
 				test.setTemporalType(TestTemporalType.from_int(((Integer) value).intValue()));
-			else if (key.equals(COLUMN_START_TIME))
+			}
+			else if (key.equals(COLUMN_START_TIME)) {
 				test.setStartTime(new Date(Long.parseLong((String) value)));
-			else if (key.equals(COLUMN_END_TIME))
+			}
+			else if (key.equals(COLUMN_END_TIME)) {
 				test.setEndTime(new Date(Long.parseLong((String) value)));
-			else if (key.equals(COLUMN_TEMPORAL_PATTERN_ID))
+			}
+			else if (key.equals(COLUMN_TEMPORAL_PATTERN_ID)) {
 				test.setTemporalPatternId((Identifier) value);
-			else if (key.equals(COLUMN_MEASUREMENT_TYPE_ID))
+			}
+			else if (key.equals(COLUMN_MEASUREMENT_TYPE_ID)) {
 				test.setMeasurementTypeId((Identifier) value);
-			else if (key.equals(COLUMN_ANALYSIS_TYPE_ID))
+			}
+			else if (key.equals(COLUMN_ANALYSIS_TYPE_ID)) {
 				test.setAnalysisTypeId((Identifier) value);
-			else if (key.equals(COLUMN_EVALUATION_TYPE_ID))
+			}
+			else if (key.equals(COLUMN_EVALUATION_TYPE_ID)) {
 				test.setEvaluationTypeId((Identifier) value);
-			else if (key.equals(COLUMN_GROUP_TEST_ID))
+			}
+			else if (key.equals(COLUMN_GROUP_TEST_ID)) {
 				test.setGroupTestId((Identifier) value);
-			else if (key.equals(COLUMN_STATUS))
+			}
+			else if (key.equals(COLUMN_STATUS)) {
 				test.setStatus(TestStatus.from_int(((Integer) value).intValue()));
-			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
+			}
+			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID)) {
 				test.setMonitoredElement((MonitoredElement) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				test.setDescription((String) value);
-			else if (key.equals(LINK_COLUMN_MEASUREMENT_SETUP_ID))
+			}
+			else if (key.equals(LINK_COLUMN_MEASUREMENT_SETUP_ID)) {
 				test.setMeasurementSetupIds((Set) value);
+			}
 		}
 	}
 

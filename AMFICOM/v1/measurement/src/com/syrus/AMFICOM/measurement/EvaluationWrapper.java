@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationWrapper.java,v 1.12 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: EvaluationWrapper.java,v 1.13 2005/08/08 13:33:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/08 13:33:50 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -75,9 +75,8 @@ public class EvaluationWrapper extends StorableObjectWrapper<Evaluation> {
 		return false;
 	}
 
-	public void setValue(final Evaluation evaluation, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(final Evaluation evaluation, final String key, final Object value) {
 		if (evaluation != null) {
 			if (key.equals(COLUMN_TYPE_ID))
 				evaluation.setType((ActionType) value);

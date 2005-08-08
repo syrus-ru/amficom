@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementWrapper.java,v 1.11 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: MeasurementWrapper.java,v 1.12 2005/08/08 13:33:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/08 13:33:50 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -94,9 +94,8 @@ public class MeasurementWrapper extends StorableObjectWrapper<Measurement> {
 		return false;
 	}
 
-	public void setValue(final Measurement measurement, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(final Measurement measurement, final String key, final Object value) {
 		if (measurement != null) {
 			if (key.equals(COLUMN_TYPE_ID))
 				measurement.setType((ActionType) value);
@@ -114,7 +113,6 @@ public class MeasurementWrapper extends StorableObjectWrapper<Measurement> {
 				measurement.setLocalAddress((String) value);
 			else if (key.equals(COLUMN_TEST_ID))
 				measurement.setTestId((Identifier) value);
-
 		}
 	}
 

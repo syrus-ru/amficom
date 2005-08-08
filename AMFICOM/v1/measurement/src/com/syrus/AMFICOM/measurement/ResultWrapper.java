@@ -1,5 +1,5 @@
 /*
- * $Id: ResultWrapper.java,v 1.15 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: ResultWrapper.java,v 1.16 2005/08/08 13:33:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/08 13:33:50 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -96,28 +96,27 @@ public class ResultWrapper extends StorableObjectWrapper<Result> {
 		return false;
 	}
 
+	@Override
 	public void setValue(final Result result, final String key, final Object value) {
 		if (result != null) {
-			if (key.equals(COLUMN_ACTION_ID))
+			if (key.equals(COLUMN_ACTION_ID)) {
 				result.setAction((Action) value);
-			else
-				if (key.equals(COLUMN_SORT))
-					result.setSort(ResultSort.from_int(((Integer) value).intValue()));
-				else
-					if (key.equals(LINK_FIELD_RESULT_PARAMETERS)) {
-						final Map resultParametersMap = (Map) value;
-						/* there are 3*N keys for N Parameter */
-						final Parameter[] resultParameters = new Parameter[resultParametersMap.size() / 3];
-						for (int i = 0; i < resultParameters.length; i++) {
-							final Identifier parameterId = (Identifier) resultParametersMap.get(COLUMN_ID + i);
-							final ParameterType parameterType = (ParameterType) resultParametersMap.get(COLUMN_TYPE_ID + i);
-							final byte[] resultParameterValue = (byte[]) resultParametersMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
+			} else if (key.equals(COLUMN_SORT)) {
+				result.setSort(ResultSort.from_int(((Integer) value).intValue()));
+			} else if (key.equals(LINK_FIELD_RESULT_PARAMETERS)) {
+				final Map resultParametersMap = (Map) value;
+				/* there are 3*N keys for N Parameter */
+				final Parameter[] resultParameters = new Parameter[resultParametersMap.size() / 3];
+				for (int i = 0; i < resultParameters.length; i++) {
+					final Identifier parameterId = (Identifier) resultParametersMap.get(COLUMN_ID + i);
+					final ParameterType parameterType = (ParameterType) resultParametersMap.get(COLUMN_TYPE_ID + i);
+					final byte[] resultParameterValue = (byte[]) resultParametersMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
 
-							resultParameters[i] = new Parameter(parameterId, parameterType, resultParameterValue);
+					resultParameters[i] = new Parameter(parameterId, parameterType, resultParameterValue);
 
-						}
-						result.setParameters(resultParameters);
-					}
+				}
+				result.setParameters(resultParameters);
+			}
 		}
 	}
 

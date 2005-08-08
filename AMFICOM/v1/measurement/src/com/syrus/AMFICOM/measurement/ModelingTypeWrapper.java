@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeWrapper.java,v 1.14 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: ModelingTypeWrapper.java,v 1.15 2005/08/08 13:33:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/08 13:33:50 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -65,9 +65,8 @@ public class ModelingTypeWrapper extends StorableObjectWrapper<ModelingType> {
 		return false;
 	}
 
-	public void setValue(final ModelingType modelingType, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(final ModelingType modelingType, final String key, final Object value) {
 		if (modelingType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				modelingType.setCodename((String) value);

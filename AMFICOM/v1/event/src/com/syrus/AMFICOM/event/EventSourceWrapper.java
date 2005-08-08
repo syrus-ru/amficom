@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceWrapper.java,v 1.9 2005/08/08 11:32:37 arseniy Exp $
+ * $Id: EventSourceWrapper.java,v 1.10 2005/08/08 13:36:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:32:37 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/08 13:36:20 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -68,12 +68,12 @@ public class EventSourceWrapper extends StorableObjectWrapper<EventSource> {
 		return value;
 	}
 
-	public void setValue(final EventSource eventSource, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(final EventSource eventSource, final String key, final Object value) {
 		if (eventSource != null) {
-			if (key.equals(LINK_FIELD_SOURCE_ENTITY_ID))
+			if (key.equals(LINK_FIELD_SOURCE_ENTITY_ID)) {
 				eventSource.setSourceEntityId((Identifier) value);
+			}
 		}
 	}
 
@@ -86,9 +86,7 @@ public class EventSourceWrapper extends StorableObjectWrapper<EventSource> {
 		return null;
 	}
 
-	public void setPropertyValue(final String key, 
-	                             final Object objectKey, 
-	                             final Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 

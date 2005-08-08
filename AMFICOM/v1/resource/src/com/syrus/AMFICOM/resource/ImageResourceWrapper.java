@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceWrapper.java,v 1.14 2005/08/08 11:33:54 arseniy Exp $
+ * $Id: ImageResourceWrapper.java,v 1.15 2005/08/08 13:37:49 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:33:54 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/08 13:37:49 $
  * @author $Author: arseniy $
  * @module resource
  */
@@ -81,8 +81,7 @@ public class ImageResourceWrapper extends StorableObjectWrapper<AbstractImageRes
 	}
 
 	@Override
-	public Object getValue(final AbstractImageResource abstractImageResource, 
-	                       final String key) {
+	public Object getValue(final AbstractImageResource abstractImageResource, final String key) {
 		final Object value = super.getValue(abstractImageResource, key);
 		if (value == null && abstractImageResource != null) {
 			if (key.equals(COLUMN_SORT))
@@ -113,16 +112,15 @@ public class ImageResourceWrapper extends StorableObjectWrapper<AbstractImageRes
 		return false;
 	}
 
-	public void setValue(final AbstractImageResource abstractImageResource, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(final AbstractImageResource abstractImageResource, final String key, final Object value) {
 		if (abstractImageResource != null) {
 			if (key.equals(COLUMN_CODENAME)) {
 				switch (abstractImageResource.getSort().value()) {
 					case ImageResourceSort._BITMAP:
-						/*
-						 * Fall-through.
-						 */
+					/*
+					 * Fall-through.
+					 */
 					case ImageResourceSort._FILE:
 						((AbstractBitmapImageResource) abstractImageResource).setCodename((String) value);
 						break;

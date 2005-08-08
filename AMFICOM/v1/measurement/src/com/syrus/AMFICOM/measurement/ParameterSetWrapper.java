@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetWrapper.java,v 1.8 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: ParameterSetWrapper.java,v 1.9 2005/08/08 13:33:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 13:33:50 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -68,12 +68,15 @@ public class ParameterSetWrapper extends StorableObjectWrapper<ParameterSet> {
 	public Object getValue(final ParameterSet parameterSet, final String key) {
 		final Object value = super.getValue(parameterSet, key);
 		if (value == null && parameterSet != null) {
-			if (key.equals(COLUMN_SORT))
+			if (key.equals(COLUMN_SORT)) {
 				return new Integer(parameterSet.getSort().value());
-			if (key.equals(COLUMN_DESCRIPTION))
+			}
+			if (key.equals(COLUMN_DESCRIPTION)) {
 				return parameterSet.getDescription();
-			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
+			}
+			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID)) {
 				return parameterSet.getMonitoredElementIds();
+			}
 			if (key.equals(LINK_FIELD_SET_PARAMETERS)) {
 				final Parameter[] parameters = parameterSet.getParameters();
 				final Map<String, Object> values = new HashMap<String, Object>(parameters.length * 3);
@@ -92,31 +95,29 @@ public class ParameterSetWrapper extends StorableObjectWrapper<ParameterSet> {
 		return false;
 	}
 
+	@Override
 	public void setValue(final ParameterSet parameterSet, final String key, final Object value) {
 		if (parameterSet != null) {
-			if (key.equals(COLUMN_SORT))
+			if (key.equals(COLUMN_SORT)) {
 				parameterSet.setSort(ParameterSetSort.from_int(((Integer) value).intValue()));
-			else
-				if (key.equals(COLUMN_DESCRIPTION))
-					parameterSet.setDescription((String) value);
-				else
-					if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID)) {
-						parameterSet.setMonitoredElementIds((Set) value);
-					} else
-						if (key.equals(LINK_FIELD_SET_PARAMETERS)) {
-							Map setParameterMap = (Map) value;
-							/* there are 3*N keys for N Parameter */
-							final Parameter[] setParameters = new Parameter[setParameterMap.size() / 3];
-							for (int i = 0; i < setParameters.length; i++) {
-								final Identifier parameterId = (Identifier) setParameterMap.get(COLUMN_ID + i);
-								final ParameterType parameterType = (ParameterType) setParameterMap.get(COLUMN_TYPE_ID + i);
-								final byte[] setParameterValue = (byte[]) setParameterMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
+				parameterSet.setDescription((String) value);
+			} else if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID)) {
+				parameterSet.setMonitoredElementIds((Set) value);
+			} else if (key.equals(LINK_FIELD_SET_PARAMETERS)) {
+				Map setParameterMap = (Map) value;
+				/* there are 3*N keys for N Parameter */
+				final Parameter[] setParameters = new Parameter[setParameterMap.size() / 3];
+				for (int i = 0; i < setParameters.length; i++) {
+					final Identifier parameterId = (Identifier) setParameterMap.get(COLUMN_ID + i);
+					final ParameterType parameterType = (ParameterType) setParameterMap.get(COLUMN_TYPE_ID + i);
+					final byte[] setParameterValue = (byte[]) setParameterMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
 
-								setParameters[i] = new Parameter(parameterId, parameterType, setParameterValue);
+					setParameters[i] = new Parameter(parameterId, parameterType, setParameterValue);
 
-							}
-							parameterSet.setParameters(setParameters);
-						}
+				}
+				parameterSet.setParameters(setParameters);
+			}
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeWrapper.java,v 1.17 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: AnalysisTypeWrapper.java,v 1.18 2005/08/08 13:33:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/08 13:33:50 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -66,9 +66,8 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper<AnalysisType> {
 		return false;
 	}
 
-	public void setValue(final AnalysisType analysisType, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(final AnalysisType analysisType, final String key, final Object value) {
 		if (analysisType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				analysisType.setCodename((String) value);
@@ -82,9 +81,7 @@ public class AnalysisTypeWrapper extends StorableObjectWrapper<AnalysisType> {
 		return null;
 	}
 
-	public void setPropertyValue(final String key, 
-	                             final Object objectKey, 
-	                             final Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
