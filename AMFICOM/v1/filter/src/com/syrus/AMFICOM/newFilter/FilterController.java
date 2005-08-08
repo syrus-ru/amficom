@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.17 2005/07/21 14:11:13 max Exp $
+ * $Id: FilterController.java,v 1.18 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,9 +42,9 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/07/21 14:11:13 $
- * @author $Author: max $
- * @module filter_v1
+ * @version $Revision: 1.18 $, $Date: 2005/08/08 11:37:22 $
+ * @author $Author: arseniy $
+ * @module filter
  */
 public class FilterController implements ActionListener, PopupMenuListener, ListSelectionListener {
 	

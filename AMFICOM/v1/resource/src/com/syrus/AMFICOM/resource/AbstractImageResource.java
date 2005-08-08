@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.21 2005/08/02 18:09:07 arseniy Exp $
+ * $Id: AbstractImageResource.java,v 1.22 2005/08/08 11:33:54 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/08/02 18:09:07 $
- * @module resource_v1
+ * @version $Revision: 1.22 $, $Date: 2005/08/08 11:33:54 $
+ * @module resource
  */
 public abstract class AbstractImageResource extends StorableObject {
 	static final long serialVersionUID = -730035505208725678L;

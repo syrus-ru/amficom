@@ -1,5 +1,5 @@
 /*
-* $Id: IntDimension.java,v 1.9 2005/07/26 09:23:33 arseniy Exp $
+* $Id: IntDimension.java,v 1.10 2005/08/08 11:35:11 arseniy Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ package com.syrus.AMFICOM.map;
  * пространстве (ширина и высота)
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/07/26 09:23:33 $
- * @module map_v1
+ * @version $Revision: 1.10 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  */
 
 public class IntDimension implements java.io.Serializable {

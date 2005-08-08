@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.50 2005/08/05 16:50:44 arseniy Exp $
+* $Id: MapView.java,v 1.51 2005/08/08 11:36:20 arseniy Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: arseniy $
- * @version $Revision: 1.50 $, $Date: 2005/08/05 16:50:44 $
- * @module mapview_v1
+ * @version $Revision: 1.51 $, $Date: 2005/08/08 11:36:20 $
+ * @module mapview
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
 public final class MapView extends DomainMember implements Namable {

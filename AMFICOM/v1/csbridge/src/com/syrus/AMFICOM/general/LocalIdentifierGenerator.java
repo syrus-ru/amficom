@@ -1,5 +1,5 @@
 /*
- * $Id: LocalIdentifierGenerator.java,v 1.8 2005/07/27 13:44:17 arseniy Exp $
+ * $Id: LocalIdentifierGenerator.java,v 1.9 2005/08/08 11:38:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,9 +10,9 @@ package com.syrus.AMFICOM.general;
 import java.util.List;
 import java.util.LinkedList;
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/27 13:44:17 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 11:38:11 $
  * @author $Author: arseniy $
- * @module csbridge_v1
+ * @module csbridge
  */
 
 public class LocalIdentifierGenerator {

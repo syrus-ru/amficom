@@ -1,5 +1,5 @@
 /*
- * $Id: ViewItem.java,v 1.14 2005/08/08 06:31:31 arseniy Exp $
+ * $Id: ViewItem.java,v 1.15 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,10 +17,10 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/08 06:31:31 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/08 11:37:22 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module filter_v1
+ * @module filter
  */
 public class ViewItem extends AbstractItem implements Item {
 

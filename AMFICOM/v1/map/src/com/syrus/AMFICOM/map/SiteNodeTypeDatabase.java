@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.32 2005/08/08 11:12:48 arseniy Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.33 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,9 +23,9 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/08/08 11:12:48 $
+ * @version $Revision: 1.33 $, $Date: 2005/08/08 11:35:11 $
  * @author $Author: arseniy $
- * @module map_v1
+ * @module map
  */
 public final class SiteNodeTypeDatabase extends StorableObjectDatabase<SiteNodeType> {
 	private static String columns;

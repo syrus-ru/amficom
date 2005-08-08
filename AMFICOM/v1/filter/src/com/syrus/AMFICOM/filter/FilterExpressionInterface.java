@@ -1,5 +1,5 @@
 /*
- * $Id: FilterExpressionInterface.java,v 1.4 2004/08/24 12:52:08 peskovsky Exp $
+ * $Id: FilterExpressionInterface.java,v 1.5 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,8 @@ import java.io.*;
 import java.util.List;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2004/08/24 12:52:08 $
- * @module filter_v1
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:37:22 $
+ * @module filter
  */
 public interface FilterExpressionInterface
 {

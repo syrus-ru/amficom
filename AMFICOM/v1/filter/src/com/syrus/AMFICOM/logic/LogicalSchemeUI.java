@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.20 2005/05/18 12:42:49 bass Exp $
+ * $Id: LogicalSchemeUI.java,v 1.21 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,9 +34,9 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/05/18 12:42:49 $
- * @author $Author: bass $
- * @module filter_v1
+ * @version $Revision: 1.21 $, $Date: 2005/08/08 11:37:22 $
+ * @author $Author: arseniy $
+ * @module filter
  */
 public class LogicalSchemeUI extends JComponent implements MouseListener, MouseMotionListener, SelectionListener, ItemListener {
 

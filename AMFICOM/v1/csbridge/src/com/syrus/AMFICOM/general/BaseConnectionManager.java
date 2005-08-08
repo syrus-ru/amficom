@@ -1,5 +1,5 @@
 /*
- * $Id: BaseConnectionManager.java,v 1.5 2005/05/18 12:52:58 bass Exp $
+ * $Id: BaseConnectionManager.java,v 1.6 2005/08/08 11:38:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,9 @@ package com.syrus.AMFICOM.general;
 
 /**
  * The sum of all extended interfaces
- * @version $Revision: 1.5 $, $Date: 2005/05/18 12:52:58 $
- * @author $Author: bass $
- * @module csbridge_v1
+ * @version $Revision: 1.6 $, $Date: 2005/08/08 11:38:11 $
+ * @author $Author: arseniy $
+ * @module csbridge
  */
 public interface BaseConnectionManager extends LoginServerConnectionManager, EventServerConnectionManager, IGSConnectionManager {
 	String KEY_SERVANT_CHECK_TIMEOUT = "ServantCheckTimeout";

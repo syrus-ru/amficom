@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlCollectorImpl.java,v 1.3 2005/07/17 05:20:44 arseniy Exp $
+ * $Id: IdlCollectorImpl.java,v 1.4 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/07/17 05:20:44 $
- * @module map_v1
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  */
 final class IdlCollectorImpl extends IdlCollector {
 	private static final long serialVersionUID = 5988839816073778091L;

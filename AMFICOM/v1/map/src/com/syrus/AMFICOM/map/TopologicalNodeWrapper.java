@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeWrapper.java,v 1.13 2005/08/05 10:01:06 bob Exp $
+ * $Id: TopologicalNodeWrapper.java,v 1.14 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,9 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/05 10:01:06 $
- * @author $Author: bob $
- * @module map_v1
+ * @version $Revision: 1.14 $, $Date: 2005/08/08 11:35:11 $
+ * @author $Author: arseniy $
+ * @module map
  */
 public class TopologicalNodeWrapper extends StorableObjectWrapper<TopologicalNode> {
 

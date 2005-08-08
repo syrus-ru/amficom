@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.65 2005/08/05 16:50:26 arseniy Exp $
+ * $Id: NodeLink.java,v 1.66 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: arseniy $
- * @version $Revision: 1.65 $, $Date: 2005/08/05 16:50:26 $
- * @module map_v1
+ * @version $Revision: 1.66 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
 

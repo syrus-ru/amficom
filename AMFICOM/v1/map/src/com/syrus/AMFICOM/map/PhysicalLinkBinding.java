@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkBinding.java,v 1.9 2005/07/26 10:46:07 arseniy Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.10 2005/08/08 11:35:11 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,8 +21,8 @@ import java.util.List;
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/07/26 10:46:07 $
- * @module map_v1
+ * @version $Revision: 1.10 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  */
 public final class PhysicalLinkBinding {
 	/** карта привязки кабелей к трубам */

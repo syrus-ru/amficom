@@ -1,5 +1,5 @@
 /*-
- * $Id: BaseSessionEnvironment.java,v 1.13 2005/07/29 14:18:13 arseniy Exp $
+ * $Id: BaseSessionEnvironment.java,v 1.14 2005/08/08 11:38:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import java.util.Date;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/29 14:18:13 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/08 11:38:11 $
  * @author $Author: arseniy $
- * @module csbridge_v1
+ * @module csbridge
  */
 public abstract class BaseSessionEnvironment {
 	protected BaseConnectionManager baseConnectionManager;

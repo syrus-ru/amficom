@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSiteNodeTypeImpl.java,v 1.5 2005/08/03 20:13:20 bass Exp $
+ * $Id: IdlSiteNodeTypeImpl.java,v 1.6 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,9 +19,9 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/08/03 20:13:20 $
- * @module map_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  */
 final class IdlSiteNodeTypeImpl extends IdlSiteNodeType {
 	private static final long serialVersionUID = 5779813368986403850L;

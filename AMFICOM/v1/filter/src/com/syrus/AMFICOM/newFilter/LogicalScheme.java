@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalScheme.java,v 1.11 2005/06/21 12:44:28 bass Exp $
+ * $Id: LogicalScheme.java,v 1.12 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,9 +24,9 @@ import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/06/21 12:44:28 $
- * @author $Author: bass $
- * @module filter_v1
+ * @version $Revision: 1.12 $, $Date: 2005/08/08 11:37:22 $
+ * @author $Author: arseniy $
+ * @module filter
  */
 public class LogicalScheme {
 

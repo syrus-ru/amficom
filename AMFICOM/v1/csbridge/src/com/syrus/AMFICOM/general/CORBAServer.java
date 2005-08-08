@@ -1,5 +1,5 @@
 /*
- * $Id: CORBAServer.java,v 1.13 2005/07/17 01:40:03 arseniy Exp $
+ * $Id: CORBAServer.java,v 1.14 2005/08/08 11:38:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,9 +42,9 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/17 01:40:03 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/08 11:38:11 $
  * @author $Author: arseniy $
- * @module csbridge_v1
+ * @module csbridge
  */
 
 public class CORBAServer {

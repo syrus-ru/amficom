@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.19 2005/06/27 11:12:02 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.20 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,10 +62,10 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/06/27 11:12:02 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/08/08 11:37:22 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module filter_v1
+ * @module filter
  */
 public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Serializable {
 

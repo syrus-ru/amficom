@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.13 2005/08/08 06:31:31 arseniy Exp $
+ * $Id: AbstractItem.java,v 1.14 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,10 +20,10 @@ import java.util.List;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/08 06:31:31 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/08 11:37:22 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module filter_v1
+ * @module filter
  */
 public abstract class AbstractItem implements Item, PropertyChangeListener {
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsActiveZoneBase.java,v 1.3 2005/04/13 19:09:40 arseniy Exp $
+ * $Id: ElementsActiveZoneBase.java,v 1.4 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/13 19:09:40 $
- * @module filter_v1
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 11:37:22 $
+ * @module filter
  */
 public class ElementsActiveZoneBase extends ProSchemeElementBase
 {

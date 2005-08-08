@@ -1,5 +1,5 @@
 /**
- * $Id: DoublePoint.java,v 1.7 2005/07/26 09:23:33 arseniy Exp $
+ * $Id: DoublePoint.java,v 1.8 2005/08/08 11:35:11 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,8 +17,8 @@ package com.syrus.AMFICOM.map;
  * конвертации координат.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/07/26 09:23:33 $
- * @module map_v1
+ * @version $Revision: 1.8 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  */
 public class DoublePoint implements Cloneable {
 

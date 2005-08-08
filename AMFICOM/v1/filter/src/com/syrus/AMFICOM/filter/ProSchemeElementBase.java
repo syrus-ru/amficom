@@ -1,5 +1,5 @@
 /*
- * $Id: ProSchemeElementBase.java,v 1.1 2004/06/17 10:23:05 krupenn Exp $
+ * $Id: ProSchemeElementBase.java,v 1.2 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.filter;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/06/17 10:23:05 $
- * @module filter_v1
+ * @version $Revision: 1.2 $, $Date: 2005/08/08 11:37:22 $
+ * @module filter
  */
 public abstract class ProSchemeElementBase
 {

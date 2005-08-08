@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.12 2005/05/18 12:42:49 bass Exp $
+ * $Id: ItemTreeModel.java,v 1.13 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,10 +22,10 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/05/18 12:42:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/08/08 11:37:22 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module filter_v1
+ * @module filter
  */
 public class ItemTreeModel implements TreeModel, ItemListener {
 

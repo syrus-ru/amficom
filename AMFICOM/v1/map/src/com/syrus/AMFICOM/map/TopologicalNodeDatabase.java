@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.35 2005/08/03 14:32:37 max Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.36 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,9 +21,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/08/03 14:32:37 $
- * @author $Author: max $
- * @module map_v1
+ * @version $Revision: 1.36 $, $Date: 2005/08/08 11:35:11 $
+ * @author $Author: arseniy $
+ * @module map
  */
 public final class TopologicalNodeDatabase extends StorableObjectDatabase<TopologicalNode> {
 	private static String columns;

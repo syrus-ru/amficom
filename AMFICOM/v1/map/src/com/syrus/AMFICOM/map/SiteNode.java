@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.64 2005/08/03 14:44:01 max Exp $
+ * $Id: SiteNode.java,v 1.65 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,9 +51,9 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: max $
- * @version $Revision: 1.64 $, $Date: 2005/08/03 14:44:01 $
- * @module map_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.65 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
 

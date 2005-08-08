@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.37 2005/08/05 09:28:05 arseniy Exp $
+ * $Id: MapViewDatabase.java,v 1.38 2005/08/08 11:36:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,9 +41,9 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/08/05 09:28:05 $
+ * @version $Revision: 1.38 $, $Date: 2005/08/08 11:36:20 $
  * @author $Author: arseniy $
- * @module mapview_v1
+ * @module mapview
  */
 public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 	// domain_id VARCHAR2(32),

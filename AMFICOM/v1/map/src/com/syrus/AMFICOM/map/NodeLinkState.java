@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkState.java,v 1.4 2005/07/26 10:20:09 arseniy Exp $
+ * $Id: NodeLinkState.java,v 1.5 2005/08/08 11:35:11 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,8 +17,8 @@ import com.syrus.util.HashCodeGenerator;
  *
  *
  *
- * @version $Revision: 1.4 $, $Date: 2005/07/26 10:20:09 $
- * @module map_v1
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  * @author $Author: arseniy $
  */
 public final class NodeLinkState extends MapElementState {

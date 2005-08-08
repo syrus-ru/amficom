@@ -1,5 +1,5 @@
 /*-
- * $Id: MapElement.java,v 1.16 2005/08/02 16:50:17 krupenn Exp $
+ * $Id: MapElement.java,v 1.17 2005/08/08 11:35:11 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,9 +21,9 @@ import com.syrus.AMFICOM.general.Namable;
  *
  *
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/08/02 16:50:17 $
- * @module map_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  */
 public interface MapElement extends Characterizable, Namable {
 	/**

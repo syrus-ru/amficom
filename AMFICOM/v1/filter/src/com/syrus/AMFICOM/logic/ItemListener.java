@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemListener.java,v 1.4 2005/04/07 10:53:59 bob Exp $
+ * $Id: ItemListener.java,v 1.5 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,10 @@
 package com.syrus.AMFICOM.logic;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/04/07 10:53:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:37:22 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module filter_v1
+ * @module filter
  */
 public interface ItemListener {
 

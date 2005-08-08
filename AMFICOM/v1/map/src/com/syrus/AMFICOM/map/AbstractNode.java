@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.32 2005/08/05 16:50:26 arseniy Exp $
+ * $Id: AbstractNode.java,v 1.33 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
  * ({@link #location}) и изображением ({@link #imageId}).
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.32 $, $Date: 2005/08/05 16:50:26 $
- * @module map_v1
+ * @version $Revision: 1.33 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  * @see SiteNode
  * @see TopologicalNode
  */

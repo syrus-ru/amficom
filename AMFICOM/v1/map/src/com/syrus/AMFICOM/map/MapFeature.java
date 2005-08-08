@@ -1,5 +1,5 @@
 /*-
- * $Id: MapFeature.java,v 1.4 2005/07/28 15:40:17 max Exp $
+ * $Id: MapFeature.java,v 1.5 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import com.syrus.AMFICOM.map.corba.IdlMapFeature;
 /**
  * 
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.4 $, $Date: 2005/07/28 15:40:17 $
- * @module map_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  */
 
 public class MapFeature {

@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.17 2005/05/18 12:42:49 bass Exp $
+ * $Id: LogicalConditionUI.java,v 1.18 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,9 +34,9 @@ import com.syrus.AMFICOM.logic.Populatable;
 import com.syrus.AMFICOM.logic.ServiceItem;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/05/18 12:42:49 $
- * @author $Author: bass $
- * @module filter_v1
+ * @version $Revision: 1.18 $, $Date: 2005/08/08 11:37:22 $
+ * @author $Author: arseniy $
+ * @module filter
  */
 public class LogicalConditionUI {
 

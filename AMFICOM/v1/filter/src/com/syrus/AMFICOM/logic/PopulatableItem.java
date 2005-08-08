@@ -1,5 +1,5 @@
 /*-
- * $Id: PopulatableItem.java,v 1.4 2005/05/18 12:42:49 bass Exp $
+ * $Id: PopulatableItem.java,v 1.5 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,10 +15,10 @@ import java.util.List;
 /**
  * Populatable item with default properties
  *
- * @version $Revision: 1.4 $, $Date: 2005/05/18 12:42:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:37:22 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module filter_v1
+ * @module filter
  */
 public class PopulatableItem extends AbstractItem implements Populatable {
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.41 2005/08/05 09:05:58 arseniy Exp $
+ * $Id: MapDatabase.java,v 1.42 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,9 +40,9 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/08/05 09:05:58 $
+ * @version $Revision: 1.42 $, $Date: 2005/08/08 11:35:11 $
  * @author $Author: arseniy $
- * @module map_v1
+ * @module map
  */
 public final class MapDatabase extends StorableObjectDatabase<Map> {
 	 // linked tables ::

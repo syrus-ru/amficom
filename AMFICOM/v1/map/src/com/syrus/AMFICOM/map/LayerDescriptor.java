@@ -1,5 +1,5 @@
 /*-
- * $Id: LayerDescriptor.java,v 1.1 2005/07/28 15:39:19 max Exp $
+ * $Id: LayerDescriptor.java,v 1.2 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,9 @@ import com.syrus.AMFICOM.map.corba.IdlLayerDescriptor;
 /**
  * 
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/07/28 15:39:19 $
- * @module map_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  */
 
 public class LayerDescriptor {

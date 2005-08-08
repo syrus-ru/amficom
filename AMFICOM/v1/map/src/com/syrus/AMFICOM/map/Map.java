@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.69 2005/08/05 16:50:26 arseniy Exp $
+ * $Id: Map.java,v 1.70 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.69 $, $Date: 2005/08/05 16:50:26 $
- * @module map_v1
+ * @version $Revision: 1.70 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  * @todo make maps persistent
  * @todo make externalNodes persistent
  * @todo make mapLibraries persistent

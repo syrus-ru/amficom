@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlImageResourceImpl.java,v 1.3 2005/07/24 16:08:07 arseniy Exp $
+ * $Id: IdlImageResourceImpl.java,v 1.4 2005/08/08 11:33:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/07/24 16:08:07 $
- * @module resource_v1
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 11:33:54 $
+ * @module resource
  */
 final class IdlImageResourceImpl extends IdlImageResource {
 	private static final long serialVersionUID = -5060050683432238759L;

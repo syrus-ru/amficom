@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.65 2005/08/08 10:10:27 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.66 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,9 +49,9 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: krupenn $
- * @version $Revision: 1.65 $, $Date: 2005/08/08 10:10:27 $
- * @module map_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.66 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
  * @todo make 'sort' persistent (update database scheme as well)

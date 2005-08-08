@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.9 2005/07/31 19:11:06 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.10 2005/08/08 11:36:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,9 +22,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $
- * @author $Author: bass $
- * @module mapview_v1
+ * @version $Revision: 1.10 $
+ * @author $Author: arseniy $
+ * @module mapview
  */
 final class LinkedIdsConditionImpl extends com.syrus.AMFICOM.general.LinkedIdsCondition {
 	@SuppressWarnings("unused")

@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.32 2005/08/08 10:16:56 arseniy Exp $
+ * $Id: ServerCore.java,v 1.33 2005/08/08 11:38:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.32 $, $Date: 2005/08/08 10:16:56 $
- * @module csbridge_v1
+ * @version $Revision: 1.33 $, $Date: 2005/08/08 11:38:11 $
+ * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
  */

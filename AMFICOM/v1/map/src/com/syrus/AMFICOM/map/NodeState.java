@@ -1,5 +1,5 @@
 /**
- * $Id: NodeState.java,v 1.5 2005/07/26 10:21:09 arseniy Exp $
+ * $Id: NodeState.java,v 1.6 2005/08/08 11:35:11 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,8 +19,8 @@ import java.util.HashMap;
  *
  *
  *
- * @version $Revision: 1.5 $, $Date: 2005/07/26 10:21:09 $
- * @module map_v1
+ * @version $Revision: 1.6 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  * @author $Author: arseniy $
  */
 public class NodeState extends MapElementState {

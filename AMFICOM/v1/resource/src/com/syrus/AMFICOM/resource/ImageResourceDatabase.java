@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceDatabase.java,v 1.34 2005/08/05 09:12:40 arseniy Exp $
+ * $Id: ImageResourceDatabase.java,v 1.35 2005/08/08 11:33:54 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.34 $, $Date: 2005/08/05 09:12:40 $
- * @module resource_v1
+ * @version $Revision: 1.35 $, $Date: 2005/08/08 11:33:54 $
+ * @module resource
  */
 
 public final class ImageResourceDatabase extends StorableObjectDatabase<AbstractImageResource> {

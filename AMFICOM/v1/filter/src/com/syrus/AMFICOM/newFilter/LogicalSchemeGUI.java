@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeGUI.java,v 1.4 2005/05/18 12:42:50 bass Exp $
+ * $Id: LogicalSchemeGUI.java,v 1.5 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,9 +23,9 @@ import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/18 12:42:50 $
- * @author $Author: bass $
- * @module filter_v1
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:37:22 $
+ * @author $Author: arseniy $
+ * @module filter
  */
 public class LogicalSchemeGUI implements LogicalSchemeView {
 	

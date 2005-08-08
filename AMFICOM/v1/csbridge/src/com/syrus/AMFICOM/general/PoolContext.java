@@ -1,5 +1,5 @@
 /*-
- * $Id: PoolContext.java,v 1.5 2005/05/23 08:34:38 bass Exp $
+ * $Id: PoolContext.java,v 1.6 2005/08/08 11:38:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,9 +9,9 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/23 08:34:38 $
- * @author $Author: bass $
- * @module csbridge_v1
+ * @version $Revision: 1.6 $, $Date: 2005/08/08 11:38:11 $
+ * @author $Author: arseniy $
+ * @module csbridge
  */
 public abstract class PoolContext {
 

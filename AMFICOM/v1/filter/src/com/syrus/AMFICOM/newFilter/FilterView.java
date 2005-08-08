@@ -1,5 +1,5 @@
 /*
- * $Id: FilterView.java,v 1.8 2005/06/20 09:31:18 max Exp $
+ * $Id: FilterView.java,v 1.9 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,9 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/20 09:31:18 $
- * @author $Author: max $
- * @module filter_v1
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 11:37:22 $
+ * @author $Author: arseniy $
+ * @module filter
  */
 public interface FilterView {
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.60 2005/08/08 10:10:27 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.61 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,9 +57,9 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: krupenn $
- * @version $Revision: 1.60 $, $Date: 2005/08/08 10:10:27 $
- * @module map_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.61 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  * @todo make 'sort' persistent (update database scheme as well)
  * @todo make 'mapLibrary' persistent
  */

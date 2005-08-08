@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMapViewImpl.java,v 1.2 2005/07/11 08:19:00 bass Exp $
+ * $Id: IdlMapViewImpl.java,v 1.3 2005/08/08 11:36:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,9 +18,9 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:19:00 $
- * @module mapview_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:36:20 $
+ * @module mapview
  */
 final class IdlMapViewImpl extends IdlMapView {
 	private static final long serialVersionUID = 7324556699067619848L;

@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.13 2005/08/05 10:48:05 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.14 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,9 +17,9 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.13 $
- * @author $Author: max $
- * @module map_v1
+ * @version $Revision: 1.14 $
+ * @author $Author: arseniy $
+ * @module map
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 

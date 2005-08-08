@@ -1,5 +1,5 @@
 /*
- * $Id: LogicSchemeElementBase.java,v 1.2 2005/04/13 19:09:41 arseniy Exp $
+ * $Id: LogicSchemeElementBase.java,v 1.3 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.filter;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/13 19:09:41 $
- * @module filter_v1
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:37:22 $
+ * @module filter
  */
 public class LogicSchemeElementBase extends ProSchemeElementBase
 {

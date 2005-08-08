@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.30 2005/08/05 16:50:21 arseniy Exp $
+ * $Id: FileImageResource.java,v 1.31 2005/08/08 11:33:54 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/08/05 16:50:21 $
- * @module resource_v1
+ * @version $Revision: 1.31 $, $Date: 2005/08/08 11:33:54 $
+ * @module resource
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
 	private static final long serialVersionUID = -3374486515234713818L;

@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalItem.java,v 1.13 2005/04/13 19:09:41 arseniy Exp $
+ * $Id: LogicalItem.java,v 1.14 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/13 19:09:41 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/08 11:37:22 $
  * @author $Author: arseniy $
- * @module filter_v1
+ * @module filter
  */
 public class LogicalItem extends AbstractItem {
 

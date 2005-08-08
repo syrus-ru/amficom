@@ -1,5 +1,5 @@
 /*
- * $Id: LogicSchemeBase.java,v 1.7 2005/06/17 12:38:54 bass Exp $
+ * $Id: LogicSchemeBase.java,v 1.8 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,8 +17,8 @@ import java.util.List;
 import java.util.ListIterator;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/17 12:38:54 $
- * @module filter_v1
+ * @version $Revision: 1.8 $, $Date: 2005/08/08 11:37:22 $
+ * @module filter
  */
 public class LogicSchemeBase implements Serializable
 {

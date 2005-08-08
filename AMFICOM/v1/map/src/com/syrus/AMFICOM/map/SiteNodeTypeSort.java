@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeTypeSort.java,v 1.6 2005/08/05 09:05:58 arseniy Exp $
+ * $Id: SiteNodeTypeSort.java,v 1.7 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ package com.syrus.AMFICOM.map;
  * {@link #PIQUET}, {@link #ATS}, {@link #BUILDING}, {@link #UNBOUND},
  * {@link #CABLE_INLET}, {@link #TOWER}
  * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/05 09:05:58 $
- * @module map_v1
+ * @version $Revision: 1.7 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  * @deprecated use com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.SiteNodeTypeSort instead
  */
 @Deprecated

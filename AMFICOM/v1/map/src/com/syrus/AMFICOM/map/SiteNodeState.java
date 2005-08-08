@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeState.java,v 1.4 2005/07/26 11:05:04 arseniy Exp $
+ * $Id: SiteNodeState.java,v 1.5 2005/08/08 11:35:11 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,8 +15,8 @@ import com.syrus.util.HashCodeGenerator;
 /**
  * состо€ние узла
  *
- * @version $Revision: 1.4 $, $Date: 2005/07/26 11:05:04 $
- * @module map_v1
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  * @author $Author: arseniy $
  */
 public class SiteNodeState extends NodeState {

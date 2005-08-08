@@ -1,5 +1,5 @@
 /*-
- * $Id: Item.java,v 1.7 2005/08/08 06:31:31 arseniy Exp $
+ * $Id: Item.java,v 1.8 2005/08/08 11:37:22 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,10 +12,10 @@ import java.util.List;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/08 06:31:31 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/08 11:37:22 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module filter_v1
+ * @module filter
  */
 public interface Item {
 	

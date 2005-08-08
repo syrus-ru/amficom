@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.59 2005/08/02 18:07:26 arseniy Exp $
+ * $Id: TopologicalNode.java,v 1.60 2005/08/08 11:35:11 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: arseniy $
- * @version $Revision: 1.59 $, $Date: 2005/08/02 18:07:26 $
- * @module map_v1
+ * @version $Revision: 1.60 $, $Date: 2005/08/08 11:35:11 $
+ * @module map
  * @todo physicalLink should be transient
  */
 public final class TopologicalNode extends AbstractNode implements XMLBeansTransferable{
