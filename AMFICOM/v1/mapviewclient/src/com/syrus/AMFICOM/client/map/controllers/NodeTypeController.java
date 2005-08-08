@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.34 2005/08/03 15:40:51 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.35 2005/08/08 10:16:22 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -43,10 +44,14 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.34 $, $Date: 2005/08/03 15:40:51 $
+ * @version $Revision: 1.35 $, $Date: 2005/08/08 10:16:22 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {
+
+	private static final String DEFAULT_IMAGE_CODENAME = "defaultimageresource";
+
+	private static final String DEFAULT_IMAGE_FILENAME = "images/defaultsite.gif";
 
 	/**
 	 * Instance.
@@ -55,6 +60,8 @@ public class NodeTypeController extends AbstractNodeController {
 
 	/** ’эш-таблица имен пиктограмм дл€ предустановленных типов узлов. */
 	private static java.util.Map imageFileNames = new HashMap();
+
+	private static Identifier defaultImageId = null;
 	
 	static {
 		imageFileNames.put(SiteNodeType.DEFAULT_UNBOUND, "images/unbound.gif");
@@ -191,9 +198,10 @@ public class NodeTypeController extends AbstractNodeController {
 	/**
 	 * ѕолучить тип сетевого узла по кодовому имени. ¬ случае, если такого типа
 	 * нет, создаетс€ новый.
-	 * 
 	 * @param userId пользователь
 	 * @param codename кодовое им€
+	 * @param isTopological TODO
+	 * 
 	 * @return тип сетевого узла
 	 * @throws ApplicationException 
 	 * @throws CreateObjectException 
@@ -202,7 +210,8 @@ public class NodeTypeController extends AbstractNodeController {
 			MapLibrary mapLibrary,
 			Identifier userId,
 			SiteNodeTypeSort sort,
-			String codename) throws ApplicationException {
+			String codename,
+			boolean isTopological) throws ApplicationException {
 		SiteNodeType type = getSiteNodeType(codename);
 		if(type == null) {
 			type = SiteNodeType.createInstance(
@@ -215,7 +224,7 @@ public class NodeTypeController extends AbstractNodeController {
 						userId, 
 						codename, 
 						NodeTypeController.getImageFileName(codename)),
-				true,
+						isTopological,
 				mapLibrary);
 				
 			StorableObjectPool.putStorableObject(type);
@@ -283,6 +292,19 @@ public class NodeTypeController extends AbstractNodeController {
 	 */
 	public static SiteNodeType getUnboundNodeType() throws ApplicationException {
 		return NodeTypeController.getSiteNodeType(SiteNodeType.DEFAULT_UNBOUND);
+	}
+
+	public static Identifier getDefaultImageId() {
+		return NodeTypeController.defaultImageId;
+	}
+
+	public static void createDefaults(Identifier creatorId) throws ApplicationException {
+		NodeTypeController.defaultImageId = getImageId(
+				creatorId,
+				DEFAULT_IMAGE_CODENAME, 
+				DEFAULT_IMAGE_FILENAME);
+		// TODO Auto-generated method stub
+		
 	}
 
 }
