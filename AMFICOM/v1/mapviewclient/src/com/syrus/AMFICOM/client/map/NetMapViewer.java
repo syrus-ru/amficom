@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.34 2005/08/05 07:37:56 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.35 2005/08/08 10:15:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,6 +50,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.AlarmMarker;
 import com.syrus.AMFICOM.mapview.CablePath;
@@ -75,7 +76,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.34 $, $Date: 2005/08/05 07:37:56 $
+ * @version $Revision: 1.35 $, $Date: 2005/08/08 10:15:11 $
  * @module mapviewclient_v1
  */
 public abstract class NetMapViewer {
@@ -395,6 +396,13 @@ public abstract class NetMapViewer {
 	{
 		try
 		{
+			if(pce.getPropertyName().equals(MapEvent.OTHER_SELECTED))
+			{
+				Object selectedObject = pce.getSource();
+				if(selectedObject instanceof PhysicalLinkType) {
+					this.logicalNetLayer.setCurrentPhysicalLinkType((PhysicalLinkType)selectedObject);
+				}
+			}
 			if(pce.getPropertyName().equals(MapEvent.NEED_FULL_REPAINT))
 			{
 				this.logicalNetLayer.calculateVisualElements();
