@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.88 2005/08/05 16:49:29 arseniy Exp $
+ * $Id: StorableObject.java,v 1.89 2005/08/08 09:14:48 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.88 $, $Date: 2005/08/05 16:49:29 $
+ * @version $Revision: 1.89 $, $Date: 2005/08/08 09:14:48 $
  * @module general
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -327,8 +327,10 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 		final IdlStorableObject[] transferables = new IdlStorableObject[storableObjects.size()];
 		int i = 0;
-		for (final StorableObject storableObject : storableObjects) {
-			transferables[i++] = storableObject.getTransferable(orb);
+		synchronized (storableObjects) {
+			for (final StorableObject storableObject : storableObjects) {
+				transferables[i++] = storableObject.getTransferable(orb);
+			}
 		}
 		return transferables;
 	}
@@ -350,8 +352,10 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 
 	public static final Map<Identifier, StorableObjectVersion> createVersionsMap(final Set<? extends StorableObject> storableObjects) {
 		final Map<Identifier, StorableObjectVersion> versionsMap = new HashMap<Identifier, StorableObjectVersion>();
-		for (final StorableObject storableObject : storableObjects) {
-			versionsMap.put(storableObject.id, storableObject.version);
+		synchronized (storableObjects) {
+			for (final StorableObject storableObject : storableObjects) {
+				versionsMap.put(storableObject.id, storableObject.version);
+			}
 		}
 		return versionsMap;
 	}
@@ -375,22 +379,24 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		}
 
 		short entityCode = VOID_IDENTIFIER.getMajor();
-		final Iterator<? extends Identifiable> identifiableIterator = identifiables.iterator();
-		while (identifiableIterator.hasNext()) {
-			final Identifier id = identifiableIterator.next().getId();
-			if (id.isVoid()) {
-				continue;
+		synchronized (identifiables) {
+			final Iterator<? extends Identifiable> identifiableIterator = identifiables.iterator();
+			while (identifiableIterator.hasNext()) {
+				final Identifier id = identifiableIterator.next().getId();
+				if (id.isVoid()) {
+					continue;
+				}
+				entityCode = id.getMajor();
+				break;
 			}
-			entityCode = id.getMajor();
-			break;
-		}
-		while (identifiableIterator.hasNext()) {
-			final Identifier id = identifiableIterator.next().getId();
-			if (id.isVoid()) {
-				continue;
-			}
-			if (entityCode != id.getMajor()) {
-				return false;
+			while (identifiableIterator.hasNext()) {
+				final Identifier id = identifiableIterator.next().getId();
+				if (id.isVoid()) {
+					continue;
+				}
+				if (entityCode != id.getMajor()) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -399,7 +405,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * @see #hasSingleTypeEntities(Set)
 	 */
-	public static final boolean hasSingleTypeEntities(final IdlIdentifier ids[]) {
+	public static final boolean hasSingleTypeEntities(final IdlIdentifier[] ids) {
 		assert ids != null;
 
 		final int length = ids.length;
@@ -447,11 +453,13 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 			return true;
 		}
 
-		final Iterator<? extends Identifiable> identifiableIterator = identifiables.iterator();
-		final short groupCode = ObjectGroupEntities.getGroupCode(identifiableIterator.next().getId().getMajor());
-		while (identifiableIterator.hasNext()) {
-			if (groupCode != ObjectGroupEntities.getGroupCode(identifiableIterator.next().getId().getMajor())) {
-				return false;
+		synchronized (identifiables) {
+			final Iterator<? extends Identifiable> identifiableIterator = identifiables.iterator();
+			final short groupCode = ObjectGroupEntities.getGroupCode(identifiableIterator.next().getId().getMajor());
+			while (identifiableIterator.hasNext()) {
+				if (groupCode != ObjectGroupEntities.getGroupCode(identifiableIterator.next().getId().getMajor())) {
+					return false;
+				}
 			}
 		}
 		return true;
@@ -471,12 +479,14 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		assert identifiables != null && !identifiables.isEmpty() : ErrorMessages.NON_EMPTY_EXPECTED;
 		assert hasSingleTypeEntities(identifiables) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
-		for (final Identifiable identifiable : identifiables) {
-			final Identifier id = identifiable.getId();
-			if (id.isVoid()) {
-				continue;
+		synchronized (identifiables) {
+			for (final Identifiable identifiable : identifiables) {
+				final Identifier id = identifiable.getId();
+				if (id.isVoid()) {
+					continue;
+				}
+				return id.getMajor();
 			}
-			return id.getMajor();
 		}
 		return VOID_IDENTIFIER.getMajor();
 	}
@@ -484,7 +494,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * @see #getEntityCodeOfIdentifiables(Set)
 	 */
-	public static final short getEntityCodeOfIdentifiables(final IdlIdentifier ids[]) {
+	public static final short getEntityCodeOfIdentifiables(final IdlIdentifier[] ids) {
 		assert ids != null && ids.length != 0;
 		assert hasSingleTypeEntities(ids) : ErrorMessages.OBJECTS_NOT_OF_THE_SAME_ENTITY;
 
