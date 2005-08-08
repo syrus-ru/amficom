@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.8 2005/08/08 08:17:19 stas Exp $
+ * $Id: Notifier.java,v 1.9 2005/08/08 11:58:07 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,9 +40,9 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/08/08 08:17:19 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 11:58:07 $
+ * @module schemeclient
  */
 
 public class Notifier {

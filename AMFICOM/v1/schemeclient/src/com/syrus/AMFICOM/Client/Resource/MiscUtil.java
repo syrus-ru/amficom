@@ -1,5 +1,5 @@
 /*-
- * $Id: MiscUtil.java,v 1.1 2005/05/26 07:33:00 stas Exp $
+ * $Id: MiscUtil.java,v 1.2 2005/08/08 11:58:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,9 +9,9 @@
 package com.syrus.AMFICOM.Client.Resource;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.1 $, $Date: 2005/05/26 07:33:00 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/08/08 11:58:06 $
+ * @module schemeclient
  */
 
 public class MiscUtil {

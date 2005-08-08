@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortPropertiesManager.java,v 1.5 2005/08/05 12:40:00 stas Exp $
+ * $Id: SchemePortPropertiesManager.java,v 1.6 2005/08/08 11:58:08 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.scheme.SchemePortWrapper;
 
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/05 12:40:00 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/08 11:58:08 $
+ * @module schemeclient
  */
 
 public class SchemePortPropertiesManager implements VisualManager {

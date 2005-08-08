@@ -1,5 +1,5 @@
 /*-
- * $Id: MarkerResource.java,v 1.3 2005/06/09 15:38:37 saa Exp $
+ * $Id: MarkerResource.java,v 1.4 2005/08/08 11:59:52 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,9 @@ package com.syrus.AMFICOM.analysis;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/06/09 15:38:37 $
- * @module analysis_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 11:59:52 $
+ * @module analysis
  */
 
 public class MarkerResource {

@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStats.java,v 1.7 2005/07/22 06:56:50 saa Exp $
+ * $Id: OverallStats.java,v 1.8 2005/08/08 11:59:53 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,9 +21,9 @@ import com.syrus.AMFICOM.analysis.dadara.TraceEvent;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/07/22 06:56:50 $
- * @module analysis_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/08 11:59:53 $
+ * @module analysis
  */
 
 public class OverallStats {

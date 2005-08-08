@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.13 2005/08/05 18:44:38 arseniy Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.14 2005/08/08 11:58:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/08/05 18:44:38 $
- * @module schemeclient_v1
+ * @version $Revision: 1.14 $, $Date: 2005/08/08 11:58:06 $
+ * @module schemeclient
  */
 
 public class ElementsEditorMainFrame extends AbstractMainFrame {

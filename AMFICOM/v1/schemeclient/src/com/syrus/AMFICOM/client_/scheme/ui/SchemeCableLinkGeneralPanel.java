@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.13 2005/08/05 12:39:59 stas Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.14 2005/08/08 11:58:07 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,9 +55,9 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/08/05 12:39:59 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/08/08 11:58:07 $
+ * @module schemeclient
  */
 
 public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {

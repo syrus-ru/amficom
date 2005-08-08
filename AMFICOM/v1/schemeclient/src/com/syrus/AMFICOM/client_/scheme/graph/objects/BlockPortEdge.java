@@ -1,5 +1,5 @@
 /*-
- * $Id: BlockPortEdge.java,v 1.2 2005/08/01 07:52:28 stas Exp $
+ * $Id: BlockPortEdge.java,v 1.3 2005/08/08 11:58:07 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,9 @@ package com.syrus.AMFICOM.client_.scheme.graph.objects;
 import com.jgraph.graph.DefaultEdge;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/08/01 07:52:28 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:58:07 $
+ * @module schemeclient
  */
 
 public class BlockPortEdge extends DefaultEdge {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementCharacteristicsPanel.java,v 1.8 2005/08/05 12:40:00 stas Exp $
+ * $Id: SchemeProtoElementCharacteristicsPanel.java,v 1.9 2005/08/08 11:58:08 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/08/05 12:40:00 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 11:58:08 $
+ * @module schemeclient
  */
 
 public class SchemeProtoElementCharacteristicsPanel extends CharacteristicsPanel {

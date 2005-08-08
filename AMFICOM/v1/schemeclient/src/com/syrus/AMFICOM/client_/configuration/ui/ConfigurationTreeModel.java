@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.6 2005/08/05 18:44:38 arseniy Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.7 2005/08/08 11:58:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/05 18:44:38 $
- * @module schemeclient_v1
+ * @version $Revision: 1.7 $, $Date: 2005/08/08 11:58:06 $
+ * @module schemeclient
  */
 
 public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFactory {

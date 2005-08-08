@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.8 2005/08/05 18:44:38 arseniy Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.9 2005/08/08 11:58:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,8 +75,8 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/05 18:44:38 $
- * @module schemeclient_v1
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 11:58:06 $
+ * @module schemeclient
  */
 
 public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {

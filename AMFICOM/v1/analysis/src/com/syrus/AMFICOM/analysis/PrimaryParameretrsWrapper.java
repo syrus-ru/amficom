@@ -1,5 +1,5 @@
 /*-
- * $Id: PrimaryParameretrsWrapper.java,v 1.2 2005/06/02 12:53:29 stas Exp $
+ * $Id: PrimaryParameretrsWrapper.java,v 1.3 2005/08/08 11:59:53 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,9 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.2 $, $Date: 2005/06/02 12:53:29 $
- * @module analysis_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:59:53 $
+ * @module analysis
  */
 
 public class PrimaryParameretrsWrapper implements Wrapper {

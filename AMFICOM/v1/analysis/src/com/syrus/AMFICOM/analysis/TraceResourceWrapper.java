@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceResourceWrapper.java,v 1.4 2005/07/04 13:40:21 saa Exp $
+ * $Id: TraceResourceWrapper.java,v 1.5 2005/08/08 11:59:53 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,9 @@ import java.util.*;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/07/04 13:40:21 $
- * @module analysis_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:59:53 $
+ * @module analysis
  */
 
 public class TraceResourceWrapper implements Wrapper {

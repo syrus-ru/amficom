@@ -1,5 +1,5 @@
 /*-
- * $Id: UgoToolBar.java,v 1.7 2005/08/05 12:39:59 stas Exp $
+ * $Id: UgoToolBar.java,v 1.8 2005/08/08 11:58:07 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,9 +32,9 @@ import oracle.jdeveloper.layout.VerticalFlowLayout;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.MarqeeAction;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/08 11:58:07 $
+ * @module schemeclient
  */
 
 public class UgoToolBar extends JToolBar {

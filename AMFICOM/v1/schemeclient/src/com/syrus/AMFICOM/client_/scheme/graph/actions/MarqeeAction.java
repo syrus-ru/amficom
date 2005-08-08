@@ -1,5 +1,5 @@
 /*
- * $Id: MarqeeAction.java,v 1.3 2005/08/05 12:39:59 stas Exp $
+ * $Id: MarqeeAction.java,v 1.4 2005/08/08 11:58:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,9 @@ import javax.swing.AbstractAction;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/08/05 12:39:59 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 11:58:07 $
+ * @module schemeclient
  */
 
 public class MarqeeAction extends AbstractAction {

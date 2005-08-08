@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.8 2005/08/05 18:44:38 arseniy Exp $
+ * $Id: SchemeGraph.java,v 1.9 2005/08/08 11:58:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/05 18:44:38 $
- * @module schemeclient_v1
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 11:58:07 $
+ * @module schemeclient
  */
 
 public class SchemeGraph extends GPGraph {

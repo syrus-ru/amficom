@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersWrapper.java,v 1.3 2005/07/15 14:33:13 saa Exp $
+ * $Id: AnalysisParametersWrapper.java,v 1.4 2005/08/08 11:59:52 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/07/15 14:33:13 $
- * @module analysis_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 11:59:52 $
+ * @module analysis
  */
 
 public class AnalysisParametersWrapper implements Wrapper {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementPropertiesManager.java,v 1.4 2005/08/05 12:39:59 stas Exp $
+ * $Id: SchemeElementPropertiesManager.java,v 1.5 2005/08/08 11:58:07 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.scheme.SchemeElementWrapper;
 
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/08/05 12:39:59 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:58:07 $
+ * @module schemeclient
  */
 
 public class SchemeElementPropertiesManager implements VisualManager {

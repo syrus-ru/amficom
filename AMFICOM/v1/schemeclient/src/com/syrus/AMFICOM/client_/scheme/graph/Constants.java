@@ -1,5 +1,5 @@
 /*
- * $Id: Constants.java,v 1.7 2005/08/05 08:21:34 stas Exp $
+ * $Id: Constants.java,v 1.8 2005/08/08 11:58:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/05 08:21:34 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/08 11:58:07 $
+ * @module schemeclient
  */
 
 public interface Constants {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.11 2005/08/08 08:17:19 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.12 2005/08/08 11:58:08 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,9 +30,9 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/08 08:17:19 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/08 11:58:08 $
+ * @module schemeclient
  */
 
 public class SchemeTreeUI extends IconedTreeUI {

@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypePropertiesManager.java,v 1.8 2005/08/05 12:39:58 stas Exp $
+ * $Id: LinkTypePropertiesManager.java,v 1.9 2005/08/08 11:58:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.configuration.LinkTypeWrapper;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/08/05 12:39:58 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 11:58:06 $
+ * @module schemeclient
  */
 
 public class LinkTypePropertiesManager implements VisualManager {

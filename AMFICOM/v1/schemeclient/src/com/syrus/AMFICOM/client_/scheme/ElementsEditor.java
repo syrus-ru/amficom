@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditor.java,v 1.4 2005/08/05 18:44:38 arseniy Exp $
+ * $Id: ElementsEditor.java,v 1.5 2005/08/08 11:58:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/05 18:44:38 $
- * @module schemeclient_v1
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:58:06 $
+ * @module schemeclient
  */
 
 public class ElementsEditor extends AbstractApplication {

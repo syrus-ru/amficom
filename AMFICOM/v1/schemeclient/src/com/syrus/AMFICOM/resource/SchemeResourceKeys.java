@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResourceKeys.java,v 1.5 2005/08/04 09:19:00 stas Exp $
+ * $Id: SchemeResourceKeys.java,v 1.6 2005/08/08 11:58:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,9 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/04 09:19:00 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/08 11:58:08 $
+ * @module schemeclient
  */
 
 public interface SchemeResourceKeys extends ResourceKeys {

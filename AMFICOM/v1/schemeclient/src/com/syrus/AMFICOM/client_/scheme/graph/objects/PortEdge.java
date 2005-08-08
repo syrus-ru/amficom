@@ -1,5 +1,5 @@
 /*
- * $Id: PortEdge.java,v 1.5 2005/08/01 07:52:28 stas Exp $
+ * $Id: PortEdge.java,v 1.6 2005/08/08 11:58:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,9 +26,9 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * used just for identification of link between PortCell and DeviceCell
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/01 07:52:28 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/08 11:58:07 $
+ * @module schemeclient
  */
 
 public class PortEdge extends DefaultEdge {

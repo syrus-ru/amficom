@@ -1,5 +1,5 @@
 /*-
-* $Id: ScalableToolBar.java,v 1.5 2005/07/08 11:58:08 saa Exp $
+* $Id: ScalableToolBar.java,v 1.6 2005/08/08 11:59:52 arseniy Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,10 +21,10 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/08 11:58:08 $
- * @author $Author: saa $
+ * @version $Revision: 1.6 $, $Date: 2005/08/08 11:59:52 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module analysis_v1
+ * @module analysis
  */
 public class ScalableToolBar extends ToolBarPanel
 {

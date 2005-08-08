@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.17 2005/08/08 08:17:19 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.18 2005/08/08 11:58:08 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,9 +60,9 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/08/08 08:17:19 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/08/08 11:58:08 $
+ * @module schemeclient
  */
 
 public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {

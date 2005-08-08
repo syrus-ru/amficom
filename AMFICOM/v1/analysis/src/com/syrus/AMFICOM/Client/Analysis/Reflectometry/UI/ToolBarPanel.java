@@ -1,5 +1,5 @@
 /*-
-* $Id: ToolBarPanel.java,v 1.4 2005/07/08 11:58:08 saa Exp $
+* $Id: ToolBarPanel.java,v 1.5 2005/08/08 11:59:52 arseniy Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,9 +22,9 @@ import javax.swing.JToolBar;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/08 11:58:08 $
- * @author $Author: saa $
- * @module analysis_v1
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:59:52 $
+ * @author $Author: arseniy $
+ * @module analysis
  */
 public class ToolBarPanel extends JToolBar
 {

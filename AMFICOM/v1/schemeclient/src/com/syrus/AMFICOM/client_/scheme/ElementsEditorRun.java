@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorRun.java,v 1.3 2005/06/22 10:16:05 stas Exp $
+ * $Id: ElementsEditorRun.java,v 1.4 2005/08/08 11:58:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,9 @@ package com.syrus.AMFICOM.client_.scheme;
 
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.3 $, $Date: 2005/06/22 10:16:05 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 11:58:06 $
+ * @module schemeclient
  */
 
 public class ElementsEditorRun {

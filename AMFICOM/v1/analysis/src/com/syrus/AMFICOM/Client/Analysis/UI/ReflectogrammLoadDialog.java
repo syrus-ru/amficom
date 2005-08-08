@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogrammLoadDialog.java,v 1.25 2005/07/28 11:59:11 saa Exp $
+ * $Id: ReflectogrammLoadDialog.java,v 1.26 2005/08/08 11:59:52 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,9 +52,9 @@ import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/07/28 11:59:11 $
- * @author $Author: saa $
- * @module analysis_v1
+ * @version $Revision: 1.26 $, $Date: 2005/08/08 11:59:52 $
+ * @author $Author: arseniy $
+ * @module analysis
  */
 public class ReflectogrammLoadDialog extends JDialog {
 	private static final long serialVersionUID = 3544388106469259320L;

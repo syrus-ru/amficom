@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectSelectedEvent.java,v 1.6 2005/08/05 12:39:58 stas Exp $
+ * $Id: ObjectSelectedEvent.java,v 1.7 2005/08/08 11:58:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import java.beans.PropertyChangeEvent;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/05 12:39:58 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/08/08 11:58:06 $
+ * @module schemeclient
  */
 
 public class ObjectSelectedEvent extends PropertyChangeEvent {

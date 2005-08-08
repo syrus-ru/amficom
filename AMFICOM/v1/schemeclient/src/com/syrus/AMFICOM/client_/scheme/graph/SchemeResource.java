@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.7 2005/08/05 12:39:59 stas Exp $
+ * $Id: SchemeResource.java,v 1.8 2005/08/08 11:58:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,9 +30,9 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/05 12:39:59 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/08 11:58:07 $
+ * @module schemeclient
  */
 
 public class SchemeResource {

@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.5 2005/07/28 09:15:39 stas Exp $
+ * $Id: ResultChildrenFactory.java,v 1.6 2005/08/08 11:59:52 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,9 +67,9 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/07/28 09:15:39 $
- * @module analysis_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/08 11:59:52 $
+ * @module analysis
  */
 
 public class ResultChildrenFactory implements ChildrenFactory {

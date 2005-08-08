@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.12 2005/08/08 08:17:19 stas Exp $
+ * $Id: DeleteAction.java,v 1.13 2005/08/08 11:58:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,9 +49,9 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/08 08:17:19 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/08/08 11:58:07 $
+ * @module schemeclient
  */
 
 public class DeleteAction extends AbstractAction {

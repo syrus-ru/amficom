@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.20 2005/08/05 18:44:38 arseniy Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.21 2005/08/08 11:58:07 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,8 +69,8 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/08/05 18:44:38 $
- * @module schemeclient_v1
+ * @version $Revision: 1.21 $, $Date: 2005/08/08 11:58:07 $
+ * @module schemeclient
  */
 
 public class SchemeMarqueeHandler extends BasicMarqueeHandler {

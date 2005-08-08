@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeGeneralPanel.java,v 1.10 2005/08/05 12:39:58 stas Exp $
+ * $Id: EquipmentTypeGeneralPanel.java,v 1.11 2005/08/08 11:58:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,9 +45,9 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/05 12:39:58 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/08/08 11:58:06 $
+ * @module schemeclient
  */
 
 public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {

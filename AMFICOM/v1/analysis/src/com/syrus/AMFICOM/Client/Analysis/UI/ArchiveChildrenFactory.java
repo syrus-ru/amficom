@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.15 2005/07/11 08:24:11 bass Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.16 2005/08/08 11:59:52 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,10 +49,10 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/07/11 08:24:11 $
- * @author $Author: bass $
+ * @version $Revision: 1.16 $, $Date: 2005/08/08 11:59:52 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module analysis_v1
+ * @module analysis
  */
 public class ArchiveChildrenFactory implements ChildrenFactory {
 

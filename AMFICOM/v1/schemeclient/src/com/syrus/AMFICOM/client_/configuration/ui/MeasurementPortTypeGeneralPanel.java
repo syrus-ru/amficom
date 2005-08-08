@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.20 2005/08/05 18:44:38 arseniy Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.21 2005/08/08 11:58:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/08/05 18:44:38 $
- * @module schemeclient_v1
+ * @version $Revision: 1.21 $, $Date: 2005/08/08 11:58:06 $
+ * @module schemeclient
  */
 
 public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor {

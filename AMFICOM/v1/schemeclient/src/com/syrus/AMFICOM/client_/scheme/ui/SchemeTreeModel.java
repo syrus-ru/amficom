@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.30 2005/08/05 12:40:00 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.31 2005/08/08 11:58:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,9 +9,9 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.30 $, $Date: 2005/08/05 12:40:00 $
- * @module schemeclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/08/08 11:58:08 $
+ * @module schemeclient
  */
 
 import java.util.Collection;

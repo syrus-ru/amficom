@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.17 2005/08/05 18:44:38 arseniy Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.18 2005/08/08 11:58:06 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/05 18:44:38 $
- * @module schemeclient_v1
+ * @version $Revision: 1.18 $, $Date: 2005/08/08 11:58:06 $
+ * @module schemeclient
  */
 
 import java.awt.BorderLayout;
