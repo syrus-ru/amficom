@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryTreeModel.java,v 1.1 2005/08/02 07:25:31 krupenn Exp $
+ * $Id: MapLibraryTreeModel.java,v 1.2 2005/08/08 10:41:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -111,7 +111,9 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 		for(Iterator iter = library.getChildren().iterator(); iter.hasNext();) {
 			LibraryEntry entry = (LibraryEntry )iter.next();
 			if(entry instanceof SiteNodeType) {
-				siteNodeTypeChildren.add(entry);
+				if(((SiteNodeType)entry).isTopological()) {
+					siteNodeTypeChildren.add(entry);
+				}
 			}
 		}
 		Collections.sort(siteNodeTypeChildren, MapLibraryTreeModel.nodeTypeComparator);
@@ -121,11 +123,9 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 		List toRemove = new LinkedList();
 
 		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
-			PopulatableIconedNode childNode = (PopulatableIconedNode )iter.next();
+			IconedNode childNode = (IconedNode )iter.next();
 			SiteNodeType type = (SiteNodeType )childNode.getObject();
 			if(siteNodeTypeChildren.contains(type)) {
-				if(childNode.isPopulated())
-					childNode.populate();
 				nodePresense.put(type, childNode);
 			}
 			else
@@ -161,7 +161,9 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 		for(Iterator iter = library.getChildren().iterator(); iter.hasNext();) {
 			LibraryEntry entry = (LibraryEntry )iter.next();
 			if(entry instanceof PhysicalLinkType) {
-				physicalLinkTypeChildren.add(entry);
+				if(((PhysicalLinkType)entry).isTopological()) {
+					physicalLinkTypeChildren.add(entry);
+				}
 			}
 		}
 		Collections.sort(physicalLinkTypeChildren, MapLibraryTreeModel.linkTypeComparator);
@@ -171,11 +173,9 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 		List toRemove = new LinkedList();
 
 		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
-			PopulatableIconedNode childNode = (PopulatableIconedNode )iter.next();
+			IconedNode childNode = (IconedNode )iter.next();
 			PhysicalLinkType type = (PhysicalLinkType )childNode.getObject();
 			if(physicalLinkTypeChildren.contains(type)) {
-				if(childNode.isPopulated())
-					childNode.populate();
 				nodePresense.put(type, childNode);
 			}
 			else
