@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.103 2005/07/27 07:48:30 saa Exp $
+ * $Id: Heap.java,v 1.104 2005/08/08 13:20:00 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.103 $, $Date: 2005/07/27 07:48:30 $
+ * @version $Revision: 1.104 $, $Date: 2005/08/08 13:20:00 $
  * @module
  */
 public class Heap
@@ -766,7 +766,7 @@ public class Heap
 	public static void primaryTraceOpened() {
 		notifyBsHashAdd(PRIMARY_TRACE_KEY);
 		notifyPrimaryTraceOpened();
-		if (refAnalysisPrimary.getMTAE().getNEvents() >= 0)
+		if (refAnalysisPrimary.getMTAE().getNEvents() > 0)
 			currentEvent.toEvent(0); // (1)
 		notifyCurrentEventChanged(); // (2)
 		// операторы (1) и (2) делают текущим событие #0
