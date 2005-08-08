@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.14 2005/07/28 20:55:07 arseniy Exp $
+ * $Id: TimeLine.java,v 1.15 2005/08/08 10:12:59 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/07/28 20:55:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/08/08 10:12:59 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
  */
@@ -44,7 +44,7 @@ public abstract class TimeLine extends JComponent {
 	long		end = 0;
 	double		scale = 0.0;
 
-	SortedSet<TestTimeItem>	timeItems	= new TreeSet<TestTimeItem>();
+	protected SortedSet<TestTimeItem>	timeItems	= new TreeSet<TestTimeItem>();
 
 	public TimeLine() {
 		

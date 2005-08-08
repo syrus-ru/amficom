@@ -24,6 +24,7 @@ import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
@@ -46,6 +47,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
+import com.syrus.util.Log;
 
 public class TestLine extends TimeLine {
 
@@ -657,10 +659,23 @@ public class TestLine extends TimeLine {
 	public void setStart(long start) {
 		long oldValue = super.start;
 		super.start = start;
-		long diff = oldValue - this.start;
+		int diff = (int) (this.scale * (oldValue - this.start));
+//		System.out.println("TestLine.setStart() | " + this.timeItems.size());
 		for(TestTimeItem testTimeItem : this.timeItems) {
-			testTimeItem.x += (int) (this.scale * diff);
+//			System.out.println("TestLine.setStart() | x: " + testTimeItem.x);
+			testTimeItem.x += diff;
+//			System.out.println("TestLine.setStart() | diff:" + diff +" , x: " + testTimeItem.x);
 		}
+		
+		for(TestTimeItem testTimeItem : this.unsavedTestTimeItems) {
+//			System.out.println("TestLine.setStart() | x: " + testTimeItem.x);
+			testTimeItem.x += diff;
+//			System.out.println("TestLine.setStart() | diff:" + diff +" , x: " + testTimeItem.x);
+		}
+		
+//		System.out.println("TestLine.setStart() | " + new Date(start));
+//		super.repaint();
+//		super.revalidate();
 	}
 	
 	@Override
@@ -702,35 +717,17 @@ public class TestLine extends TimeLine {
 
 				Color selectedColor = null;
 				Color unselectedColor = null;
-				// Log.debugMessage("TestLine.refreshTimeItems |
-				// testTimeLineList.size " + testTimeLineList.size(),
-				// Log.FINEST);
 
 				for (Iterator it = testTimeLineList.iterator(); it.hasNext(); i++) {
 					TestTimeLine testTimeLine = (TestTimeLine) it.next();
 
 					TestTimeItem testTimeItem = new TestTimeItem();
-					// Log.debugMessage("TestLine.refreshTimeItems | " +
-					// testTimeLine.test.getId(), Log.FINEST);
 
 					testTimeItem.x = PlanPanel.MARGIN / 2 + (int) (this.scale * (testTimeLine.startTime - this.start));
-					// Log.debugMessage("TestLine.refreshTimeItems |
-					// testTimeLine.duration " + testTimeLine.duration,
-					// Log.FINEST);
 					int width = (int) (this.scale * testTimeLine.duration);
-					// Log.debugMessage("TestLine.refreshTimeItems | scale "
-					// +scale , Log.FINEST);
-
-					// Log.debugMessage("TestLine.refreshTimeItems | width " +
-					// width, Log.FINEST);
 
 					width = width > this.minimalWidth ? width : this.minimalWidth;
-					// Log.debugMessage("TestLine.refreshTimeItems | width " +
-					// width, Log.FINEST);
 					testTimeItem.setWidth(width);
-
-					// Log.debugMessage("TestLine.refreshTimeItems
-					// |testTimeItem.width " + testTimeItem.width, Log.FINEST);
 
 					if (testTimeLine.haveMeasurement) {
 						selectedColor = SchedulerModel.COLOR_COMPLETED_SELECTED;
@@ -739,12 +736,12 @@ public class TestLine extends TimeLine {
 						selectedColor = SchedulerModel.getColor(test.getStatus(), true);
 						unselectedColor = SchedulerModel.getColor(test.getStatus(), false);
 					}
-					// Log.debugMessage("TestLine.refreshTimeItems | test is " +
-					// test.getId(), Log.FINEST);
 					testTimeItem.object = test.getId();
 					testTimeItem.selectedColor = selectedColor;
 					testTimeItem.color = unselectedColor;
 
+//					System.out.println("TestLine.refreshTimeItems() | " + test.getId() + ", x:" + testTimeItem.x + ", w:" + testTimeItem.getWidth());
+					
 					this.timeItems.add(testTimeItem);
 				}
 
@@ -758,8 +755,7 @@ public class TestLine extends TimeLine {
 				TestTimeItem testTimeItem = (TestTimeItem) it.next();
 				if (prevItem != null && (testTimeItem.x - (prevItem.x + prevItem.getWidth())) < 0) {
 					it.remove();
-					// Log.debugMessage("TimeStampsEditor.refreshTimeItems |
-					// remove testTimeItem " + testTimeItem.object, Log.FINEST);
+//					 Log.debugMessage("TimeStampsEditor.refreshTimeItems | remove testTimeItem " + testTimeItem.object, Level.FINEST);
 				} else {
 					prevItem = testTimeItem;
 				}

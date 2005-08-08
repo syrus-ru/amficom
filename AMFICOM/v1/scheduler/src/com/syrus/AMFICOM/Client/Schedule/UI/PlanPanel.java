@@ -354,8 +354,8 @@ ActionListener, PropertyChangeListener {
 			String value = this.sdf.format(this.cal.getTime());
 			this.cal.setTimeInMillis(this.cal.getTimeInMillis() + tmpDiff);
 			g.drawString(value, (int) (tmpDelta * counter) + MARGIN - shift, h - 7);
-			if (value.startsWith("00:00")) //$NON-NLS-1$
-				g.drawString(new SimpleDateFormat("dd.MM.yyyy").format(this.cal //$NON-NLS-1$
+			if (value.startsWith("00:00")) 
+				g.drawString(new SimpleDateFormat("dd.MM.yyyy").format(this.cal 
 						.getTime()), (int) (tmpDelta * counter) + MARGIN - 27, h - 17);
 			counter++;
 		}
@@ -603,8 +603,15 @@ ActionListener, PropertyChangeListener {
 		Test selectedTest = this.schedulerModel.getSelectedTest();
 		if (selectedTest != null) {
 			Date startTime = selectedTest.getStartTime();
-			this.toolBar.dateSpinner.setValue(startTime);
-			this.toolBar.timeSpinner.setValue(startTime);
+			if (!(startTime.after(this.scaleStart) && startTime.before(this.scaleEnd))) {
+				this.toolBar.dateSpinner.setValue(startTime);
+				this.toolBar.timeSpinner.setValue(startTime);
+				for (final Identifier monitoredElementId : this.testLines.keySet()) {
+					final TestLine line = this.testLines.get(monitoredElementId);
+					line.refreshTimeItems();
+				}
+
+			}
 		}
 
 		

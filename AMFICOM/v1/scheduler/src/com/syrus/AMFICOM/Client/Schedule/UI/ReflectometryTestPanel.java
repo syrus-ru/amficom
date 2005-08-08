@@ -69,7 +69,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/08/08 09:26:14 $
+ * @version $Revision: 1.56 $, $Date: 2005/08/08 10:12:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -1037,7 +1037,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			return;
 		}		
 		
-		System.out.println("ReflectometryTestPanel.setSet() | " + set.getId());
+//		System.out.println("ReflectometryTestPanel.setSet() | " + set.getId());
 		
 //		if (this.setId != null && this.setId.equals(set.getId())) {
 //			return;
