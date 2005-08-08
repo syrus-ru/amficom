@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.31 2005/08/02 17:01:56 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.32 2005/08/08 15:21:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/08/02 17:01:56 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/08 15:21:14 $
  * @module mapviewclient_v1
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
@@ -165,9 +165,9 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			CharacteristicType cType) {
 		try {
 			long d = System.currentTimeMillis();
-			Set<Characteristic> characteristics = mapElement.getCharacteristics();
+			Set<Characteristic> characteristics = mapElement.getCharacteristics(false);
 			long f = System.currentTimeMillis();
-			System.out.println("mapElement.getCharacteristics() at " + (f - d) + " ms");
+			Log.debugMessage("mapElement.getCharacteristics() at " + (f - d) + " ms", Level.INFO);
 			for(Iterator it = characteristics.iterator(); it.hasNext();) {
 				Characteristic ch = (Characteristic )it.next();
 				if(ch.getType().equals(cType)) {

@@ -1,5 +1,5 @@
 /*
- * $Id: MapElementCharacteristicsEditor.java,v 1.16 2005/08/08 13:06:50 krupenn Exp $
+ * $Id: MapElementCharacteristicsEditor.java,v 1.17 2005/08/08 15:22:06 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/08/08 13:06:50 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/08 15:22:06 $
  * @module mapviewclient_v1
  */
 
@@ -56,7 +56,7 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 							mapElement.getId(), 
 							true);
 				try {
-					super.addCharacteristics(mapElement.getCharacteristics(), mapElement.getId());
+					super.addCharacteristics(mapElement.getCharacteristics(false), mapElement.getId());
 				} catch(ApplicationException e) {
 					Log.debugException(e, Level.WARNING);
 				}
@@ -72,7 +72,7 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 					siteNodeType.getId(), 
 					true);
 			try {
-				super.addCharacteristics(siteNodeType.getCharacteristics(), siteNodeType.getId());
+				super.addCharacteristics(siteNodeType.getCharacteristics(false), siteNodeType.getId());
 			} catch(ApplicationException e) {
 				Log.debugException(e, Level.WARNING);
 			}
@@ -85,7 +85,7 @@ public class MapElementCharacteristicsEditor extends CharacteristicsPanel {
 					physicalLinkType.getId(), 
 					true);
 			try {
-				super.addCharacteristics(physicalLinkType.getCharacteristics(), physicalLinkType.getId());
+				super.addCharacteristics(physicalLinkType.getCharacteristics(false), physicalLinkType.getId());
 			} catch(ApplicationException e) {
 				Log.debugException(e, Level.WARNING);
 			}

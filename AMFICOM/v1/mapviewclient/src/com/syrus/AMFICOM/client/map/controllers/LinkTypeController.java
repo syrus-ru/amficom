@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.42 2005/08/08 13:06:24 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.43 2005/08/08 15:21:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.42 $, $Date: 2005/08/08 13:06:24 $
+ * @version $Revision: 1.43 $, $Date: 2005/08/08 15:21:14 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -208,9 +208,9 @@ public final class LinkTypeController extends AbstractLinkController {
 			CharacteristicType cType) {
 		try {
 			long d = System.currentTimeMillis();
-			Set<Characteristic> characteristics = linkType.getCharacteristics();
+			Set<Characteristic> characteristics = linkType.getCharacteristics(false);
 			long f = System.currentTimeMillis();
-			System.out.println("linkType.getCharacteristics() at " + (f - d) + " ms");
+			Log.debugMessage("linkType.getCharacteristics() at " + (f - d) + " ms", Level.INFO);
 			for(Iterator it = characteristics.iterator(); it.hasNext();) {
 				Characteristic ch = (Characteristic )it.next();
 				if(ch.getType().equals(cType))
