@@ -712,6 +712,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 			int selectedIndex = this.testSetups.getSelectedIndex();
 			this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);
 			this.tabbedPane.setSelectedIndex(1);
+			this.setMeasurementSetup((MeasurementSetup) evt.getNewValue());
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_ANALYSIS_TYPES)) {
 			this.setAnalysisTypes((Collection) newValue);
 		} 

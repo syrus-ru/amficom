@@ -68,8 +68,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/08/08 11:50:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.60 $, $Date: 2005/08/08 12:30:52 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -971,8 +971,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				try {
 					java.util.Set storableObjects = StorableObjectPool.getStorableObjects(selectedTestIds, true);
 					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-					boolean creareNewSetup = false;
-
+					
+					MeasurementSetup measurementSetup1 = null;
+					
 					for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
 						Test test = (Test) iterator.next();
 						if (test.isChanged()) {
@@ -993,7 +994,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 									}
 
 									if (measurementSetupId == null) {
-										MeasurementSetup measurementSetup1 = MeasurementSetup
+										measurementSetup1 = MeasurementSetup
 												.createInstance(LoginManager.getUserId(), parameterSet,
 													measurementSetup.getCriteriaSet(), measurementSetup
 															.getThresholdSet(), measurementSetup.getEtalon(),
@@ -1006,7 +1007,6 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 										measurementSetupId = measurementSetup1.getId();
 										this.unchangedMeasurementSetupNewMap.put(measurementSetup.getId(),
 											measurementSetupId);
-										creareNewSetup = true;
 									}
 
 									test.setMeasurementSetupIds(Collections.singleton(measurementSetupId));
@@ -1017,13 +1017,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						}
 					}
 
-					if (creareNewSetup) {
+					if (measurementSetup1 != null) {
 						this.skip = true;
 						this.dispatcher
 								.firePropertyChange(new PropertyChangeEvent(
 																			this,
 																			SchedulerModel.COMMAND_ADD_NEW_MEASUREMENT_SETUP,
-																			null, null));
+																			null, measurementSetup1));
 						this.skip = false;
 					}
 				} catch (ApplicationException e) {
