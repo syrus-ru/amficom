@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.59 2005/08/03 18:51:34 krupenn Exp $
+ * $Id: MapFrame.java,v 1.60 2005/08/08 10:38:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,7 +75,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.59 $, $Date: 2005/08/03 18:51:34 $
+ * @version $Revision: 1.60 $, $Date: 2005/08/08 10:38:12 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -105,11 +105,6 @@ public class MapFrame extends JInternalFrame
 	protected MapToolBar mapToolBar;
 
 	/**
-	 * Панель с доступными для добавления объектами карты
-	 */
-	protected MapElementsBarPanel mapElementsPanel;
-
-	/**
 	 * Панель отображающая координты курсора и масштаб
 	 */
 	protected MapStatusBar mapStatusbar;
@@ -124,8 +119,7 @@ public class MapFrame extends JInternalFrame
 	private MapConnection mapConnection;
 
 	public MapFrame(ApplicationContext aContext)
-		throws MapConnectionException, MapDataException, ApplicationException
-	{
+			throws MapConnectionException, MapDataException, ApplicationException {
 		super();
 
 		// экземпляр обозревателя создается менеджером карты на основе
@@ -175,13 +169,11 @@ public class MapFrame extends JInternalFrame
 	/**
 	 * геттер
 	 */
-	public NetMapViewer getMapViewer()
-	{
+	public NetMapViewer getMapViewer() {
 		return this.mapViewer;
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit()
 			.getImage("images/main/map_mini.gif")
 				.getScaledInstance(16, 16, Image.SCALE_DEFAULT)));
@@ -194,8 +186,6 @@ public class MapFrame extends JInternalFrame
 		this.setTitle(LangModelMap.getString("Map"));
 		this.getContentPane().setLayout(new BorderLayout());
 
-//		JPanel mapPanel = new JPanel();
-		
 		// визуальный компонент обозревателя карты
 		JComponent mapVisualComponent;
 	
@@ -205,15 +195,8 @@ public class MapFrame extends JInternalFrame
 
 		this.mapToolBar = new MapToolBar(this.mapViewer);
 		this.mapStatusbar = new MapStatusBar(this.mapViewer);
-		this.mapElementsPanel = new MapElementsBarPanel();
-		
-//		mapPanel.setLayout(new BorderLayout());
-//		mapPanel.add(mapVisualComponent, BorderLayout.CENTER);
-
 		this.getContentPane().add(this.mapToolBar, BorderLayout.NORTH);
 		this.getContentPane().add(this.mapStatusbar, BorderLayout.SOUTH);
-		this.getContentPane().add(this.mapElementsPanel, BorderLayout.WEST);
-//		this.getContentPane().add(mapPanel, BorderLayout.CENTER);
 		this.getContentPane().add(mapVisualComponent, BorderLayout.CENTER);		
 		
 		this.addComponentListener(new MapMainFrameComponentAdapter(this));
@@ -223,29 +206,29 @@ public class MapFrame extends JInternalFrame
 	/**
 	 * Данные отображения сохраняются в файл в обозревателе карты
 	 */
-	public void saveConfig()
-	{
+	public void saveConfig() {
 		if(this.mapViewer != null)
 			this.mapViewer.saveConfig();
 	}
 
-	public void finalizeModule()
-	{
+	public void finalizeModule() {
 		setContext(null);
-		Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, this);
+		Environment.getDispatcher().removePropertyChangeListener(
+				ContextChangeEvent.TYPE,
+				this);
 	}
 
 	/**
 	 * Одноразовая инициализация окна карты
-	 */	
-	public void initModule()
-	{
-		Environment.getDispatcher().addPropertyChangeListener(ContextChangeEvent.TYPE, this);
+	 */
+	public void initModule() {
+		Environment.getDispatcher().addPropertyChangeListener(
+				ContextChangeEvent.TYPE,
+				this);
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 	}
 
-	public void setCommands(ApplicationModel aModel)
-	{
+	public void setCommands(ApplicationModel aModel) {
 		aModel.setCommand(MapApplicationModel.OPERATION_CENTER_SELECTION, new CenterSelectionCommand(aModel, this.mapViewer));
 		aModel.setCommand(MapApplicationModel.MODE_NODE_LINK, new MapModeCommand(aModel, this.mapViewer, MapApplicationModel.MODE_NODE_LINK, MapState.SHOW_NODE_LINK));
 		aModel.setCommand(MapApplicationModel.MODE_LINK, new MapModeCommand(aModel, this.mapViewer, MapApplicationModel.MODE_LINK, MapState.SHOW_PHYSICAL_LINK));
@@ -265,11 +248,10 @@ public class MapFrame extends JInternalFrame
 		aModel.fireModelChanged();
 	}
 
-	public void setContext(ApplicationContext aContext)
-	{
+	public void setContext(ApplicationContext aContext) {
 		if(this.aContext != null)
-			if(this.aContext.getDispatcher() != null)
-			{
+			if(this.aContext.getDispatcher() != null) {
+				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.OTHER_SELECTED, this);
 				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_ELEMENT_CHANGED, this);
 				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
 				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.NEED_SELECT, this);
@@ -288,10 +270,10 @@ public class MapFrame extends JInternalFrame
 
 		this.getMapViewer().getLogicalNetLayer().setContext(aContext);
 
-		if(aContext != null)
-		{
+		if(aContext != null) {
 			this.aContext = aContext;
 			setModel(aContext.getApplicationModel());
+			aContext.getDispatcher().addPropertyChangeListener(MapEvent.OTHER_SELECTED, this);
 			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_ELEMENT_CHANGED, this);
 			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
 			aContext.getDispatcher().addPropertyChangeListener(MapEvent.NEED_SELECT, this);
@@ -306,9 +288,6 @@ public class MapFrame extends JInternalFrame
 			aContext.getDispatcher().addPropertyChangeListener(MapEvent.NEED_REPAINT, this);
 			aContext.getDispatcher().addPropertyChangeListener(MapEvent.DESELECT_ALL, this);
 			aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
-			
-			this.mapElementsPanel.setContext(this.aContext);		
-			this.mapElementsPanel.setEnableDisablePanel(true);
 		}
 		
 	}
@@ -316,88 +295,69 @@ public class MapFrame extends JInternalFrame
 	/**
 	 * геттер
 	 */
-	public ApplicationContext getContext()
-	{
+	public ApplicationContext getContext() {
 		return this.aContext;
 	}
 
-	public void setModel(ApplicationModel aModel)
-	{
+	public void setModel(ApplicationModel aModel) {
 		setCommands(aModel);
 		aModel.addListener(this.mapToolBar);
 		this.mapToolBar.setModel(aModel);
-	    aModel.fireModelChanged();
+		aModel.fireModelChanged();
 	}
 
 	/**
 	 * геттер
 	 */
-	public ApplicationModel getModel()
-	{
+	public ApplicationModel getModel() {
 		return this.aContext.getApplicationModel();
 	}
 
 	/**
 	 * геттер
 	 */
-	public Dispatcher getInternalDispatcher()
-	{
+	public Dispatcher getInternalDispatcher() {
 		return this.internalDispatcher;
 	}
 
 	/**
 	 * обработка событий
 	 */
-	public void propertyChange(PropertyChangeEvent pce)
-	{
-		if(pce.getPropertyName().equals(ContextChangeEvent.TYPE))
-		{
+	public void propertyChange(PropertyChangeEvent pce) {
+		if(pce.getPropertyName().equals(ContextChangeEvent.TYPE)) {
 			ContextChangeEvent cce = (ContextChangeEvent )pce;
-			if(cce.isDomainSelected())
-			{
+			if(cce.isDomainSelected()) {
 				Identifier di = LoginManager.getDomainId();
 				if(getMapView() == null)
 					return;
 				Identifier di2 = getMapView().getDomainId();
-				if(!di.equals(di2))
-				{
-//					setMapView(null);
-					this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
+				if(!di.equals(di2)) {
+					this.aContext.getDispatcher().firePropertyChange(
+							new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
 				}
 			}
 		}
-		else
-		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_CENTER_CHANGED))
-		{
+		else if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_CENTER_CHANGED)) {
 			DoublePoint p = (DoublePoint )pce.getNewValue();
 			this.mapStatusbar.showLatLong(p.getY(), p.getX());
 		}
-		else
-		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_SCALE_CHANGED))
-		{
+		else if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_SCALE_CHANGED)) {
 			Double p = (Double )pce.getNewValue();
 			this.mapStatusbar.showScale(p.doubleValue());
-//			this.mapViewer.getLogicalNetLayer().updateZoom();
 		}
-		else
-		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_SELECTED))
-		{
+		else if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_SELECTED)) {
 			this.mapToolBar.setEnableDisablePanel(true);
 		}
-		else
-		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_DESELECTED))
-		{
+		else if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_DESELECTED)) {
 			this.mapToolBar.setEnableDisablePanel(false);
 		}
-		else
-		{
+		else {
 			getMapViewer().propertyChange(pce);
 		}
 	}
 
 	public void setMapView( MapView mapView)
-		throws MapConnectionException, MapDataException
-	{
+			throws MapConnectionException, MapDataException {
 		getMapViewer().getLogicalNetLayer().setMapView(mapView);
 		if(mapView != null) {
 			this.mapViewer.setScale(mapView.getScale());
@@ -407,14 +367,12 @@ public class MapFrame extends JInternalFrame
 		this.mapViewer.repaint(true);
 	}
 
-	public void closeMap()
-	{
+	public void closeMap() {
 		System.out.println("Closing map");
 		setContext(null);
 	}
 
-	public boolean checkChangesPresent()
-	{
+	public boolean checkChangesPresent() {
 		boolean changesPresent = false;
 		
 		MapView mapView = getMapView();
@@ -436,277 +394,127 @@ public class MapFrame extends JInternalFrame
 		}
 		if(changesPresent) {
 			String message = "Есть несохраненные измененные объекты. Продолжить?";
-			
+
 			int ret = JOptionPane.showConfirmDialog(
 					Environment.getActiveWindow(),
 					message,
 					"Объект изменен",
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
-			if(ret == JOptionPane.YES_OPTION)
-			{
-				//TODO cancel changes
+			if(ret == JOptionPane.YES_OPTION) {
+				// TODO cancel changes
 				changesPresent = false;
-			}			
+			}
 		}
 		return changesPresent;
 	}
 
-//	public boolean checkCanCloseMap()
-//	{
-//		boolean canClose;
-//		
-//		if(getMapView() == null)
-//			return true;
-//	
-//		Map map = getMapView().getMap();
-//		
-//		if(map == null)
-//			return true;
-//		
-//		if(!getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP))
-//			return true;
-//		
-//		if(map.isChanged())
-//		{
-//			String message = "Объект " + map.getName() 
-//				+ " [" + LangModelMap.getString("Map") + "] "
-//				+ "изменен. Сохранить?";
-//				
-//			int ret = JOptionPane.showConfirmDialog(
-//					Environment.getActiveWindow(),
-//					message,
-//					"Сохранение объекта",
-//					JOptionPane.YES_NO_CANCEL_OPTION,
-//					JOptionPane.QUESTION_MESSAGE);
-//			if(ret == JOptionPane.CANCEL_OPTION)
-//			{
-//				canClose = false;
-//			}
-//			else
-//			if(ret == JOptionPane.NO_OPTION)
-//			{
-//				canClose = true;
-//			}
-//			else
-//			if(ret == JOptionPane.YES_OPTION)
-//			{
-//				try
-//				{
-//					StorableObjectPool.putStorableObject(map);
-//				}
-//				catch (IllegalObjectEntityException e)
-//				{
-//					e.printStackTrace();
-//				}
-//				try
-//				{
-//					StorableObjectPool.flush(map.getId(), true);//save map
-//				} catch(ApplicationException e) {
-//					e.printStackTrace();
-//				}
-//				canClose = true;
-//			}
-//			else
-//				canClose = false;
-//		}
-//		else
-//			canClose = true;
-//		return canClose;
-//	}
-//
-//	public boolean checkCanCloseMapView()
-//	{
-//		boolean canClose;
-//	
-//		MapView mapView = getMapView();
-//		
-//		if(mapView == null)
-//			return true;
-//	
-//		if(!getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_SAVE_MAP_VIEW))
-//			return true;
-//
-//		if(mapView.isChanged())
-//		{
-//			String message = "Объект " + mapView.getName() 
-//				+ " [" + LangModelMap.getString("MapView") + "] "
-//				+ "изменен. Сохранить?";
-//				
-//			int ret = JOptionPane.showConfirmDialog(
-//					Environment.getActiveWindow(),
-//					message,
-//					"Сохранение объекта",
-//					JOptionPane.YES_NO_CANCEL_OPTION,
-//					JOptionPane.QUESTION_MESSAGE);
-//			if(ret == JOptionPane.CANCEL_OPTION)
-//			{
-//				canClose = false;
-//			}
-//			else
-//			if(ret == JOptionPane.NO_OPTION)
-//			{
-//				canClose = true;
-//			}
-//			else
-//			if(ret == JOptionPane.YES_OPTION)
-//			{
-////				getContext().getDataSource().SaveMapView(mapView.getId());
-//				for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();)
-//				{
-//					Scheme scheme = (Scheme )it.next();
-//					if(scheme.isChanged())
-//						try
-//						{
-//							StorableObjectPool.flush(scheme.getId(), true);// save scheme
-//						}
-//						catch (VersionCollisionException e)
-//						{
-//							e.printStackTrace();
-//						}
-//						catch (IllegalDataException e)
-//						{
-//							e.printStackTrace();
-//						}
-//						catch (CommunicationException e)
-//						{
-//							e.printStackTrace();
-//						}
-//						catch (DatabaseException e)
-//						{
-//							e.printStackTrace();
-//						}
-//						catch(ApplicationException aExc)
-//						{
-//							aExc.printStackTrace();
-//						}
-//				}
-//				canClose = true;
-//			}
-//			else
-//				canClose = false;
-//		}
-//		else
-//			canClose = true;
-//		return canClose;
-//	}
-
-	public Map getMap()
-	{
+	public Map getMap() {
 		return getMapViewer().getLogicalNetLayer().getMapView().getMap();
 	}
 
-	public MapView getMapView()
-	{
+	public MapView getMapView() {
 		return getMapViewer().getLogicalNetLayer().getMapView();
 	}
 
-	void thisInternalFrameActivated(InternalFrameEvent e)
-	{
-//		this.grabFocus();
+	void thisInternalFrameActivated(InternalFrameEvent e) {
 		getMapViewer().getVisualComponent().grabFocus();
 
-		if(this.aContext.getDispatcher() != null)
-			if(getMapView() != null)
-			{
+		if(this.aContext.getDispatcher() != null) {
+			if(getMapView() != null) {
 				this.aContext.getDispatcher().firePropertyChange(
 					new MapEvent(getMapView(), MapEvent.MAP_VIEW_SELECTED));
 				this.aContext.getDispatcher().firePropertyChange(
 					new MapEvent(getMapView().getMap(), MapEvent.MAP_SELECTED));
 			}
-	}
-
-	void thisInternalFrameClosed(InternalFrameEvent e)
-	{
-		if(this.aContext.getDispatcher() != null)
-			this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
-		closeMap();
-	}
-
-	void thisInternalFrameDeactivated(InternalFrameEvent e)
-	{
-		if(this.aContext.getDispatcher() != null)
-		{
-			this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_DESELECTED));
-			this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_DESELECTED));
 		}
 	}
 
-	void thisInternalFrameOpened(InternalFrameEvent e)
-	{
-//		this.grabFocus();
+	void thisInternalFrameClosed(InternalFrameEvent e) {
+		if(this.aContext.getDispatcher() != null) {
+			this.aContext.getDispatcher().firePropertyChange(
+					new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
+		}
+		closeMap();
+	}
+
+	void thisInternalFrameDeactivated(InternalFrameEvent e) {
+		if(this.aContext.getDispatcher() != null) {
+			this.aContext.getDispatcher().firePropertyChange(
+					new MapEvent(this, MapEvent.MAP_VIEW_DESELECTED));
+			this.aContext.getDispatcher().firePropertyChange(
+					new MapEvent(this, MapEvent.MAP_DESELECTED));
+		}
+	}
+
+	void thisInternalFrameOpened(InternalFrameEvent e) {
 		getMapViewer().getVisualComponent().grabFocus();
 	}
 
-	void thisComponentShown(ComponentEvent e)
-	{
-		this.mapViewer.getVisualComponent().firePropertyChange(MAP_FRAME_SHOWN, false, true);
+	void thisComponentShown(ComponentEvent e) {
+		this.mapViewer.getVisualComponent().firePropertyChange(
+				MAP_FRAME_SHOWN, 
+				false, 
+				true);
 		MapFrame.this.mapViewer.getVisualComponent().requestFocus();
 	}
 
-	void thisComponentHidden(ComponentEvent e)
-	{
-		if(this.aContext.getDispatcher() != null)
-			this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
+	void thisComponentHidden(ComponentEvent e) {
+		if(this.aContext.getDispatcher() != null) {
+			this.aContext.getDispatcher().firePropertyChange(
+					new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
+		}
 		closeMap();
 	}
 
-	public void doDefaultCloseAction()
-	{
-		if (isMaximum())
-		try
-		{
-			setMaximum(false);
-		}
-		catch (java.beans.PropertyVetoException ex)
-		{
-			ex.printStackTrace();
-		}
+	public void doDefaultCloseAction() {
+		if(isMaximum())
+			try {
+				setMaximum(false);
+			} catch(java.beans.PropertyVetoException ex) {
+				ex.printStackTrace();
+			}
 		super.doDefaultCloseAction();
-    }
+	}
 
-	private class MapMainFrameComponentAdapter extends java.awt.event.ComponentAdapter
-	{
+	private class MapMainFrameComponentAdapter extends
+			java.awt.event.ComponentAdapter {
 		MapFrame adaptee;
-	
-		MapMainFrameComponentAdapter(MapFrame adaptee)
-		{
+
+		MapMainFrameComponentAdapter(MapFrame adaptee) {
 			this.adaptee = adaptee;
 		}
-	
-		public void componentShown(ComponentEvent e)
-		{
+
+		public void componentShown(ComponentEvent e) {
 			this.adaptee.thisComponentShown(e);
 		}
-	
-		public void componentHidden(ComponentEvent e)
-		{
+
+		public void componentHidden(ComponentEvent e) {
 			this.adaptee.thisComponentHidden(e);
 		}
 	}
-	
-	private class MapMainFrameInternalFrameAdapter extends javax.swing.event.InternalFrameAdapter
-	{
+
+	private class MapMainFrameInternalFrameAdapter extends
+			javax.swing.event.InternalFrameAdapter {
 		MapFrame adaptee;
-	
-		MapMainFrameInternalFrameAdapter(MapFrame adaptee)
-		{
+
+		MapMainFrameInternalFrameAdapter(MapFrame adaptee) {
 			this.adaptee = adaptee;
 		}
-		public void internalFrameActivated(InternalFrameEvent e)
-		{
+
+		public void internalFrameActivated(InternalFrameEvent e) {
 			this.adaptee.thisInternalFrameActivated(e);
 		}
-		public void internalFrameClosed(InternalFrameEvent e)
-		{
+
+		public void internalFrameClosed(InternalFrameEvent e) {
 			this.adaptee.thisInternalFrameClosed(e);
 		}
-		public void internalFrameDeactivated(InternalFrameEvent e)
-		{
+
+		public void internalFrameDeactivated(InternalFrameEvent e) {
 			this.adaptee.thisInternalFrameDeactivated(e);
 		}
-		public void internalFrameOpened(InternalFrameEvent e)
-		{
+
+		public void internalFrameOpened(InternalFrameEvent e) {
 			this.adaptee.thisInternalFrameOpened(e);
 		}
 	}
@@ -717,6 +525,6 @@ public class MapFrame extends JInternalFrame
 	public MapConnection getMapConnection() {
 		return this.mapConnection;
 	}
-	
+
 }
 
