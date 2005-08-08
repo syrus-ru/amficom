@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.71 2005/08/08 13:04:25 krupenn Exp $
+ * $Id: Map.java,v 1.72 2005/08/08 16:47:04 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,11 +35,15 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.corba.IdlMap;
 import com.syrus.AMFICOM.map.corba.IdlMapHelper;
 
@@ -49,7 +53,7 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.71 $, $Date: 2005/08/08 13:04:25 $
+ * @version $Revision: 1.72 $, $Date: 2005/08/08 16:47:04 $
  * @module map
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -1052,6 +1056,25 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		this.externalNodes = new HashSet<SiteNode>();
 		this.mapLibraries = new HashSet<MapLibrary>();
 		
+		final com.syrus.amficom.map.xml.MapLibraryEntries mapLibraryEntries = xmlMap.getMaplibraries();
+		if(mapLibraryEntries != null) {
+			final String[] xmlMapLibraryEntriesArray = mapLibraryEntries.getMaplibraryArray();
+			for (int i = 0; i < xmlMapLibraryEntriesArray.length; i++) {
+				StorableObjectCondition pTypeCondition = new TypicalCondition(
+						xmlMapLibraryEntriesArray[i], 
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.MAPLIBRARY_CODE,
+						StorableObjectWrapper.COLUMN_CODENAME);
+	
+				Collection<MapLibrary> pTypes =
+					StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+				if(pTypes.size() == 0) {
+					throw new ApplicationException("Library " + xmlMapLibraryEntriesArray[i] + " does not exist. Cannot proceed with import");
+				}
+				this.addMapLibrary(pTypes.iterator().next());
+			}
+		}
+
 		final com.syrus.amficom.map.xml.TopologicalNode[] xmlTopologicalNodesArray = xmlMap.getTopologicalnodes().getTopologicalnodeArray();
 		for (int i = 0; i < xmlTopologicalNodesArray.length; i++) {
 			final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = xmlTopologicalNodesArray[i];
