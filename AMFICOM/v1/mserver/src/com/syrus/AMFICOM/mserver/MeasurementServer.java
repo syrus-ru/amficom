@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.64 2005/08/02 15:27:31 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.65 2005/08/08 09:22:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginException;
@@ -35,6 +36,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -54,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/08/02 15:27:31 $
+ * @version $Revision: 1.65 $, $Date: 2005/08/08 09:22:54 $
  * @author $Author: arseniy $
  * @module mserver_v1
  */
@@ -96,12 +98,17 @@ public class MeasurementServer extends SleepButWorkThread {
 	public static final int FALL_CODE_RECEIVE_TESTS = 1;
 
 	/**
-	 * Login of the corresponding user.
-	 */
+	 * Login of the corresponding user */
 	static String login;
 
-	/*	Map of tests to transmit to MCMs	*/
-	private static Map<Identifier, Set<Test>> mcmTestQueueMap;	
+	/**
+	 * Map of tests to transmit to MCMs	*/
+	private static Map<Identifier, Set<Test>> mcmTestQueueMap;
+
+	/**
+	 * Condition to load tests. Must be re-created in case of changing set of available MCMs.
+	 */
+	private static StorableObjectCondition testLoadCondition;
 
 	private boolean running;
 
@@ -158,16 +165,19 @@ public class MeasurementServer extends SleepButWorkThread {
 			final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
 			final Set<Identifier> mcmIds = Identifier.createIdentifiers(((MCMDatabase) mcmDatabase).retrieveForServer(serverId));
 			login = user.getLogin();
-			
+
 			/*	Create map of test queues*/
 			mcmTestQueueMap = Collections.synchronizedMap(new HashMap<Identifier, Set<Test>>(mcmIds.size()));
-			for (final Iterator<Identifier> it = mcmIds.iterator(); it.hasNext();) {
-				mcmTestQueueMap.put(it.next(), Collections.synchronizedSet(new HashSet<Test>()));
+			for (final Identifier mcmId : mcmIds) {
+				mcmTestQueueMap.put(mcmId, Collections.synchronizedSet(new HashSet<Test>()));
 			}
+
+			/*	Create condition for load tests*/
+			createTestLoadCondition();
 
 			/*	Create session environment*/
 			MServerSessionEnvironment.createInstance(server.getHostName(), mcmIds);
-	
+
 			/*	Login*/
 			final MServerSessionEnvironment sessionEnvironment = MServerSessionEnvironment.getInstance();
 			try {
@@ -176,10 +186,10 @@ public class MeasurementServer extends SleepButWorkThread {
 			catch (final LoginException le) {
 				Log.errorException(le);
 			}
-	
+
 			/*	Create collection of MCM identifiers for aborting tests*/
 			mcmIdsToAbortTests = Collections.synchronizedSet(new HashSet<Identifier>());
-	
+
 			/*	Activate servant*/
 			final CORBAServer corbaServer = sessionEnvironment.getMServerServantManager().getCORBAServer();
 			corbaServer.activateServant(new MServerPOATie(new MServerImpl(), corbaServer.getPoa()), processCodename);
@@ -202,6 +212,22 @@ public class MeasurementServer extends SleepButWorkThread {
 		catch (Exception e) {
 			Log.errorException(e);
 			System.exit(0);
+		}
+	}
+
+	private static void createTestLoadCondition() {
+		LinkedIdsCondition lic = new LinkedIdsCondition(mcmTestQueueMap.keySet(), ObjectEntities.TEST_CODE);
+		TypicalCondition tc = new TypicalCondition(TestStatus._TEST_STATUS_NEW,
+				0,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.TEST_CODE,
+				TestWrapper.COLUMN_STATUS);
+		try {
+			testLoadCondition = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
+		}
+		catch (CreateObjectException coe) {
+			//Never
+			Log.errorException(coe);
 		}
 	}
 
@@ -278,36 +304,15 @@ public class MeasurementServer extends SleepButWorkThread {
 	}
 
 	private static void fillMCMTestQueueMap() throws ApplicationException {
-		LinkedIdsCondition lic = new LinkedIdsCondition(mcmTestQueueMap.keySet(), ObjectEntities.TEST_CODE);
-		TypicalCondition tc = new TypicalCondition(TestStatus._TEST_STATUS_NEW,
-				0,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.TEST_CODE,
-				TestWrapper.COLUMN_STATUS);
-		CompoundCondition cc = null;
-		try {
-			cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
-		}
-		catch (CreateObjectException coe) {
-			//Never
-			Log.errorException(coe);
-		}
-
 		final Set<Identifier> addedTestIds = new HashSet<Identifier>();
 		synchronized (mcmTestQueueMap) {
-			for (final Iterator<Identifier> it = mcmTestQueueMap.keySet().iterator(); it.hasNext();) {
-				final Identifier mcmId = it.next();
+			for (final Identifier mcmId : mcmTestQueueMap.keySet()) {
 				final Set<Test> tests = mcmTestQueueMap.get(mcmId);
-				synchronized (tests) {
-					for (final Iterator<Test> it1 = tests.iterator(); it1.hasNext();) {
-						final Test test = it1.next();
-						addedTestIds.add(test.getId());
-					}
-				}
+				addedTestIds.addAll(Identifier.createIdentifiers(tests));
 			}
 		}
 
-		final Set<Test> tests = StorableObjectPool.getStorableObjectsButIdsByCondition(addedTestIds, cc, true, true);
+		final Set<Test> tests = StorableObjectPool.getStorableObjectsButIdsByCondition(addedTestIds, testLoadCondition, true, true);
 
 		for (final Test test : tests) {
 			final Identifier mcmId = test.getMCMId();
@@ -383,6 +388,17 @@ public class MeasurementServer extends SleepButWorkThread {
 
 	protected static Set<Identifier> getMCMIds() {
 		return Collections.unmodifiableSet(mcmTestQueueMap.keySet());
+	}
+
+	protected static void addMCMId(final Identifier mcmId) {
+		assert mcmId != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert mcmId.getMajor() == ObjectEntities.MCM_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+
+		if (!mcmTestQueueMap.containsKey(mcmId)) {
+			mcmTestQueueMap.put(mcmId, Collections.synchronizedSet(new HashSet<Test>()));
+		}
+
+		createTestLoadCondition();
 	}
 
 	protected void shutdown() {
