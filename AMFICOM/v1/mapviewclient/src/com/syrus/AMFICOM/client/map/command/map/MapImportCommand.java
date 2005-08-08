@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.33 2005/08/08 13:06:06 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.34 2005/08/08 15:20:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/08/08 13:06:06 $
+ * @version $Revision: 1.34 $, $Date: 2005/08/08 15:20:31 $
  * @module mapviewclient_v1
  */
 public class MapImportCommand extends ImportCommand {
@@ -180,6 +180,8 @@ public class MapImportCommand extends ImportCommand {
 					+ xmlfile.getName() + "\')");
 			
 			map.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
+			
+			// only one map imported
 			break;
 		}
 		return map;
@@ -200,7 +202,7 @@ public class MapImportCommand extends ImportCommand {
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
 				System.out.println(error.getMessage());
-				System.out.println(error.getObjectLocation());
+//				System.out.println(error.getObjectLocation());
 			}
 		}
 		return isXmlValid;
