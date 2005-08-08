@@ -10,6 +10,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionAdapter;
 import java.beans.PropertyChangeEvent;
 import java.text.SimpleDateFormat;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -18,6 +19,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
 import java.util.SortedMap;
@@ -161,10 +163,11 @@ public class TestLine extends TimeLine {
 
 	}
 
-	boolean selectTest(int x, int y, Collection collection) {
+	boolean selectTest(int x, int y, SortedSet<TestTimeItem> testTimeItems) {
 		boolean selected = false;
-		for (Iterator it = collection.iterator(); it.hasNext();) {
-			TestTimeItem testTimeItem = (TestTimeItem) it.next();
+		List<TestTimeItem> list = new ArrayList<TestTimeItem>(testTimeItems); 
+		for (ListIterator it = list.listIterator(list.size()); it.hasPrevious();) {
+			TestTimeItem testTimeItem = (TestTimeItem) it.previous();
 			// Log.debugMessage("TestLine.selectTest | testTimeItem.x " +
 			// testTimeItem.x , Log.FINEST);
 			// Log.debugMessage("TestLine.selectTest | x " + x , Log.FINEST);
