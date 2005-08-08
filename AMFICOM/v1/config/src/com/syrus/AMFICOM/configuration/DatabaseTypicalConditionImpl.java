@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.16 2005/08/01 11:11:19 arseniy Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.17 2005/08/08 08:40:29 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/01 11:11:19 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/08 08:40:29 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -34,6 +34,8 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 			case ObjectEntities.PORT_TYPE_CODE:
 				if (this.condition.getKey().equals(PortTypeWrapper.COLUMN_SORT)) {
 					return PortTypeWrapper.COLUMN_SORT;
+				} else if (this.condition.getKey().equals(PortTypeWrapper.COLUMN_KIND)) {
+					return PortTypeWrapper.COLUMN_KIND;
 				}
 				break;
 			case ObjectEntities.EQUIPMENT_TYPE_CODE:
