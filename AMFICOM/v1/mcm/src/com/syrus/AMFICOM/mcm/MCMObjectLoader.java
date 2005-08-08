@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.18 2005/08/02 19:41:25 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.19 2005/08/08 07:39:39 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,8 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAObjectLoader;
@@ -33,7 +35,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/02 19:41:25 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/08 07:39:39 $
  * @author $Author: arseniy $
  * @module mcm_v1
  */
@@ -93,7 +95,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 
 		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
 		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
-		final Map<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap = new HashMap<Integer, Map<Short, Set<StorableObject>>>();
+		final SortedMap<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap = new TreeMap<Integer, Map<Short, Set<StorableObject>>>();
 		this.loadStorableObjectsWithDependencies(loadObjectsMap, 0, loadIds);
 		if (loadObjectsMap.isEmpty()) {
 			return objects;
@@ -122,7 +124,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		}
 		objects.addAll(loadedObjects);
 
-		final Map<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap = new HashMap<Integer, Map<Short, Set<StorableObject>>>();
+		final SortedMap<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap = new TreeMap<Integer, Map<Short, Set<StorableObject>>>();
 		final Map<Short, Set<StorableObject>> levelLoadObjectsMap = new HashMap<Short, Set<StorableObject>>(1);
 		final short entityCode = condition.getEntityCode().shortValue();
 		assert ids.isEmpty() || entityCode == StorableObject.getEntityCodeOfIdentifiables(ids);
@@ -140,7 +142,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		return objects;
 	}
 
-	final void loadStorableObjectsWithDependencies(final Map<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap,
+	final void loadStorableObjectsWithDependencies(final SortedMap<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap,
 			final int dependencyLevel,
 			final Set<Identifier> ids) throws ApplicationException {
 		final Set<StorableObject> loadedObjects = super.loadStorableObjects(ids);
