@@ -1,5 +1,5 @@
 /**
- * $Id: MapGeneralPropertiesFrame.java,v 1.6 2005/08/08 10:39:21 krupenn Exp $
+ * $Id: MapGeneralPropertiesFrame.java,v 1.7 2005/08/08 13:08:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,6 @@ import javax.swing.JDesktopPane;
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
-import com.syrus.AMFICOM.client.map.props.MapLibraryEditor;
 import com.syrus.AMFICOM.client.map.props.PhysicalLinkEditor;
 import com.syrus.AMFICOM.client.map.props.PhysicalLinkTypeEditor;
 import com.syrus.AMFICOM.client.map.props.SiteNodeTypeEditor;
@@ -24,7 +23,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.6 $, $Date: 2005/08/08 10:39:21 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/08 13:08:41 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */

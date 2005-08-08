@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.33 2005/08/08 10:12:26 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.34 2005/08/08 13:05:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,6 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
-import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -57,7 +56,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/08/08 10:12:26 $
+ * @version $Revision: 1.34 $, $Date: 2005/08/08 13:05:00 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 

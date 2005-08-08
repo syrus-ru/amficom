@@ -5,7 +5,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Collection;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -17,28 +16,17 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
-import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectCondition;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapLibrary;
-import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
