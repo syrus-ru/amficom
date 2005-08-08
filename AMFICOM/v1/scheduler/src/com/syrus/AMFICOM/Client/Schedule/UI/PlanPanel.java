@@ -121,11 +121,14 @@ ActionListener, PropertyChangeListener {
 	private Dispatcher	dispatcher;
 
 	private SchedulerModel	schedulerModel;
+
+	private SimpleDateFormat	sdf2;
 	
 	public PlanPanel(JScrollPane parent, ApplicationContext aContext) {
 		this.aContext = aContext;
 		
 		
+		this.sdf2 = new SimpleDateFormat("dd.MM.yyyy");
 		
 		this.parent = parent;
 		this.toolBar = new PlanToolBar(aContext, this);
@@ -351,12 +354,18 @@ ActionListener, PropertyChangeListener {
 			g.setColor(Color.BLACK);
 			g.drawLine((int) (tmpDelta * counter) + MARGIN, h, (int) (tmpDelta * counter) + MARGIN, h - 5);
 
+			int h1 = this.cal.get(Calendar.HOUR_OF_DAY);
 			String value = this.sdf.format(this.cal.getTime());
 			this.cal.setTimeInMillis(this.cal.getTimeInMillis() + tmpDiff);
+			int h2 = this.cal.get(Calendar.HOUR_OF_DAY);
 			g.drawString(value, (int) (tmpDelta * counter) + MARGIN - shift, h - 7);
-			if (value.startsWith("00:00")) 
-				g.drawString(new SimpleDateFormat("dd.MM.yyyy").format(this.cal 
+			if (value.startsWith("00:00")) {
+				g.drawString(this.sdf2.format(this.cal 
 						.getTime()), (int) (tmpDelta * counter) + MARGIN - 27, h - 17);
+			} else if (0 != h2 && h2 < h1) {
+				g.drawString(this.sdf2.format(this.cal 
+					.getTime()), (int) (tmpDelta * (counter + 1)) + MARGIN - 27, h - 17);
+			}
 			counter++;
 		}
 		this.cal.setTime(this.scaleStart);
