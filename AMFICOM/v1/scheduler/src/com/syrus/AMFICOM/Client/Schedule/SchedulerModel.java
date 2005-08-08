@@ -541,7 +541,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	}
 
 	public void createTest() {
-		this.flag = FLAG_CREATE;
+		this.flag = FLAG_CREATE;		
 		this.startGetData();
 	}
 
@@ -558,9 +558,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 //			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_EVALUATION_TYPE, null, null));
 //		}
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
+			this.set = null;
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_SET, null, null));
 		}
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
+			this.measurementSetup = null;
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_MEASUREMENT_SETUP, null, null));
 		}
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {

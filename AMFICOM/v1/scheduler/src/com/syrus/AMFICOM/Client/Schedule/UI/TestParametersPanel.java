@@ -292,6 +292,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 					popup.add(msSummaryInfo);
 
 					if (measurementSetup1.isChanged()) {
+						
 						final JMenuItem msRename = new JMenuItem(LangModelSchedule.getString("Rename Measurement setup"));					
 						msRename.addActionListener(new ActionListener() {
 	
@@ -314,6 +315,8 @@ public class TestParametersPanel implements PropertyChangeListener {
 									measurementSetup1.setDescription((String) object);
 									WrapperedListModel wrapperedListModel = (WrapperedListModel) TestParametersPanel.this.testSetups.getModel();
 									wrapperedListModel.sort();
+									
+									objList.setSelectedValue(measurementSetup1, true);
 								}
 	
 							}
@@ -478,7 +481,6 @@ public class TestParametersPanel implements PropertyChangeListener {
 			this.setSet(measurementSetup.getParameterSet());
 		} else {
 			int selectedIndex = this.testSetups.getSelectedIndex();
-			System.out.println("TestParametersPanel.setMeasurementSetup() | " + selectedIndex);
 			this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);
 			this.setSet(null);
 			return;
@@ -521,20 +523,17 @@ public class TestParametersPanel implements PropertyChangeListener {
 		boolean params = this.useAnalysisSetups.isSelected() && 
 			this.testSetups.getSelectedIndex() < 0;
 		
-		System.out.println("TestParametersPanel.setMeasurementSetup() | " + params);
-		
 		if (params) {
 			this.useWOAnalysisSetups.doClick();
 			this.testSetups.setSelectedValue(measurementSetup, true);			
 		}
 		
-		System.out.println("TestParametersPanel.setMeasurementSetup() | " + (this.useAnalysisSetups.isSelected() || this.parametersTestPanel == null));
 		this.tabbedPane.setSelectedIndex(this.useAnalysisSetups.isSelected() || this.parametersTestPanel == null ? 0 : 1);
 	}
 
 	public void setMeasurementSetups(Collection<MeasurementSetup> measurementSetups) {
 		
-		Log.debugMessage("TestParametersPanel.setMeasurementSetups | ", Level.FINEST);
+//		Log.debugMessage("TestParametersPanel.setMeasurementSetups | ", Level.FINEST);
 		
 		if (this.msList == null) {
 			this.msList = new LinkedList<MeasurementSetup>();
@@ -585,7 +584,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.useWOAnalysisSetups.setEnabled(true);
 
 		
-		Log.debugMessage("TestParametersPanel.setMeasurementSetups | measurementSetupId " + measurementSetupId, Level.FINEST);
+//		Log.debugMessage("TestParametersPanel.setMeasurementSetups | measurementSetupId " + measurementSetupId, Level.FINEST);
 		
 		if (this.measurementSetupId != null) {
 			try {
