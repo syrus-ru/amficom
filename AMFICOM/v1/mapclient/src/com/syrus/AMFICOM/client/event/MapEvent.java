@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.4 2005/08/02 07:16:46 krupenn Exp $
+ * $Id: MapEvent.java,v 1.5 2005/08/08 09:33:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import java.beans.PropertyChangeEvent;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/08/02 07:16:46 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 09:33:28 $
  * @module mapclient_v2
  * @author $Author: krupenn $
  */
@@ -45,6 +45,8 @@ public class MapEvent extends PropertyChangeEvent
 	public static final String MAP_DESELECTED = "mapdeselectedevent";
 	/** Содержимое карты изменилось. */
 	public static final String MAP_CHANGED = "mapchangedevent";
+
+	public static final String OTHER_SELECTED = "otherselectedevent";
 
 	/** Управление элементами на карте. */
 	public static final String MAP_NAVIGATE = "mapnavigateevent";
