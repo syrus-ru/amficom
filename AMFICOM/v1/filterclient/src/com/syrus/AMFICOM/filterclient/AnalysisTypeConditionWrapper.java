@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/17 11:01:05 $
- * @author $Author: bass $
- * @module filterclient_v1
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:41:00 $
+ * @author $Author: arseniy $
+ * @module filterclient
  */
 public class AnalysisTypeConditionWrapper implements ConditionWrapper {
 	

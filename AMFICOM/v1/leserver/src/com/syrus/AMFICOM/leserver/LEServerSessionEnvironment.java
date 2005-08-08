@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerSessionEnvironment.java,v 1.4 2005/05/16 14:59:00 arseniy Exp $
+ * $Id: LEServerSessionEnvironment.java,v 1.5 2005/08/08 11:42:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,9 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.PoolContext;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/16 14:59:00 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:42:21 $
  * @author $Author: arseniy $
- * @module leserver_v1
+ * @module leserver
  */
 final class LEServerSessionEnvironment {
 	private static LEServerSessionEnvironment instance;

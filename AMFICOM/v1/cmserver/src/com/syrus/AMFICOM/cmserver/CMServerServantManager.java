@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerServantManager.java,v 1.10 2005/07/13 19:35:43 arseniy Exp $
+ * $Id: CMServerServantManager.java,v 1.11 2005/08/08 11:44:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,9 +30,9 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/07/13 19:35:43 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/08 11:44:39 $
  * @author $Author: arseniy $
- * @module cmserver_v1
+ * @module cmserver
  */
 final class CMServerServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager, ServerConnectionManager {
 	private String loginServerServantName;

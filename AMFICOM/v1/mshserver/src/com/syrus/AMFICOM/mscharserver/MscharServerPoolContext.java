@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerPoolContext.java,v 1.5 2005/07/28 16:45:41 arseniy Exp $
+ * $Id: MscharServerPoolContext.java,v 1.6 2005/08/08 11:45:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.util.ApplicationProperties;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/07/28 16:45:41 $
- * @module mscharserver_v1
+ * @version $Revision: 1.6 $, $Date: 2005/08/08 11:45:43 $
+ * @module mscharserver
  */
 final class MscharServerPoolContext extends PoolContext {
 	private static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize"; 

@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeSpinner.java,v 1.2 2005/06/14 07:33:04 arseniy Exp $
+ * $Id: TimeSpinner.java,v 1.3 2005/08/08 11:41:00 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,9 @@ import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/14 07:33:04 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:41:00 $
  * @author $Author: arseniy $
- * @module filterclient_v1
+ * @module filterclient
  */
 public class TimeSpinner extends JSpinner {
 	private static final long serialVersionUID = 3690758401483223600L;

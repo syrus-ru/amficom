@@ -1,5 +1,5 @@
 /*
- * $Id: UserLoginDatabase.java,v 1.8 2005/08/05 10:01:32 arseniy Exp $
+ * $Id: UserLoginDatabase.java,v 1.9 2005/08/08 11:42:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,9 +26,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/05 10:01:32 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 11:42:21 $
  * @author $Author: arseniy $
- * @module leserver_v1
+ * @module leserver
  */
 public final class UserLoginDatabase {
 	private static final String TABLE_NAME_USER_LOGIN = "UserLogin";

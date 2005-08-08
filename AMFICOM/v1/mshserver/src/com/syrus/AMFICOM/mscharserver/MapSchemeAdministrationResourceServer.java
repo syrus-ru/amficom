@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.12 2005/07/28 19:05:38 arseniy Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.13 2005/08/08 11:45:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,9 +30,9 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/28 19:05:38 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/08 11:45:43 $
  * @author $Author: arseniy $
- * @module mscharserver_v1
+ * @module mscharserver
  */
 public class MapSchemeAdministrationResourceServer {
 	public static final String APPLICATION_NAME = "mscharserver";

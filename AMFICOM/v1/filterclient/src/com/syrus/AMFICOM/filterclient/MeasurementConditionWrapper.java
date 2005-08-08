@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementConditionWrapper.java,v 1.5 2005/06/20 09:34:19 max Exp $
+ * $Id: MeasurementConditionWrapper.java,v 1.6 2005/08/08 11:41:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,9 +17,9 @@ import com.syrus.AMFICOM.measurement.MeasurementWrapper;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/20 09:34:19 $
- * @author $Author: max $
- * @module filterclient_v1
+ * @version $Revision: 1.6 $, $Date: 2005/08/08 11:41:00 $
+ * @author $Author: arseniy $
+ * @module filterclient
  */
 public class MeasurementConditionWrapper implements ConditionWrapper {
 	

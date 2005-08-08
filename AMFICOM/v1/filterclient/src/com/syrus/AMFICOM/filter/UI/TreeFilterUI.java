@@ -1,5 +1,5 @@
 /*-
- * $Id: TreeFilterUI.java,v 1.1 2005/06/22 07:30:17 max Exp $
+ * $Id: TreeFilterUI.java,v 1.2 2005/08/08 11:41:00 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,9 +21,9 @@ import com.syrus.AMFICOM.filter.UI.Filtrable;
 import com.syrus.AMFICOM.newFilter.Filter;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/06/22 07:30:17 $
- * @module filterclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/08/08 11:41:00 $
+ * @module filterclient
  */
 
 public class TreeFilterUI {

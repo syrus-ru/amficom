@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.13 2005/08/08 10:00:18 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.14 2005/08/08 11:42:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,9 +23,9 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/08 10:00:18 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/08 11:42:21 $
  * @author $Author: arseniy $
- * @module leserver_v1
+ * @module leserver
  */
 final class LoginProcessor extends SleepButWorkThread {
 	public static final String KEY_LOGIN_PROCESSOR_TICK_TIME = "LoginProcessorTickTime";

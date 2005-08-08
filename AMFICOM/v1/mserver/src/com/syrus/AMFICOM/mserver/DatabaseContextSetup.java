@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.34 2005/07/28 15:10:13 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.35 2005/08/08 11:43:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,9 +47,9 @@ import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/07/28 15:10:13 $
+ * @version $Revision: 1.35 $, $Date: 2005/08/08 11:43:53 $
  * @author $Author: arseniy $
- * @module mserver_v1
+ * @module mserver
  */
 
 final class DatabaseContextSetup {

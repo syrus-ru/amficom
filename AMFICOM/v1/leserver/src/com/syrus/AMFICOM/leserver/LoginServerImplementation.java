@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.28 2005/07/28 13:59:58 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.29 2005/08/08 11:42:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,9 +41,9 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/07/28 13:59:58 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/08 11:42:21 $
  * @author $Author: arseniy $
- * @module leserver_v1
+ * @module leserver
  */
 final class LoginServerImplementation extends LoginServerPOA {
 	private static final long serialVersionUID = -7190112124735462314L;

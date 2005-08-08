@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationConditionWrapper.java,v 1.2 2005/06/17 11:01:05 bass Exp $
+ * $Id: EvaluationConditionWrapper.java,v 1.3 2005/08/08 11:41:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,9 +21,9 @@ import com.syrus.AMFICOM.measurement.Evaluation;
 import com.syrus.AMFICOM.measurement.Measurement;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/17 11:01:05 $
- * @author $Author: bass $
- * @module filterclient_v1
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:41:00 $
+ * @author $Author: arseniy $
+ * @module filterclient
  */
 public class EvaluationConditionWrapper {
 	private static short entityCode = ObjectEntities.EVALUATION_CODE;

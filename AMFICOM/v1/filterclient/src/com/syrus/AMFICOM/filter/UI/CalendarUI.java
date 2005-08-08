@@ -1,5 +1,5 @@
 /*-
- * $Id: CalendarUI.java,v 1.4 2005/08/08 10:15:29 bob Exp $
+ * $Id: CalendarUI.java,v 1.5 2005/08/08 11:41:00 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,9 +39,9 @@ import javax.swing.SwingConstants;
 import com.syrus.AMFICOM.client.resource.LangModel;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/08 10:15:29 $
- * @author $Author: bob $
- * @module filterclient_v1
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:41:00 $
+ * @author $Author: arseniy $
+ * @module filterclient
  */
 public class CalendarUI extends JPanel {
 	private static final long serialVersionUID = 3257845476471485492L;

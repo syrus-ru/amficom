@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoPool.java,v 1.2 2005/06/28 08:11:40 max Exp $
+ * $Id: MapInfoPool.java,v 1.3 2005/08/08 11:45:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,9 +18,9 @@ import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/28 08:11:40 $
- * @author $Author: max $
- * @module mscharserver_v1
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:45:43 $
+ * @author $Author: arseniy $
+ * @module mscharserver
  */
 
 public class MapInfoPool {

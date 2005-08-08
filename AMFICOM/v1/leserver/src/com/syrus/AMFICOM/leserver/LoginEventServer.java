@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.22 2005/07/28 14:00:12 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.23 2005/08/08 11:42:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,9 +24,9 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/07/28 14:00:12 $
+ * @version $Revision: 1.23 $, $Date: 2005/08/08 11:42:21 $
  * @author $Author: arseniy $
- * @module leserver_v1
+ * @module leserver
  */
 public final class LoginEventServer {
 	private static final String APPLICATION_NAME = "leserver";

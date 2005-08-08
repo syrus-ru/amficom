@@ -1,5 +1,5 @@
 /*-
- * $Id: MapJLocalRenderer.java,v 1.6 2005/08/01 13:32:33 arseniy Exp $
+ * $Id: MapJLocalRenderer.java,v 1.7 2005/08/08 11:45:43 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/01 13:32:33 $
- * @module mscharserver_v1
+ * @version $Revision: 1.7 $, $Date: 2005/08/08 11:45:43 $
+ * @module mscharserver
  */
 public class MapJLocalRenderer {
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: MonitoredElementConditionWrapper.java,v 1.2 2005/06/17 11:01:05 bass Exp $
+ * $Id: MonitoredElementConditionWrapper.java,v 1.3 2005/08/08 11:41:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 /**
  * @author Maxim Selivanov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/17 11:01:05 $
- * @module filterclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:41:00 $
+ * @module filterclient
  */
 public class MonitoredElementConditionWrapper implements ConditionWrapper {
 	

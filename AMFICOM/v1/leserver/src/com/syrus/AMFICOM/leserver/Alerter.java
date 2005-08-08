@@ -1,5 +1,5 @@
 /*
- * $Id: Alerter.java,v 1.4 2005/07/28 14:01:52 arseniy Exp $
+ * $Id: Alerter.java,v 1.5 2005/08/08 11:42:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/07/28 14:01:52 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:42:21 $
  * @author $Author: arseniy $
- * @module leserver_v1
+ * @module leserver
  */
 abstract class Alerter {
 	private static Map<AlertKind, Alerter> alertersMap;

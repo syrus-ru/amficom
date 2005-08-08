@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.16 2005/07/28 16:45:26 arseniy Exp $
+ * $Id: MscharServerImpl.java,v 1.17 2005/08/08 11:45:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,9 +34,9 @@ import com.syrus.io.FileLoader;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/28 16:45:26 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/08 11:45:43 $
  * @author $Author: arseniy $
- * @module mscharserver_v1
+ * @module mscharserver
  */
 public final class MscharServerImpl extends IdentifierGeneratorServerCore implements MscharServerOperations {
 	private static final long serialVersionUID = 3762810480783274295L;

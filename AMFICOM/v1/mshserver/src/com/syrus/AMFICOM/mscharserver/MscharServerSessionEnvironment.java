@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerSessionEnvironment.java,v 1.2 2005/06/07 17:58:13 bass Exp $
+ * $Id: MscharServerSessionEnvironment.java,v 1.3 2005/08/08 11:45:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import com.syrus.AMFICOM.general.CommunicationException;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/07 17:58:13 $
- * @module mscharserver_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:45:43 $
+ * @module mscharserver
  */
 final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
 	private static MscharServerSessionEnvironment instance;

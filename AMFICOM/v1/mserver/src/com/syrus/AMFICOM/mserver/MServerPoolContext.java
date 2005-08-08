@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerPoolContext.java,v 1.6 2005/07/28 18:57:50 arseniy Exp $
+ * $Id: MServerPoolContext.java,v 1.7 2005/08/08 11:43:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/28 18:57:50 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/08 11:43:53 $
  * @author $Author: arseniy $
- * @module mserver_v1
+ * @module mserver
  */
 final class MServerPoolContext extends PoolContext {
 	private static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";

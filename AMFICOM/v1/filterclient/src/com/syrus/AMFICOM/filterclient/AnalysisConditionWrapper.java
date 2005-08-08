@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisConditionWrapper.java,v 1.3 2005/06/17 11:01:05 bass Exp $
+ * $Id: AnalysisConditionWrapper.java,v 1.4 2005/08/08 11:41:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,9 +11,9 @@ import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.ObjectEntities;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/17 11:01:05 $
- * @author $Author: bass $
- * @module filterclient_v1
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 11:41:00 $
+ * @author $Author: arseniy $
+ * @module filterclient
  */
 public class AnalysisConditionWrapper {
 	

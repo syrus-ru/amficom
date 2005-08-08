@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.6 2005/07/28 13:56:21 arseniy Exp $
+ * $Id: LEServerPoolContext.java,v 1.7 2005/08/08 11:42:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,9 +17,9 @@ import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/28 13:56:21 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/08 11:42:21 $
  * @author $Author: arseniy $
- * @module leserver_v1
+ * @module leserver
  */
 final class LEServerPoolContext extends PoolContext {
 	private static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
