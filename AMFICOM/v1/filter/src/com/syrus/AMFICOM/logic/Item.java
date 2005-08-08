@@ -1,5 +1,5 @@
 /*-
- * $Id: Item.java,v 1.6 2005/03/24 08:19:29 bass Exp $
+ * $Id: Item.java,v 1.7 2005/08/08 06:31:31 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import java.util.List;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/03/24 08:19:29 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/08/08 06:31:31 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -37,7 +37,7 @@ public interface Item {
 	
 	Object getObject();
 	
-	List getChildren();
+	List<Item> getChildren();
 	
 	void addChild(final Item childItem);
 	

@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/11 12:38:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 06:30:44 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module generalclient_v1
  */
@@ -143,6 +143,7 @@ public final class CommonUIUtilities {
 											final String dialogTitle) {
 		new Thread() {
 
+			@Override
 			public void run() {
 				/**
 				 * @todo Set dialog's parent depending on app context.
@@ -158,6 +159,7 @@ public final class CommonUIUtilities {
 
 				Thread targetThread = new Thread() {
 
+					@Override
 					public void run() {
 						doRun.run();
 					}
@@ -166,6 +168,7 @@ public final class CommonUIUtilities {
 
 				Thread dialogThread = new Thread() {
 
+					@Override
 					public void run() {
 						jDialog.setVisible(true);
 					}

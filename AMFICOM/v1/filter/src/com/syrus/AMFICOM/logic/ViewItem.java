@@ -1,5 +1,5 @@
 /*
- * $Id: ViewItem.java,v 1.13 2005/04/06 12:31:02 max Exp $
+ * $Id: ViewItem.java,v 1.14 2005/08/08 06:31:31 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import java.util.LinkedList;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/04/06 12:31:02 $
- * @author $Author: max $
+ * @version $Revision: 1.14 $, $Date: 2005/08/08 06:31:31 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
@@ -36,24 +36,27 @@ public class ViewItem extends AbstractItem implements Item {
 
 	private boolean		sortedChildren		= false;
 
-	static Comparator	ycomparator			= new Comparator() {
+	static Comparator<Item> ycomparator = new Comparator<Item>() {
 
-												public int compare(Object o1, Object o2) {
-													if (o1 == o2) return 0;
-													if (o1 == null) return -1;
-													if (o2 == null) return 1;
-													if (o1 instanceof ViewItem && o2 instanceof ViewItem) {
-														ViewItem item1 = (ViewItem) o1;
-														ViewItem item2 = (ViewItem) o2;
-														return item1.y - item2.y;
-													}
-													return 0;
-												}
-											};
+		public int compare(Item o1, Item o2) {
+			if (o1 == o2)
+				return 0;
+			if (o1 == null)
+				return -1;
+			if (o2 == null)
+				return 1;
+			if (o1 instanceof ViewItem && o2 instanceof ViewItem) {
+				ViewItem item1 = (ViewItem) o1;
+				ViewItem item2 = (ViewItem) o2;
+				return item1.y - item2.y;
+			}
+			return 0;
+		}
+	};
 
 	private Item		sourceItem;
 
-	public static Map	item2ItemViewMap	= new HashMap();
+	public static Map<Item, Item>	item2ItemViewMap	= new HashMap<Item, Item>();
 
 	// public ViewItem(int inputCount, int outputCount, String name, Object
 	// object, int x, int y) {
@@ -70,7 +73,7 @@ public class ViewItem extends AbstractItem implements Item {
 		item2ItemViewMap.put(item, this);
 		Collection itemChildren = item.getChildren();
 		if (itemChildren != null) {
-			this.children = new LinkedList();
+			this.children = new LinkedList<Item>();
 			for (Iterator it = itemChildren.iterator(); it.hasNext();) {
 				Item item2 = (Item) it.next();
 				ViewItem viewItem;
@@ -91,7 +94,7 @@ public class ViewItem extends AbstractItem implements Item {
 
 		System.out.println("ViewItem.addChild | this.name: " + this.sourceItem.getName() + "\n\t name: "
 				+ childItem.getName());
-		if (this.children == null) this.children = new LinkedList();
+		if (this.children == null) this.children = new LinkedList<Item>();
 
 		ViewItem viewItem;
 		if (childItem instanceof ViewItem) {
@@ -113,6 +116,7 @@ public class ViewItem extends AbstractItem implements Item {
 //					+ this.sourceItem.getMaxChildrenCount() + " linked input items");
 	}
 
+	@Override
 	public void addChild(Item childItem) {
 		this.addChild(childItem, true);
 	}
@@ -132,6 +136,7 @@ public class ViewItem extends AbstractItem implements Item {
 		}
 	}
 
+	@Override
 	public void setParent(Item parent) {
 		System.out.println("ViewItem.setParent | this.name: " + this.sourceItem.getName() + " \n\t name: "
 				+ (parent == null ? "'null'" : parent.getName()));

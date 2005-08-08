@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.12 2005/07/11 08:18:59 bass Exp $
+ * $Id: AbstractItem.java,v 1.13 2005/08/08 06:31:31 arseniy Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,14 +20,14 @@ import java.util.List;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/11 08:18:59 $
- * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/08/08 06:31:31 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module filter_v1
  */
 public abstract class AbstractItem implements Item, PropertyChangeListener {
 
-	protected List				children;
+	protected List<Item>				children;
 
 	protected Item				parent;
 
@@ -35,7 +35,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 	 * Not <code>List</code>, but <em>exactly</em> <code>ArrayList</code>.
 	 * @todo Implement smth similar to {@link javax.swing.event.EventListenerList}.
 	 */
-	protected ArrayList itemListeners = new ArrayList();
+	protected ArrayList<ItemListener> itemListeners = new ArrayList<ItemListener>();
 
 	public static final String	OBJECT_NAME_PROPERTY	= "ObjectNameProperty";
 
@@ -86,7 +86,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 			throw new UnsupportedOperationException("Item " + this.getName() + " can not have children.");
 
 		if (this.children == null) {
-			this.children = new LinkedList();
+			this.children = new LinkedList<Item>();
 		}
 
 		if (this.checkForRecursion(childItem, this)) { throw new UnsupportedOperationException(
@@ -105,8 +105,11 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 		}
 	}
 
-	public List getChildren() {
-		return this.children == null ? Collections.EMPTY_LIST : this.children;
+	public List<Item> getChildren() {
+		if (this.children != null) {
+			return this.children;
+		}
+		return Collections.emptyList();
 	}
 
 	public void setParent(Item parent) {
@@ -142,7 +145,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 			 * Exactly #get(), not #iterator(), as the latter is
 			 * much slower for an ArrayList.
 			 */
-			final ItemListener itemListener = (ItemListener) this.itemListeners.get(i);
+			final ItemListener itemListener = this.itemListeners.get(i);
 			itemListener.setParentPerformed(item, oldParent, newParent);
 			Log.debugMessage(this.toString() + " listener[" + i + "(" + itemListener.getClass().getName() + ")"
 					+ "].setParentPerformed | item:" + item.toString() + ", oldParent:"
@@ -196,6 +199,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 		}
 	}
 
+	@Override
 	public String toString() {
 		String className = this.getClass().getName();
 		int lastDotIndex = className.lastIndexOf('.');
