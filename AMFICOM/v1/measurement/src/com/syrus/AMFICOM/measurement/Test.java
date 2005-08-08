@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.142 2005/08/02 18:08:52 arseniy Exp $
+ * $Id: Test.java,v 1.143 2005/08/08 09:30:02 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -50,17 +50,13 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.142 $, $Date: 2005/08/02 18:08:52 $
+ * @version $Revision: 1.143 $, $Date: 2005/08/08 09:30:02 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
 
 public final class Test extends StorableObject {	
 	private static final long	serialVersionUID	= 3688785890592241972L;
-
-	protected static final int		RETRIEVE_MEASUREMENTS	= 1;
-	protected static final int		RETRIEVE_LAST_MEASUREMENT	= 2;
-	protected static final int		RETRIEVE_NUMBER_OF_RESULTS	= 3;
 
 	private int temporalType;
 	private TestTimeStamps timeStamps;
