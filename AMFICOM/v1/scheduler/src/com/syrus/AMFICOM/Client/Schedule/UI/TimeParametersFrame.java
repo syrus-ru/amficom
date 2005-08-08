@@ -1321,8 +1321,6 @@ public class TimeParametersFrame extends JInternalFrame {
 			cal.setTime(date);
 
 			JDialog calendarDialog = CalendarUI.createDialogInstance(Environment.getActiveWindow(), cal, true, true);
-			calendarDialog.setSize(new Dimension(200, 200));
-			calendarDialog.setResizable(false);
 			calendarDialog.setLocation(new Point(this.endDateSpinner.getLocationOnScreen().x - 35, this.endDateSpinner
 					.getLocationOnScreen().y + 22));
 			calendarDialog.setVisible(true);
@@ -1336,8 +1334,6 @@ public class TimeParametersFrame extends JInternalFrame {
 			cal.setTime(date);
 
 			final JDialog calendarDialog = CalendarUI.createDialogInstance(Environment.getActiveWindow(), cal, true, true);
-			calendarDialog.setSize(new Dimension(200, 200));
-			calendarDialog.setResizable(false);
 			calendarDialog.setLocation(new Point(this.startDateSpinner.getLocationOnScreen().x - 35,
 													this.startDateSpinner.getLocationOnScreen().y + 22));
 			calendarDialog.setVisible(true);			

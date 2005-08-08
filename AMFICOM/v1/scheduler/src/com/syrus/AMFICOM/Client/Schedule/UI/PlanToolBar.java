@@ -184,8 +184,6 @@ class PlanToolBar {
 
 				final JDialog calendarDialog = CalendarUI
 						.createDialogInstance(Environment.getActiveWindow(), cal, true, true);
-				calendarDialog.pack();
-				calendarDialog.setResizable(false);
 				calendarDialog.setLocation(new Point(PlanToolBar.this.dateSpinner.getLocationOnScreen().x - 35,
 														PlanToolBar.this.dateSpinner.getLocationOnScreen().y
 																+ PlanToolBar.this.h));
