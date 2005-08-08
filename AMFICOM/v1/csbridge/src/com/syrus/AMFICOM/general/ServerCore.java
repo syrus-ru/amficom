@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.31 2005/08/02 12:24:33 arseniy Exp $
+ * $Id: ServerCore.java,v 1.32 2005/08/08 10:16:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2005/08/02 12:24:33 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/08 10:16:56 $
  * @module csbridge_v1
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -207,6 +207,8 @@ public abstract class ServerCore implements CommonServer {
 
 			Log.debugMessage("ServerCore.transmitOldVersionIds | Old versions have '"
 					+ ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
+
+			StorableObjectPool.refresh(ids);
 
 			return Identifier.createTransferables(ids);
 		} catch (ApplicationException ae) {
