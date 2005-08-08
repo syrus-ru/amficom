@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.151 2005/08/08 07:35:58 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.152 2005/08/08 10:15:17 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.151 $, $Date: 2005/08/08 07:35:58 $
+ * @version $Revision: 1.152 $, $Date: 2005/08/08 10:15:17 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -766,6 +766,55 @@ public final class StorableObjectPool {
 
 	/*	Refresh */
 
+	public static void refresh(final Set<Identifier> ids) throws ApplicationException {
+		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
+		Log.debugMessage("StorableObjectPool.refresh | Requested for: " + ids, Log.DEBUGLEVEL10);
+		if (ids.isEmpty()) {
+			return;
+		}
+
+		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(ids);
+		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE + ": " + entityCode;
+
+		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
+		if (objectPool == null) {
+			Log.errorMessage("StorableObjectPool.refresh | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
+			return;
+		}
+
+		final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
+
+		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
+		for (final StorableObject storableObject : objectPool) {
+			final Identifier id = storableObject.getId();
+			if (ids.contains(id) && !storableObject.isChanged() && (entityDeletedIds == null || !entityDeletedIds.contains(id))) {
+				storableObjects.add(storableObject);
+			}
+		}
+
+		if (storableObjects.isEmpty()) {
+			Log.debugMessage("StorableObjectPool.refresh | LRUMap for '" + ObjectEntities.codeToString(entityCode)
+					+ "' entity has no elements to refresh", Log.DEBUGLEVEL08);
+			return;
+		}
+
+		Log.debugMessage("StorableObjectPool.refresh | Refreshing pool for '"
+				+ ObjectEntities.codeToString(entityCode) + "'s: " + ids, Log.DEBUGLEVEL08);
+
+		final Set<Identifier> returnedStorableObjectsIds = objectLoader.getOldVersionIds(StorableObject.createVersionsMap(storableObjects));
+		if (returnedStorableObjectsIds.isEmpty()) {
+			return;
+		}
+
+		final Set<StorableObject> loadedObjects = objectLoader.loadStorableObjects(returnedStorableObjectsIds);
+		for (final StorableObject storableObject : loadedObjects) {
+			objectPool.put(storableObject.getId(), storableObject);
+			Log.debugMessage("StorableObjectPool.refresh | " + storableObject.getId() + ", " + storableObject.getVersion(),
+				Log.DEBUGLEVEL08);
+		}
+	}
+
 	/**
 	 * 
 	 * @throws ApplicationException
@@ -781,14 +830,13 @@ public final class StorableObjectPool {
 
 			storableObjects.clear();
 			for (final StorableObject storableObject : objectPool) {
-				if (!storableObject.isChanged() && 
-						(entityDeletedIds == null || !entityDeletedIds.contains(storableObject.getId()))) {
+				if (!storableObject.isChanged() && (entityDeletedIds == null || !entityDeletedIds.contains(storableObject.getId()))) {
 					storableObjects.add(storableObject);
 				}
 			}
 			if (storableObjects.isEmpty()) {
 				Log.debugMessage("StorableObjectPool.refresh | LRUMap for '" + ObjectEntities.codeToString(entityCode)
-						+ "' entity has no elements", Log.DEBUGLEVEL08);
+						+ "' entity has no elements to refresh", Log.DEBUGLEVEL08);
 				continue;
 			}
 
@@ -796,8 +844,9 @@ public final class StorableObjectPool {
 					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode, Log.DEBUGLEVEL08);
 
 			final Set<Identifier> returnedStorableObjectsIds = objectLoader.getOldVersionIds(StorableObject.createVersionsMap(storableObjects));
-			if (returnedStorableObjectsIds.isEmpty())
+			if (returnedStorableObjectsIds.isEmpty()) {
 				continue;
+			}
 
 			final Set<StorableObject> loadedObjects = objectLoader.loadStorableObjects(returnedStorableObjectsIds);
 			for (final StorableObject storableObject : loadedObjects) {
