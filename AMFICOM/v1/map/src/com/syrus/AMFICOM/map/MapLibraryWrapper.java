@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibraryWrapper.java,v 1.3 2005/08/05 14:46:03 arseniy Exp $
+ * $Id: MapLibraryWrapper.java,v 1.4 2005/08/08 13:12:40 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
  * @author max
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/05 14:46:03 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 13:12:40 $
  * @module map
  */
 
@@ -85,6 +85,7 @@ public class MapLibraryWrapper extends StorableObjectWrapper<MapLibrary> {
 		/* there is no properties */
 	}
 
+	@Override
 	public void setValue(final MapLibrary mapLibrary, final String key, final Object value) {
 		if (mapLibrary != null) {
 			if (key.equals(COLUMN_NAME)) {

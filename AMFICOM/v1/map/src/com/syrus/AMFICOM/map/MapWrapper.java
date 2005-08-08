@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.16 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: MapWrapper.java,v 1.17 2005/08/08 13:12:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/08 11:35:11 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/08 13:12:40 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -149,6 +149,7 @@ public class MapWrapper extends StorableObjectWrapper<Map> {
 		/* there is no properties */
 	}
 
+	@Override
 	public void setValue(final Map map, final String key, final Object value) {
 		if (map != null) {
 			if (key.equals(COLUMN_NAME)) {
