@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.87 2005/08/08 14:24:18 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.88 2005/08/08 16:47:43 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: arseniy $
- * @version $Revision: 1.87 $, $Date: 2005/08/08 14:24:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.88 $, $Date: 2005/08/08 16:47:43 $
  * @module map
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -924,14 +924,14 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-		Set<PhysicalLinkType> objects = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
+		Set<PhysicalLinkType> objects = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
 		if (objects == null || objects.size() == 0) {
 			typeCodeName1 = PhysicalLinkType.DEFAULT_TUNNEL;
 
 			condition.setValue(typeCodeName1);
 
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-			objects = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
+			objects = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
 			if (objects == null || objects.size() == 0) {
 				throw new CreateObjectException("PhysicalLinkType \'" + PhysicalLinkType.DEFAULT_TUNNEL + "\' not found");
 			}

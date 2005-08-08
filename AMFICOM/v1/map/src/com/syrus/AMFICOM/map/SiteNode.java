@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.65 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: SiteNode.java,v 1.66 2005/08/08 16:47:43 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,8 +51,8 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: arseniy $
- * @version $Revision: 1.65 $, $Date: 2005/08/08 11:35:11 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.66 $, $Date: 2005/08/08 16:47:43 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -359,14 +359,14 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-		Set<SiteNodeType> siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
+		Set<SiteNodeType> siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
 		if (siteNodeTypes == null || siteNodeTypes.size() == 0) {
 			typeCodeName1 = SiteNodeType.DEFAULT_BUILDING;
 
 			condition.setValue(typeCodeName1);
 
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-			siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, false);
+			siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
 			if (siteNodeTypes == null || siteNodeTypes.size() == 0) {
 				throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.DEFAULT_BUILDING + "\' not found");
 			}
