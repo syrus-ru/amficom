@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlParameterSetImpl.java,v 1.2 2005/07/11 08:20:01 bass Exp $
+ * $Id: IdlParameterSetImpl.java,v 1.3 2005/08/08 11:31:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,9 +19,9 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:20:01 $
- * @module measurement_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:31:46 $
+ * @module measurement
  */
 final class IdlParameterSetImpl extends IdlParameterSet {
 	private static final long serialVersionUID = -7843619861375356402L;

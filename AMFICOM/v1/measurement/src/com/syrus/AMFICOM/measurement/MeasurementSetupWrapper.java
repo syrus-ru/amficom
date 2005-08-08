@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.20 2005/08/05 09:48:24 bob Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.21 2005/08/08 11:31:45 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/08/05 09:48:24 $
- * @author $Author: bob $
- * @module measurement_v1
+ * @version $Revision: 1.21 $, $Date: 2005/08/08 11:31:45 $
+ * @author $Author: arseniy $
+ * @module measurement
  */
 public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSetup> {
 

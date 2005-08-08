@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEventSourceImpl.java,v 1.1 2005/07/05 16:10:22 bass Exp $
+ * $Id: IdlEventSourceImpl.java,v 1.2 2005/08/08 11:32:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/05 16:10:22 $
- * @module event_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/08/08 11:32:37 $
+ * @module event
  */
 final class IdlEventSourceImpl extends IdlEventSource {
 	private static final long serialVersionUID = 6938924910013150430L;

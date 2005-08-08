@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.30 2005/07/16 18:53:14 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.31 2005/08/08 11:31:45 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,9 +41,9 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/07/16 18:53:14 $
+ * @version $Revision: 1.31 $, $Date: 2005/08/08 11:31:45 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.101 2005/08/05 08:29:21 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.102 2005/08/08 11:31:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,9 +41,9 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/08/05 08:29:21 $
+ * @version $Revision: 1.102 $, $Date: 2005/08/08 11:31:46 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 
 public final class ResultDatabase extends StorableObjectDatabase<Result> {

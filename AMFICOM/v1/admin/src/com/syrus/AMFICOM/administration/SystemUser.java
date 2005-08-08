@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.18 2005/08/05 16:49:49 arseniy Exp $
+ * $Id: SystemUser.java,v 1.19 2005/08/08 11:29:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,9 +40,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/05 16:49:49 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/08 11:29:37 $
  * @author $Author: arseniy $
- * @module administration_v1
+ * @module administration
  */
 
 public final class SystemUser extends StorableObject implements Characterizable, Namable {

@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeWrapper.java,v 1.15 2005/08/05 10:04:32 bob Exp $
+ * $Id: EventTypeWrapper.java,v 1.16 2005/08/08 11:32:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,9 +15,9 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/05 10:04:32 $
- * @author $Author: bob $
- * @module event_v1
+ * @version $Revision: 1.16 $, $Date: 2005/08/08 11:32:37 $
+ * @author $Author: arseniy $
+ * @module event
  */
 public class EventTypeWrapper extends StorableObjectWrapper<EventType> {
 

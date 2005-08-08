@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlAnalysisImpl.java,v 1.2 2005/07/11 08:20:00 bass Exp $
+ * $Id: IdlAnalysisImpl.java,v 1.3 2005/08/08 11:31:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,9 +18,9 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:20:00 $
- * @module measurement_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:31:46 $
+ * @module measurement
  */
 final class IdlAnalysisImpl extends IdlAnalysis {
 	private static final long serialVersionUID = -3173456978141791125L;

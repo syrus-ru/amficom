@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEventTypeImpl.java,v 1.3 2005/07/24 15:48:54 arseniy Exp $
+ * $Id: IdlEventTypeImpl.java,v 1.4 2005/08/08 11:32:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/07/24 15:48:54 $
- * @module event_v1
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 11:32:37 $
+ * @module event
  */
 final class IdlEventTypeImpl extends IdlEventType {
 	private static final long serialVersionUID = -7624987454620297508L;

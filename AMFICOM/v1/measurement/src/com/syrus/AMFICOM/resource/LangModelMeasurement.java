@@ -1,5 +1,5 @@
 /*
- * $Id: LangModelMeasurement.java,v 1.5 2005/06/17 12:38:56 bass Exp $
+ * $Id: LangModelMeasurement.java,v 1.6 2005/08/08 11:31:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,9 +12,9 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @version $ $, $Date: 2005/06/17 12:38:56 $
- * @author $Author: bass $
- * @module measurement_v1
+ * @version $ $, $Date: 2005/08/08 11:31:46 $
+ * @author $Author: arseniy $
+ * @module measurement
  */
 
 public class LangModelMeasurement {

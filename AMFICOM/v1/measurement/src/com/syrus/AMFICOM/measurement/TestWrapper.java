@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.18 2005/08/05 09:48:24 bob Exp $
+ * $Id: TestWrapper.java,v 1.19 2005/08/08 11:31:46 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,9 +21,9 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/05 09:48:24 $
- * @author $Author: bob $
- * @module measurement_v1
+ * @version $Revision: 1.19 $, $Date: 2005/08/08 11:31:46 $
+ * @author $Author: arseniy $
+ * @module measurement
  */
 public class TestWrapper extends StorableObjectWrapper<Test> {
 

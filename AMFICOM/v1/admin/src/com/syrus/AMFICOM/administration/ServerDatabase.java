@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.33 2005/07/27 13:18:07 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.34 2005/08/08 11:29:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,9 +22,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/07/27 13:18:07 $
+ * @version $Revision: 1.34 $, $Date: 2005/08/08 11:29:37 $
  * @author $Author: arseniy $
- * @module administration_v1
+ * @module administration
  */
 
 public final class ServerDatabase extends StorableObjectDatabase<Server> {

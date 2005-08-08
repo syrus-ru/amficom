@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.91 2005/08/05 16:50:08 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.92 2005/08/08 11:31:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,9 +37,9 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementTypeHelper;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/08/05 16:50:08 $
+ * @version $Revision: 1.92 $, $Date: 2005/08/08 11:31:45 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 
 public final class MeasurementType extends ActionType implements Namable {

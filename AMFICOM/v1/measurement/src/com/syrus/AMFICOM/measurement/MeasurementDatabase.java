@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.90 2005/08/05 08:29:21 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.91 2005/08/08 11:31:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,9 +33,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/08/05 08:29:21 $
+ * @version $Revision: 1.91 $, $Date: 2005/08/08 11:31:45 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 
 public final class MeasurementDatabase extends StorableObjectDatabase<Measurement> {

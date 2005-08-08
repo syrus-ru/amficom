@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.40 2005/08/05 09:21:35 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.41 2005/08/08 11:32:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,9 +39,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/08/05 09:21:35 $
+ * @version $Revision: 1.41 $, $Date: 2005/08/08 11:32:37 $
  * @author $Author: arseniy $
- * @module event_v1
+ * @module event
  */
 
 public final class EventDatabase extends StorableObjectDatabase<Event> {

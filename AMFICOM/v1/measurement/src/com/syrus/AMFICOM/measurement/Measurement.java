@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.89 2005/08/05 16:50:08 arseniy Exp $
+ * $Id: Measurement.java,v 1.90 2005/08/08 11:31:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,9 +37,9 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/08/05 16:50:08 $
+ * @version $Revision: 1.90 $, $Date: 2005/08/08 11:31:45 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 
 public final class Measurement extends Action {

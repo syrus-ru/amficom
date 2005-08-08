@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.23 2005/07/27 15:44:14 max Exp $
+ * $Id: EventSourceDatabase.java,v 1.24 2005/08/08 11:32:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,9 +21,9 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/07/27 15:44:14 $
- * @author $Author: max $
- * @module event_v1
+ * @version $Revision: 1.24 $, $Date: 2005/08/08 11:32:37 $
+ * @author $Author: arseniy $
+ * @module event
  */
 public final class EventSourceDatabase extends StorableObjectDatabase<EventSource> {
 

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.84 2005/08/05 16:50:08 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.85 2005/08/08 11:31:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,9 +36,9 @@ import com.syrus.AMFICOM.measurement.corba.IdlEvaluationType;
 import com.syrus.AMFICOM.measurement.corba.IdlEvaluationTypeHelper;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/08/05 16:50:08 $
+ * @version $Revision: 1.85 $, $Date: 2005/08/08 11:31:45 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 
 public final class EvaluationType extends ActionType {

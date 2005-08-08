@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeWrapper.java,v 1.13 2005/08/05 09:48:24 bob Exp $
+ * $Id: MeasurementTypeWrapper.java,v 1.14 2005/08/08 11:31:46 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,9 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/05 09:48:24 $
- * @author $Author: bob $
- * @module measurement_v1
+ * @version $Revision: 1.14 $, $Date: 2005/08/08 11:31:46 $
+ * @author $Author: arseniy $
+ * @module measurement
  */
 public class MeasurementTypeWrapper extends StorableObjectWrapper<MeasurementType> {
 

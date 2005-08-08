@@ -1,5 +1,5 @@
 /*
- * $Id: ActionTypeDatabase.java,v 1.12 2005/08/05 08:29:21 arseniy Exp $
+ * $Id: ActionTypeDatabase.java,v 1.13 2005/08/08 11:31:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,9 +31,9 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/05 08:29:21 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/08 11:31:45 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 public abstract class ActionTypeDatabase<T extends ActionType> extends StorableObjectDatabase<T> {
 

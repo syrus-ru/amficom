@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.58 2005/08/05 16:50:08 arseniy Exp $
+ * $Id: Modeling.java,v 1.59 2005/08/08 11:31:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,10 +34,10 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/08/05 16:50:08 $
+ * @version $Revision: 1.59 $, $Date: 2005/08/08 11:31:46 $
  * @author $Author: arseniy $
  * @author arseniy
- * @module measurement_v1
+ * @module measurement
  */
 public final class Modeling extends Action {
 	

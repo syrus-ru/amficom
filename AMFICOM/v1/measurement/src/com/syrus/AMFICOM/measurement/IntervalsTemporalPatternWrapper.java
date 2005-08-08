@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternWrapper.java,v 1.1 2005/05/03 13:58:28 max Exp $
+ * $Id: IntervalsTemporalPatternWrapper.java,v 1.2 2005/08/08 11:31:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,9 @@
 package com.syrus.AMFICOM.measurement;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/05/03 13:58:28 $
- * @author $Author: max $
- * @module measurement_v1
+ * @version $Revision: 1.2 $, $Date: 2005/08/08 11:31:45 $
+ * @author $Author: arseniy $
+ * @module measurement
  */
 public class IntervalsTemporalPatternWrapper {
 	

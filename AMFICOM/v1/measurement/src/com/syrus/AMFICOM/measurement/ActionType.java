@@ -1,5 +1,5 @@
 /*
- * $Id: ActionType.java,v 1.14 2005/07/25 20:50:06 arseniy Exp $
+ * $Id: ActionType.java,v 1.15 2005/08/08 11:31:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,9 +17,9 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/07/25 20:50:06 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/08 11:31:45 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 
 public abstract class ActionType extends StorableObjectType {

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.47 2005/08/05 16:50:08 arseniy Exp $
+ * $Id: ModelingType.java,v 1.48 2005/08/08 11:31:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,9 +36,9 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingTypeHelper;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/08/05 16:50:08 $
+ * @version $Revision: 1.48 $, $Date: 2005/08/08 11:31:46 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 
 public final class ModelingType extends ActionType {

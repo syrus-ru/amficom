@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.35 2005/08/05 16:50:08 arseniy Exp $
+ * $Id: Action.java,v 1.36 2005/08/08 11:31:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,9 +20,9 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/08/05 16:50:08 $
+ * @version $Revision: 1.36 $, $Date: 2005/08/08 11:31:45 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 
 public abstract class Action extends StorableObject implements TypedObject {

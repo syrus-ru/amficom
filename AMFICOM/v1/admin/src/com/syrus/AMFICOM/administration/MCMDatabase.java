@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.36 2005/07/27 13:18:07 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.37 2005/08/08 11:29:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,9 +25,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/07/27 13:18:07 $
+ * @version $Revision: 1.37 $, $Date: 2005/08/08 11:29:37 $
  * @author $Author: arseniy $
- * @module administration_v1
+ * @module administration
  */
 
 public final class MCMDatabase extends StorableObjectDatabase<MCM> {

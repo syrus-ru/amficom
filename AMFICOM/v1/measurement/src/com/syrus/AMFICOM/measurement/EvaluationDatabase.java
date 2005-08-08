@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationDatabase.java,v 1.63 2005/07/27 18:20:25 arseniy Exp $
+ * $Id: EvaluationDatabase.java,v 1.64 2005/08/08 11:31:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,9 +27,9 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/07/27 18:20:25 $
+ * @version $Revision: 1.64 $, $Date: 2005/08/08 11:31:45 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 
 public final class EvaluationDatabase extends StorableObjectDatabase<Evaluation> {

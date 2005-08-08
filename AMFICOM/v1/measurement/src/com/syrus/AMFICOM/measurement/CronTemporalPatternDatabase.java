@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPatternDatabase.java,v 1.13 2005/07/27 18:20:25 arseniy Exp $
+ * $Id: CronTemporalPatternDatabase.java,v 1.14 2005/08/08 11:31:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,9 +26,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/27 18:20:25 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/08 11:31:45 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 
 public final class CronTemporalPatternDatabase extends StorableObjectDatabase<CronTemporalPattern> {

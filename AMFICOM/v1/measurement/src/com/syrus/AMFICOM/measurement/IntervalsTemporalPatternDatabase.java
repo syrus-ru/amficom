@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.17 2005/08/05 08:29:21 arseniy Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.18 2005/08/08 11:31:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,9 +37,9 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/05 08:29:21 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/08 11:31:45 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 public final class IntervalsTemporalPatternDatabase extends StorableObjectDatabase<IntervalsTemporalPattern> {
 	private static final int	TEMPORAL_PATTERN_ID_ROW	= 0;

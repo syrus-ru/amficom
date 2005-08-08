@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.45 2005/08/05 16:49:49 arseniy Exp $
+ * $Id: MCM.java,v 1.46 2005/08/08 11:29:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,9 +36,9 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/08/05 16:49:49 $
+ * @version $Revision: 1.46 $, $Date: 2005/08/08 11:29:37 $
  * @author $Author: arseniy $
- * @module administration_v1
+ * @module administration
  */
 
 public final class MCM extends DomainMember implements Characterizable {

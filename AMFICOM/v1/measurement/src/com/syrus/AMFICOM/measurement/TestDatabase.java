@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.111 2005/08/05 08:29:21 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.112 2005/08/08 11:31:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -44,9 +44,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.111 $, $Date: 2005/08/05 08:29:21 $
+ * @version $Revision: 1.112 $, $Date: 2005/08/08 11:31:46 $
  * @author $Author: arseniy $
- * @module measurement_v1
+ * @module measurement
  */
 
 public final class TestDatabase extends StorableObjectDatabase<Test> {
