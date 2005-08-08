@@ -462,8 +462,8 @@ public class TestParametersPanel implements PropertyChangeListener {
 	}
 
 	public void setMeasurementSetup(final MeasurementSetup measurementSetup) {
-		Log.debugMessage("TestParametersPanel.setMeasurementSetup | "
-				+ (measurementSetup != null ? measurementSetup.getId() : null), Level.FINEST);		
+//		Log.debugMessage("TestParametersPanel.setMeasurementSetup | "
+//				+ (measurementSetup != null ? measurementSetup.getId() : null), Level.FINEST);		
 
 		this.testSetups.setSelectedValue(null, false);
 		

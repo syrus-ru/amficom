@@ -24,6 +24,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -68,7 +69,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/08/08 12:30:52 $
+ * @version $Revision: 1.61 $, $Date: 2005/08/08 14:27:19 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -1038,9 +1039,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			return;
 		}		
 		
-		System.out.println("ReflectometryTestPanel.setSet() | " + (set != null ? set.getId() : null));
+//		System.out.println("ReflectometryTestPanel.setSet() | " + (set != null ? set.getId() : null));
 		
 		if (this.setId != null && set != null && this.setId.equals(set.getId())) {
+			this.skip = false;
 			return;
 		}
 		
@@ -1053,6 +1055,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		
 		if (set == null) {
 			this.setId = null;
+			this.skip = false;
 			return;
 		}
 
