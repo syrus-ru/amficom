@@ -368,7 +368,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 						}
 					}
 
-					TestParametersPanel.this.useAnalysisBox.setEnabled(true);
+//					TestParametersPanel.this.useAnalysisBox.setEnabled(true);
 					if (TestParametersPanel.this.parametersTestPanel != null) {
 						new Thread() {
 								public void run() {
