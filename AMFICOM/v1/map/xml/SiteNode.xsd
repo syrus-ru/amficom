@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: SiteNode.xsd,v 1.4 2005/08/08 13:03:44 krupenn Exp $
+-->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/map/xml"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -42,13 +44,12 @@
       <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="sitenodetypeuid" type="map:SiteNodeTypeSort" minOccurs="1" maxOccurs="1"/>
-<!--      <xsd:element name="sitenodetypeuid" type="xsd:string" minOccurs="1" maxOccurs="1"/>  -->
       <xsd:element name="x" type="xsd:double" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="y" type="xsd:double" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="city" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="street" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="building" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="characteristics" type="map:Characteristics" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="characteristics" type="gen:Characteristics" minOccurs="0" maxOccurs="1"/>
     </xsd:all>
   </xsd:complexType>
 

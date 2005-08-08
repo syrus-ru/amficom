@@ -1,4 +1,6 @@
 <?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: PhysicalLinkType.xsd,v 1.4 2005/08/08 13:03:44 krupenn Exp $
+-->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/map/xml"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
@@ -7,8 +9,6 @@
 	elementFormDefault="qualified">
 
   <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
-
-  <xsd:include schemaLocation="Characteristic.xsd"/>
 
   <xsd:element name="physicallinktypes" type="map:PhysicalLinkTypes">
 
@@ -33,7 +33,7 @@
       <xsd:element name="sort" type="map:PhysicalLinkTypeSort" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="dimension_x" type="xsd:integer" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="dimension_y" type="xsd:integer" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="characteristics" type="map:Characteristics" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="characteristics" type="gen:Characteristics" minOccurs="0" maxOccurs="1"/>
     </xsd:all>
   </xsd:complexType>
 
