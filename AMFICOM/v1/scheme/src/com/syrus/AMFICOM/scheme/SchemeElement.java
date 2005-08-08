@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.72 2005/08/08 06:32:26 max Exp $
+ * $Id: SchemeElement.java,v 1.73 2005/08/08 14:25:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,8 +70,8 @@ import com.syrus.util.Log;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.72 $, $Date: 2005/08/08 06:32:26 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.73 $, $Date: 2005/08/08 14:25:23 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -532,7 +532,7 @@ public final class SchemeElement extends AbstractSchemeElement
 				clone.clonedIdMap.putAll(schemeCellClone.getClonedIdMap());
 				clone.setSchemeCell(schemeCellClone);
 			}
-			for (final Characteristic characteristic : this.getCharacteristics0()) {
+			for (final Characteristic characteristic : this.getCharacteristics(true)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				characteristicClone.setCharacterizableId(clone.id);
@@ -608,7 +608,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics(true)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeDevices0()) {
@@ -1420,7 +1420,7 @@ public final class SchemeElement extends AbstractSchemeElement
 				super.clonedIdMap.putAll(schemeCellClone.getClonedIdMap());
 				this.setSchemeCell(schemeCellClone);
 			}
-			for (final Characteristic characteristic : schemeProtoElement.getCharacteristics0()) {
+			for (final Characteristic characteristic : schemeProtoElement.getCharacteristics(true)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				super.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				characteristicClone.setCharacterizableId(super.id);

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.18 2005/07/27 15:59:22 bass Exp $
+ * $Id: AbstractLinkType.java,v 1.19 2005/08/08 14:23:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,21 +15,21 @@ import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkType
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/08/08 14:23:52 $
+ * @author $Author: arseniy $
  * @module config
  */
 public abstract class AbstractLinkType extends StorableObjectType implements Namable, Characterizable {
 	private static final long serialVersionUID = 6276017738364160981L;
+
+	private transient CharacterizableDelegate characterizableDelegate;
 
 	public AbstractLinkType(Identifier id) {
 		super(id);
@@ -66,10 +66,11 @@ public abstract class AbstractLinkType extends StorableObjectType implements Nam
 
 	public abstract void setName(final String Name);
 
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		}
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
 }

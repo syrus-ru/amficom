@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.113 2005/08/05 16:50:02 arseniy Exp $
+ * $Id: Equipment.java,v 1.114 2005/08/08 14:23:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.configuration.corba.IdlEquipmentHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -41,7 +42,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.113 $, $Date: 2005/08/05 16:50:02 $
+ * @version $Revision: 1.114 $, $Date: 2005/08/08 14:23:52 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -63,6 +64,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	private String swSerial;
 	private String swVersion;
 	private String inventoryNumber;
+
+	private transient CharacterizableDelegate characterizableDelegate;
 
 	Equipment(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -263,10 +266,11 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		return this.imageId;
 	}
 
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		}
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
 	protected synchronized void setAttributes(final Date created,

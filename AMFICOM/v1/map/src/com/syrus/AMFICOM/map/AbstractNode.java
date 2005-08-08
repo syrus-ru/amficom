@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.33 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: AbstractNode.java,v 1.34 2005/08/08 14:24:18 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,10 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
@@ -28,7 +26,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
  * ({@link #location}) и изображением ({@link #imageId}).
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.33 $, $Date: 2005/08/08 11:35:11 $
+ * @version $Revision: 1.34 $, $Date: 2005/08/08 14:24:18 $
  * @module map
  * @see SiteNode
  * @see TopologicalNode
@@ -58,6 +56,8 @@ public abstract class AbstractNode extends StorableObject implements MapElement 
 	protected transient boolean alarmState = false;
 
 	protected transient boolean removed = false;
+
+	private transient CharacterizableDelegate characterizableDelegate;
 
 	protected AbstractNode(final Identifier id) {
 		super(id);
@@ -99,11 +99,12 @@ public abstract class AbstractNode extends StorableObject implements MapElement 
 		this.imageId = imageId;
 		super.markAsChanged();
 	}
-	
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
+
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		}
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
 	/**

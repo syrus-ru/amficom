@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.19 2005/08/05 07:35:44 krupenn Exp $
+ * $Id: Selection.java,v 1.20 2005/08/08 14:26:04 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.map.MapElementState;
 /**
  * Набор выбранных элементов.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/08/05 07:35:44 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/08/08 14:26:04 $
  * @module mapviewclient_v1
  * @todo copy/paste, properties
  */
@@ -106,7 +106,7 @@ public final class Selection extends MapTypedElementsContainer implements MapEle
 	/**
 	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public Set<Characteristic> getCharacteristics() {
+	public Set<Characteristic> getCharacteristics(final boolean usePool) {
 		throw new UnsupportedOperationException();
 	}
 

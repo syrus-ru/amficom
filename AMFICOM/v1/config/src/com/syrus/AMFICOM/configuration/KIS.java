@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.100 2005/08/05 16:50:02 arseniy Exp $
+ * $Id: KIS.java,v 1.101 2005/08/08 14:23:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,8 +20,6 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.IdlKIS;
 import com.syrus.AMFICOM.configuration.corba.IdlKISHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -40,12 +38,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/08/05 16:50:02 $
+ * @version $Revision: 1.101 $, $Date: 2005/08/08 14:23:52 $
  * @author $Author: arseniy $
  * @module config
  */
 
-public final class KIS extends DomainMember implements Characterizable {
+public final class KIS extends DomainMember {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -249,12 +247,6 @@ public final class KIS extends DomainMember implements Characterizable {
 		dependencies.add(this.equipmentId);
 		dependencies.add(this.mcmId);
 		return dependencies;
-	}
-
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
 	}
 
 	/**

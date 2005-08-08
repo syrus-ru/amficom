@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.46 2005/08/08 11:29:37 arseniy Exp $
+ * $Id: MCM.java,v 1.47 2005/08/08 14:23:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.administration.corba.IdlMCMHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -27,16 +28,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/08/08 11:29:37 $
+ * @version $Revision: 1.47 $, $Date: 2005/08/08 14:23:32 $
  * @author $Author: arseniy $
  * @module administration
  */
@@ -49,6 +48,8 @@ public final class MCM extends DomainMember implements Characterizable {
 	private String hostname;
 	private Identifier userId;
 	private Identifier serverId;
+
+	private transient CharacterizableDelegate characterizableDelegate;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -184,10 +185,11 @@ public final class MCM extends DomainMember implements Characterizable {
 		return this.serverId;
 	}
 
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		}
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
 	public static MCM createInstance(final Identifier creatorId,

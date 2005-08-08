@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.25 2005/08/02 16:51:17 krupenn Exp $
+ * $Id: CablePath.java,v 1.26 2005/08/08 14:26:03 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * Ёлемент кабельного пути. ќписывает прив€зку кабел€ к топологическим лини€м.
- * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/08/02 16:51:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/08/08 14:26:03 $
  * @module mapviewclient_v1
  */
 public final class CablePath implements MapElement
@@ -99,7 +99,7 @@ public final class CablePath implements MapElement
 	protected transient HashMap<CableChannelingItem, PhysicalLink> binding = null;
 
 	protected static final List EMPTY_SORTED_LIST = new LinkedList();
-	
+
 	/**
 	 *  онструктор.
 	 * @param schemeCableLink схемный кабель
@@ -186,9 +186,9 @@ public final class CablePath implements MapElement
 	 * @throws ApplicationException 
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public Set<Characteristic> getCharacteristics() throws ApplicationException
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException
 	{
-		return this.schemeCableLink.getCharacteristics();
+		return this.schemeCableLink.getCharacteristics(usePool);
 	}
 
 	/**
@@ -527,10 +527,10 @@ public final class CablePath implements MapElement
 	 * @return список отсортированных узлов, или <code>Collections.EMPTY_LIST</code>, если
 	 * узлы не отсортированы
 	 */
-	public List<AbstractNode> getSortedNodes()
-	{
-		if(!this.nodeLinksSorted)
-			return EMPTY_SORTED_LIST;
+	public List<AbstractNode> getSortedNodes() {
+		if (!this.nodeLinksSorted) {
+			return new LinkedList<AbstractNode>();
+		}
 		return Collections.unmodifiableList(this.sortedNodes);
 	}
 
@@ -541,10 +541,10 @@ public final class CablePath implements MapElement
 	 * @return список отсортированных фрагментов линий, или
 	 * <code>Collections.EMPTY_LIST</code>, если узлы не отсортированы
 	 */
-	public List<NodeLink> getSortedNodeLinks()
-	{
-		if(!this.nodeLinksSorted)
-			return EMPTY_SORTED_LIST;
+	public List<NodeLink> getSortedNodeLinks() {
+		if (!this.nodeLinksSorted) {
+			return new LinkedList<NodeLink>();
+		}
 		return Collections.unmodifiableList(this.sortedNodeLinks);
 	}
 

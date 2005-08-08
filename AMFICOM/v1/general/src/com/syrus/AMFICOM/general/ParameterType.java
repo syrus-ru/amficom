@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.48 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: ParameterType.java,v 1.49 2005/08/08 14:22:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/08/08 11:27:25 $
+ * @version $Revision: 1.49 $, $Date: 2005/08/08 14:22:49 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -31,6 +31,8 @@ public final class ParameterType extends StorableObjectType implements Character
 
 	private String name;
 	private DataType dataType;
+
+	private transient CharacterizableDelegate characterizableDelegate;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -221,10 +223,11 @@ public final class ParameterType extends StorableObjectType implements Character
 		this.dataType = dataType;
 	}
 
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		}
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
 	/**

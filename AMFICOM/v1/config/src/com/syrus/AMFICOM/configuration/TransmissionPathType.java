@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.66 2005/08/05 16:50:02 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.67 2005/08/08 14:23:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPathTypeHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -27,18 +28,16 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/08/05 16:50:02 $
+ * @version $Revision: 1.67 $, $Date: 2005/08/08 14:23:52 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -48,6 +47,8 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 	private static final long serialVersionUID = 5311725679846973948L;
 
 	private String name;
+
+	private transient CharacterizableDelegate characterizableDelegate;
 
 	TransmissionPathType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -171,9 +172,10 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 		return Collections.emptySet();
 	}
 
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		}
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 }

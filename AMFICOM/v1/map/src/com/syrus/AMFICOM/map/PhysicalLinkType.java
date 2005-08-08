@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.67 2005/08/08 12:25:48 max Exp $
+ * $Id: PhysicalLinkType.java,v 1.68 2005/08/08 14:24:18 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -30,7 +31,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -52,8 +52,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: max $
- * @version $Revision: 1.67 $, $Date: 2005/08/08 12:25:48 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.68 $, $Date: 2005/08/08 14:24:18 $
  * @module map
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -97,6 +97,8 @@ public final class PhysicalLinkType extends StorableObjectType
 	private Identifier mapLibraryId;
 	
 	private boolean topological;
+
+	private transient CharacterizableDelegate characterizableDelegate;
 
 	PhysicalLinkType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -320,10 +322,11 @@ public final class PhysicalLinkType extends StorableObjectType
 		super.setCodename0(codename);
 	}
 
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		}
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
 	public PhysicalLinkTypeSort getSort() {

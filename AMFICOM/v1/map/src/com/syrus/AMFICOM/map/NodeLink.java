@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.66 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: NodeLink.java,v 1.67 2005/08/08 14:24:18 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -26,7 +27,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: arseniy $
- * @version $Revision: 1.66 $, $Date: 2005/08/08 11:35:11 $
+ * @version $Revision: 1.67 $, $Date: 2005/08/08 14:24:18 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -60,6 +60,8 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 	private AbstractNode startNode;
 	private AbstractNode endNode;
 	private double length;
+
+	private transient CharacterizableDelegate characterizableDelegate;
 
 	protected transient boolean selected = false;
 	protected transient boolean removed = false;
@@ -422,10 +424,11 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		this.setLength(length);
 	}
 
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		}
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
 	@Override

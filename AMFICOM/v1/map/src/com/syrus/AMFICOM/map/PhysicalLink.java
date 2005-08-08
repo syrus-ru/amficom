@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.86 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: PhysicalLink.java,v 1.87 2005/08/08 14:24:18 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -58,7 +59,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: arseniy $
- * @version $Revision: 1.86 $, $Date: 2005/08/08 11:35:11 $
+ * @version $Revision: 1.87 $, $Date: 2005/08/08 14:24:18 $
  * @module map
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -83,6 +84,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	private boolean leftToRight;
 	private boolean topToBottom;
+
+	private transient CharacterizableDelegate characterizableDelegate;
 
 	private transient List<NodeLink> nodeLinks = null;
 	protected transient boolean selected = false;
@@ -839,10 +842,11 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.nodeLinksSorted = false;
 	}
 
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		}
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
 	public XmlObject getXMLTransferable() {

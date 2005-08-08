@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.63 2005/08/08 12:12:28 max Exp $
+ * $Id: SiteNodeType.java,v 1.64 2005/08/08 14:24:18 arseniy Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -29,7 +30,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -60,8 +60,8 @@ import com.syrus.util.Log;
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: max $
- * @version $Revision: 1.63 $, $Date: 2005/08/08 12:12:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.64 $, $Date: 2005/08/08 14:24:18 $
  * @module map
  * @todo make 'sort' persistent (update database scheme as well)
  * @todo make 'mapLibrary' persistent
@@ -89,7 +89,9 @@ public final class SiteNodeType extends StorableObjectType
 	private SiteNodeTypeSort sort;
 
 	private Identifier mapLibraryId;
-	
+
+	private transient CharacterizableDelegate characterizableDelegate;
+
 	SiteNodeType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -279,10 +281,11 @@ public final class SiteNodeType extends StorableObjectType
 		super.setCodename(codename);
 	}
 
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		}
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
 	public SiteNodeTypeSort getSort() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.62 2005/08/05 16:50:34 arseniy Exp $
+ * $Id: SchemeCableThread.java,v 1.63 2005/08/08 14:25:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
@@ -40,6 +39,7 @@ import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -48,7 +48,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
@@ -63,7 +62,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.62 $, $Date: 2005/08/05 16:50:34 $
+ * @version $Revision: 1.63 $, $Date: 2005/08/08 14:25:23 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -83,6 +82,8 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	Identifier targetSchemePortId;
 
 	Identifier parentSchemeCableLinkId;
+
+	private transient CharacterizableDelegate characterizableDelegate;
 
 	/**
 	 * @param id
@@ -242,7 +243,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 			clone.clonedIdMap.put(this.id, clone.id);
 
-			for (final Characteristic characteristic : this.getCharacteristics0()) {
+			for (final Characteristic characteristic : this.getCharacteristics(true)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				characteristicClone.setCharacterizableId(clone.id);
@@ -276,17 +277,11 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	/**
 	 * @see Characterizable#getCharacteristics()
 	 */
-	public Set<Characteristic> getCharacteristics() {
-		try {
-			return Collections.unmodifiableSet(this.getCharacteristics0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
 		}
-	}
-
-	private Set<Characteristic> getCharacteristics0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, CHARACTERISTIC_CODE), true);
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
 	/**
@@ -315,7 +310,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics(true)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		reverseDependencies.remove(null);

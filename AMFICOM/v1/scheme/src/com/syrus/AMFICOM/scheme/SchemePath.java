@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.68 2005/08/05 16:50:34 arseniy Exp $
+ * $Id: SchemePath.java,v 1.69 2005/08/08 14:25:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
@@ -41,6 +40,7 @@ import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * #16 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.68 $, $Date: 2005/08/05 16:50:34 $
+ * @version $Revision: 1.69 $, $Date: 2005/08/08 14:25:23 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -86,6 +86,8 @@ public final class SchemePath extends StorableObject
 	private Identifier transmissionPathId;
 
 	Identifier parentSchemeMonitoringSolutionId;
+
+	private transient CharacterizableDelegate characterizableDelegate;
 
 	/**
 	 * @param id
@@ -207,17 +209,11 @@ public final class SchemePath extends StorableObject
 	/**
 	 * @see Characterizable#getCharacteristics()
 	 */
-	public Set<Characteristic> getCharacteristics() {
-		try {
-			return Collections.unmodifiableSet(this.getCharacteristics0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
 		}
-	}
-
-	private Set<Characteristic> getCharacteristics0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, CHARACTERISTIC_CODE), true);
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
 	/**
@@ -242,7 +238,7 @@ public final class SchemePath extends StorableObject
 	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics(true)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getPathMembers0()) {

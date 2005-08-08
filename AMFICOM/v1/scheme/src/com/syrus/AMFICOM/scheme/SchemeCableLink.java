@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.67 2005/08/05 16:50:34 arseniy Exp $
+ * $Id: SchemeCableLink.java,v 1.68 2005/08/08 14:25:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
  * #13 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.67 $, $Date: 2005/08/05 16:50:34 $
+ * @version $Revision: 1.68 $, $Date: 2005/08/08 14:25:23 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
@@ -262,7 +262,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 
 			clone.clonedIdMap.put(this.id, clone.id);
 
-			for (final Characteristic characteristic : this.getCharacteristics0()) {
+			for (final Characteristic characteristic : this.getCharacteristics(true)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				characteristicClone.setCharacterizableId(clone.id);
@@ -638,7 +638,7 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics(true)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeCableThreads0()) {

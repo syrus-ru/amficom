@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.37 2005/08/02 16:51:17 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.38 2005/08/08 14:26:03 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Элемент пути.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.37 $, $Date: 2005/08/02 16:51:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2005/08/08 14:26:03 $
  * @module mapviewclient_v1
  */
 public final class MeasurementPath implements MapElement {
@@ -137,8 +137,8 @@ public final class MeasurementPath implements MapElement {
 	 * 
 	 * @throws ApplicationException
 	 */
-	public Set<Characteristic> getCharacteristics() throws ApplicationException {
-		return this.schemePath.getCharacteristics();
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		return this.schemePath.getCharacteristics(usePool);
 	}
 
 	/**

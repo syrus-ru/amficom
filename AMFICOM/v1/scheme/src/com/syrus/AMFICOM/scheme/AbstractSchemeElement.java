@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.44 2005/08/02 08:19:38 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.45 2005/08/08 14:25:23 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
@@ -27,11 +26,11 @@ import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -44,8 +43,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.44 $, $Date: 2005/08/02 08:19:38 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.45 $, $Date: 2005/08/08 14:25:23 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -63,6 +62,8 @@ public abstract class AbstractSchemeElement
 	 *       and SchemeLink may be enclosed not by Scheme only.
 	 */
 	Identifier parentSchemeId;
+
+	private transient CharacterizableDelegate characterizableDelegate;
 
 	/**
 	 * @param id
@@ -104,17 +105,11 @@ public abstract class AbstractSchemeElement
 	/**
 	 * @see Characterizable#getCharacteristics()
 	 */
-	public final Set<Characteristic> getCharacteristics() {
-		try {
-			return Collections.unmodifiableSet(this.getCharacteristics0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
 		}
-	}
-
-	Set<Characteristic> getCharacteristics0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, CHARACTERISTIC_CODE), true);
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
 	/**

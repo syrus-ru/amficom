@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.61 2005/08/05 16:50:34 arseniy Exp $
+ * $Id: SchemeLink.java,v 1.62 2005/08/08 14:25:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.61 $, $Date: 2005/08/05 16:50:34 $
+ * @version $Revision: 1.62 $, $Date: 2005/08/08 14:25:23 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -507,7 +507,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 
 			clone.clonedIdMap.put(this.id, clone.id);
 
-			for (final Characteristic characteristic : this.getCharacteristics0()) {
+			for (final Characteristic characteristic : this.getCharacteristics(true)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
 				characteristicClone.setCharacterizableId(clone.id);
@@ -544,7 +544,7 @@ public final class SchemeLink extends AbstractSchemeLink {
 	public Set<Identifiable> getReverseDependencies() throws ApplicationException {
 		final Set<Identifiable> reverseDependencies = new HashSet<Identifiable>();
 		reverseDependencies.add(super.id);
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics0()) {
+		for (final ReverseDependencyContainer reverseDependencyContainer : this.getCharacteristics(true)) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
 		reverseDependencies.remove(null);

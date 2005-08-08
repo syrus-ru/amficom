@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.21 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.22 2005/08/08 14:24:41 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.22 $, $Date: 2005/08/08 14:24:41 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -101,8 +101,9 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 	}
 
 	private void addSetParameterInfo(final StringBuffer buffer, final String title, final Parameter[] parameters) {
-		if (parameters.length == 0)
+		if (parameters.length == 0) {
 			return;
+		}
 		buffer.append(title);
 		buffer.append('\n');
 		for (int i = 0; i < parameters.length; i++) {				
@@ -112,7 +113,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 				buffer.append(parameterType.getDescription() + ": " + string);
 				Set<Characteristic> characteristics = null;
 				try {
-					characteristics = parameterType.getCharacteristics();
+					characteristics = parameterType.getCharacteristics(false);
 				} catch (ApplicationException ae) {
 					Log.errorException(ae);
 				}
@@ -159,6 +160,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 		return false;
 	}
 
+	@Override
 	public void setValue(final MeasurementSetup measurementSetup, final String key, final Object value) {
 		if (measurementSetup != null) {
 			if (key.equals(COLUMN_PARAMETER_SET_ID))

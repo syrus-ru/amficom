@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.4 2005/08/02 18:08:46 arseniy Exp $
+ * $Id: AbstractLink.java,v 1.5 2005/08/08 14:23:52 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,10 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 
@@ -34,6 +32,8 @@ public abstract class AbstractLink extends DomainMember implements Characterizab
 	String supplierCode;
 	String mark;
 	int color;
+
+	private transient CharacterizableDelegate characterizableDelegate;
 
 	AbstractLink(final Identifier id) {
 		super(id);
@@ -123,10 +123,11 @@ public abstract class AbstractLink extends DomainMember implements Characterizab
 	 * @throws ApplicationException 
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public final Set<Characteristic> getCharacteristics() throws ApplicationException {
-		final LinkedIdsCondition lic = new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE);
-		final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(lic, true);
-		return characteristics;
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		}
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
 	public final String getDescription() {
