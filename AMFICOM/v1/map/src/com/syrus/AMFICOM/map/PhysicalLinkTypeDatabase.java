@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeDatabase.java,v 1.33 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: PhysicalLinkTypeDatabase.java,v 1.34 2005/08/08 12:25:48 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/08/08 11:35:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/08/08 12:25:48 $
+ * @author $Author: max $
  * @module map
  */
 public final class PhysicalLinkTypeDatabase extends StorableObjectDatabase<PhysicalLinkType> {
@@ -80,7 +80,7 @@ public final class PhysicalLinkTypeDatabase extends StorableObjectDatabase<Physi
 		preparedStatement.setInt(++startParameterNumber, storableObject.getBindingDimension().getWidth());
 		preparedStatement.setInt(++startParameterNumber, storableObject.getBindingDimension().getHeight());
 		preparedStatement.setInt(++startParameterNumber, storableObject.isTopological() ? 1 : 0);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMapLibrary().getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMapLibraryId());
 		return startParameterNumber;
 	}
 	
@@ -93,7 +93,7 @@ public final class PhysicalLinkTypeDatabase extends StorableObjectDatabase<Physi
 				+ storableObject.getBindingDimension().getWidth() + COMMA
 				+ storableObject.getBindingDimension().getHeight() + COMMA
 				+ (storableObject.isTopological() ? "1" : "0") + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getMapLibrary().getId());
+				+ DatabaseIdentifier.toSQLString(storableObject.getMapLibraryId());
 				
 		return values;
 	}

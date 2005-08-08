@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.66 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.67 2005/08/08 12:25:48 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import static java.util.logging.Level.SEVERE;
 
 import java.math.BigInteger;
 import java.util.Date;
@@ -43,14 +45,15 @@ import com.syrus.AMFICOM.general.logic.LibraryEntry;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
+import com.syrus.util.Log;
 
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: arseniy $
- * @version $Revision: 1.66 $, $Date: 2005/08/08 11:35:11 $
+ * @author $Author: max $
+ * @version $Revision: 1.67 $, $Date: 2005/08/08 12:25:48 $
  * @module map
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -91,7 +94,7 @@ public final class PhysicalLinkType extends StorableObjectType
 	 */
 	private IntDimension bindingDimension;
 
-	private MapLibrary mapLibrary;
+	private Identifier mapLibraryId;
 	
 	private boolean topological;
 
@@ -122,7 +125,7 @@ public final class PhysicalLinkType extends StorableObjectType
 			final String description,
 			final IntDimension bindingDimension,
 			final boolean topological,
-			final MapLibrary mapLibrary) {
+			final Identifier mapLibraryId) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -140,7 +143,7 @@ public final class PhysicalLinkType extends StorableObjectType
 		else {
 			this.bindingDimension = new IntDimension(bindingDimension.getWidth(), bindingDimension.getHeight());
 		}
-		this.mapLibrary = mapLibrary;
+		this.mapLibraryId = mapLibraryId;
 	}
 
 	public static PhysicalLinkType createInstance(final Identifier creatorId,
@@ -150,16 +153,16 @@ public final class PhysicalLinkType extends StorableObjectType
 			final String description,
 			final IntDimension bindingDimension,
 			final boolean topological,
-			final MapLibrary mapLibrary) throws CreateObjectException {
+			final Identifier mapLibraryId) throws CreateObjectException {
 
-		if (creatorId == null 
-				|| codename == null 
-				|| name == null 
-				|| description == null 
-				|| bindingDimension == null 
-				|| mapLibrary == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
+		assert creatorId != null 
+				&& codename != null 
+				&& name != null 
+				&& description != null 
+				&& bindingDimension != null 
+				&& mapLibraryId != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert !mapLibraryId.isVoid() : ErrorMessages.NON_VOID_EXPECTED;
+		
 		try {
 			final PhysicalLinkType physicalLinkType = new PhysicalLinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICALLINK_TYPE_CODE),
 					creatorId,
@@ -170,7 +173,7 @@ public final class PhysicalLinkType extends StorableObjectType
 					description,
 					bindingDimension,
 					topological,
-					mapLibrary);
+					mapLibraryId);
 
 			assert physicalLinkType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -192,13 +195,13 @@ public final class PhysicalLinkType extends StorableObjectType
 		this.sort = pltt.sort;
 		this.bindingDimension = new IntDimension(pltt.dimensionX, pltt.dimensionY);
 		this.topological = pltt.topological;
-		this.mapLibrary = StorableObjectPool.getStorableObject(new Identifier(pltt.mapLibraryId), true);
+		this.mapLibraryId = new Identifier(pltt.mapLibraryId);
 	}
 
 	@Override
 	public Set<Identifiable> getDependencies() {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.add(this.mapLibrary);
+		dependencies.add(this.mapLibraryId);
 		dependencies.remove(Identifier.VOID_IDENTIFIER);
 		return dependencies;
 	}
@@ -223,7 +226,7 @@ public final class PhysicalLinkType extends StorableObjectType
 				this.bindingDimension.getWidth(),
 				this.bindingDimension.getHeight(),
 				this.topological,
-				this.mapLibrary.getId().getTransferable());
+				this.mapLibraryId.getTransferable());
 	}
 
 	@Override
@@ -276,7 +279,7 @@ public final class PhysicalLinkType extends StorableObjectType
 			final int width,
 			final int height,
 			final boolean topological,
-			final Identifier mapLibraryId) throws IllegalDataException {
+			final Identifier mapLibraryId) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -291,11 +294,7 @@ public final class PhysicalLinkType extends StorableObjectType
 		this.sort = sort;
 		this.topological = topological;
 		
-		try {
-			this.mapLibrary = StorableObjectPool.getStorableObject(mapLibraryId, true);
-		} catch (ApplicationException e) {
-			throw new IllegalDataException(e);
-		}
+		this.mapLibraryId = mapLibraryId;
 	}
 
 	@Override
@@ -402,20 +401,30 @@ public final class PhysicalLinkType extends StorableObjectType
 			throw new CreateObjectException("PhysicalLinkType.createInstance |  ", e);
 		}
 	}
+	
+	Identifier getMapLibraryId() {
+		return this.mapLibraryId;
+	}
 
 	public void setParent(Library library) {
-		this.mapLibrary = (MapLibrary)library;
+		MapLibrary mapLibrary = (MapLibrary)library;
+		setMapLibrary(mapLibrary);
 	}
 
 	public Library getParent() {
-		return this.mapLibrary;
+		return getMapLibrary();
 	}
 
 	public MapLibrary getMapLibrary() {
-		return this.mapLibrary;
+		try {
+			return StorableObjectPool.getStorableObject(this.getMapLibraryId(), true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
 	}
 
 	public void setMapLibrary(MapLibrary mapLibrary) {
-		this.mapLibrary = mapLibrary;
+		this.mapLibraryId = mapLibrary.getId();
 	}
 }
