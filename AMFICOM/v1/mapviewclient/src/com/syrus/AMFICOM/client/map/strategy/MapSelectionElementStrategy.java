@@ -1,5 +1,5 @@
 /**
- * $Id: MapSelectionElementStrategy.java,v 1.26 2005/07/15 17:06:08 krupenn Exp $
+ * $Id: MapSelectionElementStrategy.java,v 1.27 2005/08/08 13:08:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.mapview.VoidElement;
 /**
  * Стратегия управления выделенными объектами.
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/07/15 17:06:08 $
+ * @version $Revision: 1.27 $, $Date: 2005/08/08 13:08:26 $
  * @module mapviewclient_v1
  */
 public final class MapSelectionElementStrategy extends AbstractMapStrategy 
@@ -94,7 +94,7 @@ public final class MapSelectionElementStrategy extends AbstractMapStrategy
 						super.logicalNetLayer.setCurrentMapElement(VoidElement.getInstance(super.logicalNetLayer.getMapView()));
 					}
 					else if (this.selection.getElements().size() == 1) {
-						super.logicalNetLayer.setCurrentMapElement((MapElement)this.selection.getElements().iterator().next());
+						super.logicalNetLayer.setCurrentMapElement(this.selection.getElements().iterator().next());
 					}
 				}// mel.isSelected()
 				else
