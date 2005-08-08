@@ -31,7 +31,6 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
-import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 
 public final class SiteNodeTypeEditor
