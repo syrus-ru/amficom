@@ -340,7 +340,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		}
 		
 		Identifier groupTestId = test.getGroupTestId();
-		if (groupTestId != null) {
+		if (groupTestId != null && !groupTestId.isVoid()) {
 			try {
 				Set testsByCondition = StorableObjectPool.getStorableObjectsByCondition(
 					new LinkedIdsCondition(groupTestId, ObjectEntities.TEST_CODE), true, true);
