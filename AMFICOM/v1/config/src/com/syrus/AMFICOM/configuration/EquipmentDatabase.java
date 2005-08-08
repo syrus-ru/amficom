@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.93 2005/07/27 15:58:51 bass Exp $
+ * $Id: EquipmentDatabase.java,v 1.94 2005/08/08 12:02:14 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/07/27 15:58:51 $
- * @author $Author: bass $
+ * @version $Revision: 1.94 $, $Date: 2005/08/08 12:02:14 $
+ * @author $Author: bob $
  * @module config
  */
 
@@ -178,10 +178,10 @@ public final class EquipmentDatabase extends StorableObjectDatabase<Equipment> {
 				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_SUPPLIER_CODE)),
 				resultSet.getFloat(EquipmentWrapper.COLUMN_LONGITUDE),
 				resultSet.getFloat(EquipmentWrapper.COLUMN_LATITUDE),
-				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_HW_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_HW_SERIAL)),
-				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_SW_VERSION)),
+				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_HW_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_SW_SERIAL)),
+				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_SW_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_INVENTORY_NUMBER)));
 
 		return equipment;
