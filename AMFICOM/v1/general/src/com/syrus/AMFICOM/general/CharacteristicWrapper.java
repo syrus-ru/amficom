@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.18 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: CharacteristicWrapper.java,v 1.19 2005/08/08 13:14:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/08 11:27:25 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/08 13:14:42 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -117,9 +117,8 @@ public class CharacteristicWrapper extends StorableObjectWrapper<Characteristic>
 		return false;
 	}
 
-	public void setValue(final Characteristic characteristic, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(final Characteristic characteristic, final String key, final Object value) {
 		if (characteristic != null) {
 			if (key.equals(COLUMN_TYPE_ID))
 				characteristic.setType((CharacteristicType) value);
@@ -134,7 +133,7 @@ public class CharacteristicWrapper extends StorableObjectWrapper<Characteristic>
 			else if (key.equals(COLUMN_VISIBLE))
 				characteristic.setVisible(((Boolean) value).booleanValue());
 			else if (key.equals(COLUMN_VALUE))
-				characteristic.setValue((String)value);
+				characteristic.setValue((String) value);
 		}
 	}
 }

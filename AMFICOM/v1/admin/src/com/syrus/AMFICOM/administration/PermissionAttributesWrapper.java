@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesWrapper.java,v 1.2 2005/08/05 09:46:31 bob Exp $
+ * $Id: PermissionAttributesWrapper.java,v 1.3 2005/08/08 13:15:50 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/05 09:46:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 13:15:50 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module admin
  */
@@ -68,7 +68,7 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 				return permissionAttributes.getUserId();
 			}
 			if (key.equals(COLUMN_PERMISSION_MASK)) {
-				return permissionAttributes.getPermissionMask();
+				return new Long(permissionAttributes.getPermissionMask());
 			}
 		}
 		return value;
@@ -78,18 +78,17 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 		return false;
 	}
 
-	public void setValue(PermissionAttributes permissionAttributes, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(PermissionAttributes permissionAttributes, final String key, final Object value) {
 		if (permissionAttributes != null) {
 			if (key.equals(COLUMN_DOMAIN_ID)) {
 				permissionAttributes.setDomainId((Identifier) value);
 			} else if (key.equals(COLUMN_USER_ID)) {
 				permissionAttributes.setUserId((Identifier) value);
 			} else if (key.equals(COLUMN_PERMISSION_MASK)) {
-				permissionAttributes.setPermissionMask((Long) value);
+				permissionAttributes.setPermissionMask(((Long) value).longValue());
 			}
-			
+
 		}
 	}
 
@@ -102,9 +101,7 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 		return null;
 	}
 
-	public void setPropertyValue(final String key, 
-	                             final Object objectKey, 
-	                             final Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 

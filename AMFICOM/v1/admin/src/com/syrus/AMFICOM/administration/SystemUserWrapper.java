@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.10 2005/08/05 09:46:31 bob Exp $
+ * $Id: SystemUserWrapper.java,v 1.11 2005/08/08 13:15:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSor
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/05 09:46:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/08/08 13:15:50 $
+ * @author $Author: arseniy $
  * @module admin_v1
  */
 public class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
@@ -83,9 +83,8 @@ public class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 		return false;
 	}
 
-	public void setValue(final SystemUser user, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(final SystemUser user, final String key, final Object value) {
 		if (user != null) {
 			if (key.equals(COLUMN_DESCRIPTION)) {
 				user.setDescription((String) value);
@@ -94,8 +93,7 @@ public class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 			} else if (key.equals(COLUMN_NAME)) {
 				user.setName((String) value);
 			} else if (key.equals(COLUMN_SORT)) {
-				user.setSort(SystemUserSort.from_int(
-					((Integer) value).intValue()));
+				user.setSort(SystemUserSort.from_int(((Integer) value).intValue()));
 			}
 		}
 	}

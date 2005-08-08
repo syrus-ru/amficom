@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeWrapper.java,v 1.16 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: CharacteristicTypeWrapper.java,v 1.17 2005/08/08 13:14:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/08 11:27:25 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/08 13:14:42 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -76,9 +76,7 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper<Characteris
 		return null;
 	}
 
-	public void setPropertyValue(final String key, 
-	                             final Object objectKey, 
-	                             final Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		/* there is no properties */
 	}
 
@@ -105,9 +103,8 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper<Characteris
 		return false;
 	}
 
-	public void setValue(final CharacteristicType characteristicType, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(final CharacteristicType characteristicType, final String key, final Object value) {
 		if (characteristicType != null) {
 			if (key.equals(COLUMN_CODENAME))
 				characteristicType.setCodename((String) value);
@@ -116,9 +113,7 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper<Characteris
 			else if (key.equals(COLUMN_NAME))
 				characteristicType.setName((String) value);
 			else if (key.equals(COLUMN_SORT))
-				characteristicType.setSort0(
-					CharacteristicTypeSort.from_int(
-						((Integer) value).intValue()));
+				characteristicType.setSort0(CharacteristicTypeSort.from_int(((Integer) value).intValue()));
 			else if (key.equals(COLUMN_DATA_TYPE_CODE))
 				characteristicType.setDataType0((DataType) value);
 		}
