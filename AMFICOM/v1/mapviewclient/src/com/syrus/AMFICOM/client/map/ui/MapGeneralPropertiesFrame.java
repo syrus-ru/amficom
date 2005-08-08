@@ -1,5 +1,5 @@
 /**
- * $Id: MapGeneralPropertiesFrame.java,v 1.5 2005/07/01 16:21:05 krupenn Exp $
+ * $Id: MapGeneralPropertiesFrame.java,v 1.6 2005/08/08 10:39:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,12 +16,15 @@ import javax.swing.JDesktopPane;
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
+import com.syrus.AMFICOM.client.map.props.MapLibraryEditor;
 import com.syrus.AMFICOM.client.map.props.PhysicalLinkEditor;
+import com.syrus.AMFICOM.client.map.props.PhysicalLinkTypeEditor;
+import com.syrus.AMFICOM.client.map.props.SiteNodeTypeEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.5 $, $Date: 2005/07/01 16:21:05 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/08 10:39:21 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -39,6 +42,16 @@ public final class MapGeneralPropertiesFrame extends MapAbstractPropertiesFrame 
 				PhysicalLinkEditor linkEditor = (PhysicalLinkEditor )generalEditor;
 				MapFrame mapFrame = MapDesktopCommand.findMapFrame((JDesktopPane )this.getParent());
 				linkEditor.setNetMapViewer(mapFrame.getMapViewer());
+			}
+			if(generalEditor instanceof PhysicalLinkTypeEditor) {
+				PhysicalLinkTypeEditor linkTypeEditor = (PhysicalLinkTypeEditor )generalEditor;
+				MapFrame mapFrame = MapDesktopCommand.findMapFrame((JDesktopPane )this.getParent());
+				linkTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
+			}
+			if(generalEditor instanceof SiteNodeTypeEditor) {
+				SiteNodeTypeEditor nodeTypeEditor = (SiteNodeTypeEditor )generalEditor;
+				MapFrame mapFrame = MapDesktopCommand.findMapFrame((JDesktopPane )this.getParent());
+				nodeTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
 			}
 		}
 		return generalEditor;
