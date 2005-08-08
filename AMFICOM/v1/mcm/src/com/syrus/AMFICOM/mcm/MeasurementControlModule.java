@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.116 2005/08/08 11:46:55 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.117 2005/08/08 16:13:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -50,7 +51,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.116 $, $Date: 2005/08/08 11:46:55 $
+ * @version $Revision: 1.117 $, $Date: 2005/08/08 16:13:52 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -281,11 +282,13 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			Log.errorException(coe);
 		}
 
+		final Set<Identifier> scheduledTestIds = new HashSet<Identifier>();
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(cc, true, false);
 			Log.debugMessage("Found " + tests.size() + " tests of status SCHEDULED", Log.DEBUGLEVEL07);
 			sortTestsByStartTime(tests);
 			testList.addAll(tests);
+			scheduledTestIds.addAll(Identifier.createIdentifiers(tests));
 		}
 		catch (ApplicationException ae) {
 			Log.errorException(ae);
@@ -305,7 +308,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}
 
 		try {
-			final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(cc, true, false);
+			final Set<Test> tests = StorableObjectPool.getStorableObjectsButIdsByCondition(scheduledTestIds, cc, true, false);
 			Log.debugMessage("Found " + tests.size() + " tests of status PROCESSING", Log.DEBUGLEVEL07);
 			for (final Test test : tests) {
 				startTestProcessor(test);
