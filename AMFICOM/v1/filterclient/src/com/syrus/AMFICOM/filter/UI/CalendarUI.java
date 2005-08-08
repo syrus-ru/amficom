@@ -1,5 +1,5 @@
 /*-
- * $Id: CalendarUI.java,v 1.3 2005/06/17 12:38:54 bass Exp $
+ * $Id: CalendarUI.java,v 1.4 2005/08/08 10:15:29 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import javax.swing.SwingConstants;
 import com.syrus.AMFICOM.client.resource.LangModel;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/17 12:38:54 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 10:15:29 $
+ * @author $Author: bob $
  * @module filterclient_v1
  */
 public class CalendarUI extends JPanel {
@@ -88,6 +88,7 @@ public class CalendarUI extends JPanel {
 			}
 		};
 		dialog.setSize(new Dimension(190, 190));
+		dialog.setResizable(true);
 		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
@@ -103,6 +104,7 @@ public class CalendarUI extends JPanel {
 			}
 		};
 		dialog.setSize(new Dimension(190, 190));
+		dialog.setResizable(true);
 		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
@@ -118,8 +120,9 @@ public class CalendarUI extends JPanel {
 			}
 		};
 		dialog.setModal(modal);
-		// dialog.setSize(new Dimension(190, 190));
-		dialog.pack();
+		dialog.setSize(new Dimension(190, 190));
+		dialog.setResizable(true);
+//		dialog.pack();
 		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
@@ -151,6 +154,7 @@ public class CalendarUI extends JPanel {
 		};
 		dialog.setModal(modal);
 		dialog.setSize(new Dimension(190, 190));
+		dialog.setResizable(true);
 		dialog.setTitle(LangModel.getString("CalendarTitle"));
 		dialog.setContentPane(instance);
 		instance.setHideOnChoose(hideOnChoose);
