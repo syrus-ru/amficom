@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.8 2005/08/05 18:44:38 arseniy Exp $
+ * $Id: GraphActions.java,v 1.9 2005/08/08 08:17:19 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,11 @@ import java.awt.Rectangle;
 import java.util.ArrayList;
 import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
 import javax.swing.tree.TreeNode;
@@ -43,8 +45,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/05 18:44:38 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 08:17:19 $
  * @module schemeclient_v1
  */
 
@@ -410,6 +412,19 @@ public class GraphActions {
 		return v.toArray(new BlockPortCell[v.size()]);
 	}
 
+	public static DefaultGraphCell[] getTopLevelCells(SchemeGraph graph, Object[] cells) {
+		Set<DefaultGraphCell> v = new HashSet<DefaultGraphCell>();
+
+		for (int i = 0; i < cells.length; i++) {
+			DefaultGraphCell node = (DefaultGraphCell)cells[i];
+			while (node.getParent() != null) {
+				node = (DefaultGraphCell)node.getParent();
+			}
+			v.add(node);
+		}
+		return  v.toArray(new DefaultGraphCell[v.size()]);
+	}
+	
 	public static DeviceGroup[] findTopLevelGroups(SchemeGraph graph, Object[] cells) {
 		ArrayList<DeviceGroup> v = new ArrayList<DeviceGroup>();
 		Object[] objs = graph.getDescendants(cells);
@@ -438,11 +453,11 @@ public class GraphActions {
 	}
 
 	public static BlockPortCell[] findTopLevelPorts(SchemeGraph graph, Object[] cells) {
-		ArrayList<DeviceGroup> v = new ArrayList<DeviceGroup>();
+		ArrayList<BlockPortCell> v = new ArrayList<BlockPortCell>();
 		Object[] objs = graph.getDescendants(cells);
 		for (int i = 0; i < objs.length; i++)
 			if (objs[i] instanceof BlockPortCell)
-				v.add((DeviceGroup)objs[i]);
+				v.add((BlockPortCell)objs[i]);
 		return v.toArray(new BlockPortCell[v.size()]);
 	}
 /*

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.16 2005/08/05 12:40:00 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.17 2005/08/08 08:17:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/08/05 12:40:00 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/08 08:17:19 $
  * @module schemeclient_v1
  */
 
@@ -311,7 +311,9 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		
 		cbMpBox.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				setMPTypeEnabled(cbMpBox.isSelected());
+				boolean b = cbMpBox.isSelected();
+				lbMpTypeLabel.setEnabled(b);
+				cmbMpTypeCombo.setEnabled(b);
 			}
 		});
 		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
@@ -406,7 +408,6 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 			this.cmbMpTypeCombo.setSelectedItem(mPort.getType());
 		} else {
 			this.cbMpBox.setSelected(false);
-			setMPTypeEnabled(false);
 		}
 	}
 

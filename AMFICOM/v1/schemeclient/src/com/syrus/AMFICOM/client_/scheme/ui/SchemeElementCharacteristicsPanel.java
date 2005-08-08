@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementCharacteristicsPanel.java,v 1.9 2005/08/05 12:39:59 stas Exp $
+ * $Id: SchemeElementCharacteristicsPanel.java,v 1.10 2005/08/08 08:17:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client_.scheme.ui;
+
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.Equipment;
@@ -18,7 +20,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/05 12:39:59 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/08 08:17:19 $
  * @module schemeclient_v1
  */
 
@@ -48,7 +50,12 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 						this.schemeElement,
 						this.schemeElement.getId(), true);
 				super.addCharacteristics(this.schemeElement.getCharacteristics(), this.schemeElement.getId());
-				Equipment eq = this.schemeElement.getEquipment();
+				Equipment eq = null;
+				try {
+					eq = this.schemeElement.getEquipment();
+				} catch (IllegalStateException e) {
+					// ignore as it means no Equipment created
+				}
 				if (eq != null) {
 					for (int i = 0; i < sorts.length; i++)
 						super.setTypeSortMapping(sorts[i],
@@ -56,7 +63,12 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 								eq.getId(), true);
 					super.addCharacteristics(eq.getCharacteristics(), eq.getId());
 				} else {
-					EquipmentType eqt = this.schemeElement.getEquipmentType();
+					EquipmentType eqt = null;
+					try {
+						eqt = this.schemeElement.getEquipmentType();
+					} catch (IllegalStateException e) {
+						Log.debugMessage("No EqT set for SE '" + this.schemeElement.getId() + "'", Level.FINE);
+					}
 					if (eqt != null) {
 						for (int i = 0; i < sorts.length; i++)
 							super.setTypeSortMapping(sorts[i],

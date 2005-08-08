@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.14 2005/08/05 12:39:59 stas Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.15 2005/08/08 08:17:19 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/08/05 12:39:59 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/08 08:17:19 $
  * @module schemeclient_v1
  */
 
@@ -170,6 +170,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
 			CreateUgo.createElementUgo((SchemeElement)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME) {
+			//FIXME когда создается УГО для схемы SchemeDevice никуда не добавляется ибо SE не создается, поэтому после выхода он пропадает
 			CreateUgo.createSchemeUgo((Scheme)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);
 		}
 		

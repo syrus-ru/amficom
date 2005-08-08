@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.11 2005/08/05 12:39:59 stas Exp $
+ * $Id: DeleteAction.java,v 1.12 2005/08/08 08:17:19 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
@@ -49,7 +50,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/05 12:39:59 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/08 08:17:19 $
  * @module schemeclient_v1
  */
 
@@ -72,21 +73,25 @@ public class DeleteAction extends AbstractAction {
 			if (graph.isTopLevelSchemeMode()) {
 				int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
 						LangModelGraph.getString("remove_elements_schematic"),  //$NON-NLS-1$
-						LangModelGraph.getString("confirmation"), //$NON-NLS-1$
+						LangModelGraph.getString("confirm"), //$NON-NLS-1$
 						JOptionPane.YES_NO_CANCEL_OPTION);
 				if (ret == JOptionPane.YES_OPTION) {
 					graph.getModel().remove(cells);
-					return;
 				}
-			} else {
-				int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-						LangModelGraph.getString("remove_elements"),  //$NON-NLS-1$
-						LangModelGraph.getString("confirmation"),  //$NON-NLS-1$
-						JOptionPane.YES_NO_CANCEL_OPTION);
-				if (ret != JOptionPane.YES_OPTION)
-					return;
+				return;
+			} 
+			
+			int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
+					LangModelGraph.getString("remove_elements"),  //$NON-NLS-1$
+					LangModelGraph.getString("confirm"),  //$NON-NLS-1$
+					JOptionPane.YES_NO_CANCEL_OPTION);
+			if (ret != JOptionPane.YES_OPTION) {
+				return;
 			}
-			delete(graph, cells);
+
+			DefaultGraphCell[] cells1 = GraphActions.getTopLevelCells(graph, cells);
+
+			delete(graph, cells1);
 			
 			graph.selectionNotify();
 			this.pane.getContext().getDispatcher().firePropertyChange(new SchemeEvent(this, graph, SchemeEvent.SCHEME_CHANGED));
@@ -193,24 +198,33 @@ public class DeleteAction extends AbstractAction {
 		}
 	}
 	
+	static void deleteScheme(Scheme scheme) {
+		SchemeElement se = scheme.getParentSchemeElement();
+		if (se != null) {
+			objectsToDelete.add(se.getId());
+		}
+	}
+		
 	static void deleteSchemeElement(SchemeElement element) {
-		if(element.getEquipment() != null)
-			objectsToDelete.add(element.getEquipment().getId());
 		objectsToDelete.add(element.getId());
-		for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
-			objectsToDelete.add(((SchemeLink)it.next()).getId());
-		}
-		for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
-			objectsToDelete.add(((SchemePort)it.next()).getId());
-		}
-		for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
-			objectsToDelete.add(((SchemeCablePort)it.next()).getId());
-		}
-		for (Iterator it = element.getSchemeDevices().iterator(); it.hasNext();) {
-			objectsToDelete.add(((SchemeDevice)it.next()).getId());
-		}
-		for (Iterator it = element.getSchemeElements().iterator(); it.hasNext();) {
-			objectsToDelete.add(((SchemeElement)it.next()).getId());
+		if (element.getScheme() == null) {
+			if(element.getEquipment() != null)
+				objectsToDelete.add(element.getEquipment().getId());
+			for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
+				objectsToDelete.add(((SchemeLink)it.next()).getId());
+			}
+			for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
+				objectsToDelete.add(((SchemePort)it.next()).getId());
+			}
+			for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
+				objectsToDelete.add(((SchemeCablePort)it.next()).getId());
+			}
+			for (Iterator it = element.getSchemeDevices().iterator(); it.hasNext();) {
+				objectsToDelete.add(((SchemeDevice)it.next()).getId());
+			}
+			for (Iterator it = element.getSchemeElements().iterator(); it.hasNext();) {
+				objectsToDelete.add(((SchemeElement)it.next()).getId());
+			}
 		}
 	}
 	
@@ -234,7 +248,12 @@ public class DeleteAction extends AbstractAction {
 		cellsToDelete.add(group);
 		if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
 			SchemeElement element = group.getSchemeElement();
-			deleteSchemeElement(element);
+			Scheme scheme = element.getScheme();
+			if (scheme != null) {
+				deleteScheme(scheme);
+			} else {
+				deleteSchemeElement(element);
+			}
 		} else if (group.getType() == DeviceGroup.PROTO_ELEMENT) {
 			SchemeProtoElement element = group.getProtoElement();
 			deleteSchemeProtoElement(element);
@@ -242,6 +261,9 @@ public class DeleteAction extends AbstractAction {
 //			for (Iterator it = element.getSchemeProtoElements().iterator(); it.hasNext();) {
 //				this.objectsToDelete.add(((SchemeElement)it.next()).getId());
 //			}
+		} else if (group.getType() == DeviceGroup.SCHEME) {
+			Scheme scheme = group.getScheme();
+			deleteScheme(scheme);
 		}
 	}
 	

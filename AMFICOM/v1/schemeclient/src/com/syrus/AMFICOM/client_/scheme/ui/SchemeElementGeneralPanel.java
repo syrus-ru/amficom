@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.11 2005/08/05 12:39:59 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.12 2005/08/08 08:17:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.awt.event.ActionListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.text.NumberFormat;
+import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
@@ -66,7 +67,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/05 12:39:59 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/08 08:17:19 $
  * @module schemeclient_v1
  */
 
@@ -798,21 +799,41 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			this.tfLabelText.setText(this.schemeElement.getLabel());
 			if (this.schemeElement.getSymbol() != null)
 				symbol = new ImageIcon(this.schemeElement.getSymbol().getImage());
-			eqt = this.schemeElement.getEquipmentType();
-			eq = this.schemeElement.getEquipment(); 
-			kis = this.schemeElement.getKis();
 			
-			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
-			try {
-				this.cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
-			} catch (ApplicationException e) {
-				Log.errorException(e);
-			}
-			condition = new EquivalentCondition(ObjectEntities.KIS_CODE);
-			try {
-				this.cmbKisCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
-			} catch (ApplicationException e) {
-				Log.errorException(e);
+			if (this.schemeElement.getScheme() != null) {
+				this.cbInstanceBox.setVisible(false);
+			} else {
+				this.cbInstanceBox.setVisible(true);
+				try {
+					eqt = this.schemeElement.getEquipmentType();
+				} catch (IllegalStateException e) {
+					Log.debugMessage("No EqT set for SE '" + this.schemeElement.getId() + "'", Level.FINE);
+				}
+				
+				try {
+					eq = this.schemeElement.getEquipment();
+				} catch (IllegalStateException e) {
+					// ignore as it means no Equipment created
+				} 
+				
+				try {
+					kis = this.schemeElement.getKis();
+				} catch (IllegalStateException e) {
+					// ignore as it means no KIS created
+				}
+				
+				EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
+				try {
+					this.cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+				} catch (ApplicationException e) {
+					Log.errorException(e);
+				}
+				condition = new EquivalentCondition(ObjectEntities.KIS_CODE);
+				try {
+					this.cmbKisCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition, true));
+				} catch (ApplicationException e) {
+					Log.errorException(e);
+				}
 			}
 		} 
 		else {

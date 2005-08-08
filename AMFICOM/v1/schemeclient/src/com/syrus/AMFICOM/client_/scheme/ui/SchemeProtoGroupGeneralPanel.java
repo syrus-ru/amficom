@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroupGeneralPanel.java,v 1.4 2005/08/05 12:40:00 stas Exp $
+ * $Id: SchemeProtoGroupGeneralPanel.java,v 1.5 2005/08/08 08:17:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/08/05 12:40:00 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 08:17:19 $
  * @module schemeclient_v1
  */
 
@@ -65,7 +65,6 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
 	protected SchemeProtoGroup schemeProtoGroup;
 	private Identifier imageId;
-	private static final String NON_GROUP_ITEM = "nonGroupItem";
 	
 	JPanel panel0 = new JPanel();
 	JPanel generalPanel = new JPanel();
@@ -249,7 +248,7 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 			List<SchemeProtoGroup> sortedGroups = new LinkedList<SchemeProtoGroup>(groups);
 			Collections.sort(sortedGroups, new WrapperComparator(SchemeProtoGroupWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
 			this.parentCombo.addElements(sortedGroups);
-			this.parentCombo.addItem(NON_GROUP_ITEM);
+			this.parentCombo.addItem(null);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
@@ -300,13 +299,9 @@ public class SchemeProtoGroupGeneralPanel extends DefaultStorableObjectEditor {
 				Log.errorException(e);
 			}
 		}
-		
-		Object parent = this.parentCombo.getSelectedItem();
-		if (parent == null || parent.equals(NON_GROUP_ITEM)) {
-			this.schemeProtoGroup.setParentSchemeProtoGroup(null);
-		} else {
-			this.schemeProtoGroup.setParentSchemeProtoGroup((SchemeProtoGroup)parent);	
-		}
+
+		this.schemeProtoGroup.setParentSchemeProtoGroup((SchemeProtoGroup)this.parentCombo.getSelectedItem());	
+
 		try {
 			StorableObjectPool.flush(this.schemeProtoGroup.getId(), LoginManager.getUserId(), false);
 		} catch (ApplicationException e) {

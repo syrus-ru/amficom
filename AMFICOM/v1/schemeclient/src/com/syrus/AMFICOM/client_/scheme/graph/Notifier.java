@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.7 2005/08/05 08:21:34 stas Exp $
+ * $Id: Notifier.java,v 1.8 2005/08/08 08:17:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/05 08:21:34 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/08 08:17:19 $
  * @module schemeclient_v1
  */
 
@@ -102,6 +102,7 @@ public class Notifier {
 	}
 	
 	public static void notify(SchemeGraph graph, ApplicationContext aContext, Object[] cells) {
+		try {
 		Dispatcher dispatcher = aContext.getDispatcher();
 		if (cells.length == 0) {
 			Log.debugMessage(Notifier.class.getSimpleName() + " | all deselected", Level.FINEST); //$NON-NLS-1$
@@ -172,7 +173,7 @@ public class Notifier {
 					manager = SchemeDevicePropertiesManager.getInstance(aContext);
 				}
 			}
-			if (selectedType == 0) {
+			if (selectedType == 0 || selectedObject == null) {
 				Log.debugMessage(Notifier.class.getSimpleName() + " | selected other object " + object.getClass().getSimpleName(), Level.FINEST); //$NON-NLS-1$
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object, null, ObjectSelectedEvent.OTHER_OBJECT));
 			} else {
@@ -181,6 +182,10 @@ public class Notifier {
 			}
 		} else if (cells.length > 1) {
 			// TODO multiple selection
+		}
+		} catch (Exception e) {
+			Log.errorException(e);
+			graph.clearSelection();
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.12 2005/08/05 12:39:59 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.13 2005/08/08 08:17:19 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,19 +24,14 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
-import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/05 12:39:59 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/08 08:17:19 $
  * @module schemeclient_v1
  */
 
@@ -140,46 +135,40 @@ public class UgoTabbedPane extends JPanel {
 	protected void fixImages(SchemeGraph graph) {
 		DeviceGroup[] groups = GraphActions.findAllGroups(graph, graph.getRoots());
 		for (int i = 0; i < groups.length; i++) {
-			Identifier id = groups[i].getElementId();
-			try {
-				StorableObject object = StorableObjectPool.getStorableObject(id, false);
-				switch (groups[i].getType()) {
-				case DeviceGroup.SCHEME_ELEMENT:
-					SchemeElement se = (SchemeElement)object;
-					DeviceCell cell = GraphActions.getMainCell(groups[i]);
-					if (cell != null) {
-						GraphActions.setText(graph, cell, se.getLabel());
-						ImageIcon icon = null;
-						if (se.getSymbol() != null)
-							icon = new ImageIcon(se.getSymbol().getImage());
-						GraphActions.setImage(graph, cell, icon);
-					}
-					break;
-				case DeviceGroup.PROTO_ELEMENT:
-					SchemeProtoElement proto = (SchemeProtoElement)object;
-					cell = GraphActions.getMainCell(groups[i]);
-					if (cell != null) {
-						GraphActions.setText(graph, cell, proto.getLabel());
-						ImageIcon icon = null;
-						if (proto.getSymbol() != null)
-							icon = new ImageIcon(proto.getSymbol().getImage());
-						GraphActions.setImage(graph, cell, icon);
-					}
-					break;
-				case DeviceGroup.SCHEME:
-					Scheme scheme = (Scheme)object;
-					cell = GraphActions.getMainCell(groups[i]);
-					if (cell != null) {
-						GraphActions.setText(graph, cell, scheme.getLabel());
-						ImageIcon icon = null;
-						if (scheme.getSymbol() != null)
-							icon = new ImageIcon(scheme.getSymbol().getImage());
-						GraphActions.setImage(graph, cell, icon);
-					}
-					break;
+			switch (groups[i].getType()) {
+			case DeviceGroup.SCHEME_ELEMENT:
+				SchemeElement se = groups[i].getSchemeElement();
+				DeviceCell cell = GraphActions.getMainCell(groups[i]);
+				if (cell != null) {
+					GraphActions.setText(graph, cell, se.getLabel());
+					ImageIcon icon = null;
+					if (se.getSymbol() != null)
+						icon = new ImageIcon(se.getSymbol().getImage());
+					GraphActions.setImage(graph, cell, icon);
 				}
-			} catch (ApplicationException e) {
-				Log.errorException(e);
+				break;
+			case DeviceGroup.PROTO_ELEMENT:
+				SchemeProtoElement proto = groups[i].getProtoElement();
+				cell = GraphActions.getMainCell(groups[i]);
+				if (cell != null) {
+					GraphActions.setText(graph, cell, proto.getLabel());
+					ImageIcon icon = null;
+					if (proto.getSymbol() != null)
+						icon = new ImageIcon(proto.getSymbol().getImage());
+					GraphActions.setImage(graph, cell, icon);
+				}
+				break;
+			case DeviceGroup.SCHEME:
+				Scheme scheme = groups[i].getScheme();
+				cell = GraphActions.getMainCell(groups[i]);
+				if (cell != null) {
+					GraphActions.setText(graph, cell, scheme.getLabel());
+					ImageIcon icon = null;
+					if (scheme.getSymbol() != null)
+						icon = new ImageIcon(scheme.getSymbol().getImage());
+					GraphActions.setImage(graph, cell, icon);
+				}
+				break;
 			}
 		}
 	}

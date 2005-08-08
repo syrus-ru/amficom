@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.15 2005/08/05 12:40:00 stas Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.16 2005/08/08 08:17:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/08/05 12:40:00 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/08 08:17:19 $
  * @module schemeclient_v1
  */
 
@@ -71,7 +71,6 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 	ApplicationContext aContext;
 	protected SchemeProtoElement schemeProtoElement;
 	private Identifier imageId;
-	private static final String NON_GROUP_ITEM = "nonGroupItem";
 	
 	JPanel panel0 = new JPanel();
 	JPanel generalPanel = new JPanel();
@@ -434,8 +433,8 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			
 			try {
 				if (this.schemeProtoElement.getParentSchemeProtoElement() != null) {
-					this.parentCombo.addItem(NON_GROUP_ITEM);
-					this.parentCombo.setSelectedItem(NON_GROUP_ITEM);
+					this.parentCombo.addItem(null);
+					this.parentCombo.setSelectedItem(null);
 					this.parentCombo.setEnabled(false);
 				} else {
 					SchemeProtoGroup parent = this.schemeProtoElement.getParentSchemeProtoGroup();

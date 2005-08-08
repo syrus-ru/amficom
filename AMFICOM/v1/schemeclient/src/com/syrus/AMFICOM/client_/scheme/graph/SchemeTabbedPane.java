@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.12 2005/08/05 18:44:38 arseniy Exp $
+ * $Id: SchemeTabbedPane.java,v 1.13 2005/08/08 08:17:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/08/05 18:44:38 $
+ * @author $Author: stas $
+ * @version $Revision: 1.13 $, $Date: 2005/08/08 08:17:19 $
  * @module schemeclient_v1
  */
 
@@ -205,12 +205,6 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 				openSchemeElement(schemeElement);
 			} else if (see.isType(SchemeEvent.INSERT_SCHEME)) {
 				Scheme scheme = (Scheme) see.getObject();
-//				SchemeImageResource res = scheme.getUgoCell();
-//				if (res == null)
-//					res = scheme.getSchemeCell();
-//				super.openSchemeImageResource(res, true);
-
-				//TODO SchemeElement.createInstace(Scheme)
 				ElementsPanel panel1 = getCurrentPanel();
 				try {
 					SchemeElement schemeElement = null;
@@ -238,41 +232,6 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 				}
-				
-//				Scheme scheme = (Scheme) see.getObject();
-//				
-//				ElementsPanel panel1 = getCurrentPanel();
-//				try {
-//					SchemeElement schemeElement = null;
-//					if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
-//						SchemeElement parent = panel1.getSchemeResource().getSchemeElement();
-//						schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), scheme.getName(), parent);
-//					} else if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME) {
-//						Scheme parent = panel1.getSchemeResource().getScheme();
-//						schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), scheme.getName(), parent);
-//					} else {
-//						assert false : "Unknown CellContainerType " + panel1.getSchemeResource().getCellContainerType();
-//					}
-//					schemeElement.setScheme(scheme);
-//					Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
-//					clonedIds.put(scheme.getId(), schemeElement.getId());
-//										
-//					SchemeImageResource res = scheme.getUgoCell();
-//					if (res == null)
-//						res = scheme.getSchemeCell();
-//					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = super.openSchemeImageResource(res, true);
-//					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
-//					
-//					SchemeGraph graph = panel1.getGraph();
-//					schemeElement.getSchemeCell().setData((List<Object>)graph.getArchiveableState());
-//					schemeElement.setUgoCell(scheme.getSchemeCell());
-//					graph.selectionNotify();					
-//				} catch (ApplicationException e) {
-//					Log.errorException(e);
-//				}
-//				
-//				
-//				
 			} else if (see.isType(SchemeEvent.INSERT_SCHEMEELEMENT)) {
 				SchemeElement schemeElement = (SchemeElement) see.getObject();
 				SchemeImageResource res = schemeElement.getUgoCell();

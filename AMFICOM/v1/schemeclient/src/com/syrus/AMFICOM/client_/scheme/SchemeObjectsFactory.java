@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.18 2005/08/05 08:21:34 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.19 2005/08/08 08:17:19 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/08/05 08:21:34 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/08 08:17:19 $
  * @module schemeclient_v1
  */
 
@@ -236,6 +236,7 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static SchemeElement createSchemeElement(Scheme parentScheme, Scheme scheme) throws CreateObjectException {
+		// FIXME у этого SE нет EqT
 		SchemeElement schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), scheme, parentScheme);
 		return schemeElement;
 	}

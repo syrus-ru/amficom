@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceGroup.java,v 1.8 2005/08/05 18:44:38 arseniy Exp $
+ * $Id: DeviceGroup.java,v 1.9 2005/08/08 08:17:19 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/05 18:44:38 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 08:17:19 $
  * @module schemeclient_v1
  */
 
@@ -90,14 +90,14 @@ public class DeviceGroup extends DefaultGraphCell {
 	}
 
 	public Scheme getScheme() {
-//		if (this.type == SCHEME) {
-//			try {
-//				return (Scheme)StorableObjectPool.getStorableObject(elementId, true);
-//			} catch (ApplicationException e) {
-//				Log.errorException(e);
-//			}
-//		}
-//		else 
+		if (this.type == SCHEME) {
+			try {
+				return (Scheme)StorableObjectPool.getStorableObject(this.elementId, true);
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+			}
+		}
+		else 
 		if (this.type == SCHEME_ELEMENT) { 
 			SchemeElement element = getSchemeElement();
 			if (element != null)
