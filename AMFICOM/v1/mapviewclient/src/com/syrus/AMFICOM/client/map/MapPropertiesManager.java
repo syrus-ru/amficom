@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.32 2005/08/03 18:49:35 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.33 2005/08/08 10:12:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import java.awt.SystemColor;
 import java.awt.Toolkit;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
+import java.io.StringReader;
 import java.text.DateFormat;
 import java.text.DecimalFormat;
 import java.text.DecimalFormatSymbols;
@@ -29,6 +30,7 @@ import java.text.SimpleDateFormat;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Properties;
+import java.util.StringTokenizer;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
@@ -55,11 +57,13 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/08/03 18:49:35 $
+ * @version $Revision: 1.33 $, $Date: 2005/08/08 10:12:26 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
 {
+	private static final String FONT_DELIMITER = " ";
+
 	/**
 	 * Фаил откуда загружаются данные.
 	 */
@@ -90,6 +94,17 @@ public final class MapPropertiesManager
  	
 	public static final double DEFAULT_ZOOM = 1.0D;
 
+	private static final String DEFAULT_LAST_LONGITUDE = "0";
+	private static final String DEFAULT_LAST_LATITUDE = "0";
+	private static final String DEFAULT_LAST_ZOOM = "1";
+	private static final String DEFAULT_LAST_DIRECTORY = ".";
+	private static final String DEFAULT_DESCRETE_NAVIGATION = "true";
+	private static final String DEFAULT_TOPOLOGICAL_IMAGE_CACHE = "true";
+	private static final String DEFAULT_OPTIMIZE_LINKS = "true";
+	private static final String DEFAULT_TOPO_IMAGE_MAX_TIMEWAIT = "30000";
+	private static final String DEFAULT_MOVE_MOUSE_NAVIGATING = "false";
+	private static final String DEFAULT_NAVIGATE_AREA_SIZE = "0.03";
+
 	/* values read from inifile. */
 	protected static String dataBasePath = "";
 	protected static String dataBaseView = "";
@@ -115,21 +130,21 @@ public final class MapPropertiesManager
 	protected static String rendererClass = "";
 
 	/* display constants. */
-	public static final Color DEFAULT_TEXT_BACKGROUND = Color.YELLOW;
-	public static final Color DEFAULT_TEXT_COLOR = SystemColor.controlText;
-	public static final Color DEFAULT_BORDER_COLOR = SystemColor.activeCaptionBorder;
+	public static final String DEFAULT_TEXT_BACKGROUND = String.valueOf(Color.YELLOW.getRGB());
+	public static final String DEFAULT_TEXT_COLOR = String.valueOf(SystemColor.controlText.getRGB());
+	public static final String DEFAULT_BORDER_COLOR = String.valueOf(SystemColor.activeCaptionBorder.getRGB());
 	public static final String DEFAULT_METRIC = LangModelMap.getString("metric");
-	public static final int DEFAULT_THICKNESS = 1;
-	public static final int DEFAULT_BORDER_THICKNESS = 1;
+	public static final String DEFAULT_THICKNESS = String.valueOf(1);
+	public static final String DEFAULT_BORDER_THICKNESS = String.valueOf(1);
 	public static final String DEFAULT_STYLE = "Solid line";
 	public static final BasicStroke DEFAULT_STROKE = new BasicStroke(2);
-	public static final Color DEFAULT_COLOR = Color.blue;
-	public static final int DEFAULT_ALARMED_THICKNESS = 3;
+	public static final String DEFAULT_COLOR = String.valueOf(Color.BLUE.getRGB());
+	public static final String DEFAULT_ALARMED_THICKNESS = String.valueOf(3);
 	public static final String DEFAULT_ALARMED_STYLE = "Solid line";
 	public static final BasicStroke DEFAULT_ALARMED_STROKE = new BasicStroke(3);
-	public static final Color DEFAULT_ALARMED_COLOR = Color.red;
+	public static final String DEFAULT_ALARMED_COLOR = String.valueOf(Color.RED.getRGB());
 	public static final String DEFAULT_ALARMED_ANIMATION = "blink";
-	public static final int DEFAULT_SELECTION_THICKNESS = 4;
+	public static final String DEFAULT_SELECTION_THICKNESS = String.valueOf(4);
 	public static final String DEFAULT_SELECTION_STYLE = "Solid line";
 	public static final BasicStroke DEFAULT_SELECTION_STROKE = new BasicStroke( 
 			1,
@@ -138,56 +153,82 @@ public final class MapPropertiesManager
 			(float)0.0,
 			new float[] {5, 5},
 			(float)0.0);
-	public static final Color DEFAULT_SELECTION_COLOR = Color.GREEN;
-	public static final Color DEFAULT_FIRST_SELECTION_COLOR = Color.BLACK;
-	public static final Color DEFAULT_SECOND_SELECTION_COLOR = Color.RED;
-	public static final String DEFAULT_FONT_ID = "Arial_1_12";
+	public static final String DEFAULT_SELECTION_COLOR = String.valueOf(Color.GREEN.getRGB());
+	public static final String DEFAULT_SELECTION_FIRST_COLOR = String.valueOf(Color.BLACK.getRGB());
+	public static final String DEFAULT_SELECTION_SECOND_COLOR = String.valueOf(Color.RED.getRGB());
 	public static final Font DEFAULT_FONT = new Font ("Arial", 1, 12);
-	public static final int DEFAULT_UNBOUND_THICKNESS = 4;
-	public static final Color DEFAULT_UNBOUND_LINK_COLOR = Color.PINK;
-	public static final Color DEFAULT_UNBOUND_LINK_POSITION_COLOR = Color.ORANGE;
-	public static final Color DEFAULT_UNBOUND_ELEMENT_COLOR = Color.MAGENTA;
-	public static final Color DEFAULT_CAN_BIND_COLOR = Color.CYAN;
-	public static final double DEFAULT_SPARE_LENGTH = 1.5D;
-	public static final int DEFAULT_MOUSE_TOLERANCY = 3;
+	public static final String DEFAULT_FONT_ID = DEFAULT_FONT.getName() + MapPropertiesManager.FONT_DELIMITER + DEFAULT_FONT.getStyle() + MapPropertiesManager.FONT_DELIMITER + DEFAULT_FONT.getSize();
+	public static final String DEFAULT_UNBOUND_THICKNESS = String.valueOf(4);
+	public static final String DEFAULT_UNBOUND_LINK_COLOR = String.valueOf(Color.PINK.getRGB());
+	public static final String DEFAULT_UNBOUND_LINK_POSITION_COLOR = String.valueOf(Color.ORANGE.getRGB());
+	public static final String DEFAULT_UNBOUND_ELEMENT_COLOR = String.valueOf(Color.MAGENTA.getRGB());
+	public static final String DEFAULT_CAN_BIND_COLOR = String.valueOf(Color.CYAN.getRGB());
+	public static final String DEFAULT_SPARE_LENGTH = String.valueOf(1.5D);
+	public static final String DEFAULT_MOUSE_TOLERANCY = String.valueOf(3);
+
+	protected static final String KEY_TEXT_BACKGROUND = "textBackground";
+	protected static final String KEY_TEXT_COLOR = "textForeground";
+	protected static final String KEY_FONT = "font";
+	protected static final String KEY_METRIC = "metric";
+	protected static final String KEY_BORDER_THICKNESS = "borderThickness";
+	protected static final String KEY_BORDER_COLOR = "borderColor";
+	protected static final String KEY_THICKNESS = "thickness";
+	protected static final String KEY_STYLE = "style";
+	protected static final String KEY_COLOR = "color";
+	protected static final String KEY_ALARMED_THICKNESS = "alarmedThickness";
+	protected static final String KEY_ALARMED_STYLE = "alarmedStyle";
+	protected static final String KEY_ALARMED_COLOR = "alarmedColor";
+	protected static final String KEY_ALARMED_ANIMATION = "alarmedAnimation";
+	protected static final String KEY_SELECTION_THICKNESS = "selectionThickness";
+	protected static final String KEY_SELECTION_STYLE = "selectionStyle";
+	protected static final String KEY_SELECTION_COLOR = "selectionColor";
+	protected static final String KEY_SELECTION_FIRST_COLOR = "selectionFirstColor";
+	protected static final String KEY_SELECTION_SECOND_COLOR = "selectionSecondColor";
+	protected static final String KEY_UNBOUND_THICKNESS = "unboundThickness";
+	protected static final String KEY_UNBOUND_ELEMENT_COLOR = "unboundElementColor";
+	protected static final String KEY_UNBOUND_LINK_POSITION_COLOR = "linkPositionColor";
+	protected static final String KEY_UNBOUND_LINK_COLOR = "unboundLinkColor";
+	protected static final String KEY_CAN_BIND_COLOR = "canBindColor";
+	protected static final String KEY_SPARE_LENGTH = "spareLength";
+	protected static final String KEY_MOUSE_TOLERANCY = "mouseTolerancy";
 
 	/* display variables. */
-	protected static Color textBackground = DEFAULT_TEXT_BACKGROUND;
-	protected static Color textColor = DEFAULT_TEXT_COLOR;
+	protected static Color textBackground = null;
+	protected static Color textColor = null;
 	protected static Font font = DEFAULT_FONT;
 
-	protected static String metric = DEFAULT_METRIC;
+	protected static String metric = null;
 
-	protected static int borderThickness = DEFAULT_BORDER_THICKNESS;
-	protected static Color borderColor = DEFAULT_BORDER_COLOR;
+	protected static int borderThickness = 0;
+	protected static Color borderColor = null;
 
-	protected static int thickness = DEFAULT_THICKNESS;
-	protected static String style = DEFAULT_STYLE;
+	protected static int thickness = 0;
+	protected static String style = null;
 	protected static BasicStroke stroke = DEFAULT_STROKE;
-	protected static Color color = DEFAULT_COLOR;
+	protected static Color color = null;
 
-	protected static int alarmedThickness = DEFAULT_ALARMED_THICKNESS;
-	protected static String alarmedStyle = DEFAULT_ALARMED_STYLE;
+	protected static int alarmedThickness = 0;
+	protected static String alarmedStyle = null;
 	protected static BasicStroke alarmedStroke = DEFAULT_ALARMED_STROKE;
-	protected static Color alarmedColor = DEFAULT_ALARMED_COLOR;
-	protected static String alarmedAnimation = DEFAULT_ALARMED_ANIMATION;
+	protected static Color alarmedColor = null;
+	protected static String alarmedAnimation = null;
 
-	protected static int selectionThickness = DEFAULT_SELECTION_THICKNESS;
-	protected static String selectionStyle = DEFAULT_SELECTION_STYLE;
+	protected static int selectionThickness = 0;
+	protected static String selectionStyle = null;
 	protected static BasicStroke selectionStroke = DEFAULT_SELECTION_STROKE;
-	protected static Color selectionColor = DEFAULT_SELECTION_COLOR;
-	protected static Color firstSelectionColor = DEFAULT_FIRST_SELECTION_COLOR;
-	protected static Color secondSelectionColor = DEFAULT_SECOND_SELECTION_COLOR;
+	protected static Color selectionColor = null;
+	protected static Color firstSelectionColor = null;
+	protected static Color secondSelectionColor = null;
 
-	protected static int unboundThickness = DEFAULT_UNBOUND_THICKNESS;
-	protected static Color unboundLinkColor = DEFAULT_UNBOUND_LINK_COLOR;
-	protected static Color unboundLinkPositionColor = DEFAULT_UNBOUND_LINK_POSITION_COLOR;
-	protected static Color unboundElementColor = DEFAULT_UNBOUND_ELEMENT_COLOR;
-	protected static Color canBindColor = DEFAULT_CAN_BIND_COLOR;
+	protected static int unboundThickness = 0;
+	protected static Color unboundLinkColor = null;
+	protected static Color unboundLinkPositionColor = null;
+	protected static Color unboundElementColor = null;
+	protected static Color canBindColor = null;
 
-	protected static double spareLength = DEFAULT_SPARE_LENGTH;
+	protected static double spareLength = 0D;
 
-	protected static int mouseTolerancy = DEFAULT_MOUSE_TOLERANCY;
+	protected static int mouseTolerancy = 0;
 
 	/* show modes. */
 
@@ -266,11 +307,52 @@ public final class MapPropertiesManager
 
 	private static DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
 
+	private static Properties defaults = new Properties();
+
+	static {
+		defaults.put(KEY_TEXT_BACKGROUND, DEFAULT_TEXT_BACKGROUND);
+		defaults.put(KEY_TEXT_COLOR, DEFAULT_TEXT_COLOR);
+		defaults.put(KEY_FONT, DEFAULT_FONT);
+		defaults.put(KEY_METRIC, DEFAULT_METRIC);
+		defaults.put(KEY_BORDER_THICKNESS, DEFAULT_BORDER_THICKNESS);
+		defaults.put(KEY_BORDER_COLOR, DEFAULT_BORDER_COLOR);
+		defaults.put(KEY_THICKNESS, DEFAULT_THICKNESS);
+		defaults.put(KEY_STYLE, DEFAULT_STYLE);
+		defaults.put(KEY_COLOR, DEFAULT_COLOR);
+		defaults.put(KEY_ALARMED_THICKNESS, DEFAULT_ALARMED_THICKNESS);
+		defaults.put(KEY_ALARMED_STYLE, DEFAULT_ALARMED_STYLE);
+		defaults.put(KEY_ALARMED_COLOR, DEFAULT_ALARMED_COLOR);
+		defaults.put(KEY_ALARMED_ANIMATION, DEFAULT_ALARMED_ANIMATION);
+		defaults.put(KEY_SELECTION_THICKNESS, DEFAULT_SELECTION_THICKNESS);
+		defaults.put(KEY_SELECTION_STYLE, DEFAULT_SELECTION_STYLE);
+		defaults.put(KEY_SELECTION_COLOR, DEFAULT_SELECTION_COLOR);
+		defaults.put(KEY_SELECTION_FIRST_COLOR, DEFAULT_SELECTION_FIRST_COLOR);
+		defaults.put(KEY_SELECTION_SECOND_COLOR, DEFAULT_SELECTION_SECOND_COLOR);
+		defaults.put(KEY_UNBOUND_THICKNESS, DEFAULT_UNBOUND_THICKNESS);
+		defaults.put(KEY_UNBOUND_ELEMENT_COLOR, DEFAULT_UNBOUND_ELEMENT_COLOR);
+		defaults.put(KEY_UNBOUND_LINK_POSITION_COLOR, DEFAULT_UNBOUND_LINK_POSITION_COLOR);
+		defaults.put(KEY_UNBOUND_LINK_COLOR, DEFAULT_UNBOUND_LINK_COLOR);
+		defaults.put(KEY_CAN_BIND_COLOR, DEFAULT_CAN_BIND_COLOR);
+		defaults.put(KEY_SPARE_LENGTH, DEFAULT_SPARE_LENGTH);
+		defaults.put(KEY_MOUSE_TOLERANCY, DEFAULT_MOUSE_TOLERANCY);
+
+		defaults.put(KEY_LAST_LONGITUDE, DEFAULT_LAST_LONGITUDE);
+		defaults.put(KEY_LAST_LATITUDE, DEFAULT_LAST_LATITUDE);
+		defaults.put(KEY_LAST_ZOOM, DEFAULT_LAST_ZOOM);
+		defaults.put(KEY_LAST_DIRECTORY, DEFAULT_LAST_DIRECTORY);
+		defaults.put(KEY_DESCRETE_NAVIGATION, DEFAULT_DESCRETE_NAVIGATION);
+	 	defaults.put(KEY_TOPOLOGICAL_IMAGE_CACHE, DEFAULT_TOPOLOGICAL_IMAGE_CACHE);
+	 	defaults.put(KEY_OPTIMIZE_LINKS, DEFAULT_OPTIMIZE_LINKS);
+	 	defaults.put(KEY_TOPO_IMAGE_MAX_TIMEWAIT, DEFAULT_TOPO_IMAGE_MAX_TIMEWAIT);
+	 	defaults.put(KEY_MOVE_MOUSE_NAVIGATING, DEFAULT_MOVE_MOUSE_NAVIGATING);
+		defaults.put(KEY_NAVIGATE_AREA_SIZE, DEFAULT_NAVIGATE_AREA_SIZE);
+	}
+	
 	static
 	{
 		try
 		{
-			Properties properties = new Properties();
+			Properties properties = new Properties(defaults);
 			properties.load(new FileInputStream(iniFileName));
 			MapPropertiesManager.setFromIniFile(properties);
 		}
@@ -405,81 +487,223 @@ public final class MapPropertiesManager
 		try {
 			lastLong = Double.parseDouble(properties.getProperty(KEY_LAST_LONGITUDE));
 		} catch (Exception e) {
-			Log.errorMessage("Failed reading parameter "
-					+ KEY_LAST_LONGITUDE + " from properties file.");			
-			Log.errorException(e);
+			lastLong = Double.parseDouble(defaults.getProperty(KEY_LAST_LONGITUDE));
 		}
 
 		try {
 			lastLat = Double.parseDouble(properties.getProperty(KEY_LAST_LATITUDE));
 		} catch (Exception e) {
-			Log.errorMessage("Failed reading parameter "
-					+ KEY_LAST_LATITUDE + " from properties file.");			
-			Log.errorException(e);
+			lastLat = Double.parseDouble(defaults.getProperty(KEY_LAST_LATITUDE));
 		}
 
 		try {
 			lastZoom = Double.parseDouble(properties.getProperty(KEY_LAST_ZOOM));
 		} catch (Exception e) {
-			Log.errorMessage("Failed reading parameter "
-					+ KEY_LAST_ZOOM + " from properties file.");			
-			Log.errorException(e);
+			lastZoom = Double.parseDouble(defaults.getProperty(KEY_LAST_ZOOM));
 		}
 		
-		lastDirectory = properties.getProperty(KEY_LAST_DIRECTORY);
+		try {
+			lastDirectory = properties.getProperty(KEY_LAST_DIRECTORY);
+		} catch (Exception e) {
+			lastDirectory = defaults.getProperty(KEY_LAST_DIRECTORY);
+		}
 		
 		try {
 			descreteNavigation = Boolean.parseBoolean(properties.getProperty(KEY_DESCRETE_NAVIGATION));
 		} catch (Exception e) {
-			Log.errorMessage("Failed reading parameter "
-					+ KEY_DESCRETE_NAVIGATION + " from properties file.");			
-			Log.errorException(e);
+			descreteNavigation = Boolean.parseBoolean(defaults.getProperty(KEY_DESCRETE_NAVIGATION));
 		}
 
 		try {
 			useTopologicalImageCache = Boolean.parseBoolean(properties.getProperty(KEY_TOPOLOGICAL_IMAGE_CACHE));
 		} catch (Exception e) {
-			Log.errorMessage("Failed reading parameter "
-					+ KEY_TOPOLOGICAL_IMAGE_CACHE + " from properties file.");			
-			Log.errorException(e);
+			useTopologicalImageCache = Boolean.parseBoolean(defaults.getProperty(KEY_TOPOLOGICAL_IMAGE_CACHE));
 		}
 		
 		try {
 			topoImageMaxTimeWait = Long.parseLong(properties.getProperty(KEY_TOPO_IMAGE_MAX_TIMEWAIT));
 		} catch (Exception e) {
-			Log.errorMessage("Failed reading parameter "
-					+ KEY_TOPO_IMAGE_MAX_TIMEWAIT + " from properties file.");			
-			Log.errorException(e);
+			topoImageMaxTimeWait = Long.parseLong(defaults.getProperty(KEY_TOPO_IMAGE_MAX_TIMEWAIT));
 		}
 		
 		try {
 			optimizeLinks = Boolean.parseBoolean(properties.getProperty(KEY_OPTIMIZE_LINKS));
 		} catch (Exception e) {
-			Log.errorMessage("Failed reading parameter "
-					+ KEY_OPTIMIZE_LINKS + " from properties file.");			
-			Log.errorException(e);
+			optimizeLinks = Boolean.parseBoolean(defaults.getProperty(KEY_OPTIMIZE_LINKS));
 		}
 		
 		try {
 			moveMouseNavigating = Boolean.parseBoolean(properties.getProperty(KEY_MOVE_MOUSE_NAVIGATING));
 		} catch (Exception e) {
-			Log.errorMessage("Failed reading parameter "
-					+ KEY_MOVE_MOUSE_NAVIGATING + " from properties file.");			
-			Log.errorException(e);
+			moveMouseNavigating = Boolean.parseBoolean(defaults.getProperty(KEY_MOVE_MOUSE_NAVIGATING));
 		}
 		
 		try {
 			navigateAreaSize = Double.parseDouble(properties.getProperty(KEY_NAVIGATE_AREA_SIZE));
 		} catch (Exception e) {
-			Log.errorMessage("Failed reading parameter "
-					+ KEY_NAVIGATE_AREA_SIZE + " from properties file.");			
-			Log.errorException(e);
+			navigateAreaSize = Double.parseDouble(defaults.getProperty(KEY_NAVIGATE_AREA_SIZE));
 		}
 
-		//		selectionColor = iniFile.getValue("selectionColor");
-//		selectionStyle = iniFile.getValue("selectionStyle");
-//		showPhysicalNodes = iniFile.getValue("showNodes");
-		lastView = properties.getProperty(KEY_LAST_VIEW);
+		try {
+			textBackground = new Color(Integer.parseInt(properties.getProperty(KEY_TEXT_BACKGROUND)));
+		} catch (Exception e) {
+			textBackground = new Color(Integer.parseInt(defaults.getProperty(KEY_TEXT_BACKGROUND)));
+		}
+
+		try {
+			textColor = new Color(Integer.parseInt(properties.getProperty(KEY_TEXT_COLOR)));
+		} catch (Exception e) {
+			textColor = new Color(Integer.parseInt(defaults.getProperty(KEY_TEXT_COLOR)));
+		}
+
+		try {
+			String fontId = properties.getProperty(KEY_FONT);
+			StringTokenizer tokenizer = new StringTokenizer(fontId, "\n");
+			String fontName = tokenizer.nextToken();
+			int fontStyle = Integer.parseInt(tokenizer.nextToken());
+			int fontSize = Integer.parseInt(tokenizer.nextToken());
+			font = new Font(fontName, fontStyle, fontSize);
+		} catch (Exception e) {
+			font = DEFAULT_FONT;
+		}
+
+		try {
+			metric = properties.getProperty(KEY_METRIC);
+		} catch (Exception e) {
+			metric = defaults.getProperty(KEY_METRIC);
+		}
+
+		try {
+			borderThickness = Integer.parseInt(properties.getProperty(KEY_BORDER_THICKNESS));
+		} catch (Exception e) {
+			borderThickness = Integer.parseInt(defaults.getProperty(KEY_BORDER_THICKNESS));
+		}
+		
+		try {
+			borderColor = new Color(Integer.parseInt(properties.getProperty(KEY_BORDER_COLOR)));
+		} catch (Exception e) {
+			borderColor = new Color(Integer.parseInt(defaults.getProperty(KEY_BORDER_COLOR)));
+		}
+
+		try {
+			thickness = Integer.parseInt(properties.getProperty(KEY_THICKNESS));
+		} catch (Exception e) {
+			thickness = Integer.parseInt(defaults.getProperty(KEY_THICKNESS));
+		}
+
+		try {
+			style = properties.getProperty(KEY_STYLE);
+		} catch (Exception e) {
+			style = defaults.getProperty(KEY_STYLE);
+		}
+
+		try {
+			color = new Color(Integer.parseInt(properties.getProperty(KEY_COLOR)));
+		} catch (Exception e) {
+			color = new Color(Integer.parseInt(defaults.getProperty(KEY_COLOR)));
+		}
+
+		try {
+			alarmedThickness =Integer.parseInt(properties.getProperty(KEY_ALARMED_THICKNESS));
+		} catch (Exception e) {
+			alarmedThickness =Integer.parseInt(defaults.getProperty(KEY_ALARMED_THICKNESS));
+		}
+
+		try {
+			alarmedStyle = properties.getProperty(KEY_ALARMED_STYLE);
+		} catch (Exception e) {
+			alarmedStyle = defaults.getProperty(KEY_ALARMED_STYLE);
+		}
+
+		try {
+			alarmedColor = new Color(Integer.parseInt(properties.getProperty(KEY_ALARMED_COLOR)));
+		} catch (Exception e) {
+			alarmedColor = new Color(Integer.parseInt(defaults.getProperty(KEY_ALARMED_COLOR)));
+		}
+
+		try {
+			alarmedAnimation = new String(properties.getProperty(KEY_ALARMED_ANIMATION));
+		} catch (Exception e) {
+			alarmedAnimation = new String(defaults.getProperty(KEY_ALARMED_ANIMATION));
+		}
+
+		try {
+			selectionThickness = Integer.parseInt(properties.getProperty(KEY_SELECTION_THICKNESS));
+		} catch (Exception e) {
+			selectionThickness = Integer.parseInt(defaults.getProperty(KEY_SELECTION_THICKNESS));
+		}
+
+		try {
+			selectionStyle = properties.getProperty(KEY_SELECTION_STYLE);
+		} catch (Exception e) {
+			selectionStyle = defaults.getProperty(KEY_SELECTION_STYLE);
+		}
+
+		try {
+			selectionColor = new Color(Integer.parseInt(properties.getProperty(KEY_SELECTION_COLOR)));
+		} catch (Exception e) {
+			selectionColor = new Color(Integer.parseInt(defaults.getProperty(KEY_SELECTION_COLOR)));
+		}
+
+		try {
+			firstSelectionColor = new Color(Integer.parseInt(properties.getProperty(KEY_SELECTION_FIRST_COLOR)));
+		} catch (Exception e) {
+			firstSelectionColor = new Color(Integer.parseInt(defaults.getProperty(KEY_SELECTION_FIRST_COLOR)));
+		}
+
+		try {
+			secondSelectionColor = new Color(Integer.parseInt(properties.getProperty(KEY_SELECTION_SECOND_COLOR)));
+		} catch (Exception e) {
+			secondSelectionColor = new Color(Integer.parseInt(defaults.getProperty(KEY_SELECTION_SECOND_COLOR)));
+		}
+
+		try {
+			unboundThickness = Integer.parseInt(properties.getProperty(KEY_UNBOUND_THICKNESS));
+		} catch (Exception e) {
+			unboundThickness = Integer.parseInt(defaults.getProperty(KEY_UNBOUND_THICKNESS));
+		}
+
+		try {
+			unboundLinkColor = new Color(Integer.parseInt(properties.getProperty(KEY_UNBOUND_LINK_COLOR)));
+		} catch (Exception e) {
+			unboundLinkColor = new Color(Integer.parseInt(defaults.getProperty(KEY_UNBOUND_LINK_COLOR)));
+		}
+
+		try {
+			unboundLinkPositionColor = new Color(Integer.parseInt(properties.getProperty(KEY_UNBOUND_LINK_POSITION_COLOR)));
+		} catch (Exception e) {
+			unboundLinkPositionColor = new Color(Integer.parseInt(defaults.getProperty(KEY_UNBOUND_LINK_POSITION_COLOR)));
+		}
+
+		try {
+			unboundElementColor = new Color(Integer.parseInt(properties.getProperty(KEY_UNBOUND_ELEMENT_COLOR)));
+		} catch (Exception e) {
+			unboundElementColor = new Color(Integer.parseInt(defaults.getProperty(KEY_UNBOUND_ELEMENT_COLOR)));
+		}
+
+		try {
+			canBindColor = new Color(Integer.parseInt(properties.getProperty(KEY_CAN_BIND_COLOR)));
+		} catch (Exception e) {
+			canBindColor = new Color(Integer.parseInt(defaults.getProperty(KEY_CAN_BIND_COLOR)));
+		}
+
+		try {
+			spareLength = Double.parseDouble(properties.getProperty(KEY_SPARE_LENGTH));
+		} catch (Exception e) {
+			spareLength = Double.parseDouble(defaults.getProperty(KEY_SPARE_LENGTH));
+		}
+
+		try {
+			mouseTolerancy = Integer.parseInt(properties.getProperty(KEY_MOUSE_TOLERANCY));
+		} catch (Exception e) {
+			mouseTolerancy = Integer.parseInt(defaults.getProperty(KEY_MOUSE_TOLERANCY));
+		}
+
+		try {
+			lastView = properties.getProperty(KEY_LAST_VIEW);
+		} catch (Exception e) {
+			lastView = defaults.getProperty(KEY_LAST_VIEW);
+		}
 	}
 
 	/**
@@ -511,12 +735,40 @@ public final class MapPropertiesManager
 
 		try
 		{
-			Properties properties = new Properties();
+			Properties properties = new Properties(defaults);
+
 			properties.load(new FileInputStream(iniFileName));
 			properties.setProperty(KEY_LAST_LONGITUDE, Double.toString(lastLong));
 			properties.setProperty(KEY_LAST_LATITUDE, Double.toString(lastLat));
 			properties.setProperty(KEY_LAST_ZOOM, Double.toString(lastZoom));			
 			properties.setProperty(KEY_LAST_DIRECTORY, lastDirectory);
+
+			properties.setProperty(KEY_TEXT_BACKGROUND, Integer.toString(textBackground.getRGB()));
+			properties.setProperty(KEY_TEXT_COLOR, Integer.toString(textColor.getRGB()));
+			properties.setProperty(KEY_FONT, font.getName() + MapPropertiesManager.FONT_DELIMITER + font.getStyle() + MapPropertiesManager.FONT_DELIMITER + font.getSize());
+			properties.setProperty(KEY_METRIC, metric.toString());
+			properties.setProperty(KEY_BORDER_THICKNESS, Integer.toString(borderThickness));
+			properties.setProperty(KEY_BORDER_COLOR, Integer.toString(borderColor.getRGB()));
+			properties.setProperty(KEY_THICKNESS, Integer.toString(thickness));
+			properties.setProperty(KEY_STYLE, style);
+			properties.setProperty(KEY_COLOR, Integer.toString(color.getRGB()));
+			properties.setProperty(KEY_ALARMED_THICKNESS, Integer.toString(alarmedThickness));
+			properties.setProperty(KEY_ALARMED_STYLE, alarmedStyle);
+			properties.setProperty(KEY_ALARMED_COLOR, Integer.toString(alarmedColor.getRGB()));
+			properties.setProperty(KEY_ALARMED_ANIMATION, alarmedAnimation);
+			properties.setProperty(KEY_SELECTION_THICKNESS, Integer.toString(selectionThickness));
+			properties.setProperty(KEY_SELECTION_STYLE, selectionStyle);
+			properties.setProperty(KEY_SELECTION_COLOR, Integer.toString(selectionColor.getRGB()));
+			properties.setProperty(KEY_SELECTION_FIRST_COLOR, Integer.toString(firstSelectionColor.getRGB()));
+			properties.setProperty(KEY_SELECTION_SECOND_COLOR, Integer.toString(secondSelectionColor.getRGB()));
+			properties.setProperty(KEY_UNBOUND_THICKNESS, Integer.toString(unboundThickness));
+			properties.setProperty(KEY_UNBOUND_LINK_COLOR, Integer.toString(unboundLinkColor.getRGB()));
+			properties.setProperty(KEY_UNBOUND_LINK_POSITION_COLOR, Integer.toString(unboundLinkPositionColor.getRGB()));
+			properties.setProperty(KEY_UNBOUND_ELEMENT_COLOR, Integer.toString(unboundElementColor.getRGB()));
+			properties.setProperty(KEY_CAN_BIND_COLOR, Integer.toString(canBindColor.getRGB()));
+			properties.setProperty(KEY_SPARE_LENGTH, Double.toString(spareLength));
+			properties.setProperty(KEY_MOUSE_TOLERANCY, Integer.toString(mouseTolerancy));
+
 			properties.store(new FileOutputStream(iniFileName), null);
 		}
 		catch(java.io.IOException e)
