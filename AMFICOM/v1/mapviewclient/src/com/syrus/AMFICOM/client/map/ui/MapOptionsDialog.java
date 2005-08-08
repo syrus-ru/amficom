@@ -294,7 +294,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.visualPropsPanel.add(this.styleLabel, constraints);
+//		this.visualPropsPanel.add(this.styleLabel, constraints);
 
 		constraints.gridx = 1;
 		constraints.gridy = 2;
@@ -307,7 +307,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
-		this.visualPropsPanel.add(this.styleComboBox, constraints);
+//		this.visualPropsPanel.add(this.styleComboBox, constraints);
 
 
 		constraints.gridx = 0;
@@ -373,7 +373,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.selectionPropsPanel.add(this.selectionStyleLabel, constraints);
+//		this.selectionPropsPanel.add(this.selectionStyleLabel, constraints);
 
 		constraints.gridx = 1;
 		constraints.gridy = 2;
@@ -386,7 +386,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
-		this.selectionPropsPanel.add(this.selectionStyleComboBox, constraints);
+//		this.selectionPropsPanel.add(this.selectionStyleComboBox, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 3;
@@ -504,7 +504,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
-		this.alarmedPropsPanel.add(this.alarmedStyleLabel, constraints);
+//		this.alarmedPropsPanel.add(this.alarmedStyleLabel, constraints);
 
 		constraints.gridx = 1;
 		constraints.gridy = 2;
@@ -517,7 +517,7 @@ public class MapOptionsDialog extends JDialog
 		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 50;
 		constraints.ipady = 0;
-		this.alarmedPropsPanel.add(this.alarmedStyleComboBox, constraints);
+//		this.alarmedPropsPanel.add(this.alarmedStyleComboBox, constraints);
 
 
 		constraints.gridx = 0;
