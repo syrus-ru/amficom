@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeWrapper.java,v 1.12 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: PhysicalLinkTypeWrapper.java,v 1.13 2005/08/08 13:50:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/08 11:35:11 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/08 13:50:49 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -83,16 +83,21 @@ public class PhysicalLinkTypeWrapper extends StorableObjectWrapper<PhysicalLinkT
 	@Override
 	public Object getValue(final PhysicalLinkType physicalLinkType, final String key) {
 		if (physicalLinkType != null) {
-			if (key.equals(COLUMN_CODENAME))
+			if (key.equals(COLUMN_CODENAME)) {
 				return physicalLinkType.getCodename();
-			else if (key.equals(COLUMN_NAME))
+			}
+			else if (key.equals(COLUMN_NAME)) {
 				return physicalLinkType.getName();
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				return physicalLinkType.getDescription();
-			else if (key.equals(COLUMN_DIMENSION_X))
+			}
+			else if (key.equals(COLUMN_DIMENSION_X)) {
 				return new Integer(physicalLinkType.getBindingDimension().getWidth());
-			else if (key.equals(COLUMN_DIMENSION_Y))
+			}
+			else if (key.equals(COLUMN_DIMENSION_Y)) {
 				return new Integer(physicalLinkType.getBindingDimension().getHeight());
+			}
 		}
 		return null;
 	}
@@ -105,20 +110,26 @@ public class PhysicalLinkTypeWrapper extends StorableObjectWrapper<PhysicalLinkT
 		/* there is no properties */
 	}
 
+	@Override
 	public void setValue(final PhysicalLinkType physicalLinkType, final String key, final Object value) {
 		if (physicalLinkType != null) {
-			if (key.equals(COLUMN_CODENAME))
+			if (key.equals(COLUMN_CODENAME)) {
 				physicalLinkType.setCodename((String) value);
-			else if (key.equals(COLUMN_NAME))
+			}
+			else if (key.equals(COLUMN_NAME)) {
 				physicalLinkType.setName((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				physicalLinkType.setDescription((String) value);
-			else if (key.equals(COLUMN_DIMENSION_X))
+			}
+			else if (key.equals(COLUMN_DIMENSION_X)) {
 				physicalLinkType.setBindingDimension(new IntDimension(((Integer) value).intValue(),
 						physicalLinkType.getBindingDimension().getHeight()));
-			else if (key.equals(COLUMN_DIMENSION_Y))
+			}
+			else if (key.equals(COLUMN_DIMENSION_Y)) {
 				physicalLinkType.setBindingDimension(new IntDimension(physicalLinkType.getBindingDimension().getWidth(),
 						((Integer) value).intValue()));
+			}
 		}
 	}
 

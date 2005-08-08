@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkWrapper.java,v 1.10 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: PhysicalLinkWrapper.java,v 1.11 2005/08/08 13:50:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/08 11:35:11 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/08 13:50:49 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -96,22 +96,30 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper<PhysicalLink> {
 	@Override
 	public Object getValue(final PhysicalLink physicalLink, final String key) {
 		if (physicalLink != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				return physicalLink.getName();
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				return physicalLink.getDescription();
-			else if (key.equals(COLUMN_PHYSICAL_LINK_TYPE_ID))
+			}
+			else if (key.equals(COLUMN_PHYSICAL_LINK_TYPE_ID)) {
 				return physicalLink.getType();
-			else if (key.equals(COLUMN_CITY))
+			}
+			else if (key.equals(COLUMN_CITY)) {
 				return physicalLink.getCity();
-			else if (key.equals(COLUMN_STREET))
+			}
+			else if (key.equals(COLUMN_STREET)) {
 				return physicalLink.getStreet();
-			else if (key.equals(COLUMN_BUILDING))
+			}
+			else if (key.equals(COLUMN_BUILDING)) {
 				return physicalLink.getBuilding();
-			else if (key.equals(COLUMN_START_NODE_ID))
+			}
+			else if (key.equals(COLUMN_START_NODE_ID)) {
 				return physicalLink.getStartNode();
-			else if (key.equals(COLUMN_END_NODE_ID))
+			}
+			else if (key.equals(COLUMN_END_NODE_ID)) {
 				return physicalLink.getEndNode();
+			}
 		}
 		return null;
 	}
@@ -124,24 +132,33 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper<PhysicalLink> {
 		/* there is no properties */
 	}
 
+	@Override
 	public void setValue(final PhysicalLink physicalLink, final String key, final Object value) {
 		if (physicalLink != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				physicalLink.setName((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				physicalLink.setDescription((String) value);
-			else if (key.equals(COLUMN_PHYSICAL_LINK_TYPE_ID))
+			}
+			else if (key.equals(COLUMN_PHYSICAL_LINK_TYPE_ID)) {
 				physicalLink.setPhysicalLinkType((PhysicalLinkType) value);
-			else if (key.equals(COLUMN_CITY))
+			}
+			else if (key.equals(COLUMN_CITY)) {
 				physicalLink.setCity((String) value);
-			else if (key.equals(COLUMN_STREET))
+			}
+			else if (key.equals(COLUMN_STREET)) {
 				physicalLink.setStreet((String) value);
-			else if (key.equals(COLUMN_BUILDING))
+			}
+			else if (key.equals(COLUMN_BUILDING)) {
 				physicalLink.setBuilding((String) value);
-			else if (key.equals(COLUMN_START_NODE_ID))
+			}
+			else if (key.equals(COLUMN_START_NODE_ID)) {
 				physicalLink.setStartNode((AbstractNode) value);
-			else if (key.equals(COLUMN_END_NODE_ID))
+			}
+			else if (key.equals(COLUMN_END_NODE_ID)) {
 				physicalLink.setEndNode((AbstractNode) value);
+			}
 		}
 	}
 

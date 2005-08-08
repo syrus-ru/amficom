@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeWrapper.java,v 1.12 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: SiteNodeTypeWrapper.java,v 1.13 2005/08/08 13:50:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/08 11:35:11 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/08 13:50:49 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -81,16 +81,21 @@ public class SiteNodeTypeWrapper extends StorableObjectWrapper<SiteNodeType> {
 	@Override
 	public Object getValue(final SiteNodeType siteNodeType, final String key) {
 		if (siteNodeType != null) {
-			if (key.equals(COLUMN_CODENAME))
+			if (key.equals(COLUMN_CODENAME)) {
 				return siteNodeType.getCodename();
-			else if (key.equals(COLUMN_NAME))
+			}
+			else if (key.equals(COLUMN_NAME)) {
 				return siteNodeType.getName();
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				return siteNodeType.getDescription();
-			else if (key.equals(COLUMN_IMAGE_ID))
+			}
+			else if (key.equals(COLUMN_IMAGE_ID)) {
 				return siteNodeType.getImageId();
-			else if (key.equals(COLUMN_TOPOLOGICAL))
+			}
+			else if (key.equals(COLUMN_TOPOLOGICAL)) {
 				return Boolean.valueOf(siteNodeType.isTopological());
+			}
 		}
 		return null;
 	}
@@ -103,18 +108,24 @@ public class SiteNodeTypeWrapper extends StorableObjectWrapper<SiteNodeType> {
 		/* there is no properties */
 	}
 
+	@Override
 	public void setValue(final SiteNodeType siteNodeType, final String key, final Object value) {
 		if (siteNodeType != null) {
-			if (key.equals(COLUMN_CODENAME))
+			if (key.equals(COLUMN_CODENAME)) {
 				siteNodeType.setCodename((String) value);
-			else if (key.equals(COLUMN_NAME))
+			}
+			else if (key.equals(COLUMN_NAME)) {
 				siteNodeType.setName((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				siteNodeType.setDescription((String) value);
-			else if (key.equals(COLUMN_IMAGE_ID))
+			}
+			else if (key.equals(COLUMN_IMAGE_ID)) {
 				siteNodeType.setImageId((Identifier) value);
-			else if (key.equals(COLUMN_TOPOLOGICAL))
+			}
+			else if (key.equals(COLUMN_TOPOLOGICAL)) {
 				siteNodeType.setTopological(((Boolean) value).booleanValue());
+			}
 		}
 	}
 

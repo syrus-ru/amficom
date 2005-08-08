@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeWrapper.java,v 1.14 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: TopologicalNodeWrapper.java,v 1.15 2005/08/08 13:50:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:35:11 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/08 13:50:49 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -75,19 +75,23 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper<TopologicalNod
 	}
 
 	@Override
-	public Object getValue(final TopologicalNode topologicalNode, 
-	                       final String key) {
+	public Object getValue(final TopologicalNode topologicalNode, final String key) {
 		if (topologicalNode != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				return topologicalNode.getName();
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				return topologicalNode.getDescription();
-			else if (key.equals(COLUMN_LONGITUDE))
+			}
+			else if (key.equals(COLUMN_LONGITUDE)) {
 				return new Double(topologicalNode.getLocation().getX());
-			else if (key.equals(COLUMN_LATIUDE))
+			}
+			else if (key.equals(COLUMN_LATIUDE)) {
 				return new Double(topologicalNode.getLocation().getY());
-			else if (key.equals(COLUMN_ACTIVE))
+			}
+			else if (key.equals(COLUMN_ACTIVE)) {
 				return Boolean.valueOf(topologicalNode.isActive());
+			}
 			else if (key.equals(NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID)) {
 				return topologicalNode.getPhysicalLink();
 			}
@@ -103,22 +107,27 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper<TopologicalNod
 		/* there is no properties */
 	}
 
-	public void setValue(final TopologicalNode topologicalNode, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(final TopologicalNode topologicalNode, final String key, final Object value) {
 		if (topologicalNode != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				topologicalNode.setName((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				topologicalNode.setDescription((String) value);
-			else if (key.equals(COLUMN_LONGITUDE))
+			}
+			else if (key.equals(COLUMN_LONGITUDE)) {
 				topologicalNode.setLongitude(((Double) value).doubleValue());
-			else if (key.equals(COLUMN_LATIUDE))
+			}
+			else if (key.equals(COLUMN_LATIUDE)) {
 				topologicalNode.setLatitude(((Double) value).doubleValue());
-			else if (key.equals(COLUMN_ACTIVE))
+			}
+			else if (key.equals(COLUMN_ACTIVE)) {
 				topologicalNode.setActive(((Boolean) value).booleanValue());
-			else if (key.equals(NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID))
+			}
+			else if (key.equals(NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID)) {
 				topologicalNode.setPhysicalLink((PhysicalLink) value);
+			}
 		}
 	}
 

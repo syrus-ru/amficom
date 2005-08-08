@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorWrapper.java,v 1.11 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: CollectorWrapper.java,v 1.12 2005/08/08 13:50:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:35:11 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/08 13:50:49 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -63,8 +63,9 @@ public class CollectorWrapper extends StorableObjectWrapper<Collector> {
 
 	@Override
 	public Class getPropertyClass(final String key) {
-		if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
+		if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID)) {
 			return List.class;
+		}
 		return String.class;
 	}
 
@@ -76,12 +77,15 @@ public class CollectorWrapper extends StorableObjectWrapper<Collector> {
 	@Override
 	public Object getValue(final Collector collector, final String key) {
 		if (collector != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				return collector.getName();
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				return collector.getDescription();
-			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
+			}
+			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID)) {
 				return collector.getPhysicalLinks();
+			}
 
 		}
 		return null;
@@ -95,14 +99,18 @@ public class CollectorWrapper extends StorableObjectWrapper<Collector> {
 		/* there is no properties */
 	}
 
+	@Override
 	public void setValue(final Collector collector, final String key, final Object value) {
 		if (collector != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				collector.setName((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				collector.setDescription((String) value);
-			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID))
+			}
+			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID)) {
 				collector.setPhysicalLinks((Set) value);
+			}
 		}
 	}
 

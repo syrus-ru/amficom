@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeWrapper.java,v 1.11 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: SiteNodeWrapper.java,v 1.12 2005/08/08 13:50:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:35:11 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/08 13:50:49 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -91,24 +91,33 @@ public class SiteNodeWrapper extends StorableObjectWrapper<SiteNode> {
 	@Override
 	public Object getValue(final SiteNode siteNode, final String key) {
 		if (siteNode != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				return siteNode.getName();
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				return siteNode.getDescription();
-			else if (key.equals(COLUMN_LONGITUDE))
+			}
+			else if (key.equals(COLUMN_LONGITUDE)) {
 				return new Double(siteNode.getLocation().getX());
-			else if (key.equals(COLUMN_LATIUDE))
+			}
+			else if (key.equals(COLUMN_LATIUDE)) {
 				return new Double(siteNode.getLocation().getY());
-			else if (key.equals(COLUMN_IMAGE_ID))
+			}
+			else if (key.equals(COLUMN_IMAGE_ID)) {
 				return siteNode.getImageId();
-			else if (key.equals(COLUMN_SITE_NODE_TYPE_ID))
+			}
+			else if (key.equals(COLUMN_SITE_NODE_TYPE_ID)) {
 				return siteNode.getType();
-			else if (key.equals(COLUMN_CITY))
+			}
+			else if (key.equals(COLUMN_CITY)) {
 				return siteNode.getCity();
-			else if (key.equals(COLUMN_STREET))
+			}
+			else if (key.equals(COLUMN_STREET)) {
 				return siteNode.getStreet();
-			else if (key.equals(COLUMN_BUILDING))
+			}
+			else if (key.equals(COLUMN_BUILDING)) {
 				return siteNode.getBuilding();
+			}
 		}
 		return null;
 	}
@@ -121,28 +130,28 @@ public class SiteNodeWrapper extends StorableObjectWrapper<SiteNode> {
 		/* there is no properties */
 	}
 
-	public void setValue(final SiteNode siteNode, 
-	                     final String key, 
-	                     final Object value) {
+	@Override
+	public void setValue(final SiteNode siteNode, final String key, final Object value) {
 		if (siteNode != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				siteNode.setName((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				siteNode.setDescription((String) value);
-			else if (key.equals(COLUMN_LONGITUDE))
+			} else if (key.equals(COLUMN_LONGITUDE)) {
 				siteNode.setLongitude(((Double) value).doubleValue());
-			else if (key.equals(COLUMN_LATIUDE))
+			} else if (key.equals(COLUMN_LATIUDE)) {
 				siteNode.setLatitude(((Double) value).doubleValue());
-			else if (key.equals(COLUMN_IMAGE_ID))
+			} else if (key.equals(COLUMN_IMAGE_ID)) {
 				siteNode.setImageId((Identifier) value);
-			else if (key.equals(COLUMN_SITE_NODE_TYPE_ID))
+			} else if (key.equals(COLUMN_SITE_NODE_TYPE_ID)) {
 				siteNode.setType((SiteNodeType) value);
-			else if (key.equals(COLUMN_CITY))
+			} else if (key.equals(COLUMN_CITY)) {
 				siteNode.setCity((String) value);
-			else if (key.equals(COLUMN_STREET))
+			} else if (key.equals(COLUMN_STREET)) {
 				siteNode.setStreet((String) value);
-			else if (key.equals(COLUMN_BUILDING))
+			} else if (key.equals(COLUMN_BUILDING)) {
 				siteNode.setBuilding((String) value);
+			}
 		}
 	}
 }

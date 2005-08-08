@@ -1,5 +1,5 @@
 /*
- * $Id: MarkWrapper.java,v 1.11 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: MarkWrapper.java,v 1.12 2005/08/08 13:50:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:35:11 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/08 13:50:49 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -90,25 +90,33 @@ public class MarkWrapper extends StorableObjectWrapper<Mark> {
 	@Override
 	public Object getValue(final Mark mark, final String key) {
 		if (mark != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				return mark.getName();
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				return mark.getDescription();
-			else if (key.equals(COLUMN_LONGITUDE))
+			}
+			else if (key.equals(COLUMN_LONGITUDE)) {
 				return new Double(mark.getLocation().getX());
-			else if (key.equals(COLUMN_LATIUDE))
+			}
+			else if (key.equals(COLUMN_LATIUDE)) {
 				return new Double(mark.getLocation().getY());
-			else if (key.equals(COLUMN_PHYSICAL_LINK_ID))
+			}
+			else if (key.equals(COLUMN_PHYSICAL_LINK_ID)) {
 				return mark.getPhysicalLink().getId();
-			else if (key.equals(COLUMN_DISTANCE))
+			}
+			else if (key.equals(COLUMN_DISTANCE)) {
 				return new Double(mark.getDistance());
-			else if (key.equals(COLUMN_CITY))
+			}
+			else if (key.equals(COLUMN_CITY)) {
 				return mark.getCity();
-			else if (key.equals(COLUMN_STREET))
+			}
+			else if (key.equals(COLUMN_STREET)) {
 				return mark.getStreet();
-			else if (key.equals(COLUMN_BUILDING))
+			}
+			else if (key.equals(COLUMN_BUILDING)) {
 				return mark.getBuilding();
-
+			}
 		}
 		return null;
 	}
@@ -121,26 +129,36 @@ public class MarkWrapper extends StorableObjectWrapper<Mark> {
 		/* there is no properties */
 	}
 
+	@Override
 	public void setValue(final Mark mark, final String key, final Object value) {
 		if (mark != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				mark.setName((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				mark.setDescription((String) value);
-			else if (key.equals(COLUMN_LONGITUDE))
+			}
+			else if (key.equals(COLUMN_LONGITUDE)) {
 				mark.setLongitude(((Double) value).doubleValue());
-			else if (key.equals(COLUMN_LATIUDE))
+			}
+			else if (key.equals(COLUMN_LATIUDE)) {
 				mark.setLatitude(((Double) value).doubleValue());
-			else if (key.equals(COLUMN_PHYSICAL_LINK_ID))
+			}
+			else if (key.equals(COLUMN_PHYSICAL_LINK_ID)) {
 				mark.setPhysicalLink((PhysicalLink) value);
-			else if (key.equals(COLUMN_DISTANCE))
+			}
+			else if (key.equals(COLUMN_DISTANCE)) {
 				mark.setDistance(((Double) value).doubleValue());
-			else if (key.equals(COLUMN_CITY))
+			}
+			else if (key.equals(COLUMN_CITY)) {
 				mark.setCity((String) value);
-			else if (key.equals(COLUMN_STREET))
+			}
+			else if (key.equals(COLUMN_STREET)) {
 				mark.setStreet((String) value);
-			else if (key.equals(COLUMN_BUILDING))
+			}
+			else if (key.equals(COLUMN_BUILDING)) {
 				mark.setBuilding((String) value);
+			}
 		}
 	}
 

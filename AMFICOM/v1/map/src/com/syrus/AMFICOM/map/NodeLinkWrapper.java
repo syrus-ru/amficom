@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkWrapper.java,v 1.11 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: NodeLinkWrapper.java,v 1.12 2005/08/08 13:50:49 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:35:11 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/08 13:50:49 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -79,16 +79,21 @@ public class NodeLinkWrapper extends StorableObjectWrapper<NodeLink> {
 	@Override
 	public Object getValue(final NodeLink nodeLink, final String key) {
 		if (nodeLink != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				return nodeLink.getName();
-			else if (key.equals(COLUMN_PHYSICAL_LINK_ID))
+			}
+			else if (key.equals(COLUMN_PHYSICAL_LINK_ID)) {
 				return nodeLink.getPhysicalLink();
-			else if (key.equals(COLUMN_START_NODE_ID))
+			}
+			else if (key.equals(COLUMN_START_NODE_ID)) {
 				return nodeLink.getStartNode();
-			else if (key.equals(COLUMN_END_NODE_ID))
+			}
+			else if (key.equals(COLUMN_END_NODE_ID)) {
 				return nodeLink.getEndNode();
-			else if (key.equals(COLUMN_LENGTH))
+			}
+			else if (key.equals(COLUMN_LENGTH)) {
 				return new Double(nodeLink.getLength());
+			}
 		}
 		return null;
 	}
@@ -101,18 +106,24 @@ public class NodeLinkWrapper extends StorableObjectWrapper<NodeLink> {
 		/* there is no properties */
 	}
 
+	@Override
 	public void setValue(final NodeLink nodeLink, final String key, final Object value) {
 		if (nodeLink != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				nodeLink.setName((String) value);
-			else if (key.equals(COLUMN_PHYSICAL_LINK_ID))
+			}
+			else if (key.equals(COLUMN_PHYSICAL_LINK_ID)) {
 				nodeLink.setPhysicalLink((PhysicalLink) value);
-			else if (key.equals(COLUMN_START_NODE_ID))
+			}
+			else if (key.equals(COLUMN_START_NODE_ID)) {
 				nodeLink.setStartNode((AbstractNode) value);
-			else if (key.equals(COLUMN_END_NODE_ID))
+			}
+			else if (key.equals(COLUMN_END_NODE_ID)) {
 				nodeLink.setEndNode((AbstractNode) value);
-			else if (key.equals(COLUMN_LENGTH))
+			}
+			else if (key.equals(COLUMN_LENGTH)) {
 				nodeLink.setLength(((Double) value).doubleValue());
+			}
 		}
 	}
 }
