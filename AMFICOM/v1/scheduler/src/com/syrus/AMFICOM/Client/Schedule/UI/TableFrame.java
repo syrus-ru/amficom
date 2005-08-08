@@ -14,6 +14,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Iterator;
 import java.util.LinkedList;
+import java.util.List;
 import java.util.Set;
 
 import javax.swing.Icon;
@@ -34,12 +35,14 @@ import javax.swing.table.JTableHeader;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -59,7 +62,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 	WrapperedTable			listTable;
 	ApplicationContext			aContext;
 	private JPanel				panel;
-	java.util.List				rowToRemove;
+	List				rowToRemove;
 	PropertyChangeEvent	propertyChangeEvent;
 
 	public TableFrame(ApplicationContext aContext) {
@@ -187,15 +190,24 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 
 					ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 					if (!lsm.isSelectionEmpty() && TableFrame.this.propertyChangeEvent == null) {
-						int selectedRow = lsm.getMinSelectionIndex();
-						try {
-							TableFrame.this.schedulerModel.unselectTests();
-							TableFrame.this.schedulerModel
-									.addSelectedTest((Test) ((WrapperedTableModel) TableFrame.this.listTable
-											.getModel()).getObject(selectedRow));
-						} catch (ApplicationException e1) {
-							AbstractMainFrame.showErrorMessage(TableFrame.this, e1);
-						}
+						final int selectedRow = lsm.getMinSelectionIndex();
+						CommonUIUtilities.invokeAsynchronously(new Runnable() {
+
+							public void run() {
+								try {
+
+									
+									TableFrame.this.schedulerModel.unselectTests();
+									TableFrame.this.schedulerModel
+											.addSelectedTest((Test) ((WrapperedTableModel) TableFrame.this.listTable
+													.getModel()).getObject(selectedRow));
+
+								} catch (ApplicationException e) {
+									AbstractMainFrame.showErrorMessage(TableFrame.this, e);
+								}
+
+							}
+						}, LangModelGeneral.getString("Message.Information.PlsWait"));
 					}
 				}
 
@@ -289,7 +301,9 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 				// }
 			}
 			JTableHeader header = this.listTable.getTableHeader();
-
+			
+			this.listTable.sortColumn(4);
+			
 			this.panel.add(header, BorderLayout.NORTH);
 			this.panel.add(new JScrollPane(this.listTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
 											ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
