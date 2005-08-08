@@ -620,9 +620,16 @@ ActionListener, PropertyChangeListener {
 		Test selectedTest = this.schedulerModel.getSelectedTest();
 		if (selectedTest != null) {
 			Date startTime = selectedTest.getStartTime();
+//			System.out.println("PlanPanel.updateTest() | startTime " + startTime);
+//			System.out.println("PlanPanel.updateTest() | this.scaleStart " + this.scaleStart);
+//			System.out.println("PlanPanel.updateTest() | this.scaleEnd " + this.scaleEnd);
 			if (!(startTime.after(this.scaleStart) && startTime.before(this.scaleEnd))) {
+				startTime = new Date(startTime.getTime() - 30L * 60L * 1000);
 				this.toolBar.dateSpinner.setValue(startTime);
 				this.toolBar.timeSpinner.setValue(startTime);
+				
+//				System.out.println("PlanPanel.updateTest() || set " + startTime);
+				
 				for (final Identifier monitoredElementId : this.testLines.keySet()) {
 					final TestLine line = this.testLines.get(monitoredElementId);
 					line.refreshTimeItems();
@@ -636,6 +643,7 @@ ActionListener, PropertyChangeListener {
 			final TestLine line = this.testLines.get(monitoredElementId);
 			line.updateTest();
 			final Rectangle visibleRectangle = line.getVisibleRectangle();
+//			System.out.println("PlanPanel.updateTest() | " + visibleRectangle);
 			if (visibleRectangle != null) {
 				this.scrollRectToVisible(visibleRectangle);
 			}

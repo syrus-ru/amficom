@@ -228,6 +228,17 @@ public class TestLine extends TimeLine {
 					break;
 				}
 			}
+			
+			if (rectangle == null) {
+				for (final TestTimeItem element : this.unsavedTestTimeItems) {
+					if (((Identifier) element.object).equals(testId)) {
+						rectangle = new Rectangle(element.x - PlanPanel.MARGIN / 2, 0, element.getWidth(), this.getHeight()
+								- (this.titleHeight / 2 + 4)
+								- 2);
+						break;
+					}
+				}
+			}
 		}
 		return rectangle;
 	}
@@ -757,19 +768,19 @@ public class TestLine extends TimeLine {
 			// Log.debugMessage("TestLine.refreshTimeItems | timeItems.size " +
 			// timeItems.size(), Log.FINEST);
 
-			TestTimeItem prevItem = null;
-			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
-				TestTimeItem testTimeItem = (TestTimeItem) it.next();
-				if (prevItem != null && (testTimeItem.x - prevItem.x) <= 1) {
-					it.remove();
-//					 Log.debugMessage("TimeStampsEditor.refreshTimeItems | remove testTimeItem " + testTimeItem.object, Level.FINEST);
-				} else {
-					prevItem = testTimeItem;
-				}
-				// Log.debugMessage("TimeStampsEditor.refreshTimeItems | x:" +
-				// testTimeItem.x +", " + testTimeItem.object, Log.FINEST);
-
-			}
+//			TestTimeItem prevItem = null;
+//			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
+//				TestTimeItem testTimeItem = (TestTimeItem) it.next();
+//				if (prevItem != null && (testTimeItem.x - prevItem.x) <= 1) {
+//					it.remove();
+////					 Log.debugMessage("TimeStampsEditor.refreshTimeItems | remove testTimeItem " + testTimeItem.object, Level.FINEST);
+//				} else {
+//					prevItem = testTimeItem;
+//				}
+//				// Log.debugMessage("TimeStampsEditor.refreshTimeItems | x:" +
+//				// testTimeItem.x +", " + testTimeItem.object, Log.FINEST);
+//
+//			}
 
 			this.unsavedTestTimeItems.clear();
 			for (Iterator it = this.timeItems.iterator(); it.hasNext();) {
