@@ -40,6 +40,7 @@ public final class MapViewTreePanel extends JPanel
 	private BorderLayout borderLayout1 = new BorderLayout();
 
 	private MapView mapView = null;
+	public boolean performProcessing = true;
 	
 	public MapViewTreePanel(ApplicationContext aContext) {
 		setContext(aContext);
@@ -64,7 +65,7 @@ public final class MapViewTreePanel extends JPanel
 		this.treeModel.setAllwaysSort(false);
 
 		this.scroll.getViewport().add(this.tree);
-		this.tree.addTreeSelectionListener(new MapViewTreeSelectionListener(this.aContext));
+		this.tree.addTreeSelectionListener(new MapViewTreeSelectionListener(this));
 		this.tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 	}
 
@@ -97,6 +98,11 @@ public final class MapViewTreePanel extends JPanel
 	}
 
 	public void propertyChange(PropertyChangeEvent pce) {
+		if(!this.performProcessing) {
+			return;
+		}
+		this.performProcessing = false;
+
 		if(	pce.getPropertyName().equals(MapEvent.MAP_VIEW_CLOSED)) {
 			updateTree(null);
 		}
@@ -132,6 +138,8 @@ public final class MapViewTreePanel extends JPanel
 				this.tree.scrollPathToVisible(path);
 			}
 		}
+
+		this.performProcessing = true;
 	}
 
 	public void updateTree(MapView mapView) {
