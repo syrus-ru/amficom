@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseStorableObjectCondition.java,v 1.2 2005/04/12 16:33:30 arseniy Exp $
+* $Id: DatabaseStorableObjectCondition.java,v 1.3 2005/08/08 11:27:25 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,9 +10,9 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/12 16:33:30 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:27:25 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module general
  */
 public interface DatabaseStorableObjectCondition {
 	String TRUE_CONDITION = "1=1";

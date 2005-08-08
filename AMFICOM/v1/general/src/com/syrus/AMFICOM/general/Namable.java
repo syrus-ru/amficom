@@ -1,5 +1,5 @@
 /*
- * $Id: Namable.java,v 1.3 2005/03/18 19:19:49 bass Exp $
+ * $Id: Namable.java,v 1.4 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,9 +9,9 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/03/18 19:19:49 $
- * @module general_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 11:27:25 $
+ * @module general
  */
 public interface Namable {
 	/**

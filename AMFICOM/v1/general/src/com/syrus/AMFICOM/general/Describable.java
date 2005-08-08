@@ -1,5 +1,5 @@
 /*
- * $Id: Describable.java,v 1.2 2005/03/17 18:16:12 bass Exp $
+ * $Id: Describable.java,v 1.3 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,9 +9,9 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/03/17 18:16:12 $
- * @module general_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:27:25 $
+ * @module general
  */
 public interface Describable extends Namable {
 	/**

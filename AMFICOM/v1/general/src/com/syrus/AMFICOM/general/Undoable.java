@@ -1,5 +1,5 @@
 /*-
-* $Id: Undoable.java,v 1.2 2005/04/28 16:53:18 bob Exp $
+* $Id: Undoable.java,v 1.3 2005/08/08 11:27:26 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,10 +10,10 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/28 16:53:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:27:26 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module general_v1
+ * @module general
  */
 public interface Undoable {
 

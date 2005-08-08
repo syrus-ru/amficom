@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCompoundCondition.java,v 1.9 2005/06/21 12:43:48 bass Exp $
+ * $Id: DatabaseCompoundCondition.java,v 1.10 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/06/21 12:43:48 $
- * @author $Author: bass $
- * @module general_v1
+ * @version $Revision: 1.10 $, $Date: 2005/08/08 11:27:25 $
+ * @author $Author: arseniy $
+ * @module general
  */
 public final class DatabaseCompoundCondition implements DatabaseStorableObjectCondition {
 

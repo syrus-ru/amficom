@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeDatabase.java,v 1.33 2005/07/26 20:10:12 bass Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.34 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,9 +16,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/07/26 20:10:12 $
- * @author $Author: bass $
- * @module general_v1
+ * @version $Revision: 1.34 $, $Date: 2005/08/08 11:27:25 $
+ * @author $Author: arseniy $
+ * @module general
  */
 public final class ParameterTypeDatabase extends StorableObjectDatabase<ParameterType>  {
 	private static String columns;

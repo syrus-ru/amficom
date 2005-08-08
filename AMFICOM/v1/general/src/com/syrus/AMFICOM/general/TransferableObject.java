@@ -1,5 +1,5 @@
 /*-
- * $Id: TransferableObject.java,v 1.8 2005/06/25 17:07:46 bass Exp $
+ * $Id: TransferableObject.java,v 1.9 2005/08/08 11:27:26 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -12,9 +12,9 @@ import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/06/25 17:07:46 $
- * @author $Author: bass $
- * @module general_v1
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 11:27:26 $
+ * @author $Author: arseniy $
+ * @module general
  */
 public interface TransferableObject {
 

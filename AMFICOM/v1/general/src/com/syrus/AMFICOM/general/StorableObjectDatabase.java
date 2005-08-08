@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.177 2005/08/05 12:49:10 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.178 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,9 +30,9 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.177 $, $Date: 2005/08/05 12:49:10 $
+ * @version $Revision: 1.178 $, $Date: 2005/08/08 11:27:25 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module general
  */
 
 public abstract class StorableObjectDatabase<T extends StorableObject> {

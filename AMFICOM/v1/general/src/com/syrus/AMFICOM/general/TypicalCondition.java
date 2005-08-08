@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.32 2005/08/03 16:14:37 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.33 2005/08/08 11:27:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -123,9 +123,9 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.32 $, $Date: 2005/08/03 16:14:37 $
+ * @version $Revision: 1.33 $, $Date: 2005/08/08 11:27:26 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module general
  */
 public class TypicalCondition implements StorableObjectCondition {
 

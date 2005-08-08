@@ -1,5 +1,5 @@
 /*
- * $Id: LoginException.java,v 1.3 2005/05/18 11:07:39 bass Exp $
+ * $Id: LoginException.java,v 1.4 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,9 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/05/18 11:07:39 $
- * @author $Author: bass $
- * @module general_v1
+ * @version $Revision: 1.4 $, $Date: 2005/08/08 11:27:25 $
+ * @author $Author: arseniy $
+ * @module general
  */
 public class LoginException extends ApplicationException {
 	private static final long serialVersionUID = 251948020334103957L;

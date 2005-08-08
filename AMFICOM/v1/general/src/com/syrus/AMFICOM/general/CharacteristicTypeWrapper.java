@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeWrapper.java,v 1.15 2005/08/05 09:46:13 bob Exp $
+ * $Id: CharacteristicTypeWrapper.java,v 1.16 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,9 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/05 09:46:13 $
- * @author $Author: bob $
- * @module general_v1
+ * @version $Revision: 1.16 $, $Date: 2005/08/08 11:27:25 $
+ * @author $Author: arseniy $
+ * @module general
  */
 public class CharacteristicTypeWrapper extends StorableObjectWrapper<CharacteristicType> {
 

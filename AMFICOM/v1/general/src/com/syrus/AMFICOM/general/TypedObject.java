@@ -1,5 +1,5 @@
 /*
- * $Id: TypedObject.java,v 1.6 2004/08/18 11:28:07 arseniy Exp $
+ * $Id: TypedObject.java,v 1.7 2005/08/08 11:27:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,9 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2004/08/18 11:28:07 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/08 11:27:26 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module general
  */
 
 public interface TypedObject {

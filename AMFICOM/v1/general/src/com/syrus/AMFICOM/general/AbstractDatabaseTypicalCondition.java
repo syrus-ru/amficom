@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.9 2005/07/25 19:33:08 bass Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.10 2005/08/08 11:27:25 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,9 +18,9 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/25 19:33:08 $
- * @author $Author: bass $
- * @module general_v1
+ * @version $Revision: 1.10 $, $Date: 2005/08/08 11:27:25 $
+ * @author $Author: arseniy $
+ * @module general
  */
 public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorableObjectCondition {
 

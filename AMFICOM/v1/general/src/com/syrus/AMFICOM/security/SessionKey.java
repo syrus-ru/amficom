@@ -1,5 +1,5 @@
 /*
- * $Id: SessionKey.java,v 1.6 2005/06/25 17:07:47 bass Exp $
+ * $Id: SessionKey.java,v 1.7 2005/08/08 11:27:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,9 @@ import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/06/25 17:07:47 $
- * @author $Author: bass $
- * @module general_v1
+ * @version $Revision: 1.7 $, $Date: 2005/08/08 11:27:26 $
+ * @author $Author: arseniy $
+ * @module general
  */
 public final class SessionKey implements TransferableObject {
 	private String sessionCode;

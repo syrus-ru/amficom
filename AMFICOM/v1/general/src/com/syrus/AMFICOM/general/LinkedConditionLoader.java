@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedConditionLoader.java,v 1.2 2005/04/12 13:19:12 max Exp $
+ * $Id: LinkedConditionLoader.java,v 1.3 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,9 @@ package com.syrus.AMFICOM.general;
 import java.util.Collection;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/04/12 13:19:12 $
- * @author $Author: max $
- * @module general_v1
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:27:25 $
+ * @author $Author: arseniy $
+ * @module general
  */
 public interface LinkedConditionLoader {
 	

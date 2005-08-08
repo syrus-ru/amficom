@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseContext.java,v 1.8 2005/08/01 14:02:25 arseniy Exp $
+ * $Id: DatabaseContext.java,v 1.9 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -15,9 +15,9 @@ import com.syrus.util.Log;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/01 14:02:25 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 11:27:25 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module general
  */
 public final class DatabaseContext {
 	private static final TShortObjectHashMap ENTITY_CODE_DATABASE_MAP = new TShortObjectHashMap();

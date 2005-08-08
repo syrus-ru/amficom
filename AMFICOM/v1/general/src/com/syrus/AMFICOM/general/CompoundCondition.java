@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.31 2005/07/25 15:26:11 arseniy Exp $
+ * $Id: CompoundCondition.java,v 1.32 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,9 +24,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.31 $, $Date: 2005/07/25 15:26:11 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/08 11:27:25 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module general
  */
 public final class CompoundCondition implements StorableObjectCondition {
 	private int operation;

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlStorableObjectImpl.java,v 1.1 2005/07/04 15:23:09 bass Exp $
+ * $Id: IdlStorableObjectImpl.java,v 1.2 2005/08/08 11:27:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,9 @@ import com.syrus.AMFICOM.general.StorableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/04 15:23:09 $
- * @module general_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/08/08 11:27:26 $
+ * @module general
  */
 final class IdlStorableObjectImpl extends IdlStorableObject {
 	private static final long serialVersionUID = 8884720657154236801L;

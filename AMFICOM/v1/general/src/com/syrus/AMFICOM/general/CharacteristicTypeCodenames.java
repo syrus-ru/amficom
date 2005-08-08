@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicTypeCodenames.java,v 1.8 2005/08/02 13:57:12 bob Exp $
+ * $Id: CharacteristicTypeCodenames.java,v 1.9 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,10 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/02 13:57:12 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/08/08 11:27:25 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module general_v1
+ * @module general
  */
 public final class CharacteristicTypeCodenames {
 	public static final String TRACE_FLAGS = "ref_flags";

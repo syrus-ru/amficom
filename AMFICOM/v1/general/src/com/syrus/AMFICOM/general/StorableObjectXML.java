@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.32 2005/08/02 06:23:17 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.33 2005/08/08 11:27:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,9 +29,9 @@ import java.util.Set;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.32 $, $Date: 2005/08/02 06:23:17 $
- * @author $Author: bob $
- * @module general_v1
+ * @version $Revision: 1.33 $, $Date: 2005/08/08 11:27:26 $
+ * @author $Author: arseniy $
+ * @module general
  */
 public class StorableObjectXML {
 

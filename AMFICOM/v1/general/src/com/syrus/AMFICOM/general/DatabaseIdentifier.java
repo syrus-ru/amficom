@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseIdentifier.java,v 1.14 2005/07/11 08:18:56 bass Exp $
+ * $Id: DatabaseIdentifier.java,v 1.15 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,9 +24,9 @@ import com.syrus.util.Log;
  * DB Identifier wrapper.
  * Main purpose is to hide Identifier implementation and DB representation of it.
  *
- * @version $Revision: 1.14 $, $Date: 2005/07/11 08:18:56 $
- * @author $Author: bass $
- * @module general_v1
+ * @version $Revision: 1.15 $, $Date: 2005/08/08 11:27:25 $
+ * @author $Author: arseniy $
+ * @module general
  */
 public final class DatabaseIdentifier {
 	private DatabaseIdentifier() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlCharacteristicTypeImpl.java,v 1.2 2005/07/13 16:01:31 arseniy Exp $
+ * $Id: IdlCharacteristicTypeImpl.java,v 1.3 2005/08/08 11:27:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/07/13 16:01:31 $
- * @module general_v1
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:27:26 $
+ * @module general
  */
 final class IdlCharacteristicTypeImpl extends IdlCharacteristicType {
 	private static final long serialVersionUID = 2061150811286784269L;

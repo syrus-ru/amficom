@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlCharacteristicImpl.java,v 1.2 2005/07/11 08:18:56 bass Exp $
+ * $Id: IdlCharacteristicImpl.java,v 1.3 2005/08/08 11:27:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/07/11 08:18:56 $
- * @module general_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/08 11:27:26 $
+ * @module general
  */
 final class IdlCharacteristicImpl extends IdlCharacteristic {
 	private static final long serialVersionUID = 200871055614775177L;

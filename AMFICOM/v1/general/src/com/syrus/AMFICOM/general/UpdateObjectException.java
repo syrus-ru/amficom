@@ -1,5 +1,5 @@
 /*
- * $Id: UpdateObjectException.java,v 1.4 2005/05/31 10:30:38 arseniy Exp $
+ * $Id: UpdateObjectException.java,v 1.5 2005/08/08 11:27:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,9 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/05/31 10:30:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/08 11:27:26 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module general
  */
 
 public class UpdateObjectException extends DatabaseException {

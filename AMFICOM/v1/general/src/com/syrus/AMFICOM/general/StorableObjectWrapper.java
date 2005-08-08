@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.14 2005/08/05 10:28:21 bob Exp $
+ * $Id: StorableObjectWrapper.java,v 1.15 2005/08/08 11:27:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,12 +26,12 @@ import com.syrus.util.Wrapper;
  * wrapper's constructor must be private and its instance must be obtained using
  * a static method <code>getInstance()</code>.
  *
- * @author $Author: bob $
- * @version $Revision: 1.14 $, $Date: 2005/08/05 10:28:21 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/08/08 11:27:26 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
- * @module general_v1
+ * @module general
  */
 public abstract class StorableObjectWrapper<T extends StorableObject> implements Wrapper<T> {
 

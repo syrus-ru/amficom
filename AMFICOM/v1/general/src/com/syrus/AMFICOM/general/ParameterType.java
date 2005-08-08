@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterType.java,v 1.47 2005/08/05 16:49:29 arseniy Exp $
+ * $Id: ParameterType.java,v 1.48 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,9 +21,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/08/05 16:49:29 $
+ * @version $Revision: 1.48 $, $Date: 2005/08/08 11:27:25 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module general
  */
 
 public final class ParameterType extends StorableObjectType implements Characterizable, Namable {

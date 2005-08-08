@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.26 2005/08/05 13:54:20 bob Exp $
+ * $Id: ObjectGroupEntities.java,v 1.27 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/08/05 13:54:20 $
- * @author $Author: bob $
- * @module general_v1
+ * @version $Revision: 1.27 $, $Date: 2005/08/08 11:27:25 $
+ * @author $Author: arseniy $
+ * @module general
  */
 public final class ObjectGroupEntities {
 	//  Group Types

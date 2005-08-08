@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.26 2005/07/27 13:48:23 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.27 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,9 +19,9 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/07/27 13:48:23 $
+ * @version $Revision: 1.27 $, $Date: 2005/08/08 11:27:25 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module general
  */
 public class IdentifierPool {
 	private static final int DEFAULT_CAPACITY = 10;

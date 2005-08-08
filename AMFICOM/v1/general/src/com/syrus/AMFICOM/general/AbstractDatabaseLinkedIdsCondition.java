@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.22 2005/07/17 05:10:02 arseniy Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.23 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,9 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/07/17 05:10:02 $
+ * @version $Revision: 1.23 $, $Date: 2005/08/08 11:27:25 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module general
  */
 public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStorableObjectCondition {
 

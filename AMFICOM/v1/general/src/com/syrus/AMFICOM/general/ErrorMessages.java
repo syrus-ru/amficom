@@ -1,5 +1,5 @@
 /*-
- * $Id: ErrorMessages.java,v 1.21 2005/07/14 13:29:53 arseniy Exp $
+ * $Id: ErrorMessages.java,v 1.22 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.general;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/07/14 13:29:53 $
- * @module general_v1
+ * @version $Revision: 1.22 $, $Date: 2005/08/08 11:27:25 $
+ * @module general
  */
 public interface ErrorMessages {
 	String NOT_LOGGED_IN = "NOT_LOGGED_IN";

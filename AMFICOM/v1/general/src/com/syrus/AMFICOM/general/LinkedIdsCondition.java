@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.47 2005/07/17 05:13:49 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.48 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,8 +69,8 @@ import com.syrus.util.Log;
  * </ul>
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.47 $, $Date: 2005/07/17 05:13:49 $
- * @module general_v1
+ * @version $Revision: 1.48 $, $Date: 2005/08/08 11:27:25 $
+ * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.152 2005/08/08 10:15:17 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.153 2005/08/08 11:27:25 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,9 +30,9 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.152 $, $Date: 2005/08/08 10:15:17 $
+ * @version $Revision: 1.153 $, $Date: 2005/08/08 11:27:25 $
  * @author $Author: arseniy $
- * @module general_v1
+ * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
  * (т. е. объектами, идентификаторы которых помещены в DELETED_IDS_MAP). Проверять так:
  * 1) заполнить кишки разнообразными объектами;
