@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.12 2005/07/28 14:01:03 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.13 2005/08/08 10:00:18 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/07/28 14:01:03 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/08 10:00:18 $
  * @author $Author: arseniy $
  * @module leserver_v1
  */
@@ -44,8 +44,9 @@ final class LoginProcessor extends SleepButWorkThread {
 		super(ApplicationProperties.getInt(KEY_LOGIN_PROCESSOR_TICK_TIME, LOGIN_PROCESSOR_TICK_TIME) * 1000,
 				ApplicationProperties.getInt(KEY_LOGIN_PROCESSOR_MAX_FALLS, MAX_FALLS));
 
-		if (loginMap == null)
+		if (loginMap == null) {
 			loginMap = Collections.synchronizedMap(new HashMap<SessionKey, UserLogin>());
+		}
 
 		this.maxUserUnactivityPeriod = ApplicationProperties.getInt(KEY_MAX_USER_UNACTIVITY_PERIOD, MAX_USER_UNACTIVITY_PERIOD) * 60 * 1000;
 		this.userLoginDatabase = new UserLoginDatabase();
@@ -134,13 +135,14 @@ final class LoginProcessor extends SleepButWorkThread {
 
 	private static void printUserLogins() {
 		Log.debugMessage("#### LoginProcessor.printUserLogins | Logged in: ", Log.DEBUGLEVEL10);
-		for (final Iterator<SessionKey> it = loginMap.keySet().iterator(); it.hasNext();) {
-			final SessionKey sessionKey = it.next();
-			final UserLogin userLogin = loginMap.get(sessionKey);
-			Log.debugMessage("#### Session key: '" + sessionKey + "'", Log.DEBUGLEVEL10);
-			Log.debugMessage("#### '" + userLogin.getUserId()
-					+ "' from: " + userLogin.getLoginDate()
-					+ ", last: " + userLogin.getLastActivityDate(), Log.DEBUGLEVEL10);
+		synchronized (loginMap) {
+			for (final SessionKey sessionKey : loginMap.keySet()) {
+				final UserLogin userLogin = loginMap.get(sessionKey);
+				Log.debugMessage("#### Session key: '" + sessionKey + "'", Log.DEBUGLEVEL10);
+				Log.debugMessage("#### '" + userLogin.getUserId()
+						+ "' from: " + userLogin.getLoginDate()
+						+ ", last: " + userLogin.getLastActivityDate(), Log.DEBUGLEVEL10);
+			}
 		}
 	}
 
