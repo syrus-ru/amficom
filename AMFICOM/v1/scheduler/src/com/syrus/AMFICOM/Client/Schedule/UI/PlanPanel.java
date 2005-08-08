@@ -110,7 +110,7 @@ ActionListener, PropertyChangeListener {
 	ApplicationContext				aContext;
 //	private SchedulerModel			schedulerModel;
 
-	private static final int		MAX_ZOOM			= 50;
+	private static final int		MAX_ZOOM			= 200;
 	Map<Identifier, TestLine> testLines = new HashMap<Identifier, TestLine>();
 	Map testTemporalLines = new HashMap();
 
