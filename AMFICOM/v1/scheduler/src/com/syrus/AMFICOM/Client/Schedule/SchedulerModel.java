@@ -332,6 +332,13 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	}
 
 	public void removeTest(Test test) {
+		
+		int status = test.getStatus().value();
+		if (status == TestStatus._TEST_STATUS_COMPLETED ||
+				status == TestStatus._TEST_STATUS_ABORTED) {
+			return;
+		}
+		
 		Identifier groupTestId = test.getGroupTestId();
 		if (groupTestId != null) {
 			try {

@@ -46,6 +46,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 /**
  * @author Vladimir Dolzhenko
@@ -229,6 +230,14 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 						final int[] rowIndices = table.getSelectedRows();
 						if ((rowIndices != null) && (rowIndices.length > 0)) {
 							final WrapperedTableModel model = (WrapperedTableModel) table.getModel();
+							for (int i = 0; i < rowIndices.length; i++) {
+								Test test1 = (Test) model.getObject(rowIndices[i]);
+								int status = test1.getStatus().value();
+								if (status == TestStatus._TEST_STATUS_COMPLETED ||
+										status == TestStatus._TEST_STATUS_ABORTED) {
+									return;
+								}
+							}
 							JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString("delete_tests")); //$NON-NLS-1$
 							deleteTestMenuItem.addActionListener(new ActionListener() {
 
