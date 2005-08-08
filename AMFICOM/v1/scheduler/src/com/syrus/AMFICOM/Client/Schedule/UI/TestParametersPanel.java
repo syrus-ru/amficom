@@ -232,7 +232,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 						for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
 							Test test = (Test) iterator.next();
 							if (test.isChanged()) {
-								test.setAnalysisTypeId(analysisType != null ? analysisType.getId() : null);
+								test.setAnalysisTypeId(analysisType != null ? analysisType.getId() : Identifier.VOID_IDENTIFIER);
 							}
 						}
 					} catch (ApplicationException e1) {
@@ -247,7 +247,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 			public void actionPerformed(ActionEvent e) {
 				WrapperedComboBox comboBox = (WrapperedComboBox) e.getSource();
 				EvaluationType evaluationType = (EvaluationType) comboBox.getSelectedItem();
-				java.util.Set selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
+				Set selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
 				if (selectedTestIds != null && !selectedTestIds.isEmpty()
 						&& TestParametersPanel.this.propertyChangeEvent == null) {
 					try {
@@ -255,7 +255,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 						for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
 							Test test = (Test) iterator.next();
 							if (test.isChanged()) {
-								test.setEvaluationTypeId(evaluationType != null ? evaluationType.getId() : null);
+								test.setEvaluationTypeId(evaluationType != null ? evaluationType.getId() : Identifier.VOID_IDENTIFIER);
 							}
 						}
 					} catch (ApplicationException e1) {
