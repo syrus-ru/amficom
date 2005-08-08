@@ -14,7 +14,6 @@ import javax.swing.UIDefaults;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.UI.ElementsTreeFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.PlanFrame;
-import com.syrus.AMFICOM.Client.Schedule.UI.SaveParametersFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TableFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestParametersFrame;
 import com.syrus.AMFICOM.Client.Schedule.UI.TestRequestFrame;
@@ -40,7 +39,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 	public static final String	PARAMETERS_FRAME		= "parametersFrame";
 	public static final String	PLAN_FRAME				= "planFrame";
 	public static final String	PROPERTIES_FRAME		= "propertiesFrame";
-	public static final String	SAVE_PARAMETERS_FRAME	= "saveParametersFrame";
+//	public static final String	SAVE_PARAMETERS_FRAME	= "saveParametersFrame";
 	public static final String	TABLE_FRAME				= "tableFrame";
 	public static final String	TIME_PARAMETERS_FRAME	= "timeParametersFrame";
 	public static final String	TREE_FRAME				= "treeFrame";
@@ -77,7 +76,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 				JInternalFrame treeFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.TREE_FRAME));
 				JInternalFrame timeFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.TIME_PARAMETERS_FRAME));
 				JInternalFrame planFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.PLAN_FRAME));
-				JInternalFrame saveFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.SAVE_PARAMETERS_FRAME));
+//				JInternalFrame saveFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.SAVE_PARAMETERS_FRAME));
 				JInternalFrame tableFrame = ((JInternalFrame) f.frames.get(ScheduleMainFrame.TABLE_FRAME));
 
 				normalize(planFrame);
@@ -85,24 +84,24 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 				normalize(propsFrame);
 				normalize(treeFrame);
 				normalize(timeFrame);
-				normalize(saveFrame);
+//				normalize(saveFrame);
 				normalize(tableFrame);
 
 				treeFrame.setSize(w / 5, h);
 
 				propsFrame.pack();
 				propsFrame.setSize(w / 5, propsFrame.getHeight());
-				saveFrame.pack();
-				saveFrame.setSize(w / 5, saveFrame.getHeight());
+//				saveFrame.pack();
+//				saveFrame.setSize(w / 5, saveFrame.getHeight());
 				tableFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), 2 * h / 5);
 				timeFrame.setSize(w / 5, h / 3);
 				planFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), h - tableFrame.getHeight());
 
 				treeFrame.setLocation(0, 0);
 				timeFrame.setLocation(w - timeFrame.getWidth(), h - timeFrame.getHeight());
-				saveFrame.setLocation(w - saveFrame.getWidth(), h - timeFrame.getHeight() - saveFrame.getHeight());
+//				saveFrame.setLocation(w - saveFrame.getWidth(), h - timeFrame.getHeight() - saveFrame.getHeight());
 				propsFrame.setLocation(w - propsFrame.getWidth(), 0);
-				paramsFrame.setSize(w / 5, saveFrame.getY() - (propsFrame.getY() + propsFrame.getHeight()));
+				paramsFrame.setSize(w / 5, h - timeFrame.getHeight() - (propsFrame.getY() + propsFrame.getHeight()));
 				paramsFrame.setLocation(w - paramsFrame.getWidth(), propsFrame.getY() + propsFrame.getHeight());
 				tableFrame.setLocation(treeFrame.getX() + treeFrame.getWidth(), planFrame.getHeight());
 
@@ -179,14 +178,14 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 			}
 		});
 
-		this.frames.put(SAVE_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				SaveParametersFrame frame = new SaveParametersFrame(aContext);
-				desktopPane1.add(frame);
-				return frame;
-			}
-		});
+//		this.frames.put(SAVE_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
+//
+//			public Object createValue(UIDefaults table) {
+//				SaveParametersFrame frame = new SaveParametersFrame(aContext);
+//				desktopPane1.add(frame);
+//				return frame;
+//			}
+//		});
 
 		this.frames.put(TABLE_FRAME, new UIDefaults.LazyValue() {
 
@@ -232,7 +231,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		treeFrame.setVisible(true);
 		((Component) this.frames.get(TIME_PARAMETERS_FRAME)).setVisible(true);
 		((Component) this.frames.get(PLAN_FRAME)).setVisible(true);
-		((Component) this.frames.get(SAVE_PARAMETERS_FRAME)).setVisible(true);
+//		((Component) this.frames.get(SAVE_PARAMETERS_FRAME)).setVisible(true);
 		((Component) this.frames.get(TABLE_FRAME)).setVisible(true);
 		// testFilterFrame.setVisible(true);
 	}
@@ -245,7 +244,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PLAN, this.getLazyCommand(PLAN_FRAME));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TREE, this.getLazyCommand(TREE_FRAME));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, this.getLazyCommand(PARAMETERS_FRAME));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, this.getLazyCommand(SAVE_PARAMETERS_FRAME));
+//		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, this.getLazyCommand(SAVE_PARAMETERS_FRAME));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, this.getLazyCommand(PROPERTIES_FRAME));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TIME, this.getLazyCommand(TIME_PARAMETERS_FRAME));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TABLE, this.getLazyCommand(TABLE_FRAME));

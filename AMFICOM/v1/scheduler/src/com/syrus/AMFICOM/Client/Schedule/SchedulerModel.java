@@ -118,8 +118,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	public static final String	COMMAND_SET_MEASUREMENT_SETUP		= "SetMeasurementSetup";
 	public static final String	COMMAND_SET_MEASUREMENT_SETUPS		= "SetMeasurementSetups";
 
-	public static final String	COMMAND_GET_RETURN_TYPE				= "GetReturnType";
-	public static final String	COMMAND_SET_RETURN_TYPE				= "SetReturnType";
+//	public static final String	COMMAND_GET_RETURN_TYPE				= "GetReturnType";
+//	public static final String	COMMAND_SET_RETURN_TYPE				= "SetReturnType";
 
 	public static final String	COMMAND_GET_TEMPORAL_STAMPS			= "GetTestTemporalStamps";
 	public static final String	COMMAND_SET_TEMPORAL_STAMPS			= "SetTestTemporalStamps";
@@ -190,7 +190,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_NAME, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_TEMPORAL_STAMPS, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_SET, this);
-		this.dispatcher.addPropertyChangeListener(COMMAND_SET_RETURN_TYPE, this);
+//		this.dispatcher.addPropertyChangeListener(COMMAND_SET_RETURN_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_MONITORED_ELEMENT, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_MEASUREMENT_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_MEASUREMENT_SETUP, this);
@@ -565,9 +565,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.measurementSetup = null;
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_MEASUREMENT_SETUP, null, null));
 		}
-		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_RETURN_TYPE, null, null));
-		}
+//		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
+//			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_RETURN_TYPE, null, null));
+//		}
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_TEMPORAL_STAMPS, null, null));
 		}
