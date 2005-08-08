@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.150 2005/08/05 17:35:10 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.151 2005/08/08 07:35:58 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.150 $, $Date: 2005/08/05 17:35:10 $
+ * @version $Revision: 1.151 $, $Date: 2005/08/08 07:35:58 $
  * @author $Author: arseniy $
  * @module general_v1
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -41,10 +41,6 @@ import com.syrus.util.Log;
  * должны присутствовать идентификаторы помеченных на удаление объектов;
  * 4) проверить вызов refresh
  * 5) проверить все вызовы flush, убедиться что объекты, помеченные на удаление, действительно удаляются.
- * @todo Версии успешно сохранённых объектов должны выставлятся здесь и только здесь
- * (а не в StorableObjectDatabase или в CORBAObjectLoader). Метод saveWithDependencies должен получать
- * сведения о сохранении от метода saveStorableObjects, исходя из которых именно он и должен
- * обновлять версии успешно сохранённых объектов. Учение о Сохранении подлежит переработке.
  */
 public final class StorableObjectPool {
 	private static final int OBJECT_POOL_SIZE = 10;
