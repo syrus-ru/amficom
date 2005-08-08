@@ -3,8 +3,13 @@ package com.syrus.AMFICOM.analysis.dadara;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.AMFICOM.analysis.dadara.events.ConnectorDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DeadZoneDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.EndOfTraceDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
+import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 import com.syrus.io.BellcoreStructure;
 
 public class RefAnalysis
@@ -67,6 +72,49 @@ public class RefAnalysis
 				line += " N=0 L=" + tloss;
 				line += " # begin=" + re.getBegin() * getMTAE().getDeltaX();
 				System.out.println(line);
+			}
+		}
+
+		if (false) { // FIXME: just another debug
+			double sigma = MathRef.calcSigma(bs.getWavelength(),
+					bs.getPulsewidth());
+			double dx = getMTAE().getDeltaX();
+			DetailedEvent de[] = getMTAE().getDetailedEvents();
+			System.out.println("detailed events (for modelling):");
+			for (DetailedEvent ev: de) {
+				double len = (ev.getEnd() - ev.getBegin()) * getMTAE().getDeltaX();
+				switch(ev.getEventType()) {
+				case SimpleReflectogramEvent.LINEAR: // fall thru
+					System.out.println("L " + len
+							+ " " + ((LinearDetailedEvent)ev).getAttenuation() / dx);
+					break;
+				case SimpleReflectogramEvent.NOTIDENTIFIED:
+					System.out.println("U " + len
+							+ " " + ((NotIdentifiedDetailedEvent)ev).getLoss() / len);
+					break;
+				case SimpleReflectogramEvent.GAIN: // fall throu
+				case SimpleReflectogramEvent.LOSS:
+					System.out.println("S " + len
+							+ " " + ((SpliceDetailedEvent)ev).getLoss());
+					break;
+				case SimpleReflectogramEvent.DEADZONE:
+					System.out.println("C " + len
+							+ " 0"
+							+ " " + -10); // XXX
+					break;
+				case SimpleReflectogramEvent.ENDOFTRACE:
+					System.out.println("C " + 0
+							+ " 0"
+							+ " " + MathRef.calcReflectance(sigma,
+									((EndOfTraceDetailedEvent)ev).getAmpl()));
+					break;
+				case SimpleReflectogramEvent.CONNECTOR:
+					System.out.println("C " + len
+							+ " " + ((ConnectorDetailedEvent)ev).getLoss()
+							+ " " + MathRef.calcReflectance(sigma,
+									((ConnectorDetailedEvent)ev).getAmpl()));
+					break;
+				}
 			}
 		}
 
