@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.71 2005/08/05 16:50:34 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.72 2005/08/08 06:32:26 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,8 +70,8 @@ import com.syrus.util.Log;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.71 $, $Date: 2005/08/05 16:50:34 $
+ * @author $Author: max $
+ * @version $Revision: 1.72 $, $Date: 2005/08/08 06:32:26 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -231,7 +231,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final Scheme childScheme, final Scheme parentScheme)
 	throws CreateObjectException {
 		try {
-			final SchemeElement schemeElement = createInstance(creatorId, parentScheme.getName(), parentScheme);
+			final SchemeElement schemeElement = createInstance(creatorId, childScheme.getName(), parentScheme);
 
 			if (schemeElement.clonedIdMap == null) {
 				schemeElement.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -243,7 +243,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			 */
 			schemeElement.clonedIdMap.put(childScheme.getId(), schemeElement.id);
 	
-			final SchemeImageResource ugoCell = parentScheme.getUgoCell0();
+			final SchemeImageResource ugoCell = childScheme.getUgoCell0();
 			if (ugoCell == null) {
 				schemeElement.setUgoCell(null);
 			} else {
@@ -251,7 +251,7 @@ public final class SchemeElement extends AbstractSchemeElement
 				schemeElement.clonedIdMap.putAll(ugoCellClone.getClonedIdMap());
 				schemeElement.setUgoCell(ugoCellClone);
 			}
-			final SchemeImageResource schemeCell = parentScheme.getSchemeCell0();
+			final SchemeImageResource schemeCell = childScheme.getSchemeCell0();
 			if (schemeCell == null) {
 				schemeElement.setSchemeCell(null);
 			} else {
