@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.47 2005/08/05 11:06:54 arseniy Exp $
+ * $Id: KISReport.java,v 1.48 2005/08/08 11:46:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,9 +34,9 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/08/05 11:06:54 $
+ * @version $Revision: 1.48 $, $Date: 2005/08/08 11:46:55 $
  * @author $Author: arseniy $
- * @module mcm_v1
+ * @module mcm
  */
 
 public class KISReport {

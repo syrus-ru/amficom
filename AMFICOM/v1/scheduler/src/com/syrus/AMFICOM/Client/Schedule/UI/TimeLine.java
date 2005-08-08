@@ -1,5 +1,5 @@
 /*-
- * $Id: TimeLine.java,v 1.15 2005/08/08 10:12:59 bob Exp $
+ * $Id: TimeLine.java,v 1.16 2005/08/08 11:51:00 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,10 +28,10 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/08 10:12:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/08/08 11:51:00 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module scheduler_v1
+ * @module scheduler
  */
 public abstract class TimeLine extends JComponent {
 

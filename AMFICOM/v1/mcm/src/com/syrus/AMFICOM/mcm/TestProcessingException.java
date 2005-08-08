@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessingException.java,v 1.1 2004/07/28 16:02:01 arseniy Exp $
+ * $Id: TestProcessingException.java,v 1.2 2005/08/08 11:46:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,9 +9,9 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2004/07/28 16:02:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/08 11:46:55 $
  * @author $Author: arseniy $
- * @module mcm_v1
+ * @module mcm
  */
 
 public class TestProcessingException extends Exception {

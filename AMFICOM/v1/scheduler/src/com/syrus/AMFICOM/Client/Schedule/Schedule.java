@@ -11,6 +11,7 @@ public class Schedule extends AbstractApplication {
 		super(APPLICATION_NAME);
 	}
 	
+	@Override
 	protected void init() {
 		super.init();
 		super.aContext.setApplicationModel(new SchedulerModel(super.aContext));				

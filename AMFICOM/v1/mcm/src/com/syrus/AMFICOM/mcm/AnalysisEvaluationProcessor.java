@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.35 2005/08/01 14:45:40 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.36 2005/08/08 11:46:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,9 +27,9 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/08/01 14:45:40 $
+ * @version $Revision: 1.36 $, $Date: 2005/08/08 11:46:55 $
  * @author $Author: arseniy $
- * @module mcm_v1
+ * @module mcm
  */
 
 public class AnalysisEvaluationProcessor {

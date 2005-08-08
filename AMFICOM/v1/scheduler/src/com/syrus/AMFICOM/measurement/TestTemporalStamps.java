@@ -1,5 +1,5 @@
 /*
- * $Id: TestTemporalStamps.java,v 1.7 2005/07/11 08:19:42 bass Exp $
+ * $Id: TestTemporalStamps.java,v 1.8 2005/08/08 11:51:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/07/11 08:19:42 $
- * @author $Author: bass $
- * @module scheduler_v1
+ * @version $Revision: 1.8 $, $Date: 2005/08/08 11:51:00 $
+ * @author $Author: arseniy $
+ * @module scheduler
  */
 public class TestTemporalStamps implements Undoable  {
 

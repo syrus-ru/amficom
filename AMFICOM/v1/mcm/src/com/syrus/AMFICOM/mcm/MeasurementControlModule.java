@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.115 2005/08/05 11:02:45 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.116 2005/08/08 11:46:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -50,9 +50,9 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.115 $, $Date: 2005/08/05 11:02:45 $
+ * @version $Revision: 1.116 $, $Date: 2005/08/08 11:46:55 $
  * @author $Author: arseniy $
- * @module mcm_v1
+ * @module mcm
  */
 
 final class MeasurementControlModule extends SleepButWorkThread {

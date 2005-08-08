@@ -44,6 +44,7 @@ public class ScheduleMainMenuBar extends AbstractMainMenuBar {
 
 	}
 
+	@Override
 	protected void addMenuItems() {
 		this.menuView = new JMenu(LangModelSchedule.getString("View"));
 		this.menuView.setName(MENU_VIEW);

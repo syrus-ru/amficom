@@ -68,10 +68,10 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/08/08 11:37:32 $
- * @author $Author: bob $
+ * @version $Revision: 1.59 $, $Date: 2005/08/08 11:50:59 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module scheduler_v1
+ * @module scheduler
  */
 public class ReflectometryTestPanel extends ParametersTestPanel implements ParametersTest {
 

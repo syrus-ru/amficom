@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.7 2005/08/05 12:21:06 bob Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.8 2005/08/08 11:50:59 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,10 +38,10 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/05 12:21:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/08/08 11:50:59 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module scheduler_v1
+ * @module scheduler
  */
 public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 

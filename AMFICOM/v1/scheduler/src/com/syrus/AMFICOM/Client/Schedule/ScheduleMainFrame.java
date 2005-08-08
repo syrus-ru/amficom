@@ -63,6 +63,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		
 		this.setWindowArranger(new WindowArranger(this) {
 
+			@Override
 			public void arrange() {
 				ScheduleMainFrame f = (ScheduleMainFrame) this.mainframe;
 
@@ -113,12 +114,14 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		
 		this.addComponentListener(new ComponentAdapter() {
 
+			@Override
 			public void componentShown(ComponentEvent e) {
 				desktopPane1.setPreferredSize(desktopPane1.getSize());
 			}
 		});
 		this.addWindowListener(new java.awt.event.WindowAdapter() {
 
+			@Override
 			public void windowClosing(WindowEvent e) {
 				dispatcher1.removePropertyChangeListener(ContextChangeEvent.TYPE,
 					ScheduleMainFrame.this);
@@ -210,6 +213,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		return new LazyCommand(this.frames, commandKey);
 	}
 
+	@Override
 	public void setDomainSelected() {
 		super.setDomainSelected();
 
@@ -233,6 +237,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		// testFilterFrame.setVisible(true);
 	}
 
+	@Override
 	protected void initModule() {
 		super.initModule();
 
@@ -247,6 +252,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		aModel.fireModelChanged();
 	}
 	
+	@Override
 	protected void disposeModule() {
 		super.disposeModule();
 		
@@ -255,6 +261,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		
 	}
 
+	@Override
 	protected void setDefaultModel(ApplicationModel aModel) {
 		super.setDefaultModel(aModel);
 //		Log.debugMessage("ScheduleMainFrame.setDefaultModel | ", Log.FINEST);
@@ -271,6 +278,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_TEMPLATE_REPORT, false);
 	}
 
+	@Override
 	public void setConnectionOpened() {
 		super.setConnectionOpened();
 //		Log.debugMessage("ScheduleMainFrame.setConnectionOpened | ", Log.FINEST);
@@ -278,6 +286,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		
 	}
 
+	@Override
 	public void setSessionOpened() {
 		super.setSessionOpened();		
 //		Log.debugMessage("ScheduleMainFrame.setConnectionOpened | ", Log.FINEST);
@@ -301,6 +310,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		aModel.fireModelChanged("");
 	}
 
+	@Override
 	public void setConnectionClosed() {
 		super.setConnectionClosed();
 //		Log.debugMessage("ScheduleMainFrame.setConnectionClosed | ", Log.FINEST);

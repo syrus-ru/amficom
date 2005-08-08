@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMSessionEnvironment.java,v 1.5 2005/06/01 20:56:02 arseniy Exp $
+ * $Id: MCMSessionEnvironment.java,v 1.6 2005/08/08 11:46:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,9 @@ import com.syrus.AMFICOM.general.BaseSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/01 20:56:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/08 11:46:55 $
  * @author $Author: arseniy $
- * @module mcm_v1
+ * @module mcm
  */
 final class MCMSessionEnvironment extends BaseSessionEnvironment {
 	private static MCMSessionEnvironment instance;

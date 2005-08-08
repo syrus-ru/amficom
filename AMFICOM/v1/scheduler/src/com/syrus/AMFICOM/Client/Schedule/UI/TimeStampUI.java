@@ -26,10 +26,10 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/05/19 14:32:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/08/08 11:51:00 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module scheduler_v1
+ * @module scheduler
  */
 public class TimeStampUI {
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMPoolContext.java,v 1.7 2005/08/02 12:22:44 arseniy Exp $
+ * $Id: MCMPoolContext.java,v 1.8 2005/08/08 11:46:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/02 12:22:44 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/08 11:46:55 $
  * @author $Author: arseniy $
- * @module mcm_v1
+ * @module mcm
  */
 final class MCMPoolContext extends PoolContext {
 	public static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImpl.java,v 1.1 2005/08/02 12:20:17 arseniy Exp $
+ * $Id: MCMImpl.java,v 1.2 2005/08/08 11:46:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,9 +28,9 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/02 12:20:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/08 11:46:55 $
  * @author $Author: arseniy $
- * @module mcm_v1
+ * @module mcm
  */
 
 final class MCMImpl extends ServerCore implements MCMOperations {
