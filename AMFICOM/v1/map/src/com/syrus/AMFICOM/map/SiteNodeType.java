@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.61 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.62 2005/08/08 12:03:47 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -50,6 +52,7 @@ import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ImageResourceWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
+import com.syrus.util.Log;
 
 /**
  * Тип сетевого узла топологической схемы. Существует несколько
@@ -57,8 +60,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: arseniy $
- * @version $Revision: 1.61 $, $Date: 2005/08/08 11:35:11 $
+ * @author $Author: max $
+ * @version $Revision: 1.62 $, $Date: 2005/08/08 12:03:47 $
  * @module map
  * @todo make 'sort' persistent (update database scheme as well)
  * @todo make 'mapLibrary' persistent
@@ -85,7 +88,7 @@ public final class SiteNodeType extends StorableObjectType
 
 	private SiteNodeTypeSort sort;
 
-	private MapLibrary mapLibrary;
+	private Identifier mapLibraryId;
 	
 	SiteNodeType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -127,7 +130,7 @@ public final class SiteNodeType extends StorableObjectType
 		this.imageId = imageId;
 		this.topological = topological;
 		this.sort = sort;
-		this.mapLibrary = mapLibrary;
+		this.mapLibraryId = mapLibrary.getId();
 	}
 
 	public static SiteNodeType createInstance(final Identifier creatorId,
@@ -139,14 +142,13 @@ public final class SiteNodeType extends StorableObjectType
 			final boolean topological,
 			final MapLibrary mapLibrary) throws CreateObjectException {
 
-		if (creatorId == null 
-				|| codename == null 
-				|| name == null 
-				|| description == null 
-				|| imageId == null 
-				|| sort == null
-				|| mapLibrary == null)
-			throw new IllegalArgumentException("Argument is 'null'");
+		assert creatorId != null 
+				&& codename != null 
+				&& name != null 
+				&& description != null 
+				&& imageId != null 
+				&& sort != null
+				&& mapLibrary != null : ErrorMessages.NON_NULL_EXPECTED;
 
 		try {
 			final SiteNodeType siteNodeType = new SiteNodeType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_TYPE_CODE),
@@ -178,15 +180,15 @@ public final class SiteNodeType extends StorableObjectType
 		this.name = sntt.name;
 		this.imageId = new Identifier(sntt.imageId);
 		this.topological = sntt.topological;
-
 		this.sort = sntt.sort;
+		this.mapLibraryId = new Identifier(sntt.mapLibraryId);
 	}
 
 	@Override
 	public Set<Identifiable> getDependencies() {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.imageId);
-		dependencies.add(this.mapLibrary);
+		dependencies.add(this.mapLibraryId);
 		dependencies.remove(Identifier.VOID_IDENTIFIER);
 		return dependencies;
 	}
@@ -223,7 +225,7 @@ public final class SiteNodeType extends StorableObjectType
 				this.description,
 				this.imageId.getTransferable(),
 				this.topological,
-				this.mapLibrary.getId().getTransferable());
+				this.mapLibraryId.getTransferable());
 	}
 
 	public boolean isTopological() {
@@ -262,17 +264,13 @@ public final class SiteNodeType extends StorableObjectType
 			final String description,
 			final Identifier imageId,
 			final boolean topological,
-			final Identifier mapLibraryId) throws IllegalDataException {
+			final Identifier mapLibraryId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 		this.name = name;
 		this.imageId = imageId;
 		this.topological = topological;
 		this.sort = sort;
-		try {
-			this.mapLibrary = StorableObjectPool.getStorableObject(mapLibraryId, true);
-		} catch (ApplicationException e) {
-			throw new IllegalDataException(e);
-		}
+		this.mapLibraryId = mapLibraryId;
 	}
 
 	@Override
@@ -394,22 +392,31 @@ public final class SiteNodeType extends StorableObjectType
 			throw new CreateObjectException("SiteNode.createInstance |  ", e);
 		}
 	}
+	
+	public Library getParent() {
+		return getMapLibrary();
+	}
 
 	public void setParent(Library library) {
 		assert library instanceof MapLibrary : "must be instance of MapLibrary";
-		this.mapLibrary = (MapLibrary)library;
-	}
-
-	public Library getParent() {
-		return this.mapLibrary;
+		this.setMapLibrary((MapLibrary)library);
 	}
 
 	public MapLibrary getMapLibrary() {
-		return this.mapLibrary;
+		try {
+			return StorableObjectPool.getStorableObject(this.getMapLibraryId(), true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
+	}
+	
+	Identifier getMapLibraryId() {
+		return this.mapLibraryId;
 	}
 
 	public void setMapLibrary(MapLibrary mapLibrary) {
-		this.mapLibrary = mapLibrary;
+		this.mapLibraryId = mapLibrary.getId();
 	}
 	
 }
