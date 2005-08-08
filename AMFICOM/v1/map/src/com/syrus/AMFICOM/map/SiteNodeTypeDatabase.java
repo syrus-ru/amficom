@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.31 2005/08/03 20:13:20 bass Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.32 2005/08/08 11:12:48 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/08/03 20:13:20 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/08/08 11:12:48 $
+ * @author $Author: arseniy $
  * @module map_v1
  */
 public final class SiteNodeTypeDatabase extends StorableObjectDatabase<SiteNodeType> {
@@ -75,7 +75,7 @@ public final class SiteNodeTypeDatabase extends StorableObjectDatabase<SiteNodeT
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getImageId());
 		preparedStatement.setInt(++startParameterNumber, storableObject.isTopological() ? 1 : 0);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMapLibrary().getId());
 		return startParameterNumber;
 	}
 
