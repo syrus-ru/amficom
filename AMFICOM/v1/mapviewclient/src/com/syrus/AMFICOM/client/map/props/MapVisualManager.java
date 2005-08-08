@@ -1,5 +1,5 @@
 /**
- * $Id: MapVisualManager.java,v 1.7 2005/06/23 14:28:17 krupenn Exp $
+ * $Id: MapVisualManager.java,v 1.8 2005/08/08 10:19:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,10 +14,13 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.AlarmMarker;
 import com.syrus.AMFICOM.mapview.CablePath;
@@ -31,7 +34,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/23 14:28:17 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/08 10:19:07 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -53,6 +56,13 @@ public class MapVisualManager implements VisualManager {
 		vmMap.put(Map.class,
 				MapVisualManager.getInstance());
 
+		vmMap.put(MapLibrary.class,
+				MapLibraryVisualManager.getInstance());
+		vmMap.put(SiteNodeType.class,
+				SiteNodeTypeVisualManager.getInstance());
+		vmMap.put(PhysicalLinkType.class,
+				PhysicalLinkTypeVisualManager.getInstance());
+		
 		vmMap.put(TopologicalNode.class,
 				TopologicalNodeVisualManager.getInstance());
 		vmMap.put(SiteNode.class,
