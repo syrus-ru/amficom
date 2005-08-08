@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesDialog.java,v 1.2 2005/06/22 13:20:07 krupenn Exp $
+ * $Id: ImagesDialog.java,v 1.3 2005/08/08 10:11:20 krupenn Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,12 @@ import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @module commonclient_v1
  */
 public class ImagesDialog {
@@ -31,13 +32,13 @@ public class ImagesDialog {
 		return showImageDialog(null);
 	}
 
-	public static BitmapImageResource showImageDialog(BitmapImageResource ir) {
+	public static AbstractImageResource showImageDialog(AbstractImageResource ir) {
 
-		BitmapImageResource returnObject = null;
+		AbstractImageResource returnObject = null;
 		
 		final ImagesPanel imagesPanel = new ImagesPanel();
-		if(ir != null)
-			imagesPanel.setImageResource(ir);
+		if(ir != null && ir instanceof BitmapImageResource)
+			imagesPanel.setImageResource((BitmapImageResource)ir);
 
 		final JButton cancelButton = new JButton(LangModelGeneral.getString("Button.Cancel"));
 		final JButton chooseButton = new JButton(LangModelGeneral.getString("Choose"));
