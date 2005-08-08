@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.52 2005/08/08 17:11:05 max Exp $
+# $Id: Makefile,v 1.53 2005/08/08 18:01:16 max Exp $
 #
 # vim:set ft=make:
 #
@@ -36,7 +36,6 @@ endif
 XMLBEANSCLASSPATH = $(XMLBEANSLIBDIR)/xbean.jar:$(XMLBEANSLIBDIR)/jsr173_api.jar
 endif
 LIBNAME_GENERALXML=generalxml.jar
-LIBNAME_MAPXML=mapxml.jar
 
 SCOMP=$(shell which scomp 2>/dev/null)
 ifeq ($(SCOMP),)
@@ -93,7 +92,8 @@ xmlinstall: .xml $(LIBDIR)
 $(LIBNAME_GENERALXML):
 	$(RM) -r $(XMLCLASSDIR)/*
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
-		$(XMLDIR)/general.xsd
+		$(XMLDIR)/General.xsd \
+		$(XMLDIR)/Characteristic.xsd
 .PHONY: clean
 clean: cleanmach cleancorba
 	$(RM) $(LIBNAME)
