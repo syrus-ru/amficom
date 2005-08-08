@@ -69,7 +69,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/08/08 10:12:49 $
+ * @version $Revision: 1.57 $, $Date: 2005/08/08 10:37:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler_v1
@@ -963,6 +963,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	synchronized void refreshTestsSet() {
+		
+		if (this.skip)
+			return;
+		
 		java.util.Set selectedTestIds = this.schedulerModel.getSelectedTestIds();
 		if (selectedTestIds != null && !selectedTestIds.isEmpty()) {
 			ParameterSet parameterSet = this.getSet();
