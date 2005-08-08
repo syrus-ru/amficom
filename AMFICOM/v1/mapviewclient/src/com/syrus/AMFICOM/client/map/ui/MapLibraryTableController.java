@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryTableController.java,v 1.1 2005/08/02 07:25:02 krupenn Exp $
+ * $Id: MapLibraryTableController.java,v 1.2 2005/08/08 10:39:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ public class MapLibraryTableController implements Wrapper {
 	public static MapLibraryTableController getInstance() {
 		if(instance == null)
 			instance = new MapLibraryTableController();
-		return null;
+		return instance;
 	}
 
 	public static final String KEY_NAME = "Name";
