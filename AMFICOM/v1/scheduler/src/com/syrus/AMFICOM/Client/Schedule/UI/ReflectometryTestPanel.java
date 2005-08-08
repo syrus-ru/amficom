@@ -69,7 +69,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/08/08 14:27:19 $
+ * @version $Revision: 1.62 $, $Date: 2005/08/08 14:36:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -659,7 +659,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	private String getUnit(ParameterType parameterType) {
 		Set<Characteristic> characteristics = null;
 		try {
-			characteristics = parameterType.getCharacteristics();
+			characteristics = parameterType.getCharacteristics(false);
 		} catch (ApplicationException ae) {
 			Log.errorException(ae);
 		}
