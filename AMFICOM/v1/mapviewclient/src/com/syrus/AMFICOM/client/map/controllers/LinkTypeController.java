@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.44 2005/08/09 11:04:18 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.45 2005/08/09 14:57:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.44 $, $Date: 2005/08/09 11:04:18 $
+ * @version $Revision: 1.45 $, $Date: 2005/08/09 14:57:33 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -570,13 +570,10 @@ public final class LinkTypeController extends AbstractLinkController {
 				ObjectEntities.PHYSICALLINK_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-		Collection pTypes =
+		Collection<PhysicalLinkType> pTypes =
 			StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, useLoader);
-		for (Iterator it = pTypes.iterator(); it.hasNext();)
-		{
-			PhysicalLinkType type = (PhysicalLinkType )it.next();
-			if (type.getCodename().equals(codename))
-				return type;
+		if(pTypes.size() == 1) {
+			return pTypes.iterator().next();
 		}
 
 		return null;

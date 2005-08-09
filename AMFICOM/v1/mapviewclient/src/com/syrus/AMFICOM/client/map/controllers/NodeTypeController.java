@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.37 2005/08/09 11:05:18 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.38 2005/08/09 14:57:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.37 $, $Date: 2005/08/09 11:05:18 $
+ * @version $Revision: 1.38 $, $Date: 2005/08/09 14:57:33 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -191,12 +191,10 @@ public class NodeTypeController extends AbstractNodeController {
 				ObjectEntities.SITENODE_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-		Collection pTypes = 
+		Collection<SiteNodeType> pTypes = 
 			StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, useLoader);
-		for(Iterator it = pTypes.iterator(); it.hasNext();) {
-			SiteNodeType type = (SiteNodeType )it.next();
-			if(type.getCodename().equals(codename))
-				return type;
+		if(pTypes.size() == 1) {
+			return pTypes.iterator().next();
 		}
 		return null;
 	}
