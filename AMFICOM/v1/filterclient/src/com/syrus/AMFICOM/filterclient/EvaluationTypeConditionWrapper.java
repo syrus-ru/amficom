@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeConditionWrapper.java,v 1.5 2005/08/09 20:34:31 arseniy Exp $
+ * $Id: EvaluationTypeConditionWrapper.java,v 1.6 2005/08/09 22:22:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/09 20:34:31 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/09 22:22:14 $
  * @author $Author: arseniy $
  * @module filterclient
  */
@@ -58,14 +58,14 @@ public class EvaluationTypeConditionWrapper implements ConditionWrapper {
 		final String[] paramNames = new String[this.parameterTypes.size()];
 		int i = 0;
 		for (final ParameterType parameterType : this.parameterTypes) {
-			paramNames[i] = parameterType.getName();
+			paramNames[i++] = parameterType.getName();
 		}
 		this.keyLinkedNames.put(keys[0], paramNames);
 
 		final String[] mtNames = new String[this.measurementTypes.size()];
 		i = 0;
 		for (final MeasurementType measurementType : this.measurementTypes) {
-			mtNames[i] = measurementType.getDescription();
+			mtNames[i++] = measurementType.getDescription();
 		}
 		this.keyLinkedNames.put(keys[1], mtNames);
 	}

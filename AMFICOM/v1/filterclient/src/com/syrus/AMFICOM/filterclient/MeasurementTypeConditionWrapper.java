@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeConditionWrapper.java,v 1.9 2005/08/09 20:34:31 arseniy Exp $
+ * $Id: MeasurementTypeConditionWrapper.java,v 1.10 2005/08/09 22:22:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/09 20:34:31 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/09 22:22:14 $
  * @author $Author: arseniy $
  * @module measurement_v1
  */
@@ -57,7 +57,7 @@ public class MeasurementTypeConditionWrapper implements ConditionWrapper {
 		final String[] mtNames = new String[this.measurementPortTypes.size()];
 		int i = 0;
 		for (final MeasurementPortType measurementPortType : this.measurementPortTypes) {
-			mtNames[i] = measurementPortType.getName();
+			mtNames[i++] = measurementPortType.getName();
 		}
 		this.keyLinkedNames.put(keys[1], mtNames);
 	}
