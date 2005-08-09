@@ -1,5 +1,5 @@
 /**
- * $Id: MapXMLTest.java,v 1.1 2005/07/08 06:39:33 krupenn Exp $
+ * $Id: MapXMLTest.java,v 1.2 2005/08/09 07:14:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,9 +22,9 @@ import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.syrus.amficom.general.xml.UID;
-import com.syrus.amficom.map.xml.Characteristic;
-import com.syrus.amficom.map.xml.CharacteristicTypeSort;
-import com.syrus.amficom.map.xml.Characteristics;
+import com.syrus.amficom.general.xml.Characteristic;
+import com.syrus.amficom.general.xml.CharacteristicTypeSort;
+import com.syrus.amficom.general.xml.Characteristics;
 import com.syrus.amficom.map.xml.LibraryDocument;
 import com.syrus.amficom.map.xml.MapLibrary;
 import com.syrus.amficom.map.xml.PhysicalLinkType;
@@ -33,7 +33,6 @@ import com.syrus.amficom.map.xml.PhysicalLinkTypes;
 import com.syrus.amficom.map.xml.SiteNodeType;
 import com.syrus.amficom.map.xml.SiteNodeTypeSort;
 import com.syrus.amficom.map.xml.SiteNodeTypes;
-import com.syrus.amficom.map.xml.VisualCharacteristicType;
 
 public class MapXMLTest {
 
@@ -147,15 +146,12 @@ public class MapXMLTest {
 		   Characteristics chars = lnode.addNewCharacteristics();
 		   Characteristic char1 = chars.addNewCharacteristic();
 		   char1.setSort(CharacteristicTypeSort.VISUAL);
-		   char1.setName(VisualCharacteristicType.STYLE);
 		   char1.setValue("dashed");
 		   Characteristic char2 = chars.addNewCharacteristic();
 		   char2.setSort(CharacteristicTypeSort.VISUAL);
-		   char2.setName(VisualCharacteristicType.COLOR);
 		   char2.setValue(String.valueOf(0xFF004000));
 		   Characteristic char3 = chars.addNewCharacteristic();
 		   char3.setSort(CharacteristicTypeSort.VISUAL);
-		   char3.setName(VisualCharacteristicType.THICKNESS);
 		   char3.setValue(String.valueOf(1));
 
 		   printInstance(doc);
