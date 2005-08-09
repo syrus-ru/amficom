@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.26 2005/08/08 14:26:03 arseniy Exp $
+ * $Id: CablePath.java,v 1.27 2005/08/09 16:28:40 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Ёлемент кабельного пути. ќписывает прив€зку кабел€ к топологическим лини€м.
  * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/08/08 14:26:03 $
- * @module mapviewclient_v1
+ * @version $Revision: 1.27 $, $Date: 2005/08/09 16:28:40 $
+ * @module mapview
  */
 public final class CablePath implements MapElement
 {

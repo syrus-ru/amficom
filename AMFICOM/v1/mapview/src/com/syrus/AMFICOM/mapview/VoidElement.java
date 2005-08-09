@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.17 2005/08/08 14:26:04 arseniy Exp $
+ * $Id: VoidElement.java,v 1.18 2005/08/09 16:28:40 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.map.MapElementState;
  * Пустой элемент.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/08 14:26:04 $
- * @module mapviewclient_v1
+ * @version $Revision: 1.18 $, $Date: 2005/08/09 16:28:40 $
+ * @module mapview
  */
 public final class VoidElement implements MapElement {
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.20 2005/08/08 14:26:04 arseniy Exp $
+ * $Id: Selection.java,v 1.21 2005/08/09 16:28:40 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.map.MapElementState;
  * Набор выбранных элементов.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/08/08 14:26:04 $
- * @module mapviewclient_v1
+ * @version $Revision: 1.21 $, $Date: 2005/08/09 16:28:40 $
+ * @module mapview
  * @todo copy/paste, properties
  */
 public final class Selection extends MapTypedElementsContainer implements MapElement {

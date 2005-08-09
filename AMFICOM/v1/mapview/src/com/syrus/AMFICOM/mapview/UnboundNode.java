@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.26 2005/07/26 13:30:53 arseniy Exp $
+ * $Id: UnboundNode.java,v 1.27 2005/08/09 16:28:40 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,8 +33,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * ни к какому элементу топологической схемы.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/07/26 13:30:53 $
- * @module mapviewclient_v1
+ * @version $Revision: 1.27 $, $Date: 2005/08/09 16:28:40 $
+ * @module mapview
  */
 public final class UnboundNode extends SiteNode
 {

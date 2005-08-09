@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.38 2005/08/08 14:26:03 arseniy Exp $
+ * $Id: MeasurementPath.java,v 1.39 2005/08/09 16:28:40 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
  * Элемент пути.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.38 $, $Date: 2005/08/08 14:26:03 $
- * @module mapviewclient_v1
+ * @version $Revision: 1.39 $, $Date: 2005/08/09 16:28:40 $
+ * @module mapview
  */
 public final class MeasurementPath implements MapElement {
 	/**
