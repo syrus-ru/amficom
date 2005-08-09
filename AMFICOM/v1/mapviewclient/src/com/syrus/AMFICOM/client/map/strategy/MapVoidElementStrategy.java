@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.29 2005/07/15 17:06:08 krupenn Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.30 2005/08/09 06:27:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/07/15 17:06:08 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/09 06:27:09 $
  * @module mapviewclient_v1
  */
 public final class MapVoidElementStrategy extends AbstractMapStrategy 
@@ -88,7 +88,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 		if (actionMode == MapState.NULL_ACTION_MODE)
 		{
 			super.logicalNetLayer.deselectAll();
-			this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
+//			this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 		}//MapState.NULL_ACTION_MODE
 	}
 
@@ -225,7 +225,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 			super.logicalNetLayer.setCurrentMapElement(sel);
 		}
 		long t2 = System.nanoTime();
-		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
+//		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 		Log.debugMessage("MapVoidElementStrategy.selectElementsInRect | " + (t2 - t1) + " ns ", Level.INFO);
 	}
 }

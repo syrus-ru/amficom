@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.27 2005/07/20 13:31:54 krupenn Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.28 2005/08/09 06:27:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Стратегия управления топологическим узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/07/20 13:31:54 $
+ * @version $Revision: 1.28 $, $Date: 2005/08/09 06:27:09 $
  * @module mapviewclient_v1
  */
 public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy 
@@ -111,7 +111,7 @@ public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy
 			super.logicalNetLayer.deselectAll();
 		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
 		super.logicalNetLayer.getMapView().getMap().setSelected(this.node, true);
-		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
+//		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 	}
 
 	/**
