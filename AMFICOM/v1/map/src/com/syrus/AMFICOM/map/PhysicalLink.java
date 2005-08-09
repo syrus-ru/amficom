@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.89 2005/08/08 16:53:48 max Exp $
+ * $Id: PhysicalLink.java,v 1.90 2005/08/09 07:43:33 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.map;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -59,7 +60,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: max $
- * @version $Revision: 1.89 $, $Date: 2005/08/08 16:53:48 $
+ * @version $Revision: 1.90 $, $Date: 2005/08/09 07:43:33 $
  * @module map
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -247,7 +248,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 		this.startNode = StorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
 		this.endNode = StorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
-		assert this.startNode != null && this.endNode != null : ErrorMessages.NON_NULL_EXPECTED;
+		
+		assert this.startNode != null : ErrorMessages.NON_NULL_EXPECTED; 
+		assert this.endNode != null : ErrorMessages.NON_NULL_EXPECTED;
+		
 		this.selected = false;
 
 		this.binding = new PhysicalLinkBinding(new IntDimension(plt.dimensionX, plt.dimensionY));
@@ -256,7 +260,12 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		return Collections.singleton((Identifiable) this.physicalLinkType);
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		dependencies.add(this.physicalLinkType);
+		dependencies.add(this.startNode);
+		dependencies.add(this.endNode);
+		
+		return dependencies;
 	}
 
 	/**
@@ -963,4 +972,4 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			throw new CreateObjectException("PhysicalLink.createInstance |  ", e);
 		}
 	}
-}
+}	
