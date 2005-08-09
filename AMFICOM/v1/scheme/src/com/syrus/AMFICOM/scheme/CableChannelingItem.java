@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.51 2005/08/05 16:50:34 arseniy Exp $
+ * $Id: CableChannelingItem.java,v 1.52 2005/08/09 13:54:33 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
 /**
  * #15 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.51 $, $Date: 2005/08/05 16:50:34 $
+ * @author $Author: max $
+ * @version $Revision: 1.52 $, $Date: 2005/08/09 13:54:33 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -628,7 +628,7 @@ public final class CableChannelingItem
 		final int thatSequentialNumber = that.getSequentialNumber();
 		assert this.sequentialNumber != thatSequentialNumber;
 
-		if (thatSequentialNumber - this.sequentialNumber == -1) {
+		if (this.sequentialNumber - thatSequentialNumber == -1) {
 			/*-
 			 * This one is already situated immediately before that.
 			 */
@@ -670,7 +670,7 @@ public final class CableChannelingItem
 		final int thatSequentialNumber = that.getSequentialNumber();
 		assert this.sequentialNumber != thatSequentialNumber;
 
-		if (this.sequentialNumber - thatSequentialNumber == 1) {
+		if (thatSequentialNumber - this.sequentialNumber == 1) {
 			/*-
 			 * This one is already situated immediately after that.
 			 */
