@@ -10,7 +10,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import javax.swing.Icon;
 import javax.swing.JInternalFrame;
@@ -40,7 +39,6 @@ import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.SelectionListener;
 import com.syrus.AMFICOM.logic.ServiceItem;
 import com.syrus.AMFICOM.measurement.MeasurementType;
-import com.syrus.util.Log;
 
 public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeListener {
 
@@ -51,7 +49,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	SchedulerModel				schedulerModel;
 
-	private Map					paramMap			= new HashMap();
+	private Map<String, StorableObject>					paramMap			= new HashMap<String, StorableObject>();
 
 	LogicalTreeUI				treePanel;
 
@@ -153,18 +151,16 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 	}
 
 	private void selectItems() {
-		List list = new LinkedList();
+		final List<Item> list = new LinkedList<Item>();
 		this.getSelectItem((Item) this.treePanel.getTreeModel().getRoot(), list);
 		this.treePanel.selectedItems(list);
 	}
 
-	private void getSelectItem(	Item parent,
-								List list) {
+	private void getSelectItem(Item parent, List<Item> list) {
 		Object object = parent.getObject();
 		if (object instanceof Identifier) {
 			Identifier identifier = (Identifier) object;
-			StorableObject storableObject = (StorableObject) this.paramMap.get(ObjectEntities.codeToString(identifier
-					.getMajor()));
+			StorableObject storableObject = this.paramMap.get(ObjectEntities.codeToString(identifier.getMajor()));
 			if (storableObject != null && storableObject.getId().equals(identifier)) {
 				list.add(parent);
 			}
@@ -226,7 +222,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 	public void init() {
 		this.schedulerModel = (SchedulerModel) this.aContext.getApplicationModel();
 		if (this.treePanel == null) {
-			final Dispatcher dispatcher = this.aContext.getDispatcher();
+			final Dispatcher dispatcher1 = this.aContext.getDispatcher();
 			this.treePanel = new LogicalTreeUI(this.rootItem, false);
 			this.treePanel.setRenderer(IconPopulatableItem.class, new ItemTreeIconLabelCellRenderer());
 			this.selectionListener = new SelectionListener() {
@@ -259,18 +255,16 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 									SwingUtilities.invokeLater(new Runnable() {
 
 										public void run() {
-											dispatcher
-													.firePropertyChange(new PropertyChangeEvent(
-																								ElementsTreeFrame.this,
-																								SchedulerModel.COMMAND_CHANGE_ME_TYPE,
-																								null, identifier));
+											dispatcher1.firePropertyChange(new PropertyChangeEvent(ElementsTreeFrame.this,
+													SchedulerModel.COMMAND_CHANGE_ME_TYPE,
+													null,
+													identifier));
 											try {
-												ElementsTreeFrame.this.schedulerModel.setSelectedMonitoredElement(
-													(MonitoredElement) StorableObjectPool
-															.getStorableObject(identifier, true), parent != null
-															? (MeasurementType) StorableObjectPool
-																	.getStorableObject((Identifier) parent.getObject(),
-																		true) : null);
+												ElementsTreeFrame.this.schedulerModel.setSelectedMonitoredElement((MonitoredElement) StorableObjectPool.getStorableObject(identifier,
+														true),
+														parent != null
+																? (MeasurementType) StorableObjectPool.getStorableObject((Identifier) parent.getObject(), true)
+																	: null);
 											} catch (ApplicationException e) {
 												AbstractMainFrame.showErrorMessage(ElementsTreeFrame.this, e);
 											}

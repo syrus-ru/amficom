@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.16 2005/07/20 11:38:18 bob Exp $
+ * $Id: TestController.java,v 1.17 2005/08/09 17:56:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
 
@@ -36,29 +35,29 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/07/20 11:38:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/08/09 17:56:27 $
+ * @author $Author: arseniy $
  * @module module
  */
-public class TestController implements Wrapper {
+public class TestController implements Wrapper<Test> {
 
-	public static final String		KEY_TEMPORAL_TYPE		= "TemporalType";
-	public static final String		KEY_TEMPORAL_TYPE_NAME	= "TemporalTypeName";
-	public static final String		KEY_KIS					= "RTU";
-	public static final String		KEY_MONITORED_ELEMENT	= "MonitoredElement";
-	public static final String		KEY_TEST_OBJECT			= "TestObject";
-	public static final String		KEY_MEASUREMENT_TYPE	= "MeasurementType";
-	public static final String		KEY_START_TIME			= "TestStartTime";
-	public static final String		KEY_STATUS				= "Status";
+	public static final String KEY_TEMPORAL_TYPE = "TemporalType";
+	public static final String KEY_TEMPORAL_TYPE_NAME = "TemporalTypeName";
+	public static final String KEY_KIS = "RTU";
+	public static final String KEY_MONITORED_ELEMENT = "MonitoredElement";
+	public static final String KEY_TEST_OBJECT = "TestObject";
+	public static final String KEY_MEASUREMENT_TYPE = "MeasurementType";
+	public static final String KEY_START_TIME = "TestStartTime";
+	public static final String KEY_STATUS = "Status";
 
-	private List					keys;
+	private List<String> keys;
 
-	private static boolean			initialized				= false;
-	private static TestController	instance				= null;
-	private static Object			lock					= new Object();
+	private static boolean initialized = false;
+	private static TestController instance = null;
+	private static Object lock = new Object();
 
-	private Map						statusMap;
-	private Map						temporalTypeMap;
+	private Map<Component, TestStatus> statusMap;
+	private Map<String, TestTemporalType> temporalTypeMap;
 
 	private class ComparableLabel extends JLabel implements Comparable {
 		
@@ -76,18 +75,18 @@ public class TestController implements Wrapper {
 	private TestController() {
 
 		//		 empty private constructor
-		String[] keysArray = new String[] { KEY_TEMPORAL_TYPE, KEY_MONITORED_ELEMENT, KEY_TEST_OBJECT,
+		final String[] keysArray = new String[] { KEY_TEMPORAL_TYPE, KEY_MONITORED_ELEMENT, KEY_TEST_OBJECT,
 				KEY_MEASUREMENT_TYPE, KEY_START_TIME, KEY_STATUS};
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
-		this.statusMap = new HashMap();
+		this.statusMap = new HashMap<Component, TestStatus>();
 		this.addStatusItem(TestStatus.TEST_STATUS_ABORTED, LangModelSchedule.getString("Aborted"));
 		this.addStatusItem(TestStatus.TEST_STATUS_COMPLETED, LangModelSchedule.getString("Completed"));
 		this.addStatusItem(TestStatus.TEST_STATUS_NEW, LangModelSchedule.getString("New"));
 		this.addStatusItem(TestStatus.TEST_STATUS_PROCESSING, LangModelSchedule.getString("Processing"));
 		this.addStatusItem(TestStatus.TEST_STATUS_SCHEDULED, LangModelSchedule.getString("Scheduled"));
 
-		this.temporalTypeMap = new HashMap();
+		this.temporalTypeMap = new HashMap<String, TestTemporalType>();
 		this.temporalTypeMap.put(LangModelSchedule.getString("Onetime"), TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME);
 		this.temporalTypeMap.put(LangModelSchedule.getString("Periodical"), TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL);
 		this.temporalTypeMap.put(LangModelSchedule.getString("Continual"), TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS);
@@ -108,8 +107,9 @@ public class TestController implements Wrapper {
 	public static TestController getInstance() {
 		if (!initialized) {
 			synchronized (lock) {
-				if (!initialized && instance == null)
+				if (!initialized && instance == null) {
 					instance = new TestController();
+				}
 			}
 			synchronized (lock) {
 				initialized = true;
@@ -119,14 +119,14 @@ public class TestController implements Wrapper {
 	}
 
 	public String getKey(int index) {
-		return this.keys.get(index).toString();
+		return this.keys.get(index);
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
-	public String getName(String key) {
+	public String getName(final String key) {
 		String name = null;
 		if (key.equals(KEY_TEMPORAL_TYPE))
 			name = LangModelSchedule.getString("TemporalType"); //$NON-NLS-1$
@@ -146,31 +146,33 @@ public class TestController implements Wrapper {
 		return name;
 	}
 
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		Class clazz = String.class;
-		if ((key.equals(KEY_TEMPORAL_TYPE)) || (key.equals(KEY_STATUS)))
+		if ((key.equals(KEY_TEMPORAL_TYPE)) || (key.equals(KEY_STATUS))) {
 			clazz = Map.class;
+		}
 		return clazz;
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		Object value = null;
-		if (key.equals(KEY_TEMPORAL_TYPE))
+		if (key.equals(KEY_TEMPORAL_TYPE)) {
 			value = this.temporalTypeMap;
-		else if (key.equals(KEY_STATUS))
+		}
+		else if (key.equals(KEY_STATUS)) {
 			value = this.statusMap;
+		}
 		return value;
 	}
 
-	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public Object getValue(Object object, String key) {
+	public Object getValue(final Test test, final String key) {
 		Object value = null;
-		if (object instanceof Test) {
-			Test test = (Test) object;
+		if (test != null) {
 			if (key.equals(KEY_TEMPORAL_TYPE)) {
 				if (test.getGroupTestId().isVoid()) {
 					value = test.getTemporalType(); //$NON-NLS-1$
@@ -179,22 +181,20 @@ public class TestController implements Wrapper {
 				}
 			} else if (key.equals(KEY_TEMPORAL_TYPE_NAME)) {
 				if (test.getGroupTestId().isVoid()) {
-					TestTemporalType temporalType = test.getTemporalType();
-					for (Iterator iterator = this.temporalTypeMap.keySet().iterator(); iterator.hasNext();) {
-						String name = (String) iterator.next();
+					final TestTemporalType temporalType = test.getTemporalType();
+					for (final String name : this.temporalTypeMap.keySet()) {
 						if ((this.temporalTypeMap.get(name)).equals(temporalType)) {
 							value = name;
 							break;
 						}
 					}
-					
+
 					if (temporalType.value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL) {
-						Identifier temporalPatternId = test.getTemporalPatternId();
+						final Identifier temporalPatternId = test.getTemporalPatternId();
 						if (!temporalPatternId.isVoid() && temporalPatternId.getMajor() == ObjectEntities.PERIODICALTEMPORALPATTERN_CODE) {
 							try {
-								PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId, true);
+								final PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId, true);
 								value = value + ", " + periodicalTemporalPattern.getPeriodDescription();
-								
 							} catch (ApplicationException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
@@ -205,38 +205,41 @@ public class TestController implements Wrapper {
 					value = LangModelSchedule.getString("Sectional");
 				}				
 			}
-			else if (key.equals(KEY_KIS))
+			else if (key.equals(KEY_KIS)) {
 				try {
-					MeasurementPort mp = (MeasurementPort)StorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
-					KIS kis = (KIS)StorableObjectPool.getStorableObject(mp.getKISId(), true);
+					final KIS kis = (KIS) StorableObjectPool.getStorableObject(test.getKISId(), true);
 					value = kis.getName();
 				} catch (ApplicationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				} 
-			else if (key.equals(KEY_MONITORED_ELEMENT))
+				}
+			}
+			else if (key.equals(KEY_MONITORED_ELEMENT)) {
 				value = test.getMonitoredElement().getName();
-			else if (key.equals(KEY_TEST_OBJECT)){
+			}
+			else if (key.equals(KEY_TEST_OBJECT)) {
 				try {
-					MeasurementPort mp = (MeasurementPort)StorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(), true);
+					final MeasurementPort mp = (MeasurementPort) StorableObjectPool.getStorableObject(test.getMonitoredElement().getMeasurementPortId(),
+							true);
 					value = mp.getName();
 				} catch (ApplicationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
-				}				
-			}
-			else if (key.equals(KEY_MEASUREMENT_TYPE))
-				try {
-					value = ((MeasurementType)StorableObjectPool.getStorableObject(test.getMeasurementTypeId(), true)).getDescription();
-				} catch (ApplicationException e) {
-					Log.errorMessage("TestController.getValue | key='" + key + "', cannot get " + test.getMeasurementTypeId() + " -- " + e.getMessage());
-					e.printStackTrace();
 				}
-			else if (key.equals(KEY_START_TIME)) {
-				SimpleDateFormat sdf = (SimpleDateFormat)UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);			
-				value = sdf.format(test.getStartTime());
 			}
-			else if (key.equals(KEY_STATUS)) {
+			else if (key.equals(KEY_MEASUREMENT_TYPE)) {
+				try {
+					final MeasurementType measurementType = StorableObjectPool.getStorableObject(test.getMeasurementTypeId(), true);
+					value = measurementType.getDescription();
+				} catch (ApplicationException e) {
+					Log.errorMessage("TestController.getValue | key='" + key + "', cannot get " + test.getMeasurementTypeId()
+							+ " -- " + e.getMessage());
+					Log.errorException(e);
+				}
+			} else if (key.equals(KEY_START_TIME)) {
+				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+				value = sdf.format(test.getStartTime());
+			} else if (key.equals(KEY_STATUS)) {
 				return test.getStatus();
 			}
 		}
@@ -247,9 +250,9 @@ public class TestController implements Wrapper {
 		return false;
 	}
 
-	public void setValue(Object object, String key, Object value) {
-		if (object instanceof Test) {
-//			Test test = (Test) object;
+	public void setValue(Test test, String key, Object value) {
+		if (test != null) {
+			//Nothing
 		}
 	}
 

@@ -62,7 +62,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 	WrapperedTable			listTable;
 	ApplicationContext			aContext;
 	private JPanel				panel;
-	List				rowToRemove;
+	List<Test>				rowToRemove;
 	PropertyChangeEvent	propertyChangeEvent;
 
 	public TableFrame(ApplicationContext aContext) {
@@ -202,8 +202,8 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 											.addSelectedTest((Test) ((WrapperedTableModel) TableFrame.this.listTable
 													.getModel()).getObject(selectedRow));
 
-								} catch (ApplicationException e) {
-									AbstractMainFrame.showErrorMessage(TableFrame.this, e);
+								} catch (ApplicationException ae) {
+									AbstractMainFrame.showErrorMessage(TableFrame.this, ae);
 								}
 
 							}
@@ -215,10 +215,12 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 
 			this.listTable.addMouseListener(new MouseAdapter() {
 
+				@Override
 				public void mousePressed(MouseEvent e) {
 					mouseClicked(e);
 				}
 
+				@Override
 				public void mouseClicked(MouseEvent evt) {
 					final JTable table = ((JTable) evt.getSource());
 					// if (SwingUtilities.isLeftMouseButton(evt)) {
@@ -260,18 +262,16 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 												.getString("Confirm_deleting"), JOptionPane.YES_NO_OPTION);
 									if (temp == JOptionPane.YES_OPTION) {
 										if (TableFrame.this.rowToRemove == null)
-											TableFrame.this.rowToRemove = new LinkedList();
+											TableFrame.this.rowToRemove = new LinkedList<Test>();
 										else
 											TableFrame.this.rowToRemove.clear();
 										for (int i = 0; i < rowIndices.length; i++) {
 											Test test1 = (Test) model.getObject(rowIndices[i]);
 											TableFrame.this.rowToRemove.add(test1);
 										}
-										for (Iterator it = TableFrame.this.rowToRemove.iterator(); it.hasNext();) {
-											Test test1 = (Test) it.next();
+										for (final Test test1 : TableFrame.this.rowToRemove) {
 											TableFrame.this.schedulerModel.removeTest(test1);
 											model.removeObject(test1);
-
 										}
 										table.revalidate();
 										table.repaint();

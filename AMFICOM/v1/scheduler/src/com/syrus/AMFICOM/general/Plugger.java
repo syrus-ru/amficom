@@ -1,5 +1,5 @@
 /*-
- * $Id: Plugger.java,v 1.3 2005/07/11 08:19:42 bass Exp $
+ * $Id: Plugger.java,v 1.4 2005/08/09 17:56:27 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.io.File;
 import java.io.IOException;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Hashtable;
 import java.util.logging.Level;
 
 import javax.swing.UIDefaults;
@@ -23,14 +22,13 @@ import org.w3c.dom.Document;
 import org.w3c.dom.NamedNodeMap;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
-
 import org.xml.sax.SAXException;
 
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/11 08:19:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/08/09 17:56:27 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module schedulerClone
  */
@@ -41,7 +39,7 @@ public class Plugger {
 	private Document	doc;
 	private Node		plugin;
 
-	private Hashtable	plugins	= new UIDefaults();
+	private UIDefaults	plugins	= new UIDefaults();
 
 	public Plugger() {
 		this.parseXmlFile(false);

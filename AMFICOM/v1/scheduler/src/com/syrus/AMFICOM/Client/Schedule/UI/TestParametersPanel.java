@@ -13,7 +13,6 @@ import java.beans.PropertyChangeListener;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Enumeration;
-import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -91,8 +90,8 @@ public class TestParametersPanel implements PropertyChangeListener {
 //	MeasurementSetup		measurementSetup;
 	Identifier		measurementSetupId;
 
-	private final Hashtable	panels	= new UIDefaults();
-	PropertyChangeEvent		propertyChangeEvent;
+	private final UIDefaults panels = new UIDefaults();
+	PropertyChangeEvent propertyChangeEvent;
 
 	public TestParametersPanel(final ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -267,6 +266,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 											StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_ID);
 		this.testSetups.addMouseListener(new MouseAdapter() {
 
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				if (SwingUtilities.isRightMouseButton(e)) {
 					final WrapperedList objList = (WrapperedList) e.getSource();
@@ -334,7 +334,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.testSetups.addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(ListSelectionEvent e) {
-				if (propertyChangeEvent != null)
+				if (TestParametersPanel.this.propertyChangeEvent != null)
 					return;
 				
 				final MeasurementSetup measurementSetup1 = 
@@ -371,6 +371,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 //					TestParametersPanel.this.useAnalysisBox.setEnabled(true);
 					if (TestParametersPanel.this.parametersTestPanel != null) {
 						new Thread() {
+								@Override
 								public void run() {
 								TestParametersPanel.this.parametersTestPanel
 										.setSet(measurementSetup1.getParameterSet());
@@ -688,7 +689,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 		else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP)) {
 			this.setMeasurementSetup((MeasurementSetup) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS)) {
-			this.setMeasurementSetups((Collection<MeasurementSetup>) newValue);
+			this.setMeasurementSetups((Collection) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_SET)) {
 			this.setSet((ParameterSet) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE)) {

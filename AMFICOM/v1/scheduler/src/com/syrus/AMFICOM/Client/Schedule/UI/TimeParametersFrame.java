@@ -2,7 +2,6 @@
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.BorderLayout;
-import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.Insets;
@@ -49,7 +48,6 @@ import com.syrus.AMFICOM.filter.UI.CalendarUI;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -191,6 +189,7 @@ public class TimeParametersFrame extends JInternalFrame {
 					
 					private Thread		thread			= new Thread() {
 
+															@Override
 															public void run() {
 																while (true) {
 																	if (waiting 
@@ -379,6 +378,7 @@ public class TimeParametersFrame extends JInternalFrame {
 						
 						private Thread		thread			= new Thread() {
 
+																@Override
 																public void run() {
 																	while (true) {
 																		if (waiting
@@ -500,6 +500,7 @@ public class TimeParametersFrame extends JInternalFrame {
 					
 					private Thread		thread			= new Thread() {
 
+															@Override
 															public void run() {
 																while (true) {
 																	if (waiting
@@ -1048,10 +1049,10 @@ public class TimeParametersFrame extends JInternalFrame {
 		}
 		
 		
-		public void propertyChange(PropertyChangeEvent propertyChangeEvent) {
-			this.propertyChangeEvent = propertyChangeEvent;
-			String propertyName = propertyChangeEvent.getPropertyName();
-			Object newValue = propertyChangeEvent.getNewValue();
+		public void propertyChange(PropertyChangeEvent propertyChangeEvent1) {
+			this.propertyChangeEvent = propertyChangeEvent1;
+			String propertyName = propertyChangeEvent1.getPropertyName();
+			Object newValue = propertyChangeEvent1.getNewValue();
 			if (propertyName.equals(SchedulerModel.COMMAND_DATE_OPERATION)) {
 				Date date = (Date) newValue;
 				this.startDateSpinner.getModel().setValue(date);

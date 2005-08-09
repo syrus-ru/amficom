@@ -16,6 +16,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -24,7 +25,6 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
 
@@ -69,8 +69,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/08/09 14:03:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.64 $, $Date: 2005/08/09 17:56:27 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -78,7 +78,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	private static final long	serialVersionUID	= 3257004354304553266L;
 
-	private class ListNumberComparator implements java.util.Comparator {
+	private class ListNumberComparator implements Comparator<String> {
 
 		private int	direction	= 1;
 
@@ -86,14 +86,11 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			this.direction = 1;
 		}
 
-		public ListNumberComparator(int direction) {
+		public ListNumberComparator(final int direction) {
 			this.direction = direction;
 		}
 
-		public int compare(	Object o1,
-							Object o2) {
-			String s1 = o1.toString();
-			String s2 = o2.toString();
+		public int compare(final String s1, final String s2) {
 			double d1 = 0;
 			double d2 = 0;
 			boolean isDoubleNumber = false;
@@ -108,12 +105,15 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			}
 
 			if (isDoubleNumber) {
-				if (d1 < d2)
+				if (d1 < d2) {
 					result = -this.direction;
-				else if (d1 == d2)
+				}
+				else if (d1 == d2) {
 					result = 0;
-				else
+				}
+				else {
 					result = this.direction;
+				}
 			} else {
 				result = this.direction * s1.compareTo(s2);
 			}
@@ -125,13 +125,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	ListNumberComparator	comparator;
 	double					maxIndexOfRefraction			= 1.46820;
 	double					minIndexOfRefraction			= 1.46820;
-	
-	Map						pulseWidthHiResMap;
-	Map						pulseWidthLowResMap;
-	List					resolutionList;
-	Map						traceLength;
-	Map						indexOfRefraction;
-	Map						averageCount;
+
+	Map<String, String> pulseWidthHiResMap;
+	Map<String, String> pulseWidthLowResMap;
+	List<String> resolutionList;
+	Map<String, String> traceLength;
+	Map<String, String> indexOfRefraction;
+	Map<String, String> averageCount;
 
 	private JTextField		refractTextField;
 
@@ -173,7 +173,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	Identifier				setId;
 
 	long					maxPoints;
-	private Map				unchangedMeasurementSetupNewMap	= null;
+	private Map<Identifier, Identifier>				unchangedMeasurementSetupNewMap	= null;
 
 	private Map<String, String>				unchangedObjects;
 	private Dispatcher		dispatcher;
@@ -320,7 +320,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				this.refreshTitles();
 
 				if (this.unchangedObjects == null) {
-					this.unchangedObjects = new HashMap();
+					this.unchangedObjects = new HashMap<String, String>();
 				} else {
 					this.unchangedObjects.clear();
 				}
@@ -576,7 +576,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			for (Iterator iterator = conditions.iterator(); iterator.hasNext();) {
 				StorableObjectCondition condition = (StorableObjectCondition) iterator.next();
 
-				java.util.Set storableObjectsByCondition = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
+				Set storableObjectsByCondition = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
 				if (storableObjectsByCondition.isEmpty())
 					throw new IllegalArgumentException(
 														LangModelSchedule.getString("Error.CannotFindParameterTypes") + " "); //$NON-NLS-1$ //$NON-NLS-2$
@@ -734,37 +734,37 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				Collection characteristics = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true, true);
 
 				if (this.traceLength == null) {
-					this.traceLength = new HashMap();
+					this.traceLength = new HashMap<String, String>();
 				} else {
 					this.traceLength.clear();
 				}
 
 				if (this.indexOfRefraction == null) {
-					this.indexOfRefraction = new HashMap();
+					this.indexOfRefraction = new HashMap<String, String>();
 				} else {
 					this.indexOfRefraction.clear();
 				}
 
 				if (this.averageCount == null) {
-					this.averageCount = new HashMap();
+					this.averageCount = new HashMap<String, String>();
 				} else {
 					this.averageCount.clear();
 				}
 
 				if (this.resolutionList == null) {
-					this.resolutionList = new LinkedList();
+					this.resolutionList = new LinkedList<String>();
 				} else {
 					this.resolutionList.clear();
 				}
 
 				if (this.pulseWidthHiResMap == null) {
-					this.pulseWidthHiResMap = new HashMap();
+					this.pulseWidthHiResMap = new HashMap<String, String>();
 				} else {
 					this.pulseWidthHiResMap.clear();
 				}
 
 				if (this.pulseWidthLowResMap == null) {
-					this.pulseWidthLowResMap = new HashMap();
+					this.pulseWidthLowResMap = new HashMap<String, String>();
 				} else {
 					this.pulseWidthLowResMap.clear();
 				}
@@ -789,14 +789,15 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 //					 System.out.println("codename is '" + codename + "', valueis: " + value);
 
 					if (codename.equals(CharacteristicTypeCodenames.TRACE_WAVELENGTH)) {
-						String[] values = value.split("\\s+"); //$NON-NLS-1$
+						final String[] values = value.split("\\s+"); //$NON-NLS-1$
 						Arrays.sort(values, this.comparator);
 						this.waveLengthComboBox.removeAllItems();
-						for (int i = 0; i < values.length; i++)
+						for (int i = 0; i < values.length; i++) {
 							this.waveLengthComboBox.addItem(values[i]);
+						}
 
 					} else if (codename.equals(CharacteristicTypeCodenames.TRACE_RESOLUTION)) {
-						String[] values = value.split("\\s+"); //$NON-NLS-1$
+						final String[] values = value.split("\\s+"); //$NON-NLS-1$
 						Arrays.sort(values, this.comparator);
 						this.resolutionComboBox.removeAllItems();
 						for (int i = 0; i < values.length; i++) {
@@ -827,7 +828,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 							String waveLength = null;
 							String suffix = null;
 							for (int j = 0; j <= matcher.groupCount(); j++) {
-								String substring = codename.substring(matcher.start(j), matcher.end(j));
+								final String substring = codename.substring(matcher.start(j), matcher.end(j));
 								// System.out.println("j:" + j + "\t" +
 								// substring);
 								switch (j) {
@@ -845,7 +846,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 							// Log.debugMessage("ReflectometryTestPanel.setMonitoredElement
 							// | suffix: " + suffix, Log.FINEST);
 							if ((waveLength != null) && (suffix != null)) {
-								Map map = null;
+								Map<String, String> map = null;
 								if (suffix.equals(CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX)) {
 									map = this.traceLength;
 								} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES_SUFFIX)) {
@@ -865,16 +866,16 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					}
 				}
 
-				Object selectedItem = this.waveLengthComboBox.getSelectedItem();
-				String wavelength = selectedItem != null ? this.waveLengthComboBox.getSelectedItem().toString() : null;
+				final Object selectedItem = this.waveLengthComboBox.getSelectedItem();
+				final String wavelength = selectedItem != null ? this.waveLengthComboBox.getSelectedItem().toString() : null;
 				if (wavelength != null) {
 					// System.out.println("wavelength is " + wavelength);
 					if (this.traceLength != null) {
-						String value = (String) this.traceLength.get(wavelength);
-						if (value == null)
-							throw new ObjectNotFoundException(LangModelSchedule
-									.getString("Error.TraceLengthValueNotFound")); //$NON-NLS-1$
-						String[] values = value.split("\\s+"); //$NON-NLS-1$
+						final String value = this.traceLength.get(wavelength);
+						if (value == null) {
+							throw new ObjectNotFoundException(LangModelSchedule.getString("Error.TraceLengthValueNotFound")); //$NON-NLS-1$
+						}
+						final String[] values = value.split("\\s+"); //$NON-NLS-1$
 						Arrays.sort(values, this.comparator);
 						this.maxDistanceComboBox.removeAllItems();
 						for (int i = 0; i < values.length; i++) {
@@ -885,9 +886,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					}
 
 					if (this.pulseWidthHiResMap != null) {
-						String value = (String) this.pulseWidthHiResMap.get(wavelength);
+						final String value = this.pulseWidthHiResMap.get(wavelength);
 						if (value != null) {
-							String[] values = value.split("\\s+"); //$NON-NLS-1$
+							final String[] values = value.split("\\s+"); //$NON-NLS-1$
 							Arrays.sort(values, this.comparator);
 							this.pulseWidthHiResComboBox.removeAllItems();
 							for (int i = 0; i < values.length; i++) {
@@ -903,11 +904,11 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					if (this.pulseWidthLowResMap != null) {
 						// Log.debugMessage("ReflectometryTestPanel.setMonitoredElement
 						// | this.pulseWidthLowResMap != null ", Log.FINEST);
-						String value = (String) this.pulseWidthLowResMap.get(wavelength);
+						final String value = this.pulseWidthLowResMap.get(wavelength);
 						// Log.debugMessage("ReflectometryTestPanel.setMonitoredElement
 						// | pulseWidthLowResMap value: " + value, Log.FINEST);
 						if (value != null) {
-							String[] values = value.split("\\s+"); //$NON-NLS-1$
+							final String[] values = value.split("\\s+"); //$NON-NLS-1$
 							Arrays.sort(values, this.comparator);
 							this.pulseWidthLowResComboBox.removeAllItems();
 							for (int i = 0; i < values.length; i++) {
@@ -921,9 +922,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					}
 
 					if (this.indexOfRefraction != null) {
-						String value = (String) this.indexOfRefraction.get(wavelength);
+						final String value = this.indexOfRefraction.get(wavelength);
 						if (value != null) {
-							String[] values = value.split("\\s+"); //$NON-NLS-1$
+							final String[] values = value.split("\\s+"); //$NON-NLS-1$
 							Arrays.sort(values, this.comparator);
 							this.refractTextField.setText(values[0]);
 						} else {
@@ -934,9 +935,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					}
 
 					if (this.averageCount != null) {
-						String value = (String) this.averageCount.get(wavelength);
+						final String value = this.averageCount.get(wavelength);
 						if (value != null) {
-							String[] values = value.split("\\s+"); //$NON-NLS-1$
+							final String[] values = value.split("\\s+"); //$NON-NLS-1$
 							Arrays.sort(values, this.comparator);
 							this.averageQuantityComboBox.removeAllItems();
 							for (int i = 0; i < values.length; i++) {
@@ -960,52 +961,48 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	synchronized void refreshTestsSet() {
-		
-		if (this.skip)
+		if (this.skip) {
 			return;
+		}
 		
-		Set selectedTestIds = this.schedulerModel.getSelectedTestIds();
+		final Set<Identifier> selectedTestIds = this.schedulerModel.getSelectedTestIds();
 		if (selectedTestIds != null && !selectedTestIds.isEmpty()) {
-			ParameterSet parameterSet = this.getSet();
+			final ParameterSet parameterSet = this.getSet();
 			if (parameterSet.isChanged()) {
 				try {
-					java.util.Set storableObjects = StorableObjectPool.getStorableObjects(selectedTestIds, true);
-					SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-					
+					final Set<Test> storableObjects = StorableObjectPool.getStorableObjects(selectedTestIds, true);
+					final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
+
 					MeasurementSetup measurementSetup1 = null;
-					
-					for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
-						Test test = (Test) iterator.next();
+
+					for (final Test test : storableObjects) {
 						if (test.isChanged()) {
-							java.util.Set measurementSetupIds = test.getMeasurementSetupIds();
+							final Set<Identifier> measurementSetupIds = test.getMeasurementSetupIds();
 							if (measurementSetupIds.size() == 1) {
-								MeasurementSetup measurementSetup = (MeasurementSetup) StorableObjectPool
-										.getStorableObject((Identifier) measurementSetupIds.iterator().next(), true);
+								final MeasurementSetup measurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(measurementSetupIds.iterator().next(),
+										true);
 								if (measurementSetup.isChanged()) {
 									measurementSetup.setParameterSet(parameterSet);
 								} else {
 									Identifier measurementSetupId = null;
 									if (this.unchangedMeasurementSetupNewMap == null) {
-										this.unchangedMeasurementSetupNewMap = new HashMap();
-
+										this.unchangedMeasurementSetupNewMap = new HashMap<Identifier, Identifier>();
 									} else {
-										measurementSetupId = (Identifier) this.unchangedMeasurementSetupNewMap
-												.get(measurementSetup.getId());
+										measurementSetupId = this.unchangedMeasurementSetupNewMap.get(measurementSetup.getId());
 									}
 
 									if (measurementSetupId == null) {
-										measurementSetup1 = MeasurementSetup
-												.createInstance(LoginManager.getUserId(), parameterSet,
-													measurementSetup.getCriteriaSet(), measurementSetup
-															.getThresholdSet(), measurementSetup.getEtalon(),
-													LangModelSchedule.getString("created by Scheduler") + " /"
-															+ sdf.format(new Date()) + "/", measurementSetup
-															.getMeasurementDuration(), measurementSetup
-															.getMonitoredElementIds(), measurementSetup
-															.getMeasurementTypeIds());
+										measurementSetup1 = MeasurementSetup.createInstance(LoginManager.getUserId(),
+												parameterSet,
+												measurementSetup.getCriteriaSet(),
+												measurementSetup.getThresholdSet(),
+												measurementSetup.getEtalon(),
+												LangModelSchedule.getString("created by Scheduler") + " /" + sdf.format(new Date()) + "/",
+												measurementSetup.getMeasurementDuration(),
+												measurementSetup.getMonitoredElementIds(),
+												measurementSetup.getMeasurementTypeIds());
 										measurementSetupId = measurementSetup1.getId();
-										this.unchangedMeasurementSetupNewMap.put(measurementSetup.getId(),
-											measurementSetupId);
+										this.unchangedMeasurementSetupNewMap.put(measurementSetup.getId(), measurementSetupId);
 									}
 
 									test.setMeasurementSetupIds(Collections.singleton(measurementSetupId));
@@ -1018,11 +1015,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 					if (measurementSetup1 != null) {
 						this.skip = true;
-						this.dispatcher
-								.firePropertyChange(new PropertyChangeEvent(
-																			this,
-																			SchedulerModel.COMMAND_ADD_NEW_MEASUREMENT_SETUP,
-																			null, measurementSetup1));
+						this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+								SchedulerModel.COMMAND_ADD_NEW_MEASUREMENT_SETUP,
+								null,
+								measurementSetup1));
 						this.skip = false;
 					}
 				} catch (ApplicationException e) {

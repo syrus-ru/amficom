@@ -819,7 +819,7 @@ public class TestLine extends TimeLine {
 							Collection collection) {
 		// Log.debugMessage("TestLine.getTitle | collection.size() " +
 		// collection.size(), Log.FINEST);
-		TestController testController = TestController.getInstance();
+		final TestController testController = TestController.getInstance();
 		if (!collection.isEmpty()) {
 			for (Iterator it = collection.iterator(); it.hasNext();) {
 				TestTimeItem testTimeItem = (TestTimeItem) it.next();
