@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalItem.java,v 1.14 2005/08/08 11:37:22 arseniy Exp $
+ * $Id: LogicalItem.java,v 1.15 2005/08/09 21:10:10 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,39 +13,37 @@ import java.util.Iterator;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:37:22 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/09 21:10:10 $
  * @author $Author: arseniy $
  * @module filter
  */
 public class LogicalItem extends AbstractItem {
 
-	public static final String	AND				= "AND";
+	public static final String AND = "AND";
 
-	public static final String	CONDITION		= "Condition";
+	public static final String CONDITION = "Condition";
 
-	public static final String	OR				= "OR";
+	public static final String OR = "OR";
 
-	public static final String	ROOT			= "Result";
+	public static final String ROOT = "Result";
 
-	private static int			andCount		= 0;
+	private static int andCount = 0;
 
-	private static int			orCount			= 0;
+	private static int orCount = 0;
 
-	private int					maxChildrenCount;
+	private int maxChildrenCount;
 
-	private int					maxParentCount;
+	private int maxParentCount;
 
-	private int					minChildrenCount;
+	private int minChildrenCount;
 
-	private String				name;
+	private String name;
 
-	private String				type;
-	
-	private StorableObjectCondition	condition;
+	private String type;
 
-	
+	private StorableObjectCondition condition;
 
-	public LogicalItem(String sort) {
+	public LogicalItem(final String sort) {
 		if (sort.equals(OR)) {
 			this.type = OR;
 			this.name = OR + orCount++;
@@ -65,49 +63,45 @@ public class LogicalItem extends AbstractItem {
 			this.minChildrenCount = 1;
 			this.maxParentCount = 0;
 		} else {
-			throw new UnsupportedOperationException(
-					"LogicalItem.<init> | Operation " + sort
-							+ " is not supported.");
+			throw new UnsupportedOperationException("LogicalItem.<init> | Operation " + sort + " is not supported.");
 		}
 	}
 
-	public LogicalItem(String name, StorableObjectCondition condition) {
-			this.type = CONDITION;
-			this.maxChildrenCount = 0;
-			this.minChildrenCount = 0;
-			this.maxParentCount = 1;
-			this.name = name;
-			this.condition = condition;
+	public LogicalItem(final String name, final StorableObjectCondition condition) {
+		this.type = CONDITION;
+		this.maxChildrenCount = 0;
+		this.minChildrenCount = 0;
+		this.maxParentCount = 1;
+		this.name = name;
+		this.condition = condition;
 	}
-	
+
 	public boolean isService() {
 		return false;
 	}
-	
+
 	public boolean canHaveParent() {
 		return !this.type.equals(ROOT);
-	}	
-	
-	public boolean canHaveChildren() {		
+	}
+
+	public boolean canHaveChildren() {
 		return (this.type.equals(ROOT) || this.type.equals(OR) || this.type.equals(AND));
 	}
 
-	public void setCondition(StorableObjectCondition condition) {
+	public void setCondition(final StorableObjectCondition condition) {
 		this.condition = condition;
 	}
-	
-	public void childClone(LogicalItem currentParentItem,
-			LogicalItem newParentItem) {
-		for (Iterator iter = currentParentItem.getChildren().iterator(); iter
-				.hasNext();) {
-			LogicalItem item = (LogicalItem) iter.next();
-			String itemType = item.getType();
+
+	public void childClone(final LogicalItem currentParentItem, final LogicalItem newParentItem) {
+		for (final Iterator<Item> iter = currentParentItem.getChildren().iterator(); iter.hasNext();) {
+			final LogicalItem item = (LogicalItem) iter.next();
+			final String itemType = item.getType();
 			if (itemType.equals(OR) || itemType.equals(AND)) {
-				LogicalItem newItem = new LogicalItem(item.getType());
+				final LogicalItem newItem = new LogicalItem(item.getType());
 				newParentItem.addChild(newItem);
-				childClone(item, newItem);
+				this.childClone(item, newItem);
 			} else if (itemType.equals(CONDITION)) {
-				LogicalItem newItem = new LogicalItem(item.getName(), item.getCondition());
+				final LogicalItem newItem = new LogicalItem(item.getName(), item.getCondition());
 				newParentItem.addChild(newItem);
 			} else {
 				System.err.println("LogicalItem.childClone() | wrong type");
@@ -115,23 +109,25 @@ public class LogicalItem extends AbstractItem {
 		}
 	}
 
-
 	public String getType() {
 		return this.type;
 	}
 
+	@Override
 	public Object clone() {
-		String type1 = this.getType();
-		if(type1.equals(CONDITION))
-			return new LogicalItem(this.getName(),this.getCondition());
-		LogicalItem newItem = new LogicalItem(this.getType());
-		childClone(this, newItem);
+		final String type1 = this.getType();
+		if (type1.equals(CONDITION)) {
+			return new LogicalItem(this.getName(), this.getCondition());
+		}
+		final LogicalItem newItem = new LogicalItem(this.getType());
+		this.childClone(this, newItem);
 		return newItem;
 	}
 
 	public int getChildrenCount() {
-		if (this.children == null)
+		if (this.children == null) {
 			return 0;
+		}
 		return this.children.size();
 	}
 
@@ -151,7 +147,7 @@ public class LogicalItem extends AbstractItem {
 		return this.name;
 	}
 	
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 

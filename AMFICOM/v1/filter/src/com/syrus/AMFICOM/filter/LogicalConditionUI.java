@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalConditionUI.java,v 1.18 2005/08/08 11:37:22 arseniy Exp $
+ * $Id: LogicalConditionUI.java,v 1.19 2005/08/09 21:10:10 arseniy Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.logic.Populatable;
 import com.syrus.AMFICOM.logic.ServiceItem;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/08 11:37:22 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/09 21:10:10 $
  * @author $Author: arseniy $
  * @module filter
  */
@@ -191,6 +191,7 @@ public class LogicalConditionUI {
 					
 					new Thread() {
 						int i = 0;
+						@Override
 						public void run() {
 							while (true) {		
 								String oldName = result.getName();

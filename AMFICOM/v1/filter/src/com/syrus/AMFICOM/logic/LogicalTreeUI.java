@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.21 2005/08/09 19:41:15 arseniy Exp $
+ * $Id: LogicalTreeUI.java,v 1.22 2005/08/09 21:10:10 arseniy Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/08/09 19:41:15 $
+ * @version $Revision: 1.22 $, $Date: 2005/08/09 21:10:10 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module filter
@@ -254,6 +254,8 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 	}
 
 	public class ItemTransferHandler extends TransferHandler {
+		private static final long serialVersionUID = -6467895288656251393L;
+
 		DataFlavor flavor;
 
 		public ItemTransferHandler() {
@@ -292,9 +294,9 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 				this.data = alist;
 			}
 
-			public Object getTransferData(DataFlavor flavor) throws UnsupportedFlavorException {
-				if (!isDataFlavorSupported(flavor)) {
-					throw new UnsupportedFlavorException(flavor);
+			public Object getTransferData(DataFlavor flavor1) throws UnsupportedFlavorException {
+				if (!isDataFlavorSupported(flavor1)) {
+					throw new UnsupportedFlavorException(flavor1);
 				}
 				return this.data;
 			}

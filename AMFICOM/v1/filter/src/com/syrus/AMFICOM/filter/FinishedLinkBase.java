@@ -1,5 +1,5 @@
 /*
- * $Id: FinishedLinkBase.java,v 1.3 2005/08/08 11:37:22 arseniy Exp $
+ * $Id: FinishedLinkBase.java,v 1.4 2005/08/09 21:10:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,11 +9,10 @@
 package com.syrus.AMFICOM.filter;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/08 11:37:22 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/09 21:10:10 $
  * @module filter
  */
-public class FinishedLinkBase extends ProSchemeElementBase
-{
+public class FinishedLinkBase extends ProSchemeElementBase {
 	/**
 	 * Value: {@value}
 	 */
@@ -22,51 +21,46 @@ public class FinishedLinkBase extends ProSchemeElementBase
 	public ElementsActiveZoneBase az1 = null;
 	public ElementsActiveZoneBase az2 = null;
 
-	public FinishedLinkBase(ElementsActiveZoneBase az1, ElementsActiveZoneBase az2)
-	{
+	public FinishedLinkBase(final ElementsActiveZoneBase az1, final ElementsActiveZoneBase az2) {
 		this.az1 = az1;
 		this.az2 = az2;
 	}
 
-	public String getTyp()
-	{
+	@Override
+	public String getTyp() {
 		return TYP;
 	}
 
-	public boolean tryToSelect(int xs, int ys)
-	{
-		int x1 = this.az1.owner.x + this.az1.x + this.az1.size / 2;
-		int y1 = this.az1.owner.y + this.az1.y + this.az1.size / 2;
-		int x2 = this.az2.owner.x + this.az2.x + this.az2.size / 2;
-		int y2 = this.az2.owner.y + this.az2.y + this.az2.size / 2;
+	public boolean tryToSelect(final int xs, final int ys) {
+		final int x1 = this.az1.owner.x + this.az1.x + this.az1.size / 2;
+		final int y1 = this.az1.owner.y + this.az1.y + this.az1.size / 2;
+		final int x2 = this.az2.owner.x + this.az2.x + this.az2.size / 2;
+		final int y2 = this.az2.owner.y + this.az2.y + this.az2.size / 2;
 
-// Проверяем лежит ли точка между двумя заданными
-		if ((((xs - x1) * (xs - x2)) <= 0) &&
-			(((ys - y1) * (ys - y2)) <= 0))
-		{
-			if ((y1 - 2 <= ys) &&
-				(ys <= y1 + 2) &&
-				(y2 - 2 <= ys) &&
-				(ys <= y2 + 2))
+		// Проверяем лежит ли точка между двумя заданными
+		if ((((xs - x1) * (xs - x2)) <= 0) && (((ys - y1) * (ys - y2)) <= 0)) {
+			if ((y1 - 2 <= ys) && (ys <= y1 + 2) && (y2 - 2 <= ys) && (ys <= y2 + 2)) {
 				return true;
+			}
 
-			if ((x1 - 2 <= xs) &&
-				(xs <= x1 + 2) &&
-				(x2 - 2 <= xs) &&
-				(xs <= x2 + 2))
+			if ((x1 - 2 <= xs) && (xs <= x1 + 2) && (x2 - 2 <= xs) && (xs <= x2 + 2)) {
 				return true;
+			}
 
-			if (y1 == y2)
+			if (y1 == y2) {
 				return false;
+			}
 
-			if (x1 == x2)
+			if (x1 == x2) {
 				return false;
+			}
 
-			float val1 = (float) (xs - x1) / (x2 - x1);
-			float val2 = (float) (ys - y1) / (y2 - y1);
+			final float val1 = (float) (xs - x1) / (x2 - x1);
+			final float val2 = (float) (ys - y1) / (y2 - y1);
 
-			if (Math.abs(val1 - val2) < 0.2)
+			if (Math.abs(val1 - val2) < 0.2) {
 				return true;
+			}
 		}
 
 		return false;
