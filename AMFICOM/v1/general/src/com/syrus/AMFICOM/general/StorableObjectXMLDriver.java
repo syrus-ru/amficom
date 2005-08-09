@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.29 2005/08/08 11:27:26 arseniy Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.30 2005/08/09 12:24:46 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,6 @@ import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.lang.reflect.InvocationTargetException;
-import java.lang.reflect.Method;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
@@ -22,7 +20,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 import javax.xml.parsers.DocumentBuilder;
 import javax.xml.parsers.DocumentBuilderFactory;
@@ -53,8 +50,8 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.29 $, $Date: 2005/08/08 11:27:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/08/09 12:24:46 $
+ * @author $Author: bob $
  * @module general
  */
 public class StorableObjectXMLDriver {
@@ -124,50 +121,14 @@ public class StorableObjectXMLDriver {
 	}
 
 	private StorableObject reflectStorableObject(final Identifier id) throws IllegalDataException {
-		StorableObject storableObject = null;
-		final String className = ObjectGroupEntities.getPackageName(id.getMajor()) + "."
-				+ ObjectGroupEntities.getGroupName(id.getMajor()).replaceAll("Group$", "") + "StorableObjectPool";
+		StorableObject storableObject;
 		try {
-			Log.debugMessage("StorableObjectXMLDriver.reflectStorableObject | className " + className, Level.INFO);
-			final Class clazz = Class.forName(className);
-			Log.debugMessage("StorableObjectXMLDriver.reflectStorableObject | className " + clazz.getName(), Level.INFO);
-			Method method = clazz.getMethod("getStorableObject", new Class[] { Identifier.class, boolean.class});
-			storableObject = (StorableObject) method.invoke(null, new Object[] { id, Boolean.TRUE});
-			Log.debugMessage("StorableObjectXMLDriver.reflectStorableObject | id "
-					+ storableObject.getId().getIdentifierString(), Level.INFO);
-
-		} catch (ClassNotFoundException e) {
-			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Class " + className
-					+ " not found on the classpath - " + e.getMessage());
-		} catch (SecurityException e) {
-			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Caught SecurityException "
-					+ e.getMessage());
-		} catch (NoSuchMethodException e) {
-			throw new IllegalDataException("StorableObjectXMLDriver.reflectStorableObject | Class " + className
-					+ " haven't getStorableObject static method - " + e.getMessage());
-		} catch (IllegalArgumentException e) {
+			storableObject = StorableObjectPool.getStorableObject(id, true);
+		} catch (ApplicationException e1) {
 			throw new IllegalDataException(
-											"StorableObjectXMLDriver.reflectStorableObject | Caught IllegalArgumentException "
-													+ e.getMessage());
-		} catch (IllegalAccessException e) {
-			throw new IllegalDataException(
-											"StorableObjectXMLDriver.reflectStorableObject | Caught IllegalAccessException "
-													+ e.getMessage());
-		} catch (InvocationTargetException e) {
-			final Throwable cause = e.getCause();
-			if (cause instanceof AssertionError) {
-				final String message = cause.getMessage();
-				if (message == null)
-					assert false;
-				else
-					assert false: message;
-			} else		{
-				Throwable targetException = e.getTargetException();
-				throw new IllegalDataException(
-												"StorableObjectXMLDriver.reflectStorableObject | Caught InvocationTargetException "
-														+ targetException.getMessage(), targetException);
-			}
-		}
+				"StorableObjectXMLDriver.reflectStorableObject | Caught ApplicationException "
+						+ e1.getMessage());
+		}		
 		return storableObject;
 	}
 
