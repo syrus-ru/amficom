@@ -4,89 +4,99 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ConditionWrapper;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.newFilter.ConditionKey;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:41:00 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/09 20:34:31 $
  * @author $Author: arseniy $
  * @module filterclient
  */
 public class AnalysisTypeConditionWrapper implements ConditionWrapper {
-	
+
 	private static short entityCode = ObjectEntities.ANALYSIS_TYPE_CODE;
-	
-	private ArrayList parameterTypes;
-	private ArrayList measurementTypes;
-	
-	private Map keyLinkedNames = new HashMap();
-	private Map storableObjectInitialName = new HashMap();
-	
+
+	private ArrayList<ParameterType> parameterTypes;
+	private ArrayList<MeasurementType> measurementTypes;
+
+	private Map<String, String[]> keyLinkedNames = new HashMap<String, String[]>();
+	private Map<Identifier, String> storableObjectInitialName = new HashMap<Identifier, String>();
+
 	private static final String PARAM = "filter by parameter types";
 	private static final String MT = "filter by measurement types";
-	
-	private static String[] keys = {PARAM, MT};
-	private static String[] keyNames = {PARAM, MT};
-	private static byte[] keyTypes = {ConditionWrapper.LIST, ConditionWrapper.LIST};
-	
-	public AnalysisTypeConditionWrapper(Collection initialAnalysisTypes,
-			Collection parameterTypes, Collection measurementTypes) {
-		this.parameterTypes = new ArrayList(parameterTypes);
-		this.measurementTypes = new ArrayList(measurementTypes);
-		
-		for (Iterator iter = initialAnalysisTypes.iterator(); iter.hasNext();) {
-			AnalysisType analysisType = (AnalysisType) iter.next();
-			this.storableObjectInitialName.put(analysisType, analysisType.getDescription());
+
+	private static String[] keys = { PARAM, MT };
+	private static String[] keyNames = { PARAM, MT };
+	private static byte[] keyTypes = { ConditionWrapper.LIST, ConditionWrapper.LIST };
+
+	public AnalysisTypeConditionWrapper(final Set<AnalysisType> initialAnalysisTypes,
+			final Set<ParameterType> parameterTypes,
+			final Set<MeasurementType> measurementTypes) {
+		this.parameterTypes = new ArrayList<ParameterType>(parameterTypes);
+		this.measurementTypes = new ArrayList<MeasurementType>(measurementTypes);
+
+		for (final AnalysisType analysisType : initialAnalysisTypes) {
+			this.storableObjectInitialName.put(analysisType.getId(), analysisType.getDescription());
 		}
-		
-		String[] paramNames = new String[this.parameterTypes.size()];
-		int i=0;
-		for (Iterator iter = this.parameterTypes.iterator(); iter.hasNext();i++) {
-			ParameterType pt = (ParameterType) iter.next();
-			paramNames[i] = pt.getName();
+
+		final String[] paramNames = new String[this.parameterTypes.size()];
+		int i = 0;
+		for (final ParameterType parameterType : this.parameterTypes) {
+			paramNames[i] = parameterType.getName();
 		}
 		this.keyLinkedNames.put(keys[0], paramNames);
-		
-		String[] mtNames = new String[this.measurementTypes.size()];
-		i=0;
-		for (Iterator iter = this.measurementTypes.iterator(); iter.hasNext();i++) {
-			MeasurementType mt = (MeasurementType) iter.next();
-			mtNames[i] = mt.getDescription();			
+
+		final String[] mtNames = new String[this.measurementTypes.size()];
+		i = 0;
+		for (final MeasurementType measurementType : this.measurementTypes) {
+			mtNames[i] = measurementType.getDescription();
 		}
 		this.keyLinkedNames.put(keys[1], mtNames);
 	}
-	
+
 	public String[] getLinkedNames(String key) {
-		return (String[]) this.keyLinkedNames.get(key);
+		return this.keyLinkedNames.get(key);
 	}
-	
-	public Collection getInitialEntities() {
+
+	public Set<Identifier> getInitialEntities() {
 		return this.storableObjectInitialName.keySet();
 	}
-	
-	public String getInitialName(StorableObject storableObject) {
-		return (String) this.storableObjectInitialName.get(storableObject);		
+
+	public String getInitialName(final Identifier id) {
+		return this.storableObjectInitialName.get(id);
 	}
-	
-	public Collection getKeys() {return Collections.EMPTY_LIST;}
-	public String[] getKeyNames() {return keyNames;}
-	public short getEntityCode() {return entityCode;}
-	public byte[] getTypes() {return keyTypes;}
-	
-	public Object getLinkedObject(String key, int indexNumber) throws IllegalDataException {
+
+	public Collection<ConditionKey> getKeys() {
+		return Collections.emptyList();
+	}
+
+	public String[] getKeyNames() {
+		return keyNames;
+	}
+
+	public short getEntityCode() {
+		return entityCode;
+	}
+
+	public byte[] getTypes() {
+		return keyTypes;
+	}
+
+	public Object getLinkedObject(final String key, final int indexNumber) throws IllegalDataException {
 		if (key.equals(keys[0])) {
-			return ((ParameterType)this.parameterTypes.get(indexNumber)).getId();
+			return this.parameterTypes.get(indexNumber).getId();
 		} else if (key.equals(keys[1])) {
-			return ((MeasurementType)this.measurementTypes.get(indexNumber)).getId();
-		} else { 
+			return this.measurementTypes.get(indexNumber).getId();
+		} else {
 			throw new IllegalDataException("AnalysisTypeConditionWrapper.getLinkedObject | Wrong key");
 		}
 	}
