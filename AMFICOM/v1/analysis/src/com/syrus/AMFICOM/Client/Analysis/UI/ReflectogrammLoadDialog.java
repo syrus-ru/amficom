@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogrammLoadDialog.java,v 1.26 2005/08/08 11:59:52 arseniy Exp $
+ * $Id: ReflectogrammLoadDialog.java,v 1.27 2005/08/09 21:20:35 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,29 +52,29 @@ import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/08/08 11:59:52 $
+ * @version $Revision: 1.27 $, $Date: 2005/08/09 21:20:35 $
  * @author $Author: arseniy $
  * @module analysis
  */
 public class ReflectogrammLoadDialog extends JDialog {
 	private static final long serialVersionUID = 3544388106469259320L;
 
-	JButton						okButton;
-	Result						result;
-	int							resultCode		= JOptionPane.CANCEL_OPTION;
-	JScrollPane					scrollPane		= new JScrollPane();
+	JButton okButton;
+	Result result;
+	int resultCode = JOptionPane.CANCEL_OPTION;
+	JScrollPane scrollPane = new JScrollPane();
 
-	private ApplicationContext	aContext;
-	private Identifier			domainId;
+	private ApplicationContext aContext;
+	private Identifier domainId;
 
-	private JButton				cancelButton;
-	private JButton				updateButton	= new JButton();
-	
+	private JButton cancelButton;
+	private JButton updateButton = new JButton();
+
 	ResultChildrenFactory childrenFactory;
 	PopulatableIconedNode rootItem;
 	LogicalTreeUI treeUI;
 
-	public ReflectogrammLoadDialog(ApplicationContext aContext) {
+	public ReflectogrammLoadDialog(final ApplicationContext aContext) {
 		super(Environment.getActiveWindow());
 		this.aContext = aContext;
 		this.domainId = LoginManager.getDomainId();
@@ -84,15 +84,15 @@ public class ReflectogrammLoadDialog extends JDialog {
 		setTitle(LangModelAnalyse.getString("trace"));
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		{
-			int width = (int) (screenSize.getWidth() / 3);
-			int height = (int) (2 * screenSize.getHeight() / 3);
+			final int width = (int) (screenSize.getWidth() / 3);
+			final int height = (int) (2 * screenSize.getHeight() / 3);
 			this.setSize(width, height);
-			setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2);
+			this.setLocation((screenSize.width - width) / 2, (screenSize.height - height) / 2);
 		}
 
 		this.setResizable(true);
 
-		JPanel ocPanel = new JPanel();
+		final JPanel ocPanel = new JPanel();
 		ocPanel.setLayout(new FlowLayout());
 
 		this.okButton = new JButton();
@@ -100,7 +100,7 @@ public class ReflectogrammLoadDialog extends JDialog {
 		this.okButton.setEnabled(false);
 		this.okButton.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				ReflectogrammLoadDialog.this.resultCode = JOptionPane.OK_OPTION;
 				ReflectogrammLoadDialog.this.dispose();
 			}
@@ -109,7 +109,7 @@ public class ReflectogrammLoadDialog extends JDialog {
 		this.cancelButton.setText(LangModelAnalyse.getString("cancelButton"));
 		this.cancelButton.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				ReflectogrammLoadDialog.this.resultCode = JOptionPane.CANCEL_OPTION;
 				ReflectogrammLoadDialog.this.dispose();
 
@@ -119,7 +119,7 @@ public class ReflectogrammLoadDialog extends JDialog {
 		this.updateButton.setText(LangModelAnalyse.getString("refreshButton"));
 		this.updateButton.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {		
+			public void actionPerformed(final ActionEvent e) {		
 					
 				// XXX no need to refresh pool? //Stas
 				/*try {
@@ -130,8 +130,8 @@ public class ReflectogrammLoadDialog extends JDialog {
 					}*/
 						
 //				ReflectogrammLoadDialog.this.setTree();
-				TreePath selectedPath = ReflectogrammLoadDialog.this.treeUI.getTree().getSelectionModel().getSelectionPath();
-				PopulatableIconedNode itemToRefresh = selectedPath != null 
+				final TreePath selectedPath = ReflectogrammLoadDialog.this.treeUI.getTree().getSelectionModel().getSelectionPath();
+				final PopulatableIconedNode itemToRefresh = selectedPath != null 
 						? (PopulatableIconedNode)selectedPath.getLastPathComponent()
 						: ReflectogrammLoadDialog.this.rootItem;
 				
@@ -153,38 +153,39 @@ public class ReflectogrammLoadDialog extends JDialog {
 
 		this.getContentPane().add(ocPanel, BorderLayout.SOUTH);
 	}
-	
-	void updateRecursively(Item item) {
+
+	void updateRecursively(final Item item) {
 		if (item instanceof Populatable) {
-			Populatable populatable = (Populatable)item;
-			if (populatable.isPopulated())
+			final Populatable populatable = (Populatable) item;
+			if (populatable.isPopulated()) {
 				populatable.populate();
-			for (Iterator it = item.getChildren().iterator(); it.hasNext();)
-				updateRecursively((Item)it.next());
+			}
+			for (final Item item2 : item.getChildren()) {
+				this.updateRecursively(item2);
+			}
 		}
 	}
 
 	@Override
-	public void setVisible(boolean key) {
-		if (!this.domainId.equals(LoginManager.getDomainId()))
+	public void setVisible(final boolean key) {
+		if (!this.domainId.equals(LoginManager.getDomainId())) {
 			this.setTree();
+		}
 		super.setVisible(key);
 	}
 
 	void setTree() {
 		this.domainId = LoginManager.getDomainId();
 
-		
 //		getContentPane().remove(scrollPane);
-	
-			
+
 		try {
 			if (this.rootItem == null) {
-				Domain domain = (Domain)StorableObjectPool.getStorableObject(this.domainId, true);
+				final Domain domain = (Domain)StorableObjectPool.getStorableObject(this.domainId, true);
 
 //				childrenFactory = ArchiveChildrenFactory.getInstance();
 				this.childrenFactory = new ResultChildrenFactory();
-				this.rootItem = (PopulatableIconedNode)this.childrenFactory.getRoot();
+				this.rootItem = this.childrenFactory.getRoot();
 				this.rootItem.setObject(ArchiveChildrenFactory.ROOT);
 				this.rootItem.setName(LangModelAnalyse.getString("Archive"));
 				this.rootItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
@@ -195,11 +196,10 @@ public class ReflectogrammLoadDialog extends JDialog {
 				this.scrollPane.getViewport().add(this.treeUI.getTree(), null);
 				this.treeUI.addSelectionListener(new SelectionListener() {
 
-					public void selectedItems(Collection items) {
+					public void selectedItems(final Collection<Item> items) {
 						if (!items.isEmpty()) {
-							for (Iterator it = items.iterator(); it.hasNext();) {
-								Item item = (Item) it.next();
-								Object object = item.getObject();
+							for (final Item item : items) {
+								final Object object = item.getObject();
 								if (object instanceof Result) {
 									ReflectogrammLoadDialog.this.okButton.setEnabled(true);
 									ReflectogrammLoadDialog.this.result = (Result) object;
@@ -234,21 +234,23 @@ public class ReflectogrammLoadDialog extends JDialog {
 	public BellcoreStructure getBellcoreStructure() {
 		BellcoreStructure bs = null;
 
-		if (this.result == null)
+		if (this.result == null) {
 			return null;
+		}
 
-		Parameter[] parameters = this.result.getParameters();
+		final Parameter[] parameters = this.result.getParameters();
 		for (int i = 0; i < parameters.length; i++) {
-			Parameter param = parameters[i];
-			ParameterType type = (ParameterType) param.getType();
-			if (type.getCodename().equals(ParameterTypeCodename.REFLECTOGRAMMA.stringValue()))
+			final Parameter param = parameters[i];
+			final ParameterType type = (ParameterType) param.getType();
+			if (type.getCodename().equals(ParameterTypeCodename.REFLECTOGRAMMA.stringValue())) {
 				bs = new BellcoreReader().getData(param.getValue());
+			}
 		}
 
 		try {
 			if (AnalysisUtil.hasMeasurementByResult(this.result)) {
-				Measurement measurement = AnalysisUtil.getMeasurementByResult(this.result);
-				Test test = (Test) StorableObjectPool.getStorableObject(measurement.getTestId(), true);
+				final Measurement measurement = AnalysisUtil.getMeasurementByResult(this.result);
+				final Test test = (Test) StorableObjectPool.getStorableObject(measurement.getTestId(), true);
 				bs.monitoredElementId = test.getMonitoredElement().getId().getIdentifierString();
 				bs.title = test.getDescription();
 			}
