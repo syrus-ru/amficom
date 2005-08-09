@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.43 2005/08/08 15:21:14 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.44 2005/08/09 11:04:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.43 $, $Date: 2005/08/08 15:21:14 $
+ * @version $Revision: 1.44 $, $Date: 2005/08/09 11:04:18 $
  * @module mapviewclient_v1
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -207,10 +207,11 @@ public final class LinkTypeController extends AbstractLinkController {
 			PhysicalLinkType linkType,
 			CharacteristicType cType) {
 		try {
-			long d = System.currentTimeMillis();
+			long d = System.nanoTime();
 			Set<Characteristic> characteristics = linkType.getCharacteristics(false);
-			long f = System.currentTimeMillis();
-			Log.debugMessage("linkType.getCharacteristics() at " + (f - d) + " ms", Level.INFO);
+			long f = System.nanoTime();
+			MapViewController.addTime4(f - d);
+//			Log.debugMessage("linkType.getCharacteristics() at " + (f - d) + " ns", Level.INFO);
 			for(Iterator it = characteristics.iterator(); it.hasNext();) {
 				Characteristic ch = (Characteristic )it.next();
 				if(ch.getType().equals(cType))
@@ -555,7 +556,13 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @throws ApplicationException 
 	 */
 	public static PhysicalLinkType getPhysicalLinkType(
-			String codename) throws ApplicationException
+			String codename) throws ApplicationException {
+		return getPhysicalLinkType(codename, false);
+	}
+
+	static PhysicalLinkType getPhysicalLinkType(
+			String codename,
+			boolean useLoader) throws ApplicationException
 	{
 		StorableObjectCondition pTypeCondition = new TypicalCondition(
 				codename, 
@@ -564,7 +571,7 @@ public final class LinkTypeController extends AbstractLinkController {
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		Collection pTypes =
-			StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, useLoader);
 		for (Iterator it = pTypes.iterator(); it.hasNext();)
 		{
 			PhysicalLinkType type = (PhysicalLinkType )it.next();
@@ -590,7 +597,7 @@ public final class LinkTypeController extends AbstractLinkController {
 			String codename,
 			boolean topological) throws ApplicationException
 	{
-		PhysicalLinkType type = getPhysicalLinkType(codename);
+		PhysicalLinkType type = getPhysicalLinkType(codename, true);
 		if(type == null) {
 			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
 
@@ -618,13 +625,22 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @return список типов линий &lt;{@link PhysicalLinkType}&gt;
 	 */
 	public static Collection getTopologicalLinkTypes() {
+		Collection list = null;
+
 		StorableObjectCondition pTypeCondition = new EquivalentCondition(
 				ObjectEntities.PHYSICALLINK_TYPE_CODE);
 
-		Collection list = null;
+		//todo getTopologicalLinkTypes should get only included libraries
+//		Set<Identifier> libIds = new HashSet<Identifier>();
+//		for(Iterator iter = map.getMapLibraries().iterator(); iter.hasNext();) {
+//			MapLibrary library = (MapLibrary )iter.next();
+//			libIds.add(library.getId());
+//		}
+//		
+//		StorableObjectCondition pTypeCondition = new LinkedIdsCondition(libIds, PHYSICALLINK_TYPE_CODE);
 		try {
 			list =
-				StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+				StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, false);
 
 			list.remove(getUnboundPhysicalLinkType());
 
@@ -648,7 +664,7 @@ public final class LinkTypeController extends AbstractLinkController {
 	 */
 	public static PhysicalLinkType getDefaultPhysicalLinkType() throws ApplicationException
 	{
-		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_TUNNEL);
+		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_TUNNEL, false);
 	}
 
 	/**
@@ -658,6 +674,6 @@ public final class LinkTypeController extends AbstractLinkController {
 	 */
 	public static PhysicalLinkType getUnboundPhysicalLinkType() throws ApplicationException
 	{
-		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_UNBOUND);
+		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_UNBOUND, false);
 	}
 }
