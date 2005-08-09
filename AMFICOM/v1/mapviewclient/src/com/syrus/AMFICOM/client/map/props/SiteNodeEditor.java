@@ -6,6 +6,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.logging.Level;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -28,6 +29,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.util.Log;
 
 public class SiteNodeEditor extends DefaultStorableObjectEditor {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
@@ -396,7 +398,10 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.site.getName());
 
+			long d = System.currentTimeMillis();
 			Collection types = NodeTypeController.getTopologicalNodeTypes();
+			long f = System.currentTimeMillis();
+			Log.debugMessage("SiteNodeEditor::NodeTypeController.getTopologicalNodeTypes() -------- " + (f - d) + " ms ---------", Level.INFO);
 
 			this.typeComboBox.setEnabled(true);
 			this.typeComboBox.addElements(types);

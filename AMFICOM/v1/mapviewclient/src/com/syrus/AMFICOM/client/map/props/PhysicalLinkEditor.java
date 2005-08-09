@@ -7,6 +7,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.logging.Level;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -31,6 +32,7 @@ import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.util.Log;
 
 public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 	PhysicalLink link;
@@ -526,7 +528,10 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 			
 			this.topologicalLengthTextField.setText(String.valueOf(this.link.getLengthLt()));
 
+			long d = System.currentTimeMillis();
 			Collection types = LinkTypeController.getTopologicalLinkTypes();
+			long f = System.currentTimeMillis();
+			Log.debugMessage("SiteNodeEditor::LinkTypeController.getTopologicalLinkTypes() -------- " + (f - d) + " ms ---------", Level.INFO);
 			
 			this.typeComboBox.setEnabled(true);
 			this.typeComboBox.addElements(types);
