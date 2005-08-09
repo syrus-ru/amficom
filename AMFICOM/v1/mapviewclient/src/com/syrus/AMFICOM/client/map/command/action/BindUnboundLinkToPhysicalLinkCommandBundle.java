@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.19 2005/07/24 12:41:05 krupenn Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.20 2005/08/09 14:54:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,8 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
@@ -31,7 +33,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/07/24 12:41:05 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/09 14:54:38 $
  * @module mapviewclient_v1 
  */
 public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommandBundle
@@ -65,6 +67,14 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 
 		try
 		{
+			List endNodesList = new ArrayList(2);
+			endNodesList.add(unbound.getStartNode());
+			endNodesList.add(unbound.getEndNode());
+			if(! (endNodesList.contains(link.getStartNode())
+					&& endNodesList.contains(link.getEndNode()))) {
+				setResult(RESULT_NO);
+				return;
+			}
 			MapView mapView = this.logicalNetLayer.getMapView();
 			this.map = mapView.getMap();
 			// удаляется непривязанная линия
@@ -81,6 +91,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 
 			this.link.getBinding().add(cablePath);
 			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
+			setResult(Command.RESULT_OK);
 		}
 		catch(Throwable e)
 		{
