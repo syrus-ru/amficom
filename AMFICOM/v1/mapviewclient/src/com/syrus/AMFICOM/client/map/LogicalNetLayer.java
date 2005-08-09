@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.106 2005/08/05 07:37:10 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.107 2005/08/09 11:02:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.106 $, $Date: 2005/08/05 07:37:10 $
+ * @version $Revision: 1.107 $, $Date: 2005/08/09 11:02:24 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer
@@ -1127,7 +1127,7 @@ public final class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.106 $, $Date: 2005/08/05 07:37:10 $
+	 * @version $Revision: 1.107 $, $Date: 2005/08/09 11:02:24 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1193,6 +1193,8 @@ public final class LogicalNetLayer
 		MapViewController.nullTime4();
 		MapViewController.nullTime5();
 		MapViewController.nullTime6();
+		MapViewController.nullTime7();
+		MapViewController.nullTime8();
 
 		long startTime = System.currentTimeMillis();
 		this.visualElements.clear();
@@ -1286,6 +1288,7 @@ public final class LogicalNetLayer
 				+ "			" + MapViewController.getTime2() + " ms (searchLinksForNodes)\n"
 				+ "			" + MapViewController.getTime3() + " ms (fill Calculated maps)\n"
 				+ "			" + MapViewController.getTime4() + " ms (create VisualElements)\n"
+				+ "			" + MapViewController.getTime6() + " ns (getCharacteristics)\n"
 				+ "			" + MapViewController.getTime5() + " ms (calculate distance)\n",
 				Level.INFO);
 	}
@@ -1452,7 +1455,6 @@ public final class LogicalNetLayer
 		if (nodesCalculated.get(nodeProcessed).booleanValue()
 			||	(allLinksForNodeProcessed.size() == 1 
 					&& allLinksForNodeProcessed.contains(incomingLink)) ) {
-			long t1 = System.currentTimeMillis();
 			//Первое условие останова - данный узел уже рассматривался или
 			//является конечным в цепочке.
 			//Создаём элемент отображения и выходим.
@@ -1462,6 +1464,7 @@ public final class LogicalNetLayer
 			nodesCalculated.put(nodeProcessed, Boolean.TRUE);
 			
 			VisualMapElement visualMapElement;
+			long t1 = System.currentTimeMillis();
 			if (lastNode == nodeToPullFrom) {
 				//Если последний "натягиваемый" отображаемый элемент состоит из одного
 				//линка - его и отображаем
@@ -1475,11 +1478,12 @@ public final class LogicalNetLayer
 			else {
 				visualMapElement = new VisualMapElement(nodeToPullFrom, nodeProcessed, color, stroke);
 			}
+			long t2 = System.currentTimeMillis();
+			MapViewController.addTime4(t2 - t1);
+
 			this.visualElements.add(visualMapElement);
 			this.visualElements.add(nodeToPullFrom);
 			this.visualElements.add(nodeProcessed);
-			long t2 = System.currentTimeMillis();
-			MapViewController.addTime4(t2 - t1);
 			return;
 		}
 
@@ -1501,11 +1505,11 @@ public final class LogicalNetLayer
 			//Второе условие останова - получили цепочку длиннее критической
 			//длины - рекурсия останавливается, но ПРЕДПОСЛЕДНИЙ
 			//узел цепочки ставится во фронт волны.
-			long t1 = System.currentTimeMillis();
 			
 			VisualMapElement visualMapElement;
 			AbstractNode lastVMENode;
 			if (lastNode == nodeToPullFrom) {
+				long t1 = System.currentTimeMillis();
 				//Если "натягиваемый" отображаемый элемент состоит из одного
 				//линка - его и отображаем
 				if(pullAttributesFromController) {
@@ -1514,6 +1518,8 @@ public final class LogicalNetLayer
 				}
 				else
 					visualMapElement = new VisualMapElement(incomingLink, color, stroke);
+				long t2 = System.currentTimeMillis();
+				MapViewController.addTime4(t2 - t1);
 				lastVMENode = nodeProcessed;
 			}
 			else {
@@ -1527,11 +1533,12 @@ public final class LogicalNetLayer
 					if (!nodeLinksCalculated.get(outLink))
 						continue;
 					
-					if (	outLink.getStartNode().equals(lastNode)
-						||	outLink.getEndNode().equals(lastNode))
+					if (	outLink.getStartNode() == lastNode
+						||	outLink.getEndNode() == lastNode)
 						linkBetween = outLink;
 				}
 				
+				long t1 = System.currentTimeMillis();
 				if (linkBetween != null)
 				{
 					if(pullAttributesFromController) {
@@ -1543,6 +1550,8 @@ public final class LogicalNetLayer
 				}
 				else
 					visualMapElement = new VisualMapElement(nodeToPullFrom, lastNode, color, stroke);
+				long t2 = System.currentTimeMillis();
+				MapViewController.addTime4(t2 - t1);
 				lastVMENode = lastNode;	
 
 				//Помечаем в таблице предыдущий узел и линк, по которому
@@ -1554,8 +1563,6 @@ public final class LogicalNetLayer
 			this.visualElements.add(visualMapElement);
 			this.visualElements.add(nodeToPullFrom);
 			this.visualElements.add(lastVMENode);
-			long t2 = System.currentTimeMillis();
-			MapViewController.addTime4(t2 - t1);
 			
 			frontedge.add(lastVMENode);
 			return;
@@ -1572,16 +1579,16 @@ public final class LogicalNetLayer
 		if (	(incomingLink != null)
 				&&	(	(allLinksForNodeProcessed.size() > 2)
 					||	(	(nodeType != null)
-						&&	(nodeType.equals(SiteNodeTypeSort._BUILDING)
-							||	nodeType.equals(SiteNodeTypeSort._UNBOUND)
-							||	nodeType.equals(SiteNodeTypeSort._ATS))))) {
+						&&	(nodeType.getSort().value() == SiteNodeTypeSort._BUILDING
+							||	nodeType.getSort().value() == SiteNodeTypeSort._UNBOUND
+							||	nodeType.getSort().value() == SiteNodeTypeSort._ATS)))) {
 				//Третье условие останова - наткнулись на узел с развилкой или
 				//узел типа, не подлежащего оптимизации, - рекурсия останавливается,
 				//но ПОСЛЕДНИЙ узел цепочки ставится во фронт волны.
 				
-				long t1 = System.currentTimeMillis();
 				
 				VisualMapElement visualMapElement;
+				long t1 = System.currentTimeMillis();
 				if (lastNode == nodeToPullFrom) {
 					//Если последний "натягиваемый" отображаемый элемент состоит из одного
 					//линка - его и отображаем
@@ -1595,11 +1602,12 @@ public final class LogicalNetLayer
 				else {
 					visualMapElement = new VisualMapElement(nodeToPullFrom, nodeProcessed, color, stroke);
 				}
+				long t2 = System.currentTimeMillis();
+				MapViewController.addTime4(t2 - t1);
+
 				this.visualElements.add(visualMapElement);
 				this.visualElements.add(nodeToPullFrom);
 				this.visualElements.add(nodeProcessed);
-				long t2 = System.currentTimeMillis();
-				MapViewController.addTime4(t2 - t1);
 				frontedge.add(nodeProcessed);
 				return;
 		}
@@ -1612,7 +1620,7 @@ public final class LogicalNetLayer
 		//цикла произойдёт единожды.
 		for (NodeLink outgoingLink : allLinksForNodeProcessed) {
 			//Исключаем из списка линк, по которому мы пришли в данный узел
-			if (!outgoingLink.equals(incomingLink)
+			if (!(outgoingLink == incomingLink)
 					&& !nodeLinksCalculated.get(outgoingLink).booleanValue()) {
 				nodeLinksCalculated.put(outgoingLink, Boolean.TRUE);
 				pullVisualLinksFromNode(
@@ -1692,7 +1700,7 @@ public final class LogicalNetLayer
 			}
 		}
 		long t2 = System.currentTimeMillis();
-		Log.debugMessage("LogicalNetLayer.drawVisualLinks | " + String.valueOf(t2 - t1) + " ms\n", 
+		Log.debugMessage("LogicalNetLayer.drawVisualElements | " + String.valueOf(t2 - t1) + " ms\n", 
 				Level.INFO);
 	}
 	
