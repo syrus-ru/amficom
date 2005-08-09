@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.35 2005/08/09 13:24:09 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.36 2005/08/09 14:56:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * Разместить кабель на карте.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.35 $, $Date: 2005/08/09 13:24:09 $
+ * @version $Revision: 1.36 $, $Date: 2005/08/09 14:56:01 $
  * @module mapviewclient_v1
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -127,7 +127,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 					UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, currentStartNode);
 					CableChannelingItem newCableChannelingItem = CableController.generateCCI(this.cablePath, unbound);
 					newCableChannelingItem.insertSelfBefore(cci);
-					this.cablePath.addLink(unbound, newCableChannelingItem);
+ 					this.cablePath.addLink(unbound, newCableChannelingItem);
 					unbound.setCablePath(this.cablePath);
 
 					bufferStartSite = currentEndNode;
