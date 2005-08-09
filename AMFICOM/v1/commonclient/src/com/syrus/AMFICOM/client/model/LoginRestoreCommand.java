@@ -1,5 +1,5 @@
 /*-
-* $Id: LoginRestoreCommand.java,v 1.6 2005/08/09 16:06:38 arseniy Exp $
+* $Id: LoginRestoreCommand.java,v 1.7 2005/08/09 17:06:37 arseniy Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/09 16:06:38 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/09 17:06:37 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -80,9 +80,9 @@ implements LoginRestorer{
 		SystemUser systemUser = null;
 		try {
 			systemUser = StorableObjectPool.getStorableObject(LoginManager.getUserId(), false);
-		} catch (ApplicationException e) {
+		} catch (ApplicationException ae) {
 			// Never
-			Log.errorException(e);
+			Log.errorException(ae);
 		}
 		if (systemUser != null) {
 			super.login = systemUser.getLogin();
