@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathWrapper.java,v 1.17 2005/08/08 13:24:42 arseniy Exp $
+ * $Id: TransmissionPathWrapper.java,v 1.18 2005/08/09 15:27:02 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,9 +17,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
+import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
+
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/08 13:24:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/08/09 15:27:02 $
+ * @author $Author: bob $
  * @module config
  */
 public final class TransmissionPathWrapper extends StorableObjectWrapper<TransmissionPath> {
@@ -39,7 +41,10 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper<Transmi
 
 	private TransmissionPathWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_DESCRIPTION, COLUMN_NAME, ObjectEntities.TRANSPATHMELINK };
+		final String[] keysArray = new String[] { COLUMN_DESCRIPTION, 
+				COLUMN_DOMAIN_ID, 
+				COLUMN_NAME, 
+				ObjectEntities.TRANSPATHMELINK };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}

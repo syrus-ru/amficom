@@ -1,5 +1,5 @@
 /*
- * $Id: ServerWrapper.java,v 1.13 2005/08/08 13:15:50 arseniy Exp $
+ * $Id: ServerWrapper.java,v 1.14 2005/08/09 15:27:14 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
+import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
+
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/08 13:15:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/08/09 15:27:14 $
+ * @author $Author: bob $
  * @module admin_v1
  */
 public class ServerWrapper extends StorableObjectWrapper<Server> {
@@ -33,7 +35,10 @@ public class ServerWrapper extends StorableObjectWrapper<Server> {
 
 	private ServerWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_NAME, COLUMN_DESCRIPTION, DomainMember.COLUMN_DOMAIN_ID, COLUMN_HOSTNAME };
+		final String[] keysArray = new String[] { COLUMN_NAME, 
+				COLUMN_DESCRIPTION, 
+				COLUMN_DOMAIN_ID, 
+				COLUMN_HOSTNAME };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
