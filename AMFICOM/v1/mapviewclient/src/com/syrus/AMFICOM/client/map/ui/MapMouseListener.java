@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.50 2005/08/02 07:41:55 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.51 2005/08/09 11:07:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.50 $, $Date: 2005/08/02 07:41:55 $
+ * @version $Revision: 1.51 $, $Date: 2005/08/09 11:07:11 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -154,7 +154,10 @@ public final class MapMouseListener implements MouseListener
 						if(!proceed)
 							break;
 
+						long d = System.currentTimeMillis();
 						defaultAction(me);
+						long f = System.currentTimeMillis();
+						System.out.println("defaultAction -------- " + (f - d) + " ms ---------");
 					} catch(MapConnectionException e2) {
 						// TODO Auto-generated catch block
 						e2.printStackTrace();
@@ -276,6 +279,7 @@ public final class MapMouseListener implements MouseListener
 	 * @throws MapDataException
 	 */
 	private void defaultAction(MouseEvent me) throws MapConnectionException, MapDataException {
+		long d1 = System.currentTimeMillis();
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		Point point = me.getPoint();
 		//Берём фокус
@@ -299,6 +303,7 @@ public final class MapMouseListener implements MouseListener
 		}
 		if (SwingUtilities.isLeftMouseButton(me))
 		{
+			long d0 = System.currentTimeMillis();
 			MapStrategy strategy = MapStrategyManager.getStrategy(mapElement);
 			if(strategy != null)
 			{
@@ -306,7 +311,10 @@ public final class MapMouseListener implements MouseListener
 				strategy.doContextChanges(me);
 			}
 
+			long d = System.currentTimeMillis();
 			this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
+			long f = System.currentTimeMillis();
+			System.out.println("sendSelectionChangeEvent -------- " + (d0 - d1) + " " + (d - d0) + " " + (f - d) + " ms ---------");
 		}
 		else
 		if (SwingUtilities.isRightMouseButton(me))

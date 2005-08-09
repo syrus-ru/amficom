@@ -7,6 +7,7 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -24,6 +25,7 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.util.Log;
 
 public final class MapViewTreePanel extends JPanel 
 		implements PropertyChangeListener {
@@ -98,6 +100,7 @@ public final class MapViewTreePanel extends JPanel
 	}
 
 	public void propertyChange(PropertyChangeEvent pce) {
+		long d = System.currentTimeMillis();
 		if(!this.performProcessing) {
 			return;
 		}
@@ -140,6 +143,8 @@ public final class MapViewTreePanel extends JPanel
 		}
 
 		this.performProcessing = true;
+		long f = System.currentTimeMillis();
+		Log.debugMessage("MapViewTreePanel::propertyChange(" + pce.getPropertyName() + ") -------- " + (f - d) + " ms ---------", Level.INFO);
 	}
 
 	public void updateTree(MapView mapView) {
