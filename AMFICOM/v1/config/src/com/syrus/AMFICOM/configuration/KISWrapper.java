@@ -1,5 +1,5 @@
 /*
- * $Id: KISWrapper.java,v 1.15 2005/08/08 13:24:41 arseniy Exp $
+ * $Id: KISWrapper.java,v 1.16 2005/08/09 15:34:23 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,11 @@ import java.util.List;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
+import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
+
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/08 13:24:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/08/09 15:34:23 $
+ * @author $Author: bob $
  * @module config
  */
 public final class KISWrapper extends StorableObjectWrapper<KIS> {
@@ -44,6 +46,7 @@ public final class KISWrapper extends StorableObjectWrapper<KIS> {
 		// empty private constructor
 		final String[] keysArray = new String[] { COLUMN_DESCRIPTION,
 				COLUMN_NAME,
+				COLUMN_DOMAIN_ID,
 				COLUMN_EQUIPMENT_ID,
 				COLUMN_MCM_ID,
 				COLUMN_HOSTNAME,
