@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.34 2005/08/09 12:24:03 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.35 2005/08/09 15:41:57 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import java.util.Set;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.34 $, $Date: 2005/08/09 12:24:03 $
+ * @version $Revision: 1.35 $, $Date: 2005/08/09 15:41:57 $
  * @author $Author: bob $
  * @module general
  */
@@ -116,21 +116,7 @@ public class StorableObjectXML {
 				objectMap.put(CLASSNAME, shortClassName);
 		}
 		
-		try {
-			final Map<String, Object> xmlObjectMap = this.driver.getObjectMap(id);
-			final StorableObjectVersion version = (StorableObjectVersion) xmlObjectMap.get(StorableObjectWrapper.COLUMN_VERSION);
-			if (!force && !version.isNewer(storableObject.getVersion())) {
-				throw new VersionCollisionException("StorableObjectXML.updateObject | version collision, id='"
-						+ id.getIdentifierString() + '\'', storableObject.version.longValue(), version.longValue());
-			} 
-			this.driver.deleteObject(id);
-		} catch (ObjectNotFoundException e) {
-			// object not found , ok
-		} catch (RetrieveObjectException e) {
-			throw new UpdateObjectException("StorableObjectXML.updateObject | retrieve exception -- " + e.getMessage(),e );
-		} catch (IllegalDataException e) {
-			throw new UpdateObjectException("StorableObjectXML.updateObject | illegal data exception -- " + e.getMessage(),e );
-		}
+		this.driver.deleteObject(id);
 
 		/**
 		 * NOTE modifierId remains the same, but version increments.
