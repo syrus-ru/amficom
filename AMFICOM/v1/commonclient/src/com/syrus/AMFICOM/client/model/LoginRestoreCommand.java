@@ -1,5 +1,5 @@
 /*-
-* $Id: LoginRestoreCommand.java,v 1.4 2005/08/02 13:03:22 arseniy Exp $
+* $Id: LoginRestoreCommand.java,v 1.5 2005/08/09 08:07:17 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,21 +8,17 @@
 
 package com.syrus.AMFICOM.client.model;
 
-import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.LoginException;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/08/09 08:07:17 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -65,20 +61,22 @@ implements LoginRestorer{
 		return value;
 	}
 
-	@Override
-	protected void createUIItems() {
-		super.createUIItems();
-		super.loginTextField.setEditable(false);
-	}
+//	@Override
+//	protected void createUIItems() {
+//		super.createUIItems();
+//		super.loginTextField.setEditable(false);
+//	}
 
 	public boolean restoreLogin() {
 		super.logged = false;
-		try {
-			SystemUser user = (SystemUser) StorableObjectPool.getStorableObject(LoginManager.getUserId(), true);
-			super.login = user.getLogin();
-		} catch (ApplicationException e) {
-			return false;
-		}
+		
+		// XXX commenterd due to recursive calling
+//		try {
+//			SystemUser user = (SystemUser) StorableObjectPool.getStorableObject(LoginManager.getUserId(), true);
+//			super.login = user.getLogin();
+//		} catch (ApplicationException e) {
+//			return false;
+//		}
 		super.password = null;
 		super.execute();
 		return super.logged;
