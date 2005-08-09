@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.24 2005/08/02 07:45:11 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.25 2005/08/09 13:23:26 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $
+ * @version $Revision: 1.25 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -121,8 +121,8 @@ public final class SchemeSampleData {
 		scheme1clink0 = SchemeCableLink.createInstance(userId, "Кабелёк1", scheme1);
 		scheme1clink0.setOpticalLength(1000.0D);
 		scheme1clink0.setPhysicalLength(1000.0D);
-		scheme1clink0.setSourceAbstractSchemePort(scheme1dev10cport10);
-		scheme1clink0.setTargetAbstractSchemePort(scheme1dev00cport00);
+		scheme1clink0.setSourceAbstractSchemePort(scheme1dev00cport00);
+		scheme1clink0.setTargetAbstractSchemePort(scheme1dev10cport10);
 		SchemeCableThread scheme1clink0th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, scheme1clink0);
 
 		scheme1clink1 = SchemeCableLink.createInstance(userId, "Кабелёк2", scheme1);
