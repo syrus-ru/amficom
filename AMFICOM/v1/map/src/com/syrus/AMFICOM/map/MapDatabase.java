@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.42 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: MapDatabase.java,v 1.43 2005/08/09 16:25:17 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/08/08 11:35:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2005/08/09 16:25:17 $
+ * @author $Author: max $
  * @module map
  */
 public final class MapDatabase extends StorableObjectDatabase<Map> {
@@ -50,11 +50,11 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
     private static final String MAP_MARK 				= "MapMark";
 	private static final String MAP_NODE_LINK 			= "MapNodeLink";
 	private static final String MAP_PHYSICAL_LINK 		= "MapPhysicalLink";
-	private static final String MAP_SITE_NODE 			=  "MapSiteNode";
+	private static final String MAP_SITE_NODE 			= "MapSiteNode";
 	private static final String MAP_TOPOLOGICAL_NODE 	= "MapTopologicalNode";
-	private static final String MAP_MAP 				= "MapMap";
-	private static final String MAP_EXTERNAL_NODE 		= "MapExternalNode";
-	private static final String MAP_MAP_LIBRARY 		= "MapMapLibrary";
+	private static final String MAP_MAP 				= "MapMapLink";
+	private static final String MAP_EXTERNAL_NODE 		= "MapExtNodeLink";
+	private static final String MAP_MAP_LIBRARY 		= "MapMapLibraryLink";
 	
     private static final int _MAP_COLLECTOR 			= 0;
     private static final int _MAP_MARK 					= 1;
@@ -77,7 +77,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 		dbTableColumnName.put(MAP_PHYSICAL_LINK, MapWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
 		dbTableColumnName.put(MAP_SITE_NODE, MapWrapper.LINK_COLUMN_SITE_NODE_ID);
 		dbTableColumnName.put(MAP_TOPOLOGICAL_NODE, MapWrapper.LINK_COLUMN_TOPOLOGICAL_NODE_ID);
-		dbTableColumnName.put(MAP_MAP, MapWrapper.LINK_COLUMN_MAP_ID);
+		dbTableColumnName.put(MAP_MAP, MapWrapper.LINK_COLUMN_CHILD_MAP_ID);
 		dbTableColumnName.put(MAP_EXTERNAL_NODE, MapWrapper.LINK_COLUMN_EXTERNAL_NODE_ID);
 		dbTableColumnName.put(MAP_MAP_LIBRARY, MapWrapper.LINK_COLUMN_MAP_LIBRARY_ID);
 	}

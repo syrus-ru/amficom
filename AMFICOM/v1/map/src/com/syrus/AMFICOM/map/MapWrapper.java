@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.17 2005/08/08 13:12:40 arseniy Exp $
+ * $Id: MapWrapper.java,v 1.18 2005/08/09 16:25:57 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/08 13:12:40 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/08/09 16:25:57 $
+ * @author $Author: max $
  * @module map
  */
 public class MapWrapper extends StorableObjectWrapper<Map> {
@@ -29,6 +29,8 @@ public class MapWrapper extends StorableObjectWrapper<Map> {
 	public static final String COLUMN_DOMAIN_ID = "domain_id";
 	// map_id VARCHAR2(32),
 	public static final String LINK_COLUMN_MAP_ID = "map_id";
+	// child_map_id VARCHAR2(32),
+	public static final String LINK_COLUMN_CHILD_MAP_ID = "child_map_id";
 	// collector_id VARCHAR2(32),
 	public static final String LINK_COLUMN_COLLECTOR_ID = "collector_id";
 	// mark_id VARCHAR2(32),
@@ -42,7 +44,7 @@ public class MapWrapper extends StorableObjectWrapper<Map> {
 	// topological_node_id VARCHAR2(32),
 	public static final String LINK_COLUMN_TOPOLOGICAL_NODE_ID = "topological_node_id";
 	// external_node_id VARCHAR2(32),
-	public static final String LINK_COLUMN_EXTERNAL_NODE_ID = "external_node_id";
+	public static final String LINK_COLUMN_EXTERNAL_NODE_ID = "ext_node_link_id";
 	// external_node_id VARCHAR2(32),
 	public static final String LINK_COLUMN_MAP_LIBRARY_ID	= "map_library_id";
 
@@ -96,7 +98,7 @@ public class MapWrapper extends StorableObjectWrapper<Map> {
 				|| key.equals(LINK_COLUMN_PHYSICAL_LINK_ID)
 				|| key.equals(LINK_COLUMN_SITE_NODE_ID)
 				|| key.equals(LINK_COLUMN_TOPOLOGICAL_NODE_ID)
-				|| key.equals(LINK_COLUMN_MAP_ID)
+				|| key.equals(LINK_COLUMN_CHILD_MAP_ID)
 				|| key.equals(LINK_COLUMN_EXTERNAL_NODE_ID)
 				|| key.equals(LINK_COLUMN_MAP_LIBRARY_ID)) {
 			return Set.class;
