@@ -1,5 +1,5 @@
 /*-
- * $Id: FilterPanel.java,v 1.7 2005/06/21 14:50:37 max Exp $
+ * $Id: FilterPanel.java,v 1.8 2005/08/09 22:33:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.AMFICOM.newFilter.StringCondition;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/06/21 14:50:37 $
- * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2005/08/09 22:33:41 $
+ * @author $Author: arseniy $
  * @module filter_v1
  */
 public class FilterPanel extends JScrollPane implements FilterView {
@@ -638,8 +638,8 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		cardLayout.show(this.conditionPanel, EMPTY_CARD);
 	}
 	
-	private void createController(Filter filter) {
-		this.controller = new FilterController(filter, this);
+	private void createController(Filter filter1) {
+		this.controller = new FilterController(filter1, this);
 		this.keysCombo.addActionListener(this.controller);
 		this.keysCombo.addPopupMenuListener(this.controller);
 		this.createSchemeButton.addActionListener(this.controller);
