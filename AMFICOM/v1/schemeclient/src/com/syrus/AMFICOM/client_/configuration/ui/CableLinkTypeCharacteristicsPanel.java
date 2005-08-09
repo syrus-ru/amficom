@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeCharacteristicsPanel.java,v 1.9 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: CableLinkTypeCharacteristicsPanel.java,v 1.10 2005/08/09 06:52:40 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.10 $, $Date: 2005/08/09 06:52:40 $
  * @module schemeclient
  */
 
@@ -46,7 +46,7 @@ public class CableLinkTypeCharacteristicsPanel extends CharacteristicsPanel {
 					super.setTypeSortMapping(sorts[i],
 							this.type,
 							this.type.getId(), true);
-				super.addCharacteristics(this.type.getCharacteristics(), this.type.getId());
+				super.addCharacteristics(this.type.getCharacteristics(true), this.type.getId());
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 				showNoSelection();

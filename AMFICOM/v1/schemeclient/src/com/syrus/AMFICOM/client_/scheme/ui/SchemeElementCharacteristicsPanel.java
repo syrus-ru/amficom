@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementCharacteristicsPanel.java,v 1.11 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeElementCharacteristicsPanel.java,v 1.12 2005/08/09 06:52:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/08/09 06:52:52 $
  * @module schemeclient
  */
 
@@ -49,7 +49,7 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 				super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 						this.schemeElement,
 						this.schemeElement.getId(), true);
-				super.addCharacteristics(this.schemeElement.getCharacteristics(), this.schemeElement.getId());
+				super.addCharacteristics(this.schemeElement.getCharacteristics(true), this.schemeElement.getId());
 				Equipment eq = null;
 				try {
 					eq = this.schemeElement.getEquipment();
@@ -61,7 +61,7 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 						super.setTypeSortMapping(sorts[i],
 								eq,
 								eq.getId(), true);
-					super.addCharacteristics(eq.getCharacteristics(), eq.getId());
+					super.addCharacteristics(eq.getCharacteristics(true), eq.getId());
 				} else {
 					EquipmentType eqt = null;
 					try {
@@ -74,7 +74,7 @@ public class SchemeElementCharacteristicsPanel extends CharacteristicsPanel {
 							super.setTypeSortMapping(sorts[i],
 									eqt,
 									eqt.getId(), false);
-						super.addCharacteristics(eqt.getCharacteristics(), eqt.getId());
+						super.addCharacteristics(eqt.getCharacteristics(true), eqt.getId());
 					}
 				}
 			} catch (ApplicationException e) {

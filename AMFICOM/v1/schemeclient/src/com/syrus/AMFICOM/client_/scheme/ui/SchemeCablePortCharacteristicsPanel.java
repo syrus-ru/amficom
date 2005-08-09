@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortCharacteristicsPanel.java,v 1.10 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeCablePortCharacteristicsPanel.java,v 1.11 2005/08/09 06:52:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.11 $, $Date: 2005/08/09 06:52:52 $
  * @module schemeclient
  */
 
@@ -47,14 +47,14 @@ public class SchemeCablePortCharacteristicsPanel extends CharacteristicsPanel {
 				super.setTypeSortMapping(CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL,
 						this.schemeCablePort,
 						this.schemeCablePort.getId(), true);
-				super.addCharacteristics(this.schemeCablePort.getCharacteristics(), this.schemeCablePort.getId());
+				super.addCharacteristics(this.schemeCablePort.getCharacteristics(true), this.schemeCablePort.getId());
 				Port port = this.schemeCablePort.getPort();
 				if (port != null) {
 					for (int i = 0; i < sorts.length; i++)
 						super.setTypeSortMapping(sorts[i],
 								port,
 								port.getId(), true);
-					super.addCharacteristics(port.getCharacteristics(), port.getId());
+					super.addCharacteristics(port.getCharacteristics(true), port.getId());
 				} else {
 					PortType portType = this.schemeCablePort.getPortType();
 					if (portType != null) {
@@ -62,7 +62,7 @@ public class SchemeCablePortCharacteristicsPanel extends CharacteristicsPanel {
 							super.setTypeSortMapping(sorts[i],
 									portType,
 									portType.getId(), false);
-						super.addCharacteristics(portType.getCharacteristics(), portType.getId());
+						super.addCharacteristics(portType.getCharacteristics(true), portType.getId());
 					}
 				}
 			} catch (ApplicationException e) {
