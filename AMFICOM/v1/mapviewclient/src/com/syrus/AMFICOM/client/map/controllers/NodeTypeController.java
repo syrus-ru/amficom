@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.36 2005/08/08 13:06:24 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.37 2005/08/09 11:05:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.36 $, $Date: 2005/08/08 13:06:24 $
+ * @version $Revision: 1.37 $, $Date: 2005/08/09 11:05:18 $
  * @module mapviewclient_v1
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -177,7 +177,14 @@ public class NodeTypeController extends AbstractNodeController {
 	 * @return тип сетевого узла
 	 * @throws ApplicationException 
 	 */
-	public static SiteNodeType getSiteNodeType(String codename) throws ApplicationException {
+	public static SiteNodeType getSiteNodeType(
+			String codename) throws ApplicationException {
+		return getSiteNodeType(codename, false);
+	}
+
+	static SiteNodeType getSiteNodeType(
+			String codename,
+			boolean useLoader) throws ApplicationException {
 		StorableObjectCondition pTypeCondition = new TypicalCondition(
 				codename,
 				OperationSort.OPERATION_EQUALS,
@@ -185,7 +192,7 @@ public class NodeTypeController extends AbstractNodeController {
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		Collection pTypes = 
-			StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+			StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, useLoader);
 		for(Iterator it = pTypes.iterator(); it.hasNext();) {
 			SiteNodeType type = (SiteNodeType )it.next();
 			if(type.getCodename().equals(codename))
@@ -211,7 +218,7 @@ public class NodeTypeController extends AbstractNodeController {
 			SiteNodeTypeSort sort,
 			String codename,
 			boolean isTopological) throws ApplicationException {
-		SiteNodeType type = getSiteNodeType(codename);
+		SiteNodeType type = getSiteNodeType(codename, true);
 		if(type == null) {
 			type = SiteNodeType.createInstance(
 				userId,
@@ -231,24 +238,7 @@ public class NodeTypeController extends AbstractNodeController {
 		}
 		return type;
 	}
-/*
-	public static void createDefaults(Identifier creatorId) throws ApplicationException {
-		// make sure SiteNodeType.ATS is created
-		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.ATS, SiteNodeType.DEFAULT_ATS);
-		// make sure SiteNodeType.BUILDING is created
-		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.BUILDING, SiteNodeType.DEFAULT_BUILDING);
-		// make sure SiteNodeType.PIQUET is created
-		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.PIQUET, SiteNodeType.DEFAULT_PIQUET);
-		// make sure SiteNodeType.WELL is created
-		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.WELL, SiteNodeType.DEFAULT_WELL);
-		// make sure SiteNodeType.CABLE_INLET is created
-		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.CABLE_INLET, SiteNodeType.DEFAULT_CABLE_INLET);
-		// make sure SiteNodeType.UNBOUND is created
-		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.UNBOUND, SiteNodeType.DEFAULT_UNBOUND);
-		// make sure SiteNodeType.CABLE_INLET is created
-		NodeTypeController.getSiteNodeType(creatorId, SiteNodeTypeSort.TOWER, SiteNodeType.DEFAULT_TOWER);
-	}
-*/
+
 	/**
 	 * Получить список всех типов сетевых узлов.
 	 * @return список типов сетевых узлов &lt;{@link SiteNodeType}&gt;
@@ -269,7 +259,7 @@ public class NodeTypeController extends AbstractNodeController {
 		try {
 			list = StorableObjectPool.getStorableObjectsByCondition(
 					pTypeCondition,
-					true);
+					false);
 
 			list.remove(getUnboundNodeType());
 
@@ -290,7 +280,7 @@ public class NodeTypeController extends AbstractNodeController {
 	 * @throws ApplicationException 
 	 */
 	public static SiteNodeType getUnboundNodeType() throws ApplicationException {
-		return NodeTypeController.getSiteNodeType(SiteNodeType.DEFAULT_UNBOUND);
+		return NodeTypeController.getSiteNodeType(SiteNodeType.DEFAULT_UNBOUND, false);
 	}
 
 	public static Identifier getDefaultImageId() {
@@ -302,8 +292,6 @@ public class NodeTypeController extends AbstractNodeController {
 				creatorId,
 				DEFAULT_IMAGE_CODENAME, 
 				DEFAULT_IMAGE_FILENAME);
-		// TODO Auto-generated method stub
-		
 	}
 
 }
