@@ -1,5 +1,5 @@
 /*
- * $Id: ListCondition.java,v 1.3 2005/04/12 13:04:53 max Exp $
+ * $Id: ListCondition.java,v 1.4 2005/08/09 22:00:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,9 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/04/12 13:04:53 $
- * @author $Author: max $
- * @module misc
+ * @version $Revision: 1.4 $, $Date: 2005/08/09 22:00:24 $
+ * @author $Author: arseniy $
+ * @module filter
  */
 public class ListCondition {
 	

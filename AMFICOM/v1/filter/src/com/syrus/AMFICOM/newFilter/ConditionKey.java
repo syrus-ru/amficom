@@ -1,5 +1,5 @@
 /*-
- * $Id: ConditionKey.java,v 1.5 2005/08/09 21:10:10 arseniy Exp $
+ * $Id: ConditionKey.java,v 1.6 2005/08/09 22:00:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,16 +14,16 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/09 21:10:10 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/09 22:00:24 $
  * @author $Author: arseniy $
- * @module filterclient_v1
+ * @module filter
  */
 
 /**
  * The <code>ConditionKey</code> is used to create criteria for {@link com.syrus.AMFICOM.newFilter.Filter Filter}
- * @version $Revision: 1.5 $, $Date: 2005/08/09 21:10:10 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/09 22:00:24 $
  * @author $Author: arseniy $
- * @module filterclient_v1
+ * @module filter
  */
 public class ConditionKey {
 

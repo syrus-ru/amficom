@@ -1,5 +1,5 @@
 /*
- * $Id: Filter.java,v 1.14 2005/08/09 21:10:10 arseniy Exp $
+ * $Id: Filter.java,v 1.15 2005/08/09 22:00:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,9 +18,9 @@ import com.syrus.AMFICOM.general.LinkedConditionLoader;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/09 21:10:10 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/09 22:00:24 $
  * @author $Author: arseniy $
- * @module misc
+ * @module filter
  */
 public class Filter {
 	public static final String WRONG_NUMBER_MESSAGE = "you have intered wrong number type in field ";
