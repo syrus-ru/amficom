@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.68 2005/08/08 14:24:18 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.69 2005/08/09 16:28:19 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: arseniy $
- * @version $Revision: 1.68 $, $Date: 2005/08/08 14:24:18 $
+ * @author $Author: max $
+ * @version $Revision: 1.69 $, $Date: 2005/08/09 16:28:19 $
  * @module map
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -236,24 +236,17 @@ public final class PhysicalLinkType extends StorableObjectType
 		return this.description;
 	}
 
-	@Override
-	protected void setDescription0(final String description) {
-		this.description = description;
-	}
-
-	@Override
-	public void setDescription(final String description) {
-		this.setDescription0(description);
-		super.markAsChanged();
-	}
-
 	public boolean isTopological() {
 		return this.topological;
 	}
 
 	public void setTopological(final boolean topological) {
-		this.topological = topological;
+		this.setTopological0(topological);
 		super.markAsChanged();
+	}
+	
+	protected void setTopological0(final boolean topological) {
+		this.topological = topological;
 	}
 
 	public String getName() {
@@ -299,11 +292,6 @@ public final class PhysicalLinkType extends StorableObjectType
 		this.mapLibraryId = mapLibraryId;
 	}
 
-	@Override
-	public void setCodename(final String codename) {
-		super.setCodename(codename);
-	}
-
 	protected void setBindingDimension0(final IntDimension bindingDimension) {
 		this.bindingDimension = new IntDimension(bindingDimension.getWidth(), bindingDimension.getHeight());
 	}
@@ -334,6 +322,11 @@ public final class PhysicalLinkType extends StorableObjectType
 	}
 
 	public void setSort(final PhysicalLinkTypeSort sort) {
+		this.setSort0(sort);
+		super.markAsChanged();
+	}
+	
+	protected void setSort0(final PhysicalLinkTypeSort sort) {
 		this.sort = sort;
 	}
 
@@ -410,8 +403,13 @@ public final class PhysicalLinkType extends StorableObjectType
 	}
 
 	public void setParent(Library library) {
+		setParent0(library);
+		super.markAsChanged();
+	}
+	
+	protected void setParent0(Library library) {
 		MapLibrary mapLibrary = (MapLibrary)library;
-		setMapLibrary(mapLibrary);
+		setMapLibrary0(mapLibrary);
 	}
 
 	public Library getParent() {
@@ -428,6 +426,11 @@ public final class PhysicalLinkType extends StorableObjectType
 	}
 
 	public void setMapLibrary(MapLibrary mapLibrary) {
+		this.setMapLibrary0(mapLibrary);
+		super.markAsChanged();
+	}
+	
+	protected void setMapLibrary0(MapLibrary mapLibrary) {
 		this.mapLibraryId = mapLibrary.getId();
 	}
 }

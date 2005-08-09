@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibrary.java,v 1.10 2005/08/05 16:50:26 arseniy Exp $
+ * $Id: MapLibrary.java,v 1.11 2005/08/09 16:28:19 max Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,8 +51,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/05 16:50:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/08/09 16:28:19 $
+ * @author $Author: max $
  * @module map
  */
 public class MapLibrary extends StorableObject implements Identifiable, Namable, Library, XMLBeansTransferable {
@@ -138,6 +138,11 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 	}
 
 	public void setName(final String name) {
+		this.setName0(name);
+		super.markAsChanged();
+	}
+	
+	protected void setName0(final String name) {
 		this.name = name;
 	}
 
@@ -146,6 +151,11 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 	}
 
 	public void setCodename(final String codename) {
+		this.setCodename0(codename);
+		super.markAsChanged();
+	}
+	
+	protected void setCodename0(final String codename) {
 		this.codename = codename;
 	}
 
@@ -154,6 +164,11 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 	}
 
 	public void setDescription(final String description) {
+		this.setDescription0(description);
+		super.markAsChanged();
+	}
+	
+	protected void setDescription0(final String description) {
 		this.description = description;
 	}
 
@@ -203,12 +218,13 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-
-		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.add(this.parentMapLibraryId);
-		dependencies.remove(null);
-		dependencies.remove(VOID_IDENTIFIER);
-		return Collections.unmodifiableSet(dependencies);
+		if (this.parentMapLibraryId != null && 
+				!this.parentMapLibraryId.isVoid()) {
+			final Set<Identifiable> dependencies = new HashSet<Identifiable>(1);
+			dependencies.add(this.parentMapLibraryId);
+			return Collections.unmodifiableSet(dependencies);
+		}
+		return Collections.emptySet();
 	}
 
 	public void addChild(final LibraryEntry libraryEntry) {
@@ -227,10 +243,16 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 				|| libraryEntry instanceof SiteNodeType
 				|| libraryEntry instanceof MapLibrary) {
 			libraryEntry.setParent(null);
+			super.markAsChanged();
 		}
 	}
 
 	public void setParent(final Library library) {
+		this.setParent0(library);
+		super.markAsChanged();
+	}
+	
+	protected void setParent0(final Library library) {
 		assert library instanceof MapLibrary : "must be instance of MapLibrary";
 		assert library != this : ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 		this.parentMapLibraryId = Identifier.possiblyVoid((MapLibrary) library);
@@ -275,6 +297,11 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 	}
 
 	public void setParent(final Item parent) {
+		this.setParent0(parent);
+		super.markAsChanged();
+	}
+	
+	protected void setParent0(final Item parent) {
 		assert parent instanceof MapLibrary : "must be instance of MapLibrary";
 		assert parent != this : ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 		this.parentMapLibraryId = Identifier.possiblyVoid((MapLibrary) parent);

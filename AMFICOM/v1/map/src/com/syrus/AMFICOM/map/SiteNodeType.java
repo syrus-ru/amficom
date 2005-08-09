@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.64 2005/08/08 14:24:18 arseniy Exp $
+ * $Id: SiteNodeType.java,v 1.65 2005/08/09 16:28:19 max Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,8 +60,8 @@ import com.syrus.util.Log;
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: arseniy $
- * @version $Revision: 1.64 $, $Date: 2005/08/08 14:24:18 $
+ * @author $Author: max $
+ * @version $Revision: 1.65 $, $Date: 2005/08/09 16:28:19 $
  * @module map
  * @todo make 'sort' persistent (update database scheme as well)
  * @todo make 'mapLibrary' persistent
@@ -196,11 +196,6 @@ public final class SiteNodeType extends StorableObjectType
 		return dependencies;
 	}
 
-	@Override
-	public String getDescription() {
-		return this.description;
-	}
-
 	public Identifier getImageId() {
 		return this.imageId;
 	}
@@ -235,25 +230,27 @@ public final class SiteNodeType extends StorableObjectType
 		return this.topological;
 	}
 
-	@Override
-	public void setDescription(final String description) {
-		super.description = description;
-		super.markAsChanged();
-	}
-
 	public void setImageId(final Identifier imageId) {
 		this.imageId = imageId;
 		super.markAsChanged();
 	}
 
 	public void setName(final String name) {
-		this.name = name;
+		this.setName0(name);
 		super.markAsChanged();
+	}
+	
+	protected void setName0(final String name) {
+		this.name = name;
 	}
 
 	public void setTopological(final boolean topological) {
-		this.topological = topological;
+		this.setTopological0(topological);
 		super.markAsChanged();
+	}
+	
+	protected void setTopological0(final boolean topological) {
+		this.topological = topological;
 	}
 
 	synchronized void setAttributes(final Date created,
@@ -276,11 +273,6 @@ public final class SiteNodeType extends StorableObjectType
 		this.mapLibraryId = mapLibraryId;
 	}
 
-	@Override
-	public void setCodename(final String codename) {
-		super.setCodename(codename);
-	}
-
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
 		if (this.characterizableDelegate == null) {
 			this.characterizableDelegate = new CharacterizableDelegate(this.id);
@@ -293,6 +285,11 @@ public final class SiteNodeType extends StorableObjectType
 	}
 
 	public void setSort(final SiteNodeTypeSort sort) {
+		this.setSort0(sort);
+		super.markAsChanged();
+	}
+	
+	protected void setSort0(final SiteNodeTypeSort sort) {
 		this.sort = sort;
 	}
 
@@ -402,8 +399,13 @@ public final class SiteNodeType extends StorableObjectType
 	}
 
 	public void setParent(Library library) {
+		this.setParent0(library);
+		super.markAsChanged();
+	}
+	
+	protected void setParent0(Library library) {
 		assert library instanceof MapLibrary : "must be instance of MapLibrary";
-		this.setMapLibrary((MapLibrary)library);
+		this.setMapLibrary0((MapLibrary)library);
 	}
 
 	public MapLibrary getMapLibrary() {
@@ -420,6 +422,11 @@ public final class SiteNodeType extends StorableObjectType
 	}
 
 	public void setMapLibrary(MapLibrary mapLibrary) {
+		this.setMapLibrary0(mapLibrary);
+		this.markAsChanged();
+	}
+	
+	protected void setMapLibrary0(MapLibrary mapLibrary) {
 		this.mapLibraryId = mapLibrary.getId();
 	}
 	
