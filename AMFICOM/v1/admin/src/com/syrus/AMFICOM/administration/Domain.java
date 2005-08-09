@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.51 2005/08/08 14:23:32 arseniy Exp $
+ * $Id: Domain.java,v 1.52 2005/08/09 09:07:13 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -28,15 +29,19 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/08/08 14:23:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.52 $, $Date: 2005/08/09 09:07:13 $
+ * @author $Author: bob $
  * @module administration
  */
 
@@ -157,6 +162,45 @@ public final class Domain extends DomainMember implements Characterizable {
 			this.characterizableDelegate = new CharacterizableDelegate(this.id);
 		}
 		return this.characterizableDelegate.getCharacteristics(usePool);
+	}
+	
+	public final PermissionAttributes getPermissionAttributes(final Identifier userId) 
+	throws ApplicationException {
+		PermissionAttributes permissionAttributes = null;
+		LinkedIdsCondition domainCondition = 
+			new LinkedIdsCondition(this.id, ObjectEntities.PERMATTR_CODE) {
+
+			@Override
+			public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
+				return false;
+			}
+		};
+		
+		LinkedIdsCondition userCondition = 
+			new LinkedIdsCondition(userId, ObjectEntities.PERMATTR_CODE) {
+
+				@Override
+				public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
+					return false;
+				}
+			};
+
+		CompoundCondition compoundCondition 
+			= new CompoundCondition(
+				domainCondition, 
+				CompoundConditionSort.AND,
+				userCondition);
+		
+		Set<PermissionAttributes> storableObjectsByCondition = 
+			StorableObjectPool.getStorableObjectsByCondition(
+			compoundCondition, 
+			true);
+		
+		if (!storableObjectsByCondition.isEmpty()) {
+			permissionAttributes = storableObjectsByCondition.iterator().next();
+		}
+
+		return permissionAttributes;
 	}
 
 	/**
