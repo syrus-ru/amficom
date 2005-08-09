@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.89 2005/08/08 09:14:48 arseniy Exp $
+ * $Id: StorableObject.java,v 1.90 2005/08/09 16:32:55 arseniy Exp $
  *
  * Copyright ø 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
  * same identifier, comparison of object references (in Java terms) is enough.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.89 $, $Date: 2005/08/08 09:14:48 $
+ * @version $Revision: 1.90 $, $Date: 2005/08/09 16:32:55 $
  * @module general
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -58,8 +58,9 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected StorableObject() {
-		// £Õ–‘… Œ¡»
+		this.changed = false;
 	}
+
 	/**
 	 * Server-side constructor.
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -197,11 +198,13 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 *
 	 */
 	protected final void markAsChanged() {
-		this.changed = true;
-		try {
-			StorableObjectPool.putStorableObject(this);
-		} catch (IllegalObjectEntityException ioee) {
-			assert false : ioee.getMessage();
+		if (!this.changed) {
+			this.changed = true;
+			try {
+				StorableObjectPool.putStorableObject(this);
+			} catch (IllegalObjectEntityException ioee) {
+				assert false : ioee.getMessage();
+			}
 		}
 	}
 
