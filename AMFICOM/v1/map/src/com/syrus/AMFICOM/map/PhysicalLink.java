@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.90 2005/08/09 07:43:33 max Exp $
+ * $Id: PhysicalLink.java,v 1.91 2005/08/09 16:24:18 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import static java.util.logging.Level.SEVERE;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -50,6 +52,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
+import com.syrus.util.Log;
 
 /**
  * Линия топологический схемы. Линия имеет начальный и конечный узлы,
@@ -60,7 +63,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: max $
- * @version $Revision: 1.90 $, $Date: 2005/08/09 07:43:33 $
+ * @version $Revision: 1.91 $, $Date: 2005/08/09 16:24:18 $
  * @module map
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient
@@ -77,8 +80,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	private PhysicalLinkType physicalLinkType;
 
-	private AbstractNode startNode;
-	private AbstractNode endNode;
+	private Identifier startNodeId;
+	private Identifier endNodeId;
 	private String city;
 	private String street;
 	private String building;
@@ -120,8 +123,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			final String name,
 			final String description,
 			final PhysicalLinkType physicalLinkType,
-			final AbstractNode startNode,
-			final AbstractNode endNode,
+			final Identifier startNodeId,
+			final Identifier endNodeId,
 			final String city,
 			final String street,
 			final String building,
@@ -138,8 +141,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.name = name;
 		this.description = description;
 		this.physicalLinkType = physicalLinkType;
-		this.startNode = startNode;
-		this.endNode = endNode;
+		this.startNodeId = startNodeId;
+		this.endNodeId = endNodeId;
 		this.city = city;
 		this.street = street;
 		this.building = building;
@@ -159,8 +162,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	
 
 	public static PhysicalLink createInstance(final Identifier creatorId,
-			final AbstractNode stNode,
-			final AbstractNode eNode,
+			final Identifier stNode,
+			final Identifier eNode,
 			final PhysicalLinkType type) throws CreateObjectException {
 
 		return PhysicalLink.createInstance(creatorId,
@@ -182,8 +185,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			final String name,
 			final String description,
 			final PhysicalLinkType physicalLinkType,
-			final AbstractNode startNode,
-			final AbstractNode endNode,
+			final Identifier startNodeId,
+			final Identifier endNodeId,
 			final String city,
 			final String street,
 			final String building,
@@ -192,17 +195,17 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			final boolean leftToRight,
 			final boolean topToBottom) throws CreateObjectException {
 
-		if (creatorId == null
-				|| name == null
-				|| description == null
-				|| physicalLinkType == null
-				|| startNode == null
-				|| endNode == null
-				|| city == null
-				|| street == null
-				|| building == null)
-			throw new IllegalArgumentException("Argument is 'null'");
-
+		assert creatorId != null
+				&& name != null
+				&& description != null
+				&& physicalLinkType != null
+				&& startNodeId != null
+				&& endNodeId != null
+				&& city != null
+				&& street != null
+				&& building != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert !startNodeId.isVoid() && !endNodeId.isVoid() : ErrorMessages.NON_NULL_EXPECTED;		
+		
 		try {
 			final PhysicalLink physicalLink = new PhysicalLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PHYSICALLINK_CODE),
 					creatorId,
@@ -210,8 +213,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 					name,
 					description,
 					physicalLinkType,
-					startNode,
-					endNode,
+					startNodeId,
+					endNodeId,
 					city,
 					street,
 					building,
@@ -246,11 +249,11 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 		this.physicalLinkType = StorableObjectPool.getStorableObject(new Identifier(plt.physicalLinkTypeId), true);
 
-		this.startNode = StorableObjectPool.getStorableObject(new Identifier(plt.startNodeId), true);
-		this.endNode = StorableObjectPool.getStorableObject(new Identifier(plt.endNodeId), true);
+		this.startNodeId = new Identifier(plt.startNodeId);
+		this.endNodeId = new Identifier(plt.endNodeId);
 		
-		assert this.startNode != null : ErrorMessages.NON_NULL_EXPECTED; 
-		assert this.endNode != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert !this.startNodeId.isVoid() : ErrorMessages.NON_VOID_EXPECTED; 
+		assert !this.endNodeId.isVoid() : ErrorMessages.NON_VOID_EXPECTED;
 		
 		this.selected = false;
 
@@ -260,10 +263,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
+		final Set<Identifiable> dependencies = new HashSet<Identifiable>(3);
 		dependencies.add(this.physicalLinkType);
-		dependencies.add(this.startNode);
-		dependencies.add(this.endNode);
+		dependencies.add(this.startNodeId);
+		dependencies.add(this.endNodeId);
 		
 		return dependencies;
 	}
@@ -289,8 +292,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 				this.name,
 				this.description,
 				this.physicalLinkType.getId().getTransferable(),
-				this.startNode.getId().getTransferable(),
-				this.endNode.getId().getTransferable(),
+				this.startNodeId.getTransferable(),
+				this.endNodeId.getTransferable(),
 				this.city,
 				this.street,
 				this.building,
@@ -372,11 +375,20 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	public AbstractNode getEndNode() {
-		return this.endNode;
+		try {
+			return StorableObjectPool.getStorableObject(this.endNodeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
+	}
+	
+	Identifier getEndNodeId() {
+		return this.endNodeId;
 	}
 
 	protected void setEndNode0(final AbstractNode endNode) {
-		this.endNode = endNode;
+		this.endNodeId = endNode.getId();
 		this.nodeLinksSorted = false;
 	}
 
@@ -400,7 +412,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	public String getName() {
 		if (this.name.length() == 0)
-			return this.startNode.getName() + " -- " + this.endNode.getName();
+			return this.getStartNode().getName() + " -- " + this.getEndNode().getName();
 		return this.name;
 	}
 
@@ -451,11 +463,16 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	public AbstractNode getStartNode() {
-		return this.startNode;
+		try {
+			return StorableObjectPool.getStorableObject(this.startNodeId, true);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
 	}
 
 	protected void setStartNode0(final AbstractNode startNode) {
-		this.startNode = startNode;
+		this.startNodeId = startNode.getId();
 		this.nodeLinksSorted = false;
 
 	}
@@ -506,8 +523,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			final int dimensionY,
 			final boolean leftToRight,
 			final boolean topToBottom,
-			final AbstractNode startNode,
-			final AbstractNode endNode) {
+			final Identifier startNodeId,
+			final Identifier endNodeId) {
 		super.setAttributes(created,
 				modified,
 				creatorId,
@@ -521,8 +538,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.building = building;
 		this.leftToRight = leftToRight;
 		this.topToBottom = topToBottom;
-		this.startNode = startNode;
-		this.endNode = endNode;
+		this.startNodeId = startNodeId;
+		this.endNodeId = endNodeId;
 		
 		this.binding.setDimension(new IntDimension(dimensionX, dimensionY));
 	}
@@ -561,7 +578,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	public void removeNodeLink(final NodeLink nodeLink) {
 		this.nodeLinks.remove(nodeLink);
 		this.nodeLinksSorted = false;
-		super.markAsChanged();
+		// there is no need to modify object. NodeLink is transient.
 	}
 
 	/**
@@ -575,7 +592,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		if (!this.nodeLinks.contains(addNodeLink)) {
 			this.nodeLinks.add(addNodeLink);
 			this.nodeLinksSorted = false;
-			super.markAsChanged();
+			// there is no need to modify object. NodeLink is transient.
 		}
 	}
 
@@ -876,10 +893,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		xmlPhysicalLink.setPhysicallinktypeuid(com.syrus.amficom.map.xml.PhysicalLinkTypeSort.Enum.forInt(type.getSort().value()));
 
 		uid = xmlPhysicalLink.addNewStartnodeuid();
-		uid.setStringValue(this.startNode.getId().toString());
+		uid.setStringValue(this.startNodeId.toString());
 
 		uid = xmlPhysicalLink.addNewEndnodeuid();
-		uid.setStringValue(this.endNode.getId().toString());
+		uid.setStringValue(this.endNodeId.toString());
 
 		xmlPhysicalLink.setCity(this.city);
 		xmlPhysicalLink.setStreet(this.street);
@@ -923,8 +940,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			System.out.println("End node 507133 id " + endNodeId1.toString());
 		}
 		
-		this.startNode = StorableObjectPool.getStorableObject(startNodeId1, true);
-		this.endNode = StorableObjectPool.getStorableObject(endNodeId1, true);
+		this.startNodeId = startNodeId1;
+		this.endNodeId = endNodeId1;
 
 		String typeCodeName1 = xmlPhysicalLink.getPhysicallinktypeuid().toString();
 		final TypicalCondition condition = new TypicalCondition(typeCodeName1,

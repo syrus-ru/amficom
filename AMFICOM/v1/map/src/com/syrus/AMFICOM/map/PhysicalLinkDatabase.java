@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.33 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.34 2005/08/09 16:24:18 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/08/08 11:35:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/08/09 16:24:18 $
+ * @author $Author: max $
  * @module map
  */
 public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalLink> {
@@ -135,15 +135,9 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 				false) : storableObject;
 
 		PhysicalLinkType type;
-		AbstractNode startNode;
-		AbstractNode endNode;
 		try {
 			type = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
 					PhysicalLinkWrapper.COLUMN_PHYSICAL_LINK_TYPE_ID), true);
-			startNode = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-					PhysicalLinkWrapper.COLUMN_START_NODE_ID), true);
-			endNode = StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-					PhysicalLinkWrapper.COLUMN_END_NODE_ID), true);
 		} catch (ApplicationException ae) {
 			final String msg = this.getEntityName() + "Database.updateEntityFromResultSet | Error " + ae.getMessage();
 			throw new RetrieveObjectException(msg, ae);
@@ -167,8 +161,8 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 				resultSet.getInt(PhysicalLinkWrapper.COLUMN_DIMENSION_Y),
 				(topLeft & LEFT_RIGHT) == 1,
 				(topLeft & TOP_BOTTOM) == 1,
-				startNode,
-				endNode);
+				DatabaseIdentifier.getIdentifier(resultSet, PhysicalLinkWrapper.COLUMN_START_NODE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, PhysicalLinkWrapper.COLUMN_END_NODE_ID));
 		return physicalLink;
 	}
 
