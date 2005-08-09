@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.33 2005/08/08 11:27:26 arseniy Exp $
+ * $Id: StorableObjectXML.java,v 1.34 2005/08/09 12:24:03 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import java.util.Set;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.33 $, $Date: 2005/08/08 11:27:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/08/09 12:24:03 $
+ * @author $Author: bob $
  * @module general
  */
 public class StorableObjectXML {
@@ -116,29 +116,20 @@ public class StorableObjectXML {
 				objectMap.put(CLASSNAME, shortClassName);
 		}
 		
-		boolean canBeModified = false;
 		try {
 			final Map<String, Object> xmlObjectMap = this.driver.getObjectMap(id);
 			final StorableObjectVersion version = (StorableObjectVersion) xmlObjectMap.get(StorableObjectWrapper.COLUMN_VERSION);
-			if (force || version == storableObject.getVersion()) {
-				storableObject.version.increment();	
-				canBeModified = true;
-			} else {
+			if (!force && !version.isNewer(storableObject.getVersion())) {
 				throw new VersionCollisionException("StorableObjectXML.updateObject | version collision, id='"
 						+ id.getIdentifierString() + '\'', storableObject.version.longValue(), version.longValue());
-			}
+			} 
 			this.driver.deleteObject(id);
 		} catch (ObjectNotFoundException e) {
 			// object not found , ok
-			canBeModified = true;
 		} catch (RetrieveObjectException e) {
 			throw new UpdateObjectException("StorableObjectXML.updateObject | retrieve exception -- " + e.getMessage(),e );
 		} catch (IllegalDataException e) {
 			throw new UpdateObjectException("StorableObjectXML.updateObject | illegal data exception -- " + e.getMessage(),e );
-		}
-
-		if (canBeModified) {			
-			storableObject.modified = new Date(System.currentTimeMillis());
 		}
 
 		/**
