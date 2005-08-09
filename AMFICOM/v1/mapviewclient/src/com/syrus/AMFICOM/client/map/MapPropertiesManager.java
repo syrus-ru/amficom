@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.34 2005/08/08 13:05:00 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.35 2005/08/09 09:47:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.34 $, $Date: 2005/08/08 13:05:00 $
+ * @version $Revision: 1.35 $, $Date: 2005/08/09 09:47:48 $
  * @module mapviewclient_v1
  */
 public final class MapPropertiesManager 
@@ -93,8 +93,8 @@ public final class MapPropertiesManager
  	
 	public static final double DEFAULT_ZOOM = 1.0D;
 
-	private static final String DEFAULT_LAST_LONGITUDE = "0";
-	private static final String DEFAULT_LAST_LATITUDE = "0";
+	private static final String DEFAULT_LAST_LONGITUDE = "0.0";
+	private static final String DEFAULT_LAST_LATITUDE = "0.0";
 	private static final String DEFAULT_LAST_ZOOM = "1";
 	private static final String DEFAULT_LAST_DIRECTORY = ".";
 	private static final String DEFAULT_DESCRETE_NAVIGATION = "true";
@@ -108,9 +108,9 @@ public final class MapPropertiesManager
 	protected static String dataBasePath = "";
 	protected static String dataBaseView = "";
 	protected static String dataBaseURL = "";
-	protected static double lastLong = 0.D;
-	protected static double lastLat = 0.D;
-	protected static double lastZoom = 1.D;
+	protected static double lastLong = 0.0D;
+	protected static double lastLat = 0.0D;
+	protected static double lastZoom = 1.0D;
 	protected static String lastView = "";
 	protected static String lastDirectory = ".";
 	protected static boolean descreteNavigation = false;
@@ -122,7 +122,7 @@ public final class MapPropertiesManager
 	 * Величина габарита области границы (при входе в неё происходит смещение экрана)
 	 * в процентах от габарита окна карты
 	 */
-	protected static double navigateAreaSize = 0.03;
+	protected static double navigateAreaSize = 0.03D;
 	
 	protected static String connectionClass = "";
 	protected static String viewerClass = "";
@@ -488,16 +488,25 @@ public final class MapPropertiesManager
 		} catch (Exception e) {
 			lastLong = Double.parseDouble(defaults.getProperty(KEY_LAST_LONGITUDE));
 		}
+		if(Double.isNaN(lastLong)) {
+			lastLong = Double.parseDouble(defaults.getProperty(KEY_LAST_LONGITUDE));
+		}
 
 		try {
 			lastLat = Double.parseDouble(properties.getProperty(KEY_LAST_LATITUDE));
 		} catch (Exception e) {
 			lastLat = Double.parseDouble(defaults.getProperty(KEY_LAST_LATITUDE));
 		}
+		if(Double.isNaN(lastLat)) {
+			lastLat = Double.parseDouble(defaults.getProperty(KEY_LAST_LATITUDE));
+		}
 
 		try {
 			lastZoom = Double.parseDouble(properties.getProperty(KEY_LAST_ZOOM));
 		} catch (Exception e) {
+			lastZoom = Double.parseDouble(defaults.getProperty(KEY_LAST_ZOOM));
+		}
+		if(Double.isNaN(lastZoom)) {
 			lastZoom = Double.parseDouble(defaults.getProperty(KEY_LAST_ZOOM));
 		}
 		
@@ -540,6 +549,9 @@ public final class MapPropertiesManager
 		try {
 			navigateAreaSize = Double.parseDouble(properties.getProperty(KEY_NAVIGATE_AREA_SIZE));
 		} catch (Exception e) {
+			navigateAreaSize = Double.parseDouble(defaults.getProperty(KEY_NAVIGATE_AREA_SIZE));
+		}
+		if(Double.isNaN(navigateAreaSize)) {
 			navigateAreaSize = Double.parseDouble(defaults.getProperty(KEY_NAVIGATE_AREA_SIZE));
 		}
 
@@ -689,6 +701,9 @@ public final class MapPropertiesManager
 		try {
 			spareLength = Double.parseDouble(properties.getProperty(KEY_SPARE_LENGTH));
 		} catch (Exception e) {
+			spareLength = Double.parseDouble(defaults.getProperty(KEY_SPARE_LENGTH));
+		}
+		if(Double.isNaN(spareLength)) {
 			spareLength = Double.parseDouble(defaults.getProperty(KEY_SPARE_LENGTH));
 		}
 
