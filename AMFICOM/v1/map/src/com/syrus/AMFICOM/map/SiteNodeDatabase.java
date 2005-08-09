@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.33 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: SiteNodeDatabase.java,v 1.34 2005/08/09 16:27:08 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/08/08 11:35:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/08/09 16:27:08 $
+ * @author $Author: max $
  * @module map
  */
 public final class SiteNodeDatabase extends StorableObjectDatabase<SiteNode> {
@@ -64,8 +64,8 @@ public final class SiteNodeDatabase extends StorableObjectDatabase<SiteNode> {
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
-				+ QUESTION
-				+ QUESTION
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION;
 		}
 		return updateMultipleSQLValues;
