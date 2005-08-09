@@ -69,7 +69,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/08/08 14:36:25 $
+ * @version $Revision: 1.63 $, $Date: 2005/08/09 14:03:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -426,7 +426,6 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 							LoginManager.getUserId(),
 							ParameterSetSort.SET_SORT_MEASUREMENT_PARAMETERS,
 							LangModelSchedule.getString("Text.SetCreatedByScheduler"), params, Collections.singleton(this.meId)); //$NON-NLS-1$
-				StorableObjectPool.putStorableObject(set);
 				this.setId = set.getId();
 
 				System.out.println("ReflectometryTestPanel.getSet() | newSet: " + this.setId);
@@ -1004,7 +1003,6 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 															.getMeasurementDuration(), measurementSetup
 															.getMonitoredElementIds(), measurementSetup
 															.getMeasurementTypeIds());
-										StorableObjectPool.putStorableObject(measurementSetup1);
 										measurementSetupId = measurementSetup1.getId();
 										this.unchangedMeasurementSetupNewMap.put(measurementSetup.getId(),
 											measurementSetupId);

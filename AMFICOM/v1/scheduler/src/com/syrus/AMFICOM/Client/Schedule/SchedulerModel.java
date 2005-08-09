@@ -980,11 +980,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							JOptionPane.OK_OPTION);
 				}
 			}
-			try {
-				StorableObjectPool.putStorableObject(test);
-			} catch (IllegalObjectEntityException e) {
-				Log.debugException(e, Log.DEBUGLEVEL05);
-			}
 
 			try {
 				if (this.selectedTestIds != null) {
@@ -1108,7 +1103,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 								testGroup.getMonitoredElement(),
 								testGroup.getDescription(),
 								testGroup.getMeasurementSetupIds());
-						StorableObjectPool.putStorableObject(test);
 						this.testIds.add(test.getId());
 						if (this.selectedTestIds != null) {
 							this.selectedTestIds.clear();
@@ -1210,7 +1204,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 								testGroupId = testId;
 								test.setGroupTestId(testGroupId);
 							}
-							StorableObjectPool.putStorableObject(test);
 							this.testIds.add(testId.getId());
 							this.selectedTestIds.add(testId);
 							assert Log.debugMessage("SchedulerModel.addGroupTests | add test " + test.getId()

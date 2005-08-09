@@ -403,7 +403,6 @@ public class TimeParametersFrame extends JInternalFrame {
 																								periodicalTemporalPattern.setPeriod(intervalLength);
 																							} else {
 																								periodicalTemporalPattern = PeriodicalTemporalPattern.createInstance(LoginManager.getUserId(), intervalLength);
-																								StorableObjectPool.putStorableObject(periodicalTemporalPattern);
 																								selectedTest.setTemporalPatternId(periodicalTemporalPattern.getId());
 																							}
 																						} catch (ApplicationException e) {
@@ -1206,13 +1205,7 @@ public class TimeParametersFrame extends JInternalFrame {
 						AbstractMainFrame.showErrorMessage(this.panel, e);
 						return null;
 					}
-					
-					try {
-						StorableObjectPool.putStorableObject(temporalPattern);
-					} catch (IllegalObjectEntityException e) {
-						AbstractMainFrame.showErrorMessage(this.panel, e);
-						return null;
-					}
+
 				}
 				
 				if (temporalPattern == null) {
