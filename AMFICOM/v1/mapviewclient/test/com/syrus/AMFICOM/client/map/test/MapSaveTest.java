@@ -1,5 +1,5 @@
 /**
- * $Id: MapSaveTest.java,v 1.1 2005/08/09 07:14:44 krupenn Exp $
+ * $Id: MapSaveTest.java,v 1.2 2005/08/10 09:25:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,7 +7,7 @@
  */
 package com.syrus.AMFICOM.client.map.test;
 
-import java.awt.Point;
+import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
@@ -16,7 +16,6 @@ import com.syrus.AMFICOM.client.map.editor.MapEditor;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
 import com.syrus.AMFICOM.client.model.OpenSessionCommand;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -27,8 +26,6 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
-
-import junit.framework.TestCase;
 
 public class MapSaveTest extends TestCase {
 
@@ -75,8 +72,8 @@ public class MapSaveTest extends TestCase {
 		PhysicalLinkType linktype = LinkTypeController.getDefaultPhysicalLinkType();
 		PhysicalLink link = PhysicalLink.createInstance(
 				userId,
-				site1, 
-				site2, 
+				site1.getId(), 
+				site2.getId(), 
 				linktype );
 		map.addPhysicalLink(link);
 
