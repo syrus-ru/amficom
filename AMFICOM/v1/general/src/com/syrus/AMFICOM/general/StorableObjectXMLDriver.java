@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.30 2005/08/09 12:24:46 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.31 2005/08/10 07:55:54 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.30 $, $Date: 2005/08/09 12:24:46 $
+ * @version $Revision: 1.31 $, $Date: 2005/08/10 07:55:54 $
  * @author $Author: bob $
  * @module general
  */
@@ -179,10 +179,14 @@ public class StorableObjectXMLDriver {
 			value = childNodes.item(0).getNodeValue();
 		Object object = null;
 		if (className.equals(StorableObject.class.getName())) {
-			final Identifier identifier = new Identifier(value);
+			final Identifier identifier = value != null ? 
+					new Identifier(value) : 
+					Identifier.VOID_IDENTIFIER;
 			object = this.reflectStorableObject(identifier);
 		} else if (className.equals(Identifier.class.getName())) {
-			object = new Identifier(value);
+			object = value != null ? 
+					new Identifier(value) : 
+					Identifier.VOID_IDENTIFIER;
 		} else if (className.equals(StorableObjectVersion.class.getName())) {
 			object = new StorableObjectVersion(Long.parseLong(value));
 		} else if (className.equals(DataType.class.getName())) {
@@ -240,9 +244,11 @@ public class StorableObjectXMLDriver {
 			element.appendChild(text);
 		} else if (object instanceof Identifier) {
 			final Identifier id = (Identifier) object;
-			final String string = id.getIdentifierString();
-			final Text text = this.doc.createTextNode(string);
-			element.appendChild(text);
+			if (!id.isVoid()) {
+				final String string = id.getIdentifierString();
+				final Text text = this.doc.createTextNode(string);
+				element.appendChild(text);
+			}
 		} else if (object instanceof StorableObjectVersion) {
 			final StorableObjectVersion version = (StorableObjectVersion) object;
 			final String string = Long.toString(version.longValue());
