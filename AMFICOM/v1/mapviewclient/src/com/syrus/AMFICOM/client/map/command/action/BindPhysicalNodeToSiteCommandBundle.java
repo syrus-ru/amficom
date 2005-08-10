@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.28 2005/07/24 12:41:05 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.29 2005/08/10 09:21:26 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
  *  неприв€занному кабелю, к элементу узла. ѕри этом лини€, которой 
  *  принадлежит данный узел, делитс€ на 2 части
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/07/24 12:41:05 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/10 09:21:26 $
  * @module mapclient_v1
  */
 public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -133,6 +133,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 					this.site,
 					null);
 			link.setStartNode(this.site);
+			cableChannelingItem.setStartSiteNode(this.site);
 		}
 		catch(Throwable e)
 		{
