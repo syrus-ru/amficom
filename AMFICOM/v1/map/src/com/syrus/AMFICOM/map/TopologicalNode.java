@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.60 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: TopologicalNode.java,v 1.61 2005/08/10 07:48:38 max Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: arseniy $
- * @version $Revision: 1.60 $, $Date: 2005/08/08 11:35:11 $
+ * @author $Author: max $
+ * @version $Revision: 1.61 $, $Date: 2005/08/10 07:48:38 $
  * @module map
  * @todo physicalLink should be transient
  */
@@ -232,8 +232,8 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 
 			// NOTE: This call never results in using loader, so it doesn't matter
 			// what to pass as 3-d argument
-			final Set nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
-			final NodeLink nodeLink = (NodeLink) nlinks.iterator().next();
+			final Set<NodeLink> nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
+			final NodeLink nodeLink = nlinks.iterator().next();
 			return nodeLink.getPhysicalLink();
 		} catch (ApplicationException e) {
 			// TODO how to work it over?!
