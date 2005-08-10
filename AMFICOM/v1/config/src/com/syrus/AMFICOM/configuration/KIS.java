@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.101 2005/08/08 14:23:52 arseniy Exp $
+ * $Id: KIS.java,v 1.102 2005/08/10 11:24:28 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -38,12 +39,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/08/08 14:23:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.102 $, $Date: 2005/08/10 11:24:28 $
+ * @author $Author: bob $
  * @module config
  */
 
-public final class KIS extends DomainMember {
+public final class KIS extends DomainMember implements Namable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>

@@ -1,5 +1,5 @@
 /*
- * $Id: Server.java,v 1.48 2005/08/08 14:23:32 arseniy Exp $
+ * $Id: Server.java,v 1.49 2005/08/10 11:24:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -35,12 +36,12 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/08/08 14:23:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.49 $, $Date: 2005/08/10 11:24:44 $
+ * @author $Author: bob $
  * @module administration
  */
 
-public final class Server extends DomainMember implements Characterizable {
+public final class Server extends DomainMember implements Characterizable, Namable {
 	private static final long serialVersionUID = 1988410957632317660L;
 
 	private String name;
