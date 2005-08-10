@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.22 2005/08/04 14:45:47 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.23 2005/08/10 13:50:21 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/08/04 14:45:47 $
+ * @version $Revision: 1.23 $, $Date: 2005/08/10 13:50:21 $
  * @author $Author: bob $
  * @module admin_v1
  */
@@ -93,7 +93,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 							+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
 							IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 						
-				}				
+				}			
+				break;
 			default:
 				throw new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + this.entityCode
 						+ ", " + ObjectEntities.codeToString(this.entityCode),
