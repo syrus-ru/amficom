@@ -1,5 +1,5 @@
 /*
- * $Id: DomainMember.java,v 1.22 2005/08/08 11:29:37 arseniy Exp $
+ * $Id: DomainMember.java,v 1.23 2005/08/10 11:30:57 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/08/08 11:29:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/08/10 11:30:57 $
+ * @author $Author: bob $
  * @module administration
  */
 
@@ -84,7 +84,7 @@ public abstract class DomainMember extends StorableObject {
 	protected boolean isValid() {
 		/* XXX : fix checking domainId w/o check id for concrete impementation as domain
 		 * Domain entity can have null domain id what's why its doesnt must check domainId for null */
-		return super.isValid() && (this.id.getMajor() == ObjectEntities.DOMAIN_CODE || this.domainId != null);
+		return super.isValid() && (this.id.getMajor() == ObjectEntities.DOMAIN_CODE || !this.domainId.isVoid());
 	}
 
 	public final Identifier getDomainId() {
@@ -95,7 +95,9 @@ public abstract class DomainMember extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected final void setDomainId0(final Identifier domainId) {
-		assert domainId.getMajor() == ObjectEntities.DOMAIN_CODE;
+		assert domainId.isVoid() || 
+			domainId.getMajor() == ObjectEntities.DOMAIN_CODE : 
+				"Domain id expected";
 		this.domainId = domainId;
 	}
 	
