@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.18 2005/08/10 14:02:25 bob Exp $
+ * $Id: JGraphText.java,v 1.19 2005/08/10 14:45:21 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/10 14:45:21 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -1192,7 +1192,9 @@ public class JGraphText implements GraphSelectionListener {
 			}
 			
 			if (canConnect) {
-				DefaultEdge edge = new DefaultEdge("edge" + (++this.edgeCount));
+				DefaultEdge edge = new DefaultEdge(
+//					"edge" + (++this.edgeCount)
+					);
 				// 
 				edge.setSource(sourcePort);
 				edge.setTarget(targetPort);
@@ -1241,7 +1243,12 @@ public class JGraphText implements GraphSelectionListener {
 
 // 		this.createEdge(this.treeModel.isDirect() ? this.rootItem : cell, this.treeModel.isDirect() ? cell : this.rootItem, false);
  		if (parentCell != null) {
- 			this.createEdge(this.treeModel.isDirect() ? parentCell : cell, this.treeModel.isDirect() ?  cell : parentCell);
+ 			DefaultEdge edge = this.createEdge(this.treeModel.isDirect() ? parentCell : cell, this.treeModel.isDirect() ?  cell : parentCell);
+ 			if (object instanceof AbstractBean) {
+//				System.out.println("MyMarqueeHandler.mouseReleased()");
+				AbstractBean bean = (AbstractBean)object;
+				bean.updateEdgeAttributes(edge, (MPort) (this.treeModel.isDirect() ?  cell : parentCell).getChildAt(0));
+			}
  		}
  		return cell;
 	}
