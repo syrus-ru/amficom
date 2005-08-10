@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibrary.java,v 1.11 2005/08/09 16:28:19 max Exp $
+ * $Id: MapLibrary.java,v 1.12 2005/08/10 07:38:26 max Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,7 +7,6 @@
  */
 package com.syrus.AMFICOM.map;
 
-import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collection;
@@ -51,7 +50,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/09 16:28:19 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/10 07:38:26 $
  * @author $Author: max $
  * @module map
  */
