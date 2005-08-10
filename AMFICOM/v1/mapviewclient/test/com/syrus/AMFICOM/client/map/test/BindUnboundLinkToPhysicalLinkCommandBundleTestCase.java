@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundleTestCase.java,v 1.3 2005/07/24 12:28:27 krupenn Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundleTestCase.java,v 1.4 2005/08/10 09:27:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -482,7 +482,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 		physicalLinks.remove(this.link3);
 		physicalLinks.remove(this.link4);
 		
-		PhysicalLink newlink = (PhysicalLink )linksIterator.next();
+		PhysicalLink newlink = (PhysicalLink )physicalLinks.iterator().next();
 		assertTrue(newlink2 instanceof UnboundLink);
 		
 		UnboundLink unboundLink = (UnboundLink)newlink;
@@ -527,7 +527,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundleTestCase extends SchemeBi
 		assertTrue(cablePath.getLinks().contains(this.link1));
 		assertTrue(cablePath.getLinks().contains(unboundLink2));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
-		assertSame(cablePath.getStartLastBoundLink(), this.link1);
+		assertSame(cablePath.getStartLastBoundLink(), cci1);
 		assertSame(cablePath.getStartUnboundNode(), this.well1);
 		assertNull(cablePath.getEndLastBoundLink());
 		assertSame(cablePath.getEndUnboundNode(), this.building2);

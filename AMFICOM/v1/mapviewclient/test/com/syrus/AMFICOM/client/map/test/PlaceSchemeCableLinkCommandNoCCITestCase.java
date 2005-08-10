@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommandNoCCITestCase.java,v 1.6 2005/07/24 12:28:27 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommandNoCCITestCase.java,v 1.7 2005/08/10 09:27:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -143,7 +143,7 @@ public class PlaceSchemeCableLinkCommandNoCCITestCase extends SchemeBindingTestC
 
 		assertSame(cci.getStartSiteNode(), this.building1);
 		assertSame(cci.getEndSiteNode(), this.building2);
-		assertSame(cci.getPhysicalLink(), unboundLink);
+		assertNull(cci.getPhysicalLink());
 
 		assertSame(cablePath.getStartNode(), this.building1); 
 		assertSame(cablePath.getEndNode(), this.building2);

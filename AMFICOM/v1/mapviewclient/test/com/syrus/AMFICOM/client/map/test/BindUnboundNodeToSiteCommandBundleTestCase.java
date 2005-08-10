@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundleTestCase.java,v 1.3 2005/07/24 12:28:27 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundleTestCase.java,v 1.4 2005/08/10 09:27:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@ import java.awt.Point;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.Set;
 
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundNodeToSiteCommandBundle;
@@ -32,7 +33,7 @@ public class BindUnboundNodeToSiteCommandBundleTestCase extends SchemeBindingTes
 		startcommand.setNetMapViewer(METS.netMapViewer);
 		startcommand.execute();
 
-		Collection siteNodes = METS.map.getSiteNodes();
+		Collection siteNodes = new LinkedList(METS.map.getSiteNodes());
 		assertEquals(siteNodes.size(), 6);
 		siteNodes.remove(this.building1);
 		siteNodes.remove(this.well1);

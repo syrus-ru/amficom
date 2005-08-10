@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommandWithCCITestCase.java,v 1.6 2005/07/24 12:28:27 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommandWithCCITestCase.java,v 1.7 2005/08/10 09:27:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -112,7 +112,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertTrue(cablePath.getLinks().contains(unboundLink));
 		assertTrue(cablePath.getLinks().contains(this.link1));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
-		assertSame(cablePath.getStartLastBoundLink(), this.link1);
+		assertSame(cablePath.getStartLastBoundLink(), cci1);
 		assertSame(cablePath.getStartUnboundNode(), this.well1);
 		assertNull(cablePath.getEndLastBoundLink());
 		assertSame(cablePath.getEndUnboundNode(), this.building2);
@@ -201,7 +201,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertTrue(cablePath.getLinks().contains(unboundLink));
 		assertTrue(cablePath.getLinks().contains(this.link1));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
-		assertSame(cablePath.getStartLastBoundLink(), this.link1);
+		assertSame(cablePath.getStartLastBoundLink(), cci1);
 		assertSame(cablePath.getStartUnboundNode(), this.well1);
 		assertNull(cablePath.getEndLastBoundLink());
 		assertSame(cablePath.getEndUnboundNode(), this.building2);
@@ -294,9 +294,9 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertTrue(cablePath.getLinks().contains(this.link1));
 		assertTrue(cablePath.getLinks().contains(this.link4));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
-		assertSame(cablePath.getStartLastBoundLink(), this.link1);
+		assertSame(cablePath.getStartLastBoundLink(), cci1);
 		assertSame(cablePath.getStartUnboundNode(), this.well1);
-		assertSame(cablePath.getEndLastBoundLink(), this.link4);
+		assertSame(cablePath.getEndLastBoundLink(), cci3);
 		assertSame(cablePath.getEndUnboundNode(), this.well3);
 	}
 
@@ -392,9 +392,9 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertTrue(cablePath.getLinks().contains(this.link1));
 		assertTrue(cablePath.getLinks().contains(this.link4));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
-		assertSame(cablePath.getStartLastBoundLink(), this.link1);
+		assertSame(cablePath.getStartLastBoundLink(), cci1);
 		assertSame(cablePath.getStartUnboundNode(), this.well1);
-		assertSame(cablePath.getEndLastBoundLink(), this.link4);
+		assertSame(cablePath.getEndLastBoundLink(), cci3);
 		assertSame(cablePath.getEndUnboundNode(), this.well3);
 	}
 
@@ -510,7 +510,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertSame(cablePath.getEndNode(), this.building2);
 		assertSame(cablePath.getFirstCCI(this.link1), cci1);
 		assertSame(cablePath.getFirstCCI(unboundLink1), cci2);
-		assertSame(cablePath.getFirstCCI(this.link4), cci3);
+		assertSame(cablePath.getFirstCCI(this.link3), cci3);
 		assertSame(cablePath.getFirstCCI(unboundLink2), cci4);
 		assertEquals(cablePath.getLinks().size(), 4);
 		assertTrue(cablePath.getLinks().contains(this.link1));
@@ -518,7 +518,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertTrue(cablePath.getLinks().contains(this.link3));
 		assertTrue(cablePath.getLinks().contains(unboundLink2));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
-		assertSame(cablePath.getStartLastBoundLink(), this.link1);
+		assertSame(cablePath.getStartLastBoundLink(), cci1);
 		assertSame(cablePath.getStartUnboundNode(), this.well1);
 		assertNull(cablePath.getEndLastBoundLink());
 		assertSame(cablePath.getEndUnboundNode(), this.building2);
@@ -614,7 +614,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertSame(unboundNodeLink2.getPhysicalLink(), unboundLink2);
 
 		List cciList = new ArrayList(SchemeSampleData.scheme1clink0.getPathMembers());
-		assertEquals(cciList.size(), 3);
+		assertEquals(cciList.size(), 4);
 		cciList.remove(cci2);
 		cciList.remove(cci3);
 
@@ -635,8 +635,8 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertSame(cablePath.getStartNode(), this.building1); 
 		assertSame(cablePath.getEndNode(), this.building2);
 		assertSame(cablePath.getFirstCCI(unboundLink1), cci1);
-		assertSame(cablePath.getFirstCCI(this.link1), cci2);
-		assertSame(cablePath.getFirstCCI(this.link4), cci3);
+		assertSame(cablePath.getFirstCCI(this.link2), cci2);
+		assertSame(cablePath.getFirstCCI(this.link3), cci3);
 		assertSame(cablePath.getFirstCCI(unboundLink2), cci4);
 		assertEquals(cablePath.getLinks().size(), 4);
 		assertTrue(cablePath.getLinks().contains(unboundLink1));
@@ -715,17 +715,15 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		CablePath cablePath = (CablePath)cablePaths.iterator().next();
 		
 		Set<CableChannelingItem> cciList = SchemeSampleData.scheme1clink0.getPathMembers();
-		assertEquals(cciList.size(), 4);
-		cciList.remove(cci2);
-		cciList.remove(cci3);
+		assertEquals(cciList.size(), 6);
 
 		assertSame(cablePath.getStartNode(), this.building1); 
 		assertSame(cablePath.getEndNode(), this.building2);
 		assertEquals(cablePath.getLinks().size(), 6);
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
-		assertSame(cablePath.getStartLastBoundLink(), this.link4);
+		assertSame(cablePath.getStartLastBoundLink(), cci6);
 		assertSame(cablePath.getStartUnboundNode(), this.building2);
-		assertSame(cablePath.getEndLastBoundLink(), this.link1);
+		assertSame(cablePath.getEndLastBoundLink(), cci1);
 		assertSame(cablePath.getEndUnboundNode(), this.building1);
 	}
 
@@ -869,7 +867,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 
 		assertEquals(nodeLinks.size(), 7);
 		assertEquals(physicalLinks.size(), 7);
-		assertEquals(siteNodes.size(), 7);
+		assertEquals(siteNodes.size(), 5);
 		assertEquals(cablePaths.size(), 1);
 
 		nodeLinks.remove(this.nodeLink1);
@@ -928,7 +926,7 @@ public class PlaceSchemeCableLinkCommandWithCCITestCase extends SchemeBindingTes
 		assertSame(unboundLink2.getStartNode(), this.well1); 
 		assertSame(unboundLink2.getEndNode(), this.well3);
 		assertSame(unboundNodeLink2.getStartNode(), this.well1); 
-		assertSame(unboundNodeLink2.getEndNode(), this.well2);
+		assertSame(unboundNodeLink2.getEndNode(), this.well3);
 		assertEquals(unboundLink2.getNodeLinks().size(), 1);
 		assertTrue(unboundLink2.getNodeLinks().contains(unboundNodeLink2));
 		assertSame(unboundNodeLink2.getPhysicalLink(), unboundLink2);

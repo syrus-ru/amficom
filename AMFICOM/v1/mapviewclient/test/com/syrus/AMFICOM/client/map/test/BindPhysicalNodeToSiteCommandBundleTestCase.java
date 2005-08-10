@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundleTestCase.java,v 1.4 2005/07/24 12:28:27 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundleTestCase.java,v 1.5 2005/08/10 09:27:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -67,7 +67,7 @@ public class BindPhysicalNodeToSiteCommandBundleTestCase extends SchemeBindingTe
 		assertEquals(topologicalNodes.size(), 1);
 
 		TopologicalNode node = (TopologicalNode)topologicalNodes.iterator().next();
-		assertSame(node.getPhysicalLink(), this.link1);
+		assertSame(node.getPhysicalLink(), link);
 
 		//test itself
 		BindPhysicalNodeToSiteCommandBundle command = new BindPhysicalNodeToSiteCommandBundle(node, this.well1);
@@ -151,6 +151,10 @@ public class BindPhysicalNodeToSiteCommandBundleTestCase extends SchemeBindingTe
 			cci2 = cci1;
 			cci1 = (CableChannelingItem )cciIterator.next();
 		}
+
+		assertSame(cci1.getStartSiteNode(), this.building1);
+		assertSame(cci1.getEndSiteNode(), this.well1);
+		assertNull(cci1.getPhysicalLink());
 
 		assertSame(cci2.getStartSiteNode(), this.well1);
 		assertSame(cci2.getEndSiteNode(), this.building2);
