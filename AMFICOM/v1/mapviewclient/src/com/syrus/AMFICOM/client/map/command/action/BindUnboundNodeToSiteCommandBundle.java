@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.23 2005/07/11 13:18:04 bass Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.24 2005/08/10 09:22:31 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -26,13 +26,14 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
  *   оманда прив€зывани€ неприв€занного элемента к узлу.
- * @author $Author: bass $
- * @version $Revision: 1.23 $, $Date: 2005/07/11 13:18:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.24 $, $Date: 2005/08/10 09:22:31 $
  * @module mapviewclient_v1
  */
 public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -73,11 +74,20 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 			// обновл€ютс€ концевые узлы кабельных путей
 			for(Iterator it = cablePaths.iterator(); it.hasNext();)
 			{
-				CablePath cp = (CablePath)it.next();
-				if(cp.getEndNode().equals(this.unbound))
-					cp.setEndNode(this.site);
-				if(cp.getStartNode().equals(this.unbound))
-					cp.setStartNode(this.site);
+				CablePath cablePath = (CablePath)it.next();
+				if(cablePath.getEndNode().equals(this.unbound))
+					cablePath.setEndNode(this.site);
+				if(cablePath.getStartNode().equals(this.unbound))
+					cablePath.setStartNode(this.site);
+				
+				for(CableChannelingItem cci : cablePath.getSchemeCableLink().getPathMembers()) {
+					if(cci.getStartSiteNode() == this.unbound) {
+						cci.setStartSiteNode(this.site);
+					}
+					if(cci.getEndSiteNode() == this.unbound) {
+						cci.setEndSiteNode(this.site);
+					}
+				}
 			}
 			// список кабельных путей, включающий прив€зываемый элемент
 			List measurementPaths = mapView.getMeasurementPaths(this.unbound);
