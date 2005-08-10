@@ -1,5 +1,5 @@
 /**
- * $Id: METS.java,v 1.9 2005/07/20 15:01:33 bass Exp $
+ * $Id: METS.java,v 1.10 2005/08/10 09:25:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.OpenSessionCommand;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -40,7 +41,9 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -48,11 +51,15 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeSampleData;
  
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/20 15:01:33 $
- * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/08/10 09:25:44 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class METS {
+
+	public static Identifier domainId;
+
+	public static Identifier userId;
 
 	public static ApplicationContext aContext;
 
@@ -115,6 +122,19 @@ public class METS {
 		}
 	}
 	
+	public static void clearMapView() {
+		ArrayList cables = new ArrayList(mapView.getCablePaths());
+		for(Iterator iter = cables.iterator(); iter.hasNext();) {
+			CablePath cablePath = (CablePath )iter.next();
+			mapView.removeCablePath(cablePath);
+		}
+		ArrayList measurementPaths = new ArrayList(mapView.getMeasurementPaths());
+		for(Iterator iter = measurementPaths.iterator(); iter.hasNext();) {
+			MeasurementPath measurementPath = (MeasurementPath)iter.next();
+			mapView.removeMeasurementPath(measurementPath);
+		}
+	}
+	
 	public static void setUp() throws Exception {
 		if(initPerformed)
 			return;
@@ -122,12 +142,16 @@ public class METS {
 		new TestMapEditor();
 		Dispatcher dispatcher = new Dispatcher();
 		new OpenSessionCommand(dispatcher).execute();
-		System.out.println(LoginManager.getUserId());
-		System.out.println(LoginManager.getDomainId());
 		aContext = new ApplicationContext();
 		aContext.setApplicationModel(new MapMapEditorApplicationModelFactory().create());
 		aContext.setDispatcher(new Dispatcher());
 		mapFrame = new MapFrame(aContext);
+
+		METS.userId = LoginManager.getUserId();
+		METS.domainId = LoginManager.getDomainId();
+		System.out.println(METS.userId);
+		System.out.println(METS.domainId);
+		
 		MapNewCommand mnc = new MapNewCommand(aContext);
 		mnc.execute();
 		if(mnc.getResult() == Command.RESULT_OK) {
@@ -147,10 +171,10 @@ public class METS {
 		mapView.setMap(map);
 		mapFrame.setMapView(mapView);
 
-		SchemeSampleData.populate(LoginManager.getUserId(), LoginManager.getDomainId());
+		SchemeSampleData.populate(METS.userId, METS.domainId);
 
 		Set schemes = StorableObjectPool.getStorableObjectsByCondition(
-				new LinkedIdsCondition(LoginManager.getDomainId(), ObjectEntities.SCHEME_CODE), false);
+				new LinkedIdsCondition(METS.domainId, ObjectEntities.SCHEME_CODE), false);
 		Iterator iterator = schemes.iterator();
 		Scheme scheme1 = (Scheme )iterator.next();
 		Scheme scheme2 = (Scheme )iterator.next();
@@ -191,7 +215,7 @@ public class METS {
 			SiteNode startNode,
 			SiteNode endNode) throws Exception {
 		return CableChannelingItem.createInstance(
-				LoginManager.getUserId(), 
+				METS.userId, 
 				startNode,
 				endNode,
 				schemeCableLink);
@@ -204,7 +228,7 @@ public class METS {
 			PhysicalLink link) throws Exception
 	{
 		return CableChannelingItem.createInstance(
-				LoginManager.getUserId(), 
+				METS.userId, 
 				MapPropertiesManager.getSpareLength(),
 				MapPropertiesManager.getSpareLength(),
 				0,//default
