@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.31 2005/07/31 19:11:08 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.32 2005/08/10 13:19:09 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.31 $, $Date: 2005/07/31 19:11:08 $
+ * @author $Author: max $
+ * @version $Revision: 1.32 $, $Date: 2005/08/10 13:19:09 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -243,9 +243,31 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				switch (super.linkedEntityCode) {
 				case SCHEMEPATH_CODE:
 					return super.conditionTest(pathElement.parentSchemePathId);
+				case SCHEMELINK_CODE:
+					return super.conditionTest(pathElement.schemeLinkId);
+				case SCHEMEELEMENT_CODE:
+					AbstractSchemePort startSchemePort = pathElement.getStartAbstractSchemePort();
+					boolean condition1 = false; 
+					if(startSchemePort != null) {
+						condition1 = super.conditionTest(startSchemePort.getParentSchemeDeviceId());
+					}
+					AbstractSchemePort endSchemePort = pathElement.getEndAbstractSchemePort();
+					boolean condition2 = false; 
+					if(endSchemePort != null) {
+						condition2 = super.conditionTest(endSchemePort.getParentSchemeDeviceId());
+					}	
+					return condition1 | condition2;
+				case SCHEMECABLELINK_CODE:
+					SchemeCableThread schemeCableThread2 = pathElement.getSchemeCableThread();
+					boolean condition = false;
+					if(schemeCableThread2 != null) {
+						condition = super.conditionTest(schemeCableThread2.parentSchemeCableLinkId);
+					}
+					return condition;
 				default:
 					throw newIllegalObjectEntityException();
 				}
+			
 			default:
 				throw newIllegalObjectEntityException();
 		}

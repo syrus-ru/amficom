@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.27 2005/07/25 12:10:38 bass Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.28 2005/08/10 13:19:09 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,11 +34,15 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.map.SiteNodeWrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/07/25 12:10:38 $
+ * @author $Author: max $
+ * @version $Revision: 1.28 $, $Date: 2005/08/10 13:19:09 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -202,6 +206,115 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				switch (super.condition.getLinkedEntityCode()) {
 				case SCHEMEPATH_CODE:
 					return super.getQuery(PathElementWrapper.COLUMN_PARENT_SCHEME_PATH_ID);
+				case SCHEMELINK_CODE:
+					return super.getQuery(PathElementWrapper.COLUMN_SCHEME_LINK_ID);
+				case SCHEMEELEMENT_CODE:
+					StringBuffer buffer = new StringBuffer();
+					buffer.append(PathElementWrapper.COLUMN_START_ABSTRACT_SCHEME_PORT_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemePortWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEPORT);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					
+					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemeDeviceWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEDEVICE);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					
+					buffer.append(super.getLinkedQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID, SchemeElementWrapper.COLUMN_ID, ObjectEntities.SCHEMEELEMENT));
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					
+					buffer.append(StorableObjectDatabase.SQL_OR);
+					
+					buffer.append(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemePortWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEPORT);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					
+					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemeDeviceWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEDEVICE);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					buffer.append(super.getLinkedQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID, SchemeElementWrapper.COLUMN_ID, ObjectEntities.SCHEMEELEMENT));
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					
+					buffer.append(StorableObjectDatabase.SQL_OR);
+					
+					buffer.append(PathElementWrapper.COLUMN_START_ABSTRACT_SCHEME_PORT_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemeCablePortWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMECABLEPORT);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					
+					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemeDeviceWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEDEVICE);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					
+					buffer.append(super.getLinkedQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID, SchemeElementWrapper.COLUMN_ID, ObjectEntities.SCHEMEELEMENT));
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					
+					buffer.append(StorableObjectDatabase.SQL_OR);
+					
+					buffer.append(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemeCablePortWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMECABLEPORT);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					
+					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemeDeviceWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEDEVICE);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					buffer.append(super.getLinkedQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID, SchemeElementWrapper.COLUMN_ID, ObjectEntities.SCHEMEELEMENT));
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					
+					return buffer.toString();
+				case SCHEMECABLELINK_CODE:
+					StringBuffer buffer2 = new StringBuffer();
+					buffer2.append(PathElementWrapper.COLUMN_SCHEME_CABLE_THREAD_ID);
+					buffer2.append(StorableObjectDatabase.SQL_IN);
+					buffer2.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer2.append(StorableObjectDatabase.SQL_SELECT);
+					buffer2.append(SchemeCableThreadWrapper.COLUMN_ID);
+					buffer2.append(StorableObjectDatabase.SQL_FROM);
+					buffer2.append(ObjectEntities.SCHEMECABLETHREAD);
+					buffer2.append(StorableObjectDatabase.SQL_WHERE);
+					super.getLinkedQuery(SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID, SchemeCableLinkWrapper.COLUMN_ID, ObjectEntities.SCHEMECABLELINK);
+					return buffer2.toString();
 				default:
 					throw super.newExceptionLinkedEntityIllegal();
 				}
