@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.4 2005/07/24 12:28:27 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.5 2005/08/10 11:53:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -182,6 +182,10 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		physicalLinks.remove(this.link3);
 		physicalLinks.remove(this.link4);
 		
+		CablePath cablePath = METS.mapView.getCablePaths().iterator().next();
+		UnboundLink unboundLink = (UnboundLink)cablePath.getBinding().get(cci1);
+		physicalLinks.remove(unboundLink);
+
 		Iterator linkIterator = physicalLinks.iterator();
 		PhysicalLink newLink1 = (PhysicalLink )linkIterator.next();
 		PhysicalLink newLink2 = (PhysicalLink )linkIterator.next();
@@ -203,8 +207,8 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		Collection siteNodes = METS.map.getSiteNodes();
 		Collection cablePaths = METS.mapView.getCablePaths();
 
-		assertEquals(nodeLinks.size(), 6);
-		assertEquals(physicalLinks.size(), 6);
+		assertEquals(nodeLinks.size(), 7);
+		assertEquals(physicalLinks.size(), 7);
 		assertEquals(siteNodes.size(), 7);
 		assertEquals(cablePaths.size(), 1);
 
@@ -215,6 +219,7 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 
 		assertTrue(physicalLinks.contains(unboundLink1));
 		assertTrue(physicalLinks.contains(unboundLink2));
+		assertTrue(physicalLinks.contains(unboundLink));
 	}
 
 	public void testUnboundBetweenBoundAndSite() throws Exception {
@@ -312,13 +317,14 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		assertEquals(cablePath.getLinks().size(), 2);
 		assertTrue(cablePath.getLinks().contains(greneratedLink));
 		assertTrue(cablePath.getLinks().contains(unboundLink2));
-		assertSame(cablePath.getStartLastBoundLink(), greneratedLink);
+		assertSame(cablePath.getStartLastBoundLink(), cci1);
 		assertSame(cablePath.getStartUnboundNode(), this.well1);
 		assertNull(cablePath.getEndLastBoundLink());
 		assertSame(cablePath.getEndUnboundNode(), unbound);
 	}
 
 	public void testUnboundBetweenTwoBound() {
+		long t1 = System.currentTimeMillis();
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
 		startcommand.execute();
@@ -330,6 +336,8 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		PlaceSchemeCableLinkCommand cablecommand = new PlaceSchemeCableLinkCommand(SchemeSampleData.scheme1clink0);
 		cablecommand.setNetMapViewer(METS.netMapViewer);
 		cablecommand.execute();
+
+		long t2 = System.currentTimeMillis();
 
 		Collection nodeLinks = METS.map.getNodeLinks();
 		Collection physicalLinks = new ArrayList(METS.map.getPhysicalLinks());
@@ -348,9 +356,13 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		
 		UnboundLink unboundLink = (UnboundLink)link;
 
+		long t3 = System.currentTimeMillis();
+
 		GenerateUnboundLinkCablingCommandBundle command = new GenerateUnboundLinkCablingCommandBundle(unboundLink);
 		command.setNetMapViewer(METS.netMapViewer);
 		command.execute();
+
+		long t4 = System.currentTimeMillis();
 
 		assertEquals(command.getResult(), Command.RESULT_OK);
 
@@ -389,6 +401,8 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		assertTrue(generatedLink.getNodeLinks().contains(generatedNodeLink));
 		assertSame(generatedNodeLink.getPhysicalLink(), generatedLink);
 		
+		long t5 = System.currentTimeMillis();
+
 		Set cciSet = SchemeSampleData.scheme1clink0.getPathMembers();
 		assertEquals(cciSet.size(), 1);
 		CableChannelingItem cci = (CableChannelingItem )cciSet.iterator().next();
@@ -403,10 +417,16 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		assertEquals(cablePath.getLinks().size(), 1);
 		assertTrue(cablePath.getLinks().contains(generatedLink));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
-		assertSame(cablePath.getStartLastBoundLink(), generatedLink);
+		assertSame(cablePath.getStartLastBoundLink(), cci);
 		assertSame(cablePath.getStartUnboundNode(), this.building2);
-		assertSame(cablePath.getEndLastBoundLink(), generatedLink);
+		assertSame(cablePath.getEndLastBoundLink(), cci);
 		assertSame(cablePath.getEndUnboundNode(), this.building1);
+		long t6 = System.currentTimeMillis();
+		System.out.println("place commands " + (t2 - t1) + " ms");
+		System.out.println("place assertions " + (t3 - t2) + " ms");
+		System.out.println("generate command " + (t4 - t3) + " ms");
+		System.out.println("map assertions " + (t5 - t4) + " ms");
+		System.out.println("cci assertions " + (t6 - t5) + " ms");
 	}
 
 	public void testUnboundBetweenTwoSites() throws Exception {
@@ -512,9 +532,9 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		assertTrue(cablePath.getLinks().contains(this.link1));
 		assertTrue(cablePath.getLinks().contains(this.link4));
 		assertSame(cablePath.getSchemeCableLink(), SchemeSampleData.scheme1clink0);
-		assertSame(cablePath.getStartLastBoundLink(), this.link4);
+		assertSame(cablePath.getStartLastBoundLink(), cci3);
 		assertSame(cablePath.getStartUnboundNode(), this.building2);
-		assertSame(cablePath.getEndLastBoundLink(), this.link1);
+		assertSame(cablePath.getEndLastBoundLink(), cci1);
 		assertSame(cablePath.getEndUnboundNode(), this.building1);
 	}
 
