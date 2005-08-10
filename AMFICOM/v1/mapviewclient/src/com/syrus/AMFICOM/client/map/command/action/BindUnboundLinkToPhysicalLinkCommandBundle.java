@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.20 2005/08/09 14:54:38 krupenn Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.21 2005/08/10 09:22:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/08/09 14:54:38 $
+ * @version $Revision: 1.21 $, $Date: 2005/08/10 09:22:01 $
  * @module mapviewclient_v1 
  */
 public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommandBundle
@@ -68,10 +68,10 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 		try
 		{
 			List endNodesList = new ArrayList(2);
-			endNodesList.add(unbound.getStartNode());
-			endNodesList.add(unbound.getEndNode());
-			if(! (endNodesList.contains(link.getStartNode())
-					&& endNodesList.contains(link.getEndNode()))) {
+			endNodesList.add(this.unbound.getStartNode());
+			endNodesList.add(this.unbound.getEndNode());
+			if(! (endNodesList.contains(this.link.getStartNode())
+					&& endNodesList.contains(this.link.getEndNode()))) {
 				setResult(RESULT_NO);
 				return;
 			}
