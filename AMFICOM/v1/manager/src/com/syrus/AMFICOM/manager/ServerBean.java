@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBean.java,v 1.2 2005/08/02 14:42:06 bob Exp $
+ * $Id: ServerBean.java,v 1.3 2005/08/10 14:02:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,10 +17,12 @@ import java.beans.PropertyChangeEvent;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/02 14:42:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/10 14:02:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -65,6 +67,8 @@ public class ServerBean extends Bean {
 				(name2 != null && !name2.equals(name) ||
 				!name.equals(name2))) {
 			this.server.setName(name);
+			JGraphText.entityDispatcher.firePropertyChange(
+				new PropertyChangeEvent(this, ObjectEntities.SERVER, null, this));
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_NAME, name2, name));
 		}		
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBean.java,v 1.3 2005/08/02 14:42:06 bob Exp $
+ * $Id: RTUBean.java,v 1.4 2005/08/10 14:02:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/02 14:42:06 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/10 14:02:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -43,6 +43,7 @@ public class RTUBean extends Bean {
 		return this.kis.getName();
 	}
 	
+	@Override
 	public final void setName(String name) {
 		String name2 = this.kis.getName();
 		if (name2 != name &&

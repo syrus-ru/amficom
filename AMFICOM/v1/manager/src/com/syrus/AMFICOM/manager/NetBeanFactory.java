@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.8 2005/08/02 14:42:06 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.9 2005/08/10 14:02:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,12 @@
 
 package com.syrus.AMFICOM.manager;
 
+import com.syrus.AMFICOM.general.Identifier;
+
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/02 14:42:06 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/10 14:02:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -41,7 +43,7 @@ public class NetBeanFactory extends AbstractBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean() {		
+	public AbstractBean createBean(Perspective perspective) {		
 		AbstractBean bean = new NonStorableBean();
 		bean.setName("Net" + (++super.count));
 		bean.setCodeName("Net");
@@ -50,6 +52,11 @@ public class NetBeanFactory extends AbstractBeanFactory {
 		return bean;
 	}
 
+	@Override
+	public AbstractBean createBean(Identifier identifier) {
+		throw new UnsupportedOperationException();
+	}
+	
 	private final Validator getValidator() {
 		if (this.validator == null) {
 			 this.validator = new Validator() {

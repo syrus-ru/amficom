@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.7 2005/08/02 14:42:06 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.8 2005/08/10 14:02:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,10 +19,9 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/02 14:42:06 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/10 14:02:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -50,22 +49,28 @@ public class RTUBeanFactory extends TabledBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean() 
+	public AbstractBean createBean(Perspective perspective) 
 	throws CreateObjectException, IllegalObjectEntityException {
-		RTUBean bean = new RTUBean();
-		bean.setCodeName("RTU");
-		bean.setValidator(this.getValidator());
+		
+		DomainPerpective domainPerpective = (DomainPerpective) perspective;
 		
 		KIS kis = KIS.createInstance(LoginManager.getUserId(),
-			Identifier.VOID_IDENTIFIER,
+			domainPerpective.getDomainId(),
 			"",
 			"",
 			"",
 			(short)0,
 			Identifier.VOID_IDENTIFIER,
 			Identifier.VOID_IDENTIFIER);
-		StorableObjectPool.putStorableObject(kis);
-		bean.setId(kis.getId());	
+		return this.createBean(kis.getId());
+	}
+	
+	@Override
+	public AbstractBean createBean(Identifier identifier) {
+		RTUBean bean = new RTUBean();
+		bean.setCodeName("RTU");
+		bean.setValidator(this.getValidator());
+		bean.setId(identifier);	
 		
 		bean.table = super.getTable(bean, 
 			RTUBeanWrapper.getInstance(),

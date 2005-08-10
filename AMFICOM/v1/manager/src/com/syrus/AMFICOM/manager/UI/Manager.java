@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.1 2005/08/02 14:40:51 bob Exp $
+* $Id: Manager.java,v 1.2 2005/08/10 14:02:25 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/02 14:40:51 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/10 14:02:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -93,135 +93,114 @@ public class Manager extends AbstractApplication {
 	throws ApplicationException {
 		
 		{
-			CharacteristicType type = CharacteristicType.createInstance(LoginManager.getUserId(), 
+			CharacteristicType.createInstance(LoginManager.getUserId(), 
 				CharacteristicTypeCodenames.USER_NATURE, 
 				"Тип должностного лица", 
 				"Тип", 
 				DataType.STRING, 
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
 			
-			StorableObjectPool.putStorableObject(type);
 		}
 		
 		{
-			CharacteristicType type = CharacteristicType.createInstance(LoginManager.getUserId(), 
+			CharacteristicType.createInstance(LoginManager.getUserId(), 
 				CharacteristicTypeCodenames.USER_FULLNAME, 
 				"Полное имя пользотеля", 
 				"ФИО", 
 				DataType.STRING, 
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
 			
-			StorableObjectPool.putStorableObject(type);
 		}
 		
 		{
-			CharacteristicType type = CharacteristicType.createInstance(LoginManager.getUserId(), 
+			CharacteristicType.createInstance(LoginManager.getUserId(), 
 				CharacteristicTypeCodenames.USER_POSITION, 
 				"Должность", 
 				"Должность", 
 				DataType.STRING, 
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
 			
-			StorableObjectPool.putStorableObject(type);
 		}
 
 		{
-			CharacteristicType type = CharacteristicType.createInstance(LoginManager.getUserId(), 
+			CharacteristicType.createInstance(LoginManager.getUserId(), 
 				CharacteristicTypeCodenames.USER_DEPARTEMENT, 
 				"Подразделение", 
 				"Подразделение", 
 				DataType.STRING, 
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
-			
-			StorableObjectPool.putStorableObject(type);
 		}
 		
 		{
-			CharacteristicType type = CharacteristicType.createInstance(LoginManager.getUserId(), 
+			CharacteristicType.createInstance(LoginManager.getUserId(), 
 				CharacteristicTypeCodenames.USER_COMPANY, 
 				"Организация", 
 				"Организация", 
 				DataType.STRING, 
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
-			
-			StorableObjectPool.putStorableObject(type);
 		}
 		
 		{
-			CharacteristicType type = CharacteristicType.createInstance(LoginManager.getUserId(), 
+			CharacteristicType.createInstance(LoginManager.getUserId(), 
 				CharacteristicTypeCodenames.USER_ROOM_NO, 
 				"Номер комнаты", 
 				"Номер комнаты", 
 				DataType.STRING, 
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
-			
-			StorableObjectPool.putStorableObject(type);
 		}
 		
 		{
-			CharacteristicType type = CharacteristicType.createInstance(LoginManager.getUserId(), 
+			CharacteristicType.createInstance(LoginManager.getUserId(), 
 				CharacteristicTypeCodenames.USER_CITY, 
 				"Город", 
 				"Город", 
 				DataType.STRING, 
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
-			
-			StorableObjectPool.putStorableObject(type);
 		}
 		
 		{
-			CharacteristicType type = CharacteristicType.createInstance(LoginManager.getUserId(), 
+			CharacteristicType.createInstance(LoginManager.getUserId(), 
 				CharacteristicTypeCodenames.USER_STREET, 
 				"Улица", 
 				"Улица", 
 				DataType.STRING, 
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
-			
-			StorableObjectPool.putStorableObject(type);
 		}
 		
 		{
-			CharacteristicType type = CharacteristicType.createInstance(LoginManager.getUserId(), 
+			CharacteristicType.createInstance(LoginManager.getUserId(), 
 				CharacteristicTypeCodenames.USER_BUILDING, 
 				"Дом", 
 				"Дом", 
 				DataType.STRING, 
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
-			
-			StorableObjectPool.putStorableObject(type);
 		}
 		
 		{
-			CharacteristicType type = CharacteristicType.createInstance(LoginManager.getUserId(), 
+			CharacteristicType.createInstance(LoginManager.getUserId(), 
 				CharacteristicTypeCodenames.USER_EMAIL, 
 				"Адрес электронной почты", 
 				"Электронная почта", 
 				DataType.STRING, 
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
-			
-			StorableObjectPool.putStorableObject(type);
 		}
 		
 		{
-			CharacteristicType type = CharacteristicType.createInstance(LoginManager.getUserId(), 
+			CharacteristicType.createInstance(LoginManager.getUserId(), 
 				CharacteristicTypeCodenames.USER_PHONE, 
 				"Телефон", 
 				"Телефон", 
 				DataType.STRING, 
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
-			
-			StorableObjectPool.putStorableObject(type);
 		}
 		
 		{
-			CharacteristicType type = CharacteristicType.createInstance(LoginManager.getUserId(), 
+			CharacteristicType.createInstance(LoginManager.getUserId(), 
 				CharacteristicTypeCodenames.USER_CELLULAR, 
 				"Сотовый телефон", 
 				"Сотовый телефон", 
 				DataType.STRING, 
 				CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL); 
-			
-			StorableObjectPool.putStorableObject(type);
 		}
 		
 		StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_TYPE_CODE, LoginManager.getUserId(), true);

@@ -6,12 +6,19 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
+import com.syrus.AMFICOM.administration.MCM;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: RTUBeanWrapper.java,v 1.3 2005/08/02 14:42:06 bob Exp $
+ * $Id: RTUBeanWrapper.java,v 1.4 2005/08/10 14:02:25 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +26,7 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/02 14:42:06 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/10 14:02:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -36,28 +43,20 @@ public class RTUBeanWrapper implements Wrapper {
 
 	private List<String>					keys;
 	
-	private Map<Identifier, String> 	mcmIdMapReverce; 
+//	private Map<Identifier, String> 	mcmIdMapReverce; 
 	private Map<String, Identifier> 	mcmIdMap;
 	
 	private RTUBeanWrapper() {
-		// empty private constructor
-		String[] keysArray = new String[] { KEY_NAME, 
-				KEY_DESCRIPTION, 
-				KEY_HOSTNAME,
-				KEY_PORT,
-				KEY_MCM_ID};
-
-		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
+		this.keys = Collections.unmodifiableList(
+			Arrays.asList(
+				new String[] { KEY_NAME, 
+					KEY_DESCRIPTION, 
+					KEY_HOSTNAME,
+					KEY_PORT,
+					KEY_MCM_ID}));
 		
-		this.mcmIdMapReverce = new HashMap<Identifier, String>();
-		this.mcmIdMapReverce.put(new Identifier("MCM_1"), "MCM в Тушино");
-		this.mcmIdMapReverce.put(new Identifier("MCM_2"), "MCM у чёрта на куличках");
-		
+//		this.mcmIdMapReverce = new HashMap<Identifier, String>();
 		this.mcmIdMap  = new HashMap<String, Identifier>();
-		
-		for(Identifier identifier : this.mcmIdMapReverce.keySet()) {
-			this.mcmIdMap.put(this.mcmIdMapReverce.get(identifier), identifier);
-		}
 		
 	}
 
@@ -74,6 +73,25 @@ public class RTUBeanWrapper implements Wrapper {
 
 	public List<String> getKeys() {
 		return this.keys;
+	}
+	
+	private void refreshMCMMap() {
+//		this.mcmIdMapReverce.clear();
+		this.mcmIdMap.clear();
+		try {
+			Set<MCM> mcms = StorableObjectPool.getStorableObjectsByCondition(
+				new EquivalentCondition(ObjectEntities.MCM_CODE), 
+				true);			
+			for(MCM mcm : mcms) {
+				String name = mcm.getName();
+				Identifier id = mcm.getId();
+//				this.mcmIdMapReverce.put(id, name);
+				this.mcmIdMap.put(name, id);
+			}
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 
 	public String getName(final String key) {
@@ -110,6 +128,7 @@ public class RTUBeanWrapper implements Wrapper {
 
 	public Object getPropertyValue(String key) {
 		if (key.equals(KEY_MCM_ID)) {
+			this.refreshMCMMap();
 			return this.mcmIdMap;
 		}
 		return null;

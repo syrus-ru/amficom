@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.17 2005/08/02 14:42:06 bob Exp $
+ * $Id: JGraphText.java,v 1.18 2005/08/10 14:02:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/02 14:42:06 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/10 14:02:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -34,6 +34,7 @@ import java.util.Hashtable;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
@@ -43,7 +44,6 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDesktopPane;
-import javax.swing.JFrame;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
@@ -54,6 +54,7 @@ import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.event.UndoableEditEvent;
@@ -81,8 +82,19 @@ import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 import org.jgraph.graph.PortView;
 
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainMember;
+import com.syrus.AMFICOM.administration.PermissionAttributes;
+import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.ARMBeanFactory;
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.AbstractBeanFactory;
@@ -92,6 +104,7 @@ import com.syrus.AMFICOM.manager.LangModelManager;
 import com.syrus.AMFICOM.manager.MCMBeanFactory;
 import com.syrus.AMFICOM.manager.MPort;
 import com.syrus.AMFICOM.manager.NetBeanFactory;
+import com.syrus.AMFICOM.manager.Perspective;
 import com.syrus.AMFICOM.manager.RTUBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
 import com.syrus.AMFICOM.manager.UserBeanFactory;
@@ -142,8 +155,11 @@ public class JGraphText implements GraphSelectionListener {
 	 public JLabel	currentPerspectiveLabel;
 	 
 	 private boolean direct = false;
+	 
+	 public static Dispatcher entityDispatcher = new Dispatcher();  
 
 	
+	 Perspective perspective;
 	
 	public JGraphText() {
 		// Construct Model and Graph
@@ -195,88 +211,227 @@ public class JGraphText implements GraphSelectionListener {
 	}
 	
 	private void createChilden() {
-//		int childCount = 0;
-//		
-//		String name = "Child" + (++childCount);
-//		DefaultGraphCell[] cells = new DefaultGraphCell[5];
-//		cells[0] = this.createChild(null, name, 160, 20, 20, 20, Color.CYAN, false);
-//		
-//		name = "Child" + (++childCount);
-//		cells[1] = this.createChild(cells[0], name, 20, 160, 20, 20, Color.CYAN, false);
-//
-//		cells[2] = this.createChild(cells[1], "Icon", 160, 160, 0, 0, null, false);
-//		
-//		{
-//			AttributeMap attributes = cells[2].getAttributes();
-//			URL resource = JGraphText.class.getClassLoader().getResource("jgraph.gif");
-//			if (resource != null) {
-//				GraphConstants.setIcon(attributes, new ImageIcon(resource));
-//				attributes.remove(GraphConstants.BORDER);
-//				attributes.remove(GraphConstants.BORDERCOLOR);
-//			}
-//		}
-//
-//		name = "Child" + (++childCount);
-//		cells[3] = this.createChild(cells[0], name, 260, 60, 20, 20, Color.CYAN, false);
-//		
-//		name = "Child" + (++childCount);
-//		cells[4] = this.createChild(null, name, 280, 20, 20, 20, Color.CYAN, false);
-//
-//		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-//		graphLayoutCache.insert(cells);	
-//
-//		this.graph.getSelectionModel().clearSelection();		
 		
-//		try {
-//			SystemUser user = SystemUser.createInstance(null, "sys", SystemUserSort.USER_SORT_SYSADMIN, "SysAdmin", "System Administrator");
-//			StorableObjectPool.putStorableObject(user);
-//		} catch (CreateObjectException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		} catch (IllegalObjectEntityException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		
-//		try {
-//			StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, LoginManager.getUserId(), true);
-//		} catch (ApplicationException e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
+		Map<Identifier, DefaultGraphCell> domainCellMap = new HashMap<Identifier, DefaultGraphCell>();
 		
+		try {
+			
+			// Domains
+			Set<Domain> domains = 
+				StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.DOMAIN_CODE), true);
+			
+			DomainBeanFactory domainBeanFactory =
+				DomainBeanFactory.getInstance();
+			
+			Icon image = domainBeanFactory.getImage();
+			int iconHeight = image.getIconHeight();
+			
+			int i = 0;
+			boolean firstIteration = true;
+			while(!domains.isEmpty()) {
+				for (Iterator iterator = domains.iterator(); iterator.hasNext();) {
+					Domain domain = (Domain) iterator.next();
+					if (!(firstIteration ^ domain.getDomainId().isVoid())) {						
+						Identifier id = domain.getId();
+						DefaultGraphCell cell = domainCellMap.get(domain.getDomainId());
+						if (!(firstIteration ^ (cell == null))) {
+							AbstractBean bean = domainBeanFactory.createBean(id);					
+							domainCellMap.put(id, 
+								this.createChild(
+									cell, 
+									domain.getName(), 
+									bean, 
+									400, 
+									iconHeight * 3 * i / 2, 
+									0, 
+									0, 
+									image));
+							i++;
+							iterator.remove();
+							
+						}
+					}
+				}
+				firstIteration = false;
+			}
+
+			
+			{
+				// Users
+				Set<PermissionAttributes> permissions = 
+					StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.PERMATTR_CODE), true);
+			
+				UserBeanFactory userBeanFactory = UserBeanFactory.getInstance();
+				
+				NetBeanFactory netBeanFactory = NetBeanFactory.getInstance();
+				
+				ARMBeanFactory armBeanFactory = ARMBeanFactory.getInstance();
+				
+				for(PermissionAttributes permissionAttributes : permissions) {
+					Identifier domainId = permissionAttributes.getDomainId();				
+									
+					Domain domain = StorableObjectPool.getStorableObject(domainId, true);
+					
+					DefaultGraphCell domainCell = domainCellMap.get(domainId);
+					if (domainCell == null) {
+						throw new ApplicationException("Domain " + domainId + ", doesn't created !");
+					}
+					
+					MPort domainPort = (MPort) domainCell.getChildAt(0);
+					List<Port> targets = (this.direct ? domainPort.getTargets() : domainPort.getSources());
+					
+					DefaultGraphCell netCell = null;
+					
+					for(Port port : targets) {
+						MPort port2 = (MPort) port;
+						AbstractBean bean = port2.getBean();
+						if (bean.getCodeName().equals("Net")) {
+							netCell = (DefaultGraphCell) port2.getParent();
+							break;
+						}
+					}
+					
+					DefaultGraphCell armCell = null;
+					
+					if (netCell == null) {
+						AbstractBean bean = netBeanFactory.createBean((Perspective)null);					
+						netCell = this.createChild(
+								domainCell, 
+								LangModelManager.getString("Entity.Net") + ' ' + domain.getName(), 
+								bean, 
+								200, 
+								200, 
+								0, 
+								0, 
+								netBeanFactory.getImage());
+					} else {
+						MPort netPort = (MPort) netCell.getChildAt(0);
+						List<Port> netTargets = (this.direct ? netPort.getTargets() : netPort.getSources());
+						
+						for(Port port : netTargets) {
+							MPort port2 = (MPort) port;
+							AbstractBean bean = port2.getBean();
+							if (bean.getCodeName().equals("ARM")) {
+								armCell = (DefaultGraphCell) port2.getParent();
+								break;
+							}
+						}
+					}
+					
+					{
+						// user
+						if (armCell == null) {
+							AbstractBean bean = armBeanFactory.createBean((Perspective)null);					
+							armCell = this.createChild(
+									netCell, 
+									LangModelManager.getString("Entity.AutomatedWorkplace"), 
+									bean, 
+									200, 
+									300, 
+									0, 
+									0, 
+									armBeanFactory.getImage());
+						}
+						
+						
+						AbstractBean userBean = 
+							userBeanFactory.createBean(permissionAttributes.getUserId());
+						
+						this.createChild(
+							armCell, 
+							userBean.getName(), 
+							userBean, 
+							100, 
+							300, 
+							0, 
+							0, 
+							userBeanFactory.getImage());
+						
+					}				
+				}
+			
+			}
+			
+			
+			this.addDomainMember(domainCellMap, 
+				ObjectEntities.KIS_CODE, 
+				RTUBeanFactory.getInstance());
+			this.addDomainMember(domainCellMap, 
+				ObjectEntities.MCM_CODE, 
+				MCMBeanFactory.getInstance());
+			this.addDomainMember(domainCellMap, 
+				ObjectEntities.SERVER_CODE, 
+				ServerBeanFactory.getInstance());
+			
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
+	
+	private void addDomainMember(Map<Identifier, DefaultGraphCell> domainCellMap,
+	                             short entityCode,
+	                             AbstractBeanFactory factory) 
+	throws ApplicationException {
+		// domainMember
+		Set<DomainMember> domainMembers = 
+			StorableObjectPool.getStorableObjectsByCondition(
+				new EquivalentCondition(entityCode), true);
 		
-//		DomainBeanFactory domainBeanFactory = DomainBeanFactory.getInstance();
-//		
-//		DefaultGraphCell domain1 = this.createChild(null, domainBeanFactory.getShortName() + "-" + 1, 
-//				domainBeanFactory.createBean(), 550, 200, 0, 0, domainBeanFactory.getImage());
-//		
-//		DefaultGraphCell domain2 = this.createChild(domain1, domainBeanFactory.getShortName() + "-" + 2, 
-//				domainBeanFactory.createBean(), 220, 50, 0, 0, domainBeanFactory.getImage());
-//		
-//		NetBeanFactory netBeanFactory = NetBeanFactory.getInstance();
-//		
-//		DefaultGraphCell net1 = this.createChild(domain2, netBeanFactory.getShortName() + "-" + 1, 
-//				netBeanFactory.createBean(), 0, 50, 0, 0, netBeanFactory.getImage());
-//		
-//		ARMBeanFactory armBeanFactory = ARMBeanFactory.getInstance();
-//		
-//		DefaultGraphCell arm1 = this.createChild(net1, armBeanFactory.getShortName() + "-" + 1, 
-//			armBeanFactory.createBean(), 0, 350, 0, 0, armBeanFactory.getImage());
-//		
-//		RTUBeanFactory rtuBeanFactory = RTUBeanFactory.getInstance();
-//		
-//		DefaultGraphCell rtu1 = this.createChild(net1, rtuBeanFactory.getShortName() + "-" + 1, 
-//			rtuBeanFactory.createBean(), 450, 20, 0, 0, rtuBeanFactory.getImage());
-//		
-//		UserBeanFactory userBeanFactory = UserBeanFactory.getInstance();
-//		
-//		DefaultGraphCell user1 = this.createChild(arm1, userBeanFactory.getShortName() + "-" + 1, 
-//			userBeanFactory.createBean(), 250, 250, 0, 0, userBeanFactory.getImage());
-//		
-//		DefaultGraphCell domain3 = this.createChild(domain1, domainBeanFactory.getShortName() + "-" + 3, 
-//				domainBeanFactory.createBean(), 200, 350, 0, 0, domainBeanFactory.getImage());
-		
+		for(DomainMember domainMember : domainMembers) {
+			
+			System.out.println("JGraphText.addDomainMember() | " + domainMember.getId());
+			
+			AbstractBean bean = 
+				factory.createBean(domainMember.getId());
+			
+			Identifier domainId = domainMember.getDomainId();
+			
+			DefaultGraphCell domainCell = domainCellMap.get(domainId);
+			if (domainCell == null) {
+				throw new ApplicationException("Domain " + domainId + ", doesn't created !");
+			}
+			
+			MPort domainPort = (MPort) domainCell.getChildAt(0);
+			List<Port> targets = (this.direct ? domainPort.getTargets() : domainPort.getSources());
+			
+			DefaultGraphCell netCell = null;
+			
+			for(Port port : targets) {
+				MPort port2 = (MPort) port;
+				AbstractBean netBean = port2.getBean();
+				if (netBean.getCodeName().equals("Net")) {
+					netCell = (DefaultGraphCell) port2.getParent();
+					break;
+				}
+			}
+			
+			if (netCell == null) {
+				NetBeanFactory netBeanFactory = NetBeanFactory.getInstance();
+				AbstractBean netBean = netBeanFactory.createBean((Perspective)null);		
+				Domain domain = StorableObjectPool.getStorableObject(domainId, true);
+				netCell = this.createChild(
+						domainCell, 
+						LangModelManager.getString("Entity.Net") + ' ' + domain.getName(), 
+						netBean, 
+						200, 
+						200, 
+						0, 
+						0, 
+						netBeanFactory.getImage());
+			}
+			
+			this.createChild(
+				netCell, 
+				bean.getName(), 
+				bean, 
+				100, 
+				300, 
+				0, 
+				0, 
+				factory.getImage());
+		}
 	}
 	
 	private void createModelListener() {
@@ -424,6 +579,7 @@ public class JGraphText implements GraphSelectionListener {
 			desktopPane.add(frame);
 			frame.getContentPane().add(pane);
 			
+			frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 			frame.setSize(200, 600);
 			frame.setLocation(0, 0);
 			
@@ -485,11 +641,10 @@ public class JGraphText implements GraphSelectionListener {
 			desktopPane.add(frame);
 			frame.getContentPane().add(panel);
 
+			frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 			frame.setSize(800, 800);
 			frame.setLocation(200, 0);
 
-			frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-			
 			frame.setVisible(true);			
 			
 		}
@@ -509,6 +664,7 @@ public class JGraphText implements GraphSelectionListener {
 			
 			frame.getContentPane().add(this.propertyPanel);
 			
+			frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 			frame.setSize(200, 200);
 			frame.setLocation(0, 600);
 			
@@ -527,6 +683,8 @@ public class JGraphText implements GraphSelectionListener {
 	private JToolBar createPerspecives() {		
 		
 		JToolBar perspectives = new JToolBar();
+		
+		perspectives.setFloatable(false);
 		
 		this.domainsButton = perspectives.add(new AbstractAction(LangModelManager.getString("Action.Domains")) {
 			public void actionPerformed(ActionEvent e) {
@@ -550,10 +708,31 @@ public class JGraphText implements GraphSelectionListener {
 					
 					JButton button = (JButton) e.getSource();
 					button.setEnabled(false);
+					
+					perspective = null;
 			}
 		});	
 
 		perspectives.addSeparator();
+		
+		perspectives.add(new AbstractAction("Flush") {
+			
+			public void actionPerformed(ActionEvent e) {
+				try {
+					StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, LoginManager.getUserId(), true);
+					StorableObjectPool.flush(ObjectEntities.PERMATTR_CODE, LoginManager.getUserId(), true);
+					StorableObjectPool.flush(ObjectEntities.DOMAIN_CODE, LoginManager.getUserId(), true);
+					StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, LoginManager.getUserId(), true);
+					StorableObjectPool.flush(ObjectEntities.KIS_CODE, LoginManager.getUserId(), true);
+					StorableObjectPool.flush(ObjectEntities.SERVER_CODE, LoginManager.getUserId(), true);
+					StorableObjectPool.flush(ObjectEntities.MCM_CODE, LoginManager.getUserId(), true);
+				} catch (ApplicationException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
+				
+			}
+		});
 		
 		return perspectives;
 	}
@@ -933,7 +1112,7 @@ public class JGraphText implements GraphSelectionListener {
 		toolBar.addSeparator();
 		this.domainButton = this.createAction(toolBar, DomainBeanFactory.getInstance());
 		return toolBar;
-	}
+	}	
 	
 	private JButton createAction(final JToolBar toolBar,
 	                          final AbstractBeanFactory factory) {
@@ -944,7 +1123,7 @@ public class JGraphText implements GraphSelectionListener {
 			
 			public void actionPerformed(ActionEvent e) {
 				try {
-					AbstractBean bean = factory.createBean();
+					AbstractBean bean = factory.createBean(perspective);
 					
 					if (this.entityIndices == null) {
 						this.entityIndices = new HashMap<String, Integer>();
@@ -953,7 +1132,6 @@ public class JGraphText implements GraphSelectionListener {
 					int index = (i != null ? i : 0) + 1;
 					this.entityIndices.put(name, index);
 					JGraphText.this.createChild(null, factory.getShortName() + "-" + index, bean, 20, 20, 0, 0, factory.getImage());
-					
 				} catch (CreateObjectException e1) {
 					e1.printStackTrace();
 					JOptionPane.showMessageDialog(graph, 
@@ -994,6 +1172,7 @@ public class JGraphText implements GraphSelectionListener {
 //		});
 	}
 	
+
 	DefaultEdge createEdge(DefaultGraphCell source, DefaultGraphCell target) {
 		return this.createEdge(source, target, true);
 	}
@@ -1526,5 +1705,10 @@ public class JGraphText implements GraphSelectionListener {
 	
 	public final boolean isDirect() {
 		return this.direct;
+	}
+
+	
+	public final void setPerspective(Perspective perspective) {
+		this.perspective = perspective;
 	}
 }

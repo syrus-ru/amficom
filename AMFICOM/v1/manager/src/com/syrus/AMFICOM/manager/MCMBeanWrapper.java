@@ -3,13 +3,22 @@ package com.syrus.AMFICOM.manager;
 
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: MCMBeanWrapper.java,v 1.1 2005/08/01 11:32:03 bob Exp $
+ * $Id: MCMBeanWrapper.java,v 1.2 2005/08/10 14:02:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +26,7 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/10 14:02:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -34,6 +43,9 @@ public class MCMBeanWrapper implements Wrapper {
 
 	private List<String>			keys;
 	
+	private Map<String, Identifier> 	serverIdMap;
+	private Map<String, Identifier> 	userIdMap;
+	
 	private MCMBeanWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { KEY_NAME, 
@@ -43,6 +55,8 @@ public class MCMBeanWrapper implements Wrapper {
 				KEY_USER_ID};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
+		this.serverIdMap  = new HashMap<String, Identifier>();
+		this.userIdMap  = new HashMap<String, Identifier>();		
 
 	}
 
@@ -52,7 +66,33 @@ public class MCMBeanWrapper implements Wrapper {
 		}
 		return instance;
 	}
+	
+	public void refreshServers() {
+		this.refreshMap(this.serverIdMap, ObjectEntities.SERVER_CODE);
+	}
+	
+	public void refreshUsers() {
+		this.refreshMap(this.userIdMap, ObjectEntities.SYSTEMUSER_CODE);
+	}
 
+	private void refreshMap(Map<String, Identifier> map,
+	                              short entityCode) {
+		map.clear();
+		try {
+			Set<StorableObject> storableObjects = StorableObjectPool.getStorableObjectsByCondition(
+				new EquivalentCondition(entityCode), 
+				true);			
+			for(StorableObject storableObject : storableObjects) {
+				System.out.println("MCMBeanWrapper.refreshServerMap() | " + ((Namable)storableObject).getName());
+				map.put(((Namable)storableObject).getName(), 
+					storableObject.getId());
+			}
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+	
 	public String getKey(int index) {
 		return this.keys.get(index);
 	}
@@ -93,7 +133,10 @@ public class MCMBeanWrapper implements Wrapper {
 
 	public Object getPropertyValue(String key) {
 		if (key.equals(KEY_SERVER_ID)) {
-//			return this.mcmIdMap;
+			return this.serverIdMap;
+		}
+		if (key.equals(KEY_USER_ID)) {			
+			return this.userIdMap;
 		}
 		return null;
 	}

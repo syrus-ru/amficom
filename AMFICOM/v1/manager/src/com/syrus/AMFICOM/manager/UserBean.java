@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.7 2005/08/02 14:42:06 bob Exp $
+ * $Id: UserBean.java,v 1.8 2005/08/10 14:02:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.manager;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
+import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/02 14:42:06 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/10 14:02:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -50,11 +51,15 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 public class UserBean extends Bean {
 
 	List<String>	names;
+	
+	Map<String, String> propertyName;
 
 	private SystemUser	user;
 	
 	UserBean(List<String> names) {
 		this.names = names;
+		
+		this.propertyName = new HashMap<String, String>();
 	}
 	
 	@Override
@@ -163,13 +168,12 @@ public class UserBean extends Bean {
 		if (!storableObjectsByCondition.isEmpty()) {
 			CharacteristicType characteristicType = (CharacteristicType) storableObjectsByCondition.iterator().next();
 			Identifier characteristicTypeId = characteristicType.getId();
-			for(Characteristic characteristic : this.user.getCharacteristics()) {
+			for(Characteristic characteristic : this.user.getCharacteristics(false)) {
 				if (characteristic.getType().getId().equals(characteristicTypeId)) {
 					return characteristic;
 				}
 			}			
 			Characteristic characteristic = Characteristic.createInstance(LoginManager.getUserId(), characteristicType, codename, codename, "", this.user, true, true);
-			StorableObjectPool.putStorableObject(characteristic);
 			return characteristic;
 		}
 		
@@ -177,21 +181,41 @@ public class UserBean extends Bean {
 
 	}
 	
+	private String getCharacteriscticValue(final String codename) 
+	throws ApplicationException {
+		String value = this.propertyName.get(codename);
+		if (value == null) {
+			Characteristic characteristic = this.findCharacteristic(codename);		
+			value = characteristic.getValue();
+			this.propertyName.put(codename, value);
+		}
+		return value;
+	}
+	
+	private void setCharacteriscticValue(final String codename, 
+	                                     final String value,
+	                                     final String key) 
+	throws ApplicationException {
+		String value2 = this.getCharacteriscticValue(codename);
+		if (value2 != value &&
+				(value2 != null && !value2.equals(value) ||
+				!value.equals(value2))) {
+			String oldValue = value2;
+			Characteristic characteristic = this.findCharacteristic(codename);
+			characteristic.setValue(value);
+			this.propertyName.put(codename, value);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, key, oldValue, value));
+		}
+	}
+	
 	protected final String getFullName() throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_FULLNAME);		
-		return characteristic.getValue();
+		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_FULLNAME);		
 	}
 
 	protected final void setFullName(final String fullName) throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_FULLNAME);
-		String fullName2 = characteristic.getValue();
-		if (fullName2 != fullName &&
-				(fullName2 != null && !fullName2.equals(fullName) ||
-				!fullName.equals(fullName2))) {
-			String oldValue = fullName2;
-			characteristic.setValue(fullName);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_FULL_NAME, oldValue, fullName));
-		}	
+		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_FULLNAME, 
+			fullName, 
+			UserBeanWrapper.FULL_NAME);
 	}
 
 	public final String getName() {
@@ -205,213 +229,155 @@ public class UserBean extends Bean {
 				!name.equals(name2))) {
 			String oldValue = name2;
 			this.user.setName(name);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_NAME, oldValue, name));
+			JGraphText.entityDispatcher.firePropertyChange(
+				new PropertyChangeEvent(this, ObjectEntities.SYSTEMUSER, null, this));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.NAME, oldValue, name));
+		}
+	}
+
+	
+	public final String getLogin() {
+		return this.user.getLogin();
+	}
+
+	public final void setLogin(final String login) {
+		String login2 = this.user.getLogin();
+		if (login2 != login &&
+				(login2 != null && !login2.equals(login) ||
+				!login.equals(login2))) {
+			String oldValue = login2;
+			this.user.setLogin(login);
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.LOGIN, oldValue, login));
 		}
 	}
 	
 	protected final String getNature() throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_NATURE);		
-		return characteristic.getValue();
+		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_NATURE);
 	}
 
 	protected final void setNature(final String nature) throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_NATURE);
-		String nature2 = characteristic.getValue();
-		if (nature2 != nature &&
-				(nature2 != null && !nature2.equals(nature) ||
-				!nature.equals(nature2))) {
-			String oldValue = nature2;
-			characteristic.setValue(nature);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_NATURE, oldValue, nature));
-		}
+		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_NATURE, 
+			nature,
+			UserBeanWrapper.USER_NATURE);
 	}
 
 	public final String getBuilding() throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_BUILDING);		
-		return characteristic.getValue();
+		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_BUILDING);
 	}
 
 	
 	public final void setBuilding(String building) throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_BUILDING);
-		String building2 = characteristic.getValue();
-		if (building2 != building &&
-				(building2 != null && !building2.equals(building) ||
-				!building.equals(building2))) {
-			String oldValue = building2;
-			characteristic.setValue(building);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_BUILDING, oldValue, building));
-		}
+		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_BUILDING, 
+			building,
+			UserBeanWrapper.USER_BUILDING);
 	}	
 	
 	public final String getCellular() throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_CELLULAR);		
-		return characteristic.getValue();
+		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_CELLULAR);
 	}
 
 	
 	public final void setCellular(String cellular) throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_CELLULAR);
-		String cellular2 = characteristic.getValue();
-		if (cellular2 != cellular &&
-				(cellular2 != null && !cellular2.equals(cellular) ||
-				!cellular.equals(cellular2))) {
-			String oldValue = cellular2;
-			characteristic.setValue(cellular);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_CELLULAR, oldValue, cellular));
-		}
+		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_CELLULAR, 
+			cellular,
+			UserBeanWrapper.USER_CELLULAR);
+
 	}
 
 	
 	public final String getCity() throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_CITY);		
-		return characteristic.getValue();
+		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_CITY);
 	}
 
 	
 	public final void setCity(String city) throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_CITY);
-		String city2 = characteristic.getValue();
-		if (city2 != city &&
-				(city2 != null && !city2.equals(city) ||
-				!city.equals(city2))) {
-			String oldValue = city2;
-			characteristic.setValue(city);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_CITY, oldValue, city));
-		}
+		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_CITY, 
+			city,
+			UserBeanWrapper.USER_CITY);
 	}
 
 	
 	public final String getCompany() throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_COMPANY);		
-		return characteristic.getValue();
+		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_COMPANY);
 	}
 
 	
 	public final void setCompany(String company) throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_COMPANY);
-		String company2 = characteristic.getValue();
-		if (company2 != company &&
-				(company2 != null && !company2.equals(company) ||
-				!company.equals(company2))) {
-			String oldValue = company2;
-			characteristic.setValue(company);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_COMPANY, oldValue, company));
-		}
+		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_COMPANY, 
+			company,
+			UserBeanWrapper.USER_COMPANY);
 	}
 
 	
 	public final String getDepartement() throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_DEPARTEMENT);		
-		return characteristic.getValue();
+		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_DEPARTEMENT);
 	}
 
 	
 	public final void setDepartement(String departement) throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_DEPARTEMENT);
-		String departement2 = characteristic.getValue();
-		if (departement2 != departement &&
-				(departement2 != null && !departement2.equals(departement) ||
-				!departement.equals(departement2))) {
-			String oldValue = departement2;
-			characteristic.setValue(departement);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_DEPARTEMENT, oldValue, departement));
-		}
+		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_DEPARTEMENT, 
+			departement,
+			UserBeanWrapper.USER_DEPARTEMENT);
 	}
 
 	
 	public final String getEmail() throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_EMAIL);		
-		return characteristic.getValue();
+		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_EMAIL);
 	}
 
 	
 	public final void setEmail(String email) throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_EMAIL);
-		String email2 = characteristic.getValue();
-		if (email2 != email &&
-				(email2 != null && !email2.equals(email) ||
-				!email.equals(email2))) {
-			String oldValue = email2;
-			characteristic.setValue(email);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_EMAIL, oldValue, email));
-		}
+		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_EMAIL, 
+			email,
+			UserBeanWrapper.USER_EMAIL);
 	}
 
 	
 	public final String getPhone() throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_PHONE);		
-		return characteristic.getValue();
+		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_PHONE);
 	}
 
 	
 	public final void setPhone(String phone) throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_PHONE);
-		String phone2 = characteristic.getValue();
-		if (phone2 != phone &&
-				(phone2 != null && !phone2.equals(phone) ||
-				!phone.equals(phone2))) {
-			String oldValue = phone2;
-			characteristic.setValue(phone);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_PHONE, oldValue, phone));
-		}
+		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_PHONE, 
+			phone,
+			UserBeanWrapper.USER_PHONE);
 	}
 
 	
 	public final String getPosition() throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_POSITION);		
-		return characteristic.getValue();
+		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_POSITION);
 	}
 
 	
 	public final void setPosition(String position) throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_POSITION);
-		String position2 = characteristic.getValue();
-		if (position2 != position &&
-				(position2 != null && !position2.equals(position) ||
-				!position.equals(position2))) {
-			String oldValue = position2;
-			characteristic.setValue(position);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_POSITION, oldValue, position));
-		}
+		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_POSITION, 
+			position,
+			UserBeanWrapper.USER_POSITION);
 	}
 
 	
 	public final String getRoomNo() throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_ROOM_NO);		
-		return characteristic.getValue();
+		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_ROOM_NO);
 	}
 
 	
 	public final void setRoomNo(String roomNo) throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_ROOM_NO);
-		String roomNo2 = characteristic.getValue();
-		if (roomNo2 != roomNo &&
-				(roomNo2 != null && !roomNo2.equals(roomNo) ||
-				!roomNo.equals(roomNo2))) {
-			String oldValue = roomNo2;
-			characteristic.setValue(roomNo);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_ROOM_NO, oldValue, roomNo));
-		}
+		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_ROOM_NO, 
+			roomNo,
+			UserBeanWrapper.USER_ROOM_NO);
 	}
 
 	
 	public final String getStreet() throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_STREET);		
-		return characteristic.getValue();
+		return this.getCharacteriscticValue(CharacteristicTypeCodenames.USER_STREET);
 	}
 
 	
 	public final void setStreet(String street) throws ApplicationException {
-		Characteristic characteristic = this.findCharacteristic(CharacteristicTypeCodenames.USER_STREET);
-		String street2 = characteristic.getValue();
-		if (street2 != street &&
-				(street2 != null && !street2.equals(street) ||
-				!street.equals(street2))) {
-			String oldValue = street2;
-			characteristic.setValue(street);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.KEY_USER_STREET, oldValue, street));
-		}
+		this.setCharacteriscticValue(CharacteristicTypeCodenames.USER_STREET, 
+			street,
+			UserBeanWrapper.USER_STREET);
 	}
 
 }

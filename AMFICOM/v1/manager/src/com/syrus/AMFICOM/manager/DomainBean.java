@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.2 2005/08/02 14:42:06 bob Exp $
+ * $Id: DomainBean.java,v 1.3 2005/08/10 14:02:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,20 +23,25 @@ import org.jgraph.graph.DefaultGraphCell;
 import org.jgraph.graph.Port;
 
 import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainMember;
+import com.syrus.AMFICOM.administration.PermissionAttributes;
+import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/02 14:42:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/10 14:02:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class DomainBean extends Bean {
 	
-	private Domain domain;
+	Domain domain;
 	
 	@Override
 	public JPopupMenu getMenu(	final JGraphText graph,
@@ -98,7 +103,9 @@ public class DomainBean extends Bean {
 					
 					graph.showOnly(new String[] {"Net", "User", "ARM", "RTU", "Server", "MCM"});
 					
-					System.out.println("DomainBeanFactory | entered");
+					final DomainBean domainBean = (DomainBean) port.getBean();					
+					
+					graph.setPerspective(new DomainPerpective(DomainBean.this));
 				}
 			});
 			return popupMenu;
@@ -124,6 +131,7 @@ public class DomainBean extends Bean {
 		if (result) {
 			DomainBean domainBean = (DomainBean) targetBean;
 			this.domain.setDomainId(domainBean.getId());
+//			System.out.println("DomainBean.isTargetValid() | set " + this.id + ", parent " + domainBean.getId());
 		}
 		return result;
 	}

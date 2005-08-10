@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanFactory.java,v 1.5 2005/08/02 14:42:06 bob Exp $
+ * $Id: MCMBeanFactory.java,v 1.6 2005/08/10 14:02:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,26 @@
 
 package com.syrus.AMFICOM.manager;
 
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.*;
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_DESCRIPTION;
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_HOSTNAME;
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_NAME;
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_SERVER_ID;
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_USER_ID;
 
-import com.syrus.AMFICOM.administration.Domain;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/02 14:42:06 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/10 14:02:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -48,20 +55,53 @@ public class MCMBeanFactory extends TabledBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean() 
+	public AbstractBean createBean(Perspective perspective) 
 	throws CreateObjectException, IllegalObjectEntityException {
-		MCMBean bean = new MCMBean();
-		bean.setCodeName("MCM");
-		bean.setValidator(this.getValidator());
+		
+		DomainPerpective domainPerpective = (DomainPerpective) perspective;
+		
 		MCM mcm = MCM.createInstance(LoginManager.getUserId(), 
-			Identifier.VOID_IDENTIFIER,
+			domainPerpective.getDomainId(),
 			"",
 			"",
 			"",
 			Identifier.VOID_IDENTIFIER,
 			Identifier.VOID_IDENTIFIER);
-		StorableObjectPool.putStorableObject(mcm);
-		bean.setId(mcm.getId());					
+
+		return this.createBean(mcm.getId());
+	}	
+
+	@Override
+	public AbstractBean createBean(Identifier identifier) {
+		final MCMBean bean = new MCMBean();
+		bean.setCodeName("MCM");
+		bean.setValidator(this.getValidator());
+		bean.setId(identifier);			
+		
+		final MCMBeanWrapper mcmBeanWrapper = MCMBeanWrapper.getInstance();		
+		
+		// XXX potential performance loss :
+		// wrapper update its users / servers for each bean
+		
+		JGraphText.entityDispatcher.addPropertyChangeListener(
+			ObjectEntities.SYSTEMUSER,
+			new PropertyChangeListener() {
+
+				public void propertyChange(PropertyChangeEvent evt) {
+					mcmBeanWrapper.refreshUsers();
+					bean.table.updateModel();
+				}
+			});
+		
+		JGraphText.entityDispatcher.addPropertyChangeListener(
+			ObjectEntities.SERVER,
+			new PropertyChangeListener() {
+
+				public void propertyChange(PropertyChangeEvent evt) {
+					mcmBeanWrapper.refreshServers();
+					bean.table.updateModel();
+				}
+			});
 
 		bean.table = super.getTable(bean, 
 			MCMBeanWrapper.getInstance(),
