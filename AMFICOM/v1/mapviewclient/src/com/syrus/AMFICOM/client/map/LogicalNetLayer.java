@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.107 2005/08/09 11:02:24 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.108 2005/08/10 15:30:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.107 $, $Date: 2005/08/09 11:02:24 $
+ * @version $Revision: 1.108 $, $Date: 2005/08/10 15:30:45 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer
@@ -1127,7 +1127,7 @@ public final class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.107 $, $Date: 2005/08/09 11:02:24 $
+	 * @version $Revision: 1.108 $, $Date: 2005/08/10 15:30:45 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1443,6 +1443,16 @@ public final class LogicalNetLayer
 		//Получаем список всех входящих/исходящих линий для данного узла
 		Set<NodeLink> allLinksForNodeProcessed = this.linksForNodes.get(nodeProcessed);
 		
+		boolean hasUncalculatedLinks = false;
+		for (NodeLink outgoingLink : allLinksForNodeProcessed) {
+			//Исключаем из списка линк, по которому мы пришли в данный узел
+			if (!(outgoingLink == incomingLink)
+					&& !nodeLinksCalculated.get(outgoingLink).booleanValue()) {
+				hasUncalculatedLinks = true;
+				break;
+			}
+		}
+		
 		if (allLinksForNodeProcessed == null
 				|| allLinksForNodeProcessed.size() == 0) {
 			//Это одиночный узел (без связей). Он отображается всегда.
@@ -1454,14 +1464,18 @@ public final class LogicalNetLayer
 
 		if (nodesCalculated.get(nodeProcessed).booleanValue()
 			||	(allLinksForNodeProcessed.size() == 1 
-					&& allLinksForNodeProcessed.contains(incomingLink)) ) {
+					&& allLinksForNodeProcessed.contains(incomingLink))
+			|| !hasUncalculatedLinks) {
 			//Первое условие останова - данный узел уже рассматривался или
-			//является конечным в цепочке.
+			//является конечным в цепочке или все остальный линии, выходящие 
+			//из него, уже рассмотрены.
 			//Создаём элемент отображения и выходим.
 
 			//Отмечаем в таблице, что узел обработан - для случая конечного
 			//узла в цепочке.			
+			nodesCalculated.put(lastNode, Boolean.TRUE);
 			nodesCalculated.put(nodeProcessed, Boolean.TRUE);
+			nodeLinksCalculated.put(incomingLink, Boolean.TRUE);
 			
 			VisualMapElement visualMapElement;
 			long t1 = System.currentTimeMillis();
@@ -1521,6 +1535,8 @@ public final class LogicalNetLayer
 				long t2 = System.currentTimeMillis();
 				MapViewController.addTime4(t2 - t1);
 				lastVMENode = nodeProcessed;
+				nodesCalculated.put(lastNode, Boolean.TRUE);
+				nodeLinksCalculated.put(incomingLink, Boolean.TRUE);
 			}
 			else {
 				//В обратном случае - создаём отображаемый элемент до
@@ -1530,12 +1546,11 @@ public final class LogicalNetLayer
 				NodeLink linkBetween = null; 
 				for (NodeLink outLink : this.linksForNodes.get(nodeToPullFrom))
 				{
-					if (!nodeLinksCalculated.get(outLink))
-						continue;
-					
 					if (	outLink.getStartNode() == lastNode
-						||	outLink.getEndNode() == lastNode)
+						||	outLink.getEndNode() == lastNode) {
 						linkBetween = outLink;
+						break;
+					}
 				}
 				
 				long t1 = System.currentTimeMillis();
@@ -1553,11 +1568,6 @@ public final class LogicalNetLayer
 				long t2 = System.currentTimeMillis();
 				MapViewController.addTime4(t2 - t1);
 				lastVMENode = lastNode;	
-
-				//Помечаем в таблице предыдущий узел и линк, по которому
-				// мы пришли от него к текущему узлу, как необработанные. 
-				nodesCalculated.put(lastVMENode, Boolean.FALSE);
-				nodeLinksCalculated.put(incomingLink, Boolean.FALSE);			
 			}
 			
 			this.visualElements.add(visualMapElement);
@@ -1605,6 +1615,9 @@ public final class LogicalNetLayer
 				long t2 = System.currentTimeMillis();
 				MapViewController.addTime4(t2 - t1);
 
+				nodesCalculated.put(lastNode, Boolean.TRUE);
+				nodeLinksCalculated.put(incomingLink, Boolean.TRUE);
+
 				this.visualElements.add(visualMapElement);
 				this.visualElements.add(nodeToPullFrom);
 				this.visualElements.add(nodeProcessed);
@@ -1612,9 +1625,11 @@ public final class LogicalNetLayer
 				return;
 		}
 
-		//Отмечаем в таблице, что узел обработан. 
-		nodesCalculated.put(nodeProcessed, Boolean.TRUE);
-		
+		nodesCalculated.put(lastNode, Boolean.TRUE);
+		if(incomingLink != null) {
+			nodeLinksCalculated.put(incomingLink, Boolean.TRUE);
+		}
+
 		//Тянем элемент отображения дальше. Случай ветвления рассмотрен выше
 		//(третье условие останова). Поэтому вызов рекурсивного метода из этого
 		//цикла произойдёт единожды.
@@ -1622,7 +1637,6 @@ public final class LogicalNetLayer
 			//Исключаем из списка линк, по которому мы пришли в данный узел
 			if (!(outgoingLink == incomingLink)
 					&& !nodeLinksCalculated.get(outgoingLink).booleanValue()) {
-				nodeLinksCalculated.put(outgoingLink, Boolean.TRUE);
 				pullVisualLinksFromNode(
 						nodeToPullFrom, 
 						nodeProcessed,
