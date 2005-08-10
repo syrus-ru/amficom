@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.20 2005/08/09 15:27:02 bob Exp $
+ * $Id: EquipmentWrapper.java,v 1.21 2005/08/10 11:24:07 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/08/09 15:27:02 $
+ * @version $Revision: 1.21 $, $Date: 2005/08/10 11:24:07 $
  * @author $Author: bob $
  * @module config
  */
@@ -100,6 +100,8 @@ public final class EquipmentWrapper extends StorableObjectWrapper<Equipment> {
 				return equipment.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return equipment.getName();
+			else if (key.equals(COLUMN_DOMAIN_ID)) 
+				return equipment.getDomainId();
 			if (key.equals(COLUMN_TYPE_ID))
 				return equipment.getType();
 			if (key.equals(COLUMN_IMAGE_ID))
@@ -139,6 +141,8 @@ public final class EquipmentWrapper extends StorableObjectWrapper<Equipment> {
 				equipment.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				equipment.setDescription((String) value);
+			else if (key.equals(COLUMN_DOMAIN_ID)) 
+				equipment.setDomainId((Identifier) value);
 			else if (key.equals(COLUMN_TYPE_ID))
 				equipment.setType((EquipmentType)value);
 			else if (key.equals(COLUMN_IMAGE_ID))
@@ -192,7 +196,8 @@ public final class EquipmentWrapper extends StorableObjectWrapper<Equipment> {
 			return String.class;
 		} else if (key.equals(COLUMN_TYPE_ID)) {
 			return EquipmentType.class;
-		} else if (key.equals(COLUMN_IMAGE_ID)) {
+		} else if (key.equals(COLUMN_IMAGE_ID) ||
+				key.equals(COLUMN_DOMAIN_ID)) {
 			return Identifier.class;
 		} else if (key.equals(COLUMN_LONGITUDE) 
 				|| key.equals(COLUMN_LATITUDE)) {

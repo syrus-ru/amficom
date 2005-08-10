@@ -1,5 +1,5 @@
 /*
- * $Id: KISWrapper.java,v 1.16 2005/08/09 15:34:23 bob Exp $
+ * $Id: KISWrapper.java,v 1.17 2005/08/10 11:23:54 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/09 15:34:23 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/10 11:23:54 $
  * @author $Author: bob $
  * @module config
  */
@@ -73,11 +73,13 @@ public final class KISWrapper extends StorableObjectWrapper<KIS> {
 	@Override
 	public Object getValue(final KIS kis, final String key) {
 		final Object value = super.getValue(kis, key);
-		if (value == null && kis != null) {
+		if (value == null && kis != null) {			
 			if (key.equals(COLUMN_DESCRIPTION))
 				return kis.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return kis.getName();
+			if (key.equals(COLUMN_DOMAIN_ID)) 
+				return kis.getDomainId();			
 			if (key.equals(COLUMN_EQUIPMENT_ID))
 				return kis.getEquipmentId();
 			if (key.equals(COLUMN_MCM_ID))
@@ -101,6 +103,8 @@ public final class KISWrapper extends StorableObjectWrapper<KIS> {
 				kis.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				kis.setDescription((String) value);
+			else if (key.equals(COLUMN_DOMAIN_ID)) 
+				kis.setDomainId((Identifier) value);
 			else if (key.equals(COLUMN_EQUIPMENT_ID))
 				kis.setEquipmentId((Identifier) value);
 			else if (key.equals(COLUMN_MCM_ID))
@@ -138,7 +142,8 @@ public final class KISWrapper extends StorableObjectWrapper<KIS> {
 		} else if (key.equals(COLUMN_TCP_PORT)) {
 			return Short.class;			
 		} else if (key.equals(COLUMN_EQUIPMENT_ID)
-				|| key.equals(COLUMN_MCM_ID)) {
+				|| key.equals(COLUMN_MCM_ID) 
+				|| key.equals(COLUMN_DOMAIN_ID)) {
 			return Identifier.class;
 		}
 		return null;

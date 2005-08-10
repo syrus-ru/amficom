@@ -1,5 +1,5 @@
 /*
- * $Id: MCMWrapper.java,v 1.15 2005/08/09 15:27:14 bob Exp $
+ * $Id: MCMWrapper.java,v 1.16 2005/08/10 11:25:00 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/09 15:27:14 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/10 11:25:00 $
  * @author $Author: bob $
  * @module admin_v1
  */
@@ -75,6 +75,8 @@ public class MCMWrapper extends StorableObjectWrapper<MCM> {
 				return mcm.getUserId();
 			if (key.equals(COLUMN_SERVER_ID))
 				return mcm.getServerId();
+			else if (key.equals(COLUMN_DOMAIN_ID)) 
+				return mcm.getDomainId();
 			if (key.equals(COLUMN_HOSTNAME))
 				return mcm.getHostName();
 		}
@@ -96,6 +98,8 @@ public class MCMWrapper extends StorableObjectWrapper<MCM> {
 				mcm.setUserId((Identifier) value);
 			else if (key.equals(COLUMN_SERVER_ID))
 				mcm.setServerId((Identifier) value);
+			else if (key.equals(COLUMN_DOMAIN_ID)) 
+				mcm.setDomainId((Identifier) value);
 			else if (key.equals(COLUMN_HOSTNAME))
 				mcm.setHostName((String) value);
 
@@ -127,7 +131,8 @@ public class MCMWrapper extends StorableObjectWrapper<MCM> {
 			return String.class;
 		}
 		if (key.equals(COLUMN_USER_ID)
-				|| key.equals(COLUMN_SERVER_ID)) {
+				|| key.equals(COLUMN_SERVER_ID)
+				|| key.equals(COLUMN_DOMAIN_ID)) {
 			return Identifier.class;
 		}
 		return null;

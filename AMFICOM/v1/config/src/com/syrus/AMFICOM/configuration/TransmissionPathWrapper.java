@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathWrapper.java,v 1.18 2005/08/09 15:27:02 bob Exp $
+ * $Id: TransmissionPathWrapper.java,v 1.19 2005/08/10 11:24:07 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/09 15:27:02 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/10 11:24:07 $
  * @author $Author: bob $
  * @module config
  */
@@ -72,6 +72,8 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper<Transmi
 				return transmissionPath.getDescription();
 			if (key.equals(COLUMN_NAME))
 				return transmissionPath.getName();
+			if (key.equals(COLUMN_DOMAIN_ID))
+				return transmissionPath.getDomainId();
 			if (key.equals(COLUMN_TYPE_ID))
 				return transmissionPath.getType();
 			if (key.equals(COLUMN_START_PORT_ID))
@@ -95,6 +97,8 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper<Transmi
 				transmissionPath.setName((String) value);
 			else if (key.equals(COLUMN_DESCRIPTION))
 				transmissionPath.setDescription((String) value);
+			else if (key.equals(COLUMN_DOMAIN_ID))
+				transmissionPath.setDomainId((Identifier)value);
 			else if (key.equals(COLUMN_TYPE_ID))
 				transmissionPath.setType((TransmissionPathType) value);
 			else if (key.equals(COLUMN_START_PORT_ID))
@@ -126,7 +130,8 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper<Transmi
 		if (key.equals(COLUMN_TYPE_ID))
 			return TransmissionPathType.class;
 		else if (key.equals(COLUMN_START_PORT_ID)
-				|| key.equals(COLUMN_FINISH_PORT_ID))
+				|| key.equals(COLUMN_FINISH_PORT_ID)
+				|| key.equals(COLUMN_DOMAIN_ID))
 			return Identifier.class;
 		if (key.equals(ObjectEntities.EQUIPMENTMELINK))
 			return Set.class;
