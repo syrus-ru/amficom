@@ -1,5 +1,5 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.3 2005/08/08 12:02:02 arseniy Exp $
+ * $Id: MapJLocalRenderer.java,v 1.4 2005/08/11 17:45:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,11 +26,10 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/08 12:02:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/11 17:45:53 $
  * @module mapinfo
  */
-public class MapJLocalRenderer
-{
+public class MapJLocalRenderer {
 	public static final int NUM_OF_COLORS = 256;
 
 	public static final Color BACKGROUND_COLOR = Color.WHITE;
@@ -52,37 +51,30 @@ public class MapJLocalRenderer
 
 	private boolean stopRendering = false;
 
-	public MapJLocalRenderer(String fileToLoad) throws IOException
-	{
-		Log.debugMessage("RunningThread - Constructor - Initializing MapJ.",
-				Level.FINEST);
+	public MapJLocalRenderer(final String fileToLoad) throws IOException {
+		Log.debugMessage("RunningThread - Constructor - Initializing MapJ.", Level.FINEST);
 		this.mapJObject = MapJLocalRenderer.createMapJ(fileToLoad);
 	}
 
 	/**
-	 * Создаёт объект MapJ и загружает картографические данные. 
-	 * @return Готовый к использованию объект MapJ для работы с
-	 *  картографическими данными
+	 * Создаёт объект MapJ и загружает картографические данные.
+	 * 
+	 * @return Готовый к использованию объект MapJ для работы с картографическими
+	 *         данными
 	 * @throws IOException
 	 */
-	public static MapJ createMapJ(String fileToLoad) throws IOException
-	{
-		Log.debugMessage("RunningThread - Initializing MapJ instance...",
-				Level.FINEST);
+	public static MapJ createMapJ(final String fileToLoad) throws IOException {
+		Log.debugMessage("RunningThread - Initializing MapJ instance...", Level.FINEST);
 		// instantiate a MapJ and set the bounds
-		MapJ returnValue = new MapJ(); // this MapJ object
+		final MapJ returnValue = new MapJ(); // this MapJ object
 
 		// Query for image locations and load the geoset
-		try
-		{
+		try {
 			Log.debugMessage("RunningThread - Loading geoset...", Level.FINEST);
 			returnValue.loadMapDefinition(fileToLoad);
-			Log.debugMessage("RunningThread - Map definition " + fileToLoad
-					+ " has been loaded.", Level.FINEST);
-		} catch (IOException e)
-		{
-			Log.debugMessage("RunningThread - ERROR!!! - Can't load geoset: "
-					+ fileToLoad, Level.SEVERE);
+			Log.debugMessage("RunningThread - Map definition " + fileToLoad + " has been loaded.", Level.FINEST);
+		} catch (IOException e) {
+			Log.debugMessage("RunningThread - ERROR!!! - Can't load geoset: " + fileToLoad, Level.SEVERE);
 			throw e;
 		}
 
@@ -91,83 +83,69 @@ public class MapJLocalRenderer
 		return returnValue;
 	}
 
-	public Image renderImage(TopologicalImageQuery query) throws Exception
-	{
+	public Image renderImage(final TopologicalImageQuery query) throws Exception {
 		this.stopRendering = false;
 
-		int miWidth = query.getMapImageWidth();
-		int miHeight = query.getMapImageHeight();
-		//Setting size, zoom and center point
-		if ((this.imageBuffer == null) || (this.imageBuffer.getWidth() != miWidth)
-				|| (this.imageBuffer.getHeight() != miHeight))
-		{
-			this.imageBuffer = new BufferedImage(miWidth, miHeight,
-					BufferedImage.TYPE_USHORT_565_RGB);
-			Log.debugMessage(
-					"RunningThread - Constructor - Creating MapXtreme renderer.",
-					Level.FINEST);
+		final int miWidth = query.getMapImageWidth();
+		final int miHeight = query.getMapImageHeight();
+		// Setting size, zoom and center point
+		if ((this.imageBuffer == null) || (this.imageBuffer.getWidth() != miWidth) || (this.imageBuffer.getHeight() != miHeight)) {
+			this.imageBuffer = new BufferedImage(miWidth, miHeight, BufferedImage.TYPE_USHORT_565_RGB);
+			Log.debugMessage("RunningThread - Constructor - Creating MapXtreme renderer.", Level.FINEST);
 			this.renderer = new LocalRenderer(this.imageBuffer);
-			Log.debugMessage(
-					"RunningThread - Constructor - MapXtreme renderer created.",
-					Level.FINEST);
+			Log.debugMessage("RunningThread - Constructor - MapXtreme renderer created.", Level.FINEST);
 		}
 
 		this.setSize(miWidth, miHeight);
-		this.setCenter(new DoublePoint(query.getTopoCenterX(), query
-				.getTopoCenterY()));
+		this.setCenter(new DoublePoint(query.getTopoCenterX(), query.getTopoCenterY()));
 		this.setScale(query.getTopoScale());
 
-		boolean[] layerVisibilities = query.getLayerVisibilities();
-		boolean[] labelVisibilities = query.getLabelVisibilities();
+		final boolean[] layerVisibilities = query.getLayerVisibilities();
+		final boolean[] labelVisibilities = query.getLabelVisibilities();
 
-		for (int i = 0; i < query.getLayerVisibilities().length; i++)
+		for (int i = 0; i < query.getLayerVisibilities().length; i++) {
 			this.setLayerVisibility(i, layerVisibilities[i], labelVisibilities[i]);
+		}
 
-		long time1 = System.currentTimeMillis();
-		this.renderer.render(ImageRequestComposer.create(this.mapJObject,
-				NUM_OF_COLORS, BACKGROUND_COLOR, "image/gif"));
+		final long time1 = System.currentTimeMillis();
+		this.renderer.render(ImageRequestComposer.create(this.mapJObject, NUM_OF_COLORS, BACKGROUND_COLOR, "image/gif"));
 
-		if (this.stopRendering)
+		if (this.stopRendering) {
 			return null;
+		}
 
-		long time2 = System.currentTimeMillis();
+		final long time2 = System.currentTimeMillis();
 
-		BufferedImage imageToReturn = new BufferedImage(miWidth, miHeight,
-				BufferedImage.TYPE_USHORT_565_RGB);
+		final BufferedImage imageToReturn = new BufferedImage(miWidth, miHeight, BufferedImage.TYPE_USHORT_565_RGB);
 		this.imageBuffer.copyData(imageToReturn.getRaster());
 
-		long time3 = System.currentTimeMillis();
+		final long time3 = System.currentTimeMillis();
 
-		Log.debugMessage("MapJLocalRenderer.renderToStream | total " + (time3 - time1)
-				+ "\n		" + (time2 - time1) + " (rendered image)\n"
-				+ "\n		" + (time3 - time2) + " created new BufferedImage.",
-				Level.INFO);
+		Log.debugMessage("MapJLocalRenderer.renderToStream | total " + (time3 - time1) + "\n		"
+				+ (time2 - time1) + " (rendered image)\n"
+				+ "\n		" + (time3 - time2) + " created new BufferedImage.", Level.INFO);
 
 		return imageToReturn;
 	}
 
-	public void cancelRendering() throws Exception
-	{
+	public void cancelRendering() throws Exception {
 		this.stopRendering = true;
-		Log.debugMessage(
-				"MapJRenderer - cancelRendering - Stopping the rendering of map.",
-				Level.FINEST);
-		if (this.renderer != null)
+		Log.debugMessage("MapJRenderer - cancelRendering - Stopping the rendering of map.", Level.FINEST);
+		if (this.renderer != null) {
 			this.renderer.interrupt();
-		Log.debugMessage("MapJRenderer - cancelRendering - Rendering stopped.",
-				Level.FINEST);
+		}
+		Log.debugMessage("MapJRenderer - cancelRendering - Rendering stopped.", Level.FINEST);
 	}
 
-	//---------------------------------------Функции, работающие с MapJ --------------------------
+	// ---------------------------------------Функции, работающие с MapJ
+	// --------------------------
 	/**
 	 * Установить размер выходного изображения
 	 * @param width Ширина
 	 * @param height Высота
 	 */
-	public void setSize(int width, int height)
-	{
-		synchronized (this.mapJObject)
-		{
+	public void setSize(final int width, final int height) {
+		synchronized (this.mapJObject) {
 			Log.debugMessage("RunningThread - Setting size", Level.FINEST);
 			this.mapJObject.setDeviceBounds(new DoubleRect(0, 0, width, height));
 		}
@@ -175,79 +153,65 @@ public class MapJLocalRenderer
 
 	/**
 	 * Установить центральную точку вида карты
-	 * @param center Топологические координаты центральной точки
+	 * 
+	 * @param center
+	 *        Топологические координаты центральной точки
 	 */
-	public void setCenter(DoublePoint center)
-	{
-		synchronized (this.mapJObject)
-		{
+	public void setCenter(final DoublePoint center) {
+		synchronized (this.mapJObject) {
 			Log.debugMessage("RunningThread - Setting center", Level.FINEST);
-			try
-			{
-				this.mapJObject.setCenter(new com.mapinfo.util.DoublePoint(center.x,
-						center.y));
-			} catch (Exception e)
-			{
-				Log.debugMessage("RunningThread - ERROR!!! - Failed setting center.",
-						Level.SEVERE);
+			try {
+				this.mapJObject.setCenter(new com.mapinfo.util.DoublePoint(center.x, center.y));
+			} catch (Exception e) {
+				Log.debugMessage("RunningThread - ERROR!!! - Failed setting center.", Level.SEVERE);
 			}
 		}
 	}
 
 	/**
 	 * Установить заданный масштаб вида карты
-	 * @param scale Массштаб для карты
+	 * 
+	 * @param scale
+	 *        Массштаб для карты
 	 */
-	public void setScale(double scale)
-	{
-		synchronized (this.mapJObject)
-		{
+	public void setScale(final double scale) {
+		synchronized (this.mapJObject) {
 			Log.debugMessage("RunningThread - Setting scale", Level.FINEST);
-			try
-			{
-				if (scale != 0.0D)
+			try {
+				if (scale != 0.0D) {
 					this.mapJObject.setZoom(scale);
-			} catch (Exception e)
-			{
-				Log.debugMessage("RunningThread - ERROR!!! - Failed setting scale.",
-						Level.SEVERE);
+				}
+			} catch (Exception e) {
+				Log.debugMessage("RunningThread - ERROR!!! - Failed setting scale.", Level.SEVERE);
 			}
 		}
 	}
 
 	/**
-	 * @param layerIndex Индекс слоя, которому устанавливаются параметры видимости
-	 * @param layerVisible Видимость слоя
-	 * @param layerLabelsVisible Видимость надписей данного слоя
+	 * @param layerIndex
+	 *        Индекс слоя, которому устанавливаются параметры видимости
+	 * @param layerVisible
+	 *        Видимость слоя
+	 * @param layerLabelsVisible
+	 *        Видимость надписей данного слоя
 	 */
-	public void setLayerVisibility(
-			int layerIndex,
-			boolean layerVisible,
-			boolean layerLabelsVisible)
-	{
-		synchronized (this.mapJObject)
-		{
-			try
-			{
-				FeatureLayer layer = (FeatureLayer) this.mapJObject.getLayers().get(
-						layerIndex, LayerType.FEATURE);
+	public void setLayerVisibility(final int layerIndex, final boolean layerVisible, final boolean layerLabelsVisible) {
+		synchronized (this.mapJObject) {
+			try {
+				final FeatureLayer layer = (FeatureLayer) this.mapJObject.getLayers().get(layerIndex, LayerType.FEATURE);
 
-				Log.debugMessage("RunningThread - Setting visibility for layer "
-						+ layer.getName(), Level.FINEST);
+				Log.debugMessage("RunningThread - Setting visibility for layer " + layer.getName(), Level.FINEST);
 
 				layer.setEnabled(layerVisible);
 				layer.setAutoLabel(layerLabelsVisible);
-			} catch (Exception exc)
-			{
-				Log.debugMessage(
-						"RunningThread - ERROR!!! - Failed setting layer visibility.",
-						Level.SEVERE);
+			} catch (Exception exc) {
+				Log.debugMessage("RunningThread - ERROR!!! - Failed setting layer visibility.", Level.SEVERE);
 			}
 		}
 	}
 	//    
-	//    public static void main (String[] args)
-	//    {
+	// public static void main (String[] args)
+	// {
 	//  		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
 	//  		TopologicalImageQuery tiq = new TopologicalImageQuery(800,800,37.59,55.81, 2001.0000000345,layerVis,layerVis);
 	//			MapJLocalRenderer renderer = null;

@@ -6,82 +6,65 @@ import com.mapinfo.mapj.FeatureLayer;
 import com.mapinfo.unit.Distance;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 
-public class MapInfoSpatialLayer implements SpatialLayer
-{
+public class MapInfoSpatialLayer implements SpatialLayer {
 	private boolean visible = true;
-	
+
 	private FeatureLayer mapLayer = null;
 
-	public MapInfoSpatialLayer(
-			FeatureLayer mapLayer)
-	{
+	public MapInfoSpatialLayer(final FeatureLayer mapLayer) {
 		this.mapLayer = mapLayer;
 	}
 
-	public MapInfoSpatialLayer()
-	{//empty
+	public MapInfoSpatialLayer() {// empty
 	}
 
-	public boolean isVisible()
-	{
+	public boolean isVisible() {
 		return this.visible;
 	}
 
-	public boolean isLabelVisible()
-	{
+	public boolean isLabelVisible() {
 		boolean returnValue = false;
-		try
-		{
-			//Проверяем видны ли надписи на текущем масштабе на сервере
+		try {
+			// Проверяем видны ли надписи на текущем масштабе на сервере
 			returnValue = this.mapLayer.isAutoLabel();
-		}
-		catch(Exception exc)
-		{
+		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
-		
-		//надписи видны когда виден слой.
+
+		// надписи видны когда виден слой.
 		returnValue &= this.visible;
-		
+
 		return returnValue;
 	}
 
-	public boolean isVisibleAtScale(double scale)
-	{
+	public boolean isVisibleAtScale(final double scale) {
 		boolean returnValue = false;
-		try
-		{
-			if (this.mapLayer.isZoomLayer())
-			{
-				Distance minZoom = this.mapLayer.getMinZoom();
-				Distance maxZoom = this.mapLayer.getMaxZoom();
-				if ((minZoom.getScalarValue() < scale) && (scale < maxZoom.getScalarValue()))
+		try {
+			if (this.mapLayer.isZoomLayer()) {
+				final Distance minZoom = this.mapLayer.getMinZoom();
+				final Distance maxZoom = this.mapLayer.getMaxZoom();
+				if ((minZoom.getScalarValue() < scale) && (scale < maxZoom.getScalarValue())) {
 					returnValue = true;
-			}
-			else
+				}
+			} else
 				returnValue = true;
-//			returnValue = this.mapLayer.isVisibleAtCurrentZoom();
-		}
-		catch(Exception exc)
-		{
+			//			returnValue = this.mapLayer.isVisibleAtCurrentZoom();
+		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
 
 		return returnValue;
 	}
 
-	public void setVisible(boolean visible)
-	{
+	public void setVisible(final boolean visible) {
 		this.visible = visible;
 	}
 
-	public void setLabelVisible(boolean visible)
-	{
+	public void setLabelVisible(boolean visible) {
 		throw new UnsupportedOperationException();
 	}
 
-	public Component getLayerImage()
-	{
+	public Component getLayerImage() {
 		/*
 		 * JPanel panel = new JPanel(); Canvas canvas = new Canvas();
 		 * this.mapLayer. panel.add( return ;
@@ -89,8 +72,7 @@ public class MapInfoSpatialLayer implements SpatialLayer
 		return null;
 	}
 
-	public String getName()
-	{
+	public String getName() {
 		return this.mapLayer.getName();
 	}
 }

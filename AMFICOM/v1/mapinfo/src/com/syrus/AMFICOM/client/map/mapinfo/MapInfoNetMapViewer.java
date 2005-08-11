@@ -27,7 +27,7 @@ public class MapInfoNetMapViewer extends NetMapViewer {
 
 	protected DropTarget dropTarget = null;
 
-	public MapInfoNetMapViewer(LogicalNetLayer logicalNetLayer, MapContext mapContext, MapImageRenderer renderer)
+	public MapInfoNetMapViewer(final LogicalNetLayer logicalNetLayer, final MapContext mapContext, final MapImageRenderer renderer)
 			throws MapConnectionException {
 		super(logicalNetLayer, mapContext, renderer);
 
@@ -77,9 +77,8 @@ public class MapInfoNetMapViewer extends NetMapViewer {
 	@Override
 	public Double getVisibleBounds() throws MapConnectionException, MapDataException {
 		try {
-			DoubleRect rect = this.mapConnection.getLocalMapJ().getBounds();
-			Rectangle2D.Double vb = new Rectangle2D.Double(rect.xmin, rect.ymin, rect.width(), rect.height());
-
+			final DoubleRect rect = this.mapConnection.getLocalMapJ().getBounds();
+			final Rectangle2D.Double vb = new Rectangle2D.Double(rect.xmin, rect.ymin, rect.width(), rect.height());
 			return vb;
 		} catch (Exception ex) {
 			throw new MapConnectionException("cannot get visible bounds", ex);

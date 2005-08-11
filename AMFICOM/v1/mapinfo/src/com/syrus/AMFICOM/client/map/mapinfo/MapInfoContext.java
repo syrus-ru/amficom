@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoContext.java,v 1.3 2005/08/08 12:02:02 arseniy Exp $
+ * $Id: MapInfoContext.java,v 1.4 2005/08/11 17:45:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,75 +16,64 @@ import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/08 12:02:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/11 17:45:53 $
  * @module mapinfo
  */
-public class MapInfoContext implements MapContext
-{
+public class MapInfoContext implements MapContext {
 	private final MapInfoConnection connection;
 
-	public MapInfoContext(MapInfoConnection connection)
-	{
+	public MapInfoContext(final MapInfoConnection connection) {
 		this.connection = connection;
 	}
-	/* (non-Javadoc)
+
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.MapContext#setCenter(com.syrus.AMFICOM.map.DoublePoint)
 	 */
-	public void setCenter(DoublePoint center) throws MapConnectionException,
-			MapDataException
-	{
-//		DoublePoint nearestDescreteCenter = center;
-//		if (	MapPropertiesManager.isDescreteNavigation()
-//				&&MapPropertiesManager.isTopologicalImageCache()
-//				&&(this.imageCache != null))
-//			nearestDescreteCenter = this.imageCache.getNearestCenter(center);
-		try
-		{
-			this.connection.getLocalMapJ().setCenter(new com.mapinfo.util.DoublePoint(
-					center.getX(),
-					center.getY()));
-		}
-		catch(Exception exc)
-		{
+	public void setCenter(final DoublePoint center) throws MapConnectionException, MapDataException {
+		// DoublePoint nearestDescreteCenter = center;
+		// if ( MapPropertiesManager.isDescreteNavigation()
+		// &&MapPropertiesManager.isTopologicalImageCache()
+		// &&(this.imageCache != null))
+		// nearestDescreteCenter = this.imageCache.getNearestCenter(center);
+		try {
+			this.connection.getLocalMapJ().setCenter(new com.mapinfo.util.DoublePoint(center.getX(), center.getY()));
+		} catch (Exception exc) {
 			System.out.println("MILNL - Failed setting center.");
 			throw new MapConnectionException("Cannot set center", exc);
 		}
-//		if (	MapPropertiesManager.isTopologicalImageCache()
-//				&&(this.imageCache != null))
-//			this.imageCache.setCenter(center);
+		// if ( MapPropertiesManager.isTopologicalImageCache()
+		// &&(this.imageCache != null))
+		// this.imageCache.setCenter(center);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.MapContext#getCenter()
 	 */
-	public DoublePoint getCenter() throws MapConnectionException,
-			MapDataException
-	{
+	public DoublePoint getCenter() throws MapConnectionException, MapDataException {
 		com.mapinfo.util.DoublePoint center = null;
-		try
-		{
+		try {
 			center = this.connection.getLocalMapJ().getCenter();
 			return new DoublePoint(center.x, center.y);
-		}
-		catch(Exception exc)
-		{
+		} catch (Exception exc) {
 			System.out.println("MapInfoContext - Failed getting center.");
 			throw new MapConnectionException("MapInfoContext - Failed getting center.", exc);
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.MapContext#getScale()
 	 */
-	public double getScale() throws MapConnectionException, MapDataException
-	{
+	public double getScale() throws MapConnectionException, MapDataException {
 		double currentZoom = 0.0D;
-		try
-		{
+		try {
 			currentZoom = this.connection.getLocalMapJ().getZoom();
-		}
-		catch(Exception exc)
-		{
+		} catch (Exception exc) {
 			System.out.println("MapInfoContext - Failed setting scale.");
 			throw new MapConnectionException("MapInfoContext - Failed setting scale.", exc);
 		}
@@ -92,22 +81,19 @@ public class MapInfoContext implements MapContext
 		return currentZoom;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.MapContext#setScale(double)
 	 */
-	public void setScale(double scale) throws MapConnectionException,
-			MapDataException
-	{
-		try
-		{
+	public void setScale(final double scale) throws MapConnectionException, MapDataException {
+		try {
 			this.connection.getLocalMapJ().setZoom(scale);
-		}
-		catch(Exception exc)
-		{
+		} catch (Exception exc) {
 			System.out.println("MapInfoContext - Failed setting scale.");
 			throw new MapConnectionException("MapInfoContext - Failed setting scale.", exc);
 		}
-//		if(this.aContext != null) {
+// if(this.aContext != null) {
 //			Dispatcher disp = this.aContext.getDispatcher();
 //			if(disp != null) {
 //				Double p = new Double(getScale());
@@ -123,59 +109,60 @@ public class MapInfoContext implements MapContext
 	/* (non-Javadoc)
 	 * @see com.syrus.AMFICOM.client.map.MapContext#scaleTo(double)
 	 */
-	public void scaleTo(double scaleCoef) throws MapConnectionException,
-			MapDataException
-	{
+	public void scaleTo(final double scaleCoef) throws MapConnectionException, MapDataException {
 		this.setScale(this.getScale() * scaleCoef);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.MapContext#zoomIn()
 	 */
-	public void zoomIn() throws MapConnectionException, MapDataException
-	{
-		scaleTo(1.0D / ZOOM_FACTOR);
+	public void zoomIn() throws MapConnectionException, MapDataException {
+		this.scaleTo(1.0D / ZOOM_FACTOR);
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.MapContext#zoomOut()
 	 */
-	public void zoomOut() throws MapConnectionException, MapDataException
-	{
-		scaleTo(ZOOM_FACTOR);
+	public void zoomOut() throws MapConnectionException, MapDataException {
+		this.scaleTo(ZOOM_FACTOR);
 	}
 
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.client.map.MapContext#zoomToBox(com.syrus.AMFICOM.map.DoublePoint, com.syrus.AMFICOM.map.DoublePoint)
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see com.syrus.AMFICOM.client.map.MapContext#zoomToBox(com.syrus.AMFICOM.map.DoublePoint,
+	 *      com.syrus.AMFICOM.map.DoublePoint)
 	 */
-	public void zoomToBox(DoublePoint from, DoublePoint to)
-			throws MapConnectionException, MapDataException
-	{
+	public void zoomToBox(final DoublePoint from, final DoublePoint to) throws MapConnectionException, MapDataException {
 		try {
-			this.connection.getLocalMapJ().setBounds(new DoubleRect(from.getX(), from.getY(),
-					to.getX(), to.getY()));
-//			updateZoom();
-		}
-		catch(Exception e) {
+			this.connection.getLocalMapJ().setBounds(new DoubleRect(from.getX(), from.getY(), to.getX(), to.getY()));
+			// updateZoom();
+		} catch (Exception e) {
 			System.out.println("MapInfoContext - Failed zooming to box.");
 			throw new MapConnectionException("MapInfoContext - Failed zooming to box.", e);
 
 		}
-//		if(this.aContext != null) {
-//			Dispatcher disp = this.aContext.getDispatcher();
-//			if(disp != null) {
-//				Double p = new Double(getScale());
-//				disp.firePropertyChange(new MapEvent(p, MapEvent.MAP_VIEW_SCALE_CHANGED));
-//			}
-//		}
-//		this.imageCache.setScale(this.getScale());
+		// if(this.aContext != null) {
+		// Dispatcher disp = this.aContext.getDispatcher();
+		// if(disp != null) {
+		// Double p = new Double(getScale());
+		// disp.firePropertyChange(new MapEvent(p,
+		// MapEvent.MAP_VIEW_SCALE_CHANGED));
+		// }
+		// }
+		// this.imageCache.setScale(this.getScale());
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.MapContext#getMapConnection()
 	 */
-	public MapConnection getMapConnection() throws MapConnectionException
-	{
+	public MapConnection getMapConnection() throws MapConnectionException {
 		return this.connection;
 	}
 
