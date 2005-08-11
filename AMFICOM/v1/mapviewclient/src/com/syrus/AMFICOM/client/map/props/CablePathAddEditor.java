@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.14 $
+ * @version $Revision: 1.15 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -715,10 +715,10 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.endNodeToComboBox.addElements(availableNodesFromEnd);
 		this.endNodeToComboBox.setSelectedItem(this.stubObject);
 
-		this.startLinkComboBox.setEnabled(false);
-		this.endLinkComboBox.setEnabled(false);
-		this.startNodeToComboBox.setEnabled(false);
-		this.endNodeToComboBox.setEnabled(false);
+		this.startLinkComboBox.setEnabled(true);
+		this.endLinkComboBox.setEnabled(true);
+		this.startNodeToComboBox.setEnabled(true);
+		this.endNodeToComboBox.setEnabled(true);
 	}
 
 	void selectLink() {
@@ -820,6 +820,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	void clearBinding()
 	{
 		this.cablePath.clearLinks();
+		this.cablePath.getSchemeCableLink().getPathMembers().iterator().next().setParentPathOwner(null, true);
 
 		CreateUnboundLinkCommandBundle command = new CreateUnboundLinkCommandBundle(
 			this.cablePath.getStartNode(), this.cablePath.getEndNode());
