@@ -1,5 +1,5 @@
 /*
- * $Id: ADefaultTableCellRenderer.java,v 1.3 2005/07/20 06:06:04 bob Exp $
+ * $Id: ADefaultTableCellRenderer.java,v 1.4 2005/08/11 18:51:08 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,10 +30,10 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/20 06:06:04 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/08/11 18:51:08 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module generalclient_v1
+ * @module commonclient
  */
 public final class ADefaultTableCellRenderer extends JLabel implements TableCellRenderer {
 

@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.6 2005/07/28 10:03:02 bob Exp $
+ * $Id: ApplicationModel.java,v 1.7 2005/08/11 18:51:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -21,9 +21,9 @@ import com.syrus.util.Log;
  * ћодель приложени€ описывает действи€, которые пользователь (оператор) может
  * производить с системой
  * 
- * @author $Author: bob $
- * @version $Revision: 1.6 $, $Date: 2005/07/28 10:03:02 $
- * @module generalclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/08/11 18:51:08 $
+ * @module commonclient
  */
 public class ApplicationModel {
 
@@ -357,9 +357,9 @@ public class ApplicationModel {
 	 * и флаги видимости и доступности команды пользователю. конструктора без
 	 * параметров нет, так как элемент определ€етс€ идентификатором
 	 * 
-	 * @author $Author: bob $
-	 * @version $Revision: 1.6 $, $Date: 2005/07/28 10:03:02 $
-	 * @module generalclient_v1
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.7 $, $Date: 2005/08/11 18:51:08 $
+	 * @module commonclient
 	 */
 	class ApplicationEntry {
 

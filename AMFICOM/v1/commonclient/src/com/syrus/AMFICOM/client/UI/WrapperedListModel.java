@@ -17,9 +17,9 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/04 08:17:49 $
- * @author $Author: bob $
- * @module generalclient_v1
+ * @version $Revision: 1.6 $, $Date: 2005/08/11 18:51:08 $
+ * @author $Author: arseniy $
+ * @module commonclient
  */
 public class WrapperedListModel extends AbstractListModel implements MutableComboBoxModel, Serializable {
 

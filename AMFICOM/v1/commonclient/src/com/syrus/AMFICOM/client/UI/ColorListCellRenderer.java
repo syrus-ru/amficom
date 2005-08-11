@@ -1,5 +1,5 @@
 /*
- * $Id: ColorListCellRenderer.java,v 1.2 2005/06/21 14:58:43 bob Exp $
+ * $Id: ColorListCellRenderer.java,v 1.3 2005/08/11 18:51:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,9 +9,9 @@
 package com.syrus.AMFICOM.client.UI;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/06/21 14:58:43 $
- * @module generalclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/11 18:51:08 $
+ * @module commonclient
  */
 
 import java.awt.Color;
@@ -25,9 +25,9 @@ import javax.swing.ListCellRenderer;
 
 /**
  * Renderer for java.awt.Color cell at JList.
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/06/21 14:58:43 $
- * @module generalclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/11 18:51:08 $
+ * @module commonclient
  */
 
 public class ColorListCellRenderer extends JLabel implements ListCellRenderer {

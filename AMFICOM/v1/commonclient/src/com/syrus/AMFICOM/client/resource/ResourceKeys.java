@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceKeys.java,v 1.9 2005/07/28 13:17:07 bob Exp $
+ * $Id: ResourceKeys.java,v 1.10 2005/08/11 18:51:09 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,10 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/07/28 13:17:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/08/11 18:51:09 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module generalclient_v1
+ * @module commonclient
  */
 public interface ResourceKeys {
 

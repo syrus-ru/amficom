@@ -1,5 +1,5 @@
 /*
- * $Id: SessionChangePasswordCommand.java,v 1.1 2005/05/19 14:06:42 bob Exp $
+ * $Id: SessionChangePasswordCommand.java,v 1.2 2005/08/11 18:51:09 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,9 +13,9 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 /**
  * TODO
  * 
- * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:42 $
- * @module generalclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/08/11 18:51:09 $
+ * @module commonclient
  */
 public class SessionChangePasswordCommand extends AbstractCommand {
 

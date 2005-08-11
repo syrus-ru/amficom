@@ -23,9 +23,9 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/08 15:32:53 $
- * @author $Author: bob $
- * @module generalclient_v1
+ * @version $Revision: 1.9 $, $Date: 2005/08/11 18:51:08 $
+ * @author $Author: arseniy $
+ * @module commonclient
  */
 public class WrapperedTable extends ATable {
 

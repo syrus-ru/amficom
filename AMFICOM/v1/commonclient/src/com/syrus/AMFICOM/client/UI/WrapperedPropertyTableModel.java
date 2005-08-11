@@ -10,9 +10,9 @@ import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/06 14:52:47 $
- * @author $Author: bob $
- * @module generalclient_v1
+ * @version $Revision: 1.4 $, $Date: 2005/08/11 18:51:08 $
+ * @author $Author: arseniy $
+ * @module commonclient
  */
 public class WrapperedPropertyTableModel extends AbstractTableModel {
 

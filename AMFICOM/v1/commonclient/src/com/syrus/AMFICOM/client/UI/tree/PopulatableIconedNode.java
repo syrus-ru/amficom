@@ -1,5 +1,5 @@
 /*
- * $Id: PopulatableIconedNode.java,v 1.2 2005/06/21 14:58:43 bob Exp $
+ * $Id: PopulatableIconedNode.java,v 1.3 2005/08/11 18:51:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Populatable;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/06/21 14:58:43 $
- * @module generalclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/11 18:51:08 $
+ * @module commonclient
  */
 
 public class PopulatableIconedNode extends IconedNode implements Populatable, Visualizable {

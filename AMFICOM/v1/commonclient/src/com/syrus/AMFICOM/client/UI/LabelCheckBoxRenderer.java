@@ -1,5 +1,5 @@
 /*-
-* $Id: LabelCheckBoxRenderer.java,v 1.3 2005/05/20 09:39:12 bob Exp $
+* $Id: LabelCheckBoxRenderer.java,v 1.4 2005/08/11 18:51:08 arseniy Exp $
 *
 * Copyright © 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,9 +25,9 @@ import com.syrus.util.Wrapper;
 
 /**
  * Renderer for JCheckBox items based on JLabel.
- * @version $Revision: 1.3 $, $Date: 2005/05/20 09:39:12 $
- * @author $Author: bob $
- * @module generalclient_v1
+ * @version $Revision: 1.4 $, $Date: 2005/08/11 18:51:08 $
+ * @author $Author: arseniy $
+ * @module commonclient
  */
 public class LabelCheckBoxRenderer extends JLabel implements ListCellRenderer {
 

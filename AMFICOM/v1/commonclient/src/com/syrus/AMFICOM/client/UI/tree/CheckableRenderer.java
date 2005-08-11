@@ -1,5 +1,5 @@
 /*-
- * $Id: CheckableRenderer.java,v 1.2 2005/06/17 11:50:08 bass Exp $
+ * $Id: CheckableRenderer.java,v 1.3 2005/08/11 18:51:08 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,9 +17,9 @@ import javax.swing.tree.TreeCellRenderer;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/06/17 11:50:08 $
- * @module generalclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/11 18:51:08 $
+ * @module commonclient
  */
 
 public class CheckableRenderer extends JCheckBox implements TreeCellRenderer {

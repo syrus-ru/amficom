@@ -8,9 +8,9 @@ import com.syrus.util.Wrapper;
  * Simple stub of AbstractLabelCellRenderer. see
  * {@link AbstractLabelCellRenderer}
  * 
- * @version $Revision: 1.1 $, $Date: 2005/05/19 14:06:41 $
- * @author $Author: bob $
- * @module generalclient_v1
+ * @version $Revision: 1.2 $, $Date: 2005/08/11 18:51:08 $
+ * @author $Author: arseniy $
+ * @module commonclient
  */
 public class StubLabelCellRenderer extends AbstractLabelCellRenderer {
 

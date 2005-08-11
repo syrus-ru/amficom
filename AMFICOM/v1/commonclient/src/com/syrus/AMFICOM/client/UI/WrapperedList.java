@@ -1,5 +1,5 @@
 /*
- * $Id: WrapperedList.java,v 1.4 2005/07/27 15:16:49 bob Exp $
+ * $Id: WrapperedList.java,v 1.5 2005/08/11 18:51:08 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -20,9 +20,9 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/07/27 15:16:49 $
- * @module generalclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/08/11 18:51:08 $
+ * @module commonclient
  */
 public class WrapperedList extends JList {
 

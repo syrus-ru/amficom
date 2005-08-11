@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.16 2005/07/29 14:41:51 arseniy Exp $
+ * $Id: OpenSessionCommand.java,v 1.17 2005/08/11 18:51:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.general.LoginManager;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/07/29 14:41:51 $
- * @module generalclient_v1
+ * @version $Revision: 1.17 $, $Date: 2005/08/11 18:51:08 $
+ * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
 

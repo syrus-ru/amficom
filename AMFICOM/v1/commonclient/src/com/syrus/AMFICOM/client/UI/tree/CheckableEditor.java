@@ -1,5 +1,5 @@
 /*-
- * $Id: CheckableEditor.java,v 1.1 2005/05/25 07:55:08 bob Exp $
+ * $Id: CheckableEditor.java,v 1.2 2005/08/11 18:51:08 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,9 +16,9 @@ import javax.swing.plaf.basic.BasicRadioButtonUI;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/05/25 07:55:08 $
- * @module generalclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/08/11 18:51:08 $
+ * @module commonclient
  */
 
 public class CheckableEditor extends DefaultCellEditor {

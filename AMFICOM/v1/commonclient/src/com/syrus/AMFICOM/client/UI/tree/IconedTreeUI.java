@@ -1,5 +1,5 @@
 /*
- * $Id: IconedTreeUI.java,v 1.4 2005/07/28 13:17:07 bob Exp $
+ * $Id: IconedTreeUI.java,v 1.5 2005/08/11 18:51:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,9 +32,9 @@ import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.Populatable;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/07/28 13:17:07 $
- * @module generalclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/08/11 18:51:08 $
+ * @module commonclient
  */
 
 public class IconedTreeUI {

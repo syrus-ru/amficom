@@ -31,10 +31,10 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/08 06:30:44 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/11 18:51:08 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module generalclient_v1
+ * @module commonclient
  */
 public final class CommonUIUtilities {
 
