@@ -1,5 +1,5 @@
 /*
- * $Id: EmptyLog.java,v 1.3 2005/08/08 12:02:02 arseniy Exp $
+ * $Id: EmptyLog.java,v 1.4 2005/08/11 17:11:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,41 +11,50 @@ import org.apache.commons.logging.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/08 12:02:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/11 17:11:16 $
  * @module mapinfo
  */
 public class EmptyLog implements Log {
-    
-    public EmptyLog(String instanceName){
-        
-    }
-    /* (non-Javadoc)
-     * @see org.apache.commons.logging.Log#isDebugEnabled()
-     */
-    public boolean isDebugEnabled() {
-        // TODO Auto-generated method stub
-        return false;
-    }
 
-    /* (non-Javadoc)
-     * @see org.apache.commons.logging.Log#isErrorEnabled()
-     */
-    public boolean isErrorEnabled() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	public EmptyLog(final String instanceName) {
+		//Nothing
+	}
 
-    /* (non-Javadoc)
-     * @see org.apache.commons.logging.Log#isFatalEnabled()
-     */
-    public boolean isFatalEnabled() {
-        // TODO Auto-generated method stub
-        return false;
-    }
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.apache.commons.logging.Log#isDebugEnabled()
+	 */
+	public boolean isDebugEnabled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
 
-    /* (non-Javadoc)
-     * @see org.apache.commons.logging.Log#isInfoEnabled()
-     */
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.apache.commons.logging.Log#isErrorEnabled()
+	 */
+	public boolean isErrorEnabled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+	/*
+	 * (non-Javadoc)
+	 * 
+	 * @see org.apache.commons.logging.Log#isFatalEnabled()
+	 */
+	public boolean isFatalEnabled() {
+		// TODO Auto-generated method stub
+		return false;
+	}
+
+    /*
+		 * (non-Javadoc)
+		 * 
+		 * @see org.apache.commons.logging.Log#isInfoEnabled()
+		 */
     public boolean isInfoEnabled() {
         // TODO Auto-generated method stub
         return false;

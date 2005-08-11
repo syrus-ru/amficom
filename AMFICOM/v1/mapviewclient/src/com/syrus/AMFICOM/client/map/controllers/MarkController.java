@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.17 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MarkController.java,v 1.18 2005/08/11 17:08:10 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,7 +15,6 @@ import java.awt.Graphics2D;
 import java.awt.Image;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
-import java.util.Iterator;
 import java.util.List;
 
 import javax.swing.ImageIcon;
@@ -36,7 +35,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 /**
  *  онтроллер метки.
  * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/11 17:08:10 $
  * @module mapviewclient
  */
 public final class MarkController extends AbstractNodeController {
@@ -51,25 +50,18 @@ public final class MarkController extends AbstractNodeController {
 	/**
 	 * Private constructor.
 	 */
-	private MarkController(NetMapViewer netMapViewer) {
+	private MarkController(final NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
 
-	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+	public static MapElementController createInstance(final NetMapViewer netMapViewer) {
 		return new MarkController(netMapViewer);
 	}
 
-	public static void init(Identifier creatorId) throws ApplicationException {
-		if(needInit ) {
-			imageId = NodeTypeController.getImageId(
-					creatorId, 
-					MarkController.IMAGE_NAME, 
-					MarkController.IMAGE_PATH);
-
-			MapPropertiesManager.setOriginalImage(
-				imageId,
-				new ImageIcon(MarkController.IMAGE_PATH).getImage());
-				
+	public static void init(final Identifier creatorId) throws ApplicationException {
+		if (needInit) {
+			imageId = NodeTypeController.getImageId(creatorId, MarkController.IMAGE_NAME, MarkController.IMAGE_PATH);
+			MapPropertiesManager.setOriginalImage(imageId, new ImageIcon(MarkController.IMAGE_PATH).getImage());
 			needInit = false;
 		}
 	}
@@ -77,7 +69,8 @@ public final class MarkController extends AbstractNodeController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Image getImage(AbstractNode node) {
+	@Override
+	public Image getImage(final AbstractNode node) {
 		node.setImageId(imageId);
 		return super.getImage(node);
 	}
@@ -85,109 +78,102 @@ public final class MarkController extends AbstractNodeController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint(
-			MapElement mapElement,
-			Graphics g,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(!(mapElement instanceof Mark))
+	@Override
+	public void paint(final MapElement mapElement, final Graphics g, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(mapElement instanceof Mark)) {
 			return;
-		Mark mark = (Mark )mapElement;
+		}
+		final Mark mark = (Mark) mapElement;
 
-		if(!isElementVisible(mark, visibleBounds))
+		if (!this.isElementVisible(mark, visibleBounds)) {
 			return;
-		
+		}
+
 		super.paint(mapElement, g, visibleBounds);
 
-		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
+		final MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
-		Point p = converter.convertMapToScreen( mark.getLocation());
+		final Point p = converter.convertMapToScreen(mark.getLocation());
 
-		Graphics2D pg = (Graphics2D )g;
+		final Graphics2D pg = (Graphics2D) g;
 		pg.setStroke(new BasicStroke(MapPropertiesManager.getBorderThickness()));
-		
+
 		pg.setColor(MapPropertiesManager.getBorderColor());
 		pg.setBackground(MapPropertiesManager.getTextBackground());
 		pg.setFont(MapPropertiesManager.getFont());
 
-		int width = getBounds(mark).width;
-		int height = g.getFontMetrics().getHeight();
+		final int width = getBounds(mark).width;
+		final int height = g.getFontMetrics().getHeight();
 
-		String s1 = mark.getName();
-		pg.drawRect(
-				p.x + width, 
-				p.y - height + 2,
-				pg.getFontMetrics().stringWidth(s1), 
-				height );
+		final String s1 = mark.getName();
+		pg.drawRect(p.x + width, p.y - height + 2, pg.getFontMetrics().stringWidth(s1), height);
 
 		pg.setColor(MapPropertiesManager.getTextBackground());
-		pg.fillRect(
-				p.x + width, 
-				p.y - height + 2,
-				pg.getFontMetrics().stringWidth(s1), 
-				height );
+		pg.fillRect(p.x + width, p.y - height + 2, pg.getFontMetrics().stringWidth(s1), height);
 
 		g.setColor(MapPropertiesManager.getTextColor());
-		g.drawString(
-				s1, 
-				p.x + width, 
-				p.y - 2 );
+		g.drawString(s1, p.x + width, p.y - 2);
 	}
 
 	/**
-	 * ѕересчитать рассто€ние от начального узла фрагмента, на котором
-	 * находитс€ метка, до метки.
-	 * @param mark метка
+	 * ѕересчитать рассто€ние от начального узла фрагмента, на котором находитс€
+	 * метка, до метки.
+	 * 
+	 * @param mark
+	 *        метка
 	 */
-	public void updateSizeInDoubleLt(Mark mark)
-			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
-		
-		mark.getPhysicalLink().sortNodes();
-		
-		List nodes = mark.getPhysicalLink().getSortedNodes();
-		
-		DoublePoint from;
-		DoublePoint to = mark.getLocation();
+	public void updateSizeInDoubleLt(final Mark mark) throws MapConnectionException, MapDataException {
+		final MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
-		if(nodes.indexOf(mark.getNodeLink().getStartNode()) 
-				< nodes.indexOf(mark.getNodeLink().getEndNode()))
+		mark.getPhysicalLink().sortNodes();
+
+		final List<AbstractNode> nodes = mark.getPhysicalLink().getSortedNodes();
+
+		DoublePoint from;
+		final DoublePoint to = mark.getLocation();
+
+		if (nodes.indexOf(mark.getNodeLink().getStartNode()) < nodes.indexOf(mark.getNodeLink().getEndNode())) {
 			from = mark.getNodeLink().getStartNode().getLocation();
-		else
+		}
+		else {
 			from = mark.getNodeLink().getEndNode().getLocation();
+		}
 
 		mark.setSizeInDoubleLt(converter.distance(from, to));
 	}
 
 	/**
 	 * ѕередвинуть в точку на заданном рассто€нии от начала линии.
-	 * @param mark метка
-	 * @param topologicalDistance топологическа€ дистанци€
+	 * 
+	 * @param mark
+	 *        метка
+	 * @param topologicalDistance
+	 *        топологическа€ дистанци€
 	 */
-	public void moveToFromStartLt(Mark mark, double topologicalDistance)
-			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
+	public void moveToFromStartLt(final Mark mark, double topologicalDistance) throws MapConnectionException, MapDataException {
+		final MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
 		mark.getPhysicalLink().sortNodeLinks();
-		
+
 		mark.setStartNode(mark.getPhysicalLink().getStartNode());
 
-		if(topologicalDistance > mark.getPhysicalLink().getLengthLt()) {
+		if (topologicalDistance > mark.getPhysicalLink().getLengthLt()) {
 			topologicalDistance = mark.getPhysicalLink().getLengthLt();
 		}
 
 		mark.setDistance(topologicalDistance);
 
 		double cumulativeDistance = 0;
-		
-		for(Iterator it = mark.getPhysicalLink().getNodeLinks().iterator(); it.hasNext();) {
-			mark.setNodeLink((NodeLink )it.next());
-			NodeLinkController nlc = (NodeLinkController)this.logicalNetLayer.getMapViewController().getController(mark.getNodeLink());
+
+		for (final NodeLink nodeLink : mark.getPhysicalLink().getNodeLinks()) {
+			mark.setNodeLink(nodeLink);
+			final NodeLinkController nlc = (NodeLinkController) this.logicalNetLayer.getMapViewController().getController(mark.getNodeLink());
 			nlc.updateLengthLt(mark.getNodeLink());
-			if(cumulativeDistance + mark.getNodeLink().getLengthLt() > topologicalDistance) {
-				double distanceFromStart = topologicalDistance - cumulativeDistance;
-				DoublePoint newPoint = converter.pointAtDistance(
-						mark.getStartNode().getLocation(), 
+			if (cumulativeDistance + mark.getNodeLink().getLengthLt() > topologicalDistance) {
+				final double distanceFromStart = topologicalDistance - cumulativeDistance;
+				final DoublePoint newPoint = converter.pointAtDistance(mark.getStartNode().getLocation(),
 						mark.getNodeLink().getOtherNode(mark.getStartNode()).getLocation(),
 						distanceFromStart);
 				mark.setLocation(newPoint);
@@ -197,46 +183,49 @@ public final class MarkController extends AbstractNodeController {
 			cumulativeDistance += mark.getNodeLink().getLengthLt();
 			mark.setStartNode(mark.getNodeLink().getOtherNode(mark.getStartNode()));
 		}
-		
-		updateSizeInDoubleLt(mark);
+
+		this.updateSizeInDoubleLt(mark);
 	}
 
 	/**
-	 * Adjust marker position accurding to topological distance relative
-	 * to current node link (which comprises startNode and endNode).
-	 * @param mark метка
-	 * @param screenDistance экранное рассто€ние
+	 * Adjust marker position accurding to topological distance relative to
+	 * current node link (which comprises startNode and endNode).
+	 * 
+	 * @param mark
+	 *        метка
+	 * @param screenDistance
+	 *        экранное рассто€ние
 	 */
-	public void adjustPosition(Mark mark, double screenDistance)
-			throws MapConnectionException, MapDataException {
-		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
+	public void adjustPosition(final Mark mark, final double screenDistance) throws MapConnectionException, MapDataException {
+		final MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
-		Point sp = converter.convertMapToScreen(mark.getStartNode().getLocation());
-	
-		double startNodeX = sp.x;
-		double startNodeY = sp.y;
+		final Point sp = converter.convertMapToScreen(mark.getStartNode().getLocation());
 
-		Point ep = converter.convertMapToScreen(mark.getNodeLink().getOtherNode(mark.getStartNode()).getLocation());
+		final double startNodeX = sp.x;
+		final double startNodeY = sp.y;
 
-		double endNodeX = ep.x;
-		double endNodeY = ep.y;
+		final Point ep = converter.convertMapToScreen(mark.getNodeLink().getOtherNode(mark.getStartNode()).getLocation());
 
-		double nodeLinkLength =  Math.sqrt( 
-				(endNodeX - startNodeX) * (endNodeX - startNodeX) +
-				(endNodeY - startNodeY) * (endNodeY - startNodeY) );
+		final double endNodeX = ep.x;
+		final double endNodeY = ep.y;
 
-		double sinB = (endNodeY - startNodeY) / nodeLinkLength;
+		final double nodeLinkLength = Math.sqrt((endNodeX - startNodeX)
+				* (endNodeX - startNodeX)
+				+ (endNodeY - startNodeY)
+				* (endNodeY - startNodeY));
 
-		double cosB = (endNodeX - startNodeX) / nodeLinkLength;
+		final double sinB = (endNodeY - startNodeY) / nodeLinkLength;
 
-		mark.setLocation(converter.convertScreenToMap(new Point(
-			(int )Math.round(startNodeX + cosB * screenDistance),
-			(int )Math.round(startNodeY + sinB * screenDistance) ) ) );
+		final double cosB = (endNodeX - startNodeX) / nodeLinkLength;
+
+		mark.setLocation(converter.convertScreenToMap(new Point((int) Math.round(startNodeX + cosB * screenDistance),
+				(int) Math.round(startNodeY + sinB * screenDistance))));
 	}
 
-	public Identifier getImageId(AbstractNode node) {
-		if(node.getImageId() == null) {
-			Mark mark = (Mark )node;
+	@Override
+	public Identifier getImageId(final AbstractNode node) {
+		if (node.getImageId() == null) {
+			final Mark mark = (Mark) node;
 			mark.setImageId(imageId);
 		}
 		return node.getImageId();

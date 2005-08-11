@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNodeController.java,v 1.11 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: UnboundNodeController.java,v 1.12 2005/08/11 17:08:10 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,59 +28,54 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Контроллер непривязанного узела (элемент схемы).
  * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/11 17:08:10 $
  * @module mapviewclient
  */
-public class UnboundNodeController extends SiteNodeController
-{
+public class UnboundNodeController extends SiteNodeController {
 	/**
 	 * Private constructor.
 	 */
-	private UnboundNodeController(NetMapViewer netMapViewer) {
+	private UnboundNodeController(final NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
-	
-	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+
+	public static MapElementController createInstance(final NetMapViewer netMapViewer) {
 		return new UnboundNodeController(netMapViewer);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint(
-			MapElement mapElement,
-			Graphics g,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(!(mapElement instanceof UnboundNode))
+	@Override
+	public void paint(final MapElement mapElement, final Graphics g, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(mapElement instanceof UnboundNode)) {
 			return;
-		UnboundNode unbound = (UnboundNode)mapElement;
-
-		if(!isElementVisible(unbound, visibleBounds))
-			return;
-		
-		super.paint(unbound, g, visibleBounds);
-		
-		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
-		
-		Point p = converter.convertMapToScreen(unbound.getLocation());
-
-		Graphics2D pg = (Graphics2D )g;
-		
-		int width = getBounds(unbound).width + 20;
-		int height = getBounds(unbound).height + 20;
-		
-		pg.setStroke(new BasicStroke(MapPropertiesManager.getUnboundThickness()));
-		if(unbound.getCanBind()) {
-			pg.setColor(MapPropertiesManager.getCanBindColor());
 		}
-		else {
+		final UnboundNode unbound = (UnboundNode) mapElement;
+
+		if (!super.isElementVisible(unbound, visibleBounds)) {
+			return;
+		}
+
+		super.paint(unbound, g, visibleBounds);
+
+		final MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
+
+		final Point p = converter.convertMapToScreen(unbound.getLocation());
+
+		final Graphics2D pg = (Graphics2D) g;
+
+		final int width = super.getBounds(unbound).width + 20;
+		int height = super.getBounds(unbound).height + 20;
+
+		pg.setStroke(new BasicStroke(MapPropertiesManager.getUnboundThickness()));
+		if (unbound.getCanBind()) {
+			pg.setColor(MapPropertiesManager.getCanBindColor());
+		} else {
 			pg.setColor(MapPropertiesManager.getUnboundElementColor());
 		}
-		pg.drawRect( 
-				p.x - width / 2,
-				p.y - height / 2,
-				width,
-				height);
+		pg.drawRect(p.x - width / 2, p.y - height / 2, width, height);
 	}
 }

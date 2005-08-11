@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.39 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: NodeTypeController.java,v 1.40 2005/08/11 17:08:10 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -17,6 +17,7 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -36,6 +37,7 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
+import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.AMFICOM.resource.ImageResourceWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
@@ -43,7 +45,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 /**
  * контроллер типа сетевого узла.
  * @author $Author: arseniy $
- * @version $Revision: 1.39 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.40 $, $Date: 2005/08/11 17:08:10 $
  * @module mapviewclient
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -58,10 +60,10 @@ public class NodeTypeController extends AbstractNodeController {
 	private static NodeTypeController instance = null;
 
 	/** ’эш-таблица имен пиктограмм дл€ предустановленных типов узлов. */
-	private static java.util.Map imageFileNames = new HashMap();
+	private static java.util.Map<String, String> imageFileNames = new HashMap<String, String>();
 
 	private static Identifier defaultImageId = null;
-	
+
 	static {
 		imageFileNames.put(SiteNodeType.DEFAULT_UNBOUND, "images/unbound.gif");
 		imageFileNames.put(SiteNodeType.DEFAULT_ATS, "images/ats.gif");
@@ -85,38 +87,39 @@ public class NodeTypeController extends AbstractNodeController {
 	 * @return instance
 	 */
 	public static MapElementController getInstance() {
-		if(instance == null)
+		if (instance == null) {
 			instance = new NodeTypeController();
+		}
 		return instance;
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since SiteNodeType is not really a Map Element
+	 * {@inheritDoc} Suppress since SiteNodeType is not really a Map Element
 	 */
-	public boolean isElementVisible(
-			MapElement me,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
+	@Override
+	public boolean isElementVisible(final MapElement me, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc} Suppress since SiteNodeType is not really a Map Element
 	 */
-	public void paint(
-			MapElement me,
-			Graphics g,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
+	@Override
+	public void paint(final MapElement me, final Graphics g, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc} Suppress since SiteNodeType is not really a Map Element
 	 */
-	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
-			throws MapConnectionException, MapDataException {
+	@Override
+	public boolean isMouseOnElement(final MapElement me, final Point currentMousePoint)
+			throws MapConnectionException,
+				MapDataException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -127,11 +130,11 @@ public class NodeTypeController extends AbstractNodeController {
 	 * @param codename кодовое им€
 	 * @return им€ пиктограммы
 	 */
-	public static String getImageFileName(String codename) {
-		return (String )imageFileNames.get(codename);
+	public static String getImageFileName(final String codename) {
+		return imageFileNames.get(codename);
 	}
 
-	public static Image getImage(SiteNodeType type) {
+	public static Image getImage(final SiteNodeType type) {
 		return MapPropertiesManager.getImage(type.getImageId());
 	}
 
@@ -145,55 +148,46 @@ public class NodeTypeController extends AbstractNodeController {
 	 * @return »дентификатор пиктограммы ({@link com.syrus.AMFICOM.resource.AbstractImageResource})
 	 * @throws ApplicationException 
 	 */
-	public static Identifier getImageId(
-			Identifier userId,
-			String codename, 
-			String filename) throws ApplicationException {
-		StorableObjectCondition condition = new TypicalCondition(
-			String.valueOf(ImageResourceSort._FILE),
-			OperationSort.OPERATION_EQUALS,
-			ObjectEntities.IMAGERESOURCE_CODE,
-			ImageResourceWrapper.COLUMN_SORT);
-		Collection bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+	public static Identifier getImageId(final Identifier userId, final String codename, final String filename)
+			throws ApplicationException {
+		StorableObjectCondition condition = new TypicalCondition(String.valueOf(ImageResourceSort._FILE),
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.IMAGERESOURCE_CODE,
+				ImageResourceWrapper.COLUMN_SORT);
+		final Set<AbstractBitmapImageResource> bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-		for(Iterator it = bitMaps.iterator(); it.hasNext();) {
-			FileImageResource ir = (FileImageResource )it.next();
-			if(ir.getCodename().equals(codename))
+		for (final Iterator<AbstractBitmapImageResource> it = bitMaps.iterator(); it.hasNext();) {
+			final FileImageResource ir = (FileImageResource) it.next();
+			if (ir.getCodename().equals(codename)) {
 				return ir.getId();
+			}
 		}
-		FileImageResource ir = FileImageResource.createInstance(
-				userId,
-				codename,
-				filename);
+		final FileImageResource ir = FileImageResource.createInstance(userId, codename, filename);
 		StorableObjectPool.flush(ir, userId, true);
-//		FileImageResource ir = (FileImageResource )bitMaps.iterator().next();
+		// FileImageResource ir = (FileImageResource )bitMaps.iterator().next();
 		return ir.getId();
 	}
 
 	/**
 	 * ѕолучить тип сетевого узла по кодовому имени.
 	 * 
-	 * @param codename кодовое им€
+	 * @param codename
+	 *        кодовое им€
 	 * @return тип сетевого узла
-	 * @throws ApplicationException 
+	 * @throws ApplicationException
 	 */
-	public static SiteNodeType getSiteNodeType(
-			String codename) throws ApplicationException {
+	public static SiteNodeType getSiteNodeType(final String codename) throws ApplicationException {
 		return getSiteNodeType(codename, false);
 	}
 
-	static SiteNodeType getSiteNodeType(
-			String codename,
-			boolean useLoader) throws ApplicationException {
-		StorableObjectCondition pTypeCondition = new TypicalCondition(
-				codename,
+	static SiteNodeType getSiteNodeType(final String codename, final boolean useLoader) throws ApplicationException {
+		final StorableObjectCondition pTypeCondition = new TypicalCondition(codename,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.SITENODE_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-		Collection<SiteNodeType> pTypes = 
-			StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, useLoader);
-		if(pTypes.size() == 1) {
+		final Set<SiteNodeType> pTypes = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, useLoader);
+		if (pTypes.size() == 1) {
 			return pTypes.iterator().next();
 		}
 		return null;
@@ -202,36 +196,33 @@ public class NodeTypeController extends AbstractNodeController {
 	/**
 	 * ѕолучить тип сетевого узла по кодовому имени. ¬ случае, если такого типа
 	 * нет, создаетс€ новый.
-	 * @param userId пользователь
-	 * @param codename кодовое им€
-	 * @param isTopological TODO
 	 * 
+	 * @param userId
+	 *        пользователь
+	 * @param codename
+	 *        кодовое им€
+	 * @param isTopological
+	 *        TODO
 	 * @return тип сетевого узла
-	 * @throws ApplicationException 
-	 * @throws CreateObjectException 
+	 * @throws ApplicationException
+	 * @throws CreateObjectException
 	 */
-	static SiteNodeType getSiteNodeType(
-			MapLibrary mapLibrary,
-			Identifier userId,
-			SiteNodeTypeSort sort,
-			String codename,
-			boolean isTopological) throws ApplicationException {
+	static SiteNodeType getSiteNodeType(final MapLibrary mapLibrary,
+			final Identifier userId,
+			final SiteNodeTypeSort sort,
+			final String codename,
+			final boolean isTopological) throws ApplicationException {
 		SiteNodeType type = getSiteNodeType(codename, true);
-		if(type == null) {
-			type = SiteNodeType.createInstance(
-				userId,
-				sort,
-				codename,
-				LangModelMap.getString(codename),
-				"",
-				NodeTypeController.getImageId(
-						userId, 
-						codename, 
-						NodeTypeController.getImageFileName(codename)),
-						isTopological,
-				mapLibrary.getId());
-				
-			StorableObjectPool.putStorableObject(type);
+		if (type == null) {
+			type = SiteNodeType.createInstance(userId,
+					sort,
+					codename,
+					LangModelMap.getString(codename),
+					"",
+					NodeTypeController.getImageId(userId, codename, NodeTypeController.getImageFileName(codename)),
+					isTopological,
+					mapLibrary.getId());
+
 			StorableObjectPool.flush(type, userId, true);
 		}
 		return type;
@@ -239,37 +230,38 @@ public class NodeTypeController extends AbstractNodeController {
 
 	/**
 	 * ѕолучить список всех типов сетевых узлов.
+	 * 
 	 * @return список типов сетевых узлов &lt;{@link SiteNodeType}&gt;
 	 */
 	public static Collection getTopologicalNodeTypes() {
-		Collection list = Collections.EMPTY_LIST;
-		StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITENODE_TYPE_CODE);
-		
-		//todo getTopologicalNodeTypes should get only included libraries
-//		Set<Identifier> libIds = new HashSet<Identifier>();
-//		for(Iterator iter = map.getMapLibraries().iterator(); iter.hasNext();) {
-//			MapLibrary library = (MapLibrary )iter.next();
-//			libIds.add(library.getId());
-//		}
-//		
-//		StorableObjectCondition pTypeCondition = new LinkedIdsCondition(libIds, ObjectEntities.SITENODE_TYPE_CODE);
+		Set<SiteNodeType> objects = Collections.emptySet();
+		final StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITENODE_TYPE_CODE);
+
+		// todo getTopologicalNodeTypes should get only included libraries
+		// Set<Identifier> libIds = new HashSet<Identifier>();
+		// for(Iterator iter = map.getMapLibraries().iterator(); iter.hasNext();) {
+		// MapLibrary library = (MapLibrary )iter.next();
+		// libIds.add(library.getId());
+		// }
+		//		
+		// StorableObjectCondition pTypeCondition = new LinkedIdsCondition(libIds,
+		// ObjectEntities.SITENODE_TYPE_CODE);
 
 		try {
-			list = StorableObjectPool.getStorableObjectsByCondition(
-					pTypeCondition,
-					false);
+			objects = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, false);
 
-			list.remove(getUnboundNodeType());
+			objects.remove(getUnboundNodeType());
 
-			for(Iterator it = list.iterator(); it.hasNext();) {
-				SiteNodeType mnpe = (SiteNodeType )it.next();
-				if(!mnpe.isTopological())
+			for (final Iterator<SiteNodeType> it = objects.iterator(); it.hasNext();) {
+				final SiteNodeType mnpe = it.next();
+				if (!mnpe.isTopological()) {
 					it.remove();
+				}
 			}
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
-		return list;
+		return objects;
 	}
 
 	/**
@@ -285,7 +277,7 @@ public class NodeTypeController extends AbstractNodeController {
 		return NodeTypeController.defaultImageId;
 	}
 
-	public static void createDefaults(Identifier creatorId) throws ApplicationException {
+	public static void createDefaults(final Identifier creatorId) throws ApplicationException {
 		NodeTypeController.defaultImageId = getImageId(
 				creatorId,
 				DEFAULT_IMAGE_CODENAME, 

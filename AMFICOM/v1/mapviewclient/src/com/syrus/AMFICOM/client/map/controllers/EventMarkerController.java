@@ -1,5 +1,5 @@
 /**
- * $Id: EventMarkerController.java,v 1.14 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: EventMarkerController.java,v 1.15 2005/08/11 17:08:10 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.mapview.EventMarker;
 /**
  * Контроллер маркера события.
  * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/11 17:08:10 $
  * @module mapviewclient
  */
 public final class EventMarkerController extends MarkerController {
@@ -33,8 +33,7 @@ public final class EventMarkerController extends MarkerController {
 
 	/**
 	 * Флаг необходимости инициализировать изображения маркеров событий.
-	 * Инициализация проводится один раз при первом обращении к отрисовке 
-	 * маркера.
+	 * Инициализация проводится один раз при первом обращении к отрисовке маркера.
 	 */
 	private static boolean needInit = true;
 
@@ -43,25 +42,22 @@ public final class EventMarkerController extends MarkerController {
 	/**
 	 * Private constructor.
 	 */
-	private EventMarkerController(NetMapViewer netMapViewer) {
+	private EventMarkerController(final NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
 
-	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+	public static MapElementController createInstance(final NetMapViewer netMapViewer) {
 		return new EventMarkerController(netMapViewer);
 	}
 
-	public static void init(Identifier creatorId) throws ApplicationException {
-		if(needInit) {
-			eventImageId = NodeTypeController.getImageId(
-					creatorId, 
-					EventMarkerController.EVENT_IMAGE_NAME, 
+	public static void init(final Identifier creatorId) throws ApplicationException {
+		if (needInit) {
+			eventImageId = NodeTypeController.getImageId(creatorId,
+					EventMarkerController.EVENT_IMAGE_NAME,
 					EventMarkerController.EVENT_IMAGE_PATH);
 
-			MapPropertiesManager.setOriginalImage(
-				eventImageId,
-				new ImageIcon(EventMarkerController.EVENT_IMAGE_PATH).getImage());
-				
+			MapPropertiesManager.setOriginalImage(eventImageId, new ImageIcon(EventMarkerController.EVENT_IMAGE_PATH).getImage());
+
 			needInit = false;
 		}
 	}
@@ -69,16 +65,16 @@ public final class EventMarkerController extends MarkerController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getToolTipText(MapElement mapElement) {
-		if(!(mapElement instanceof EventMarker))
+	@Override
+	public String getToolTipText(final MapElement mapElement) {
+		if(!(mapElement instanceof EventMarker)) {
 			return null;
+		}
 
-		EventMarker marker = (EventMarker )mapElement;
+		final EventMarker marker = (EventMarker )mapElement;
 		
-		String s1 = LangModelMap.getString("Event") 
-			+ " " + marker.getName() 
-			+ " (" + LangModelMap.getString("Path_lowercase")
-			+ " " + marker.getMeasurementPath().getName() + ")";
+		final String s1 = LangModelMap.getString("Event") + " " + marker.getName() 
+			+ " (" + LangModelMap.getString("Path_lowercase") + " " + marker.getMeasurementPath().getName() + ")";
 
 		return s1;
 	}

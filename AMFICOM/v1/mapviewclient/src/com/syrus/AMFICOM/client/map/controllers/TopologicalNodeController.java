@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.20 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: TopologicalNodeController.java,v 1.21 2005/08/11 17:08:10 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 /**
  * Контроллер топологического узла.
  * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.21 $, $Date: 2005/08/11 17:08:10 $
  * @module mapviewclient
  */
 public class TopologicalNodeController extends AbstractNodeController {
@@ -56,11 +56,10 @@ public class TopologicalNodeController extends AbstractNodeController {
 
 	/**
 	 * Флаг необходимости инициализировать изображения маркеров событий.
-	 * Инициализация проводится один раз при первом обращении к отрисовке 
-	 * маркера.
+	 * Инициализация проводится один раз при первом обращении к отрисовке маркера.
 	 */
 	private static boolean needInit = true;
-	
+
 	/** Идентификатор пиктограммы закрытого топологического узла. */
 	private static Identifier openImageId;
 	/** Идентификатор пиктограммы открытоготопологического узла. */
@@ -69,33 +68,26 @@ public class TopologicalNodeController extends AbstractNodeController {
 	/**
 	 * Private constructor.
 	 */
-	private TopologicalNodeController(NetMapViewer netMapViewer) {
+	private TopologicalNodeController(final NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
 
-	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+	public static MapElementController createInstance(final NetMapViewer netMapViewer) {
 		return new TopologicalNodeController(netMapViewer);
 	}
 
-	public static void init(Identifier creatorId) throws ApplicationException {
-		if(needInit) {
-
-			openImageId = NodeTypeController.getImageId(
-					creatorId, 
-					TopologicalNodeController.OPEN_NODE, 
+	public static void init(final Identifier creatorId) throws ApplicationException {
+		if (needInit) {
+			openImageId = NodeTypeController.getImageId(creatorId,
+					TopologicalNodeController.OPEN_NODE,
 					TopologicalNodeController.OPEN_NODE_IMAGE);
-			closedImageId = NodeTypeController.getImageId(
-					creatorId, 
-					TopologicalNodeController.CLOSED_NODE, 
+			closedImageId = NodeTypeController.getImageId(creatorId,
+					TopologicalNodeController.CLOSED_NODE,
 					TopologicalNodeController.CLOSED_NODE_IMAGE);
 
-			MapPropertiesManager.setOriginalImage(
-				openImageId,
-				new ImageIcon(TopologicalNodeController.OPEN_NODE_IMAGE).getImage());
-			MapPropertiesManager.setOriginalImage(
-				closedImageId,
-				new ImageIcon(TopologicalNodeController.CLOSED_NODE_IMAGE).getImage());
-				
+			MapPropertiesManager.setOriginalImage(openImageId, new ImageIcon(TopologicalNodeController.OPEN_NODE_IMAGE).getImage());
+			MapPropertiesManager.setOriginalImage(closedImageId, new ImageIcon(TopologicalNodeController.CLOSED_NODE_IMAGE).getImage());
+
 			needInit = false;
 		}
 	}
@@ -103,6 +95,7 @@ public class TopologicalNodeController extends AbstractNodeController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Rectangle getDefaultBounds() {
 		return TopologicalNodeController.NODE_BOUNDS;
 	}
@@ -110,6 +103,7 @@ public class TopologicalNodeController extends AbstractNodeController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Rectangle getMinBounds() {
 		return TopologicalNodeController.MIN_NODE_BOUNDS;
 	}
@@ -117,6 +111,7 @@ public class TopologicalNodeController extends AbstractNodeController {
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public Rectangle getMaxBounds() {
 		return TopologicalNodeController.MAX_NODE_BOUNDS;
 	}
@@ -128,23 +123,28 @@ public class TopologicalNodeController extends AbstractNodeController {
 	 * @param node топологического узла
 	 * @param active флаг активности
 	 */
-	public void setActive(TopologicalNode node, boolean active) {
+	public void setActive(final TopologicalNode node, final boolean active) {
 		node.setActive(active);
 
-		if(active)
+		if (active) {
 			node.setImageId(openImageId);
-		else
+		}
+		else {
 			node.setImageId(closedImageId);
+		}
 	}
 
-	public Identifier getImageId(AbstractNode node) {
-		if(node.getImageId() == null) {
-			TopologicalNode topologicalNode = (TopologicalNode )node;
+	@Override
+	public Identifier getImageId(final AbstractNode node) {
+		if (node.getImageId() == null) {
+			final TopologicalNode topologicalNode = (TopologicalNode) node;
 
-			if(topologicalNode.isActive())
+			if (topologicalNode.isActive()) {
 				topologicalNode.setImageId(openImageId);
-			else
+			}
+			else {
 				topologicalNode.setImageId(closedImageId);
+			}
 		}
 		return node.getImageId();
 	}
@@ -152,16 +152,20 @@ public class TopologicalNodeController extends AbstractNodeController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Image getImage(AbstractNode node) {
-		TopologicalNode topologicalNode = (TopologicalNode )node;
+	@Override
+	public Image getImage(final AbstractNode node) {
+		final TopologicalNode topologicalNode = (TopologicalNode) node;
 
-		if(topologicalNode.isActive())
+		if (topologicalNode.isActive()) {
 			node.setImageId(openImageId);
-		else
+		}
+		else {
 			node.setImageId(closedImageId);
+		}
 
-		if(topologicalNode.isActive())
+		if (topologicalNode.isActive()) {
 			return MapPropertiesManager.getScaledImage(closedImageId);
+		}
 
 		return MapPropertiesManager.getScaledImage(openImageId);
 	}
@@ -169,37 +173,34 @@ public class TopologicalNodeController extends AbstractNodeController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint(
-			MapElement mapElement,
-			Graphics g,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(!(mapElement instanceof TopologicalNode))
+	@Override
+	public void paint(final MapElement mapElement, final Graphics g, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(mapElement instanceof TopologicalNode)) {
 			return;
-		TopologicalNode node = (TopologicalNode)mapElement;
+		}
+		final TopologicalNode node = (TopologicalNode) mapElement;
 
-		if(!isElementVisible(node, visibleBounds))
+		if (!super.isElementVisible(node, visibleBounds)) {
 			return;
-		
+		}
+
 		super.paint(node, g, visibleBounds);
 
-		if(node.isCanBind()) {
-			MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
-			
-			Point p = converter.convertMapToScreen(node.getLocation());
-	
-			Graphics2D pg = (Graphics2D )g;
-			
-			int width = getBounds(node).width + 20;
-			int height = getBounds(node).height + 20;
-			
+		if (node.isCanBind()) {
+			final MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
+
+			final Point p = converter.convertMapToScreen(node.getLocation());
+
+			final Graphics2D pg = (Graphics2D) g;
+
+			final int width = getBounds(node).width + 20;
+			final int height = getBounds(node).height + 20;
+
 			pg.setStroke(new BasicStroke(MapPropertiesManager.getUnboundThickness()));
 			pg.setColor(MapPropertiesManager.getCanBindColor());
-			pg.drawRect( 
-					p.x - width / 2,
-					p.y - height / 2,
-					width,
-					height);
+			pg.drawRect(p.x - width / 2, p.y - height / 2, width, height);
 		}
 	}
 }

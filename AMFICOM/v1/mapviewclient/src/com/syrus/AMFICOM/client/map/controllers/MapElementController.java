@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementController.java,v 1.10 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MapElementController.java,v 1.11 2005/08/11 17:08:10 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,16 +22,15 @@ import com.syrus.AMFICOM.map.MapElement;
  * Интерфейс контроллера элемента карты. Позволяет управлять отображением
  * элементов карты.
  * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/11 17:08:10 $
  * @module mapviewclient
  */
-public interface MapElementController 
-{
+public interface MapElementController {
 	/**
 	 * Установить логический вид.
 	 * @param netMapViewer логический вид
 	 */
-	void setNetMapViewer(NetMapViewer netMapViewer);
+	void setNetMapViewer(final NetMapViewer netMapViewer);
 
 	/**
 	 * Отрисовать элемент. При отрисовке необходимо производить проверку 
@@ -41,8 +40,9 @@ public interface MapElementController
 	 * @param g графический контекст
 	 * @param visibleBounds видимая облать
 	 */
-	void paint (MapElement me, Graphics g, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException;
+	void paint(final MapElement me, final Graphics g, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException;
 
 	/**
 	 * Возвращает флаг, указывающий, что точка currentMousePoint находится
@@ -54,8 +54,7 @@ public interface MapElementController
 	 * @return <code>true</code>, если точка на элементе карты, иначе 
 	 * <code>false</code>
 	 */
-	boolean isMouseOnElement(MapElement me, Point currentMousePoint)
-		throws MapConnectionException, MapDataException;
+	boolean isMouseOnElement(final MapElement me, final Point currentMousePoint) throws MapConnectionException, MapDataException;
 
 	/**
 	 * Определить, попадает ли элемент в область visibleBounds.
@@ -66,13 +65,14 @@ public interface MapElementController
 	 * @return <code>true</code>, если элемент попадает в область, иначе 
 	 * <code>false</code>
 	 */
-	boolean isElementVisible(MapElement me, Rectangle2D.Double visibleBounds)
-		throws MapConnectionException, MapDataException;
+	boolean isElementVisible(final MapElement me, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException;
 
 	/**
 	 * Получить текст всплывающей подсказки для элемента карты.
 	 * @param me элемент карты
 	 * @return строка для всплывающей подсказки
 	 */
-	String getToolTipText(MapElement me);
+	String getToolTipText(final MapElement me);
 }

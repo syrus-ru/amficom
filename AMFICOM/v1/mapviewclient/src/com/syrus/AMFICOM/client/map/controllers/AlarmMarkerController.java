@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmMarkerController.java,v 1.14 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: AlarmMarkerController.java,v 1.15 2005/08/11 17:08:10 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.mapview.AlarmMarker;
 /**
  *  онтроллер маркера сигнала тревоги.
  * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/11 17:08:10 $
  * @module mapviewclient
  */
 public final class AlarmMarkerController extends MarkerController {
@@ -47,8 +47,7 @@ public final class AlarmMarkerController extends MarkerController {
 
 	/**
 	 * ‘лаг необходимости инициализировать изображени€ маркеров сигнала тревоги.
-	 * »нициализаци€ проводитс€ один раз при первом обращении к отрисовке 
-	 * маркера.
+	 * »нициализаци€ проводитс€ один раз при первом обращении к отрисовке маркера.
 	 */
 	private static boolean needInit = true;
 	private static Identifier alarm1ImageId;
@@ -57,32 +56,26 @@ public final class AlarmMarkerController extends MarkerController {
 	/**
 	 * Private constructor.
 	 */
-	private AlarmMarkerController(NetMapViewer netMapViewer) {
+	private AlarmMarkerController(final NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
 
-	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+	public static MapElementController createInstance(final NetMapViewer netMapViewer) {
 		return new AlarmMarkerController(netMapViewer);
 	}
 
-	public static void init(Identifier creatorId) throws ApplicationException {
-		if(needInit) {
-			alarm1ImageId = NodeTypeController.getImageId(
-					creatorId, 
-					AlarmMarkerController.ALARM_IMAGE_NAME, 
+	public static void init(final Identifier creatorId) throws ApplicationException {
+		if (needInit) {
+			alarm1ImageId = NodeTypeController.getImageId(creatorId,
+					AlarmMarkerController.ALARM_IMAGE_NAME,
 					AlarmMarkerController.ALARM_IMAGE_PATH);
-			alarm2ImageId = NodeTypeController.getImageId(
-					creatorId, 
-					AlarmMarkerController.ALARM_IMAGE2_NAME, 
+			alarm2ImageId = NodeTypeController.getImageId(creatorId,
+					AlarmMarkerController.ALARM_IMAGE2_NAME,
 					AlarmMarkerController.ALARM_IMAGE2_PATH);
 
-			MapPropertiesManager.setOriginalImage(
-				alarm1ImageId,
-				new ImageIcon(AlarmMarkerController.ALARM_IMAGE_PATH).getImage());
-			MapPropertiesManager.setOriginalImage(
-				alarm2ImageId,
-				new ImageIcon(AlarmMarkerController.ALARM_IMAGE2_PATH).getImage());
-				
+			MapPropertiesManager.setOriginalImage(alarm1ImageId, new ImageIcon(AlarmMarkerController.ALARM_IMAGE_PATH).getImage());
+			MapPropertiesManager.setOriginalImage(alarm2ImageId, new ImageIcon(AlarmMarkerController.ALARM_IMAGE2_PATH).getImage());
+
 			needInit = false;
 		}
 	}
@@ -90,18 +83,17 @@ public final class AlarmMarkerController extends MarkerController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getToolTipText(MapElement mapElement) {
-		if(!(mapElement instanceof AlarmMarker))
+	@Override
+	public String getToolTipText(final MapElement mapElement) {
+		if (!(mapElement instanceof AlarmMarker)) {
 			return null;
-			
-		AlarmMarker marker = (AlarmMarker)mapElement;
-		
-		String s1 = LangModelMap.getString("Alarm") 
-				+ " " + marker.getName() 
-				+ " (" + LangModelMap.getString("Path_lowercase") 
-				+ " " + marker.getMeasurementPath().getName() 
-				+ ") " + LangModelMap.getString("Distance_lowercase") 
-				+ " - " + getFromStartLengthLf(marker);
+		}
+
+		final AlarmMarker marker = (AlarmMarker) mapElement;
+
+		final String s1 = LangModelMap.getString("Alarm") + " " + marker.getName()
+				+ " (" + LangModelMap.getString("Path_lowercase") + " " + marker.getMeasurementPath().getName() + ") "
+				+ LangModelMap.getString("Distance_lowercase") + " - " + super.getFromStartLengthLf(marker);
 
 		return s1;
 	}
@@ -109,7 +101,8 @@ public final class AlarmMarkerController extends MarkerController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public Image getAlarmedImage(AbstractNode node) {
+	@Override
+	public Image getAlarmedImage(final AbstractNode node) {
 		return MapPropertiesManager.getScaledImage(alarm2ImageId);
 	}
 
