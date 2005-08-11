@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.5 2005/08/08 09:33:28 krupenn Exp $
+ * $Id: MapEvent.java,v 1.6 2005/08/11 09:07:42 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,12 +17,13 @@ import java.beans.PropertyChangeEvent;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/08/08 09:33:28 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/11 09:07:42 $
  * @module mapclient_v2
- * @author $Author: krupenn $
+ * @author $Author: arseniy $
  */
-public class MapEvent extends PropertyChangeEvent 
-{
+public class MapEvent extends PropertyChangeEvent {
+	private static final long serialVersionUID = -837303529240341674L;
+
 	/** Открыто окно карты. */
 	public static final String MAP_FRAME_SHOWN = "mapframeshownevent";
 
