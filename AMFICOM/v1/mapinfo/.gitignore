@@ -1,0 +1,11 @@
+classes
+docs
+lib
+*.deploy
+*.jpr
+*.jpx
+*.tar
+*.gz
+*.jar
+*.swp
+.mach
