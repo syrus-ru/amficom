@@ -1,5 +1,5 @@
 /*
- * $Id: XMLObjectLoader.java,v 1.6 2005/07/27 18:53:36 arseniy Exp $
+ * $Id: XMLObjectLoader.java,v 1.7 2005/08/11 07:30:44 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,12 +15,12 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/27 18:53:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/08/11 07:30:44 $
+ * @author $Author: bob $
  * @module csbridge
  */
 public final class XMLObjectLoader implements ObjectLoader {
-	private static final String PACKAGE_NAME = "general";
+	private static final String PACKAGE_NAME = "amficom";
 
 	private StorableObjectXML soXML;
 
