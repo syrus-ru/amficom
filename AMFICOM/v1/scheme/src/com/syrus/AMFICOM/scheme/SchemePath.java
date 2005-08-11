@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.70 2005/08/11 08:02:44 arseniy Exp $
+ * $Id: SchemePath.java,v 1.71 2005/08/11 08:33:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * #16 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.70 $, $Date: 2005/08/11 08:02:44 $
+ * @version $Revision: 1.71 $, $Date: 2005/08/11 08:33:54 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -287,7 +287,7 @@ public final class SchemePath extends StorableObject
 
 	public SortedSet<PathElement> getPathMembers() {
 		try {
-			return Collections.unmodifiableSortedSet(new TreeSet<PathElement>(getPathMembers0()));
+			return Collections.unmodifiableSortedSet(new TreeSet<PathElement>(this.getPathMembers0()));
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.unmodifiableSortedSet(new TreeSet<PathElement>(Collections.<PathElement>emptySet()));
