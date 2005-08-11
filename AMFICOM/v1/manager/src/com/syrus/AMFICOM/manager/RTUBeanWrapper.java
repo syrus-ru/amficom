@@ -1,6 +1,8 @@
 
 package com.syrus.AMFICOM.manager;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.HashMap;
@@ -13,12 +15,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.manager.UI.JGraphText;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: RTUBeanWrapper.java,v 1.4 2005/08/10 14:02:25 bob Exp $
+ * $Id: RTUBeanWrapper.java,v 1.5 2005/08/11 13:09:00 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +28,7 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/11 13:09:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -43,7 +45,6 @@ public class RTUBeanWrapper implements Wrapper {
 
 	private List<String>					keys;
 	
-//	private Map<Identifier, String> 	mcmIdMapReverce; 
 	private Map<String, Identifier> 	mcmIdMap;
 	
 	private RTUBeanWrapper() {
@@ -55,9 +56,20 @@ public class RTUBeanWrapper implements Wrapper {
 					KEY_PORT,
 					KEY_MCM_ID}));
 		
-//		this.mcmIdMapReverce = new HashMap<Identifier, String>();
 		this.mcmIdMap  = new HashMap<String, Identifier>();
+
+		JGraphText.entityDispatcher.addPropertyChangeListener(
+			ObjectEntities.MCM,
+			new PropertyChangeListener() {
+
+				public void propertyChange(PropertyChangeEvent evt) {
+					refreshMCMs();
+					JGraphText.entityDispatcher.firePropertyChange(
+						new PropertyChangeEvent(RTUBeanWrapper.this, "mcmsRefreshed", null, null));
+				}
+			});
 		
+		this.refreshMCMs();
 	}
 
 	public static RTUBeanWrapper getInstance() {
@@ -75,8 +87,7 @@ public class RTUBeanWrapper implements Wrapper {
 		return this.keys;
 	}
 	
-	private void refreshMCMMap() {
-//		this.mcmIdMapReverce.clear();
+	void refreshMCMs() {
 		this.mcmIdMap.clear();
 		try {
 			Set<MCM> mcms = StorableObjectPool.getStorableObjectsByCondition(
@@ -85,7 +96,6 @@ public class RTUBeanWrapper implements Wrapper {
 			for(MCM mcm : mcms) {
 				String name = mcm.getName();
 				Identifier id = mcm.getId();
-//				this.mcmIdMapReverce.put(id, name);
 				this.mcmIdMap.put(name, id);
 			}
 		} catch (ApplicationException e) {
@@ -128,7 +138,6 @@ public class RTUBeanWrapper implements Wrapper {
 
 	public Object getPropertyValue(String key) {
 		if (key.equals(KEY_MCM_ID)) {
-			this.refreshMCMMap();
 			return this.mcmIdMap;
 		}
 		return null;
