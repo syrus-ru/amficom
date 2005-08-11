@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.47 2005/08/02 08:13:05 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.48 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -77,9 +77,9 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
  * 
  * 
  * 
- * @version $Revision: 1.47 $, $Date: 2005/08/02 08:13:05 $
- * @module mapviewclient_v1
- * @author $Author: krupenn $
+ * @version $Revision: 1.48 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
+ * @author $Author: arseniy $
  */
 public final class MapEditorMainFrame extends AbstractMainFrame {
 	protected static String iniFileName = "Map.properties";

@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddMapCommand.java,v 1.11 2005/07/20 18:06:51 krupenn Exp $
+ * $Id: MapAddMapCommand.java,v 1.12 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,9 +42,9 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * добавить в вид схему из списка
- * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/07/20 18:06:51 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public class MapAddMapCommand extends AbstractCommand
 {

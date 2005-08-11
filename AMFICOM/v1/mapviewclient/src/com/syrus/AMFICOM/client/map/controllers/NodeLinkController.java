@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.17 2005/08/03 18:50:38 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.18 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,9 +34,9 @@ import com.syrus.AMFICOM.map.NodeLink;
 
 /**
  * Контроллер фрагмента линии.
- * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/08/03 18:50:38 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public final class NodeLinkController extends AbstractLinkController {
 	/** Границы объекта, отображающего длину фрагмента. */

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.52 2005/08/11 07:19:50 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.53 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,9 +54,9 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.52 $, $Date: 2005/08/11 07:19:50 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.53 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public final class MapMouseListener implements MouseListener
 {

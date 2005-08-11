@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalLinkCommandAtomic.java,v 1.18 2005/08/10 09:23:22 krupenn Exp $
+ * $Id: CreatePhysicalLinkCommandAtomic.java,v 1.19 2005/08/11 12:43:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,9 +24,9 @@ import com.syrus.util.Log;
 /**
  * создание физической линии, внесение ее в пул и на карту - 
  * атомарное действие 
- * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/08/10 09:23:22 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/08/11 12:43:29 $
+ * @module mapviewclient
  */
 public class CreatePhysicalLinkCommandAtomic extends MapActionCommand
 {

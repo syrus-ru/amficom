@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryController.java,v 1.6 2005/08/08 10:17:35 krupenn Exp $
+ * $Id: MapLibraryController.java,v 1.7 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,9 +30,9 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
  * контроллер типа сетевого узла.
- * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/08/08 10:17:35 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public class MapLibraryController {
 

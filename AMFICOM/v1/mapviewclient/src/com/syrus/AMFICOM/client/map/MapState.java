@@ -1,5 +1,5 @@
 /**
- * $Id: MapState.java,v 1.10 2005/07/11 08:35:39 krupenn Exp $
+ * $Id: MapState.java,v 1.11 2005/08/11 12:43:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,9 +20,9 @@ package com.syrus.AMFICOM.client.map;
  * 
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/07/11 08:35:39 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/08/11 12:43:29 $
+ * @module mapviewclient
  */
 public final class MapState 
 {

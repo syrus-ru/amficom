@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.18 2005/08/02 17:00:37 krupenn Exp $ Syrus
+ * $Id: MapExportCommand.java,v 1.19 2005/08/11 12:43:30 arseniy Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -30,9 +30,9 @@ import com.syrus.AMFICOM.map.Map;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/08/02 17:00:37 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public class MapExportCommand extends ExportCommand {
 

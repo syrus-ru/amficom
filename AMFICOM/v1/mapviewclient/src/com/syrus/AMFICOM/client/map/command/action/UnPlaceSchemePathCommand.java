@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemePathCommand.java,v 1.15 2005/07/20 17:55:47 krupenn Exp $
+ * $Id: UnPlaceSchemePathCommand.java,v 1.16 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,9 +19,9 @@ import com.syrus.util.Log;
 /**
  * убрать привязку измерительного пути с карты
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/07/20 17:55:47 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public class UnPlaceSchemePathCommand extends MapActionCommandBundle
 {

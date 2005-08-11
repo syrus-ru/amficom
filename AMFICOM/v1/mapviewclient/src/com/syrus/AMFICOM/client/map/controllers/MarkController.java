@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.16 2005/08/02 07:37:14 krupenn Exp $
+ * $Id: MarkController.java,v 1.17 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,9 +35,9 @@ import com.syrus.AMFICOM.map.NodeLink;
 
 /**
  * Контроллер метки.
- * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/08/02 07:37:14 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public final class MarkController extends AbstractNodeController {
 	/** Имя пиктограммы. */

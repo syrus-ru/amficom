@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommand.java,v 1.7 2005/06/06 12:20:30 krupenn Exp $
+ * $Id: MapActionCommand.java,v 1.8 2005/08/11 12:43:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,9 +19,9 @@ import com.syrus.AMFICOM.map.MapElementState;
 
 /**
  *  
- * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/06/06 12:20:30 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/11 12:43:29 $
+ * @module mapviewclient
  */
 public class MapActionCommand extends AbstractCommand
 {

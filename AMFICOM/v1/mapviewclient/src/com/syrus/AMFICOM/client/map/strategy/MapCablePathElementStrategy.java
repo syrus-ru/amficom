@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElementStrategy.java,v 1.19 2005/08/09 06:27:09 krupenn Exp $
+ * $Id: MapCablePathElementStrategy.java,v 1.20 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.mapview.Selection;
 /**
  * Стратегия управления кабельным путем.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/08/09 06:27:09 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/08/11 12:43:32 $
+ * @module mapviewclient
  */
 public final class MapCablePathElementStrategy extends AbstractMapStrategy 
 {

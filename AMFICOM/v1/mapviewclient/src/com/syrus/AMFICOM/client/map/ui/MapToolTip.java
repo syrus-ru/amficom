@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolTip.java,v 1.4 2005/06/06 12:20:36 krupenn Exp $
+ * $Id: MapToolTip.java,v 1.5 2005/08/11 12:43:32 arseniy Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -14,9 +14,9 @@ import com.syrus.AMFICOM.client.UI.MultiRowToolTipUI;
  * Класс используется для отображения всплывающей
  * подсказки в несколько строк
  * 
- * @version $Revision: 1.4 $, $Date: 2005/06/06 12:20:36 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.5 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class MapToolTip extends JToolTip {
 	MultiRowToolTipUI toolTipUI = new MultiRowToolTipUI();

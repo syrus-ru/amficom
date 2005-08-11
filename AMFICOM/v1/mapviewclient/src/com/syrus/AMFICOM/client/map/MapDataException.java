@@ -1,5 +1,5 @@
 /**
- * $Id: MapDataException.java,v 1.3 2005/06/08 09:49:24 krupenn Exp $
+ * $Id: MapDataException.java,v 1.4 2005/08/11 12:43:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,9 +11,9 @@ package com.syrus.AMFICOM.client.map;
 
 /**
  * 
- * @version $Revision: 1.3 $, $Date: 2005/06/08 09:49:24 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.4 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class MapDataException extends MapException {
 	public MapDataException(String message) {

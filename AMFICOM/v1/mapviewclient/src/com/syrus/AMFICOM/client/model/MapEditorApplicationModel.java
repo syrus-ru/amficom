@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.5 2005/08/02 08:11:03 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.6 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,9 +17,9 @@ package com.syrus.AMFICOM.client.model;
  * 
  * 
  * 
- * @version $Revision: 1.5 $, $Date: 2005/08/02 08:11:03 $
- * @module mapviewclient_v1
- * @author $Author: krupenn $
+ * @version $Revision: 1.6 $, $Date: 2005/08/11 12:43:32 $
+ * @module mapviewclient
+ * @author $Author: arseniy $
  */
 public class MapEditorApplicationModel extends ApplicationModel 
 {

@@ -1,5 +1,5 @@
 /**
- * $Id: CollectorVisualManager.java,v 1.4 2005/06/06 12:20:33 krupenn Exp $
+ * $Id: CollectorVisualManager.java,v 1.5 2005/08/11 12:43:31 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,9 +12,9 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.4 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.5 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class CollectorVisualManager implements VisualManager {
 

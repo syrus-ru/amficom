@@ -1,5 +1,5 @@
 /*
- * $Id: ExportCommand.java,v 1.5 2005/06/06 12:20:29 krupenn Exp $
+ * $Id: ExportCommand.java,v 1.6 2005/08/11 12:43:29 arseniy Exp $
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.client.model.Environment;
 
 /**
  * 
- * @version $Revision: 1.5 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.6 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public abstract class ExportCommand extends AbstractCommand {
 	private FileOutputStream fos;

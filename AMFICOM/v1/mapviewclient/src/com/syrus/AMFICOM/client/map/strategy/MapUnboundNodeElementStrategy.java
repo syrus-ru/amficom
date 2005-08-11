@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.25 2005/08/09 06:27:09 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.26 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,9 +29,9 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 
 /**
  * Стратегия управления непривязанным узлом.
- * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/08/09 06:27:09 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/08/11 12:43:32 $
+ * @module mapviewclient
  */
 public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy 
 {

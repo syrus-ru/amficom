@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.23 2005/08/10 10:34:51 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.24 2005/08/11 12:43:29 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,9 +30,9 @@ import com.syrus.util.Log;
 
 /**
  *  оманда генерации тоннел€ по неприв€занной линии.
- * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/08/10 10:34:51 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/08/11 12:43:29 $
+ * @module mapviewclient
  */
 public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBundle
 {

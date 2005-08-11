@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveViewAsCommand.java,v 1.15 2005/07/20 13:21:31 krupenn Exp $
+ * $Id: MapEditorSaveViewAsCommand.java,v 1.16 2005/08/11 12:43:30 arseniy Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ
  */
 
@@ -28,9 +28,9 @@ import com.syrus.AMFICOM.scheme.Scheme;
  * схемы в модуле "Редактор топологических схем" с новым именем. Использует
  * команду MapSaveAsCommand
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/07/20 13:21:31 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  * @see MapViewSaveAsCommand
  */
 public class MapEditorSaveViewAsCommand extends AbstractCommand {

@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.27 2005/07/20 15:01:33 bass Exp $
+ * $Id: MarkerController.java,v 1.28 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,9 +41,9 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 /**
  * Контроллер маркера.
- * @author $Author: bass $
- * @version $Revision: 1.27 $, $Date: 2005/07/20 15:01:33 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public class MarkerController extends AbstractNodeController {
 	/** Размер пиктограммы маркера. */

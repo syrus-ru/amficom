@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.22 2005/07/15 17:06:07 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.23 2005/08/11 12:43:29 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -37,9 +37,9 @@ import com.syrus.util.Log;
  * данна€ команда
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/07/15 17:06:07 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/08/11 12:43:29 $
+ * @module mapviewclient
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 {

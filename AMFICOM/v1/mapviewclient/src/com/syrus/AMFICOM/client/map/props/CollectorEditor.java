@@ -34,9 +34,9 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.12 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.13 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class CollectorEditor extends DefaultStorableObjectEditor {
 	Collector collector;

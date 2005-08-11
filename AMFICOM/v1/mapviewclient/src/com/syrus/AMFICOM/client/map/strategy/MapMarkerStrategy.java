@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.28 2005/08/09 06:27:09 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.29 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,9 +29,9 @@ import com.syrus.AMFICOM.mapview.Selection;
 /**
  * Стратегия управления маркером.
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/08/09 06:27:09 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/08/11 12:43:32 $
+ * @module mapviewclient
  */
 public final class MapMarkerStrategy extends AbstractMapStrategy 
 {

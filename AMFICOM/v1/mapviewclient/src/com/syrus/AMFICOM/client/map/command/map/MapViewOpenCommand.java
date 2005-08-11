@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.25 2005/06/20 15:30:57 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.26 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -34,9 +34,9 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * открыть вид 
- * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/06/20 15:30:57 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public class MapViewOpenCommand extends AbstractCommand {
 	ApplicationContext aContext;

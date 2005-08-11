@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewRemoveSchemeCommand.java,v 1.11 2005/06/22 08:43:48 krupenn Exp $
+ * $Id: MapViewRemoveSchemeCommand.java,v 1.12 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,9 +28,9 @@ import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
  * убрать из вида выбранную схему 
- * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/06/22 08:43:48 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public class MapViewRemoveSchemeCommand extends AbstractCommand {
 	JDesktopPane desktop;

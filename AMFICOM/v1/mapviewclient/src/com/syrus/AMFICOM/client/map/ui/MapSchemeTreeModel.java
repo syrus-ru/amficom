@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.28 2005/08/03 20:13:21 bass Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.29 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,9 +82,9 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.28 $, $Date: 2005/08/03 20:13:21 $
- * @author $Author: bass $
- * @module mapviewclient_v1
+ * @version $Revision: 1.29 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class MapSchemeTreeModel 
 		implements ChildrenFactory {

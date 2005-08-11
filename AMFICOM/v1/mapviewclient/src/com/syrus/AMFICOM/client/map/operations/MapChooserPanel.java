@@ -1,5 +1,5 @@
 /*
- * Ќазвание: $Id: MapChooserPanel.java,v 1.8 2005/06/22 13:21:53 krupenn Exp $
+ * Ќазвание: $Id: MapChooserPanel.java,v 1.9 2005/08/11 12:43:31 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,9 +30,9 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.8 $, $Date: 2005/06/22 13:21:53 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.9 $, $Date: 2005/08/11 12:43:31 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class MapChooserPanel extends JPanel
 {
@@ -136,38 +136,31 @@ public class MapChooserPanel extends JPanel
 	/**
 	 * обновить список возможных видов карты
 	 */
-	public synchronized void refreshMapList() 
-	{
+	public synchronized void refreshMapList() {
 		this.combo.removeAllItems();
-		if(this.mapFrame == null)
+		if (this.mapFrame == null) {
 			return;
-
-		List availableViews;
-		try
-		{
-			availableViews = this.mapFrame.getMapConnection().getAvailableViews();
 		}
-		catch(MapDataException e)
-		{
+
+		List<String> availableViews;
+		try {
+			availableViews = this.mapFrame.getMapConnection().getAvailableViews();
+		} catch (MapDataException e) {
 			System.out.println("Cannot get views: " + e.getMessage());
 			e.printStackTrace();
 			return;
-		} 
-
-		for(Iterator it = availableViews.iterator(); it.hasNext();)
-		{
-			this.combo.addItem(it.next());
 		}
-		String currentMap = this.mapFrame.getMapConnection().getView();
-		if (null == currentMap) 
-		{
-			if(this.combo.getModel().getSize() != 0)
-			{
+
+		for (final String view : availableViews) {
+			this.combo.addItem(view);
+		}
+		final String currentMap = this.mapFrame.getMapConnection().getView();
+		if (null == currentMap) {
+			if (this.combo.getModel().getSize() != 0) {
 				this.combo.setSelectedIndex(0);
 				changeMap();
 			}
-		}
-		else
+		} else
 			this.combo.setSelectedItem(currentMap);
 	}
 	

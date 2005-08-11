@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.14 2005/08/03 15:42:24 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.15 2005/08/11 12:43:31 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,9 +41,9 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 /**
  * панель управления отображением слоев
  * 
- * @version $Revision: 1.14 $, $Date: 2005/08/03 15:42:24 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.15 $, $Date: 2005/08/11 12:43:31 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class LayersPanel extends JPanel {
 	GridBagLayout gridBagLayout1 = new GridBagLayout();

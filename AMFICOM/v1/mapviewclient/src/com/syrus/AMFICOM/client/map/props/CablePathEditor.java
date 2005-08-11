@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.CablePath;
 
 /**
- * @version $Revision: 1.9 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.10 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class CablePathEditor extends DefaultStorableObjectEditor {
 

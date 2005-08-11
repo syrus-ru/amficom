@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.33 2005/08/09 11:03:39 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.34 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,9 +43,9 @@ import com.syrus.util.Log;
 
 /**
  * Контроллер линейного элемента карты.
- * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/08/09 11:03:39 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public abstract class AbstractLinkController extends AbstractMapElementController
 {

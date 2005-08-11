@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.27 2005/07/24 12:41:05 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.28 2005/08/11 12:43:29 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -35,9 +35,9 @@ import com.syrus.util.Log;
  * от того, какие конечные точки на концах происходит операци€ удалени€ 
  * фрагментов линий, линий, узлов  (и путей).  оманда
  * состоит из последовательности атомарных действий
- * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/07/24 12:41:05 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.28 $, $Date: 2005/08/11 12:43:29 $
+ * @module mapviewclient
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 {

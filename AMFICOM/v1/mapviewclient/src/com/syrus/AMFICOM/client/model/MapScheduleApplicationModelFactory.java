@@ -1,5 +1,5 @@
 /**
- * $Id: MapScheduleApplicationModelFactory.java,v 1.2 2005/06/22 08:43:50 krupenn Exp $
+ * $Id: MapScheduleApplicationModelFactory.java,v 1.3 2005/08/11 12:43:33 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,9 +15,9 @@ package com.syrus.AMFICOM.client.model;
 /**
  * Фабричный класс создания модели приложения для работы с картой 
  * в модуле "Планировщик".
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/06/22 08:43:50 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/11 12:43:33 $
+ * @module mapviewclient
  */
 public class MapScheduleApplicationModelFactory 
 		extends MapApplicationModelFactory 

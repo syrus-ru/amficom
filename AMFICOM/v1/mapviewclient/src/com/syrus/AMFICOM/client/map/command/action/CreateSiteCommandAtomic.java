@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.20 2005/07/20 18:06:51 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.21 2005/08/11 12:43:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,9 +29,9 @@ import com.syrus.util.Log;
  * Разместить сетевой элемент на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/07/20 18:06:51 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/08/11 12:43:29 $
+ * @module mapviewclient
  */
 public class CreateSiteCommandAtomic extends MapActionCommand
 {

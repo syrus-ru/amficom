@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCablePathCommandAtomic.java,v 1.18 2005/07/11 13:18:04 bass Exp $
+ * $Id: CreateCablePathCommandAtomic.java,v 1.19 2005/08/11 12:43:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,9 +25,9 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/07/11 13:18:04 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/08/11 12:43:29 $
+ * @module mapviewclient
  */
 public class CreateCablePathCommandAtomic extends MapActionCommand
 {

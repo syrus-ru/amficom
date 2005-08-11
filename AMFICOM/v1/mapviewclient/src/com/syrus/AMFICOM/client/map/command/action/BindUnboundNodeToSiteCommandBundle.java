@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.24 2005/08/10 09:22:31 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.25 2005/08/11 12:43:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,9 +32,9 @@ import com.syrus.util.Log;
 
 /**
  *  Команда привязывания непривязанного элемента к узлу.
- * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/08/10 09:22:31 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/08/11 12:43:29 $
+ * @module mapviewclient
  */
 public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 {

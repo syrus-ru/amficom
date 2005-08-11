@@ -1,5 +1,5 @@
 /**
- * $Id: CollectorController.java,v 1.10 2005/06/23 08:26:04 krupenn Exp $
+ * $Id: CollectorController.java,v 1.11 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,9 +26,9 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 
 /**
  * Контроллер коллектора.
- * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/06/23 08:26:04 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public final class CollectorController extends AbstractLinkController {
 	

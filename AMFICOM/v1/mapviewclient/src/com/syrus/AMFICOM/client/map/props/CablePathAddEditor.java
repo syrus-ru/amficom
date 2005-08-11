@@ -49,9 +49,9 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.15 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.16 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 

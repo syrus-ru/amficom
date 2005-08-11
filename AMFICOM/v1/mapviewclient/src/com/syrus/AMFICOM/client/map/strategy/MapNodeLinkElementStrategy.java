@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElementStrategy.java,v 1.21 2005/08/09 06:27:09 krupenn Exp $
+ * $Id: MapNodeLinkElementStrategy.java,v 1.22 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.mapview.Selection;
 
 /**
  * Стратегия управления фрагментом линии.
- * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/08/09 06:27:09 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/08/11 12:43:32 $
+ * @module mapviewclient
  */
 public final class MapNodeLinkElementStrategy extends AbstractMapStrategy 
 {

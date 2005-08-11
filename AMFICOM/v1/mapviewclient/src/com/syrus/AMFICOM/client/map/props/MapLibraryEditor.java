@@ -26,9 +26,9 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 /**
- * @version $Revision: 1.2 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.3 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class MapLibraryEditor extends DefaultStorableObjectEditor {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();

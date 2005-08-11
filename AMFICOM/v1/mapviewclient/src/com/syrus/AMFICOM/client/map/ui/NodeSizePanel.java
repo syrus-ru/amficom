@@ -1,5 +1,5 @@
 /**
- * $Id: NodeSizePanel.java,v 1.11 2005/07/13 09:49:45 krupenn Exp $
+ * $Id: NodeSizePanel.java,v 1.12 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,9 +29,9 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 /**
  * Панель, на которой располагаются две кнопки увеличения и уменьшения
  * коэффициента масштабирования изображений элементов карты
- * @version $Revision: 1.11 $, $Date: 2005/07/13 09:49:45 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.12 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public final class NodeSizePanel extends JPanel 
 {

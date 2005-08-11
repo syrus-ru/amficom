@@ -1,5 +1,5 @@
 /**
- * $Id: MoveNodeCommand.java,v 1.13 2005/07/11 13:18:04 bass Exp $
+ * $Id: MoveNodeCommand.java,v 1.14 2005/08/11 12:43:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,9 +21,9 @@ import com.syrus.util.Log;
 
 /**
  * Перемещение узла.
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/07/11 13:18:04 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/08/11 12:43:29 $
+ * @module mapviewclient
  */
 public class MoveNodeCommand extends MapActionCommand
 {

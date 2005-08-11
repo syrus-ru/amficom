@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRun.java,v 1.10 2005/06/22 07:27:32 krupenn Exp $
+ * $Id: MapEditorRun.java,v 1.11 2005/08/11 12:43:31 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,9 +13,9 @@ package com.syrus.AMFICOM.client.map.editor;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/06/22 07:27:32 $
- * @module mapviewclient_v1
- * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2005/08/11 12:43:31 $
+ * @module mapviewclient
+ * @author $Author: arseniy $
  */
 public class MapEditorRun {
 	private MapEditorRun() {

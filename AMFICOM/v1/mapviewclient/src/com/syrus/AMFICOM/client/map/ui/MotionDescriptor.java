@@ -1,5 +1,5 @@
 /**
- * $Id: MotionDescriptor.java,v 1.4 2005/06/06 12:20:36 krupenn Exp $
+ * $Id: MotionDescriptor.java,v 1.5 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -36,9 +36,9 @@ import java.awt.Point;
  *  A - угол медлу векторами (startPoint, endPoint) и  (thisPoint, mousePoint)
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/06/06 12:20:36 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.5 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class MotionDescriptor 
 {

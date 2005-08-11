@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.26 2005/08/02 16:57:04 krupenn Exp $
+ * $Id: MapViewNewCommand.java,v 1.27 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,9 +30,9 @@ import com.syrus.util.Log;
 
 /**
  * создать новый вид 
- * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/08/02 16:57:04 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public class MapViewNewCommand extends AbstractCommand {
 	ApplicationContext aContext;

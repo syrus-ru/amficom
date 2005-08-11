@@ -1,5 +1,5 @@
 /**
- * $Id: CablePathVisualManager.java,v 1.7 2005/07/20 13:22:42 krupenn Exp $
+ * $Id: CablePathVisualManager.java,v 1.8 2005/08/11 12:43:31 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,9 +12,9 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.8 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class CablePathVisualManager implements VisualManager {
 

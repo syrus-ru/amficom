@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.19 2005/06/23 08:27:19 krupenn Exp $
+ * $Id: TopologicalNodeController.java,v 1.20 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,9 +32,9 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 
 /**
  * Контроллер топологического узла.
- * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/06/23 08:27:19 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public class TopologicalNodeController extends AbstractNodeController {
 	/** Размер пиктограммы поумолчанию. */

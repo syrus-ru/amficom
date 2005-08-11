@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.15 2005/08/03 18:50:38 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.16 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,9 +30,9 @@ import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Контроллер узла.
- * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/08/03 18:50:38 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public abstract class AbstractNodeController extends AbstractMapElementController {
 	/** Размер пиктограммы поумолчанию. */

@@ -1,5 +1,5 @@
 /**
- * $Id: MapAdditionalPropertiesFrame.java,v 1.7 2005/07/20 18:02:47 krupenn Exp $
+ * $Id: MapAdditionalPropertiesFrame.java,v 1.8 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,9 +21,9 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.7 $, $Date: 2005/07/20 18:02:47 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.8 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public final class MapAdditionalPropertiesFrame extends MapAbstractPropertiesFrame
 {

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementStateChangeCommand.java,v 1.10 2005/07/11 13:18:03 bass Exp $
+ * $Id: MapElementStateChangeCommand.java,v 1.11 2005/08/11 12:43:29 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -21,9 +21,9 @@ import com.syrus.util.Log;
 /**
  * атомарна€ команда изменени€ состо€ни€ элемента карты 
  * 
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/07/11 13:18:03 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/08/11 12:43:29 $
+ * @module mapviewclient
  */
 public final class MapElementStateChangeCommand extends MapActionCommand
 {

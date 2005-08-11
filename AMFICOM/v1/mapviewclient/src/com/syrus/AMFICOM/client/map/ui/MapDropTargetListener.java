@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.34 2005/08/08 10:30:00 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.35 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,9 +50,9 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.34 $, $Date: 2005/08/08 10:30:00 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.35 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public final class MapDropTargetListener implements DropTargetListener
 {

@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.25 2005/07/24 12:41:05 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.26 2005/08/11 12:43:29 arseniy Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -30,9 +30,9 @@ import com.syrus.util.Log;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/07/24 12:41:05 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/08/11 12:43:29 $
+ * @module mapviewclient
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle {
 	/**

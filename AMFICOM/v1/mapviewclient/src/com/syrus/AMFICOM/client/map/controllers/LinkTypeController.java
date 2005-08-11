@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.45 2005/08/09 14:57:33 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.46 2005/08/11 12:43:30 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,9 +46,9 @@ import com.syrus.util.Log;
 
 /**
  * Контроллер типа линейного элемента карты.
- * @author $Author: krupenn $
- * @version $Revision: 1.45 $, $Date: 2005/08/09 14:57:33 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2005/08/11 12:43:30 $
+ * @module mapviewclient
  */
 public final class LinkTypeController extends AbstractLinkController {
 	/**

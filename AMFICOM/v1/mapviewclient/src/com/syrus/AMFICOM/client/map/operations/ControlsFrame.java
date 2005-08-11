@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.9 2005/06/22 13:21:53 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.10 2005/08/11 12:43:31 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,9 +33,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * <li> Поиск элементов АМФИКОМ
  * <lI> Поиск географических объектов
  * <li> Управление отображением слоев
- * @version $Revision: 1.9 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.10 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
  public class ControlsFrame extends JInternalFrame 
 		implements PropertyChangeListener {

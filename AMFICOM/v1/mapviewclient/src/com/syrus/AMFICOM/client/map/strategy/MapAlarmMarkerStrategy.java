@@ -1,5 +1,5 @@
 /**
- * $Id: MapAlarmMarkerStrategy.java,v 1.19 2005/08/09 06:27:09 krupenn Exp $
+ * $Id: MapAlarmMarkerStrategy.java,v 1.20 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -22,9 +22,9 @@ import com.syrus.AMFICOM.mapview.Selection;
 
 /**
  * —тратеги€ управлени€ маркером сигнала тревоги.
- * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/08/09 06:27:09 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/08/11 12:43:32 $
+ * @module mapviewclient
  */
 public final class MapAlarmMarkerStrategy extends AbstractMapStrategy 
 {

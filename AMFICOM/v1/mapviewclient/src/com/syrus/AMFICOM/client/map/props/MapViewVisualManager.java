@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewVisualManager.java,v 1.5 2005/06/06 12:20:33 krupenn Exp $
+ * $Id: MapViewVisualManager.java,v 1.6 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,9 +17,9 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/06/06 12:20:33 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/11 12:43:32 $
+ * @module mapviewclient
  */
 public final class MapViewVisualManager implements VisualManager {
 	/** Instance. */

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPenBarPanel.java,v 1.15 2005/07/01 16:22:36 krupenn Exp $
+ * $Id: MapPenBarPanel.java,v 1.16 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,9 +26,9 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 
 /**
  *  На этой панельке располагаются элементы которые будут наноситься на карту
- * @version $Revision: 1.15 $, $Date: 2005/07/01 16:22:36 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.16 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public final class MapPenBarPanel extends JPanel 
 {

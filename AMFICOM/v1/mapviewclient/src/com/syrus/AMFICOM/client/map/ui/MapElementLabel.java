@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.13 2005/06/22 08:43:49 krupenn Exp $
+ * $Id: MapElementLabel.java,v 1.14 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,9 +44,9 @@ import com.syrus.AMFICOM.map.SiteNodeType;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2005/06/22 08:43:49 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.14 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class MapElementLabel extends JLabel
 		implements

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.16 2005/06/14 12:07:14 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.17 2005/08/11 12:43:31 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,9 +23,9 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель инструментов модуля "Редактор топологических схем". 
- * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/06/14 12:07:14 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/08/11 12:43:31 $
+ * @module mapviewclient
  */
 public class MapEditorToolBar extends AbstractMainToolBar {
 

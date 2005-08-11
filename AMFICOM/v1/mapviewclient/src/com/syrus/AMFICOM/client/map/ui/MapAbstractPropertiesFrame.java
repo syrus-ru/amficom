@@ -1,5 +1,5 @@
 /**
- * $Id: MapAbstractPropertiesFrame.java,v 1.11 2005/08/09 11:06:25 krupenn Exp $
+ * $Id: MapAbstractPropertiesFrame.java,v 1.12 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,9 +36,9 @@ import com.syrus.util.Log;
 /**
  * Окно отображения свойств элемента карты
  * 
- * @version $Revision: 1.11 $, $Date: 2005/08/09 11:06:25 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.12 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public abstract class MapAbstractPropertiesFrame extends
 		AbstractPropertiesFrame implements PropertyChangeListener {

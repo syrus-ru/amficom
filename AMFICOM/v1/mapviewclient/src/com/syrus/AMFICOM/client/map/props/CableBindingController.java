@@ -14,9 +14,9 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.23 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.24 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public final class CableBindingController implements Wrapper {
 	public static final String KEY_START_NODE = "startnode";

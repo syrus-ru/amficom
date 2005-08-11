@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkSizeField.java,v 1.10 2005/06/22 08:43:49 krupenn Exp $
+ * $Id: MapNodeLinkSizeField.java,v 1.11 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,9 +31,9 @@ import com.syrus.AMFICOM.map.NodeLink;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/06/22 08:43:49 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.11 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public final class MapNodeLinkSizeField extends JTextField 
 {

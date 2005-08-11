@@ -32,9 +32,9 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.12 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.13 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class MapEditor extends DefaultStorableObjectEditor {
 	Map map;

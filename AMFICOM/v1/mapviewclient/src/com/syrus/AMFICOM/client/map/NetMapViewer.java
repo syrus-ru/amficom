@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.35 2005/08/08 10:15:11 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.36 2005/08/11 12:43:29 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,9 +75,9 @@ import com.syrus.util.Log;
  * картографии, следует вызвать метод {@link #getVisualComponent()}
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
- * @author $Author: krupenn $
- * @version $Revision: 1.35 $, $Date: 2005/08/08 10:15:11 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/08/11 12:43:29 $
+ * @module mapviewclient
  */
 public abstract class NetMapViewer {
 	protected LogicalNetLayer logicalNetLayer;

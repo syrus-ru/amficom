@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolTippedPanel.java,v 1.9 2005/06/16 10:57:21 krupenn Exp $
+ * $Id: MapToolTippedPanel.java,v 1.10 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,9 +30,9 @@ import com.syrus.AMFICOM.map.MapElement;
  * NetMapViewer (прозрачно передавать сообщения мыши родительскому объекту 
  * NetMapViewer). Объект класса MapToolTippedPanel прозрачен и не видим для
  * пользователя
- * @version $Revision: 1.9 $, $Date: 2005/06/16 10:57:21 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.10 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public class MapToolTippedPanel extends JComponent {
 	NetMapViewer parent;
@@ -114,9 +114,9 @@ public class MapToolTippedPanel extends JComponent {
  * возникающих событий мыши родительскому объекту
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/06/16 10:57:21 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.10 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 class MapToolTippedPanelListener implements MouseListener, MouseMotionListener {
 	JComponent parent;

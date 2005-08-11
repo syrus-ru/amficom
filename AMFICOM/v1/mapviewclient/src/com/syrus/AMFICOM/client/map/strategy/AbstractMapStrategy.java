@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractMapStrategy.java,v 1.6 2005/07/11 13:18:05 bass Exp $
+ * $Id: AbstractMapStrategy.java,v 1.7 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,9 +31,9 @@ import com.syrus.util.Log;
  * режимом работы пользователя с картой, режимом отображения, состоянием
  * или изменением состояния мыши и клавиатуры.
  * 
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/07/11 13:18:05 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/08/11 12:43:32 $
+ * @module mapviewclient
  */
 abstract class AbstractMapStrategy implements MapStrategy
 {

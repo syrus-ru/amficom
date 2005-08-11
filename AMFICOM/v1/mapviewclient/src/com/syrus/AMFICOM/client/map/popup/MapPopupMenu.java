@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.50 2005/08/03 15:46:16 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.51 2005/08/11 12:43:31 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,9 +54,9 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 
 /**
  * Контекстное меню элемента карты
- * @author $Author: krupenn $
- * @version $Revision: 1.50 $, $Date: 2005/08/03 15:46:16 $
- * @module mapviewclient_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/08/11 12:43:31 $
+ * @module mapviewclient
  */
 public abstract class MapPopupMenu extends JPopupMenu {
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.28 2005/07/20 18:07:25 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.29 2005/08/11 12:43:32 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,9 +37,9 @@ import com.syrus.util.Log;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.28 $, $Date: 2005/07/20 18:07:25 $
- * @author $Author: krupenn $
- * @module mapviewclient_v1
+ * @version $Revision: 1.29 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: arseniy $
+ * @module mapviewclient
  */
 public final class MapMouseMotionListener implements MouseMotionListener
 {
