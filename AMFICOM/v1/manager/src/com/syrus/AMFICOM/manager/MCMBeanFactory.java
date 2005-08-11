@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanFactory.java,v 1.6 2005/08/10 14:02:25 bob Exp $
+ * $Id: MCMBeanFactory.java,v 1.7 2005/08/11 13:06:12 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/11 13:06:12 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -60,9 +60,11 @@ public class MCMBeanFactory extends TabledBeanFactory {
 		
 		DomainPerpective domainPerpective = (DomainPerpective) perspective;
 		
+		String name = LangModelManager.getString("Entity.MeasurementContolModule") + "-" + (++super.count);
+		
 		MCM mcm = MCM.createInstance(LoginManager.getUserId(), 
 			domainPerpective.getDomainId(),
-			"",
+			name,
 			"",
 			"",
 			Identifier.VOID_IDENTIFIER,
@@ -78,27 +80,20 @@ public class MCMBeanFactory extends TabledBeanFactory {
 		bean.setValidator(this.getValidator());
 		bean.setId(identifier);			
 		
-		final MCMBeanWrapper mcmBeanWrapper = MCMBeanWrapper.getInstance();		
-		
-		// XXX potential performance loss :
-		// wrapper update its users / servers for each bean
-		
 		JGraphText.entityDispatcher.addPropertyChangeListener(
-			ObjectEntities.SYSTEMUSER,
+			"usersRefreshed",
 			new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
-					mcmBeanWrapper.refreshUsers();
 					bean.table.updateModel();
 				}
 			});
 		
 		JGraphText.entityDispatcher.addPropertyChangeListener(
-			ObjectEntities.SERVER,
+			"serversRefreshed",
 			new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
-					mcmBeanWrapper.refreshServers();
 					bean.table.updateModel();
 				}
 			});
@@ -112,6 +107,10 @@ public class MCMBeanFactory extends TabledBeanFactory {
 				KEY_USER_ID});
 		bean.addPropertyChangeListener(this.listener);
 		bean.setPropertyPanel(this.panel);
+		
+		JGraphText.entityDispatcher.firePropertyChange(
+			new PropertyChangeEvent(this, ObjectEntities.MCM, null, bean));
+		
 		return bean;
 	}
 	
