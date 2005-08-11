@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.33 2005/07/28 17:42:35 bass Exp $
+ * $Id: SchemeUtils.java,v 1.34 2005/08/11 07:51:20 arseniy Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.Identifier;
  * Functionality will be partially moved to appropriate model classes; partially
  * removed Œ¡»’ .
  *
- * @author $Author: bass $
- * @version $Revision: 1.33 $, $Date: 2005/07/28 17:42:35 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/08/11 07:51:20 $
  * @module scheme
  */
 public class SchemeUtils {
@@ -128,6 +128,14 @@ public class SchemeUtils {
 			}
 		}
 		return schemeCableLinks;
+	}
+	
+	public static SchemeElement getTopLevelSchemeElement(final SchemeElement schemeElement) {
+		SchemeElement top = schemeElement;
+		while (top.getParentSchemeElement() != null) {
+			top = top.getParentSchemeElement();
+		}
+		return top;
 	}
 
 	public static SchemeElement getTopologicalElement(final Scheme scheme, final SchemeElement schemeElement) {
