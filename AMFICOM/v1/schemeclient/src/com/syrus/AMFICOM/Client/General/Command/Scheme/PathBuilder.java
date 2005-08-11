@@ -56,7 +56,7 @@ public class PathBuilder {
 		
 			if (lastPE.getKind().value() == IdlKind._SCHEME_ELEMENT) {
 				SchemeElement se = lastPE.getSchemeElement();
-				SchemeElement top = SchemeUtils.getTopLevelScheemElement(se);
+				SchemeElement top = SchemeUtils.getTopLevelSchemeElement(se);
 				if (!top.equals(scheme_element)) {
 					path.removePathMember(lastPE, false);
 					return true;
