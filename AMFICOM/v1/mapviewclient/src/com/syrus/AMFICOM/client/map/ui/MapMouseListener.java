@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.51 2005/08/09 11:07:11 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.52 2005/08/11 07:19:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.51 $, $Date: 2005/08/09 11:07:11 $
+ * @version $Revision: 1.52 $, $Date: 2005/08/11 07:19:50 $
  * @author $Author: krupenn $
  * @module mapviewclient_v1
  */
@@ -157,7 +157,7 @@ public final class MapMouseListener implements MouseListener
 						long d = System.currentTimeMillis();
 						defaultAction(me);
 						long f = System.currentTimeMillis();
-						System.out.println("defaultAction -------- " + (f - d) + " ms ---------");
+						Log.debugMessage("defaultAction -------- " + (f - d) + " ms ---------", Level.INFO);
 					} catch(MapConnectionException e2) {
 						// TODO Auto-generated catch block
 						e2.printStackTrace();
@@ -314,7 +314,7 @@ public final class MapMouseListener implements MouseListener
 			long d = System.currentTimeMillis();
 			this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 			long f = System.currentTimeMillis();
-			System.out.println("sendSelectionChangeEvent -------- " + (d0 - d1) + " " + (d - d0) + " " + (f - d) + " ms ---------");
+			Log.debugMessage("sendSelectionChangeEvent -------- " + (d0 - d1) + " " + (d - d0) + " " + (f - d) + " ms ---------", Level.INFO);
 		}
 		else
 		if (SwingUtilities.isRightMouseButton(me))
