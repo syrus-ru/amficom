@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.8 2005/08/10 14:02:25 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.9 2005/08/11 13:08:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,14 +14,18 @@ import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_MCM_ID;
 import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_NAME;
 import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_PORT;
 
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
+
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/11 13:08:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -67,10 +71,12 @@ public class RTUBeanFactory extends TabledBeanFactory {
 	
 	@Override
 	public AbstractBean createBean(Identifier identifier) {
-		RTUBean bean = new RTUBean();
+		final RTUBean bean = new RTUBean();
 		bean.setCodeName("RTU");
 		bean.setValidator(this.getValidator());
 		bean.setId(identifier);	
+		
+
 		
 		bean.table = super.getTable(bean, 
 			RTUBeanWrapper.getInstance(),
@@ -79,6 +85,16 @@ public class RTUBeanFactory extends TabledBeanFactory {
 				KEY_MCM_ID,
 				KEY_HOSTNAME,
 				KEY_PORT});
+		
+		JGraphText.entityDispatcher.addPropertyChangeListener(
+			"mcmsRefreshed",
+			new PropertyChangeListener() {
+
+				public void propertyChange(PropertyChangeEvent evt) {
+					bean.table.updateModel();
+				}
+			});
+		
 		bean.addPropertyChangeListener(this.listener);
 		bean.setPropertyPanel(this.panel);
 		
