@@ -20,60 +20,52 @@ import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.util.Log;
 
-public class MapInfoNetMapViewer extends NetMapViewer
-{
+public class MapInfoNetMapViewer extends NetMapViewer {
 	protected MapImagePanel visualComponent = null;
 
 	protected MapInfoConnection mapConnection = null;
 
 	protected DropTarget dropTarget = null;
 
-	public MapInfoNetMapViewer(
-			LogicalNetLayer logicalNetLayer,
-			MapContext mapContext,
-			MapImageRenderer renderer) throws MapDataException,
-			MapConnectionException
-	{
+	public MapInfoNetMapViewer(LogicalNetLayer logicalNetLayer, MapContext mapContext, MapImageRenderer renderer)
+			throws MapConnectionException {
 		super(logicalNetLayer, mapContext, renderer);
 
 		this.mapConnection = (MapInfoConnection) this.mapContext.getMapConnection();
 		this.visualComponent = new MapImagePanel(this);
 	}
 
-	public void init() throws MapDataException
-	{
+	@Override
+	public void init() throws MapDataException {
 		super.init();
-		try
-		{
+		try {
 			this.dropTarget = new DropTarget(this.visualComponent, this.dtl);
 			this.dropTarget.setActive(true);
 
 			this.visualComponent.addMouseListener(this.mttp.toolTippedPanelListener);
-			this.visualComponent
-					.addMouseMotionListener(this.mttp.toolTippedPanelListener);
+			this.visualComponent.addMouseMotionListener(this.mttp.toolTippedPanelListener);
 
 			this.visualComponent.addKeyListener(this.mka);
 			this.visualComponent.grabFocus();
 
 			this.visualComponent.addMouseListener(this.ml);
 			this.visualComponent.addMouseMotionListener(this.mml);
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			e.printStackTrace();
 			throw new MapDataException("abracadabra");
 		}
 	}
 
-	public void dispose()
-	{
+	@Override
+	public void dispose() {
 		this.renderer.cancel();
 	}
 
 	/**
 	 * Получить графический компонент, в котором отображается картография
 	 */
-	public JComponent getVisualComponent()
-	{
+	@Override
+	public JComponent getVisualComponent() {
 		return this.visualComponent;
 	}
 
@@ -82,18 +74,14 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#getVisibleBounds()
 	 */
-	public Double getVisibleBounds() throws MapConnectionException,
-			MapDataException
-	{
-		try
-		{
+	@Override
+	public Double getVisibleBounds() throws MapConnectionException, MapDataException {
+		try {
 			DoubleRect rect = this.mapConnection.getLocalMapJ().getBounds();
-			Rectangle2D.Double vb = new Rectangle2D.Double(rect.xmin, rect.ymin, rect
-					.width(), rect.height());
+			Rectangle2D.Double vb = new Rectangle2D.Double(rect.xmin, rect.ymin, rect.width(), rect.height());
 
 			return vb;
-		} catch (Exception ex)
-		{
+		} catch (Exception ex) {
 			throw new MapConnectionException("cannot get visible bounds", ex);
 		}
 	}
@@ -103,10 +91,9 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#centerSpatialObject(com.syrus.AMFICOM.client.map.SpatialObject)
 	 */
-	public void centerSpatialObject(SpatialObject so)
-			throws MapConnectionException, MapDataException
-	{
-		MapInfoSpatialObject miso = (MapInfoSpatialObject) so;
+	@Override
+	public void centerSpatialObject(final SpatialObject so) throws MapConnectionException, MapDataException {
+		final MapInfoSpatialObject miso = (MapInfoSpatialObject) so;
 		this.mapContext.setCenter(miso.getCenter());
 		this.renderer.setCenter(miso.getCenter());
 	}
@@ -116,25 +103,21 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#repaint(boolean)
 	 */
-	public void repaint(boolean fullRepaint) throws MapConnectionException,
-			MapDataException
-	{
-		long t1 = System.currentTimeMillis();		
-		if (fullRepaint)
-		{
-			Log.debugMessage(" MIFLNL - repaint - Entered full repaint",
-					Level.FINEST);
+	@Override
+	public void repaint(final boolean fullRepaint) throws MapConnectionException, MapDataException {
+		final long t1 = System.currentTimeMillis();
+		if (fullRepaint) {
+			Log.debugMessage(" MIFLNL - repaint - Entered full repaint", Level.FINEST);
 
 			this.visualComponent.setMapImage(this.renderer.getImage());
-			Log.debugMessage(" MIFLNL - repaint - Exiting full repaint",
-					Level.FINEST);
+			Log.debugMessage(" MIFLNL - repaint - Exiting full repaint", Level.FINEST);
 		}
 
-		long t2 = System.currentTimeMillis();		
+		final long t2 = System.currentTimeMillis();
 		this.visualComponent.refreshLayerImage();
-		long t3 = System.currentTimeMillis();		
+		final long t3 = System.currentTimeMillis();
 		this.visualComponent.repaint();
-		long t4 = System.currentTimeMillis();
+		final long t4 = System.currentTimeMillis();
 
 		Log.debugMessage("MapInfoNetMapViewer.repaint | finished in " + (t3 - t1) + " ms \n"
 				+ "		" + (t2 - t1) + " ms (image loaded)\n"
@@ -147,8 +130,8 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#setCursor(java.awt.Cursor)
 	 */
-	public void setCursor(Cursor cursor)
-	{
+	@Override
+	public void setCursor(final Cursor cursor) {
 		this.visualComponent.setCursor(cursor);
 	}
 
@@ -157,8 +140,8 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#getCursor()
 	 */
-	public Cursor getCursor()
-	{
+	@Override
+	public Cursor getCursor() {
 		return this.visualComponent.getCursor();
 	}
 
@@ -167,9 +150,8 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#handDragged(java.awt.event.MouseEvent)
 	 */
-	public void handDragged(MouseEvent me) throws MapConnectionException,
-			MapDataException
-	{
+	@Override
+	public void handDragged(final MouseEvent me) throws MapConnectionException, MapDataException {
 		// empty
 	}
 
@@ -178,9 +160,8 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#handMoved(java.awt.event.MouseEvent)
 	 */
-	public void handMoved(MouseEvent me) throws MapConnectionException,
-			MapDataException
-	{
+	@Override
+	public void handMoved(final MouseEvent me) throws MapConnectionException, MapDataException {
 		// empty
 	}
 
@@ -189,19 +170,14 @@ public class MapInfoNetMapViewer extends NetMapViewer
 	 * 
 	 * @see com.syrus.AMFICOM.client.map.NetMapViewer#mouseMoved(java.awt.event.MouseEvent)
 	 */
-	public void mouseMoved(MouseEvent me) throws MapConnectionException,
-			MapDataException
-	{
+	@Override
+	public void mouseMoved(final MouseEvent me) throws MapConnectionException, MapDataException {
 		this.renderer.analyzeMouseLocation(me);
 	}
 
-	public void setMapImageSize(Dimension newSize) throws MapConnectionException,
-			MapDataException
-	{
-		if ((newSize.width > 0) && (newSize.height > 0))
-		{
-			this.mapConnection.getLocalMapJ().setDeviceBounds(
-					new DoubleRect(0, 0, newSize.width, newSize.height));
+	public void setMapImageSize(final Dimension newSize) throws MapConnectionException, MapDataException {
+		if ((newSize.width > 0) && (newSize.height > 0)) {
+			this.mapConnection.getLocalMapJ().setDeviceBounds(new DoubleRect(0, 0, newSize.width, newSize.height));
 
 			this.renderer.setSize(newSize);
 

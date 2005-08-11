@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.3 2005/08/08 12:02:02 arseniy Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.4 2005/08/11 17:34:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,137 +22,117 @@ import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
+import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/08 12:02:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/11 17:34:06 $
  * @module mapinfo
  */
-public class MapInfoLocalStubImageLoader implements MapImageLoader
-{
+public class MapInfoLocalStubImageLoader implements MapImageLoader {
 
 	private MapJLocalRenderer renderer;
 
 	private MapInfoConnection connection;
 
-	public MapInfoLocalStubImageLoader(MapInfoConnection connection)
-			throws MapConnectionException
-	{
+	public MapInfoLocalStubImageLoader(final MapInfoConnection connection) throws MapConnectionException {
 		this.connection = connection;
 
-		//Setting logger to log nothing.
-		System.setProperty("org.apache.commons.logging.Log",
-				"com.syrus.AMFICOM.client.map.EmptyLog");
+		// Setting logger to log nothing.
+		System.setProperty("org.apache.commons.logging.Log", "com.syrus.AMFICOM.client.map.EmptyLog");
 
-		try
-		{
-			this.renderer = new MapJLocalRenderer(this.connection.getPath()
-					+ this.connection.getView());
-		} catch (IOException e)
-		{
+		try {
+			this.renderer = new MapJLocalRenderer(this.connection.getPath() + this.connection.getView());
+		} catch (IOException e) {
 			throw new MapConnectionException("Failed initializing MapJLocalRenderer");
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.Client.Map.MapImageLoader#stopRenderingAtServer()
 	 */
-	public void stopRendering()
-	{
-		try
-		{
+	public void stopRendering() {
+		try {
 			this.renderer.cancelRendering();
-		} catch (Exception e)
-		{
+		} catch (Exception e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.Client.Map.MapImageLoader#renderMapImageAtServer(com.syrus.AMFICOM.Client.Map.TopologicalRequest)
 	 */
-	public Image renderMapImage(TopologicalImageQuery query)
-			throws MapConnectionException, MapDataException
-	{
-		//Здесь должен формироваться запрос serverQuery к пулу
-		Image image = null;
-		try
-		{
-			image = this.renderer.renderImage(query);
-		} catch (Exception e)
-		{
+	public Image renderMapImage(final TopologicalImageQuery query) throws MapConnectionException, MapDataException {
+		// Здесь должен формироваться запрос serverQuery к пулу
+		try {
+			return this.renderer.renderImage(query);
+		} catch (Exception e) {
 			throw new MapDataException("Failed rendering image");
 		}
-
-		return image;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.MapImageLoader#getMapConnection()
 	 */
-	public MapConnection getMapConnection() throws MapConnectionException
-	{
+	public MapConnection getMapConnection() throws MapConnectionException {
 		return this.connection;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.MapImageLoader#findSpatialObjects(java.lang.String)
 	 */
-	public List findSpatialObjects(String searchText)
-			throws MapConnectionException, MapDataException
-	{
-		List<MapInfoSpatialObject> searchResultsList = 
-			new ArrayList<MapInfoSpatialObject>();
-		
-		Iterator layersIt = this.connection.getLocalMapJ().getLayers().iterator(
-				LayerType.FEATURE);
+	public List<SpatialObject> findSpatialObjects(final String searchText) throws MapConnectionException, MapDataException {
+		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
 
-		for (; layersIt.hasNext();)
-		{
-			FeatureLayer currLayer = (FeatureLayer) layersIt.next();
-			try
-			{
+		for (final Iterator layersIt = this.connection.getLocalMapJ().getLayers().iterator(LayerType.FEATURE); layersIt.hasNext();) {
+			final FeatureLayer currLayer = (FeatureLayer) layersIt.next();
+			try {
 				// Название колонки с надписями
-				List labelColumnsList = currLayer.getLabelProperties()
-						.getLabelColumns();
+				final List labelColumnsList = currLayer.getLabelProperties().getLabelColumns();
 
-				if (labelColumnsList.isEmpty())
+				if (labelColumnsList.isEmpty()) {
 					continue;
+				}
 
-				FeatureSet fs = currLayer.searchAll(labelColumnsList, null);
+				final FeatureSet fs = currLayer.searchAll(labelColumnsList, null);
 
 				Feature feature = null;
 				// Loop until FeatureSet.getNextFeature() returns null
-				while ((feature = fs.getNextFeature()) != null)
-				{
-					String featureName = feature.getAttribute(0).getString();
+				while ((feature = fs.getNextFeature()) != null) {
+					final String featureName = feature.getAttribute(0).getString();
 
-					if (featureName.toLowerCase().indexOf(searchText.toLowerCase()) < 0)
+					if (featureName.toLowerCase().indexOf(searchText.toLowerCase()) < 0) {
 						continue;
+					}
 
-					Log.debugMessage("MapInfoLocalStubImageLoader.findSpatialObjects | "
-							+ "Got feature name: " + featureName, Level.FINEST);
+					Log.debugMessage("MapInfoLocalStubImageLoader.findSpatialObjects | " + "Got feature name: " + featureName, Level.FINEST);
 
-					com.mapinfo.util.DoublePoint featureCentre = feature.getGeometry()
-							.getBounds().center();
+					final com.mapinfo.util.DoublePoint featureCentre = feature.getGeometry().getBounds().center();
 
-					MapInfoSpatialObject spatialObject = new MapInfoSpatialObject(
-							new DoublePoint(featureCentre.x, featureCentre.y), featureName);
-					
+					final MapInfoSpatialObject spatialObject = new MapInfoSpatialObject(new DoublePoint(featureCentre.x, featureCentre.y),
+							featureName);
+
 					searchResultsList.add(spatialObject);
 				}
-			} catch (Exception exc)
-			{
+			} catch (Exception exc) {
 				Log.errorMessage("MapInfoLocalStubImageLoader.findSpatialObjects | "
 						+ "ERROR!!! - Failed searching at layer \"" + currLayer.getName()
 						+ "\" with message \"" + exc.getMessage() + "\".");
 			}
 		}
-		
+
 		return searchResultsList;
 	}
 }
