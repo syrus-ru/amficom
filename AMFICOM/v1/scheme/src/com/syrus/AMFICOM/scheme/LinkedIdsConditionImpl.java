@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.33 2005/08/11 09:37:18 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.34 2005/08/11 13:46:30 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.33 $, $Date: 2005/08/11 09:37:18 $
+ * @version $Revision: 1.34 $, $Date: 2005/08/11 13:46:30 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -254,16 +254,25 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						return false;
 					}
 					AbstractSchemePort startSchemePort = pathElement.getStartAbstractSchemePort();
-					boolean condition1 = false; 
 					if(startSchemePort != null) {
-						condition1 = super.conditionTest(startSchemePort.getParentSchemeDeviceId());
+						SchemeDevice sd = startSchemePort.getParentSchemeDevice();
+						if(sd != null) {
+							if(super.conditionTest(sd.parentSchemeElementId)) {
+								return true;
+							}
+						}
+						
 					}
 					AbstractSchemePort endSchemePort = pathElement.getEndAbstractSchemePort();
-					boolean condition2 = false; 
 					if(endSchemePort != null) {
-						condition2 = super.conditionTest(endSchemePort.getParentSchemeDeviceId());
+						SchemeDevice sd = endSchemePort.getParentSchemeDevice();
+						if(sd != null) {
+							if(super.conditionTest(sd.parentSchemeElementId)) {
+								return true;
+							}
+						}
 					}	
-					return condition1 | condition2;
+					return false;
 				case SCHEMECABLELINK_CODE:
 					if(pathElement.getKind() != IdlKind.SCHEME_CABLE_LINK) {
 						return false;
