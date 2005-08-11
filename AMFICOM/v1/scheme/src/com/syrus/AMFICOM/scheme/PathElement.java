@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.61 2005/08/10 13:18:38 max Exp $
+ * $Id: PathElement.java,v 1.62 2005/08/11 08:02:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: max $
- * @version $Revision: 1.61 $, $Date: 2005/08/10 13:18:38 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/08/11 08:02:18 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -925,8 +925,10 @@ public final class PathElement extends StorableObject
 	}
 
 	public void setSchemeElement(final SchemeElement schemeElement) {
+		// XXX it won't work in case of first SE (when initially set SE, and then endPort)  
 		final SchemeDevice parentSchemeDevice = getStartAbstractSchemePort().getParentSchemeDevice();
 		assert (parentSchemeDevice == getEndAbstractSchemePort().getParentSchemeDevice()): NO_COMMON_PARENT;
+		//XXX it's not correct. in case of set need to change ports along with SchemeElement
 		parentSchemeDevice.setParentSchemeElement(schemeElement);
 	}
 
