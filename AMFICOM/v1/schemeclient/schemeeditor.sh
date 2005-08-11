@@ -22,7 +22,6 @@ $LIB/csbridge.jar:\
 $LIB/commonclient.jar:\
 $LIB/filterclient.jar:\
 $LIB/leserver_interface.jar:\
-$LIB/cmserver_interface.jar:\
 $LIB/util.jar
 
 $JAVA -Xmx256m -ea -client -classpath $APPCLASSPATH:$EXTCLASSPATH:$DEPRECATEDCLASSPATH com.syrus.AMFICOM.client_.scheme.SchemeEditor

@@ -21,7 +21,6 @@ $LIB/dadara.jar:\
 $LIB/commonclient.jar:\
 $LIB/filterclient.jar:\
 $LIB/leserver_interface.jar:\
-$LIB/cmserver_interface.jar:\
 $LIB/util.jar
 
 $JAVA -Xmx256m -client -ea -classpath $APPCLASSPATH:$EXTCLASSPATH -Djava.library.path=$LIB com.syrus.AMFICOM.Client.Analysis.Reflectometry.AnalyseExt

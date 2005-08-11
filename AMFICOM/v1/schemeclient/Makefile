@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.9 2005/08/05 09:47:26 arseniy Exp $
+# $Id: Makefile,v 1.10 2005/08/11 17:58:38 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -9,13 +9,14 @@ MODULE_NAME := schemeclient
 LIBNAME := $(MODULE_NAME).jar
 ARCHFILE := $(MODULE_NAME).tar.gz
 
-JAVAC=$(JAVA_HOME)/bin/javac
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
 APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/filterclient.jar
 EXTCLASSPATH := $(EXTLIBDIR)/jgraphpad.jar
+
+SOURCES := $(shell find $(SRCDIR) -name '*.java')
 
 
 $(LIBNAME):	.mach
@@ -41,7 +42,7 @@ $(LIBNAME):	.mach
 	$(JAVAC) \
 		$(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(DEPRECATEDCLASSPATH) \
-		$(shell find $(SRCDIR) -name '*.java')
+		$(SOURCES)
 	touch $@
 
 .PHONY: clean
@@ -50,7 +51,7 @@ clean: cleanmach
 
 .PHONY: cleanmach
 cleanmach:
-	$(RM) $(shell find $(CLASSDIR) -name '*\.class')
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
 	$(RM) .mach
 
 

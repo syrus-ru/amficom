@@ -20,8 +20,7 @@ $LIB/csbridge.jar:\
 $LIB/commonclient.jar:\
 $LIB/filterclient.jar:\
 $LIB/leserver_interface.jar:\
-$LIB/cmserver_interface.jar:\
 $LIB/util.jar
 
-$JAVA -Xmx256m -client -ea -classpath $APPCLASSPATH:$EXTCLASSPATH com.syrus.AMFICOM.Client.Schedule.Schedule
+$JAVA -Xmx256m -ea -client -classpath $APPCLASSPATH:$EXTCLASSPATH com.syrus.AMFICOM.Client.Schedule.Schedule
 
