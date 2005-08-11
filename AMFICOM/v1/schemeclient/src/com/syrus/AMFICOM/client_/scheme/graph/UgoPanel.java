@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.11 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: UgoPanel.java,v 1.12 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -34,7 +33,6 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
@@ -44,8 +42,8 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -113,36 +111,7 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 		return this.undoManager;
 	}
 	
-	void updateGroup(DeviceGroup group, String text) {
-		if (group.getChildCount() > 0) {
-			for (Enumeration en = group.children(); en.hasMoreElements();) {
-				Object child = en.nextElement();
-				if (child instanceof DeviceCell) {
-					GraphActions.setText(this.graph, child, text);
-					break;
-				}
-			}
-		} 
-		else {
-			GraphActions.setText(this.graph, group, text);
-		}
-	}
-	
-	void updateGroup(DeviceGroup group, ImageIcon icon) {
-		if (group.getChildCount() > 0) {
-			for (Enumeration en = group.children(); en.hasMoreElements();) {
-				Object child = en.nextElement();
-				if (child instanceof DeviceCell) {
-					GraphActions.setImage(this.graph, ((DeviceCell) child), icon);
-					break;
-				}
-			}
-		} 
-		else {
-			GraphActions.setImage(this.graph, group, icon);
-		}
-	}
-	
+
 	public void propertyChange(PropertyChangeEvent ev) {
 		if (ev.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent see = (SchemeEvent)ev;
@@ -153,18 +122,18 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 					DeviceGroup group = SchemeActions.findGroupById(this.graph, se.getId());
 					if (group != null) {
 						if (se.getLabel() != null)
-							updateGroup(group, se.getLabel());
+							GraphActions.updateGroup(this.graph, group, se.getLabel());
 						if (se.getSymbol() != null)
-							updateGroup(group, new ImageIcon(se.getSymbol().getImage()));
+							GraphActions.updateGroup(this.graph, group, new ImageIcon(se.getSymbol().getImage()));
 					}
 				} else if (obj instanceof SchemeProtoElement) {
 					SchemeProtoElement proto = (SchemeProtoElement)obj;
 					DeviceGroup group = SchemeActions.findGroupById(this.graph, proto.getId());
 					if (group != null) {
 						if (proto.getLabel() != null)
-							updateGroup(group, proto.getLabel());
+							GraphActions.updateGroup(this.graph, group, proto.getLabel());
 						if (proto.getSymbol() != null)
-							updateGroup(group, new ImageIcon(proto.getSymbol().getImage()));
+							GraphActions.updateGroup(this.graph, group, new ImageIcon(proto.getSymbol().getImage()));
 					}
 				} else if (obj instanceof SchemeCableLink) {
 					SchemeCableLink link = (SchemeCableLink)obj;

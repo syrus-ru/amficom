@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.21 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.22 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,12 +21,15 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.jgraph.graph.BasicMarqueeHandler;
 import com.jgraph.graph.CellView;
@@ -54,22 +57,25 @@ import com.syrus.AMFICOM.configuration.PortTypeWrapper;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
+import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.22 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -220,7 +226,42 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 			} else if (this.ce.isSelected() && this.firstPort != null)
 				this.start = graph.toScreen(this.firstPort.getLocation(null));
 		}
-		
+
+		// select SchemePath
+		if (graph.getMode().equals(Constants.PATH_MODE)) {
+			Object cell = graph.getSelectionCell();
+			if (this.pane instanceof SchemeTabbedPane) {
+				SchemePath path = ((SchemeTabbedPane)this.pane).getCurrentPanel().getSchemeResource().getSchemePath();
+
+				if (path == null) {
+					PathElement pe = SchemeActions.getSelectedPathElement(cell);
+					path = pe != null ? pe.getParentPathOwner() : null;
+				}
+				SortedSet<PathElement> pathElements = path != null ? path.getPathMembers() : null;
+				
+				SortedSet<Identifier> ids = null;
+				
+				if (pathElements != null) {
+					ids = new TreeSet<Identifier>();
+					for (PathElement pe1 : pathElements) {
+						ids.add(pe1.getAbstractSchemeElement().getId());
+					}
+				}
+
+				for (ElementsPanel panel : ((SchemeTabbedPane)this.pane).getAllPanels()) {
+					panel.getSchemeResource().setSchemePath(path);
+					panel.getSchemeResource().setCashedPathMemberIds(ids);
+				}
+				
+				// select path objects
+				if (pathElements != null) {
+					Object[] pathObjects = SchemeActions.getPathObjects(ids, graph);
+					graph.setSelectionCells(pathObjects);
+					event.consume();
+				}
+			}
+		}
+
 		// from GPMarqueeHandler
 		if (!isPopupTrigger(event) && !event.isConsumed() && !this.s.isSelected()) {
 			this.start = graph.snap(event.getPoint());
@@ -403,6 +444,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 	@Override
 	public void mouseReleased(MouseEvent event) {
 		SchemeGraph graph = (SchemeGraph)event.getSource();
+		boolean notify = true;
+				
 		if (!graph.isEditable()) {
 			event.consume();
 		}
@@ -413,8 +456,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					graph.fromScreen(this.bounds);
 //					bounds.width += 2;
 //					bounds.height += 2;
-//					bounds.width ++;
-//					bounds.height ++;
+//					this.bounds.width ++;
+//					this.bounds.height ++;
 					try {
 						SchemeDevice device = SchemeObjectsFactory.createSchemeDevice(Constants.DEVICE + System.currentTimeMillis());
 						DeviceCell cell = SchemeActions.createDevice(graph, "", this.bounds, device.getId());  //$NON-NLS-1$
@@ -553,18 +596,33 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		} else { // right mouse button pressed
 			if (!graph.isSelectionEmpty()) {
 				Object cell = graph.getSelectionCell();
-				DeviceGroup group = null;
-
-				if (cell instanceof DeviceGroup)
-					group = (DeviceGroup) cell;
-				else if (cell instanceof DeviceCell
-						&& ((DeviceCell) cell).getParent() instanceof DeviceGroup)
-					group = (DeviceGroup) ((DeviceCell) cell).getParent();
-
-				if (group != null) {
-					JPopupMenu pop = SchemeActions.createElementPopup(this.pane.aContext, graph, group);
-					if (pop.getSubElements().length != 0)
-						pop.show(graph, event.getX(), event.getY());
+				
+				if (graph.getMode().equals(Constants.LINK_MODE)) {
+					DeviceGroup group = null;
+					if (cell instanceof DeviceGroup)
+						group = (DeviceGroup) cell;
+					else if (cell instanceof DeviceCell
+							&& ((DeviceCell) cell).getParent() instanceof DeviceGroup)
+						group = (DeviceGroup) ((DeviceCell) cell).getParent();
+					
+					if (group != null) {
+						JPopupMenu pop = SchemeActions.createElementPopup(this.pane.aContext, graph, group);
+						if (pop.getSubElements().length != 0) {
+							pop.show(graph, event.getX(), event.getY());
+							event.consume();
+						}
+					}
+				} else { // PATH_MODE
+					SchemeTabbedPane pane1 = (SchemeTabbedPane)this.pane; 
+					SchemeResource res = pane1.getCurrentPanel().getSchemeResource();
+					if (res.getSchemePath() != null) {
+						JPopupMenu pop = SchemeActions.createPathPopup(pane1.getContext(), res, cell);
+						if (pop != null && pop.getComponentCount() != 0) {
+							pop.show(graph, event.getX(), event.getY());
+						}
+						notify = false;
+					}
+					event.consume();
 				}
 			}
 		}
@@ -579,7 +637,8 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		
 		graph.repaint();
 		graph.setCursor(DEFAULT_CURSOR);
-//		graph.selectionNotify();
+		if (notify)
+			graph.selectionNotify();
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeToolBar.java,v 1.10 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeToolBar.java,v 1.11 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.SetTopLevelModeAction;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.11 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -60,6 +60,8 @@ public class SchemeToolBar extends ElementsToolBar {
 	@Override
 	protected Map<String, AbstractButton> createGraphButtons() {
 		Map<String, AbstractButton> bttns = super.createGraphButtons();
+		
+		SchemeTabbedPane pane1 = (SchemeTabbedPane)this.pane;
 
 		SchemeMarqueeHandler mh = this.pane.getMarqueeHandler();
 
@@ -70,10 +72,10 @@ public class SchemeToolBar extends ElementsToolBar {
 				Constants.ICON_CREATE_UGO,
 				new CreateTopLevelSchemeAction(this.pane), true));
 		bttns.put(Constants.LINK_MODE, createToolButton(mh.linkButt, this.btn_size,
-				null, LangModelGraph.getString(Constants.LINK_MODE), Constants.ICON_LINK_MODE, new SetLinkModeAction(this.pane),
+				null, LangModelGraph.getString(Constants.LINK_MODE), Constants.ICON_LINK_MODE, new SetLinkModeAction(pane1),
 				true));
 		bttns.put(Constants.PATH_MODE, createToolButton(mh.pathButt, this.btn_size,
-				null, LangModelGraph.getString(Constants.PATH_MODE), Constants.ICON_PATH_MODE, new SetPathModeAction(this.pane),
+				null, LangModelGraph.getString(Constants.PATH_MODE), Constants.ICON_PATH_MODE, new SetPathModeAction(pane1),
 				true));
 
 		bttns.put(Constants.TOP_LEVEL_MODE, createToolButton(mh.topModeButt,

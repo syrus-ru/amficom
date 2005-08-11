@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.13 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: DeleteAction.java,v 1.14 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,8 +49,8 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.14 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -89,7 +89,7 @@ public class DeleteAction extends AbstractAction {
 				return;
 			}
 
-			DefaultGraphCell[] cells1 = GraphActions.getTopLevelCells(graph, cells);
+			DefaultGraphCell[] cells1 = GraphActions.getTopLevelCells(cells);
 
 			delete(graph, cells1);
 			

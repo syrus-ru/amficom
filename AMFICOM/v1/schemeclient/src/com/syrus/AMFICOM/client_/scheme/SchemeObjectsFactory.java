@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.20 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.21 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,12 +52,15 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
+import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemeMonitoringSolution;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
@@ -66,8 +69,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.21 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -312,6 +315,37 @@ public class SchemeObjectsFactory {
 		Identifier userId = LoginManager.getUserId();
 		SchemeCableLink schemeLink = SchemeCableLink.createInstance(userId, name, parent);
 		return schemeLink;
+	}
+	
+	public static SchemeMonitoringSolution createSchemeMonitoringSolution(Scheme scheme) throws CreateObjectException {
+		SchemeMonitoringSolution solution = SchemeMonitoringSolution.createInstance(LoginManager.getUserId(), 
+				LangModelScheme.getString("Title.solution"),   //$NON-NLS-1$
+				scheme);
+		return solution;
+	}
+	
+	public static PathElement createPathElement(SchemePath path, final Identifier id) throws CreateObjectException {
+		if (id.getMajor() == ObjectEntities.SCHEMELINK_CODE) {
+			SchemeLink link;
+			try {
+				link = StorableObjectPool.getStorableObject(id, false);
+			} catch (ApplicationException e) {
+				throw new CreateObjectException(e);
+			}
+			return PathElement.createInstance(LoginManager.getUserId(), path, link);
+		} else if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
+			PathElement pe;
+		}
+		
+		
+		throw new UnsupportedOperationException("Unknown id " + id);
+	}
+	
+	public static SchemePath createSchemePath(SchemeMonitoringSolution solution) throws CreateObjectException {
+		SchemePath path = SchemePath.createInstance(LoginManager.getUserId(), 
+				LangModelScheme.getString("Title.path") + " (" + counter + ")",   //$NON-NLS-1$//$NON-NLS-2$//$NON-NLS-3$
+				solution);
+		return path;
 	}
 	
 	public static void assignClonedIds(Map<DefaultGraphCell, DefaultGraphCell> clonedCells, Map<Identifier, Identifier> clonedIds) {

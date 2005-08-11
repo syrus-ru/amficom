@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.14 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeTabbedPane.java,v 1.15 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
+import javax.swing.AbstractButton;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JMenuItem;
@@ -38,6 +39,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.jgraph.graph.DefaultGraphCell;
+import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -52,8 +54,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.15 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -64,6 +66,17 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 
 	public SchemeTabbedPane(ApplicationContext aContext) {
 		super(aContext);
+	}
+	
+	@Override
+	public void setContext(ApplicationContext aContext) {
+		if (this.aContext != null) {
+			this.aContext.getDispatcher().removePropertyChangeListener(ObjectSelectedEvent.TYPE, this);
+		}
+		super.setContext(aContext);
+		if (aContext != null) {
+			this.aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
+		}
 	}
 
 	@Override
@@ -113,9 +126,9 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 
 	
 	@Override
-	public Set<UgoPanel> getAllPanels() {
+	public Set<ElementsPanel> getAllPanels() {
 		Object[] comp = this.tabs.getComponents();
-		Set<UgoPanel> panels = new HashSet<UgoPanel>(comp.length);
+		Set<ElementsPanel> panels = new HashSet<ElementsPanel>(comp.length);
 		for (int i = 0; i < comp.length; i++)
 			panels.add(this.graphPanelsMap.get(comp[i]));
 		return panels;
@@ -273,6 +286,12 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					SchemeGraph graph = getGraph();
 					graph.setActualSize(new Dimension(scheme.getWidth(), scheme.getHeight()));
 				}
+			}
+		} else if (ae.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
+			ObjectSelectedEvent ose = (ObjectSelectedEvent) ae;
+			if (ose.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
+				AbstractButton b = this.toolBar.commands.get(Constants.PATH_MODE);
+				b.doClick();
 			}
 		}
 		super.propertyChange(ae);

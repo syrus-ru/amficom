@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.9 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: Notifier.java,v 1.10 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemeCablePortPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeDevicePropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeElementPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeLinkPropertiesManager;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemePathPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemePortPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeProtoElementPropertiesManager;
@@ -35,13 +36,14 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.10 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -86,6 +88,10 @@ public class Notifier {
 			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemeProtoElementPropertiesManager.getInstance(aContext),
 					ObjectSelectedEvent.SCHEME_PROTOELEMENT));
+		} else if (object instanceof SchemePath) {
+			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
+					SchemePathPropertiesManager.getInstance(aContext),
+					ObjectSelectedEvent.SCHEME_PATH));
 		} else if (object instanceof Scheme) {
 			dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object,
 					SchemePropertiesManager.getInstance(aContext), ObjectSelectedEvent.SCHEME));

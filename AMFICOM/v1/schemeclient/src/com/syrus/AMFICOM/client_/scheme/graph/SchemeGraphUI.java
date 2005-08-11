@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.13 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeGraphUI.java,v 1.14 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import java.util.TooManyListenersException;
 import javax.swing.AbstractAction;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
+import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.jgraph.JGraph;
 import com.jgraph.graph.CellHandle;
@@ -51,8 +52,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.14 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -215,8 +216,10 @@ public class SchemeGraphUI extends GPGraphUI {
 					}
 				}
 
-				//Marquee Selection
-				if (!e.isConsumed() && (!isToggleSelectionEvent(e) || SchemeGraphUI.this.focus == null)) {
+				//Marquee Selection 
+				if (
+						//!e.isConsumed() &&  unremark this to move cells without <CTRL> pressed 
+						(!isToggleSelectionEvent(e) || SchemeGraphUI.this.focus == null)) {
 					if (SchemeGraphUI.this.marquee != null) {
 						SchemeGraphUI.this.marquee.mousePressed(e);
 						this.handler = SchemeGraphUI.this.marquee;
@@ -233,8 +236,37 @@ public class SchemeGraphUI extends GPGraphUI {
 		
 		@Override
 		public void mouseReleased(MouseEvent e) {
-			super.mouseReleased(e);
-			((SchemeGraph)SchemeGraphUI.this.graph).selectionNotify();
+			try {
+				if (e != null && !e.isConsumed()) {
+					if (this.cell != null) {
+						Object tmp = this.cell.getCell();
+						boolean wasSelected = SchemeGraphUI.this.graph.isCellSelected(tmp);
+						selectCellForEvent(tmp, e);
+						SchemeGraphUI.this.focus = this.cell;
+						if (wasSelected && SchemeGraphUI.this.graph.isCellSelected(tmp)) {
+							Object root =
+								((DefaultMutableTreeNode) tmp).getRoot();
+							selectCellForEvent(root, e);
+							SchemeGraphUI.this.focus = SchemeGraphUI.this.graphLayoutCache.getMapping(root, false);
+						}
+					}
+					
+					if (this.handler == SchemeGraphUI.this.marquee) {
+						marquee.mouseReleased(e);
+					} else if (this.handler == SchemeGraphUI.this.handle && handle != null) {
+						SchemeGraphUI.this.handle.mouseReleased(e);
+					}
+					
+					if (isDescendant(this.cell, SchemeGraphUI.this.focus) && e.getModifiers() != 0) {
+						// Do not switch to parent if Special Selection
+						this.cell = SchemeGraphUI.this.focus;
+					}
+					
+				}
+			} finally {
+				this.handler = null;
+				this.cell = null;
+			}
 		}
 	}
 
@@ -287,7 +319,7 @@ public class SchemeGraphUI extends GPGraphUI {
 				this.firstDrag = true;
 				this.start = null;
 			}
-			super.mouseDragged(event);
+			super.mouseReleased(event);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.8 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeResource.java,v 1.9 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,14 @@ import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.AbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.PathElement;
@@ -30,8 +32,8 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -45,6 +47,9 @@ public class SchemeResource {
 	private SchemeCellContainer object;
 	private int objectType;
 	private SchemePath schemePath;
+	private SortedSet<Identifier> pmIds;
+	private Identifier pmStartId;
+	private Identifier pmEndId;
 
 	public SchemeResource(SchemeGraph graph) {
 		this.graph = graph;
@@ -52,6 +57,30 @@ public class SchemeResource {
 
 	public void setSchemePath(SchemePath path) {
 		this.schemePath = path;
+	}
+	
+	public void setCashedPathStart(Identifier pathMemberId) {
+		this.pmStartId = pathMemberId;
+	}
+	
+	public void setCashedPathEnd(Identifier pathMemberId) {
+		this.pmEndId = pathMemberId;
+	}
+	
+	public Identifier getCashedPathStart() {
+		return this.pmStartId;
+	}
+	
+	public Identifier getCashedPathEnd() {
+		return this.pmEndId;
+	}
+	
+	public void setCashedPathMemberIds(SortedSet<Identifier> pathMemberIds) {
+		this.pmIds = pathMemberIds;
+	}
+	
+	public SortedSet<Identifier> getCashedPathElementIds() {
+		return this.pmIds;
 	}
 	
 	public SchemeCellContainer getCellContainer() {

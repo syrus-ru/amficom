@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.14 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: UgoTabbedPane.java,v 1.15 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,24 +14,18 @@ import java.util.Collections;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
 import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
-import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.15 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -81,6 +75,9 @@ public class UgoTabbedPane extends JPanel {
 	protected JComponent createPanel() {
 		this.panel = new UgoPanel(this.aContext);
 		this.panel.getGraph().setMarqueeHandler(this.marqueeHandler);
+		
+		
+		
 		JScrollPane graphView = new JScrollPane(this.panel.getGraph());
 		return graphView;
 	}
@@ -99,7 +96,7 @@ public class UgoTabbedPane extends JPanel {
 	/**
 	 * @return set of UgoPanels
 	 */
-	public Set<UgoPanel> getAllPanels() {
+	public Set<? extends UgoPanel> getAllPanels() {
 		return Collections.singleton(this.panel);
 	}
 	
@@ -132,47 +129,6 @@ public class UgoTabbedPane extends JPanel {
 		this.toolBar.setVisible(b);
 	}
 
-	protected void fixImages(SchemeGraph graph) {
-		DeviceGroup[] groups = GraphActions.findAllGroups(graph, graph.getRoots());
-		for (int i = 0; i < groups.length; i++) {
-			switch (groups[i].getType()) {
-			case DeviceGroup.SCHEME_ELEMENT:
-				SchemeElement se = groups[i].getSchemeElement();
-				DeviceCell cell = GraphActions.getMainCell(groups[i]);
-				if (cell != null) {
-					GraphActions.setText(graph, cell, se.getLabel());
-					ImageIcon icon = null;
-					if (se.getSymbol() != null)
-						icon = new ImageIcon(se.getSymbol().getImage());
-					GraphActions.setImage(graph, cell, icon);
-				}
-				break;
-			case DeviceGroup.PROTO_ELEMENT:
-				SchemeProtoElement proto = groups[i].getProtoElement();
-				cell = GraphActions.getMainCell(groups[i]);
-				if (cell != null) {
-					GraphActions.setText(graph, cell, proto.getLabel());
-					ImageIcon icon = null;
-					if (proto.getSymbol() != null)
-						icon = new ImageIcon(proto.getSymbol().getImage());
-					GraphActions.setImage(graph, cell, icon);
-				}
-				break;
-			case DeviceGroup.SCHEME:
-				Scheme scheme = groups[i].getScheme();
-				cell = GraphActions.getMainCell(groups[i]);
-				if (cell != null) {
-					GraphActions.setText(graph, cell, scheme.getLabel());
-					ImageIcon icon = null;
-					if (scheme.getSymbol() != null)
-						icon = new ImageIcon(scheme.getSymbol().getImage());
-					GraphActions.setImage(graph, cell, icon);
-				}
-				break;
-			}
-		}
-	}
-
 	/**
 	 * @param schemeImageResource Scheme or SchemeElement or SchemeProtoElement SchemeCell or UgoCell
 	 * @param doClone create copy of objects or open themself
@@ -184,7 +140,7 @@ public class UgoTabbedPane extends JPanel {
 //		GraphActions.clearGraph(graph);
 		if (schemeImageResource != null) {
 			clones = getCurrentPanel().insertCell(schemeImageResource.getData(), new Point(0, 0), doClone);
-			fixImages(graph);
+			SchemeActions.fixImages(graph);
 		}
 		setGraphChanged(false);
 		return clones;

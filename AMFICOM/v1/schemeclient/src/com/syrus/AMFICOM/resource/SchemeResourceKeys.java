@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResourceKeys.java,v 1.6 2005/08/08 11:58:08 arseniy Exp $
+ * $Id: SchemeResourceKeys.java,v 1.7 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/08 11:58:08 $
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -90,6 +90,10 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	String SCHEME_SHORT_WIDTH = "scheme_short_width"; //$NON-NLS-1$
 	String SCHEME_SHORT_HEIGHT = "scheme_short_height"; //$NON-NLS-1$
 	String SCHEME_SIZE = "scheme_size"; //$NON-NLS-1$
+	String SCHEME_MONITORING_SOLUTION = "scheme_monitoring_solution"; //$NON-NLS-1$
+	
+	String START_ELEMENT = "start_element"; //$NON-NLS-1$
+	String END_ELEMENT = "end_element"; //$NON-NLS-1$
 	
 	String NAME = "name"; //$NON-NLS-1$
 	String CODENAME = "class"; //$NON-NLS-1$

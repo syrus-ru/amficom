@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.10 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: GraphActions.java,v 1.11 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,8 +45,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.11 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -80,8 +80,7 @@ public class GraphActions {
 		return port;
 	}
 
-	public static DefaultPort removePort(SchemeGraph graph, DefaultGraphCell cell,
-			DefaultPort port, Map viewMap) {
+	public static DefaultPort removePort(DefaultGraphCell cell, DefaultPort port, Map viewMap) {
 		cell.remove(port);
 		viewMap.remove(port);
 		return port;
@@ -255,9 +254,38 @@ public class GraphActions {
 
 		graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 	}
+	
+	public static void updateGroup(SchemeGraph graph, DeviceGroup group, String text) {
+		if (group.getChildCount() > 0) {
+			for (Enumeration en = group.children(); en.hasMoreElements();) {
+				Object child = en.nextElement();
+				if (child instanceof DeviceCell) {
+					setText(graph, child, text);
+					break;
+				}
+			}
+		} 
+		else {
+			setText(graph, group, text);
+		}
+	}
+	
+	public static void updateGroup(SchemeGraph graph, DeviceGroup group, ImageIcon icon) {
+		if (group.getChildCount() > 0) {
+			for (Enumeration en = group.children(); en.hasMoreElements();) {
+				Object child = en.nextElement();
+				if (child instanceof DeviceCell) {
+					setImage(graph, ((DeviceCell) child), icon);
+					break;
+				}
+			}
+		} 
+		else {
+			setImage(graph, group, icon);
+		}
+	}
 
-	public static void setImage(SchemeGraph graph, DefaultGraphCell cell,
-			ImageIcon icon) {
+	public static void setImage(SchemeGraph graph, DefaultGraphCell cell, ImageIcon icon) {
 		if (icon == null) {
 			Map map = cell.getAttributes();
 			map.remove(GraphConstants.ICON);
@@ -265,9 +293,9 @@ public class GraphActions {
 			viewMap.put(cell, GraphConstants.cloneMap(map));
 			graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 		} else {
-			if (icon.getIconHeight() > 20 || icon.getIconWidth() > 20)
-				icon = new ImageIcon(icon.getImage().getScaledInstance(20, 20,
-						Image.SCALE_SMOOTH));
+			if (icon.getIconHeight() > 20 || icon.getIconWidth() > 20) {
+				icon = new ImageIcon(icon.getImage().getScaledInstance(20, 20, Image.SCALE_SMOOTH));
+			}
 			Map map = GraphConstants.createMap();
 			GraphConstants.setIcon(map, icon);
 			Map<Object, Map> viewMap = new HashMap<Object, Map>();
@@ -276,7 +304,7 @@ public class GraphActions {
 		}
 	}
 
-	public static ImageIcon getImage(SchemeGraph graph, DefaultGraphCell cell) {
+	public static ImageIcon getImage(DefaultGraphCell cell) {
 		Map map = cell.getAttributes();
 		return GraphConstants.getIcon(map);
 	}
@@ -381,7 +409,7 @@ public class GraphActions {
 		return v.toArray(new DefaultGraphCell[v.size()]);
 	}
 
-	public static Edge[] findAllVertexEdges(SchemeGraph graph, DefaultGraphCell[] cells) {
+	public static Edge[] findAllVertexEdges(DefaultGraphCell[] cells) {
 		ArrayList<Edge> edges = new ArrayList<Edge>();
 		for (int i = 0; i < cells.length; i++) {
 			for (Enumeration enumeration = cells[i].children(); enumeration
@@ -412,7 +440,7 @@ public class GraphActions {
 		return v.toArray(new BlockPortCell[v.size()]);
 	}
 
-	public static DefaultGraphCell[] getTopLevelCells(SchemeGraph graph, Object[] cells) {
+	public static DefaultGraphCell[] getTopLevelCells(Object[] cells) {
 		Set<DefaultGraphCell> v = new HashSet<DefaultGraphCell>();
 
 		for (int i = 0; i < cells.length; i++) {

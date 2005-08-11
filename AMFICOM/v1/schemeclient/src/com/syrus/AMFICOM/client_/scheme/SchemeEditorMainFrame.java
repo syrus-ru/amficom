@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.18 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.19 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.19 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -28,6 +28,7 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
+import com.syrus.AMFICOM.Client.General.Command.Scheme.PathNewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeNewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveAsCommand;
@@ -224,9 +225,9 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		// SchemeFromFileCommand(Environment.getDispatcher(), aContext));
 
 		// TODO разобраться с созданием пути
-		/*
-		aModel.setCommand("menuPathNew", new PathNewCommand(aContext, schemeTab));
-		aModel.setCommand("menuPathEdit", new PathEditCommand(aContext, schemeTab));
+		
+		aModel.setCommand("menuPathNew", new PathNewCommand(this.schemeTab));
+		/*aModel.setCommand("menuPathEdit", new PathEditCommand(aContext, schemeTab));
 		aModel.setCommand("menuPathAddStart", new PathSetStartCommand(aContext,
 				schemeTab));
 		aModel.setCommand("menuPathAddEnd", new PathSetEndCommand(aContext,

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.9 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeGraph.java,v 1.10 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
 
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.10 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -59,7 +59,7 @@ public class SchemeGraph extends GPGraph {
 	private boolean graphChanged = false;	
 	private boolean topLevelSchemeMode = false;
 	
-	private boolean notify = false;
+	private boolean notifying = false;
 	boolean make_notifications = false;
 	/**
 	 * trigger between path selection modes
@@ -196,51 +196,56 @@ public class SchemeGraph extends GPGraph {
 			return;
 		
 		SchemeMarqueeHandler marqee = (SchemeMarqueeHandler)getMarqueeHandler();
-		marqee.updateButtonsState(getSelectionCells());
+		Object[] selected = getSelectionCells();
+		marqee.updateButtonsState(selected);
 		
-		this.notify = true;
-		if (getSelectionCount() == 0) {
+		this.notifying = true;
+		if (selected.length == 0) {
 			UgoPanel panel = marqee.pane.getCurrentPanel();
 			if (panel instanceof ElementsPanel) {
 				SchemeResource res = ((ElementsPanel)panel).getSchemeResource();
-				if (res.getCellContainer() != null) {
+				if (res.getSchemePath() != null) {
+					this.notifying = false;
+					return;
+				}
+				else if (res.getCellContainer() != null) {
 					Notifier.notify(this, this.aContext, res.getCellContainer());
-					this.notify = false;
+					this.notifying = false;
 					return;
 				}
 			}
 		}
-		Notifier.notify(this, this.aContext, getSelectionCells());
-		this.notify = false;
+		Notifier.notify(this, this.aContext, selected);
+		this.notifying = false;
 	}
 	
 	@Override
 	public void addSelectionCell(Object cell) {
-		if (!this.notify)
+		if (!this.notifying)
 			super.addSelectionCell(cell);
 	}
 
 	@Override
 	public void addSelectionCells(Object[] cells) {
-		if (!this.notify)
+		if (!this.notifying)
 			super.addSelectionCells(cells);
 	}
 
 	@Override
 	public void setSelectionCell(Object cell) {
-		if (!this.notify)
+		if (!this.notifying)
 			super.setSelectionCell(cell);
 	}
 	
 	@Override
 	public void setSelectionCells(Object[] cells) {
-		if (!this.notify)
+		if (!this.notifying)
 			super.setSelectionCells(cells);
 	}
 	
 	@Override
 	public void removeSelectionCell(Object cell) {
-		if (!this.notify)
+		if (!this.notifying)
 			super.removeSelectionCell(cell);
 	}
 	
@@ -409,6 +414,9 @@ public class SchemeGraph extends GPGraph {
 	}
 	public void setMode(String mode) {
 		this.mode = mode;
+	}
+	public String getMode() {
+		return this.mode;
 	}
 	public void setMakeNotifications(boolean make_notifications) {
 		this.make_notifications = make_notifications;

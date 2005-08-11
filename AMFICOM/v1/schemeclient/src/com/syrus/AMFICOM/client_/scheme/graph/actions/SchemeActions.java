@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.19 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeActions.java,v 1.20 2005/08/11 07:27:27 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,17 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.SortedSet;
+import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
+import javax.swing.ImageIcon;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
@@ -28,11 +34,13 @@ import com.jgraph.graph.EdgeView;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.Port;
 import com.jgraph.graph.PortView;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.PathBuilder;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.LangModelGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
@@ -44,22 +52,31 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelCableLink;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
+import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemePort;
+import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.20 $, $Date: 2005/08/11 07:27:27 $
  * @module schemeclient
  */
 
@@ -68,6 +85,47 @@ public class SchemeActions {
 	
 	private SchemeActions () {
 		// empty
+	}
+	
+	public static void fixImages(SchemeGraph graph) {
+		DeviceGroup[] groups = GraphActions.findAllGroups(graph, graph.getRoots());
+		for (int i = 0; i < groups.length; i++) {
+			switch (groups[i].getType()) {
+			case DeviceGroup.SCHEME_ELEMENT:
+				SchemeElement se = groups[i].getSchemeElement();
+				DeviceCell cell = GraphActions.getMainCell(groups[i]);
+				if (cell != null) {
+					GraphActions.setText(graph, cell, se.getLabel());
+					ImageIcon icon = null;
+					if (se.getSymbol() != null)
+						icon = new ImageIcon(se.getSymbol().getImage());
+					GraphActions.setImage(graph, cell, icon);
+				}
+				break;
+			case DeviceGroup.PROTO_ELEMENT:
+				SchemeProtoElement proto = groups[i].getProtoElement();
+				cell = GraphActions.getMainCell(groups[i]);
+				if (cell != null) {
+					GraphActions.setText(graph, cell, proto.getLabel());
+					ImageIcon icon = null;
+					if (proto.getSymbol() != null)
+						icon = new ImageIcon(proto.getSymbol().getImage());
+					GraphActions.setImage(graph, cell, icon);
+				}
+				break;
+			case DeviceGroup.SCHEME:
+				Scheme scheme = groups[i].getScheme();
+				cell = GraphActions.getMainCell(groups[i]);
+				if (cell != null) {
+					GraphActions.setText(graph, cell, scheme.getLabel());
+					ImageIcon icon = null;
+					if (scheme.getSymbol() != null)
+						icon = new ImageIcon(scheme.getSymbol().getImage());
+					GraphActions.setImage(graph, cell, icon);
+				}
+				break;
+			}
+		}
 	}
 	
 	public static DeviceGroup createTopLevelElement(SchemeGraph graph,
@@ -379,6 +437,157 @@ public class SchemeActions {
 		if (port.getPortType().getSort().equals(PortTypeSort.PORTTYPESORT_THERMAL))
 			return Color.BLACK;
 		return Color.WHITE;
+	}
+	
+	public static JPopupMenu createPathPopup(final ApplicationContext aContext,
+			final SchemeResource res, Object cell) {
+				
+		final Identifier id;
+		if (cell instanceof DeviceGroup) {
+			id = ((DeviceGroup)cell).getElementId();
+		} else if (cell instanceof DefaultLink) {
+			id = ((DefaultLink)cell).getSchemeLinkId();
+		} else if (cell instanceof DefaultCableLink) {
+			id = ((DefaultCableLink)cell).getSchemeCableLinkId();
+		} else {
+//		no popup for other elements
+			return null;
+		}
+		
+		final SchemePath path = res.getSchemePath();
+		final SortedSet<Identifier> pmIds = res.getCashedPathElementIds();
+		JPopupMenu pop = new JPopupMenu();
+		
+		if (pmIds.contains(id)) { // already added to path
+			System.err.println("removing");
+		} else { // not added to path yet
+			if (pmIds.isEmpty()) { // add only start
+				if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
+					pop.add(createPathStartMenuItem(res, id));
+				}
+			} else { // add "add" and "end"
+				pop.add(createPathAddMenuItem(res, id));
+				pop.addSeparator();
+				pop.add(createPathEndMenuItem(res, id));
+			}
+		}
+
+		return pop;
+	}
+	
+	private static JMenuItem createPathAddMenuItem(final SchemeResource res, final Identifier id) {
+		JMenuItem menuItem = new JMenuItem(new AbstractAction() {
+			private static final long serialVersionUID = -471712824699016078L;
+			public void actionPerformed(ActionEvent ev) {
+				SchemePath path = res.getSchemePath();
+				if (id.getMajor() == ObjectEntities.SCHEMELINK_CODE) {
+					try {
+						SchemeLink link = StorableObjectPool.getStorableObject(id, false);
+						if (PathBuilder.createPEbySL(path, link) == null) {
+							Log.debugMessage("Can't add to path " + link.getName(), Level.WARNING);
+						}
+					} catch (ApplicationException e) {
+						Log.errorException(e);
+					}
+				} else if (id.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
+					try {
+						SchemeCableLink link = StorableObjectPool.getStorableObject(id, false);
+						if (PathBuilder.createPEbySCL(path, link) == null) {
+							Log.debugMessage("Can't add to path " + link.getName(), Level.WARNING);
+						}
+					} catch (ApplicationException e) {
+						Log.errorException(e);
+					}
+				} else if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
+					try {
+						SchemeElement se = StorableObjectPool.getStorableObject(id, false);
+						if (PathBuilder.createPEbySE(path, se) == null) {
+							Log.debugMessage("Can't add to path " + se.getName(), Level.WARNING);
+						}
+					} catch (ApplicationException e) {
+						Log.errorException(e);
+					}
+				}
+			}
+		});
+		menuItem.setText(LangModelScheme.getString("Menu.path.add")); //$NON-NLS-1$
+		return menuItem;
+	}
+	
+	private static JMenuItem createPathStartMenuItem(final SchemeResource res, final Identifier id) {
+		JMenuItem menuItem = new JMenuItem(new AbstractAction() {
+			private static final long serialVersionUID = -2925941385039796591L;
+			public void actionPerformed(ActionEvent ev) {
+				res.setCashedPathStart(id);
+				SchemePath path = res.getSchemePath();
+				if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
+					try {
+						SchemeElement se = StorableObjectPool.getStorableObject(id, false);
+						PathBuilder.createPEbySE(path, se);
+					} catch (ApplicationException e) {
+						Log.errorException(e);
+					}
+				}
+			}
+		});
+		menuItem.setText(LangModelScheme.getString("Menu.path.set_start")); //$NON-NLS-1$
+		return menuItem;
+	} 
+	
+	private static JMenuItem createPathEndMenuItem(final SchemeResource res, final Identifier id) {
+		JMenuItem menuItem = new JMenuItem(new AbstractAction() {
+			private static final long serialVersionUID = -2610269229583452112L;
+			public void actionPerformed(ActionEvent ev) {
+				res.setCashedPathStart(id);
+			}
+		});
+		menuItem.setText(LangModelScheme.getString("Menu.path.set_end")); //$NON-NLS-1$
+		return menuItem;
+	} 
+	
+	public static Object[] getPathObjects(SortedSet<Identifier> ids, SchemeGraph graph) {
+		Collection<Object> pathObjects = new ArrayList<Object>();
+		
+		Object[] cells = graph.getRoots();
+		for (Object cell : cells) {
+			Identifier id = null;
+			if (cell instanceof DeviceGroup) {
+				id = ((DeviceGroup)cell).getElementId();
+			} else if (cell instanceof DefaultLink) {
+				id = ((DefaultLink)cell).getSchemeLinkId();
+			} else if (cell instanceof DefaultCableLink) {
+				id = ((DefaultCableLink)cell).getSchemeCableLinkId();
+			}
+			if (id != null && ids.contains(id)) {
+				pathObjects.add(cell);
+			}
+		}
+		return pathObjects.toArray();
+	}
+	
+	public static PathElement getSelectedPathElement(Object selected) {
+		Identifier schemeObjectId = null;
+		if (selected instanceof DeviceGroup) {
+			schemeObjectId = ((DeviceGroup)selected).getElementId();
+		} else if (selected instanceof DefaultLink) {
+			schemeObjectId = ((DefaultLink)selected).getSchemeLinkId();
+		} else if (selected instanceof DefaultCableLink) {
+			schemeObjectId = ((DefaultCableLink)selected).getSchemeCableLinkId();
+		}
+		
+		if (schemeObjectId != null) {
+			LinkedIdsCondition condition = new LinkedIdsCondition(schemeObjectId, ObjectEntities.PATHELEMENT_CODE);
+			try {
+				Set<PathElement> pathElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				if (!pathElements.isEmpty()) {
+					PathElement pe = pathElements.iterator().next();
+					return pe;
+				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
+			}
+		}
+		return null;
 	}
 	
 	public static JPopupMenu createElementPopup(final ApplicationContext aContext,
