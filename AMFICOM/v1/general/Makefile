@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.53 2005/08/08 18:01:16 max Exp $
+# $Id: Makefile,v 1.54 2005/08/11 10:13:52 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -13,36 +13,12 @@ IDL_SOURCES = $(IDLDIR)/general.idl
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,XMLBEANSCLASSPATH)
+$(call checkenve,SCOMP)
+$(call checkenve,SCOMPFLAGS)
 
-XMLDIR = xml
 
-ifeq ($(shell hostname -s),bass)
-XMLSRCDIR = $(SRCDIR)
-XMLCLASSDIR = $(CLASSDIR)
-else
-XMLSRCDIR = $(XMLDIR)/src
-XMLCLASSDIR = $(XMLDIR)/classes
-endif
-
-# If XMLBEANS_HOME is defined, search in ${XMLBEANS_HOME}/lib
-ifeq ($(XMLBEANS_HOME),)
-XMLBEANSCLASSPATH = $(EXTLIBDIR)/xbean.jar:$(EXTLIBDIR)/jsr173_api.jar
-else
-# XMLBEANS_HOME found. Find out whether this is an ant-build distribution
-XMLBEANSLIBDIR = $(firstword $(wildcard $(XMLBEANS_HOME)/build/lib))
-ifeq ($(XMLBEANSLIBDIR),)
-XMLBEANSLIBDIR = $(XMLBEANS_HOME)/lib
-endif
-XMLBEANSCLASSPATH = $(XMLBEANSLIBDIR)/xbean.jar:$(XMLBEANSLIBDIR)/jsr173_api.jar
-endif
 LIBNAME_GENERALXML=generalxml.jar
-
-SCOMP=$(shell which scomp 2>/dev/null)
-ifeq ($(SCOMP),)
-SCOMP=$(XMLBEANS_HOME)/bin/scomp
-endif
-
-SCOMPFLAGS = -src $(XMLSRCDIR) -d $(XMLCLASSDIR)
 
 APPCLASSPATH := $(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xalan.jar:$(EXTLIBDIR)/xbean.jar
@@ -86,14 +62,16 @@ corba: .corba
 
 .xml: $(LIBNAME_GENERALXML)
 	touch $@
+
 .PHONY: xmlinstall
 xmlinstall: .xml $(LIBDIR)
 	install -m 0644 $(LIBNAME_GENERALXML) $(LIBDIR)
+
 $(LIBNAME_GENERALXML):
-	$(RM) -r $(XMLCLASSDIR)/*
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
 		$(XMLDIR)/General.xsd \
 		$(XMLDIR)/Characteristic.xsd
+
 .PHONY: clean
 clean: cleanmach cleancorba
 	$(RM) $(LIBNAME)

@@ -7,41 +7,17 @@ IDL_SOURCES = $(IDLDIR)/map.idl
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,XMLBEANSCLASSPATH)
+$(call checkenve,SCOMP)
+$(call checkenve,SCOMPFLAGS)
 
 
-XMLDIR = xml
-
-ifeq ($(shell hostname -s),bass)
-XMLSRCDIR = $(SRCDIR)
-XMLCLASSDIR = $(CLASSDIR)
-else
-XMLSRCDIR = $(XMLDIR)/src
-XMLCLASSDIR = $(XMLDIR)/classes
-endif
-
-# If XMLBEANS_HOME is defined, search in ${XMLBEANS_HOME}/lib
-ifeq ($(XMLBEANS_HOME),)
-XMLBEANSCLASSPATH = $(EXTLIBDIR)/xbean.jar:$(EXTLIBDIR)/jsr173_api.jar
-else
-# XMLBEANS_HOME found. Find out whether this is an ant-build distribution
-XMLBEANSLIBDIR = $(firstword $(wildcard $(XMLBEANS_HOME)/build/lib))
-ifeq ($(XMLBEANSLIBDIR),)
-XMLBEANSLIBDIR = $(XMLBEANS_HOME)/lib
-endif
-XMLBEANSCLASSPATH = $(XMLBEANSLIBDIR)/xbean.jar:$(XMLBEANSLIBDIR)/jsr173_api.jar
-endif
 LIBNAME_GENERALXML=generalxml.jar
 LIBNAME_MAPXML=mapxml.jar
 
-SCOMP=$(shell which scomp 2>/dev/null)
-ifeq ($(SCOMP),)
-SCOMP=$(XMLBEANS_HOME)/bin/scomp
-endif
-
-SCOMPFLAGS = -src $(XMLSRCDIR) -d $(XMLCLASSDIR)
-
-
 APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar:$(LIBDIR)/filter.jar
+
+XMLCLASSPATH := $(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
 
 # If TROVE4J_HOME is defined, search in ${TROVE4J_HOME}/lib
 ifeq ($(TROVE4J_HOME),)
@@ -61,7 +37,7 @@ $(LIBNAME): .mach
 
 .mach: .corba .xml $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
@@ -94,7 +70,6 @@ xmlinstall: .xml $(LIBDIR)
 	install -m 0644 $(LIBNAME_MAPXML) $(LIBDIR)
 
 $(LIBNAME_MAPXML): 
-	$(RM) -r $(XMLCLASSDIR)/*
 	$(SCOMP) $(SCOMPFLAGS) -out $@ -cp $(XMLBEANSCLASSPATH):$(LIBDIR)/$(LIBNAME_GENERALXML) \
 		$(XMLDIR)/Map.xsd \
 		$(XMLDIR)/Collector.xsd \
