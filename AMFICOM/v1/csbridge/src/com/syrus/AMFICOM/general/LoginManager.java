@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.18 2005/08/08 11:38:11 arseniy Exp $
+ * $Id: LoginManager.java,v 1.19 2005/08/11 17:55:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/08 11:38:11 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/11 17:55:17 $
  * @author $Author: arseniy $
  * @module csbridge
  */
@@ -52,7 +52,7 @@ public final class LoginManager {
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
 	public static void login(final String login, final String password) throws CommunicationException, LoginException {
-		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
+		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
 			IdlIdentifierHolder userIdHolder = new IdlIdentifierHolder();
 			sessionKeyT = loginServer.login(login, password, userIdHolder);
@@ -77,7 +77,7 @@ public final class LoginManager {
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
 	public static void logout() throws CommunicationException, LoginException {
-		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
+		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
 			loginServer.logout(sessionKey.getTransferable());
 		}
@@ -95,10 +95,10 @@ public final class LoginManager {
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
 	public static Set getAvailableDomains() throws CommunicationException, LoginException {
-		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
+		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
-			IdlDomain[] domainsT = loginServer.transmitAvailableDomains(sessionKey.getTransferable());
-			Set<Domain> domains = new HashSet<Domain>(domainsT.length);
+			final IdlDomain[] domainsT = loginServer.transmitAvailableDomains(sessionKey.getTransferable());
+			final Set<Domain> domains = new HashSet<Domain>(domainsT.length);
 			for (int i = 0; i < domainsT.length; i++) {
 				try {
 					domains.add(new Domain(domainsT[i]));
@@ -123,7 +123,7 @@ public final class LoginManager {
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
 	public static void selectDomain(Identifier domainId1) throws CommunicationException {
-		LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
+		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
 			loginServer.selectDomain(sessionKey.getTransferable(), domainId1.getTransferable());
 			domainId = domainId1;
