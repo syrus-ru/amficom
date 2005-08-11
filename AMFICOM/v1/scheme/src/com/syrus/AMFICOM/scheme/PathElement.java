@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.62 2005/08/11 08:02:18 arseniy Exp $
+ * $Id: PathElement.java,v 1.63 2005/08/11 08:33:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.62 $, $Date: 2005/08/11 08:02:18 $
+ * @version $Revision: 1.63 $, $Date: 2005/08/11 08:33:45 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -639,7 +639,10 @@ public final class PathElement extends StorableObject
 	 * @see PathMember#getSequentialNumber()
 	 */
 	public int getSequentialNumber() {
-		assert this.getParentPathOwner().assertContains(this);
+//XXX During saving on server this method cannot work correctly.
+//XXX This is because method getPathMembers() of SchemePath cannot return SchemeElement's,
+//XXX which not saved yet.
+//		assert this.getParentPathOwner().assertContains(this);
 		return this.sequentialNumber;
 	}
 
