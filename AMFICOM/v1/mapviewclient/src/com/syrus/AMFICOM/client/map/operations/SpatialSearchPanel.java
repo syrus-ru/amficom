@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.12 2005/08/11 12:43:31 arseniy Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.13 2005/08/11 17:23:00 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,12 +40,13 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель поиска географических объектов
- * @version $Revision: 1.12 $, $Date: 2005/08/11 12:43:31 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/11 17:23:00 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */
- public class SpatialSearchPanel extends JPanel
-{
+ public class SpatialSearchPanel extends JPanel {
+	private static final long serialVersionUID = 181586229719837247L;
+
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 	JScrollPane jScrollPane = new JScrollPane();
 
@@ -65,29 +66,26 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 	private static Dimension buttonSize = new Dimension(24, 24);
 
-	public void setMapFrame(MapFrame mapFrame)
-	{
+	public void setMapFrame(final MapFrame mapFrame) {
 		this.mapFrame = mapFrame;
-		if(mapFrame == null)
+		if (mapFrame == null) {
 			this.foundList.removeAll();
+		}
 	}
-	
-	public MapFrame getMapFrame() 
-	{
+
+	public MapFrame getMapFrame() {
 		return this.mapFrame;
 	}
 
 	/**
 	 * По умолчанию
 	 */
-	public SpatialSearchPanel(MapFrame mapFrame)
-	{
-		jbInit();
-		setMapFrame(mapFrame);
+	public SpatialSearchPanel(final MapFrame mapFrame) {
+		this.jbInit();
+		this.setMapFrame(mapFrame);
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		this.setToolTipText(LangModelMap.getString("SearchTopologicalObjects"));
 		this.setLayout(this.gridBagLayout1);
 		this.setSize(new Dimension(370, 629));
@@ -95,36 +93,35 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 		this.searchButton.setPreferredSize(buttonSize);
 		this.searchButton.setMaximumSize(buttonSize);
 		this.searchButton.setMinimumSize(buttonSize);
-		this.searchButton.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					doSearch();
-				}
-			});
+		this.searchButton.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				SpatialSearchPanel.this.doSearch();
+			}
+		});
 		this.jScrollPane.getViewport().add(this.foundList);
 		this.jScrollPane.setAutoscrolls(true);
 		this.centerButton.setText(LangModelMap.getString("DoCenter"));
-		this.centerButton.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					doCenter();
-				}
-			});
+		this.centerButton.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				SpatialSearchPanel.this.doCenter();
+			}
+		});
 
-		this.searchField.addKeyListener(new KeyListener()
-			{
-				public void keyPressed(KeyEvent e)
-				{
-					if(e.getKeyCode() == KeyEvent.VK_ENTER)
-						doSearch();
+		this.searchField.addKeyListener(new KeyListener() {
+			public void keyPressed(KeyEvent e) {
+				if (e.getKeyCode() == KeyEvent.VK_ENTER) {
+					SpatialSearchPanel.this.doSearch();
 				}
-				public void keyReleased(KeyEvent e) {/*empty*/}
-				public void keyTyped(KeyEvent e) {/*empty*/}
-			});
+			}
 
-		GridBagConstraints constraints = new GridBagConstraints();
+			public void keyReleased(final KeyEvent e) {/* empty */
+			}
+
+			public void keyTyped(final KeyEvent e) {/* empty */
+			}
+		});
+
+		final GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.gridx = 0;
 		constraints.gridy = 0;
@@ -180,10 +177,10 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 		this.foundList.getSelectionModel().setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.foundList.setCellRenderer(new SpatialSearchPanel.SpatialObjectRenderer());
-		this.foundList.addMouseListener(new java.awt.event.MouseAdapter(){
-			public void mouseClicked(java.awt.event.MouseEvent e)
-			{
-				if (e.getClickCount() > 1)				
+		this.foundList.addMouseListener(new java.awt.event.MouseAdapter() {
+			@Override
+			public void mouseClicked(final java.awt.event.MouseEvent e) {
+				if (e.getClickCount() > 1)
 					SpatialSearchPanel.this.doCenter();
 			}
 		});
@@ -193,44 +190,43 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 	 * обработка нажатия на кнопку поиска. сам поиск запускается в отдельном
 	 * thread'е
 	 */
-	void doSearch()
-	{
-		if(this.searching)
+	void doSearch() {
+		if (this.searching) {
 			return;
-		if(this.mapFrame == null)
+		}
+		if (this.mapFrame == null) {
 			return;
-			
+		}
+
 		this.searchText = this.searchField.getText();
-		if(this.searchText.length() == 0)
+		if (this.searchText.length() == 0) {
 			return;
+		}
 		this.searching = true;
 		this.foundList.removeAll();
-		
-		Thread t = new Thread(new Runnable() 
-		{
-			public void run() 
-			{
+
+		final Thread t = new Thread(new Runnable() {
+			public void run() {
 				search();
 			}
 		});
 		t.start();
 	}
-	
+
 	/**
-	 * выполнение поиска географических объектов по шаблону
-	 * найденные объекты помещаются в список foundList
+	 * выполнение поиска географических объектов по шаблону найденные объекты
+	 * помещаются в список foundList
 	 */
-	public void search()
-	{
+	public void search() {
 		this.searchButton.setEnabled(false);
 		try {
-			List found = this.mapFrame.getMapViewer().getRenderer().getLoader().findSpatialObjects(this.searchText);
+			final List<SpatialObject> found = this.mapFrame.getMapViewer().getRenderer().getLoader().findSpatialObjects(this.searchText);
 			this.foundList.setListData(found.toArray());
-		} catch(MapConnectionException e) {
-			this.foundList.setListData(new String[] {e.getMessage()});
+		} catch (MapConnectionException e) {
+			this.foundList.setListData(new String[] { e.getMessage() });
 			e.printStackTrace();
-		} catch(MapDataException e) {
-			this.foundList.setListData(new String[] {e.getMessage()});
+		} catch (MapDataException e) {
+			this.foundList.setListData(new String[] { e.getMessage() });
 			e.printStackTrace();
 		}
 		this.searchButton.setEnabled(true);
@@ -241,38 +237,30 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 	 * обработка нажатия кнопки Центрировать. вид карты центрируется по 
 	 * среднему геометрическому центров выделенных в списке объектов
 	 */
-	void doCenter()
-	{
+	void doCenter() {
 		try {
-			SpatialObject so = (SpatialObject )this.foundList.getSelectedValue();
+			final SpatialObject so = (SpatialObject) this.foundList.getSelectedValue();
 			this.mapFrame.getMapViewer().centerSpatialObject(so);
 			this.mapFrame.getMapViewer().repaint(true);
-		} catch(MapException e) {
-			this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
+		} catch (MapException e) {
+			this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this,
+					StatusMessageEvent.STATUS_MESSAGE,
+					"Ошибка соединения с картографическими данными"));
 			e.printStackTrace();
 		}
 	}
-	
+
 	/**
 	 * отрисовка географических объектов в списке - отображение их заголовков
 	 */
-	protected class SpatialObjectRenderer extends DefaultListCellRenderer
-	{
-		public Component getListCellRendererComponent(
-				JList list,
-				Object value,
-				int index,
-				boolean isSelected,
-				boolean cellHasFocus)
-		{
-			JLabel lbl = (JLabel )super.getListCellRendererComponent(
-				list,
-				value,
-				index,
-				isSelected,
-				cellHasFocus);
-				
-			SpatialObject so = (SpatialObject )value;
+	protected class SpatialObjectRenderer extends DefaultListCellRenderer {
+		private static final long serialVersionUID = -218545524571005590L;
+
+		@Override
+		public Component getListCellRendererComponent(JList list, Object value, int index, boolean isSelected, boolean cellHasFocus) {
+			final JLabel lbl = (JLabel) super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+
+			final SpatialObject so = (SpatialObject) value;
 			lbl.setText(so.getLabel());
 			return lbl;
 		}
