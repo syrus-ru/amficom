@@ -1,8 +1,14 @@
+#
+# $Id: Makefile,v 1.8 2005/08/11 08:56:40 arseniy Exp $
+#
+# vim:set ft=make:
+#
+
 MODULE_NAME := filterclient
 
 LIBNAME := $(MODULE_NAME).jar
-LIBNAME_INTERFACE := $(MODULE_NAME)_interface.jar
 ARCHFILE := $(MODULE_NAME).tar.gz
+
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
@@ -27,7 +33,7 @@ $(LIBNAME): .mach
 
 .PHONY:	clean
 clean:	cleanmach
-	$(RM)
+	$(RM) $(LIBNAME)
 
 .PHONY:	cleanmach
 cleanmach:
