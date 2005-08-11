@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.73 2005/08/08 14:25:23 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.74 2005/08/11 14:37:16 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,19 +65,22 @@ import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElement;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementHelper;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
 import com.syrus.util.Log;
 
 /**
  * #04 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.73 $, $Date: 2005/08/08 14:25:23 $
+ * @author $Author: max $
+ * @version $Revision: 1.74 $, $Date: 2005/08/11 14:37:16 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
 		implements SchemeCellContainer {
 	private static final long serialVersionUID = 3618977875802797368L;
 
+	private SchemeElementKind kind;
+	
 	private Identifier equipmentId;
 
 	private Identifier equipmentTypeId;
@@ -103,7 +106,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	private Identifier ugoCellId;
 
 	private boolean equipmentTypeSet = false;
-
+		
 	/**
 	 * @param id
 	 * @throws RetrieveObjectException
@@ -146,6 +149,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
+			final SchemeElementKind kind,
 			final String name,
 			final String description,
 			final String label,
@@ -159,6 +163,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final Scheme parentScheme,
 			final SchemeElement parentSchemeElement) {
 		super(id, created, modified, creatorId, modifierId, version, name, description, parentScheme);
+		this.kind = kind;
 		this.label = label;
 
 		assert equipmentType == null || equipment == null;
@@ -231,7 +236,38 @@ public final class SchemeElement extends AbstractSchemeElement
 			final Scheme childScheme, final Scheme parentScheme)
 	throws CreateObjectException {
 		try {
-			final SchemeElement schemeElement = createInstance(creatorId, childScheme.getName(), parentScheme);
+			String name = childScheme.getName();
+			assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+			assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+			assert parentScheme != null : NON_NULL_EXPECTED;
+			//final SchemeElement schemeElement = createInstance(creatorId, name, "", "", null, null,
+			//		null, null, null, null, null, parentScheme);
+			final SchemeElement schemeElement;
+			try {
+				final Date created = new Date();
+				schemeElement = new SchemeElement(IdentifierPool.getGeneratedIdentifier(SCHEMEELEMENT_CODE),
+						created,
+						created,
+						creatorId,
+						creatorId,
+						StorableObjectVersion.createInitial(),
+						SchemeElementKind.SCHEMED,
+						name,
+						"",
+						"",
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						null,
+						parentScheme,
+						null);
+				schemeElement.markAsChanged();
+			} catch (final IdentifierGenerationException ige) {
+				throw new CreateObjectException("SchemeElement.createInstance | cannot generate identifier ", ige);
+			}
 
 			if (schemeElement.clonedIdMap == null) {
 				schemeElement.clonedIdMap = new HashMap<Identifier, Identifier>();
@@ -388,6 +424,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					creatorId,
 					creatorId,
 					StorableObjectVersion.createInitial(),
+					SchemeElementKind.EQUIPMENTED,
 					name,
 					description,
 					label,
@@ -450,6 +487,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					creatorId,
 					creatorId,
 					StorableObjectVersion.createInitial(),
+					SchemeElementKind.EQUIPMENTED,					
 					name,
 					description,
 					label,
@@ -629,14 +667,20 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	Identifier getEquipmentId() {
-		assert true || this.assertEquipmentTypeSetStrict() : OBJECT_BADLY_INITIALIZED;
-		if (!this.assertEquipmentTypeSetStrict()) {
-			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+		if(!isSchemed()) {
+			assert true || this.assertEquipmentTypeSetStrict() : OBJECT_BADLY_INITIALIZED;
+			if (!this.assertEquipmentTypeSetStrict()) {
+				throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+			}
+			assert this.equipmentId.isVoid() || this.equipmentId.getMajor() == EQUIPMENT_CODE;
 		}
-		assert this.equipmentId.isVoid() || this.equipmentId.getMajor() == EQUIPMENT_CODE;
 		return this.equipmentId;
 	}
 	
+	private boolean isSchemed() {
+		return this.kind == SchemeElementKind.SCHEMED ? true : false;
+	}
+
 	/**
 	 * A wrapper around {@link #getEquipmentId()}.
 	 */
@@ -650,11 +694,13 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	Identifier getEquipmentTypeId() {
-		assert true || this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
-		if (!this.assertEquipmentTypeSetStrict()) {
-			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+		if(!isSchemed()) {
+			assert true || this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
+			if (!this.assertEquipmentTypeSetStrict()) {
+				throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+			}
+			assert this.equipmentTypeId.isVoid() || this.equipmentTypeId.getMajor() == EQUIPMENT_TYPE_CODE;
 		}
-		assert this.equipmentTypeId.isVoid() || this.equipmentTypeId.getMajor() == EQUIPMENT_TYPE_CODE;
 		return this.equipmentTypeId;
 	}
 
@@ -892,6 +938,7 @@ public final class SchemeElement extends AbstractSchemeElement
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
 				this.version.longValue(),
+				this.kind,
 				super.getName(),
 				super.getDescription(),
 				this.label,

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementDatabase.java,v 1.16 2005/07/28 17:42:35 bass Exp $
+ * $Id: SchemeElementDatabase.java,v 1.17 2005/08/11 14:37:16 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/07/28 17:42:35 $
+ * @author $Author: max $
+ * @version $Revision: 1.17 $, $Date: 2005/08/11 14:37:16 $
  * @module scheme
  */
 public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeElement> {
@@ -164,6 +164,7 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 						null,
 						null,
 						ILLEGAL_VERSION,
+						null,
 						null,
 						null,
 						null,

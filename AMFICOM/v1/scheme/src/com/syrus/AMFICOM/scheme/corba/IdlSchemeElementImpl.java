@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeElementImpl.java,v 1.4 2005/07/24 17:08:16 bass Exp $
+ * $Id: IdlSchemeElementImpl.java,v 1.5 2005/08/11 14:37:16 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,13 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/24 17:08:16 $
+ * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2005/08/11 14:37:16 $
  * @module scheme
  */
 final class IdlSchemeElementImpl extends IdlSchemeElement {
@@ -35,6 +36,7 @@ final class IdlSchemeElementImpl extends IdlSchemeElement {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
+			final SchemeElementKind kind,
 			final String name,
 			final String description,
 			final String label,
@@ -53,6 +55,7 @@ final class IdlSchemeElementImpl extends IdlSchemeElement {
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
+		this.kind = kind;
 		this.name = name;
 		this.description = description;
 		this.label = label;
