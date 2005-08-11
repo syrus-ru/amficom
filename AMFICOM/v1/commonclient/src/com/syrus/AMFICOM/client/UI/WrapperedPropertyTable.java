@@ -3,6 +3,10 @@ package com.syrus.AMFICOM.client.UI;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -19,7 +23,7 @@ import javax.swing.table.TableColumn;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/11 08:48:44 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/11 11:53:05 $
  * @author $Author: bob $
  * @module generalclient_v1
  */
@@ -105,6 +109,14 @@ public class WrapperedPropertyTable extends ATable {
 
 					}
 				});
+				
+				comboBox.addFocusListener(new FocusAdapter() {
+					@Override
+					public void focusLost(FocusEvent e) {
+						WrapperedPropertyTable.this.editingStopped(null);
+					}
+				});
+				
 				this.cellEditors[mRowIndex][1] = new DefaultCellEditor(comboBox);
 			} else {
 				Class clazz = model.wrapper.getPropertyClass(model.keys[mRowIndex]);
@@ -120,7 +132,7 @@ public class WrapperedPropertyTable extends ATable {
 		this.cellEditors = new TableCellEditor[this.getModel().getRowCount()][this.getModel().getColumnCount()];
 		updateModel();
 		this.setColumnSelectionAllowed(false);
-		this.setRowSelectionAllowed(true);
+		this.setRowSelectionAllowed(true);		
 	}
 
 	public TableCellEditor getCellEditor(int row, int column) {
