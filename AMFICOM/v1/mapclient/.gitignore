@@ -10,6 +10,8 @@ test
 *.jpx
 *.tar
 *.gz
+*.jar
 *.swp
+.mach
 Makefile.inc
 .pmd
