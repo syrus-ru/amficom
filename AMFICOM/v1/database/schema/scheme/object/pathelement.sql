@@ -1,4 +1,4 @@
--- $Id: pathelement.sql,v 1.7 2005/06/15 17:03:10 bass Exp $
+-- $Id: pathelement.sql,v 1.8 2005/08/11 11:35:20 arseniy Exp $
 
 CREATE TABLE PathElement (
 	id NUMBER(19) NOT NULL,
@@ -32,21 +32,36 @@ CREATE TABLE PathElement (
 		REFERENCES SchemePath(id) ON DELETE CASCADE,
 --
 	-- TODO: check for kind value, too.
-	CONSTRAINT pathelement_kind_chk CHECK
-		((start_abstract_scheme_port_id IS NOT NULL 
-		AND end_abstract_scheme_port_id IS NOT NULL
-		AND scheme_cable_thread_id IS NULL 
-		AND scheme_link_id IS NULL)
-		OR (start_abstract_scheme_port_id IS NULL
-		AND end_abstract_scheme_port_id IS NULL
-		AND scheme_cable_thread_id IS NOT NULL
-		AND scheme_link_id IS NULL)
-		OR (start_abstract_scheme_port_id IS NULL
-		AND end_abstract_scheme_port_id IS NULL
-		AND scheme_cable_thread_id IS NULL
-		AND scheme_link_id IS NOT NULL))
+	CONSTRAINT pathelement_kind_chk CHECK (
+		(kind = 0
+			AND scheme_cable_thread_id IS NULL
+			AND scheme_link_id IS NULL)
+		OR (kind = 1
+			AND start_abstract_scheme_port_id IS NULL
+			AND end_abstract_scheme_port_id IS NULL
+			AND scheme_cable_thread_id IS NOT NULL
+			AND scheme_link_id IS NULL)
+		OR (kind = 2
+			AND start_abstract_scheme_port_id IS NULL
+			AND end_abstract_scheme_port_id IS NULL
+			AND scheme_cable_thread_id IS NULL
+			AND scheme_link_id IS NOT NULL)
+	)
+--	CONSTRAINT pathelement_kind_chk CHECK
+--		((start_abstract_scheme_port_id IS NOT NULL 
+--		AND end_abstract_scheme_port_id IS NOT NULL
+--		AND scheme_cable_thread_id IS NULL 
+--		AND scheme_link_id IS NULL)
+--		OR (start_abstract_scheme_port_id IS NULL
+--		AND end_abstract_scheme_port_id IS NULL
+--		AND scheme_cable_thread_id IS NOT NULL
+--		AND scheme_link_id IS NULL)
+--		OR (start_abstract_scheme_port_id IS NULL
+--		AND end_abstract_scheme_port_id IS NULL
+--		AND scheme_cable_thread_id IS NULL
+--		AND scheme_link_id IS NOT NULL))
 );
 
-COMMENT ON TABLE PathElement IS '$Id: pathelement.sql,v 1.7 2005/06/15 17:03:10 bass Exp $';
+COMMENT ON TABLE PathElement IS '$Id: pathelement.sql,v 1.8 2005/08/11 11:35:20 arseniy Exp $';
 
 CREATE SEQUENCE PathElement_Seq ORDER;
