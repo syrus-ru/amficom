@@ -1,3 +1,10 @@
+/*
+ * $Id: MapInfoCorbaConnection.java,v 1.4 2005/08/11 12:36:44 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
 package com.syrus.AMFICOM.client.map.mapinfo;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
@@ -8,6 +15,11 @@ import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServerHelper;
 
+/**
+ * @version $Revision: 1.4 $, $Date: 2005/08/11 12:36:44 $
+ * @author $Author: arseniy $
+ * @module mapinfo
+ */
 public class MapInfoCorbaConnection extends MapInfoConnection {
 	private MscharServer mscharServer;
 
