@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.8 2005/08/10 14:02:25 bob Exp $
+ * $Id: UserBean.java,v 1.9 2005/08/11 13:12:30 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/11 13:12:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -218,10 +218,12 @@ public class UserBean extends Bean {
 			UserBeanWrapper.FULL_NAME);
 	}
 
+	@Override
 	public final String getName() {
 		return this.user.getName();
 	}
 
+	@Override
 	public final void setName(final String name) {
 		String name2 = this.user.getName();
 		if (name2 != name &&

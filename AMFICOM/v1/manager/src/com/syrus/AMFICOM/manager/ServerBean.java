@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBean.java,v 1.3 2005/08/10 14:02:25 bob Exp $
+ * $Id: ServerBean.java,v 1.4 2005/08/11 13:12:30 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/11 13:12:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -61,6 +61,7 @@ public class ServerBean extends Bean {
 		return this.server.getName();
 	}
 	
+	@Override
 	public final void setName(String name) {
 		String name2 = this.server.getName();
 		if (name2 != name &&
