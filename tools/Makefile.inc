@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.31 2005/08/04 13:59:38 bass Exp $
+# $Id: Makefile.inc,v 1.32 2005/08/11 10:21:41 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -102,6 +102,34 @@ ifeq ($(jdevrt),)
 jdevrt = $(wildcard $(ORACLE_HOME)/jdev/lib/jdev-rt.zip)
 endif
 DEPRECATEDCLASSPATH = $(jdevrt)
+
+# If XMLBEANS_HOME is defined, search in ${XMLBEANS_HOME}/lib
+ifeq ($(XMLBEANS_HOME),)
+XMLBEANSCLASSPATH = $(EXTLIBDIR)/xbean.jar:$(EXTLIBDIR)/jsr173_api.jar
+else
+# XMLBEANS_HOME found. Find out whether this is an ant-build distribution
+XMLBEANSLIBDIR = $(firstword $(wildcard $(XMLBEANS_HOME)/build/lib))
+ifeq ($(XMLBEANSLIBDIR),)
+XMLBEANSLIBDIR = $(XMLBEANS_HOME)/lib
+endif
+XMLBEANSCLASSPATH = $(XMLBEANSLIBDIR)/xbean.jar:$(XMLBEANSLIBDIR)/jsr173_api.jar
+endif
+
+XMLDIR = xml
+ifeq ($(shell hostname -s),bass)
+XMLSRCDIR = $(SRCDIR)
+XMLCLASSDIR = $(CLASSDIR)
+else
+XMLSRCDIR = $(XMLDIR)/src
+XMLCLASSDIR = $(XMLDIR)/classes
+endif
+
+SCOMP=$(shell which scomp 2>/dev/null)
+ifeq ($(SCOMP),)
+SCOMP=$(XMLBEANS_HOME)/bin/scomp
+endif
+
+SCOMPFLAGS = -src $(XMLSRCDIR) -d $(XMLCLASSDIR)
 
 ENCODING ?= KOI8-R
 JAVAC_WARNOFF_FLAG = -nowarn
