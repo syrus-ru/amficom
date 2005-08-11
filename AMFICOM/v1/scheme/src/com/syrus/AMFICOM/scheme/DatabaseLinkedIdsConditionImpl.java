@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.28 2005/08/10 13:19:09 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.29 2005/08/11 13:32:46 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.map.SiteNodeWrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.28 $, $Date: 2005/08/10 13:19:09 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/11 13:32:46 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -228,7 +228,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					buffer.append(ObjectEntities.SCHEMEDEVICE);
 					buffer.append(StorableObjectDatabase.SQL_WHERE);
 					
-					buffer.append(super.getLinkedQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID, SchemeElementWrapper.COLUMN_ID, ObjectEntities.SCHEMEELEMENT));
+					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
 					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					
@@ -251,7 +251,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					buffer.append(StorableObjectDatabase.SQL_FROM);
 					buffer.append(ObjectEntities.SCHEMEDEVICE);
 					buffer.append(StorableObjectDatabase.SQL_WHERE);
-					buffer.append(super.getLinkedQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID, SchemeElementWrapper.COLUMN_ID, ObjectEntities.SCHEMEELEMENT));
+					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
 					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					
@@ -275,7 +275,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					buffer.append(ObjectEntities.SCHEMEDEVICE);
 					buffer.append(StorableObjectDatabase.SQL_WHERE);
 					
-					buffer.append(super.getLinkedQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID, SchemeElementWrapper.COLUMN_ID, ObjectEntities.SCHEMEELEMENT));
+					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
 					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					
@@ -298,7 +298,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					buffer.append(StorableObjectDatabase.SQL_FROM);
 					buffer.append(ObjectEntities.SCHEMEDEVICE);
 					buffer.append(StorableObjectDatabase.SQL_WHERE);
-					buffer.append(super.getLinkedQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID, SchemeElementWrapper.COLUMN_ID, ObjectEntities.SCHEMEELEMENT));
+					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
 					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					
