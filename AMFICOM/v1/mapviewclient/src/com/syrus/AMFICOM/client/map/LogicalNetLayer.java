@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.108 2005/08/10 15:30:45 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.109 2005/08/11 07:18:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.108 $, $Date: 2005/08/10 15:30:45 $
+ * @version $Revision: 1.109 $, $Date: 2005/08/11 07:18:04 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer
@@ -1127,7 +1127,7 @@ public final class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.108 $, $Date: 2005/08/10 15:30:45 $
+	 * @version $Revision: 1.109 $, $Date: 2005/08/11 07:18:04 $
 	 * @module mapviewclient_v1_modifying
 	 */
 	private class VisualMapElement
@@ -1444,12 +1444,14 @@ public final class LogicalNetLayer
 		Set<NodeLink> allLinksForNodeProcessed = this.linksForNodes.get(nodeProcessed);
 		
 		boolean hasUncalculatedLinks = false;
-		for (NodeLink outgoingLink : allLinksForNodeProcessed) {
-			//Исключаем из списка линк, по которому мы пришли в данный узел
-			if (!(outgoingLink == incomingLink)
-					&& !nodeLinksCalculated.get(outgoingLink).booleanValue()) {
-				hasUncalculatedLinks = true;
-				break;
+		if (allLinksForNodeProcessed != null) {
+			for (NodeLink outgoingLink : allLinksForNodeProcessed) {
+				//Исключаем из списка линк, по которому мы пришли в данный узел
+				if (!(outgoingLink == incomingLink)
+						&& !nodeLinksCalculated.get(outgoingLink).booleanValue()) {
+					hasUncalculatedLinks = true;
+					break;
+				}
 			}
 		}
 		
