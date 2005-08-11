@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.1 2005/08/11 11:56:38 arseniy Exp $
+# $Id: Makefile,v 1.2 2005/08/11 18:55:03 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -18,7 +18,6 @@ EXTCLASSPATH := $(EXTLIBDIR)/xalan.jar
 
 MAPINFODIR := $(EXTLIBDIR)/mapinfo
 COMMONMAPINFODIR := $(MAPINFODIR)/common
-CLIENTMAPINFODIR := $(MAPINFODIR)/client
 MAPINFOCLASSPATH := $(COMMONMAPINFODIR)/jdom.jar:$(COMMONMAPINFODIR)/commons-logging.jar:$(COMMONMAPINFODIR)/micsys.jar:$(COMMONMAPINFODIR)/miutil.jar:$(COMMONMAPINFODIR)/mxj.jar:$(COMMONMAPINFODIR)/mxjgeom.jar
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/map/*.java) \
