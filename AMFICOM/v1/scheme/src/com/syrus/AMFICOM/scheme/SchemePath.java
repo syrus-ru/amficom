@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.69 2005/08/08 14:25:23 arseniy Exp $
+ * $Id: SchemePath.java,v 1.70 2005/08/11 08:02:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRE
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
@@ -71,7 +72,7 @@ import com.syrus.util.Log;
  * #16 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.69 $, $Date: 2005/08/08 14:25:23 $
+ * @version $Revision: 1.70 $, $Date: 2005/08/11 08:02:44 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -500,7 +501,8 @@ public final class SchemePath extends StorableObject
 	 */
 	public SchemeElement getStartSchemeElement() {
 		final SortedSet<PathElement> pathElements = this.getPathMembers();
-		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
+		if (pathElements.isEmpty())
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 		final PathElement startPathElement = pathElements.first();
 		assert startPathElement.getKind().value() == IdlKind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
 		return startPathElement.getSchemeElement();
@@ -512,7 +514,8 @@ public final class SchemePath extends StorableObject
 	 */
 	public SchemeElement getEndSchemeElement() {
 		final SortedSet<PathElement> pathElements = this.getPathMembers();
-		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
+		if (pathElements.isEmpty())
+			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
 		final PathElement endPathElement = pathElements.last();
 		assert endPathElement.getKind().value() == IdlKind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
 		return endPathElement.getSchemeElement();
