@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.11 2005/07/10 13:41:28 bass Exp $
+# $Id: Makefile,v 1.12 2005/08/11 08:55:37 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -7,64 +7,50 @@
 MODULE_NAME := filter
 
 LIBNAME := $(MODULE_NAME).jar
+ARCHFILE := $(MODULE_NAME).tar.gz
+
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
 APPCLASSPATH := $(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 
-.PHONY: export
-export: $(LIBNAME)
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/filter/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/logic/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/newFilter/*.java)
 
-.PHONY: all
-all: .all
 
-.all: .sqlj
-	echo $(APPCLASSPATH)
-	$(JAVAC) $(JAVACFLAGS) \
-		 -classpath $(APPCLASSPATH) \
-	 	$(shell find $(SRCDIR) -name '*.java')
-	touch $@
+all: $(LIBNAME)
 
-.PHONY: sqlj
-sqlj: .sqlj
-
-.sqlj: $(CLASSDIR)
-	echo "sqlj.compiler-executable=$(JAVAC) $(JAVACFLAGS) -sourcepath $(SRCDIR)" > sqlj.properties
-	$(RM) \
-		$(filter $(foreach source, $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj')), $(foreach src_suffix, $(SRC_SUFFIXES), $(source)$(src_suffix))), $(shell find $(SRCDIR) -name '*\.java')) \
-		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)')
-	touch $@
-
-.PHONY: sqljclean
-sqljclean:
-	$(RM) \
-		.sqlj
-
-.PHONY: clean
-clean: sqljclean
-	$(RM) \
-		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
-		.all
-
-.PHONY: dist
-dist: distclean
-	$(RM) ../$(MODULE_NAME)-$(MODULE_VERSION).tar*
-	cd .. && tar cf $(MODULE_NAME)-$(MODULE_VERSION).tar $(MODULE_NAME)
-	bzip2 -9 ../$(MODULE_NAME)-$(MODULE_VERSION).tar
-
-.PHONY: distclean
-distclean: clean
-	$(RM) -r \
-		$(CLASSDIR) \
-		SQLChecker.cache \
-		sqlj.properties \
-		*.jar
-
-$(LIBNAME): .all
-	$(JAR) cf $@ \
+$(LIBNAME): .mach
+	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
+
+.mach:
+	$(JAVAC) $(JAVACFLAGS) \
+		-classpath $(APPCLASSPATH):$(CLASSDIR) \
+		$(SOURCES)
+	touch $@
+
+.PHONY:	clean
+clean:	cleanmach
+	$(RM) $(LIBNAME)
+
+.PHONY:	cleanmach
+cleanmach:
+	$(RM) $(subst $(SRCDIR),$(CLASSDIR),$(subst .java,*.class,$(SOURCES)))
+	$(RM) .mach
+
 
 #### Install ####
 install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
+
+#### Archive ####
+.PHONY:	arch
+arch:
+	tar -czvf $(ARCHFILE) \
+		Makefile \
+		$(SOURCES)
+
