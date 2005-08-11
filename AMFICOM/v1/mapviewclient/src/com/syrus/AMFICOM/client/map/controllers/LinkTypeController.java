@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.46 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: LinkTypeController.java,v 1.47 2005/08/11 13:55:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: arseniy $
- * @version $Revision: 1.46 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.47 $, $Date: 2005/08/11 13:55:41 $
  * @module mapviewclient
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -57,27 +57,27 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * {@link #getColor(PhysicalLinkType)}, созданный объект помещается в
 	 * хэш-таблицу и при последующих обращениях используется повторно.
 	 */
-	private static java.util.Map colorsHolder = new HashMap();
+	private static java.util.Map<Identifier, Color> colorsHolder = new HashMap<Identifier, Color>();
 	/**
-	 * Хэш-таблица цветов сигнала тревоги для типов линий. Для того, чтобы 
-	 * объект {@link Color} не создавался каждый раз из атрибута при вызове 
+	 * Хэш-таблица цветов сигнала тревоги для типов линий. Для того, чтобы объект
+	 * {@link Color} не создавался каждый раз из атрибута при вызове
 	 * {@link #getAlarmedColor(PhysicalLinkType)}, созданный объект помещается в
 	 * хэш-таблицу и при последующих обращениях используется повторно.
 	 */
-	private static java.util.Map alarmedColorsHolder = new HashMap();
+	private static java.util.Map<Identifier, Color> alarmedColorsHolder = new HashMap<Identifier, Color>();
 
 	/** Хэш-таблица цветов для предустановленных типов линии. */
-	private static java.util.Map lineColors = new HashMap();
+	private static java.util.Map<String, Color> lineColors = new HashMap<String, Color>();
 	/** Хэш-таблица толщины линии для предустановленных типов линии. */
-	private static java.util.Map lineThickness = new HashMap();
+	private static java.util.Map<String, Integer> lineThickness = new HashMap<String, Integer>();
 	/** Хэш-таблица размерности привязки для предустановленных типов линии. */
-	private static java.util.Map bindDimensions = new HashMap();
+	private static java.util.Map<String, IntDimension> bindDimensions = new HashMap<String, IntDimension>();
 
 	/**
 	 * Instance
 	 */
 	private static LinkTypeController instance = null;
-	
+
 	static {
 		lineColors.put(PhysicalLinkType.DEFAULT_COLLECTOR, Color.DARK_GRAY);
 		lineColors.put(PhysicalLinkType.DEFAULT_TUNNEL, Color.BLACK);
@@ -114,86 +114,86 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @return instance
 	 */
 	public static MapElementController getInstance() {
-		if(instance == null)
+		if (instance == null) {
 			instance = new LinkTypeController();
+		}
 		return instance;
 	}
 
 	/**
 	 * {@inheritDoc} Suppress since PhysicalLinkType is not really a Map Element
 	 */
-	public String getToolTipText(MapElement mapElement) {
+	public String getToolTipText(final MapElement mapElement) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc} Suppress since PhysicalLinkType is not really a Map Element
 	 */
-	public boolean isSelectionVisible(MapElement mapElement) {
+	@Override
+	public boolean isSelectionVisible(final MapElement mapElement) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc} Suppress since PhysicalLinkType is not really a Map Element
 	 */
-	public boolean isElementVisible(
-			MapElement mapElement,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
+	public boolean isElementVisible(final MapElement mapElement, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc} Suppress since PhysicalLinkType is not really a Map Element
 	 */
-	public void paint(
-			MapElement mapElement,
-			Graphics g,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
+	public void paint(final MapElement mapElement, final Graphics g, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc} Suppress since PhysicalLinkType is not really a Map Element
 	 */
-	public boolean isMouseOnElement(
-			MapElement mapElement,
-			Point currentMousePoint)
-			throws MapConnectionException, MapDataException {
+	public boolean isMouseOnElement(final MapElement mapElement, final Point currentMousePoint)
+			throws MapConnectionException,
+				MapDataException {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * Получить цвет по кодовому имени для предустановленного типа линии.
 	 * 
-	 * @param codename кодовое имя
+	 * @param codename
+	 *        кодовое имя
 	 * @return цвет
 	 */
-	public static Color getLineColor(String codename) {
-		return (Color )lineColors.get(codename);
+	public static Color getLineColor(final String codename) {
+		return lineColors.get(codename);
 	}
 
 	/**
-	 * Получить толщину линии по кодовому имени для предустановленного типа
-	 * линии.
+	 * Получить толщину линии по кодовому имени для предустановленного типа линии.
 	 * 
-	 * @param codename кодовое имя
+	 * @param codename
+	 *        кодовое имя
 	 * @return толщина
 	 */
-	public static int getLineThickness(String codename) {
-		return ((Integer )lineThickness.get(codename)).intValue();
+	public static int getLineThickness(final String codename) {
+		return lineThickness.get(codename).intValue();
 	}
 
 	/**
-	 * Получить размерность привязки по кодовому имени для предустановленного
-	 * типа линии.
+	 * Получить размерность привязки по кодовому имени для предустановленного типа
+	 * линии.
 	 * 
-	 * @param codename кодовое имя
+	 * @param codename
+	 *        кодовое имя
 	 * @return размерность привязки
 	 */
-	public static IntDimension getBindDimension(String codename) {
-		return (IntDimension )bindDimensions.get(codename);
+	public static IntDimension getBindDimension(final String codename) {
+		return bindDimensions.get(codename);
 	}
 
 	/**
@@ -203,21 +203,20 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @param cType тип атрибута
 	 * @return атрибут
 	 */
-	public static Characteristic getCharacteristic(
-			PhysicalLinkType linkType,
-			CharacteristicType cType) {
+	public static Characteristic getCharacteristic(final PhysicalLinkType linkType, final CharacteristicType cType) {
 		try {
-			long d = System.nanoTime();
-			Set<Characteristic> characteristics = linkType.getCharacteristics(false);
-			long f = System.nanoTime();
+			final long d = System.nanoTime();
+			final Set<Characteristic> characteristics = linkType.getCharacteristics(false);
+			final long f = System.nanoTime();
 			MapViewController.addTime4(f - d);
-//			Log.debugMessage("linkType.getCharacteristics() at " + (f - d) + " ns", Level.INFO);
-			for(Iterator it = characteristics.iterator(); it.hasNext();) {
-				Characteristic ch = (Characteristic )it.next();
-				if(ch.getType().equals(cType))
+			// Log.debugMessage("linkType.getCharacteristics() at " + (f - d) + " ns",
+			// Level.INFO);
+			for (final Characteristic ch : characteristics) {
+				if (ch.getType().equals(cType)) {
 					return ch;
+				}
 			}
-		} catch(ApplicationException e) {
+		} catch (ApplicationException e) {
 			Log.debugException(e, Level.WARNING);
 		}
 		return null;
@@ -230,15 +229,11 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @param linkType тип линии
 	 * @param size толщина линии
 	 */
-	public void setLineSize(Identifier userId, PhysicalLinkType linkType, int size)
-	{
+	public void setLineSize(final Identifier userId, final PhysicalLinkType linkType, final int size) {
 		Characteristic attribute = getCharacteristic(linkType, this.thicknessCharType);
-		if(attribute == null)
-		{
-			try
-			{
-				attribute = Characteristic.createInstance(
-						userId,
+		if (attribute == null) {
+			try {
+				attribute = Characteristic.createInstance(userId,
 						this.thicknessCharType,
 						"name",
 						"1",
@@ -246,14 +241,11 @@ public final class LinkTypeController extends AbstractLinkController {
 						linkType,
 						true,
 						true);
-				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute, userId, true);
-			}
-			catch (CreateObjectException e)
-			{
+			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
-			} catch(IllegalObjectEntityException e) {
+			} catch (IllegalObjectEntityException e) {
 				e.printStackTrace();
 				return;
 			} catch (ApplicationException e) {
@@ -265,18 +257,19 @@ public final class LinkTypeController extends AbstractLinkController {
 	}
 
 	/**
-	 * Получить толщину линии. Толщина определяется
-	 * атрибутом {@link AbstractLinkController#ATTRIBUTE_THICKNESS}. 
-	 * В случае, если такого атрибута у элемента нет, берется значение 
-	 * по умолчанию ({@link MapPropertiesManager#getThickness()}).
-	 * @param linkType тип линии
+	 * Получить толщину линии. Толщина определяется атрибутом
+	 * {@link AbstractLinkController#ATTRIBUTE_THICKNESS}. В случае, если такого
+	 * атрибута у элемента нет, берется значение по умолчанию ({@link MapPropertiesManager#getThickness()}).
+	 * 
+	 * @param linkType
+	 *        тип линии
 	 * @return толщина линии
 	 */
-	public int getLineSize(PhysicalLinkType linkType)
-	{
-		Characteristic ea = getCharacteristic(linkType, this.thicknessCharType);
-		if(ea == null)
+	public int getLineSize(final PhysicalLinkType linkType) {
+		final Characteristic ea = getCharacteristic(linkType, this.thicknessCharType);
+		if (ea == null) {
 			return MapPropertiesManager.getThickness();
+		}
 		return Integer.parseInt(ea.getValue());
 	}
 
@@ -287,30 +280,16 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @param linkType тип линии
 	 * @param style стиль
 	 */
-	public void setStyle(Identifier userId, PhysicalLinkType linkType, String style)
-	{
+	public void setStyle(final Identifier userId, final PhysicalLinkType linkType, final String style) {
 		Characteristic attribute = getCharacteristic(linkType, this.styleCharType);
-		if(attribute == null)
-		{
-			try
-			{
-				attribute = Characteristic.createInstance(
-						userId,
-						this.styleCharType,
-						"name",
-						"1",
-						style,
-						linkType,
-						true,
-						true);
-				StorableObjectPool.putStorableObject(attribute);
+		if (attribute == null) {
+			try {
+				attribute = Characteristic.createInstance(userId, this.styleCharType, "name", "1", style, linkType, true, true);
 				StorableObjectPool.flush(attribute, userId, true);
-			}
-			catch (CreateObjectException e)
-			{
+			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
-			} catch(IllegalObjectEntityException e) {
+			} catch (IllegalObjectEntityException e) {
 				e.printStackTrace();
 				return;
 			} catch (ApplicationException e) {
@@ -322,18 +301,19 @@ public final class LinkTypeController extends AbstractLinkController {
 	}
 
 	/**
-	 * Получить стиль линии. Стиль определяется
-	 * атрибутом {@link AbstractLinkController#ATTRIBUTE_STYLE}. В случае, если
-	 * такого атрибута у элемента нет, берется значение по умолчанию
-	 * ({@link MapPropertiesManager#getStyle()}).
-	 * @param linkType тип линии
+	 * Получить стиль линии. Стиль определяется атрибутом
+	 * {@link AbstractLinkController#ATTRIBUTE_STYLE}. В случае, если такого
+	 * атрибута у элемента нет, берется значение по умолчанию ({@link MapPropertiesManager#getStyle()}).
+	 * 
+	 * @param linkType
+	 *        тип линии
 	 * @return стиль
 	 */
-	public String getStyle(PhysicalLinkType linkType)
-	{
-		Characteristic ea = getCharacteristic(linkType, this.styleCharType);
-		if(ea == null)
+	public String getStyle(final PhysicalLinkType linkType) {
+		final Characteristic ea = getCharacteristic(linkType, this.styleCharType);
+		if (ea == null) {
 			return MapPropertiesManager.getStyle();
+		}
 		return ea.getValue();
 	}
 
@@ -344,15 +324,11 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @param linkType тип линии
 	 * @param color цвет
 	 */
-	public void setColor(Identifier userId, PhysicalLinkType linkType, Color color)
-	{
+	public void setColor(final Identifier userId, final PhysicalLinkType linkType, final Color color) {
 		Characteristic attribute = getCharacteristic(linkType, this.colorCharType);
-		if(attribute == null)
-		{
-			try
-			{
-				attribute = Characteristic.createInstance(
-						userId,
+		if (attribute == null) {
+			try {
+				attribute = Characteristic.createInstance(userId,
 						this.colorCharType,
 						"name",
 						"1",
@@ -360,14 +336,11 @@ public final class LinkTypeController extends AbstractLinkController {
 						linkType,
 						true,
 						true);
-				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute, userId, true);
-			}
-			catch (CreateObjectException e)
-			{
+			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
-			} catch(IllegalObjectEntityException e) {
+			} catch (IllegalObjectEntityException e) {
 				e.printStackTrace();
 				return;
 			} catch (ApplicationException e) {
@@ -376,59 +349,58 @@ public final class LinkTypeController extends AbstractLinkController {
 			}
 		}
 		attribute.setValue(String.valueOf(color.getRGB()));
-		colorsHolder.put(linkType, color);
+		colorsHolder.put(linkType.getId(), color);
 	}
 
 	/**
-	 * Получить цвет типа линии. Цает определяется
-	 * атрибутом {@link AbstractLinkController#ATTRIBUTE_COLOR}. В случае, если
-	 * такого атрибута у элемента нет, берется значение по умолчанию
-	 * ({@link MapPropertiesManager#getColor()}). При первом вызове метода
-	 * для объекта <code>linkType</code> полученный цвет помещается в 
-	 * хэш-таблицу {@link #colorsHolder} и при повторных вызовах берется из нее.
-	 * @param linkType тип линии
+	 * Получить цвет типа линии. Цает определяется атрибутом
+	 * {@link AbstractLinkController#ATTRIBUTE_COLOR}. В случае, если такого
+	 * атрибута у элемента нет, берется значение по умолчанию ({@link MapPropertiesManager#getColor()}).
+	 * При первом вызове метода для объекта <code>linkType</code> полученный
+	 * цвет помещается в хэш-таблицу {@link #colorsHolder} и при повторных вызовах
+	 * берется из нее.
+	 * 
+	 * @param linkType
+	 *        тип линии
 	 * @return цвет
 	 */
-	public Color getColor(PhysicalLinkType linkType)
-	{
-		Color color = (Color )colorsHolder.get(linkType);
-		if(color == null)
-		{
-			Characteristic ea = getCharacteristic(linkType, this.colorCharType);
+	public Color getColor(final PhysicalLinkType linkType) {
+		Color color = colorsHolder.get(linkType.getId());
+		if (color == null) {
+			final Characteristic ea = getCharacteristic(linkType, this.colorCharType);
 
-			if(ea == null)
+			if (ea == null) {
 				color = MapPropertiesManager.getColor();
+			}
 			else {
-				color = (Color)this.colors.get(ea.getValue());
-				if (color == null)
-				{
+				color = this.colors.get(ea.getValue());
+				if (color == null) {
 					color = new Color(Integer.parseInt(ea.getValue()));
-					this.colors.put(ea.getValue(),color);
+					this.colors.put(ea.getValue(), color);
 				}
 				color = new Color(Integer.parseInt(ea.getValue()));
 			}
-			
-			colorsHolder.put(linkType, color);
+
+			colorsHolder.put(linkType.getId(), color);
 		}
 		return color;
 	}
 
 	/**
 	 * Установить цвет типа линии при наличии сигнала тревоги. Цает определяется
-	 * атрибутом {@link AbstractLinkController#ATTRIBUTE_ALARMED_COLOR}. 
-	 * В случае, если такого атрибута у элемента нет, создается новый.
-	 * @param linkType тип линии
-	 * @param color цвет
+	 * атрибутом {@link AbstractLinkController#ATTRIBUTE_ALARMED_COLOR}. В
+	 * случае, если такого атрибута у элемента нет, создается новый.
+	 * 
+	 * @param linkType
+	 *        тип линии
+	 * @param color
+	 *        цвет
 	 */
-	public void setAlarmedColor(Identifier userId, PhysicalLinkType linkType, Color color)
-	{
+	public void setAlarmedColor(final Identifier userId, final PhysicalLinkType linkType, final Color color) {
 		Characteristic attribute = getCharacteristic(linkType, this.alarmedColorCharType);
-		if(attribute == null)
-		{
-			try
-			{
-				attribute = Characteristic.createInstance(
-						userId,
+		if (attribute == null) {
+			try {
+				attribute = Characteristic.createInstance(userId,
 						this.alarmedColorCharType,
 						"name",
 						"1",
@@ -436,14 +408,11 @@ public final class LinkTypeController extends AbstractLinkController {
 						linkType,
 						true,
 						true);
-				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute, userId, true);
-			}
-			catch (CreateObjectException e)
-			{
+			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
-			} catch(IllegalObjectEntityException e) {
+			} catch (IllegalObjectEntityException e) {
 				e.printStackTrace();
 				return;
 			} catch (ApplicationException e) {
@@ -452,61 +421,58 @@ public final class LinkTypeController extends AbstractLinkController {
 			}
 		}
 		attribute.setValue(String.valueOf(color.getRGB()));
-		alarmedColorsHolder.put(linkType, color);
+		alarmedColorsHolder.put(linkType.getId(), color);
 	}
 
 	/**
-	 * Получить цвет для типа линии при наличии сигнала тревоги. Цает 
-	 * определяется атрибутом 
-	 * {@link AbstractLinkController#ATTRIBUTE_ALARMED_COLOR}. В случае, если
-	 * такого атрибута у элемента нет, берется значение по умолчанию
-	 * ({@link MapPropertiesManager#getAlarmedColor()}). При первом вызове метода
-	 * для объекта <code>linkType</code> полученный цвет помещается в 
-	 * хэш-таблицу {@link #alarmedColorsHolder} и при повторных вызовах 
-	 * берется из нее.
-	 * @param linkType тип линии
+	 * Получить цвет для типа линии при наличии сигнала тревоги. Цает определяется
+	 * атрибутом {@link AbstractLinkController#ATTRIBUTE_ALARMED_COLOR}. В
+	 * случае, если такого атрибута у элемента нет, берется значение по умолчанию ({@link MapPropertiesManager#getAlarmedColor()}).
+	 * При первом вызове метода для объекта <code>linkType</code> полученный
+	 * цвет помещается в хэш-таблицу {@link #alarmedColorsHolder} и при повторных
+	 * вызовах берется из нее.
+	 * 
+	 * @param linkType
+	 *        тип линии
 	 * @return цвет
 	 */
-	public Color getAlarmedColor(PhysicalLinkType linkType)
-	{
-		Color color = (Color )alarmedColorsHolder.get(linkType);
-		if(color == null)
-		{
+	public Color getAlarmedColor(final PhysicalLinkType linkType) {
+		Color color = alarmedColorsHolder.get(linkType.getId());
+		if (color == null) {
 			Characteristic ea = getCharacteristic(linkType, this.alarmedColorCharType);
-			if(ea == null)
+			if (ea == null) {
 				color = MapPropertiesManager.getAlarmedColor();
+			}
 			else {
-				color = (Color)this.colors.get(ea.getValue());
-				if (color == null)
-				{
+				color = this.colors.get(ea.getValue());
+				if (color == null) {
 					color = new Color(Integer.parseInt(ea.getValue()));
-					this.colors.put(ea.getValue(),color);
+					this.colors.put(ea.getValue(), color);
 				}
 				color = new Color(Integer.parseInt(ea.getValue()));
 			}
 
-			alarmedColorsHolder.put(linkType, color);
+			alarmedColorsHolder.put(linkType.getId(), color);
 		}
 		return color;
 	}
 
 	/**
-	 * Установить толщину линии для типа линии при наличи сигнала тревоги. 
-	 * Толщина определяется атрибутом 
-	 * {@link AbstractLinkController#ATTRIBUTE_ALARMED_THICKNESS}. В случае, 
-	 * если такого атрибута у элемента нет, создается новый.
-	 * @param linkType тип линии
-	 * @param size толщина линии
+	 * Установить толщину линии для типа линии при наличи сигнала тревоги. Толщина
+	 * определяется атрибутом
+	 * {@link AbstractLinkController#ATTRIBUTE_ALARMED_THICKNESS}. В случае, если
+	 * такого атрибута у элемента нет, создается новый.
+	 * 
+	 * @param linkType
+	 *        тип линии
+	 * @param size
+	 *        толщина линии
 	 */
-	public void setAlarmedLineSize(Identifier userId, PhysicalLinkType linkType, int size)
-	{
+	public void setAlarmedLineSize(final Identifier userId, final PhysicalLinkType linkType, final int size) {
 		Characteristic attribute = getCharacteristic(linkType, this.alarmedThicknessCharType);
-		if(attribute == null)
-		{
-			try
-			{
-				attribute = Characteristic.createInstance(
-						userId,
+		if (attribute == null) {
+			try {
+				attribute = Characteristic.createInstance(userId,
 						this.alarmedThicknessCharType,
 						"name",
 						"1",
@@ -514,14 +480,11 @@ public final class LinkTypeController extends AbstractLinkController {
 						linkType,
 						true,
 						true);
-				StorableObjectPool.putStorableObject(attribute);
 				StorableObjectPool.flush(attribute, userId, true);
-			}
-			catch (CreateObjectException e)
-			{
+			} catch (CreateObjectException e) {
 				e.printStackTrace();
 				return;
-			} catch(IllegalObjectEntityException e) {
+			} catch (IllegalObjectEntityException e) {
 				e.printStackTrace();
 				return;
 			} catch (ApplicationException e) {
@@ -533,19 +496,20 @@ public final class LinkTypeController extends AbstractLinkController {
 	}
 
 	/**
-	 * Получить толщину линии для типа линии при наличи сигнала тревоги. 
-	 * Толщина определяется атрибутом 
-	 * {@link AbstractLinkController#ATTRIBUTE_ALARMED_THICKNESS}. В случае, 
-	 * если такого атрибута у элемента нет, берется значение по умолчанию
-	 * ({@link MapPropertiesManager#getAlarmedThickness()}).
-	 * @param linkType тип линии
+	 * Получить толщину линии для типа линии при наличи сигнала тревоги. Толщина
+	 * определяется атрибутом
+	 * {@link AbstractLinkController#ATTRIBUTE_ALARMED_THICKNESS}. В случае, если
+	 * такого атрибута у элемента нет, берется значение по умолчанию ({@link MapPropertiesManager#getAlarmedThickness()}).
+	 * 
+	 * @param linkType
+	 *        тип линии
 	 * @return толщина линии
 	 */
-	public int getAlarmedLineSize(PhysicalLinkType linkType)
-	{
-		Characteristic ea = getCharacteristic(linkType, this.alarmedThicknessCharType);
-		if(ea == null)
+	public int getAlarmedLineSize(final PhysicalLinkType linkType) {
+		final Characteristic ea = getCharacteristic(linkType, this.alarmedThicknessCharType);
+		if (ea == null) {
 			return MapPropertiesManager.getAlarmedThickness();
+		}
 		return Integer.parseInt(ea.getValue());
 	}
 
@@ -555,24 +519,18 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @return тип линии
 	 * @throws ApplicationException 
 	 */
-	public static PhysicalLinkType getPhysicalLinkType(
-			String codename) throws ApplicationException {
+	public static PhysicalLinkType getPhysicalLinkType(final String codename) throws ApplicationException {
 		return getPhysicalLinkType(codename, false);
 	}
 
-	static PhysicalLinkType getPhysicalLinkType(
-			String codename,
-			boolean useLoader) throws ApplicationException
-	{
-		StorableObjectCondition pTypeCondition = new TypicalCondition(
-				codename, 
+	static PhysicalLinkType getPhysicalLinkType(final String codename, final boolean useLoader) throws ApplicationException {
+		StorableObjectCondition pTypeCondition = new TypicalCondition(codename,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.PHYSICALLINK_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
-		Collection<PhysicalLinkType> pTypes =
-			StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, useLoader);
-		if(pTypes.size() == 1) {
+		final Collection<PhysicalLinkType> pTypes = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, useLoader);
+		if (pTypes.size() == 1) {
 			return pTypes.iterator().next();
 		}
 
@@ -582,36 +540,35 @@ public final class LinkTypeController extends AbstractLinkController {
 	/**
 	 * Получить тип линии по кодовому имени. В случае, если такого типа нет,
 	 * создается новый.
-	 * @param userId пользователь
-	 * @param codename кодовое имя
+	 * 
+	 * @param userId
+	 *        пользователь
+	 * @param codename
+	 *        кодовое имя
 	 * @return тип линии
-	 * @throws CreateObjectException 
+	 * @throws CreateObjectException
 	 */
-	static PhysicalLinkType getPhysicalLinkType(
-			MapLibrary mapLibrary,
-			Identifier userId,
-			PhysicalLinkTypeSort sort,
-			String codename,
-			boolean topological) throws ApplicationException
-	{
+	static PhysicalLinkType getPhysicalLinkType(final MapLibrary mapLibrary,
+			final Identifier userId,
+			final PhysicalLinkTypeSort sort,
+			final String codename,
+			final boolean topological) throws ApplicationException {
 		PhysicalLinkType type = getPhysicalLinkType(codename, true);
-		if(type == null) {
-			LinkTypeController ltc = (LinkTypeController )LinkTypeController.getInstance();
+		if (type == null) {
+			LinkTypeController ltc = (LinkTypeController) LinkTypeController.getInstance();
 
-			type = PhysicalLinkType.createInstance(
-				userId,
-				sort,
-				codename,
-				LangModelMap.getString(codename),
-				"",
-				LinkTypeController.getBindDimension(codename),
-				topological,
-				mapLibrary.getId());
+			type = PhysicalLinkType.createInstance(userId,
+					sort,
+					codename,
+					LangModelMap.getString(codename),
+					"",
+					LinkTypeController.getBindDimension(codename),
+					topological,
+					mapLibrary.getId());
 
 			ltc.setLineSize(userId, type, LinkTypeController.getLineThickness(codename));
 			ltc.setColor(userId, type, LinkTypeController.getLineColor(codename));
 
-			StorableObjectPool.putStorableObject(type);
 			StorableObjectPool.flush(type, userId, true);
 		}
 		return type;
@@ -621,46 +578,41 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * Получить список всех типов линий.
 	 * @return список типов линий &lt;{@link PhysicalLinkType}&gt;
 	 */
-	public static Collection getTopologicalLinkTypes() {
-		Collection list = null;
-
-		StorableObjectCondition pTypeCondition = new EquivalentCondition(
-				ObjectEntities.PHYSICALLINK_TYPE_CODE);
-
-		//todo getTopologicalLinkTypes should get only included libraries
-//		Set<Identifier> libIds = new HashSet<Identifier>();
-//		for(Iterator iter = map.getMapLibraries().iterator(); iter.hasNext();) {
-//			MapLibrary library = (MapLibrary )iter.next();
-//			libIds.add(library.getId());
-//		}
-//		
-//		StorableObjectCondition pTypeCondition = new LinkedIdsCondition(libIds, PHYSICALLINK_TYPE_CODE);
+	public static Collection<PhysicalLinkType> getTopologicalLinkTypes() {
+		// todo getTopologicalLinkTypes should get only included libraries
+		// Set<Identifier> libIds = new HashSet<Identifier>();
+		// for(Iterator iter = map.getMapLibraries().iterator(); iter.hasNext();) {
+		// MapLibrary library = (MapLibrary )iter.next();
+		// libIds.add(library.getId());
+		// }
+		//		
+		// StorableObjectCondition pTypeCondition = new LinkedIdsCondition(libIds,
+		// PHYSICALLINK_TYPE_CODE);
 		try {
-			list =
-				StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, false);
+			final StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.PHYSICALLINK_TYPE_CODE);
+			final Set<PhysicalLinkType> list = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, false);
 
 			list.remove(getUnboundPhysicalLinkType());
 
-			for(Iterator it = list.iterator(); it.hasNext();) {
-				PhysicalLinkType type = (PhysicalLinkType )it.next();
-				if(!type.isTopological())
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				final PhysicalLinkType type = (PhysicalLinkType) it.next();
+				if (!type.isTopological()) {
 					it.remove();
+				}
 			}
+
+			return list;
+		} catch (Exception e) {
+			return Collections.emptySet();
 		}
-		catch(Exception e) {
-			list = Collections.EMPTY_LIST;
-		}
-		
-		return list;
 	}
-	
+
 	/**
 	 * Получить тип линии по умолчанию ({@link PhysicalLinkType#DEFAULT_TUNNEL}).
 	 * @return тип линии
 	 * @throws ApplicationException 
 	 */
-	public static PhysicalLinkType getDefaultPhysicalLinkType() throws ApplicationException
-	{
+	public static PhysicalLinkType getDefaultPhysicalLinkType() throws ApplicationException {
 		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_TUNNEL, false);
 	}
 
@@ -669,8 +621,7 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * @return тип линии
 	 * @throws ApplicationException 
 	 */
-	public static PhysicalLinkType getUnboundPhysicalLinkType() throws ApplicationException
-	{
+	public static PhysicalLinkType getUnboundPhysicalLinkType() throws ApplicationException {
 		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_UNBOUND, false);
 	}
 }

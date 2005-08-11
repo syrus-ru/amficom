@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.30 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MeasurementPathController.java,v 1.31 2005/08/11 13:55:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
-import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -43,7 +42,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Контроллер топологическиго пути.
  * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.31 $, $Date: 2005/08/11 13:55:41 $
  * @module mapviewclient
  */
 public final class MeasurementPathController extends AbstractLinkController {
@@ -51,22 +50,24 @@ public final class MeasurementPathController extends AbstractLinkController {
 	/**
 	 * Private constructor.
 	 */
-	private MeasurementPathController(NetMapViewer netMapViewer) {
+	private MeasurementPathController(final NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
 
-	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+	public static MapElementController createInstance(final NetMapViewer netMapViewer) {
 		return new MeasurementPathController(netMapViewer);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isSelectionVisible(MapElement mapElement) {
-		if(!(mapElement instanceof MeasurementPath))
+	@Override
+	public boolean isSelectionVisible(final MapElement mapElement) {
+		if (!(mapElement instanceof MeasurementPath)) {
 			return false;
+		}
 
-		MeasurementPath mpath = (MeasurementPath )mapElement;
+		final MeasurementPath mpath = (MeasurementPath) mapElement;
 
 		return mpath.isSelected();
 	}
@@ -74,20 +75,19 @@ public final class MeasurementPathController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isElementVisible(
-			MapElement mapElement,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(!(mapElement instanceof MeasurementPath))
+	public boolean isElementVisible(final MapElement mapElement, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(mapElement instanceof MeasurementPath)) {
 			return false;
+		}
 
-		MeasurementPath mpath = (MeasurementPath )mapElement;
+		final MeasurementPath mpath = (MeasurementPath) mapElement;
 
 		boolean vis = false;
-		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();) {
-			CablePath cpath = (CablePath )it.next();
-			CableController cc = (CableController)this.logicalNetLayer.getMapViewController().getController(cpath);
-			if(cc.isElementVisible(cpath, visibleBounds)) {
+		for (final CablePath cpath : mpath.getSortedCablePaths()) {
+			final CableController cc = (CableController) this.logicalNetLayer.getMapViewController().getController(cpath);
+			if (cc.isElementVisible(cpath, visibleBounds)) {
 				vis = true;
 				break;
 			}
@@ -98,42 +98,37 @@ public final class MeasurementPathController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getToolTipText(MapElement mapElement) {
-		if(!(mapElement instanceof MeasurementPath))
+	public String getToolTipText(final MapElement mapElement) {
+		if (!(mapElement instanceof MeasurementPath)) {
 			return null;
+		}
 
-		MeasurementPath mpath = (MeasurementPath )mapElement;
+		final MeasurementPath mpath = (MeasurementPath) mapElement;
 
 		String s1 = mpath.getName();
 		String s2 = "";
 		String s3 = "";
 		try {
-			AbstractNode smne = mpath.getStartNode();
-			s2 =  ":\n" 
-				+ "   " 
-				+ LangModelMap.getString("From") 
-				+ " " 
-				+ smne.getName() 
-				+ " [" 
-				+ MapViewController.getMapElementReadableType(smne)
-				+ "]";
-			AbstractNode emne = mpath.getEndNode();
-			s3 = "\n" 
-				+ "   " 
-				+ LangModelMap.getString("To") 
-				+ " " 
-				+ emne.getName() 
-				+ " [" 
-				+ MapViewController.getMapElementReadableType(emne)
-				+ "]";
-		}
-		catch(Exception e) {
-			Environment.log(
-					Environment.LOG_LEVEL_FINER,
-					"method call",
-					getClass().getName(),
-					"getToolTipText()",
-					e);
+			final AbstractNode smne = mpath.getStartNode();
+			s2 = ":\n"
+					+ "   "
+					+ LangModelMap.getString("From")
+					+ " "
+					+ smne.getName()
+					+ " ["
+					+ MapViewController.getMapElementReadableType(smne)
+					+ "]";
+			final AbstractNode emne = mpath.getEndNode();
+			s3 = "\n"
+					+ "   "
+					+ LangModelMap.getString("To")
+					+ " "
+					+ emne.getName()
+					+ " ["
+					+ MapViewController.getMapElementReadableType(emne)
+					+ "]";
+		} catch (Exception e) {
+			Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getToolTipText()", e);
 		}
 		return s1 + s2 + s3;
 	}
@@ -141,71 +136,76 @@ public final class MeasurementPathController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint(
-			MapElement mapElement,
-			Graphics g,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(!(mapElement instanceof MeasurementPath))
+	public void paint(final MapElement mapElement, final Graphics g, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(mapElement instanceof MeasurementPath)) {
 			return;
+		}
 
-		MeasurementPath mpath = (MeasurementPath)mapElement;
-		
-		if(!isElementVisible(mpath, visibleBounds))
+		final MeasurementPath mpath = (MeasurementPath) mapElement;
+
+		if (!isElementVisible(mpath, visibleBounds)) {
 			return;
+		}
 
-		Stroke stroke = getStroke(mpath);
-		Color color = getColor(mpath);
+		final Stroke stroke = getStroke(mpath);
+		final Color color = getColor(mpath);
 
-		paint(mpath, g, visibleBounds, stroke, color, isSelectionVisible(mpath));
+		this.paint(mpath, g, visibleBounds, stroke, color, isSelectionVisible(mpath));
 	}
 
 	/**
 	 * Отрисовать путь с заданным стилем и цветом.
-	 * @param mpath путь
-	 * @param g графический контекст
-	 * @param visibleBounds видимая область
-	 * @param stroke стиль линии
-	 * @param color цвет линии
-	 * @param selectionVisible рисовать рамку выделения
+	 * 
+	 * @param mpath
+	 *        путь
+	 * @param g
+	 *        графический контекст
+	 * @param visibleBounds
+	 *        видимая область
+	 * @param stroke
+	 *        стиль линии
+	 * @param color
+	 *        цвет линии
+	 * @param selectionVisible
+	 *        рисовать рамку выделения
 	 */
-	public void paint(
-			MeasurementPath mpath,
-			Graphics g,
-			Rectangle2D.Double visibleBounds,
-			Stroke stroke,
-			Color color,
-			boolean selectionVisible)
-			throws MapConnectionException, MapDataException {
-		if(!isElementVisible(mpath, visibleBounds))
+	public void paint(final MeasurementPath mpath,
+			final Graphics g,
+			final Rectangle2D.Double visibleBounds,
+			final Stroke stroke,
+			final Color color,
+			final boolean selectionVisible) throws MapConnectionException, MapDataException {
+		if (!isElementVisible(mpath, visibleBounds)) {
 			return;
+		}
 
-		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();) {
-			CablePath cpath = (CablePath)it.next();
-			CableController cc = (CableController)this.logicalNetLayer.getMapViewController().getController(cpath);
+		for (final CablePath cpath : mpath.getSortedCablePaths()) {
+			final CableController cc = (CableController) this.logicalNetLayer.getMapViewController().getController(cpath);
 			cc.paint(cpath, g, visibleBounds, stroke, color, selectionVisible);
 		}
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <br>Точка находится на пути, если она находится на любом кабеле,
-	 * котораый входит в путь.
+	 * {@inheritDoc} <br>
+	 * Точка находится на пути, если она находится на любом кабеле, котораый
+	 * входит в путь.
 	 */
-	public boolean isMouseOnElement(
-			MapElement mapElement,
-			Point currentMousePoint)
-			throws MapConnectionException, MapDataException {
-		if(!(mapElement instanceof MeasurementPath))
+	public boolean isMouseOnElement(final MapElement mapElement, final Point currentMousePoint)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(mapElement instanceof MeasurementPath)) {
 			return false;
+		}
 
-		MeasurementPath mpath = (MeasurementPath )mapElement;
+		final MeasurementPath mpath = (MeasurementPath) mapElement;
 
-		for(Iterator it = mpath.getSortedCablePaths().iterator(); it.hasNext();) {
-			CablePath cpath = (CablePath)it.next();
-			CableController cc = (CableController)this.logicalNetLayer.getMapViewController().getController(cpath);
-			if(cc.isMouseOnElement(cpath, currentMousePoint))
+		for (final CablePath cpath : mpath.getSortedCablePaths()) {
+			final CableController cc = (CableController) this.logicalNetLayer.getMapViewController().getController(cpath);
+			if (cc.isMouseOnElement(cpath, currentMousePoint)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -216,32 +216,33 @@ public final class MeasurementPathController extends AbstractLinkController {
 	 * @param pe элемент пути
 	 * @return элемент карты
 	 */
-	public MapElement getMapElement(MeasurementPath path, PathElement pe) {
+	public MapElement getMapElement(final MeasurementPath path, final PathElement pe) {
 		MapElement me = null;
-		MapView mapView = this.logicalNetLayer.getMapView();
-		switch(pe.getKind().value()) {
+		final MapView mapView = this.logicalNetLayer.getMapView();
+		switch (pe.getKind().value()) {
 			case IdlKind._SCHEME_ELEMENT:
-				SchemeElement se = (SchemeElement )pe.getAbstractSchemeElement();
-				SiteNode site = mapView.findElement(se);
-				if(site != null) {
+				final SchemeElement se = (SchemeElement) pe.getAbstractSchemeElement();
+				final SiteNode site = mapView.findElement(se);
+				if (site != null) {
 					me = site;
 				}
 				break;
 			case IdlKind._SCHEME_LINK:
-				SchemeLink link = (SchemeLink )pe.getAbstractSchemeElement();
-				SchemeElement sse = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme(), link.getSourceAbstractSchemePort().getParentSchemeDevice());
-				SchemeElement ese = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme(), link.getTargetAbstractSchemePort().getParentSchemeDevice());
-				SiteNode ssite = mapView.findElement(sse);
-				SiteNode esite = mapView.findElement(ese);
-				if(ssite != null && ssite.equals(esite)) {
+				final SchemeLink link = (SchemeLink) pe.getAbstractSchemeElement();
+				final SchemeElement sse = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme(),
+						link.getSourceAbstractSchemePort().getParentSchemeDevice());
+				final SchemeElement ese = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme(),
+						link.getTargetAbstractSchemePort().getParentSchemeDevice());
+				final SiteNode ssite = mapView.findElement(sse);
+				final SiteNode esite = mapView.findElement(ese);
+				if (ssite != null && ssite.equals(esite)) {
 					me = ssite;
 				}
 				break;
 			case IdlKind._SCHEME_CABLE_LINK:
-				SchemeCableLink clink = (SchemeCableLink )pe.getAbstractSchemeElement();
-				CablePath cp = mapView.findCablePath(clink);
-				if(cp != null)
-				{
+				final SchemeCableLink clink = (SchemeCableLink) pe.getAbstractSchemeElement();
+				final CablePath cp = mapView.findCablePath(clink);
+				if (cp != null) {
 					me = cp;
 				}
 				break;
@@ -258,12 +259,12 @@ public final class MeasurementPathController extends AbstractLinkController {
 	 * @return идентификатор или <code>null</code>, если исследуемый объект 
 	 * не найден
 	 */
-	public Identifier getMonitoredElementId(MeasurementPath path) {
-		Identifier meid = null;
-		MonitoredElement me = getMonitoredElement(path);
-		if(me != null)
-			meid = me.getId();
-		return meid;
+	public Identifier getMonitoredElementId(final MeasurementPath path) {
+		final MonitoredElement me = this.getMonitoredElement(path);
+		if (me != null) {
+			return me.getId();
+		}
+		return null;
 	}
 
 	/**
@@ -273,19 +274,17 @@ public final class MeasurementPathController extends AbstractLinkController {
 	 * @return исследуемый объект или <code>null</code>, если исследуемый объект 
 	 * не найден
 	 */
-	public MonitoredElement getMonitoredElement(MeasurementPath path) {
+	public MonitoredElement getMonitoredElement(final MeasurementPath path) {
 		MonitoredElement me = null;
 		try {
-			TransmissionPath tp = path.getSchemePath().getTransmissionPath();
+			final TransmissionPath tp = path.getSchemePath().getTransmissionPath();
 
-			me = StorableObjectPool.getStorableObject(
-					tp.getMonitoredElementIds().iterator().next(), 
-					true);
-		} catch(CommunicationException e) {
+			me = StorableObjectPool.getStorableObject(tp.getMonitoredElementIds().iterator().next(), true);
+		} catch (CommunicationException e) {
 			e.printStackTrace();
-		} catch(DatabaseException e) {
+		} catch (DatabaseException e) {
 			e.printStackTrace();
-		} catch(Exception e) {
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 

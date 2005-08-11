@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.27 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: CableController.java,v 1.28 2005/08/11 13:55:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
-import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -24,9 +23,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
@@ -43,7 +40,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * Контроллер кабеля.
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.28 $, $Date: 2005/08/11 13:55:41 $
  * @module mapviewclient
  */
 public final class CableController extends AbstractLinkController {
@@ -51,29 +48,30 @@ public final class CableController extends AbstractLinkController {
 	/**
 	 * Private constructor.
 	 */
-	private CableController(NetMapViewer netMapViewer) {
+	private CableController(final NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
 
-	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+	public static MapElementController createInstance(final NetMapViewer netMapViewer) {
 		return new CableController(netMapViewer);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isSelectionVisible(MapElement me) {
-		if(!(me instanceof CablePath))
+	@Override
+	public boolean isSelectionVisible(final MapElement me) {
+		if (!(me instanceof CablePath)) {
 			return false;
+		}
 
-		CablePath cpath = (CablePath )me;
+		final CablePath cpath = (CablePath) me;
 
 		boolean isv = cpath.isSelected();
-		if(!isv) {
-			for(Iterator it = this.logicalNetLayer.getMapView().getMeasurementPaths(cpath).iterator(); it.hasNext();) {
-				MeasurementPath mp = (MeasurementPath )it.next();
-				MeasurementPathController mpc = (MeasurementPathController )this.logicalNetLayer.getMapViewController().getController(mp);
-				if(mpc.isSelectionVisible(mp)) {
+		if (!isv) {
+			for (final MeasurementPath mp : this.logicalNetLayer.getMapView().getMeasurementPaths(cpath)) {
+				final MeasurementPathController mpc = (MeasurementPathController) this.logicalNetLayer.getMapViewController().getController(mp);
+				if (mpc.isSelectionVisible(mp)) {
 					isv = true;
 					break;
 				}
@@ -85,20 +83,19 @@ public final class CableController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isElementVisible(
-			MapElement me,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(!(me instanceof CablePath))
+	public boolean isElementVisible(final MapElement me, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(me instanceof CablePath)) {
 			return false;
+		}
 
-		CablePath cpath = (CablePath )me;
+		final CablePath cpath = (CablePath) me;
 
 		boolean vis = false;
-		for(Iterator it = cpath.getLinks().iterator(); it.hasNext();) {
-			PhysicalLink link = (PhysicalLink )it.next();
-			PhysicalLinkController plc = (PhysicalLinkController )this.logicalNetLayer.getMapViewController().getController(link);
-			if(plc.isElementVisible(link, visibleBounds)) {
+		for (final PhysicalLink link : cpath.getLinks()) {
+			final PhysicalLinkController plc = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(link);
+			if (plc.isElementVisible(link, visibleBounds)) {
 				vis = true;
 				break;
 			}
@@ -109,44 +106,37 @@ public final class CableController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getToolTipText(MapElement me) {
-		if(!(me instanceof CablePath))
+	public String getToolTipText(final MapElement me) {
+		if (!(me instanceof CablePath)) {
 			return null;
+		}
 
-		CablePath cpath = (CablePath)me;
-		
-		String s1 = cpath.getName();
+		final CablePath cpath = (CablePath) me;
+
+		final String s1 = cpath.getName();
 		String s2 = "";
 		String s3 = "";
-		try
-		{
-			AbstractNode smne = cpath.getStartNode();
-			s2 =  ":\n" 
-				+ "   " 
-				+ LangModelMap.getString("From") 
-				+ " " 
-				+ smne.getName() 
-				+ " [" 
-				+ MapViewController.getMapElementReadableType(smne)
-				+ "]";
-			AbstractNode emne = cpath.getEndNode();
-			s3 = "\n" 
-				+ "   " 
-				+ LangModelMap.getString("To") 
-				+ " " 
-				+ emne.getName() 
-				+ " [" 
-				+ MapViewController.getMapElementReadableType(emne)
-				+ "]";
-		}
-		catch(Exception e)
-		{
-			Environment.log(
-				Environment.LOG_LEVEL_FINER, 
-				"method call", 
-				getClass().getName(), 
-				"getToolTipText()", 
-				e);
+		try {
+			final AbstractNode smne = cpath.getStartNode();
+			s2 = ":\n"
+					+ "   "
+					+ LangModelMap.getString("From")
+					+ " "
+					+ smne.getName()
+					+ " ["
+					+ MapViewController.getMapElementReadableType(smne)
+					+ "]";
+			final AbstractNode emne = cpath.getEndNode();
+			s3 = "\n"
+					+ "   "
+					+ LangModelMap.getString("To")
+					+ " "
+					+ emne.getName()
+					+ " ["
+					+ MapViewController.getMapElementReadableType(emne)
+					+ "]";
+		} catch (Exception e) {
+			Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getToolTipText()", e);
 		}
 		return s1 + s2 + s3;
 	}
@@ -154,70 +144,77 @@ public final class CableController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint(
-			MapElement me,
-			Graphics g,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(!(me instanceof CablePath))
+	public void paint(final MapElement me, final Graphics g, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(me instanceof CablePath)) {
 			return;
+		}
 
-		CablePath cpath = (CablePath)me;
-		
-		if(!isElementVisible(cpath, visibleBounds))
+		final CablePath cpath = (CablePath) me;
+
+		if (!this.isElementVisible(cpath, visibleBounds)) {
 			return;
+		}
 
-		Stroke stroke = getStroke(cpath);
-		Color color = getColor(cpath);
+		final Stroke stroke = getStroke(cpath);
+		final Color color = getColor(cpath);
 
-		paint(cpath, g, visibleBounds, stroke, color, isSelectionVisible(cpath));
+		this.paint(cpath, g, visibleBounds, stroke, color, isSelectionVisible(cpath));
 	}
 
 	/**
-	 * Отрисовать все линии, из которых состоит кабель, с заданным стилем.
-	 * и цветом линии
-	 * @param cpath кабель
-	 * @param g графический контекст
-	 * @param visibleBounds видимая область
-	 * @param stroke стиль линии
-	 * @param color цвет линии
-	 * @param selectionVisible рисовать рамку выделения
+	 * Отрисовать все линии, из которых состоит кабель, с заданным стилем. и
+	 * цветом линии
+	 * 
+	 * @param cpath
+	 *        кабель
+	 * @param g
+	 *        графический контекст
+	 * @param visibleBounds
+	 *        видимая область
+	 * @param stroke
+	 *        стиль линии
+	 * @param color
+	 *        цвет линии
+	 * @param selectionVisible
+	 *        рисовать рамку выделения
 	 */
-	public void paint(
-			CablePath cpath,
-			Graphics g,
-			Rectangle2D.Double visibleBounds,
-			Stroke stroke,
-			Color color,
-			boolean selectionVisible)
-			throws MapConnectionException, MapDataException {
-		if(!isElementVisible(cpath, visibleBounds))
+	public void paint(final CablePath cpath,
+			final Graphics g,
+			final Rectangle2D.Double visibleBounds,
+			final Stroke stroke,
+			final Color color,
+			final boolean selectionVisible) throws MapConnectionException, MapDataException {
+		if (!this.isElementVisible(cpath, visibleBounds)) {
 			return;
+		}
 
-		for(Iterator it = cpath.getLinks().iterator(); it.hasNext();) {
-			PhysicalLink link = (PhysicalLink)it.next();
-			PhysicalLinkController plc = (PhysicalLinkController)this.logicalNetLayer.getMapViewController().getController(link);
+		for (final PhysicalLink link : cpath.getLinks()) {
+			final PhysicalLinkController plc = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(link);
 			plc.paint(link, g, visibleBounds, stroke, color, selectionVisible);
 		}
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * <br>Точка находится на кабеле, если она находится на любой линии,
-	 * которая входит в кабель.
+	 * {@inheritDoc} <br>
+	 * Точка находится на кабеле, если она находится на любой линии, которая
+	 * входит в кабель.
 	 */
-	public boolean isMouseOnElement(MapElement me, Point currentMousePoint)
-			throws MapConnectionException, MapDataException {
-		if(!(me instanceof CablePath))
+	public boolean isMouseOnElement(final MapElement me, final Point currentMousePoint)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(me instanceof CablePath)) {
 			return false;
+		}
 
-		CablePath cpath = (CablePath )me;
+		final CablePath cpath = (CablePath) me;
 
-		for(Iterator it = cpath.getLinks().iterator(); it.hasNext();) {
-			PhysicalLink link = (PhysicalLink)it.next();
-			PhysicalLinkController plc = (PhysicalLinkController)this.logicalNetLayer.getMapViewController().getController(link);
-			if(plc.isMouseOnElement(link, currentMousePoint))
+		for (final PhysicalLink link : cpath.getLinks()) {
+			final PhysicalLinkController plc = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(link);
+			if (plc.isMouseOnElement(link, currentMousePoint)) {
 				return true;
+			}
 		}
 		return false;
 	}
@@ -228,80 +225,63 @@ public final class CableController extends AbstractLinkController {
 	 * @param link лниия
 	 * @return объект привязки, или <code>null</code> при возникновении ошибки
 	 */
-	public static CableChannelingItem generateCCI(
-			CablePath cablePath,
-			PhysicalLink link)
-	{
-		Identifier creatorId = LoginManager.getUserId();
+	public static CableChannelingItem generateCCI(final CablePath cablePath, final PhysicalLink link) {
+		final Identifier creatorId = LoginManager.getUserId();
 		CableChannelingItem cci = null;
 		try {
-			SiteNode startNode = (SiteNode )link.getStartNode();
-			SiteNode endNode = (SiteNode )link.getEndNode();
+			final SiteNode startNode = (SiteNode) link.getStartNode();
+			final SiteNode endNode = (SiteNode) link.getEndNode();
 			double startSpare = 0.0D;
 			double endSpare = 0.0D;
-			SchemeCableLink schemeCableLink = cablePath.getSchemeCableLink();
-			if(!(link instanceof UnboundLink)) {
+			final SchemeCableLink schemeCableLink = cablePath.getSchemeCableLink();
+			if (!(link instanceof UnboundLink)) {
 				startSpare = MapPropertiesManager.getSpareLength();
 				endSpare = MapPropertiesManager.getSpareLength();
 
-				cci = CableChannelingItem.createInstance(
-						creatorId, 
-						startSpare,
-						endSpare,
-						0,//default
-						0,//default
-						link,
-						startNode,
-						endNode,
-						schemeCableLink);
+				cci = CableChannelingItem.createInstance(creatorId, startSpare, endSpare, 0,// default
+						0,// default
+						link, startNode, endNode, schemeCableLink);
+			} else {
+				cci = CableChannelingItem.createInstance(creatorId, startNode, endNode, schemeCableLink);
 			}
-			else {
-				cci = CableChannelingItem.createInstance(
-						creatorId, 
-						startNode,
-						endNode,
-						schemeCableLink);
-			}
-		
-			StorableObjectPool.putStorableObject(cci);
-		} catch(IllegalObjectEntityException e) {
-			e.printStackTrace();
-			cci = null;
-		} catch(CreateObjectException e) {
+		} catch (CreateObjectException e) {
 			e.printStackTrace();
 			cci = null;
 		}
 
 		return cci;
 	}
+
 	/**
 	 * Получить расстояние от начального узла кабеля до заданной точки.
 	 * 
-	 * @param cpath кабель
-	 * @param pt точка в экранных координатах
+	 * @param cpath
+	 *        кабель
+	 * @param pt
+	 *        точка в экранных координатах
 	 * @return дистанция топологическая
 	 */
-	public double getDistanceFromStartLt(CablePath cpath, Point pt)
-			throws MapConnectionException, MapDataException {
+	public double getDistanceFromStartLt(final CablePath cpath, final Point pt) throws MapConnectionException, MapDataException {
 		double distance = 0.0;
 
 		AbstractNode node = cpath.getStartNode();
 		cpath.sortNodeLinks();
-		for(Iterator it = cpath.getSortedNodeLinks().iterator(); it.hasNext();) {
-			NodeLink mnle = (NodeLink)it.next();
-			NodeLinkController nlc = (NodeLinkController)this.logicalNetLayer.getMapViewController().getController(mnle);
-			if(nlc.isMouseOnElement(mnle, pt)) {
-				DoublePoint dpoint = this.logicalNetLayer.getConverter().convertScreenToMap(pt);
+		for (final NodeLink mnle : cpath.getSortedNodeLinks()) {
+			final NodeLinkController nlc = (NodeLinkController) this.logicalNetLayer.getMapViewController().getController(mnle);
+			if (nlc.isMouseOnElement(mnle, pt)) {
+				final DoublePoint dpoint = this.logicalNetLayer.getConverter().convertScreenToMap(pt);
 				distance += this.logicalNetLayer.getConverter().distance(dpoint, node.getLocation());
 				break;
 			}
 
 			distance += mnle.getLengthLt();
 
-			if(mnle.getStartNode().equals(node))
+			if (mnle.getStartNode().equals(node)) {
 				node = mnle.getEndNode();
-			else
+			}
+			else {
 				node = mnle.getStartNode();
+			}
 		}
 		return distance;
 	}
@@ -313,51 +293,56 @@ public final class CableController extends AbstractLinkController {
 	 * @param pt точка в экранных координатах
 	 * @return дистанция физическая
 	 */
-	public double getDistanceFromStartLf(CablePath cpath, Point pt)
-			throws MapConnectionException, MapDataException {
-		double kd = cpath.getKd();
-		return getDistanceFromStartLt(cpath, pt) * kd;
+	public double getDistanceFromStartLf(final CablePath cpath, final Point pt) throws MapConnectionException, MapDataException {
+		final double kd = cpath.getKd();
+		return this.getDistanceFromStartLt(cpath, pt) * kd;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public int getLineSize(MapElement link) {
+	@Override
+	public int getLineSize(final MapElement link) {
 		return MapPropertiesManager.getUnboundThickness();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getStyle(MapElement link) {
+	@Override
+	public String getStyle(final MapElement link) {
 		return MapPropertiesManager.getStyle();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Stroke getStroke(MapElement link) {
+	@Override
+	public Stroke getStroke(final MapElement link) {
 		return MapPropertiesManager.getStroke();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Color getColor(MapElement link) {
+	@Override
+	public Color getColor(final MapElement link) {
 		return MapPropertiesManager.getUnboundLinkColor();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Color getAlarmedColor(MapElement link) {
+	@Override
+	public Color getAlarmedColor(final MapElement link) {
 		return MapPropertiesManager.getAlarmedColor();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public int getAlarmedLineSize(MapElement link) {
+	@Override
+	public int getAlarmedLineSize(final MapElement link) {
 		return MapPropertiesManager.getAlarmedThickness();
 	}
 }

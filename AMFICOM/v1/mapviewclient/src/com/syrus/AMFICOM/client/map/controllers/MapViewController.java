@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.40 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MapViewController.java,v 1.41 2005/08/11 13:55:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -60,7 +60,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: arseniy $
- * @version $Revision: 1.40 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.41 $, $Date: 2005/08/11 13:55:41 $
  * @module mapviewclient
  */
 public final class MapViewController {
@@ -109,7 +109,7 @@ public final class MapViewController {
 	}
 
 	/** Хэш-таблица контроллеров элементов карты. */
-	private java.util.Map ctlMap = new HashMap();
+	private java.util.Map<Class, MapElementController> ctlMap = new HashMap<Class, MapElementController>();
 	
 	/** Ссылка на логический слой, на котором отображается вид. */
 	protected LogicalNetLayer logicalNetLayer = null;
@@ -172,7 +172,7 @@ public final class MapViewController {
 	 * @return контроллер
 	 */
 	public MapElementController getController(MapElement me) {
-		return (MapElementController)this.ctlMap.get(me.getClass());
+		return this.ctlMap.get(me.getClass());
 	}
 
 

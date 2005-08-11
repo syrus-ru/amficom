@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.1 2005/08/11 10:56:13 arseniy Exp $
+# $Id: Makefile,v 1.2 2005/08/11 13:55:41 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -12,6 +12,7 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,XMLBEANSCLASSPATH)
 
 APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/mapclient.jar:$(LIBDIR)/schemeclient.jar
 XMLCLASSPATH := $(LIBDIR)/generalxml.jar:$(LIBDIR)/mapxml.jar

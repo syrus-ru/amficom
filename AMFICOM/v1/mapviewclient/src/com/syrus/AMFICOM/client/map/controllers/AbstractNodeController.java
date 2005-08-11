@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.16 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: AbstractNodeController.java,v 1.17 2005/08/11 13:55:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер узла.
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/11 13:55:41 $
  * @module mapviewclient
  */
 public abstract class AbstractNodeController extends AbstractMapElementController {
@@ -43,7 +43,7 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 	public static final Rectangle MAX_BOUNDS = new Rectangle(40, 40);
 
 	/** Размер пиктограммы в экранных координатах. */
-	protected static java.util.Map boundsContainer = new HashMap();
+	protected static java.util.Map<AbstractNode, Rectangle> boundsContainer = new HashMap<AbstractNode, Rectangle>();
 
 	/**
 	 * Временный объект кординат центра эемента. Используется для определения
@@ -57,7 +57,7 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 	 */
 	protected static Rectangle searchBounds = new Rectangle();
 
-	public AbstractNodeController(NetMapViewer netMapViewer) {
+	public AbstractNodeController(final NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
 
@@ -93,24 +93,21 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 	 * 
 	 * @param mapElement элемент карты
 	 */
-	public void updateScaleCoefficient(MapElement mapElement) {
-		if(!(mapElement instanceof AbstractNode)) {
+	public void updateScaleCoefficient(final MapElement mapElement) {
+		if (!(mapElement instanceof AbstractNode)) {
 			return;
 		}
-		AbstractNode node = (AbstractNode )mapElement;
+		final AbstractNode node = (AbstractNode) mapElement;
 
-		double scaleCoefficient = this.logicalNetLayer.getDefaultScale() 
-				/ this.logicalNetLayer.getCurrentScale();
+		final double scaleCoefficient = this.logicalNetLayer.getDefaultScale() / this.logicalNetLayer.getCurrentScale();
 
-		int w = (int )(getDefaultBounds().getWidth() * scaleCoefficient);
-		int h = (int )(getDefaultBounds().getHeight() * scaleCoefficient);
-		
-		if(w >= this.getMaxBounds().width || h >= this.getMaxBounds().height) {
+		int w = (int) (getDefaultBounds().getWidth() * scaleCoefficient);
+		int h = (int) (getDefaultBounds().getHeight() * scaleCoefficient);
+
+		if (w >= this.getMaxBounds().width || h >= this.getMaxBounds().height) {
 			w = this.getMaxBounds().width;
 			h = this.getMaxBounds().height;
-		}
-		else
-		if(w <= this.getMinBounds().width || h <= this.getMinBounds().height) {
+		} else if (w <= this.getMinBounds().width || h <= this.getMinBounds().height) {
 			w = this.getMinBounds().width;
 			h = this.getMinBounds().height;
 		}
@@ -119,10 +116,10 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 		MapPropertiesManager.setScaledImageSize(this.getImageId(node), w, h);
 	}
 
-	public Identifier getImageId(AbstractNode node) {
+	public Identifier getImageId(final AbstractNode node) {
 		return node.getImageId();
 	}
-	
+
 	/**
 	 * Пполучить границы элемента. Поскольку вызов метода осуществляется
 	 * довольно часто при перерисовке карты, границы хранятся в
@@ -130,9 +127,9 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 	 * @param node узел
 	 * @return границы пиктограммы
 	 */
-	public Rectangle getBounds(AbstractNode node) {
-		Rectangle rect = (Rectangle )boundsContainer.get(node);
-		if(rect == null) {
+	public Rectangle getBounds(final AbstractNode node) {
+		Rectangle rect = boundsContainer.get(node);
+		if (rect == null) {
 			rect = new Rectangle(DEFAULT_BOUNDS);
 			boundsContainer.put(node, rect);
 		}
@@ -145,7 +142,7 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 	 * @param node узел
 	 * @param rect границы пиктограммы
 	 */
-	public void setBounds(AbstractNode node, Rectangle rect) {
+	public void setBounds(final AbstractNode node, final Rectangle rect) {
 		boundsContainer.put(node, rect);
 	}
 
@@ -155,7 +152,7 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 	 * @param node узел
 	 * @return пиктограмма
 	 */
-	public Image getImage(AbstractNode node) {
+	public Image getImage(final AbstractNode node) {
 		return MapPropertiesManager.getScaledImage(node.getImageId());
 	}
 
@@ -165,63 +162,55 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 	 * @param node узел
 	 * @return пиктограмма
 	 */
-	public Image getAlarmedImage(AbstractNode node) {
-		return getImage(node);
+	public Image getAlarmedImage(final AbstractNode node) {
+		return this.getImage(node);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isElementVisible(
-			MapElement mapElement,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(!(mapElement instanceof AbstractNode)) {
+	public boolean isElementVisible(final MapElement mapElement, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(mapElement instanceof AbstractNode)) {
 			return false;
 		}
-		AbstractNode node = (AbstractNode )mapElement;
-		anchorContainer.setLocation(
-				node.getLocation().getX(), 
-				node.getLocation().getY());
+		final AbstractNode node = (AbstractNode) mapElement;
+		anchorContainer.setLocation(node.getLocation().getX(), node.getLocation().getY());
 		return visibleBounds.contains(anchorContainer);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint(
-			MapElement mapElement,
-			Graphics g,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(!(mapElement instanceof AbstractNode)) {
+	public void paint(final MapElement mapElement, final Graphics g, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(mapElement instanceof AbstractNode)) {
 			return;
 		}
-		AbstractNode node = (AbstractNode )mapElement;
+		final AbstractNode node = (AbstractNode) mapElement;
 
-		if(!isElementVisible(node, visibleBounds)) {
+		if (!isElementVisible(node, visibleBounds)) {
 			return;
 		}
 
-		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
+		final MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
-		Point p = converter.convertMapToScreen(node.getLocation());
+		final Point p = converter.convertMapToScreen(node.getLocation());
 
-		Graphics2D pg = (Graphics2D )g;
+		final Graphics2D pg = (Graphics2D) g;
 
-		int width = getBounds(node).width;
-		int height = getBounds(node).height;
+		final int width = getBounds(node).width;
+		final int height = getBounds(node).height;
 
-		pg.drawImage(getImage(node), p.x - width / 2, p.y - height / 2, null);
+		pg.drawImage(this.getImage(node), p.x - width / 2, p.y - height / 2, null);
 
 		// если на элементе есть сигнал тревоги, то анимация
 		// в зависимости от флага getShowAlarmed()
-		if(node.getAlarmState()) {
-			if(MapPropertiesManager.isDrawAlarmed()) {
-				pg.drawImage(
-						getAlarmedImage(node),
-						p.x - width / 2, 
-						p.y - height / 2, null);
+		if (node.getAlarmState()) {
+			if (MapPropertiesManager.isDrawAlarmed()) {
+				pg.drawImage(getAlarmedImage(node), p.x - width / 2, p.y - height / 2, null);
 
 				pg.setStroke(MapPropertiesManager.getAlarmedStroke());
 				pg.setColor(MapPropertiesManager.getAlarmedColor());
@@ -230,7 +219,7 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 		}
 
 		// Если выбрано то рисовать рамку
-		if(node.isSelected()) {
+		if (node.isSelected()) {
 			pg.setStroke(new BasicStroke(3));
 			pg.setColor(MapPropertiesManager.getSelectionColor());
 			pg.drawRect(p.x - width / 2, p.y - height / 2, width, height);
@@ -240,28 +229,23 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isMouseOnElement(
-			MapElement mapElement,
-			Point currentMousePoint)
-			throws MapConnectionException, MapDataException {
-		if(!(mapElement instanceof AbstractNode)) {
+	public boolean isMouseOnElement(final MapElement mapElement, final Point currentMousePoint)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(mapElement instanceof AbstractNode)) {
 			return false;
 		}
 
-		AbstractNode node = (AbstractNode )mapElement;
+		final AbstractNode node = (AbstractNode) mapElement;
 
-		MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
+		final MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 
-		//Проверка того что курсор находиться в прямоугольнике
-		int width = (int )getBounds(node).getWidth();
-		int height = (int )getBounds(node).getHeight();
-		Point p = converter.convertMapToScreen(node.getLocation());
-		searchBounds.setBounds(
-				p.x - width / 2, 
-				p.y - height / 2, 
-				width, 
-				height);
-		if(searchBounds.contains(currentMousePoint)) {
+		// Проверка того что курсор находиться в прямоугольнике
+		final int width = (int) getBounds(node).getWidth();
+		final int height = (int) getBounds(node).getHeight();
+		final Point p = converter.convertMapToScreen(node.getLocation());
+		searchBounds.setBounds(p.x - width / 2, p.y - height / 2, width, height);
+		if (searchBounds.contains(currentMousePoint)) {
 			return true;
 		}
 		return false;
@@ -270,14 +254,14 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getToolTipText(MapElement mapElement) {
-		if(!(mapElement instanceof AbstractNode)) {
+	public String getToolTipText(final MapElement mapElement) {
+		if (!(mapElement instanceof AbstractNode)) {
 			return null;
 		}
 
-		AbstractNode node = (AbstractNode )mapElement;
+		final AbstractNode node = (AbstractNode) mapElement;
 
-		String s1 = node.getName();
+		final String s1 = node.getName();
 
 		return s1 + " [" + MapViewController.getMapElementReadableType(node) + "]";
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundLinkController.java,v 1.10 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: UnboundLinkController.java,v 1.11 2005/08/11 13:57:33 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 /**
  * Контроллер элемента непривязанной линии (участка непривязанного кабеля). 
  * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/11 13:57:33 $
  * @module mapviewclient
  */
 public final class UnboundLinkController extends PhysicalLinkController {
@@ -32,24 +32,26 @@ public final class UnboundLinkController extends PhysicalLinkController {
 	/**
 	 * Private constructor.
 	 */
-	private UnboundLinkController(NetMapViewer netMapViewer) {
+	private UnboundLinkController(final NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
 
-	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+	public static MapElementController createInstance(final NetMapViewer netMapViewer) {
 		return new UnboundLinkController(netMapViewer);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isSelectionVisible(MapElement me) {
-		if(!(me instanceof UnboundLink))
+	@Override
+	public boolean isSelectionVisible(final MapElement me) {
+		if (!(me instanceof UnboundLink)) {
 			return false;
+		}
 
-		UnboundLink link = (UnboundLink)me;
-		
-		CableController cc = (CableController)this.logicalNetLayer.getMapViewController().getController(link.getCablePath());
+		final UnboundLink link = (UnboundLink) me;
+
+		final CableController cc = (CableController) this.logicalNetLayer.getMapViewController().getController(link.getCablePath());
 
 		return link.isSelected() || cc.isSelectionVisible(link.getCablePath());
 	}
@@ -57,28 +59,28 @@ public final class UnboundLinkController extends PhysicalLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint(
-			MapElement me,
-			Graphics g,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(! (me instanceof UnboundLink))
+	@Override
+	public void paint(final MapElement me, final Graphics g, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(me instanceof UnboundLink)) {
 			return;
+		}
 
-		UnboundLink link = (UnboundLink)me;
-		
-		if(!isElementVisible(link, visibleBounds))
+		final UnboundLink link = (UnboundLink) me;
+
+		if (!isElementVisible(link, visibleBounds)) {
 			return;
+		}
 
-		BasicStroke stroke = (BasicStroke )getStroke(link);
-		Stroke str = new BasicStroke(
-				MapPropertiesManager.getUnboundThickness(), 
-				stroke.getEndCap(), 
-				stroke.getLineJoin(), 
-				stroke.getMiterLimit(), 
-				stroke.getDashArray(), 
+		final BasicStroke stroke = (BasicStroke) getStroke(link);
+		final Stroke str = new BasicStroke(MapPropertiesManager.getUnboundThickness(),
+				stroke.getEndCap(),
+				stroke.getLineJoin(),
+				stroke.getMiterLimit(),
+				stroke.getDashArray(),
 				stroke.getDashPhase());
 
-		paint(link, g, visibleBounds, str, MapPropertiesManager.getUnboundLinkColor(), false);
+		this.paint(link, g, visibleBounds, str, MapPropertiesManager.getUnboundLinkColor(), false);
 	}
 }

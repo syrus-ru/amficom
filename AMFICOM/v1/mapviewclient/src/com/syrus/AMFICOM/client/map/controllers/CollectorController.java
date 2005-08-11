@@ -1,5 +1,5 @@
 /**
- * $Id: CollectorController.java,v 1.11 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: CollectorController.java,v 1.12 2005/08/11 13:55:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,7 +15,6 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
-import java.util.Iterator;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -27,7 +26,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 /**
  * Контроллер коллектора.
  * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/11 13:55:41 $
  * @module mapviewclient
  */
 public final class CollectorController extends AbstractLinkController {
@@ -35,22 +34,22 @@ public final class CollectorController extends AbstractLinkController {
 	/**
 	 * Private constructor.
 	 */
-	private CollectorController(NetMapViewer netMapViewer) {
+	private CollectorController(final NetMapViewer netMapViewer) {
 		super(netMapViewer);
 	}
 
-	public static MapElementController createInstance(NetMapViewer netMapViewer) {
+	public static MapElementController createInstance(final NetMapViewer netMapViewer) {
 		return new CollectorController(netMapViewer);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public String getToolTipText(MapElement mapElement) {
-		if(!(mapElement instanceof Collector))
+	public String getToolTipText(final MapElement mapElement) {
+		if (!(mapElement instanceof Collector))
 			return null;
 
-		Collector collector = (Collector )mapElement;
+		final Collector collector = (Collector) mapElement;
 
 		return collector.getName();
 	}
@@ -58,27 +57,26 @@ public final class CollectorController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isSelectionVisible(MapElement mapElement) {
+	@Override
+	public boolean isSelectionVisible(final MapElement mapElement) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isElementVisible(
-			MapElement mapElement,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(!(mapElement instanceof Collector))
+	public boolean isElementVisible(final MapElement mapElement, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(mapElement instanceof Collector))
 			return false;
 
-		Collector collector = (Collector )mapElement;
+		final Collector collector = (Collector) mapElement;
 
 		boolean vis = false;
-		for(Iterator it = collector.getPhysicalLinks().iterator(); it.hasNext();) {
-			PhysicalLink link = (PhysicalLink )it.next();
-			PhysicalLinkController plc = (PhysicalLinkController)this.logicalNetLayer.getMapViewController().getController(link);
-			if(plc.isElementVisible(link, visibleBounds)) {
+		for (final PhysicalLink link : collector.getPhysicalLinks()) {
+			final PhysicalLinkController plc = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(link);
+			if (plc.isElementVisible(link, visibleBounds)) {
 				vis = true;
 				break;
 			}
@@ -89,32 +87,30 @@ public final class CollectorController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public void paint(
-			MapElement mapElement,
-			Graphics g,
-			Rectangle2D.Double visibleBounds)
-			throws MapConnectionException, MapDataException {
-		if(!(mapElement instanceof Collector))
+	public void paint(final MapElement mapElement, final Graphics g, final Rectangle2D.Double visibleBounds)
+			throws MapConnectionException,
+				MapDataException {
+		if (!(mapElement instanceof Collector)) {
 			return;
+		}
 
-		Collector collector = (Collector )mapElement;
-		
-		if(!isElementVisible(collector, visibleBounds))
+		final Collector collector = (Collector) mapElement;
+
+		if (!this.isElementVisible(collector, visibleBounds)) {
 			return;
+		}
 
-		BasicStroke stroke = (BasicStroke )getStroke(collector);
-		Stroke str = new BasicStroke(
-				getLineSize(collector), 
-				stroke.getEndCap(), 
-				stroke.getLineJoin(), 
-				stroke.getMiterLimit(), 
-				stroke.getDashArray(), 
+		final BasicStroke stroke = (BasicStroke) getStroke(collector);
+		final Stroke str = new BasicStroke(getLineSize(collector),
+				stroke.getEndCap(),
+				stroke.getLineJoin(),
+				stroke.getMiterLimit(),
+				stroke.getDashArray(),
 				stroke.getDashPhase());
-		Color color = getColor(collector);
+		final Color color = getColor(collector);
 
-		for(Iterator it = collector.getPhysicalLinks().iterator(); it.hasNext();) {
-			PhysicalLink link = (PhysicalLink )it.next();
-			PhysicalLinkController plc = (PhysicalLinkController)this.logicalNetLayer.getMapViewController().getController(link);
+		for (final PhysicalLink link : collector.getPhysicalLinks()) {
+			final PhysicalLinkController plc = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(link);
 			plc.paint(link, g, visibleBounds, str, color, false);
 		}
 	}
@@ -122,15 +118,14 @@ public final class CollectorController extends AbstractLinkController {
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isMouseOnElement(
-			MapElement mapElement,
-			Point currentMousePoint)
-			throws MapConnectionException, MapDataException {
-//		if(! (mapElement instanceof Collector))
-//			return false;
-//
-//		Collector collector = (Collector )mapElement;
-		
+	public boolean isMouseOnElement(final MapElement mapElement, final Point currentMousePoint)
+			throws MapConnectionException,
+				MapDataException {
+		// if(! (mapElement instanceof Collector))
+		// return false;
+		//
+		// final Collector collector = (Collector )mapElement;
+
 		return false;
 	}
 
