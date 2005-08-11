@@ -1,0 +1,17 @@
+classes
+docs
+lib
+model
+test
+.settings
+*.deploy
+*.jpr
+*.jpx
+*.tar
+*.gz
+*.swp
+*.jar
+Makefile.inc
+.pmd
+*.key
+.mach
