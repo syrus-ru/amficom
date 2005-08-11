@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBean.java,v 1.2 2005/08/02 14:42:06 bob Exp $
+ * $Id: MCMBean.java,v 1.3 2005/08/11 13:05:20 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,10 +15,12 @@ import java.beans.PropertyChangeEvent;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/02 14:42:06 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/11 13:05:20 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -57,6 +59,7 @@ public class MCMBean extends Bean {
 		}	
 	}
 	
+	@Override
 	public final void setName(String name) {
 		String name2 = this.mcm.getName();
 		if (name2 != name &&
@@ -64,6 +67,9 @@ public class MCMBean extends Bean {
 				!name.equals(name2))) {
 			this.mcm.setName(name);
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_NAME, name2, name));
+			JGraphText.entityDispatcher.firePropertyChange(
+				new PropertyChangeEvent(this, ObjectEntities.MCM, null, this));
+
 		}		
 	}
 	
