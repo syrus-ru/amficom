@@ -6,19 +6,19 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.MscharClientServantManager;
 import com.syrus.AMFICOM.general.corba.CommonServer;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
+import com.syrus.AMFICOM.mscharserver.corba.MscharServerHelper;
 
-public class MapInfoCorbaConnection extends MapInfoConnection
-{
+public class MapInfoCorbaConnection extends MapInfoConnection {
 	private MscharServer mscharServer;
 
-	public boolean connect() throws MapConnectionException
-	{
-		boolean flag = super.connect();
-		if(flag) {
+	@Override
+	public boolean connect() throws MapConnectionException {
+		final boolean flag = super.connect();
+		if (flag) {
 			try {
-				MscharClientServantManager mscharClientServantManager = MscharClientServantManager.create();
-				CommonServer commonServer = mscharClientServantManager.getServerReference();
-				this.mscharServer = (MscharServer) commonServer;
+				final MscharClientServantManager mscharClientServantManager = MscharClientServantManager.create();
+				final CommonServer commonServer = mscharClientServantManager.getServerReference();
+				this.mscharServer = MscharServerHelper.narrow(commonServer);
 			} catch (CommunicationException e) {
 				throw new MapConnectionException("MapInfoCorbaConnection - failed initializing MscharClientServantManager.", e);
 			}
@@ -26,22 +26,23 @@ public class MapInfoCorbaConnection extends MapInfoConnection
 		return flag;
 	}
 
-	public boolean release() throws MapConnectionException
-	{
-		boolean flag = super.release();
-
+	@Override
+	public boolean release() throws MapConnectionException {
+		final boolean flag = super.release();
 		return flag;
 	}
 
-	/* (non-Javadoc)
+	/*
+	 * (non-Javadoc)
+	 * 
 	 * @see com.syrus.AMFICOM.client.map.MapConnection#createImageLoader()
 	 */
-	public MapImageLoader createImageLoader() throws MapConnectionException
-	{
+	@Override
+	public MapImageLoader createImageLoader() throws MapConnectionException {
 		return new MapInfoCorbaImageLoader(this);
 	}
-	public MscharServer getMscharServer()
-	{
+
+	public MscharServer getMscharServer() {
 		return this.mscharServer;
 	}
 }
