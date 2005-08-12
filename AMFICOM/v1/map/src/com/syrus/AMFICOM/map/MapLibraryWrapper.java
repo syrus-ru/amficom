@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibraryWrapper.java,v 1.4 2005/08/08 13:12:40 arseniy Exp $
+ * $Id: MapLibraryWrapper.java,v 1.5 2005/08/12 10:05:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
  * @author max
  * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/08 13:12:40 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/12 10:05:08 $
  * @module map
  */
 
@@ -24,9 +24,9 @@ public class MapLibraryWrapper extends StorableObjectWrapper<MapLibrary> {
 	
 	public static final String COLUMN_PARENT_MAP_LIBRARY_ID = "parent_map_library_id";
 
-	protected static MapLibraryWrapper instance;
+	private static MapLibraryWrapper instance;
 
-	protected List<String> keys;
+	private List<String> keys;
 	
 	protected MapLibraryWrapper() {
 		// empty private constructor

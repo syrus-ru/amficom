@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeWrapper.java,v 1.15 2005/08/08 13:50:49 arseniy Exp $
+ * $Id: TopologicalNodeWrapper.java,v 1.16 2005/08/12 10:05:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/08 13:50:49 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/12 10:05:08 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -33,9 +33,9 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper<TopologicalNod
 	// active NUMBER(1),
 	public static final String COLUMN_ACTIVE = "active";
 
-	protected static TopologicalNodeWrapper instance;
+	private static TopologicalNodeWrapper instance;
 
-	protected List<String> keys;
+	private List<String> keys;
 
 	private TopologicalNodeWrapper() {
 		// empty private constructor

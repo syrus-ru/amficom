@@ -1,5 +1,5 @@
 /*
- * $Id: MapWrapper.java,v 1.18 2005/08/09 16:25:57 max Exp $
+ * $Id: MapWrapper.java,v 1.19 2005/08/12 10:05:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/09 16:25:57 $
- * @author $Author: max $
+ * @version $Revision: 1.19 $, $Date: 2005/08/12 10:05:08 $
+ * @author $Author: arseniy $
  * @module map
  */
 public class MapWrapper extends StorableObjectWrapper<Map> {
@@ -48,9 +48,9 @@ public class MapWrapper extends StorableObjectWrapper<Map> {
 	// external_node_id VARCHAR2(32),
 	public static final String LINK_COLUMN_MAP_LIBRARY_ID	= "map_library_id";
 
-	protected static MapWrapper instance;
+	private static MapWrapper instance;
 
-	protected List<String> keys;
+	private List<String> keys;
 
 	protected MapWrapper() {
 		// empty private constructor

@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkWrapper.java,v 1.12 2005/08/08 13:50:49 arseniy Exp $
+ * $Id: NodeLinkWrapper.java,v 1.13 2005/08/12 10:05:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/08 13:50:49 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/12 10:05:08 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -31,9 +31,9 @@ public class NodeLinkWrapper extends StorableObjectWrapper<NodeLink> {
 	// length NUMBER(12,6),
 	public static final String COLUMN_LENGTH = "length";
 
-	protected static NodeLinkWrapper instance;
+	private static NodeLinkWrapper instance;
 
-	protected List<String> keys;
+	private List<String> keys;
 
 	private NodeLinkWrapper() {
 		// empty private constructor

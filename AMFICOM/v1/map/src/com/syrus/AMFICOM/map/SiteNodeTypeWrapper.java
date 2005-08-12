@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeWrapper.java,v 1.13 2005/08/08 13:50:49 arseniy Exp $
+ * $Id: SiteNodeTypeWrapper.java,v 1.14 2005/08/12 10:05:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/08 13:50:49 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/12 10:05:08 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -33,9 +33,9 @@ public class SiteNodeTypeWrapper extends StorableObjectWrapper<SiteNodeType> {
 	// mapLibrary 
 	public static final String COLUMN_MAP_LIBRARY_ID = "map_library_id";
 
-	protected static SiteNodeTypeWrapper instance;
+	private static SiteNodeTypeWrapper instance;
 
-	protected List<String> keys;
+	private List<String> keys;
 
 	private SiteNodeTypeWrapper() {
 		// empty private constructor

@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkWrapper.java,v 1.11 2005/08/08 13:50:49 arseniy Exp $
+ * $Id: PhysicalLinkWrapper.java,v 1.12 2005/08/12 10:05:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/08 13:50:49 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/12 10:05:08 $
  * @author $Author: arseniy $
  * @module map
  */
@@ -42,9 +42,9 @@ public class PhysicalLinkWrapper extends StorableObjectWrapper<PhysicalLink> {
 	// end_node_id VARCHAR2(32),
 	public static final String COLUMN_END_NODE_ID = "end_node_id";
 
-	protected static PhysicalLinkWrapper instance;
+	private static PhysicalLinkWrapper instance;
 
-	protected List<String> keys;
+	private List<String> keys;
 
 	private PhysicalLinkWrapper() {
 		// empty private constructor
