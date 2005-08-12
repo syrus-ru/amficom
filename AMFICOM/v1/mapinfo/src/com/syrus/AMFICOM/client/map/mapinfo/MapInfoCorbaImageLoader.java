@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.4 2005/08/12 12:36:14 krupenn Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.5 2005/08/12 15:04:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.general.DoublePoint;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.AMFICOM.map.corba.IdlMapFeature;
 import com.syrus.AMFICOM.map.corba.IdlRenderedImage;
@@ -31,8 +31,8 @@ import com.syrus.io.ImageToByte;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/12 12:36:14 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2005/08/12 15:04:32 $
+ * @author $Author: arseniy $
  * @module mapinfo
  */
 

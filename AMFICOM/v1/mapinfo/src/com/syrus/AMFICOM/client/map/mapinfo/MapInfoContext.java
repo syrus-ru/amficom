@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoContext.java,v 1.5 2005/08/12 12:36:14 krupenn Exp $
+ * $Id: MapInfoContext.java,v 1.6 2005/08/12 15:04:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapDataException;
-import com.syrus.AMFICOM.general.DoublePoint;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/08/12 12:36:14 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/12 15:04:32 $
  * @module mapinfo
  */
 public class MapInfoContext implements MapContext {

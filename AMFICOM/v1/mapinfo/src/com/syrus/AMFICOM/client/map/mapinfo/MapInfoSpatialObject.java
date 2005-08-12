@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.client.map.mapinfo;
 
 import com.syrus.AMFICOM.client.map.SpatialObject;
-import com.syrus.AMFICOM.general.DoublePoint;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 public class MapInfoSpatialObject implements SpatialObject {
 	private DoublePoint centre = null;
