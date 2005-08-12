@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.92 2005/08/12 12:17:31 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.93 2005/08/12 14:24:16 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,14 +28,12 @@ import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.IntDimension;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -54,6 +52,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
+import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
 
 /**
@@ -64,8 +64,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.92 $, $Date: 2005/08/12 12:17:31 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.93 $, $Date: 2005/08/12 14:24:16 $
  * @module map
  * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
  * @todo nodeLinks should be transient

@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.32 2005/08/12 12:17:44 krupenn Exp $
+ * $Id: Marker.java,v 1.33 2005/08/12 14:27:00 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -26,6 +25,7 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * Название: Маркер связывания оптической дистанции Lo, полученной      *
@@ -48,9 +48,9 @@ import com.syrus.AMFICOM.map.SiteNode;
  *
  *
  *
- * @version $Revision: 1.32 $, $Date: 2005/08/12 12:17:44 $
+ * @version $Revision: 1.33 $, $Date: 2005/08/12 14:27:00 $
  * @module mapview
- * @author $Author: krupenn $
+ * @author $Author: arseniy $
  */
 
 public class Marker extends AbstractNode {

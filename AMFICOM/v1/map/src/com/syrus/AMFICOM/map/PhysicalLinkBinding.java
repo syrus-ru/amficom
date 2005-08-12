@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkBinding.java,v 1.11 2005/08/12 12:17:31 krupenn Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.12 2005/08/12 14:24:16 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -15,16 +15,16 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.IntDimension;
-import com.syrus.AMFICOM.general.IntPoint;
+import com.syrus.AMFICOM.resource.IntDimension;
+import com.syrus.AMFICOM.resource.IntPoint;
 
 /**
  * ќбъект прив€зки кабелей к тоннелю. ѕринадлежит определенному тоннелю.
  * включает всеб€ список кабелей, которые проход€т по данному тоннелю,
  * и матрицу пролегани€ кабелей по трубам тоннел€.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/08/12 12:17:31 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/12 14:24:16 $
  * @module map
  */
 public final class PhysicalLinkBinding {

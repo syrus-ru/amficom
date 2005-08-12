@@ -1,5 +1,5 @@
 /**
- * $Id: UnboundNode.java,v 1.28 2005/08/12 12:17:44 krupenn Exp $
+ * $Id: UnboundNode.java,v 1.29 2005/08/12 14:27:00 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,6 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -26,14 +25,15 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 
 /**
  * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному
  * ни к какому элементу топологической схемы.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/08/12 12:17:44 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/08/12 14:27:00 $
  * @module mapview
  */
 public final class UnboundNode extends SiteNode

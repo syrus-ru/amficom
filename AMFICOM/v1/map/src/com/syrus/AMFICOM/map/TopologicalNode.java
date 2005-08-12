@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.62 2005/08/12 12:17:31 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.63 2005/08/12 14:24:17 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -36,14 +35,15 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * Топологический узел нв топологической схеме. Топологический узел может
  * быть концевым для линии и для фрагмента линии. В физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: krupenn $
- * @version $Revision: 1.62 $, $Date: 2005/08/12 12:17:31 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.63 $, $Date: 2005/08/12 14:24:17 $
  * @module map
  * @todo physicalLink should be transient
  */

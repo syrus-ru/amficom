@@ -1,5 +1,5 @@
 /*-
- * $Id: MapElement.java,v 1.18 2005/08/12 12:17:31 krupenn Exp $
+ * $Id: MapElement.java,v 1.19 2005/08/12 14:24:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,9 +12,9 @@
 package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  *  Интерфейс для всех элементов карты. Нужен для определения координат
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.Namable;
  *
  *
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/08/12 12:17:31 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/08/12 14:24:16 $
  * @module map
  */
 public interface MapElement extends Characterizable, Namable {

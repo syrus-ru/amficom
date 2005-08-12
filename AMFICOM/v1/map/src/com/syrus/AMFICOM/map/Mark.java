@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.59 2005/08/12 12:17:31 krupenn Exp $
+ * $Id: Mark.java,v 1.60 2005/08/12 14:24:16 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -33,6 +32,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.map.corba.IdlMark;
 import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * Метка на линии на топологической схеме. Метка частично характеризуется
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.map.corba.IdlMarkHelper;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: krupenn $
- * @version $Revision: 1.59 $, $Date: 2005/08/12 12:17:31 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.60 $, $Date: 2005/08/12 14:24:16 $
  * @module map
  */
 public final class Mark extends AbstractNode {

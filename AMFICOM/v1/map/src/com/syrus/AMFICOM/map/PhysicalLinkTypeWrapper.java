@@ -1,5 +1,5 @@
 /*
- * $Id: PhysicalLinkTypeWrapper.java,v 1.15 2005/08/12 12:17:31 krupenn Exp $
+ * $Id: PhysicalLinkTypeWrapper.java,v 1.16 2005/08/12 14:24:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
-import com.syrus.AMFICOM.general.IntDimension;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/12 12:17:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2005/08/12 14:24:16 $
+ * @author $Author: arseniy $
  * @module map
  */
 public class PhysicalLinkTypeWrapper extends StorableObjectWrapper<PhysicalLinkType> {

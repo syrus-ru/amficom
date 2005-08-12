@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.52 2005/08/12 12:17:44 krupenn Exp $
+* $Id: MapView.java,v 1.53 2005/08/12 14:27:00 arseniy Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -44,6 +43,7 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.corba.IdlMapView;
 import com.syrus.AMFICOM.mapview.corba.IdlMapViewHelper;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: krupenn $
- * @version $Revision: 1.52 $, $Date: 2005/08/12 12:17:44 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.53 $, $Date: 2005/08/12 14:27:00 $
  * @module mapview
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */

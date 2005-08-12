@@ -1,5 +1,5 @@
 /**
- * $Id: VoidElement.java,v 1.19 2005/08/12 12:17:44 krupenn Exp $
+ * $Id: VoidElement.java,v 1.20 2005/08/12 14:27:00 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,16 +12,16 @@ package com.syrus.AMFICOM.mapview;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * Пустой элемент.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/08/12 12:17:44 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/08/12 14:27:00 $
  * @module mapview
  */
 public final class VoidElement implements MapElement {

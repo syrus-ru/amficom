@@ -1,5 +1,5 @@
 /**
- * $Id: NodeState.java,v 1.7 2005/08/12 12:17:31 krupenn Exp $
+ * $Id: NodeState.java,v 1.8 2005/08/12 14:24:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,8 +9,8 @@
 
 package com.syrus.AMFICOM.map;
 
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.HashCodeGenerator;
 
 import java.util.HashMap;
@@ -20,9 +20,9 @@ import java.util.HashMap;
  *
  *
  *
- * @version $Revision: 1.7 $, $Date: 2005/08/12 12:17:31 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/12 14:24:16 $
  * @module map
- * @author $Author: krupenn $
+ * @author $Author: arseniy $
  */
 public class NodeState extends MapElementState {
 	public String name;

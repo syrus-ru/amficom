@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.69 2005/08/12 12:17:31 krupenn Exp $
+ * $Id: NodeLink.java,v 1.70 2005/08/12 14:24:16 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -39,14 +38,15 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.corba.IdlNodeLink;
 import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.69 $, $Date: 2005/08/12 12:17:31 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.70 $, $Date: 2005/08/12 14:24:16 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {

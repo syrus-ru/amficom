@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.67 2005/08/12 12:17:31 krupenn Exp $
+ * $Id: SiteNode.java,v 1.68 2005/08/12 14:24:17 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -39,6 +38,7 @@ import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * Сетевой узел на топологической схеме. Характеризуется типом
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: krupenn $
- * @version $Revision: 1.67 $, $Date: 2005/08/12 12:17:31 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.68 $, $Date: 2005/08/12 14:24:17 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
