@@ -182,7 +182,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	void insertSite() {
 		SiteNodeType proto = super.selectNodeProto();
 		if(proto != null) {
-			for(Iterator it = this.selection.getElements().iterator(); it.hasNext();) {
+			for(Iterator it = new LinkedList(this.selection.getElements()).iterator(); it.hasNext();) {
 				TopologicalNode node = (TopologicalNode )it.next();
 				super.insertSiteInPlaceOfANode(node, proto);
 			}
