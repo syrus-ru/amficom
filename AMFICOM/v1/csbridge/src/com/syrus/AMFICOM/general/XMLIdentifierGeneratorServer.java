@@ -1,5 +1,5 @@
 /*
- * $Id: XMLIdentifierGeneratorServer.java,v 1.7 2005/08/08 11:38:11 arseniy Exp $
+ * $Id: XMLIdentifierGeneratorServer.java,v 1.8 2005/08/12 10:08:17 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,24 +10,56 @@ package com.syrus.AMFICOM.general;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.TreeSet;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/08 11:38:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/12 10:08:17 $
+ * @author $Author: bob $
  * @module csbridge
  */
 public class XMLIdentifierGeneratorServer implements IdentifierGeneratorServer, IGSConnectionManager {
 	private static final long serialVersionUID = -2081866914276561857L;
 
 	private Map<Short, Long> entityCount = new HashMap<Short, Long>();
+	
+	private XMLObjectLoader	objectLoader;
 
-	public IdlIdentifier getGeneratedIdentifier(final short entity) {
-		final Short code = new Short(entity);
-		final Long count = this.entityCount.get(code);
-		final long minor = (count == null) ? 0 : count.longValue() + 1;
+	/**
+	 * @param objectLoader
+	 */
+	public XMLIdentifierGeneratorServer(XMLObjectLoader objectLoader) {
+		this.objectLoader = objectLoader;
+	}
+
+	public IdlIdentifier getGeneratedIdentifier(final short entityCode) {
+		final Short code = new Short(entityCode);
+		
+		Long count = this.entityCount.get(code);
+		if (count == null) {
+			StorableObjectXML storableObjectXML = this.objectLoader.getStorableObjectXML();
+			try {
+				TreeSet<Identifier> ids = new TreeSet<Identifier>(storableObjectXML.getIdentifiers(entityCode));
+				Identifier id = null;
+				if (!ids.isEmpty()) {
+					id = ids.last();
+					Log.debugMessage(
+						"XMLIdentifierGeneratorServer.getGeneratedIdentifier | last id is " + id.getIdentifierString() ,
+						Level.FINEST);
+				}			
+				
+				count = id != null ? id.getMinor() : -1;
+				
+			} catch (IllegalDataException e) {
+				// nothing;
+			}		
+		}
+		
+		final long minor = count.longValue() + 1;
 		this.entityCount.put(code, new Long(minor));
 		final Identifier identifier = new Identifier(ObjectEntities.codeToString(code) + Identifier.SEPARATOR + minor);
 		return identifier.getTransferable();
