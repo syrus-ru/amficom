@@ -1,5 +1,5 @@
 /*
- * $Id: XMLIdentifierGeneratorServer.java,v 1.8 2005/08/12 10:08:17 bob Exp $
+ * $Id: XMLIdentifierGeneratorServer.java,v 1.9 2005/08/12 15:01:06 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.general;
 
 import java.util.HashMap;
 import java.util.Map;
+import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
 
@@ -18,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/12 10:08:17 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/08/12 15:01:06 $
+ * @author $Author: arseniy $
  * @module csbridge
  */
 public class XMLIdentifierGeneratorServer implements IdentifierGeneratorServer, IGSConnectionManager {
@@ -32,38 +33,36 @@ public class XMLIdentifierGeneratorServer implements IdentifierGeneratorServer, 
 	/**
 	 * @param objectLoader
 	 */
-	public XMLIdentifierGeneratorServer(XMLObjectLoader objectLoader) {
+	public XMLIdentifierGeneratorServer(final XMLObjectLoader objectLoader) {
 		this.objectLoader = objectLoader;
 	}
 
 	public IdlIdentifier getGeneratedIdentifier(final short entityCode) {
 		final Short code = new Short(entityCode);
-		
+
 		Long count = this.entityCount.get(code);
 		if (count == null) {
 			StorableObjectXML storableObjectXML = this.objectLoader.getStorableObjectXML();
 			try {
-				TreeSet<Identifier> ids = new TreeSet<Identifier>(storableObjectXML.getIdentifiers(entityCode));
+				final SortedSet<Identifier> ids = new TreeSet<Identifier>(storableObjectXML.getIdentifiers(entityCode));
 				Identifier id = null;
 				if (!ids.isEmpty()) {
 					id = ids.last();
-					Log.debugMessage(
-						"XMLIdentifierGeneratorServer.getGeneratedIdentifier | last id is " + id.getIdentifierString() ,
-						Level.FINEST);
-				}			
-				
-				count = id != null ? id.getMinor() : -1;
-				
+					Log.debugMessage("XMLIdentifierGeneratorServer.getGeneratedIdentifier | last id is " + id.getIdentifierString(),
+							Level.FINEST);
+				}
+
+				count = new Long((id != null) ? id.getMinor() : -1);
+
 			} catch (IllegalDataException e) {
 				// nothing;
-			}		
+			}
 		}
-		
+
 		final long minor = count.longValue() + 1;
 		this.entityCount.put(code, new Long(minor));
 		final Identifier identifier = new Identifier(ObjectEntities.codeToString(code) + Identifier.SEPARATOR + minor);
 		return identifier.getTransferable();
-
 	}
 
 	public IdlIdentifier[] getGeneratedIdentifierRange(final short entity, final int size) {
