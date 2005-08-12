@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.68 2005/08/08 14:25:23 arseniy Exp $
+ * $Id: SchemeCableLink.java,v 1.69 2005/08/12 06:22:25 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,6 +40,7 @@ import com.syrus.AMFICOM.configuration.AbstractLink;
 import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableLink;
 import com.syrus.AMFICOM.configuration.CableLinkType;
+import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -69,8 +70,8 @@ import com.syrus.util.Log;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.68 $, $Date: 2005/08/08 14:25:23 $
+ * @author $Author: max $
+ * @version $Revision: 1.69 $, $Date: 2005/08/12 06:22:25 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
@@ -699,11 +700,29 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	
 	/**
 	 * @param cableLinkType
+	 * @throws ApplicationException 
 	 */
-	public void setAbstractLinkTypeExt(final CableLinkType cableLinkType) {
+	public void setAbstractLinkTypeExt(final CableLinkType cableLinkType, Identifier creatorId) throws ApplicationException {
+		// TODO: make things a little bit smarter
 		this.setAbstractLinkType(cableLinkType);
-		/**
-		 * @todo Add further implementation.
-		 */
+		Set<CableThreadType> cableThreadTypes = cableLinkType.getCableThreadTypes(true);
+		try {
+		Set<SchemeCableThread> newCableThreadTypes = new HashSet<SchemeCableThread>(cableThreadTypes.size());
+			for (CableThreadType cableThreadType : cableThreadTypes) {
+			SchemeCableThread schemeCableThread = SchemeCableThread.createInstance(
+					creatorId,
+					cableThreadType.getName(),
+					cableThreadType,
+					this);
+			newCableThreadTypes.add(schemeCableThread);
+		}
+		this.setSchemeCableThreads(newCableThreadTypes);
+		} catch (CreateObjectException e) {
+			Log.debugMessage("SchemeCableLink.setAbstractLinkTypeExt | CreateObjectException" + e.getMessage(), Log.DEBUGLEVEL04);
+			throw new ApplicationException(e);
+		} catch (ApplicationException e) {
+			Log.debugMessage("SchemeCableLink.setAbstractLinkTypeExt | ApplicationException" + e.getMessage(), Log.DEBUGLEVEL04);
+			throw new ApplicationException(e);
+		}
 	}
 }
