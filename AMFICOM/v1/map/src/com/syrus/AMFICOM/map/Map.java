@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.73 2005/08/10 15:32:39 krupenn Exp $
+ * $Id: Map.java,v 1.74 2005/08/12 10:31:32 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.73 $, $Date: 2005/08/10 15:32:39 $
+ * @version $Revision: 1.74 $, $Date: 2005/08/12 10:31:32 $
  * @module map
  * @todo make maps persistent
  * @todo make externalNodes persistent
@@ -675,7 +675,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 	 *          узел
 	 * @return список линий
 	 */
-	public Set getPhysicalLinksAt(final AbstractNode node) {
+	public Set<PhysicalLink> getPhysicalLinksAt(final AbstractNode node) {
 		final HashSet<PhysicalLink> returnLinks = new HashSet<PhysicalLink>();
 		for (final PhysicalLink physicalLink : this.getAllPhysicalLinks()) {
 			if ((physicalLink.getEndNode().equals(node)) || (physicalLink.getStartNode().equals(node)))
