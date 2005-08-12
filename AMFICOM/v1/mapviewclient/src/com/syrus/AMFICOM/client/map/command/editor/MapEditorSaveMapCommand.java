@@ -1,9 +1,11 @@
 /*
- * $Id: MapEditorSaveMapCommand.java,v 1.9 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: MapEditorSaveMapCommand.java,v 1.10 2005/08/12 10:44:48 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ
  */
 
 package com.syrus.AMFICOM.client.map.command.editor;
+
+import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
 
@@ -13,13 +15,14 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.util.Log;
 
 /**
  * Класс MapEditorSaveContextCommand используется для сохранения топологической
  * схемы в модуле "Редактор топологических схем". Использует команду
  * MapSaveCommand
  * 
- * @version $Revision: 1.9 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/12 10:44:48 $
  * @author $Author: krupenn $
  * @module
  * @see MapSaveCommand
@@ -43,7 +46,7 @@ public class MapEditorSaveMapCommand extends AbstractCommand {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
 		if(mapFrame == null) {
-			System.out.println("map frame is null! Cannot save map.");
+			Log.debugMessage("map frame is null! Cannot save map.", Level.SEVERE);
 			setResult(Command.RESULT_NO);
 			return;
 		}

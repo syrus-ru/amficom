@@ -1,5 +1,5 @@
 /**
- * $Id: MapNewCommand.java,v 1.23 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MapNewCommand.java,v 1.24 2005/08/12 10:45:20 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -27,8 +27,8 @@ import com.syrus.util.Log;
 
 /**
  * создание новой карты (Map). включает в себ€ создание нового вида
- * @author $Author: arseniy $
- * @version $Revision: 1.23 $, $Date: 2005/08/11 12:43:30 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.24 $, $Date: 2005/08/12 10:45:20 $
  * @module mapviewclient
  */
 public class MapNewCommand extends AbstractCommand {
@@ -43,7 +43,7 @@ public class MapNewCommand extends AbstractCommand {
 	public void execute() {
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "Creating new map", Level.CONFIG);
 
-		System.out.println("Creating new map context");
+		Log.debugMessage("Creating new map", Level.INFO);
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(
 						this,

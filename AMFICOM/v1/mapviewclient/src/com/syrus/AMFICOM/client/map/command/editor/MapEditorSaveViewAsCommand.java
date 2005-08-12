@@ -1,11 +1,12 @@
 /*
- * $Id: MapEditorSaveViewAsCommand.java,v 1.16 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MapEditorSaveViewAsCommand.java,v 1.17 2005/08/12 10:44:48 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ
  */
 
 package com.syrus.AMFICOM.client.map.command.editor;
 
 import java.util.Iterator;
+import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
@@ -22,14 +23,15 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.util.Log;
 
 /**
  * Класс MapEditorSaveViewAsCommand используется для сохранения топологической
  * схемы в модуле "Редактор топологических схем" с новым именем. Использует
  * команду MapSaveAsCommand
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/08/11 12:43:30 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.17 $, $Date: 2005/08/12 10:44:48 $
  * @module mapviewclient
  * @see MapViewSaveAsCommand
  */
@@ -52,8 +54,7 @@ public class MapEditorSaveViewAsCommand extends AbstractCommand {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
 		if(mapFrame == null) {
-			System.out
-					.println("MapView SaveAs: map frame is null! Cannot complete operation.");
+			Log.debugMessage("MapView SaveAs: map frame is null! Cannot complete operation.", Level.SEVERE);
 			setResult(Command.RESULT_NO);
 			return;
 		}

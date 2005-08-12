@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.35 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MapImportCommand.java,v 1.36 2005/08/12 10:45:20 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -14,6 +14,7 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
+import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
 
@@ -44,6 +45,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.util.Log;
 
 /**
  *  ласс $RCSfile: MapImportCommand.java,v $ используетс€ дл€ закрыти€ 
@@ -51,8 +53,8 @@ import com.syrus.AMFICOM.mapview.MapView;
  * самого окна карты. ѕри этом в азголовке окна отображаетс€ информаци€ о том,
  * что активной карты нет, и карта центрируетс€ по умолчанию
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.35 $, $Date: 2005/08/11 12:43:30 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.36 $, $Date: 2005/08/12 10:45:20 $
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {
@@ -79,7 +81,7 @@ public class MapImportCommand extends ImportCommand {
 
 		try {
 			Map map = null;
-			System.out.println("Import map");
+			Log.debugMessage("Importing map", Level.INFO);
 
 			String fileName = ImportCommand
 					.openFileForReading(MapPropertiesManager.getLastDirectory());
@@ -198,11 +200,11 @@ public class MapImportCommand extends ImportCommand {
 				.setErrorListener(validationMessages));
 
 		if(!isXmlValid) {
-			System.out.println("Invalid XML: ");
+			Log.debugMessage("Invalid XML: ", Level.WARNING);
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
-				System.out.println(error.getMessage());
-//				System.out.println(error.getObjectLocation());
+				Log.debugMessage(error.getMessage(), Level.WARNING);
+				Log.debugMessage(error.getObjectLocation().toString(), Level.WARNING);
 			}
 		}
 		return isXmlValid;

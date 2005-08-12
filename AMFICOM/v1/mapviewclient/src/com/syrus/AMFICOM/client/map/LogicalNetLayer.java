@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.110 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: LogicalNetLayer.java,v 1.111 2005/08/12 10:41:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -74,8 +74,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.110 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.111 $, $Date: 2005/08/12 10:41:11 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer
@@ -252,7 +252,7 @@ public final class LogicalNetLayer
 
 		if(mapView == null)
 		{
-			System.out.println("mapView null!");
+			Log.debugMessage("mapView null!", Level.INFO);
 		}
 
 		getMapViewController().setMapView(this.mapView);
@@ -1126,8 +1126,8 @@ public final class LogicalNetLayer
 
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.110 $, $Date: 2005/08/11 12:43:29 $
+	 * @author $Author: krupenn $
+	 * @version $Revision: 1.111 $, $Date: 2005/08/12 10:41:11 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement

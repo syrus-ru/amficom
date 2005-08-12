@@ -1,5 +1,5 @@
 /*
- * $Id: MapLibraryExportCommand.java,v 1.3 2005/08/11 12:43:30 arseniy Exp $ Syrus
+ * $Id: MapLibraryExportCommand.java,v 1.4 2005/08/12 10:45:20 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
 
@@ -34,6 +35,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapLibrary;
+import com.syrus.util.Log;
 
 /**
  * Класс $RCSfile: MapLibraryExportCommand.java,v $ используется для закрытия карты при
@@ -41,8 +43,8 @@ import com.syrus.AMFICOM.map.MapLibrary;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/11 12:43:30 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.4 $, $Date: 2005/08/12 10:45:20 $
  * @module mapviewclient
  */
 public class MapLibraryExportCommand extends ExportCommand {
@@ -142,8 +144,8 @@ public class MapLibraryExportCommand extends ExportCommand {
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println("\nXML Instance Document saved at : "
-					+ f.getPath());
+			Log.debugMessage("\nXML Instance Document saved at : "
+					+ f.getPath(), Level.INFO);
 		}
 	}
 
@@ -158,11 +160,11 @@ public class MapLibraryExportCommand extends ExportCommand {
 				.setErrorListener(validationMessages));
 
 		if(!isXmlValid) {
-			System.out.println("Invalid XML: ");
+			Log.debugMessage("Invalid XML: ", Level.WARNING);
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
-				System.out.println(error.getMessage());
-				System.out.println(error.getObjectLocation());
+				Log.debugMessage(error.getMessage(), Level.WARNING);
+				Log.debugMessage(error.getObjectLocation().toString(), Level.WARNING);
 			}
 		}
 		return isXmlValid;

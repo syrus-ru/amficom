@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveMapAsCommand.java,v 1.10 2005/06/22 08:43:47 krupenn Exp $
+ * $Id: MapEditorSaveMapAsCommand.java,v 1.11 2005/08/12 10:44:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,6 +7,8 @@
 */
 
 package com.syrus.AMFICOM.client.map.command.editor;
+
+import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
 
@@ -18,13 +20,14 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.util.Log;
 
 /**
  * Класс $RCSfile: MapEditorSaveMapAsCommand.java,v $ используется для сохранения топологической схемы в модуле
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.10 $, $Date: 2005/06/22 08:43:47 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/12 10:44:48 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand
@@ -48,7 +51,7 @@ public class MapEditorSaveMapAsCommand extends AbstractCommand {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
 		if(mapFrame == null) {
-			System.out.println("map frame is null! Cannot create new map.");
+			Log.debugMessage("map frame is null! Cannot create new map.", Level.SEVERE);
 			setResult(Command.RESULT_NO);
 			return;
 		}

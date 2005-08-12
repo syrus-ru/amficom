@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.36 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: MapPropertiesManager.java,v 1.37 2005/08/12 10:41:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.36 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.37 $, $Date: 2005/08/12 10:41:25 $
  * @module mapviewclient
  */
 public final class MapPropertiesManager 
@@ -787,7 +787,8 @@ public final class MapPropertiesManager
 		}
 		catch(java.io.IOException e)
 		{
-			System.out.println("Params not saved");
+			Log.debugMessage("Params not saved", Level.WARNING);
+			Log.debugException(e, Level.WARNING);
 		}
 	}
 
