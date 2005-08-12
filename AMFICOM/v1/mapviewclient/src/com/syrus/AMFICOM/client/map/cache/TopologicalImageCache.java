@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.13 2005/08/12 12:17:59 krupenn Exp $
+ * $Id: TopologicalImageCache.java,v 1.14 2005/08/12 14:49:41 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,13 +26,13 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.MapImageRenderer;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/08/12 12:17:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/08/12 14:49:41 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer

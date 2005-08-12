@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.25 2005/08/12 12:17:59 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.26 2005/08/12 14:49:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,20 +23,20 @@ import com.syrus.AMFICOM.client.map.controllers.NodeLinkController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
  * Команда создания метки на линии
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/08/12 12:17:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/08/12 14:49:41 $
  * @module mapviewclient
  */
 public class CreateMarkerCommandAtomic extends MapActionCommand

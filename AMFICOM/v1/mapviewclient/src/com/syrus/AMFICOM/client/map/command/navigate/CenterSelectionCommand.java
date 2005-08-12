@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.23 2005/08/12 12:17:59 krupenn Exp $
+ * $Id: CenterSelectionCommand.java,v 1.24 2005/08/12 14:49:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,15 +15,15 @@ import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * Центрировать геометрическое место точек, являющих собой центры 
  * выделенных элементов карты
- * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/08/12 12:17:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/08/12 14:49:41 $
  * @module mapviewclient
  */
 public class CenterSelectionCommand extends MapNavigateCommand {

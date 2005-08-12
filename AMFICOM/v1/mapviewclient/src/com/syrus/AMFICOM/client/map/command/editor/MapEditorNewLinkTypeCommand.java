@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewLinkTypeCommand.java,v 1.5 2005/08/12 12:17:59 krupenn Exp $
+ * $Id: MapEditorNewLinkTypeCommand.java,v 1.6 2005/08/12 14:49:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IntDimension;
+import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLinkType;

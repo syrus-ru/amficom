@@ -37,12 +37,12 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.IntDimension;
-import com.syrus.AMFICOM.general.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
+import com.syrus.AMFICOM.resource.IntDimension;
+import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {

@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.21 2005/08/12 12:17:59 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.22 2005/08/12 14:49:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,13 +15,13 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
@@ -30,9 +30,9 @@ import com.syrus.util.Log;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.21 $, $Date: 2005/08/12 12:17:59 $
+ * @version $Revision: 1.22 $, $Date: 2005/08/12 14:49:41 $
  * @module mapviewclient
- * @author $Author: krupenn $
+ * @author $Author: arseniy $
  */
 public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 {

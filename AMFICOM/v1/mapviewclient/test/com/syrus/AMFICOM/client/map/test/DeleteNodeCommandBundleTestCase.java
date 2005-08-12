@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundleTestCase.java,v 1.3 2005/08/12 12:17:59 krupenn Exp $
+ * $Id: DeleteNodeCommandBundleTestCase.java,v 1.4 2005/08/12 14:49:42 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalNodeCommandAtom
 import com.syrus.AMFICOM.client.map.command.action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.DeleteNodeCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
-import com.syrus.AMFICOM.general.DoublePoint;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;

@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.28 2005/08/12 12:17:59 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.29 2005/08/12 14:49:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,12 +15,12 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
  * Разместить c[tvysq элемент на карте в соответствии с привязкой
  * или по координатам
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/08/12 12:17:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.29 $, $Date: 2005/08/12 14:49:41 $
  * @module mapviewclient
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle

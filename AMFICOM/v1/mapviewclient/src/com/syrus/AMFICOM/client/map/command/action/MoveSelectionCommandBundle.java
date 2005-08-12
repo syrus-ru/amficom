@@ -1,5 +1,5 @@
 /**
- * $Id: MoveSelectionCommandBundle.java,v 1.16 2005/08/12 12:17:59 krupenn Exp $
+ * $Id: MoveSelectionCommandBundle.java,v 1.17 2005/08/12 14:49:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
-import com.syrus.AMFICOM.general.DoublePoint;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.map.Mark;
 /**
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
- * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/08/12 12:17:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/08/12 14:49:41 $
  * @module mapviewclient
  */
 public class MoveSelectionCommandBundle extends MapActionCommandBundle

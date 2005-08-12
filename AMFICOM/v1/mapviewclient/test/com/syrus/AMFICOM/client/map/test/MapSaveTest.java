@@ -1,5 +1,5 @@
 /**
- * $Id: MapSaveTest.java,v 1.4 2005/08/12 12:17:59 krupenn Exp $
+ * $Id: MapSaveTest.java,v 1.5 2005/08/12 14:49:42 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.client.map.editor.MapEditor;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
 import com.syrus.AMFICOM.client.model.OpenSessionCommand;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DoublePoint;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;

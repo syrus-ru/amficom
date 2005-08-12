@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.24 2005/08/12 12:17:59 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.25 2005/08/12 14:49:41 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,7 +18,6 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
@@ -27,6 +26,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
  * данна€ команда
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/08/12 12:17:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.25 $, $Date: 2005/08/12 14:49:41 $
  * @module mapviewclient
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle

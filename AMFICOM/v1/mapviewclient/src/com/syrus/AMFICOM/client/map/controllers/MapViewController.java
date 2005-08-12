@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.43 2005/08/12 12:17:59 krupenn Exp $
+ * $Id: MapViewController.java,v 1.44 2005/08/12 14:49:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,6 @@ import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Collector;
@@ -52,6 +51,7 @@ import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -62,8 +62,8 @@ import com.syrus.util.Log;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: krupenn $
- * @version $Revision: 1.43 $, $Date: 2005/08/12 12:17:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2005/08/12 14:49:41 $
  * @module mapviewclient
  */
 public final class MapViewController {

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomicTestCase.java,v 1.2 2005/08/12 12:17:59 krupenn Exp $
+ * $Id: CreateSiteCommandAtomicTestCase.java,v 1.3 2005/08/12 14:49:42 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,7 @@ import junit.framework.TestCase;
 import com.syrus.AMFICOM.client.map.command.action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.RemoveNodeCommandAtomic;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
-import com.syrus.AMFICOM.general.DoublePoint;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 

@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.37 2005/08/12 12:17:59 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.38 2005/08/12 14:49:41 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,6 @@ import com.syrus.AMFICOM.client.map.ui.MapToolTippedPanel;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
@@ -60,6 +59,7 @@ import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
@@ -75,8 +75,8 @@ import com.syrus.util.Log;
  * картографии, следует вызвать метод {@link #getVisualComponent()}
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
- * @author $Author: krupenn $
- * @version $Revision: 1.37 $, $Date: 2005/08/12 12:17:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2005/08/12 14:49:41 $
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
