@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.26 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.27 2005/08/12 10:43:08 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2005/08/12 10:43:08 $
  * @module mapviewclient
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle {
@@ -138,14 +138,35 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 				for(Iterator it = mapView.getCablePaths(this.link).iterator(); it.hasNext();) {
 					CablePath cablePath = (CablePath )it.next();
 
-					CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(this.link);
-					CableChannelingItem newCableChannelingItem = CableController.generateCCI(cablePath, this.newLink);
-					if(this.newLink.getStartNode().equals(cableChannelingItem.getStartSiteNode()))
-						newCableChannelingItem.insertSelfBefore(cableChannelingItem);
-					else
-						newCableChannelingItem.insertSelfAfter(cableChannelingItem);
-					// новая линия добавляется в кабельный путь
-					cablePath.addLink(this.newLink, newCableChannelingItem);
+//					CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(this.link);
+					for(CableChannelingItem cableChannelingItem : cablePath.getSchemeCableLink().getPathMembers()) {
+						if(cablePath.getBinding().get(cableChannelingItem) == this.link) {
+							if(this.newLink.getStartNode().equals(cableChannelingItem.getStartSiteNode())) {
+								CableChannelingItem newCableChannelingItem = 
+									CableController.generateCCI(
+										cablePath, 
+										this.newLink,
+										this.newLink.getStartNode(),
+										this.site);
+								newCableChannelingItem.insertSelfBefore(cableChannelingItem);
+								cableChannelingItem.setStartSiteNode(this.site);
+								// новая линия добавляется в кабельный путь
+								cablePath.addLink(this.newLink, newCableChannelingItem);
+							}
+							else {
+								CableChannelingItem newCableChannelingItem = 
+									CableController.generateCCI(
+										cablePath, 
+										this.newLink,
+										this.site,
+										this.newLink.getStartNode());
+								newCableChannelingItem.insertSelfAfter(cableChannelingItem);
+								cableChannelingItem.setEndSiteNode(this.site);
+								// новая линия добавляется в кабельный путь
+								cablePath.addLink(this.newLink, newCableChannelingItem);
+							}
+						}
+					}
 
 					if(this.newLink instanceof UnboundLink)
 						((UnboundLink )this.newLink).setCablePath(cablePath);

@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.28 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.29 2005/08/12 10:42:13 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -35,8 +35,8 @@ import com.syrus.util.Log;
  * от того, какие конечные точки на концах происходит операци€ удалени€ 
  * фрагментов линий, линий, узлов  (и путей).  оманда
  * состоит из последовательности атомарных действий
- * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.29 $, $Date: 2005/08/12 10:42:13 $
  * @module mapviewclient
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
@@ -348,12 +348,21 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 							physicalLink.getEndNode());
 					unbound.setCablePath(cablePath);
 
-					CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(physicalLink);
-					CableChannelingItem newCableChannelingItem = CableController.generateCCI(cablePath, unbound);
-					newCableChannelingItem.insertSelfBefore(cableChannelingItem);
-					cableChannelingItem.setParentPathOwner(null, false);
-					cablePath.removeLink(cableChannelingItem);
-					cablePath.addLink(unbound, newCableChannelingItem);
+//					CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(physicalLink);
+					for(CableChannelingItem cableChannelingItem : cablePath.getSchemeCableLink().getPathMembers()) {
+						if(cablePath.getBinding().get(cableChannelingItem) == physicalLink) {
+							CableChannelingItem newCableChannelingItem = 
+								CableController.generateCCI(
+										cablePath, 
+										unbound,
+										cableChannelingItem.getStartSiteNode(),
+										cableChannelingItem.getEndSiteNode());
+							newCableChannelingItem.insertSelfBefore(cableChannelingItem);
+							cableChannelingItem.setParentPathOwner(null, false);
+							cablePath.removeLink(cableChannelingItem);
+							cablePath.addLink(unbound, newCableChannelingItem);
+						}
+					}
 				}
 			}
 			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);

@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.34 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.35 2005/08/12 10:42:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,8 +40,8 @@ import com.syrus.util.Log;
 /**
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
- * @author $Author: arseniy $
- * @version $Revision: 1.34 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.35 $, $Date: 2005/08/12 10:42:13 $
  * @module mapviewclient
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -127,9 +127,6 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 					}
 				}
 				
-				CableChannelingItem leftCableChannelingItem = cablePath.getFirstCCI(left);
-				CableChannelingItem rightCableChannelingItem = cablePath.getFirstCCI(right);
-
 				// удаляются линии
 				// вместо них создается новая непривязанная
 				UnboundLink unbound = 
@@ -138,15 +135,40 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 						right.getOtherNode(site));
 				unbound.setCablePath(cablePath);
 
-				CableChannelingItem newCableChannelingItem = CableController.generateCCI(cablePath, unbound);
-				newCableChannelingItem.insertSelfBefore(rightCableChannelingItem);
-				leftCableChannelingItem.setParentPathOwner(null, false);
-				rightCableChannelingItem.setParentPathOwner(null, false);
+				CableChannelingItem leftCableChannelingItem = cablePath.getFirstCCI(left);
+				CableChannelingItem rightCableChannelingItem = cablePath.getFirstCCI(right);
 
-				cablePath.removeLink(leftCableChannelingItem);
-				cablePath.removeLink(rightCableChannelingItem);
-
-				cablePath.addLink(unbound, newCableChannelingItem);
+				while(leftCableChannelingItem != null) {
+					SiteNode start;
+					SiteNode end;
+					if(leftCableChannelingItem.getStartSiteNode() == rightCableChannelingItem.getEndSiteNode()) {
+						start = rightCableChannelingItem.getStartSiteNode();
+						end = leftCableChannelingItem.getEndSiteNode();
+					}
+					else {
+						start = leftCableChannelingItem.getStartSiteNode();
+						end = rightCableChannelingItem.getEndSiteNode();
+					}
+					
+					CableChannelingItem newCableChannelingItem = 
+						CableController.generateCCI(
+								cablePath, 
+								unbound,
+								start,
+								end);
+	
+					newCableChannelingItem.insertSelfBefore(rightCableChannelingItem);
+					leftCableChannelingItem.setParentPathOwner(null, false);
+					rightCableChannelingItem.setParentPathOwner(null, false);
+	
+					cablePath.removeLink(leftCableChannelingItem);
+					cablePath.removeLink(rightCableChannelingItem);
+	
+					cablePath.addLink(unbound, newCableChannelingItem);
+	
+					leftCableChannelingItem = cablePath.getFirstCCI(left);
+					rightCableChannelingItem = cablePath.getFirstCCI(right);
+				}
 
 				// если "левая" была непмривязанной, она удаляется (вместе 
 				// со своими фрагментами
