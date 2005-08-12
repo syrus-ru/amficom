@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.68 2005/08/09 09:32:51 krupenn Exp $
+ * $Id: NodeLink.java,v 1.69 2005/08/12 12:17:31 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: krupenn $
- * @version $Revision: 1.68 $, $Date: 2005/08/09 09:32:51 $
+ * @version $Revision: 1.69 $, $Date: 2005/08/12 12:17:31 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {

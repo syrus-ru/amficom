@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundleTestCase.java,v 1.2 2005/07/01 16:07:19 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundleTestCase.java,v 1.3 2005/08/12 12:17:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalLinkCommandAtom
 import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalNodeCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
-import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;

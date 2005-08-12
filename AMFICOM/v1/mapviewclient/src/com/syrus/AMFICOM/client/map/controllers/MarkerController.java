@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.29 2005/08/11 17:08:10 arseniy Exp $
+ * $Id: MarkerController.java,v 1.30 2005/08/12 12:17:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,9 +25,9 @@ import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 /**
  * Контроллер маркера.
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/08/11 17:08:10 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.30 $, $Date: 2005/08/12 12:17:59 $
  * @module mapviewclient
  */
 public class MarkerController extends AbstractNodeController {

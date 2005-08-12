@@ -1,5 +1,5 @@
 /**
- * $Id: MoveFixedDistanceCommand.java,v 1.11 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: MoveFixedDistanceCommand.java,v 1.12 2005/08/12 12:17:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,15 +16,15 @@ import java.awt.Point;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
  * Команда позволяет перемещать топологический узел вокруг другого
  * топологического узла, связанного с ним фрагментом линии, при сохранении
  * длины фрагмента
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2005/08/12 12:17:59 $
  * @module mapviewclient
  */
 public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle

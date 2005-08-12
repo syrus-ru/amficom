@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.47 2005/08/11 13:55:41 arseniy Exp $
+ * $Id: LinkTypeController.java,v 1.48 2005/08/12 12:17:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,13 +31,13 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.IntDimension;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.map.IntDimension;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 
 /**
  * Контроллер типа линейного элемента карты.
- * @author $Author: arseniy $
- * @version $Revision: 1.47 $, $Date: 2005/08/11 13:55:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.48 $, $Date: 2005/08/12 12:17:59 $
  * @module mapviewclient
  */
 public final class LinkTypeController extends AbstractLinkController {

@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
-import com.syrus.AMFICOM.map.IntPoint;
+import com.syrus.AMFICOM.general.IntPoint;
 import com.syrus.AMFICOM.map.PhysicalLinkBinding;
 
 public class TunnelLayout implements PropertyChangeListener {

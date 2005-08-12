@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.28 2005/08/12 10:45:20 krupenn Exp $
+ * $Id: MapViewNewCommand.java,v 1.29 2005/08/12 12:17:59 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -19,11 +19,11 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.util.Log;
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 /**
  * создать новый вид 
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/08/12 10:45:20 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/12 12:17:59 $
  * @module mapviewclient
  */
 public class MapViewNewCommand extends AbstractCommand {

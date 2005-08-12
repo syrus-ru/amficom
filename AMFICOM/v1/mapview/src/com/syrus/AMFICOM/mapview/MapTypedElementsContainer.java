@@ -1,5 +1,5 @@
 /**
- * $Id: MapTypedElementsContainer.java,v 1.1 2005/08/04 08:21:54 krupenn Exp $
+ * $Id: MapTypedElementsContainer.java,v 1.2 2005/08/12 12:17:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,7 @@ import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.TopologicalNode;

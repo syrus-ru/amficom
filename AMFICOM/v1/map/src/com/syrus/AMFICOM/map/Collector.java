@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.65 2005/08/08 14:24:18 arseniy Exp $
+ * $Id: Collector.java,v 1.66 2005/08/12 12:17:31 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -44,8 +45,8 @@ import com.syrus.AMFICOM.map.corba.IdlCollectorHelper;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.65 $, $Date: 2005/08/08 14:24:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.66 $, $Date: 2005/08/12 12:17:31 $
  * @module map
  */
 public final class Collector extends StorableObject implements MapElement, XMLBeansTransferable {

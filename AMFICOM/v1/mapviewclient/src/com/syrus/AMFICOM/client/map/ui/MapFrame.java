@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.62 2005/08/12 10:57:19 krupenn Exp $
+ * $Id: MapFrame.java,v 1.63 2005/08/12 12:17:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -60,9 +60,9 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.util.Log;
@@ -77,7 +77,7 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @version $Revision: 1.62 $, $Date: 2005/08/12 10:57:19 $
+ * @version $Revision: 1.63 $, $Date: 2005/08/12 12:17:59 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */

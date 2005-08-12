@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.34 2005/08/08 14:24:18 arseniy Exp $
+ * $Id: AbstractNode.java,v 1.35 2005/08/12 12:17:31 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -25,8 +26,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.34 $, $Date: 2005/08/08 14:24:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.35 $, $Date: 2005/08/12 12:17:31 $
  * @module map
  * @see SiteNode
  * @see TopologicalNode

@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageQuery.java,v 1.12 2005/07/26 11:17:35 arseniy Exp $
+ * $Id: TopologicalImageQuery.java,v 1.13 2005/08/12 12:17:31 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,14 +10,15 @@ package com.syrus.AMFICOM.map;
 
 import java.awt.Image;
 
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
 
 /**
  * Класс-запрос для обращения к серверу топографических данных через пул
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/07/26 11:17:35 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/08/12 12:17:31 $
  * @module mapinfo_v1
  */
 public final class TopologicalImageQuery implements Comparable<TopologicalImageQuery> {

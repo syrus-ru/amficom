@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.39 2005/08/09 16:28:40 arseniy Exp $
+ * $Id: MeasurementPath.java,v 1.40 2005/08/12 12:17:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,9 +19,9 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Элемент пути.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.39 $, $Date: 2005/08/09 16:28:40 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.40 $, $Date: 2005/08/12 12:17:44 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {

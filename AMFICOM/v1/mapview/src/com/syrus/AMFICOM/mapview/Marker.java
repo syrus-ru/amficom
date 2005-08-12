@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.31 2005/08/08 11:36:20 arseniy Exp $
+ * $Id: Marker.java,v 1.32 2005/08/12 12:17:44 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -22,7 +23,6 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -48,9 +48,9 @@ import com.syrus.AMFICOM.map.SiteNode;
  *
  *
  *
- * @version $Revision: 1.31 $, $Date: 2005/08/08 11:36:20 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/12 12:17:44 $
  * @module mapview
- * @author $Author: arseniy $
+ * @author $Author: krupenn $
  */
 
 public class Marker extends AbstractNode {

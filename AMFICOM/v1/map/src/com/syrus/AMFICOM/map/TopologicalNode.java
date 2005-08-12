@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.61 2005/08/10 07:48:38 max Exp $
+ * $Id: TopologicalNode.java,v 1.62 2005/08/12 12:17:31 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -41,8 +42,8 @@ import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: max $
- * @version $Revision: 1.61 $, $Date: 2005/08/10 07:48:38 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.62 $, $Date: 2005/08/12 12:17:31 $
  * @module map
  * @todo physicalLink should be transient
  */

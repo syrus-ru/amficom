@@ -1,5 +1,5 @@
 /**
- * $Id: MapContext.java,v 1.6 2005/06/20 12:10:03 krupenn Exp $
+ * $Id: MapContext.java,v 1.7 2005/08/12 12:17:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,7 +7,7 @@
  */
 package com.syrus.AMFICOM.client.map;
 
-import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.general.DoublePoint;
 
 public interface MapContext {
 	public static final double ZOOM_FACTOR = 2D;

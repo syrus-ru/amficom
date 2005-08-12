@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.111 2005/08/12 10:41:11 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.112 2005/08/12 12:17:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -49,10 +49,10 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.CommandList;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
-import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.111 $, $Date: 2005/08/12 10:41:11 $
+ * @version $Revision: 1.112 $, $Date: 2005/08/12 12:17:58 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer
@@ -1127,7 +1127,7 @@ public final class LogicalNetLayer
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.111 $, $Date: 2005/08/12 10:41:11 $
+	 * @version $Revision: 1.112 $, $Date: 2005/08/12 12:17:58 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement

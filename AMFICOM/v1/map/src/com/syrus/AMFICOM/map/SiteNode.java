@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.66 2005/08/08 16:47:43 krupenn Exp $
+ * $Id: SiteNode.java,v 1.67 2005/08/12 12:17:31 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -52,7 +53,7 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: krupenn $
- * @version $Revision: 1.66 $, $Date: 2005/08/08 16:47:43 $
+ * @version $Revision: 1.67 $, $Date: 2005/08/12 12:17:31 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {

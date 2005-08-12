@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.21 2005/08/09 16:28:40 arseniy Exp $
+ * $Id: Selection.java,v 1.22 2005/08/12 12:17:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,16 +12,16 @@ package com.syrus.AMFICOM.mapview;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
 
 /**
  * Набор выбранных элементов.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/08/09 16:28:40 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/08/12 12:17:44 $
  * @module mapview
  * @todo copy/paste, properties
  */

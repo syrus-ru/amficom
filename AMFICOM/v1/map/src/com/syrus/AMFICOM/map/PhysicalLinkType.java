@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.69 2005/08/09 16:28:19 max Exp $
+ * $Id: PhysicalLinkType.java,v 1.70 2005/08/12 12:17:31 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.IntDimension;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -52,8 +53,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: max $
- * @version $Revision: 1.69 $, $Date: 2005/08/09 16:28:19 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.70 $, $Date: 2005/08/12 12:17:31 $
  * @module map
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
