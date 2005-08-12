@@ -1,5 +1,5 @@
 /*
- * $Id: XMLSessionEnvironment.java,v 1.4 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: XMLSessionEnvironment.java,v 1.5 2005/08/12 10:09:32 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/08/12 10:09:32 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public final class XMLSessionEnvironment {
@@ -22,7 +22,7 @@ public final class XMLSessionEnvironment {
 		this.poolContext = poolContext;
 		this.poolContext.init();
 
-		IdentifierPool.init(new XMLIdentifierGeneratorServer());
+		IdentifierPool.init(new XMLIdentifierGeneratorServer(poolContext.getObjectLoader()));
 	}
 
 	public void openSession() {
