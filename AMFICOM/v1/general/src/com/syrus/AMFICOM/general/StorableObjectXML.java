@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.35 2005/08/09 15:41:57 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.36 2005/08/12 10:07:25 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import java.util.Set;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.35 $, $Date: 2005/08/09 15:41:57 $
+ * @version $Revision: 1.36 $, $Date: 2005/08/12 10:07:25 $
  * @author $Author: bob $
  * @module general
  */
@@ -71,7 +71,7 @@ public class StorableObjectXML {
 			throws RetrieveObjectException,
 				IllegalDataException {
 		Set<T> set = null;
-		final Set<Identifier> identifiers = this.driver.getIdentifiers(condition.getEntityCode().shortValue());
+		final Set<Identifier> identifiers = this.getIdentifiers(condition.getEntityCode().shortValue());
 		for (final Identifier id : identifiers) {
 			if (ids == null || !ids.contains(id)) {
 				try {
@@ -96,6 +96,10 @@ public class StorableObjectXML {
 		if (set == null)
 			set = Collections.emptySet();
 		return set;
+	}
+	
+	Set<Identifier> getIdentifiers(final short entityCode) throws IllegalDataException{
+		return this.driver.getIdentifiers(entityCode);
 	}
 
 	public void updateObject(final StorableObject storableObject, boolean force)
