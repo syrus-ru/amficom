@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.75 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.76 2005/08/12 14:49:19 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/08/08 11:27:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.76 $, $Date: 2005/08/12 14:49:19 $
+ * @author $Author: bob $
  * @module general
  */
 public final class ObjectEntities {
@@ -135,6 +135,7 @@ public final class ObjectEntities {
 
 	/*       Resource       */
 	public static final String IMAGERESOURCE = "ImageResource";
+	public static final String LAYOUT_ITEM = "LayoutItem";
 	
 	/*		MapView			*/
 	public static final String MAPVIEW = "MapView";
@@ -306,6 +307,8 @@ public final class ObjectEntities {
 	public static final short RESOURCE_MIN_CODE = 0x0381;
 
 	public static final short IMAGERESOURCE_CODE = RESOURCE_MIN_CODE;
+	
+	public static final short LAYOUT_ITEM_CODE = 0x0382;
 
 	public static final short RESOURCE_MAX_CODE = 0x0400;
 	
@@ -428,6 +431,7 @@ public final class ObjectEntities {
 		registerEntity(MAPLIBRARY_CODE, MAPLIBRARY);
 
 		registerEntity(IMAGERESOURCE_CODE, IMAGERESOURCE);
+		registerEntity(LAYOUT_ITEM_CODE, LAYOUT_ITEM);
 
 		registerEntity(MAPVIEW_CODE, MAPVIEW);
 

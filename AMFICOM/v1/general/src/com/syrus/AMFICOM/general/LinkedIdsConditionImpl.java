@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.16 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.17 2005/08/12 14:49:19 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,11 +48,12 @@ import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/08 11:27:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/08/12 14:49:19 $
+ * @author $Author: bob $
  * @module general
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -127,6 +128,9 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					case SITENODE_CODE:
 					case SITENODE_TYPE_CODE:
 					case TOPOLOGICALNODE_CODE:
+						
+					/* Resource */
+					case LAYOUT_ITEM_CODE:
 
 						condition = super.conditionTest(characteristic.getCharacterizableId());
 						break;
