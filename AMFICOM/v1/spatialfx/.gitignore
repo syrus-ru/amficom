@@ -10,3 +10,5 @@ lib
 *.gz
 *.swp
 Makefile.inc
+*.pl
+files
