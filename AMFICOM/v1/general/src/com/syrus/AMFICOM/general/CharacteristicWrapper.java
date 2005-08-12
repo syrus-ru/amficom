@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.19 2005/08/08 13:14:42 arseniy Exp $
+ * $Id: CharacteristicWrapper.java,v 1.20 2005/08/12 09:57:04 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/08 13:14:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/08/12 09:57:04 $
+ * @author $Author: bob $
  * @module general
  */
 public class CharacteristicWrapper extends StorableObjectWrapper<Characteristic> {
@@ -29,9 +29,9 @@ public class CharacteristicWrapper extends StorableObjectWrapper<Characteristic>
 	public static final String COLUMN_EDITABLE = "editable";
 	public static final String COLUMN_VISIBLE = "visible";
 
-	protected static CharacteristicWrapper instance;
+	private static CharacteristicWrapper instance;
 
-	final protected List<String> keys;
+	private final List<String> keys;
 
 	private CharacteristicWrapper() {
 		// empty private constructor

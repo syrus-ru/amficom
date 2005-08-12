@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceWrapper.java,v 1.15 2005/08/08 13:37:49 arseniy Exp $
+ * $Id: ImageResourceWrapper.java,v 1.16 2005/08/12 09:57:28 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/08 13:37:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/08/12 09:57:28 $
+ * @author $Author: bob $
  * @module resource
  */
 public class ImageResourceWrapper extends StorableObjectWrapper<AbstractImageResource> {
@@ -28,9 +28,9 @@ public class ImageResourceWrapper extends StorableObjectWrapper<AbstractImageRes
 
 	public static final String COLUMN_DATA = "data";
 
-	protected static ImageResourceWrapper instance;
+	private static ImageResourceWrapper instance;
 
-	protected List<String> keys;
+	private List<String> keys;
 
 	private ImageResourceWrapper() {
 		// empty private constructor

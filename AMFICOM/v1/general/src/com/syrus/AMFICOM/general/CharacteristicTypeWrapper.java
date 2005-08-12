@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeWrapper.java,v 1.17 2005/08/08 13:14:42 arseniy Exp $
+ * $Id: CharacteristicTypeWrapper.java,v 1.18 2005/08/12 09:57:04 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/08 13:14:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/08/12 09:57:04 $
+ * @author $Author: bob $
  * @module general
  */
 public class CharacteristicTypeWrapper extends StorableObjectWrapper<CharacteristicType> {
@@ -24,9 +24,9 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper<Characteris
 	public static final String COLUMN_DATA_TYPE_CODE = "data_type_code";
 	public static final String COLUMN_SORT = "sort";
 
-	protected static CharacteristicTypeWrapper instance;
+	private static CharacteristicTypeWrapper instance;
 
-	protected List<String> keys;
+	private List<String> keys;
 
 	private CharacteristicTypeWrapper() {
 		// empty private constructor

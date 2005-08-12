@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterTypeWrapper.java,v 1.14 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: ParameterTypeWrapper.java,v 1.15 2005/08/12 09:57:04 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,17 +13,17 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:27:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/08/12 09:57:04 $
+ * @author $Author: bob $
  * @module general
  */
 public class ParameterTypeWrapper extends StorableObjectWrapper<ParameterType> {
 
 	public static final String COLUMN_DATA_TYPE_CODE = "data_type_code";
 
-	protected static ParameterTypeWrapper instance;
+	private static ParameterTypeWrapper instance;
 
-	protected List<String> keys;
+	private List<String> keys;
 
 	private ParameterTypeWrapper() {
 		// empty private constructor
