@@ -17,3 +17,5 @@ Makefile.inc
 .pmd
 *.key
 .mach
+*.pl
+*.txt
