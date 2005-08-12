@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.26 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.27 2005/08/12 10:43:44 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
  * –азместить c[tvysq элемент на карте в соответствии с прив€зкой
  * или по координатам
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2005/08/12 10:43:44 $
  * @module mapviewclient
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle
@@ -87,15 +87,22 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 			return;
 		
 		try {
+			long t1 = System.currentTimeMillis();
 			// если географическа€ точка не задана, получить ее из экранной точки
 			if(this.coordinatePoint == null)
 				this.coordinatePoint = this.logicalNetLayer.getConverter().convertScreenToMap(this.point);
 			MapView mapView = this.logicalNetLayer.getMapView();
 			this.map = mapView.getMap();
+			long t2 = System.currentTimeMillis();
 			this.site = mapView.findElement(this.schemeElement);
+			long t3 = System.currentTimeMillis();
+			long t4 = System.currentTimeMillis();
+			long t5 = System.currentTimeMillis();
+			long t6 = System.currentTimeMillis();
 			if(this.site == null)
 			{
 				MapElement mapElement = this.logicalNetLayer.getMapElementAtPoint(this.point, this.netMapViewer.getVisibleBounds());
+				t4 = System.currentTimeMillis();
 				
 				if(mapElement instanceof SiteNode
 					&& !(mapElement instanceof UnboundNode))
@@ -108,12 +115,21 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 					this.unbound = super.createUnboundNode(this.coordinatePoint, this.schemeElement);
 					this.site = this.unbound;
 				}
+				t5 = System.currentTimeMillis();
 				
 				this.logicalNetLayer.getMapViewController().scanCables(this.schemeElement.getParentScheme());
+				t6 = System.currentTimeMillis();
 			}
 			// операци€ закончена - оповестить слушателей
 			this.logicalNetLayer.setCurrentMapElement(this.site);
 			this.logicalNetLayer.notifySchemeEvent(this.site);
+			long t7 = System.currentTimeMillis();
+			Log.debugMessage("PlaceSchemeElementCommand :: calculate coordinates " + (t2 - t1) + " ms", Level.INFO);
+			Log.debugMessage("PlaceSchemeElementCommand :: find scheme element " + (t3 - t2) + " ms", Level.INFO);
+			Log.debugMessage("PlaceSchemeElementCommand :: get map element at point " + (t4 - t3) + " ms", Level.INFO);
+			Log.debugMessage("PlaceSchemeElementCommand :: create unbound node " + (t5 - t4) + " ms", Level.INFO);
+			Log.debugMessage("PlaceSchemeElementCommand :: scan cables " + (t6 - t5) + " ms", Level.INFO);
+			Log.debugMessage("PlaceSchemeElementCommand :: notify " + (t7 - t6) + " ms", Level.INFO);
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);
