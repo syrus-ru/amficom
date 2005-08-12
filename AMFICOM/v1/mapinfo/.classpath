@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mapviewclient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/map"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/xalan"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mscharserver_interface"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/commonclient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csbridge"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mapinfo-common"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>
