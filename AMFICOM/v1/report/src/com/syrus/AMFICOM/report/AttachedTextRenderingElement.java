@@ -58,162 +58,41 @@ public final class AttachedTextRenderingElement extends RenderingElement
 	 * Задаёт привязку по горизонтали
 	 * @param hAttacher объект, к которому осуществляется привязка
 	 * @param attachmentType тип привязки
+	 * @param distance расстояние до элемента отображения данных, к которому
+	 * осуществляется привязка.
 	 */
-	public void setHorizAttachment(DataRenderingElement hAttacher,
-		String attachmentType)
+	public void setHorizAttachment(
+			DataRenderingElement hAttacher,
+			String attachmentType,
+			int distance)
 	{
 		if (attachmentType == null)
 			throw new AssertionError("AttachedTextRenderingElement.setHorizAttachment | attachmentType can't be null!");
 		
 		this.horizAttacher = hAttacher;
 		this.horizontalAttachType = attachmentType;
+		this.distanceX = distance;
 	}
 
 	/**
 	 * Задаёт привязку по вертикали
 	 * @param vAttacher объект, к которому осуществляется привязка
 	 * @param attachmentType тип привязки
+	 * @param distance расстояние до элемента отображения данных, к которому
+	 * осуществляется привязка.
 	 */
-	public void setVertAttachment(DataRenderingElement vAttacher,
-		String attachmentType)
+	public void setVertAttachment(
+			DataRenderingElement vAttacher,
+			String attachmentType,
+			int distance)
 	{
 		if (attachmentType == null)
 			throw new AssertionError("AttachedTextRenderingElement.setVertAttachment | attachmentType can't be null!");
 		
 		this.vertAttacher = vAttacher;
 		this.verticalAttachType = attachmentType;
+		this.distanceY = distance;		
 	}
-
-//	/**
-//	 * Задаёт новые значения distanceX,distanceY.
-//	 * Используется при перемещении привязанной надписи относительно
-//	 * объекта, к которому она привязана.
-//	 */
-//	public void setFirmingDistance()
-//	{
-//		if (horizAttacher == null)
-//			distanceX = this.getX();
-//		if (vertAttacher == null)
-//			distanceY = this.getY();
-//
-//		int width = 0;
-//		int height = 0;
-//
-//		if (vertAttacher != null)
-//		{
-//			if (vertAttacher.rendererPanel == null)
-//				height = vertAttacher.height;
-//			else
-//				height = vertAttacher.rendererPanel.getHeight();
-//
-//			if (verticalAttachTo.equals(TextAttachingType.toFieldsTop))
-//				distanceY = this.getY();
-//			if (verticalAttachTo.equals(TextAttachingType.toTop))
-//				distanceY = this.getY() - vertAttacher.y;
-//			if (verticalAttachTo.equals(TextAttachingType.toBottom))
-//				distanceY = this.getY() - vertAttacher.y - height;
-//		}
-//
-//		if (horizAttacher != null)
-//		{
-//			if (horizAttacher.rendererPanel == null)
-//				width = horizAttacher.width;
-//			else
-//				width = horizAttacher.rendererPanel.getWidth();
-//
-//			if (horizontalAttachTo.equals(TextAttachingType.toFieldsLeft))
-//				distanceX = this.getX();
-//			if (horizontalAttachTo.equals(TextAttachingType.toLeft))
-//				distanceX = this.getX() - horizAttacher.x;
-//			if (horizontalAttachTo.equals(TextAttachingType.toRight))
-//				distanceX = this.getX() - horizAttacher.x - width;
-//		}
-//	}
-//
-//	/**
-//	 * Используется при перемещении объекта, к которому привязана
-//	 * надпись. Изменяет координаты надписи так, чтобы расстояние
-//	 * между надписью и объектом осталось неизменным.
-//	 * @param imagableRect поля
-//	 */
-//	public void refreshCoords(Rectangle imagableRect)
-//	{
-//		int newX = 0;
-//		int newY = 0;
-//
-//		if (horizAttacher == null)
-//			newX = this.getX();
-//		if (vertAttacher == null)
-//			newY = this.getY();
-//
-//		if (vertAttacher != null)
-//		{
-//			int height = 0;
-//			int vertFirmerY = 0;
-//			if (vertAttacher.rendererPanel == null)
-//			{
-//				height = vertAttacher.height;
-//				vertFirmerY = vertAttacher.y;
-//			}
-//			else
-//			{
-//				height = vertAttacher.rendererPanel.getHeight();
-//				vertFirmerY = vertAttacher.rendererPanel.getY();
-//			}
-//
-//			if (verticalAttachTo.equals(TextAttachingType.toTop))
-//				newY = vertFirmerY + distanceY;
-//
-//			if (verticalAttachTo.equals(TextAttachingType.toBottom))
-//				newY = vertFirmerY + height + distanceY;
-//
-//			if (imagableRect != null)
-//			{
-//				if (newY < imagableRect.y)
-//					newY = imagableRect.y;
-//
-//				int tpheight = (int) this.getPreferredSize().getWidth();
-//				if (newY + tpheight > imagableRect.y + imagableRect.height)
-//					newY = imagableRect.y + imagableRect.height - tpheight;
-//			}
-//		}
-//
-//		if (horizAttacher != null)
-//		{
-//			int width = 0;
-//			int horizFirmerX = 0;
-//
-//			if (horizAttacher.rendererPanel == null)
-//			{
-//				width = horizAttacher.width;
-//				horizFirmerX = horizAttacher.x;
-//			}
-//			else
-//			{
-//				width = horizAttacher.rendererPanel.getWidth();
-//				horizFirmerX = horizAttacher.rendererPanel.getX();
-//			}
-//
-//			if (horizontalAttachTo.equals(TextAttachingType.toLeft))
-//				newX = horizFirmerX + distanceX;
-//
-//			if (horizontalAttachTo.equals(TextAttachingType.toRight))
-//				newX = horizFirmerX + width + distanceX;
-//
-//			if (imagableRect != null)
-//			{
-//				if (newX < imagableRect.x)
-//					newX = imagableRect.x;
-//
-//				int tpwidth = (int) this.getPreferredSize().getWidth();
-//
-//				if (newX + tpwidth > imagableRect.x + imagableRect.width)
-//					newX = imagableRect.x + imagableRect.width - tpwidth;
-//			}
-//		}
-//
-//		this.setLocation(newX, newY);
-//	}
 
 	public Font getFont() {
 		return this.font;
@@ -345,5 +224,40 @@ public final class AttachedTextRenderingElement extends RenderingElement
 	}
 
 	public AttachedTextRenderingElement() {
+	}
+	
+	/**
+	 * Метод используется, чтобы изменить местоположение элемента с надписью
+	 * так, чтобы он находился на заданном при привязке расстоянии от
+	 * элемента отображения данных, к которому он привязан.
+	 */
+	public void setAttachingDistances()
+	{
+		int newX = 0;
+		int newY = 0;
+
+		if (this.horizontalAttachType.equals(TextAttachingType.toFieldsLeft))
+			newX = this.x;
+		else if (this.horizontalAttachType.equals(TextAttachingType.toLeft))
+			newX = this.horizAttacher.x + this.distanceX;
+		else if (this.horizontalAttachType.equals(TextAttachingType.toRight))
+			newX = this.horizAttacher.x + this.horizAttacher.width + this.distanceX;
+		
+		if (this.verticalAttachType.equals(TextAttachingType.toFieldsTop))
+			newX = this.x;
+		else if (this.verticalAttachType.equals(TextAttachingType.toTop))
+			newX = this.vertAttacher.y + this.distanceY;
+		else if (this.verticalAttachType.equals(TextAttachingType.toBottom))
+			newX = this.vertAttacher.y + this.vertAttacher.height + this.distanceY;
+
+		this.setLocation(newX, newY);
+	}
+
+	public void setDistanceX(int distanceX) {
+		this.distanceX = distanceX;
+	}
+
+	public void setDistanceY(int distanceY) {
+		this.distanceY = distanceY;
 	}
 }
