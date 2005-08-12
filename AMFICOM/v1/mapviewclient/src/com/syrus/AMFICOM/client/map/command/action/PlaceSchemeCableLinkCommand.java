@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.37 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.38 2005/08/12 10:43:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 /**
  * Разместить кабель на карте.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.37 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.38 $, $Date: 2005/08/12 10:43:30 $
  * @module mapviewclient
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -73,9 +73,13 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		this.map = this.mapView.getMap();
 		
 		try {
+			long t1 = System.currentTimeMillis();
 			this.startNode = this.mapView.getStartNode(this.schemeCableLink);
+			long t2 = System.currentTimeMillis();
 			this.endNode = this.mapView.getEndNode(this.schemeCableLink);
+			long t3 = System.currentTimeMillis();
 			this.cablePath = this.mapView.findCablePath(this.schemeCableLink);
+			long t4 = System.currentTimeMillis();
 			// если кабельный путь уже есть - ничего не делать
 			if(this.cablePath != null)
 			{
@@ -85,6 +89,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 			if(this.startNode == null || this.endNode == null)
 				return;
 			this.cablePath = super.createCablePath(this.schemeCableLink, this.startNode, this.endNode);
+			long t5 = System.currentTimeMillis();
 			// идем по всем узлам кабельного пути от начального
 			SiteNode bufferStartSite = this.startNode;
 			// цикл по элементам привязки кабеля.
@@ -125,7 +130,12 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 				if(!exists)
 				{
 					UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, currentStartNode);
-					CableChannelingItem newCableChannelingItem = CableController.generateCCI(this.cablePath, unbound);
+					CableChannelingItem newCableChannelingItem = 
+						CableController.generateCCI(
+								this.cablePath, 
+								unbound,
+								bufferStartSite,
+								currentStartNode);
 					newCableChannelingItem.insertSelfBefore(cci);
  					this.cablePath.addLink(unbound, newCableChannelingItem);
 					unbound.setCablePath(this.cablePath);
@@ -155,19 +165,34 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle
 					}
 				}
 			}
+			long t6 = System.currentTimeMillis();
 			// если элементы привязки не доходят до конца, создать непривязанную
 			// линию от текущего до конечного узла
 			if(this.endNode != bufferStartSite)
 			{
 				UnboundLink unbound = super.createUnboundLinkWithNodeLink(bufferStartSite, this.endNode);
-				CableChannelingItem newCableChannelingItem = CableController.generateCCI(this.cablePath, unbound);
+				CableChannelingItem newCableChannelingItem = 
+					CableController.generateCCI(
+							this.cablePath, 
+							unbound,
+							bufferStartSite,
+							this.endNode);
 				this.cablePath.addLink(unbound, newCableChannelingItem);
 				unbound.setCablePath(this.cablePath);
 			}
+			long t7 = System.currentTimeMillis();
 			setResult(Command.RESULT_OK);
 			// операция закончена - оповестить слушателей
 			this.logicalNetLayer.setCurrentMapElement(this.cablePath);
 			this.logicalNetLayer.notifySchemeEvent(this.cablePath);
+			long t8 = System.currentTimeMillis();
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: get start node for scl " + (t2 - t1) + " ms", Level.INFO);
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: get end node for scl " + (t3 - t2) + " ms", Level.INFO);
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: find cable path " + (t4 - t3) + " ms", Level.INFO);
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: create cable path " + (t5 - t4) + " ms", Level.INFO);
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: walk through CCIs " + (t6 - t5) + " ms", Level.INFO);
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: create final unbound node " + (t7 - t6) + " ms", Level.INFO);
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: notify " + (t8 - t7) + " ms", Level.INFO);
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);
