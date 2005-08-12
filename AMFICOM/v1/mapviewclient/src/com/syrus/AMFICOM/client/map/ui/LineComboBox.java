@@ -289,7 +289,6 @@ public class LineComboBox extends AComboBox
 					ml.basicStroke,
 					ml.text );
 			this.returnStroke = ml.basicStroke;
-			System.out.println("select " + ml.text);
 		}
 	}
 
@@ -299,7 +298,6 @@ public class LineComboBox extends AComboBox
 				((MyLine)this.getSelectedItem()).basicStroke,
 				((MyLine)this.getSelectedItem()).text );
 		this.returnStroke = ((MyLine)this.getSelectedItem()).basicStroke;
-		System.out.println("select " + ((MyLine)this.getSelectedItem()).text);
 	}
 
 	void this_mousePressed(MouseEvent e)
