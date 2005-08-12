@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.29 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.30 2005/08/12 10:42:35 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -36,8 +36,8 @@ import com.syrus.util.Log;
  *  из непроложенных линий генерируютс€ тоннели и кабель прив€зываетс€ к ним.
  *  ”же существующа€ прив€зка сохран€етс€. ѕо неприв€занным элементам 
  *  генерируютс€ сетевые узла и схемные элементы прив€зываютс€ к ним.
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.30 $, $Date: 2005/08/12 10:42:35 $
  * @module mapviewclient
  */
 public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
@@ -115,7 +115,12 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 					}
 
 					CableChannelingItem cableChannelingItem = this.cablePath.getFirstCCI(unbound);
-					CableChannelingItem newCableChannelingItem = CableController.generateCCI(this.cablePath, link);
+					CableChannelingItem newCableChannelingItem = 
+						CableController.generateCCI(
+								this.cablePath, 
+								link,
+								startsite,
+								endsite);
 					newCableChannelingItem.insertSelfBefore(cableChannelingItem);
 					cableChannelingItem.setParentPathOwner(null, false);
 					this.cablePath.removeLink(cableChannelingItem);

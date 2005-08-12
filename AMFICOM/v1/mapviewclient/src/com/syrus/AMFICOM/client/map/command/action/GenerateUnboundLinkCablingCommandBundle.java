@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.24 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.25 2005/08/12 10:42:35 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
 
 /**
  *  оманда генерации тоннел€ по неприв€занной линии.
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/08/12 10:42:35 $
  * @module mapviewclient
  */
 public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBundle
@@ -89,7 +89,12 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 			}
 
 			CableChannelingItem cableChannelingItem = this.cablePath.getFirstCCI(this.unbound);
-			CableChannelingItem newCableChannelingItem = CableController.generateCCI(this.cablePath, this.link);
+			CableChannelingItem newCableChannelingItem = 
+				CableController.generateCCI(
+						this.cablePath, 
+						this.link,
+						cableChannelingItem.getStartSiteNode(),
+						cableChannelingItem.getEndSiteNode());
 			newCableChannelingItem.insertSelfBefore(cableChannelingItem);
 			cableChannelingItem.setParentPathOwner(null, false);
 			this.cablePath.removeLink(cableChannelingItem);

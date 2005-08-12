@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.22 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.23 2005/08/12 10:41:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,8 +32,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.22 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.23 $, $Date: 2005/08/12 10:41:45 $
  * @module mapviewclient 
  */
 public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommandBundle
@@ -83,7 +83,12 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 			CablePath cablePath = this.unbound.getCablePath();
 
 			CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(this.unbound);
-			CableChannelingItem newCableChannelingItem = CableController.generateCCI(cablePath, this.link);
+			CableChannelingItem newCableChannelingItem = 
+				CableController.generateCCI(
+						cablePath, 
+						this.link,
+						cableChannelingItem.getStartSiteNode(),
+						cableChannelingItem.getEndSiteNode());
 			newCableChannelingItem.insertSelfBefore(cableChannelingItem);
 			cableChannelingItem.setParentPathOwner(null, false);
 			cablePath.removeLink(cableChannelingItem);
