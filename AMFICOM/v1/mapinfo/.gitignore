@@ -10,4 +10,8 @@ lib
 *.gz
 *.jar
 *.swp
+Makefile.inc
+*.pl
+files
+*.txt
 .mach
