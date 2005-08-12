@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.53 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapMouseListener.java,v 1.54 2005/08/12 10:57:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.53 $, $Date: 2005/08/11 12:43:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.54 $, $Date: 2005/08/12 10:57:49 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public final class MapMouseListener implements MouseListener
@@ -169,7 +169,7 @@ public final class MapMouseListener implements MouseListener
 				default:
 					try
 					{
-						System.out.println("unknown map operation: " + mapState.getOperationMode());
+						Log.debugMessage("unknown map operation: " + mapState.getOperationMode(), Level.SEVERE);
 						throw new Exception("dummy");
 					}
 					catch(Exception e)
@@ -457,7 +457,7 @@ public final class MapMouseListener implements MouseListener
 					default:
 						try
 						{
-							System.out.println("unknown map operation: " + mapState.getOperationMode());
+							Log.debugMessage("unknown map operation: " + mapState.getOperationMode(), Level.SEVERE);
 							throw new Exception("dummy");
 						}
 						catch(Exception e)

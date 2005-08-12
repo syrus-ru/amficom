@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.29 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapMouseMotionListener.java,v 1.30 2005/08/12 10:57:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.29 $, $Date: 2005/08/11 12:43:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/08/12 10:57:49 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public final class MapMouseMotionListener implements MouseMotionListener
@@ -123,7 +123,7 @@ public final class MapMouseMotionListener implements MouseMotionListener
 				default:
 					try
 					{
-						System.out.println("unknown map operation: " + mapState.getOperationMode());
+						Log.debugMessage("unknown map operation: " + mapState.getOperationMode(), Level.SEVERE);
 						throw new Exception("dummy");
 					}
 					catch(Exception e)

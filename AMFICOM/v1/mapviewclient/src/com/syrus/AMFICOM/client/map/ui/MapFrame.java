@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.61 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapFrame.java,v 1.62 2005/08/12 10:57:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import java.awt.Toolkit;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
@@ -64,6 +65,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.util.Log;
 /**
  * Класс $RCSfile: MapFrame.java,v $ используется для управления отображеним топологический схемы.
  * Основой является объект типа MapView. Отображение осуществляется объектом 
@@ -75,8 +77,8 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.61 $, $Date: 2005/08/11 12:43:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.62 $, $Date: 2005/08/12 10:57:19 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapFrame extends JInternalFrame implements PropertyChangeListener {
@@ -360,7 +362,7 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 	}
 
 	public void closeMap() {
-		System.out.println("Closing map");
+		Log.debugMessage("Closing map", Level.INFO);
 		this.setContext(null);
 	}
 

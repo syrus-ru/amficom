@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkSizeField.java,v 1.11 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapNodeLinkSizeField.java,v 1.12 2005/08/12 10:57:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ package com.syrus.AMFICOM.client.map.ui;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.KeyEvent;
+import java.util.logging.Level;
 
 import javax.swing.JTextField;
 
@@ -22,6 +23,7 @@ import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.util.Log;
 
 /**
  * Поле редактирования длины фрагмента линии. При отображении компонент
@@ -31,8 +33,8 @@ import com.syrus.AMFICOM.map.NodeLink;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/08/11 12:43:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/12 10:57:49 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public final class MapNodeLinkSizeField extends JTextField 
@@ -125,7 +127,7 @@ public final class MapNodeLinkSizeField extends JTextField
 				}
 				catch(Exception ex)
 				{
-					System.out.println("Illegal distance");
+					Log.debugMessage("Illegal distance", Level.INFO);
 				}
 			}
 		}

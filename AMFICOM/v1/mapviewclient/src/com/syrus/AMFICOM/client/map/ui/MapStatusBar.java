@@ -1,5 +1,5 @@
 /*
- * $Id: MapStatusBar.java,v 1.13 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapStatusBar.java,v 1.14 2005/08/12 10:57:49 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.DoublePoint;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/08/12 10:57:49 $
  * @module mapviewclient
  */
 public final class MapStatusBar extends JPanel {
@@ -113,7 +113,7 @@ public final class MapStatusBar extends JPanel {
 							MapStatusBar.this.netMapViewer.setScale(scale);
 						}
 					} catch(Exception ex) {
-						System.out.println("Wring number format");
+						System.out.println("Wrong number format");
 					}
 				}
 			}
