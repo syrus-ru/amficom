@@ -1,5 +1,5 @@
 /**
- * $Id: ClonedIdsPool.java,v 1.2 2005/08/05 16:02:51 arseniy Exp $
+ * $Id: ClonedIdsPool.java,v 1.3 2005/08/12 12:26:28 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,9 +11,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/05 16:02:51 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/12 12:26:28 $
  * @author $Author: arseniy $
- * @module map_v1
+ * @module general
  */
 public class ClonedIdsPool {
 

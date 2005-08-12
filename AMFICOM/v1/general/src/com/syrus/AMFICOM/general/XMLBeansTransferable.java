@@ -1,5 +1,5 @@
 /*-
- * $Id: XMLBeansTransferable.java,v 1.1 2005/08/05 15:42:17 max Exp $
+ * $Id: XMLBeansTransferable.java,v 1.2 2005/08/12 12:26:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,9 @@ package com.syrus.AMFICOM.general;
 import org.apache.xmlbeans.XmlObject;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/05 15:42:17 $
- * @author $Author: max $
- * @module map
+ * @version $Revision: 1.2 $, $Date: 2005/08/12 12:26:28 $
+ * @author $Author: arseniy $
+ * @module general
  */
 public interface XMLBeansTransferable {
 
