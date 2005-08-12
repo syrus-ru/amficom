@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryController.java,v 1.7 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MapLibraryController.java,v 1.8 2005/08/12 14:52:33 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,14 +24,14 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
-import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
  * контроллер типа сетевого узла.
  * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/12 14:52:33 $
  * @module mapviewclient
  */
 public class MapLibraryController {

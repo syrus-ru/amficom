@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 public class TopologicalNodeEditor extends DefaultStorableObjectEditor {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();

@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.10 2005/08/12 10:52:39 krupenn Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.11 2005/08/12 14:52:33 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,6 @@ import java.awt.GridBagLayout;
 import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
 
@@ -32,8 +31,8 @@ import com.syrus.util.Log;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.10 $, $Date: 2005/08/12 10:52:39 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2005/08/12 14:52:33 $
+ * @author $Author: arseniy $
  * @module mapviewclient
  */
 public class MapChooserPanel extends JPanel

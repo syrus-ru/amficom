@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.64 2005/08/12 14:49:42 arseniy Exp $
+ * $Id: MapFrame.java,v 1.65 2005/08/12 14:52:33 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -60,11 +60,11 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 /**
  * Класс $RCSfile: MapFrame.java,v $ используется для управления отображеним топологический схемы.
@@ -77,7 +77,7 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @version $Revision: 1.64 $, $Date: 2005/08/12 14:49:42 $
+ * @version $Revision: 1.65 $, $Date: 2005/08/12 14:52:33 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */

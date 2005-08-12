@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 public class UnboundNodeEditor extends DefaultStorableObjectEditor {
 	private GridBagLayout gridBagLayout1 = new GridBagLayout();
