@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanFactory.java,v 1.7 2005/08/11 13:06:12 bob Exp $
+ * $Id: MCMBeanFactory.java,v 1.8 2005/08/12 06:46:31 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,8 @@ import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_HOSTNAME;
 import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_NAME;
 import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_SERVER_ID;
 import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_USER_ID;
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.PROPERTY_SERVERS_REFRESHED;
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.PROPERTY_USERS_REFRESHED;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -27,7 +29,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/11 13:06:12 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/12 06:46:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -81,7 +83,7 @@ public class MCMBeanFactory extends TabledBeanFactory {
 		bean.setId(identifier);			
 		
 		JGraphText.entityDispatcher.addPropertyChangeListener(
-			"usersRefreshed",
+			PROPERTY_USERS_REFRESHED,
 			new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
@@ -90,7 +92,7 @@ public class MCMBeanFactory extends TabledBeanFactory {
 			});
 		
 		JGraphText.entityDispatcher.addPropertyChangeListener(
-			"serversRefreshed",
+			PROPERTY_SERVERS_REFRESHED,
 			new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {

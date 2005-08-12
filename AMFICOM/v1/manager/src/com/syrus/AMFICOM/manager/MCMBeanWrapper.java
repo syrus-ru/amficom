@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: MCMBeanWrapper.java,v 1.3 2005/08/11 13:07:51 bob Exp $
+ * $Id: MCMBeanWrapper.java,v 1.4 2005/08/12 06:46:31 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/11 13:07:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/12 06:46:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -41,6 +41,10 @@ public class MCMBeanWrapper implements Wrapper {
 	public static final String		KEY_HOSTNAME	= "hostname";
 	public static final String		KEY_SERVER_ID	= "serverId";
 	public static final String		KEY_USER_ID		= "userd";
+	
+	
+	public static final String		PROPERTY_USERS_REFRESHED	= "usersRefreshed";
+	public static final String		PROPERTY_SERVERS_REFRESHED	= "serversRefreshed";
 
 	private static MCMBeanWrapper	instance;
 
@@ -68,7 +72,7 @@ public class MCMBeanWrapper implements Wrapper {
 				public void propertyChange(PropertyChangeEvent evt) {
 					refreshUsers();
 					JGraphText.entityDispatcher.firePropertyChange(
-						new PropertyChangeEvent(MCMBeanWrapper.this, "usersRefreshed", null, null));
+						new PropertyChangeEvent(MCMBeanWrapper.this, PROPERTY_USERS_REFRESHED, null, null));
 				}
 			});
 		
@@ -79,7 +83,7 @@ public class MCMBeanWrapper implements Wrapper {
 				public void propertyChange(PropertyChangeEvent evt) {
 					refreshServers();
 					JGraphText.entityDispatcher.firePropertyChange(
-						new PropertyChangeEvent(MCMBeanWrapper.this, "serversRefreshed", null, null));
+						new PropertyChangeEvent(MCMBeanWrapper.this, PROPERTY_SERVERS_REFRESHED, null, null));
 				}
 			});
 		

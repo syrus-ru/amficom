@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: RTUBeanWrapper.java,v 1.5 2005/08/11 13:09:00 bob Exp $
+ * $Id: RTUBeanWrapper.java,v 1.6 2005/08/12 06:46:31 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/11 13:09:00 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/12 06:46:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -41,6 +41,8 @@ public class RTUBeanWrapper implements Wrapper {
 	public static final String		KEY_PORT		= "tcpport";
 	public static final String		KEY_MCM_ID		= "mcmId";
 
+	public static final String PROPERTY_MCMS_REFRESHED =  "mcmsRefreshed";
+	
 	private static RTUBeanWrapper	instance;
 
 	private List<String>					keys;
@@ -65,7 +67,10 @@ public class RTUBeanWrapper implements Wrapper {
 				public void propertyChange(PropertyChangeEvent evt) {
 					refreshMCMs();
 					JGraphText.entityDispatcher.firePropertyChange(
-						new PropertyChangeEvent(RTUBeanWrapper.this, "mcmsRefreshed", null, null));
+						new PropertyChangeEvent(RTUBeanWrapper.this, 
+							PROPERTY_MCMS_REFRESHED, 
+							null, 
+							null));
 				}
 			});
 		

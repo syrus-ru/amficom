@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.9 2005/08/11 13:08:33 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.10 2005/08/12 06:46:31 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_HOSTNAME;
 import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_MCM_ID;
 import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_NAME;
 import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_PORT;
+import static com.syrus.AMFICOM.manager.RTUBeanWrapper.PROPERTY_MCMS_REFRESHED;
 
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -25,7 +26,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/11 13:08:33 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/12 06:46:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -87,7 +88,7 @@ public class RTUBeanFactory extends TabledBeanFactory {
 				KEY_PORT});
 		
 		JGraphText.entityDispatcher.addPropertyChangeListener(
-			"mcmsRefreshed",
+			PROPERTY_MCMS_REFRESHED,
 			new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
