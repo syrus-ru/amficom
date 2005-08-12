@@ -20,7 +20,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 public final class SchemeTableController extends StorableObjectWrapper<Scheme> {
+	public static final String KEY_NAME = "Name";
 	public static final String KEY_DOMAIN = "Domain";
+	public static final String KEY_USER = "User_id";
+	public static final String KEY_CREATED = "Created";
+	public static final String KEY_MODIFIED = "Modified";
 
 	private static SchemeTableController instance;
 
@@ -30,11 +34,11 @@ public final class SchemeTableController extends StorableObjectWrapper<Scheme> {
 	private SchemeTableController() {
 		// empty private constructor
 		this.keysArray = new String[] {
-			COLUMN_NAME,
-			KEY_DOMAIN,
-			COLUMN_CREATOR_ID,
-			COLUMN_CREATED,
-			COLUMN_MODIFIED
+			KEY_NAME, 
+			KEY_DOMAIN, 
+			KEY_USER, 
+			KEY_CREATED, 
+			KEY_MODIFIED
 		};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(this.keysArray));
@@ -60,9 +64,9 @@ public final class SchemeTableController extends StorableObjectWrapper<Scheme> {
 	}
 
 	public Object getValue(final Scheme scheme, final String key) {
-		Object result = super.getValue(scheme, key);
-		if(result == null && scheme != null) {
-			if(key.equals(COLUMN_NAME)) {
+		Object result = null;
+		if(scheme != null) {
+			if (key.equals(KEY_NAME)) {
 				result = scheme.getName();
 			}
 			else if(key.equals(KEY_DOMAIN)) {
@@ -75,7 +79,7 @@ public final class SchemeTableController extends StorableObjectWrapper<Scheme> {
 					result = null;
 				}
 			}
-			else if(key.equals(COLUMN_CREATOR_ID)) {
+			else if (key.equals(KEY_USER)) {
 				try {
 					SystemUser user = StorableObjectPool.getStorableObject(
 							scheme.getCreatorId(),
@@ -85,15 +89,14 @@ public final class SchemeTableController extends StorableObjectWrapper<Scheme> {
 					e.printStackTrace();
 				}
 			}
-			else if(key.equals(COLUMN_CREATED)) {
+			else if (key.equals(KEY_CREATED)) {
 				result = MapPropertiesManager.getDateFormat().format(
 						scheme.getCreated());
 			}
-			else if(key.equals(COLUMN_MODIFIED)) {
+			else if (key.equals(KEY_MODIFIED)) {
 				result = MapPropertiesManager.getDateFormat().format(
 						scheme.getModified());
 			}
-			return result;
 		}
 		return result;
 	}
