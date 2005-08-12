@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.15 2005/08/11 12:43:31 arseniy Exp $
+ * Название: $Id: LayersPanel.java,v 1.16 2005/08/12 10:52:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -37,12 +38,13 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.util.Log;
 
 /**
  * панель управления отображением слоев
  * 
- * @version $Revision: 1.15 $, $Date: 2005/08/11 12:43:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/08/12 10:52:39 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class LayersPanel extends JPanel {
@@ -248,12 +250,9 @@ public class LayersPanel extends JPanel {
 				lvCheckBox.setNameLabel(nameLabel);
 				i++;
 			}
-		} catch (MapDataException e) {
-			System.out.println("cannot get layers");
-			e.printStackTrace();
-		} catch (MapConnectionException e) {
-			System.out.println("cannot get layers");
-			e.printStackTrace();
+		} catch (MapException e) {
+			Log.debugMessage("cannot get layers", Level.WARNING);
+			Log.debugException(e, Level.WARNING);
 		}
 
 		setVisibility();

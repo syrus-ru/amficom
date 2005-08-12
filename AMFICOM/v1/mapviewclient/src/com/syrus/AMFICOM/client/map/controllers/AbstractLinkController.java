@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.35 2005/08/11 13:55:41 arseniy Exp $
+ * $Id: AbstractLinkController.java,v 1.36 2005/08/12 10:47:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,8 +42,8 @@ import com.syrus.util.Log;
 
 /**
  * Контроллер линейного элемента карты.
- * @author $Author: arseniy $
- * @version $Revision: 1.35 $, $Date: 2005/08/11 13:55:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.36 $, $Date: 2005/08/12 10:47:53 $
  * @module mapviewclient
  */
 public abstract class AbstractLinkController extends AbstractMapElementController {
@@ -127,9 +127,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				return type;
 			}
 		} catch (ApplicationException ex) {
-			// TODO empty
-			System.err.println("Exception searching CharacteristicType. Creating new one.");
-			ex.printStackTrace();
+			Log.debugMessage("Exception searching CharacteristicType. Creating new one.", Level.INFO);
 		}
 
 		try {

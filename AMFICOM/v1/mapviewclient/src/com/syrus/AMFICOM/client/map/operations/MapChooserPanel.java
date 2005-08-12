@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.9 2005/08/11 12:43:31 arseniy Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.10 2005/08/12 10:52:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Iterator;
 import java.util.List;
+import java.util.logging.Level;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -27,11 +28,12 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.util.Log;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.9 $, $Date: 2005/08/11 12:43:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/08/12 10:52:39 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapChooserPanel extends JPanel
@@ -145,9 +147,9 @@ public class MapChooserPanel extends JPanel
 		List<String> availableViews;
 		try {
 			availableViews = this.mapFrame.getMapConnection().getAvailableViews();
-		} catch (MapDataException e) {
-			System.out.println("Cannot get views: " + e.getMessage());
-			e.printStackTrace();
+		} catch(MapDataException e) {
+			Log.debugMessage("Cannot get views: " + e.getMessage(), Level.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 			return;
 		}
 
@@ -186,7 +188,8 @@ public class MapChooserPanel extends JPanel
 		}
 		catch(MapConnectionException e)
 		{
-			System.out.println("Cannot change view: " + e.getMessage());
+			Log.debugMessage("Cannot change view: " + e.getMessage(), Level.SEVERE);
+			Log.debugException(e, Level.SEVERE);
 			e.printStackTrace();
 			this.mapFrame.getMapConnection().setView(previousView);
 		}
