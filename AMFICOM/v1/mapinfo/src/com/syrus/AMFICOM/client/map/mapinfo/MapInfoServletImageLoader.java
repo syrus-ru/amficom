@@ -1,5 +1,5 @@
 /**
- * $Id: MapInfoServletImageLoader.java,v 1.3 2005/08/11 17:34:06 arseniy Exp $
+ * $Id: MapInfoServletImageLoader.java,v 1.4 2005/08/12 12:36:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.client.map.ServletCommandNames;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 public class MapInfoServletImageLoader implements MapImageLoader {

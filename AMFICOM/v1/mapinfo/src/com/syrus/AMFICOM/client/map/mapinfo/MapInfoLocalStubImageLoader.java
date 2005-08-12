@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.4 2005/08/11 17:34:06 arseniy Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.5 2005/08/12 12:36:14 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,13 +23,13 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.SpatialObject;
-import com.syrus.AMFICOM.map.DoublePoint;
+import com.syrus.AMFICOM.general.DoublePoint;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/11 17:34:06 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2005/08/12 12:36:14 $
  * @module mapinfo
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader {
