@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.29 2005/08/10 09:21:26 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.30 2005/08/12 10:33:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,6 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.CableController;
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -32,7 +31,7 @@ import com.syrus.util.Log;
  *  непривязанному кабелю, к элементу узла. При этом линия, которой 
  *  принадлежит данный узел, делится на 2 части
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/08/10 09:21:26 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/12 10:33:30 $
  * @module mapclient_v1
  */
 public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -44,18 +43,6 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 	
 	/** Узел, к которому привязывается топологический узел */
 	SiteNode site;
-
-	/** 
-	 * узел, находящийся "слева" от перетаскиваемого узла на той же линии,
-	 * что и перетаскиваемый узел
-	 */
-	AbstractNode node1 = null;
-
-	/** 
-	 * узел, находящийся "справа" от перетаскиваемого узла на той же линии,
-	 * что и перетаскиваемый узел
-	 */
-	AbstractNode node2 = null;
 
 	/**
 	 * Вид, на котором производится операция
@@ -88,17 +75,12 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 			// концевые узлы фрагментов
 			for(Iterator it = this.map.getNodeLinks(this.node).iterator(); it.hasNext();)
 			{
-				NodeLink mnle = (NodeLink)it.next();
+				NodeLink nodeLink = (NodeLink)it.next();
 
-				if(this.node1 == null)
-					this.node1 = mnle.getOtherNode(this.node);
+				if(nodeLink.getStartNode().equals(this.node))
+					nodeLink.setStartNode(this.site);
 				else
-					this.node2 = mnle.getOtherNode(this.node);
-
-				if(mnle.getStartNode().equals(this.node))
-					mnle.setStartNode(this.site);
-				else
-					mnle.setEndNode(this.site);
+					nodeLink.setEndNode(this.site);
 			}
 			// топологический узел удаляется
 			super.removeNode(this.node);
@@ -113,15 +95,23 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 			newLink.setType(link.getType());
 			// single cpath, as long as link is UnboundLink
 			CablePath cablePath = link.getCablePath();
-			
-			CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(link);
-			CableChannelingItem newCableChannelingItem = CableController.generateCCI(cablePath, newLink);
-			if(link.getStartNode().equals(cableChannelingItem.getStartSiteNode()))
-				newCableChannelingItem.insertSelfBefore(cableChannelingItem);
-			else
-				newCableChannelingItem.insertSelfAfter(cableChannelingItem);
-			// новая линия добавляется в кабельный путь
-			cablePath.addLink(newLink, newCableChannelingItem);
+
+//			CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(link);
+			for(CableChannelingItem cableChannelingItem : cablePath.getSchemeCableLink().getPathMembers()) {
+				if(cablePath.getBinding().get(cableChannelingItem) == link) {
+					CableChannelingItem newCableChannelingItem = 
+						CableController.generateCCI(
+								cablePath, 
+								newLink,
+								cableChannelingItem.getStartSiteNode(),
+								this.site);
+					newCableChannelingItem.insertSelfBefore(cableChannelingItem);
+					// новая линия добавляется в кабельный путь
+					cablePath.addLink(newLink, newCableChannelingItem);
+					cableChannelingItem.setStartSiteNode(this.site);
+				}
+			}
+
 			newLink.setCablePath(cablePath);
 			// переносим фрагменты в новую линию пока не наткнемся на
 			// созданный узел
@@ -133,7 +123,6 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 					this.site,
 					null);
 			link.setStartNode(this.site);
-			cableChannelingItem.setStartSiteNode(this.site);
 		}
 		catch(Throwable e)
 		{
