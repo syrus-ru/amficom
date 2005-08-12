@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.74 2005/08/11 14:37:16 max Exp $
+ * $Id: SchemeElement.java,v 1.75 2005/08/12 12:25:27 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: max $
- * @version $Revision: 1.74 $, $Date: 2005/08/11 14:37:16 $
+ * @version $Revision: 1.75 $, $Date: 2005/08/12 12:25:27 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -336,7 +336,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					null,
 					parentScheme);
 
-			schemeElement.fillProperties(schemeProtoElement);
+			schemeElement.fillProperties(schemeProtoElement, creatorId);
 			return schemeElement;
 		} catch (final ApplicationException ae) {
 			if (ae instanceof CreateObjectException) {
@@ -373,7 +373,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					null,
 					parentSchemeElement);
 
-			schemeElement.fillProperties(schemeProtoElement);
+			schemeElement.fillProperties(schemeProtoElement, creatorId);
 			return schemeElement;
 		} catch (final ApplicationException ae) {
 			if (ae instanceof CreateObjectException) {
@@ -1438,7 +1438,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @throws ApplicationException
 	 * @see SchemeProtoElement#clone()
 	 */
-	private void fillProperties(final SchemeProtoElement schemeProtoElement)
+	private void fillProperties(final SchemeProtoElement schemeProtoElement, Identifier creatorId)
 	throws ApplicationException {
 		try {
 			if (super.clonedIdMap == null) {
@@ -1482,7 +1482,12 @@ public final class SchemeElement extends AbstractSchemeElement
 				super.clonedIdMap.putAll(schemeLinkClone.getClonedIdMap());
 				this.addSchemeLink(schemeLinkClone);
 			}
-
+			
+			for (SchemeProtoElement proto : schemeProtoElement.getSchemeProtoElements()) {
+				final SchemeElement schemeElement = SchemeElement.createInstance(creatorId, proto, this);
+				super.clonedIdMap.putAll(schemeElement.getClonedIdMap());
+				this.addSchemeElement(schemeElement);
+			}
 			/*-
 			 * Port references remapping.
 			 */
