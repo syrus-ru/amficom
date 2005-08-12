@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.1 2005/08/11 11:15:30 peskovsky Exp $
+ * $Id: ReportTemplate.java,v 1.2 2005/08/12 10:21:47 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * отчёт </p>
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/08/11 11:15:30 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/12 10:21:47 $
  * @module generalclient_v1
  */
 public class ReportTemplate implements Serializable
@@ -214,6 +214,23 @@ public class ReportTemplate implements Serializable
 				return curRO;
 
 		return null;
+	}
+
+	/**
+	 * @param dre Объект отображения данных
+	 * @return Список надписей, привязанных к данному объекту отображения
+	 */
+	public List<AttachedTextRenderingElement> getAttachedLabels (DataRenderingElement dre)
+	{
+		List<AttachedTextRenderingElement> result =
+			new ArrayList<AttachedTextRenderingElement>();
+		
+		for (AttachedTextRenderingElement label : this.labels)
+			if (	label.getVertAttacher().equals(dre)
+				||	label.getHorizAttacher().equals(dre))
+				result.add(label);
+
+		return result;
 	}
 	
 	/**
