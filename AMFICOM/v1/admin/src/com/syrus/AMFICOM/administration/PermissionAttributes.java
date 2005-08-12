@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.2 2005/08/05 16:49:49 arseniy Exp $
+* $Id: PermissionAttributes.java,v 1.3 2005/08/12 06:28:54 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/05 16:49:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/12 06:28:54 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module admin
  */
@@ -250,7 +250,7 @@ public class PermissionAttributes extends StorableObject {
 		return dependencies;
 	}
 	
-	public final void setPermission(PermissionCodenames codename,
+	public final void setPermissionEnable(PermissionCodenames codename,
 	                                boolean enable) {
 		long mask = 1 << codename.ordinal();
 		if (enable) {
