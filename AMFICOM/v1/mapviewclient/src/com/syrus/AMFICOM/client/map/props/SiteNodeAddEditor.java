@@ -397,14 +397,30 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 			UnboundLink unbound = command.getUnbound();
 			unbound.setCablePath(cablePath);
 
-			CableChannelingItem unboundCableChannelingItem = CableController.generateCCI(cablePath, unbound);
+			SiteNode start;
+			SiteNode end;
+			if(leftCableChannelingItem.getStartSiteNode() == rightCableChannelingItem.getEndSiteNode()) {
+				start = rightCableChannelingItem.getStartSiteNode();
+				end = leftCableChannelingItem.getEndSiteNode();
+			}
+			else {
+				start = leftCableChannelingItem.getStartSiteNode();
+				end = rightCableChannelingItem.getEndSiteNode();
+			}
+
+			CableChannelingItem unboundCableChannelingItem = 
+				CableController.generateCCI(
+						cablePath, 
+						unbound,
+						start,
+						end);
 			unboundCableChannelingItem.insertSelfBefore(leftCableChannelingItem);
 			leftCableChannelingItem.setParentPathOwner(null, false);
 			cablePath.removeLink(leftCableChannelingItem);
 
 			cablePath.addLink(unbound, unboundCableChannelingItem);
 		}
-		
+
 		this.elementsTree.updateUI();
 	}
 
@@ -471,12 +487,22 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 	}
 
 	void selectElement(Object or) {
-		MapElement mapElement = (MapElement )or;
-		this.netMapViewer.getLogicalNetLayer().getMapView().getMap().clearSelection();
-		this.netMapViewer.getLogicalNetLayer().deselectAll();
-		this.netMapViewer.getLogicalNetLayer().setCurrentMapElement(mapElement);
-		this.netMapViewer.getLogicalNetLayer().getMapView().getMap().setSelected(mapElement, true);
-		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
+		MapElement mapElement = null;
+		if(or instanceof SchemeCableLink) {
+			SchemeCableLink scl = (SchemeCableLink)or;
+			mapElement = this.logicalNetLayer.getMapView().findCablePath(scl);
+		}
+		else if(or instanceof SchemeElement) {
+			SchemeElement schemeElement = (SchemeElement)or;
+			mapElement = this.logicalNetLayer.getMapView().findElement(schemeElement);
+		}
+		if(mapElement != null) {
+			this.logicalNetLayer.getMapView().getMap().clearSelection();
+			this.logicalNetLayer.deselectAll();
+			this.logicalNetLayer.setCurrentMapElement(mapElement);
+			this.logicalNetLayer.getMapView().getMap().setSelected(mapElement, true);
+			this.logicalNetLayer.sendSelectionChangeEvent();
+		}
 	}
 
 	public void setObject(Object objectResource) {
