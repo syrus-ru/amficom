@@ -553,11 +553,20 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		UnboundLink unbound = command.getUnbound();
 		unbound.setCablePath(cablePath);
 
-		CableChannelingItem cci = cablePath.getFirstCCI(this.physicalLink);
-		CableChannelingItem newCableChannelingItem = CableController.generateCCI(cablePath, unbound);
-		newCableChannelingItem.insertSelfBefore(cci);
-		cablePath.removeLink(cci);
-		cablePath.addLink(unbound, newCableChannelingItem);
+//		CableChannelingItem cci = cablePath.getFirstCCI(this.physicalLink);
+		for(CableChannelingItem cableChannelingItem : cablePath.getSchemeCableLink().getPathMembers()) {
+			if(cablePath.getBinding().get(cableChannelingItem) == this.physicalLink) {
+				CableChannelingItem newCableChannelingItem = 
+					CableController.generateCCI(
+							cablePath, 
+							unbound,
+							cableChannelingItem.getStartSiteNode(),
+							cableChannelingItem.getEndSiteNode());
+				newCableChannelingItem.insertSelfBefore(cableChannelingItem);
+				cablePath.removeLink(cableChannelingItem);
+				cablePath.addLink(unbound, newCableChannelingItem);
+			}
+		}
 
 		this.physicalLink.getBinding().remove(cablePath);
 
