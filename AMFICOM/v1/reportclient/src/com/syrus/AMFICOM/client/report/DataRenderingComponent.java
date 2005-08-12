@@ -1,11 +1,11 @@
 /*
- * $Id: DataRenderingComponent.java,v 1.1 2005/08/11 11:17:34 peskovsky Exp $
+ * $Id: DataRenderingComponent.java,v 1.1 2005/08/12 10:23:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.client.general.report;
+package com.syrus.AMFICOM.client.report;
 
 import java.awt.Point;
 
@@ -17,6 +17,8 @@ import com.syrus.AMFICOM.report.RenderingElement;
 public abstract class DataRenderingComponent extends JPanel implements ReportComponent{
 
 	private static final long serialVersionUID = 6913791212343038576L;
+	
+	public static final String BOUNDS_PROPERTY = "boundsProperty";
 	
 	public static int EDGE_SIZE = 7;
 	public static int DIAGONAL_EDGE_SIZE = 10;

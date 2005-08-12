@@ -1,22 +1,25 @@
 /*
- * $Id: AttachedTextComponent.java,v 1.1 2005/08/11 11:17:34 peskovsky Exp $
+ * $Id: AttachedTextComponent.java,v 1.1 2005/08/12 10:23:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.client.general.report;
+package com.syrus.AMFICOM.client.report;
 
 import java.awt.Cursor;
 import java.awt.Point;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 
 import com.syrus.AMFICOM.report.AttachedTextRenderingElement;
+import com.syrus.AMFICOM.report.DataRenderingElement;
 import com.syrus.AMFICOM.report.RenderingElement;
 import com.syrus.AMFICOM.report.TextAttachingType;
 
@@ -25,7 +28,7 @@ public class AttachedTextComponent extends JTextPane implements ReportComponent{
 
 	private static final int MINIMUM_COMPONENT_WIDTH = 60;
 	
-	private final AttachedTextRenderingElement textRenderingElement;
+	protected final AttachedTextRenderingElement textRenderingElement;
 
 	/**
 	 * Точка клика мыши на надписи
@@ -78,6 +81,21 @@ public class AttachedTextComponent extends JTextPane implements ReportComponent{
 				AttachedTextComponent.this.textPaneMouseDragged(e);
 			}
 		});
+		
+		this.addPropertyChangeListener(new PropertyChangeListener(){
+
+			public void propertyChange(PropertyChangeEvent evt) {
+				DataRenderingComponent component =
+					(DataRenderingComponent)evt.getSource();
+				
+				DataRenderingElement drElement =
+					(DataRenderingElement)component.getElement();
+				
+				AttachedTextRenderingElement textElement = AttachedTextComponent.this.textRenderingElement;
+				if (	drElement.equals(textElement.getHorizAttacher())
+					||	drElement.equals(textElement.getVertAttacher()))
+				{}
+			}});
 	}
 
 	void textPaneKeyPressed(KeyEvent e)

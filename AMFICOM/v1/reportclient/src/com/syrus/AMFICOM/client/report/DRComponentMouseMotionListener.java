@@ -1,11 +1,11 @@
 /*
- * $Id: DRComponentMouseMotionListener.java,v 1.1 2005/08/11 11:17:34 peskovsky Exp $
+ * $Id: DRComponentMouseMotionListener.java,v 1.1 2005/08/12 10:23:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.client.general.report;
+package com.syrus.AMFICOM.client.report;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
@@ -13,14 +13,15 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseMotionListener;
-import java.util.ListIterator;
+import java.beans.PropertyChangeEvent;
 
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.report.ReportTemplate;
 
 /**
  * MouseMotionListener for DataRenderingComponent
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/08/11 11:17:34 $
+ * @version $Revision: 1.1 $, $Date: 2005/08/12 10:23:10 $
  * @module reportclient_v1
  */
 public class DRComponentMouseMotionListener implements MouseMotionListener{
@@ -29,10 +30,23 @@ public class DRComponentMouseMotionListener implements MouseMotionListener{
 	 * на поля шаблона.
 	 */
 	private final Rectangle templateBounds;
+	private final ApplicationContext aContext;
+	
+	/**
+	 * Данный параметр указывает, будут ли данные о границах элемента отображения
+	 * передаваться в его элемент (структуру сохраняемых данных). Равен true в случае,
+	 * если редактируем схему шаблона, равен false, если просматриваем отчёт (в отчёте
+	 * габариты элементов отображения данных отличаются от габаритов на схеме шаблона).
+	 */
+	private boolean synchronizeElements;
 
 	public DRComponentMouseMotionListener(
-			ReportTemplate template)
+			ReportTemplate template,
+			ApplicationContext aContext,
+			boolean synchronizeElements)
 	{
+		this.aContext = aContext;
+		this.synchronizeElements = synchronizeElements;
 		this.templateBounds = new Rectangle();
 		int templateMarginSize = template.getMarginSize();
 		this.templateBounds.setLocation(
@@ -154,8 +168,6 @@ public class DRComponentMouseMotionListener implements MouseMotionListener{
 			newLocation.x += dx;
 		}
 
-		boolean smthChanged = false;
-
 		if (	(this.templateBounds.x <= newLocation.x)
 			&&	(newLocation.x + newSize.width <= this.templateBounds.x + this.templateBounds.width))
 		{
@@ -170,52 +182,27 @@ public class DRComponentMouseMotionListener implements MouseMotionListener{
 			component.setSize(component.getWidth(),newSize.height);
 		}
 		
+		if (this.synchronizeElements)
+			component.getElement().setBounds(component.getBounds());
 		
-		if ((imagableRect.y <= newY)
-			&& (newY + newHeight <= imagableRect.y + imagableRect.height))
-		{
-			if (selectedRenderingObject != null)
-			{
-				selectedRenderingObject.y = newY;
-				selectedRenderingObject.height = newHeight;
-				smthChanged = true;
-			}
-			else
-			{
-				ip.setLocation(ip.getX(),newY);
-				ip.setSize(ip.getWidth(),newHeight);
-				ip.setPreferredSize(ip.getSize());
-			}
-		}
+		//Отсылаем сообщение, чтобы те надписи, которые привязаны к данному
+		//элементу отображения данных, передвинулись, сохраняя интервал между
+		//ними.
+		this.aContext.getDispatcher().firePropertyChange(
+				new PropertyChangeEvent(
+						component,
+						DataRenderingComponent.BOUNDS_PROPERTY,
+						prevBounds,
+						component.getBounds()));
+		
 
-//		if (selectedRenderingObject == null)
-//		{
-//			this.remove(ip);
-//			this.add(ip,new XYConstraints(ip.getX(),ip.getY(),-1,-1));
-//			this.repaint();
-//			prevBounds = ip.getBounds();
-//		}
-//
-//		if (!smthChanged)
-//			return;
-//
-//    for (ListIterator lIt = reportTemplate.labels.listIterator(); lIt.hasNext();)
-//		{
-//			FirmedTextPane tp = (FirmedTextPane)lIt.next();
-//			if ((tp.vertFirmer != null) &&
-//				tp.vertFirmer.equals(selectedRenderingObject) ||
-//				(tp.horizFirmer != null) &&
-//				tp.horizFirmer.equals(selectedRenderingObject))
-//			{
-//				tp.refreshCoords(this.imagableRect);
-//				this.remove(tp);
-//				this.add(tp, new XYConstraints(tp.getX(), tp.getY(), -1, -1));
-//			}
-//		}
-//
-//		reportTemplate.curModified = System.currentTimeMillis();
-//
-//		this.repaint();
+		component.getElement().setModified(System.currentTimeMillis());
+		
+		//TODO Здесь ещё с перерисовкой разобраться надо.
+	}
+
+	public void setSynchronizeElements(boolean synchronizeElements) {
+		this.synchronizeElements = synchronizeElements;
 	}
 
 }

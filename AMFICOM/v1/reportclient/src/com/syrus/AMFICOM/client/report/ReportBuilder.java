@@ -1,11 +1,11 @@
 /*
- * $Id: ReportBuilder.java,v 1.1 2005/08/11 11:17:34 peskovsky Exp $
+ * $Id: ReportBuilder.java,v 1.1 2005/08/12 10:23:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.AMFICOM.client.general.report;
+package com.syrus.AMFICOM.client.report;
 
 import com.syrus.AMFICOM.report.AttachedTextRenderingElement;
 import com.syrus.AMFICOM.report.DataRenderingElement;
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.report.ReportTemplate;
 /**
  * Реализует отчёт по шаблону
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/08/11 11:17:34 $
+ * @version $Revision: 1.1 $, $Date: 2005/08/12 10:23:10 $
  * @module reportclient_v1
  */
 public class ReportBuilder {

@@ -1,6 +1,6 @@
-package com.syrus.AMFICOM.client.general.report;
+package com.syrus.AMFICOM.client.report;
 
-import com.syrus.AMFICOM.client.general.report.LangModelReport;
+import com.syrus.AMFICOM.client.report.LangModelReport;
 
 /**
  * <p>Title: </p>

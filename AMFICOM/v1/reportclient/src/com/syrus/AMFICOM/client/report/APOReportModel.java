@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.client.general.report;
+package com.syrus.AMFICOM.client.report;
 
 import java.util.List;
 import java.util.Iterator;
