@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.41 2005/08/11 13:55:41 arseniy Exp $
+ * $Id: MapViewController.java,v 1.42 2005/08/12 10:51:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,8 @@ import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Set;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
@@ -55,12 +57,13 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.util.Log;
 
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: arseniy $
- * @version $Revision: 1.41 $, $Date: 2005/08/11 13:55:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.42 $, $Date: 2005/08/12 10:51:38 $
  * @module mapviewclient
  */
 public final class MapViewController {
@@ -378,9 +381,13 @@ public final class MapViewController {
 	 * @param schemeCableLink кабель
 	 */
 	public void scanCable(SchemeCableLink schemeCableLink) {
+		long t1 = System.currentTimeMillis();
 		SiteNode cableStartNode = this.mapView.getStartNode(schemeCableLink);
+		long t2 = System.currentTimeMillis();
 		SiteNode cableEndNode = this.mapView.getEndNode(schemeCableLink);
+		long t3 = System.currentTimeMillis();
 		CablePath cp = this.mapView.findCablePath(schemeCableLink);
+		long t4 = System.currentTimeMillis();
 		if(cp == null) {
 			if(cableStartNode != null && cableEndNode != null) {
 				placeElement(schemeCableLink);
@@ -394,6 +401,11 @@ public final class MapViewController {
 				placeElement(schemeCableLink);
 			}
 		}
+		long t5 = System.currentTimeMillis();
+		Log.debugMessage("scanCable :: get start node for scl " + (t2 - t1) + " ms", Level.INFO);
+		Log.debugMessage("scanCable :: get end node for scl " + (t3 - t2) + " ms", Level.INFO);
+		Log.debugMessage("scanCable :: find cable path " + (t4 - t3) + " ms", Level.INFO);
+		Log.debugMessage("scanCable :: placeElement(scl) " + (t5 - t4) + " ms", Level.INFO);
 	}
 	
 	/**
@@ -402,11 +414,19 @@ public final class MapViewController {
 	 * @param scheme схема
 	 */
 	public void scanCables(Scheme scheme) {
-		for(Iterator it = SchemeUtils.getTopologicalCableLinks(scheme).iterator(); it.hasNext();) {
+		long t1 = System.currentTimeMillis();
+		Set<SchemeCableLink> topologicalCableLinks = SchemeUtils.getTopologicalCableLinks(scheme);
+		long t2 = System.currentTimeMillis();
+		for(Iterator it = topologicalCableLinks.iterator(); it.hasNext();) {
 			SchemeCableLink scl = (SchemeCableLink )it.next();
 			scanCable(scl);
 		}
+		long t3 = System.currentTimeMillis();
 		scanPaths(scheme);
+		long t4 = System.currentTimeMillis();
+		Log.debugMessage("scanCables :: SchemeUtils.getTopologicalCableLinks(scheme) " + (t2 - t1) + " ms", Level.INFO);
+		Log.debugMessage("scanCables :: scanCable(scl) : topologicalCableLinks " + (t3 - t2) + " ms", Level.INFO);
+		Log.debugMessage("scanCables :: scanPaths(scheme); " + (t4 - t3) + " ms", Level.INFO);
 	}
 
 	/**
@@ -414,9 +434,13 @@ public final class MapViewController {
 	 * @param schemePath схемный путь
 	 */
 	public void scanPath(SchemePath schemePath) {
+		long t1 = System.currentTimeMillis();
 		SiteNode pathStartNode = this.mapView.getStartNode(schemePath);
+		long t2 = System.currentTimeMillis();
 		SiteNode pathEndNode = this.mapView.getEndNode(schemePath);
+		long t3 = System.currentTimeMillis();
 		MeasurementPath mp = this.mapView.findMeasurementPath(schemePath);
+		long t4 = System.currentTimeMillis();
 		if(mp == null) {
 			if(pathStartNode != null && pathEndNode != null) {
 				placeElement(schemePath);
@@ -430,6 +454,11 @@ public final class MapViewController {
 			placeElement(schemePath);
 		}
 		}
+		long t5 = System.currentTimeMillis();
+		Log.debugMessage("scanPath :: get start node for sp " + (t2 - t1) + " ms", Level.INFO);
+		Log.debugMessage("scanPath :: get end node for sp " + (t3 - t2) + " ms", Level.INFO);
+		Log.debugMessage("scanPath :: find measurement path " + (t4 - t3) + " ms", Level.INFO);
+		Log.debugMessage("scanPath :: placeElement(sp) " + (t5 - t4) + " ms", Level.INFO);
 	}
 
 	/**
@@ -438,9 +467,15 @@ public final class MapViewController {
 	 * @param scheme схема
 	 */
 	public void scanPaths(final Scheme scheme) {
-		for (final SchemePath schemePath : scheme.getTopologicalPaths()) {
+		long t1 = System.currentTimeMillis();
+		Set<SchemePath> topologicalPaths = scheme.getTopologicalPaths();
+		long t2 = System.currentTimeMillis();
+		for (final SchemePath schemePath : topologicalPaths) {
 			this.scanPath(schemePath);
 		}
+		long t3 = System.currentTimeMillis();
+		Log.debugMessage("scanPaths :: scheme.getTopologicalPaths() " + (t2 - t1) + " ms", Level.INFO);
+		Log.debugMessage("scanPaths :: scanPath(schemePath) : topologicalPaths " + (t3 - t2) + " ms", Level.INFO);
 	}
 
 	/**
