@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.21 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: CenterSelectionCommand.java,v 1.22 2005/08/12 10:46:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,8 +11,7 @@ package com.syrus.AMFICOM.client.map.command.navigate;
 
 import java.util.Iterator;
 
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
@@ -23,8 +22,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Центрировать геометрическое место точек, являющих собой центры 
  * выделенных элементов карты
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/08/11 12:43:30 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/08/12 10:46:10 $
  * @module mapviewclient
  */
 public class CenterSelectionCommand extends MapNavigateCommand {
@@ -55,94 +54,19 @@ public class CenterSelectionCommand extends MapNavigateCommand {
 			count++;
 		}
 
-/*
-		for(Iterator it = mapView.getMap().getNodes().iterator(); it.hasNext();)
-		{
-			me = (MapElement)it.next();
-			if(me.isSelected())
-			{
-				DoublePoint an = me.getLocation();
-				x += an.getX();
-				y += an.getY();
-				count++;
-			}
-		}
+		if(count != 0) {
+			x /= count;
+			y /= count;
 
-		for(Iterator it = mapView.getMarkers().iterator(); it.hasNext();)
-		{
-			me = (MapElement)it.next();
-			if(me.isSelected())
-			{
-				DoublePoint an = me.getLocation();
-				x += an.getX();
-				y += an.getY();
-				count++;
-			}
-		}
-
-		for(Iterator it = mapView.getMap().getAllNodeLinks().iterator(); it.hasNext();)
-		{
-			me = (MapElement)it.next();
-			if(me.isSelected())
-			{
-				DoublePoint an = me.getLocation();
-				x += an.getX();
-				y += an.getY();
-				count++;
-			}
-		}
-
-		for(Iterator it = mapView.getMap().getAllPhysicalLinks().iterator(); it.hasNext();)
-		{
-			me = (MapElement)it.next();
-			if(me.isSelected())
-			{
-				DoublePoint an = me.getLocation();
-				x += an.getX();
-				y += an.getY();
-				count++;
-			}
-		}
-
-		for(Iterator it = mapView.getCablePaths().iterator(); it.hasNext();)
-		{
-			me = (MapElement)it.next();
-			if(me.isSelected())
-			{
-				DoublePoint an = me.getLocation();
-				x += an.getX();
-				y += an.getY();
-				count++;
-			}
-		}
-
-		for(Iterator it = mapView.getMeasurementPaths().iterator(); it.hasNext();)
-		{
-			me = (MapElement)it.next();
-			if(me.isSelected())
-			{
-				DoublePoint an = me.getLocation();
-				x += an.getX();
-				y += an.getY();
-				count++;
-			}
-		}
-*/
-		x /= count;
-		y /= count;
+			point.setLocation(x, y);
 		
-		point.setLocation(x, y);
-		
-		try {
-			this.netMapViewer.setCenter(point);
-		} catch(MapConnectionException e) {
-			setException(e);
-			setResult(Command.RESULT_NO);
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			setException(e);
-			setResult(Command.RESULT_NO);
-			e.printStackTrace();
+			try {
+				this.netMapViewer.setCenter(point);
+			} catch(MapException e) {
+				setException(e);
+				setResult(Command.RESULT_NO);
+				e.printStackTrace();
+			}
 		}
 	}
 }
