@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.28 2005/08/11 13:55:41 arseniy Exp $
+ * $Id: CableController.java,v 1.29 2005/08/12 10:50:09 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Контроллер кабеля.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2005/08/11 13:55:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.29 $, $Date: 2005/08/12 10:50:09 $
  * @module mapviewclient
  */
 public final class CableController extends AbstractLinkController {
@@ -225,24 +225,35 @@ public final class CableController extends AbstractLinkController {
 	 * @param link лниия
 	 * @return объект привязки, или <code>null</code> при возникновении ошибки
 	 */
-	public static CableChannelingItem generateCCI(final CablePath cablePath, final PhysicalLink link) {
+	public static CableChannelingItem generateCCI(
+			final CablePath cablePath,
+			final PhysicalLink link,
+			final AbstractNode startNode,
+			final AbstractNode endNode) {
 		final Identifier creatorId = LoginManager.getUserId();
 		CableChannelingItem cci = null;
 		try {
-			final SiteNode startNode = (SiteNode) link.getStartNode();
-			final SiteNode endNode = (SiteNode) link.getEndNode();
-			double startSpare = 0.0D;
-			double endSpare = 0.0D;
+			double startSpare = MapPropertiesManager.getSpareLength();
+			double endSpare = MapPropertiesManager.getSpareLength();
 			final SchemeCableLink schemeCableLink = cablePath.getSchemeCableLink();
-			if (!(link instanceof UnboundLink)) {
-				startSpare = MapPropertiesManager.getSpareLength();
-				endSpare = MapPropertiesManager.getSpareLength();
-
-				cci = CableChannelingItem.createInstance(creatorId, startSpare, endSpare, 0,// default
-						0,// default
-						link, startNode, endNode, schemeCableLink);
-			} else {
-				cci = CableChannelingItem.createInstance(creatorId, startNode, endNode, schemeCableLink);
+			if(!(link instanceof UnboundLink)) {
+				cci = CableChannelingItem.createInstance(
+						creatorId, 
+						startSpare,
+						endSpare,
+						0,//default
+						0,//default
+						link,
+						(SiteNode)startNode,
+						(SiteNode)endNode,
+						schemeCableLink);
+			}
+			else {
+				cci = CableChannelingItem.createInstance(
+						creatorId, 
+						(SiteNode)startNode,
+						(SiteNode)endNode,
+						schemeCableLink);
 			}
 		} catch (CreateObjectException e) {
 			e.printStackTrace();
