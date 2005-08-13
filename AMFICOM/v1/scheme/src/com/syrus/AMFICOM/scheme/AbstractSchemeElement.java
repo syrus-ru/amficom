@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.45 2005/08/08 14:25:23 arseniy Exp $
+ * $Id: AbstractSchemeElement.java,v 1.46 2005/08/13 10:59:57 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,8 +43,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.45 $, $Date: 2005/08/08 14:25:23 $
+ * @author $Author: max $
+ * @version $Revision: 1.46 $, $Date: 2005/08/13 10:59:57 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -273,5 +273,13 @@ public abstract class AbstractSchemeElement
 	 */
 	public final void setAlarmed(final boolean alarmed) {
 		this.alarmed = alarmed;
+	}
+	
+	void setParentSchemeId(final Identifier parentSchemeId) {
+//		TODO: inroduce additional sanity checks
+		assert parentSchemeId != null : NON_NULL_EXPECTED;
+		assert parentSchemeId.isVoid() || parentSchemeId.getMajor() == SCHEME_CODE;
+		this.parentSchemeId = parentSchemeId;
+		super.markAsChanged();
 	}
 }
