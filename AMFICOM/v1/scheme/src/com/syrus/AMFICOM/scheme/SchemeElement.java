@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.77 2005/08/13 08:49:42 max Exp $
+ * $Id: SchemeElement.java,v 1.78 2005/08/13 11:17:03 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: max $
- * @version $Revision: 1.77 $, $Date: 2005/08/13 08:49:42 $
+ * @version $Revision: 1.78 $, $Date: 2005/08/13 11:17:03 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1391,6 +1391,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		super.fromTransferable(schemeElement, schemeElement.name,
 				schemeElement.description,
 				schemeElement.parentSchemeId);
+		this.kind = schemeElement.kind;
 		this.label = schemeElement.label;
 		this.equipmentTypeId = new Identifier(schemeElement.equipmentTypeId);
 		this.equipmentId = new Identifier(schemeElement.equipmentId);
@@ -1569,8 +1570,19 @@ public final class SchemeElement extends AbstractSchemeElement
 		this.parentSchemeElementId = parentSchemeElementId;
 		super.markAsChanged();
 	}
+	
+	void setKisId(Identifier kisId) {
+//		TODO: inroduce additional sanity checks
+		assert kisId != null : NON_NULL_EXPECTED;
+		assert kisId.isVoid() || kisId.getMajor() == KIS_CODE;
+		this.kisId = kisId;
+		super.markAsChanged();
+	}
 
 	public SchemeElementKind getKind() {
+		assert this.kind != null : NON_NULL_EXPECTED;
 		return this.kind;
 	}
+
+	
 }
