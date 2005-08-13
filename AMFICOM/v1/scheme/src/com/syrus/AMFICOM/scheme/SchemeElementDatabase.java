@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementDatabase.java,v 1.17 2005/08/11 14:37:16 max Exp $
+ * $Id: SchemeElementDatabase.java,v 1.18 2005/08/13 08:43:47 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
+import static com.syrus.AMFICOM.scheme.SchemeElementWrapper.COLUMN_KIND;
 import static com.syrus.AMFICOM.scheme.SchemeElementWrapper.COLUMN_EQUIPMENT_ID;
 import static com.syrus.AMFICOM.scheme.SchemeElementWrapper.COLUMN_EQUIPMENT_TYPE_ID;
 import static com.syrus.AMFICOM.scheme.SchemeElementWrapper.COLUMN_KIS_ID;
@@ -39,13 +40,14 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.17 $, $Date: 2005/08/11 14:37:16 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/13 08:43:47 $
  * @module scheme
  */
 public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeElement> {
@@ -56,7 +58,8 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = COLUMN_NAME + COMMA
+			columns = COLUMN_KIND + COMMA 
+					+ COLUMN_NAME + COMMA
 					+ COLUMN_DESCRIPTION + COMMA
 					+ COLUMN_LABEL + COMMA
 					+ COLUMN_EQUIPMENT_TYPE_ID + COMMA
@@ -91,6 +94,7 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
 					+ QUESTION + COMMA
+					+ QUESTION + COMMA
 					+ QUESTION;
 		}
 		return updateMultipleSQLValues;
@@ -104,7 +108,8 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 	protected String getUpdateSingleSQLValuesTmpl(
 			SchemeElement storableObject)
 			throws IllegalDataException {
-		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+		return 	storableObject.getKind() + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getLabel(), SIZE_LABEL_COLUMN) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getEquipmentTypeId()) + COMMA
@@ -131,6 +136,7 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 			PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException,
 			SQLException {
+		preparedStatement.setInt(++startParameterNumber, storableObject.getKind().value());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getLabel(), SIZE_LABEL_COLUMN);
@@ -183,6 +189,7 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
+				SchemeElementKind.from_int(resultSet.getInt(COLUMN_KIND)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LABEL)),

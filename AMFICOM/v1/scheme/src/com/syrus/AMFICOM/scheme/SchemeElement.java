@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.75 2005/08/12 12:25:27 max Exp $
+ * $Id: SchemeElement.java,v 1.76 2005/08/13 08:43:47 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: max $
- * @version $Revision: 1.75 $, $Date: 2005/08/12 12:25:27 $
+ * @version $Revision: 1.76 $, $Date: 2005/08/13 08:43:47 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1054,6 +1054,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
+			final SchemeElementKind kind,
 			final String name,
 			final String description,
 			final String label,
@@ -1068,6 +1069,8 @@ public final class SchemeElement extends AbstractSchemeElement
 			final Identifier parentSchemeElementId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version, name, description, parentSchemeId);
 
+		assert kind != null : NON_NULL_EXPECTED;
+		
 		assert label != null : NON_NULL_EXPECTED;
 
 		assert equipmentTypeId != null : NON_NULL_EXPECTED;
@@ -1083,6 +1086,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
 		assert parentSchemeId.isVoid() ^ parentSchemeElementId.isVoid();
 
+		this.kind = kind;
 		this.label = label;
 		this.equipmentTypeId = equipmentTypeId;
 		this.equipmentId = equipmentId;
@@ -1532,5 +1536,41 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	public void setAlarmedPathElement(@SuppressWarnings("unused") final PathElement alarmedPathElement) {
 		throw new UnsupportedOperationException("Method not implemented");
+	}
+
+	void setEquipmentId(Identifier equipmentId) {
+//		TODO: inroduce additional sanity checks
+		assert equipmentId != null : NON_NULL_EXPECTED;
+		assert equipmentId.isVoid() || equipmentId.getMajor() == EQUIPMENT_CODE;
+		this.equipmentId = equipmentId;
+		super.markAsChanged();
+	}
+
+	void setEquipmentTypeId(Identifier equipmentTypeId) {
+//		TODO: inroduce additional sanity checks
+		assert equipmentTypeId != null : NON_NULL_EXPECTED;
+		assert equipmentTypeId.isVoid() || equipmentTypeId.getMajor() == EQUIPMENT_TYPE_CODE;
+		this.equipmentTypeId = equipmentTypeId;
+		super.markAsChanged();
+	}
+
+	void setSiteNodeId(Identifier siteNodeId) {
+//		TODO: inroduce additional sanity checks
+		assert siteNodeId != null : NON_NULL_EXPECTED;
+		assert siteNodeId.isVoid() || siteNodeId.getMajor() == SITENODE_CODE;
+		this.siteNodeId = siteNodeId;
+		super.markAsChanged();
+	}
+
+	void setParentSchemeElementId(Identifier parentSchemeElementId) {
+//		TODO: inroduce additional sanity checks
+		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
+		assert parentSchemeElementId.isVoid() || parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
+		this.parentSchemeElementId = parentSchemeElementId;
+		super.markAsChanged();
+	}
+
+	SchemeElementKind getKind() {
+		return this.kind;
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementWrapper.java,v 1.7 2005/08/05 11:20:03 bass Exp $
+ * $Id: SchemeElementWrapper.java,v 1.8 2005/08/13 08:43:47 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,13 +7,15 @@
  */
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/05 11:20:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/08/13 08:43:47 $
+ * @author $Author: max $
  * @module scheme
  */
 public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElement> {
@@ -23,6 +25,7 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 //	name VARCHAR2(32 CHAR)NOT NULL,
 //	description VARCHAR2(256 CHAR),
 //--
+//  kind NUMBER(1),
 //	label VARCHAR2(64 CHAR),
 //	equipment_type_id VARCHAR2(32 CHAR),
 //	equipment_id VARCHAR2(32 CHAR),
@@ -34,6 +37,7 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 //	parent_scheme_id VARCHAR2(32 CHAR),
 //	parent_scheme_element_id VARCHAR2(32 CHAR)
 	
+	public static final String COLUMN_KIND = "kind";
 	public static final String COLUMN_LABEL = "label";
 	public static final int	SIZE_LABEL_COLUMN	= 64;
 	public static final String COLUMN_EQUIPMENT_TYPE_ID = "equipment_type_id";
@@ -47,6 +51,13 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 	public static final String COLUMN_PARENT_SCHEME_ELEMENT_ID = "parent_scheme_element_id";
 
 	private static SchemeElementWrapper instance;
+	
+//	private final List<String> keys;
+	
+//	private SchemeElementWrapper() {
+//		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] {
+//	}
+	
 
 	public List<String> getKeys() {
 		throw new UnsupportedOperationException("SchemeElementWrapper | not implemented yet");
