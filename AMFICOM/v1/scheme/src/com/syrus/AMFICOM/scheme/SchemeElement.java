@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.76 2005/08/13 08:43:47 max Exp $
+ * $Id: SchemeElement.java,v 1.77 2005/08/13 08:49:42 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: max $
- * @version $Revision: 1.76 $, $Date: 2005/08/13 08:43:47 $
+ * @version $Revision: 1.77 $, $Date: 2005/08/13 08:49:42 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1570,7 +1570,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		super.markAsChanged();
 	}
 
-	SchemeElementKind getKind() {
+	public SchemeElementKind getKind() {
 		return this.kind;
 	}
 }
