@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.32 2005/08/04 14:18:03 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.33 2005/08/13 11:10:44 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,10 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
@@ -39,8 +43,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
  *
- * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/08/04 14:18:03 $
+ * @author $Author: max $
+ * @version $Revision: 1.33 $, $Date: 2005/08/13 11:10:44 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -355,7 +359,23 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		this.sourceAbstractSchemePortId = sourceAbstractSchemePortId;
 		super.markAsChanged();
 	}
-
+	
+	void setAbstractLinkTypeId(final Identifier abstractLinkTypeId) {
+//		TODO: inroduce additional sanity checks
+		assert abstractLinkTypeId != null : NON_NULL_EXPECTED;
+		assert abstractLinkTypeId.isVoid() || abstractLinkTypeId.getMajor() == LINK_TYPE_CODE || abstractLinkTypeId.getMajor() == CABLELINK_TYPE_CODE;
+		this.abstractLinkTypeId = abstractLinkTypeId;
+		super.markAsChanged();
+	}
+	
+	void setAbstractLinkId(final Identifier abstractLinkId) {
+//		TODO: inroduce additional sanity checks
+		assert abstractLinkId != null : NON_NULL_EXPECTED;
+		assert abstractLinkId.isVoid() || abstractLinkId.getMajor() == LINK_CODE || abstractLinkId.getMajor() == CABLELINK_CODE;
+		this.abstractLinkId = abstractLinkId;
+		super.markAsChanged();
+	}
+	
 	/**
 	 * <p>
 	 * A wrapper around {@link #setSourceAbstractSchemePortId(Identifier)}.

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.53 2005/08/08 14:25:23 arseniy Exp $
+ * $Id: AbstractSchemePort.java,v 1.54 2005/08/13 11:11:15 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.53 $, $Date: 2005/08/08 14:25:23 $
+ * @author $Author: max $
+ * @version $Revision: 1.54 $, $Date: 2005/08/13 11:11:15 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -582,5 +582,37 @@ public abstract class AbstractSchemePort
 		return this.portId != null
 				&& this.portTypeId != null
 				&& (this.portId.isVoid() ^ this.portTypeId.isVoid());
+	}
+
+	void setMeasurementPortId(Identifier measurementPortId) {
+		//TODO: inroduce additional sanity checks
+		assert measurementPortId != null : NON_NULL_EXPECTED;
+		assert measurementPortId.isVoid() || measurementPortId.getMajor() == MEASUREMENTPORT_CODE;
+		this.measurementPortId = measurementPortId;
+		super.markAsChanged();
+	}
+
+	void setParentSchemeDeviceId(Identifier parentSchemeDeviceId) {
+		//TODO: inroduce additional sanity checks
+		assert parentSchemeDeviceId != null : NON_NULL_EXPECTED;
+		assert parentSchemeDeviceId.isVoid() || parentSchemeDeviceId.getMajor() == SCHEMEDEVICE_CODE;
+		this.parentSchemeDeviceId = parentSchemeDeviceId;
+		super.markAsChanged();
+	}
+
+	void setPortId(Identifier portId) {
+		//TODO: inroduce additional sanity checks
+		assert portId != null : NON_NULL_EXPECTED;
+		assert portId.isVoid() || portId.getMajor() == PORT_CODE;
+		this.portId = portId;
+		super.markAsChanged();
+	}
+
+	void setPortTypeId(Identifier portTypeId) {
+		//TODO: inroduce additional sanity checks
+		assert portTypeId != null : NON_NULL_EXPECTED;
+		assert portTypeId.isVoid() || portTypeId.getMajor() == PORT_TYPE_CODE;
+		this.portTypeId = portTypeId;
+		super.markAsChanged();
 	}
 }

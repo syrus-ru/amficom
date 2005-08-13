@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.52 2005/08/09 13:54:33 max Exp $
+ * $Id: CableChannelingItem.java,v 1.53 2005/08/13 11:11:53 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: max $
- * @version $Revision: 1.52 $, $Date: 2005/08/09 13:54:33 $
+ * @version $Revision: 1.53 $, $Date: 2005/08/13 11:11:53 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -696,4 +696,42 @@ public final class CableChannelingItem
 		}
 		super.markAsChanged();
 	}
+
+	void setEndSiteNodeId(Identifier endSiteNodeId) {
+		// TODO: inroduce additional sanity checks
+		assert endSiteNodeId != null : NON_NULL_EXPECTED;
+		assert endSiteNodeId.isVoid()
+				|| endSiteNodeId.getMajor() == SITENODE_CODE;
+		this.endSiteNodeId = endSiteNodeId;
+		super.markAsChanged();
+	}
+
+	void setPhysicalLinkId(Identifier physicalLinkId) {
+		// TODO: inroduce additional sanity checks
+		assert physicalLinkId != null : NON_NULL_EXPECTED;
+		assert physicalLinkId.isVoid()
+				|| physicalLinkId.getMajor() == PHYSICALLINK_CODE;
+		this.physicalLinkId = physicalLinkId;
+		super.markAsChanged();
+	}
+
+	void setStartSiteNodeId(Identifier startSiteNodeId) {
+		// TODO: inroduce additional sanity checks
+		assert startSiteNodeId != null : NON_NULL_EXPECTED;
+		assert startSiteNodeId.isVoid()
+				|| startSiteNodeId.getMajor() == SITENODE_CODE;
+		this.startSiteNodeId = startSiteNodeId;
+		super.markAsChanged();
+	}
+
+	void setParentPathOwnerId(Identifier parentPathOwnerId) {
+		// TODO: inroduce additional sanity checks
+		assert parentPathOwnerId != null : NON_NULL_EXPECTED;
+		assert parentPathOwnerId.isVoid() 
+				|| parentPathOwnerId.getMajor() == SCHEMECABLELINK_CODE;
+		this.parentSchemeCableLinkId = parentPathOwnerId;
+		super.markAsChanged();		
+	}
+	
+	
 }
