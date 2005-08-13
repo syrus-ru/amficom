@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.64 2005/08/11 08:38:26 arseniy Exp $
+ * $Id: PathElement.java,v 1.65 2005/08/13 11:13:19 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.64 $, $Date: 2005/08/11 08:38:26 $
+ * @author $Author: max $
+ * @version $Revision: 1.65 $, $Date: 2005/08/13 11:13:19 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -1123,5 +1123,45 @@ public final class PathElement extends StorableObject
 				&& endAbstractSchemePort.getPortType().getSort() == PORTTYPESORT_OPTICAL)
 			return true;
 		return false;
+	}
+
+	void setEndAbstractSchemePortId(Identifier endAbstractSchemePortId) {
+		// TODO: inroduce additional sanity checks
+		assert endAbstractSchemePortId != null : NON_NULL_EXPECTED;
+		assert endAbstractSchemePortId.isVoid() || endAbstractSchemePortId.getMajor() == SCHEMEPORT_CODE || endAbstractSchemePortId.getMajor() == SCHEMECABLEPORT_CODE;
+		this.endAbstractSchemePortId = endAbstractSchemePortId;
+		super.markAsChanged();
+	}
+
+	void setSchemeCableThreadId(Identifier schemeCableThreadId) {
+		// TODO: inroduce additional sanity checks
+		assert schemeCableThreadId != null : NON_NULL_EXPECTED;
+		assert schemeCableThreadId.isVoid() || schemeCableThreadId.getMajor() == SCHEMECABLETHREAD_CODE;
+		this.schemeCableThreadId = schemeCableThreadId;
+		super.markAsChanged();
+	}
+
+	void setStartAbstractSchemePortId(Identifier startAbstractSchemePortId) {
+		// TODO: inroduce additional sanity checks
+		assert startAbstractSchemePortId != null : NON_NULL_EXPECTED;
+		assert startAbstractSchemePortId.isVoid() || startAbstractSchemePortId.getMajor() == SCHEMEPORT_CODE || startAbstractSchemePortId.getMajor() == SCHEMECABLEPORT_CODE;
+		this.startAbstractSchemePortId = startAbstractSchemePortId;
+		super.markAsChanged();
+	}
+
+	void setParentSchemePathId(Identifier parentSchemePathId) {
+		// TODO: inroduce additional sanity checks
+		assert parentSchemePathId != null : NON_NULL_EXPECTED;
+		assert parentSchemePathId.isVoid() || parentSchemePathId.getMajor() == SCHEMEPATH_CODE;
+		this.parentSchemePathId = parentSchemePathId;
+		super.markAsChanged();
+	}
+
+	void setSchemeLinkId(Identifier schemeLinkId) {
+		// TODO: inroduce additional sanity checks
+		assert schemeLinkId != null : NON_NULL_EXPECTED;
+		assert schemeLinkId.isVoid() || schemeLinkId.getMajor() == SCHEMELINK_CODE;
+		this.schemeLinkId = schemeLinkId;
+		super.markAsChanged();
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.62 2005/08/08 14:25:23 arseniy Exp $
+ * $Id: SchemeLink.java,v 1.63 2005/08/13 11:17:27 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,8 +65,8 @@ import com.syrus.util.Log;
 /**
  * #12 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.62 $, $Date: 2005/08/08 14:25:23 $
+ * @author $Author: max $
+ * @version $Revision: 1.63 $, $Date: 2005/08/13 11:17:27 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink {
@@ -1073,5 +1073,29 @@ public final class SchemeLink extends AbstractSchemeLink {
 				&& ((super.parentSchemeId.isVoid() ? 0 : 1)
 						+ (this.parentSchemeElementId.isVoid() ? 0 : 1)
 						+ (this.parentSchemeProtoElementId.isVoid() ? 0 : 1) == 1);
+	}
+
+	void setSiteNodeId(Identifier siteNodeId) {
+//		 TODO: inroduce additional sanity checks
+		assert siteNodeId != null : NON_NULL_EXPECTED;
+		assert siteNodeId.isVoid() || siteNodeId.getMajor() == SITENODE_CODE;
+		this.siteNodeId = siteNodeId;
+		super.markAsChanged();
+	}
+
+	void setParentSchemeElementId(Identifier parentSchemeElementId) {
+//		 TODO: inroduce additional sanity checks
+		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
+		assert parentSchemeElementId.isVoid() || parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
+		this.parentSchemeElementId = parentSchemeElementId;
+		super.markAsChanged();
+	}
+
+	void setParentSchemeProtoElementId(Identifier parentSchemeProtoElementId) {
+//		 TODO: inroduce additional sanity checks
+		assert parentSchemeProtoElementId != null : NON_NULL_EXPECTED;
+		assert parentSchemeProtoElementId.isVoid() || parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
+		this.parentSchemeProtoElementId = parentSchemeProtoElementId;
+		super.markAsChanged();
 	}
 }

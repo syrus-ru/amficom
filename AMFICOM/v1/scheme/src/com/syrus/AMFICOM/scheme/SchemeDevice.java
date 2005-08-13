@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.68 2005/08/08 14:25:23 arseniy Exp $
+ * $Id: SchemeDevice.java,v 1.69 2005/08/13 11:15:41 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.Log;
 /**
  * #09 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.68 $, $Date: 2005/08/08 14:25:23 $
+ * @author $Author: max $
+ * @version $Revision: 1.69 $, $Date: 2005/08/13 11:15:41 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -778,5 +778,21 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		return this.parentSchemeElementId != null
 				&& this.parentSchemeProtoElementId != null
 				&& (this.parentSchemeElementId.isVoid() ^ this.parentSchemeProtoElementId.isVoid());
+	}
+
+	void setParentSchemeElementId(Identifier parentSchemeElementId) {
+		//TODO: inroduce additional sanity checks
+		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
+		assert parentSchemeElementId.isVoid() || parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
+		this.parentSchemeElementId = parentSchemeElementId;
+		super.markAsChanged();
+	}
+
+	void setParentSchemeProtoElementId(Identifier parentSchemeProtoElementId) {
+		//TODO: inroduce additional sanity checks
+		assert parentSchemeProtoElementId != null : NON_NULL_EXPECTED;
+		assert parentSchemeProtoElementId.isVoid() || parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
+		this.parentSchemeProtoElementId = parentSchemeProtoElementId;
+		super.markAsChanged();
 	}
 }

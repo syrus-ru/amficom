@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.63 2005/08/08 14:25:23 arseniy Exp $
+ * $Id: SchemeCableThread.java,v 1.64 2005/08/13 11:15:06 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,8 +61,8 @@ import com.syrus.util.Log;
 /**
  * #14 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.63 $, $Date: 2005/08/08 14:25:23 $
+ * @author $Author: max $
+ * @version $Revision: 1.64 $, $Date: 2005/08/13 11:15:06 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -635,5 +635,29 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		this.sourceSchemePortId = new Identifier(schemeCableThread.sourceSchemePortId);
 		this.targetSchemePortId = new Identifier(schemeCableThread.targetSchemePortId);
 		this.parentSchemeCableLinkId = new Identifier(schemeCableThread.parentSchemeCableLinkId);
+	}
+
+	void setCableThreadTypeId(Identifier cableThreadTypeId) {
+		//TODO: inroduce additional sanity checks
+		assert cableThreadTypeId != null : NON_NULL_EXPECTED;
+		assert cableThreadTypeId.isVoid() || cableThreadTypeId.getMajor() == CABLETHREAD_TYPE_CODE;
+		this.cableThreadTypeId = cableThreadTypeId;
+		super.markAsChanged();
+	}
+
+	void setLinkId(Identifier linkId) {
+		//TODO: inroduce additional sanity checks
+		assert linkId != null : NON_NULL_EXPECTED;
+		assert linkId.isVoid() || linkId.getMajor() == LINK_CODE;
+		this.linkId = linkId;
+		super.markAsChanged();
+	}
+
+	void setParentSchemeCableLinkId(Identifier parentSchemeCableLinkId) {
+//		TODO: inroduce additional sanity checks
+		assert parentSchemeCableLinkId != null : NON_NULL_EXPECTED;
+		assert parentSchemeCableLinkId.isVoid() || parentSchemeCableLinkId.getMajor() == SCHEMECABLELINK_CODE;
+		this.parentSchemeCableLinkId = parentSchemeCableLinkId;
+		super.markAsChanged();
 	}
 }
