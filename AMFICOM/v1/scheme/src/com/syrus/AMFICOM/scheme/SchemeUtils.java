@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.34 2005/08/11 07:51:20 arseniy Exp $
+ * $Id: SchemeUtils.java,v 1.35 2005/08/13 09:05:33 max Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.Identifier;
  * Functionality will be partially moved to appropriate model classes; partially
  * removed Œ¡»’ .
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.34 $, $Date: 2005/08/11 07:51:20 $
+ * @author $Author: max $
+ * @version $Revision: 1.35 $, $Date: 2005/08/13 09:05:33 $
  * @module scheme
  */
 public class SchemeUtils {
@@ -51,7 +51,7 @@ public class SchemeUtils {
 		switch (pathElement.getKind().value()) {
 		case _SCHEME_CABLE_LINK:
 			/*
-			 * Fall through.
+			 * Fall through
 			 */
 		case _SCHEME_LINK:
 			final AbstractSchemeLink link = (AbstractSchemeLink)pathElement.getAbstractSchemeElement();
