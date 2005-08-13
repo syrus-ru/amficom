@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkWrapper.java,v 1.7 2005/08/05 11:20:03 bass Exp $
+ * $Id: SchemeCableLinkWrapper.java,v 1.8 2005/08/13 11:20:58 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,13 +7,16 @@
  */
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/05 11:20:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/08/13 11:20:58 $
+ * @author $Author: max $
  * @module scheme
  */
 public final class SchemeCableLinkWrapper extends StorableObjectWrapper<SchemeCableLink> {
@@ -41,39 +44,119 @@ public final class SchemeCableLinkWrapper extends StorableObjectWrapper<SchemeCa
 
 	private static SchemeCableLinkWrapper instance;
 
+	private final List<String> keys;
+	
+	private SchemeCableLinkWrapper() {
+		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] {
+				COLUMN_NAME,
+				COLUMN_DESCRIPTION,
+				COLUMN_PHYSICAL_LENGTH,
+				COLUMN_OPTICAL_LENGTH,
+				COLUMN_CABLE_LINK_TYPE_ID,
+				COLUMN_CABLE_LINK_ID,
+				COLUMN_SOURCE_SCHEME_CABLE_PORT_ID,
+				COLUMN_TARGET_SCHEME_CABLE_PORT_ID,
+				COLUMN_PARENT_SCHEME_ID}));
+	}
+	
 	public List<String> getKeys() {
-		throw new UnsupportedOperationException("SchemeCableLinkWrapper | not implemented yet");
+		return this.keys;
 	}
 
 	public String getName(String key) {
-		throw new UnsupportedOperationException("SchemeCableLinkWrapper | not implemented yet");
+		return key;
 	}
 
 	@Override
 	public Class getPropertyClass(String key) {
-		throw new UnsupportedOperationException("SchemeCableLinkWrapper | not implemented yet");
+		final Class clazz = super.getPropertyClass(key);
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME)
+				|| key.equals(COLUMN_DESCRIPTION)) {
+			return String.class;
+		} else if (key.equals(COLUMN_PHYSICAL_LENGTH) 
+				|| key.equals(COLUMN_OPTICAL_LENGTH)) {
+			return Double.class;
+		} else if (key.equals(COLUMN_CABLE_LINK_TYPE_ID)
+				|| key.equals(COLUMN_CABLE_LINK_ID)
+				|| key.equals(COLUMN_SOURCE_SCHEME_CABLE_PORT_ID)
+				|| key.equals(COLUMN_TARGET_SCHEME_CABLE_PORT_ID)
+				|| key.equals(COLUMN_PARENT_SCHEME_ID)) {
+			return Identifier.class;
+		}
+		return null;
 	}
 
 	public Object getPropertyValue(String key) {
-		throw new UnsupportedOperationException("SchemeCableLinkWrapper | not implemented yet");
+		// There is no property
+		return null;
 	}
 
 	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
-		throw new UnsupportedOperationException("SchemeCableLinkWrapper | not implemented yet");
+		// There is no property
 	}
 
 	@Override
-	public Object getValue(SchemeCableLink object, String key) {
-		throw new UnsupportedOperationException("SchemeCableLinkWrapper | not implemented yet");
+	@SuppressWarnings("boxing")
+	public Object getValue(SchemeCableLink schemeCableLink, String key) {
+		final Object value = super.getValue(schemeCableLink, key);
+		if (value != null) {
+			return value;
+		}
+		if (schemeCableLink != null) {
+			if (key.equals(COLUMN_NAME)) {
+				return schemeCableLink.getName();
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
+				return schemeCableLink.getDescription();
+			} else if (key.equals(COLUMN_PHYSICAL_LENGTH)) {
+				return schemeCableLink.getPhysicalLength();
+			} else if (key.equals(COLUMN_OPTICAL_LENGTH)) {
+				return schemeCableLink.getOpticalLength();
+			} else if (key.equals(COLUMN_CABLE_LINK_TYPE_ID)) {
+				return schemeCableLink.getAbstractLinkTypeId();
+			} else if (key.equals(COLUMN_CABLE_LINK_ID)) {
+				return schemeCableLink.getAbstractLinkId();
+			} else if (key.equals(COLUMN_SOURCE_SCHEME_CABLE_PORT_ID)) {
+				return schemeCableLink.getSourceAbstractSchemePortId();
+			} else if (key.equals(COLUMN_TARGET_SCHEME_CABLE_PORT_ID)) {
+				return schemeCableLink.getTargetAbstractSchemePortId();
+			} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
+				return schemeCableLink.getParentSchemeId();
+			}
+		}
+		return null;
 	}
 
 	public boolean isEditable(String key) {
-		throw new UnsupportedOperationException("SchemeCableLinkWrapper | not implemented yet");
+		return false;
 	}
 
 	@Override
-	public void setValue(SchemeCableLink object, String key, Object value) {
-		throw new UnsupportedOperationException("SchemeCableLinkWrapper | not implemented yet");
+	@SuppressWarnings("boxing")
+	public void setValue(SchemeCableLink schemeCableLink, String key, Object value) {
+		if (schemeCableLink != null) {
+			if (key.equals(COLUMN_NAME)) {
+				schemeCableLink.setName((String) value);
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
+				schemeCableLink.setDescription((String) value);
+			} else if (key.equals(COLUMN_PHYSICAL_LENGTH)) {
+				schemeCableLink.setPhysicalLength((Double) value);
+			} else if (key.equals(COLUMN_OPTICAL_LENGTH)) {
+				schemeCableLink.setOpticalLength((Double) value);
+			} else if (key.equals(COLUMN_CABLE_LINK_TYPE_ID)) {
+				schemeCableLink.setAbstractLinkTypeId((Identifier) value);
+			} else if (key.equals(COLUMN_CABLE_LINK_ID)) {
+				schemeCableLink.setAbstractLinkId((Identifier) value);
+			} else if (key.equals(COLUMN_SOURCE_SCHEME_CABLE_PORT_ID)) {
+				schemeCableLink.setSourceAbstractSchemePortId((Identifier) value);
+			} else if (key.equals(COLUMN_TARGET_SCHEME_CABLE_PORT_ID)) {
+				schemeCableLink.setTargetAbstractSchemePortId((Identifier) value);
+			} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
+				schemeCableLink.setParentSchemeId((Identifier) value);
+			}
+		}
 	}
 
 	public static SchemeCableLinkWrapper getInstance() {

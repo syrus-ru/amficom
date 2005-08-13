@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortWrapper.java,v 1.10 2005/08/05 11:20:03 bass Exp $
+ * $Id: SchemeCablePortWrapper.java,v 1.11 2005/08/13 11:21:59 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/05 11:20:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/08/13 11:21:59 $
+ * @author $Author: max $
  * @module scheme
  */
 public final class SchemeCablePortWrapper extends StorableObjectWrapper<SchemeCablePort> {
@@ -42,7 +42,7 @@ public final class SchemeCablePortWrapper extends StorableObjectWrapper<SchemeCa
 
 	private static SchemeCablePortWrapper instance;
 
-	private List<String> keys;
+	private final List<String> keys;
 
 	private SchemeCablePortWrapper() {
 		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] { COLUMN_NAME,
@@ -130,16 +130,13 @@ public final class SchemeCablePortWrapper extends StorableObjectWrapper<SchemeCa
 			} else if (key.equals(COLUMN_DIRECTION_TYPE)) {
 				schemeCablePort.setDirectionType(IdlDirectionType.from_int(((Integer) value).intValue()));
 			} else if (key.equals(COLUMN_CABLE_PORT_TYPE_ID)) {
-				/**
-				 * @bug changed status is not updated.
-				 */
-				schemeCablePort.portTypeId = (Identifier) value;
+				schemeCablePort.setPortTypeId((Identifier) value);
 			} else if (key.equals(COLUMN_CABLE_PORT_ID)) {
-				schemeCablePort.portId = (Identifier) value;
+				schemeCablePort.setPortId((Identifier) value);
 			} else if (key.equals(COLUMN_MEASUREMENT_PORT_ID)) {
-				schemeCablePort.measurementPortId = (Identifier) value;
+				schemeCablePort.setMeasurementPortId((Identifier) value);
 			} else if (key.equals(COLUMN_PARENT_DEVICE_ID)) {
-				schemeCablePort.parentSchemeDeviceId = (Identifier) value;
+				schemeCablePort.setParentSchemeDeviceId((Identifier) value);
 			}
 		}
 	}

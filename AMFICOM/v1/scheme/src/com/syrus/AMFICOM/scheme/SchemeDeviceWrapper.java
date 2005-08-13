@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceWrapper.java,v 1.6 2005/08/05 11:20:03 bass Exp $
+ * $Id: SchemeDeviceWrapper.java,v 1.7 2005/08/13 11:23:15 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,16 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/05 11:20:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.7 $, $Date: 2005/08/13 11:23:15 $
+ * @author $Author: max $
  * @module scheme
  */
 public final class SchemeDeviceWrapper extends StorableObjectWrapper<SchemeDevice> {
@@ -28,40 +31,87 @@ public final class SchemeDeviceWrapper extends StorableObjectWrapper<SchemeDevic
 	public static final String COLUMN_PARENT_SCHEME_ELEMENT_ID = "parent_scheme_element_id";
 
 	private static SchemeDeviceWrapper instance;
-
+	
+	private final List<String> keys;
+	
+	private SchemeDeviceWrapper() {
+		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] {
+				COLUMN_NAME,
+				COLUMN_DESCRIPTION,
+				COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID,
+				COLUMN_PARENT_SCHEME_ELEMENT_ID}));
+	}
+	
 	public List<String> getKeys() {
-		throw new UnsupportedOperationException("SchemeDeviceWrapper | not implemented yet");
+		return this.keys;
 	}
 
 	public String getName(String key) {
-		throw new UnsupportedOperationException("SchemeDeviceWrapper | not implemented yet");
+		return key;
 	}
 
 	@Override
 	public Class getPropertyClass(String key) {
-		throw new UnsupportedOperationException("SchemeDeviceWrapper | not implemented yet");
+		final Class clazz = super.getPropertyClass(key);
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME)
+				|| key.equals(COLUMN_DESCRIPTION)) {
+			return String.class;
+		} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)
+				|| key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
+			return Identifier.class;
+		}
+		return null;
 	}
 
 	public Object getPropertyValue(String key) {
-		throw new UnsupportedOperationException("SchemeDeviceWrapper | not implemented yet");
+		//there is no property
+		return null;
 	}
 
 	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
-		throw new UnsupportedOperationException("SchemeDeviceWrapper | not implemented yet");
+		//there is no property
 	}
 
 	@Override
-	public Object getValue(SchemeDevice object, String key) {
-		throw new UnsupportedOperationException("SchemeDeviceWrapper | not implemented yet");
+	public Object getValue(SchemeDevice schemeDevice, String key) {
+		final Object value = super.getValue(schemeDevice, key);
+		if (value != null) {
+			return value;
+		}
+		if (schemeDevice != null) {
+			if (key.equals(COLUMN_NAME)) {
+				return schemeDevice.getName();
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
+				return schemeDevice.getDescription();
+			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
+				return schemeDevice.getParentSchemeProtoElementId();
+			} else if (key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
+				return schemeDevice.getParentSchemeElementId();
+			}
+		}
+		return null;
 	}
 
 	public boolean isEditable(String key) {
-		throw new UnsupportedOperationException("SchemeDeviceWrapper | not implemented yet");
+		return false;
 	}
 
 	@Override
-	public void setValue(SchemeDevice object, String key, Object value) {
-		throw new UnsupportedOperationException("SchemeDeviceWrapper | not implemented yet");
+	public void setValue(SchemeDevice schemeDevice, String key, Object value) {
+		if (schemeDevice != null) {
+			if (key.equals(COLUMN_NAME)) {
+				schemeDevice.getName();
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
+				schemeDevice.getDescription();
+			} else if (key.equals(COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID)) {
+				schemeDevice.setParentSchemeProtoElementId((Identifier) value);
+			} else if (key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
+				schemeDevice.setParentSchemeElementId((Identifier) value);
+			}
+		}
 	}
 
 	public static SchemeDeviceWrapper getInstance() {
