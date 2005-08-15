@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: Characteristic.xsd,v 1.7 2005/08/08 17:52:30 max Exp $
+<!-- $Id: Characteristic.xsd,v 1.8 2005/08/15 13:57:47 max Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/general/xml"
@@ -14,23 +14,8 @@
   </xsd:complexType>
 
   <xsd:complexType name="Characteristic">
-      <xsd:attribute name="typecodename" type="xsd:string" use="required"/>
-      <xsd:attribute name="value" type="xsd:string" use="required"/>
-      <xsd:attribute name="editable" type="xsd:boolean" use="required"/>
-      <xsd:attribute name="visible" type="xsd:boolean" use="required"/>
-      <xsd:attribute name="sort" type="general:CharacteristicTypeSort" use="required"/>
-      <xsd:attribute name="name" type="xsd:string" use="required"/>
-      <xsd:attribute name="description" type="xsd:string" use="required"/>
+    <xsd:attribute name="typecodename" type="xsd:string" use="required"/>
+    <xsd:attribute name="value" type="xsd:string" use="required"/>
   </xsd:complexType>
-
-  <xsd:simpleType name="CharacteristicTypeSort">
-      <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="visual"/>
-            <xsd:enumeration value="operational"/>
-            <xsd:enumeration value="interface"/>
-            <xsd:enumeration value="electrical"/>
-            <xsd:enumeration value="optical"/>
-      </xsd:restriction>
-  </xsd:simpleType>
 
 </xsd:schema>
