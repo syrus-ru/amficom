@@ -1,4 +1,4 @@
--- $Id: schemeelement.sql,v 1.10 2005/06/15 17:03:10 bass Exp $
+-- $Id: schemeelement.sql,v 1.11 2005/08/15 11:14:34 max Exp $
 
 CREATE TABLE SchemeElement (
 	id NUMBER(19) NOT NULL,
@@ -12,6 +12,7 @@ CREATE TABLE SchemeElement (
 	name VARCHAR2(32 CHAR)NOT NULL,
 	description VARCHAR2(256 CHAR),
 --
+	kind NUMBER(1) NOT NULL,
 	label VARCHAR2(64 CHAR),
 	equipment_type_id,
 	equipment_id,
@@ -62,7 +63,7 @@ CREATE TABLE SchemeElement (
 		AND parent_scheme_element_id IS NULL))
 );
 
-COMMENT ON TABLE SchemeElement IS '$Id: schemeelement.sql,v 1.10 2005/06/15 17:03:10 bass Exp $';
+COMMENT ON TABLE SchemeElement IS '$Id: schemeelement.sql,v 1.11 2005/08/15 11:14:34 max Exp $';
 
 ALTER TABLE Scheme ADD (
 	CONSTRAINT scheme_prnt_scheme_element_fk FOREIGN KEY(parent_scheme_element_id)
