@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmMarker.java,v 1.9 2005/08/09 16:28:40 arseniy Exp $
+ * $Id: AlarmMarker.java,v 1.10 2005/08/15 14:08:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.Identifier;
 
 /**
  * Стационарный маркер сигнала тревоги.
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/08/09 16:28:40 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.10 $, $Date: 2005/08/15 14:08:55 $
  * @module mapview
  * @todo AlarmMarker functionality
  */
@@ -30,11 +30,10 @@ public final class AlarmMarker extends Marker {
 			Identifier id,
 			Identifier creatorId,
 			MapView mapView,
-			double len,
 			MeasurementPath path,
 			Identifier meId,
 			String name) {
-		super(id, creatorId, mapView, len, path, meId, name);
+		super(id, creatorId, mapView, path, meId, name);
 	}
 
 //	public static MapAlarmMarker createInstance(
