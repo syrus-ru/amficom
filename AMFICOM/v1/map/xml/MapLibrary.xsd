@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: MapLibrary.xsd,v 1.5 2005/08/08 17:50:53 max Exp $
+<!-- $Id: MapLibrary.xsd,v 1.6 2005/08/15 14:53:28 krupenn Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/map/xml"
@@ -20,5 +20,6 @@
       <xsd:element name="physicallinktypes" type="map:PhysicalLinkTypes" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="sitenodetypes" type="map:SiteNodeTypes" minOccurs="1" maxOccurs="1"/>
     </xsd:all>
+	<xsd:attribute name="importtype" type="xsd:string" use="required"/>
   </xsd:complexType>
 </xsd:schema>
