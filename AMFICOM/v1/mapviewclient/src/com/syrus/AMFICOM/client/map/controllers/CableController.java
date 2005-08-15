@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.31 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: CableController.java,v 1.32 2005/08/15 14:29:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Контроллер кабеля.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2005/08/12 14:49:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.32 $, $Date: 2005/08/15 14:29:19 $
  * @module mapviewclient
  */
 public final class CableController extends AbstractLinkController {
@@ -67,17 +67,19 @@ public final class CableController extends AbstractLinkController {
 
 		final CablePath cpath = (CablePath) me;
 
-		boolean isv = cpath.isSelected();
-		if (!isv) {
-			for (final MeasurementPath mp : this.logicalNetLayer.getMapView().getMeasurementPaths(cpath)) {
-				final MeasurementPathController mpc = (MeasurementPathController) this.logicalNetLayer.getMapViewController().getController(mp);
-				if (mpc.isSelectionVisible(mp)) {
-					isv = true;
+		boolean visibility = cpath.isSelected();
+		if (!visibility) {
+			for (final MeasurementPath measurementPath : this.logicalNetLayer.getMapView().getMeasurementPaths(cpath)) {
+				final MeasurementPathController controller = 
+					(MeasurementPathController) 
+						this.logicalNetLayer.getMapViewController().getController(measurementPath);
+				if (controller.isSelectionVisible(measurementPath)) {
+					visibility = true;
 					break;
 				}
 			}
 		}
-		return isv;
+		return visibility;
 	}
 
 	/**
@@ -90,17 +92,17 @@ public final class CableController extends AbstractLinkController {
 			return false;
 		}
 
-		final CablePath cpath = (CablePath) me;
+		final CablePath cablePath = (CablePath) me;
 
-		boolean vis = false;
-		for (final PhysicalLink link : cpath.getLinks()) {
-			final PhysicalLinkController plc = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(link);
-			if (plc.isElementVisible(link, visibleBounds)) {
-				vis = true;
+		boolean visibility = false;
+		for (final PhysicalLink link : cablePath.getLinks()) {
+			final PhysicalLinkController controller = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(link);
+			if (controller.isElementVisible(link, visibleBounds)) {
+				visibility = true;
 				break;
 			}
 		}
-		return vis;
+		return visibility;
 	}
 
 	/**
