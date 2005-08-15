@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.41 2005/08/12 14:27:00 arseniy Exp $
+ * $Id: MeasurementPath.java,v 1.42 2005/08/15 14:07:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Элемент пути.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.41 $, $Date: 2005/08/12 14:27:00 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.42 $, $Date: 2005/08/15 14:07:33 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -300,14 +300,6 @@ public final class MeasurementPath implements MapElement {
 	}
 
 	/**
-	 * @deprecated
-	 */
-	@Deprecated
-	public boolean isSelectionVisible() {
-		return isSelected();
-	}
-
-	/**
 	 * Возвращает топологическую длинну в метрах
 	 * 
 	 * @return топологическая длина
@@ -465,11 +457,12 @@ public final class MeasurementPath implements MapElement {
 	 *         списке
 	 */
 	public NodeLink nextNodeLink(final NodeLink nodeLink) {
-		final int index = getSortedNodeLinks().indexOf(nodeLink);
-		if (index == getSortedNodeLinks().size() - 1)
+		List nodeLinks = getSortedNodeLinks();
+		final int index = nodeLinks.indexOf(nodeLink);
+		if (index == nodeLinks.size() - 1)
 			return null;
 
-		return (NodeLink) getSortedNodeLinks().get(index + 1);
+		return (NodeLink) nodeLinks.get(index + 1);
 	}
 
 	/**
@@ -479,11 +472,12 @@ public final class MeasurementPath implements MapElement {
 	 * в списке
 	 */
 	public NodeLink previousNodeLink(final NodeLink nodeLink) {
-		int index = getSortedNodeLinks().indexOf(nodeLink);
+		List nodeLinks = getSortedNodeLinks();
+		int index = nodeLinks.indexOf(nodeLink);
 		if (index == 0)
 			return null;
 
-		return (NodeLink) getSortedNodeLinks().get(index - 1);
+		return (NodeLink) nodeLinks.get(index - 1);
 	}
 
 	/**
