@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.53 2005/08/12 14:27:00 arseniy Exp $
+* $Id: MapView.java,v 1.54 2005/08/15 14:09:40 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: arseniy $
- * @version $Revision: 1.53 $, $Date: 2005/08/12 14:27:00 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.54 $, $Date: 2005/08/15 14:09:40 $
  * @module mapview
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -401,27 +401,6 @@ public final class MapView extends DomainMember implements Namable {
 		return (DoublePoint) this.center.clone();
 	}
 
-	/**
-	 * Коррекция начального и конечного узлов топологической прокладки кабеля по
-	 * элементам карты, в которых размещены начальный и конечный элемент схемного
-	 * кабеля.
-	 * 
-	 * @param cablePath
-	 *        топологический кабель
-	 * @param schemeCableLink
-	 *        схемный кабель
-	 */
-//	public void correctStartEndNodes(CablePath cablePath, SchemeCableLink schemeCableLink)
-//	{
-//		SiteNode startNode = getStartNode(schemeCableLink);
-//		SiteNode endNode = getEndNode(schemeCableLink);
-//		if(startNode != null && endNode != null)
-//		{
-//			cablePath.setStartNode(startNode);
-//			cablePath.setEndNode(endNode);
-//		}
-//	}
-	
 	/**
 	 * Возвращает топологический элемент, в котором расположен начальный
 	 * элемент кабеля.
