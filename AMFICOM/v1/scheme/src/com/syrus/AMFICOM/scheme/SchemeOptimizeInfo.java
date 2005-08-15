@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.56 2005/08/05 16:50:34 arseniy Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.57 2005/08/15 15:18:44 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
 /**
  * #05 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.56 $, $Date: 2005/08/05 16:50:34 $
+ * @author $Author: max $
+ * @version $Revision: 1.57 $, $Date: 2005/08/15 15:18:44 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -750,5 +750,13 @@ public final class SchemeOptimizeInfo extends StorableObject
 		this.nodesCutProb = schemeOptimizeInfo.nodesCutProb;
 		this.survivorRate = schemeOptimizeInfo.survivorRate;
 		this.parentSchemeId = new Identifier(schemeOptimizeInfo.parentSchemeId);
+	}
+	
+	void setParentSchemeId(Identifier parentSchemeId) {
+//		 TODO: inroduce additional sanity checks
+		assert parentSchemeId != null : NON_NULL_EXPECTED;
+		assert parentSchemeId.isVoid() || parentSchemeId.getMajor() == SCHEME_CODE;
+		this.parentSchemeId = parentSchemeId;
+		super.markAsChanged();
 	}
 }

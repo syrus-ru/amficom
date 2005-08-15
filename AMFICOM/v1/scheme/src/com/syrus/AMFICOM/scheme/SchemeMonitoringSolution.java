@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.60 2005/08/05 16:50:34 arseniy Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.61 2005/08/15 15:17:01 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -57,8 +58,8 @@ import com.syrus.util.Log;
 /**
  * #08 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.60 $, $Date: 2005/08/05 16:50:34 $
+ * @author $Author: max $
+ * @version $Revision: 1.61 $, $Date: 2005/08/15 15:17:01 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -602,5 +603,13 @@ public final class SchemeMonitoringSolution
 		this.active = schemeMonitoringSolution.active;
 		this.parentSchemeId = new Identifier(schemeMonitoringSolution.parentSchemeId);
 		this.parentSchemeOptimizeInfoId = new Identifier(schemeMonitoringSolution.parentSchemeOptimizeInfoId);
+	}
+
+	void setParentSchemeId(Identifier parentSchemeId) {
+//		 TODO: inroduce additional sanity checks
+		assert parentSchemeId != null : NON_NULL_EXPECTED;
+		assert parentSchemeId.isVoid() || parentSchemeId.getMajor() == SCHEME_CODE;
+		this.parentSchemeId = parentSchemeId;
+		super.markAsChanged();
 	}
 }
