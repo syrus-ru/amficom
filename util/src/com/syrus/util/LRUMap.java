@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.36 2005/08/15 13:49:55 arseniy Exp $
+ * $Id: LRUMap.java,v 1.37 2005/08/15 14:04:33 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/08/15 13:49:55 $
+ * @version $Revision: 1.37 $, $Date: 2005/08/15 14:04:33 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -96,14 +96,20 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 	public synchronized V get(final K key) {
 		this.modCount++;
 		if (key != null) {
-			V ret = null;
-			for (int i = 0; i < this.array.length; i++) {
+			int i = 0;
+			IEntry<K, V> entry = null;
+			for (; i < this.array.length; i++) {
 				if (this.array[i] != null && key.equals(this.array[i].getKey())) {
-					ret = this.array[i].getValue();
+					entry = this.array[i];
 					break;
 				}
 			}
-			return ret;
+			if (entry != null) {
+				this.array[i] = this.array[0];
+				this.array[0] = entry;
+				return entry.getValue();
+			}
+			return null;
 		}
 		throw new IllegalArgumentException("Key is NULL");
 	}
