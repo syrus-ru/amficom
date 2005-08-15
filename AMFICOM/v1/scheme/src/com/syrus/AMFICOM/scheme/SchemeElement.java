@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.78 2005/08/13 11:17:03 max Exp $
+ * $Id: SchemeElement.java,v 1.79 2005/08/15 08:54:47 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: max $
- * @version $Revision: 1.78 $, $Date: 2005/08/13 11:17:03 $
+ * @version $Revision: 1.79 $, $Date: 2005/08/15 08:54:47 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1075,8 +1075,8 @@ public final class SchemeElement extends AbstractSchemeElement
 
 		assert equipmentTypeId != null : NON_NULL_EXPECTED;
 		assert equipmentId != null : NON_NULL_EXPECTED;
-		assert equipmentTypeId.isVoid() ^ equipmentId.isVoid();
-
+		assert (kind.equals(SchemeElementKind.EQUIPMENTED) ? equipmentTypeId.isVoid() ^ equipmentId.isVoid(): !(equipmentTypeId.isVoid() ^ equipmentId.isVoid())) : OBJECT_BADLY_INITIALIZED;
+		
 		assert kisId != null : NON_NULL_EXPECTED;
 		assert siteNodeId != null : NON_NULL_EXPECTED;
 		assert symbolId != null : NON_NULL_EXPECTED;
