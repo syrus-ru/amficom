@@ -1,5 +1,5 @@
 /**
- * $Id: MapXMLTest.java,v 1.2 2005/08/09 07:14:27 krupenn Exp $
+ * $Id: MapXMLTest.java,v 1.3 2005/08/15 14:46:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,10 +21,10 @@ import org.apache.xmlbeans.XmlOptions;
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
-import com.syrus.amficom.general.xml.UID;
+import com.syrus.AMFICOM.client.map.controllers.AbstractLinkController;
 import com.syrus.amficom.general.xml.Characteristic;
-import com.syrus.amficom.general.xml.CharacteristicTypeSort;
 import com.syrus.amficom.general.xml.Characteristics;
+import com.syrus.amficom.general.xml.UID;
 import com.syrus.amficom.map.xml.LibraryDocument;
 import com.syrus.amficom.map.xml.MapLibrary;
 import com.syrus.amficom.map.xml.PhysicalLinkType;
@@ -145,13 +145,13 @@ public class MapXMLTest {
 		   lnode.setDimensionY(BigInteger.valueOf(1));
 		   Characteristics chars = lnode.addNewCharacteristics();
 		   Characteristic char1 = chars.addNewCharacteristic();
-		   char1.setSort(CharacteristicTypeSort.VISUAL);
+		   char1.setTypecodename(AbstractLinkController.ATTRIBUTE_STYLE);
 		   char1.setValue("dashed");
 		   Characteristic char2 = chars.addNewCharacteristic();
-		   char2.setSort(CharacteristicTypeSort.VISUAL);
+		   char2.setTypecodename(AbstractLinkController.ATTRIBUTE_COLOR);
 		   char2.setValue(String.valueOf(0xFF004000));
 		   Characteristic char3 = chars.addNewCharacteristic();
-		   char3.setSort(CharacteristicTypeSort.VISUAL);
+		   char3.setTypecodename(AbstractLinkController.ATTRIBUTE_THICKNESS);
 		   char3.setValue(String.valueOf(1));
 
 		   printInstance(doc);
