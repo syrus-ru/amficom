@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.29 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: MapActionCommandBundle.java,v 1.30 2005/08/15 14:25:36 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 
 /**
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/08/12 14:49:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.30 $, $Date: 2005/08/15 14:25:36 $
  * @module maviewclient_v1
  */
 public class MapActionCommandBundle extends CommandBundle
@@ -354,16 +354,6 @@ public class MapActionCommandBundle extends CommandBundle
 		}
 		cablePath.clearLinks();
 	}
-
-	/**
-	 * удал€етс€ измерительный путь
-	 */
-	protected void removeMeasurementPathCables(MeasurementPath mPath)
-		throws Throwable
-	{
-//		mPath.clearCablePaths();
-	}
-
 
 	/**
 	 * фрагменты линии link перенос€тс€ в линию newLink начина€ от начального
