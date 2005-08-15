@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.33 2005/08/12 14:27:00 arseniy Exp $
+ * $Id: Marker.java,v 1.34 2005/08/15 14:08:40 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,9 +48,9 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *
  *
  *
- * @version $Revision: 1.33 $, $Date: 2005/08/12 14:27:00 $
+ * @version $Revision: 1.34 $, $Date: 2005/08/15 14:08:40 $
  * @module mapview
- * @author $Author: arseniy $
+ * @author $Author: krupenn $
  */
 
 public class Marker extends AbstractNode {
@@ -64,7 +64,7 @@ public class Marker extends AbstractNode {
 	/**
 	 * Дистанция от начала измерительного пути до маркера.
 	 */
-	protected double distance = 0.0;
+	protected double physicalDistance = 0.0;
 
 	/**
 	 * Описатель. Интерпретируется в соответствии с типом маркера.
@@ -118,7 +118,7 @@ public class Marker extends AbstractNode {
 			final MeasurementPath path,
 			final Identifier monitoredElementId,
 			final DoublePoint dpoint) {
-		this(id, creatorId, mapView, 0.0, path, monitoredElementId, String.valueOf(id.getMinor()));
+		this(id, creatorId, mapView, path, monitoredElementId, String.valueOf(id.getMinor()));
 
 		this.startNode = startNode;
 		this.endNode = endNode;
@@ -190,7 +190,6 @@ public class Marker extends AbstractNode {
 	public Marker(final Identifier id,
 			final Identifier creatorId,
 			final MapView mapView,
-			final double opticalDistance,
 			final MeasurementPath path,
 			final Identifier monitoredElementId,
 			final String name) {
@@ -220,8 +219,6 @@ public class Marker extends AbstractNode {
 	 *        пользователь
 	 * @param mapView
 	 *        вид карты
-	 * @param opticalDistance
-	 *        оптическая дистанция от начала пути
 	 * @param path
 	 *        измерительный путь
 	 * @param monitoredElementId
@@ -233,7 +230,6 @@ public class Marker extends AbstractNode {
 	 */
 	public static Marker createInstance(final Identifier creatorId,
 			final MapView mapView,
-			final double opticalDistance,
 			final MeasurementPath path,
 			final Identifier monitoredElementId,
 			final String name) throws CreateObjectException {
@@ -242,7 +238,7 @@ public class Marker extends AbstractNode {
 
 		try {
 			final Identifier ide = IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE);
-			return new Marker(ide, creatorId, mapView, opticalDistance, path, monitoredElementId, name);
+			return new Marker(ide, creatorId, mapView, path, monitoredElementId, name);
 		} catch (IdentifierGenerationException e) {
 			throw new CreateObjectException("MapMarker.createInstance | cannot generate identifier ", e);
 		}
@@ -277,10 +273,6 @@ public class Marker extends AbstractNode {
 		return this.mapView;
 	}
 
-	public double getOpticalDistanceFromStart() {
-		return 0.0;
-	}
-
 	public NodeLink previousNodeLink() {
 		NodeLink nLink;
 		final int index = this.measurementPath.getSortedNodeLinks().indexOf(this.nodeLink);
@@ -305,34 +297,34 @@ public class Marker extends AbstractNode {
 		return nLink;
 	}
 
-	public SiteNode getLeft() {
-		final List<AbstractNode> nodes = this.cpath.getSortedNodes();
-		SiteNode previous = null;
-		for (final AbstractNode node : nodes) {
-			if (node instanceof SiteNode) {
-				previous = (SiteNode) node;
-			}
-			if (node.equals(this.startNode)) {
-				break;
-			}
-		}
-		return previous;
-	}
-
-	public SiteNode getRight() {
-		final List<AbstractNode> nodes = this.cpath.getSortedNodes();
-		SiteNode found = null;
-
-		for (final AbstractNode node : nodes) {
-			if (node instanceof SiteNode) {
-				found = (SiteNode) node;
-			}
-			if (node.equals(this.endNode)) {
-				break;
-			}
-		}
-		return found;
-	}
+//	public SiteNode getLeft() {
+//		final List<AbstractNode> nodes = this.cpath.getSortedNodes();
+//		SiteNode previous = null;
+//		for (final AbstractNode node : nodes) {
+//			if (node instanceof SiteNode) {
+//				previous = (SiteNode) node;
+//			}
+//			if (node.equals(this.startNode)) {
+//				break;
+//			}
+//		}
+//		return previous;
+//	}
+//
+//	public SiteNode getRight() {
+//		final List<AbstractNode> nodes = this.cpath.getSortedNodes();
+//		SiteNode found = null;
+//
+//		for (final AbstractNode node : nodes) {
+//			if (node instanceof SiteNode) {
+//				found = (SiteNode) node;
+//			}
+//			if (node.equals(this.endNode)) {
+//				break;
+//			}
+//		}
+//		return found;
+//	}
 
 	public void setMeasurementPath(final MeasurementPath measurementPath) {
 		this.measurementPath = measurementPath;
@@ -382,20 +374,20 @@ public class Marker extends AbstractNode {
 		this.cpath = cpath;
 	}
 
-	public void setMeId(final Identifier meId) {
-		this.monitoredElementId = meId;
+	public void setMonitoringElementId(final Identifier monitoringElementId) {
+		this.monitoredElementId = monitoringElementId;
 	}
 
-	public Identifier getMeId() {
+	public Identifier getMonitoringElementId() {
 		return this.monitoredElementId;
 	}
 
-	public void setDistance(final double distance) {
-		this.distance = distance;
+	public void setPhysicalDistance(final double physicalDistance) {
+		this.physicalDistance = physicalDistance;
 	}
 
-	public double getDistance() {
-		return this.distance;
+	public double getPhysicalDistance() {
+		return this.physicalDistance;
 	}
 
 	/**
