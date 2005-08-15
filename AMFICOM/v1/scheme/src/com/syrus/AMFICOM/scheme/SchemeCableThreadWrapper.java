@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadWrapper.java,v 1.7 2005/08/13 11:22:41 max Exp $
+ * $Id: SchemeCableThreadWrapper.java,v 1.8 2005/08/15 15:15:13 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/13 11:22:41 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/15 15:15:13 $
  * @author $Author: max $
  * @module scheme
  */
@@ -111,9 +111,9 @@ public final class SchemeCableThreadWrapper extends StorableObjectWrapper<Scheme
 	public void setValue(SchemeCableThread schemeCableThread, String key, Object value) {
 		if (schemeCableThread != null) {
 			if (key.equals(COLUMN_NAME)) {
-				schemeCableThread.getName();
+				schemeCableThread.setName((String) value);
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemeCableThread.getDescription();
+				schemeCableThread.setDescription((String) value);
 			} else if (key.equals(COLUMN_CABLE_THREAD_TYPE_ID)) {
 				schemeCableThread.setCableThreadTypeId((Identifier) value);
 			} else if (key.equals(COLUMN_LINK_ID)) {

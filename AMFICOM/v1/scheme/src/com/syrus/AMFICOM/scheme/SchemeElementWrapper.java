@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementWrapper.java,v 1.9 2005/08/13 11:24:10 max Exp $
+ * $Id: SchemeElementWrapper.java,v 1.10 2005/08/15 15:15:51 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/13 11:24:10 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/15 15:15:51 $
  * @author $Author: max $
  * @module scheme
  */
@@ -162,9 +162,9 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 	public void setValue(SchemeElement schemeElement, String key, Object value) {
 		if (schemeElement != null) {
 			if (key.equals(COLUMN_NAME)) {
-				schemeElement.getName();
+				schemeElement.setName((String) value);
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemeElement.getDescription();
+				schemeElement.setDescription((String) value);
 			} else if (key.equals(COLUMN_KIND)) {
 				//nothing to do 
 			} else if (key.equals(COLUMN_LABEL)) {

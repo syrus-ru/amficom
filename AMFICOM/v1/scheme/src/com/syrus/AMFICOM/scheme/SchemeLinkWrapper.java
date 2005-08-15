@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkWrapper.java,v 1.8 2005/08/13 11:25:00 max Exp $
+ * $Id: SchemeLinkWrapper.java,v 1.9 2005/08/15 15:16:02 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/13 11:25:00 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/15 15:16:02 $
  * @author $Author: max $
  * @module scheme
  */
@@ -157,9 +157,9 @@ public final class SchemeLinkWrapper extends StorableObjectWrapper<SchemeLink> {
 	public void setValue(SchemeLink schemeLink, String key, Object value) {
 		if (schemeLink != null) {
 			if (key.equals(COLUMN_NAME)) {
-				schemeLink.getName();
+				schemeLink.setName((String) value);
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				schemeLink.getDescription();
+				schemeLink.setDescription((String) value);
 			} else if (key.equals(COLUMN_PHYSICAL_LENGTH)) {
 				schemeLink.setPhysicalLength((Double) value);
 			} else if (key.equals(COLUMN_OPTICAL_LENGTH)) {
