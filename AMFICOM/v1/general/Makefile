@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.55 2005/08/11 18:52:52 arseniy Exp $
+# $Id: Makefile,v 1.56 2005/08/15 13:56:11 max Exp $
 #
 # vim:set ft=make:
 #
@@ -70,7 +70,8 @@ xmlinstall: .xml $(LIBDIR)
 $(LIBNAME_GENERALXML):
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
 		$(XMLDIR)/General.xsd \
-		$(XMLDIR)/Characteristic.xsd
+		$(XMLDIR)/Characteristic.xsd \
+		$(XMLDIR)/CharacteristicType.xsd
 
 .PHONY: clean
 clean: cleanmach cleancorba
