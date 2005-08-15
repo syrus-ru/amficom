@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.17 2005/08/02 13:03:21 arseniy Exp $
+ * $Id: CharacteristicsPanel.java,v 1.18 2005/08/15 08:54:52 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/02 13:03:21 $
+ * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2005/08/15 08:54:52 $
  * @module commonclient
  */
 
@@ -166,7 +166,8 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 					public void valueChanged(ListSelectionEvent e) {
 						if (e.getValueIsAdjusting())
 							return;
-						CharacteristicsPanel.this.toolBar.setCancelButtonEnabled(!CharacteristicsPanel.this.wTable.getSelectionModel().isSelectionEmpty());
+						CharacteristicsPanel.this.toolBar.setCancelButtonEnabled(!CharacteristicsPanel.this.wTable.getSelectionModel().isSelectionEmpty() 
+								&& CharacteristicsPanel.this.toolBar.addButton.isEnabled());
 					}
 				});
 		this.wTable.getColumnModel().getColumn(0).setPreferredWidth(180);
@@ -180,6 +181,7 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 				item_stateChanged(e);
 			}
 		});
+		this.selectedTypeSort = (CharacteristicTypeSort) this.characteristicTypeSortCombo.getSelectedItem();
 
 		final GridBagLayout gbPanel0 = new GridBagLayout();
 		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
