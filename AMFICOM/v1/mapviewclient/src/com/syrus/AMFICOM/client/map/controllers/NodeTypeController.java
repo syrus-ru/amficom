@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.40 2005/08/11 17:08:10 arseniy Exp $
+ * $Id: NodeTypeController.java,v 1.41 2005/08/15 14:30:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * контроллер типа сетевого узла.
- * @author $Author: arseniy $
- * @version $Revision: 1.40 $, $Date: 2005/08/11 17:08:10 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.41 $, $Date: 2005/08/15 14:30:46 $
  * @module mapviewclient
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -164,7 +164,6 @@ public class NodeTypeController extends AbstractNodeController {
 		}
 		final FileImageResource ir = FileImageResource.createInstance(userId, codename, filename);
 		StorableObjectPool.flush(ir, userId, true);
-		// FileImageResource ir = (FileImageResource )bitMaps.iterator().next();
 		return ir.getId();
 	}
 

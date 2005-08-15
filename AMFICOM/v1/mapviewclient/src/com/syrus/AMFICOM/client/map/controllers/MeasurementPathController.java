@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.31 2005/08/11 13:55:41 arseniy Exp $
+ * $Id: MeasurementPathController.java,v 1.32 2005/08/15 14:30:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 
 /**
  * Контроллер топологическиго пути.
- * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2005/08/11 13:55:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.32 $, $Date: 2005/08/15 14:30:35 $
  * @module mapviewclient
  */
 public final class MeasurementPathController extends AbstractLinkController {
@@ -66,9 +66,7 @@ public final class MeasurementPathController extends AbstractLinkController {
 		if (!(mapElement instanceof MeasurementPath)) {
 			return false;
 		}
-
 		final MeasurementPath mpath = (MeasurementPath) mapElement;
-
 		return mpath.isSelected();
 	}
 
