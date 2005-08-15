@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.38 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: NetMapViewer.java,v 1.39 2005/08/15 14:24:46 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,8 +75,8 @@ import com.syrus.util.Log;
  * картографии, следует вызвать метод {@link #getVisualComponent()}
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
- * @author $Author: arseniy $
- * @version $Revision: 1.38 $, $Date: 2005/08/12 14:49:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.39 $, $Date: 2005/08/15 14:24:46 $
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
@@ -155,9 +155,7 @@ public abstract class NetMapViewer {
 			MapPropertiesManager.setCenter(this.mapContext.getCenter());
 			MapPropertiesManager.setZoom(this.mapContext.getScale());
 			MapPropertiesManager.saveIniFile();
-		} catch(MapConnectionException e) {
-			e.printStackTrace();
-		} catch(MapDataException e) {
+		} catch(MapException e) {
 			e.printStackTrace();
 		}
 	}
@@ -176,7 +174,6 @@ public abstract class NetMapViewer {
 	 * Выполнить удаление выбранных элементов.
 	 */
 	public void delete()
-		throws MapConnectionException, MapDataException
 	{
 		DeleteSelectionCommand command = new DeleteSelectionCommand();
 		command.setNetMapViewer(this);
@@ -555,7 +552,6 @@ public abstract class NetMapViewer {
 							mne.getMarkerId(),
 							LoginManager.getUserId(),
 			                mapView,
-							mne.getDistance(),
 							path,
 							mne.getMeId(),
 							LangModelMap.getString("Marker"));
@@ -585,7 +581,6 @@ public abstract class NetMapViewer {
 							mne.getMarkerId(),
 							LoginManager.getUserId(),
 			                mapView,
-							mne.getDistance(),
 							path,
 							mne.getMeId(),
 							LangModelMap.getString("Event"));
@@ -633,7 +628,6 @@ public abstract class NetMapViewer {
 								mne.getMarkerId(),
 								LoginManager.getUserId(),
 								mapView,
-								mne.getDistance(),
 								path,
 								mne.getMeId(),
 								LangModelMap.getString("Alarm"));
@@ -729,39 +723,6 @@ public abstract class NetMapViewer {
 
 				repaint(false);
 			}
-//			else
-//			if(pce.getPropertyName().equals(TreeDataSelectionEvent.type))
-//			{
-//				TreeDataSelectionEvent tdse = (TreeDataSelectionEvent)pce;
-//
-//				List data = tdse.getList();
-//				int n = tdse.getSelectionNumber();
-//
-//				if (n != -1)
-//				{
-//					try 
-//					{
-//						MapElement me = (MapElement)data.get(n);
-//						this.mapView.getMap().setSelected(me, true);
-//						repaint(false);
-//					} 
-//					catch (Exception ex) 
-//					{
-//						ex.printStackTrace();
-//					} 
-//				}
-//			}
-//			else
-//			if(pce.getPropertyName().equals(TreeListSelectionEvent.typ))
-//			{
-//				if(pce.getSource() instanceof MapElement)
-//				{
-//					MapElement me = (MapElement)pce.getSource();
-//					this.mapView.getMap().setSelected(me, true);
-//					repaint(false);
-//				} 
-//			}
-
 			else
 			if(pce.getPropertyName().equals(ObjectSelectedEvent.TYPE))
 			{
@@ -791,53 +752,9 @@ public abstract class NetMapViewer {
 					if(cablePath != null)
 						mapView.getMap().setSelected(cablePath, true);
 				}
-/*
-					else
-					if(sne.SCHEME_ELEMENT_DESELECTED)
-					{
-						SchemeElement[] ses = (SchemeElement[] )sne.getSource();
-
-						for(int i = 0; i < ses.length; i++)
-						{
-							SiteNode site = this.mapView.findElement(ses[i]);
-							if(site != null)
-								this.mapView.getMap().setSelected(site, false);
-						}
-					}
-
-					if(sne.SCHEME_PATH_DESELECTED)
-					{
-						SchemePath[] sps = (SchemePath[] )sne.getSource();
-
-						for(int i = 0; i < sps.length; i++)
-						{
-							MeasurementPath measurementPath = this.mapView.findMeasurementPath(sps[i]);
-							if(measurementPath != null)
-								this.mapView.getMap().setSelected(measurementPath, false);
-						}
-					}
-
-					if(sne.SCHEME_CABLE_LINK_DESELECTED)
-					{
-						SchemeCableLink[] scs = (SchemeCableLink[] )sne.getSource();
-						for(int i = 0; i < scs.length; i++)
-						{
-							CablePath cablePath = this.mapView.findCablePath(scs[i]);
-							if(cablePath != null)
-								this.mapView.getMap().setSelected(cablePath, false);
-						}
-					}
-*/
 				repaint(false);
 			}
-		}
-		catch(MapConnectionException e)
-		{
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-		catch(MapDataException e)
-		{
+		} catch(MapException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
@@ -926,7 +843,7 @@ public abstract class NetMapViewer {
 			ite.printStackTrace();
 			throw new MapDataException("NetMapViewer.create() throws InvocationTargetException");
 		}
-		throw new MapDataException("NetMapViewer.create() cannot find constructor with arguments (LogicalNetLayer, MapImageRenderer) for class " + viewerClass);
+		throw new MapDataException("NetMapViewer.create() cannot find constructor with arguments (LogicalNetLayer, MapContext, MapImageRenderer) for class " + viewerClass);
 	}
 
 	/**
