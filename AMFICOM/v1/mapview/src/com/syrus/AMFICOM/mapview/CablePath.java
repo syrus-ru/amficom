@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.29 2005/08/12 14:27:00 arseniy Exp $
+ * $Id: CablePath.java,v 1.30 2005/08/15 14:22:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,12 +35,12 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
 /**
  * Элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/08/12 14:27:00 $
+ * 
+ * @author $Author: krupenn $
+ * @version $Revision: 1.30 $, $Date: 2005/08/15 14:22:04 $
  * @module mapview
  */
-public final class CablePath implements MapElement
-{
+public final class CablePath implements MapElement {
 	/**
 	 * Флаг выделения.
 	 */
@@ -87,7 +87,7 @@ public final class CablePath implements MapElement
 	 * Флаг сортировки линий.
 	 */
 	protected transient boolean linksSorted = false;
-	
+
 	/**
 	 * Схемный кабель.
 	 */
@@ -102,6 +102,7 @@ public final class CablePath implements MapElement
 
 	/**
 	 * Конструктор.
+	 * 
 	 * @param schemeCableLink схемный кабель
 	 * @param stNode начальный узел
 	 * @param eNode конечный узел
@@ -109,8 +110,7 @@ public final class CablePath implements MapElement
 	protected CablePath(
 			SchemeCableLink schemeCableLink,
 			AbstractNode stNode,
-			AbstractNode eNode)
-	{
+			AbstractNode eNode) {
 		this.schemeCableLink = schemeCableLink;
 
 		this.startNode = stNode;
@@ -122,164 +122,153 @@ public final class CablePath implements MapElement
 
 	/**
 	 * Создать новый элемент кабеля.
+	 * 
 	 * @param schemeCableLink схемный кабель
 	 * @param stNode начальный узел
 	 * @param eNode конечный узел
-	 * @return новый топологический кабель
-	 * создания объекта.
+	 * @return новый топологический кабель создания объекта.
 	 */
 	public static CablePath createInstance(
 			SchemeCableLink schemeCableLink,
 			AbstractNode stNode,
-			AbstractNode eNode)
-	{
-		if (stNode == null || eNode == null || schemeCableLink == null)
+			AbstractNode eNode) {
+		if(stNode == null || eNode == null || schemeCableLink == null)
 			throw new IllegalArgumentException("Argument is 'null'");
-		
-		return new CablePath(
-			schemeCableLink,
-			stNode,
-			eNode);
+
+		return new CablePath(schemeCableLink, stNode, eNode);
 	}
 
 	/**
 	 * Get this.endNode.
+	 * 
 	 * @return this.endNode
 	 */
-	public AbstractNode getEndNode()
-	{
+	public AbstractNode getEndNode() {
 		return this.endNode;
 	}
-	
+
 	/**
 	 * Set {@link #endNode}.
+	 * 
 	 * @param endNode new endNode
 	 */
-	public void setEndNode(AbstractNode endNode)
-	{
+	public void setEndNode(AbstractNode endNode) {
 		this.endNode = endNode;
 		this.nodeLinksSorted = false;
 	}
-	
+
 	/**
 	 * Get {@link #startNode}.
+	 * 
 	 * @return this.startNode
 	 */
-	public AbstractNode getStartNode()
-	{
+	public AbstractNode getStartNode() {
 		return this.startNode;
 	}
-	
+
 	/**
 	 * Set {@link #startNode}.
+	 * 
 	 * @param startNode new startNode
 	 */
-	public void setStartNode(AbstractNode startNode)
-	{
+	public void setStartNode(AbstractNode startNode) {
 		this.startNode = startNode;
 		this.nodeLinksSorted = false;
 	}
-	
+
 	/**
-	 *
 	 * {@inheritDoc}
-	 * @throws ApplicationException 
+	 * 
+	 * @throws ApplicationException
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
 	 */
-	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException
-	{
+	public Set<Characteristic> getCharacteristics(final boolean usePool)
+			throws ApplicationException {
 		return this.schemeCableLink.getCharacteristics(usePool);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public Identifier getId()
-	{
+	public Identifier getId() {
 		return this.schemeCableLink.getId();
 	}
 
 	/**
 	 * получить название.
+	 * 
 	 * @return название
 	 */
-	public String getName()
-	{
+	public String getName() {
 		return this.schemeCableLink.getName();
 	}
 
 	/**
 	 * Установить название.
+	 * 
 	 * @param name новое название
 	 */
-	public void setName(String name)
-	{
+	public void setName(String name) {
 		this.schemeCableLink.setName(name);
 	}
 
 	/**
 	 * Получить описание.
+	 * 
 	 * @return описание
 	 */
-	public String getDescription()
-	{
+	public String getDescription() {
 		return this.schemeCableLink.getDescription();
 	}
 
 	/**
 	 * Установить описание.
+	 * 
 	 * @param description новое описание
 	 */
-	public void setDescription(String description)
-	{
+	public void setDescription(String description) {
 		this.schemeCableLink.setDescription(description);
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isSelected()
-	{
+	public boolean isSelected() {
 		return this.selected;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setSelected(boolean selected)
-	{
+	public void setSelected(boolean selected) {
 		this.selected = selected;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setAlarmState(boolean alarmState)
-	{
+	public void setAlarmState(boolean alarmState) {
 		this.alarmState = alarmState;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean getAlarmState()
-	{
+	public boolean getAlarmState() {
 		return this.alarmState;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public DoublePoint getLocation()
-	{
+	public DoublePoint getLocation() {
 		int count = 0;
 		DoublePoint point = new DoublePoint(0.0, 0.0);
 		double x = 0.0D;
 		double y = 0.0D;
 
-		for(Iterator it = this.getLinks().iterator(); it.hasNext();)
-		{
-			PhysicalLink link = (PhysicalLink )it.next();
+		for(Iterator it = this.getLinks().iterator(); it.hasNext();) {
+			PhysicalLink link = (PhysicalLink) it.next();
 			DoublePoint an = link.getLocation();
 			x += an.getX();
 			y += an.getY();
@@ -287,81 +276,76 @@ public final class CablePath implements MapElement
 		}
 		x /= count;
 		y /= count;
-		
+
 		point.setLocation(x, y);
-		
+
 		return point;
 	}
-
 
 	/**
 	 * Suppress since this class is transient
 	 */
-	public void setLocation(DoublePoint location)
-	{
+	public void setLocation(DoublePoint location) {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public boolean isRemoved()
-	{
+	public boolean isRemoved() {
 		return this.removed;
 	}
 
 	/**
 	 * {@inheritDoc}
 	 */
-	public void setRemoved(boolean removed)
-	{
+	public void setRemoved(boolean removed) {
 		this.removed = removed;
 	}
 
 	/**
 	 * Получить узел на другом конце топологического кабеля.
+	 * 
 	 * @param node концевой узел
 	 * @return другой концевой узел
 	 */
-	public AbstractNode getOtherNode(AbstractNode node)
-	{
-		if ( this.endNode.equals(node) )
+	public AbstractNode getOtherNode(AbstractNode node) {
+		if(this.endNode.equals(node))
 			return this.startNode;
-		if ( this.startNode.equals(node) )
+		if(this.startNode.equals(node))
 			return this.endNode;
 		return null;
 	}
 
 	/**
 	 * Установить схемный кабель.
+	 * 
 	 * @param schemeCableLink схемный кабель
 	 */
-	public void setSchemeCableLink(SchemeCableLink schemeCableLink)
-	{
+	public void setSchemeCableLink(SchemeCableLink schemeCableLink) {
 		this.schemeCableLink = schemeCableLink;
 	}
 
 	/**
 	 * получить схемный кабель.
+	 * 
 	 * @return схемный кабель
 	 */
-	public SchemeCableLink getSchemeCableLink()
-	{
+	public SchemeCableLink getSchemeCableLink() {
 		return this.schemeCableLink;
 	}
 
 	/**
 	 * Возвращает топологическую длину в метрах.
+	 * 
 	 * @return топологическая длина
 	 */
-	public double getLengthLt()
-	{
+	public double getLengthLt() {
 		double length = 0;
 		Iterator e = this.getLinks().iterator();
-		while( e.hasNext())
-		{
-			PhysicalLink link = (PhysicalLink)e.next();
-			if(! (link instanceof UnboundLink))
+		while(e.hasNext()) {
+			PhysicalLink link = (PhysicalLink) e.next();
+			if(!(link instanceof UnboundLink))
 				length = length + link.getLengthLt();
 		}
 		return length;
@@ -369,47 +353,47 @@ public final class CablePath implements MapElement
 
 	/**
 	 * Возвращает физическую длину в метрах.
+	 * 
 	 * @return физическая длина
 	 */
-	public double getLengthLf()
-	{
+	public double getLengthLf() {
 		return this.schemeCableLink.getPhysicalLength();
 	}
 
 	/**
 	 * Возвращает оптическую длину в метрах.
+	 * 
 	 * @return оптическая длина
 	 */
-	public double getLengthLo()
-	{
+	public double getLengthLo() {
 		return this.schemeCableLink.getOpticalLength();
 	}
 
 	/**
 	 * Установить физическую длину в метрах.
+	 * 
 	 * @param len физическая длина
 	 */
-	public void setLengthLf(double len)
-	{
+	public void setLengthLf(double len) {
 		this.schemeCableLink.setPhysicalLength(len);
 	}
 
 	/**
 	 * Установить оптическую длину в метрах.
+	 * 
 	 * @param len оптическая длина
 	 */
-	public void setLengthLo(double len)
-	{
+	public void setLengthLo(double len) {
 		this.schemeCableLink.setOpticalLength(len);
 	}
 
 	/**
 	 * Возвращает коэффициент топологической привязки. Коэффициент связывает
 	 * топологическую длину с физической.
+	 * 
 	 * @return коэффициент топологической привязки
 	 */
-	public double getKd()
-	{
+	public double getKd() {
 		double phLen = this.schemeCableLink.getPhysicalLength();
 		if(phLen == 0.0D)
 			return 1.0;
@@ -423,6 +407,7 @@ public final class CablePath implements MapElement
 
 	/**
 	 * Получить список линий, по которым проходит кабель.
+	 * 
 	 * @return список линий
 	 */
 	public List<PhysicalLink> getLinks() {
@@ -442,8 +427,8 @@ public final class CablePath implements MapElement
 	}
 
 	/**
-	 * Убрать линию из списка.
-	 * <br>Внимание! концевые точки линии не обновляются.
+	 * Убрать линию из списка. <br>
+	 * Внимание! концевые точки линии не обновляются.
 	 */
 	public void removeLink(final CableChannelingItem cci) {
 		this.getBinding().remove(cci);
@@ -451,42 +436,48 @@ public final class CablePath implements MapElement
 	}
 
 	/**
-	 * Добавить линию в список.
-	 * <br>Внимание! концевые точки линии не обновляются
+	 * Добавить линию в список. <br>
+	 * Внимание! концевые точки линии не обновляются
+	 * 
 	 * @param addLink добавляемая линия
 	 * @param cci оюъект, описывающий привязку кабеля к линии
 	 */
-	public void addLink(final PhysicalLink addLink, final CableChannelingItem cci) {
+	public void addLink(
+			final PhysicalLink addLink,
+			final CableChannelingItem cci) {
 		this.binding.put(cci, addLink);
 		this.nodeLinksSorted = false;
 	}
 
 	private CableChannelingItem getElementAt(int index) {
-		SortedSet<CableChannelingItem> cableChannelingItems = this.schemeCableLink.getPathMembers();
+		SortedSet<CableChannelingItem> cableChannelingItems = 
+			this.schemeCableLink.getPathMembers();
 		int count = cableChannelingItems.size();
 		if(index < count && index >= 0) {
 			int i = 0;
 			for(CableChannelingItem nextCableChannelingItem : cableChannelingItems) {
-				if( i == index)
+				if(i == index)
 					return nextCableChannelingItem;
 				i++;
 			}
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Получить следующую линию по цепочке сортированных линий.
 	 * 
-	 * @return следующая линия, или <code>null</code>, если link - последняя в
-	 *         списке
+	 * @return следующая линия, или <code>null</code>, если link - последняя
+	 *         в списке
 	 */
 	public CableChannelingItem nextLink(CableChannelingItem cableChannelingItem) {
 		CableChannelingItem ret = null;
-		if (cableChannelingItem == null) {
-			SortedSet<CableChannelingItem> cableChannelingItems = this.schemeCableLink.getPathMembers();
+		if(cableChannelingItem == null) {
+			SortedSet<CableChannelingItem> cableChannelingItems = 
+				this.schemeCableLink.getPathMembers();
 			ret = cableChannelingItems.first();
-		} else {
+		}
+		else {
 			int index = cableChannelingItem.getSequentialNumber();
 			ret = getElementAt(index + 1);
 		}
@@ -495,16 +486,20 @@ public final class CablePath implements MapElement
 
 	/**
 	 * Получить предыдущую линию по цепочке сортированных линий.
+	 * 
 	 * @param cableChannelingItem привязка линии
-	 * @return предыдущая линия, или <code>null</code>, если link - первая
-	 * в списке
+	 * @return предыдущая линия, или <code>null</code>, если link - первая в
+	 *         списке
 	 */
-	public CableChannelingItem previousLink(CableChannelingItem cableChannelingItem) {
+	public CableChannelingItem previousLink(
+			CableChannelingItem cableChannelingItem) {
 		CableChannelingItem ret = null;
-		if (cableChannelingItem == null) {
-			SortedSet<CableChannelingItem> cableChannelingItems = this.schemeCableLink.getPathMembers();
+		if(cableChannelingItem == null) {
+			SortedSet<CableChannelingItem> cableChannelingItems = 
+				this.schemeCableLink.getPathMembers();
 			ret = cableChannelingItems.last();
-		} else {
+		}
+		else {
 			int index = cableChannelingItem.getSequentialNumber();
 			ret = getElementAt(index - 1);
 		}
@@ -515,21 +510,22 @@ public final class CablePath implements MapElement
 	 * Сортировать узлы, входящие в состав кабеля, начиная от начального узла.
 	 * Сортировка узлов неразрывно связана с сортировкой фрагментов
 	 */
-	public void sortNodes()
-	{
+	public void sortNodes() {
 		this.sortNodeLinks();
 	}
-	
+
 	/**
 	 * Получить список отсортированных узлов, входящих в состав кабеля, начиная
-	 * от начального узла линии. Сортировка узлов должна производиться явно
-	 * ({@link #sortNodes()}) до вызова этой функции
-	 * @return список отсортированных узлов, или <code>Collections.EMPTY_LIST</code>, если
-	 * узлы не отсортированы
+	 * от начального узла линии. Сортировка узлов должна производиться явно ({@link #sortNodes()})
+	 * до вызова этой функции
+	 * 
+	 * @return список отсортированных узлов, или
+	 *         <code>Collections.EMPTY_LIST</code>, если узлы не
+	 *         отсортированы
 	 */
 	public List<AbstractNode> getSortedNodes() {
-		if (!this.nodeLinksSorted) {
-			return new LinkedList<AbstractNode>();
+		if(!this.nodeLinksSorted) {
+			return Collections.EMPTY_LIST;
 		}
 		return Collections.unmodifiableList(this.sortedNodes);
 	}
@@ -538,19 +534,21 @@ public final class CablePath implements MapElement
 	 * Получить список отсортированных фрагментов линий, входящих в состав
 	 * кабеля, начиная от начального узла линии. Сортировка узлов должна
 	 * производиться явно ({@link #sortNodes()}) до вызова этой функции
+	 * 
 	 * @return список отсортированных фрагментов линий, или
-	 * <code>Collections.EMPTY_LIST</code>, если узлы не отсортированы
+	 *         <code>Collections.EMPTY_LIST</code>, если узлы не
+	 *         отсортированы
 	 */
 	public List<NodeLink> getSortedNodeLinks() {
-		if (!this.nodeLinksSorted) {
-			return new LinkedList<NodeLink>();
+		if(!this.nodeLinksSorted) {
+			return Collections.EMPTY_LIST;
 		}
 		return Collections.unmodifiableList(this.sortedNodeLinks);
 	}
 
 	/**
-	 * Сортировать фрагменты линии по цепочке начиная от начального узла.
-	 * При сортировке фрагментов сортируются также узлы
+	 * Сортировать фрагменты линии по цепочке начиная от начального узла. При
+	 * сортировке фрагментов сортируются также узлы
 	 */
 	public void sortNodeLinks() {
 		// if(!nodeLinksSorted)
@@ -560,22 +558,28 @@ public final class CablePath implements MapElement
 
 			AbstractNode node = getStartNode();
 
-			for (Iterator it = this.getLinks().iterator(); it.hasNext();) {
+			for(Iterator it = this.getLinks().iterator(); it.hasNext();) {
 				PhysicalLink link = (PhysicalLink) it.next();
 
 				link.sortNodeLinks();
 
-				if (link.getStartNode().equals(node)) {
+				if(link.getStartNode().equals(node)) {
 					list.addAll(link.getNodeLinks());
 					nodeList.addAll(link.getSortedNodes());
-				} else {
+				}
+				else {
 					final List<NodeLink> nodeLinks = link.getNodeLinks();
-					final List<NodeLink> nodeLinksList = new ArrayList<NodeLink>(nodeLinks);
-					for (final ListIterator<NodeLink> listIterator = nodeLinksList.listIterator(nodeLinksList.size()); listIterator.hasPrevious();) {
+					final List<NodeLink> nodeLinksList = 
+						new ArrayList<NodeLink>(nodeLinks);
+					for(final ListIterator<NodeLink> listIterator = 
+							nodeLinksList.listIterator(nodeLinksList.size()); 
+							listIterator.hasPrevious();) {
 						list.add(listIterator.previous());
 					}
 					List<AbstractNode> sortedNodes2 = link.getSortedNodes();
-					for (final ListIterator<AbstractNode> listIterator = sortedNodes2.listIterator(sortedNodes2.size()); listIterator.hasPrevious();) {
+					for(final ListIterator<AbstractNode> listIterator = 
+							sortedNodes2.listIterator(sortedNodes2.size()); 
+							listIterator.hasPrevious();) {
 						nodeList.add(listIterator.previous());
 					}
 				}
@@ -597,6 +601,7 @@ public final class CablePath implements MapElement
 
 	/**
 	 * Получить объект, хранящий привязку кабеля к линиям.
+	 * 
 	 * @return привязка
 	 */
 	public HashMap<CableChannelingItem, PhysicalLink> getBinding() {
@@ -606,30 +611,32 @@ public final class CablePath implements MapElement
 	/**
 	 * Получить из списка линий, входящих в кабельный путь, первый с начала узел
 	 * первой по порядку непривязанной линии.
+	 * 
 	 * @return узел
 	 */
 	public AbstractNode getStartUnboundNode() {
 		AbstractNode bufferSite = getStartNode();
 		for(Iterator it = getLinks().iterator(); it.hasNext();) {
-			PhysicalLink link = (PhysicalLink)it.next();
+			PhysicalLink link = (PhysicalLink) it.next();
 			if(link instanceof UnboundLink)
 				break;
 			bufferSite = link.getOtherNode(bufferSite);
 		}
 		return bufferSite;
 	}
-	
+
 	/**
 	 * Получить из списка линий, входящих в кабельный путь, первый с конца узел
 	 * последней по порядку непривязанной линии.
+	 * 
 	 * @return узел
 	 */
 	public AbstractNode getEndUnboundNode() {
 		AbstractNode bufferSite = getEndNode();
 		List<PhysicalLink> thislinks = this.getLinks();
-		for(ListIterator it = thislinks.listIterator(thislinks.size()); it.hasPrevious();)
-		{
-			PhysicalLink link = (PhysicalLink)it.previous();
+		for(ListIterator it = thislinks.listIterator(thislinks.size()); 
+				it.hasPrevious();) {
+			PhysicalLink link = (PhysicalLink) it.previous();
 			if(link instanceof UnboundLink)
 				break;
 			bufferSite = link.getOtherNode(bufferSite);
@@ -645,16 +652,18 @@ public final class CablePath implements MapElement
 		}
 		return null;
 	}
-	
+
 	/**
 	 * Получить из списка линий, входящих в кабельный путь, последнюю с начала
 	 * привязанную линию.
+	 * 
 	 * @return привязанная линия
 	 */
 	public CableChannelingItem getStartLastBoundLink() {
 		CableChannelingItem cci = null;
-		for(Iterator it = this.schemeCableLink.getPathMembers().iterator(); it.hasNext();) {
-			CableChannelingItem cci2 = (CableChannelingItem)it.next();
+		for(Iterator it = this.schemeCableLink.getPathMembers().iterator(); 
+				it.hasNext();) {
+			CableChannelingItem cci2 = (CableChannelingItem) it.next();
 			if(cci2.getPhysicalLink() == null)
 				break;
 			cci = cci2;
@@ -665,12 +674,14 @@ public final class CablePath implements MapElement
 	/**
 	 * Получить из списка линий, входящих в кабельный путь, последнюю с конца
 	 * привязанную линию.
+	 * 
 	 * @return привязанная линия
 	 */
 	public CableChannelingItem getEndLastBoundLink() {
 		CableChannelingItem cci = null;
-		for(Iterator it = this.schemeCableLink.getPathMembers().iterator(); it.hasNext();) {
-			CableChannelingItem cci2 = (CableChannelingItem)it.next();
+		for(Iterator it = this.schemeCableLink.getPathMembers().iterator(); 
+				it.hasNext();) {
+			CableChannelingItem cci2 = (CableChannelingItem) it.next();
 			if(cci == null)
 				cci = cci2;
 			if(cci2.getPhysicalLink() == null)
@@ -680,20 +691,16 @@ public final class CablePath implements MapElement
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since this class is transient
+	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public MapElementState getState()
-	{
+	public MapElementState getState() {
 		throw new UnsupportedOperationException();
 	}
 
 	/**
-	 * {@inheritDoc}
-	 * Suppress since this class is transient
+	 * {@inheritDoc} Suppress since this class is transient
 	 */
-	public void revert(MapElementState state)
-	{
+	public void revert(MapElementState state) {
 		throw new UnsupportedOperationException();
 	}
 
