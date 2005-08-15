@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: Characteristic.xsd,v 1.8 2005/08/15 13:57:47 max Exp $
+<!-- $Id: Characteristic.xsd,v 1.9 2005/08/15 14:55:30 max Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/general/xml"

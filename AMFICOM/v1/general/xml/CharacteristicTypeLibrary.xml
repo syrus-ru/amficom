@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: CharacteristicTypeLibrary.xml,v 1.1 2005/08/15 13:58:41 max Exp $
+<!-- $Id: CharacteristicTypeLibrary.xml,v 1.2 2005/08/15 14:55:30 max Exp $
 -->
 
 <gen:characteristictypes
@@ -8,7 +8,7 @@
 	topological characteristic types
 -->
 	<gen:characteristictype>
-		<gen:name>–¢¥â</gen:name>
+		<gen:name>ï¿½ï¿½ï¿½ï¿½</gen:name>
 		<gen:codename>color</gen:codename>
 		<gen:description/>
 		<gen:sort>visual</gen:sort>
@@ -17,7 +17,7 @@
 		<gen:visible>false</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>’®«é¨­  «¨­¨¨</gen:name>
+		<gen:name>ï¿½ï¿½ï¿½é¨­ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½</gen:name>
 		<gen:codename>thickness</gen:codename>
 		<gen:description/>
 		<gen:sort>visual</gen:sort>
@@ -26,7 +26,7 @@
 		<gen:visible>false</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>‘â¨«ì «¨­¨¨</gen:name>
+		<gen:name>ï¿½â¨«ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½</gen:name>
 		<gen:codename>style</gen:codename>
 		<gen:description/>
 		<gen:sort>visual</gen:sort>
@@ -35,52 +35,52 @@
 		<gen:visible>false</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>‘¯®á®¡ ãª« ¤ª¨ ª ¡¥«ï</gen:name>
+		<gen:name>ï¿½ï¿½ï¿½á®¡ ãª«ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</gen:name>
 		<gen:codename>channelingmeans</gen:codename>
-		<gen:description>‘¯®á®¡ ãª« ¤ª¨ ª ¡¥«ï ¢ ª ¡¥«ì­®© ª ­ «¨§ æ¨¨</gen:description>
+		<gen:description>ï¿½ï¿½ï¿½á®¡ ãª«ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ì­®ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ¨¨</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>string</gen:datatype>
 		<gen:editable>true</gen:editable>
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>ƒ«ã¡¨­  § «®¦¥­¨ï</gen:name>
+		<gen:name>ï¿½ï¿½ã¡¨ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</gen:name>
 		<gen:codename>channelingdepth</gen:codename>
-		<gen:description>ƒ«ã¡¨­  ¯à®ª« ¤ª¨ âàã¡</gen:description>
+		<gen:description>ï¿½ï¿½ã¡¨ï¿½ï¿½ ï¿½à®ªï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>string</gen:datatype>
 		<gen:editable>true</gen:editable>
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>„¨ ¬¥âà âàã¡ë</gen:name>
+		<gen:name>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½</gen:name>
 		<gen:codename>channelingdiameter</gen:codename>
-		<gen:description>„¨ ¬¥âà âàã¡ë</gen:description>
+		<gen:description>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>string</gen:datatype>
 		<gen:editable>true</gen:editable>
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>Œ â¥à¨ «</gen:name>
+		<gen:name>ï¿½ï¿½ï¿½à¨ ï¿½</gen:name>
 		<gen:codename>channelingmaterial</gen:codename>
-		<gen:description>Œ â¥à¨ « ¨§£®â®¢«¥­¨ï âàã¡ë/ª®«®¤æ </gen:description>
+		<gen:description>ï¿½ï¿½ï¿½à¨ ï¿½ ï¿½ï¿½ï¿½ï¿½â®¢ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½/ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>string</gen:datatype>
 		<gen:editable>true</gen:editable>
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>‘¯®á®¡ ãª« ¤ª¨ âàã¡ë</gen:name>
+		<gen:name>ï¿½ï¿½ï¿½á®¡ ãª«ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½</gen:name>
 		<gen:codename>channelingmeans</gen:codename>
-		<gen:description>‘¯®á®¡ ãª« ¤ª¨ âàã¡ë ª ¡¥«ì­®© ª ­ «¨§ æ¨¨</gen:description>
+		<gen:description>ï¿½ï¿½ï¿½á®¡ ãª«ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ì­®ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½æ¨¨</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>string</gen:datatype>
 		<gen:editable>true</gen:editable>
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>Ž¡á«ã¦¨¢ ­¨¥ ª®«®¤æ </gen:name>
+		<gen:name>ï¿½ï¿½ï¿½ã¦¨ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</gen:name>
 		<gen:codename>channelingmaintenance</gen:codename>
 		<gen:description></gen:description>
 		<gen:sort>operational</gen:sort>
@@ -89,7 +89,7 @@
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>Ž¡é¥¥ á®áâ®ï­¨¥ ª®«®¤æ </gen:name>
+		<gen:name>ï¿½ï¿½é¥¥ ï¿½ï¿½ï¿½ï­¨ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</gen:name>
 		<gen:codename>channelingstatus</gen:codename>
 		<gen:description></gen:description>
 		<gen:sort>operational</gen:sort>
@@ -99,18 +99,18 @@
 	</gen:characteristictype>
 
 	<gen:characteristictype>
-		<gen:name>…¬ª®áâì ¡«®ª  âàã¡</gen:name>
+		<gen:name>ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½</gen:name>
 		<gen:codename>wellcapacity</gen:codename>
-		<gen:description>Œ ªá¨¬ «ì­ ï ¥¬ª®áâì ¡«®ª  âàã¡, ¢¢®¤¨¬®£® ¢ ª®«®¤¥æ</gen:description>
+		<gen:description>ï¿½ï¿½ï¿½á¨¬ï¿½ï¿½ì­ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½, ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>integer</gen:datatype>
 		<gen:editable>true</gen:editable>
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>—¨á«® ª ­ «®¢ ¢ ®á­®¢ ­¨ï ¡«®ª </gen:name>
+		<gen:name>ï¿½ï¿½á«® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½á­®ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½</gen:name>
 		<gen:codename>wellchannels</gen:codename>
-		<gen:description>—¨á«® ª ­ «®¢ ¢ ®á­®¢ ­¨ï ¡«®ª </gen:description>
+		<gen:description>ï¿½ï¿½á«® ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ ï¿½á­®ï¿½ï¿½ï¿½ï¿½ï¿½ ï¿½ï¿½ï¿½ï¿½ï¿½</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>integer</gen:datatype>
 		<gen:editable>true</gen:editable>
@@ -118,4 +118,3 @@
 	</gen:characteristictype>
 
 </gen:characteristictypes>
-
