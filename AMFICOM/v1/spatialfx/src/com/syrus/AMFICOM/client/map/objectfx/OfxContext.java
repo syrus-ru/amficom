@@ -1,5 +1,5 @@
 /**
- * $Id: OfxContext.java,v 1.3 2005/08/12 12:29:18 krupenn Exp $
+ * $Id: OfxContext.java,v 1.4 2005/08/15 07:09:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,7 @@ package com.syrus.AMFICOM.client.map.objectfx;
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapContext;
-import com.syrus.AMFICOM.general.DoublePoint;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * Реализация уровня логического отображения сети на карте средствами
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.DoublePoint;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/08/12 12:29:18 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/15 07:09:40 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
