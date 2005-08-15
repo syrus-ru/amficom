@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.31 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: MarkerController.java,v 1.32 2005/08/15 14:30:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 /**
  * Контроллер маркера.
- * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2005/08/12 14:49:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.32 $, $Date: 2005/08/15 14:30:21 $
  * @module mapviewclient
  */
 public class MarkerController extends AbstractNodeController {
@@ -321,13 +321,13 @@ public class MarkerController extends AbstractNodeController {
 	public void moveToFromStartLf(final Marker marker, final double physicalDistance)
 			throws MapConnectionException,
 				MapDataException {
-		marker.setDistance(physicalDistance);
+		marker.setPhysicalDistance(physicalDistance);
 
 		final MeasurementPath measurementPath = marker.getMeasurementPath();
 
 		final double pathl = measurementPath.getLengthLf();
-		if (marker.getDistance() > pathl) {
-			marker.setDistance(pathl);
+		if (marker.getPhysicalDistance() > pathl) {
+			marker.setPhysicalDistance(pathl);
 		}
 
 		MapElement me = null;
@@ -339,9 +339,9 @@ public class MarkerController extends AbstractNodeController {
 		final SortedSet<PathElement> pathElements = measurementPath.getSchemePath().getPathMembers();
 		for (final PathElement pathElement : pathElements) {
 			final double d = SchemeUtils.getPhysicalLength(pathElement);
-			if (pathLength + d > marker.getDistance()) {
+			if (pathLength + d > marker.getPhysicalDistance()) {
 				me = pathController.getMapElement(measurementPath, pathElement);
-				localDistance = marker.getDistance() - pathLength;
+				localDistance = marker.getPhysicalDistance() - pathLength;
 				break;
 			}
 
@@ -620,7 +620,7 @@ public class MarkerController extends AbstractNodeController {
 				marker.getId(),
 				getFromStartLengthLf(marker),
 				marker.getMeasurementPath().getSchemePath().getId(),
-				marker.getMeId()));
+				marker.getMonitoringElementId()));
 	}
 
 	/**
@@ -633,7 +633,7 @@ public class MarkerController extends AbstractNodeController {
 				marker.getId(),
 				0.0D,
 				marker.getMeasurementPath().getSchemePath().getId(),
-				marker.getMeId()));
+				marker.getMonitoringElementId()));
 	}
 
 	/**
@@ -646,7 +646,7 @@ public class MarkerController extends AbstractNodeController {
 				marker.getId(),
 				getFromStartLengthLo(marker),
 				marker.getMeasurementPath().getSchemePath().getId(),
-				marker.getMeId()));
+				marker.getMonitoringElementId()));
 	}
 
 }
