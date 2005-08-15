@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.154 2005/08/15 10:17:13 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.155 2005/08/15 10:42:52 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.154 $, $Date: 2005/08/15 10:17:13 $
+ * @version $Revision: 1.155 $, $Date: 2005/08/15 10:42:52 $
  * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -74,7 +74,6 @@ public final class StorableObjectPool {
 	private static final long LOCK_TIME_WAIT = 5 * 1000; // 5 sec
 
 	private static final DependencySortedContainer DEPENDENCY_SORTED_CONTAINER = new DependencySortedContainer();
-	//private static final SortedMap<Integer, Map<Short, Set<StorableObject>>> SAVING_OBJECTS_MAP = new TreeMap<Integer, Map<Short, Set<StorableObject>>>();
 	private static final Set<Identifier> SAVING_OBJECT_IDS = new HashSet<Identifier>();
 
 
