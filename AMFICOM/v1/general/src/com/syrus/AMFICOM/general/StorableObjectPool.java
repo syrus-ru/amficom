@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.158 2005/08/15 14:18:59 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.159 2005/08/15 14:49:38 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.158 $, $Date: 2005/08/15 14:18:59 $
+ * @version $Revision: 1.159 $, $Date: 2005/08/15 14:49:38 $
  * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -447,8 +447,9 @@ public final class StorableObjectPool {
 				loadedObjects = objectLoader.loadStorableObjectsButIdsByCondition(loadButIds, condition);
 			}
 			catch (ApplicationException ae) {
-				if (breakOnLoadError)
+				if (breakOnLoadError) {
 					throw ae;
+				}
 				Log.errorException(ae);
 				loadedObjects = Collections.emptySet();
 			}
@@ -458,7 +459,13 @@ public final class StorableObjectPool {
 
 				for (final T storableObject : loadedObjects) {
 					storableObjects.add(storableObject);
-					objectPool.put(storableObject.getId(), storableObject);
+					final Identifier id = storableObject.getId();
+//	If locally isConditionTrue == false and remote isConditionTrue == true,
+//	object will be loaded. But it can not replace the local object in pool.
+//				objectPool.put(storableObject.getId(), storableObject);
+					if (!objectPool.containsKey(id)) {
+						objectPool.put(id, storableObject);
+					}
 				}
 			}
 		}
@@ -671,7 +678,9 @@ public final class StorableObjectPool {
 			throws ApplicationException {
 		final Identifier id = storableObject.getId();
 		if (SAVING_OBJECT_IDS.contains(id)) {
-			DEPENDENCY_SORTED_CONTAINER.moveIfAlreadyPresent(storableObject, dependencyLevel);
+			if (storableObject.isChanged()) {
+				DEPENDENCY_SORTED_CONTAINER.moveIfAlreadyPresent(storableObject, dependencyLevel);
+			}
 			return;
 		}
 
