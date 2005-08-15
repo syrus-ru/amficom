@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.37 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.38 2005/08/15 14:27:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,8 +34,8 @@ import com.syrus.util.Log;
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.37 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.38 $, $Date: 2005/08/15 14:27:23 $
  * @module mapviewclient
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
@@ -47,14 +47,8 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 
 	SchemePath schemePath = null;
 	
-	Map map;
 	MapView mapView;
 	
-	/**
-	 * точка, в которой создается новый топологический узел
-	 */
-	Point point;
-
 	public PlaceSchemePathCommand(SchemePath path)
 	{
 		super();
@@ -66,55 +60,24 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
 		this.mapView = this.logicalNetLayer.getMapView();
-		this.map = this.mapView.getMap();
 		try {
-			Scheme scheme = this.schemePath.getParentSchemeMonitoringSolution().getParentScheme();
 			this.startNode = this.mapView.getStartNode(this.schemePath);
 			this.endNode = this.mapView.getEndNode(this.schemePath);
+			if(this.startNode == null || this.endNode == null) {
+				setResult(Command.RESULT_NO);
+				return;
+			}
 			this.measurementPath = this.mapView.findMeasurementPath(this.schemePath);
 			if(this.measurementPath == null)
-				this.measurementPath = super.createMeasurementPath(this.schemePath, this.startNode, this.endNode);
-			else
-			// если путь уже есть, все его составляющие наносятся заново
-				super.removeMeasurementPathCables(this.measurementPath);
-			for(Iterator iter = this.schemePath.getPathMembers().iterator(); iter.hasNext();) {
-				PathElement pe = (PathElement )iter.next();
-				switch(pe.getKind().value())
-				{
-					case IdlKind._SCHEME_ELEMENT:
-						SchemeElement schemeElement = (SchemeElement )pe.getAbstractSchemeElement();
-					SiteNode site = this.mapView.findElement(schemeElement);
-					if(site != null)
-					{
-//					mPath.addCablePath(site);
-					}
-						break;
-					case IdlKind._SCHEME_LINK:
-						SchemeLink schemeLink = (SchemeLink )pe.getAbstractSchemeElement();
-						SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice());
-						SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme, schemeLink.getTargetAbstractSchemePort().getParentSchemeDevice());
-						SiteNode startSite = this.mapView.findElement(startSchemeElement);
-						SiteNode endSite = this.mapView.findElement(endSchemeElement);
-						if(startSite.equals(endSite))
-						{
-//					mPath.addCablePath(ssite);
-						}
-						break;
-					case IdlKind._SCHEME_CABLE_LINK:
-						SchemeCableLink schemeCableLink = (SchemeCableLink )pe.getAbstractSchemeElement();
-						CablePath cablePath = this.mapView.findCablePath(schemeCableLink);
-						if(cablePath != null)
-						{
-//					mPath.addCablePath(cablePath);
-						}
-						break;
-					default:
-						throw new UnsupportedOperationException();
-				}
-			}
+				this.measurementPath = super.createMeasurementPath(
+						this.schemePath, 
+						this.startNode, 
+						this.endNode);
+
 			// операция закончена - оповестить слушателей
 			this.logicalNetLayer.setCurrentMapElement(this.measurementPath);
 			this.logicalNetLayer.notifySchemeEvent(this.measurementPath);
+			setResult(Command.RESULT_OK);
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);
