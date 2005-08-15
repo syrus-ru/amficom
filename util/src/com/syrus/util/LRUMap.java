@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.35 2005/07/27 15:27:35 arseniy Exp $
+ * $Id: LRUMap.java,v 1.36 2005/08/15 13:49:55 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/07/27 15:27:35 $
+ * @version $Revision: 1.36 $, $Date: 2005/08/15 13:49:55 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -97,11 +97,26 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 		this.modCount++;
 		if (key != null) {
 			V ret = null;
-			for (int i = 0; i < this.array.length; i++)
+			for (int i = 0; i < this.array.length; i++) {
 				if (this.array[i] != null && key.equals(this.array[i].getKey())) {
 					ret = this.array[i].getValue();
 					break;
 				}
+			}
+			return ret;
+		}
+		throw new IllegalArgumentException("Key is NULL");
+	}
+
+	public synchronized V unmodifiableGet(final K key) {
+		if (key != null) {
+			V ret = null;
+			for (int i = 0; i < this.array.length; i++) {
+				if (this.array[i] != null && key.equals(this.array[i].getKey())) {
+					ret = this.array[i].getValue();
+					break;
+				}
+			}
 			return ret;
 		}
 		throw new IllegalArgumentException("Key is NULL");
@@ -109,9 +124,11 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 
 	public synchronized boolean containsKey(final K key) {
 		if (key != null) {
-			for (int i = 0; i < this.array.length; i++)
-				if (this.array[i] != null && key.equals(this.array[i].getKey()))
+			for (int i = 0; i < this.array.length; i++) {
+				if (this.array[i] != null && key.equals(this.array[i].getKey())) {
 					return true;
+				}
+			}
 			return false;
 		}
 		throw new IllegalArgumentException("Key is NULL");
@@ -125,8 +142,9 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 				final IEntry<K, V> entry = this.array[i];
 				if (entry != null && entry.getKey() != null && key.equals(entry.getKey())) {
 					ret = entry.getValue();
-					for (int j = i; j < this.array.length - 1; j++)
+					for (int j = i; j < this.array.length - 1; j++) {
 						this.array[j] = this.array[j + 1];
+					}
 					this.entityCount -= (this.entityCount == 0) ? 0 : 1;
 					break;
 				}
@@ -194,10 +212,11 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 		}
 
 		public final void remove() {
-			if (this.lastRet == -1)
+			if (this.lastRet == -1) {
 				throw new IllegalStateException();
+			}
 			this.checkForComodification();
-			
+
 			try {
 				final int modCountPrev = LRUMap.this.modCount;
 				LRUMap.this.remove(LRUMap.this.array[this.lastRet].getKey());
@@ -210,10 +229,11 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 				throw new ConcurrentModificationException();
 			}
 		}
-		
+
 		final void checkForComodification() {
-			if (LRUMap.this.modCount != this.expectedModCount)
+			if (LRUMap.this.modCount != this.expectedModCount) {
 				throw new ConcurrentModificationException();
+			}
 		}
 	}
 
