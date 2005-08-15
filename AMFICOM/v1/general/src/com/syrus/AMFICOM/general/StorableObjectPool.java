@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.157 2005/08/15 13:48:52 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.158 2005/08/15 14:18:59 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.157 $, $Date: 2005/08/15 13:48:52 $
+ * @version $Revision: 1.158 $, $Date: 2005/08/15 14:18:59 $
  * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -693,7 +693,7 @@ public final class StorableObjectPool {
 					dependencyObject = objectPool.unmodifiableGet(dependencyObjectId);
 				}
 				else {
-					Log.errorMessage("StorableObjectPool.checkChangedWithDependencies | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+					Log.errorMessage("StorableObjectPool.checkChangedWithDependencies(Identifier) | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
 							+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 				}
 			} else if (identifiable instanceof StorableObject) {
