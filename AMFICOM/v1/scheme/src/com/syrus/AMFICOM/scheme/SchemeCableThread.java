@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.64 2005/08/13 11:15:06 max Exp $
+ * $Id: SchemeCableThread.java,v 1.65 2005/08/15 10:28:32 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: max $
- * @version $Revision: 1.64 $, $Date: 2005/08/13 11:15:06 $
+ * @version $Revision: 1.65 $, $Date: 2005/08/15 10:28:32 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -479,9 +479,9 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 			final String description,
 			final Identifier cableThreadTypeId,
 			final Identifier linkId,
+			final Identifier parentSchemeCableLinkId,
 			final Identifier sourceSchemePortId,
-			final Identifier targetSchemePortId,
-			final Identifier parentSchemeCableLinkId) {
+			final Identifier targetSchemePortId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
@@ -490,7 +490,8 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		assert linkId != null;
 		assert sourceSchemePortId != null : NON_NULL_EXPECTED;
 		assert targetSchemePortId != null : NON_NULL_EXPECTED;
-		assert parentSchemeCableLinkId != null && !parentSchemeCableLinkId.isVoid() : NON_VOID_EXPECTED;
+		assert parentSchemeCableLinkId != null : NON_NULL_EXPECTED; 
+		assert !parentSchemeCableLinkId.isVoid() : NON_VOID_EXPECTED;
 
 		this.name = name;
 		this.description = description;
