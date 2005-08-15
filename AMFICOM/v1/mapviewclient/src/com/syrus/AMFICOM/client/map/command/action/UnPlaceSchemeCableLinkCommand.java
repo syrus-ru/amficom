@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.24 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.25 2005/08/15 14:28:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,8 +23,8 @@ import com.syrus.util.Log;
 /**
  * убрать кабельный путь с привязкой из карты
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/08/11 12:43:30 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/08/15 14:28:41 $
  * @module mapviewclient
  */
 public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
@@ -42,15 +42,16 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
 		try {
-			SchemeCableLink scl = this.cablePath.getSchemeCableLink();
-			final SortedSet<CableChannelingItem> cableChannelingItems = scl.getPathMembers();
-			for(CableChannelingItem cableChannelingItem : new LinkedList<CableChannelingItem>(cableChannelingItems)) {
-				if(cableChannelingItem.getPhysicalLink() == null)
-					cableChannelingItem.setParentPathOwner(null, false);
-			}
+//			SchemeCableLink scl = this.cablePath.getSchemeCableLink();
+//			final SortedSet<CableChannelingItem> cableChannelingItems = scl.getPathMembers();
+//			for(CableChannelingItem cableChannelingItem : new LinkedList<CableChannelingItem>(cableChannelingItems)) {
+//				if(cableChannelingItem.getPhysicalLink() == null)
+//					cableChannelingItem.setParentPathOwner(null, false);
+//			}
 
 			super.removeCablePathLinks(this.cablePath);
 			super.removeCablePath(this.cablePath);
+			setResult(Command.RESULT_OK);
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);
