@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.153 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.154 2005/08/15 10:17:13 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.153 $, $Date: 2005/08/08 11:27:25 $
+ * @version $Revision: 1.154 $, $Date: 2005/08/15 10:17:13 $
  * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -73,8 +73,100 @@ public final class StorableObjectPool {
 	private static final long MAX_LOCK_TIMEOUT = 1 * 60 * 1000; // 1 minuta
 	private static final long LOCK_TIME_WAIT = 5 * 1000; // 5 sec
 
-	private static final SortedMap<Integer, Map<Short, Set<StorableObject>>> SAVING_OBJECTS_MAP = new TreeMap<Integer, Map<Short, Set<StorableObject>>>();
+	private static final DependencySortedContainer DEPENDENCY_SORTED_CONTAINER = new DependencySortedContainer();
+	//private static final SortedMap<Integer, Map<Short, Set<StorableObject>>> SAVING_OBJECTS_MAP = new TreeMap<Integer, Map<Short, Set<StorableObject>>>();
 	private static final Set<Identifier> SAVING_OBJECT_IDS = new HashSet<Identifier>();
+
+
+	private static final class DependencySortedContainer {
+		private SortedMap<Integer, Map<Short, Set<StorableObject>>> objectsMap;
+
+		private DependencySortedContainer() {
+			this.objectsMap = new TreeMap<Integer, Map<Short, Set<StorableObject>>>();
+		}
+
+		void put(final StorableObject storableObject, final int dependencyLevel) {
+			final Identifier id = storableObject.getId();
+			final Integer dependencyKey = new Integer(-dependencyLevel);
+			Map<Short, Set<StorableObject>> levelSavingObjectsMap = this.objectsMap.get(dependencyKey);
+			if (levelSavingObjectsMap == null) {
+				levelSavingObjectsMap = new HashMap<Short, Set<StorableObject>>();
+				this.objectsMap.put(dependencyKey, levelSavingObjectsMap);
+			}
+			final Short entityKey = new Short(id.getMajor());
+			Set<StorableObject> levelEntitySavingObjects = levelSavingObjectsMap.get(entityKey);
+			if (levelEntitySavingObjects == null) {
+				levelEntitySavingObjects = new HashSet<StorableObject>();
+				levelSavingObjectsMap.put(entityKey, levelEntitySavingObjects);
+			}
+			levelEntitySavingObjects.add(storableObject);
+		}
+
+		Set<Integer> dependencyKeySet() {
+			return this.objectsMap.keySet();
+		}
+
+		Map<Short, Set<StorableObject>> getLevelEntityMap(final Integer dependencyKey) {
+			return this.objectsMap.get(dependencyKey);
+		}
+
+		void moveIfAlreadyPresent(final StorableObject storableObject, final int dependencyLevel) {
+			final Integer dependencyKey0 = new Integer(-(dependencyLevel - 1));
+			if (!this.objectsMap.containsKey(dependencyKey0)) {
+				return;
+			}
+
+			final SortedMap<Integer, Map<Short, Set<StorableObject>>> rangeObjectsMap = this.objectsMap.tailMap(dependencyKey0);
+			Integer foundDependencyKey = null;
+			for (final Integer dependencyKey : rangeObjectsMap.keySet()) {
+				if (this.containsOnDependencyLevel(storableObject, dependencyKey)) {
+					foundDependencyKey = dependencyKey;
+				}
+			}
+			if (foundDependencyKey == null) {
+				return;
+			}
+			this.remove(storableObject, foundDependencyKey);
+			this.put(storableObject, dependencyLevel);
+		}
+
+		private boolean containsOnDependencyLevel(final StorableObject storableObject, final Integer dependencyKey) {
+			final Identifier id = storableObject.getId();
+			Map<Short, Set<StorableObject>> levelSavingObjectsMap = this.objectsMap.get(dependencyKey);
+			if (levelSavingObjectsMap == null) {
+				return false;
+			}
+			final Short entityKey = new Short(id.getMajor());
+			final Set<StorableObject> levelEntitySavingObjects = levelSavingObjectsMap.get(entityKey);
+			if (levelEntitySavingObjects == null) {
+				return false;
+			}
+			return levelEntitySavingObjects.contains(storableObject);
+		}
+
+		boolean remove(final StorableObject storableObject, final int dependencyLevel) {
+			final Integer dependencyKey = new Integer(-dependencyLevel);
+			return this.remove(storableObject, dependencyKey);
+		}
+
+		private boolean remove(final StorableObject storableObject, final Integer dependencyKey) {
+			final Identifier id = storableObject.getId();
+			final Map<Short, Set<StorableObject>> levelSavingObjectsMap = this.objectsMap.get(dependencyKey);
+			if (levelSavingObjectsMap == null) {
+				return false;
+			}
+			final Short entityKey = new Short(id.getMajor());
+			final Set<StorableObject> levelEntitySavingObjects = levelSavingObjectsMap.get(entityKey);
+			if (levelEntitySavingObjects == null) {
+				return false;
+			}
+			return levelEntitySavingObjects.remove(storableObject);
+		}
+
+		void clear() {
+			this.objectsMap.clear();
+		}
+	}
 
 
 	private StorableObjectPool() {
@@ -519,9 +611,9 @@ public final class StorableObjectPool {
 			}
 		}
 		else {
-			synchronized (SAVING_OBJECTS_MAP) {
+			synchronized (DEPENDENCY_SORTED_CONTAINER) {
 				SAVING_OBJECT_IDS.clear();
-				SAVING_OBJECTS_MAP.clear();
+				DEPENDENCY_SORTED_CONTAINER.clear();
 				final StorableObject storableObject = getStorableObject(id, false);
 				if (storableObject != null) {
 					checkChangedWithDependencies(storableObject, 0);
@@ -536,9 +628,9 @@ public final class StorableObjectPool {
 
 		flushDeleted(entityCode);
 
-		synchronized (SAVING_OBJECTS_MAP) {
+		synchronized (DEPENDENCY_SORTED_CONTAINER) {
 			SAVING_OBJECT_IDS.clear();
-			SAVING_OBJECTS_MAP.clear();
+			DEPENDENCY_SORTED_CONTAINER.clear();
 			checkChangedWithDependencies(entityCode);
 			saveWithDependencies(modifierId, force);
 		}
@@ -572,6 +664,7 @@ public final class StorableObjectPool {
 			throws ApplicationException {
 		final Identifier id = storableObject.getId();
 		if (SAVING_OBJECT_IDS.contains(id)) {
+			DEPENDENCY_SORTED_CONTAINER.moveIfAlreadyPresent(storableObject, dependencyLevel);
 			return;
 		}
 
@@ -602,25 +695,13 @@ public final class StorableObjectPool {
 		if (storableObject.isChanged()) {
 			Log.debugMessage("StorableObjectPool.checkChangedWithDependencies | Object '" + storableObject.getId() + "' is changed",
 					Log.DEBUGLEVEL10);
-			final Integer dependencyKey = new Integer(-dependencyLevel);
-			Map<Short, Set<StorableObject>> levelSavingObjectsMap = SAVING_OBJECTS_MAP.get(dependencyKey);
-			if (levelSavingObjectsMap == null) {
-				levelSavingObjectsMap = new HashMap<Short, Set<StorableObject>>();
-				SAVING_OBJECTS_MAP.put(dependencyKey, levelSavingObjectsMap);
-			}
-			final Short entityKey = new Short(storableObject.getId().getMajor());
-			Set<StorableObject> levelEntitySavingObjects = levelSavingObjectsMap.get(entityKey);
-			if (levelEntitySavingObjects == null) {
-				levelEntitySavingObjects = new HashSet<StorableObject>();
-				levelSavingObjectsMap.put(entityKey, levelEntitySavingObjects);
-			}
-			levelEntitySavingObjects.add(storableObject);
+			DEPENDENCY_SORTED_CONTAINER.put(storableObject, dependencyLevel);
 		}
 	}
 
 	private static void saveWithDependencies(final Identifier modifierId, final boolean force) throws ApplicationException {
-		for (final Integer dependencyKey : SAVING_OBJECTS_MAP.keySet()) {
-			final Map<Short, Set<StorableObject>> levelSavingObjectsMap = SAVING_OBJECTS_MAP.get(dependencyKey);
+		for (final Integer dependencyKey : DEPENDENCY_SORTED_CONTAINER.dependencyKeySet()) {
+			final Map<Short, Set<StorableObject>> levelSavingObjectsMap = DEPENDENCY_SORTED_CONTAINER.getLevelEntityMap(dependencyKey);
 			for (final Short entityKey : levelSavingObjectsMap.keySet()) {
 				final Set<StorableObject> levelEntitySavingObjects = levelSavingObjectsMap.get(entityKey);
 				saveStorableObjects(levelEntitySavingObjects, modifierId, force);
