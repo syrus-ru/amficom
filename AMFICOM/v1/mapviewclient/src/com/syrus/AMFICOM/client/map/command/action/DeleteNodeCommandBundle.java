@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.35 2005/08/12 10:42:13 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.36 2005/08/15 14:26:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.35 $, $Date: 2005/08/12 10:42:13 $
+ * @version $Revision: 1.36 $, $Date: 2005/08/15 14:26:16 $
  * @module mapviewclient
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -85,7 +85,6 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			if(measurementPath.getStartNode().equals(site)
 				|| measurementPath.getEndNode().equals(site))
 			{
-				super.removeMeasurementPathCables(measurementPath);
 				super.removeMeasurementPath(measurementPath);
 			}
 		}
@@ -248,6 +247,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		}//while(e.hasNext())
 
 		super.removeNode(site);
+		setResult(Command.RESULT_OK);
 	}
 	
 	/**
@@ -391,6 +391,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			super.registerStateChange(physicalLink, pls, physicalLink.getState());
 
 		}//if ( node.isActive() )
+		setResult(Command.RESULT_OK);
 	}
 
 	/**
@@ -418,6 +419,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			super.removeCablePathLinks(cpath);
 			super.removeCablePath(cpath);
 		}
+		setResult(Command.RESULT_OK);
 	}
 
 	/**
@@ -430,6 +432,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			return;
 
 		super.removeNode(mark);
+		setResult(Command.RESULT_OK);
 	}
 
 	/**
@@ -442,6 +445,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			return;
 
 		this.logicalNetLayer.getMapView().removeMarker(marker);
+		setResult(Command.RESULT_OK);
 	}
 
 	public void execute()
