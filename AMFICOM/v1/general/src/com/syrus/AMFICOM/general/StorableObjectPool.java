@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.156 2005/08/15 12:41:13 max Exp $
+ * $Id: StorableObjectPool.java,v 1.157 2005/08/15 13:48:52 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.156 $, $Date: 2005/08/15 12:41:13 $
- * @author $Author: max $
+ * @version $Revision: 1.157 $, $Date: 2005/08/15 13:48:52 $
+ * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
  * (т. е. объектами, идентификаторы которых помещены в DELETED_IDS_MAP). Проверять так:
@@ -120,6 +120,7 @@ public final class StorableObjectPool {
 			for (final Integer dependencyKey : rangeObjectsMap.keySet()) {
 				if (this.containsOnDependencyLevel(storableObject, dependencyKey)) {
 					foundDependencyKey = dependencyKey;
+					break;
 				}
 			}
 			if (foundDependencyKey == null) {
@@ -685,7 +686,16 @@ public final class StorableObjectPool {
 
 			StorableObject dependencyObject = null;
 			if (identifiable instanceof Identifier) {
-				dependencyObject = getStorableObject((Identifier) identifiable, false);
+				final Identifier dependencyObjectId = (Identifier) identifiable;
+				final short entityCode = dependencyObjectId.getMajor();
+				final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
+				if (objectPool != null) {
+					dependencyObject = objectPool.unmodifiableGet(dependencyObjectId);
+				}
+				else {
+					Log.errorMessage("StorableObjectPool.checkChangedWithDependencies | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+							+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
+				}
 			} else if (identifiable instanceof StorableObject) {
 				dependencyObject = (StorableObject) identifiable;
 			} else {
