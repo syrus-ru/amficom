@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: CharacteristicTypeLibrary.xml,v 1.2 2005/08/15 14:55:30 max Exp $
+<!-- $Id: CharacteristicTypeLibrary.xml,v 1.3 2005/08/15 15:06:29 max Exp $
 -->
 
 <gen:characteristictypes
@@ -8,7 +8,7 @@
 	topological characteristic types
 -->
 	<gen:characteristictype>
-		<gen:name>����</gen:name>
+		<gen:name>Цвет</gen:name>
 		<gen:codename>color</gen:codename>
 		<gen:description/>
 		<gen:sort>visual</gen:sort>
@@ -17,7 +17,7 @@
 		<gen:visible>false</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>���騭� �����</gen:name>
+		<gen:name>Толщина линии</gen:name>
 		<gen:codename>thickness</gen:codename>
 		<gen:description/>
 		<gen:sort>visual</gen:sort>
@@ -26,7 +26,7 @@
 		<gen:visible>false</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>�⨫� �����</gen:name>
+		<gen:name>Стиль линии</gen:name>
 		<gen:codename>style</gen:codename>
 		<gen:description/>
 		<gen:sort>visual</gen:sort>
@@ -35,52 +35,52 @@
 		<gen:visible>false</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>���ᮡ 㪫���� ������</gen:name>
+		<gen:name>Способ укладки кабеля</gen:name>
 		<gen:codename>channelingmeans</gen:codename>
-		<gen:description>���ᮡ 㪫���� ������ � �����쭮� ��������樨</gen:description>
+		<gen:description>Способ укладки кабеля в кабельной канализации</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>string</gen:datatype>
 		<gen:editable>true</gen:editable>
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>��㡨�� ���������</gen:name>
+		<gen:name>Глубина заложения</gen:name>
 		<gen:codename>channelingdepth</gen:codename>
-		<gen:description>��㡨�� �ப����� ���</gen:description>
+		<gen:description>Глубина прокладки труб</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>string</gen:datatype>
 		<gen:editable>true</gen:editable>
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>������� ����</gen:name>
+		<gen:name>Диаметр трубы</gen:name>
 		<gen:codename>channelingdiameter</gen:codename>
-		<gen:description>������� ����</gen:description>
+		<gen:description>Диаметр трубы</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>string</gen:datatype>
 		<gen:editable>true</gen:editable>
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>���ਠ�</gen:name>
+		<gen:name>Материал</gen:name>
 		<gen:codename>channelingmaterial</gen:codename>
-		<gen:description>���ਠ� ����⮢����� ����/������</gen:description>
+		<gen:description>Материал изготовления трубы/колодца</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>string</gen:datatype>
 		<gen:editable>true</gen:editable>
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>���ᮡ 㪫���� ����</gen:name>
+		<gen:name>Способ укладки трубы</gen:name>
 		<gen:codename>channelingmeans</gen:codename>
-		<gen:description>���ᮡ 㪫���� ���� �����쭮� ��������樨</gen:description>
+		<gen:description>Способ укладки трубы кабельной канализации</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>string</gen:datatype>
 		<gen:editable>true</gen:editable>
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>���㦨����� ������</gen:name>
+		<gen:name>Обслуживание колодца</gen:name>
 		<gen:codename>channelingmaintenance</gen:codename>
 		<gen:description></gen:description>
 		<gen:sort>operational</gen:sort>
@@ -89,7 +89,7 @@
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>��饥 ���ﭨ� ������</gen:name>
+		<gen:name>Общее состояние колодца</gen:name>
 		<gen:codename>channelingstatus</gen:codename>
 		<gen:description></gen:description>
 		<gen:sort>operational</gen:sort>
@@ -99,18 +99,18 @@
 	</gen:characteristictype>
 
 	<gen:characteristictype>
-		<gen:name>������� ����� ���</gen:name>
+		<gen:name>Емкость блока труб</gen:name>
 		<gen:codename>wellcapacity</gen:codename>
-		<gen:description>���ᨬ��쭠� ������� ����� ���, ��������� � �������</gen:description>
+		<gen:description>Максимальная емкость блока труб, вводимого в колодец</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>integer</gen:datatype>
 		<gen:editable>true</gen:editable>
 		<gen:visible>true</gen:visible>
 	</gen:characteristictype>
 	<gen:characteristictype>
-		<gen:name>��᫮ ������� � �᭮����� �����</gen:name>
+		<gen:name>Число каналов в основания блока</gen:name>
 		<gen:codename>wellchannels</gen:codename>
-		<gen:description>��᫮ ������� � �᭮����� �����</gen:description>
+		<gen:description>Число каналов в основания блока</gen:description>
 		<gen:sort>operational</gen:sort>
 		<gen:datatype>integer</gen:datatype>
 		<gen:editable>true</gen:editable>
@@ -118,3 +118,4 @@
 	</gen:characteristictype>
 
 </gen:characteristictypes>
+
