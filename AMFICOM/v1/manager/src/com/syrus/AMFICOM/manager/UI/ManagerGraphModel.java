@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModel.java,v 1.6 2005/07/25 05:58:53 bob Exp $
+* $Id: ManagerGraphModel.java,v 1.7 2005/08/15 14:20:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.manager.MPort;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/25 05:58:53 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -34,6 +34,14 @@ public class ManagerGraphModel extends DefaultGraphModel {
 	@Override
 	public boolean acceptsSource(	Object edge,
 									Object port) {
+		
+		try {
+			throw new Exception();
+		} catch (Exception e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		// null port doesn't supply
 		boolean result = port != null;
 		Edge edge2 = (Edge)edge;

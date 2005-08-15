@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.11 2005/08/10 14:02:25 bob Exp $
+* $Id: UserBeanFactory.java,v 1.12 2005/08/15 14:20:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -120,11 +120,11 @@ public class UserBeanFactory extends TabledBeanFactory {
 		}
 
 	}
-
+	
 	@Override
-	public AbstractBean createBean(Identifier identifier) {
+	protected AbstractBean createBean(Identifier identifier) {
 		UserBean bean = new UserBean(this.names);
-		bean.setCodeName("User");
+		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());		
 
 		bean.setId(identifier);	
@@ -169,8 +169,8 @@ public class UserBeanFactory extends TabledBeanFactory {
 						+ targetBean.getName());
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getCodeName().equals("User") &&
-						targetBean.getCodeName().equals("ARM");
+						sourceBean.getCodeName().startsWith(ObjectEntities.SYSTEMUSER) &&
+						targetBean.getCodeName().startsWith(ARMBeanFactory.ARM_CODENAME);
 				}
 			};
 		}

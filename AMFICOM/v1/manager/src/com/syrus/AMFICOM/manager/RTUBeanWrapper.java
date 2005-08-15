@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: RTUBeanWrapper.java,v 1.6 2005/08/12 06:46:31 bob Exp $
+ * $Id: RTUBeanWrapper.java,v 1.7 2005/08/15 14:20:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/12 06:46:31 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -126,7 +126,7 @@ public class RTUBeanWrapper implements Wrapper {
 		return null;
 	}
 
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		if (key.equals(KEY_NAME) || 
 				key.equals(KEY_DESCRIPTION) ||
 				key.equals(KEY_HOSTNAME)) { 
@@ -161,11 +161,7 @@ public class RTUBeanWrapper implements Wrapper {
 			} else if (key.equals(KEY_PORT)) { 
 				return bean.getPort(); 
 			} else if (key.equals(KEY_MCM_ID)) { 
-				return 
-//				this.mcmIdMapReverce.get(
-					bean.getMcmId()
-//					)
-					; 
+				return bean.getMcmId(); 
 			}  
 		}
 		return null;

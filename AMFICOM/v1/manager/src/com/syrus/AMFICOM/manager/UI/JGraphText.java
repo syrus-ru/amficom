@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.19 2005/08/10 14:45:21 bob Exp $
+ * $Id: JGraphText.java,v 1.20 2005/08/15 14:20:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/10 14:45:21 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -38,7 +38,6 @@ import java.util.Set;
 
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
@@ -82,19 +81,24 @@ import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 import org.jgraph.graph.PortView;
 
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.manager.ARMBeanFactory;
 import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.AbstractBeanFactory;
@@ -108,63 +112,59 @@ import com.syrus.AMFICOM.manager.Perspective;
 import com.syrus.AMFICOM.manager.RTUBeanFactory;
 import com.syrus.AMFICOM.manager.ServerBeanFactory;
 import com.syrus.AMFICOM.manager.UserBeanFactory;
+import com.syrus.AMFICOM.resource.LayoutItem;
+import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 
 public class JGraphText implements GraphSelectionListener {	
 	
-	JGraph graph;
-	
-	JTree tree;
-	
-//	DefaultGraphCell rootItem; 
-	
-	private int edgeCount = 0;
+	JGraph						graph;
 
-//	GraphTreeModel	treeModel;
-	NonRootGraphTreeModel	treeModel;
-	
-//	private JPanel panel;
-	
-	private JPanel propertyPanel;
-	
+	JTree						tree;
+
+	NonRootGraphTreeModel		treeModel;
+
+	private JPanel				propertyPanel;
+
 	// Undo Manager
-	protected GraphUndoManager undoManager;
+	protected GraphUndoManager	undoManager;
 
 	// Actions which Change State
-	protected Action undo, redo, remove, group, ungroup, tofront, toback, cut,
-			copy, paste;
+	protected Action			undo, redo, remove, group, ungroup, tofront, toback,
+			cut, copy, paste;
 
 	private GridBagConstraints	gbc2;
 
-	 public JButton	userButton;
+	public JButton				userButton;
 
-	 public JButton	armButton;
+	public JButton				armButton;
 
-	 public JButton	rtuButton;
+	public JButton				rtuButton;
 
-	 public JButton	serverButton;
+	public JButton				serverButton;
 
-	 public JButton	mcmButton;
+	public JButton				mcmButton;
 
-	 public JButton	netButton;
+	public JButton				netButton;
 
-	 public JButton	domainButton;	 
-	 
+	public JButton				domainButton;
 
-	 public JButton	domainsButton;
-	
-	 public JLabel	currentPerspectiveLabel;
-	 
-	 private boolean direct = false;
-	 
-	 public static Dispatcher entityDispatcher = new Dispatcher();  
+	public JButton				domainsButton;
 
-	
-	 Perspective perspective;
+	public JLabel				currentPerspectiveLabel;
+
+	private boolean				direct				= false;
+
+	public static Dispatcher	entityDispatcher	= new Dispatcher();
+
+	private Perspective			perspective;
+	private Identifier			xTypeId;
+	private Identifier			yTypeId;
+	private Identifier			nonStorableObjectNameTypeId;
+
+	boolean						arranging;
 	
 	public JGraphText() {
 		// Construct Model and Graph
-		this.createRootItem();
-		
 		GraphModel model = new ManagerGraphModel(this.direct);
 		
 		this.graph = new JGraph(model,
@@ -188,6 +188,7 @@ public class JGraphText implements GraphSelectionListener {
 		
 		this.undoManager = new GraphUndoManager() {
 			// Override Superclass
+			@Override
 			public void undoableEditHappened(UndoableEditEvent e) {
 				// First Invoke Superclass
 				super.undoableEditHappened(e);
@@ -196,242 +197,10 @@ public class JGraphText implements GraphSelectionListener {
 			}
 		};
 
-		// Add Listeners to Graph
-		//
 		// Register UndoManager with the Model
 		this.graph.getModel().addUndoableEditListener(this.undoManager);
-		
-//		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-//		graphLayoutCache.setVisible(this.rootItem, false);
-		
-		this.createModelListener();
-		
-//		this._getPanel();		
-		
-	}
-	
-	private void createChilden() {
-		
-		Map<Identifier, DefaultGraphCell> domainCellMap = new HashMap<Identifier, DefaultGraphCell>();
-		
-		try {
-			
-			// Domains
-			Set<Domain> domains = 
-				StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.DOMAIN_CODE), true);
-			
-			DomainBeanFactory domainBeanFactory =
-				DomainBeanFactory.getInstance();
-			
-			Icon image = domainBeanFactory.getImage();
-			int iconHeight = image.getIconHeight();
-			
-			int i = 0;
-			boolean firstIteration = true;
-			while(!domains.isEmpty()) {
-				for (Iterator iterator = domains.iterator(); iterator.hasNext();) {
-					Domain domain = (Domain) iterator.next();
-					if (!(firstIteration ^ domain.getDomainId().isVoid())) {						
-						Identifier id = domain.getId();
-						DefaultGraphCell cell = domainCellMap.get(domain.getDomainId());
-						if (!(firstIteration ^ (cell == null))) {
-							AbstractBean bean = domainBeanFactory.createBean(id);					
-							domainCellMap.put(id, 
-								this.createChild(
-									cell, 
-									domain.getName(), 
-									bean, 
-									400, 
-									iconHeight * 3 * i / 2, 
-									0, 
-									0, 
-									image));
-							i++;
-							iterator.remove();
-							
-						}
-					}
-				}
-				firstIteration = false;
-			}
 
-			
-			{
-				// Users
-				Set<PermissionAttributes> permissions = 
-					StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.PERMATTR_CODE), true);
-			
-				UserBeanFactory userBeanFactory = UserBeanFactory.getInstance();
-				
-				NetBeanFactory netBeanFactory = NetBeanFactory.getInstance();
-				
-				ARMBeanFactory armBeanFactory = ARMBeanFactory.getInstance();
-				
-				for(PermissionAttributes permissionAttributes : permissions) {
-					Identifier domainId = permissionAttributes.getDomainId();				
-									
-					Domain domain = StorableObjectPool.getStorableObject(domainId, true);
-					
-					DefaultGraphCell domainCell = domainCellMap.get(domainId);
-					if (domainCell == null) {
-						throw new ApplicationException("Domain " + domainId + ", doesn't created !");
-					}
-					
-					MPort domainPort = (MPort) domainCell.getChildAt(0);
-					List<Port> targets = (this.direct ? domainPort.getTargets() : domainPort.getSources());
-					
-					DefaultGraphCell netCell = null;
-					
-					for(Port port : targets) {
-						MPort port2 = (MPort) port;
-						AbstractBean bean = port2.getBean();
-						if (bean.getCodeName().equals("Net")) {
-							netCell = (DefaultGraphCell) port2.getParent();
-							break;
-						}
-					}
-					
-					DefaultGraphCell armCell = null;
-					
-					if (netCell == null) {
-						AbstractBean bean = netBeanFactory.createBean((Perspective)null);					
-						netCell = this.createChild(
-								domainCell, 
-								LangModelManager.getString("Entity.Net") + ' ' + domain.getName(), 
-								bean, 
-								200, 
-								200, 
-								0, 
-								0, 
-								netBeanFactory.getImage());
-					} else {
-						MPort netPort = (MPort) netCell.getChildAt(0);
-						List<Port> netTargets = (this.direct ? netPort.getTargets() : netPort.getSources());
-						
-						for(Port port : netTargets) {
-							MPort port2 = (MPort) port;
-							AbstractBean bean = port2.getBean();
-							if (bean.getCodeName().equals("ARM")) {
-								armCell = (DefaultGraphCell) port2.getParent();
-								break;
-							}
-						}
-					}
-					
-					{
-						// user
-						if (armCell == null) {
-							AbstractBean bean = armBeanFactory.createBean((Perspective)null);					
-							armCell = this.createChild(
-									netCell, 
-									LangModelManager.getString("Entity.AutomatedWorkplace"), 
-									bean, 
-									200, 
-									300, 
-									0, 
-									0, 
-									armBeanFactory.getImage());
-						}
-						
-						
-						AbstractBean userBean = 
-							userBeanFactory.createBean(permissionAttributes.getUserId());
-						
-						this.createChild(
-							armCell, 
-							userBean.getName(), 
-							userBean, 
-							100, 
-							300, 
-							0, 
-							0, 
-							userBeanFactory.getImage());
-						
-					}				
-				}
-			
-			}
-			
-			
-			this.addDomainMember(domainCellMap, 
-				ObjectEntities.KIS_CODE, 
-				RTUBeanFactory.getInstance());
-			this.addDomainMember(domainCellMap, 
-				ObjectEntities.MCM_CODE, 
-				MCMBeanFactory.getInstance());
-			this.addDomainMember(domainCellMap, 
-				ObjectEntities.SERVER_CODE, 
-				ServerBeanFactory.getInstance());
-			
-		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
-	}
-	
-	
-	private void addDomainMember(Map<Identifier, DefaultGraphCell> domainCellMap,
-	                             short entityCode,
-	                             AbstractBeanFactory factory) 
-	throws ApplicationException {
-		// domainMember
-		Set<DomainMember> domainMembers = 
-			StorableObjectPool.getStorableObjectsByCondition(
-				new EquivalentCondition(entityCode), true);
-		
-		for(DomainMember domainMember : domainMembers) {
-			
-			System.out.println("JGraphText.addDomainMember() | " + domainMember.getId());
-			
-			AbstractBean bean = 
-				factory.createBean(domainMember.getId());
-			
-			Identifier domainId = domainMember.getDomainId();
-			
-			DefaultGraphCell domainCell = domainCellMap.get(domainId);
-			if (domainCell == null) {
-				throw new ApplicationException("Domain " + domainId + ", doesn't created !");
-			}
-			
-			MPort domainPort = (MPort) domainCell.getChildAt(0);
-			List<Port> targets = (this.direct ? domainPort.getTargets() : domainPort.getSources());
-			
-			DefaultGraphCell netCell = null;
-			
-			for(Port port : targets) {
-				MPort port2 = (MPort) port;
-				AbstractBean netBean = port2.getBean();
-				if (netBean.getCodeName().equals("Net")) {
-					netCell = (DefaultGraphCell) port2.getParent();
-					break;
-				}
-			}
-			
-			if (netCell == null) {
-				NetBeanFactory netBeanFactory = NetBeanFactory.getInstance();
-				AbstractBean netBean = netBeanFactory.createBean((Perspective)null);		
-				Domain domain = StorableObjectPool.getStorableObject(domainId, true);
-				netCell = this.createChild(
-						domainCell, 
-						LangModelManager.getString("Entity.Net") + ' ' + domain.getName(), 
-						netBean, 
-						200, 
-						200, 
-						0, 
-						0, 
-						netBeanFactory.getImage());
-			}
-			
-			this.createChild(
-				netCell, 
-				bean.getName(), 
-				bean, 
-				100, 
-				300, 
-				0, 
-				0, 
-				factory.getImage());
-		}
+		this.createModelListener();
 	}
 	
 	private void createModelListener() {
@@ -440,101 +209,7 @@ public class JGraphText implements GraphSelectionListener {
 			public void graphChanged(GraphModelEvent e) {
 				GraphModelChange change = e.getChange();
 				
-//				boolean direct = JGraphText.this.treeModel.isDirect();
-//				Object[] inserted = change.getInserted();
-//				if (inserted != null) {
-//					for(Object insertedObject: inserted) {
-//						if (insertedObject instanceof Edge) {
-//							Edge edge = (Edge)insertedObject;
-//							Object source = edge.getSource();
-//							Object target = edge.getTarget();
-//							
-//							MutableTreeNode targetParent = (MutableTreeNode)((MPort)(direct ? target : source)).getParent();
-//							MutableTreeNode sourceParent = (MutableTreeNode)((MPort)(direct ? source : target)).getParent();
-//							System.out.println(".graphChanged() | source:" + sourceParent + ", target:" + targetParent);
-//							if (sourceParent != JGraphText.this.rootItem) {
-//								JGraphText.this.treeModel.removeNodeFromParent(targetParent);
-//							}
-//							JGraphText.this.treeModel.clearCache();
-//							JGraphText.this.treeModel.insertNodeInto(targetParent,
-//								sourceParent);
-//						}
-//					}
-//				} else {
-//				
-//					Object[] removed = change.getRemoved();
-//					if (removed != null) {
-//							for(Object removedObject: removed) {
-//								System.out.println(".graphChanged() | removedObject:" + removedObject + "[" + removedObject.getClass().getName() +"]");
-//								if (removedObject instanceof DefaultGraphCell) {
-//									DefaultGraphCell cell = (DefaultGraphCell)removedObject;
-//									if (cell.getAllowsChildren()) {
-//										JGraphText.this.treeModel.removeNodeFromParent(cell);
-////										MPort defaultPort = (MPort) cell.getChildAt(0);
-////										for(Object edge: defaultPort.getEdges()) {
-////											System.out.println(".graphChanged() | " + edge);
-////										}
-////										JGraphText.this.treeModel.removeNodeFromParent(cell);
-//									}
-//								}
-//								
-//							}
-//						} else 	{
-//							ConnectionSet connectionSet = change.getConnectionSet();
-//							if (connectionSet != null) {
-//								// connections changed !
-//								Set connections = connectionSet.getConnections();
-//								for(Object oConnection: connections) {
-//									Connection connection = (Connection)oConnection;
-//									Edge edge = (Edge) connection.getEdge();
-//									
-//									MPort oldPort = (MPort) connection.getPort();							
-//									MutableTreeNode oldPortParent = (MutableTreeNode) oldPort.getParent();
-//		
-//									boolean source = connection.isSource();
-//									
-//									MPort newPort = (MPort) (source ? edge.getSource() : edge.getTarget());							
-//									MutableTreeNode newPortParent = (MutableTreeNode) newPort.getParent();
-//		
-//									System.out.println(".graphChanged() | oldPortParent:" + oldPortParent +", newPortParent:" + newPortParent
-//										+ ", edge:" + edge);
-//		
-//									MPort sourcePort = (MPort) (source ? edge.getTarget() : edge.getSource());							
-//									MutableTreeNode sourcePortParent = (MutableTreeNode) sourcePort.getParent();
-//									
-//									System.out.println(".graphChanged() | source is " + source);
-//									
-//									if (source) {
-//										// TODO unimplemented yet
-//									} else {
-//										JGraphText.this.treeModel.removeNodeFromParent(oldPortParent);
-//										JGraphText.this.treeModel.removeNodeFromParent(newPortParent);
-//										
-//										JGraphText.this.treeModel.clearCache();
-//										
-//										JGraphText.this.treeModel.insertNodeInto(newPortParent, sourcePortParent);								
-//										JGraphText.this.treeModel.insertNodeInto(oldPortParent, JGraphText.this.rootItem);
-//									}
-//									
-//								}
-//							} else {
-//								for(Object object: change.getChanged()) {
-//									TreeNode treeNode = (TreeNode)object;
-//									if (treeNode.getAllowsChildren()) {
-//										JGraphText.this.treeModel.nodeChanged(treeNode);
-//									}
-//								}
-//							}
-//						}
-//				}
-				
-//				JGraphText.this.treeModel.reload((TreeNode) JGraphText.this.treeModel.getRoot());
-				
 				GraphModel model = JGraphText.this.graph.getModel();
-				
-//				for(int i=0;i<model.getRootCount();i++) {
-//					System.out.println("JGraphText.createModelListener() | getRootAt " + i + " " + model.getRootAt(i));
-//				}
 				
 				Object[] inserted = change.getInserted();
 				Object[] changed = change.getChanged();
@@ -558,12 +233,110 @@ public class JGraphText implements GraphSelectionListener {
 								JGraphText.this.tree.scrollPathToVisible(new TreePath(pathToRoot));
 							}
 						} else if (!model.isEdge(changedObject)) {
-							DefaultGraphCell defaultGraphCell = (DefaultGraphCell)changedObject;
-							MPort port = (MPort) defaultGraphCell.getChildAt(0);
+							DefaultGraphCell cell = (DefaultGraphCell)changedObject;
+							MPort port = (MPort) cell.getChildAt(0);
 							AbstractBean bean = port.getBean();
 							if (bean != null) {
-								bean.setName((String) defaultGraphCell.getUserObject());
+								bean.setName((String) cell.getUserObject());
 							}
+							
+							AttributeMap attributes = cell.getAttributes();
+							Rectangle2D rectangle2D = GraphConstants.getBounds(attributes);
+							String title = cell.getUserObject().toString();
+
+							if (!arranging) {								
+								String codeName = bean.getCodeName();
+								System.out.println(".graphChanged() | " + rectangle2D.getX() + ", " + rectangle2D.getY());								
+								try {
+									CompoundCondition compoundCondition = 
+										new CompoundCondition(new TypicalCondition(
+											perspective.getPerspectiveName(), 
+											OperationSort.OPERATION_EQUALS,
+											ObjectEntities.LAYOUT_ITEM_CODE,
+											LayoutItemWrapper.COLUMN_LAYOUT_NAME),
+											CompoundConditionSort.AND,
+											new LinkedIdsCondition(
+												LoginManager.getUserId(),
+												ObjectEntities.LAYOUT_ITEM_CODE) {
+												@Override
+												public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
+													return storableObjects.isEmpty();
+												}
+											});
+									
+									compoundCondition.addCondition(new TypicalCondition(
+										codeName, 
+										OperationSort.OPERATION_EQUALS,
+										ObjectEntities.LAYOUT_ITEM_CODE,
+										StorableObjectWrapper.COLUMN_NAME));
+									
+									Set<LayoutItem> layoutItems = 
+										StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+									
+									if (layoutItems.isEmpty()) {
+										LayoutItem item = LayoutItem.createInstance(LoginManager.getUserId(),
+											Identifier.VOID_IDENTIFIER,
+											perspective.getPerspectiveName(),
+											codeName);
+										
+										Characteristic.createInstance(LoginManager.getUserId(),
+											(CharacteristicType) StorableObjectPool.getStorableObject(xTypeId, true),
+											"x",
+											"x",
+											Integer.toString((int) rectangle2D.getX()),
+											item,
+											true,
+											true);
+										
+										Characteristic.createInstance(LoginManager.getUserId(),
+											(CharacteristicType) StorableObjectPool.getStorableObject(yTypeId, true),
+											"y",
+											"y",
+											Integer.toString((int) rectangle2D.getY()),
+											item,
+											true,
+											true);
+										
+										if (bean.getId().isVoid()) {
+											Characteristic.createInstance(LoginManager.getUserId(),
+												(CharacteristicType) StorableObjectPool.getStorableObject(nonStorableObjectNameTypeId, true),
+												"title",
+												"title",
+												title,
+												item,
+												true,
+												true);
+										}
+										
+									} else {
+										LayoutItem item = layoutItems.iterator().next();
+										for(Characteristic characteristic : item.getCharacteristics(false)) {
+											String codename = characteristic.getType().getCodename();
+											if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_X)) {
+//												System.out
+//														.println(".graphChanged() x | was " + characteristic.getValue() + ", now:" + Integer.toString((int) rectangle2D.getX()));
+												characteristic.setValue(Integer.toString((int) rectangle2D.getX()));
+											} else if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_Y)) {
+//												System.out
+//												.println(".graphChanged() y | was " + characteristic.getValue() + ", now:" + Integer.toString((int) rectangle2D.getY()));
+
+												characteristic.setValue(Integer.toString((int) rectangle2D.getY()));
+											} else if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_NAME)) {
+												characteristic.setValue(title);
+											}
+										}
+	
+									}
+									
+								} catch (ApplicationException e2) {
+									e2.printStackTrace();
+									JOptionPane.showMessageDialog(graph, 
+										e2.getMessage(), 
+										LangModelManager.getString("Error"),
+										JOptionPane.ERROR_MESSAGE);
+								}
+							}
+						
 						}
 					}
 				}
@@ -602,15 +375,10 @@ public class JGraphText implements GraphSelectionListener {
 			Box box = Box.createHorizontalBox();
 			
 			JToolBar perspectiveBox = this.createPerspecives();
-			
-//			CommonUIUtilities.fixHorizontalSize(perspectiveBox);
-			
 			this.currentPerspectiveLabel = new JLabel();
 			
 			box.add(new JLabel(LangModelManager.getString("Label.Levels") + ':'));
 			box.add(perspectiveBox);
-//			box.add(Box.createHorizontalGlue());
-			
 			
 			
 			panel.add(box, gbc);
@@ -671,13 +439,9 @@ public class JGraphText implements GraphSelectionListener {
 			frame.setVisible(true);
 			
 
-		}
-		
-		
-		this.createChilden();
+		}		
 		
 		this.domainsButton.doClick();
-
 	}	
 	
 	private JToolBar createPerspecives() {		
@@ -703,13 +467,18 @@ public class JGraphText implements GraphSelectionListener {
 
 					mcmButton.setEnabled(false);
 					
-					showOnly(new String[] {"Net", "Domain"});
+					showOnly(new String[] {NetBeanFactory.NET_CODENAME, 
+							ObjectEntities.DOMAIN});
 					treeModel.setRoot(null);
 					
 					JButton button = (JButton) e.getSource();
 					button.setEnabled(false);
 					
-					perspective = null;
+					setPerspective(new Perspective() {
+						public String getPerspectiveName() {
+							return "domains";
+						}
+					});
 			}
 		});	
 
@@ -719,7 +488,9 @@ public class JGraphText implements GraphSelectionListener {
 			
 			public void actionPerformed(ActionEvent e) {
 				try {
+					arranging = true;
 					StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, LoginManager.getUserId(), true);
+//					StorableObjectPool.flush(ObjectEntities.LAYOUT_ITEM_CODE, LoginManager.getUserId(), true);
 					StorableObjectPool.flush(ObjectEntities.PERMATTR_CODE, LoginManager.getUserId(), true);
 					StorableObjectPool.flush(ObjectEntities.DOMAIN_CODE, LoginManager.getUserId(), true);
 					StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, LoginManager.getUserId(), true);
@@ -727,46 +498,213 @@ public class JGraphText implements GraphSelectionListener {
 					StorableObjectPool.flush(ObjectEntities.SERVER_CODE, LoginManager.getUserId(), true);
 					StorableObjectPool.flush(ObjectEntities.MCM_CODE, LoginManager.getUserId(), true);
 				} catch (ApplicationException e1) {
-					// TODO Auto-generated catch block
 					e1.printStackTrace();
+					JOptionPane.showMessageDialog(graph, 
+						e1.getMessage(), 
+						LangModelManager.getString("Error"),
+						JOptionPane.ERROR_MESSAGE);
 				}
-				
+				arranging = false;
+
 			}
 		});
 		
 		return perspectives;
 	}
 	
-	public void showOnly(String[] names) {
+	private void arrange() throws ApplicationException {
+		this.arranging = true;
+		TypicalCondition typicalCondition = new TypicalCondition(
+			this.perspective.getPerspectiveName(), 
+			OperationSort.OPERATION_EQUALS,
+			ObjectEntities.LAYOUT_ITEM_CODE,
+			LayoutItemWrapper.COLUMN_LAYOUT_NAME);
+		
+		LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(
+			LoginManager.getUserId(),
+			ObjectEntities.LAYOUT_ITEM_CODE) {
+			@Override
+			public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
+				return storableObjects.isEmpty();
+			}
+		};
+		
+		CompoundCondition compoundCondition = 
+			new CompoundCondition(typicalCondition,
+				CompoundConditionSort.AND,
+				linkedIdsCondition);
+		
+		
+		Set<LayoutItem> layoutItems = 
+			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+		
+		if (this.xTypeId == null) {
+			typicalCondition = new TypicalCondition(
+				LayoutItem.CHARACTERISCTIC_TYPE_X, 
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.CHARACTERISTIC_TYPE_CODE,
+				StorableObjectWrapper.COLUMN_CODENAME);
+			
+			Set<CharacteristicType> storableObjectsByCondition = 
+				StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
+			
+			this.xTypeId = storableObjectsByCondition.iterator().next().getId();
+		
+		}
+		if (this.yTypeId == null) {
+			typicalCondition = new TypicalCondition(
+					LayoutItem.CHARACTERISCTIC_TYPE_Y, 
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.CHARACTERISTIC_TYPE_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+				
+			Set<CharacteristicType> storableObjectsByCondition = 
+				StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
+			
+			this.yTypeId = storableObjectsByCondition.iterator().next().getId();
+		}
+		
+		if (this.nonStorableObjectNameTypeId == null) {
+			typicalCondition = new TypicalCondition(
+					LayoutItem.CHARACTERISCTIC_TYPE_NAME, 
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.CHARACTERISTIC_TYPE_CODE,
+					StorableObjectWrapper.COLUMN_CODENAME);
+				
+			Set<CharacteristicType> storableObjectsByCondition = 
+				StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true);
+			
+			this.nonStorableObjectNameTypeId = storableObjectsByCondition.iterator().next().getId();
+		}
+
+		for(LayoutItem layoutItem : layoutItems) {
+			this.arrangeCell(layoutItem);
+		}
+		this.arranging = false;	
+	}
+	
+	public DefaultGraphCell arrangeCell(LayoutItem item) throws NumberFormatException, ApplicationException {
 		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
 		GraphModel model = this.graph.getModel();
 		
+		DefaultGraphCell parentCell = null;
+		Identifier parentId = item.getParentId();
+		if (!parentId.isVoid()) {
+			LayoutItem parentItem = StorableObjectPool.getStorableObject(parentId, true);
+			parentCell = this.arrangeCell(parentItem);
+		}
 		
-//		CellView[] cellViews = graphLayoutCache.getCellViews();
-//		for(CellView cellView: cellViews) {
-//			DefaultGraphCell cell = (DefaultGraphCell) cellView.getCell();
-//			if (model.isPort(cell)) {
-//				MPort port = (MPort)cell;
-//				Object userObject = port.getUserObject();
-//				boolean hide = true;
-//				
-//				if (userObject instanceof AbstractBean) {
-//					AbstractBean bean = (AbstractBean)userObject;
-//					String codeName = bean.getCodeName();
-//					for (String name : names) {
-//						if (name.equals(codeName)) {
-//							hide = false;
-//							break;
-//						}
-//					}
-//					System.out.println("JGraphText.showOnly() | bean " + bean.getCodeName() + " hide:" + hide );
-//				} 
-//				
-//				graphLayoutCache.setVisible(cell.getParent(), !hide);
-//				
-//				System.out.println("JGraphText.showOnly() | " + cell + ", hide is " + hide);
-//			}
-//		}
+		
+		String name = item.getName();		
+		DefaultGraphCell itemCell = null;		
+		int x = 0;
+		int y = 0;
+		String title = null;
+		for(Characteristic characteristic : item.getCharacteristics(false)) {
+			String codename = characteristic.getType().getCodename();
+			if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_X)) {
+				x = Integer.parseInt(characteristic.getValue());
+			} else if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_Y)) {
+				y = Integer.parseInt(characteristic.getValue());
+			} else if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_NAME)) {
+				title = characteristic.getValue();
+			}
+		}
+		
+		for(int i = 0; i<model.getRootCount(); i++) {
+			DefaultGraphCell cell = (DefaultGraphCell) model.getRootAt(i);
+			if (!model.isEdge(cell) && !model.isPort(cell)) {				
+				MPort port = (MPort) cell.getChildAt(0);
+				AbstractBean bean = port.getBean();
+				if (name.equals(bean.getCodeName())) {
+					if (!graphLayoutCache.isVisible(cell)) {
+						graphLayoutCache.setVisible(cell, true);
+					}
+					
+					itemCell = cell;
+					
+					AttributeMap attributeMap = new AttributeMap();
+					GraphConstants.setBounds(attributeMap,
+						new Rectangle2D.Double(x, y, 0, 0));
+					if (title != null) {
+						GraphConstants.setValue(attributeMap,
+							title);
+					}
+					Map viewMap = new Hashtable();
+					viewMap.put(itemCell, attributeMap);
+					model.edit(viewMap, null, null, null);
+					
+					
+					if (parentCell != null) {
+						MPort parentPort = (MPort) parentCell.getChildAt(0);
+						Edge connectionEdge = null;
+						for(int j = 0; j<model.getRootCount(); j++) {
+							DefaultGraphCell edgeCell = (DefaultGraphCell) model.getRootAt(j);
+							if (model.isEdge(edgeCell)) {
+								Edge edge = (Edge) edgeCell;
+								Object target =  (this.direct ? edge.getTarget() : edge.getSource());
+								Object source =  (this.direct ? edge.getSource() : edge.getTarget());
+								
+								if (target == port && source == parentPort) {
+									connectionEdge = edge;
+									break;
+								}
+							}
+						}
+						
+						
+						if (connectionEdge != null) {
+							// make edge visible
+							if (!graphLayoutCache.isVisible(connectionEdge)) {
+								graphLayoutCache.setVisible(connectionEdge, true);
+							}
+						} else {
+							// otherwise create edge
+							this.createEdge(this.direct ? parentCell : cell, this.direct ?  cell : parentCell);
+						}
+					}
+					
+				}
+			}
+		}
+		
+		if (itemCell == null) {
+			AbstractBeanFactory factory = null;
+			if (name.startsWith(ARMBeanFactory.ARM_CODENAME)) {
+				factory = ARMBeanFactory.getInstance();
+			} else if (name.startsWith(NetBeanFactory.NET_CODENAME)) {
+				factory = NetBeanFactory.getInstance();
+			} else if (name.startsWith(ObjectEntities.DOMAIN)) {
+				factory = DomainBeanFactory.getInstance();
+			} else if (name.startsWith(ObjectEntities.MCM)) {
+				factory = MCMBeanFactory.getInstance();
+			} else if (name.startsWith(ObjectEntities.KIS)) {
+				factory = RTUBeanFactory.getInstance();
+			} else if (name.startsWith(ObjectEntities.SERVER)) {
+				factory = ServerBeanFactory.getInstance();
+			} else if (name.startsWith(ObjectEntities.SYSTEMUSER)) {
+				factory = UserBeanFactory.getInstance();
+			}			
+			
+			AbstractBean bean = factory.createBean(name);
+			
+			itemCell = this.createChild(
+				parentCell, 
+				title != null ? title : bean.getName(), 
+				bean, 
+				x, 
+				y, 
+				0, 
+				0, 
+				factory.getImage());
+		}
+		
+		return itemCell;
+	}
+	
+	public void showOnly(String[] names) {
+		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
+		GraphModel model = this.graph.getModel();
 		
 		for(int i = 0; i<model.getRootCount(); i++) {
 			Object rootAt = model.getRootAt(i);
@@ -778,7 +716,7 @@ public class JGraphText implements GraphSelectionListener {
 				if (bean != null) {
 					String codeName = bean.getCodeName();
 					for (String name : names) {
-						if (name.equals(codeName)) {
+						if (codeName.startsWith(name)) {
 							hide = false;
 							break;
 						}
@@ -808,13 +746,9 @@ public class JGraphText implements GraphSelectionListener {
 		graphLayoutCache.setVisible(startPort.getParent(), false);
 
 		if (startPort == port) {
-//			System.err.println("JGraphText.hideTillCell() | startPort == port: " + startPort);
 			return;
 		}
-		
-//		System.out.println("JGraphText.hideTillCell() | startPort " + startPort);
-		
-		List<Port> targets = (this.direct ? startPort.getTargets() : startPort.getSources());
+		final List<Port> targets = (this.direct ? startPort.getTargets() : startPort.getSources());
 		
 		for(Port targetPort: targets) {			
 				this.hideTillCell((MPort) targetPort, port);
@@ -822,8 +756,6 @@ public class JGraphText implements GraphSelectionListener {
 	}
 	
 	public void showOnlyDescendants(final DefaultGraphCell cell) {		
-		GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-		
 		GraphModel model = this.graph.getModel();		
 		
 		MPort selectedPort = (MPort) cell.getChildAt(0);
@@ -910,29 +842,6 @@ public class JGraphText implements GraphSelectionListener {
 		url = getClass().getClassLoader().getResource(
 				"com/syrus/AMFICOM/manager/resources/icons/copy.gif");
 		action.putValue(Action.SMALL_ICON, new ImageIcon(url));
-//		 TODO
-//		toolBar.add(copy = new EventRedirector(action));
-
-		// Paste
-		action = javax.swing.TransferHandler // JAVA13:
-												// org.jgraph.plaf.basic.TransferHandler
-				.getPasteAction();
-		url = getClass().getClassLoader().getResource(
-				"com/syrus/AMFICOM/manager/resources/icons/paste.gif");
-		action.putValue(Action.SMALL_ICON, new ImageIcon(url));
-//		 TODO
-//		toolBar.add(paste = new EventRedirector(action));
-
-		// Cut
-		action = javax.swing.TransferHandler // JAVA13:
-												// org.jgraph.plaf.basic.TransferHandler
-				.getCutAction();
-		url = getClass().getClassLoader().getResource(
-				"com/syrus/AMFICOM/manager/resources/icons/cut.gif");
-		action.putValue(Action.SMALL_ICON, new ImageIcon(url));
-		// TODO
-//		toolBar.add(cut = new EventRedirector(action));
-
 		// Remove
 		URL removeUrl = getClass().getClassLoader().getResource(
 				"com/syrus/AMFICOM/manager/resources/icons/delete.gif");
@@ -962,34 +871,6 @@ public class JGraphText implements GraphSelectionListener {
 		this.remove.setEnabled(false);
 		toolBar.add(this.remove);
 		this.remove.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Delete"));
-		
-//		 TODO
-//		// To Front
-//		toolBar.addSeparator();
-//		URL toFrontUrl = getClass().getClassLoader().getResource(
-//				"com/syrus/AMFICOM/manager/resources/icons/tofront.gif");
-//		ImageIcon toFrontIcon = new ImageIcon(toFrontUrl);
-//		tofront = new AbstractAction("", toFrontIcon) {
-//			public void actionPerformed(ActionEvent e) {
-//				if (!graph.isSelectionEmpty())
-//					toFront(graph.getSelectionCells());
-//			}
-//		};
-//		tofront.setEnabled(false);
-//		toolBar.add(tofront);
-//
-//		// To Back
-//		URL toBackUrl = getClass().getClassLoader().getResource(
-//				"com/syrus/AMFICOM/manager/resources/icons/toback.gif");
-//		ImageIcon toBackIcon = new ImageIcon(toBackUrl);
-//		toback = new AbstractAction("", toBackIcon) {
-//			public void actionPerformed(ActionEvent e) {
-//				if (!graph.isSelectionEmpty())
-//					toBack(graph.getSelectionCells());
-//			}
-//		};
-//		toback.setEnabled(false);
-//		toolBar.add(toback);
 		
 		toolBar.addSeparator();
 		{
@@ -1038,33 +919,6 @@ public class JGraphText implements GraphSelectionListener {
 			toolBar.add(zoomOut);
 			zoomOut.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.ZoomOut"));
 		}
-
-//		// Group
-//		toolBar.addSeparator();
-//		URL groupUrl = getClass().getClassLoader().getResource(
-//				"com/syrus/AMFICOM/manager/resources/icons/group.gif");
-//		ImageIcon groupIcon = new ImageIcon(groupUrl);
-//		this.group = new AbstractAction("", groupIcon) {
-//			public void actionPerformed(ActionEvent e) {
-////				 TODO
-////				group(graph.getSelectionCells());
-//			}
-//		};
-//		this.group.setEnabled(false);
-//		toolBar.add(this.group);
-//
-//		// Ungroup
-//		URL ungroupUrl = getClass().getClassLoader().getResource(
-//				"com/syrus/AMFICOM/manager/resources/icons/ungroup.gif");
-//		ImageIcon ungroupIcon = new ImageIcon(ungroupUrl);
-//		ungroup = new AbstractAction("", ungroupIcon) {
-//			public void actionPerformed(ActionEvent e) {
-//				// TODO
-////				ungroup(graph.getSelectionCells());
-//			}
-//		};
-//		this.ungroup.setEnabled(false);
-//		toolBar.add(this.ungroup);
 		
 		return toolBar;
 	}
@@ -1149,27 +1003,10 @@ public class JGraphText implements GraphSelectionListener {
 				
 				
 			}
-		};
-		
-		
-		
+		};		
+	
 		action.putValue(Action.SHORT_DESCRIPTION, name);
-		
 		return toolBar.add(action);
-		
-//		button.addMouseListener(new MouseAdapter() {
-//			
-//			@Override
-//			public void mouseEntered(MouseEvent e) {
-//				System.out.println(".mouseEntered() | name:" + name);
-//			}
-//		});
-//		
-//		button.addFocusListener(new FocusAdapter() {			
-//			public void focusGained(FocusEvent e) {
-//				System.out.println(".focusGained() | name:" + name);
-//			};
-//		});
 	}
 	
 
@@ -1189,26 +1026,69 @@ public class JGraphText implements GraphSelectionListener {
 				AbstractBean sourceBean = (AbstractBean) sourceObject;
 				AbstractBean targetBean = (AbstractBean) targetObject;
 				canConnect = sourceBean.isTargetValid(targetBean);
-			}
-			
 			if (canConnect) {
-				DefaultEdge edge = new DefaultEdge(
-//					"edge" + (++this.edgeCount)
-					);
-				// 
+				DefaultEdge edge = new DefaultEdge();
 				edge.setSource(sourcePort);
 				edge.setTarget(targetPort);
 //				 Set Arrow Style for edge
 				this.createEdgeAttributes(edge);
 				
 				GraphLayoutCache graphLayoutCache = this.graph.getGraphLayoutCache();
-//				System.out.println("JGraphText.createChild() | insert " + edge + "\n\t"+source+" -> " + target);
 				graphLayoutCache.insert(edge);		
 				graphLayoutCache.setVisibleImpl(new Object[] {edge}, addToGraph);
 				
 				this.graph.getSelectionModel().clearSelection();
+				try {
+					CompoundCondition compoundCondition = 
+						new CompoundCondition(new TypicalCondition(
+							this.perspective.getPerspectiveName(), 
+							OperationSort.OPERATION_EQUALS,
+							ObjectEntities.LAYOUT_ITEM_CODE,
+							LayoutItemWrapper.COLUMN_LAYOUT_NAME),
+							CompoundConditionSort.AND,
+							new LinkedIdsCondition(
+								LoginManager.getUserId(),
+								ObjectEntities.LAYOUT_ITEM_CODE) {
+								@Override
+								public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
+									return storableObjects.isEmpty();
+								}
+							});
+					
+					TypicalCondition condition = new TypicalCondition(
+						sourceBean.getCodeName(), 
+						OperationSort.OPERATION_EQUALS,
+						ObjectEntities.LAYOUT_ITEM_CODE,
+						StorableObjectWrapper.COLUMN_NAME);
+					
+					compoundCondition.addCondition(condition);
+					
+					Set<LayoutItem> sourceItems = 
+						StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+					
+					condition.setValue(targetBean.getCodeName());
+
+					Set<LayoutItem> targetItems = 
+						StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+					
+					assert !sourceItems.isEmpty();
+					assert !targetItems.isEmpty();
+					
+					LayoutItem sourceItem = sourceItems.iterator().next();
+					LayoutItem targetItem = targetItems.iterator().next();
+					
+					sourceItem.setParentId(targetItem.getId());
+					
+				} catch (ApplicationException e) {
+					e.printStackTrace();
+					JOptionPane.showMessageDialog(graph, 
+						e.getMessage(), 
+						LangModelManager.getString("Error"),
+						JOptionPane.ERROR_MESSAGE);
+				}
 				
 				return edge;
+			}
 			}
 		}
 
@@ -1223,69 +1103,33 @@ public class JGraphText implements GraphSelectionListener {
 		GraphConstants.setEndFill(attributes, true);
 		GraphConstants.setLabelAlongEdge(attributes, true);
 	}
-	
-//	private DefaultGraphCell createChild(DefaultGraphCell parentCell, String name, double x,
-//	             			double y, double w, double h, Color bg, boolean raised) {
-//		DefaultGraphCell cell = this.createVertex(name, x, y, w, h, bg, raised);
-//		this.createEdge(this.treeModel.isDirect() ? this.rootItem : cell, this.treeModel.isDirect() ? cell : this.rootItem, false);
-//		if (parentCell != null && parentCell != this.rootItem) {
-//			this.createEdge(this.treeModel.isDirect() ? parentCell : cell, this.treeModel.isDirect() ?  cell : parentCell);
-//		}
-//		return cell;
-//	}
+
 	
 	DefaultGraphCell createChild(DefaultGraphCell parentCell, String name, Object object, double x,
 	         	             			double y, double w, double h, Icon image) {
 		DefaultGraphCell cell = this.createVertex(name, object, x, y, w, h, image);
  		GraphLayoutCache cache = this.graph.getGraphLayoutCache();
-// 		System.out.println("JGraphText.createChild() | insert " + cell);
 		cache.insert(cell);	
 
-// 		this.createEdge(this.treeModel.isDirect() ? this.rootItem : cell, this.treeModel.isDirect() ? cell : this.rootItem, false);
  		if (parentCell != null) {
  			DefaultEdge edge = this.createEdge(this.treeModel.isDirect() ? parentCell : cell, this.treeModel.isDirect() ?  cell : parentCell);
  			if (object instanceof AbstractBean) {
-//				System.out.println("MyMarqueeHandler.mouseReleased()");
 				AbstractBean bean = (AbstractBean)object;
 				bean.updateEdgeAttributes(edge, (MPort) (this.treeModel.isDirect() ?  cell : parentCell).getChildAt(0));
 			}
  		}
  		return cell;
 	}
-	
-	private void createRootItem() {
-		
-//		DefaultGraphCell[] cells = new DefaultGraphCell[1];
-//		this.rootItem = createVertex("Root", -100, -100, 0, 0, Color.LIGHT_GRAY, true);
-//		this.rootItem = cells[0];
-//		
-//		this.graph.getSelectionModel().clearSelection();
-//		
-//		
-//		GraphConstants.setAutoSize(cells[0].getAttributes(), true);
-//		
-//		GraphLayoutCache cache = this.graph.getGraphLayoutCache();		
-//		cache.insert(cells);		
-	}
-
 
 	public void valueChanged(GraphSelectionEvent e) {
-//		try {
-//			throw new Exception();
-//		} catch (Exception e1) {
-//			// TODO Auto-generated catch block
-//			e1.printStackTrace();
-//		}		
 		final Object cell = e.getCell();
 		final TreeSelectionModel selectionModel = this.tree.getSelectionModel();
-//		System.out.println(".valueChanged() | " + cell + '[' + cell.getClass().getName() + ']');
 		final GraphModel model = this.graph.getModel();
 		
 		this.propertyPanel.removeAll();
 		
 		if (model.isEdge(cell)) {
 			if (e.isAddedCell()) {
-//				System.out.println("JGraphText.valueChanged() | edge ");
 				Edge edge = (Edge)cell;
 				TreeNode sourceNode = (TreeNode) edge.getSource();
 				TreeNode targetNode = (TreeNode) edge.getSource();
@@ -1328,23 +1172,12 @@ public class JGraphText implements GraphSelectionListener {
 		this.propertyPanel.revalidate();
 		this.propertyPanel.repaint();
 		
-//		 Update Button States based on Current Selection
 		boolean enabled = !this.graph.isSelectionEmpty();
 		this.remove.setEnabled(enabled);
-//		ungroup.setEnabled(enabled);
-//		tofront.setEnabled(enabled);
-//		toback.setEnabled(enabled);
-//		copy.setEnabled(enabled);
-//		cut.setEnabled(enabled);
 	}
 
 	
 	private void createTreeModel() {		
-		
-//		GraphConstants.setAutoSize(this.rootItem.getAttributes(), true);
-//		GraphLayoutCache cache = this.graph.getGraphLayoutCache();		
-//		cache.insert(this.rootItem);
-		
 		this.treeModel = new NonRootGraphTreeModel(this.graph.getModel(), this.direct);
 		this.tree = new JTree(this.treeModel);
 		
@@ -1363,60 +1196,6 @@ public class JGraphText implements GraphSelectionListener {
 		});
 	}
 
-	//
-	// PopupMenu
-	//
-//	public JPopupMenu createPopupMenu(final Point pt, final Object cell) {
-//		JPopupMenu menu = new JPopupMenu();
-//		if (cell != null) {
-//			// Edit
-//			menu.add(new AbstractAction("Edit") {
-//				public void actionPerformed(ActionEvent e) {
-//					graph.startEditingAtCell(cell);
-//				}
-//			});
-//		}
-//		// Remove
-//		if (!graph.isSelectionEmpty()) {
-//			menu.addSeparator();
-//			menu.add(new AbstractAction("Remove") {
-//				public void actionPerformed(ActionEvent e) {
-//					remove.actionPerformed(e);
-//				}
-//			});
-//		}
-//		menu.addSeparator();
-//		// Insert
-//		menu.add(new AbstractAction("Insert") {
-//			public void actionPerformed(ActionEvent ev) {
-////				insert(pt);
-//			}
-//		});
-//		return menu;
-//	}
-	
-//	public static void main(String[] args) {
-//
-//		JGraphText text = new JGraphText();
-////		JFrame frame = new JFrame("JGraphText");
-////		frame.getContentPane().add(text.getPanel());
-////		frame.setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-////		frame.pack();
-////		
-////		GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
-////		GraphicsDevice gs = ge.getDefaultScreenDevice();
-////		DisplayMode[] dmodes = gs.getDisplayModes();
-////		
-////		frame.setSize(3 * dmodes[0].getWidth() / 4, 3 * dmodes[0].getHeight() / 4);
-////		frame.setVisible(true);
-//		
-//		text.openFrames();
-//		
-//
-//	
-//	}
-	
-	
 	private DefaultGraphCell createVertex(	final String name,
 	                                      	final Object object,
 	                                      	final double x,
@@ -1464,43 +1243,6 @@ public class JGraphText implements GraphSelectionListener {
 		return cell;
 	}
 	
-	private DefaultGraphCell createVertex(String name, double x,
-			double y, double w, double h, Color bg, boolean raised) {
-
-		
-		// Create vertex with the given name
-		DefaultGraphCell cell = new DefaultGraphCell(name);
-
-		// Set bounds
-		GraphConstants.setBounds(cell.getAttributes(), 
-			new Rectangle2D.Double(x, y, w, h));
-
-		GraphConstants.setAutoSize(cell.getAttributes(), true);
-
-		// Set fill color
-		if (bg != null) {
-			GraphConstants.setGradientColor(cell.getAttributes(), bg);
-			GraphConstants.setOpaque(cell.getAttributes(), true);
-		}
-
-		// Set raised border
-		if (raised) {
-			GraphConstants.setBorder(cell.getAttributes(), BorderFactory
-					.createRaisedBevelBorder());
-		} else {
-			// Set black border
-			GraphConstants.setBorderColor(cell.getAttributes(), Color.BLACK);
-		}
-		
-		// Add a Port
-		MPort port = new MPort("port:" + name);
-		cell.add(port);
-		return cell;
-	}
-
-	//
-	// Custom MarqueeHandler
-
 	// MarqueeHandler that Connects Vertices and Displays PopupMenus
 	public class MyMarqueeHandler extends BasicMarqueeHandler {
 
@@ -1549,12 +1291,6 @@ public class JGraphText implements GraphSelectionListener {
 						} 
 					}
 				}
-				
-//				// Create PopupMenu for the Cell 
-//				JPopupMenu menu = createPopupMenu(e.getPoint(), cell);
-//				// Display PopupMenu
-//				menu.show(graph, e.getX(), e.getY());
-//				// Else if in ConnectMode and Remembered Port is Valid
 			} else if (this.port != null && JGraphText.this.graph.isPortsVisible()) {
 				// Remember Start Location
 				this.start = JGraphText.this.graph.toScreen(this.port.getLocation(null));
@@ -1617,6 +1353,7 @@ public class JGraphText implements GraphSelectionListener {
 		}
 
 		// Connect the First Port and the Current Port in the Graph or Repaint
+		@Override
 		public void mouseReleased(MouseEvent e) {
 //			System.out.println("MyMarqueeHandler.mouseReleased()");
 			// If Valid Event, Current and First Port
@@ -1653,6 +1390,7 @@ public class JGraphText implements GraphSelectionListener {
 		}
 
 		// Show Special Cursor if Over Port
+		@Override
 		public void mouseMoved(MouseEvent e) {
 			// Check Mode and Find Port
 			if (e != null && getSourcePortAt(e.getPoint()) != null
@@ -1715,7 +1453,14 @@ public class JGraphText implements GraphSelectionListener {
 	}
 
 	
-	public final void setPerspective(Perspective perspective) {
+	public final void setPerspective(final Perspective perspective) {
+		assert perspective != null;		
 		this.perspective = perspective;
+		try {
+			this.arrange();
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
 	}
 }

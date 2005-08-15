@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.8 2005/08/10 14:02:25 bob Exp $
+ * $Id: ARMBeanFactory.java,v 1.9 2005/08/15 14:20:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,16 @@ import com.syrus.AMFICOM.general.Identifier;
 
 
 
+
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class ARMBeanFactory extends AbstractBeanFactory {
+	
+	public static final String ARM_CODENAME = "ARM";
 	
 	private static ARMBeanFactory instance;
 	
@@ -44,18 +47,18 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 
 	@Override
 	public AbstractBean createBean(Perspective perspective) {
-		AbstractBean bean = new NonStorableBean();
-		
-		bean.setValidator(this.getValidator());
-		bean.setCodeName("ARM");
-		bean.setName("ARM" + (++this.count));
-		
-		return bean;
+		return this.createBean(ARM_CODENAME + this.count);
 	}
 	
 	@Override
-	public AbstractBean createBean(Identifier identifier) {
-		throw new UnsupportedOperationException();
+	public AbstractBean createBean(final String codename) {
+		++super.count;
+		AbstractBean bean = new NonStorableBean();
+		bean.setValidator(this.getValidator());
+		bean.setCodeName(codename);
+		bean.setId(Identifier.VOID_IDENTIFIER);
+		
+		return bean;
 	}
 	
 	private Validator getValidator() {
@@ -70,8 +73,8 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 						+ targetBean.getName());
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getCodeName().equals("ARM") &&
-						targetBean.getCodeName().equals("Net");
+						sourceBean.getCodeName().startsWith(ARM_CODENAME) &&
+						targetBean.getCodeName().startsWith(NetBeanFactory.NET_CODENAME);
 				}
 			};
 		}

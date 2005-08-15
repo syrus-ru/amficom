@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.9 2005/08/10 14:02:25 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.10 2005/08/15 14:20:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,12 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
 
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -52,14 +53,13 @@ public class DomainBeanFactory extends TabledBeanFactory {
 		return this.createBean(domain.getId());
 	}
 	
-
 	@Override
-	public AbstractBean createBean(Identifier identifier) {
+	protected AbstractBean createBean(final Identifier id) {
 		DomainBean bean = new DomainBean();
 		
-		bean.setCodeName("Domain");
+		bean.setCodeName(id.getIdentifierString());
 		bean.setValidator(this.getValidator());
-		bean.setId(identifier);		
+		bean.setId(id);		
 		bean.table = super.getTable(bean, 
 			DomainBeanWrapper.getInstance(),
 			new String[] {
@@ -73,7 +73,7 @@ public class DomainBeanFactory extends TabledBeanFactory {
 		
 		return bean;
 	}
-	
+
 	private Validator getValidator() {
 		if (this.validator == null) {
 			this.validator = new Validator() {
@@ -82,9 +82,9 @@ public class DomainBeanFactory extends TabledBeanFactory {
 										AbstractBean targetBean) {
 					return sourceBean != null && 
 						targetBean != null && 
-						(sourceBean.getCodeName().equals("Domain") ||
-						 sourceBean.getCodeName().equals("Net")) &&
-						targetBean.getCodeName().equals("Domain");
+						(sourceBean.getCodeName().startsWith(ObjectEntities.DOMAIN) ||
+						 sourceBean.getCodeName().startsWith(NetBeanFactory.NET_CODENAME) &&
+						targetBean.getCodeName().startsWith(ObjectEntities.DOMAIN));
 				}
 			};
 		}

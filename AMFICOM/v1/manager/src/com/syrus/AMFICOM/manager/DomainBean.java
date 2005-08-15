@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.4 2005/08/11 13:04:42 bob Exp $
+ * $Id: DomainBean.java,v 1.5 2005/08/15 14:20:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,11 +25,12 @@ import org.jgraph.graph.Port;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/11 13:04:42 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -67,7 +68,7 @@ public class DomainBean extends Bean {
 						MPort port3 = (MPort) port2;
 						AbstractBean bean2 = port3.getBean();
 						
-						if (bean2 == null || !bean2.getCodeName().equals("Net")) {
+						if (bean2 == null || !bean2.getCodeName().startsWith(NetBeanFactory.NET_CODENAME)) {
 							JOptionPane.showMessageDialog(popupMenu, 
 								LangModelManager.getString("Error.DomainContainsNotOnlyNetwork"), 
 								LangModelManager.getString("Error"),
@@ -96,7 +97,12 @@ public class DomainBean extends Bean {
 					
 					graph.showOnlyDescendants(cell2);
 					
-					graph.showOnly(new String[] {"Net", "User", "ARM", "RTU", "Server", "MCM"});
+					graph.showOnly(new String[] {NetBeanFactory.NET_CODENAME, 
+							ObjectEntities.SYSTEMUSER, 
+							ARMBeanFactory.ARM_CODENAME, 
+							ObjectEntities.KIS, 
+							ObjectEntities.SERVER, 
+							ObjectEntities.MCM});
 					
 					graph.setPerspective(new DomainPerpective(DomainBean.this));
 				}
@@ -124,7 +130,6 @@ public class DomainBean extends Bean {
 		if (result) {
 			DomainBean domainBean = (DomainBean) targetBean;
 			this.domain.setDomainId(domainBean.getId());
-//			System.out.println("DomainBean.isTargetValid() | set " + this.id + ", parent " + domainBean.getId());
 		}
 		return result;
 	}

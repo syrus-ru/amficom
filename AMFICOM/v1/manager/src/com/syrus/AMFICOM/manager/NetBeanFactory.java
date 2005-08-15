@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.9 2005/08/10 14:02:25 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.10 2005/08/15 14:20:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,16 +9,19 @@
 package com.syrus.AMFICOM.manager;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class NetBeanFactory extends AbstractBeanFactory {
+	
+	public static final String NET_CODENAME = "Net";
 	
 	private static NetBeanFactory instance;
 	
@@ -43,18 +46,18 @@ public class NetBeanFactory extends AbstractBeanFactory {
 	}
 
 	@Override
-	public AbstractBean createBean(Perspective perspective) {		
-		AbstractBean bean = new NonStorableBean();
-		bean.setName("Net" + (++super.count));
-		bean.setCodeName("Net");
-		bean.setValidator(this.getValidator());
-		
-		return bean;
+	public AbstractBean createBean(Perspective perspective) {
+		return this.createBean(NET_CODENAME + super.count);
 	}
 
 	@Override
-	public AbstractBean createBean(Identifier identifier) {
-		throw new UnsupportedOperationException();
+	public AbstractBean createBean(final String codename) {
+		++super.count;
+		AbstractBean bean = new NonStorableBean();
+		bean.setCodeName(codename);
+		bean.setValidator(this.getValidator());
+		bean.setId(Identifier.VOID_IDENTIFIER);
+		return bean;
 	}
 	
 	private final Validator getValidator() {
@@ -66,8 +69,8 @@ public class NetBeanFactory extends AbstractBeanFactory {
 						
 						return sourceBean != null && 
 							targetBean != null && 
-							sourceBean.getCodeName().equals("Net") &&
-							targetBean.getCodeName().equals("Domain");
+							sourceBean.getCodeName().startsWith(NET_CODENAME) &&
+							targetBean.getCodeName().startsWith(ObjectEntities.DOMAIN);
 					}
 				};
 		}

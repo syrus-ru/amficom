@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBeanFactory.java,v 1.6 2005/08/10 14:02:25 bob Exp $
+ * $Id: ServerBeanFactory.java,v 1.7 2005/08/15 14:20:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -67,10 +67,10 @@ public class ServerBeanFactory extends TabledBeanFactory {
 	}
 	
 	@Override
-	public AbstractBean createBean(Identifier identifier) {
+	protected AbstractBean createBean(Identifier identifier) {
 		ServerBean bean = new ServerBean();
 		bean.setId(identifier);
-		bean.setCodeName("Server");
+		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());
 		bean.table = super.getTable(bean, 
 			ServerBeanWrapper.getInstance(),
@@ -95,8 +95,8 @@ public class ServerBeanFactory extends TabledBeanFactory {
 										AbstractBean targetBean) {
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getCodeName().equals("Server") &&
-						targetBean.getCodeName().equals("Net");
+						sourceBean.getCodeName().startsWith(ObjectEntities.SERVER) &&
+						targetBean.getCodeName().startsWith(NetBeanFactory.NET_CODENAME);
 				}
 			};
 		}

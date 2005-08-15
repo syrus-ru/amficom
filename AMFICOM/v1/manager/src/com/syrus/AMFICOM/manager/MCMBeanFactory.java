@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanFactory.java,v 1.8 2005/08/12 06:46:31 bob Exp $
+ * $Id: MCMBeanFactory.java,v 1.9 2005/08/15 14:20:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/12 06:46:31 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -78,7 +78,7 @@ public class MCMBeanFactory extends TabledBeanFactory {
 	@Override
 	public AbstractBean createBean(Identifier identifier) {
 		final MCMBean bean = new MCMBean();
-		bean.setCodeName("MCM");
+		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());
 		bean.setId(identifier);			
 		
@@ -124,8 +124,8 @@ public class MCMBeanFactory extends TabledBeanFactory {
 										AbstractBean targetBean) {
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getCodeName().equals("MCM") &&
-						targetBean.getCodeName().equals("Net");
+						sourceBean.getCodeName().startsWith(ObjectEntities.MCM) &&
+						targetBean.getCodeName().startsWith(NetBeanFactory.NET_CODENAME);
 				}
 			};
 		}

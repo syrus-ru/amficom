@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractBeanFactory.java,v 1.5 2005/08/10 14:02:25 bob Exp $
+* $Id: AbstractBeanFactory.java,v 1.6 2005/08/15 14:20:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -57,7 +57,7 @@ public abstract class AbstractBeanFactory {
 	public abstract AbstractBean createBean(Perspective perspective) 
 	throws IllegalObjectEntityException, CreateObjectException;	
 
-	public abstract AbstractBean createBean(Identifier identifier);	
+	public abstract AbstractBean createBean(String codename);	
 
 	
 	public final Icon getIcon() {

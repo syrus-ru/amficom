@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.10 2005/08/12 06:46:31 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.11 2005/08/15 14:20:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,10 +23,11 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/12 06:46:31 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -73,7 +74,7 @@ public class RTUBeanFactory extends TabledBeanFactory {
 	@Override
 	public AbstractBean createBean(Identifier identifier) {
 		final RTUBean bean = new RTUBean();
-		bean.setCodeName("RTU");
+		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());
 		bean.setId(identifier);	
 		
@@ -110,8 +111,8 @@ public class RTUBeanFactory extends TabledBeanFactory {
 										AbstractBean targetBean) {
 					return sourceBean != null && 
 						targetBean != null && 
-						sourceBean.getCodeName().equals("RTU") &&
-						targetBean.getCodeName().equals("Net");
+						sourceBean.getCodeName().startsWith(ObjectEntities.KIS) &&
+						targetBean.getCodeName().startsWith(NetBeanFactory.NET_CODENAME);
 				}
 			};
 		}

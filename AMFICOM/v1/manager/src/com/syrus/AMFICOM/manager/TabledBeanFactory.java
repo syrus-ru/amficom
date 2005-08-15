@@ -1,5 +1,5 @@
 /*-
-* $Id: TabledBeanFactory.java,v 1.1 2005/08/01 11:32:03 bob Exp $
+* $Id: TabledBeanFactory.java,v 1.2 2005/08/15 14:20:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,11 +18,12 @@ import javax.swing.JScrollPane;
 
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -76,5 +77,12 @@ public abstract class TabledBeanFactory extends AbstractBeanFactory {
 		
 		return this.table;
 	}
+	
+	@Override
+	public AbstractBean createBean(final String codename) {
+		return this.createBean(new Identifier(codename));
+	}
+	
+	protected abstract AbstractBean createBean(final Identifier id);
 }
 

@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.1 2005/08/10 14:01:51 bob Exp $
+* $Id: DomainPerpective.java,v 1.2 2005/08/15 14:20:05 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/10 14:01:51 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -30,6 +30,10 @@ public class DomainPerpective implements Perspective {
 	
 	public DomainPerpective(final DomainBean domainBean) {
 		this.domainBean = domainBean;
+	}
+	
+	public String getPerspectiveName() {
+		return this.getDomainId().getIdentifierString();
 	}
 	
 	public final Identifier getDomainId() {

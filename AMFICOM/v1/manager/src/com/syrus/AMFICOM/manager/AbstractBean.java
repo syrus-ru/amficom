@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.11 2005/08/02 14:42:06 bob Exp $
+ * $Id: AbstractBean.java,v 1.12 2005/08/15 14:20:05 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/02 14:42:06 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/15 14:20:05 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 public abstract class AbstractBean {
 
 	protected Identifier	id;
+	
 	protected Validator		validator;
 
 	protected String		codeName;
