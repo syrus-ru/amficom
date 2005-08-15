@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainToolBar.java,v 1.10 2005/08/02 19:12:24 arseniy Exp $
+ * $Id: AbstractMainToolBar.java,v 1.11 2005/08/15 08:56:10 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/02 19:12:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/08/15 08:56:10 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -55,8 +55,13 @@ public abstract class AbstractMainToolBar extends JToolBar {
 				String s = jb.getName();
 				Command command = model.getCommand(s);
 				Log.debugMessage("AbstractMainToolBar$ActionListener.actionPerformed | command " + (command != null ? '[' + command.getClass().getName() + ']' : "'null'"), Level.FINEST);
-				command.execute();
-				this.executed = false;
+				try {
+					command.execute();
+				} catch (Exception ex) {
+					ex.printStackTrace();
+				} finally {
+					this.executed = false;
+				}
 			}
 		};
 		
