@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.155 2005/08/15 10:42:52 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.156 2005/08/15 12:41:13 max Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.155 $, $Date: 2005/08/15 10:42:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.156 $, $Date: 2005/08/15 12:41:13 $
+ * @author $Author: max $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
  * (т. е. объектами, идентификаторы которых помещены в DELETED_IDS_MAP). Проверять так:
@@ -159,7 +159,14 @@ public final class StorableObjectPool {
 			if (levelEntitySavingObjects == null) {
 				return false;
 			}
-			return levelEntitySavingObjects.remove(storableObject);
+			final boolean removed = levelEntitySavingObjects.remove(storableObject);
+			if (levelEntitySavingObjects.isEmpty()) {
+				levelSavingObjectsMap.remove(entityKey);
+			}
+			if (levelSavingObjectsMap.isEmpty()) {
+				this.objectsMap.remove(dependencyKey);
+			}
+			return removed;
 		}
 
 		void clear() {
