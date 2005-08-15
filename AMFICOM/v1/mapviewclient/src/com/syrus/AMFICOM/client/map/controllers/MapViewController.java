@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.44 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: MapViewController.java,v 1.45 2005/08/15 14:29:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -62,8 +62,8 @@ import com.syrus.util.Log;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: arseniy $
- * @version $Revision: 1.44 $, $Date: 2005/08/12 14:49:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.45 $, $Date: 2005/08/15 14:29:56 $
  * @module mapviewclient
  */
 public final class MapViewController {
@@ -544,11 +544,11 @@ public final class MapViewController {
 	 * @param node элемент карты
 	 * @param se элемент схемы
 	 */
-	public void unplaceElement(SiteNode node, SchemeElement se) {
-		UnPlaceSchemeElementCommand cmd = new UnPlaceSchemeElementCommand(node, se);
-		cmd.setNetMapViewer(this.netMapViewer);
-		cmd.execute();
-	}
+//	public void unplaceElement(SiteNode node, SchemeElement se) {
+//		UnPlaceSchemeElementCommand cmd = new UnPlaceSchemeElementCommand(node, se);
+//		cmd.setNetMapViewer(this.netMapViewer);
+//		cmd.execute();
+//	}
 
 	/**
 	 * Разместить кабель на топологической схеме.
