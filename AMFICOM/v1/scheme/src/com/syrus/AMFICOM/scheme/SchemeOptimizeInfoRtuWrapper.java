@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtuWrapper.java,v 1.6 2005/08/05 11:20:03 bass Exp $
+ * $Id: SchemeOptimizeInfoRtuWrapper.java,v 1.7 2005/08/15 15:19:38 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,17 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/08/05 11:20:03 $
+ * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2005/08/15 15:19:38 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper<SchemeOptimizeInfoRtu> {
@@ -27,11 +30,18 @@ public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper<Sc
 
 	private static SchemeOptimizeInfoRtuWrapper instance;
 
-	/**
-	 * @see com.syrus.util.Wrapper#getKeys()
-	 */
+	private final List<String> keys;
+	
+	private SchemeOptimizeInfoRtuWrapper() {
+		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] {
+				COLUMN_NAME,
+				COLUMN_PRICE,
+				COLUMN_RANGE,
+				COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID}));
+	}
+	
 	public List<String> getKeys() {
-		throw new UnsupportedOperationException();
+		return this.keys;
 	}
 
 	/**
@@ -39,7 +49,7 @@ public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper<Sc
 	 * @see com.syrus.util.Wrapper#getName(java.lang.String)
 	 */
 	public String getName(String key) {
-		throw new UnsupportedOperationException();
+		return key;
 	}
 
 	/**
@@ -48,15 +58,25 @@ public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper<Sc
 	 */
 	@Override
 	public Class getPropertyClass(String key) {
-		throw new UnsupportedOperationException();
+		final Class clazz = super.getPropertyClass(key);
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME)) {
+			return String.class;
+		} else if (key.equals(COLUMN_PRICE)) {
+			return Integer.class;
+		} else if (key.equals(COLUMN_RANGE)) {
+			return Float.class;
+		} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
+			return Identifier.class;
+		}
+		return null;
 	}
 
-	/**
-	 * @param key
-	 * @see com.syrus.util.Wrapper#getPropertyValue(java.lang.String)
-	 */
 	public Object getPropertyValue(String key) {
-		throw new UnsupportedOperationException();
+		//there is no property
+		return null;
 	}
 
 	/**
@@ -67,7 +87,7 @@ public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper<Sc
 	 */
 	public void setPropertyValue(String key, Object objectKey,
 			Object objectValue) {
-		throw new UnsupportedOperationException();
+		//there is no property
 	}
 
 	/**
@@ -75,27 +95,54 @@ public final class SchemeOptimizeInfoRtuWrapper extends StorableObjectWrapper<Sc
 	 * @see com.syrus.util.Wrapper#isEditable(java.lang.String)
 	 */
 	public boolean isEditable(String key) {
-		throw new UnsupportedOperationException();
+		return false;
 	}
 
 	/**
-	 * @param object
+	 * @param schemeOptimizeInfoRtu
 	 * @param key
 	 * @param value
 	 * @see com.syrus.util.Wrapper#setValue(java.lang.Object, java.lang.String, java.lang.Object)
 	 */
 	@Override
-	public void setValue(SchemeOptimizeInfoRtu object, String key, Object value) {
-		throw new UnsupportedOperationException();
+	@SuppressWarnings("boxing")
+	public void setValue(SchemeOptimizeInfoRtu schemeOptimizeInfoRtu, String key, Object value) {
+		if (schemeOptimizeInfoRtu != null) {
+			if (key.equals(COLUMN_NAME)) {
+				schemeOptimizeInfoRtu.setName((String) value);
+			} else if (key.equals(COLUMN_PRICE)) {
+				schemeOptimizeInfoRtu.setPriceUsd((Integer) value);
+			} else if (key.equals(COLUMN_RANGE)) {
+				schemeOptimizeInfoRtu.setRangeDb((Float) value);
+			} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
+				schemeOptimizeInfoRtu.setParentSchemeOptimizeInfoId((Identifier) value);
+			}
+		}
 	}
 
 	/**
-	 * @param object
+	 * @param schemeOptimizeInfoRtu
 	 * @param key
 	 */
 	@Override
-	public Object getValue(final SchemeOptimizeInfoRtu object, String key) {
-		throw new UnsupportedOperationException();
+	@SuppressWarnings("boxing")
+	public Object getValue(final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu, String key) {
+		final Object value = super.getValue(schemeOptimizeInfoRtu, key);
+		if (value != null) {
+			return value;
+		}
+		if (schemeOptimizeInfoRtu != null) {
+			if (key.equals(COLUMN_NAME)) {
+				return schemeOptimizeInfoRtu.getName();
+			} else if (key.equals(COLUMN_PRICE)) {
+				return schemeOptimizeInfoRtu.getPriceUsd();
+			} else if (key.equals(COLUMN_RANGE)) {
+				return schemeOptimizeInfoRtu.getRangeDb();
+			} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
+				return schemeOptimizeInfoRtu.getParentSchemeOptimizeInfoId();
+			}
+		}
+		return null;
 	}
 
 	public static SchemeOptimizeInfoRtuWrapper getInstance() {
