@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.71 2005/08/11 08:33:54 arseniy Exp $
+ * $Id: SchemePath.java,v 1.72 2005/08/16 12:02:42 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
@@ -71,8 +72,8 @@ import com.syrus.util.Log;
 /**
  * #16 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.71 $, $Date: 2005/08/11 08:33:54 $
+ * @author $Author: max $
+ * @version $Revision: 1.72 $, $Date: 2005/08/16 12:02:42 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -779,5 +780,22 @@ public final class SchemePath extends StorableObject
 				break;
 			}
 		}
+	}
+
+	void setTransmissionPathId(Identifier transmissionPathId) {
+//		TODO: inroduce additional sanity checks
+		assert transmissionPathId != null : NON_NULL_EXPECTED;
+		assert transmissionPathId.isVoid() || transmissionPathId.getMajor() == TRANSPATH_CODE;
+		this.transmissionPathId = transmissionPathId;
+		super.markAsChanged();
+	}
+
+	void setParentSchemeMonitoringSolutionId(
+			Identifier parentSchemeMonitoringSolutionId) {
+//		TODO: inroduce additional sanity checks
+		assert parentSchemeMonitoringSolutionId != null : NON_NULL_EXPECTED;
+		assert parentSchemeMonitoringSolutionId.isVoid() || parentSchemeMonitoringSolutionId.getMajor() == SCHEMEMONITORINGSOLUTION_CODE;
+		this.parentSchemeMonitoringSolutionId = parentSchemeMonitoringSolutionId;
+		super.markAsChanged();
 	}
 }
