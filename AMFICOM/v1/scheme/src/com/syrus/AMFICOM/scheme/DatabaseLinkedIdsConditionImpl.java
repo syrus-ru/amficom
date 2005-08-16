@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.29 2005/08/11 13:32:46 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.30 2005/08/16 07:39:52 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
@@ -42,7 +43,7 @@ import com.syrus.AMFICOM.map.SiteNodeWrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.29 $, $Date: 2005/08/11 13:32:46 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/16 07:39:52 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -71,6 +72,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					return super.getQuery(SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
 				case SCHEMEPROTOGROUP_CODE:
 					return super.getQuery(SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
+				case EQUIPMENT_TYPE_CODE:
+					return super.getQuery(SchemeProtoElementWrapper.COLUMN_EQUIPMENT_TYPE_ID);
 				default:
 					throw super.newExceptionLinkedEntityIllegal();
 				}
