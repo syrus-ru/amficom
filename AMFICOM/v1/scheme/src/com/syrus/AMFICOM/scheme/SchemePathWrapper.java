@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathWrapper.java,v 1.10 2005/08/05 11:20:03 bass Exp $
+ * $Id: SchemePathWrapper.java,v 1.11 2005/08/16 12:03:21 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,55 +7,105 @@
  */
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/05 11:20:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/08/16 12:03:21 $
+ * @author $Author: max $
  * @module scheme
  */
 public final class SchemePathWrapper extends StorableObjectWrapper<SchemePath> {
 	public static final String COLUMN_TRANSMISSION_PATH_ID = "transmission_path_id";
 
 	public static final String COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID = "prnt_schm_mntrng_sltn_id";
-
+	
+	private List<String> keys;
+	
+	private SchemePathWrapper() {
+		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] {
+				COLUMN_NAME,
+				COLUMN_DESCRIPTION,
+				COLUMN_TRANSMISSION_PATH_ID,
+				COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID}));
+	}
+	
 	private static SchemePathWrapper instance;
 
 	public List<String> getKeys() {
-		throw new UnsupportedOperationException("SchemePathWrapper | not implemented yet");
+		return this.keys;
 	}
 
 	public String getName(String key) {
-		throw new UnsupportedOperationException("SchemePathWrapper | not implemented yet");
+		return key;
 	}
 
 	@Override
 	public Class getPropertyClass(String key) {
-		throw new UnsupportedOperationException("SchemePathWrapper | not implemented yet");
+		final Class clazz = super.getPropertyClass(key);
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME) 
+				|| key.equals(COLUMN_DESCRIPTION)) {
+			return String.class;
+		} else if (key.equals(COLUMN_TRANSMISSION_PATH_ID)
+				|| key.equals(COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID)) {
+			return Identifier.class;
+		}
+		return null;
 	}
 
 	public Object getPropertyValue(String key) {
-		throw new UnsupportedOperationException("SchemePathWrapper | not implemented yet");
+//		there is no property
+		return null;
 	}
 
 	public void setPropertyValue(String key, Object objectKey, Object objectValue) {
-		throw new UnsupportedOperationException("SchemePathWrapper | not implemented yet");
+//		there is no property
 	}
 
 	@Override
-	public Object getValue(SchemePath object, String key) {
-		throw new UnsupportedOperationException("SchemePathWrapper | not implemented yet");
+	public Object getValue(SchemePath schemePath, String key) {
+		final Object value = super.getValue(schemePath, key);
+		if (value != null) {
+			return value;
+		}
+		if (schemePath != null) {
+			if (key.equals(COLUMN_NAME)) {
+				return schemePath.getName();
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
+				return schemePath.getDescription();
+			} else if (key.equals(COLUMN_TRANSMISSION_PATH_ID)) {
+				return schemePath.getTransmissionPathId();
+			} else if (key.equals(COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID)) {
+				return schemePath.getParentSchemeMonitoringSolutionId();
+			}
+		}
+		return null;
 	}
 
 	public boolean isEditable(String key) {
-		throw new UnsupportedOperationException("SchemePathWrapper | not implemented yet");
+		return false;
 	}
 
 	@Override
-	public void setValue(SchemePath object, String key, Object value) {
-		throw new UnsupportedOperationException("SchemePathWrapper | not implemented yet");
+	public void setValue(SchemePath schemePath, String key, Object value) {
+		if (schemePath != null) {
+			if (key.equals(COLUMN_NAME)) {
+				schemePath.setName((String) value);
+			} else if (key.equals(COLUMN_DESCRIPTION)) {
+				schemePath.setDescription((String) value);
+			} else if (key.equals(COLUMN_TRANSMISSION_PATH_ID)) {
+				schemePath.setTransmissionPathId((Identifier) value);
+			} else if (key.equals(COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID)) {
+				schemePath.setParentSchemeMonitoringSolutionId((Identifier) value);
+			}
+		}
 	}
 
 	public static SchemePathWrapper getInstance() {

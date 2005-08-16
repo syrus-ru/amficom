@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.6 2005/08/05 11:20:03 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.7 2005/08/16 12:01:39 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,17 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import java.util.Arrays;
+import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/08/05 11:20:03 $
+ * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2005/08/16 12:01:39 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper<SchemeOptimizeInfoSwitch> {
@@ -27,11 +30,18 @@ public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper
 
 	private static SchemeOptimizeInfoSwitchWrapper instance;
 
-	/**
-	 * @see com.syrus.util.Wrapper#getKeys()
-	 */
+	private final List<String> keys;
+	
+	private SchemeOptimizeInfoSwitchWrapper() {
+		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] {
+				COLUMN_NAME,
+				COLUMN_PRICE,
+				COLUMN_NO_OF_PORTS,
+				COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID}));
+	}
+	
 	public List<String> getKeys() {
-		throw new UnsupportedOperationException();
+		return this.keys;
 	}
 
 	/**
@@ -39,7 +49,7 @@ public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper
 	 * @see com.syrus.util.Wrapper#getName(java.lang.String)
 	 */
 	public String getName(String key) {
-		throw new UnsupportedOperationException();
+		return key;
 	}
 
 	/**
@@ -48,7 +58,20 @@ public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper
 	 */
 	@Override
 	public Class getPropertyClass(String key) {
-		throw new UnsupportedOperationException();
+		final Class clazz = super.getPropertyClass(key);
+		if (clazz != null) {
+			return clazz;
+		}
+		if (key.equals(COLUMN_NAME)) {
+			return String.class;
+		} else if (key.equals(COLUMN_PRICE)) {
+			return Integer.class;
+		} else if (key.equals(COLUMN_NO_OF_PORTS)) {
+			return Byte.class;
+		} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
+			return Identifier.class;
+		}
+		return null;
 	}
 
 	/**
@@ -56,7 +79,8 @@ public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper
 	 * @see com.syrus.util.Wrapper#getPropertyValue(java.lang.String)
 	 */
 	public Object getPropertyValue(String key) {
-		throw new UnsupportedOperationException();
+		//there is no property
+		return null;
 	}
 
 	/**
@@ -67,7 +91,7 @@ public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper
 	 */
 	public void setPropertyValue(String key, Object objectKey,
 			Object objectValue) {
-		throw new UnsupportedOperationException();
+		//there is no property
 	}
 
 	/**
@@ -75,27 +99,54 @@ public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper
 	 * @see com.syrus.util.Wrapper#isEditable(java.lang.String)
 	 */
 	public boolean isEditable(String key) {
-		throw new UnsupportedOperationException();
+		return false;
 	}
 
 	/**
-	 * @param object
+	 * @param schemeOptimizeInfoSwitch
 	 * @param key
 	 * @param value
 	 * @see com.syrus.util.Wrapper#setValue(java.lang.Object, java.lang.String, java.lang.Object)
 	 */
 	@Override
-	public void setValue(SchemeOptimizeInfoSwitch object, String key, Object value) {
-		throw new UnsupportedOperationException();
+	@SuppressWarnings("boxing")
+	public void setValue(SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch, String key, Object value) {
+		if (schemeOptimizeInfoSwitch != null) {
+			if (key.equals(COLUMN_NAME)) {
+				schemeOptimizeInfoSwitch.setName((String) value);
+			} else if (key.equals(COLUMN_PRICE)) {
+				schemeOptimizeInfoSwitch.setPriceUsd((Integer) value);
+			} else if (key.equals(COLUMN_NO_OF_PORTS)) {
+				schemeOptimizeInfoSwitch.setNoOfPorts((Byte) value);
+			} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
+				schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfoId((Identifier) value);
+			}
+		}
 	}
 
 	/**
-	 * @param object
+	 * @param schemeOptimizeInfoSwitch
 	 * @param key
 	 */
 	@Override
-	public Object getValue(SchemeOptimizeInfoSwitch object, String key) {
-		throw new UnsupportedOperationException();
+	@SuppressWarnings("boxing")
+	public Object getValue(SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch, String key) {
+		final Object value = super.getValue(schemeOptimizeInfoSwitch, key);
+		if (value != null) {
+			return value;
+		}
+		if (schemeOptimizeInfoSwitch != null) {
+			if (key.equals(COLUMN_NAME)) {
+				return schemeOptimizeInfoSwitch.getName();
+			} else if (key.equals(COLUMN_PRICE)) {
+				return schemeOptimizeInfoSwitch.getPriceUsd();
+			} else if (key.equals(COLUMN_NO_OF_PORTS)) {
+				return schemeOptimizeInfoSwitch.getNoOfPorts();
+			} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
+				return schemeOptimizeInfoSwitch.getParentSchemeOptimizeInfoId();
+			}
+		}
+		return null;
 	}
 
 	public static SchemeOptimizeInfoSwitchWrapper getInstance() {
