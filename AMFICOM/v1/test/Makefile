@@ -29,8 +29,6 @@ all:	.mach
 		$(SRCDIR)/$(subst .,/,$(TEST_PACKAGE))/$(TEST_CLASS)$(JAVA_SUFFIX)
 	touch $@
 
-$(CLASSDIR):
-	mkdir -p $@
 
 .PHONY:	clean
 clean:	cleanmach
