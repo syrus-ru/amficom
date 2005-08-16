@@ -1,5 +1,5 @@
 /*
- * $Id: ImportUIDMapDatabase.java,v 1.2 2005/08/16 09:27:02 arseniy Exp $
+ * $Id: ImportUIDMapDatabase.java,v 1.3 2005/08/16 11:54:03 krupenn Exp $
  *
  * Syrus Systems
  * Научно-Технический Центр
@@ -20,8 +20,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $
+ * @author $Author: krupenn $
  * @author krupenn
  * @module map
  */
@@ -34,10 +34,10 @@ public final class ImportUIDMapDatabase {
 
 	private static StringBuffer getWhereClause(final String importType, final String uid) {
 		return new StringBuffer(COLUMN_IMPORT_KIND + StorableObjectDatabase.EQUALS
-				+ StorableObjectDatabase.APOSTROPHE + DatabaseDate.toQuerySubString(importType) + StorableObjectDatabase.APOSTROPHE
+				+ StorableObjectDatabase.APOSTROPHE + importType + StorableObjectDatabase.APOSTROPHE
 				+ StorableObjectDatabase.SQL_AND
 				+ COLUMN_FOREIGN_UID + StorableObjectDatabase.EQUALS
-				+ StorableObjectDatabase.APOSTROPHE + DatabaseDate.toQuerySubString(uid) + StorableObjectDatabase.APOSTROPHE);
+				+ StorableObjectDatabase.APOSTROPHE + uid + StorableObjectDatabase.APOSTROPHE);
 	}
 
 	private static StringBuffer retrieveQuery(final StringBuffer condition) {
