@@ -1,5 +1,5 @@
 /*
- * $Id: ImportUIDMapDatabase.java,v 1.1 2005/08/16 09:02:02 krupenn Exp $
+ * $Id: ImportUIDMapDatabase.java,v 1.2 2005/08/16 09:27:02 arseniy Exp $
  *
  * Syrus Systems
  * Научно-Технический Центр
@@ -20,37 +20,30 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $
+ * @author $Author: arseniy $
  * @author krupenn
  * @module map
  */
 
 public final class ImportUIDMapDatabase {
 	private static final String TABLE_NAME_IMPORT_UID_MAP = "ImportUIDMap";
-	private static final String COLUMN_IMPORT_TYPE = "import_type";
-	private static final String COLUMN_UID = "uid";
+	private static final String COLUMN_IMPORT_KIND = "import_kind";
+	private static final String COLUMN_FOREIGN_UID = "foreign_uid";
 	private static final String COLUMN_ID = "id";
 
 	private static StringBuffer getWhereClause(final String importType, final String uid) {
-		return new StringBuffer(
-				COLUMN_IMPORT_TYPE
-				+ StorableObjectDatabase.EQUALS
-				+ StorableObjectDatabase.APOSTROPHE
-				+ DatabaseDate.toQuerySubString(importType)
-				+ StorableObjectDatabase.APOSTROPHE
+		return new StringBuffer(COLUMN_IMPORT_KIND + StorableObjectDatabase.EQUALS
+				+ StorableObjectDatabase.APOSTROPHE + DatabaseDate.toQuerySubString(importType) + StorableObjectDatabase.APOSTROPHE
 				+ StorableObjectDatabase.SQL_AND
-				+ COLUMN_UID
-				+ StorableObjectDatabase.EQUALS
-				+ StorableObjectDatabase.APOSTROPHE
-				+ DatabaseDate.toQuerySubString(uid)
-				+ StorableObjectDatabase.APOSTROPHE);
+				+ COLUMN_FOREIGN_UID + StorableObjectDatabase.EQUALS
+				+ StorableObjectDatabase.APOSTROPHE + DatabaseDate.toQuerySubString(uid) + StorableObjectDatabase.APOSTROPHE);
 	}
 
 	private static StringBuffer retrieveQuery(final StringBuffer condition) {
 		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_SELECT
-				+ COLUMN_IMPORT_TYPE + StorableObjectDatabase.COMMA
-				+ COLUMN_UID + StorableObjectDatabase.COMMA
+				+ COLUMN_IMPORT_KIND + StorableObjectDatabase.COMMA
+				+ COLUMN_FOREIGN_UID + StorableObjectDatabase.COMMA
 				+ COLUMN_ID
 				+ StorableObjectDatabase.SQL_FROM + TABLE_NAME_IMPORT_UID_MAP);
 
@@ -121,8 +114,8 @@ public final class ImportUIDMapDatabase {
 	public static void insert(final String import_type, String uid, Identifier id) throws CreateObjectException {
 		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_INSERT_INTO + TABLE_NAME_IMPORT_UID_MAP
 				+ StorableObjectDatabase.OPEN_BRACKET
-				+ COLUMN_IMPORT_TYPE + StorableObjectDatabase.COMMA
-				+ COLUMN_UID + StorableObjectDatabase.COMMA
+				+ COLUMN_IMPORT_KIND + StorableObjectDatabase.COMMA
+				+ COLUMN_FOREIGN_UID + StorableObjectDatabase.COMMA
 				+ COLUMN_ID + StorableObjectDatabase.CLOSE_BRACKET 
 				+ StorableObjectDatabase.SQL_VALUES + StorableObjectDatabase.OPEN_BRACKET
 				+ StorableObjectDatabase.APOSTROPHE + DatabaseString.toQuerySubString(import_type) + StorableObjectDatabase.APOSTROPHE + StorableObjectDatabase.COMMA
