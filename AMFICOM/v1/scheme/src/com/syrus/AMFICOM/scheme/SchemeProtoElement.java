@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.75 2005/08/08 14:25:23 arseniy Exp $
+ * $Id: SchemeProtoElement.java,v 1.76 2005/08/16 12:15:15 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -77,8 +77,8 @@ import com.syrus.util.Log;
 /**
  * #02 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.75 $, $Date: 2005/08/08 14:25:23 $
+ * @author $Author: max $
+ * @version $Revision: 1.76 $, $Date: 2005/08/16 12:15:15 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -455,7 +455,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	/**
 	 * @throws CloneNotSupportedException
 	 * @see Object#clone()
-	 * @see SchemeElement#fillProperties(SchemeProtoElement)
 	 */
 	@Override
 	public SchemeProtoElement clone() throws CloneNotSupportedException {
@@ -524,7 +523,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Characterizable#getCharacteristics()
+	 * @see Characterizable#getCharacteristics(boolean usePool)
 	 */
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
 		if (this.characterizableDelegate == null) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.46 2005/08/13 10:59:57 max Exp $
+ * $Id: AbstractSchemeElement.java,v 1.47 2005/08/16 12:12:46 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: max $
- * @version $Revision: 1.46 $, $Date: 2005/08/13 10:59:57 $
+ * @version $Revision: 1.47 $, $Date: 2005/08/16 12:12:46 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -103,7 +103,7 @@ public abstract class AbstractSchemeElement
 	}
 
 	/**
-	 * @see Characterizable#getCharacteristics()
+	 * @see Characterizable#getCharacteristics(boolean)
 	 */
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
 		if (this.characterizableDelegate == null) {

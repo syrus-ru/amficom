@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.69 2005/08/13 11:15:41 max Exp $
+ * $Id: SchemeDevice.java,v 1.70 2005/08/16 12:13:13 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: max $
- * @version $Revision: 1.69 $, $Date: 2005/08/13 11:15:41 $
+ * @version $Revision: 1.70 $, $Date: 2005/08/16 12:13:13 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -368,7 +368,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Characterizable#getCharacteristics()
+	 * @see Characterizable#getCharacteristics(boolean)
 	 */
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
 		if (this.characterizableDelegate == null) {

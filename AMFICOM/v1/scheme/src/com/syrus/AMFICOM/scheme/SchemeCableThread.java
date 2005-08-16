@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.65 2005/08/15 10:28:32 max Exp $
+ * $Id: SchemeCableThread.java,v 1.66 2005/08/16 12:13:00 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: max $
- * @version $Revision: 1.65 $, $Date: 2005/08/15 10:28:32 $
+ * @version $Revision: 1.66 $, $Date: 2005/08/16 12:13:00 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -275,7 +275,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Characterizable#getCharacteristics()
+	 * @see Characterizable#getCharacteristics(boolean)
 	 */
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
 		if (this.characterizableDelegate == null) {
