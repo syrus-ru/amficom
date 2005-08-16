@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.159 2005/08/15 14:49:38 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.160 2005/08/16 09:00:20 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.159 $, $Date: 2005/08/15 14:49:38 $
+ * @version $Revision: 1.160 $, $Date: 2005/08/16 09:00:20 $
  * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -458,12 +458,13 @@ public final class StorableObjectPool {
 						+ " objects: " + Identifier.createStrings(loadedObjects), Log.DEBUGLEVEL10);
 
 				for (final T storableObject : loadedObjects) {
-					storableObjects.add(storableObject);
 					final Identifier id = storableObject.getId();
 //	If locally isConditionTrue == false and remote isConditionTrue == true,
-//	object will be loaded. But it can not replace the local object in pool.
+//	object will be loaded. But it can not replace the local object in pool and cannot be returned.
+//				storableObjects.add(storableObject);
 //				objectPool.put(storableObject.getId(), storableObject);
 					if (!objectPool.containsKey(id)) {
+						storableObjects.add(storableObject);
 						objectPool.put(id, storableObject);
 					}
 				}
