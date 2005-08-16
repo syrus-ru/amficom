@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: MapLibrary.xsd,v 1.6 2005/08/15 14:53:28 krupenn Exp $
+<!-- $Id: MapLibrary.xsd,v 1.7 2005/08/16 10:57:52 krupenn Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/map/xml"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns:map="http://syrus.com/AMFICOM/map/xml"
+	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
 	elementFormDefault="qualified">
 
   <xsd:include schemaLocation="SiteNodeType.xsd"/>
@@ -14,6 +15,7 @@
 
   <xsd:complexType name="MapLibrary">
     <xsd:all>
+      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>

@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: MapLibrary.xml,v 1.7 2005/08/15 14:53:56 krupenn Exp $
+<!-- $Id: MapLibrary.xml,v 1.8 2005/08/16 10:57:52 krupenn Exp $
 -->
 <map:library
 	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
 	xmlns:map="http://syrus.com/AMFICOM/map/xml"
 	importtype="ucm">
+    <map:uid>default</map:uid>
     <map:name>default</map:name>
     <map:codename>defaultlibrary</map:codename>
     <map:description/>

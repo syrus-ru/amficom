@@ -1,10 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: Towers.xml,v 1.1 2005/08/15 14:04:23 krupenn Exp $
+<!-- $Id: Towers.xml,v 1.2 2005/08/16 10:57:52 krupenn Exp $
 -->
 <map:library
 	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
 	xmlns:map="http://syrus.com/AMFICOM/map/xml">
-    <map:name>ЋЇ®ал ў®§¤ги­ле «Ё­Ё© бўп§Ё</map:name>
+	<map:uid>towers</map:uid>
+    <map:name>РћРїРѕСЂС‹ РІРѕР·РґСѓС€РЅС‹С… Р»РёРЅРёР№ СЃРІСЏР·Рё</map:name>
     <map:codename>towers</map:codename>
     <map:description/>
 	<map:physicallinktypes/>
@@ -13,8 +14,8 @@
 			<map:uid>1</map:uid>
 			<map:sort>tower</map:sort>
 			<map:image>images/tower.gif</map:image>
-			<map:name>ЏЋ-2,0-7,5</map:name>
-			<map:description>ЋЇ®а  ЇаҐ¤­ §­ зҐ­  ¤«п ў®§¤ги­ле н«ҐЄваЁзҐбЄЁе «Ё­Ё© бўп§Ё Ё «Ё­Ё© н«ҐЄва®бўп§Ё</map:description>
+			<map:name>РџРћ-2,0-7,5</map:name>
+			<map:description>РћРїРѕСЂР° РїСЂРµРґРЅР°Р·РЅР°С‡РµРЅР° РґР»СЏ РІРѕР·РґСѓС€РЅС‹С… СЌР»РµРєС‚СЂРёС‡РµСЃРєРёС… Р»РёРЅРёР№ СЃРІСЏР·Рё Рё Р»РёРЅРёР№ СЌР»РµРєС‚СЂРѕСЃРІСЏР·Рё</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
 			</map:characteristics>
