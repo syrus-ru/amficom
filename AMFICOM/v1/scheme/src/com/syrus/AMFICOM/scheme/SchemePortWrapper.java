@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortWrapper.java,v 1.10 2005/08/05 11:20:03 bass Exp $
+ * $Id: SchemePortWrapper.java,v 1.11 2005/08/16 12:12:23 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/05 11:20:03 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/08/16 12:12:23 $
+ * @author $Author: max $
  * @module scheme
  */
 public final class SchemePortWrapper extends StorableObjectWrapper<SchemePort> {
@@ -131,16 +131,13 @@ public final class SchemePortWrapper extends StorableObjectWrapper<SchemePort> {
 			} else if (key.equals(COLUMN_DIRECTION_TYPE)) {
 				schemePort.setDirectionType(IdlDirectionType.from_int(((Integer) value).intValue()));
 			} else if (key.equals(COLUMN_PORT_TYPE_ID)) {
-				/**
-				 * @bug changed status is not updated.
-				 */
-				schemePort.portTypeId = (Identifier) value;
+				schemePort.setPortTypeId((Identifier) value);
 			} else if (key.equals(COLUMN_PORT_ID)) {
-				schemePort.portId = (Identifier) value;
+				schemePort.setPortId((Identifier) value);
 			} else if (key.equals(COLUMN_MEASUREMENT_PORT_ID)) {
-				schemePort.measurementPortId = (Identifier) value;
+				schemePort.setMeasurementPortId((Identifier) value);
 			} else if (key.equals(COLUMN_PARENT_DEVICE_ID)) {
-				schemePort.parentSchemeDeviceId = (Identifier) value;
+				schemePort.setParentSchemeDeviceId((Identifier) value);
 			}
 		}
 	}
