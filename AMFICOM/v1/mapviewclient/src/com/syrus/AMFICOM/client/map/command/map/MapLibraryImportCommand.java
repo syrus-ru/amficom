@@ -1,5 +1,5 @@
 /*
- * $Id: MapLibraryImportCommand.java,v 1.4 2005/08/12 10:45:20 krupenn Exp $
+ * $Id: MapLibraryImportCommand.java,v 1.5 2005/08/16 11:01:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/08/12 10:45:20 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/16 11:01:30 $
  * @module mapviewclient
  */
 public class MapLibraryImportCommand extends ImportCommand {
@@ -151,7 +151,7 @@ public class MapLibraryImportCommand extends ImportCommand {
 
 		com.syrus.amficom.map.xml.MapLibrary xmlLibrary = doc.getLibrary();
 		
-		mapLibrary = MapLibrary.createInstance(userId, xmlLibrary, new ClonedIdsPool());
+		mapLibrary = MapLibrary.createInstance(userId, xmlLibrary.getImporttype(), xmlLibrary, new ClonedIdsPool());
 		return mapLibrary;
 	}
 
