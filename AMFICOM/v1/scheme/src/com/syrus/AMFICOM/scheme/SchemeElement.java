@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.79 2005/08/15 08:54:47 max Exp $
+ * $Id: SchemeElement.java,v 1.80 2005/08/16 07:17:21 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: max $
- * @version $Revision: 1.79 $, $Date: 2005/08/15 08:54:47 $
+ * @version $Revision: 1.80 $, $Date: 2005/08/16 07:17:21 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -236,10 +236,19 @@ public final class SchemeElement extends AbstractSchemeElement
 			final Scheme childScheme, final Scheme parentScheme)
 	throws CreateObjectException {
 		try {
+			assert childScheme != null : NON_VOID_EXPECTED;
 			String name = childScheme.getName();
 			assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 			assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 			assert parentScheme != null : NON_NULL_EXPECTED;
+			
+			BitmapImageResource symbol = null;
+			try {
+				symbol = StorableObjectPool.getStorableObject(childScheme.getSymbolId(), true);
+			} catch (final ApplicationException ae) {
+				Log.debugException(ae, SEVERE);
+			}
+			
 			//final SchemeElement schemeElement = createInstance(creatorId, name, "", "", null, null,
 			//		null, null, null, null, null, parentScheme);
 			final SchemeElement schemeElement;
@@ -253,13 +262,13 @@ public final class SchemeElement extends AbstractSchemeElement
 						StorableObjectVersion.createInitial(),
 						SchemeElementKind.SCHEMED,
 						name,
-						"",
-						"",
+						childScheme.getDescription(),
+						childScheme.getLabel(),
 						null,
 						null,
 						null,
 						null,
-						null,
+						symbol,
 						null,
 						null,
 						parentScheme,
