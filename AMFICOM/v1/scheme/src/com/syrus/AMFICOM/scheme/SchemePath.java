@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.72 2005/08/16 12:02:42 max Exp $
+ * $Id: SchemePath.java,v 1.73 2005/08/16 12:14:36 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
@@ -73,7 +72,7 @@ import com.syrus.util.Log;
  * #16 in hierarchy.
  *
  * @author $Author: max $
- * @version $Revision: 1.72 $, $Date: 2005/08/16 12:02:42 $
+ * @version $Revision: 1.73 $, $Date: 2005/08/16 12:14:36 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -209,7 +208,7 @@ public final class SchemePath extends StorableObject
 	}
 
 	/**
-	 * @see Characterizable#getCharacteristics()
+	 * @see Characterizable#getCharacteristics(boolean usePool)
 	 */
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
 		if (this.characterizableDelegate == null) {

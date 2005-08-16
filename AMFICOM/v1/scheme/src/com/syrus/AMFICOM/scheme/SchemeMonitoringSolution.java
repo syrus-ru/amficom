@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.61 2005/08/15 15:17:01 max Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.62 2005/08/16 12:14:17 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -59,7 +58,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: max $
- * @version $Revision: 1.61 $, $Date: 2005/08/15 15:17:01 $
+ * @version $Revision: 1.62 $, $Date: 2005/08/16 12:14:17 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
