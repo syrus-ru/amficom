@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.71 2005/08/12 14:24:16 arseniy Exp $
+ * $Id: PhysicalLinkType.java,v 1.72 2005/08/16 11:00:38 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -53,8 +54,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: arseniy $
- * @version $Revision: 1.71 $, $Date: 2005/08/12 14:24:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.72 $, $Date: 2005/08/16 11:00:38 $
  * @module map
  * @todo add 'topological' to constructor
  * @todo make 'topological' persistent
@@ -355,7 +356,8 @@ public final class PhysicalLinkType extends StorableObjectType
 			final String codename,
 			final String description,
 			final com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
+			final ClonedIdsPool clonedIdsPool,
+			final String importType) throws CreateObjectException, ApplicationException {
 
 		super(clonedIdsPool.getClonedId(ObjectEntities.PHYSICALLINK_CODE, xmlPhysicalLinkType.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
@@ -365,10 +367,10 @@ public final class PhysicalLinkType extends StorableObjectType
 				version,
 				codename,
 				description);
-		this.fromXMLTransferable(xmlPhysicalLinkType, clonedIdsPool);
+		this.fromXMLTransferable(xmlPhysicalLinkType, clonedIdsPool, importType);
 	}
 
-	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
+	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
 		final com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = (com.syrus.amficom.map.xml.PhysicalLinkType) xmlObject;
 
 		this.name = xmlPhysicalLinkType.getName();
@@ -377,19 +379,37 @@ public final class PhysicalLinkType extends StorableObjectType
 				xmlPhysicalLinkType.getDimensionY().intValue());
 	}
 
-	public static PhysicalLinkType createInstance(final Identifier creatorId,
+	public static PhysicalLinkType createInstance(
+			final Identifier creatorId,
+			final String importType,
 			final XmlObject xmlObject,
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		final com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = (com.syrus.amficom.map.xml.PhysicalLinkType) xmlObject;
 
 		try {
-			final PhysicalLinkType physicalLinkType = new PhysicalLinkType(creatorId,
-					StorableObjectVersion.createInitial(),
-					xmlPhysicalLinkType.getSort().toString(),
-					xmlPhysicalLinkType.getDescription(),
-					xmlPhysicalLinkType,
-					clonedIdsPool);
+			String uid = xmlPhysicalLinkType.getUid().getStringValue();
+			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			PhysicalLinkType physicalLinkType = null;
+			if(existingIdentifier != null) {
+				physicalLinkType = StorableObjectPool.getStorableObject(existingIdentifier, true);
+				if(physicalLinkType != null) {
+					physicalLinkType.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
+				}
+				else{
+					ImportUIDMapDatabase.delete(importType, uid);
+				}
+			}
+			if(physicalLinkType == null) {
+				physicalLinkType = new PhysicalLinkType(creatorId,
+						StorableObjectVersion.createInitial(),
+						xmlPhysicalLinkType.getSort().toString(),
+						xmlPhysicalLinkType.getDescription(),
+						xmlPhysicalLinkType,
+						clonedIdsPool, 
+						importType);
+				ImportUIDMapDatabase.insert(importType, uid, physicalLinkType.id);
+			}
 			assert physicalLinkType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			physicalLinkType.markAsChanged();
 			return physicalLinkType;

@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.70 2005/08/12 14:24:16 arseniy Exp $
+ * $Id: NodeLink.java,v 1.71 2005/08/16 11:00:38 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -45,8 +46,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: arseniy $
- * @version $Revision: 1.70 $, $Date: 2005/08/12 14:24:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.71 $, $Date: 2005/08/16 11:00:38 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -470,7 +471,8 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 	NodeLink(final Identifier creatorId,
 			final StorableObjectVersion version,
 			final com.syrus.amficom.map.xml.NodeLink xmlNodeLink,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
+			final ClonedIdsPool clonedIdsPool, 
+			final String importType) throws CreateObjectException, ApplicationException {
 
 		super(clonedIdsPool.getClonedId(ObjectEntities.NODELINK_CODE, xmlNodeLink.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
@@ -479,10 +481,10 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 				creatorId,
 				version);
 		this.selected = false;
-		this.fromXMLTransferable(xmlNodeLink, clonedIdsPool);
+		this.fromXMLTransferable(xmlNodeLink, clonedIdsPool, importType);
 	}
 
-	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
+	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
 		final com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink) xmlObject;
 
 		this.length = xmlNodeLink.getLength();
@@ -500,13 +502,31 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		this.physicalLink.addNodeLink(this);
 	}
 
-	public static NodeLink createInstance(final Identifier creatorId, final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool)
-			throws CreateObjectException {
+	public static NodeLink createInstance(
+			final Identifier creatorId, 
+			final String importType, 
+			final XmlObject xmlObject, 
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		final com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink) xmlObject;
 
 		try {
-			final NodeLink nodeLink = new NodeLink(creatorId, StorableObjectVersion.createInitial(), xmlNodeLink, clonedIdsPool);
+			String uid = xmlNodeLink.getUid().getStringValue();
+			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			NodeLink nodeLink = null;
+			if(existingIdentifier != null) {
+				nodeLink = StorableObjectPool.getStorableObject(existingIdentifier, true);
+				if(nodeLink != null) {
+					nodeLink.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
+				}
+				else{
+					ImportUIDMapDatabase.delete(importType, uid);
+				}
+			}
+			if(nodeLink == null) {
+				nodeLink = new NodeLink(creatorId, StorableObjectVersion.createInitial(), xmlNodeLink, clonedIdsPool, importType);
+				ImportUIDMapDatabase.insert(importType, uid, nodeLink.id);
+			}
 			assert nodeLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			nodeLink.markAsChanged();
 			return nodeLink;

@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.63 2005/08/12 14:24:17 arseniy Exp $
+ * $Id: TopologicalNode.java,v 1.64 2005/08/16 11:00:38 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -42,8 +43,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: arseniy $
- * @version $Revision: 1.63 $, $Date: 2005/08/12 14:24:17 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.64 $, $Date: 2005/08/16 11:00:38 $
  * @module map
  * @todo physicalLink should be transient
  */
@@ -335,7 +336,8 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	TopologicalNode(final Identifier creatorId,
 			final StorableObjectVersion version,
 			final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
+			final ClonedIdsPool clonedIdsPool,
+			final String importType) throws CreateObjectException, ApplicationException {
 
 		super(clonedIdsPool.getClonedId(ObjectEntities.TOPOLOGICALNODE_CODE, xmlTopologicalNode.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
@@ -347,27 +349,45 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 				"",
 				new DoublePoint(0, 0));
 		this.selected = false;
-		this.fromXMLTransferable(xmlTopologicalNode, clonedIdsPool);
+		this.fromXMLTransferable(xmlTopologicalNode, clonedIdsPool, importType);
 	}
 
-	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
+	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
 		final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode) xmlObject;
 
 		this.active = xmlTopologicalNode.getActive();
 		super.location.setLocation(xmlTopologicalNode.getX(), xmlTopologicalNode.getY());
 	}
 
-	public static TopologicalNode createInstance(final Identifier creatorId,
+	public static TopologicalNode createInstance(
+			final Identifier creatorId,
+			final String importType,
 			final XmlObject xmlObject,
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode) xmlObject;
 
 		try {
-			final TopologicalNode topologicalNode = new TopologicalNode(creatorId,
-					StorableObjectVersion.createInitial(),
-					xmlTopologicalNode,
-					clonedIdsPool);
+			String uid = xmlTopologicalNode.getUid().getStringValue();
+			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			TopologicalNode topologicalNode = null;
+			if(existingIdentifier != null) {
+				topologicalNode = StorableObjectPool.getStorableObject(existingIdentifier, true);
+				if(topologicalNode != null) {
+					topologicalNode.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
+				}
+				else{
+					ImportUIDMapDatabase.delete(importType, uid);
+				}
+			}
+			if(topologicalNode == null) {
+				topologicalNode = new TopologicalNode(creatorId,
+						StorableObjectVersion.createInitial(),
+						xmlTopologicalNode,
+						clonedIdsPool, 
+						importType);
+				ImportUIDMapDatabase.insert(importType, uid, topologicalNode.id);
+			}
 			assert topologicalNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			topologicalNode.markAsChanged();
 			return topologicalNode;

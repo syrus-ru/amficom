@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibrary.java,v 1.12 2005/08/10 07:38:26 max Exp $
+ * $Id: MapLibrary.java,v 1.13 2005/08/16 11:00:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -50,8 +51,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/10 07:38:26 $
- * @author $Author: max $
+ * @version $Revision: 1.13 $, $Date: 2005/08/16 11:00:38 $
+ * @author $Author: krupenn $
  * @module map
  */
 public class MapLibrary extends StorableObject implements Identifiable, Namable, Library, XMLBeansTransferable {
@@ -346,7 +347,8 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 	MapLibrary(final Identifier creatorId,
 			final StorableObjectVersion version,
 			final com.syrus.amficom.map.xml.MapLibrary xmlMapLibrary,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
+			final ClonedIdsPool clonedIdsPool,
+			final String importType) throws CreateObjectException, ApplicationException {
 
 		super(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAPLIBRARY_CODE),
 				new Date(System.currentTimeMillis()),
@@ -354,10 +356,10 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 				creatorId,
 				creatorId,
 				version);
-		this.fromXMLTransferable(xmlMapLibrary, clonedIdsPool);
+		this.fromXMLTransferable(xmlMapLibrary, clonedIdsPool, importType);
 	}
 
-	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
+	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
 		final com.syrus.amficom.map.xml.MapLibrary xmlMapLibrary = (com.syrus.amficom.map.xml.MapLibrary) xmlObject;
 
 		this.name = xmlMapLibrary.getName();
@@ -367,23 +369,42 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 		final com.syrus.amficom.map.xml.PhysicalLinkType[] xmlPhysicalLinkTypesArray = xmlMapLibrary.getPhysicallinktypes().getPhysicallinktypeArray();
 		for (int i = 0; i < xmlPhysicalLinkTypesArray.length; i++) {
 			final com.syrus.amficom.map.xml.PhysicalLinkType xmlPhysicalLinkType = xmlPhysicalLinkTypesArray[i];
-			this.addChild(PhysicalLinkType.createInstance(this.creatorId, xmlPhysicalLinkType, clonedIdsPool));
+			this.addChild(PhysicalLinkType.createInstance(this.creatorId, importType, xmlPhysicalLinkType, clonedIdsPool));
 		}
 
 		final com.syrus.amficom.map.xml.SiteNodeType[] xmlSiteNodeTypesArray = xmlMapLibrary.getSitenodetypes().getSitenodetypeArray();
 		for (int i = 0; i < xmlSiteNodeTypesArray.length; i++) {
 			final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = xmlSiteNodeTypesArray[i];
-			this.addChild(SiteNodeType.createInstance(this.creatorId, xmlSiteNodeType, clonedIdsPool));
+			this.addChild(SiteNodeType.createInstance(this.creatorId, importType, xmlSiteNodeType, clonedIdsPool));
 		}
 	}
 
-	public static MapLibrary createInstance(final Identifier creatorId, final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool)
+	public static MapLibrary createInstance(
+			final Identifier creatorId, 
+			final String importType,
+			final XmlObject xmlObject, 
+			final ClonedIdsPool clonedIdsPool)
 			throws CreateObjectException {
 
 		final com.syrus.amficom.map.xml.MapLibrary xmlMapLibrary = (com.syrus.amficom.map.xml.MapLibrary) xmlObject;
 
 		try {
-			final MapLibrary mapLibrary = new MapLibrary(creatorId, StorableObjectVersion.createInitial(), xmlMapLibrary, clonedIdsPool);
+			String uid = xmlMapLibrary.getUid().getStringValue();
+			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			MapLibrary mapLibrary = null;
+			if(existingIdentifier != null) {
+				mapLibrary = StorableObjectPool.getStorableObject(existingIdentifier, true);
+				if(mapLibrary != null) {
+					mapLibrary.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
+				}
+				else{
+					ImportUIDMapDatabase.delete(importType, uid);
+				}
+			}
+			if(mapLibrary == null) {
+				mapLibrary = new MapLibrary(creatorId, StorableObjectVersion.createInitial(), xmlMapLibrary, clonedIdsPool, importType);
+				ImportUIDMapDatabase.insert(importType, uid, mapLibrary.id);
+			}
 			assert mapLibrary.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			mapLibrary.markAsChanged();
 			return mapLibrary;

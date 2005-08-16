@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.67 2005/08/12 14:24:16 arseniy Exp $
+ * $Id: Collector.java,v 1.68 2005/08/16 11:00:38 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -45,8 +46,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.67 $, $Date: 2005/08/12 14:24:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.68 $, $Date: 2005/08/16 11:00:38 $
  * @module map
  */
 public final class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -367,7 +368,8 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 	Collector(final Identifier creatorId,
 			final StorableObjectVersion version,
 			final com.syrus.amficom.map.xml.Collector xmlCollector,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
+			final ClonedIdsPool clonedIdsPool,
+			final String importType) throws CreateObjectException, ApplicationException {
 
 		super(clonedIdsPool.getClonedId(ObjectEntities.COLLECTOR_CODE, xmlCollector.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
@@ -378,10 +380,10 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 
 		this.physicalLinks = new HashSet<PhysicalLink>();
 
-		this.fromXMLTransferable(xmlCollector, clonedIdsPool);
+		this.fromXMLTransferable(xmlCollector, clonedIdsPool, importType);
 	}
 
-	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
+	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
 		final com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector) xmlObject;
 
 		this.name = xmlCollector.getName();
@@ -397,13 +399,31 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 		}
 	}
 
-	public static Collector createInstance(final Identifier creatorId, final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool)
-			throws CreateObjectException {
+	public static Collector createInstance(
+			final Identifier creatorId, 
+			final String importType,
+			final XmlObject xmlObject, 
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		final com.syrus.amficom.map.xml.Collector xmlCollector = (com.syrus.amficom.map.xml.Collector) xmlObject;
 
 		try {
-			final Collector collector = new Collector(creatorId, StorableObjectVersion.createInitial(), xmlCollector, clonedIdsPool);
+			String uid = xmlCollector.getUid().getStringValue();
+			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			Collector collector = null;
+			if(existingIdentifier != null) {
+				collector = StorableObjectPool.getStorableObject(existingIdentifier, true);
+				if(collector != null) {
+					collector.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
+				}
+				else{
+					ImportUIDMapDatabase.delete(importType, uid);
+				}
+			}
+			if(collector == null) {
+				collector = new Collector(creatorId, StorableObjectVersion.createInitial(), xmlCollector, clonedIdsPool, importType);
+				ImportUIDMapDatabase.insert(importType, uid, collector.id);
+			}
 			assert collector.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			collector.markAsChanged();
 			return collector;

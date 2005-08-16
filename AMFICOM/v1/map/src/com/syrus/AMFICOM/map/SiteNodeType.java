@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.65 2005/08/09 16:28:19 max Exp $
+ * $Id: SiteNodeType.java,v 1.66 2005/08/16 11:00:38 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -60,8 +61,8 @@ import com.syrus.util.Log;
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: max $
- * @version $Revision: 1.65 $, $Date: 2005/08/09 16:28:19 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.66 $, $Date: 2005/08/16 11:00:38 $
  * @module map
  * @todo make 'sort' persistent (update database scheme as well)
  * @todo make 'mapLibrary' persistent
@@ -329,7 +330,8 @@ public final class SiteNodeType extends StorableObjectType
 			final String codename,
 			final String description,
 			final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException, ApplicationException {
+			final ClonedIdsPool clonedIdsPool,
+			final String importType) throws CreateObjectException, ApplicationException {
 
 		super(clonedIdsPool.getClonedId(ObjectEntities.SITENODE_CODE, xmlSiteNodeType.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
@@ -339,10 +341,10 @@ public final class SiteNodeType extends StorableObjectType
 				version,
 				codename,
 				description);
-		this.fromXMLTransferable(xmlSiteNodeType, clonedIdsPool);
+		this.fromXMLTransferable(xmlSiteNodeType, clonedIdsPool, importType);
 	}
 
-	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool) throws ApplicationException {
+	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
 		final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType )xmlObject;
 
 		this.name = xmlSiteNodeType.getName();
@@ -373,24 +375,42 @@ public final class SiteNodeType extends StorableObjectType
 		this.imageId = loadedImageId;
 	}
 
-	public static SiteNodeType createInstance(final Identifier creatorId,
+	public static SiteNodeType createInstance(
+			final Identifier creatorId,
+			final String importType,
 			final XmlObject xmlObject,
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType) xmlObject;
 
 		try {
-			final SiteNodeType siteNode = new SiteNodeType(creatorId,
-					StorableObjectVersion.createInitial(),
-					xmlSiteNodeType.getSort().toString(),
-					xmlSiteNodeType.getDescription(),
-					xmlSiteNodeType,
-					clonedIdsPool);
-			assert siteNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-			siteNode.markAsChanged();
-			return siteNode;
+			String uid = xmlSiteNodeType.getUid().getStringValue();
+			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			SiteNodeType siteNodeType = null;
+			if(existingIdentifier != null) {
+				siteNodeType = StorableObjectPool.getStorableObject(existingIdentifier, true);
+				if(siteNodeType != null) {
+					siteNodeType.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
+				}
+				else{
+					ImportUIDMapDatabase.delete(importType, uid);
+				}
+			}
+			if(siteNodeType == null) {
+				siteNodeType = new SiteNodeType(creatorId,
+						StorableObjectVersion.createInitial(),
+						xmlSiteNodeType.getSort().toString(),
+						xmlSiteNodeType.getDescription(),
+						xmlSiteNodeType,
+						clonedIdsPool, 
+						importType);
+				ImportUIDMapDatabase.insert(importType, uid, siteNodeType.id);
+			}
+			assert siteNodeType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			siteNodeType.markAsChanged();
+			return siteNodeType;
 		} catch (Exception e) {
-			throw new CreateObjectException("SiteNode.createInstance |  ", e);
+			throw new CreateObjectException("SiteNodeType.createInstance |  ", e);
 		}
 	}
 	
