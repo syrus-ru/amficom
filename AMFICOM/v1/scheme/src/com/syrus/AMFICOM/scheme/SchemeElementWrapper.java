@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementWrapper.java,v 1.10 2005/08/15 15:15:51 max Exp $
+ * $Id: SchemeElementWrapper.java,v 1.11 2005/08/16 12:22:10 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/15 15:15:51 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/16 12:22:10 $
  * @author $Author: max $
  * @module scheme
  */
@@ -116,6 +116,7 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 		//there is no property
 	}
 
+	@SuppressWarnings("boxing")
 	@Override
 	public Object getValue(SchemeElement schemeElement, String key) {
 		final Object value = super.getValue(schemeElement, key);

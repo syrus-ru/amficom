@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementWrapper.java,v 1.9 2005/08/13 11:20:06 max Exp $
+ * $Id: PathElementWrapper.java,v 1.10 2005/08/16 12:22:10 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/13 11:20:06 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/16 12:22:10 $
  * @author $Author: max $
  * @module scheme
  */
@@ -95,6 +95,7 @@ public final class PathElementWrapper extends StorableObjectWrapper<PathElement>
 		//There is no property
 	}
 
+	@SuppressWarnings("boxing")
 	@Override
 	public Object getValue(final PathElement pathElement, final String key) {
 		final Object value = super.getValue(pathElement, key);
