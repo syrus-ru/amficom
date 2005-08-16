@@ -1,3 +1,4 @@
--- $Id: CREATE.sql,v 1.4 2005/06/15 07:50:19 bass Exp $
+-- $Id: CREATE.sql,v 1.5 2005/08/16 09:25:48 arseniy Exp $
 
 @@imageresource;
+@@importuidmap;
