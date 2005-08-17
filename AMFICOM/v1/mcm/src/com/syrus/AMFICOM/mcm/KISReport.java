@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.48 2005/08/08 11:46:55 arseniy Exp $
+ * $Id: KISReport.java,v 1.49 2005/08/17 11:48:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,12 +34,12 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/08/08 11:46:55 $
+ * @version $Revision: 1.49 $, $Date: 2005/08/17 11:48:45 $
  * @author $Author: arseniy $
  * @module mcm
  */
 
-public class KISReport {
+final class KISReport {
 	private static final Map<String, Identifier> OUT_PARAMETER_TYPE_IDS_MAP;	//Map <String parameterTypeCodename, Identifier parameterTypeId>
 
 	private Identifier measurementId;

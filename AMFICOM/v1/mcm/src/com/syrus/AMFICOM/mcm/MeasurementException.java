@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementException.java,v 1.4 2005/08/08 11:46:55 arseniy Exp $
+ * $Id: MeasurementException.java,v 1.5 2005/08/17 11:48:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,12 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/08 11:46:55 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/17 11:48:45 $
  * @author $Author: arseniy $
  * @module mcm
  */
 
-public class MeasurementException extends TestProcessingException {
+final class MeasurementException extends TestProcessingException {
 	private static final long serialVersionUID = 5663146797166499357L;
 
 	public static final int OTHER_CODE = 0;

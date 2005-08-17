@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.62 2005/08/08 19:36:40 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.63 2005/08/17 11:48:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/08/08 19:36:40 $
+ * @version $Revision: 1.63 $, $Date: 2005/08/17 11:48:45 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -51,7 +51,7 @@ import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.util.Log;
 
-public class DadaraAnalysisManager implements AnalysisManager {
+final class DadaraAnalysisManager implements AnalysisManager {
 	// input SetParameters codenames
 	public static final String CODENAME_REFLECTOGRAMMA = ParameterTypeCodename.REFLECTOGRAMMA.stringValue();
 	public static final String CODENAME_DADARA_ETALON = ParameterTypeCodename.DADARA_ETALON.stringValue();

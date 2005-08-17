@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.29 2005/08/08 11:46:55 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.30 2005/08/17 11:48:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,12 +16,12 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/08/08 11:46:55 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/17 11:48:45 $
  * @author $Author: arseniy $
  * @module mcm
  */
 
-public class OnetimeTestProcessor extends TestProcessor {
+final class OnetimeTestProcessor extends TestProcessor {
 	/*	Error codes for method processFall()	*/
 	public static final int FALL_CODE_CREATE_IDENTIFIER = 1;
 	public static final int FALL_CODE_CREATE_MEASUREMENT = 2;

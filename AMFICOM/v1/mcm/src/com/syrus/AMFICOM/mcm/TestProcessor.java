@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.62 2005/08/08 11:46:56 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.63 2005/08/17 11:48:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,12 +36,12 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/08/08 11:46:56 $
+ * @version $Revision: 1.63 $, $Date: 2005/08/17 11:48:45 $
  * @author $Author: arseniy $
  * @module mcm
  */
 
-public abstract class TestProcessor extends SleepButWorkThread {
+abstract class TestProcessor extends SleepButWorkThread {
 	Test test;
 	Transceiver transceiver;
 	private int numberOfReceivedMResults;

@@ -1,5 +1,5 @@
 /*-
- * $Id: TCPKISConnection.java,v 1.14 2005/08/02 12:17:04 arseniy Exp $
+ * $Id: TCPKISConnection.java,v 1.15 2005/08/17 11:48:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,10 +17,10 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/02 12:17:04 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/17 11:48:45 $
  * @module mcm
  */
-public class TCPKISConnection implements KISConnection {
+final class TCPKISConnection implements KISConnection {
 	
 	private static final int KIS_TCP_SOCKET_DISCONNECTED = -1;
 

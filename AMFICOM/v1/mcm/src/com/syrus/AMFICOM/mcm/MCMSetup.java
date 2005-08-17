@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.5 2005/08/01 14:52:35 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.6 2005/08/17 11:48:45 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 
-public final class MCMSetup {
+final class MCMSetup {
 	private static final String KEY_SETUP_SERVER_HOST_NAME = "SetupServerHostName";
 	private static final String KEY_MCM_USER_LOGIN = "MCMUserLogin";
 	private static final String KEY_MCM_USER_PASSWORD = "MCMUserPassword";

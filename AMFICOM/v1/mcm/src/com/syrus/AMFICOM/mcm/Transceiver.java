@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStat
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
-public class Transceiver extends SleepButWorkThread {
+final class Transceiver extends SleepButWorkThread {
 	/*	Error codes for method processFall()	*/
 	public static final int FALL_CODE_ESTABLISH_CONNECTION = 1;
 	public static final int FALL_CODE_TRANSMIT_MEASUREMENT = 2;

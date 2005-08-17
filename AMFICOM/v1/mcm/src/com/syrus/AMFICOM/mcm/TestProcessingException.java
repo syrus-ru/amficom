@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessingException.java,v 1.2 2005/08/08 11:46:55 arseniy Exp $
+ * $Id: TestProcessingException.java,v 1.3 2005/08/17 11:48:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,12 +9,12 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/08 11:46:55 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/17 11:48:45 $
  * @author $Author: arseniy $
  * @module mcm
  */
 
-public class TestProcessingException extends Exception {
+class TestProcessingException extends Exception {
 	private static final long serialVersionUID = 3482128438964994335L;
 
 	public TestProcessingException(String message) {

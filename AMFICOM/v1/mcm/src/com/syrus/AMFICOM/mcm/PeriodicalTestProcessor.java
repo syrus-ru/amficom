@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.43 2005/08/08 11:46:55 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.44 2005/08/17 11:48:45 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,12 +23,12 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/08/08 11:46:55 $
+ * @version $Revision: 1.44 $, $Date: 2005/08/17 11:48:45 $
  * @author $Author: arseniy $
  * @module mcm
  */
 
-public class PeriodicalTestProcessor extends TestProcessor {
+final class PeriodicalTestProcessor extends TestProcessor {
 	private static final long FRAME = 24*60*60*1000;//ms	
 	
 	/*	Error codes for method processFall()	*/
