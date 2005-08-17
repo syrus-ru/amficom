@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.104 2005/08/08 13:20:00 saa Exp $
+ * $Id: Heap.java,v 1.105 2005/08/17 11:24:48 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,17 +90,17 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.104 $, $Date: 2005/08/08 13:20:00 $
+ * @version $Revision: 1.105 $, $Date: 2005/08/17 11:24:48 $
  * @module
  */
 public class Heap
 {
 	// constants
 
-	public static final String PRIMARY_TRACE_KEY = "primarytrace";
-	public static final String ETALON_TRACE_KEY =  "etalon";
-	public static final String REFERENCE_TRACE_KEY = "referencetrace"; // XXX - is referencetrace really required?
-	public static final String MODELED_TRACE_KEY = "modeledtrace"; // trace got from modelling module
+	public static final String PRIMARY_TRACE_KEY = "<primarytrace>";
+	public static final String ETALON_TRACE_KEY =  "<etalon>";
+	public static final String REFERENCE_TRACE_KEY = "<referencetrace>"; // XXX - is referencetrace really required?
+	public static final String MODELED_TRACE_KEY = "<modeledtrace>"; // trace got from modelling module
 
 	// properties
 
