@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.12 2005/08/15 14:20:05 bob Exp $
+ * $Id: AbstractBean.java,v 1.13 2005/08/17 15:59:40 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/17 15:59:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -49,10 +49,10 @@ public abstract class AbstractBean {
 	}
 
 	public boolean isTargetValid(AbstractBean targetBean) {
-		return this.validator != null ? this.validator.isValid(this, targetBean) :
-		// TODO development bypass
-				true;
+		return this.validator.isValid(this, targetBean);
 	}
+	
+	public abstract void applyTargetPort(MPort oldPort, MPort newPort); 
 
 	public JPanel getPropertyPanel() {
 		return this.propertyPanel;

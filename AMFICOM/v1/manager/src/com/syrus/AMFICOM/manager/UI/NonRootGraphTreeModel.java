@@ -1,5 +1,5 @@
 /*-
- * $Id: NonRootGraphTreeModel.java,v 1.2 2005/07/25 11:08:09 bob Exp $
+ * $Id: NonRootGraphTreeModel.java,v 1.3 2005/08/17 15:59:40 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreeNode;
 import javax.swing.tree.TreePath;
 
+import org.jgraph.event.GraphModelEvent;
 import org.jgraph.event.GraphModelListener;
 import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.Port;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.MPort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/07/25 11:08:09 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/17 15:59:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -60,7 +61,7 @@ public class NonRootGraphTreeModel implements TreeModel {
 		this.availableCodenames = new HashSet<String>();
 		
 		this.model.addGraphModelListener(new GraphModelListener() {
-			public void graphChanged(org.jgraph.event.GraphModelEvent e) {
+			public void graphChanged(GraphModelEvent e) {
 				e.getChange();
 				
 				NonRootGraphTreeModel.this.refreshFirstLevel();
@@ -84,9 +85,22 @@ public class NonRootGraphTreeModel implements TreeModel {
 					MPort rootPort = (MPort) (this.root != null ? this.root.getChildAt(0) : null); 
 
 					AbstractBean bean = port.getBean();
-					if (bean == null || !this.availableCodenames.contains(bean.getCodeName())) {
+					if (bean == null) {
 						continue;
 					}
+					
+					boolean found = false;
+					String beanCodeName = bean.getCodeName();
+					for(String codename : this.availableCodenames) {
+						if (beanCodeName.startsWith(codename)) {
+							found = true;
+							break;
+						}
+					}
+					if (!found) {
+						continue;
+					}
+					
 //					System.out.println(".refreshFirstLevel() | port:" + port);
 					
 					List<Port> sources = this.direct ? port.getSources() : port.getTargets(); 
@@ -148,7 +162,19 @@ public class NonRootGraphTreeModel implements TreeModel {
 			for(Port port2: targets) {
 				MPort mport2 = (MPort)port2;
 				AbstractBean bean = mport2.getBean();
-				if (bean == null || !this.availableCodenames.contains(bean.getCodeName())) {
+				if (bean == null) {
+					continue;
+				}
+				
+				boolean found = false;
+				String beanCodeName = bean.getCodeName();
+				for(String codename : this.availableCodenames) {
+					if (beanCodeName.startsWith(codename)) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
 					continue;
 				}
 				if(count == index) {
@@ -177,7 +203,19 @@ public class NonRootGraphTreeModel implements TreeModel {
 			for(Port port2: targets) {
 				MPort mport2 = (MPort)port2;
 				AbstractBean bean = mport2.getBean();
-				if (bean == null || !this.availableCodenames.contains(bean.getCodeName())) {
+				if (bean == null) {
+					continue;
+				}
+				
+				boolean found = false;
+				String beanCodeName = bean.getCodeName();
+				for(String codename : this.availableCodenames) {
+					if (beanCodeName.startsWith(codename)) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
 					continue;
 				}
 				count++;
@@ -208,7 +246,19 @@ public class NonRootGraphTreeModel implements TreeModel {
 			for(Port port2: targets) {
 				MPort mport2 = (MPort)port2;
 				AbstractBean bean = mport2.getBean();
-				if (bean == null || !this.availableCodenames.contains(bean.getCodeName())) {
+				if (bean == null) {
+					continue;
+				}
+				
+				boolean found = false;
+				String beanCodeName = bean.getCodeName();
+				for(String codename : this.availableCodenames) {
+					if (beanCodeName.startsWith(codename)) {
+						found = true;
+						break;
+					}
+				}
+				if (!found) {
 					continue;
 				}
 				if (port2 == child) {
@@ -227,7 +277,6 @@ public class NonRootGraphTreeModel implements TreeModel {
 	}
 	
 	public final void setRoot(TreeNode root) {
-		System.out.println("NonRootGraphTreeModel.setRoot()");
 		this.root = root;
 		this.refreshFirstLevel();
 	}

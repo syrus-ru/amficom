@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBean.java,v 1.3 2005/08/11 13:05:20 bob Exp $
+ * $Id: MCMBean.java,v 1.4 2005/08/17 15:59:40 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/11 13:05:20 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/17 15:59:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -115,5 +115,14 @@ public class MCMBean extends Bean {
 			this.mcm.setUserId(userId);
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_USER_ID, userId2, userId));
 		}		
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.manager.AbstractBean#applyTargetPort(com.syrus.AMFICOM.manager.MPort)
+	 */
+	@Override
+	public void applyTargetPort(MPort oldPort, MPort newPort) {
+		// TODO Auto-generated method stub
+		
 	}
 }

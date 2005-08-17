@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBean.java,v 1.4 2005/08/10 14:02:25 bob Exp $
+ * $Id: RTUBean.java,v 1.5 2005/08/17 15:59:40 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/17 15:59:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -110,6 +110,11 @@ public class RTUBean extends Bean {
 			this.kis.setMCMId(mcmId);
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_MCM_ID, mcmId2, mcmId));
 		}	
-	}	
+	}
 
+	@Override
+	public void applyTargetPort(MPort oldPort, MPort newPort) {
+		// TODO Auto-generated method stub
+		
+	}
 }

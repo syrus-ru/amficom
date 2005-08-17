@@ -1,5 +1,5 @@
 /*-
- * $Id: MPort.java,v 1.3 2005/08/01 11:32:03 bob Exp $
+ * $Id: MPort.java,v 1.4 2005/08/17 15:59:40 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import org.jgraph.graph.Edge;
 import org.jgraph.graph.Port;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/01 11:32:03 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/17 15:59:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -34,6 +34,8 @@ public class MPort extends DefaultGraphCell implements Port {
 
 	/** Reference to the anchor of this port */
 	protected Port anchor;
+
+	private boolean	cacheOn;
 
 	/**
 	 * Constructs an empty port.
@@ -87,22 +89,8 @@ public class MPort extends DefaultGraphCell implements Port {
 		if (edge == null) {
 			return false;
 		}
-		
-		Port source = (Port) edge.getSource();
-		Port target = (Port) edge.getTarget();
-		
-//		System.out.println("MPort.addEdge()| source:" + source + ", this:" + this);		
-//		System.out.println("MPort.addEdge()| target:" + target + ", this:" + this);
-		
-		if ((this == source || source == null) && !this.targets.contains(target)) {
-//			System.out.println("MPort.addEdge() | add target:" + target + " to " + this);
-			this.targets.add(target);
-		}
-		
-		if ((this == target || target == null) && !this.sources.contains(source)) {
-//			System.out.println("MPort.addEdge() | add source:" + source + " to " + this);
-			this.sources.add(source);
-		}
+
+		this.cacheOn = false;
 		
 		return this.edges.add(edge);
 	}
@@ -110,26 +98,11 @@ public class MPort extends DefaultGraphCell implements Port {
 	/**
 	 * Removes <code>edge</code> from the list of ports.
 	 */
-	public boolean removeEdge(Object oEdge) {
-		Edge edge = (Edge) oEdge;
-		
+	public boolean removeEdge(final Object edge) {
 		if (edge == null) {
 			return false;
-		}
-		
-		Port source = (Port) edge.getSource();
-		Port target = (Port) edge.getTarget();
-		
-		if (this == source) {
-//			System.out.println("MPort.removeEdge() | remove target:" + target + " from " + this);
-			this.targets.remove(target);
-		}
-		
-		if (this == target) {
-//			System.out.println("MPort.removeEdge() | remove source:" + source + " from " + this);
-			this.sources.remove(source);
-		}
-		
+		}		
+		this.cacheOn = false;		
 		return this.edges.remove(edge);
 	}
 
@@ -143,17 +116,12 @@ public class MPort extends DefaultGraphCell implements Port {
 	/**
 	 * Sets the anchor of this port.
 	 */
-	public void setEdges(Set edges) {
-		
+	public void setEdges(Set edges) {		
 		this.edges.clear();
-		this.sources.clear();
-		this.targets.clear();
+		this.edges.addAll(edges);
+		this.cacheOn = false;
 		
-		if (edges != null) {
-			for(Object oEdge: edges) {
-				this.addEdge(oEdge);
-			}
-		}
+		
 	}
 
 	/**
@@ -177,16 +145,37 @@ public class MPort extends DefaultGraphCell implements Port {
 	 *
 	 * @return Object  a clone of this object.
 	 */
+	@Override
 	public Object clone() {
 		MPort c = (MPort) super.clone();
 		c.edges = new HashSet<Edge>();
 		return c;
 	}
 	
+	private void updateCache() {
+		this.sources.clear();
+		this.targets.clear();
+		for(Edge edge : this.edges) {
+			Port source = (Port) edge.getSource();
+			Port target = (Port) edge.getTarget();
+			if (source == this) {
+				this.targets.add(target);
+				continue;
+			}
+			if (target == this) {
+				this.sources.add(source);
+			}
+		}
+		this.cacheOn = true;
+	}
+	
 	/**
 	 * @return Returns the sources.
 	 */
 	public final List<Port> getSources() {
+		if (!this.cacheOn) {
+			this.updateCache();
+		}
 		return this.sources;
 	}
 	
@@ -194,6 +183,9 @@ public class MPort extends DefaultGraphCell implements Port {
 	 * @return Returns the targets.
 	 */
 	public final List<Port> getTargets() {
+		if (!this.cacheOn) {
+			this.updateCache();
+		}
 		return this.targets;
 	}
 	

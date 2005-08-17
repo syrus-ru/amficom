@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.3 2005/08/15 14:20:05 bob Exp $
+* $Id: Manager.java,v 1.4 2005/08/17 15:59:40 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
@@ -31,7 +32,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/17 15:59:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -56,6 +57,8 @@ public class Manager extends AbstractApplication {
 	}
 	
 	private class ManagerMainFrame extends AbstractMainFrame {
+		private JGraphText	text;
+
 		public ManagerMainFrame(final ApplicationContext aContext) {
 			super(aContext, "Manager", new AbstractMainMenuBar(aContext.getApplicationModel()) {
 
@@ -76,18 +79,26 @@ public class Manager extends AbstractApplication {
 
 				LoginManager.setUserId(storableObjectsByCondition.iterator().next().getId());
 				
-				System.out.println("ManagerMainFrame.ManagerMainFrame() | " + LoginManager.getUserId());
-				
 //				createCharacteristicTypes();
 				
-				JGraphText text = new JGraphText();
-				text.openFrames(this.desktopPane);
+				this.text.openFrames(this.desktopPane);
 
 			} catch (ApplicationException e) {
 				// TODO Auto-generated catch block
 				e.printStackTrace();
-			}
+			}			
+		}
+		
+		@Override
+		protected void initModule() {
+			super.initModule();
 			
+			this.text = new JGraphText(this.aContext);
+			
+			ApplicationModel applicationModel = this.aContext.getApplicationModel();
+			
+			applicationModel.setCommand(ManagerModel.DOMAINS_COMMAND, new DomainsPerspective(this.text));
+			applicationModel.setCommand(ManagerModel.FLUSH_COMMAND, new FlushCommand());
 		}
 	}
 	

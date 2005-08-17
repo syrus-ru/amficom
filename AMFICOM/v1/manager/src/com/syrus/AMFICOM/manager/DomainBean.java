@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.5 2005/08/15 14:20:05 bob Exp $
+ * $Id: DomainBean.java,v 1.6 2005/08/17 15:59:40 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/17 15:59:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -123,16 +123,6 @@ public class DomainBean extends Bean {
 			e.printStackTrace();
 		}
 	}
-
-	@Override
-	public boolean isTargetValid(AbstractBean targetBean) {
-		boolean result = super.isTargetValid(targetBean);
-		if (result) {
-			DomainBean domainBean = (DomainBean) targetBean;
-			this.domain.setDomainId(domainBean.getId());
-		}
-		return result;
-	}
 	
 	public final String getDescription() {
 		return this.domain.getDescription();
@@ -153,6 +143,7 @@ public class DomainBean extends Bean {
 		}	
 	}
 	
+	@Override
 	public final void setName(String name) {
 		String name2 = this.domain.getName();
 		if (name2 != name &&
@@ -160,8 +151,17 @@ public class DomainBean extends Bean {
 				!name.equals(name2))) {
 			this.domain.setName(name);
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_NAME, name2, name));
-		}	
+		}
+	}
 	
+	@Override
+	public void applyTargetPort(MPort oldPort, MPort newPort) {
+		Identifier parentId = Identifier.VOID_IDENTIFIER;
+		if (newPort != null) {
+			parentId = ((DomainBean) newPort.getUserObject()).getId();
+		}
+		System.out.println("DomainBean.applyTargetPort() | " + domain.getId() + ", set parent " + parentId); 
+		this.domain.setDomainId(parentId);
 	}
 	
 }

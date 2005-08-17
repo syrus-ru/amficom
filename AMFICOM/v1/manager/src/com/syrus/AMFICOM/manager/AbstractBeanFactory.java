@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractBeanFactory.java,v 1.6 2005/08/15 14:20:05 bob Exp $
+* $Id: AbstractBeanFactory.java,v 1.7 2005/08/17 15:59:40 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,12 +14,11 @@ import javax.swing.Icon;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/17 15:59:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

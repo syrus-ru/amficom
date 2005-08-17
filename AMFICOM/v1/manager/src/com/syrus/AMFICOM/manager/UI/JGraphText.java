@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.20 2005/08/15 14:20:05 bob Exp $
+ * $Id: JGraphText.java,v 1.21 2005/08/17 15:59:40 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,21 +9,17 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.21 $, $Date: 2005/08/17 15:59:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_NAME;
 
-import java.awt.Color;
-import java.awt.Cursor;
-import java.awt.Graphics;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
+import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
-import java.awt.event.MouseEvent;
-import java.awt.geom.Point2D;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
@@ -47,12 +43,10 @@ import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
-import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -68,7 +62,7 @@ import org.jgraph.event.GraphSelectionEvent;
 import org.jgraph.event.GraphSelectionListener;
 import org.jgraph.event.GraphModelEvent.GraphModelChange;
 import org.jgraph.graph.AttributeMap;
-import org.jgraph.graph.BasicMarqueeHandler;
+import org.jgraph.graph.ConnectionSet;
 import org.jgraph.graph.DefaultCellViewFactory;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.DefaultGraphCell;
@@ -79,9 +73,9 @@ import org.jgraph.graph.GraphModel;
 import org.jgraph.graph.GraphSelectionModel;
 import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
-import org.jgraph.graph.PortView;
 
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -162,8 +156,11 @@ public class JGraphText implements GraphSelectionListener {
 	private Identifier			nonStorableObjectNameTypeId;
 
 	boolean						arranging;
+
+	final ApplicationContext	context;
 	
-	public JGraphText() {
+	public JGraphText(final ApplicationContext aContext) {
+		this.context = aContext;
 		// Construct Model and Graph
 		GraphModel model = new ManagerGraphModel(this.direct);
 		
@@ -173,7 +170,7 @@ public class JGraphText implements GraphSelectionListener {
 					true));
 		
 		//	Use a Custom Marquee Handler
-		this.graph.setMarqueeHandler(new MyMarqueeHandler());
+		this.graph.setMarqueeHandler(new ManagerMarqueeHandler(this));
 
 		// Control-drag should clone selection
 		this.graph.setCloneable(true);
@@ -227,12 +224,39 @@ public class JGraphText implements GraphSelectionListener {
 				
 				if (changed != null && removed == null) {
 					for(Object changedObject : changed) {
+						System.out.println(".graphChanged() | changedObject " + changedObject + '[' + changedObject.getClass().getName() + ']');
 						if (model.isPort(changedObject)) {
 							TreeNode[] pathToRoot = JGraphText.this.treeModel.getPathToRoot((TreeNode) changedObject);
 							if (pathToRoot != null) {
 								JGraphText.this.tree.scrollPathToVisible(new TreePath(pathToRoot));
 							}
-						} else if (!model.isEdge(changedObject)) {
+						} else  if (model.isEdge(changedObject)) {
+							Edge edge = (Edge) changedObject;
+							final MPort source = (MPort) edge.getSource();
+							final MPort target = (MPort) edge.getTarget();
+							System.out.println(".graphChanged() | " + source  +" -> " + target);						
+							
+							
+							AbstractBean bean = (AbstractBean) source.getUserObject();
+							
+							
+							ConnectionSet connectionSet = change.getConnectionSet();							
+							MPort source2 = (MPort) connectionSet.getPort(edge, true);
+							MPort target2 = (MPort) connectionSet.getPort(edge, false);
+
+							System.out.println(".graphChanged() | ' " + source2  +" -> " + target2);
+							
+							if (target2 == null) {
+								AbstractBean bean2 = (AbstractBean) source2.getUserObject();
+								System.out
+										.println("JGraphText.createModelListener() | " + bean2);
+//								bean2.applyTargetPort(target2, null);
+							}
+							
+							bean.applyTargetPort(target2, target);
+							
+							
+						} else {
 							DefaultGraphCell cell = (DefaultGraphCell)changedObject;
 							MPort port = (MPort) cell.getChildAt(0);
 							AbstractBean bean = port.getBean();
@@ -246,7 +270,6 @@ public class JGraphText implements GraphSelectionListener {
 
 							if (!arranging) {								
 								String codeName = bean.getCodeName();
-								System.out.println(".graphChanged() | " + rectangle2D.getX() + ", " + rectangle2D.getY());								
 								try {
 									CompoundCondition compoundCondition = 
 										new CompoundCondition(new TypicalCondition(
@@ -313,13 +336,8 @@ public class JGraphText implements GraphSelectionListener {
 										for(Characteristic characteristic : item.getCharacteristics(false)) {
 											String codename = characteristic.getType().getCodename();
 											if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_X)) {
-//												System.out
-//														.println(".graphChanged() x | was " + characteristic.getValue() + ", now:" + Integer.toString((int) rectangle2D.getX()));
 												characteristic.setValue(Integer.toString((int) rectangle2D.getX()));
 											} else if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_Y)) {
-//												System.out
-//												.println(".graphChanged() y | was " + characteristic.getValue() + ", now:" + Integer.toString((int) rectangle2D.getY()));
-
 												characteristic.setValue(Integer.toString((int) rectangle2D.getY()));
 											} else if (codename.equals(LayoutItem.CHARACTERISCTIC_TYPE_NAME)) {
 												characteristic.setValue(title);
@@ -338,6 +356,59 @@ public class JGraphText implements GraphSelectionListener {
 							}
 						
 						}
+					}
+				} 
+				if (removed != null) {
+					if (changed != null) {
+						for(Object changedObject : changed) {
+							System.out.println(".graphChanged() | changedObject after delete " + changedObject + '[' + changedObject.getClass().getName() + ']');
+						}
+					}
+					for(Object removedObject : removed) {
+						System.out.println(".graphChanged() | removedObject " + removedObject + '[' + removedObject.getClass().getName() + ']');
+						 if (model.isEdge(removedObject)) {
+							Edge edge = (Edge) removedObject;
+							ConnectionSet connectionSet = change.getConnectionSet();							
+							MPort source = (MPort) connectionSet.getPort(edge, true);
+							MPort target = (MPort) connectionSet.getPort(edge, false);
+							
+							AbstractBean bean = (AbstractBean) source.getUserObject();
+							
+							try {
+								CompoundCondition compoundCondition = 
+									new CompoundCondition(new TypicalCondition(
+										perspective.getPerspectiveName(), 
+										OperationSort.OPERATION_EQUALS,
+										ObjectEntities.LAYOUT_ITEM_CODE,
+										LayoutItemWrapper.COLUMN_LAYOUT_NAME),
+										CompoundConditionSort.AND,
+										new LinkedIdsCondition(
+											LoginManager.getUserId(),
+											ObjectEntities.LAYOUT_ITEM_CODE) {
+											@Override
+											public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
+												return storableObjects.isEmpty();
+											}
+										});
+								
+								compoundCondition.addCondition(new TypicalCondition(
+									bean.getCodeName(), 
+									OperationSort.OPERATION_EQUALS,
+									ObjectEntities.LAYOUT_ITEM_CODE,
+									StorableObjectWrapper.COLUMN_NAME));
+								
+								Set<LayoutItem> layoutItems = 
+									StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+								
+								LayoutItem item = layoutItems.iterator().next();
+								item.setParentId(Identifier.VOID_IDENTIFIER);
+							} catch (ApplicationException e1) {
+								// TODO Auto-generated catch block
+								e1.printStackTrace();
+							}
+							
+							bean.applyTargetPort(target, null);
+						 } 
 					}
 				}
 			}	
@@ -452,62 +523,21 @@ public class JGraphText implements GraphSelectionListener {
 		
 		this.domainsButton = perspectives.add(new AbstractAction(LangModelManager.getString("Action.Domains")) {
 			public void actionPerformed(ActionEvent e) {
-					currentPerspectiveLabel.setText(LangModelManager.getString("Label.DomainsLevel"));
-				
-					domainButton.setEnabled(true);
-					netButton.setEnabled(true);
-					
-					userButton.setEnabled(false);
-
-					armButton.setEnabled(false);
-
-					rtuButton.setEnabled(false);
-
-					serverButton.setEnabled(false);
-
-					mcmButton.setEnabled(false);
-					
-					showOnly(new String[] {NetBeanFactory.NET_CODENAME, 
-							ObjectEntities.DOMAIN});
-					treeModel.setRoot(null);
-					
-					JButton button = (JButton) e.getSource();
-					button.setEnabled(false);
-					
-					setPerspective(new Perspective() {
-						public String getPerspectiveName() {
-							return "domains";
-						}
-					});
+					JGraphText.this.context.getApplicationModel().getCommand(ManagerModel.DOMAINS_COMMAND).execute();
 			}
 		});	
 
 		perspectives.addSeparator();
 		
-		perspectives.add(new AbstractAction("Flush") {
+		JButton button = perspectives.add(new AbstractAction("", new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/refresh.gif"))) {
 			
 			public void actionPerformed(ActionEvent e) {
-				try {
-					arranging = true;
-					StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, LoginManager.getUserId(), true);
-//					StorableObjectPool.flush(ObjectEntities.LAYOUT_ITEM_CODE, LoginManager.getUserId(), true);
-					StorableObjectPool.flush(ObjectEntities.PERMATTR_CODE, LoginManager.getUserId(), true);
-					StorableObjectPool.flush(ObjectEntities.DOMAIN_CODE, LoginManager.getUserId(), true);
-					StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, LoginManager.getUserId(), true);
-					StorableObjectPool.flush(ObjectEntities.KIS_CODE, LoginManager.getUserId(), true);
-					StorableObjectPool.flush(ObjectEntities.SERVER_CODE, LoginManager.getUserId(), true);
-					StorableObjectPool.flush(ObjectEntities.MCM_CODE, LoginManager.getUserId(), true);
-				} catch (ApplicationException e1) {
-					e1.printStackTrace();
-					JOptionPane.showMessageDialog(graph, 
-						e1.getMessage(), 
-						LangModelManager.getString("Error"),
-						JOptionPane.ERROR_MESSAGE);
+				JGraphText.this.context.getApplicationModel().getCommand(ManagerModel.FLUSH_COMMAND).execute();
 				}
-				arranging = false;
-
-			}
 		});
+		
+		button.setToolTipText(LangModelManager.getString("Action.Save"));
 		
 		return perspectives;
 	}
@@ -725,8 +755,6 @@ public class JGraphText implements GraphSelectionListener {
 				
 				graphLayoutCache.setVisible(port.getParent(), !hide);
 			}
-			
-			
 		}
 		
 		this.treeModel.removeAllAvailableCodenames();
@@ -1242,206 +1270,6 @@ public class JGraphText implements GraphSelectionListener {
 		
 		return cell;
 	}
-	
-	// MarqueeHandler that Connects Vertices and Displays PopupMenus
-	public class MyMarqueeHandler extends BasicMarqueeHandler {
-
-		// Holds the Start and the Current Point
-		protected Point2D start, current;
-
-		// Holds the First and the Current Port
-		protected PortView port, firstPort;
-
-		// Override to Gain Control (for PopupMenu and ConnectMode)
-		public boolean isForceMarqueeEvent(MouseEvent e) {
-//			System.out.println("MyMarqueeHandler.isForceMarqueeEvent()");
-			if (e.isShiftDown())
-				return false;
-			// If Right Mouse Button we want to Display the PopupMenu
-			if (SwingUtilities.isRightMouseButton(e))
-				// Return Immediately
-				return true;
-			// Find and Remember Port
-			this.port = getSourcePortAt(e.getPoint());
-			// If Port Found and in ConnectMode (=Ports Visible)
-			if (this.port != null && JGraphText.this.graph.isPortsVisible())
-				return true;
-			// Else Call Superclass
-			return super.isForceMarqueeEvent(e);
-		}
-	
-		// Display PopupMenu or Remember Start Location and First Port
-		public void mousePressed(final MouseEvent e) {
-			// If Right Mouse Button
-			if (SwingUtilities.isRightMouseButton(e)) {
-				// TODO
-//				// Find Cell in Model Coordinates
-				DefaultGraphCell cell = (DefaultGraphCell) graph.getFirstCellForLocation(e.getX(), e.getY());
-				if (cell == null) {
-					return;
-				}
-				if (cell.getAllowsChildren()) {
-					MPort port = (MPort) cell.getChildAt(0);
-					Object userObject = port.getUserObject();
-					if (userObject instanceof AbstractBean) {
-						AbstractBean bean = (AbstractBean)userObject;
-						JPopupMenu menu = bean.getMenu(JGraphText.this, cell);
-						if (menu != null) {
-							menu.show(JGraphText.this.graph, e.getX(), e.getY());
-						} 
-					}
-				}
-			} else if (this.port != null && JGraphText.this.graph.isPortsVisible()) {
-				// Remember Start Location
-				this.start = JGraphText.this.graph.toScreen(this.port.getLocation(null));
-				// Remember First Port
-				this.firstPort = this.port;
-//				System.out.println("MyMarqueeHandler.mousePressed() | " + e.getClickCount());
-//				if (SwingUtilities.isLeftMouseButton(e) && e.getClickCount() == 2) {
-//					System.out.println("MyMarqueeHandler.mousePressed() | try enter");
-//				}
-			} else {
-				// Call Superclass
-				super.mousePressed(e);
-			}
-		}
-
-		// Find Port under Mouse and Repaint Connector
-		public void mouseDragged(MouseEvent e) {
-			// If remembered Start Point is Valid
-			if (this.start != null) {
-				// Fetch Graphics from Graph
-				Graphics g = JGraphText.this.graph.getGraphics();
-				// Reset Remembered Port
-				PortView newPort = getTargetPortAt(e.getPoint());
-				// Do not flicker (repaint only on real changes)
-				if (newPort == null || newPort != this.port) {
-					// Xor-Paint the old Connector (Hide old Connector)
-					paintConnector(Color.BLACK, JGraphText.this.graph.getBackground(), g);
-					// If Port was found then Point to Port Location
-					this.port = newPort;
-					if (this.port != null)
-						this.current = JGraphText.this.graph.toScreen(this.port.getLocation(null));
-					// Else If no Port was found then Point to Mouse Location
-					else
-						this.current = JGraphText.this.graph.snap(e.getPoint());
-					// Xor-Paint the new Connector
-					paintConnector(JGraphText.this.graph.getBackground(), Color.BLACK, g);
-				}
-			}
-			// Call Superclass
-			super.mouseDragged(e);
-		}
-
-		public PortView getSourcePortAt(Point2D point) {
-			// Disable jumping
-			JGraphText.this.graph.setJumpToDefaultPort(false);
-			PortView result;
-			try {
-				// Find a Port View in Model Coordinates and Remember
-				result = JGraphText.this.graph.getPortViewAt(point.getX(), point.getY());
-			} finally {
-				JGraphText.this.graph.setJumpToDefaultPort(true);
-			}
-			return result;
-		}
-
-		// Find a Cell at point and Return its first Port as a PortView
-		protected PortView getTargetPortAt(Point2D point) {
-			// Find a Port View in Model Coordinates and Remember
-			return JGraphText.this.graph.getPortViewAt(point.getX(), point.getY());
-		}
-
-		// Connect the First Port and the Current Port in the Graph or Repaint
-		@Override
-		public void mouseReleased(MouseEvent e) {
-//			System.out.println("MyMarqueeHandler.mouseReleased()");
-			// If Valid Event, Current and First Port
-			if (e != null && this.port != null && this.firstPort != null
-					&& this.firstPort != this.port) {
-				// Then Establish Connection
-				// connect((Port) firstPort.getCell(), (Port) port.getCell());
-				MPort sourcePort = (MPort) this.firstPort.getCell();
-				MPort targetPort = (MPort) this.port.getCell();
-				DefaultEdge edge = JGraphText.this.createEdge((DefaultGraphCell)sourcePort.getParent(), (DefaultGraphCell)targetPort.getParent());
-				
-				
-				
-				if (edge != null) {
-					Object userObject = sourcePort.getUserObject();
-					if (userObject instanceof AbstractBean) {
-//						System.out.println("MyMarqueeHandler.mouseReleased()");
-						AbstractBean bean = (AbstractBean)userObject;
-						bean.updateEdgeAttributes(edge, targetPort);
-					}
-					GraphLayoutCache graphLayoutCache = JGraphText.this.graph.getGraphLayoutCache();
-					graphLayoutCache.refresh(graphLayoutCache.getMapping(edge, true), true);
-				}
-				e.consume();
-				// Else Repaint the Graph
-			} 
-//			else
-				JGraphText.this.graph.repaint();
-			// Reset Global Vars
-			this.firstPort = this.port = null;
-			this.start = this.current = null;
-			// Call Superclass
-			super.mouseReleased(e);
-		}
-
-		// Show Special Cursor if Over Port
-		@Override
-		public void mouseMoved(MouseEvent e) {
-			// Check Mode and Find Port
-			if (e != null && getSourcePortAt(e.getPoint()) != null
-					&& JGraphText.this.graph.isPortsVisible()) {
-				// Set Cusor on Graph (Automatically Reset)
-				JGraphText.this.graph.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
-				// Consume Event
-				// Note: This is to signal the BasicGraphUI's
-				// MouseHandle to stop further event processing.
-				e.consume();
-			} else
-				// Call Superclass
-				super.mouseMoved(e);
-		}
-
-		// Use Xor-Mode on Graphics to Paint Connector
-		protected void paintConnector(Color fg, Color bg, Graphics g) {
-			// Set Foreground
-			g.setColor(fg);
-			// Set Xor-Mode Color
-			g.setXORMode(bg);
-			// Highlight the Current Port
-			paintPort(JGraphText.this.graph.getGraphics());
-			// If Valid First Port, Start and Current Point
-			if (this.firstPort != null && this.start != null && this.current != null)
-				// Then Draw A Line From Start to Current Point
-				g.drawLine((int) this.start.getX(), (int) this.start.getY(),
-						(int) this.current.getX(), (int) this.current.getY());
-		}
-
-		// Use the Preview Flag to Draw a Highlighted Port
-		protected void paintPort(Graphics g) {
-			// If Current Port is Valid
-			if (this.port != null) {
-				// If Not Floating Port...
-				boolean o = (GraphConstants.getOffset(this.port.getAttributes()) != null);
-				// ...Then use Parent's Bounds
-				Rectangle2D r = (o) ? this.port.getBounds() : this.port.getParentView()
-						.getBounds();
-				// Scale from Model to Screen
-				r = JGraphText.this.graph.toScreen((Rectangle2D) r.clone());
-				// Add Space For the Highlight Border
-				r.setFrame(r.getX() - 3, r.getY() - 3, r.getWidth() + 6, r
-						.getHeight() + 6);
-				// Paint Port in Preview (=Highlight) Mode
-				JGraphText.this.graph.getUI().paintCell(g, this.port, r, true);
-			}
-		}
-
-	} // End of Editor.MyMarqueeHandler
-
 	
 	public final JGraph getGraph() {
 		return this.graph;

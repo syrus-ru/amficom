@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.10 2005/08/15 14:20:05 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.11 2005/08/17 15:59:40 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/17 15:59:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -80,6 +80,9 @@ public class DomainBeanFactory extends TabledBeanFactory {
 				
 				public boolean isValid(	AbstractBean sourceBean,
 										AbstractBean targetBean) {
+					
+//					System.out.println("DomainBeanFactory.isValid() | sourceBean:" + sourceBean +", \n\ttargetBean:"+targetBean);
+					
 					return sourceBean != null && 
 						targetBean != null && 
 						(sourceBean.getCodeName().startsWith(ObjectEntities.DOMAIN) ||
