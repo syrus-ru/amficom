@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.178 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.179 2005/08/17 14:26:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.178 $, $Date: 2005/08/08 11:27:25 $
+ * @version $Revision: 1.179 $, $Date: 2005/08/17 14:26:23 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -633,15 +633,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				this.setEntityForPreparedStatement(storableObject, preparedStatement, ExecuteMode.MODE_INSERT);
 				Log.debugMessage(this.getEntityName() + "Database.insertEntities | Inserting  " + this.getEntityName()
 						+ " '" + id + "'", Log.DEBUGLEVEL09);
-				try {
-					preparedStatement.executeUpdate();
-				}
-				catch (SQLException sqle) {
-					Log.errorException(sqle);
-					continue;
-				}
+				preparedStatement.executeUpdate();
 			}
-
 			connection.commit();
 		} catch (SQLException sqle) {
 			try {
@@ -682,8 +675,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			final String tableName,
 			final String idColumnName,
 			final String linkedIdColumnName) throws CreateObjectException {
-		if (idLinkedObjectIdsMap == null || idLinkedObjectIdsMap.isEmpty())
+		if (idLinkedObjectIdsMap == null || idLinkedObjectIdsMap.isEmpty()) {
 			return;
+		}
 
 		final String sql = SQL_INSERT_INTO + tableName + OPEN_BRACKET
 				+ idColumnName + COMMA
@@ -693,29 +687,36 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				+ QUESTION
 				+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
+		Connection connection = null;
 		Identifier id = null;
 		Identifier linkedId = null;
-		Connection connection = null;
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			for (final Iterator<Identifier> it1 = idLinkedObjectIdsMap.keySet().iterator(); it1.hasNext();) {
-				id = it1.next();
+			for (final Iterator<Identifier> idIt = idLinkedObjectIdsMap.keySet().iterator(); idIt.hasNext();) {
+				id = idIt.next();
 				final Set<Identifier> linkedIds = idLinkedObjectIdsMap.get(id);
-				for (final Iterator<Identifier> it2 = linkedIds.iterator(); it2.hasNext();) {
-					linkedId = it2.next();
+				for (final Iterator<Identifier> linkedIdIt = linkedIds.iterator(); linkedIdIt.hasNext();) {
+					linkedId = linkedIdIt.next();
 					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
 					DatabaseIdentifier.setIdentifier(preparedStatement, 2, linkedId);
 					Log.debugMessage(this.getEntityName() + "Database.insertLinkedEntityIds | Inserting linked entity  '"
 							+ linkedId + "' for '" + id + "'", Log.DEBUGLEVEL09);
 					preparedStatement.executeUpdate();
 				}
+				connection.commit();
 			}
-			connection.commit();
 		} catch (SQLException sqle) {
+			if (connection != null) {
+				try {
+					connection.rollback();
+				} catch (SQLException sqle1) {
+					Log.errorException(sqle1);
+				}
+			}
 			final String mesg = this.getEntityName()
 					+ "Database.insertLinkedEntityIds | Cannot insert linked entity  '" + linkedId
-					+ "' for " + id + " -- " + sqle.getMessage();
+					+ "' for '" + id + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -737,11 +738,6 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 	// //////////////////// update /////////////////////////
-/**
- * @todo Make methods insert and update private, use only save
- *@todo Remove single object methods insert and update
- */
-
 
 	/**
 	 * @param storableObjects
@@ -797,13 +793,15 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 		final StringBuffer sql = new StringBuffer(SQL_UPDATE + this.getEntityName() + SQL_SET);
 		for (int i = 0; i < cols.length; i++) {
-			if (cols[i].equals(StorableObjectWrapper.COLUMN_ID))
+			if (cols[i].equals(StorableObjectWrapper.COLUMN_ID)) {
 				continue;
+			}
 			sql.append(cols[i]);
 			sql.append(EQUALS);
 			sql.append(values[i]);
-			if (i < cols.length - 1)
+			if (i < cols.length - 1) {
 				sql.append(COMMA);
+			}
 		}
 		sql.append(SQL_WHERE);
 		sql.append(StorableObjectWrapper.COLUMN_ID);
@@ -885,8 +883,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			final String tableName,
 			final String idColumnName,
 			final String linkedIdColumnName) throws UpdateObjectException {
-		if (idLinkedIdMap == null || idLinkedIdMap.isEmpty())
+		if (idLinkedIdMap == null || idLinkedIdMap.isEmpty()) {
 			return;
+		}
 
 		final StringBuffer sql = new StringBuffer(SQL_SELECT + idColumnName + COMMA + linkedIdColumnName + SQL_FROM + tableName + SQL_WHERE);
 		sql.append(idsEnumerationString(idLinkedIdMap.keySet(), idColumnName, true));
@@ -941,16 +940,14 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 		final Map<Identifier, Set<Identifier>> insertIdsMap = new HashMap<Identifier, Set<Identifier>>();
 		final Map<Identifier, Set<Identifier>> deleteIdsMap = new HashMap<Identifier, Set<Identifier>>();
-		for (final Iterator<Identifier> it1 = idLinkedIdMap.keySet().iterator(); it1.hasNext();) {
-			final Identifier id = it1.next();
+		for (final Identifier id : idLinkedIdMap.keySet()) {
 			final Set<Identifier> linkedObjIds = idLinkedIdMap.get(id);
 			final Set<Identifier> dbLinkedObjIds = dbLinkedObjIdsMap.get(id);
 
 			if (dbLinkedObjIds != null) {
 
 				// Prepare map for insertion
-				for (Iterator<Identifier> it2 = linkedObjIds.iterator(); it2.hasNext();) {
-					final Identifier linkedObjId = it2.next();
+				for (final Identifier linkedObjId : linkedObjIds) {
 					if (!dbLinkedObjIds.contains(linkedObjId)) {
 						Set<Identifier> alteringIds = insertIdsMap.get(id);
 						if (alteringIds == null) {
@@ -962,8 +959,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				}
 
 				// Prepare map for deletion
-				for (Iterator<Identifier> it2 = dbLinkedObjIds.iterator(); it2.hasNext();) {
-					final Identifier linkedObjId = it2.next();
+				for (final Identifier linkedObjId : dbLinkedObjIds) {
 					if (!linkedObjIds.contains(linkedObjId)) {
 						Set<Identifier> alteringIds = deleteIdsMap.get(id);
 						if (alteringIds == null) {
@@ -974,8 +970,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 
-			} else
+			} else {
 				insertIdsMap.put(id, linkedObjIds);
+			}
 
 		}
 
@@ -1084,14 +1081,14 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			final String tableName,
 			final String idColumnName,
 			final String linkedIdColumnName) {
-		if (idLinkedObjectIdsMap == null || idLinkedObjectIdsMap.isEmpty())
+		if (idLinkedObjectIdsMap == null || idLinkedObjectIdsMap.isEmpty()) {
 			return;
+		}
 
 		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + tableName
 				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
 
-		for (final Iterator<Identifier> it = idLinkedObjectIdsMap.keySet().iterator(); it.hasNext();) {
-			final Identifier id = it.next();
+		for (final Identifier id : idLinkedObjectIdsMap.keySet()) {
 			final Set<Identifier> linkedObjIds = idLinkedObjectIdsMap.get(id);
 
 			sql.append(SQL_OR + OPEN_BRACKET + idColumnName + EQUALS + DatabaseIdentifier.toSQLString(id) + SQL_AND + OPEN_BRACKET);
