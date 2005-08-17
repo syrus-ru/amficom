@@ -1,4 +1,4 @@
--- $Id: test.sql,v 1.13 2005/07/29 16:06:28 arseniy Exp $
+-- $Id: test.sql,v 1.14 2005/08/17 15:10:35 arseniy Exp $
 
 CREATE TABLE Test (
  id NUMBER(19),
@@ -11,7 +11,7 @@ CREATE TABLE Test (
  temporal_type NUMBER(2, 0) NOT NULL,
  start_time DATE,
  end_time DATE,
- cron_temporal_pattern_id,
+ temporal_pattern_id NUMBER(19),
 --
  measurement_type_id NOT NULL,
  analysis_type_id,
@@ -29,8 +29,8 @@ CREATE TABLE Test (
  CONSTRAINT test_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
 --
- CONSTRAINT test_ctp_fk FOREIGN KEY (cron_temporal_pattern_id)
-  REFERENCES CronTemporalPattern (id) ON DELETE CASCADE,
+-- CONSTRAINT test_ctp_fk FOREIGN KEY (cron_temporal_pattern_id)
+--  REFERENCES CronTemporalPattern (id) ON DELETE CASCADE,
 --
  CONSTRAINT test_mnttype_fk FOREIGN KEY (measurement_type_id)
   REFERENCES MeasurementType (id) ON DELETE CASCADE,
