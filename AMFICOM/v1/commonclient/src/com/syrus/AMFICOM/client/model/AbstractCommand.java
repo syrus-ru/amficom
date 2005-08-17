@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractCommand.java,v 1.4 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: AbstractCommand.java,v 1.5 2005/08/17 14:28:06 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.model;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/17 14:28:06 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -50,8 +50,7 @@ public abstract class AbstractCommand implements Command {
 
 	}
 
-	public void setParameter(	String field,
-								Object value) {
+	public void setParameter(String field, Object value) {
 		// nothing
 
 	}
@@ -61,6 +60,7 @@ public abstract class AbstractCommand implements Command {
 
 	}
 
+	@Override
 	protected Object clone() throws CloneNotSupportedException {
 		return super.clone();
 	}
