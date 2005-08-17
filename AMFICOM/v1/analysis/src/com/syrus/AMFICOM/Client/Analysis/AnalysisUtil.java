@@ -220,10 +220,10 @@ public class AnalysisUtil
 	}
 
 	/**
-	 * Method for loading Etalon for certain TestSetup to Pool. If there is no
-	 * Etalon attached to TestSetup method returns.
-	 * @param ms MeasurementSetup
-	 * @throws DataFormatException 
+	 * Load Etalon for certain MeasurementSetup to Heap.
+	 * If there is no Etalon attached to MeasurementSetup, do nothing.
+	 * @param ms MeasurementSetup to be loaded
+	 * @throws DataFormatException Etalon object decoding failed
 	 */
 	public static void loadEtalon(MeasurementSetup ms)
 	throws DataFormatException
