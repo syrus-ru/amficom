@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: SchemeCableThread.xsd,v 1.1 2005/08/17 07:39:11 max Exp $
+-->
+<xsd:schema 
+	targetNamespace="http://syrus.com/AMFICOM/scheme/xml"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:scheme="http://syrus.com/AMFICOM/scheme/xml"
+	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault="qualified">
+
+  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+
+  <xsd:element name="schemecablethreads" type="scheme:SchemeCableThreads">
+
+    <xsd:key name="schemecablethreaduid">
+      <xsd:selector xpath="scheme:schemecablethread"/>
+      <xsd:field xpath="@uid"/>
+    </xsd:key>
+
+    <xsd:keyref name="dummysctspu" refer="scheme:schemeportuid">
+      <xsd:selector xpath="scheme:schemecablethread"/>
+      <xsd:field xpath="@sourceportuid"/>
+    </xsd:keyref>
+
+    <xsd:keyref name="dummyscttpu" refer="scheme:schemeportuid">
+      <xsd:selector xpath="scheme:schemecablethread"/>
+      <xsd:field xpath="@targetportuid"/>
+    </xsd:keyref>
+
+  </xsd:element>
+
+  <xsd:complexType name="SchemeCableThreads">
+    <xsd:sequence>
+      <xsd:element name="schemecablethread" type="scheme:SchemeCableThread" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="SchemeCableThread">
+    <xsd:all>
+      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="threadtype" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="sourceportuid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="targetportuid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+    </xsd:all>
+  </xsd:complexType>
+
+</xsd:schema>

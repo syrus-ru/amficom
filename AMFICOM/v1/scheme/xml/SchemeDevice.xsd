@@ -1,0 +1,40 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: SchemeDevice.xsd,v 1.1 2005/08/17 07:39:11 max Exp $
+-->
+<xsd:schema 
+	targetNamespace="http://syrus.com/AMFICOM/scheme/xml"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:scheme="http://syrus.com/AMFICOM/scheme/xml"
+	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault="qualified">
+
+  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+
+  <xsd:include schemaLocation="SchemePort.xsd"/>
+
+  <xsd:element name="schemedevices" type="scheme:SchemeDevices">
+
+    <xsd:key name="schemedeviceuid">
+      <xsd:selector xpath="scheme:schemedevice"/>
+      <xsd:field xpath="@uid"/>
+    </xsd:key>
+
+  </xsd:element>
+
+  <xsd:complexType name="SchemeDevices">
+    <xsd:sequence>
+      <xsd:element name="schemedevice" type="scheme:SchemeDevice" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="SchemeDevice">
+    <xsd:sequence>
+      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="schemeports" type="scheme:SchemePorts" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="schemecableports" type="scheme:SchemePorts" minOccurs="0" maxOccurs="1"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+</xsd:schema>

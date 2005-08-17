@@ -1,0 +1,58 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: CableChannelingItem.xsd,v 1.1 2005/08/17 07:39:11 max Exp $
+-->
+<xsd:schema 
+	targetNamespace="http://syrus.com/AMFICOM/scheme/xml"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:scheme="http://syrus.com/AMFICOM/scheme/xml"
+	xmlns:map="http://syrus.com/AMFICOM/map/xml"
+	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault="qualified">
+
+  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+  <xsd:import namespace="http://syrus.com/AMFICOM/map/xml"/>
+
+  <xsd:element name="cablechannelingitems" type="scheme:CableChannelingItems">
+
+    <xsd:key name="cablechannelingitemuid">
+      <xsd:selector xpath="scheme:cablechannelingitem"/>
+      <xsd:field xpath="@uid"/>
+    </xsd:key>
+<!--
+    <xsd:keyref name="dummyplu" refer="map:physicallinkuid">
+      <xsd:selector xpath="scheme:cablechannelingitem"/>
+      <xsd:field xpath="@physicallinkuid"/>
+    </xsd:keyref>
+
+    <xsd:keyref name="dummyssnu" refer="map:nodeuid">
+      <xsd:selector xpath="scheme:cablechannelingitem"/>
+      <xsd:field xpath="@startsitenodeuid"/>
+    </xsd:keyref>
+
+    <xsd:keyref name="dummyesnu" refer="map:nodeuid">
+      <xsd:selector xpath="scheme:cablechannelingitem"/>
+      <xsd:field xpath="@endsitenodeuid"/>
+    </xsd:keyref>
+-->
+  </xsd:element>
+
+  <xsd:complexType name="CableChannelingItems">
+    <xsd:sequence>
+      <xsd:element name="cablechannelingitem" type="scheme:CableChannelingItem" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
+
+  <xsd:complexType name="CableChannelingItem">
+    <xsd:all>
+      <xsd:element name="number" type="xsd:integer" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="rowX" type="xsd:integer" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="placeY" type="xsd:integer" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="startSpare" type="xsd:double" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="endSpare" type="xsd:double" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="physicallinkuid" type="gen:UID" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="startsitenodeuid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="endsitenodeuid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+    </xsd:all>
+  </xsd:complexType>
+
+</xsd:schema>
