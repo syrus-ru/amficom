@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveLinkTypeCommand.java,v 1.1 2005/08/02 07:22:03 krupenn Exp $
+ * $Id: MapEditorRemoveLinkTypeCommand.java,v 1.2 2005/08/17 14:14:18 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ public class MapEditorRemoveLinkTypeCommand extends AbstractCommand {
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute() {
 		PhysicalLinkType physicalLinkType = (PhysicalLinkType )WrapperedComboChooserDialog.showChooserDialog(
 				LinkTypeController.getTopologicalLinkTypes());

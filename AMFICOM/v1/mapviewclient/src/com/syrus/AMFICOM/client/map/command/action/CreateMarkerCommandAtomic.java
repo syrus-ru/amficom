@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.26 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.27 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
  * Команда создания метки на линии
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/08/12 14:49:41 $
+ * @version $Revision: 1.27 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class CreateMarkerCommandAtomic extends MapActionCommand
@@ -72,6 +72,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 		this.point = point;
 	}
 
+	@Override
 	public void execute()
 	{
 		try

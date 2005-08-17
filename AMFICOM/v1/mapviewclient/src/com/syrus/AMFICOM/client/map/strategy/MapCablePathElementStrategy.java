@@ -1,5 +1,5 @@
 /**
- * $Id: MapCablePathElementStrategy.java,v 1.20 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapCablePathElementStrategy.java,v 1.21 2005/08/17 14:14:20 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.mapview.Selection;
  * Стратегия управления кабельным путем.
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.21 $, $Date: 2005/08/17 14:14:20 $
  * @module mapviewclient
  */
 public final class MapCablePathElementStrategy extends AbstractMapStrategy 
@@ -59,6 +59,7 @@ public final class MapCablePathElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setMapElement(MapElement me)
 	{
 		this.path = (CablePath)me;
@@ -67,6 +68,7 @@ public final class MapCablePathElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void leftMousePressed(MapState mapState, Point point)
 		throws MapConnectionException, MapDataException
 	{

@@ -36,6 +36,7 @@ public final class ProtoPopupMenu extends MapPopupMenu {
 		return instance;
 	}
 
+	@Override
 	public void setElement(Object me) {
 		this.proto = (SiteNodeType )me;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MapStatusBar.java,v 1.16 2005/08/12 14:49:42 arseniy Exp $
+ * $Id: MapStatusBar.java,v 1.17 2005/08/17 14:14:20 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/08/12 14:49:42 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/17 14:14:20 $
  * @module mapviewclient
  */
 public final class MapStatusBar extends JPanel {
@@ -104,6 +104,7 @@ public final class MapStatusBar extends JPanel {
 		this.scaleField.setMinimumSize(fieldSize);
 
 		this.scaleField.addKeyListener(new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 					try {
@@ -120,6 +121,7 @@ public final class MapStatusBar extends JPanel {
 		});
 
 		KeyListener longlatKeyListener = new KeyAdapter() {
+			@Override
 			public void keyPressed(KeyEvent e) {
 				if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 					try {

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandAtomic.java,v 1.19 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: CreateUnboundLinkCommandAtomic.java,v 1.20 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
  * создание непривязанной линии, внесение ее в пул и на карту - 
  * атомарное действие 
  * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/08/11 12:43:29 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class CreateUnboundLinkCommandAtomic extends MapActionCommand
@@ -51,6 +51,7 @@ public class CreateUnboundLinkCommandAtomic extends MapActionCommand
 		return this.link;
 	}
 	
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);

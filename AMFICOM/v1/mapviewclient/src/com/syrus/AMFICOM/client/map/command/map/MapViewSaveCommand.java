@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.25 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MapViewSaveCommand.java,v 1.26 2005/08/17 14:14:18 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.26 $, $Date: 2005/08/17 14:14:18 $
  * @module mapviewclient
  */
 public class MapViewSaveCommand extends AbstractCommand
@@ -46,6 +46,7 @@ public class MapViewSaveCommand extends AbstractCommand
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute()
 	{
 		if(EditorDialog.showEditorDialog(

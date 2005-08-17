@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddMapCommand.java,v 1.12 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MapAddMapCommand.java,v 1.13 2005/08/17 14:14:18 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * добавить в вид схему из списка
  * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/17 14:14:18 $
  * @module mapviewclient
  */
 public class MapAddMapCommand extends AbstractCommand
@@ -64,6 +64,7 @@ public class MapAddMapCommand extends AbstractCommand
 		return this.map;
 	}
 
+	@Override
 	public void execute()
 	{
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);

@@ -33,6 +33,7 @@ public final class SitePopupMenu extends MapPopupMenu {
 		return instance;
 	}
 
+	@Override
 	public void setElement(Object me) {
 		this.site = (SiteNode )me;
 	}

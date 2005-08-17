@@ -1,5 +1,5 @@
 /**
- * $Id: MapAdditionalPropertiesFrame.java,v 1.8 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapAdditionalPropertiesFrame.java,v 1.9 2005/08/17 14:14:20 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.8 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/17 14:14:20 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */
@@ -31,6 +31,7 @@ public final class MapAdditionalPropertiesFrame extends MapAbstractPropertiesFra
 		super(title, aContext);
 	}
 	
+	@Override
 	public StorableObjectEditor getEditor(VisualManager manager) {
 		StorableObjectEditor addEditor = 
 			manager.getAdditionalPropertiesPanel();

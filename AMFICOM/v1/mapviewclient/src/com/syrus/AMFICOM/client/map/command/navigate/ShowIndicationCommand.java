@@ -1,5 +1,5 @@
 /**
- * $Id: ShowIndicationCommand.java,v 1.3 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: ShowIndicationCommand.java,v 1.4 2005/08/17 14:14:19 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
 /**
  * Команда включения/выключения режима отображения топологических узлов на карте 
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/17 14:14:19 $
  * @module mapviewclient
  */
 public class ShowIndicationCommand extends MapNavigateCommand {
@@ -31,6 +31,7 @@ public class ShowIndicationCommand extends MapNavigateCommand {
 		super(aModel, netMapViewer);
 	}
 
+	@Override
 	public void setParameter(String field, Object value) {
 		super.setParameter(field, value);
 		if(field.equals("button"))
@@ -41,6 +42,7 @@ public class ShowIndicationCommand extends MapNavigateCommand {
 
 	Icon invisibleIcon = new ImageIcon("images/indication_invisible.gif");
 
+	@Override
 	public void execute() {
 		if(MapPropertiesManager.isShowAlarmIndication()) {
 			this.button.setIcon(this.invisibleIcon);

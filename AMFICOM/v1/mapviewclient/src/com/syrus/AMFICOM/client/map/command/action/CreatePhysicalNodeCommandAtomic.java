@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.22 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.23 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  * создание топологического узла, внесение его в пул и на карту - 
  * атомарное действие 
  * @author $Author: arseniy $
- * @version $Revision: 1.22 $, $Date: 2005/08/12 14:49:41 $
+ * @version $Revision: 1.23 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
@@ -51,6 +51,7 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 		return this.node;
 	}
 	
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
@@ -81,11 +82,13 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand
 		}
 	}
 	
+	@Override
 	public void redo() 
 	{
 		this.logicalNetLayer.getMapView().getMap().addNode(this.node);
 	}
 	
+	@Override
 	public void undo()
 	{
 		this.logicalNetLayer.getMapView().getMap().removeNode(this.node);

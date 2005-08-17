@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewCloseCommand.java,v 1.13 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MapViewCloseCommand.java,v 1.14 2005/08/17 14:14:18 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/17 14:14:18 $
  * @module mapviewclient
  */
 public class MapViewCloseCommand extends AbstractCommand {
@@ -33,6 +33,7 @@ public class MapViewCloseCommand extends AbstractCommand {
 		this.mapView = mapView;
 	}
 
+	@Override
 	public void execute() {
 		//		mapFrame.saveConfig();
 

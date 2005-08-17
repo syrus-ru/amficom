@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.8 2005/08/11 12:43:32 arseniy Exp $ 
+ * $Id: MapTreeModel.java,v 1.9 2005/08/17 14:14:20 arseniy Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный Интеллектуальный 
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/17 14:14:20 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */
@@ -615,6 +615,7 @@ final class SiteNodeTypeComparator implements Comparator {
 		return type1.getName().compareTo(type2.getName());
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		return (obj instanceof SiteNodeTypeComparator);
 	}
@@ -627,6 +628,7 @@ final class MapElementComparator implements Comparator {
 		return mapElement1.getName().compareTo(mapElement2.getName());
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		return (obj instanceof MapElementComparator);
 	}
@@ -639,6 +641,7 @@ final class MapComparator implements Comparator {
 		return map1.getName().compareTo(map2.getName());
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		return (obj instanceof MapComparator);
 	}

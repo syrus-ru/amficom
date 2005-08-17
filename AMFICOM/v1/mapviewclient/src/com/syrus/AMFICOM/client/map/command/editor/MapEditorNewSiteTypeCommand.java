@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewSiteTypeCommand.java,v 1.4 2005/08/08 13:05:43 krupenn Exp $
+ * $Id: MapEditorNewSiteTypeCommand.java,v 1.5 2005/08/17 14:14:17 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,6 +36,7 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute() {
 		try {
 			MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);

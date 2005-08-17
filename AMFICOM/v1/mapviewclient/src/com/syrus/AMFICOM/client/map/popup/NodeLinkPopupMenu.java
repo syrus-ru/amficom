@@ -30,6 +30,7 @@ public final class NodeLinkPopupMenu extends MapPopupMenu {
 		return instance;
 	}
 
+	@Override
 	public void setElement(Object me) {
 		this.link = (NodeLink )me;
 	}

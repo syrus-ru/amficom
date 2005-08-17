@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.48 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MapEditorMainFrame.java,v 1.49 2005/08/17 14:14:19 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -77,11 +77,13 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
  * 
  * 
  * 
- * @version $Revision: 1.48 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.49 $, $Date: 2005/08/17 14:14:19 $
  * @module mapviewclient
  * @author $Author: arseniy $
  */
 public final class MapEditorMainFrame extends AbstractMainFrame {
+	private static final long serialVersionUID = 3420855179151985089L;
+
 	protected static String iniFileName = "Map.properties";
 
 	private MapFrame mapFrame = null;
@@ -100,6 +102,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 
 		this.addComponentListener(new ComponentAdapter()
 			{
+				@Override
 				public void componentShown(ComponentEvent e)
 				{
 					thisComponentShown(e);
@@ -109,6 +112,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		this.desktopPane.setLayout(null);
 	}
 
+	@Override
 	protected void setDefaultModel (ApplicationModel aModel) {
 		super.setDefaultModel(aModel);
 
@@ -117,6 +121,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW, true);
 	}
 
+	@Override
 	public void disposeModule() {
 		if(getMapFrame() != null)
 			getMapFrame().saveConfig();
@@ -124,6 +129,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		super.disposeModule();
 	}
 
+	@Override
 	protected void initModule() {
 		super.initModule();
 
@@ -287,6 +293,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 //		}
 	}
 
+	@Override
 	public void setContext(ApplicationContext aContext)
 	{
 		if(this.aContext != null)
@@ -310,6 +317,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		}
 	}
 
+	@Override
 	public void propertyChange(PropertyChangeEvent pce)
 	{
 		super.propertyChange(pce);
@@ -376,6 +384,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		}
 	}
 
+	@Override
 	public void setConnectionClosed() {
 		super.setConnectionClosed();
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -388,6 +397,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		aModel.fireModelChanged();
 	}
 
+	@Override
 	public void setConnectionFailed() {
 		super.setConnectionFailed();
 		ApplicationModel aModel = this.aContext.getApplicationModel();
@@ -400,6 +410,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		aModel.fireModelChanged();
 	}
 
+	@Override
 	public void setDomainSelected() {
 		super.setDomainSelected();
 		new CloseAllInternalCommand(this.desktopPane).execute();
@@ -449,6 +460,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		}
 	}
 
+	@Override
 	public void setSessionClosed() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 

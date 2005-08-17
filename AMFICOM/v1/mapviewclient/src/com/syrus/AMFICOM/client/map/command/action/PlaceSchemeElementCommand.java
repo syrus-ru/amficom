@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.29 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.30 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * или по координатам
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/08/12 14:49:41 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle
@@ -78,6 +78,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 		this.point = point;
 	}
 
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);

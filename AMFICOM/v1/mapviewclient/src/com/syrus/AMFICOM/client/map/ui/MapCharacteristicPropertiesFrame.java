@@ -10,6 +10,7 @@ public class MapCharacteristicPropertiesFrame extends MapAbstractPropertiesFrame
 		super(title, aContext);
 	}
 	
+	@Override
 	protected StorableObjectEditor getEditor(VisualManager manager) {
 		return manager.getCharacteristicPropertiesPanel();
 	}

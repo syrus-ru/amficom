@@ -1,5 +1,5 @@
 /**
- * $Id: HandPanCommand.java,v 1.11 2005/06/16 10:57:20 krupenn Exp $ 
+ * $Id: HandPanCommand.java,v 1.12 2005/08/17 14:14:18 arseniy Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный 
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
  * изменение модели приложения и объекта MapState в логическом сетевом слое
  * карты
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/06/16 10:57:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/17 14:14:18 $
  * @module mpviewclient_v1
  */
 public class HandPanCommand extends MapNavigateCommand {
@@ -30,6 +30,7 @@ public class HandPanCommand extends MapNavigateCommand {
 		super(aModel, netMapViewer);
 	}
 
+	@Override
 	public void execute() {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		if(this.aModel.isSelected(MapApplicationModel.OPERATION_HAND_PAN)) {

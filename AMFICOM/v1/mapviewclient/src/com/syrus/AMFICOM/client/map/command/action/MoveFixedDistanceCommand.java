@@ -1,5 +1,5 @@
 /**
- * $Id: MoveFixedDistanceCommand.java,v 1.13 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: MoveFixedDistanceCommand.java,v 1.14 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * топологического узла, связанного с ним фрагментом линии, при сохранении
  * длины фрагмента
  * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/08/12 14:49:41 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
@@ -55,6 +55,7 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 				+ (movedY - fixedY) * (movedY - fixedY));
 	}
 
+	@Override
 	public void setNetMapViewer(NetMapViewer netMapViewer)
 	{
 		super.setNetMapViewer(netMapViewer);
@@ -85,6 +86,7 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 	 * создать отдельные команды на перемещение для всех выделенных
 	 * точечных объектов
 	 */
+	@Override
 	protected void setElements()
 	{
 		super.add(new MoveNodeCommand(this.movedNode));
@@ -93,6 +95,7 @@ public class MoveFixedDistanceCommand extends MoveSelectionCommandBundle
 	/**
 	 * обновить абсолютное смещение по начальной и конечной точкам сдвига
 	 */
+	@Override
 	protected void setShift()
 	{
 		try {

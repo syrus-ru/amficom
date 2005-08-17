@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.45 2005/08/15 14:29:56 krupenn Exp $
+ * $Id: MapViewController.java,v 1.46 2005/08/17 14:14:19 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemePathCommand;
 import com.syrus.AMFICOM.client.map.command.action.RemoveNodeCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeCableLinkCommand;
-import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemeElementCommand;
 import com.syrus.AMFICOM.client.map.command.action.UnPlaceSchemePathCommand;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.configuration.Equipment;
@@ -62,8 +61,8 @@ import com.syrus.util.Log;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: krupenn $
- * @version $Revision: 1.45 $, $Date: 2005/08/15 14:29:56 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.46 $, $Date: 2005/08/17 14:14:19 $
  * @module mapviewclient
  */
 public final class MapViewController {

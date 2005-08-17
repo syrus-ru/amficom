@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewLinkTypeCommand.java,v 1.7 2005/08/12 14:52:33 arseniy Exp $
+ * $Id: MapEditorNewLinkTypeCommand.java,v 1.8 2005/08/17 14:14:17 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,6 +36,7 @@ public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute() {
 		try {
 			MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);

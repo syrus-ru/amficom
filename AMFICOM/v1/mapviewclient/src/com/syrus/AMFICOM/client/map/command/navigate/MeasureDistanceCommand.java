@@ -1,5 +1,5 @@
 /**
- * $Id: MeasureDistanceCommand.java,v 1.10 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MeasureDistanceCommand.java,v 1.11 2005/08/17 14:14:19 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
  * Команда включения/выключения масштабирования по выбранной области
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/17 14:14:19 $
  * @module mapviewclient
  */
 public class MeasureDistanceCommand extends MapNavigateCommand {
@@ -29,6 +29,7 @@ public class MeasureDistanceCommand extends MapNavigateCommand {
 		super(aModel, netMapViewer);
 	}
 
+	@Override
 	public void execute() {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		if(this.aModel

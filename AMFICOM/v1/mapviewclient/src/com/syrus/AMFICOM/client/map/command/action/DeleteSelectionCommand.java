@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.24 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.25 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,37 +30,35 @@ import com.syrus.util.Log;
  * Удалить выбранные элементы карты. Команда является пучком команд 
  * (CommandBundle), удаляющих отдельные элементы.
  * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/08/11 12:43:29 $
+ * @version $Revision: 1.25 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
-public class DeleteSelectionCommand extends MapActionCommandBundle
-{
+public class DeleteSelectionCommand extends MapActionCommandBundle {
 	/**
-	 * при установке логического слоя сети создаются команды на удаление
-	 * выбранных объектов. выполнение удаления осуществляется только
-	 * при вызове execute()
+	 * при установке логического слоя сети создаются команды на удаление выбранных
+	 * объектов. выполнение удаления осуществляется только при вызове execute()
 	 */
-	public void setNetMapViewer(NetMapViewer netMapViewer)
-	{
+	@Override
+	public void setNetMapViewer(final NetMapViewer netMapViewer) {
 		super.setNetMapViewer(netMapViewer);
-		
+
 		//Удаляем все выбранные элементы взависимости от разрешения на их удаление
 		Iterator e;
 
-		LinkedList nodesToDelete = new LinkedList();
-		LinkedList nodeLinksToDelete = new LinkedList();
-		LinkedList linksToDelete = new LinkedList();
-		LinkedList cablePathsToDelete = new LinkedList();
+		final LinkedList<AbstractNode> nodesToDelete = new LinkedList<AbstractNode>();
+		final LinkedList<NodeLink> nodeLinksToDelete = new LinkedList<NodeLink>();
+		final LinkedList<PhysicalLink> linksToDelete = new LinkedList<PhysicalLink>();
+		final LinkedList cablePathsToDelete = new LinkedList();
 //		LinkedList pathsToDelete = new LinkedList();
 
-		int showMode = this.logicalNetLayer.getMapState().getShowMode();
+		final int showMode = this.logicalNetLayer.getMapState().getShowMode();
 
 		for(Iterator it = this.logicalNetLayer.getSelectedElements().iterator(); it.hasNext();)
 		{
 			MapElement me = (MapElement)it.next();
 			if(me instanceof AbstractNode)
 			{
-				nodesToDelete.add(me);
+				nodesToDelete.add((AbstractNode) me);
 			}
 			else
 			if(me instanceof NodeLink
@@ -68,15 +66,17 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 			{
 				NodeLink nodeLink = (NodeLink)me;
 				PhysicalLink link = nodeLink.getPhysicalLink();
-				if(!(link instanceof UnboundLink))
+				if(!(link instanceof UnboundLink)) {
 					nodeLinksToDelete.add(nodeLink);
+				}
 			}
 			else
 			if(me instanceof PhysicalLink
 				&& showMode == MapState.SHOW_PHYSICAL_LINK)
 			{
-				if(! (me instanceof UnboundLink))
-					linksToDelete.add(me);
+				if(! (me instanceof UnboundLink)) {
+					linksToDelete.add((PhysicalLink) me);
+				}
 			}
 		}
 
@@ -213,6 +213,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle
 	 * после удаления обновить текущий элемент карты и оповестить
 	 * слушателей об изменениях карты
 	 */
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);

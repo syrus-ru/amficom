@@ -1,5 +1,5 @@
 /**
- * $Id: MapKeyAdapter.java,v 1.12 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapKeyAdapter.java,v 1.13 2005/08/17 14:14:20 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.map.NodeLink;
  * обработчик событий клавиатуры в окне карты. »спользуетс€ дл€ изменени€ 
  * режима обработки действий (SHIFT, ALT, CTRL) и дл€ удалени€ выбранных 
  * элементов (DEL)
- * @version $Revision: 1.12 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/17 14:14:20 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */
@@ -40,6 +40,7 @@ public final class MapKeyAdapter extends KeyAdapter
 		this.viewer = viewer;
 	}
 
+	@Override
 	public void keyPressed(KeyEvent ke)
 	{
 		int code = ke.getKeyCode();
@@ -114,11 +115,13 @@ public final class MapKeyAdapter extends KeyAdapter
 		}
 	}
 
+	@Override
 	public void keyReleased(KeyEvent ke)
 	{
 		this.viewer.getLogicalNetLayer().getMapState().setActionMode(MapState.NULL_ACTION_MODE);
 	}
 
+	@Override
 	public void keyTyped(KeyEvent ke)
 	{//empty
 	}

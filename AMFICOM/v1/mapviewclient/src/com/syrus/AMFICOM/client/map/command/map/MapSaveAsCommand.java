@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.24 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MapSaveAsCommand.java,v 1.25 2005/08/17 14:14:18 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.map.Map;
  * Класс $RCSfile: MapSaveAsCommand.java,v $ используется для сохранения 
  * топологической схемы с новым именем
  * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.25 $, $Date: 2005/08/17 14:14:18 $
  * @module mapviewclient
  */
 public class MapSaveAsCommand extends AbstractCommand {
@@ -44,6 +44,7 @@ public class MapSaveAsCommand extends AbstractCommand {
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute() {
 		Identifier userId = LoginManager.getUserId();
 		Identifier domainId = LoginManager.getDomainId();

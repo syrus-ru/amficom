@@ -1,5 +1,5 @@
 /**
- * $Id: ZoomInCommand.java,v 1.11 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: ZoomInCommand.java,v 1.12 2005/08/17 14:14:19 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client.model.Command;
 /**
  * Команда "Приблизить вид со стандартным коэффициентом" 
  * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/17 14:14:19 $
  * @module mapviewclient
  */
 public class ZoomInCommand extends MapNavigateCommand {
@@ -26,6 +26,7 @@ public class ZoomInCommand extends MapNavigateCommand {
 		super(aModel, netMapViewer);
 	}
 
+	@Override
 	public void execute() {
 		try {
 			this.netMapViewer.zoomIn();

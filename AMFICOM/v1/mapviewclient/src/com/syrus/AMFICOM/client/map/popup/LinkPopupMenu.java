@@ -47,6 +47,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 		return instance;
 	}
 	
+	@Override
 	public void setElement(Object me)
 	{
 		this.link = (PhysicalLink)me;

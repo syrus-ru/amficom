@@ -32,6 +32,7 @@ public class VoidElementPopupMenu extends MapPopupMenu {
 		return instance;
 	}
 
+	@Override
 	public void setElement(Object me) {
 		// empty
 	}

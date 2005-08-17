@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapViewNavigatorCommand.java,v 1.7 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: ViewMapViewNavigatorCommand.java,v 1.8 2005/08/17 14:14:18 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.client.model.Command;
 /**
  * отобразить окно привязки схем к карте 
  * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/17 14:14:18 $
  * @module mapviewclient
  */
 public class ViewMapViewNavigatorCommand extends AbstractCommand {
@@ -45,6 +45,7 @@ public class ViewMapViewNavigatorCommand extends AbstractCommand {
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute() {
 		this.treeFrame = MapDesktopCommand.findMapViewTreeFrame(this.desktop);
 

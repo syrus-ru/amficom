@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.30 2005/08/12 10:42:35 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.31 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -36,8 +36,8 @@ import com.syrus.util.Log;
  *  из непроложенных линий генерируютс€ тоннели и кабель прив€зываетс€ к ним.
  *  ”же существующа€ прив€зка сохран€етс€. ѕо неприв€занным элементам 
  *  генерируютс€ сетевые узла и схемные элементы прив€зываютс€ к ним.
- * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/08/12 10:42:35 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
@@ -67,6 +67,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 		this.proto = proto;
 	}
 	
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);

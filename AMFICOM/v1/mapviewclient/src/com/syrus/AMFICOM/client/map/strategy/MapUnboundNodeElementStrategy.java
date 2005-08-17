@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.26 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.27 2005/08/17 14:14:20 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Стратегия управления непривязанным узлом.
  * @author $Author: arseniy $
- * @version $Revision: 1.26 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.27 $, $Date: 2005/08/17 14:14:20 $
  * @module mapviewclient
  */
 public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy 
@@ -68,6 +68,7 @@ public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setMapElement(MapElement me)
 	{
 		this.unbound = (UnboundNode)me;
@@ -76,6 +77,7 @@ public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void leftMousePressed(MapState mapState, Point point)
 		throws MapConnectionException, MapDataException
 	{
@@ -107,6 +109,7 @@ public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void leftMouseDragged(MapState mapState, Point point)
 		throws MapConnectionException, MapDataException
 	{
@@ -142,6 +145,7 @@ public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void leftMouseReleased(MapState mapState, Point point)
 		throws MapConnectionException, MapDataException
 	{

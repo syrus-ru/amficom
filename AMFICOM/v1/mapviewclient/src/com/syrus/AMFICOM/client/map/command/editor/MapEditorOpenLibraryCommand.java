@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorOpenLibraryCommand.java,v 1.3 2005/08/03 15:34:35 krupenn Exp $
+ * $Id: MapEditorOpenLibraryCommand.java,v 1.4 2005/08/17 14:14:17 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,6 +43,7 @@ public class MapEditorOpenLibraryCommand extends AbstractCommand {
 		this.aContext = context;
 	}
 
+	@Override
 	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 

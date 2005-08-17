@@ -1,5 +1,5 @@
 /**
- * $Id: MoveNodeCommand.java,v 1.16 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: MoveNodeCommand.java,v 1.17 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.util.Log;
 /**
  * Перемещение узла.
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/08/12 14:49:41 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class MoveNodeCommand extends MapActionCommand
@@ -56,6 +56,7 @@ public class MoveNodeCommand extends MapActionCommand
 		this.initialLocation = node.getLocation();
 	}
 
+	@Override
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals(MoveSelectionCommandBundle.DELTA_X))
@@ -71,12 +72,14 @@ public class MoveNodeCommand extends MapActionCommand
 		}
 	}
 
+	@Override
 	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
 	{
 		this.logicalNetLayer = logicalNetLayer;
 		this.aContext = logicalNetLayer.getContext();
 	}
 	
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
@@ -89,6 +92,7 @@ public class MoveNodeCommand extends MapActionCommand
 		setResult(Command.RESULT_OK);
 	}
 	
+	@Override
 	public void undo()
 	{
 		this.node.setLocation(this.initialLocation);

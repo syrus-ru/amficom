@@ -1,5 +1,5 @@
 /**
- * $Id: MoveFixedCommand.java,v 1.7 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MoveFixedCommand.java,v 1.8 2005/08/17 14:14:19 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
  * Команда включения/выключения масштабирования по выбранной области
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/17 14:14:19 $
  * @module mapviewclient
  */
 public class MoveFixedCommand extends MapNavigateCommand {
@@ -29,6 +29,7 @@ public class MoveFixedCommand extends MapNavigateCommand {
 		super(aModel, netMapViewer);
 	}
 
+	@Override
 	public void execute() {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		if(this.aModel.isSelected(MapApplicationModel.OPERATION_MOVE_FIXED)) {

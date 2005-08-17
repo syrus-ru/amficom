@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryTreeModel.java,v 1.2 2005/08/08 10:41:11 krupenn Exp $
+ * $Id: MapLibraryTreeModel.java,v 1.3 2005/08/17 14:14:20 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -208,6 +208,7 @@ final class NodeTypeComparator implements Comparator {
 		return type1.getName().compareTo(type2.getName());
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		return (obj instanceof NodeTypeComparator);
 	}
@@ -220,6 +221,7 @@ final class LinkTypeComparator implements Comparator {
 		return type1.getName().compareTo(type2.getName());
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		return (obj instanceof LinkTypeComparator);
 	}

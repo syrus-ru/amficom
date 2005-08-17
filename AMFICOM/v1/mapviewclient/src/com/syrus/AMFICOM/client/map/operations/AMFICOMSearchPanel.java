@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.20 2005/08/11 12:43:31 arseniy Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.21 2005/08/17 14:14:19 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.20 $, $Date: 2005/08/11 12:43:31 $
+ * @version $Revision: 1.21 $, $Date: 2005/08/17 14:14:19 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */
@@ -216,6 +216,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 		this.table.getSelectionModel().setSelectionMode(ListSelectionModel.MULTIPLE_INTERVAL_SELECTION);
 		this.table.addMouseListener(new java.awt.event.MouseAdapter(){
+			@Override
 			public void mouseClicked(java.awt.event.MouseEvent e)
 			{
 				if (e.getClickCount() > 1)

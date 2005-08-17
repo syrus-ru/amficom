@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.30 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.31 2005/08/17 14:14:20 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.mapview.Selection;
 /**
  * —тратеги€ управлени€ метки на физической линии.
  * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.31 $, $Date: 2005/08/17 14:14:20 $
  * @module mapviewclient
  */
 public final class MapMarkElementStrategy extends AbstractMapStrategy 
@@ -69,6 +69,7 @@ public final class MapMarkElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setMapElement(MapElement me)
 	{
 		this.mark = (Mark)me;
@@ -77,6 +78,7 @@ public final class MapMarkElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void leftMousePressed(MapState mapState, Point point)
 		throws MapConnectionException, MapDataException
 	{
@@ -108,6 +110,7 @@ public final class MapMarkElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void leftMouseDragged(MapState mapState, Point point)
 		throws MapConnectionException, MapDataException
 	{
@@ -178,6 +181,7 @@ public final class MapMarkElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void leftMouseReleased(MapState mapState, Point point)
 		throws MapConnectionException, MapDataException
 	{

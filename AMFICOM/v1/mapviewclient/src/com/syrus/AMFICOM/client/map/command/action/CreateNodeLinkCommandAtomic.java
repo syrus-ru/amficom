@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandAtomic.java,v 1.16 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: CreateNodeLinkCommandAtomic.java,v 1.17 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
  * создание фрагмента линии св€зи, внесение ее в пул и на карту - 
  * атомарное действие 
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/08/11 12:43:29 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class CreateNodeLinkCommandAtomic extends MapActionCommand
@@ -55,6 +55,7 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand
 		return this.nodeLink;
 	}
 	
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
@@ -78,11 +79,13 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand
 		}
 	}
 	
+	@Override
 	public void redo()
 	{
 		this.logicalNetLayer.getMapView().getMap().addNodeLink(this.nodeLink);
 	}
 	
+	@Override
 	public void undo()
 	{
 		this.logicalNetLayer.getMapView().getMap().removeNodeLink(this.nodeLink);

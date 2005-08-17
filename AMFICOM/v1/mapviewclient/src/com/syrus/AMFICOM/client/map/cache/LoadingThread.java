@@ -1,5 +1,5 @@
 /**
- * $Id: LoadingThread.java,v 1.11 2005/07/13 11:12:18 peskovsky Exp $
+ * $Id: LoadingThread.java,v 1.12 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -90,7 +90,8 @@ public class LoadingThread extends Thread {
         this.state.setValue(State.STATE_IDLE);
     }
 
-    public void run() {
+    @Override
+		public void run() {
         while (!this.toCancelLoading) {
             // Задержка - для пустой очереди
             try {

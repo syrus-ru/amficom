@@ -30,6 +30,7 @@ public final class MarkPopupMenu extends MapPopupMenu {
 		return instance;
 	}
 
+	@Override
 	public void setElement(Object me) {
 		this.mark = (Mark )me;
 	}

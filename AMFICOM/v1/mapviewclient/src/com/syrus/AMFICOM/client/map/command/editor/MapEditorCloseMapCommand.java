@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorCloseMapCommand.java,v 1.14 2005/07/24 12:30:23 krupenn Exp $
+ * $Id: MapEditorCloseMapCommand.java,v 1.15 2005/08/17 14:14:17 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,9 +29,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * класс использует команду MapCloseCommand для закрытия карты, после чего
  * генерирует событие закрытия
  * 
- * @version $Revision: 1.14 $, $Date: 2005/07/24 12:30:23 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/17 14:14:17 $
  * @module map_v2
- * @author $Author: krupenn $
+ * @author $Author: arseniy $
  * @see MapCloseCommand
  */
 public class MapEditorCloseMapCommand extends AbstractCommand
@@ -45,6 +45,7 @@ public class MapEditorCloseMapCommand extends AbstractCommand
 		this.dispatcher = dispatcher;
 	}
 
+	@Override
 	public void execute()
 	{
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);

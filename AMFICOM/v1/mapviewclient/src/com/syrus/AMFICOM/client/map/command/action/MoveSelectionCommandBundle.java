@@ -1,5 +1,5 @@
 /**
- * $Id: MoveSelectionCommandBundle.java,v 1.18 2005/08/12 14:52:33 arseniy Exp $
+ * $Id: MoveSelectionCommandBundle.java,v 1.19 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,9 +10,6 @@
  */
 
 package com.syrus.AMFICOM.client.map.command.action;
-
-import static com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle.DELTA_X;
-import static com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle.DELTA_Y;
 
 import java.awt.Point;
 import java.util.Iterator;
@@ -31,7 +28,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
  * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/08/12 14:52:33 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class MoveSelectionCommandBundle extends MapActionCommandBundle
@@ -80,6 +77,7 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	 * при установке параметров перемещения параметры передаются всем командам
 	 * в пучке
 	 */
+	@Override
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals(DELTA_X))
@@ -120,6 +118,7 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	 * выбранных объектов. выполнение удаления осуществляется только
 	 * при вызове execute()
 	 */
+	@Override
 	public void setNetMapViewer(NetMapViewer netMapViewer)
 	{
 		super.setNetMapViewer(netMapViewer);
@@ -171,6 +170,7 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 		}
 	}
 	
+	@Override
 	public void execute()
 	{
 		super.execute();

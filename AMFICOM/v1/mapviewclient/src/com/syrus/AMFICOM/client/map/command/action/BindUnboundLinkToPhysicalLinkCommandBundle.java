@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.23 2005/08/12 10:41:45 krupenn Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.24 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,8 +32,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/08/12 10:41:45 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient 
  */
 public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommandBundle
@@ -61,6 +61,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 		this.link = link;
 	}
 	
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);

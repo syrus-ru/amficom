@@ -36,6 +36,7 @@ public class UnboundPopupMenu extends MapPopupMenu {
 		return instance;
 	}
 
+	@Override
 	public void setElement(Object me) {
 		this.unbound = (UnboundNode )me;
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: MoveMarkCommand.java,v 1.16 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: MoveMarkCommand.java,v 1.17 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
  * Команда перемещения метки. вызывает только функцию "обновить состояние 
  * местоположения"
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/08/12 14:49:41 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class MoveMarkCommand extends MapActionCommand
@@ -49,6 +49,7 @@ public class MoveMarkCommand extends MapActionCommand
 //		setState(mark.getState());
 	}
 
+	@Override
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals(MoveSelectionCommandBundle.DELTA_X))
@@ -62,6 +63,7 @@ public class MoveMarkCommand extends MapActionCommand
 		}
 	}
 
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
@@ -78,6 +80,7 @@ public class MoveMarkCommand extends MapActionCommand
 		}
 	}
 	
+	@Override
 	public void undo()
 	{
 		try {
@@ -91,6 +94,7 @@ public class MoveMarkCommand extends MapActionCommand
 		}
 	}
 
+	@Override
 	public void redo()
 	{
 		try {

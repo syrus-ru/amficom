@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.37 2005/08/16 11:01:30 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.38 2005/08/17 14:14:18 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -53,8 +53,8 @@ import com.syrus.util.Log;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.37 $, $Date: 2005/08/16 11:01:30 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2005/08/17 14:14:18 $
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {
@@ -73,6 +73,7 @@ public class MapImportCommand extends ImportCommand {
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute() {
 		this.mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 

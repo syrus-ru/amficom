@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.36 2005/08/15 14:26:16 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.37 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,8 +40,8 @@ import com.syrus.util.Log;
 /**
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
- * @author $Author: krupenn $
- * @version $Revision: 1.36 $, $Date: 2005/08/15 14:26:16 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -448,6 +448,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		setResult(Command.RESULT_OK);
 	}
 
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);

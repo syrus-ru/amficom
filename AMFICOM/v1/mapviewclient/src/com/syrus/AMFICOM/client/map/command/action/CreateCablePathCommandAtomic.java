@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCablePathCommandAtomic.java,v 1.19 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: CreateCablePathCommandAtomic.java,v 1.20 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/08/11 12:43:29 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class CreateCablePathCommandAtomic extends MapActionCommand
@@ -59,6 +59,7 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 		return this.cablePath;
 	}
 	
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
@@ -72,11 +73,13 @@ public class CreateCablePathCommandAtomic extends MapActionCommand
 		setResult(Command.RESULT_OK);
 	}
 	
+	@Override
 	public void redo()
 	{
 		this.logicalNetLayer.getMapView().addCablePath(this.cablePath);
 	}
 	
+	@Override
 	public void undo()
 	{
 		this.logicalNetLayer.getMapView().removeCablePath(this.cablePath);

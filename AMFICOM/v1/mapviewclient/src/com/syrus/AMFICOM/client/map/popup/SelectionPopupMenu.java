@@ -48,6 +48,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 		}
 	}
 
+	@Override
 	public void setElement(Object me) {
 		this.selection = (Selection)me;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.20 2005/08/12 10:45:20 krupenn Exp $ Syrus
+ * $Id: MapExportCommand.java,v 1.21 2005/08/17 14:14:18 arseniy Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -32,8 +32,8 @@ import com.syrus.util.Log;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/08/12 10:45:20 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/08/17 14:14:18 $
  * @module mapviewclient
  */
 public class MapExportCommand extends ExportCommand {
@@ -53,6 +53,7 @@ public class MapExportCommand extends ExportCommand {
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute() {
 		this.mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 

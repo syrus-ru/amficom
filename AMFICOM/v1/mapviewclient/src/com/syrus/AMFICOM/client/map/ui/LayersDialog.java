@@ -1,5 +1,5 @@
 /**
- * $Id: LayersDialog.java,v 1.8 2005/08/02 07:40:25 krupenn Exp $
+ * $Id: LayersDialog.java,v 1.9 2005/08/17 14:14:20 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -111,6 +111,7 @@ public class LayersDialog extends JDialog {
 			});
 
 		DefaultTableModel siteLabelTableModel = new DefaultTableModel() {
+			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
@@ -121,6 +122,7 @@ public class LayersDialog extends JDialog {
 		this.siteLabelTable.setTableHeader(null);
 
 		DefaultTableModel linkLabelTableModel = new DefaultTableModel() {
+			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
@@ -131,6 +133,7 @@ public class LayersDialog extends JDialog {
 		this.linkLabelTable.setTableHeader(null);
 
 		DefaultTableModel cableLabelTableModel = new DefaultTableModel() {
+			@Override
 			public boolean isCellEditable(int row, int column) {
 				return false;
 			}
@@ -141,12 +144,14 @@ public class LayersDialog extends JDialog {
 		this.cableLabelTable.setTableHeader(null);
 
 		this.siteTableModel = new DefaultTableModel() {
-		    public Class<?> getColumnClass(int columnIndex) {
+		    @Override
+				public Class<?> getColumnClass(int columnIndex) {
 				if(columnIndex == 0 || columnIndex == 2)
 					return LayerVisibility.class;
 				return Object.class;
 			    }
 
+			@Override
 			public void setValueAt(Object aValue, int row, int column) {
 				Boolean bool = (Boolean )aValue;
 				boolean visible = bool.booleanValue();
@@ -180,6 +185,7 @@ public class LayersDialog extends JDialog {
 				fireTableDataChanged();
 			}
 
+			@Override
 			public boolean isCellEditable(int row, int column) {
 				return column == 0 || column == 2;
 			}
@@ -201,12 +207,14 @@ public class LayersDialog extends JDialog {
 		this.siteTable.setDefaultEditor(LayerVisibility.class, LayersTableCellEditor.getInstance());
 
 		this.linkTableModel = new DefaultTableModel() {
-		    public Class<?> getColumnClass(int columnIndex) {
+		    @Override
+				public Class<?> getColumnClass(int columnIndex) {
 				if(columnIndex == 0 || columnIndex == 2)
 					return LayerVisibility.class;
 				return Object.class;
 			    }
 
+			@Override
 			public void setValueAt(Object aValue, int row, int column) {
 				Boolean bool = (Boolean )aValue;
 				boolean visible = bool.booleanValue();
@@ -240,6 +248,7 @@ public class LayersDialog extends JDialog {
 				fireTableDataChanged();
 			}
 
+			@Override
 			public boolean isCellEditable(int row, int column) {
 				return column == 0 || column == 2;
 			}
@@ -261,12 +270,14 @@ public class LayersDialog extends JDialog {
 		this.linkTable.setDefaultEditor(LayerVisibility.class, LayersTableCellEditor.getInstance());
 
 		this.cableTableModel = new DefaultTableModel() {
-		    public Class<?> getColumnClass(int columnIndex) {
+		    @Override
+				public Class<?> getColumnClass(int columnIndex) {
 			if(columnIndex == 0 || columnIndex == 2)
 				return Boolean.class;
 			return Object.class;
 		    }
 
+			@Override
 			public boolean isCellEditable(int row, int column) {
 				return column == 0 || column == 2;
 			}

@@ -17,6 +17,7 @@ class SiteBindingRenderer extends DefaultTreeCellRenderer {
 		// empty
 	}
 
+	@Override
 	public Component getTreeCellRendererComponent(
 			JTree tree,
 			Object value,

@@ -34,6 +34,7 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu {
 		return instance;
 	}
 
+	@Override
 	public void setElement(Object me) {
 		this.path = (MeasurementPath )me;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: LayersTableCellEditor.java,v 1.4 2005/08/11 12:43:32 arseniy Exp $ Copyright © 2005 Syrus Systems. Dept. of Science & Technology. Project:
+ * $Id: LayersTableCellEditor.java,v 1.5 2005/08/17 14:14:20 arseniy Exp $ Copyright © 2005 Syrus Systems. Dept. of Science & Technology. Project:
  * AMFICOM.
  */
 
@@ -16,7 +16,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/17 14:14:20 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */
@@ -38,6 +38,7 @@ public class LayersTableCellEditor extends DefaultCellEditor {
 		return instance;
 	}
 
+	@Override
 	public Component getTableCellEditorComponent(
 			JTable table,
 			Object value,

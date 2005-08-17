@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.30 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: MapViewNewCommand.java,v 1.31 2005/08/17 14:14:18 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 /**
  * создать новый вид 
  * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/08/12 14:49:41 $
+ * @version $Revision: 1.31 $, $Date: 2005/08/17 14:14:18 $
  * @module mapviewclient
  */
 public class MapViewNewCommand extends AbstractCommand {
@@ -46,6 +46,7 @@ public class MapViewNewCommand extends AbstractCommand {
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute() {
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "Creating new map view", Level.CONFIG);
 

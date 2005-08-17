@@ -44,6 +44,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 		return instance;
 	}
 	
+	@Override
 	public void setElement(Object me)
 	{
 		this.path = (CablePath)me;

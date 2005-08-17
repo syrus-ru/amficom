@@ -1,5 +1,5 @@
 /**
- * $Id: ShowNodesCommand.java,v 1.12 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: ShowNodesCommand.java,v 1.13 2005/08/17 14:14:19 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
 /**
  * Команда включения/выключения режима отображения топологических узлов на карте 
  * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/17 14:14:19 $
  * @module mapviewclient
  */
 public class ShowNodesCommand extends MapNavigateCommand {
@@ -34,6 +34,7 @@ public class ShowNodesCommand extends MapNavigateCommand {
 		super(aModel, netMapViewer);
 	}
 
+	@Override
 	public void setParameter(String field, Object value) {
 		super.setParameter(field, value);
 		if(field.equals("button"))
@@ -44,6 +45,7 @@ public class ShowNodesCommand extends MapNavigateCommand {
 
 	Icon invisibleIcon = new ImageIcon("images/nodes_invisible.gif");
 
+	@Override
 	public void execute() {
 		if(MapPropertiesManager.isShowPhysicalNodes()) {
 			this.button.setIcon(this.invisibleIcon);

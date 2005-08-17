@@ -1,5 +1,5 @@
 /**
- * $Id: MapModeCommand.java,v 1.18 2005/08/11 12:43:30 arseniy Exp $ 
+ * $Id: MapModeCommand.java,v 1.19 2005/08/17 14:14:19 arseniy Exp $ 
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный 
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
  * Команда переключения режима работы с картой - режимы фрагмента, линии, пути
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/17 14:14:19 $
  * @module mapviewclient
  */
 public class MapModeCommand extends MapNavigateCommand {
@@ -41,6 +41,7 @@ public class MapModeCommand extends MapNavigateCommand {
 		this.mode = mode;
 	}
 
+	@Override
 	public void execute() {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		if(this.aModel.isEnabled(this.modeString)) {

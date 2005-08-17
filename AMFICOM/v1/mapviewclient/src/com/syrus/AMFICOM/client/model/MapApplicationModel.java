@@ -1,5 +1,5 @@
 /**
- * $Id: MapApplicationModel.java,v 1.6 2005/08/12 14:52:33 arseniy Exp $
+ * $Id: MapApplicationModel.java,v 1.7 2005/08/17 14:14:21 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import static com.syrus.AMFICOM.client.model.MapApplicationModel.OPERATION_ZOOM_
  *  
  * 
  * @author Andrei Kroupennikov
- * @version $Revision: 1.6 $, $Date: 2005/08/12 14:52:33 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/17 14:14:21 $
  * @module mapviewclient
  */
 public class MapApplicationModel extends ApplicationModel
@@ -104,6 +104,7 @@ public class MapApplicationModel extends ApplicationModel
 
 	}
 
+	@Override
 	public String toString()
 	{
 		return getClass().getName();

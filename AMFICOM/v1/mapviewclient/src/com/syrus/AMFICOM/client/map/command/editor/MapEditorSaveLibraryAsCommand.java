@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorSaveLibraryAsCommand.java,v 1.2 2005/08/03 15:36:20 krupenn Exp $
+ * $Id: MapEditorSaveLibraryAsCommand.java,v 1.3 2005/08/17 14:14:18 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,6 +33,7 @@ public class MapEditorSaveLibraryAsCommand extends AbstractCommand {
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 

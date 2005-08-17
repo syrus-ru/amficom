@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.30 2005/08/12 10:33:30 krupenn Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.31 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
  *   оманда прив€зывани€ топологического узла, принадлежащего
  *  неприв€занному кабелю, к элементу узла. ѕри этом лини€, которой 
  *  принадлежит данный узел, делитс€ на 2 части
- * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/08/12 10:33:30 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/08/17 14:14:16 $
  * @module mapclient_v1
  */
 public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
@@ -62,6 +62,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 		this.site = site;
 	}
 	
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);

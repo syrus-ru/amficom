@@ -1,5 +1,5 @@
 /**
- * $Id: MapAbstractPropertiesFrame.java,v 1.12 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapAbstractPropertiesFrame.java,v 1.13 2005/08/17 14:14:20 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 /**
  * Окно отображения свойств элемента карты
  * 
- * @version $Revision: 1.12 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/17 14:14:20 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */
@@ -51,6 +51,7 @@ public abstract class MapAbstractPropertiesFrame extends
 		setContext(aContext);
 	}
 
+	@Override
 	public void setContext(ApplicationContext aContext) {
 		if(this.aContext != null)
 			if(this.aContext.getDispatcher() != null) {
@@ -146,6 +147,7 @@ public abstract class MapAbstractPropertiesFrame extends
 		Log.debugMessage(this.getClass().getName() + "::propertyChange(" + pce.getPropertyName() + ") -------- " + (f - d0) + " ms --------- " + mesg2, Level.INFO);
 	}
 
+	@Override
 	public void stateChanged(ChangeEvent e) {
 		super.stateChanged(e);
 		if(this.aContext.getDispatcher() != null) {

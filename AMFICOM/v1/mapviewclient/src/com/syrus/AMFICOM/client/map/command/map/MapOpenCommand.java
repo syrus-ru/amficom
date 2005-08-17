@@ -1,5 +1,5 @@
 /**
- * $Id: MapOpenCommand.java,v 1.27 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: MapOpenCommand.java,v 1.28 2005/08/17 14:14:18 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.map.Map;
 /**
  * открыть карту. карта открывается в новом виде
  * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.28 $, $Date: 2005/08/17 14:14:18 $
  * @module mapviewclient
  */
 public class MapOpenCommand extends AbstractCommand {
@@ -60,6 +60,7 @@ public class MapOpenCommand extends AbstractCommand {
 		return this.map;
 	}
 
+	@Override
 	public void execute() {
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(

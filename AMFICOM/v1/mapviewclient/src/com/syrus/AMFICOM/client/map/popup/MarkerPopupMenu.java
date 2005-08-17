@@ -31,6 +31,7 @@ public final class MarkerPopupMenu extends MapPopupMenu {
 		return instance;
 	}
 
+	@Override
 	public void setElement(Object me) {
 		this.marker = (Marker )me;
 	}

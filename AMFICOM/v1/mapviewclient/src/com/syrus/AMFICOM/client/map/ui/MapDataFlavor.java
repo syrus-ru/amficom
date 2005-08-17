@@ -1,5 +1,5 @@
 /**
- * $Id: MapDataFlavor.java,v 1.4 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapDataFlavor.java,v 1.5 2005/08/17 14:14:20 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,7 @@ import java.awt.datatransfer.DataFlavor;
 
 /**
  * Формат данных для переноса элементов карты для операций drag / drop
- * @version $Revision: 1.4 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/17 14:14:20 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */
@@ -26,7 +26,8 @@ public class MapDataFlavor extends DataFlavor
 		super(representationClass, humanPresentableName);
 	}
 	
-    public boolean isFlavorSerializedObjectType() 
+    @Override
+		public boolean isFlavorSerializedObjectType() 
 	{
         return false;
     }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolTippedPanel.java,v 1.10 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapToolTippedPanel.java,v 1.11 2005/08/17 14:14:20 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.MapElement;
  * NetMapViewer (прозрачно передавать сообщения мыши родительскому объекту 
  * NetMapViewer). Объект класса MapToolTippedPanel прозрачен и не видим для
  * пользователя
- * @version $Revision: 1.10 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/17 14:14:20 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */
@@ -46,34 +46,42 @@ public class MapToolTippedPanel extends JComponent {
 		this.toolTippedPanelListener = new MapToolTippedPanelListener(this);
 	}
 
+	@Override
 	public int getWidth() {
 		return this.component.getWidth();
 	}
 
+	@Override
 	public int getHeight() {
 		return this.component.getHeight();
 	}
 
+	@Override
 	public boolean isShowing() {
 		return this.component.isShowing();
 	}
 
+	@Override
 	public Point getLocationOnScreen() {
 		return this.component.getLocationOnScreen();
 	}
 
+	@Override
 	public GraphicsConfiguration getGraphicsConfiguration() {
 		return this.component.getGraphicsConfiguration();
 	}
 
+	@Override
 	public Container getTopLevelAncestor() {
 		return this.component.getParent();
 	}
 
+	@Override
 	public Container getParent() {
 		return this.component.getParent();
 	}
 
+	@Override
 	public JToolTip createToolTip() {
 // System.out.println("create tooltip");
 //        JToolTip tip = new MapToolTip(parent.getLogicalNetLayer());
@@ -83,6 +91,7 @@ public class MapToolTippedPanel extends JComponent {
         return tip;
     }
 
+	@Override
 	public String getToolTipText() 	{
 //		System.out.println("create tooltip");
 		LogicalNetLayer logicalNetLayer = this.parent.getLogicalNetLayer();
@@ -114,7 +123,7 @@ public class MapToolTippedPanel extends JComponent {
  * возникающих событий мыши родительскому объекту
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/17 14:14:20 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */

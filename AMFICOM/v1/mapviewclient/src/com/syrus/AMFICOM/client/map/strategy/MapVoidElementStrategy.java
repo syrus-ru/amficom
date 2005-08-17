@@ -1,5 +1,5 @@
 /**
- * $Id: MapVoidElementStrategy.java,v 1.31 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapVoidElementStrategy.java,v 1.32 2005/08/17 14:14:20 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 /**
  * Стратегия управления элементами, когда нет выбранных элементов.
  * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/17 14:14:20 $
  * @module mapviewclient
  */
 public final class MapVoidElementStrategy extends AbstractMapStrategy 
@@ -71,6 +71,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public void setMapElement(MapElement me)
 	{
 		this.mapView = ((VoidElement)me).getMapView();
@@ -80,6 +81,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void leftMousePressed(MapState mapState, Point point)
 		throws MapConnectionException, MapDataException
 	{
@@ -95,6 +97,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void leftMouseDragged(MapState mapState, Point point)
 		throws MapConnectionException, MapDataException
 	{
@@ -111,6 +114,7 @@ public final class MapVoidElementStrategy extends AbstractMapStrategy
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	protected void leftMouseReleased(MapState mapState, Point point)
 		throws MapConnectionException, MapDataException
 	{

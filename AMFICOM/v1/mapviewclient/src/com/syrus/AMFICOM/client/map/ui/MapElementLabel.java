@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementLabel.java,v 1.14 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapElementLabel.java,v 1.15 2005/08/17 14:14:20 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
  * 
  * 
  * 
- * @version $Revision: 1.14 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/17 14:14:20 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */
@@ -192,6 +192,7 @@ public class MapElementLabel extends JLabel
 		return (flavor.getHumanPresentableName().equals(DATA_FLAVOUR));
 	}
 
+	@Override
 	public void setEnabled(boolean b)
 	{
 		this.enable = b;

@@ -1,5 +1,5 @@
 /**
- * $Id: ZoomBoxCommand.java,v 1.12 2005/08/11 12:43:30 arseniy Exp $
+ * $Id: ZoomBoxCommand.java,v 1.13 2005/08/17 14:14:19 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
 /**
  * Команда включения/выключения масштабирования по выбранной области 
  * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/08/11 12:43:30 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/17 14:14:19 $
  * @module mapviewclient
  */
 public class ZoomBoxCommand extends MapNavigateCommand {
@@ -28,6 +28,7 @@ public class ZoomBoxCommand extends MapNavigateCommand {
 		super(aModel, netMapViewer);
 	}
 
+	@Override
 	public void execute() {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		if(this.aModel.isSelected(MapApplicationModel.OPERATION_ZOOM_BOX)) {

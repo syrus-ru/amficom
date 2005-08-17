@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveMapCommand.java,v 1.10 2005/08/12 10:44:48 krupenn Exp $
+ * $Id: MapEditorSaveMapCommand.java,v 1.11 2005/08/17 14:14:18 arseniy Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ
  */
 
@@ -22,8 +22,8 @@ import com.syrus.util.Log;
  * схемы в модуле "Редактор топологических схем". Использует команду
  * MapSaveCommand
  * 
- * @version $Revision: 1.10 $, $Date: 2005/08/12 10:44:48 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2005/08/17 14:14:18 $
+ * @author $Author: arseniy $
  * @module
  * @see MapSaveCommand
  */
@@ -42,6 +42,7 @@ public class MapEditorSaveMapCommand extends AbstractCommand {
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 

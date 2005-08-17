@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanelLabel.java,v 1.2 2005/06/22 13:20:07 krupenn Exp $
+ * $Id: ImagesPanelLabel.java,v 1.3 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $
  * @module commonclient_v1
  */
 public class ImagesPanelLabel extends JLabel
@@ -54,6 +54,7 @@ public class ImagesPanelLabel extends JLabel
 		this.setSize(myIcon.getIconWidth(), myIcon.getIconHeight());
 		this.setIcon(myIcon);
 		this.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				if(ImagesPanelLabel.this.disp != null)
 					ImagesPanelLabel.this.disp.firePropertyChange(
@@ -94,6 +95,7 @@ public class ImagesPanelLabel extends JLabel
 			}
 	}
 
+	@Override
 	public String getToolTipText() {
 		return "";//ir.description();
 	}

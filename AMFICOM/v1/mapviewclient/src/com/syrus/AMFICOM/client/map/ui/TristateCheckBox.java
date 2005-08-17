@@ -1,5 +1,5 @@
 /**
- * $Id: TristateCheckBox.java,v 1.3 2005/06/22 08:43:49 krupenn Exp $ 
+ * $Id: TristateCheckBox.java,v 1.4 2005/08/17 14:14:20 arseniy Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ
@@ -61,6 +61,7 @@ public class TristateCheckBox extends JCheckBox {
 		super(text, icon);
 		// Add a listener for when the mouse is pressed
 		super.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mousePressed(MouseEvent e) {
 				grabFocus();
 				TristateCheckBox.this.model.nextState();
@@ -95,6 +96,7 @@ public class TristateCheckBox extends JCheckBox {
 	}
 
 	/** No one may add mouse listeners, not even Swing! */
+	@Override
 	public void addMouseListener(MouseListener l) {
 	}
 
@@ -114,6 +116,7 @@ public class TristateCheckBox extends JCheckBox {
 		return this.model.getState();
 	}
 
+	@Override
 	public void setSelected(boolean b) {
 		if(b) {
 			setState(SELECTED);

@@ -34,6 +34,7 @@ public class UnboundLinkPopupMenu extends MapPopupMenu {
 		return instance;
 	}
 
+	@Override
 	public void setElement(Object me) {
 		this.unbound = (UnboundLink)me;
 		this.generateMenuItem.setVisible( !(this.unbound.getStartNode() instanceof UnboundNode)

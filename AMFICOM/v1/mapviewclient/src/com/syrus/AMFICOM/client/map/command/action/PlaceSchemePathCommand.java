@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.38 2005/08/15 14:27:23 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.39 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,32 +10,21 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
-import java.awt.Point;
-import java.util.Iterator;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.model.Command;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
-import com.syrus.AMFICOM.scheme.PathElement;
-import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeCableLink;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
-import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
  * Разместить элемент типа mpe на карте. используется при переносе 
  * (drag/drop), в точке point (в экранных координатах)
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.38 $, $Date: 2005/08/15 14:27:23 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle
@@ -55,6 +44,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle
 		this.schemePath = path;
 	}
 
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);

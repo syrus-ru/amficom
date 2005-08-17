@@ -105,6 +105,7 @@ public class LineComboBox extends AComboBox
 			this.text = tx;
 		}
 
+		@Override
 		public String toString()
 		{
 			return this.text;
@@ -208,6 +209,7 @@ public class LineComboBox extends AComboBox
 				this.basicStroke = bas;
 			}
 
+			@Override
 			public void paint(Graphics g)
 			{
 				Graphics2D p = ( Graphics2D)g;

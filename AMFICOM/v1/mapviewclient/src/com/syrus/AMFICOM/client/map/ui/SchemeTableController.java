@@ -63,6 +63,7 @@ public final class SchemeTableController extends StorableObjectWrapper<Scheme> {
 		return name;
 	}
 
+	@Override
 	public Object getValue(final Scheme scheme, final String key) {
 		Object result = null;
 		if(scheme != null) {
@@ -105,6 +106,7 @@ public final class SchemeTableController extends StorableObjectWrapper<Scheme> {
 		return false;
 	}
 
+	@Override
 	public void setValue(Scheme object, final String key, final Object value) {
 		// empty
 	}
@@ -125,6 +127,7 @@ public final class SchemeTableController extends StorableObjectWrapper<Scheme> {
 		// empty
 	}
 
+	@Override
 	public Class getPropertyClass(String key) {
 		Class clazz = String.class;
 		return clazz;

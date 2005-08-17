@@ -33,6 +33,7 @@ public final class NodePopupMenu extends MapPopupMenu {
 		return instance;
 	}
 
+	@Override
 	public void setElement(Object me) {
 		this.node = (TopologicalNode )me;
 	}

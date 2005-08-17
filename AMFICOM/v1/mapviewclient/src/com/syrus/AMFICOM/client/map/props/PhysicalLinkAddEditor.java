@@ -191,6 +191,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.directionPanel.add(this.leftRightLabel);
 
 		this.horvertLabel.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				PhysicalLinkAddEditor.this.physicalLink.getBinding()
 						.flipHorizontalVertical();
@@ -202,6 +203,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		});
 
 		this.topDownLabel.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				PhysicalLinkAddEditor.this.physicalLink.getBinding()
 						.flipTopToBottom();
@@ -213,6 +215,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		});
 
 		this.leftRightLabel.addMouseListener(new MouseAdapter() {
+			@Override
 			public void mouseClicked(MouseEvent e) {
 				PhysicalLinkAddEditor.this.physicalLink.getBinding()
 						.flipLeftToRight();

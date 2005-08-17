@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.21 2005/08/11 12:43:32 arseniy Exp $ Syrus
+ * $Id: MapViewTreeModel.java,v 1.22 2005/08/17 14:14:20 arseniy Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.22 $, $Date: 2005/08/17 14:14:20 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */
@@ -289,6 +289,7 @@ final class MapLibraryComparator implements Comparator {
 		return library1.getName().compareTo(library2.getName());
 	}
 
+	@Override
 	public boolean equals(Object obj) {
 		return (obj instanceof MapLibraryComparator);
 	}

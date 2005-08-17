@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.25 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.26 2005/08/17 14:14:16 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/08/12 14:49:41 $
+ * @version $Revision: 1.26 $, $Date: 2005/08/17 14:14:16 $
  * @module mapviewclient
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
@@ -71,6 +71,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		this.startNode = startNode;
 	}
 
+	@Override
 	public void setParameter(String field, Object value)
 	{
 		if(field.equals(END_POINT))
@@ -217,6 +218,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		super.registerStateChange(this.physicalLink, pls, this.physicalLink.getState());
 	}
 
+	@Override
 	public void execute()
 	{
 		try

@@ -108,6 +108,7 @@ public class SiteCrossingPanel extends JPanel {
 		repaint();
 	}
 
+	@Override
 	public void paintComponent(Graphics g) {
 		super.paintComponent(g);
 		

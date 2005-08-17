@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorNewViewCommand.java,v 1.19 2005/07/24 12:30:23 krupenn Exp $
+ * $Id: MapEditorNewViewCommand.java,v 1.20 2005/08/17 14:14:17 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,9 +29,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.19 $, $Date: 2005/07/24 12:30:23 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/17 14:14:17 $
  * @module
- * @author $Author: krupenn $
+ * @author $Author: arseniy $
  * @see MapNewCommand
  * @see ViewMapAllCommand
  */
@@ -47,6 +47,7 @@ public class MapEditorNewViewCommand extends AbstractCommand {
 		this.aContext = aContext;
 	}
 
+	@Override
 	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 

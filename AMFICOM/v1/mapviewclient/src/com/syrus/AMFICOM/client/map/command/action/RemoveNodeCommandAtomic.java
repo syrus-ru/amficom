@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveNodeCommandAtomic.java,v 1.16 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: RemoveNodeCommandAtomic.java,v 1.17 2005/08/17 14:14:17 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 /**
  * удаление узла из карты - атомарное действие 
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/08/11 12:43:29 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/17 14:14:17 $
  * @module mapviewclient
  */
 public class RemoveNodeCommandAtomic extends MapActionCommand
@@ -39,6 +39,7 @@ public class RemoveNodeCommandAtomic extends MapActionCommand
 		return this.node;
 	}
 	
+	@Override
 	public void execute()
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
@@ -51,11 +52,13 @@ public class RemoveNodeCommandAtomic extends MapActionCommand
 		setResult(Command.RESULT_OK);
 	}
 	
+	@Override
 	public void redo()
 	{
 		this.logicalNetLayer.getMapView().getMap().removeNode(this.node);
 	}
 	
+	@Override
 	public void undo()
 	{
 		this.logicalNetLayer.getMapView().getMap().addNode(this.node);

@@ -1,5 +1,5 @@
 /**
- * $Id: CenterSelectionCommand.java,v 1.24 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: CenterSelectionCommand.java,v 1.25 2005/08/17 14:14:18 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Центрировать геометрическое место точек, являющих собой центры 
  * выделенных элементов карты
  * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/08/12 14:49:41 $
+ * @version $Revision: 1.25 $, $Date: 2005/08/17 14:14:18 $
  * @module mapviewclient
  */
 public class CenterSelectionCommand extends MapNavigateCommand {
@@ -31,6 +31,7 @@ public class CenterSelectionCommand extends MapNavigateCommand {
 		super(aModel, netMapViewer);
 	}
 
+	@Override
 	public void execute() {
 		if(this.netMapViewer == null) {
 			return;

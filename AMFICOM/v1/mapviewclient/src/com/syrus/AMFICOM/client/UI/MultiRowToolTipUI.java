@@ -1,5 +1,5 @@
 /*
- * $Id: MultiRowToolTipUI.java,v 1.1 2005/06/08 13:44:06 krupenn Exp $ 
+ * $Id: MultiRowToolTipUI.java,v 1.2 2005/08/17 14:14:16 arseniy Exp $ 
  * Syrus Systems. 
  * Научно-технический центр. 
  * Проект: АМФИКОМ.
@@ -25,8 +25,8 @@ import javax.swing.text.View;
 /**
  * Позволяет организовывать всплывающие подсказки в несколько строк
  * 
- * @version $Revision: 1.1 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.2 $
+ * @author $Author: arseniy $
  * @module commonclient_v1
  */
 public class MultiRowToolTipUI extends BasicToolTipUI {
@@ -36,6 +36,7 @@ public class MultiRowToolTipUI extends BasicToolTipUI {
 		return sharedInstance;
 	}
 
+	@Override
 	public void paint(Graphics g, JComponent c) {
 		Font font = c.getFont();
 		FontMetrics metrics = Toolkit.getDefaultToolkit().getFontMetrics(font);
@@ -67,6 +68,7 @@ public class MultiRowToolTipUI extends BasicToolTipUI {
 		}
 	}
 
+	@Override
 	public Dimension getPreferredSize(JComponent c) {
 		FontMetrics fm = Toolkit.getDefaultToolkit().getFontMetrics(c.getFont());
 		Insets insets = c.getInsets();

@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkSizeField.java,v 1.12 2005/08/12 10:57:49 krupenn Exp $
+ * $Id: MapNodeLinkSizeField.java,v 1.13 2005/08/17 14:14:20 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,8 +33,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2005/08/12 10:57:49 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/08/17 14:14:20 $
+ * @author $Author: arseniy $
  * @module mapviewclient
  */
 public final class MapNodeLinkSizeField extends JTextField 
@@ -75,10 +75,12 @@ public final class MapNodeLinkSizeField extends JTextField
 			this.adaptee = adaptee;
 		}
 
+		@Override
 		public void focusGained(FocusEvent e)
 		{//empty
 		}
 		
+		@Override
 		public void focusLost(FocusEvent e)
 		{
 			this.adaptee.setVisible(false);
@@ -97,6 +99,7 @@ public final class MapNodeLinkSizeField extends JTextField
 			this.adaptee = adaptee;
 		}
 
+		@Override
 		public void keyPressed(KeyEvent e) 
 		{
 			int code = e.getKeyCode();
@@ -131,7 +134,9 @@ public final class MapNodeLinkSizeField extends JTextField
 				}
 			}
 		}
+		@Override
 		public void keyReleased(KeyEvent e) {/*empty*/}
+		@Override
 		public void keyTyped(KeyEvent e) {/*empty*/}
 	}
 	
