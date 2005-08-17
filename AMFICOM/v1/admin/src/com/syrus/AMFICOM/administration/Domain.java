@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.52 2005/08/09 09:07:13 bob Exp $
+ * $Id: Domain.java,v 1.53 2005/08/17 16:00:22 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/08/09 09:07:13 $
+ * @version $Revision: 1.53 $, $Date: 2005/08/17 16:00:22 $
  * @author $Author: bob $
  * @module administration
  */
@@ -168,22 +168,10 @@ public final class Domain extends DomainMember implements Characterizable {
 	throws ApplicationException {
 		PermissionAttributes permissionAttributes = null;
 		LinkedIdsCondition domainCondition = 
-			new LinkedIdsCondition(this.id, ObjectEntities.PERMATTR_CODE) {
-
-			@Override
-			public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
-				return false;
-			}
-		};
+			new LinkedIdsCondition(this.id, ObjectEntities.PERMATTR_CODE);
 		
 		LinkedIdsCondition userCondition = 
-			new LinkedIdsCondition(userId, ObjectEntities.PERMATTR_CODE) {
-
-				@Override
-				public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
-					return false;
-				}
-			};
+			new LinkedIdsCondition(userId, ObjectEntities.PERMATTR_CODE);
 
 		CompoundCondition compoundCondition 
 			= new CompoundCondition(
