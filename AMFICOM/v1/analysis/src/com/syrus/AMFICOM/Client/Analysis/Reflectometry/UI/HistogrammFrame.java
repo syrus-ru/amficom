@@ -4,48 +4,43 @@ import javax.swing.JLayeredPane;
 import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.AnalysisParametersListener;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.io.BellcoreStructure;
 
-public class HistogrammFrame extends ScalableFrame
-implements BsHashChangeListener, AnalysisParametersListener
-{
+public class HistogrammFrame
+extends ScalableFrame
+implements BsHashChangeListener, AnalysisParametersListener {
 	Dispatcher dispatcher;
-	public HistogrammFrame(Dispatcher dispatcher)
-	{
+	public HistogrammFrame(Dispatcher dispatcher) {
 		super (new HistogrammLayeredPanel(dispatcher));
 
 		init_module(dispatcher);
-		try
-		{
+		try {
 			jbInit();
-		} catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	private void jbInit() throws Exception
-	{
+	private void jbInit() throws Exception {
 		setTitle(LangModelAnalyse.getString("histogrammTitle"));
 	}
 
-	public Dispatcher getInternalDispatcher ()
-	{
+	@Deprecated // seems unused
+	public Dispatcher getInternalDispatcher() {
 		return dispatcher;
 	}
 
-	void init_module(Dispatcher dispatcher)
-	{
+	void init_module(Dispatcher dispatcher) {
 		this.dispatcher = dispatcher;
 		Heap.addBsHashListener(this);
 		Heap.addAnalysisParametersListener(this);
 	}
 
-	public void addTrace (String id)
-	{
+	public void addTrace (String id) {
 		if (id.equals(Heap.PRIMARY_TRACE_KEY) || id.equals(Heap.MODELED_TRACE_KEY))
 		{
 			HistogrammPanel p;
@@ -66,29 +61,26 @@ implements BsHashChangeListener, AnalysisParametersListener
 		}
 	}
 
-	public void bsHashAdded(String key)
-	{
+	public void bsHashAdded(String key) {
 			addTrace (key);
 			setVisible(true);
 	}
 
-	public void bsHashRemoved(String key)
-	{
+	public void bsHashRemoved(String key) {
+		// XXX: ignore at this version, because do not expect modeled trace;
+		// as for primary trace, its removal is notified by bsHashRemovedAll()
 	}
 
-	public void bsHashRemovedAll()
-	{
+	public void bsHashRemovedAll() {
 		((ScalableLayeredPanel)panel).removeAllGraphPanels();
 		setVisible (false);
 	}
 
 	public void analysisParametersUpdated() {
 		JLayeredPane slp = ((ScalableLayeredPanel)panel).jLayeredPane;
-		for(int i=0; i<slp.getComponentCount(); i++)
-		{
+		for(int i=0; i<slp.getComponentCount(); i++) {
 			JPanel panel1 = (JPanel)slp.getComponent(i);
-			if (panel1 instanceof HistogrammPanel)
-			{
+			if (panel1 instanceof HistogrammPanel) {
 				((HistogrammPanel)panel1).updAnalysisParameters();
 			}
 		}
