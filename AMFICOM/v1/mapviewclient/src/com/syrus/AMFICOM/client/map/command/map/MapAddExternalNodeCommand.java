@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddExternalNodeCommand.java,v 1.13 2005/08/17 14:14:18 arseniy Exp $
+ * $Id: MapAddExternalNodeCommand.java,v 1.14 2005/08/18 14:10:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * добавить в вид схему из списка
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/08/17 14:14:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/08/18 14:10:21 $
  * @module mapviewclient
  */
 public class MapAddExternalNodeCommand extends AbstractCommand
@@ -143,7 +143,7 @@ public class MapAddExternalNodeCommand extends AbstractCommand
 		mapView.getMap().addExternalNode(this.node);
 
 		this.aContext.getDispatcher().firePropertyChange(
-				new MapEvent(mapView, MapEvent.MAP_CHANGED));
+				new MapEvent(this, MapEvent.MAP_CHANGED, mapView));
 
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(

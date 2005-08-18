@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewRemoveSchemeCommand.java,v 1.13 2005/08/17 14:14:18 arseniy Exp $
+ * $Id: MapViewRemoveSchemeCommand.java,v 1.14 2005/08/18 14:10:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
  * убрать из вида выбранную схему 
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/08/17 14:14:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/08/18 14:10:21 $
  * @module mapviewclient
  */
 public class MapViewRemoveSchemeCommand extends AbstractCommand {
@@ -87,7 +87,7 @@ public class MapViewRemoveSchemeCommand extends AbstractCommand {
 
 		controller.removeScheme(scheme);
 		mapFrame.getContext().getDispatcher().firePropertyChange(
-				new MapEvent(mapFrame.getMapView(), MapEvent.MAP_VIEW_CHANGED));
+				new MapEvent(this, MapEvent.MAP_VIEW_CHANGED, mapFrame.getMapView()));
 
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(
