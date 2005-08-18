@@ -12,6 +12,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
+import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
@@ -100,7 +101,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 			paint_gauss(g);
 			paint_threshold(g);
 		}
-		paint_scale_digits(g);
+		//paint_scale_digits(g);
 		paint_level(g);
 	}
 
@@ -153,11 +154,17 @@ public class HistogrammPanel extends ScaledGraphPanel
 							 jw - 10, (int)((maxY - level - top) * scaleY - 1));
 
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_SCALE_DIGITS));
-		g.drawString(String.valueOf(MathRef.round_2(level)),
-								 jw - 30,
-								 (int)((maxY - level - top) * scaleY - 4));
+		StringBuilder sb = new StringBuilder();
+		sb.append(String.valueOf(Math.round(level * 100.0)));
+		sb.append("% \u2014 "); // тире
+		sb.append(MathRef.round_3(level2thresh(this.level)));
+		sb.append(" ");
+		sb.append(LangModelAnalyse.getString("dB"));
+		String str = sb.toString();
+		g.drawString(str,
+				jw - g.getFontMetrics().stringWidth(str) - 6,
+				(int)((maxY - level - top) * scaleY - 4));
 	}
-	
 
 	// use this method to paint scale digits for krivulka in dB  
 	protected void paint_scale_digits(Graphics g)
@@ -230,8 +237,12 @@ public class HistogrammPanel extends ScaledGraphPanel
 				break;
 			}
 		}
+		// округляем
+		// XXX: скорее всего, округление должно проводиться в AnalysisParameters, а не здесь
+		thresh = MathRef.round_4(thresh);
 		return thresh;
 	}
+
 	private double thresh2level(double thresh) {
 		double fIndex = Math.round(thresh / alpha / Kx);
 		if (fIndex < 0)
@@ -255,9 +266,6 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 	protected void levelUpdated() {
 		double vThresh = level2thresh(this.level);
-		// округляем
-		// XXX: скорее всего, округление должно проводиться в AnalysisParameters, а не здесь
-		vThresh = MathRef.round_4(vThresh);
 		if (vThresh > 0) {
 			setHeapThreshold(vThresh);
 		}
