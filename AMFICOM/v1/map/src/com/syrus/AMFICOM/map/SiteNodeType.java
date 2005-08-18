@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.66 2005/08/16 11:00:38 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.67 2005/08/18 13:27:39 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,13 @@ package com.syrus.AMFICOM.map;
 
 import static java.util.logging.Level.SEVERE;
 
+import java.io.File;
+import java.io.FileInputStream;
+import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
+import java.util.Iterator;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
@@ -39,6 +44,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XMLBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -48,6 +54,7 @@ import com.syrus.AMFICOM.general.logic.LibraryEntry;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypeHelper;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
+import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
@@ -62,7 +69,7 @@ import com.syrus.util.Log;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: krupenn $
- * @version $Revision: 1.66 $, $Date: 2005/08/16 11:00:38 $
+ * @version $Revision: 1.67 $, $Date: 2005/08/18 13:27:39 $
  * @module map
  * @todo make 'sort' persistent (update database scheme as well)
  * @todo make 'mapLibrary' persistent
@@ -353,23 +360,10 @@ public final class SiteNodeType extends StorableObjectType
 		this.topological = xmlSiteNodeType.getTopological();
 
 		final String imageCodeName = xmlSiteNodeType.getImage();
-		Identifier loadedImageId = null;
-		final StorableObjectCondition condition = new TypicalCondition(
-				String.valueOf(ImageResourceSort._FILE),
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.IMAGERESOURCE_CODE,
-				ImageResourceWrapper.COLUMN_SORT);
-		final Set<FileImageResource> bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-
-		for(FileImageResource ir : bitMaps) {
-			if(ir.getCodename().equals(imageCodeName)) {
-				loadedImageId = ir.getId();
-				break;
-			}
-		}
+		Identifier loadedImageId = getImageId(this.modifierId, imageCodeName);
 
 		if (loadedImageId == null) {
-			throw new CreateObjectException("ImageResource \'" + loadedImageId + "\' not found");
+			throw new CreateObjectException("ImageResource \'" + imageCodeName + "\' not found");
 		}
 		
 		this.imageId = loadedImageId;
@@ -450,4 +444,53 @@ public final class SiteNodeType extends StorableObjectType
 		this.mapLibraryId = mapLibrary.getId();
 	}
 	
+	/**
+	 * Получить пиктограмму по кодовому имени. Если пиктограмма не существует, 
+	 * на создается.
+	 * 
+	 * @param userId пользователь
+	 * @param codename кодовое имя
+	 * @return Идентификатор пиктограммы ({@link com.syrus.AMFICOM.resource.AbstractImageResource})
+	 * @throws ApplicationException 
+	 */
+	static Identifier getImageId(
+			final Identifier userId, 
+			final String codename)
+			throws ApplicationException {
+		StorableObjectCondition condition = new TypicalCondition(
+				codename,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.IMAGERESOURCE_CODE,
+				StorableObjectWrapper.COLUMN_CODENAME);
+		final Set<AbstractBitmapImageResource> bitMaps = 
+			StorableObjectPool.getStorableObjectsByCondition(condition, true);
+
+		if(!bitMaps.isEmpty()) {
+			return bitMaps.iterator().next().getId();
+		}
+
+		// interprete codename as a file name
+		// and create new bitmap image resource
+		try {
+			File file = new File(codename);
+			FileInputStream in = new FileInputStream(file);
+			byte[] data = new byte[(int) file.length()];
+			in.read(data);
+			in.close();
+
+			BitmapImageResource bitmapImageResource = BitmapImageResource.createInstance(
+					userId,
+					file.getAbsolutePath(),
+					data);
+			StorableObjectPool.flush(bitmapImageResource, userId, true);
+			return bitmapImageResource.getId();
+		} catch(FileNotFoundException e) {
+			e.printStackTrace();
+		} catch(IOException e) {
+			e.printStackTrace();
+		}
+		return null;
+
+	}
+
 }
