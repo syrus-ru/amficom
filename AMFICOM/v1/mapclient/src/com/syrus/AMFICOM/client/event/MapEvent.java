@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.6 2005/08/11 09:07:42 arseniy Exp $
+ * $Id: MapEvent.java,v 1.7 2005/08/18 13:50:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,13 +17,14 @@ import java.beans.PropertyChangeEvent;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/08/11 09:07:42 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/18 13:50:25 $
  * @module mapclient_v2
- * @author $Author: arseniy $
+ * @author $Author: krupenn $
  */
 public class MapEvent extends PropertyChangeEvent {
 	private static final long serialVersionUID = -837303529240341674L;
 
+	public static final String MAP_EVENT_TYPE = "mapevent";
 	/** Открыто окно карты. */
 	public static final String MAP_FRAME_SHOWN = "mapframeshownevent";
 
@@ -77,13 +78,22 @@ public class MapEvent extends PropertyChangeEvent {
 	/** Необходимо снять выделение с объектов. */
 	public static final String NEED_DESELECT = "needdeselect";
 
-	public MapEvent(Object source, String type)
-	{	
-		super(source, type, null, null);
+	/** Копировать тип узла или линии. */
+	public static final String COPY_TYPE = "copytype";
+
+	private final String mapEventType;
+
+	public MapEvent(Object source, String type) {
+		super(source, MAP_EVENT_TYPE, null, null);
+		this.mapEventType = type;
 	}
 
-	public MapEvent(Object source, String type, Object newValue)
-	{	
-		super(source, type, null, newValue);
+	public MapEvent(Object source, String type, Object newValue) {	
+		super(source, MAP_EVENT_TYPE, null, newValue);
+		this.mapEventType = type;
+	}
+
+	public String getMapEventType() {
+		return this.mapEventType;
 	}
 }
