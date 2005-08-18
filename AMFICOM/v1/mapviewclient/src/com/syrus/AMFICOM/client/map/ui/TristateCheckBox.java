@@ -1,5 +1,5 @@
 /**
- * $Id: TristateCheckBox.java,v 1.4 2005/08/17 14:14:20 arseniy Exp $ 
+ * $Id: TristateCheckBox.java,v 1.5 2005/08/18 14:18:31 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ
@@ -98,6 +98,7 @@ public class TristateCheckBox extends JCheckBox {
 	/** No one may add mouse listeners, not even Swing! */
 	@Override
 	public void addMouseListener(MouseListener l) {
+		// empty
 	}
 
 	/**
@@ -201,6 +202,7 @@ public class TristateCheckBox extends JCheckBox {
 
 		/** Filter: No one may change the armed status except us. */
 		public void setArmed(boolean b) {
+			// empty
 		}
 
 		/**
