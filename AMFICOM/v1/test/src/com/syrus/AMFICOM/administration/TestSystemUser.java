@@ -1,5 +1,5 @@
 /*
- * $Id: TestSystemUser.java,v 1.5 2005/06/28 15:28:24 arseniy Exp $
+ * $Id: TestSystemUser.java,v 1.6 2005/08/18 10:40:08 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/28 15:28:24 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/18 10:40:08 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -92,7 +92,7 @@ public final class TestSystemUser extends TestCase {
 		System.out.println("MSHServer user: '" + mshserverUser.getLogin() + "', id: '" + mshserverUser.getId() + "'");
 
 //	save all
-		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, true);
+		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, DatabaseCommonTest.getSysUser().getId(), true);
 	}
 
 	public void testCreateMCMUsers() throws ApplicationException {
@@ -103,7 +103,7 @@ public final class TestSystemUser extends TestCase {
 				"Need for MCM");
 		System.out.println("MCM user: '" + mcmUser.getLogin() + "', id: '" + mcmUser.getId() + "'");
 
-		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, true);
+		StorableObjectPool.flush(ObjectEntities.SYSTEMUSER_CODE, DatabaseCommonTest.getSysUser().getId(), true);
 	}
 
 	public void testSetPassword() throws ApplicationException, AMFICOMRemoteException {

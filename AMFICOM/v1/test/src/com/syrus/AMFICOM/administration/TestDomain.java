@@ -1,5 +1,5 @@
 /*
- * $Id: TestDomain.java,v 1.3 2005/06/20 15:13:53 arseniy Exp $
+ * $Id: TestDomain.java,v 1.4 2005/08/18 10:40:08 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/20 15:13:53 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/18 10:40:08 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -37,6 +37,6 @@ public final class TestDomain extends TestCase {
 				Identifier.VOID_IDENTIFIER,
 				"Корневой домен",
 				"Первый домен в иерархии");
-		StorableObjectPool.flush(domain, true);
+		StorableObjectPool.flush(domain, DatabaseCommonTest.getSysUser().getId(), true);
 	}
 }

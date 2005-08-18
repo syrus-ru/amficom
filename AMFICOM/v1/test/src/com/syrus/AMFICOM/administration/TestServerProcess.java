@@ -1,5 +1,5 @@
 /*
- * $Id: TestServerProcess.java,v 1.10 2005/06/28 15:31:46 arseniy Exp $
+ * $Id: TestServerProcess.java,v 1.11 2005/08/18 10:40:08 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/06/28 15:31:46 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/18 10:40:08 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -134,7 +134,7 @@ public final class TestServerProcess extends TestCase {
 				user.getId(),
 				"Map/Scheme/Administration/Resource Server");
 
-		StorableObjectPool.flush(ObjectEntities.SERVERPROCESS_CODE, true);
+		StorableObjectPool.flush(ObjectEntities.SERVERPROCESS_CODE, DatabaseCommonTest.getSysUser().getId(), true);
 	}
 
 	public void testUpdate() throws ApplicationException {
