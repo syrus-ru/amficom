@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.1 2005/07/13 16:02:05 arseniy Exp $
+ * $Id: DataType.java,v 1.2 2005/08/18 15:30:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,12 @@
 package com.syrus.AMFICOM.general;
 
 import org.omg.CORBA.ORB;
-import org.omg.CORBA.portable.IDLEntity;
 
 import com.syrus.AMFICOM.general.corba.IdlDataType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/13 16:02:05 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/18 15:30:03 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -29,6 +28,7 @@ public enum DataType implements TransferableObject {
 
 	private final String codename;
 	private final String description;
+
 
 	private DataType(final String codename, final String description) {
 		this.codename = codename;
@@ -74,7 +74,7 @@ public enum DataType implements TransferableObject {
 	}
 
 	@SuppressWarnings("unused")
-	public IDLEntity getTransferable(final ORB orb) {
+	public IdlDataType getTransferable(final ORB orb) {
 		return IdlDataType.from_int(this.getCode());
 	}
 }

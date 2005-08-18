@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.46 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.47 2005/08/18 15:31:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.corba.IdlDataType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypeHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -22,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/08/08 11:27:25 $
+ * @version $Revision: 1.47 $, $Date: 2005/08/18 15:31:39 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -149,7 +148,7 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 				super.codename,
 				super.description != null ? super.description : "",
 				this.name,
-				(IdlDataType) this.dataType.getTransferable(orb),
+				this.dataType.getTransferable(orb),
 				CharacteristicTypeSort.from_int(this.sort));
 	}
 
