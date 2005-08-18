@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.65 2005/08/12 14:52:33 arseniy Exp $
+ * $Id: MapFrame.java,v 1.66 2005/08/18 14:17:30 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -77,12 +77,13 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @version $Revision: 1.65 $, $Date: 2005/08/12 14:52:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.66 $, $Date: 2005/08/18 14:17:30 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 	private static final long serialVersionUID = 1313547389360194239L;
+	public static final String	NAME = "mapFrame";
 
 	public static final String MAP_FRAME_SHOWN = "map_frame_shown";
 
@@ -251,20 +252,7 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 	public void setContext(final ApplicationContext aContext) {
 		if (this.aContext != null) {
 			if (this.aContext.getDispatcher() != null) {
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.OTHER_SELECTED, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_ELEMENT_CHANGED, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.NEED_SELECT, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.NEED_DESELECT, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.SELECTION_CHANGED, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.PLACE_ELEMENT, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_VIEW_CENTER_CHANGED, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_VIEW_SCALE_CHANGED, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_CHANGED, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_VIEW_CHANGED, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.NEED_FULL_REPAINT, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.NEED_REPAINT, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.DESELECT_ALL, this);
+				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
 				this.aContext.getDispatcher().removePropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 			}
 		}
@@ -274,20 +262,7 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 		if (aContext != null) {
 			this.aContext = aContext;
 			this.setModel(aContext.getApplicationModel());
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.OTHER_SELECTED, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_ELEMENT_CHANGED, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_NAVIGATE, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.NEED_SELECT, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.NEED_DESELECT, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.SELECTION_CHANGED, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.PLACE_ELEMENT, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_VIEW_CENTER_CHANGED, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_VIEW_SCALE_CHANGED, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_CHANGED, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_VIEW_CHANGED, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.NEED_FULL_REPAINT, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.NEED_REPAINT, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.DESELECT_ALL, this);
+			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
 			aContext.getDispatcher().addPropertyChangeListener(ObjectSelectedEvent.TYPE, this);
 		}
 
@@ -337,18 +312,23 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 					this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
 				}
 			}
-		} else if (pce.getPropertyName().equals(MapEvent.MAP_VIEW_CENTER_CHANGED)) {
-			final DoublePoint p = (DoublePoint) pce.getNewValue();
-			this.mapStatusbar.showLatLong(p.getY(), p.getX());
-		} else if (pce.getPropertyName().equals(MapEvent.MAP_VIEW_SCALE_CHANGED)) {
-			final Double p = (Double) pce.getNewValue();
-			this.mapStatusbar.showScale(p.doubleValue());
-		} else if (pce.getPropertyName().equals(MapEvent.MAP_VIEW_SELECTED)) {
-			this.mapToolBar.setEnableDisablePanel(true);
-		} else if (pce.getPropertyName().equals(MapEvent.MAP_VIEW_DESELECTED)) {
-			this.mapToolBar.setEnableDisablePanel(false);
-		} else {
-			this.getMapViewer().propertyChange(pce);
+		} else if(pce.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
+			MapEvent mapEvent = (MapEvent )pce;
+			String mapEventType = mapEvent.getMapEventType();
+
+			if (mapEventType.equals(MapEvent.MAP_VIEW_CENTER_CHANGED)) {
+				final DoublePoint p = (DoublePoint) pce.getNewValue();
+				this.mapStatusbar.showLatLong(p.getY(), p.getX());
+			} else if (mapEventType.equals(MapEvent.MAP_VIEW_SCALE_CHANGED)) {
+				final Double p = (Double) pce.getNewValue();
+				this.mapStatusbar.showScale(p.doubleValue());
+			} else if (mapEventType.equals(MapEvent.MAP_VIEW_SELECTED)) {
+				this.mapToolBar.setEnableDisablePanel(true);
+			} else if (mapEventType.equals(MapEvent.MAP_VIEW_DESELECTED)) {
+				this.mapToolBar.setEnableDisablePanel(false);
+			} else {
+				this.getMapViewer().propertyChange(pce);
+			}
 		}
 	}
 
@@ -407,41 +387,41 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 		return this.getMapViewer().getLogicalNetLayer().getMapView();
 	}
 
-	void thisInternalFrameActivated(final InternalFrameEvent e) {
+	void thisInternalFrameActivated(@SuppressWarnings("unused")final InternalFrameEvent e) {
 		this.getMapViewer().getVisualComponent().grabFocus();
 
 		if (this.aContext.getDispatcher() != null) {
 			if (this.getMapView() != null) {
-				this.aContext.getDispatcher().firePropertyChange(new MapEvent(this.getMapView(), MapEvent.MAP_VIEW_SELECTED));
-				this.aContext.getDispatcher().firePropertyChange(new MapEvent(this.getMapView().getMap(), MapEvent.MAP_SELECTED));
+				this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_SELECTED, this.getMapView()));
+				this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_SELECTED, this.getMapView().getMap()));
 			}
 		}
 	}
 
-	void thisInternalFrameClosed(final InternalFrameEvent e) {
+	void thisInternalFrameClosed(@SuppressWarnings("unused")final InternalFrameEvent e) {
 		if (this.aContext.getDispatcher() != null) {
 			this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
 		}
 		this.closeMap();
 	}
 
-	void thisInternalFrameDeactivated(final InternalFrameEvent e) {
+	void thisInternalFrameDeactivated(@SuppressWarnings("unused")final InternalFrameEvent e) {
 		if (this.aContext.getDispatcher() != null) {
 			this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_DESELECTED));
 			this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_DESELECTED));
 		}
 	}
 
-	void thisInternalFrameOpened(final InternalFrameEvent e) {
+	void thisInternalFrameOpened(@SuppressWarnings("unused")final InternalFrameEvent e) {
 		this.getMapViewer().getVisualComponent().grabFocus();
 	}
 
-	void thisComponentShown(final ComponentEvent e) {
+	void thisComponentShown(@SuppressWarnings("unused")final ComponentEvent e) {
 		this.mapViewer.getVisualComponent().firePropertyChange(MAP_FRAME_SHOWN, false, true);
 		MapFrame.this.mapViewer.getVisualComponent().requestFocus();
 	}
 
-	void thisComponentHidden(final ComponentEvent e) {
+	void thisComponentHidden(@SuppressWarnings("unused")final ComponentEvent e) {
 		if (this.aContext.getDispatcher() != null) {
 			this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_CLOSED));
 		}

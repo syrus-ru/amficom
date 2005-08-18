@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.49 2005/08/17 14:14:19 arseniy Exp $
+ * $Id: MapEditorMainFrame.java,v 1.50 2005/08/18 14:13:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,8 @@ import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 
-import javax.swing.JDesktopPane;
+import javax.swing.JInternalFrame;
+import javax.swing.UIDefaults;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.editor.MapEditorCloseMapCommand;
@@ -57,12 +58,15 @@ import com.syrus.AMFICOM.client.map.ui.MapAdditionalPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapCharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.CloseAllInternalCommand;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
+import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -77,17 +81,17 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
  * 
  * 
  * 
- * @version $Revision: 1.49 $, $Date: 2005/08/17 14:14:19 $
+ * @version $Revision: 1.50 $, $Date: 2005/08/18 14:13:00 $
  * @module mapviewclient
- * @author $Author: arseniy $
+ * @author $Author: krupenn $
  */
 public final class MapEditorMainFrame extends AbstractMainFrame {
 	private static final long serialVersionUID = 3420855179151985089L;
 
-	protected static String iniFileName = "Map.properties";
-
 	private MapFrame mapFrame = null;
 	
+	UIDefaults frames;
+
 	public MapEditorMainFrame(ApplicationContext aContext)
 	{
 		super(
@@ -299,9 +303,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		if(this.aContext != null)
 			if(this.aContext.getDispatcher() != null)
 			{
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_FRAME_SHOWN, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_VIEW_SELECTED, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_VIEW_CLOSED, this);
+				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
 				this.aContext.getDispatcher().removePropertyChangeListener(MapEditorWindowArranger.EVENT_ARRANGE, this);				
 				this.statusBar.removeDispatcher(this.aContext.getDispatcher());
 			}
@@ -310,9 +312,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		{
 			super.setContext(aContext);
 
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_FRAME_SHOWN, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_VIEW_SELECTED, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_VIEW_CLOSED, this);
+			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
 			aContext.getDispatcher().addPropertyChangeListener(MapEditorWindowArranger.EVENT_ARRANGE, this);			
 		}
 	}
@@ -322,65 +322,69 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 	{
 		super.propertyChange(pce);
 		if (		(pce.getPropertyName().equals(MapEditorWindowArranger.EVENT_ARRANGE))
-				&& 	(pce.getSource() instanceof JDesktopPane)
 				&&	(pce.getSource().equals(this.desktopPane)))
 		{
 			this.windowArranger.arrange();
 		}
-		if(pce.getPropertyName().equals(MapEvent.MAP_FRAME_SHOWN))
-		{
-			this.mapFrame = (MapFrame)pce.getSource();
-		 }
-		else
-		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_SELECTED))
-		{
-			ApplicationModel aModel = this.aContext.getApplicationModel();
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE, true);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE_AS, true);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_CLOSE, true);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_EXPORT, true);
+		if(pce.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
+			MapEvent mapEvent = (MapEvent )pce;
+			String mapEventType = mapEvent.getMapEventType();
 
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE, true);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS, true);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE, true);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, true);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, true);
-
-			aModel.fireModelChanged();
-			setTitle(LangModelMap.getString("MapView") + ": " + ((MapView )pce.getSource()).getName());
-		}
-		else
-		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_CLOSED))
-		{
-			for(int i = 0; i < this.desktopPane.getComponents().length; i++)
+			if(mapEventType.equals(MapEvent.MAP_FRAME_SHOWN))
 			{
-				Component comp = this.desktopPane.getComponent(i);
-				if (comp instanceof MapFrame)
-				{
-					((MapFrame)comp).setVisible(false);
-					((MapFrame)comp).setContext(null);
-				}
-				else if (comp instanceof MapGeneralPropertiesFrame)
-					((MapGeneralPropertiesFrame)comp).setVisible(false);
-				else if (comp instanceof MapAdditionalPropertiesFrame)
-					((MapAdditionalPropertiesFrame)comp).setVisible(false);
-				else if (comp instanceof MapCharacteristicPropertiesFrame)
-					((MapCharacteristicPropertiesFrame)comp).setVisible(false);
+				this.mapFrame = (MapFrame)pce.getNewValue();
+			 }
+			else
+			if(mapEventType.equals(MapEvent.MAP_VIEW_SELECTED))
+			{
+				ApplicationModel aModel = this.aContext.getApplicationModel();
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE_AS, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_CLOSE, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_EXPORT, true);
+	
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, true);
+	
+				aModel.fireModelChanged();
+				setTitle(LangModelMap.getString("MapView") + ": " + ((MapView )pce.getNewValue()).getName());
 			}
-			ApplicationModel aModel = this.aContext.getApplicationModel();
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE, false);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE_AS, false);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_CLOSE, false);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_EXPORT, false);
-
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE, false);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS, false);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE, false);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, false);
-			aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, false);
-
-			aModel.fireModelChanged();
-			setTitle(LangModelMap.getString("MapView"));
+			else
+			if(mapEventType.equals(MapEvent.MAP_VIEW_CLOSED))
+			{
+				for(int i = 0; i < this.desktopPane.getComponents().length; i++)
+				{
+					Component comp = this.desktopPane.getComponent(i);
+					if (comp instanceof MapFrame)
+					{
+						((MapFrame)comp).setVisible(false);
+						((MapFrame)comp).setContext(null);
+					}
+					else if (comp instanceof MapGeneralPropertiesFrame)
+						((MapGeneralPropertiesFrame)comp).setVisible(false);
+					else if (comp instanceof MapAdditionalPropertiesFrame)
+						((MapAdditionalPropertiesFrame)comp).setVisible(false);
+					else if (comp instanceof MapCharacteristicPropertiesFrame)
+						((MapCharacteristicPropertiesFrame)comp).setVisible(false);
+				}
+				ApplicationModel aModel = this.aContext.getApplicationModel();
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE_AS, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_CLOSE, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_EXPORT, false);
+	
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, false);
+	
+				aModel.fireModelChanged();
+				setTitle(LangModelMap.getString("MapView"));
+			}
 		}
 	}
 
@@ -471,14 +475,35 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		new CloseAllInternalCommand(this.desktopPane).execute();
 	}
 
-	void thisComponentShown(ComponentEvent e) {
+	void thisComponentShown(@SuppressWarnings("unused") ComponentEvent e) {
 //		initModule();
 		this.desktopPane.setPreferredSize(this.desktopPane.getSize());
 	}
 
-	private MapFrame getMapFrame()
-	{
+	private MapFrame getMapFrame() {
 		return this.mapFrame;
 	}
 
+	private AbstractCommand getLazyCommand(final Object key) {
+		return new AbstractCommand() {
+
+			private Command	command;
+
+			private Command getLazyCommand() {
+				if (this.command == null) {
+					Object object = MapEditorMainFrame.this.frames.get(key);
+					if (object instanceof JInternalFrame) {
+						System.out.println("init getLazyCommand for " + key);
+						this.command = new ShowWindowCommand((JInternalFrame)object);
+					}
+				}
+				return this.command;
+			}
+
+			@Override
+			public void execute() {
+				this.getLazyCommand().execute();
+			}
+		};
+	}
 }
