@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorWindowArranger.java,v 1.17 2005/08/17 14:14:19 arseniy Exp $
+ * $Id: MapEditorWindowArranger.java,v 1.18 2005/08/18 14:13:48 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.client.map.ui.MapGeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/17 14:14:19 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/08/18 14:13:48 $
  * @module mapviewclient
  */
 
@@ -105,7 +105,6 @@ public class MapEditorWindowArranger extends WindowArranger
 	public void propertyChange(PropertyChangeEvent pce)
 	{
 		if (		(pce.getPropertyName().equals(MapEditorWindowArranger.EVENT_ARRANGE))
-				&& 	(pce.getSource() instanceof JDesktopPane)
 				&&	(pce.getSource().equals(this.desktop)))
 		{
 			this.arrange();
