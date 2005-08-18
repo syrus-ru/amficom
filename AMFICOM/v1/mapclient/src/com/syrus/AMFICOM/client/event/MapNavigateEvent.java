@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.4 2005/08/11 09:07:42 arseniy Exp $
+ * $Id: MapNavigateEvent.java,v 1.5 2005/08/18 13:47:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,9 +17,9 @@ import com.syrus.AMFICOM.general.Identifier;
  *
  *
  *
- * @version $Revision: 1.4 $, $Date: 2005/08/11 09:07:42 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/18 13:47:14 $
  * @module mapclient_v2
- * @author $Author: arseniy $
+ * @author $Author: krupenn $
  */
 public class MapNavigateEvent extends MapEvent {
 	private static final long serialVersionUID = 7592135696104602801L;
@@ -84,7 +84,7 @@ public class MapNavigateEvent extends MapEvent {
 	/**
 	 * Тип события.
 	 */
-	protected int mapEventType;
+	protected int mapNavigateEventType;
 
 	/**
 	 * Идентификатор маркера.
@@ -115,22 +115,22 @@ public class MapNavigateEvent extends MapEvent {
 	 * Декомпозитор пути измерений.
 	 */
 	protected Object schemePath = null;
-	
+
 	public MapNavigateEvent(
 			Object source,
-			int mapEventType)
+			int mapNavigateEventType)
 	{
 		super(source, MAP_NAVIGATE);
-		this.mapEventType = mapEventType;
+		this.mapNavigateEventType = mapNavigateEventType;
 	}
 
 	public MapNavigateEvent(
 			Object source,
-			int mapEventType,
+			int mapNavigateEventType,
 			Object newValue)
 	{
 		super(source, MAP_NAVIGATE, newValue);
-		this.mapEventType = mapEventType;
+		this.mapNavigateEventType = mapNavigateEventType;
 	}
 
 	public MapNavigateEvent(
@@ -233,57 +233,57 @@ public class MapNavigateEvent extends MapEvent {
 
 	public boolean isMapMarkerCreated()
 	{
-		return this.mapEventType == MAP_MARKER_CREATED_EVENT;
+		return this.mapNavigateEventType == MAP_MARKER_CREATED_EVENT;
 	}
 
 	public boolean isMapMarkerDeleted()
 	{
-		return this.mapEventType == MAP_MARKER_DELETED_EVENT;
+		return this.mapNavigateEventType == MAP_MARKER_DELETED_EVENT;
 	}
 
 	public boolean isMapMarkerSelected()
 	{
-		return this.mapEventType == MAP_MARKER_SELECTED_EVENT;
+		return this.mapNavigateEventType == MAP_MARKER_SELECTED_EVENT;
 	}
 
 	public boolean isMapMarkerMoved()
 	{
-		return this.mapEventType == MAP_MARKER_MOVED_EVENT;
+		return this.mapNavigateEventType == MAP_MARKER_MOVED_EVENT;
 	}
 
 	public boolean isDataMarkerCreated()
 	{
-		return this.mapEventType == DATA_MARKER_CREATED_EVENT;
+		return this.mapNavigateEventType == DATA_MARKER_CREATED_EVENT;
 	}
 
 	public boolean isDataMarkerDeleted()
 	{
-		return this.mapEventType == DATA_MARKER_DELETED_EVENT;
+		return this.mapNavigateEventType == DATA_MARKER_DELETED_EVENT;
 	}
 
 	public boolean isDataMarkerSelected()
 	{
-		return this.mapEventType == DATA_MARKER_SELECTED_EVENT;
+		return this.mapNavigateEventType == DATA_MARKER_SELECTED_EVENT;
 	}
 
 	public boolean isDataMarkerDeselected()
 	{
-		return this.mapEventType == DATA_MARKER_DESELECTED_EVENT;
+		return this.mapNavigateEventType == DATA_MARKER_DESELECTED_EVENT;
 	}
 
 	public boolean isDataMarkerMoved()
 	{
-		return this.mapEventType == DATA_MARKER_MOVED_EVENT;
+		return this.mapNavigateEventType == DATA_MARKER_MOVED_EVENT;
 	}
 
 	public boolean isDataEventMarkerCreated()
 	{
-		return this.mapEventType == DATA_EVENTMARKER_CREATED_EVENT;
+		return this.mapNavigateEventType == DATA_EVENTMARKER_CREATED_EVENT;
 	}
 
 	public boolean isDataAlarmMarkerCreated()
 	{
-		return this.mapEventType == DATA_ALARMMARKER_CREATED_EVENT;
+		return this.mapNavigateEventType == DATA_ALARMMARKER_CREATED_EVENT;
 	}
 
 }
