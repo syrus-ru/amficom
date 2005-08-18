@@ -5,7 +5,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * по ModelTrace или заданные в виде массива.
  * 
  * @author $Author: saa $
- * @version $Revision: 1.24 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.25 $, $Date: 2005/08/18 12:59:48 $
  * @module analysis_v1
  */
 public class ReflectogramComparer
@@ -137,7 +137,7 @@ public class ReflectogramComparer
 		int length1 = ReflectogramMath.getEndOfTraceBegin(dataSRE);
 		int length2 = ReflectogramMath.getEndOfTraceBegin(etalonSRE);
 
-		int c = etalonSRE[0].getEnd();
+		int c = etalonSRE.length != 0 ? etalonSRE[0].getEnd() : 0;
 
 		ModelTrace dataMT = data.getModelTrace();
 		ModelTrace etalonMT = etalon.getModelTrace();
