@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeSelectionListener.java,v 1.2 2005/08/08 10:45:07 krupenn Exp $
+ * $Id: MapViewTreeSelectionListener.java,v 1.3 2005/08/18 14:18:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -68,14 +68,14 @@ public class MapViewTreeSelectionListener implements TreeSelectionListener {
 				else if(userObject instanceof Map) {
 					Map map = (Map )userObject;
 					if(e.isAddedPath(paths[i])) {
-						dispatcher.firePropertyChange(new MapEvent(map, MapEvent.MAP_SELECTED));
+						dispatcher.firePropertyChange(new MapEvent(this, MapEvent.MAP_SELECTED, map));
 						sendSelectionEvent = false;
 					}
 				}
 				else if(userObject instanceof MapView) {
 					MapView mapView = (MapView )userObject;
 					if(e.isAddedPath(paths[i])) {
-						dispatcher.firePropertyChange(new MapEvent(mapView, MapEvent.MAP_VIEW_SELECTED));
+						dispatcher.firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_SELECTED, mapView));
 						sendSelectionEvent = false;
 					}
 				}
@@ -83,7 +83,7 @@ public class MapViewTreeSelectionListener implements TreeSelectionListener {
 						|| userObject instanceof PhysicalLinkType
 						|| userObject instanceof MapLibrary) {
 					if(e.isAddedPath(paths[i])) {
-						dispatcher.firePropertyChange(new MapEvent(userObject, MapEvent.OTHER_SELECTED));
+						dispatcher.firePropertyChange(new MapEvent(this, MapEvent.OTHER_SELECTED, userObject));
 						sendSelectionEvent = false;
 					}
 				}
