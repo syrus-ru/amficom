@@ -67,8 +67,7 @@ implements BsHashChangeListener, AnalysisParametersListener {
 	}
 
 	public void bsHashRemoved(String key) {
-		// XXX: ignore at this version, because do not expect modeled trace;
-		// as for primary trace, its removal is notified by bsHashRemovedAll()
+		// FIXME: modeled trace removal is not implemented now
 	}
 
 	public void bsHashRemovedAll() {
