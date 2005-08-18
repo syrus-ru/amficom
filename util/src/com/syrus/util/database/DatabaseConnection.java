@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseConnection.java,v 1.17 2005/08/03 19:52:59 bass Exp $
+ * $Id: DatabaseConnection.java,v 1.18 2005/08/18 10:44:24 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import oracle.jdbc.pool.OracleDataSource;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/08/03 19:52:59 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/08/18 10:44:24 $
  * @module util
  */
 public class DatabaseConnection {
@@ -83,7 +83,7 @@ public class DatabaseConnection {
 					final Object obj = new Object();
 					try {
 						synchronized (obj) {
-							obj.wait(5*1000);
+							obj.wait(5 * 1000);
 						}
 					} catch (InterruptedException ex) {
 						Log.errorException(ex);
