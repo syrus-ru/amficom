@@ -1,5 +1,5 @@
 /*
- * $Id: TestCreateSysUser.java,v 1.5 2005/07/15 12:00:46 arseniy Exp $
+ * $Id: TestCreateSysUser.java,v 1.6 2005/08/18 11:32:14 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,6 +30,7 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
 
+import java.sql.Connection;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Date;
@@ -50,7 +51,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/07/15 12:00:46 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/18 11:32:14 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -65,7 +66,7 @@ public final class TestCreateSysUser extends TestCase {
 	}
 
 	public static Test suite() {
-		SQLCommonTest commonTest = new SQLCommonTest();
+		final SQLCommonTest commonTest = new SQLCommonTest();
 		commonTest.addTestSuite(TestCreateSysUser.class);
 		return commonTest.createTestSetup();
 	}
@@ -75,46 +76,63 @@ public final class TestCreateSysUser extends TestCase {
 		final Date date = new Date(System.currentTimeMillis());
 		final String name = "sys";
 		final String description = "System administrator";
-		String sql;
-		final Statement statement = DatabaseConnection.getConnection().createStatement();
 
-		sql = SQL_INSERT_INTO + SYSTEMUSER + OPEN_BRACKET
-				+ COLUMN_ID + COMMA
-				+ COLUMN_CREATED + COMMA
-				+ COLUMN_MODIFIED + COMMA
-				+ COLUMN_CREATOR_ID + COMMA
-				+ COLUMN_MODIFIER_ID + COMMA
-				+ COLUMN_VERSION + COMMA
-				+ COLUMN_LOGIN + COMMA
-				+ COLUMN_SORT + COMMA
-				+ COLUMN_NAME + COMMA
-				+ COLUMN_DESCRIPTION
-				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-				+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
-				+ DatabaseDate.toUpdateSubString(date) + COMMA
-				+ DatabaseDate.toUpdateSubString(date) + COMMA
-				+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
-				+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
-				+ Long.toString(0) + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(SYS_LOGIN, SIZE_LOGIN_COLUMN) + APOSTROPHE + COMMA
-				+ Integer.toString(_USER_SORT_SYSADMIN) + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(name, SIZE_NAME_COLUMN) + APOSTROPHE + COMMA 
-				+ APOSTROPHE + DatabaseString.toQuerySubString(description, SIZE_DESCRIPTION_COLUMN) + APOSTROPHE
-				+ StorableObjectDatabase.CLOSE_BRACKET;
-		Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
-		statement.executeUpdate(sql);
+		Connection connection = null;
+		Statement statement = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.createStatement();
+			String sql;
 
-		sql = SQL_INSERT_INTO + TABLE_SHADOW + OPEN_BRACKET
-				+ COLUMN_USER_ID + COMMA
-				+ COLUMN_PASSWORD
-				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
-				+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(SYS_PASSWORD) + APOSTROPHE
-				+ CLOSE_BRACKET;
-		Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
-		statement.executeUpdate(sql);
+			sql = SQL_INSERT_INTO + SYSTEMUSER + OPEN_BRACKET
+					+ COLUMN_ID + COMMA
+					+ COLUMN_CREATED + COMMA
+					+ COLUMN_MODIFIED + COMMA
+					+ COLUMN_CREATOR_ID + COMMA
+					+ COLUMN_MODIFIER_ID + COMMA
+					+ COLUMN_VERSION + COMMA
+					+ COLUMN_LOGIN + COMMA
+					+ COLUMN_SORT + COMMA
+					+ COLUMN_NAME + COMMA
+					+ COLUMN_DESCRIPTION
+					+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+					+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
+					+ DatabaseDate.toUpdateSubString(date) + COMMA
+					+ DatabaseDate.toUpdateSubString(date) + COMMA
+					+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
+					+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
+					+ Long.toString(0) + COMMA
+					+ APOSTROPHE + DatabaseString.toQuerySubString(SYS_LOGIN, SIZE_LOGIN_COLUMN) + APOSTROPHE + COMMA
+					+ Integer.toString(_USER_SORT_SYSADMIN) + COMMA
+					+ APOSTROPHE + DatabaseString.toQuerySubString(name, SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
+					+ APOSTROPHE + DatabaseString.toQuerySubString(description, SIZE_DESCRIPTION_COLUMN) + APOSTROPHE
+					+ StorableObjectDatabase.CLOSE_BRACKET;
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			statement.executeUpdate(sql);
 
-		statement.close();
+			sql = SQL_INSERT_INTO + TABLE_SHADOW + OPEN_BRACKET
+					+ COLUMN_USER_ID + COMMA
+					+ COLUMN_PASSWORD
+					+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+					+ DatabaseIdentifier.toSQLString(sysUserId) + COMMA
+					+ APOSTROPHE + DatabaseString.toQuerySubString(SYS_PASSWORD) + APOSTROPHE
+					+ CLOSE_BRACKET;
+			Log.debugMessage("Trying: " + sql, Log.DEBUGLEVEL09);
+			statement.executeUpdate(sql);
+
+			statement.close();
+		} finally {
+			if (statement != null) {
+				try {
+					statement.close();
+					statement = null;
+				}
+				finally {
+					DatabaseConnection.releaseConnection(connection);
+					connection = null;
+				}
+			}
+		}
 	}
 
 }
