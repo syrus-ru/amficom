@@ -19,6 +19,8 @@ import javax.swing.JTextArea;
 import javax.swing.JTextField;
 import javax.swing.SwingConstants;
 import javax.swing.UIManager;
+import javax.swing.event.ChangeEvent;
+import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
@@ -34,8 +36,8 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class CollectorEditor extends DefaultStorableObjectEditor {
@@ -95,6 +97,11 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
 		this.commitButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
+				Object obj = CollectorEditor.this.getObject();
+//				if (obj != null)
+//					for (Iterator it = CollectorEditor.this.getChangeListeners().iterator(); it.hasNext();) {
+//						((ChangeListener)it.next()).stateChanged(new ChangeEvent(obj));
+//					}
 				commitChanges();
 			}
 		});
