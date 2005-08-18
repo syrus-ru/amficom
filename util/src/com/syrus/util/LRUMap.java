@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.37 2005/08/15 14:04:33 arseniy Exp $
+ * $Id: LRUMap.java,v 1.38 2005/08/18 09:12:33 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/08/15 14:04:33 $
+ * @version $Revision: 1.38 $, $Date: 2005/08/18 09:12:33 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -94,7 +94,6 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 	}
 
 	public synchronized V get(final K key) {
-		this.modCount++;
 		if (key != null) {
 			int i = 0;
 			IEntry<K, V> entry = null;
@@ -105,6 +104,7 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 				}
 			}
 			if (entry != null) {
+				this.modCount++;
 				this.array[i] = this.array[0];
 				this.array[0] = entry;
 				return entry.getValue();
