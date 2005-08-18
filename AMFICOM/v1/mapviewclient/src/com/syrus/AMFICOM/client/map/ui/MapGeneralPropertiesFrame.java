@@ -1,5 +1,5 @@
 /**
- * $Id: MapGeneralPropertiesFrame.java,v 1.9 2005/08/17 14:14:20 arseniy Exp $
+ * $Id: MapGeneralPropertiesFrame.java,v 1.10 2005/08/18 13:57:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,11 +23,13 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.9 $, $Date: 2005/08/17 14:14:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/08/18 13:57:11 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public final class MapGeneralPropertiesFrame extends MapAbstractPropertiesFrame {
+	public static final String	NAME = "mapGeneralPropertiesFrame";
+
 	public MapGeneralPropertiesFrame(String title, ApplicationContext aContext) {
 		super(title, aContext);
 	}
@@ -37,23 +39,6 @@ public final class MapGeneralPropertiesFrame extends MapAbstractPropertiesFrame 
 		StorableObjectEditor generalEditor = 
 			manager.getGeneralPropertiesPanel();
 		
-		if(generalEditor != null ) {
-			if(generalEditor instanceof PhysicalLinkEditor) {
-				PhysicalLinkEditor linkEditor = (PhysicalLinkEditor )generalEditor;
-				MapFrame mapFrame = MapDesktopCommand.findMapFrame((JDesktopPane )this.getParent());
-				linkEditor.setNetMapViewer(mapFrame.getMapViewer());
-			}
-			if(generalEditor instanceof PhysicalLinkTypeEditor) {
-				PhysicalLinkTypeEditor linkTypeEditor = (PhysicalLinkTypeEditor )generalEditor;
-				MapFrame mapFrame = MapDesktopCommand.findMapFrame((JDesktopPane )this.getParent());
-				linkTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
-			}
-			if(generalEditor instanceof SiteNodeTypeEditor) {
-				SiteNodeTypeEditor nodeTypeEditor = (SiteNodeTypeEditor )generalEditor;
-				MapFrame mapFrame = MapDesktopCommand.findMapFrame((JDesktopPane )this.getParent());
-				nodeTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
-			}
-		}
 		return generalEditor;
 	}
 }

@@ -4,8 +4,9 @@ import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 
-public class MapCharacteristicPropertiesFrame extends MapAbstractPropertiesFrame
-{
+public class MapCharacteristicPropertiesFrame extends MapAbstractPropertiesFrame {
+	public static final String	NAME = "mapCharacteristicPropertiesFrame";
+
 	public MapCharacteristicPropertiesFrame(String title, ApplicationContext aContext) {
 		super(title, aContext);
 	}
