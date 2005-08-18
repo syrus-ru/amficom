@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.114 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: LogicalNetLayer.java,v 1.115 2005/08/18 13:59:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -74,8 +74,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.114 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.115 $, $Date: 2005/08/18 13:59:08 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer {
@@ -225,11 +225,15 @@ public final class LogicalNetLayer {
 
 		if (this.getContext() != null && this.getContext().getDispatcher() != null) {
 			if (mapView != null && mapView.getMap() != null) {
-				this.aContext.getDispatcher().firePropertyChange(new MapEvent(mapView, MapEvent.MAP_VIEW_SELECTED));
-				this.aContext.getDispatcher().firePropertyChange(new MapEvent(mapView.getMap(), MapEvent.MAP_SELECTED));
+				this.aContext.getDispatcher().firePropertyChange(
+						new MapEvent(this, MapEvent.MAP_VIEW_SELECTED, mapView));
+					this.aContext.getDispatcher().firePropertyChange(
+						new MapEvent(this, MapEvent.MAP_SELECTED, mapView.getMap()));
 			} else {
-				this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_VIEW_DESELECTED));
-				this.aContext.getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_DESELECTED));
+				this.aContext.getDispatcher().firePropertyChange(
+						new MapEvent(this, MapEvent.MAP_VIEW_DESELECTED));
+				this.aContext.getDispatcher().firePropertyChange(
+					new MapEvent(this, MapEvent.MAP_DESELECTED));
 			}
 		}
 
@@ -1005,8 +1009,8 @@ public final class LogicalNetLayer {
 	/**
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.114 $, $Date: 2005/08/17 14:14:16 $
+	 * @author $Author: krupenn $
+	 * @version $Revision: 1.115 $, $Date: 2005/08/18 13:59:08 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
