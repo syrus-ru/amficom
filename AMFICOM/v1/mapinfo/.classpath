@@ -12,5 +12,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/csbridge"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mapinfo-common"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/dom4j"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
