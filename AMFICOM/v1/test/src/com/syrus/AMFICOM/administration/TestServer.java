@@ -1,5 +1,5 @@
 /*
- * $Id: TestServer.java,v 1.5 2005/08/18 10:40:08 arseniy Exp $
+ * $Id: TestServer.java,v 1.6 2005/08/18 10:53:04 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,18 +23,18 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/18 10:40:08 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/18 10:53:04 $
  * @author $Author: arseniy $
  * @module test
  */
 public final class TestServer extends TestCase {
 
-	public TestServer(String name) {
+	public TestServer(final String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
+		final DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
 		//databaseCommonTest.addTestSuite(TestServer.class);
 		databaseCommonTest.addTest(new TestServer("testRetrieve"));
 		return databaseCommonTest.createTestSetup();

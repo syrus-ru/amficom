@@ -1,5 +1,5 @@
 /*
- * $Id: TestServerProcess.java,v 1.11 2005/08/18 10:40:08 arseniy Exp $
+ * $Id: TestServerProcess.java,v 1.12 2005/08/18 10:53:04 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,18 +27,18 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/18 10:40:08 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/18 10:53:04 $
  * @author $Author: arseniy $
  * @module test
  */
 public final class TestServerProcess extends TestCase {
 
-	public TestServerProcess(String name) {
+	public TestServerProcess(final String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
+		final DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
 		databaseCommonTest.addTestSuite(TestServerProcess.class);
 		return databaseCommonTest.createTestSetup();
 	}

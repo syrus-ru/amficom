@@ -1,5 +1,5 @@
 /*
- * $Id: TestMCM.java,v 1.5 2005/08/18 10:40:08 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestMCM.java,v 1.6 2005/08/18 10:53:04 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.administration;
@@ -16,18 +16,18 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/18 10:40:08 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/18 10:53:04 $
  * @author $Author: arseniy $
  * @module test
  */
 public final class TestMCM extends TestCase {
 
-	public TestMCM(String name) {
+	public TestMCM(final String name) {
 		super(name);
 	}
 
 	public static Test suite() {
-		DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
+		final DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
 		databaseCommonTest.addTestSuite(TestMCM.class);
 		return databaseCommonTest.createTestSetup();
 	}
