@@ -17,4 +17,4 @@ APPCLASSPATH=$LIB/filter.jar:$LIB/mscharserver.jar:$LIB/general.jar:$LIB/adminis
 JAVA="$JAVA -agentlib:jdwp=transport=dt_socket,address=8004,server=y,suspend=n"
 $JAVA -Xmx256m -server -ea -classpath $APPCLASSPATH:$ORACLECLASSPATH:$EXTCLASSPATH com.syrus.AMFICOM.mscharserver.MapSchemeAdministrationResourceServer &
 # Expands to the process ID of the most recently executed background (asynchronous) command.
-echo $! >`dirname $0`/mscharserver.pid
+echo $! > `dirname $0`/mscharserver.pid
