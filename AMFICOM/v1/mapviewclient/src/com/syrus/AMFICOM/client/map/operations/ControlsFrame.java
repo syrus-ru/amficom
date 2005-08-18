@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.10 2005/08/11 12:43:31 arseniy Exp $
+ * Название: $Id: ControlsFrame.java,v 1.11 2005/08/18 14:14:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,12 +33,14 @@ import com.syrus.AMFICOM.mapview.MapView;
  * <li> Поиск элементов АМФИКОМ
  * <lI> Поиск географических объектов
  * <li> Управление отображением слоев
- * @version $Revision: 1.10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
  public class ControlsFrame extends JInternalFrame 
 		implements PropertyChangeListener {
+	public static final String	NAME = "controlsFrame";
+
 	BorderLayout borderLayout1 = new BorderLayout();
 
 	/**
@@ -88,10 +90,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 		if(this.aContext != null) {
 			disp = this.aContext.getDispatcher();
 			if(disp != null) {
-				disp.removePropertyChangeListener(MapEvent.MAP_FRAME_SHOWN, this);
-				disp.removePropertyChangeListener(MapEvent.MAP_VIEW_SELECTED, this);
-				disp.removePropertyChangeListener(MapEvent.MAP_VIEW_DESELECTED, this);
-				disp.removePropertyChangeListener(MapEvent.MAP_VIEW_SCALE_CHANGED, this);
+				disp.removePropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
 			}
 		}
 		this.aContext = aContext;
@@ -99,27 +98,29 @@ import com.syrus.AMFICOM.mapview.MapView;
 			return;
 		disp = this.aContext.getDispatcher();
 		if(disp != null) {
-			disp.addPropertyChangeListener(MapEvent.MAP_FRAME_SHOWN, this);
-			disp.addPropertyChangeListener(MapEvent.MAP_VIEW_SELECTED, this);
-			disp.addPropertyChangeListener(MapEvent.MAP_VIEW_DESELECTED, this);
-			disp.addPropertyChangeListener(MapEvent.MAP_VIEW_SCALE_CHANGED, this);
+			disp.addPropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
 		}
 	}
 
 	public void propertyChange(PropertyChangeEvent pce) {
-		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_SELECTED))
-			this.searchPanel.setMapView((MapView )pce.getSource());
-		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_DESELECTED))
-			this.searchPanel.setMapView(null);
-		if(pce.getPropertyName().equals(MapEvent.MAP_FRAME_SHOWN)) {
-			try {
-				setMapFrame((MapFrame )pce.getSource());
-			} catch(Exception ex) {
-				ex.printStackTrace();
+		if(pce.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
+			MapEvent mapEvent = (MapEvent )pce;
+			String mapEventType = mapEvent.getMapEventType();
+
+			if(mapEventType.equals(MapEvent.MAP_VIEW_SELECTED))
+				this.searchPanel.setMapView((MapView )pce.getNewValue());
+			if(mapEventType.equals(MapEvent.MAP_VIEW_DESELECTED))
+				this.searchPanel.setMapView(null);
+			if(mapEventType.equals(MapEvent.MAP_FRAME_SHOWN)) {
+				try {
+					setMapFrame((MapFrame )pce.getNewValue());
+				} catch(Exception ex) {
+					ex.printStackTrace();
+				}
 			}
+			if(mapEventType.equals(MapEvent.MAP_VIEW_SCALE_CHANGED))
+				this.layersPanel.setVisibility();
 		}
-		if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_SCALE_CHANGED))
-			this.layersPanel.setVisibility();
 	}
 
 	public void setMapFrame(MapFrame mapFrame) {
