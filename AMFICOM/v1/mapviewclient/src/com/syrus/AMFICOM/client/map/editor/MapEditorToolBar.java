@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.17 2005/08/11 12:43:31 arseniy Exp $
+ * $Id: MapEditorToolBar.java,v 1.18 2005/08/18 14:14:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель инструментов модуля "Редактор топологических схем". 
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/11 12:43:31 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/08/18 14:14:20 $
  * @module mapviewclient
  */
 public class MapEditorToolBar extends AbstractMainToolBar {
@@ -225,6 +225,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				this.modelChanged("");
 			}
 
+			@SuppressWarnings("synthetic-access")
 			public void modelChanged(String elementName) {
 				MapEditorToolBar.this.menuMapNew.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_NEW));
 				MapEditorToolBar.this.menuMapNew.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_NEW));

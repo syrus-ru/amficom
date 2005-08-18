@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.21 2005/08/17 14:14:19 arseniy Exp $
+ * $Id: MapEditorMenuBar.java,v 1.22 2005/08/18 14:14:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,9 +20,9 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель меню модуля "Редактор топологических схем".
- * @version $Revision: 1.21 $, $Date: 2005/08/17 14:14:19 $
+ * @version $Revision: 1.22 $, $Date: 2005/08/18 14:14:20 $
  * @module mapviewclient
- * @author $Author: arseniy $
+ * @author $Author: krupenn $
  */
 public class MapEditorMenuBar extends AbstractMainMenuBar {
 
@@ -274,6 +274,7 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 				this.modelChanged();
 			}
 
+			@SuppressWarnings("synthetic-access")
 			private void modelChanged() {
 				menuView.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_VIEW));
 				menuView.setEnabled(MapEditorMenuBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW));

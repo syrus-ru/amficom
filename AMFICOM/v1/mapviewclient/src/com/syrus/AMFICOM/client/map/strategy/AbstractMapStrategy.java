@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractMapStrategy.java,v 1.7 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: AbstractMapStrategy.java,v 1.8 2005/08/18 14:16:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
  * режимом работы пользователя с картой, режимом отображения, состоянием
  * или изменением состояния мыши и клавиатуры.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/11 12:43:32 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.8 $, $Date: 2005/08/18 14:16:04 $
  * @module mapviewclient
  */
 abstract class AbstractMapStrategy implements MapStrategy
@@ -101,6 +101,7 @@ abstract class AbstractMapStrategy implements MapStrategy
 	 * @param mapState map state
 	 * @param point new point
 	 */
+	@SuppressWarnings("unused")
 	protected void leftMousePressed(MapState mapState, Point point)
 		throws MapConnectionException, MapDataException 
 	{//empty
@@ -111,6 +112,7 @@ abstract class AbstractMapStrategy implements MapStrategy
 	 * @param mapState map state
 	 * @param point new point
 	 */
+	@SuppressWarnings("unused")
 	protected void leftMouseDragged(MapState mapState, Point point)
 		throws MapConnectionException, MapDataException 
 	{//empty
@@ -121,6 +123,7 @@ abstract class AbstractMapStrategy implements MapStrategy
 	 * @param mapState map state
 	 * @param point new point
 	 */
+	@SuppressWarnings("unused")
 	protected void leftMouseReleased(MapState mapState, Point point)
 		throws MapConnectionException, MapDataException
 	{//empty

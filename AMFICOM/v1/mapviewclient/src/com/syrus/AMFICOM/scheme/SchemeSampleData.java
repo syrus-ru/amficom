@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.25 2005/08/09 13:23:26 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.26 2005/08/18 14:19:15 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $
+ * @version $Revision: 1.26 $
  * @module generalclient_v1
  */
 public final class SchemeSampleData {
@@ -156,31 +156,31 @@ public final class SchemeSampleData {
 		SchemeMonitoringSolution solution = SchemeMonitoringSolution.createInstance(userId, "Сольюшн", scheme1);
 		scheme1path0 = SchemePath.createInstance(userId, "Путяра измерений", solution);
 
-		PathElement scheme1pelstart = PathElement.createInstance(userId, scheme1path0, null, scheme1dev00port00);
+		@SuppressWarnings("unused") PathElement scheme1pelstart = PathElement.createInstance(userId, scheme1path0, null, scheme1dev00port00);
 
 		PathElement scheme1pel0 = PathElement.createInstance(userId, scheme1path0, scheme1link0);
 		SchemeUtils.setOpticalLength(scheme1pel0, 3.0);
 		SchemeUtils.setPhysicalLength(scheme1pel0, 3.0);
 		
-		PathElement scheme1pel1 = PathElement.createInstance(userId, scheme1path0, scheme1dev00port00, scheme1dev00cport00);
+		@SuppressWarnings("unused") PathElement scheme1pel1 = PathElement.createInstance(userId, scheme1path0, scheme1dev00port00, scheme1dev00cport00);
 		
 		PathElement scheme1pel2 = PathElement.createInstance(userId, scheme1path0, scheme1clink0th);
 		SchemeUtils.setOpticalLength(scheme1pel2, 1000.0);
 		SchemeUtils.setPhysicalLength(scheme1pel2, 1000.0);
 		
-		PathElement scheme1pel3 = PathElement.createInstance(userId, scheme1path0, scheme1dev10cport10, scheme1dev10cport11);
+		@SuppressWarnings("unused") PathElement scheme1pel3 = PathElement.createInstance(userId, scheme1path0, scheme1dev10cport10, scheme1dev10cport11);
 		
 		PathElement scheme1pel4 = PathElement.createInstance(userId, scheme1path0, scheme1clink1th);
 		SchemeUtils.setOpticalLength(scheme1pel4, 1000.0);
 		SchemeUtils.setPhysicalLength(scheme1pel4, 1000.0);
 		
-		PathElement scheme1pel5 = PathElement.createInstance(userId, scheme1path0, scheme1dev20cport20, scheme1dev20cport21);
+		@SuppressWarnings("unused") PathElement scheme1pel5 = PathElement.createInstance(userId, scheme1path0, scheme1dev20cport20, scheme1dev20cport21);
 		
 		PathElement scheme1pel6 = PathElement.createInstance(userId, scheme1path0, scheme1clink2th);
 		SchemeUtils.setOpticalLength(scheme1pel6, 1000.0);
 		SchemeUtils.setPhysicalLength(scheme1pel6, 1000.0);
 
-		PathElement scheme1pelend = PathElement.createInstance(userId, scheme1path0, scheme1dev20cport21, null);
+		@SuppressWarnings("unused") PathElement scheme1pelend = PathElement.createInstance(userId, scheme1path0, scheme1dev30cport30, null);
 
 		scheme1.setHeight(100);
 		scheme1.setLabel("lab1");
@@ -227,11 +227,11 @@ public final class SchemeSampleData {
 
 		SchemeMonitoringSolution solution = SchemeMonitoringSolution.createInstance(userId, "Сольюшн", scheme2);
 		scheme2path0 = SchemePath.createInstance(userId, "Путяра измерений", solution);
-		PathElement scheme2pelstart = PathElement.createInstance(userId, scheme2path0, null, scheme2dev10port10);
-		PathElement scheme2pel0 = PathElement.createInstance(userId, scheme2path0, scheme2link0);
-		PathElement scheme2pel1 = PathElement.createInstance(userId, scheme2path0, scheme2dev10port10, scheme2dev10cport10);
-		PathElement scheme2pel2 = PathElement.createInstance(userId, scheme2path0, scheme2clink0th);
-		PathElement scheme2pelend = PathElement.createInstance(userId, scheme2path0, scheme2dev10cport10, null);
+		@SuppressWarnings("unused") PathElement scheme2pelstart = PathElement.createInstance(userId, scheme2path0, null, scheme2dev10port10);
+		@SuppressWarnings("unused") PathElement scheme2pel0 = PathElement.createInstance(userId, scheme2path0, scheme2link0);
+		@SuppressWarnings("unused") PathElement scheme2pel1 = PathElement.createInstance(userId, scheme2path0, scheme2dev10port10, scheme2dev10cport10);
+		@SuppressWarnings("unused") PathElement scheme2pel2 = PathElement.createInstance(userId, scheme2path0, scheme2clink0th);
+		@SuppressWarnings("unused") PathElement scheme2pelend = PathElement.createInstance(userId, scheme2path0, scheme2dev00cport00, null);
 
 		scheme2.setHeight(100);
 		scheme2.setLabel("lab1");
