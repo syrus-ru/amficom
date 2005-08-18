@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.105 2005/08/17 11:24:48 saa Exp $
+ * $Id: Heap.java,v 1.106 2005/08/18 12:57:56 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.105 $, $Date: 2005/08/17 11:24:48 $
+ * @version $Revision: 1.106 $, $Date: 2005/08/18 12:57:56 $
  * @module
  */
 public class Heap
@@ -144,6 +144,7 @@ public class Heap
 	private static LinkedList<CurrentEventChangeListener> currentEventChangeListeners = new LinkedList<CurrentEventChangeListener>();
 	private static LinkedList<AnalysisParametersListener> analysisParametersListeners = new LinkedList<AnalysisParametersListener>();
 	private static LinkedList<RefMismatchListener> refMismatchListeners = new LinkedList<RefMismatchListener>();
+	private static String etalonName;
 
 	// constructor is not available
 	private Heap() {
@@ -339,15 +340,19 @@ public class Heap
 		return getAnyBSTraceByKey(ETALON_TRACE_KEY);
 	}
 
-	public static void setEtalonTraceFromBS(BellcoreStructure etalonTrace) {
+	public static void setEtalonTraceFromBS(BellcoreStructure etalonTrace, String name) {
 		// @todo - эталон должен храниться отдельно от остальных (первичных и вторичных) рефлектограмм, и вообще не как Trace, а отдельно
-		if (etalonTrace != null)
+		if (etalonTrace != null) {
+			etalonName = name;
 			setAnyTraceByKey(ETALON_TRACE_KEY, new Trace(
 					etalonTrace,
 					ETALON_TRACE_KEY,
 					getMinuitAnalysisParams()));
-		else
+		}
+		else {
 			removeAnyTraceByKey(ETALON_TRACE_KEY);
+			etalonName = null;
+		}
 	}
 
 	public static Trace getReferenceTrace() {
@@ -903,6 +908,7 @@ public class Heap
 		// close Etalon MTM
 		etalonMTM = null;
 		backupEtalonMTM = null;
+		etalonName = null;
 		fixEventList();
 		notifyEtalonMTMRemoved();
 
@@ -1101,14 +1107,14 @@ public class Heap
 	}
 
 	public static void unSetEtalonPair() {
-		setEtalonTraceFromBS(null);
+		setEtalonTraceFromBS(null, null);
 		Heap.setAnchorer(null);
 		Heap.setMTMEtalon(null);
 	}
 
 	public static void setEtalonPair(BellcoreStructure bs,
-			Etalon etalonObj) {
-		setEtalonTraceFromBS(bs);
+			Etalon etalonObj, String etalonName) {
+		setEtalonTraceFromBS(bs, etalonName);
 		Heap.setMinTraceLevel(etalonObj.getMinTraceLevel());
 		Heap.setAnchorer(etalonObj.getAnc());
 		Heap.setMTMEtalon(etalonObj.getMTM());
@@ -1154,5 +1160,9 @@ public class Heap
 
 		// устанавливаем вторичную
 		putSecondaryTrace(oldPrimary);
+	}
+
+	public static String getEtalonName() {
+		return etalonName;
 	}
 }

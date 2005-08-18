@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.Client.Analysis;
 
 import java.util.Collection;
+import java.util.Date;
 import java.util.Set;
 
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
@@ -13,6 +14,7 @@ import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
+import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
@@ -38,6 +40,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
+import com.syrus.util.EasyDateFormatter;
 
 /**
  Class with methods used to save/load measuring parameters onto server
@@ -220,13 +223,52 @@ public class AnalysisUtil
 	}
 
 	/**
+	 * ”беждаетс€, что в данном ms есть один и только один me,
+	 * и возвращает этот me. ѕредназначен дл€ использовани€
+	 * @param ms
+	 * #return если у данного ms один me, то me данного ms. Eсли у данного ms
+	 * нет me либо есть более одного me, то null.
+	 * @throws ApplicationException ошибки getStorableObject()
+	 */
+	public static MonitoredElement getMEbyMS(MeasurementSetup ms)
+	throws ApplicationException {
+		if (ms.getMonitoredElementIds().size() != 1) {
+			return null;
+		}
+		return StorableObjectPool.getStorableObject(
+				ms.getMonitoredElementIds().iterator().next(), true);
+	}
+
+	/**
+	 *  онструирует строку вида 'Ё–-путь-дата'
+	 * @param me путь тестировани€, may be null
+	 * @param date дата шаблона,  may be null
+	 */
+	public static String makeEtalonRefName(MonitoredElement me, Date date) {
+		StringBuilder sb = new StringBuilder();
+		sb.append(LangModelAnalyse.getString("ER"));
+		if (me != null) {
+			// если MonitoredElement у данного ms есть и единственный,
+			// то вз€ть его им€
+			sb.append("-");
+			sb.append(me.getName());
+		}
+		if (date != null) {
+			sb.append("-");
+			sb.append(EasyDateFormatter.formatDate(date));
+		}
+		return sb.toString();
+	}
+
+	/**
 	 * Load Etalon for certain MeasurementSetup to Heap.
 	 * If there is no Etalon attached to MeasurementSetup, do nothing.
 	 * @param ms MeasurementSetup to be loaded
 	 * @throws DataFormatException Etalon object decoding failed
+	 * @throws ApplicationException Error while getting ME
 	 */
 	public static void loadEtalon(MeasurementSetup ms)
-	throws DataFormatException
+	throws DataFormatException, ApplicationException
 	{
 		ParameterSet etalonSet = ms.getEtalon();
 		//ParameterSet metas = ms.getParameterSet();
@@ -247,10 +289,10 @@ public class AnalysisUtil
 			else if (type.getCodename().equals(REFLECTOGRAMMA_ETALON))
 			{
 				etalonBS = new BellcoreReader().getData(params[i].getValue());
-				etalonBS.title = "etalon (" + (ms.getDescription().equals("")
-							? ms.getId().getIdentifierString()
-							: ms.getDescription())
-						+ ")"; // FIXME: generate etalon name some other way
+//				etalonBS.title = "etalon (" + (ms.getDescription().equals("")
+//							? ms.getId().getIdentifierString()
+//							: ms.getDescription())
+//						+ ")"; // FIXME: generate etalon name some other way
 			}
 		}
 		if (etalonObj == null || etalonBS == null) {
@@ -260,7 +302,8 @@ public class AnalysisUtil
 			GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_MALFORMED_ETALON);
 			return;
 		}
-		Heap.setEtalonPair(etalonBS, etalonObj);
+		etalonBS.title =  makeEtalonRefName(getMEbyMS(ms), ms.getModified());// XXX: ms.getCreated()?
+		Heap.setEtalonPair(etalonBS, etalonObj, etalonBS.title);
 		//Heap.setEtalonEtalonMetas(metas);
 	}
 

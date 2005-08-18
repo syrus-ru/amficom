@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 import java.awt.BorderLayout;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
@@ -153,7 +152,8 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 		tr.setShown(true);
 
 		if (Heap.ETALON_TRACE_KEY.equals(key))
-			tr.setTitle(LangModelAnalyse.getString("etalon"));
+			tr.setTitle(Heap.getEtalonName());
+			//tr.setTitle(LangModelAnalyse.getString("etalon"));
 		else
 			tr.setTitle(Heap.getAnyBSTraceByKey(key).title);
 
