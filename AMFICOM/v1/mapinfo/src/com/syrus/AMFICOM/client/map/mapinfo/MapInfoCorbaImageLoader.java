@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.5 2005/08/12 15:04:32 arseniy Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.6 2005/08/18 14:06:06 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,11 +7,26 @@
  */
 package com.syrus.AMFICOM.client.map.mapinfo;
 
+import static com.syrus.io.FileLoader.BUFF_SIZE;
+import static com.syrus.io.FileLoader.NULL_STUB;
+
 import java.awt.Image;
 import java.awt.image.BufferedImage;
+import java.io.File;
+import java.io.FileOutputStream;
+import java.io.FileWriter;
+import java.io.IOException;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Iterator;
 import java.util.List;
 import java.util.logging.Level;
+
+import org.dom4j.Document;
+import org.dom4j.DocumentException;
+import org.dom4j.Node;
+import org.dom4j.io.SAXReader;
+import org.dom4j.io.XMLWriter;
 
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
@@ -21,22 +36,29 @@ import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.AMFICOM.map.LayerDescriptor;
+import com.syrus.AMFICOM.map.MapDescriptor;
+import com.syrus.AMFICOM.map.MapFileDescriptor;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
+import com.syrus.AMFICOM.map.corba.IdlLayerDescriptor;
+import com.syrus.AMFICOM.map.corba.IdlMapDescriptor;
 import com.syrus.AMFICOM.map.corba.IdlMapFeature;
 import com.syrus.AMFICOM.map.corba.IdlRenderedImage;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
 import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.io.ImageToByte;
+import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/12 15:04:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/18 14:06:06 $
+ * @author $Author: max $
  * @module mapinfo
  */
 
 public class MapInfoCorbaImageLoader implements MapImageLoader {
+	private static final String	CACHE_DIR	= "CacheDir";
 	private final MapInfoCorbaConnection connection;
 
 	MapInfoCorbaImageLoader(final MapInfoConnection connection) {
@@ -130,5 +152,165 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		}
 
 		return resultList;
+	}
+	
+	public List<MapDescriptor> getMapDescriptors() {
+		final MscharServer serv = this.connection.getMscharServer();
+		final IdlSessionKey idlSessionKey = LoginManager.getSessionKeyTransferable();
+		final IdlMapDescriptor[] idlMapDescriptors;
+		try {
+			idlMapDescriptors = serv.getMapDescriptors(idlSessionKey);
+		} catch (AMFICOMRemoteException e) {
+			Log.errorMessage("MapInfoCorbsImageLoader.getMapDescriptors |" + e.getMessage());
+			return Collections.emptyList();
+		}
+		if(idlMapDescriptors.length == 1) {
+			MapDescriptor mapDescriptor = new MapDescriptor(idlMapDescriptors[0]);
+			if(mapDescriptor.getFileName().equals("") 
+					&& mapDescriptor.getFilePathName().equals("")) {
+				return Collections.emptyList();
+			}
+		}
+		final List<MapDescriptor> mapDescriptors = new ArrayList<MapDescriptor>(idlMapDescriptors.length);
+		for (int i = 0; i < idlMapDescriptors.length; i++) {
+			IdlMapDescriptor descriptor = idlMapDescriptors[i];
+			mapDescriptors.add(new MapDescriptor(descriptor));
+		}
+		return mapDescriptors;
+	}
+	
+	private List<LayerDescriptor> getLayerDescriptors(MapDescriptor mapDescriptor) {
+		final MscharServer serv = this.connection.getMscharServer();
+		final IdlSessionKey idlSessionKey = LoginManager.getSessionKeyTransferable();
+		final IdlLayerDescriptor[] idlLayerDescriptors;
+		try {
+			idlLayerDescriptors = serv.getLayerDescriptors(mapDescriptor.getTransferable(),idlSessionKey);
+		} catch (AMFICOMRemoteException e) {
+			Log.errorMessage("MapInfoCorbsImageLoader.getMapDescriptors |" + e.getMessage());
+			return Collections.emptyList();
+		}
+		if(idlLayerDescriptors.length == 1) {
+			LayerDescriptor layerDescriptor = new LayerDescriptor(idlLayerDescriptors[0]);
+			if(layerDescriptor.getFileName().equals("") 
+					&& layerDescriptor.getFilePathName().equals("")) {
+				return Collections.emptyList();
+			}
+		}
+		final List<LayerDescriptor> layerDescriptors = new ArrayList<LayerDescriptor>(idlLayerDescriptors.length);
+		for (int i = 0; i < idlLayerDescriptors.length; i++) {
+			IdlLayerDescriptor descriptor = idlLayerDescriptors[i];
+			layerDescriptors.add(new LayerDescriptor(descriptor));
+		}
+		return layerDescriptors;
+	}
+	
+	public void syncronizeMap(final MapDescriptor mapDescriptor) {
+		String cacheDir = ApplicationProperties.getString(CACHE_DIR, "cache");
+		File cacheDirFile = new File(cacheDir);
+		if(!cacheDirFile.isDirectory()) {
+			Log.debugMessage("MapInfoCorbaImageLoader.syncronizeMap | Cache dir + " + "\"" + cacheDirFile.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
+			cacheDirFile.mkdirs();
+		}
+		File localMapDir = new File(cacheDirFile, mapDescriptor.getMapName());
+		if(!localMapDir.exists()) {
+			Log.debugMessage("MapInfoCorbaImageLoader.syncronizeMap | Cache dir + " + "\"" + localMapDir.getAbsolutePath() + "\"" + "does not exist, tryin to create", Log.DEBUGLEVEL05);
+			cacheDirFile.mkdir();
+		}
+		File localMDF = new File(localMapDir, mapDescriptor.getFileName());
+		compareAndLoadFile(localMDF, mapDescriptor);
+		patchMapMDF(localMDF, localMDF.getParentFile().getAbsolutePath());
+		final List<LayerDescriptor> layerDescriptors = getLayerDescriptors(mapDescriptor);
+		for (LayerDescriptor descriptor : layerDescriptors) {
+			File localLayer = new File(localMapDir, descriptor.getFileName());
+			compareAndLoadFile(localLayer, descriptor);
+		}
+	}
+	
+	private File loadFile(final File localFile, final MapFileDescriptor mapFileDescriptor) {
+		final MscharServer serv = this.connection.getMscharServer();
+		final IdlSessionKey idlSessionKey = LoginManager.getSessionKeyTransferable();
+		boolean eof = false;
+		long offset = 0;
+		File tempFile = new File(localFile.getPath() + ".swp");
+		if(tempFile.exists()) {
+			Log.debugMessage("MapInfoCorbaImageLoader.loadFile | Warning: swp file\" " + tempFile.getAbsolutePath() +  " \" exsists. Removing it...", Log.DEBUGLEVEL05);
+			tempFile.delete();
+		}
+		try {
+			FileOutputStream fos = new FileOutputStream(tempFile);
+			while(!eof) {
+				byte[] partOfFile = serv.loadFile(mapFileDescriptor.getFilePathName(), offset, idlSessionKey);
+				if(partOfFile.equals(NULL_STUB)) {
+					eof = true;
+					break;
+				}
+				fos.write(partOfFile);
+				if(partOfFile.length < BUFF_SIZE) {
+					eof = true;
+					break;
+				}
+				offset += BUFF_SIZE;
+			}
+			fos.flush();
+			fos.close();
+			if(localFile.exists()) {
+				localFile.delete();
+			}
+			tempFile.renameTo(localFile);
+			localFile.setLastModified(mapFileDescriptor.getLastModified());
+			return localFile;
+		} catch (AMFICOMRemoteException e) {
+			Log.errorMessage("MapInfoCorbaImageLoader.loadFile | AMFICOMRemoteException " + e.getMessage());
+			return null;
+		} catch (IOException e) {
+			Log.errorMessage("MapInfoCorbaImageLoader.loadFile | IOException" + e.getMessage());
+			return null;
+		}		
+	}
+	
+	private void compareAndLoadFile(final File localFile, final MapFileDescriptor descriptor) {
+		if(localFile.exists()) {
+			if(!localFile.isFile() 
+					|| localFile.length() != descriptor.getLength() 
+					|| localFile.lastModified() != descriptor.getLastModified()) {
+				loadFile(localFile, descriptor);
+			}
+		} else {
+			loadFile(localFile, descriptor);
+		}
+	}
+	
+	private void patchMapMDF(final File localMdf, final String newDir) {
+		final SAXReader reader = new SAXReader();
+		Document document;
+		try {
+			document = reader.read(localMdf);
+		} catch (DocumentException e) {
+			Log.errorException(e);
+			return;
+		}
+		 
+		final List layerNodeList = document.selectNodes("//MapDefinitionLayer");
+		for (final Iterator it = layerNodeList.iterator(); it.hasNext();) {
+			final Node node = (Node) it.next();
+			final Node layerPathNode = node.selectSingleNode("Connection/Url");
+			if (layerPathNode == null) {
+				continue;
+			}
+			String layerPath = layerPathNode.getText();
+			if (layerPath == null || layerPath.equals("")) {
+				Log.errorMessage("LayerFilesParser.patchMapMDF() | Wrong xml content in file " + localMdf.getAbsolutePath());
+				continue;
+			}
+			layerPathNode.setText("tab:" + newDir);
+		}
+		
+		try {
+	        XMLWriter writer = new XMLWriter(new FileWriter(localMdf));
+	        writer.write(document);
+	        writer.close();
+		} catch (IOException e) {
+			Log.errorMessage("LayerFilesParser.patchMapMDF() | IOException " + e.getMessage());
+		}
 	}
 }
