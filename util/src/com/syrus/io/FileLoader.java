@@ -1,5 +1,5 @@
 /*-
- * $Id: FileLoader.java,v 1.2 2005/07/28 16:09:51 arseniy Exp $
+ * $Id: FileLoader.java,v 1.3 2005/08/18 14:03:02 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,14 +15,14 @@ import java.io.IOException;
 
 /**
  * @author max
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/07/28 16:09:51 $
+ * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/08/18 14:03:02 $
  * @module util
  */
 
 public class FileLoader {
 	
-	public static final int BUFF_SIZE = 1024;
+	public static final int BUFF_SIZE = 1024*1024;
 	public static final byte[] NULL_STUB = new byte[] { 1, 2, 3, 4, 5, 6, 7, 8, 9, 10};
 	
 	public static byte[] fileToByte(final String pathName, final long offset) throws IOException {
