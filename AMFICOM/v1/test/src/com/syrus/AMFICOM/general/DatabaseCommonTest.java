@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCommonTest.java,v 1.5 2005/08/18 10:40:08 arseniy Exp $
+ * $Id: DatabaseCommonTest.java,v 1.6 2005/08/18 10:51:47 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
+import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
@@ -63,9 +64,10 @@ import com.syrus.AMFICOM.scheme.SchemePathDatabase;
 import com.syrus.AMFICOM.scheme.SchemePortDatabase;
 import com.syrus.AMFICOM.scheme.SchemeProtoElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroupDatabase;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/18 10:40:08 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/18 10:51:47 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -82,6 +84,7 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		super.oneTimeSetUp();
 		initDatabaseContext();
 		initStorableObjectPools();
+		setSysUser();
 	}
 
 	@Override
@@ -171,4 +174,14 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		//More pools...
 	}
 
+	private static void setSysUser() {
+		final StorableObjectDatabase<SystemUser> database = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
+		final SystemUserDatabase userDatabase = (SystemUserDatabase) database;
+		try {
+			sysUser = userDatabase.retrieveForLogin(SystemUserWrapper.SYS_LOGIN);
+		} catch (ApplicationException ae) {
+			Log.errorException(ae);
+			System.exit(0);
+		}
+	}
 }
