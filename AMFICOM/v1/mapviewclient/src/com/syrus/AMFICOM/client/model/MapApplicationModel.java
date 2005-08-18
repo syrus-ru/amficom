@@ -1,5 +1,5 @@
 /**
- * $Id: MapApplicationModel.java,v 1.7 2005/08/17 14:14:21 arseniy Exp $
+ * $Id: MapApplicationModel.java,v 1.8 2005/08/18 14:18:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,37 +11,13 @@
 
 package com.syrus.AMFICOM.client.model;
 
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.ACTION_EDIT_BINDING;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.ACTION_EDIT_MAP;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.ACTION_EDIT_MAP_VIEW;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.ACTION_EDIT_PROPERTIES;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.ACTION_INDICATION;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.ACTION_SAVE_MAP;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.ACTION_SAVE_MAP_VIEW;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.ACTION_USE_MARKER;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.MODE_CABLE_PATH;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.MODE_INDICATION;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.MODE_LINK;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.MODE_NODES;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.MODE_NODE_LINK;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.MODE_PATH;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.OPERATION_CENTER_SELECTION;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.OPERATION_HAND_PAN;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.OPERATION_MEASURE_DISTANCE;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.OPERATION_MOVE_FIXED;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.OPERATION_MOVE_TO_CENTER;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.OPERATION_ZOOM_BOX;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.OPERATION_ZOOM_IN;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.OPERATION_ZOOM_OUT;
-import static com.syrus.AMFICOM.client.model.MapApplicationModel.OPERATION_ZOOM_TO_POINT;
-
 /**
  * Модель приложения определяет функциональные элементы, досступные при работе
  * с картой.
  *  
  * 
  * @author Andrei Kroupennikov
- * @version $Revision: 1.7 $, $Date: 2005/08/17 14:14:21 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/18 14:18:56 $
  * @module mapviewclient
  */
 public class MapApplicationModel extends ApplicationModel
