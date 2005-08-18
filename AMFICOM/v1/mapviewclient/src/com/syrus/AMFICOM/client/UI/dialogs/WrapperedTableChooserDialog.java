@@ -1,5 +1,5 @@
 /*
- * $Id: WrapperedTableChooserDialog.java,v 1.8 2005/08/02 07:31:21 krupenn Exp $
+ * $Id: WrapperedTableChooserDialog.java,v 1.9 2005/08/18 13:58:09 krupenn Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ
@@ -41,7 +41,7 @@ import com.syrus.util.Wrapper;
  * В окне выбора объекта можно включить функцию удаления выбранного объекта.
  * Для того, чтобы включить эту возможность, используется параметр canDelete
  *
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @author $Author: krupenn $
  * @module commonclient_v1
  */
@@ -149,7 +149,7 @@ public class WrapperedTableChooserDialog extends JDialog {
 				StorableObjectPool.delete(id);
 				try {
 					StorableObjectPool.flush(id, LoginManager.getUserId(), true);
-					model.getValues().remove(obj);
+					model.removeObject(obj);
 					model.fireTableDataChanged();
 					buttonOpen.setEnabled(false);
 					buttonDelete.setEnabled(false);
