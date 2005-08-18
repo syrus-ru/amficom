@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.39 2005/08/15 14:24:46 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.40 2005/08/18 14:04:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,6 +32,7 @@ import javax.swing.JComponent;
 import javax.swing.ToolTipManager;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
+import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.MapNavigateEvent;
@@ -39,6 +40,8 @@ import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.MarkerController;
 import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
+import com.syrus.AMFICOM.client.map.props.PhysicalLinkTypeEditor;
+import com.syrus.AMFICOM.client.map.props.SiteNodeTypeEditor;
 import com.syrus.AMFICOM.client.map.ui.MapDropTargetListener;
 import com.syrus.AMFICOM.client.map.ui.MapKeyAdapter;
 import com.syrus.AMFICOM.client.map.ui.MapMouseListener;
@@ -47,10 +50,13 @@ import com.syrus.AMFICOM.client.map.ui.MapToolTippedPanel;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.AlarmMarker;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.EventMarker;
@@ -76,7 +82,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.39 $, $Date: 2005/08/15 14:24:46 $
+ * @version $Revision: 1.40 $, $Date: 2005/08/18 14:04:49 $
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
@@ -393,30 +399,43 @@ public abstract class NetMapViewer {
 	{
 		try
 		{
-			if(pce.getPropertyName().equals(MapEvent.OTHER_SELECTED))
+			MapViewController mapViewController = this.logicalNetLayer.getMapViewController();
+
+			MapView mapView = this.logicalNetLayer.getMapView();
+			
+			if(pce.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
+				MapEvent mapEvent = (MapEvent )pce;
+				String mapEventType = mapEvent.getMapEventType();
+			if(mapEventType.equals(MapEvent.COPY_TYPE))
 			{
-				Object selectedObject = pce.getSource();
+				Object selectedObject = pce.getNewValue();
+				if(selectedObject instanceof SiteNodeType) {
+					copyType((SiteNodeType)selectedObject);
+				}
+				else if(selectedObject instanceof PhysicalLinkType) {
+					copyType((PhysicalLinkType)selectedObject);
+				}
+			}
+			if(mapEventType.equals(MapEvent.OTHER_SELECTED))
+			{
+				Object selectedObject = pce.getNewValue();
 				if(selectedObject instanceof PhysicalLinkType) {
 					this.logicalNetLayer.setCurrentPhysicalLinkType((PhysicalLinkType)selectedObject);
 				}
 			}
-			if(pce.getPropertyName().equals(MapEvent.NEED_FULL_REPAINT))
+			if(mapEventType.equals(MapEvent.NEED_FULL_REPAINT))
 			{
 				this.logicalNetLayer.calculateVisualElements();
 				repaint(true);
 				return;
 			}
-			if(pce.getPropertyName().equals(MapEvent.NEED_REPAINT))
+			if(mapEventType.equals(MapEvent.NEED_REPAINT))
 			{
 				repaint(false);
 				return;
 			}
 
-			MapViewController mapViewController = this.logicalNetLayer.getMapViewController();
-
-			MapView mapView = this.logicalNetLayer.getMapView();
-			
-			if(pce.getPropertyName().equals(MapEvent.MAP_CHANGED))
+			if(mapEventType.equals(MapEvent.MAP_CHANGED))
 			{
 				updateSelectedElements();
 				this.logicalNetLayer.updateZoom();
@@ -424,7 +443,7 @@ public abstract class NetMapViewer {
 				repaint(false);
 			}
 			else
-			if(pce.getPropertyName().equals(MapEvent.MAP_ELEMENT_CHANGED))
+			if(mapEventType.equals(MapEvent.MAP_ELEMENT_CHANGED))
 			{
 				Object me = pce.getNewValue();
 				if(me instanceof SchemeElement)
@@ -456,14 +475,14 @@ public abstract class NetMapViewer {
 				repaint(false);
 			}
 			else
-			if(pce.getPropertyName().equals(MapEvent.MAP_VIEW_CHANGED))
+			if(mapEventType.equals(MapEvent.MAP_VIEW_CHANGED))
 			{
 				this.logicalNetLayer.calculateVisualElements();
 				this.logicalNetLayer.sendSelectionChangeEvent();
 				repaint(false);
 			}
 			else
-			if(pce.getPropertyName().equals(MapEvent.NEED_SELECT))
+			if(mapEventType.equals(MapEvent.NEED_SELECT))
 			{
 				Collection elements = (Collection )pce.getNewValue();
 				for(Iterator iter = elements.iterator(); iter.hasNext();) {
@@ -496,7 +515,7 @@ public abstract class NetMapViewer {
 				repaint(false);
 			}
 			else
-			if(pce.getPropertyName().equals(MapEvent.NEED_DESELECT))
+			if(mapEventType.equals(MapEvent.NEED_DESELECT))
 			{
 				Collection elements = (Collection )pce.getNewValue();
 				for(Iterator iter = elements.iterator(); iter.hasNext();) {
@@ -514,7 +533,7 @@ public abstract class NetMapViewer {
 			if(pce.getSource().equals(this.logicalNetLayer))
 				return;
 
-			if(pce.getPropertyName().equals(MapEvent.SELECTION_CHANGED))
+			if(mapEventType.equals(MapEvent.SELECTION_CHANGED))
 			{
 				updateSelectedElements();
 				this.logicalNetLayer.sendSelectionChangeEvent();
@@ -522,15 +541,15 @@ public abstract class NetMapViewer {
 				return;
 			}
 			else
-			if(pce.getPropertyName().equals(MapEvent.DESELECT_ALL))
+			if(mapEventType.equals(MapEvent.DESELECT_ALL))
 			{
 				this.logicalNetLayer.deselectAll();
 				this.logicalNetLayer.sendSelectionChangeEvent();
 			}
 			else
-			if(pce.getPropertyName().equals(MapEvent.MAP_NAVIGATE))
+			if(mapEventType.equals(MapEvent.MAP_NAVIGATE))
 			{
-				MapNavigateEvent mne = (MapNavigateEvent )pce;
+				MapNavigateEvent mne = (MapNavigateEvent )mapEvent;
 
 				//Здесь принимаюттся собитыя по создению и управлению маркером
 				if(mne.isDataMarkerCreated())
@@ -723,6 +742,7 @@ public abstract class NetMapViewer {
 
 				repaint(false);
 			}
+			}
 			else
 			if(pce.getPropertyName().equals(ObjectSelectedEvent.TYPE))
 			{
@@ -756,6 +776,66 @@ public abstract class NetMapViewer {
 			}
 		} catch(MapException e) {
 			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
+
+	protected void copyType(SiteNodeType siteNodeType) {
+		try {
+			SiteNodeType newSiteNodeType = SiteNodeType.createInstance(
+					LoginManager.getUserId(), 
+					siteNodeType.getSort(), 
+					"codename", 
+					"Copy of " + siteNodeType.getName(), 
+					siteNodeType.getDescription(), 
+					siteNodeType.getImageId(), 
+					true, 
+					siteNodeType.getMapLibrary().getId());
+			newSiteNodeType.setCodename(newSiteNodeType.getId().toString());
+			SiteNodeTypeEditor siteNodeTypeEditor = new SiteNodeTypeEditor();
+
+			siteNodeTypeEditor.setNetMapViewer(this);
+			if(EditorDialog.showEditorDialog(
+					LangModelMap.getString("sitenodetype"),
+					newSiteNodeType,
+					siteNodeTypeEditor) ) {
+				StorableObjectPool.flush(newSiteNodeType, LoginManager.getUserId(), true);
+			} else {
+				StorableObjectPool.delete(newSiteNodeType.getId());
+			}
+		} catch(CreateObjectException e) {
+			e.printStackTrace();
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+		}
+	}
+
+	protected void copyType(PhysicalLinkType physicalLinkType) {
+		try {
+			PhysicalLinkType newPhysicalLinkType = PhysicalLinkType.createInstance(
+					LoginManager.getUserId(), 
+					physicalLinkType.getSort(), 
+					"codename", 
+					"Copy of " + physicalLinkType.getName(), 
+					physicalLinkType.getDescription(), 
+					physicalLinkType.getBindingDimension(), 
+					true, 
+					physicalLinkType.getMapLibrary().getId());
+			newPhysicalLinkType.setCodename(newPhysicalLinkType.getId().toString());
+			PhysicalLinkTypeEditor physicalLinkTypeEditor = new PhysicalLinkTypeEditor();
+			physicalLinkTypeEditor.setNetMapViewer(this);
+			if(EditorDialog.showEditorDialog(
+					LangModelMap.getString("physicallinktype"),
+					newPhysicalLinkType,
+					physicalLinkTypeEditor)) {
+				StorableObjectPool.flush(newPhysicalLinkType, LoginManager.getUserId(), true);
+			}
+			else {
+				StorableObjectPool.delete(newPhysicalLinkType.getId());
+			}
+		} catch(CreateObjectException e) {
+			e.printStackTrace();
+		} catch(ApplicationException e) {
 			e.printStackTrace();
 		}
 	}
