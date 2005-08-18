@@ -1,5 +1,5 @@
 /*
- * $Id: ImportUIDMapDatabase.java,v 1.3 2005/08/16 11:54:03 krupenn Exp $
+ * $Id: ImportUIDMapDatabase.java,v 1.4 2005/08/18 13:28:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-Технический Центр
@@ -14,13 +14,14 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.syrus.util.Application;
+import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
-import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author $Author: krupenn $
  * @author krupenn
  * @module map
@@ -184,4 +185,53 @@ public final class ImportUIDMapDatabase {
 		}
 	}
 
+	/*-********************************************************************
+	 * Keys.                                                              *
+	 **********************************************************************/
+
+	private static final String KEY_DB_HOST_NAME = "DBHostName";
+	private static final String KEY_DB_SID = "DBSID";
+	private static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
+	private static final String KEY_DB_LOGIN_NAME = "DBLoginName";
+	private static final String KEY_SERVER_ID = "ServerID";
+
+	/*-********************************************************************
+	 * Default values.                                                    *
+	 **********************************************************************/
+
+	public static final String DB_SID = "amficom";
+	/**
+	 * Database connection timeout, in seconds.
+	 */
+	public static final int DB_CONNECTION_TIMEOUT = 120;	//sec
+	public static final String DB_LOGIN_NAME = "amficom";
+	public static final String SERVER_ID = "Server_1";
+
+	static {
+		establishDatabaseConnection();
+		Runtime.getRuntime().addShutdownHook(new Thread() {
+			@Override
+			public void run() {
+				shutdown();
+			}
+		});
+	}
+	
+	private static void establishDatabaseConnection() {
+		final String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
+		final String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
+		final long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT)*1000;
+		final String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
+		try {
+			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
+		}
+		catch (Exception e) {
+			Log.errorException(e);
+			System.exit(0);
+		}
+	}
+
+	protected static void shutdown() {
+		DatabaseConnection.closeConnection();
+	}
 }
