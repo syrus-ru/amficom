@@ -1,5 +1,5 @@
 /*-
- * $Id: DataTypeDatabase.java,v 1.3 2005/08/05 07:38:01 arseniy Exp $
+ * $Id: DataTypeDatabase.java,v 1.4 2005/08/18 15:30:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/05 07:38:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/18 15:30:46 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -60,7 +60,7 @@ public final class DataTypeDatabase {
 			preparedStatement = connection.prepareStatement(sql);
 
 			for (final DataType dataType : DataType.values()) {
-				code = dataType.ordinal();
+				code = dataType.getCode();
 				codename = dataType.getCodename();
 				description = dataType.getDescription();
 
