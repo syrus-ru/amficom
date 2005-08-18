@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.12 2005/08/02 19:36:33 arseniy Exp $
+ * $Id: AnalysisParameters.java,v 1.13 2005/08/18 14:05:28 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,13 +13,18 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/08/02 19:36:33 $
+ * @author $Author: saa $
+ * @version $Revision: 1.13 $, $Date: 2005/08/18 14:05:28 $
  * @module
  */
 public class AnalysisParameters
 implements DataStreamable, Cloneable
 {
+	private static final double DEFAULT_THRESHOLD_TO_SPLICE_RATIO = 0.4;
+	private static final double[] RECOMMENDED_NOISE_FACTORS = new double[] {
+		0.7, 1.0, 1.3, 1.5, 2.0, 2.5, 3.0 }; // XXX: remove 0.7 and 3.0
+	private static DSReader reader;
+
 	private double[] param; // основные параметры анализа
 
 	// дополнительные параметры анализа - экспериментальная версия
@@ -32,10 +37,6 @@ implements DataStreamable, Cloneable
 
 	// еще дополнительный параметр
 	private double scaleFactor = 1.0;
-
-	private static DSReader reader;
-	private static final double[] RECOMMENDED_NOISE_FACTORS = new double[] {
-		0.7, 1.0, 1.3, 1.5, 2.0, 2.5, 3.0 }; // XXX: remove 0.7 and 3.0
 
 	/**
 	 * Определяет допустимость набора параметров.
@@ -99,6 +100,15 @@ implements DataStreamable, Cloneable
 
 	public void setMinSplice(double v) {
 		this.param[1] = v;
+	}
+
+	public void setSensitivity(double v) {
+		this.setMinSplice(v);
+		this.setMinThreshold(v * DEFAULT_THRESHOLD_TO_SPLICE_RATIO);
+	}
+
+	public double getSentitivity() {
+		return getMinSplice();
 	}
 
 	public void setMinConnector(double v) {
