@@ -99,8 +99,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 
 		tModelMinuit = new WrapperedPropertyTableModel(AnalysisParametersWrapper
 				.getInstance(), null, new String[] {
-				AnalysisParametersWrapper.KEY_MIN_THRESHOLD,
-				AnalysisParametersWrapper.KEY_MIN_SPLICE,
+				AnalysisParametersWrapper.KEY_SENSITIVITY,
 				AnalysisParametersWrapper.KEY_MIN_CONNECTOR,
 				AnalysisParametersWrapper.KEY_MIN_END,
 				AnalysisParametersWrapper.KEY_NOISE_FACTOR });

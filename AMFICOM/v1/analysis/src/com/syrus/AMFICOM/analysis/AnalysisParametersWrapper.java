@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersWrapper.java,v 1.4 2005/08/08 11:59:52 arseniy Exp $
+ * $Id: AnalysisParametersWrapper.java,v 1.5 2005/08/18 14:07:10 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,19 +16,20 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/08 11:59:52 $
+ * @author $Author: saa $
+ * @version $Revision: 1.5 $, $Date: 2005/08/18 14:07:10 $
  * @module analysis
  */
 
 public class AnalysisParametersWrapper implements Wrapper {
 	
-	public static final String KEY_MIN_THRESHOLD = "analysisMinEvent";
-	public static final String KEY_MIN_SPLICE = "analysisMinWeld";
+//	public static final String KEY_MIN_THRESHOLD = "analysisMinEvent";
+//	public static final String KEY_MIN_SPLICE = "analysisMinWeld";
+	public static final String KEY_SENSITIVITY = "analysisSensitivity";
 	public static final String KEY_MIN_CONNECTOR = "analysisMinConnector";
 	public static final String KEY_MIN_END = "analysisMinEnd";
 	public static final String KEY_NOISE_FACTOR = "analysisNoiseFactor";
-	
+
 	private static AnalysisParametersWrapper	instance;
 	private static Map noiseFactors = new HashMap();
 	static {
@@ -48,7 +49,7 @@ public class AnalysisParametersWrapper implements Wrapper {
 	private AnalysisParametersWrapper() {
 		// empty private constructor
 		String[] keysArray = new String[] { KEY_MIN_CONNECTOR, KEY_MIN_END,
-				KEY_MIN_SPLICE, KEY_MIN_THRESHOLD, KEY_NOISE_FACTOR };
+				KEY_SENSITIVITY, KEY_NOISE_FACTOR };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -93,10 +94,8 @@ public class AnalysisParametersWrapper implements Wrapper {
 				return new Double(params.getMinConnector());
 			} else if (key.equals(KEY_MIN_END)) {
 				return new Double(params.getMinEnd());
-			} else if (key.equals(KEY_MIN_SPLICE)) {
-				return new Double(params.getMinSplice());
-			} else if (key.equals(KEY_MIN_THRESHOLD)) {
-				return new Double(params.getMinThreshold());
+			} else if (key.equals(KEY_SENSITIVITY)) {
+				return new Double(params.getSentitivity());
 			} else if (key.equals(KEY_NOISE_FACTOR)) {
 				return new Double(params.getNoiseFactor());
 			} 
@@ -126,10 +125,8 @@ public class AnalysisParametersWrapper implements Wrapper {
 					params.setMinConnector(Double.parseDouble((String)value));
 				} else if (key.equals(KEY_MIN_END)) {
 					params.setMinEnd(Double.parseDouble((String)value));
-				} else if (key.equals(KEY_MIN_SPLICE)) {
-					params.setMinSplice(Double.parseDouble((String)value));
-				} else if (key.equals(KEY_MIN_THRESHOLD)) {
-					params.setMinThreshold(Double.parseDouble((String)value));
+				} else if (key.equals(KEY_SENSITIVITY)) {
+					params.setSensitivity(Double.parseDouble((String)value));
 				} else if (key.equals(KEY_NOISE_FACTOR)) {
 					params.setNoiseFactor(((Double)value).doubleValue());
 				}
