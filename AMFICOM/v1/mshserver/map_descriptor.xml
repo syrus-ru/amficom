@@ -1,0 +1,11 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<mapdescriptor>
+	<map>
+		<name>Moscow City</name>
+		<mdf>../lib/mapinfo/cb_AMFICOM.mdf</mdf>
+	</map>
+	<map>
+		<name>Moscow district</name>
+		<mdf>../lib/mapinfo/cb.mdf</mdf>
+	</map>
+</mapdescriptor>
