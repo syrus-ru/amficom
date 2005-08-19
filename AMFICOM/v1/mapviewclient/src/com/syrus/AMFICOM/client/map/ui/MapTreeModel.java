@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.9 2005/08/17 14:14:20 arseniy Exp $ 
+ * $Id: MapTreeModel.java,v 1.10 2005/08/19 12:49:19 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный Интеллектуальный 
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/17 14:14:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/08/19 12:49:19 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapTreeModel implements ChildrenFactory {
@@ -490,7 +490,7 @@ public class MapTreeModel implements ChildrenFactory {
 			if(childNode == null) {
 				Item newItem = new IconedNode(
 						topologicalNode,
-						getObjectName(topologicalNode),
+						LangModelMap.getString(NONAME_BRANCH),
 						nodeIcon,
 						false);
 				// if(node.getChildren().isEmpty())
