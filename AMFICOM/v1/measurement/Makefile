@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.68 2005/07/19 13:25:04 arseniy Exp $
+# $Id: Makefile,v 1.69 2005/08/19 16:32:50 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -36,17 +36,15 @@ APPCLASSPATH := $(LIBDIR)/configuration.jar:$(LIBDIR)/administration.jar:$(LIBDI
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
-SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java) \
-	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.java)
+SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.java)
 
 
 $(LIBNAME): .mach
 	$(CP) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/resource/*.properties) \
-		$(CLASSDIR)/com/syrus/AMFICOM/resource/
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.properties) \
+		$(CLASSDIR)/com/syrus/AMFICOM/measurement/
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/measurement \
-		-C $(CLASSDIR) com/syrus/AMFICOM/resource
+		-C $(CLASSDIR) com/syrus/AMFICOM/measurement
 
 .mach: .corba .ora $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
