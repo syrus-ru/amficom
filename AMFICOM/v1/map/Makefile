@@ -52,7 +52,7 @@ corba: .corba
 
 .corba: $(CLASSDIR) $(LIBNAME_MAPXML) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML):$(XMLBEANSCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/map/corba/*.java
 	touch $@
