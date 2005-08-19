@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.103 2005/08/19 14:18:37 arseniy Exp $
+ * $Id: general.idl,v 1.104 2005/08/19 16:28:15 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ module general {
 			NANOSECOND
 		};
 
-		enum IdlParameterTypeEnum {
+		enum IdlParameterType {
 			REF_WAVE_LENGTH,
 			REF_TRACE_LENGTH,
 			REF_RESOLUTION,
@@ -90,7 +90,7 @@ module general {
 			PREDICTION_TIME_END
 		};
 
-		typedef sequence<IdlParameterTypeEnum> IdlParameterTypeEnumSeq;
+		typedef sequence<IdlParameterType> IdlParameterTypeSeq;
 
 
 //////////////////// Exceptions ///////////////////
