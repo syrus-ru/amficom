@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.179 2005/08/17 14:26:23 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.180 2005/08/19 14:16:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.179 $, $Date: 2005/08/17 14:26:23 $
+ * @version $Revision: 1.180 $, $Date: 2005/08/19 14:16:57 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -1176,8 +1176,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			final Identifier id = identifiable.getId();
 			stringBuffer.append(DatabaseIdentifier.toSQLString(id));
 			if (it.hasNext()) {
-				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0))
+				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0)) {
 					stringBuffer.append(COMMA);
+				}
 				else {
 					stringBuffer.append(CLOSE_BRACKET);
 					stringBuffer.append(inList ? SQL_OR : SQL_AND);
