@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.34 2005/08/19 07:56:51 bob Exp $
+ * $Id: TypicalCondition.java,v 1.35 2005/08/19 09:24:22 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -123,7 +123,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.34 $, $Date: 2005/08/19 07:56:51 $
+ * @version $Revision: 1.35 $, $Date: 2005/08/19 09:24:22 $
  * @author $Author: bob $
  * @module general
  */
@@ -1301,7 +1301,8 @@ public class TypicalCondition implements StorableObjectCondition {
 	
 	@Override
 	public String toString() {
-		final StringBuffer buffer = new StringBuffer(); 
+		final StringBuffer buffer = new StringBuffer(this.getClass().getSimpleName());
+		buffer.append(", field:");
 		buffer.append(this.delegate.key);
 		switch (this.delegate.type) {
 			case TypicalSort._TYPE_NUMBER_INT:
@@ -1311,15 +1312,15 @@ public class TypicalCondition implements StorableObjectCondition {
 					case OperationSort._OPERATION_EQUALS: {
 						switch (this.delegate.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
-								buffer.append(" int == ");
+								buffer.append(" [int] == ");
 								buffer.append(this.delegate.firstInt);
 								break;
 							case TypicalSort._TYPE_NUMBER_DOUBLE:
-								buffer.append(" double == ");
+								buffer.append(" [double] == ");
 								buffer.append(this.delegate.firstDouble);
 								break;
 							case TypicalSort._TYPE_NUMBER_LONG:
-								buffer.append(" long == ");
+								buffer.append(" [long] == ");
 								buffer.append(this.delegate.firstLong);
 								break;
 							default:
@@ -1331,15 +1332,15 @@ public class TypicalCondition implements StorableObjectCondition {
 					case OperationSort._OPERATION_GREAT: {
 						switch (this.delegate.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
-								buffer.append(" int > ");
+								buffer.append(" [int] > ");
 								buffer.append(this.delegate.firstInt);
 								break;
 							case TypicalSort._TYPE_NUMBER_DOUBLE:
-								buffer.append(" double > ");
+								buffer.append(" [double] > ");
 								buffer.append(this.delegate.firstDouble);
 								break;
 							case TypicalSort._TYPE_NUMBER_LONG:
-								buffer.append(" long > ");
+								buffer.append(" [long] > ");
 								buffer.append(this.delegate.firstLong);
 								break;
 							default:
@@ -1351,15 +1352,15 @@ public class TypicalCondition implements StorableObjectCondition {
 					case OperationSort._OPERATION_LESS: {
 						switch (this.delegate.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
-								buffer.append(" int < ");
+								buffer.append(" [int] < ");
 								buffer.append(this.delegate.firstInt);
 								break;
 							case TypicalSort._TYPE_NUMBER_DOUBLE:
-								buffer.append(" double < ");
+								buffer.append(" [double] < ");
 								buffer.append(this.delegate.firstDouble);
 								break;
 							case TypicalSort._TYPE_NUMBER_LONG:
-								buffer.append(" long < ");
+								buffer.append(" [long] < ");
 								buffer.append(this.delegate.firstLong);
 								break;
 							default:
@@ -1371,15 +1372,15 @@ public class TypicalCondition implements StorableObjectCondition {
 					case OperationSort._OPERATION_GREAT_EQUALS: {
 						switch (this.delegate.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
-								buffer.append(" int >= ");
+								buffer.append(" [int] >= ");
 								buffer.append(this.delegate.firstInt);
 								break;
 							case TypicalSort._TYPE_NUMBER_DOUBLE:
-								buffer.append(" double >= ");
+								buffer.append(" [double] >= ");
 								buffer.append(this.delegate.firstDouble);
 								break;
 							case TypicalSort._TYPE_NUMBER_LONG:
-								buffer.append(" long >= ");
+								buffer.append(" [long] >= ");
 								buffer.append(this.delegate.firstLong);
 								break;
 							default:
@@ -1391,15 +1392,15 @@ public class TypicalCondition implements StorableObjectCondition {
 					case OperationSort._OPERATION_LESS_EQUALS: {
 						switch (this.delegate.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
-								buffer.append(" int <= ");
+								buffer.append(" [int] <= ");
 								buffer.append(this.delegate.firstInt);
 								break;
 							case TypicalSort._TYPE_NUMBER_DOUBLE:
-								buffer.append(" double <= ");
+								buffer.append(" [double] <= ");
 								buffer.append(this.delegate.firstDouble);
 								break;
 							case TypicalSort._TYPE_NUMBER_LONG:
-								buffer.append(" long <= ");
+								buffer.append(" [long] <= ");
 								buffer.append(this.delegate.firstLong);
 								break;
 							default:
@@ -1411,21 +1412,21 @@ public class TypicalCondition implements StorableObjectCondition {
 					case OperationSort._OPERATION_IN_RANGE: {
 						switch (this.delegate.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
-								buffer.append(" int in (");
+								buffer.append(" [int] in (");
 								buffer.append(this.delegate.firstInt);
 								buffer.append(", ");
 								buffer.append(this.delegate.secondInt);
 								buffer.append(")");
 								break;
 							case TypicalSort._TYPE_NUMBER_DOUBLE:
-								buffer.append(" double in (");
+								buffer.append(" [double] in (");
 								buffer.append(this.delegate.firstDouble);
 								buffer.append(", ");
 								buffer.append(this.delegate.secondDouble);
 								buffer.append(")");
 								break;
 							case TypicalSort._TYPE_NUMBER_LONG:
-								buffer.append(" long in (");
+								buffer.append(" [long] in (");
 								buffer.append(this.delegate.firstLong);
 								buffer.append(", ");
 								buffer.append(this.delegate.secondLong);
@@ -1444,19 +1445,19 @@ public class TypicalCondition implements StorableObjectCondition {
 				break;
 			case TypicalSort._TYPE_STRING:
 				String v = this.delegate.value.toString();
-				buffer.append(" string is ");
+				buffer.append(" [string] ");
 				switch (this.delegate.operation) {
 					case OperationSort._OPERATION_EQUALS:
 						buffer.append("equals ");
 						break;
 					case OperationSort._OPERATION_SUBSTRING:
-						buffer.append("substring of ");
+						buffer.append("is substring of ");
 						break;
 					case OperationSort._OPERATION_REGEXP:
-						buffer.append("match regexp ");
+						buffer.append("is match regexp ");
 						break;
 					case OperationSort._OPERATION_CI_REGEXP:
-						buffer.append("match case insencetive regexp ");
+						buffer.append("is match case insencetive regexp ");
 						break;
 					default:
 						Log.errorMessage("TypicalCondition.toString | unknown operation code " + this.delegate.operation);
@@ -1465,7 +1466,7 @@ public class TypicalCondition implements StorableObjectCondition {
 				buffer.append(v);
 				break;
 			case TypicalSort._TYPE_DATE:
-				buffer.append(" date ");
+				buffer.append(" [date] ");
 				switch (this.delegate.operation) {
 					case OperationSort._OPERATION_IN_RANGE:
 						buffer.append(" between ");
@@ -1501,7 +1502,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			case TypicalSort._TYPE_BOOLEAN:
 				switch (this.delegate.operation) {
 					case OperationSort._OPERATION_EQUALS:
-						buffer.append(" boolean is ");
+						buffer.append(" [boolean] is ");
 						buffer.append(this.delegate.value);
 						break;
 					default:
