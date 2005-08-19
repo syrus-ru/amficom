@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.23 2005/08/19 15:50:23 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.24 2005/08/19 16:00:23 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -71,8 +71,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/08/19 15:50:23 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/08/19 16:00:23 $
  * @module schemeclient
  */
 
@@ -95,7 +95,7 @@ public class SchemeObjectsFactory {
 	
 	public static MeasurementType createMeasurementType(String codename) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		MeasurementType type = MeasurementType.createInstance(userId, codename, EMPTY, Collections.<ParameterTypeEnum>emptySet(), Collections.<ParameterTypeEnum>emptySet(), Collections.<Identifier>emptySet());
+		MeasurementType type = MeasurementType.createInstance(userId, codename, EMPTY, Collections.<ParameterType>emptySet(), Collections.<ParameterType>emptySet(), Collections.<Identifier>emptySet());
 		return type;
 	}
 

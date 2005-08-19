@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.19 2005/08/19 15:41:34 stas Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.20 2005/08/19 16:00:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
@@ -44,10 +43,8 @@ import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -56,8 +53,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2005/08/19 15:41:34 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/08/19 16:00:23 $
  * @module schemeclient
  */
 
@@ -257,8 +254,8 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		if (this.type != null) {
 			this.tfNameText.setText(this.type.getDescription());
 		
-			Set<ParameterTypeEnum> inPTypeIds = this.type.getInParameterTypes();
-			Set<ParameterTypeEnum> outPTypeIds = this.type.getOutParameterTypes();
+			Set<ParameterType> inPTypeIds = this.type.getInParameterTypes();
+			Set<ParameterType> outPTypeIds = this.type.getOutParameterTypes();
 			
 			try {
 				Collection inPTypes = StorableObjectPool.getStorableObjects(inPTypeIds, true);
@@ -306,6 +303,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		}
 	}
 	
+	@Override
 	public void commitChanges() {
 		super.commitChanges();
 		if (MiscUtil.validName(this.tfNameText.getText())) {
@@ -390,7 +388,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		root.addChild(input);
 		root.addChild(output);
 		
-		for (ParameterTypeEnum parameterType : ParameterTypeEnum.values()) {
+		for (ParameterType parameterType : ParameterType.values()) {
 			input.addChild(new CheckableNode(parameterType.getCodename(), parameterType.getDescription(), false));
 			output.addChild(new CheckableNode(parameterType.getCodename(), parameterType.getDescription(), false));
 		}
