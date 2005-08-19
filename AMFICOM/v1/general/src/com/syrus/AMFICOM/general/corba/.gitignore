@@ -7,11 +7,12 @@ AMFICOMRemoteException.java
 IdVersion.java
 CommonServer.java
 IdlDataType.java
+IdlMeasurementUnit.java
+IdlParameterTypeEnum.java
 IdentifierGeneratorServer.java
 IdlCharacteristic.java
 IdlCharacteristicType.java
 IdlIdentifier.java
-IdlParameterType.java
 IdlStorableObject.java
 IdlStorableObjectCondition.java
 Verifiable.java
