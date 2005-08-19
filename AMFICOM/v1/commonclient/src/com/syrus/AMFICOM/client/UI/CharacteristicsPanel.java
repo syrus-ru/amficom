@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.18 2005/08/15 08:54:52 bob Exp $
+ * $Id: CharacteristicsPanel.java,v 1.19 2005/08/19 14:06:09 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,6 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
@@ -64,7 +63,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.18 $, $Date: 2005/08/15 08:54:52 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/19 14:06:09 $
  * @module commonclient
  */
 
@@ -243,24 +242,40 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 		this.removedCharacteristics.clear();
 	}
 
-	public void commitChanges() {
-		try {
-			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, LoginManager.getUserId(), true);
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-		}
-	}
+//	public void commitChanges() {
+		// flush must be performed while saving characterizable object object itself
+//		try {
+//			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, LoginManager.getUserId(), true);
+//		} catch (ApplicationException e) {
+//			Log.errorException(e);
+//		}
+//	}
 
-	public boolean save() {
+	protected boolean save() {
 		try {
-			final Set<Identifier> removedIds = new HashSet<Identifier>();
+			final Set<Identifier> charIds = new HashSet<Identifier>();
 			for (final List<Characteristic> removed : this.removedCharacteristics.values()) {
 				for (final Characteristic ch : removed) {
-					removedIds.add(ch.getId());
+					charIds.add(ch.getId());
 				}
 			}
-			StorableObjectPool.delete(removedIds);
-			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, LoginManager.getUserId(), true);
+			StorableObjectPool.delete(charIds);
+			
+			for (final List<Characteristic> added : this.addedCharacteristics.values()) {
+				for (final Characteristic ch : added) {
+					charIds.add(ch.getId());
+				}
+			}
+			for (final Set<Characteristic> existing : this.characteristics.values()) {
+				for (final Characteristic ch : existing) {
+					charIds.add(ch.getId());
+				}
+			}
+			
+			Identifier userId = LoginManager.getUserId();
+			for (Identifier id : charIds) {
+				StorableObjectPool.flush(id, userId, false);
+			}
 		} catch (ApplicationException ex) {
 			ex.printStackTrace();
 			return false;

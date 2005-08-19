@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.14 2005/08/02 13:03:21 arseniy Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.15 2005/08/19 14:06:09 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,9 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.HashSet;
 import java.util.Iterator;
+import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -32,6 +34,7 @@ import javax.swing.JTextField;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeWrapper;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -46,8 +49,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/02 13:03:21 $
+ * @author $Author: bob $
+ * @version $Revision: 1.15 $, $Date: 2005/08/19 14:06:09 $
  * @module commonclient
  */
 
@@ -145,7 +148,7 @@ public class CharacteristicAddDialog {
 		return this.panel;
 	}
 
-	public int showDialog(CharacteristicTypeSort sort, Collection characaterisctics) {
+	public int showDialog(CharacteristicTypeSort sort, Collection<Characteristic> characterisctics) {
 		this.sort = sort;
 
 		final String okButton = LangModelGeneral.getString(ResourceKeys.I18N_ADD);
@@ -157,11 +160,16 @@ public class CharacteristicAddDialog {
 		try {
 			TypicalCondition condition = new TypicalCondition(sort.value(), sort.value(), OperationSort.OPERATION_EQUALS,				
 					ObjectEntities.CHARACTERISTIC_TYPE_CODE, CharacteristicTypeWrapper.COLUMN_SORT);
-			Collection characteristicTypes = StorableObjectPool
-					.getStorableObjectsByCondition(condition, true, true);
+			Collection characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
+			
+			Collection<CharacteristicType> existingTypes = new HashSet<CharacteristicType>();
+			for (Characteristic characteristic : characterisctics) {
+				existingTypes.add((CharacteristicType)characteristic.getType());
+			}
+			
 			for (Iterator it = characteristicTypes.iterator(); it.hasNext();) {
 				CharacteristicType characteristicType = (CharacteristicType) it.next();
-				if (!characaterisctics.contains(characteristicType)) {
+				if (!existingTypes.contains(characteristicType)) {
 					this.characteristicTypeComboBox.addItem(characteristicType);
 				}
 			}

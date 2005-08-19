@@ -1,5 +1,5 @@
 /*
- * $Id: IconedTreeUI.java,v 1.5 2005/08/11 18:51:08 arseniy Exp $
+ * $Id: IconedTreeUI.java,v 1.6 2005/08/19 14:06:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.Populatable;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/11 18:51:08 $
+ * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/08/19 14:06:09 $
  * @module commonclient
  */
 
@@ -66,6 +66,8 @@ public class IconedTreeUI {
 	public JComponent getPanel() {
 		if (this.scrollPane == null) {
 			this.scrollPane = new JScrollPane(getTree());
+			this.scrollPane.setAutoscrolls(true);
+			this.scrollPane.setWheelScrollingEnabled(true);
 		}
 		return this.scrollPane;
 	}
