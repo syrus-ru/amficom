@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.36 2005/08/12 10:07:25 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.37 2005/08/19 14:03:56 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,9 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
+
+import com.syrus.util.Log;
 
 /**
  * Provide routines with storage StorableObject as XML. StorableObject must be
@@ -29,7 +32,7 @@ import java.util.Set;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.36 $, $Date: 2005/08/12 10:07:25 $
+ * @version $Revision: 1.37 $, $Date: 2005/08/19 14:03:56 $
  * @author $Author: bob $
  * @module general
  */
@@ -66,31 +69,33 @@ public class StorableObjectXML {
 		}
 		return storableObject;
 	}
-
-	public <T extends StorableObject> Set<T> retrieveByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
-			throws RetrieveObjectException,
-				IllegalDataException {
+	
+	public <T extends StorableObject> Set<T> retrieveButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
+	throws RetrieveObjectException,
+		IllegalDataException {
 		Set<T> set = null;
-		final Set<Identifier> identifiers = this.getIdentifiers(condition.getEntityCode().shortValue());
+		final Set<Identifier> identifiers = this.reflectXMLCondition(condition).getIdsByCondition();
+		Log.debugMessage("StorableObjectXML.retrieveButIdsByCondition | identifiers:" + Identifier.createStrings(identifiers), Level.FINEST);
+		identifiers.removeAll(ids);
+		Log.debugMessage("StorableObjectXML.retrieveButIdsByCondition | cleaned identifiers:" + Identifier.createStrings(identifiers), Level.FINEST);		
 		for (final Identifier id : identifiers) {
-			if (ids == null || !ids.contains(id)) {
-				try {
-					final T storableObject = this.<T>retrieve(id);
-					if (condition.isConditionTrue(storableObject)) {
-						if (set == null)
-							set = new HashSet<T>();
-						set.add(storableObject);
+			try {
+				final T storableObject = this.<T>retrieve(id);
+				if (condition.isConditionTrue(storableObject)) {
+					if (set == null) {
+						set = new HashSet<T>();
 					}
-
-				} catch (ObjectNotFoundException e) {
-					final String msg = "StorableObjectXML.retrieveByCondition | object " + id.getIdentifierString()
-							+ " not found";
-					throw new RetrieveObjectException(msg, e);
-				} catch (ApplicationException e) {
-					final String msg = "StorableObjectXML.retrieveByCondition | caught  " + e.getMessage() + " during check "
-							+ id.getIdentifierString() + " for condition ";
-					throw new RetrieveObjectException(msg, e);
+					set.add(storableObject);
 				}
+
+			} catch (ObjectNotFoundException e) {
+				final String msg = "StorableObjectXML.retrieveButIdsByCondition | object " + id.getIdentifierString()
+						+ " not found";
+				throw new RetrieveObjectException(msg, e);
+			} catch (ApplicationException e) {
+				final String msg = "StorableObjectXML.retrieveButIdsByCondition | caught  " + e.getMessage() + " during check "
+						+ id.getIdentifierString() + " for condition ";
+				throw new RetrieveObjectException(msg, e);
 			}
 		}
 		if (set == null)
@@ -196,6 +201,49 @@ public class StorableObjectXML {
 					+ " not found on the classpath - " + e.getMessage());
 		}
 		throw new IllegalDataException("StorableObjectXML.getStorableObject | there is no constuctor(Identifier, Identifier, ...)");
+	}
+	
+	private XMLStorableObjectCondition reflectXMLCondition(final StorableObjectCondition condition) {
+		XMLStorableObjectCondition xmlStorableObjectCondition = null;
+		final String className = condition.getClass().getName();
+		final int lastPoint = className.lastIndexOf('.');
+		final String dbClassName = className.substring(0, lastPoint + 1) + "XML" + className.substring(lastPoint + 1);
+		try {
+			final Class clazz = Class.forName(dbClassName);
+			final Constructor constructor = 
+				clazz.getDeclaredConstructor(
+					new Class[] {
+							condition.getClass(),
+							StorableObjectXMLDriver.class});
+			constructor.setAccessible(true);
+			xmlStorableObjectCondition = 
+				(XMLStorableObjectCondition) constructor.newInstance(
+					new Object[] {condition, this.driver});
+		} catch (ClassNotFoundException e) {
+			Log.errorException(e);
+		} catch (SecurityException e) {
+			Log.errorException(e);
+		} catch (NoSuchMethodException e) {
+			Log.errorException(e);
+		} catch (IllegalArgumentException e) {
+			Log.errorException(e);
+		} catch (InstantiationException e) {
+			Log.errorException(e);
+		} catch (IllegalAccessException e) {
+			Log.errorException(e);
+		} catch (InvocationTargetException e) {
+			final Throwable cause = e.getCause();
+			if (cause instanceof AssertionError) {
+				final String message = cause.getMessage();
+				if (message == null)
+					assert false;
+				else
+					assert false : message;
+			} else {
+				Log.errorException(e);
+			}
+		}
+		return xmlStorableObjectCondition;
 	}
 
 	public void flush() {
