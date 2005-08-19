@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.19 2005/08/19 15:41:35 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.20 2005/08/19 16:27:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2005/08/19 15:41:35 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/19 16:27:28 $
  * @module schemeclient
  */
 
@@ -450,8 +450,8 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 					mp.setType((MeasurementPortType)this.cmbMpTypeCombo.getSelectedItem());
 				}
 			} else if (mp != null) {
-				StorableObjectPool.delete(mp.getId());
 				this.schemePort.setMeasurementPort(null);
+				StorableObjectPool.delete(mp.getId());
 			} 
 			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePort.getId(), SchemeEvent.UPDATE_OBJECT));
 		}

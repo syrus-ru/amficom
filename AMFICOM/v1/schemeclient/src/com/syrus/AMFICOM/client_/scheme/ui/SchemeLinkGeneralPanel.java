@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkGeneralPanel.java,v 1.15 2005/08/19 15:41:35 stas Exp $
+ * $Id: SchemeLinkGeneralPanel.java,v 1.16 2005/08/19 16:27:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/08/19 15:41:35 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/19 16:27:28 $
  * @module schemeclient
  */
 
@@ -554,8 +554,8 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 					link.setColor(((Color) this.cmbColorCombo.getSelectedItem()).getRGB());
 				}	
 			} else if (link != null) {
-				StorableObjectPool.delete(link.getId());
 				this.schemeLink.setAbstractLink(null);
+				StorableObjectPool.delete(link.getId());
 			}
 			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeLink.getId(), SchemeEvent.UPDATE_OBJECT));
 		}
