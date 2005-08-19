@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.18 2005/08/08 11:58:08 arseniy Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.19 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,8 +60,8 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/08/08 11:58:08 $
+ * @author $Author: stas $
+ * @version $Revision: 1.19 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -416,6 +416,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
+		super.commitChanges();
 		if (this.schemePort != null && MiscUtil.validName(this.tfNameText.getText())) {
 			this.schemePort.setName(this.tfNameText.getText());
 			this.schemePort.setDescription(this.taDescrArea.getText());
@@ -452,7 +453,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 				StorableObjectPool.delete(mp.getId());
 				this.schemePort.setMeasurementPort(null);
 			} 
-			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePort, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePort.getId(), SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

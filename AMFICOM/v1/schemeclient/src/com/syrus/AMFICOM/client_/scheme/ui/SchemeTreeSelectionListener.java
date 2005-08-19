@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.5 2005/08/08 11:58:08 arseniy Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.6 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -39,8 +40,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:58:08 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -139,12 +140,16 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 				this.treeUI.updateRecursively((Item)model.getRoot());
 			}
 			if (ev.isType(SchemeEvent.UPDATE_OBJECT)) {
-				Object obj = ev.getObject();
-				ItemTreeModel model = this.treeUI.getTreeUI().getTreeModel();
-				Item node = this.treeUI.findNode((Item)model.getRoot(), obj, false);
-				if (node != null) {
-					model.setObjectNameChanged(node, null, null);
-					this.treeUI.getTree().updateUI();
+				try {
+					Object obj = ev.getStorableObject();
+					ItemTreeModel model = this.treeUI.getTreeUI().getTreeModel();
+					Item node = this.treeUI.findNode((Item)model.getRoot(), obj, false);
+					if (node != null) {
+						model.setObjectNameChanged(node, null, null);
+						this.treeUI.getTree().updateUI();
+					}
+				} catch (ApplicationException e1) {
+					Log.errorException(e1);
 				}
 			}
 		}

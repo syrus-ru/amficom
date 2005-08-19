@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.22 2005/08/11 07:27:27 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.23 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.JToggleButton;
 import javax.swing.SwingUtilities;
-import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.jgraph.graph.BasicMarqueeHandler;
 import com.jgraph.graph.CellView;
@@ -43,6 +42,7 @@ import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.PopupFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
@@ -58,6 +58,7 @@ import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -75,7 +76,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/08/11 07:27:27 $
+ * @version $Revision: 1.23 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -231,12 +232,11 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		if (graph.getMode().equals(Constants.PATH_MODE)) {
 			Object cell = graph.getSelectionCell();
 			if (this.pane instanceof SchemeTabbedPane) {
-				SchemePath path = ((SchemeTabbedPane)this.pane).getCurrentPanel().getSchemeResource().getSchemePath();
+				
+				PathElement pe = SchemeActions.getSelectedPathElement(cell);
+				SchemePath path = pe != null ? pe.getParentPathOwner() : 
+					((SchemeTabbedPane)this.pane).getCurrentPanel().getSchemeResource().getSchemePath();
 
-				if (path == null) {
-					PathElement pe = SchemeActions.getSelectedPathElement(cell);
-					path = pe != null ? pe.getParentPathOwner() : null;
-				}
 				SortedSet<PathElement> pathElements = path != null ? path.getPathMembers() : null;
 				
 				SortedSet<Identifier> ids = null;
@@ -257,8 +257,11 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				if (pathElements != null) {
 					Object[] pathObjects = SchemeActions.getPathObjects(ids, graph);
 					graph.setSelectionCells(pathObjects);
-					event.consume();
+					if (path != null) {
+						Notifier.notify(graph, graph.aContext, path);
+					}
 				}
+				event.consume();
 			}
 		}
 
@@ -426,7 +429,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				}
 				schemePort.setPortType(type);
 				
-				Color color = SchemeActions.determinePortColor(schemePort);
+				Color color = SchemeActions.determinePortColor(schemePort, null);
 
 				if (!isCable) { //port
 					SchemeActions.createPort(graph, deviceCell, 
@@ -497,7 +500,7 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 						
 							try {
 								SchemeCableLink link = SchemeObjectsFactory.createSchemeCableLink("cable" + System.currentTimeMillis(), scheme);
-								link.setAbstractLinkType(type);
+								link.setAbstractLinkTypeExt(type, LoginManager.getUserId());
 								DefaultCableLink cell = SchemeActions.createCableLink(graph,
 										this.firstPort, this.port, graph.fromScreen(new Point(this.start)), 
 										graph.fromScreen(new Point(this.current)), link.getId());
@@ -598,25 +601,33 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				Object cell = graph.getSelectionCell();
 				
 				if (graph.getMode().equals(Constants.LINK_MODE)) {
-					DeviceGroup group = null;
-					if (cell instanceof DeviceGroup)
-						group = (DeviceGroup) cell;
-					else if (cell instanceof DeviceCell
-							&& ((DeviceCell) cell).getParent() instanceof DeviceGroup)
-						group = (DeviceGroup) ((DeviceCell) cell).getParent();
-					
-					if (group != null) {
-						JPopupMenu pop = SchemeActions.createElementPopup(this.pane.aContext, graph, group);
+					if (cell instanceof DefaultCableLink) {
+						JPopupMenu pop = PopupFactory.createCablePopup(this.pane.aContext, graph, (DefaultCableLink)cell);
 						if (pop.getSubElements().length != 0) {
 							pop.show(graph, event.getX(), event.getY());
 							event.consume();
+						}
+					} else {
+						DeviceGroup group = null;
+						if (cell instanceof DeviceGroup)
+							group = (DeviceGroup) cell;
+						else if (cell instanceof DeviceCell
+								&& ((DeviceCell) cell).getParent() instanceof DeviceGroup)
+							group = (DeviceGroup) ((DeviceCell) cell).getParent();
+						
+						if (group != null) {
+							JPopupMenu pop = PopupFactory.createElementPopup(this.pane.aContext, group);
+							if (pop.getSubElements().length != 0) {
+								pop.show(graph, event.getX(), event.getY());
+								event.consume();
+							}
 						}
 					}
 				} else { // PATH_MODE
 					SchemeTabbedPane pane1 = (SchemeTabbedPane)this.pane; 
 					SchemeResource res = pane1.getCurrentPanel().getSchemeResource();
 					if (res.getSchemePath() != null) {
-						JPopupMenu pop = SchemeActions.createPathPopup(pane1.getContext(), res, cell);
+						JPopupMenu pop = PopupFactory.createPathPopup(pane1.getContext(), res, cell);
 						if (pop != null && pop.getComponentCount() != 0) {
 							pop.show(graph, event.getX(), event.getY());
 						}
@@ -637,8 +648,9 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 		
 		graph.repaint();
 		graph.setCursor(DEFAULT_CURSOR);
-		if (notify)
+		if (!this.pathButt.isSelected() && notify) {
 			graph.selectionNotify();
+		}
 	}
 
 	@Override

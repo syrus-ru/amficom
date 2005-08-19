@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.15 2005/08/11 07:27:27 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.16 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -44,8 +43,13 @@ import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -55,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/08/11 07:27:27 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -159,6 +163,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		this.tabs.setSelectedComponent(graphView);
 		setGraphChanged(false);
 		graph.setEditable(this.editable);
+		
+		graph.setMode(this.toolBar.commands.get(Constants.PATH_MODE).isSelected() ? Constants.PATH_MODE : Constants.LINK_MODE);
 	}
 	
 	public void selectPanel(ElementsPanel p) {
@@ -209,92 +215,135 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	@Override
 	public void propertyChange(PropertyChangeEvent ae) {
 		if (ae.getPropertyName().equals(SchemeEvent.TYPE)) {
-			SchemeEvent see = (SchemeEvent) ae;
-			if (see.isType(SchemeEvent.OPEN_SCHEME)) {
-				Scheme scheme = (Scheme) see.getObject();
-				openScheme(scheme);
-			} else if (see.isType(SchemeEvent.OPEN_SCHEMEELEMENT)) {
-				SchemeElement schemeElement = (SchemeElement) see.getObject();
-				openSchemeElement(schemeElement);
-			} else if (see.isType(SchemeEvent.INSERT_SCHEME)) {
-				Scheme scheme = (Scheme) see.getObject();
-				ElementsPanel panel1 = getCurrentPanel();
-				try {
-					SchemeElement schemeElement = null;
-					if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME) {
-						Scheme parentScheme = panel1.getSchemeResource().getScheme();
-						schemeElement = SchemeObjectsFactory.createSchemeElement(parentScheme, scheme);
-					} else {
-						Log.debugMessage(getClass().getSimpleName() + " | Unsupported CellContainerType " + panel1.getSchemeResource().getCellContainerType(), Level.FINER);
+			try {
+				SchemeEvent see = (SchemeEvent) ae;
+				if (see.isType(SchemeEvent.OPEN_SCHEME)) {
+					Scheme scheme = (Scheme)see.getStorableObject();
+					openScheme(scheme);
+					setLinkMode();
+				} else if (see.isType(SchemeEvent.OPEN_SCHEMEELEMENT)) {
+					SchemeElement schemeElement = (SchemeElement)see.getStorableObject();
+					openSchemeElement(schemeElement);
+					setLinkMode();
+				} else if (see.isType(SchemeEvent.INSERT_SCHEME)) {
+					Scheme scheme = (Scheme)see.getStorableObject();
+					SchemeElement parent = scheme.getParentSchemeElement();
+					if (parent != null) {
+						Log.debugMessage("Try to insert already inserted scheme " + scheme.getId(), Level.INFO); //$NON-NLS-1$
+						if (parent.getParentScheme() == null) {
+							scheme.setParentSchemeElement(null);
+							StorableObjectPool.delete(parent.getId());
+							StorableObjectPool.flush(parent.getId(), LoginManager.getUserId(), true);
+						} else {
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+								scheme.getName() + " " + LangModelScheme.getString("Message.error.scheme_already_inserted") + " " + parent.getParentScheme().getName(),  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+								LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
+								JOptionPane.ERROR_MESSAGE);
 						return;
+						}
 					}
-					Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
-					SchemeImageResource res = scheme.getUgoCell();
-					if (res == null)
-						res = scheme.getSchemeCell();
-					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = super.openSchemeImageResource(res, true);
-					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
-					SchemeGraph graph = panel1.getGraph();
-					SchemeImageResource seRes = schemeElement.getUgoCell();
-					if (seRes == null) {
-						seRes = SchemeObjectsFactory.createSchemeImageResource();
-						schemeElement.setUgoCell(seRes);
+					
+					ElementsPanel panel1 = getCurrentPanel();
+					try {
+						SchemeElement schemeElement = null;
+						if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME) {
+							Scheme parentScheme = panel1.getSchemeResource().getScheme();
+							if (scheme.equals(parentScheme)) {
+								Log.debugMessage("Try to insert scheme into itself " + scheme.getId(), Level.INFO); //$NON-NLS-1$
+								JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+										LangModelScheme.getString("Message.error.scheme_insert_itself"),  //$NON-NLS-1$
+										LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
+										JOptionPane.ERROR_MESSAGE);
+								return;
+							}
+							schemeElement = SchemeObjectsFactory.createSchemeElement(parentScheme, scheme);
+						} else {
+							Log.debugMessage(getClass().getSimpleName() + " | Unsupported CellContainerType " + panel1.getSchemeResource().getCellContainerType(), Level.FINER);
+							return;
+						}
+						SchemeGraph graph = panel1.getGraph();
+						SchemeActions.insertSEbyS(graph, schemeElement, see.getInsertionPoint(), true);
+						
+						graph.selectionNotify();
+					} catch (CreateObjectException e) {
+						Log.errorException(e);
 					}
-					seRes.setData((List<Object>)graph.getArchiveableState());
-					graph.selectionNotify();
-				} catch (CreateObjectException e) {
-					Log.errorException(e);
-				}
-			} else if (see.isType(SchemeEvent.INSERT_SCHEMEELEMENT)) {
-				SchemeElement schemeElement = (SchemeElement) see.getObject();
-				SchemeImageResource res = schemeElement.getUgoCell();
-				if (res == null)
-					res = schemeElement.getSchemeCell();
-				super.openSchemeImageResource(res, true);
-			} else if (see.isType(SchemeEvent.INSERT_PROTOELEMENT)) {
-				SchemeProtoElement proto = (SchemeProtoElement) see.getObject();
-				ElementsPanel panel1 = getCurrentPanel();
-				try {
-					SchemeElement schemeElement = null;
-					if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
-						SchemeElement se = panel1.getSchemeResource().getSchemeElement();
-						schemeElement = SchemeObjectsFactory.createSchemeElement(se, proto);
-					} else if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME) {
-						Scheme scheme = panel1.getSchemeResource().getScheme();
-						schemeElement = SchemeObjectsFactory.createSchemeElement(scheme, proto);
-					} else {
-						Log.debugMessage(getClass().getSimpleName() + " | Unsupported CellContainerType " + panel1.getSchemeResource().getCellContainerType(), Level.FINER);
-						return;
+					setLinkMode();
+				} else if (see.isType(SchemeEvent.INSERT_SCHEMEELEMENT)) {
+					SchemeElement schemeElement = (SchemeElement)see.getStorableObject();
+					
+					ElementsPanel panel1 = getCurrentPanel();
+					if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME_ELEMENT &&
+							schemeElement.equals(panel1.getSchemeResource().getSchemeElement())) {
+						Log.debugMessage("Try to insert schemeElement into itself " + schemeElement.getId(), Level.INFO); //$NON-NLS-1$
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+								LangModelScheme.getString("Message.error.schemeelement_insert_itself"),  //$NON-NLS-1$
+								LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
+								JOptionPane.ERROR_MESSAGE);
+						return;	
 					}
-					Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
+
 					SchemeImageResource res = schemeElement.getUgoCell();
 					if (res == null)
 						res = schemeElement.getSchemeCell();
-					Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = super.openSchemeImageResource(res, true);
-					SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
 					SchemeGraph graph = panel1.getGraph();
-					schemeElement.getSchemeCell().setData((List<Object>)graph.getArchiveableState());
-					graph.selectionNotify();
-				} catch (CreateObjectException e) {
-					Log.errorException(e);
+					SchemeActions.openSchemeImageResource(graph, res, true, see.getInsertionPoint(), false);
+					setLinkMode();
+				} else if (see.isType(SchemeEvent.INSERT_PROTOELEMENT)) {
+					SchemeProtoElement proto = (SchemeProtoElement)see.getStorableObject();
+					ElementsPanel panel1 = getCurrentPanel();
+					try {
+						SchemeElement schemeElement = null;
+						if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
+							SchemeElement se = panel1.getSchemeResource().getSchemeElement();
+							schemeElement = SchemeObjectsFactory.createSchemeElement(se, proto);
+						} else if (panel1.getSchemeResource().getCellContainerType() == SchemeResource.SCHEME) {
+							Scheme scheme = panel1.getSchemeResource().getScheme();
+							schemeElement = SchemeObjectsFactory.createSchemeElement(scheme, proto);
+						} else {
+							Log.debugMessage(getClass().getSimpleName() + " | Unsupported CellContainerType " + panel1.getSchemeResource().getCellContainerType(), Level.FINER);
+							return;
+						}
+						SchemeGraph graph = panel1.getGraph();
+						SchemeActions.insertSEbyPE(graph, schemeElement, see.getInsertionPoint(), true);
+						graph.selectionNotify();
+					} catch (CreateObjectException e) {
+						Log.errorException(e);
+					}
+					setLinkMode();
+					return;
+				}	else if (see.isType(SchemeEvent.UPDATE_OBJECT)) {
+					Identifier id = see.getIdentifier();
+					if (id.getMajor() == ObjectEntities.SCHEME_CODE) {
+						Scheme scheme = (Scheme)see.getStorableObject();
+						SchemeGraph graph = getGraph();
+						graph.setActualSize(new Dimension(scheme.getWidth(), scheme.getHeight()));
+					}
 				}
-				return;
-			}	else if (see.isType(SchemeEvent.UPDATE_OBJECT)) {
-				Object obj = see.getObject();
-				if (obj instanceof Scheme) {
-					Scheme scheme = (Scheme)obj;
-					SchemeGraph graph = getGraph();
-					graph.setActualSize(new Dimension(scheme.getWidth(), scheme.getHeight()));
-				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 		} else if (ae.getPropertyName().equals(ObjectSelectedEvent.TYPE)) {
 			ObjectSelectedEvent ose = (ObjectSelectedEvent) ae;
 			if (ose.isSelected(ObjectSelectedEvent.SCHEME_PATH)) {
-				AbstractButton b = this.toolBar.commands.get(Constants.PATH_MODE);
-				b.doClick();
+				setPathMode();
 			}
 		}
 		super.propertyChange(ae);
+	}
+	
+	private void setPathMode() {
+		AbstractButton b = this.toolBar.commands.get(Constants.PATH_MODE);
+		if (!b.isSelected()) {
+			b.doClick();
+		}
+	}
+	
+	private void setLinkMode() {
+		AbstractButton b = this.toolBar.commands.get(Constants.LINK_MODE);
+		if (!b.isSelected()) {
+			b.doClick();
+		}
 	}
 		
 	public Map<DefaultGraphCell, DefaultGraphCell> openScheme(Scheme sch) {
@@ -303,17 +352,18 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		for (Iterator it = panels.iterator(); it.hasNext();) {
 			UgoPanel p = (UgoPanel)it.next();
 			if (p instanceof SchemePanel) {
-				SchemePanel sp = (SchemePanel)p;
-				if (sch.equals(sp.getSchemeResource().getScheme())) {
-					selectPanel(sp);
+				SchemePanel panel1 = (SchemePanel)p;
+				if (sch.equals(panel1.getSchemeResource().getScheme())) {
+					selectPanel(panel1);
 					if (p.getGraph().isGraphChanged()) {
 						int ret = JOptionPane.showConfirmDialog(
 								Environment.getActiveWindow(), "Схема " + sch.getName()
 									+ " уже открыта. Открыть сохраненную ранее версию?",
 									"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
 						if (ret == JOptionPane.YES_OPTION) {
-							sp.getSchemeResource().setScheme(sch);
-							clones = super.openSchemeImageResource(sch.getSchemeCell(), false);
+							panel1.getSchemeResource().setScheme(sch);
+							SchemeGraph graph = panel1.getGraph();
+							clones = SchemeActions.openSchemeImageResource(graph, sch.getSchemeCell(), false);
 						}		
 					}
 					return clones;
@@ -321,12 +371,13 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 			}				
 		}
 
-		SchemePanel p = new SchemePanel(this.aContext);
-		addPanel(p);
-		p.getSchemeResource().setScheme(sch);
+		SchemePanel panel1 = new SchemePanel(this.aContext);
+		addPanel(panel1);
+		panel1.getSchemeResource().setScheme(sch);
 		updateTitle(sch.getName());
-		clones = super.openSchemeImageResource(sch.getSchemeCell(), false);
-		p.setGraphSize(new Dimension(sch.getWidth(), sch.getHeight()));
+		SchemeGraph graph = panel1.getGraph();
+		SchemeActions.openSchemeImageResource(graph, sch.getSchemeCell(), false);
+		panel1.setGraphSize(new Dimension(sch.getWidth(), sch.getHeight()));
 		return clones;
 	}
 	
@@ -336,28 +387,30 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		for (Iterator it = panels.iterator(); it.hasNext();) {
 			UgoPanel p1 = (UgoPanel)it.next();
 			if (p1 instanceof ElementsPanel) {
-				ElementsPanel p = (ElementsPanel)p1;
-				if (se.equals(p.getSchemeResource().getSchemeElement())) {
-					selectPanel(p);
-					if (p.getGraph().isGraphChanged()) {
+				ElementsPanel panel1 = (ElementsPanel)p1;
+				if (se.equals(panel1.getSchemeResource().getSchemeElement())) {
+					selectPanel(panel1);
+					if (panel1.getGraph().isGraphChanged()) {
 						int ret = JOptionPane.showConfirmDialog(
 								Environment.getActiveWindow(), "Элемент " + se.getName()
 								+ " уже открыт. Открыть сохраненную ранее версию?",
 								"Подтверждение", JOptionPane.YES_NO_CANCEL_OPTION);
 						if (ret == JOptionPane.YES_OPTION) {
-							p.getSchemeResource().setSchemeElement(se);
-							clones = super.openSchemeImageResource(se.getSchemeCell(), false);
+							panel1.getSchemeResource().setSchemeElement(se);
+							SchemeGraph graph = panel1.getGraph();
+							clones = SchemeActions.openSchemeImageResource(graph, se.getSchemeCell(), false);
 						}
 					}
 					return clones;
 				}
 			}
 		}
-		ElementsPanel p = new ElementsPanel(this.aContext);
-		addPanel(p);
-		p.getSchemeResource().setSchemeElement(se);
+		ElementsPanel panel1 = new ElementsPanel(this.aContext);
+		addPanel(panel1);
+		panel1.getSchemeResource().setSchemeElement(se);
 		updateTitle(se.getName());
-		clones = super.openSchemeImageResource(se.getSchemeCell(), false);
+		SchemeGraph graph = panel1.getGraph();
+		clones = SchemeActions.openSchemeImageResource(graph, se.getSchemeCell(), false);
 		return clones;
 	}
 	/*

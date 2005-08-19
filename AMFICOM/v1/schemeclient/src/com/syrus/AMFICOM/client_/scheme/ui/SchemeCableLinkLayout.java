@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.6 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.7 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,12 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -33,13 +36,16 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.ThreadCell;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.resource.NumberedComparator;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
+import com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -78,9 +84,10 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 					|| this.link.getAbstractLinkType().getCodename().equals("okst16"))
 				nModules = 6;
 
-			Set scts = this.link.getSchemeCableThreads();
+			List<SchemeCableThread> scts = getSortedCableThreads();
 			int tmp = (int) (2 * FIBER_RADIUS * Math.sqrt(Math.round((double) 
 					scts.size() / (double) nModules + 0.499)));
+			this.radius = 20;
 			if (tmp > this.radius)
 				this.radius = tmp;
 
@@ -90,12 +97,16 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		}
 	}
 	
-	public Object getObject() {
-		return this.link;
+	private List<SchemeCableThread> getSortedCableThreads() {
+		Set<SchemeCableThread> schemeCableThreads = this.link.getSchemeCableThreads();
+		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(schemeCableThreads);
+		Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(),
+				StorableObjectWrapper.COLUMN_NAME));
+		return threads;
 	}
 	
-	public void commitChanges() {
-		// TODO Auto-generated method stub
+	public Object getObject() {
+		return this.link;
 	}
 	
 	public void setContext(ApplicationContext aContext) {

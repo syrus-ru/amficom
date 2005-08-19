@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.10 2005/08/11 07:27:27 stas Exp $
+ * $Id: ElementsPanel.java,v 1.11 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/11 07:27:27 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -81,7 +81,6 @@ public class ElementsPanel extends UgoPanel {
 				SchemePath path = (SchemePath)ev.getSelectedObject();
 				this.graph.setSelectionCells(this.schemeResource.getPathElements(path));
 				this.schemeResource.setSchemePath(path);
-				
 			}
 			// TODO разобраться с созданием пути 
 //			else {

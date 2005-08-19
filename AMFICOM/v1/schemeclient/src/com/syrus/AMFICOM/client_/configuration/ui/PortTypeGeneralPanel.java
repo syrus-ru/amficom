@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.14 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.15 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.15 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -255,12 +255,13 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
+		super.commitChanges();
 		if (MiscUtil.validName(this.tfNameText.getText())) {
 			if (this.portType == null) {
 				try {
 					this.portType = SchemeObjectsFactory.createPortType(this.tfNameText.getText(), this.kind);
 					apply();
-					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.portType, SchemeEvent.CREATE_OBJECT));
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.portType.getId(), SchemeEvent.CREATE_OBJECT));
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.portType, PortTypePropertiesManager.getInstance(this.aContext, this.kind), ObjectSelectedEvent.PORT_TYPE));
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
@@ -288,6 +289,6 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
-		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.portType, SchemeEvent.UPDATE_OBJECT));
+		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.portType.getId(), SchemeEvent.UPDATE_OBJECT));
 	}
 }

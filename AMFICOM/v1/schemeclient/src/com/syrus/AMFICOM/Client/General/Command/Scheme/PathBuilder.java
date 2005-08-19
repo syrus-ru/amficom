@@ -1,14 +1,13 @@
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
 
-import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
 
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -30,6 +29,7 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
 import com.syrus.util.Log;
 
 public class PathBuilder {
@@ -182,7 +182,7 @@ public class PathBuilder {
 						if (!endSE.equals(seBeforeLast))
 							seToAdd = endSE;
 					}
-					if (seToAdd != null && link.getSourceAbstractSchemePort() != null) {
+					if (seToAdd == null && link.getSourceAbstractSchemePort() != null) {
 						SchemeElement startSE = link.getSourceAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
 						if (!startSE.equals(seBeforeLast))
 							seToAdd = startSE;
@@ -194,7 +194,7 @@ public class PathBuilder {
 						if (!endSE.equals(seBeforeLast))
 							seToAdd = endSE;
 					}
-					if (seToAdd != null && link.getSourceAbstractSchemePort() != null) {
+					if (seToAdd == null && link.getSourceAbstractSchemePort() != null) {
 						SchemeElement startSE = link.getSourceAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
 						if (!startSE.equals(seBeforeLast))
 							seToAdd = startSE;
@@ -215,7 +215,7 @@ public class PathBuilder {
 		PathElement newPE = null;
 		
 		if (!path.getPathMembers().isEmpty()) {  // non fisrt element
-			if (se.getScheme() != null) {
+			if (se.getKind().value() == SchemeElementKind._SCHEMED) {
 				Scheme scheme = se.getScheme();
 				exploreScheme(path, scheme);
 				return path.getPathMembers().last();
@@ -262,9 +262,9 @@ public class PathBuilder {
 			// searching for ports with opposite direction
 			AbstractSchemePort newEndPort = null;
 			SchemeDevice dev = newStartPort.getParentSchemeDevice();
-			List<SchemePort> ports = findPorts(dev, newStartPort.getDirectionType().equals(IdlDirectionType._IN) ? 
+			Set<SchemePort> ports = SchemeActions.findPorts(dev, newStartPort.getDirectionType().equals(IdlDirectionType._IN) ? 
 					IdlDirectionType._OUT : IdlDirectionType._IN);
-			List<SchemeCablePort> cports = findCablePorts(dev, newStartPort.getDirectionType().equals(IdlDirectionType._IN) ? 
+			Set<SchemeCablePort> cports = SchemeActions.findCablePorts(dev, newStartPort.getDirectionType().equals(IdlDirectionType._IN) ? 
 							IdlDirectionType._OUT : IdlDirectionType._IN);
 			
 			// для предыдущего линка подходят варианты (для противоположный портов):
@@ -274,7 +274,7 @@ public class PathBuilder {
 			if (lastPE.getKind() == IdlKind.SCHEME_LINK) {
 				if (ports.size() == 0) {
 					if (cports.size() == 1) { // 1st variant
-						newEndPort = cports.get(0);
+						newEndPort = cports.iterator().next();
 					} else { // 2nd variand - searching what thread start port routed with
 						SchemeCableThread thread = ((SchemePort)newStartPort).getSchemeCableThread();
 						if (thread != null) {
@@ -287,7 +287,7 @@ public class PathBuilder {
 				}
 				// 3rd variant
 				else if (ports.size() == 1 && cports.size() == 0) {
-					newEndPort = ports.get(0);
+					newEndPort = ports.iterator().next();
 				}
 				else if (ports.size() > 1) { // else we couldn't go further
 					state = MULTIPLE_PORTS;
@@ -298,7 +298,7 @@ public class PathBuilder {
 			//	2. n портов
 			else if (lastPE.getKind() == IdlKind.SCHEME_LINK) {
 				if (ports.size() == 0 && cports.size() == 1) { // 1st variant
-					newEndPort = cports.get(0);
+					newEndPort = cports.iterator().next();
 				} else if (ports.size() > 0 && cports.size() == 0) { // 2nd variant
 					SchemePort port = lastPE.getSchemeCableThread().getSchemePort(dev);
 					if (port != null) {
@@ -363,7 +363,7 @@ public class PathBuilder {
 				if (lastEndPort != null) {
 					if (lastEndPort.equals(link.getSourceAbstractSchemePort()) ||
 							lastEndPort.equals(link.getTargetAbstractSchemePort())) {
-						addLink(path, link);
+						return addLink(path, link);
 					}
 				} else { //в противном случае ищем по общему порту предыдущего эл-та и линка
 					for (SchemePort port : se.getSchemePortsRecursively()) {
@@ -453,8 +453,7 @@ public class PathBuilder {
 		}
 	}
 
-	private static SchemeCablePort getCablePortByThread(List cableports, SchemeCableThread thread)
-	{
+	private static SchemeCablePort getCablePortByThread(Set cableports, SchemeCableThread thread) {
 		for (Iterator it = cableports.iterator(); it.hasNext(); )
 		{
 			SchemeCablePort port = (SchemeCablePort)it.next();
@@ -465,26 +464,5 @@ public class PathBuilder {
 			}
 		}
 		return null;
-	}
-
-
-	private static List<SchemePort> findPorts(SchemeDevice dev, IdlDirectionType direction) {
-		List<SchemePort> ports = new ArrayList<SchemePort>();
-		for (Iterator it = dev.getSchemePorts().iterator(); it.hasNext();) {
-			SchemePort p = (SchemePort)it.next();
-			if (p.getDirectionType().equals(direction))
-				ports.add(p);
-		}
-		return ports;
-	}
-
-	private static List<SchemeCablePort> findCablePorts(SchemeDevice dev, IdlDirectionType direction) {
-		List<SchemeCablePort> ports = new ArrayList<SchemeCablePort>();
-		for (Iterator it = dev.getSchemeCablePorts().iterator(); it.hasNext();) {
-			SchemeCablePort p = (SchemeCablePort)it.next();
-			if (p.getDirectionType().equals(direction))
-				ports.add(p);
-		}
-		return ports;
 	}
 }

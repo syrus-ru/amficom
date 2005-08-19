@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLinkGeneralPanel.java,v 1.14 2005/08/08 11:58:08 arseniy Exp $
+ * $Id: SchemeLinkGeneralPanel.java,v 1.15 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:58:08 $
+ * @author $Author: stas $
+ * @version $Revision: 1.15 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -524,6 +524,7 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	public void commitChanges() {
+		super.commitChanges();
 		if (this.schemeLink != null && MiscUtil.validName(this.tfNameText.getText())) {
 			this.schemeLink.setName(this.tfNameText.getText());
 			this.schemeLink.setDescription(this.taDescrArea.getText());
@@ -556,7 +557,7 @@ public class SchemeLinkGeneralPanel extends DefaultStorableObjectEditor {
 				StorableObjectPool.delete(link.getId());
 				this.schemeLink.setAbstractLink(null);
 			}
-			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeLink, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeLink.getId(), SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 	

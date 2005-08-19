@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.9 2005/08/11 07:27:27 stas Exp $
+ * $Id: SchemeResource.java,v 1.10 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,10 @@
 package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
-import com.syrus.AMFICOM.scheme.AbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCellContainer;
@@ -33,7 +32,7 @@ import com.syrus.util.Log;
 /**
  * 
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/11 07:27:27 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -47,6 +46,9 @@ public class SchemeResource {
 	private SchemeCellContainer object;
 	private int objectType;
 	private SchemePath schemePath;
+	/**
+	 * Set of AbstractSchemeElements Identifiers
+	 */
 	private SortedSet<Identifier> pmIds;
 	private Identifier pmStartId;
 	private Identifier pmEndId;
@@ -75,10 +77,16 @@ public class SchemeResource {
 		return this.pmEndId;
 	}
 	
+	/**
+	 * @param pathMemberIds Set of AbstractSchemeElements Identifiers
+	 */
 	public void setCashedPathMemberIds(SortedSet<Identifier> pathMemberIds) {
 		this.pmIds = pathMemberIds;
 	}
 	
+	/**
+	 * @return Set of AbstractSchemeElements Identifiers
+	 */
 	public SortedSet<Identifier> getCashedPathElementIds() {
 		return this.pmIds;
 	}
@@ -165,26 +173,29 @@ public class SchemeResource {
 	}
 	
 	public Object[] getPathElements(SchemePath path) {
-		Object[] cells = this.graph.getAll();
-		ArrayList<Object> new_cells = new ArrayList<Object>();
-		Set pes = path.getPathMembers();
-		ArrayList<AbstractSchemeElement> links = new ArrayList<AbstractSchemeElement>(pes.size());
-		for (Iterator it = pes.iterator(); it.hasNext();) {
-			links.add(((PathElement)it.next()).getAbstractSchemeElement());
+		Object[] cells = this.graph.getRoots();
+		List<Object> new_cells = new ArrayList<Object>();
+		
+		if (this.pmIds == null) {
+			Set<PathElement> pes = path.getPathMembers();	
+			this.pmIds = new TreeSet<Identifier>();
+			for(PathElement pe : pes) {
+				this.pmIds.add(pe.getAbstractSchemeElement().getId());
+			}
 		}
 
 		for (int i = 0; i < cells.length; i++) {
 			if (cells[i] instanceof DefaultCableLink) {
 				DefaultCableLink cable = (DefaultCableLink) cells[i];
-				if (links.contains(cable.getSchemeCableLink()))
+				if (this.pmIds.contains(cable.getSchemeCableLinkId()))
 					new_cells.add(cable);
 			} else if (cells[i] instanceof DefaultLink) {
 				DefaultLink link = (DefaultLink) cells[i];
-				if (links.contains(link.getSchemeLink()))
+				if (this.pmIds.contains(link.getSchemeLinkId()))
 					new_cells.add(link);
 			} else if (cells[i] instanceof DeviceGroup) {
 				DeviceGroup group = (DeviceGroup) cells[i];
-				if (links.contains(group.getSchemeElement()))
+				if (this.pmIds.contains(group.getElementId()))
 					new_cells.add(group);
 			}
 		}

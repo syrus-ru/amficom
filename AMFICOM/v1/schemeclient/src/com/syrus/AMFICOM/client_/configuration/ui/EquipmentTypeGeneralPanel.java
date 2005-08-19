@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeGeneralPanel.java,v 1.11 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: EquipmentTypeGeneralPanel.java,v 1.12 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -45,8 +46,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -248,7 +249,7 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
 		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		for (int i = 0; i < EquipmentTypeCodenames.DEFAULT_CODENAMES.length; i++) {
-			tfCodenameCombo.addItem(EquipmentTypeCodenames.DEFAULT_CODENAMES[i]);			
+			tfCodenameCombo.addItem(EquipmentTypeCodenames.DEFAULT_CODENAMES[i].stringValue());			
 		}
 		tfCodenameCombo.setRenderer(EquipmentTypeCodenames.getListCellRenderer());
 		
@@ -296,14 +297,15 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
+		super.commitChanges();
 		if (MiscUtil.validName(this.tfNameText.getText())) {
 			if (this.eqt == null) {
 				try {
 					String name = this.tfNameText.getText();
-					String codeName = EquipmentTypeCodenames.DEFAULT_CODENAMES[this.tfCodenameCombo.getSelectedIndex()];
+					EquipmentTypeCodename codeName = EquipmentTypeCodenames.DEFAULT_CODENAMES[this.tfCodenameCombo.getSelectedIndex()];
 					this.eqt = SchemeObjectsFactory.createEquipmentType(name, codeName);
 					apply();
-					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.eqt, SchemeEvent.CREATE_OBJECT));
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.eqt.getId(), SchemeEvent.CREATE_OBJECT));
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.eqt, EquipmentTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.EQUIPMENT_TYPE));
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
@@ -320,13 +322,13 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		this.eqt.setDescription(this.taDescriptionArea.getText());
 		this.eqt.setManufacturer(this.tfManufacturerText.getText());
 		this.eqt.setManufacturerCode(this.tfManufacturerCodeText.getText());
-		this.eqt.setCodename(EquipmentTypeCodenames.DEFAULT_CODENAMES[this.tfCodenameCombo.getSelectedIndex()]);
+		this.eqt.setCodename(EquipmentTypeCodenames.DEFAULT_CODENAMES[this.tfCodenameCombo.getSelectedIndex()].stringValue());
 		
 		try {
 			StorableObjectPool.flush(this.eqt.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
-		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.eqt, SchemeEvent.UPDATE_OBJECT));
+		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.eqt.getId(), SchemeEvent.UPDATE_OBJECT));
 	}
 }

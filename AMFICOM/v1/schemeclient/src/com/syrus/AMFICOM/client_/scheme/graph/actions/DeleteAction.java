@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.14 2005/08/11 07:27:27 stas Exp $
+ * $Id: DeleteAction.java,v 1.15 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,6 @@ import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultGraphModel;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.Port;
-import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.LangModelGraph;
@@ -42,15 +41,17 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
+import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/08/11 07:27:27 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -94,7 +95,13 @@ public class DeleteAction extends AbstractAction {
 			delete(graph, cells1);
 			
 			graph.selectionNotify();
-			this.pane.getContext().getDispatcher().firePropertyChange(new SchemeEvent(this, graph, SchemeEvent.SCHEME_CHANGED));
+			
+//			if (this.pane instanceof SchemeTabbedPane) {
+//				SchemeResource res = ((SchemeTabbedPane)this.pane).getCurrentPanel().getSchemeResource();
+//				if (res.getCellContainer() instanceof Identifiable) {
+//					this.pane.getContext().getDispatcher().firePropertyChange(new SchemeEvent(this, ((Identifiable)res.getCellContainer()).getId(), SchemeEvent.SCHEME_CHANGED));
+//				}
+//			}
 		}
 	}
 	
@@ -207,7 +214,7 @@ public class DeleteAction extends AbstractAction {
 		
 	static void deleteSchemeElement(SchemeElement element) {
 		objectsToDelete.add(element.getId());
-		if (element.getScheme() == null) {
+		if (element.getKind().value() == SchemeElementKind._EQUIPMENTED) {
 			if(element.getEquipment() != null)
 				objectsToDelete.add(element.getEquipment().getId());
 			for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
@@ -248,8 +255,9 @@ public class DeleteAction extends AbstractAction {
 		cellsToDelete.add(group);
 		if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
 			SchemeElement element = group.getSchemeElement();
-			Scheme scheme = element.getScheme();
-			if (scheme != null) {
+			
+			if (element.getKind().value() == SchemeElementKind._SCHEMED) {
+				Scheme scheme = element.getScheme();
 				deleteScheme(scheme);
 			} else {
 				deleteSchemeElement(element);
@@ -287,6 +295,9 @@ public class DeleteAction extends AbstractAction {
 			objectsToDelete.add(link.getAbstractLink().getId());
 		}
 		objectsToDelete.add(link.getId());
+		for (SchemeCableThread thread : link.getSchemeCableThreads()) {
+			objectsToDelete.add(thread.getId());
+		}
 	}
 	
 	static void deleteLink(SchemeGraph graph, DefaultLink cell) {

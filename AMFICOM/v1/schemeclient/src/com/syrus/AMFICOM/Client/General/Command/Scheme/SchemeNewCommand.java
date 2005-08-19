@@ -30,7 +30,7 @@ public class SchemeNewCommand extends AbstractCommand {
 			
 			aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
 			
-			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme, SchemeEvent.OPEN_SCHEME));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));
 			this.result = RESULT_OK;
 		} 
 		catch (CreateObjectException e) {

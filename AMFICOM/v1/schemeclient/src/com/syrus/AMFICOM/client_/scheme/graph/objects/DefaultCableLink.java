@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.9 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: DefaultCableLink.java,v 1.10 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.10 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -42,7 +42,7 @@ public class DefaultCableLink extends DefaultEdge {
 
 	protected Point[] routed;
 	protected transient DefaultPort _source, _target;
-	protected transient DefaultPort source, target;
+	protected transient DefaultPort source1, target1;
 	private LinkRouting routing = new LinkRouting();
 
 	public static DefaultCableLink createInstance(Object userObject,
@@ -95,13 +95,13 @@ public class DefaultCableLink extends DefaultEdge {
 	@Override
 	public void setSource(Object port) {
 		super.setSource(port);
-		this.source = (DefaultPort)port;
+		this.source1 = (DefaultPort)port;
 	}
 
 	@Override
 	public void setTarget(Object port) {
 		super.setTarget(port);
-		this.target = (DefaultPort)port;
+		this.target1 = (DefaultPort)port;
 	}
 
 	public Edge.Routing getRouting() {
@@ -118,55 +118,62 @@ public class DefaultCableLink extends DefaultEdge {
 			if (getSchemeCableLinkId() != null && !getSchemeCableLinkId().equals(cell.getSchemeCableLinkId()))
 				setSchemeCableLinkId(cell.getSchemeCableLinkId());
 
-			if (cell.source != cell._source) {
-				DefaultCableLink.this.source = cell.source;
+			if (cell.source1 == null) {
+				cell.source1 = (DefaultPort)cell.source;
+			}
+			if (cell.target1 == null) {
+				cell.target1 = (DefaultPort)cell.target;
+			}
+			
+			if (cell.source1 != cell._source) {
+				DefaultCableLink.this.source1 = cell.source1;
 				DefaultCableLink.this._source = cell._source;
 			}
-			if (cell.target != cell._target) {
-				DefaultCableLink.this.target = cell.target;
+			if (cell.target1 != cell._target) {
+				DefaultCableLink.this.target1 = cell.target1;
 				DefaultCableLink.this._target = cell._target;
 			}
 
-			if (DefaultCableLink.this.source != null && !DefaultCableLink.this.source.equals(DefaultCableLink.this._source)) {
+			if (DefaultCableLink.this.source1 != null && !DefaultCableLink.this.source1.equals(DefaultCableLink.this._source)) {
 				if (DefaultCableLink.this._source != null) {
 					if (DefaultCableLink.this._source.getParent() instanceof CablePortCell)
 						SchemeActions.disconnectSchemeCableLink(graph, DefaultCableLink.this, (CablePortCell) DefaultCableLink.this._source.getParent(), true);
 				}
 				
-				DefaultCableLink.this._source = DefaultCableLink.this.source;
-				cell._source = cell.source;
+				DefaultCableLink.this._source = DefaultCableLink.this.source1;
+				cell._source = cell.source1;
 
-				if (DefaultCableLink.this.source.getParent() instanceof CablePortCell)
+				if (DefaultCableLink.this.source1.getParent() instanceof CablePortCell)
 					SchemeActions.connectSchemeCableLink(graph, DefaultCableLink.this,
-							(CablePortCell) DefaultCableLink.this.source.getParent(), true);
+							(CablePortCell) DefaultCableLink.this.source1.getParent(), true);
 			}
-			if (DefaultCableLink.this.source == null && DefaultCableLink.this._source != null) {
+			if (DefaultCableLink.this.source1 == null && DefaultCableLink.this._source != null) {
 				if (DefaultCableLink.this._source.getParent() instanceof CablePortCell)
 					SchemeActions.disconnectSchemeCableLink(graph, DefaultCableLink.this, (CablePortCell) DefaultCableLink.this._source.getParent(), true);
 				
-				DefaultCableLink.this._source = DefaultCableLink.this.source;
-				cell._source = cell.source;
+				DefaultCableLink.this._source = DefaultCableLink.this.source1;
+				cell._source = cell.source1;
 			}
 
-			if (DefaultCableLink.this.target != null && !DefaultCableLink.this.target.equals(DefaultCableLink.this._target)) {
+			if (DefaultCableLink.this.target1 != null && !DefaultCableLink.this.target1.equals(DefaultCableLink.this._target)) {
 				if (DefaultCableLink.this._target != null) {
 					if (DefaultCableLink.this._target.getParent() instanceof CablePortCell)
 						SchemeActions.disconnectSchemeCableLink(graph, DefaultCableLink.this, (CablePortCell) DefaultCableLink.this._target.getParent(), false);
 				}
 				
-				DefaultCableLink.this._target = DefaultCableLink.this.target;
-				cell._target = cell.target;
+				DefaultCableLink.this._target = DefaultCableLink.this.target1;
+				cell._target = cell.target1;
 
-				if (DefaultCableLink.this.target.getParent() instanceof CablePortCell)
+				if (DefaultCableLink.this.target1.getParent() instanceof CablePortCell)
 					SchemeActions.connectSchemeCableLink(graph, DefaultCableLink.this,
-							(CablePortCell) DefaultCableLink.this.target.getParent(), false);
+							(CablePortCell) DefaultCableLink.this.target1.getParent(), false);
 			}
-			if (DefaultCableLink.this.target == null && DefaultCableLink.this._target != null) {
+			if (DefaultCableLink.this.target1 == null && DefaultCableLink.this._target != null) {
 				if (DefaultCableLink.this._target.getParent() instanceof CablePortCell)
 					SchemeActions.disconnectSchemeCableLink(graph, DefaultCableLink.this, (CablePortCell) DefaultCableLink.this._target.getParent(), false);
 				
-				DefaultCableLink.this._target = DefaultCableLink.this.target;
-				cell._target = cell.target;
+				DefaultCableLink.this._target = DefaultCableLink.this.target1;
+				cell._target = cell.target1;
 			}
 
 			int n = points.size();

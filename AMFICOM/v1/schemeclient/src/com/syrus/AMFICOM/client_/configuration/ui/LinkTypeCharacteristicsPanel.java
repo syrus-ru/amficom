@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeCharacteristicsPanel.java,v 1.9 2005/08/09 06:52:40 stas Exp $
+ * $Id: LinkTypeCharacteristicsPanel.java,v 1.10 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,20 @@
 
 package com.syrus.AMFICOM.client_.configuration.ui;
 
+import java.util.List;
+
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/09 06:52:40 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -52,5 +58,12 @@ public class LinkTypeCharacteristicsPanel extends CharacteristicsPanel {
 			}
 		} else
 			showNoSelection();
+	}
+	
+	public void commitChanges() {
+		super.commitChanges();
+		if (this.type != null) {
+			save();
+		}
 	}
 }

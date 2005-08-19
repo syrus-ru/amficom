@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCellPanel.java,v 1.5 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeCellPanel.java,v 1.6 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,14 +23,15 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.SchemeCellContainer;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -92,7 +93,7 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 		this.schemeCellContainer = (SchemeCellContainer)or;
 		GraphActions.clearGraph(this.pane.getGraph());
 		if (this.schemeCellContainer != null) {
-			this.pane.openSchemeImageResource(this.schemeCellContainer.getUgoCell(), false);
+			SchemeActions.openSchemeImageResource(this.pane.getGraph(), this.schemeCellContainer.getUgoCell(), false);
 		}
 	}
 
@@ -108,6 +109,7 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 	 * @see com.syrus.AMFICOM.client.UI.StorableObjectEditor#commitChanges()
 	 */
 	public void commitChanges() {
+		super.commitChanges();
 		SchemeImageResource image = this.schemeCellContainer.getUgoCell();
 		if (image == null) {
 			try {

@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Model;
 
+import java.awt.Color;
 import java.awt.Image;
 import java.awt.Toolkit;
 
@@ -85,5 +86,10 @@ public class SchematicsApplicationModel extends ApplicationModel
 		UIManager.put(SchemeResourceKeys.ICON_SAVE, new ImageIcon(Toolkit
 				.getDefaultToolkit().getImage("images/save.gif").getScaledInstance(16,
 						16, Image.SCALE_SMOOTH)));
+		
+		UIManager.put(SchemeResourceKeys.COLOR_PORT_COMMON, new Color(200, 255, 200));
+		UIManager.put(SchemeResourceKeys.COLOR_PORT_NO_LINK, new Color(255, 255, 200));
+		UIManager.put(SchemeResourceKeys.COLOR_PORT_NO_TYPE, new Color(255, 200, 200));
+		UIManager.put(SchemeResourceKeys.COLOR_PORT_TERMAL, new Color(200, 200, 255));
 	}
 }

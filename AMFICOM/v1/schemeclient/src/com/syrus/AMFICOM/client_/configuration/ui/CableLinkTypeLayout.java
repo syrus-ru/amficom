@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.8 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.9 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,11 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
-import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
@@ -38,11 +38,11 @@ import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.CableThreadTypeWrapper;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.util.WrapperComparator;
+import com.syrus.AMFICOM.resource.NumberedComparator;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -53,7 +53,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 	private static final int FIBER_RADIUS = 8;
 	private static final int GAP = 10;
 	private int radius = 20;
-	
+		
 	private ApplicationContext internalContext = new ApplicationContext();
 	private UgoTabbedPane panel;
 //	private Map mapping = new HashMap();
@@ -84,6 +84,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 			List ctts = getSortedThreadTypes();
 			int tmp = (int) (2 * FIBER_RADIUS * Math.sqrt(Math.round((double) 
 					ctts.size() / (double) nModules + 0.499)));
+			this.radius = 20;
 			if (tmp > this.radius)
 				this.radius = tmp;
 
@@ -96,19 +97,15 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 	public Object getObject() {
 		return this.type;
 	}
-	
-	public void commitChanges() {
-		// TODO Auto-generated method stub
-	}
-	
+		
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 	
 	private List<CableThreadType> getSortedThreadTypes() {
-		List<CableThreadType> threads = new LinkedList<CableThreadType>(this.type.getCableThreadTypes(false));
-		Collections.sort(threads, new WrapperComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
-				StorableObjectWrapper.COLUMN_CODENAME));
+		List<CableThreadType> threads = new ArrayList<CableThreadType>(this.type.getCableThreadTypes(false));
+		Collections.sort(threads, new NumberedComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
+				StorableObjectWrapper.COLUMN_NAME));
 		return threads;
 	}
 

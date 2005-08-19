@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.9 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.10 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -61,28 +62,28 @@ import com.syrus.AMFICOM.configuration.LinkTypeWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.resource.EquipmentTypeCodenames;
 import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.resource.NumberedComparator;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
-import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.10 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
 public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
 	protected CableLinkType linkType;
-	protected List sortedTheradTypes;
+	protected List<CableThreadType> sortedTheradTypes;
 
 	JPanel pnPanel0 = new JPanel();
 	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
@@ -511,9 +512,9 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 	
 	private List<CableThreadType> getSortedThreadTypes() {
 		Set<CableThreadType> cableThreadTypes = this.linkType.getCableThreadTypes(false);
-		List<CableThreadType> threads = new LinkedList<CableThreadType>(cableThreadTypes);
-		Collections.sort(threads, new WrapperComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
-				StorableObjectWrapper.COLUMN_CODENAME));
+		List<CableThreadType> threads = new ArrayList<CableThreadType>(cableThreadTypes);
+		Collections.sort(threads, new NumberedComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
+				StorableObjectWrapper.COLUMN_NAME));
 		return threads;
 	}
 
@@ -558,13 +559,15 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
+		super.commitChanges();
+		
 		if(MiscUtil.validName(this.tfNameText.getText())) {
 			if (this.linkType == null) {
 				try {
 					this.linkType = SchemeObjectsFactory.createCableLinkType(this.tfNameText.getText());
 					apply();
-					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType, SchemeEvent.CREATE_OBJECT));
-					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.linkType, CableLinkTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.CABLELINK_TYPE));
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType.getId(), SchemeEvent.CREATE_OBJECT));
+					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.linkType.getId(), CableLinkTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.CABLELINK_TYPE));
 				} 
 				catch (CreateObjectException e) {
 					Log.errorException(e);
@@ -613,10 +616,10 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 				}
 				
 				for (int i = oldSize; i < newSize; i++) {
-					SchemeObjectsFactory.createCableThreadType(
-							EquipmentTypeCodenames.getName(EquipmentTypeCodenames.THREAD) + (i + 1), 
+					this.sortedTheradTypes.add(SchemeObjectsFactory.createCableThreadType(
+							LangModelScheme.getString(SchemeResourceKeys.THREAD) + (i + 1), 
 							Integer.toString(i + 1), 
-							tlType, this.linkType);
+							tlType, this.linkType));
 				}
 			} else if (oldSize > newSize) { // remove
 				int i = oldSize;
@@ -624,6 +627,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 				for (ListIterator it = this.sortedTheradTypes.listIterator(oldSize); it.hasPrevious() && i > newSize; i--) {
 					CableThreadType ctt = (CableThreadType)it.previous();
 					removed.add(ctt.getId());
+					this.sortedTheradTypes.remove(ctt);
 				}
 				StorableObjectPool.delete(removed);
 			}
@@ -632,11 +636,14 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		}
 		
 		try {
-			StorableObjectPool.flush(this.linkType.getId(), LoginManager.getUserId(), false);
-			StorableObjectPool.flush(ObjectEntities.CABLETHREAD_TYPE_CODE, LoginManager.getUserId(), false);
+			Identifier userId = LoginManager.getUserId();
+			for (Identifiable identifiable : this.sortedTheradTypes) {
+				StorableObjectPool.flush(identifiable, userId, false);
+			}
+			StorableObjectPool.flush(this.linkType.getId(), userId, false);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
-		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType, SchemeEvent.UPDATE_OBJECT));
+		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType.getId(), SchemeEvent.UPDATE_OBJECT));
 	}
 }

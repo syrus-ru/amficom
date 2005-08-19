@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.18 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.19 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeEnum;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -56,8 +56,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.19 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -257,8 +257,8 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		if (this.type != null) {
 			this.tfNameText.setText(this.type.getDescription());
 		
-			Set inPTypeIds = this.type.getInParameterTypeIds();
-			Set outPTypeIds = this.type.getOutParameterTypeIds();
+			Set<ParameterTypeEnum> inPTypeIds = this.type.getInParameterTypes();
+			Set<ParameterTypeEnum> outPTypeIds = this.type.getOutParameterTypes();
 			
 			try {
 				Collection inPTypes = StorableObjectPool.getStorableObjects(inPTypeIds, true);
@@ -307,37 +307,38 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	public void commitChanges() {
+		super.commitChanges();
 		if (MiscUtil.validName(this.tfNameText.getText())) {
 			if (this.type == null) {
 				try {
 					this.type = SchemeObjectsFactory.createMeasurementType(this.tfNameText.getText());
-					apply();
-					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type, SchemeEvent.CREATE_OBJECT));
+//					apply();
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type.getId(), SchemeEvent.CREATE_OBJECT));
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.type, MeasurementTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.MEASUREMENT_TYPE));
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 					return;
 				}
 			} else {
-				apply();
+//				apply();
 			}
 		}
 	}
-	
+	/*
 	private void apply() {
 		if (!this.type.getDescription().equals(this.tfNameText.getText())) {
 			this.type.setDescription(this.tfNameText.getText());
 		}
 
-		Set<Identifier> inPTypeIds = new HashSet<Identifier>();
-		Set<Identifier> outPTypeIds = new HashSet<Identifier>();
+		Set<String> inPTypeIds = new HashSet<String>();
+		Set<String> outPTypeIds = new HashSet<String>();
 		for (Iterator it = this.allInPTypeNodes.iterator(); it.hasNext();) {
 			CheckableNode node = (CheckableNode) it.next();
 			if (node.isChecked()) {
-				inPTypeIds.add(((ParameterType)node.getObject()).getId());
+				inPTypeIds.add(((String)node.getObject()));
 			}
 		}
-		if (!this.type.getInParameterTypeIds().equals(inPTypeIds)) {
+		if (!this.type.getInParameterTypes().equals(inPTypeIds)) {
 			this.type.setInParameterTypeIds(inPTypeIds);
 		}
 		for (Iterator it = this.allOutPTypeNodes.iterator(); it.hasNext();) {
@@ -365,9 +366,9 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
-		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type, SchemeEvent.UPDATE_OBJECT));
+		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type.getId(), SchemeEvent.UPDATE_OBJECT));
 	}
-	
+	*/
 	List getParameterTypeNodes(String way) {
 		for (Iterator it = this.parametersRoot.getChildren().iterator(); it.hasNext();) {
 			Item node = (Item)it.next();
@@ -389,18 +390,9 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		root.addChild(input);
 		root.addChild(output);
 		
-		EquivalentCondition condition = new EquivalentCondition(
-				ObjectEntities.PARAMETER_TYPE_CODE);
-		try {
-			Collection pTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-			for (Iterator it = pTypes.iterator(); it.hasNext();) {
-				ParameterType t = (ParameterType) it.next();
-				input.addChild(new CheckableNode(t, false));
-				output.addChild(new CheckableNode(t, false));
-			}
-		} 
-		catch (ApplicationException e) {
-			Log.errorException(e);
+		for (ParameterTypeEnum parameterType : ParameterTypeEnum.values()) {
+			input.addChild(new CheckableNode(parameterType.getCodename(), parameterType.getDescription(), false));
+			output.addChild(new CheckableNode(parameterType.getCodename(), parameterType.getDescription(), false));
 		}
 		return root;
 	}

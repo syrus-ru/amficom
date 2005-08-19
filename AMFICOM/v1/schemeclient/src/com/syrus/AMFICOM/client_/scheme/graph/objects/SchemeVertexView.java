@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeVertexView.java,v 1.5 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeVertexView.java,v 1.6 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,14 @@ import java.awt.Rectangle;
 
 import com.jgraph.graph.CellMapper;
 import com.jgraph.graph.CellViewRenderer;
+import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.VertexView;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -34,6 +36,16 @@ public class SchemeVertexView extends VertexView {
 
 	public Rectangle getPureBounds() {
 		return this.bounds;
+	}
+	
+	protected void updateAllAttributes() {
+		this.allAttributes = getModel().getAttributes(this.cell);
+		if (this.allAttributes != null) {
+			this.allAttributes = GraphActions.cloneMap(this.allAttributes);
+		} else {
+			this.allAttributes = GraphConstants.createMap();
+		}
+		this.allAttributes.putAll(this.attributes);
 	}
 }
 

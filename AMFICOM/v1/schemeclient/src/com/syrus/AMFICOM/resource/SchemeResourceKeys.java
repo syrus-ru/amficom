@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResourceKeys.java,v 1.7 2005/08/11 07:27:27 stas Exp $
+ * $Id: SchemeResourceKeys.java,v 1.8 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/11 07:27:27 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -59,6 +59,11 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	String ICON_COMPONENTS = "icon.components";
 	String ICON_NEW = "icon.new";
 	String ICON_SAVE = "icon.save";
+	
+	String COLOR_PORT_NO_TYPE = "color.port_no_type";
+	String COLOR_PORT_NO_LINK = "color.port_no_link";
+	String COLOR_PORT_TERMAL = "color.port_thermal";
+	String COLOR_PORT_COMMON = "color.port_common";
 		
 	String EMPTY = ""; //$NON-NLS-1$
 	String ROOT = "scheme.root"; //$NON-NLS-1$
@@ -121,6 +126,7 @@ public interface SchemeResourceKeys extends ResourceKeys {
 	String THREAD_NUMBER = "threadNumber"; //$NON-NLS-1$
 	String THREAD = "thread"; //$NON-NLS-1$
 	String PARENT_GROUP = "parent_group"; //$NON-NLS-1$
+	String THREAD_PORT_MAP = "thread_port_map"; //$NON-NLS-1$
 			
 	String NEW_SCHEME = "new_scheme"; //$NON-NLS-1$
 		

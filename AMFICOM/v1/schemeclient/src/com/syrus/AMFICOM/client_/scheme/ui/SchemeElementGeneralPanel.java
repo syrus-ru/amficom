@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.13 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.14 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,11 +63,12 @@ import com.syrus.AMFICOM.resource.EquipmentTypeCodenames;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.14 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -714,7 +715,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		addToUndoableListener(taDescrArea);
 		
 		for (int i = 0; i < EquipmentTypeCodenames.DEFAULT_CODENAMES.length; i++) {
-			this.codenameCombo.addItem(EquipmentTypeCodenames.DEFAULT_CODENAMES[i]);			
+			this.codenameCombo.addItem(EquipmentTypeCodenames.DEFAULT_CODENAMES[i].stringValue());			
 		}
 		this.codenameCombo.setRenderer(EquipmentTypeCodenames.getListCellRenderer());
 		
@@ -797,10 +798,12 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			this.tfNameText.setText(this.schemeElement.getName());
 			this.taDescrArea.setText(this.schemeElement.getDescription());
 			this.tfLabelText.setText(this.schemeElement.getLabel());
-			if (this.schemeElement.getSymbol() != null)
-				symbol = new ImageIcon(this.schemeElement.getSymbol().getImage());
+			BitmapImageResource s = this.schemeElement.getSymbol();
+			if (s != null) {
+				symbol = new ImageIcon(s.getImage());
+			}
 			
-			if (this.schemeElement.getScheme() != null) {
+			if (this.schemeElement.getKind().value() == SchemeElementKind._SCHEMED) {
 				this.cbInstanceBox.setVisible(false);
 			} else {
 				this.cbInstanceBox.setVisible(true);
@@ -892,6 +895,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
+		super.commitChanges();
 		if (this.schemeElement != null && MiscUtil.validName(this.tfNameText.getText())) {
 			this.schemeElement.setName(this.tfNameText.getText());
 			this.schemeElement.setDescription(this.taDescrArea.getText());
@@ -957,7 +961,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 			} else {
 				this.schemeElement.setKis(null);
 			}
-			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeElement, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeElement.getId(), SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

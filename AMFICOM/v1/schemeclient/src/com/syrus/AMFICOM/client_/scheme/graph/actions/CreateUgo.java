@@ -1,5 +1,5 @@
 /*
- * $Id: CreateUgo.java,v 1.6 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: CreateUgo.java,v 1.7 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,8 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -29,7 +31,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeDevice;
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -48,7 +49,7 @@ public class CreateUgo {
 		// empty
 	}
 
-	public static void createProtoUgo(SchemeProtoElement proto, SchemeGraph graph, ImageIcon symbol, String label, List blockports_in, List blockports_out) {
+	public static void createProtoUgo(SchemeProtoElement proto, SchemeGraph graph, ImageIcon symbol, String label, List<BlockPortCell> blockports_in, List<BlockPortCell> blockports_out) {
 		create(graph, symbol, label, blockports_in, blockports_out);
 		Object[] cells = CreateGroup.getCellsToAdd(graph);
 		if (cells.length == 0)
@@ -56,7 +57,7 @@ public class CreateUgo {
 		CreateGroup.createGroup(graph, cells, proto.getId(), DeviceGroup.PROTO_ELEMENT);	
 	}
 	
-	public static void createElementUgo(SchemeElement element, SchemeGraph graph, ImageIcon symbol, String label, List blockports_in, List blockports_out) {
+	public static void createElementUgo(SchemeElement element, SchemeGraph graph, ImageIcon symbol, String label, List<BlockPortCell> blockports_in, List<BlockPortCell> blockports_out) {
 		create(graph, symbol, label, blockports_in, blockports_out);
 		Object[] cells = CreateGroup.getCellsToAdd(graph);
 		if (cells.length == 0)
@@ -64,7 +65,7 @@ public class CreateUgo {
 		CreateGroup.createGroup(graph, cells, element.getId(), DeviceGroup.SCHEME_ELEMENT);	
 	}
 	
-	public static void createSchemeUgo(Scheme scheme, SchemeGraph graph, ImageIcon symbol, String label, List blockports_in, List blockports_out) {
+	public static void createSchemeUgo(Scheme scheme, SchemeGraph graph, ImageIcon symbol, String label, List<BlockPortCell> blockports_in, List<BlockPortCell> blockports_out) {
 		create(graph, symbol, label, blockports_in, blockports_out);
 		Object[] cells = CreateGroup.getCellsToAdd(graph);
 		if (cells.length == 0)
@@ -73,23 +74,23 @@ public class CreateUgo {
 	}
 	 
 	
-	private static void create(SchemeGraph graph, ImageIcon symbol, String label, List blockports_in, List blockports_out) {
+	private static void create(SchemeGraph graph, ImageIcon symbol, String label, List<BlockPortCell> blockports_in, List<BlockPortCell> blockports_out) {
 		//remove old cells
 		graph.setSelectionCells(new Object[0]);
 		graph.getModel().remove(graph.getDescendants(graph.getAll()));
 
 		// create new element
 		int grid = graph.getGridSize();
-		int max = Math.max(3, Math.max(blockports_in.size(), blockports_out.size()));
+		int max = Math.max(1, Math.max(blockports_in.size(), blockports_out.size()));
 		Rectangle deviceBounds = new Rectangle(
-				graph.snap(new Point(grid*2, grid*2)),//oldrect.x, oldrect.y
-				graph.snap(new Dimension(grid*4, grid*(max+1))));
+				graph.snap(new Point(grid*4, grid*2)),//oldrect.x, oldrect.y
+				graph.snap(new Dimension(grid*5, grid*(2 * max))));
 
 		List<DefaultGraphCell> insertedObjects = new ArrayList<DefaultGraphCell>(2 * (blockports_in.size() + blockports_out.size()) + 1);
 		
 		SchemeDevice dev;
 		try {
-			dev = SchemeObjectsFactory.createSchemeDevice("SchemeDevice"+System.currentTimeMillis());
+			dev = SchemeObjectsFactory.createSchemeDevice(Long.toString(System.currentTimeMillis()));
 		} catch (CreateObjectException e) {
 			Log.errorException(e);
 			return;
@@ -103,14 +104,15 @@ public class CreateUgo {
 		insertedObjects.add(cell);
 		
 		int counter = 0;
+		Collections.sort(blockports_out, new BPCComparator());
 		for (Iterator it = blockports_out.iterator(); it.hasNext();)
 		{
 			BlockPortCell b = (BlockPortCell)it.next();
 			String name = (String)b.getUserObject();
-			Point p = graph.snap(new Point(grid*2 + grid*5, grid*2 + grid*((max - blockports_out.size()) / 2 + 1 + counter++)));
+			Point p = graph.snap(new Point(grid*4 + grid*7, grid*2 + grid*(1 + (max - blockports_out.size()) /*/ 2 + 1*/ + 2 * counter++)));
 			
 			AbstractSchemePort port = b.getAbstractSchemePort();
-			Color color = SchemeActions.determinePortColor(port);
+			Color color = SchemeActions.determinePortColor(port, port.getAbstractSchemeLink());
 			port.setName(name);
 			if (b.isCablePort()) {
 				CablePortCell portCell = SchemeActions.createCablePort(graph, cell, p, name, port.getDirectionType(), color, port.getId());
@@ -121,14 +123,15 @@ public class CreateUgo {
 			}
 		}
 		counter = 0;
+		Collections.sort(blockports_in, new BPCComparator());
 		for (Iterator it = blockports_in.iterator(); it.hasNext();)
 		{
 			BlockPortCell b = (BlockPortCell)it.next();
 			String name = (String)b.getUserObject();
-			Point p = graph.snap(new Point(grid*2-grid, grid*2+ grid*((max - blockports_in.size()) / 2 + 1 + counter++)));
+			Point p = graph.snap(new Point(grid*4-grid*2, grid*2+ grid*(1 + (max - blockports_in.size()) /* / 2 + 1 */+ 2 *  counter++)));
 			
 			AbstractSchemePort port = b.getAbstractSchemePort();
-			Color color = SchemeActions.determinePortColor(port);
+			Color color = SchemeActions.determinePortColor(port, port.getAbstractSchemeLink());
 			port.setName(name);
 			if (b.isCablePort()) {
 				CablePortCell portCell = SchemeActions.createCablePort(graph, cell, p, name, port.getDirectionType(), color, port.getId());
@@ -139,11 +142,17 @@ public class CreateUgo {
 			}
 		}
 		Object[] insertedCells = insertedObjects.toArray();
-		GraphActions.setObjectsBackColor(graph, insertedCells, Color.WHITE);
+//		GraphActions.setObjectsBackColor(graph, insertedCells, Color.WHITE);
 		graph.setSelectionCells(insertedCells);
 		
 		if (symbol != null) {
 			GraphActions.setImage(graph, cell, symbol);
 		}
+	}
+}
+
+class BPCComparator implements Comparator<BlockPortCell> {
+	public int compare(BlockPortCell o1, BlockPortCell o2) {
+		return ((String)o1.getUserObject()).compareTo((String)o2.getUserObject());
 	}
 }

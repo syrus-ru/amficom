@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.8 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: DefaultLink.java,v 1.9 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -41,7 +41,7 @@ public class DefaultLink extends DefaultEdge {
 
 	protected Point[] routed;
 	protected transient DefaultPort _source, _target;
-	protected transient DefaultPort source, target;
+	protected transient DefaultPort source1, target1;
 	private LinkRouting routing = new LinkRouting();
 
 	public static DefaultLink createInstance(Object userObject,
@@ -92,12 +92,12 @@ public class DefaultLink extends DefaultEdge {
 
 	public void setSource(Object port) {
 		super.setSource(port);
-		this.source = (DefaultPort)port;
+		this.source1 = (DefaultPort)port;
 	}
 
 	public void setTarget(Object port) {
 		super.setTarget(port);
-		this.target = (DefaultPort)port;
+		this.target1 = (DefaultPort)port;
 	}
 
 	public DefaultEdge.Routing getRouting() {
@@ -114,57 +114,76 @@ public class DefaultLink extends DefaultEdge {
 			if (getSchemeLinkId() != null && !getSchemeLinkId().equals(cell.getSchemeLinkId()))
 				setSchemeLinkId(cell.getSchemeLinkId());
 
-			if (cell.source != cell._source) {
-				DefaultLink.this.source = cell.source;
+			if (cell.source1 == null) {
+				cell.source1 = (DefaultPort)cell.source;
+			}
+			if (cell.target1 == null) {
+				cell.target1 = (DefaultPort)cell.target;
+			}
+			
+			if (cell.source1 != cell._source) {
+				DefaultLink.this.source1 = cell.source1;
 				DefaultLink.this._source = cell._source;
 			}
-			if (cell.target != cell._target) {
-				DefaultLink.this.target = cell.target;
+			if (cell.target1 != cell._target) {
+				DefaultLink.this.target1 = cell.target1;
 				DefaultLink.this._target = cell._target;
 			}
 
-			if (DefaultLink.this.source != null && !DefaultLink.this.source.equals(DefaultLink.this._source)) {
+			if (DefaultLink.this.source1 != null && !DefaultLink.this.source1.equals(DefaultLink.this._source)) {
 				if (DefaultLink.this._source != null) {
-					if (DefaultLink.this._source.getParent() instanceof PortCell)
-						SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) DefaultLink.this._source.getParent(), true);
+					if (DefaultLink.this._source.getParent() instanceof PortCell) {
+						if (!SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) DefaultLink.this._source.getParent(), true)) {
+							return;
+						}
+					}
 				}
 				
-				DefaultLink.this._source = DefaultLink.this.source;
-				cell._source = cell.source;
+				DefaultLink.this._source = DefaultLink.this.source1;
+				cell._source = cell.source1;
 
-				if (DefaultLink.this.source.getParent() instanceof PortCell)
+				if (DefaultLink.this.source1.getParent() instanceof PortCell)
 					SchemeActions.connectSchemeLink(graph, DefaultLink.this,
-							(PortCell) DefaultLink.this.source.getParent(), true);
+							(PortCell) DefaultLink.this.source1.getParent(), true);
 			}
-			if (DefaultLink.this.source == null && DefaultLink.this._source != null) {
-				if (DefaultLink.this._source.getParent() instanceof PortCell)
-					SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) DefaultLink.this._source.getParent(), true);
+			if (DefaultLink.this.source1 == null && DefaultLink.this._source != null) {
+				if (DefaultLink.this._source.getParent() instanceof PortCell) {
+					if (!SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) DefaultLink.this._source.getParent(), true)) {
+						return;
+					}
+				}
 				
-				DefaultLink.this._source = DefaultLink.this.source;
-				cell._source = cell.source;
+				DefaultLink.this._source = DefaultLink.this.source1;
+				cell._source = cell.source1;
 			}
 
-			if (DefaultLink.this.target != null && !DefaultLink.this.target.equals(DefaultLink.this._target))
+			if (DefaultLink.this.target1 != null && !DefaultLink.this.target1.equals(DefaultLink.this._target))
 			{
 				if (DefaultLink.this._target != null) {
-					if (DefaultLink.this._target.getParent() instanceof PortCell)
-						SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) DefaultLink.this._target.getParent(), false);
+					if (DefaultLink.this._target.getParent() instanceof PortCell) {
+						if (!SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) DefaultLink.this._target.getParent(), false)) {
+							return;
+						}
+					}
 				}
 				
-				DefaultLink.this._target = DefaultLink.this.target;
-				cell._target = cell.target;
+				DefaultLink.this._target = DefaultLink.this.target1;
+				cell._target = cell.target1;
 
-				if (DefaultLink.this.target.getParent() instanceof PortCell) {
+				if (DefaultLink.this.target1.getParent() instanceof PortCell) {
 					SchemeActions.connectSchemeLink(graph, DefaultLink.this,
-							(PortCell) DefaultLink.this.target.getParent(), false);
+							(PortCell) DefaultLink.this.target1.getParent(), false);
 				}
 			}
-			if (DefaultLink.this.target == null && DefaultLink.this._target != null) {
-				if (DefaultLink.this._target.getParent() instanceof PortCell)
-					SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) DefaultLink.this._target.getParent(), false);
+			if (DefaultLink.this.target1 == null && DefaultLink.this._target != null) {
+				if (DefaultLink.this._target.getParent() instanceof PortCell) {
+					if (!SchemeActions.disconnectSchemeLink(graph, DefaultLink.this, (PortCell) DefaultLink.this._target.getParent(), false)) {
+						return;
+					}
+				}
 				
-				DefaultLink.this._target = DefaultLink.this.target;
-				cell._target = cell.target;
+				DefaultLink.this._target = DefaultLink.this.target1;
+				cell._target = cell.target1;
 			}
 
 			int n = points.size();

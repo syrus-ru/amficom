@@ -159,7 +159,6 @@ public class SchemeSaveCommand extends AbstractCommand {
 					schemeCableLinks.add(((DefaultCableLink)object).getSchemeCableLink());
 				else if (object instanceof DeviceGroup) {
 					SchemeElement schemeElement = ((DeviceGroup)object).getSchemeElement();
-					assert schemeElement != null;
 					schemeElements.add(schemeElement);
 				}
 			}
@@ -185,7 +184,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 				this.schemeTab.setGraphChanged(false);
 				
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-						scheme.getName() + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$
+						scheme.getName() + " " + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$ //$NON-NLS-2$
 						LangModelScheme.getString("Message.information"), //$NON-NLS-1$
 						JOptionPane.INFORMATION_MESSAGE);
 			} catch (ApplicationException e) {

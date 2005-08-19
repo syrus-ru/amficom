@@ -143,7 +143,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 			this.cellPane.setGraphChanged(false);
 			
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					proto.getName() + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$
+					proto.getName() + " " + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$ //$NON-NLS-2$
 					LangModelScheme.getString("Message.information"), //$NON-NLS-1$,
 					JOptionPane.INFORMATION_MESSAGE);
 		} catch (ApplicationException e) {

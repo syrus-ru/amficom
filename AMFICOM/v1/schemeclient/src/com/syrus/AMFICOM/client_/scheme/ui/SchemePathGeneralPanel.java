@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.1 2005/08/11 07:43:40 stas Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.2 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.SortedSet;
 import java.util.Vector;
 
 import javax.swing.BorderFactory;
@@ -37,7 +38,6 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeMonitoringSolution;
 import com.syrus.AMFICOM.scheme.SchemeMonitoringSolutionWrapper;
 import com.syrus.AMFICOM.scheme.SchemePath;
@@ -274,20 +274,19 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 			this.tfNameText.setText(this.schemePath.getName());
 			this.taDescriptionArea.setText(this.schemePath.getDescription());
 			
-			try {
-				SchemeElement startElement = this.schemePath.getStartSchemeElement();
+			final SortedSet<PathElement> pathElements = this.schemePath.getPathMembers();
+			if (!pathElements.isEmpty()) {
+				PathElement startElement = pathElements.first();
 				this.tfStartText.setText(startElement.getName());
-			} catch (IllegalStateException e) {
-				this.tfStartText.setText(SchemeResourceKeys.EMPTY); 
-			}
-			try {
-				SchemeElement endElement = this.schemePath.getEndSchemeElement();
+				PathElement endElement = pathElements.last();
 				this.tfEndText.setText(endElement.getName());
-			} catch (IllegalStateException e) {
-				this.tfEndText.setText(SchemeResourceKeys.EMPTY); 
+			} else {
+				this.tfStartText.setText(SchemeResourceKeys.EMPTY);
+				this.tfEndText.setText(SchemeResourceKeys.EMPTY);	
 			}
+
 			Vector<String> peNames = new Vector<String>(); 
-			for (PathElement pe : this.schemePath.getPathMembers()) {
+			for (PathElement pe : pathElements) {
 				peNames.add(pe.getName());
 			}
 			this.lsPesList.setListData(peNames);
@@ -308,12 +307,13 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
+		super.commitChanges();
 		if (this.schemePath != null && MiscUtil.validName(this.tfNameText.getText())) {
 			this.schemePath.setName(this.tfNameText.getText());
 			this.schemePath.setDescription(this.taDescriptionArea.getText());
 			this.schemePath.setParentSchemeMonitoringSolution((SchemeMonitoringSolution)this.cmbSolutionCombo.getSelectedItem());
 
-			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePath, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePath.getId(), SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

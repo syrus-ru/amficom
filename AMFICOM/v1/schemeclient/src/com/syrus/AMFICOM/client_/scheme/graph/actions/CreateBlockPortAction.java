@@ -1,5 +1,5 @@
 /*
- * $Id: CreateBlockPortAction.java,v 1.9 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: CreateBlockPortAction.java,v 1.10 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,13 +13,17 @@ import java.awt.Point;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.util.ArrayList;
+import java.util.Enumeration;
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.swing.AbstractAction;
 
 import com.jgraph.graph.ConnectionSet;
+import com.jgraph.graph.DefaultEdge;
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.GraphConstants;
@@ -32,10 +36,11 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
+import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.10 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -63,6 +68,18 @@ public class CreateBlockPortAction extends AbstractAction {
 		Rectangle bounds = null;
 		AbstractSchemePort abstractSchemePort = null;
 
+		// search for connected BlockPortEdges
+		for (Enumeration en = ((DefaultGraphCell)cell).children(); en.hasMoreElements();) {
+			DefaultPort p = (DefaultPort) en.nextElement();
+			for (Iterator<DefaultEdge> it = p.edges(); it.hasNext();) {
+				DefaultEdge edge = it.next();
+				if (edge instanceof BlockPortEdge) {
+					Log.debugMessage("BlockPortEdge already connected to port " + cell, Level.FINEST);
+					return;
+				}
+			}
+		}
+		
 		if (cell instanceof PortCell) {
 			PortCell port = (PortCell) cell;
 			abstractSchemePort = port.getSchemePort();

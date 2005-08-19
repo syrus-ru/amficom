@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.15 2005/08/11 07:27:27 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.16 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,23 +9,18 @@
 package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.awt.BorderLayout;
-import java.awt.Point;
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 
-import com.jgraph.graph.DefaultGraphCell;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
-import com.syrus.AMFICOM.resource.SchemeImageResource;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/08/11 07:27:27 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -129,23 +124,6 @@ public class UgoTabbedPane extends JPanel {
 		this.toolBar.setVisible(b);
 	}
 
-	/**
-	 * @param schemeImageResource Scheme or SchemeElement or SchemeProtoElement SchemeCell or UgoCell
-	 * @param doClone create copy of objects or open themself
-	 * @return Map of cloned DefaultGraphCells (oldCell, newCell) if doClone is true, empty map overwise  
-	 */
-	public Map<DefaultGraphCell, DefaultGraphCell> openSchemeImageResource(SchemeImageResource schemeImageResource, boolean doClone) {
-		Map<DefaultGraphCell, DefaultGraphCell> clones = Collections.emptyMap();
-		SchemeGraph graph = getGraph();
-//		GraphActions.clearGraph(graph);
-		if (schemeImageResource != null) {
-			clones = getCurrentPanel().insertCell(schemeImageResource.getData(), new Point(0, 0), doClone);
-			SchemeActions.fixImages(graph);
-		}
-		setGraphChanged(false);
-		return clones;
-	}
-	
 	public void setGraphChanged(boolean b) {
 		getGraph().setGraphChanged(b);
 	}

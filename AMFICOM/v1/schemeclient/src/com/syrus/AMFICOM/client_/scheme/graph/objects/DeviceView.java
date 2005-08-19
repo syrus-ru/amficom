@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceView.java,v 1.5 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: DeviceView.java,v 1.6 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,23 +29,22 @@ import com.jgraph.graph.GraphContext;
 import com.jgraph.graph.Port;
 import com.jgraph.graph.VertexRenderer;
 import com.jgraph.graph.VertexView;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
 public class DeviceView extends VertexView {
 	private static final long serialVersionUID = 3763093055304970547L;
 
-	protected DeviceCell cell;
 	protected Rectangle _bounds;
 	private static VertexRenderer schemerenderer = new SchemeVertexRenderer();
 
 	public DeviceView(Object cell, JGraph graph, CellMapper mapper) {
 		super(cell, graph, mapper);
-		this.cell = (DeviceCell) cell;
 	}
 
 	public CellViewRenderer getRenderer() {
@@ -62,6 +61,16 @@ public class DeviceView extends VertexView {
 	public Map setAttributes(Map map) {
 		Map undo = super.setAttributes(map);
 		return undo;
+	}
+	
+	protected void updateAllAttributes() {
+		this.allAttributes = getModel().getAttributes(this.cell);
+		if (this.allAttributes != null) {
+			this.allAttributes = GraphActions.cloneMap(this.allAttributes);
+		} else {
+			this.allAttributes = GraphConstants.createMap();
+		}
+		this.allAttributes.putAll(this.attributes);
 	}
 
 	public class DeviceSizeHandle extends VertexView.SizeHandle {
@@ -83,7 +92,7 @@ public class DeviceView extends VertexView {
 
 			if (!bounds1.equals(DeviceView.this._bounds)) {
 				double u = GraphConstants.PERCENT;
-				java.util.List list = DeviceView.this.cell.getChildren();
+				java.util.List list = ((DefaultGraphCell)DeviceView.this.cell).getChildren();
 				Iterator iterator = list.iterator();
 				while (iterator.hasNext()) {
 					Port port = (Port) iterator.next();

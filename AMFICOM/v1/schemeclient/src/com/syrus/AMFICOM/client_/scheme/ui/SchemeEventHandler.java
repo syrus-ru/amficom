@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEventHandler.java,v 1.4 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeEventHandler.java,v 1.5 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,8 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 import java.beans.PropertyChangeEvent;
 
+import javax.swing.event.ChangeEvent;
+
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.AbstractEventHandler;
@@ -18,8 +20,8 @@ import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.5 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -57,5 +59,9 @@ public class SchemeEventHandler extends AbstractEventHandler {
 				}
 			}
 		}
+	}
+
+	public void stateChanged(ChangeEvent e) {
+		// empty
 	}
 }

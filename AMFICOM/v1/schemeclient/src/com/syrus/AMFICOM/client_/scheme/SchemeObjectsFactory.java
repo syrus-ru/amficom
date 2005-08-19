@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.21 2005/08/11 07:27:27 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.22 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
+import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
 import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
@@ -70,7 +71,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/08/11 07:27:27 $
+ * @version $Revision: 1.22 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -85,9 +86,9 @@ public class SchemeObjectsFactory {
 		return cht;
 	}
 	
-	public static EquipmentType createEquipmentType(String name, String codeName) throws CreateObjectException {
+	public static EquipmentType createEquipmentType(String name, EquipmentTypeCodename codeName) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		EquipmentType eqt = EquipmentType.createInstance(userId, codeName, EMPTY, name, EMPTY, EMPTY);
+		EquipmentType eqt = EquipmentType.createInstance(userId, codeName.stringValue(), EMPTY, name, EMPTY, EMPTY);
 		return eqt;
 	}
 	
@@ -239,7 +240,6 @@ public class SchemeObjectsFactory {
 	}
 	
 	public static SchemeElement createSchemeElement(Scheme parentScheme, Scheme scheme) throws CreateObjectException {
-		// FIXME у этого SE нет EqT
 		SchemeElement schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), scheme, parentScheme);
 		return schemeElement;
 	}

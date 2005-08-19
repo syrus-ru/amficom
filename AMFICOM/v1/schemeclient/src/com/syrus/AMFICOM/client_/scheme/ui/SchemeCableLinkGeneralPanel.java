@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.14 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.15 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,12 +40,13 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.configuration.AbstractLinkType;
 import com.syrus.AMFICOM.configuration.CableLink;
+import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableLinkTypeWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -55,8 +56,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.15 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -494,10 +495,15 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	public void commitChanges() {
+		super.commitChanges();
 		if (this.schemeCableLink != null && MiscUtil.validName(this.tfNameText.getText())) {
 			this.schemeCableLink.setName(this.tfNameText.getText());
 			this.schemeCableLink.setDescription(this.taDescrArea.getText());
-			this.schemeCableLink.setAbstractLinkType((AbstractLinkType)this.cmbTypeCombo.getSelectedItem());
+			try {
+				this.schemeCableLink.setAbstractLinkTypeExt((CableLinkType)this.cmbTypeCombo.getSelectedItem(), LoginManager.getUserId());
+			} catch (ApplicationException e1) {
+				Log.errorException(e1);
+			}
 			this.schemeCableLink.setOpticalLength((Double)(this.tfOpticalText.getValue()));
 			this.schemeCableLink.setPhysicalLength((Double)(this.tfPhysicalText.getValue()));
 
@@ -526,7 +532,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 				StorableObjectPool.delete(link.getId());
 				this.schemeCableLink.setAbstractLink(null);
 			}
-			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeCableLink, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeCableLink.getId(), SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 	

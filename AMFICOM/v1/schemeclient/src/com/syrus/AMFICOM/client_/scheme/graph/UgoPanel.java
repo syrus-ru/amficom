@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.12 2005/08/11 07:27:27 stas Exp $
+ * $Id: UgoPanel.java,v 1.13 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,13 +11,11 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
-import java.awt.Point;
 import java.awt.print.PageFormat;
 import java.awt.print.Printable;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 import javax.swing.ImageIcon;
@@ -34,16 +32,20 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/11 07:27:27 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -56,9 +58,11 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 
 		public void undoableEditHappened(UndoableEditEvent e) {
 			super.undoableEditHappened(e);
+			if (!UgoPanel.this.graph.make_notifications) {
+				return;
+			}
 			((SchemeMarqueeHandler)UgoPanel.this.graph.getMarqueeHandler()).updateHistoryButtons(this);
-			UgoPanel.this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, UgoPanel.this.graph, 
-					SchemeEvent.SCHEME_CHANGED), false);
+//			UgoPanel.this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, UgoPanel.this.graph, SchemeEvent.SCHEME_CHANGED), false);
 		}
 	};
 	
@@ -116,77 +120,70 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 		if (ev.getPropertyName().equals(SchemeEvent.TYPE)) {
 			SchemeEvent see = (SchemeEvent)ev;
 			if (see.isType(SchemeEvent.UPDATE_OBJECT)) {
-				Object obj = see.getObject();
-				if (obj instanceof SchemeElement) {
-					SchemeElement se = (SchemeElement)obj;
-					DeviceGroup group = SchemeActions.findGroupById(this.graph, se.getId());
-					if (group != null) {
-						if (se.getLabel() != null)
-							GraphActions.updateGroup(this.graph, group, se.getLabel());
-						if (se.getSymbol() != null)
-							GraphActions.updateGroup(this.graph, group, new ImageIcon(se.getSymbol().getImage()));
+				try {
+					Identifier id = see.getIdentifier();
+					if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
+						SchemeElement se = (SchemeElement)see.getStorableObject();
+						DeviceGroup group = SchemeActions.findGroupById(this.graph, se.getId());
+						if (group != null) {
+							if (se.getLabel() != null)
+								GraphActions.updateGroup(this.graph, group, se.getLabel());
+							if (se.getSymbol() != null)
+								GraphActions.updateGroup(this.graph, group, new ImageIcon(se.getSymbol().getImage()));
+						}
+					} else if (id.getMajor() == ObjectEntities.SCHEMEPROTOELEMENT_CODE) {
+						SchemeProtoElement proto = (SchemeProtoElement)see.getStorableObject();
+						DeviceGroup group = SchemeActions.findGroupById(this.graph, proto.getId());
+						if (group != null) {
+							if (proto.getLabel() != null)
+								GraphActions.updateGroup(this.graph, group, proto.getLabel());
+							if (proto.getSymbol() != null)
+								GraphActions.updateGroup(this.graph, group, new ImageIcon(proto.getSymbol().getImage()));
+						}
+					} else if (id.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
+						SchemeCableLink link = (SchemeCableLink)see.getStorableObject();
+						DefaultGraphCell cell = SchemeActions.findSchemeCableLinkById(this.graph, link.getId());
+						if (cell != null) {
+							GraphActions.setText(this.graph, cell, link.getName());
+						}
+					} else if (id.getMajor() == ObjectEntities.SCHEMELINK_CODE) {
+						SchemeLink link = (SchemeLink)see.getStorableObject();
+						DefaultGraphCell cell = SchemeActions.findSchemeLinkById(this.graph, link.getId());
+						if (cell != null) {
+							GraphActions.setText(this.graph, cell, link.getName());
+						}
+					} else if (id.getMajor() == ObjectEntities.SCHEMEPORT_CODE) {
+						SchemePort port = (SchemePort)see.getStorableObject();
+						DefaultGraphCell cell = SchemeActions.findPortCellById(this.graph, port.getId());
+						if (cell != null) {
+							GraphActions.setText(this.graph, cell, port.getName());
+							GraphActions.setObjectBackColor(this.graph, cell, SchemeActions.determinePortColor(port, port.getAbstractSchemeLink()));
+						}
+						cell = SchemeActions.findBlockPortCellById(this.graph, port.getId());
+						if (cell != null) {
+							GraphActions.setText(this.graph, cell, port.getName());
+						}
+					} else if (id.getMajor() == ObjectEntities.SCHEMECABLEPORT_CODE) {
+						SchemeCablePort port = (SchemeCablePort)see.getStorableObject();
+						DefaultGraphCell cell = SchemeActions.findCablePortCellById(this.graph, port.getId());
+						if (cell != null) {
+							GraphActions.setText(this.graph, cell, port.getName());
+							
+							if (port.getAbstractSchemeLink() != null)
+								GraphActions.setObjectBackColor(this.graph, cell, Color.WHITE);
+							else
+								GraphActions.setObjectBackColor(this.graph, cell, Color.YELLOW);
+						}
+						cell = SchemeActions.findBlockPortCellById(this.graph, port.getId());
+						if (cell != null) {
+							GraphActions.setText(this.graph, cell, port.getName());
+						}
 					}
-				} else if (obj instanceof SchemeProtoElement) {
-					SchemeProtoElement proto = (SchemeProtoElement)obj;
-					DeviceGroup group = SchemeActions.findGroupById(this.graph, proto.getId());
-					if (group != null) {
-						if (proto.getLabel() != null)
-							GraphActions.updateGroup(this.graph, group, proto.getLabel());
-						if (proto.getSymbol() != null)
-							GraphActions.updateGroup(this.graph, group, new ImageIcon(proto.getSymbol().getImage()));
-					}
-				} else if (obj instanceof SchemeCableLink) {
-					SchemeCableLink link = (SchemeCableLink)obj;
-					DefaultGraphCell cell = SchemeActions.findSchemeCableLinkById(this.graph, link.getId());
-					if (cell != null) {
-						GraphActions.setText(this.graph, cell, link.getName());
-					}
-				} else if (obj instanceof SchemeLink) {
-					SchemeLink link = (SchemeLink)obj;
-					DefaultGraphCell cell = SchemeActions.findSchemeLinkById(this.graph, link.getId());
-					if (cell != null) {
-						GraphActions.setText(this.graph, cell, link.getName());
-					}
-				} else if (obj instanceof SchemePort) {
-					SchemePort port = (SchemePort)obj;
-					DefaultGraphCell cell = SchemeActions.findPortCellById(this.graph, port.getId());
-					if (cell != null) {
-						GraphActions.setText(this.graph, cell, port.getName());
-						GraphActions.setObjectBackColor(this.graph, cell, SchemeActions.determinePortColor(port));
-					}
-					cell = SchemeActions.findBlockPortCellById(this.graph, port.getId());
-					if (cell != null) {
-						GraphActions.setText(this.graph, cell, port.getName());
-					}
-				} else if (obj instanceof SchemeCablePort) {
-					SchemeCablePort port = (SchemeCablePort)obj;
-					DefaultGraphCell cell = SchemeActions.findCablePortCellById(this.graph, port.getId());
-					if (cell != null) {
-						GraphActions.setText(this.graph, cell, port.getName());
-						
-						if (port.getAbstractSchemeLink() != null)
-							GraphActions.setObjectBackColor(this.graph, cell, Color.WHITE);
-						else
-							GraphActions.setObjectBackColor(this.graph, cell, Color.YELLOW);
-					}
-					cell = SchemeActions.findBlockPortCellById(this.graph, port.getId());
-					if (cell != null) {
-						GraphActions.setText(this.graph, cell, port.getName());
-					}
+				} catch (ApplicationException e) {
+					Log.errorException(e);
 				}
 			}
 		}
-	}
-
-	protected Map<DefaultGraphCell, DefaultGraphCell> insertCell(List serialized, Point p, boolean clone) {
-		if (serialized != null) {
-			if (clone) {
-				Map<DefaultGraphCell, DefaultGraphCell> clones = this.graph.copyFromArchivedState(serialized, p);
-				return clones;
-			}
-			return this.graph.setFromArchivedState(serialized);
-		}
-		return null;
 	}
 
 	public int print(Graphics g, PageFormat pf, int pi) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.12 2005/08/08 11:58:08 arseniy Exp $
+ * $Id: SchemeTreeUI.java,v 1.13 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Set;
 
 import javax.swing.JButton;
 import javax.swing.JToolBar;
@@ -21,6 +22,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
@@ -30,8 +32,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/08/08 11:58:08 $
+ * @author $Author: stas $
+ * @version $Revision: 1.13 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -74,23 +76,29 @@ public class SchemeTreeUI extends IconedTreeUI {
 						Object object = item.getObject();
 						if (object instanceof Scheme) {
 							Scheme scheme = (Scheme)object;
-							StorableObjectPool.delete(scheme.getId());
-							TreePath parentPath = selectedPath.getParentPath();
-							SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
-							updateRecursively((Item)parentPath.getLastPathComponent());
-							try {
-								StorableObjectPool.flush(scheme, LoginManager.getUserId(), true);
-							} catch (ApplicationException e1) {
-								Log.errorException(e1);
+							if (scheme.getParentSchemeElement() == null) {
+								try {
+									Set<Identifiable> ids = scheme.getReverseDependencies();
+									StorableObjectPool.delete(ids);
+									StorableObjectPool.delete(scheme.getId());
+									TreePath parentPath = selectedPath.getParentPath();
+									SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
+									updateRecursively((Item)parentPath.getLastPathComponent());
+									StorableObjectPool.flush(scheme, LoginManager.getUserId(), true);
+								} catch (ApplicationException e1) {
+									Log.errorException(e1);
+								}
 							}
 						}
 						else if (object instanceof SchemeProtoElement) {
-							SchemeProtoElement proto = (SchemeProtoElement)object;
-							proto.setParentSchemeProtoGroup(null);
-							TreePath parentPath = selectedPath.getParentPath();
-							SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
-							updateRecursively((Item)parentPath.getLastPathComponent());
 							try {
+								SchemeProtoElement proto = (SchemeProtoElement)object;
+								Set<Identifiable> ids = proto.getReverseDependencies();
+								StorableObjectPool.delete(ids);
+								proto.setParentSchemeProtoGroup(null);
+								TreePath parentPath = selectedPath.getParentPath();
+								SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
+								updateRecursively((Item)parentPath.getLastPathComponent());
 								StorableObjectPool.flush(proto, LoginManager.getUserId(), true);
 							} catch (ApplicationException e1) {
 								Log.errorException(e1);
@@ -99,11 +107,13 @@ public class SchemeTreeUI extends IconedTreeUI {
 							SchemeProtoGroup group = (SchemeProtoGroup)object;
 							if (group.getSchemeProtoElements().isEmpty() && 
 									group.getSchemeProtoGroups().isEmpty()) {
-								StorableObjectPool.delete(group.getId());
-								TreePath parentPath = selectedPath.getParentPath();
-								SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
-								updateRecursively((Item)parentPath.getLastPathComponent());
 								try {
+									Set<Identifiable> ids = group.getReverseDependencies();
+									StorableObjectPool.delete(ids);
+									StorableObjectPool.delete(group.getId());
+									TreePath parentPath = selectedPath.getParentPath();
+									SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
+									updateRecursively((Item)parentPath.getLastPathComponent());
 									StorableObjectPool.flush(group, LoginManager.getUserId(), true);
 								} catch (ApplicationException e1) {
 									Log.errorException(e1);

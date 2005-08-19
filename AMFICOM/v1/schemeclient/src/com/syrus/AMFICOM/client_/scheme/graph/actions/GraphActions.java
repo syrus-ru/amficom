@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.11 2005/08/11 07:27:27 stas Exp $
+ * $Id: GraphActions.java,v 1.12 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import java.util.Set;
 import javax.swing.ImageIcon;
 import javax.swing.tree.TreeNode;
 
+import com.jgraph.graph.AbstractCellView;
 import com.jgraph.graph.CellView;
 import com.jgraph.graph.ConnectionSet;
 import com.jgraph.graph.DefaultEdge;
@@ -32,27 +33,46 @@ import com.jgraph.graph.DefaultGraphModel;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.Edge;
 import com.jgraph.graph.GraphConstants;
+import com.jgraph.graph.GraphLayoutCache;
 import com.jgraph.graph.Port;
 import com.jgraph.pad.ImageCell;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/11 07:27:27 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
 public class GraphActions {
 	private GraphActions () {
 		// empty
+	}
+	
+	public static Map<DefaultGraphCell, DefaultGraphCell> insertCell(SchemeGraph graph, List serialized, boolean clone) {
+		return insertCell(graph, serialized, clone, null, false);
+	}
+	
+	public static Map<DefaultGraphCell, DefaultGraphCell> insertCell(SchemeGraph graph, List serialized, boolean clone, Point p, boolean isCenterPoint) {
+		if (serialized != null) {
+			if (clone) {
+				Map<DefaultGraphCell, DefaultGraphCell> clones = graph.copyFromArchivedState(serialized, p, isCenterPoint);
+				return clones;
+			}
+			return graph.setFromArchivedState(serialized);
+		}
+		return null;
 	}
 	
 	public static DefaultPort addPort(SchemeGraph graph, Object userObject,
@@ -130,12 +150,101 @@ public class GraphActions {
 	}
 
 	public static void clearGraph(SchemeGraph graph) {
-		// SchemeGraph.skip_notify = true;
+		boolean b = graph.isMakeNotifications();
+		graph.setMakeNotifications(false);
 		graph.setSelectionCells(new Object[0]);
 		Object[] cells = graph.getAll();
-		if (cells.length != 0)
+		if (cells.length != 0) {
 			graph.getModel().remove(cells);
-		// SchemeGraph.skip_notify = false;
+		}
+		graph.setMakeNotifications(b);
+	}
+	
+	public static void move(SchemeGraph graph, Object[] cells, Point p, boolean isCenterPoint) {
+		Rectangle rect;
+		CellView[] cv = graph.getGraphLayoutCache().getMapping(cells);
+		AbstractCellView topcv = (AbstractCellView)cv[0];
+		for (int i = 0; i < cv.length; i++)
+			if (cv[i] instanceof DeviceView) {
+				topcv = (AbstractCellView)cv[i];
+				break;
+			}
+		if (topcv instanceof SchemeVertexView)
+			rect = ((SchemeVertexView)topcv).getPureBounds();
+		else
+			rect = topcv.getBounds();
+
+		Point setpoint = graph.fromScreen(graph.snap(p));
+		Point p0 = graph.fromScreen(rect.getLocation());
+		int x = (setpoint.x - p0.x - (isCenterPoint ? rect.width / 2 : 0)) / 2;  
+		int y = (setpoint.y - p0.y - (isCenterPoint ? rect.height / 2 : 0)) / 2;
+		translateViews(cv, x, y);
+		graph.getGraphLayoutCache().refresh(cv, true);
+	}
+	
+	private static void translateViews(CellView[] views, int dx, int dy) {
+		views = AbstractCellView.getDescendantViews(views);
+		for (int i = 0; i < views.length; i++) {
+			if (views[i].isLeaf()) {
+				translate(views[i].getAllAttributes(), dx, dy);
+			}
+		}
+	}
+	
+	private static void translate(Map map, int dx, int dy) {
+		// Translate Bounds
+		if (GraphConstants.isMoveable(map)) {
+			Rectangle bounds = GraphConstants.getBounds(map);
+			if (bounds != null) {
+				bounds.translate(dx, dy);
+			}
+			// Translate Points
+			java.util.List points = GraphConstants.getPoints(map);
+			if (points != null) {
+				for (int i = 0; i < points.size(); i++) {
+					Object obj = points.get(i);
+					if (obj instanceof Point) {
+						 ((Point) obj).translate(dx, dy);
+					}
+				}
+			}
+		}
+	}
+	
+	public static Map<Object, Object> cloneMap(Map map) {
+		Map<Object, Object> clone = new HashMap<Object, Object>(map);
+		return clone;
+	}
+	
+	public static void connect(SchemeGraph graph, DefaultCableLink link, CablePortCell port, boolean isSource) {
+		connect(graph, (DefaultEdge)link, (DefaultGraphCell)port, isSource);
+	}
+	
+	public static void connect(SchemeGraph graph, DefaultLink link, PortCell port, boolean isSource) {
+		connect(graph, (DefaultEdge)link, (DefaultGraphCell)port, isSource);
+	}
+	
+	private static void connect(SchemeGraph graph, DefaultEdge edge, DefaultGraphCell port, boolean isSource) {
+		// find com.jgraph.graph.Port to connect
+		DefaultPort p = null;
+		for (Enumeration<DefaultPort> en = port.children(); en.hasMoreElements();) {
+			p = en.nextElement();
+			if (p.getUserObject().equals("Center")) {
+				break;
+			}
+		}
+		if (p != null) {
+			CellView view = graph.getGraphLayoutCache().getMapping(edge, true);
+			Map nested = GraphConstants.createAttributes(new CellView[] { view }, null);
+			ConnectionSet cs = new ConnectionSet();
+			cs.connect(edge, p, isSource);
+			if (isSource) {
+				edge.setSource(p);
+			} else {
+				edge.setTarget(p);
+			}
+			graph.getGraphLayoutCache().edit(nested, cs, null, null);
+		}		
 	}
 	
 	public static Rectangle getGroupBounds(SchemeGraph graph, DeviceGroup group) {

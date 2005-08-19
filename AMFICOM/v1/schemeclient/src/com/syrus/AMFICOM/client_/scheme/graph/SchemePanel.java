@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePanel.java,v 1.8 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemePanel.java,v 1.9 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,10 +15,11 @@ import java.util.Map;
 import com.jgraph.graph.DefaultGraphModel;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelSchematics;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -45,12 +46,12 @@ public class SchemePanel extends ElementsPanel {
 	public String getReportTitle() {
 		return LangModelSchematics.getString("schemeMainTitle");
 	}
-
+/*
 	static Map copyFromArchivedState_virtual(List serializable) {
 		DefaultGraphModel model = new DefaultGraphModel();
 		SchemeGraph virtual_graph = new SchemeGraph(model, new ApplicationContext());
-		Map clones = virtual_graph.copyFromArchivedState(serializable, new Point(0, 0));
+		Map clones = GraphActions.insertCell(virtual_graph, serializable, null, true);
 		serializable = (List)virtual_graph.getArchiveableState(virtual_graph.getRoots());
 		return clones;
-	}
+	}*/
 }

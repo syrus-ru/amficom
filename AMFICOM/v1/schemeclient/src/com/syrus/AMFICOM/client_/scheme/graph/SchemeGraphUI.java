@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.14 2005/08/11 07:27:27 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.15 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import java.awt.datatransfer.UnsupportedFlavorException;
 import java.awt.dnd.DnDConstants;
 import java.awt.dnd.DropTarget;
 import java.awt.dnd.DropTargetDropEvent;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.io.IOException;
@@ -25,8 +24,6 @@ import java.util.List;
 import java.util.Map;
 import java.util.TooManyListenersException;
 
-import javax.swing.AbstractAction;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import javax.swing.tree.DefaultMutableTreeNode;
 
@@ -41,19 +38,20 @@ import com.jgraph.graph.GraphLayoutCache;
 import com.jgraph.pad.GPGraphUI;
 import com.jgraph.plaf.basic.BasicGraphUI;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.PopupFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
+import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
-import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/08/11 07:27:27 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -91,7 +89,7 @@ public class SchemeGraphUI extends GPGraphUI {
 
 		@Override
 		public void drop(DropTargetDropEvent e) {
-			//			Point p = e.getLocation();
+			Point p = e.getLocation();
 			DataFlavor[] df = e.getCurrentDataFlavors();
 
 			if (df[0].getHumanPresentableName().equals(LogicalTreeUI.TRANSFERABLE_OBJECTS)) {
@@ -100,49 +98,23 @@ public class SchemeGraphUI extends GPGraphUI {
 					e.acceptDrop(DnDConstants.ACTION_MOVE);
 					e.getDropTargetContext().dropComplete(true);
 					if (transferableObjects.size() > 0) {
-						final Object transferable = transferableObjects.iterator().next();
-						long actionType = 0;
-						if (transferable instanceof SchemeProtoElement) {
-							actionType = SchemeEvent.INSERT_PROTOELEMENT;
-						} else if (transferable instanceof SchemeElement) {
-							actionType = SchemeEvent.INSERT_SCHEMEELEMENT;
-						} else if (transferable instanceof Scheme) {
-							actionType = SchemeEvent.INSERT_SCHEME;
-						}
-						if (actionType != 0) {
-							final long actionType1 = actionType;
-							JPopupMenu pop = new JPopupMenu();
-							JMenuItem menu1 = new JMenuItem(new AbstractAction() {
-								private static final long serialVersionUID = 7254016041683457753L;
-
-								public void actionPerformed(ActionEvent ev) {
-									((SchemeGraph) SchemeGraphUI.this.graph).aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, actionType1));									
+						final Object transferableObject = transferableObjects.iterator().next();
+						if (transferableObject instanceof Identifiable) {
+							Identifier transferable = ((Identifiable)transferableObject).getId(); 
+							long actionType = 0;
+							if (transferable.getMajor() == ObjectEntities.SCHEMEPROTOELEMENT_CODE) {
+								actionType = SchemeEvent.INSERT_PROTOELEMENT;
+							} else if (transferable.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
+								actionType = SchemeEvent.INSERT_SCHEMEELEMENT;
+							} else if (transferable.getMajor() == ObjectEntities.SCHEME_CODE) {
+								actionType = SchemeEvent.INSERT_SCHEME;
+							}
+							if (actionType != 0) {
+								JPopupMenu pop = PopupFactory.createOpenPopup(((SchemeGraph)SchemeGraphUI.this.graph).aContext, transferable, p, actionType);
+								if (pop.getSubElements().length != 0) {
+									pop.show(SchemeGraphUI.this.graph, p.x, p.y);
 								}
-							});
-							menu1.setText(LangModelGraph.getString("insert")); //$NON-NLS-1$
-							pop.add(menu1);
-							JMenuItem menu2 = new JMenuItem(new AbstractAction() {
-								private static final long serialVersionUID = 1023861610666047648L;
-
-								public void actionPerformed(ActionEvent ev) {
-									long actionType2;
-									if (actionType1 == SchemeEvent.INSERT_PROTOELEMENT)
-										actionType2 = SchemeEvent.OPEN_PROTOELEMENT;
-									else if (actionType1 == SchemeEvent.INSERT_SCHEMEELEMENT)
-										actionType2 = SchemeEvent.OPEN_SCHEMEELEMENT;
-									else
-										actionType2 = SchemeEvent.OPEN_SCHEME;
-									((SchemeGraph) SchemeGraphUI.this.graph).aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, actionType2));									
-								}
-							});
-							menu2.setText(LangModelGraph.getString("open")); //$NON-NLS-1$
-							pop.add(menu2);
-							JMenuItem menu3 = new JMenuItem();
-							menu3.setText(LangModelGraph.getString("cancel")); //$NON-NLS-1$
-							pop.addSeparator();
-							pop.add(menu3);
-							
-							pop.show(SchemeGraphUI.this.graph, e.getLocation().x, e.getLocation().y);
+							}
 						}
 					}
 				} catch (UnsupportedFlavorException ex) {
@@ -217,8 +189,8 @@ public class SchemeGraphUI extends GPGraphUI {
 				}
 
 				//Marquee Selection 
-				if (
-						//!e.isConsumed() &&  unremark this to move cells without <CTRL> pressed 
+				if (// XXX unremark this to move cells without <CTRL> pressed						
+						//!e.isConsumed() &&   
 						(!isToggleSelectionEvent(e) || SchemeGraphUI.this.focus == null)) {
 					if (SchemeGraphUI.this.marquee != null) {
 						SchemeGraphUI.this.marquee.mousePressed(e);
@@ -238,6 +210,39 @@ public class SchemeGraphUI extends GPGraphUI {
 		public void mouseReleased(MouseEvent e) {
 			try {
 				if (e != null && !e.isConsumed()) {
+					if (handler == marquee) {
+//						marquee.mouseReleased(e);
+					}
+					else if (handler == handle && handle != null)
+						handle.mouseReleased(e);
+					if (isDescendant(cell, focus) && e.getModifiers() != 0) {
+						// Do not switch to parent if Special Selection
+						cell = focus;
+					}
+					if (!e.isConsumed() && cell != null) {
+						Object tmp = cell.getCell();
+						boolean wasSelected = graph.isCellSelected(tmp);
+						selectCellForEvent(tmp, e);
+						focus = cell;
+						if (wasSelected && graph.isCellSelected(tmp)) {
+							Object root =
+								((DefaultMutableTreeNode) tmp).getRoot();
+							selectCellForEvent(root, e);
+							focus = graphLayoutCache.getMapping(root, false);
+						}
+					}
+//					if (handler != marquee)
+						marquee.mouseReleased(e);
+				}
+			} finally {
+				handler = null;
+				cell = null;
+			}
+		}
+		
+	/*	public void mouseReleased(MouseEvent e) {
+			try {
+				if (e != null && !e.isConsumed()) {
 					if (this.cell != null) {
 						Object tmp = this.cell.getCell();
 						boolean wasSelected = SchemeGraphUI.this.graph.isCellSelected(tmp);
@@ -253,7 +258,7 @@ public class SchemeGraphUI extends GPGraphUI {
 					
 					if (this.handler == SchemeGraphUI.this.marquee) {
 						marquee.mouseReleased(e);
-					} else if (this.handler == SchemeGraphUI.this.handle && handle != null) {
+					} else if (this.handler == SchemeGraphUI.this.handle && SchemeGraphUI.this.handle != null) {
 						SchemeGraphUI.this.handle.mouseReleased(e);
 					}
 					
@@ -267,7 +272,7 @@ public class SchemeGraphUI extends GPGraphUI {
 				this.handler = null;
 				this.cell = null;
 			}
-		}
+		}*/
 	}
 
 	public class SchemeRootHandle extends BasicGraphUI.RootHandle {

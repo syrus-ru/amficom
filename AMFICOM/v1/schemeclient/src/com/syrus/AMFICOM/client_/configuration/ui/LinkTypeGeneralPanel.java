@@ -1,5 +1,5 @@
 /*
- * $Id: LinkTypeGeneralPanel.java,v 1.6 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: LinkTypeGeneralPanel.java,v 1.7 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -281,7 +281,7 @@ public class LinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 				try {
 					this.linkType = SchemeObjectsFactory.createLinkType(this.tfNameText.getText());
 					apply();
-					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType, SchemeEvent.CREATE_OBJECT));
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType.getId(), SchemeEvent.CREATE_OBJECT));
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.linkType, LinkTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.LINK_TYPE));
 				} 
 				catch (CreateObjectException e) {
@@ -305,6 +305,6 @@ public class LinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
-		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType, SchemeEvent.UPDATE_OBJECT));
+		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType.getId(), SchemeEvent.UPDATE_OBJECT));
 	}
 }

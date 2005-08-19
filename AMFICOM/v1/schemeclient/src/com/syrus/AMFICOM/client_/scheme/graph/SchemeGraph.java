@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.10 2005/08/11 07:27:27 stas Exp $
+ * $Id: SchemeGraph.java,v 1.11 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,23 +28,24 @@ import com.jgraph.graph.GraphConstants;
 import com.jgraph.graph.GraphLayoutCache;
 import com.jgraph.graph.GraphModel;
 import com.jgraph.graph.VertexView;
+import com.jgraph.pad.EllipseCell;
 import com.jgraph.pad.GPGraph;
 import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultPortView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.LinkView;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeEllipseView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/11 07:27:27 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -119,13 +120,11 @@ public class SchemeGraph extends GPGraph {
 
 	@Override
 	protected VertexView createVertexView(Object v, CellMapper cm) {
-		if (v instanceof DeviceCell)
+		if (v instanceof DeviceCell) 		// handle size
 			return new DeviceView(v, this, cm);
-		else if (v instanceof PortCell)
-			return new DefaultPortView(v, this, cm);
-		else if (v instanceof DeviceGroup)
-			return new SchemeVertexView(v, this, cm);
-		return super.createVertexView(v, cm);
+		if (v instanceof EllipseCell || v instanceof TopLevelElement)	//	round view 
+			return new SchemeEllipseView(v, this, cm);
+		return new SchemeVertexView(v, this, cm);	// square view
 	}
 	
 	@Override
@@ -313,7 +312,7 @@ public class SchemeGraph extends GPGraph {
 		return Collections.emptyMap();
 	}
 	
-	public Map<DefaultGraphCell, DefaultGraphCell> copyFromArchivedState(Object s, Point p) {
+	public Map<DefaultGraphCell, DefaultGraphCell> copyFromArchivedState(Object s, Point p, boolean isCenterPoint) {
 		if (s instanceof List) {
 			List v = (List) s;
 			Object[] cells = (Object[]) v.get(0);
@@ -350,28 +349,7 @@ public class SchemeGraph extends GPGraph {
 			getGraphLayoutCache().insert(cloned_cells, viewAttributes, cs, null, null);
 
 			if (p != null) { // переносим вставленный объект в новую точку
-				// Point setpoint = snap(p);
-				// Rectangle rect;
-				// CellView[] cv = getGraphLayoutCache().getMapping(cloned_cells);
-				// //CellView[] cv2 = getGraphLayoutCache().getAllDescendants(cv);
-				// CellView topcv = cv[0];
-				// for (int i = 0; i < cv.length; i++)
-				// if (cv[i] instanceof DeviceView)
-				// {
-				// topcv = cv[i];
-				// break;
-				// }
-				// if (topcv instanceof SchemeVertexView)
-				// rect = ((SchemeVertexView)topcv).getPureBounds();
-				// else
-				// rect = topcv.getBounds();
-				//
-				// p = snap(new Point((int)(p.x / (2 * getScale()) - rect.x / 2),
-				// (int)(p.y / (2 * getScale()) - rect.y / 2)));
-				// //getGraphLayoutCache().update(getGraphLayoutCache().getAllDescendants(cv));
-				// getGraphLayoutCache().setRememberCellViews(false);
-				// getGraphLayoutCache().translateViews(cv, p.x, p.y);
-				// getGraphLayoutCache().update(cv);
+				GraphActions.move(this, cloned_cells, p, isCenterPoint);
 			}
 			return clones;
 		}
@@ -406,7 +384,7 @@ public class SchemeGraph extends GPGraph {
 	public boolean isGridVisibleAtActualSize() {
 		return this.isGridVisibleAtActualSize;
 	}
-	void setGraphChanged(boolean b) {
+	public void setGraphChanged(boolean b) {
 		this.graphChanged = b;
 	}
 	public boolean isGraphChanged() {
@@ -420,5 +398,8 @@ public class SchemeGraph extends GPGraph {
 	}
 	public void setMakeNotifications(boolean make_notifications) {
 		this.make_notifications = make_notifications;
+	}
+	public boolean isMakeNotifications() {
+		return this.make_notifications;
 	}
 }

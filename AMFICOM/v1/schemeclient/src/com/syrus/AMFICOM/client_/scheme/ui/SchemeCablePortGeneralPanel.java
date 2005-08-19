@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.15 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.16 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.16 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -339,6 +339,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
+		super.commitChanges();
 		if (this.schemePort != null && MiscUtil.validName(this.tfNameText.getText())) {
 			this.schemePort.setName(this.tfNameText.getText());
 			this.schemePort.setDescription(this.taDescrArea.getText());
@@ -351,7 +352,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 //					port.setMark(markText.getText());
 //					port.setColor(((Color) colorCombo.getSelectedItem()).getRGB());
 			}
-			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePort, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePort.getId(), SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }

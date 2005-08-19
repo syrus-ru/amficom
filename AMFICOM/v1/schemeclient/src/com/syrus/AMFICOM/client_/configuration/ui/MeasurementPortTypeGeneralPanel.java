@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.21 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.22 2005/08/19 15:41:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.22 $, $Date: 2005/08/19 15:41:34 $
  * @module schemeclient
  */
 
@@ -276,12 +276,13 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 	}
 
 	public void commitChanges() {
+		super.commitChanges();
 		if (MiscUtil.validName(this.tfNameText.getText())) {
 			if (this.type == null) {
 				try {
 					this.type = SchemeObjectsFactory.createMeasurementPortType(this.tfNameText.getText());
 					apply();
-					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type, SchemeEvent.CREATE_OBJECT));
+					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type.getId(), SchemeEvent.CREATE_OBJECT));
 					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.type, MeasurementPortTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.MEASUREMENTPORT_TYPE));
 				} 
 				catch (CreateObjectException e) {
@@ -323,7 +324,7 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
-		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type, SchemeEvent.UPDATE_OBJECT));
+		this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.type.getId(), SchemeEvent.UPDATE_OBJECT));
 	}
 	
 	Item createRoot() {

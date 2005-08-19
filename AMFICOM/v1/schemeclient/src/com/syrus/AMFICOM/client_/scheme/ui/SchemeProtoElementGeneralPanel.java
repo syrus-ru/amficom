@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElementGeneralPanel.java,v 1.17 2005/08/08 11:58:08 arseniy Exp $
+ * $Id: SchemeProtoElementGeneralPanel.java,v 1.18 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,8 +62,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/08 11:58:08 $
+ * @author $Author: stas $
+ * @version $Revision: 1.18 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -359,7 +359,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		addToUndoableListener(this.descrArea);
 		
 		for (int i = 0; i < EquipmentTypeCodenames.DEFAULT_CODENAMES.length; i++) {
-			this.codenameCombo.addItem(EquipmentTypeCodenames.DEFAULT_CODENAMES[i]);			
+			this.codenameCombo.addItem(EquipmentTypeCodenames.DEFAULT_CODENAMES[i].stringValue());			
 		}
 		this.codenameCombo.setRenderer(EquipmentTypeCodenames.getListCellRenderer());
 		
@@ -414,7 +414,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 		try {
 			Set<SchemeProtoGroup> groups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			List<SchemeProtoGroup> sortedGroups = new LinkedList<SchemeProtoGroup>(groups);
-			Collections.sort(sortedGroups, new WrapperComparator(SchemeProtoGroupWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
+			Collections.sort(sortedGroups, new WrapperComparator<SchemeProtoGroup>(SchemeProtoGroupWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
 			this.parentCombo.addElements(sortedGroups);
 //			parentCombo.addItem(NON_GROUP_ITEM);
 		} catch (ApplicationException e) {
@@ -471,6 +471,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 	}
 
 	public void commitChanges() {
+		super.commitChanges();
 		if (this.schemeProtoElement != null && MiscUtil.validName(this.nameText.getText())) {
 			this.schemeProtoElement.setName(this.nameText.getText());
 			this.schemeProtoElement.setDescription(this.descrArea.getText());
@@ -493,7 +494,7 @@ public class SchemeProtoElementGeneralPanel extends DefaultStorableObjectEditor 
 			if (parent != null) {
 				this.schemeProtoElement.setParentSchemeProtoGroup((SchemeProtoGroup)parent);	
 			}			
-			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeProtoElement, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemeProtoElement.getId(), SchemeEvent.UPDATE_OBJECT));
 			
 //			try {
 //				StorableObjectPool.delete(schemeProtoElement.getId());

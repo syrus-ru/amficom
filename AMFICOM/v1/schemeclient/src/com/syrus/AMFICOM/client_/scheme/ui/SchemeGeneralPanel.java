@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGeneralPanel.java,v 1.10 2005/08/08 11:58:08 arseniy Exp $
+ * $Id: SchemeGeneralPanel.java,v 1.11 2005/08/19 15:41:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/08/08 11:58:08 $
+ * @author $Author: stas $
+ * @version $Revision: 1.11 $, $Date: 2005/08/19 15:41:35 $
  * @module schemeclient
  */
 
@@ -432,6 +432,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 	}
 
 	public void commitChanges() {
+		super.commitChanges();
 		if (this.scheme != null && MiscUtil.validName(this.tfNameText.getText())) {
 			this.scheme.setName(this.tfNameText.getText());
 			this.scheme.setDescription(this.taDescrArea.getText());
@@ -450,7 +451,7 @@ public class SchemeGeneralPanel extends DefaultStorableObjectEditor {
 			this.scheme.setWidth(((Long)this.tfWidthText.getValue()).intValue() * 4);
 			this.scheme.setHeight(((Long)this.tfHeightText.getValue()).intValue() * 4);
 			
-			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.scheme, SchemeEvent.UPDATE_OBJECT));
+			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.scheme.getId(), SchemeEvent.UPDATE_OBJECT));
 		}
 	}
 }
