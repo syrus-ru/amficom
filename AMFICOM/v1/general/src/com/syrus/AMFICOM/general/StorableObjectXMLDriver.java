@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXMLDriver.java,v 1.31 2005/08/10 07:55:54 bob Exp $
+ * $Id: StorableObjectXMLDriver.java,v 1.32 2005/08/19 14:04:31 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Collection;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -50,11 +49,11 @@ import com.syrus.util.Log;
 /**
  * XML Driver for storable object package, one per package.
  *
- * @version $Revision: 1.31 $, $Date: 2005/08/10 07:55:54 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/19 14:04:31 $
  * @author $Author: bob $
  * @module general
  */
-public class StorableObjectXMLDriver {
+public class StorableObjectXMLDriver extends StorableObjectXMLData {
 
 	private String fileName;
 	private Document doc;
@@ -120,17 +119,6 @@ public class StorableObjectXMLDriver {
 		return map;
 	}
 
-	private StorableObject reflectStorableObject(final Identifier id) throws IllegalDataException {
-		StorableObject storableObject;
-		try {
-			storableObject = StorableObjectPool.getStorableObject(id, true);
-		} catch (ApplicationException e1) {
-			throw new IllegalDataException(
-				"StorableObjectXMLDriver.reflectStorableObject | Caught ApplicationException "
-						+ e1.getMessage());
-		}		
-		return storableObject;
-	}
 
 	private Object parse(final Node node) throws IllegalDataException {
 //		Log.debugMessage("StorableObjectXMLDriver.parse | node name:" +
@@ -172,61 +160,14 @@ public class StorableObjectXMLDriver {
 	private Object getObject(final NodeList childNodes, final String className) throws IllegalDataException {
 		String value = null;
 		/* just simple objects */
-		if (childNodes.getLength() > 1)
+		if (childNodes.getLength() > 1) {
 			throw new IllegalDataException("StorableObjectXMLDriver.getObject | more that one child for : "
 					+ childNodes.item(0).getParentNode().getNodeName());
-		if (childNodes.getLength() == 1)
+		}
+		if (childNodes.getLength() == 1) {
 			value = childNodes.item(0).getNodeValue();
-		Object object = null;
-		if (className.equals(StorableObject.class.getName())) {
-			final Identifier identifier = value != null ? 
-					new Identifier(value) : 
-					Identifier.VOID_IDENTIFIER;
-			object = this.reflectStorableObject(identifier);
-		} else if (className.equals(Identifier.class.getName())) {
-			object = value != null ? 
-					new Identifier(value) : 
-					Identifier.VOID_IDENTIFIER;
-		} else if (className.equals(StorableObjectVersion.class.getName())) {
-			object = new StorableObjectVersion(Long.parseLong(value));
-		} else if (className.equals(DataType.class.getName())) {
-			object = DataType.fromInt(Integer.parseInt(value));
-		} else if (className.equals(Date.class.getName())) {
-			object = new Date(Long.parseLong(value));
-		} else if (className.equals(Short.class.getName())) {
-			final Short short1 = Short.valueOf(value);
-			object = short1;
-		} else if (className.equals(Integer.class.getName())) {
-			final Integer integer = Integer.valueOf(value);
-			object = integer;
-		} else if (className.equals(Long.class.getName())) {
-			Long long1 = Long.valueOf(value);
-			object = long1;
-		} else if (className.equals(Float.class.getName())) {
-			final Float float1 = Float.valueOf(value);
-			object = float1;
-		} else if (className.equals(Double.class.getName())) {
-			final Double double1 = Double.valueOf(value);
-			object = double1;
-		} else if (className.equals(String.class.getName())) {
-			if (value != null)
-				object = value;
-			else
-				object = "";
-		} else if (className.equals(Boolean.class.getName())) {
-			object = new Boolean(value);
-		} else if (className.equals(byte[].class.getName())) {
-			/* if value is null, array is empty */
-			if (value != null) {
-				byte[] bs = new byte[value.length() / 2];
-				for (int j = 0; j < bs.length; j++)
-					bs[j] = (byte) ((char) Integer.parseInt(value.substring(2 * j, 2 * (j + 1)), 16));
-				object = bs;
-			} else
-				object = new byte[0];
-		} else
-			object = value;
-		return object;
+		}
+		return super.getObject(className, value);
 	}
 
 	private void addObject(final Node node, final String key, final Object object) {
@@ -235,91 +176,27 @@ public class StorableObjectXMLDriver {
 			Log.errorMessage("StorableObjectXMLDriver.addObject | key : " + key + " , value is 'null'");
 			return;
 		}
-		String className = object.getClass().getName();		
-		if (object instanceof StorableObject) {
-			final StorableObject storableObject = (StorableObject) object;
-			final String string = storableObject.getId().getIdentifierString();
-			final Text text = this.doc.createTextNode(string);
-			className = StorableObject.class.getName();
-			element.appendChild(text);
-		} else if (object instanceof Identifier) {
-			final Identifier id = (Identifier) object;
-			if (!id.isVoid()) {
-				final String string = id.getIdentifierString();
-				final Text text = this.doc.createTextNode(string);
-				element.appendChild(text);
-			}
-		} else if (object instanceof StorableObjectVersion) {
-			final StorableObjectVersion version = (StorableObjectVersion) object;
-			final String string = Long.toString(version.longValue());
-			final Text text = this.doc.createTextNode(string);
-			element.appendChild(text);
-		} else if (object instanceof DataType) {
-			final DataType dataType = (DataType) object;
-			final Text text = this.doc.createTextNode(Integer.toString(dataType.getCode()));
-			element.appendChild(text);
-		} else if (object instanceof Date) {
-			final Date date = (Date) object;
-			final Text text = this.doc.createTextNode(Long.toString(date.getTime()));
-			element.appendChild(text);
-		} else if (object instanceof Boolean) {
-			final Boolean boolean1 = (Boolean) object;
-			final Text text = this.doc.createTextNode(boolean1.toString());
-			element.appendChild(text);
-		} else if (object instanceof Integer) {
-			final Integer integer = (Integer) object;
-			final Text text = this.doc.createTextNode(integer.toString());
-			element.appendChild(text);
-		} else if (object instanceof Short) {
-			final Short short1 = (Short) object;
-			final Text text = this.doc.createTextNode(short1.toString());
-			element.appendChild(text);
-		} else if (object instanceof Long) {
-			final Long long1 = (Long) object;
-			final Text text = this.doc.createTextNode(long1.toString());
-			element.appendChild(text);
-		} else if (object instanceof Float) {
-			final Float float1 = (Float) object;
-			final Text text = this.doc.createTextNode(float1.toString());
-			element.appendChild(text);
-		} else if (object instanceof Double) {
-			final Double double1 = (Double) object;
-			final Text text = this.doc.createTextNode(double1.toString());
-			element.appendChild(text);
-		} else if (object instanceof String) {
-			final String string = (String) object;
-			final Text text = this.doc.createTextNode(string);
-			element.appendChild(text);
-		} else if (object instanceof byte[]) {
-			final byte[] bs = (byte[]) object;
-			final StringBuffer buffer = new StringBuffer();
-			for (int j = 0; j < bs.length; j++) {
-				final String s = Integer.toString(bs[j] & 0xFF, 16);
-				buffer.append((s.length() == 1 ? "0" : "") + s);
-			}
-			final Text text = this.doc.createTextNode(buffer.toString());
-			element.appendChild(text);
-		} else if (object instanceof Collection) {
+		
+		final String className = super.getClassName(object);		
+		if (object instanceof Collection) {
 			/* TODO replace for java.util.Set*/
 			final Collection<?> collection = (Collection) object;
-			className = Collection.class.getName();
 			final Set<Object> set = new HashSet<Object>(collection);
 			for (final Iterator it = set.iterator(); it.hasNext();) {
 				this.addObject(element, key + "item", it.next());
 			}
 		} else if (object instanceof Map) {
 			final Map map = (Map) object;
-			className = Map.class.getName();
 			for (final Iterator it = map.keySet().iterator(); it.hasNext();) {
 				final String key2 = (String) it.next();
 				this.addObject(element, key2, map.get(key2));
 			}
 		} else {
-			Log.errorMessage("StorableObjectXMLDriver.addObject | unsupported class value : "
-					+ object.getClass().getName());
-			final String string = object.toString();
-			final Text text = this.doc.createTextNode(string);
-			element.appendChild(text);
+			String value = super.getValue(object);
+			if (value != null) {
+				final Text text = this.doc.createTextNode(value);
+				element.appendChild(text);
+			}
 		}
 		element.setAttribute("className", className);
 		node.appendChild(element);
@@ -426,5 +303,15 @@ public class StorableObjectXMLDriver {
 		} catch (FileNotFoundException e) {
 			Log.errorMessage("StorableObjectXMLDriver.writeXmlFile | Caught " + e.getMessage());
 		}
+	}
+
+	
+	public final String getPackageName() {
+		return this.packageName;
+	}
+
+	
+	public final Document getDoc() {
+		return this.doc;
 	}
 }
