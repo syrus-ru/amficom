@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.17 2005/08/12 14:49:19 bob Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.18 2005/08/19 14:01:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
@@ -52,8 +51,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/12 14:49:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.18 $, $Date: 2005/08/19 14:01:33 $
+ * @author $Author: arseniy $
  * @module general
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -82,9 +81,6 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case CHARACTERISTIC_CODE:
 				final Characteristic characteristic = (Characteristic) storableObject;
 				switch (this.linkedEntityCode) {
-
-					/* General */
-					case PARAMETER_TYPE_CODE:
 
 					/* Administration */
 					case SYSTEMUSER_CODE:

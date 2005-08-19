@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.76 2005/08/12 14:49:19 bob Exp $
+ * $Id: ObjectEntities.java,v 1.77 2005/08/19 14:01:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/08/12 14:49:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.77 $, $Date: 2005/08/19 14:01:33 $
+ * @author $Author: arseniy $
  * @module general
  */
 public final class ObjectEntities {
@@ -23,7 +23,6 @@ public final class ObjectEntities {
 	public static final String UNKNOWN = null;
 
 	/*	Object Types	*/
-	public static final String PARAMETER_TYPE = "ParameterType";
 	public static final String CHARACTERISTIC_TYPE = "CharacteristicType";
 
 	public static final String EVENT_TYPE = "EventType";
@@ -164,7 +163,6 @@ public final class ObjectEntities {
 
 	public static final short CHARACTERISTIC_CODE = GENERAL_MIN_CODE;
 
-	public static final short PARAMETER_TYPE_CODE = 0x0061;
 	public static final short CHARACTERISTIC_TYPE_CODE = 0x0062;
 
 	public static final short GENERAL_MAX_CODE = 0x0080;
@@ -342,7 +340,6 @@ public final class ObjectEntities {
 	}
 
 	private static void registerEntities() {
-		registerEntity(PARAMETER_TYPE_CODE, PARAMETER_TYPE);
 		registerEntity(CHARACTERISTIC_TYPE_CODE, CHARACTERISTIC_TYPE);
 
 		registerEntity(EVENT_TYPE_CODE, EVENT_TYPE);

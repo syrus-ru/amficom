@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.28 2005/08/12 14:49:19 bob Exp $
+ * $Id: ObjectGroupEntities.java,v 1.29 2005/08/19 14:01:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/08/12 14:49:19 $
- * @author $Author: bob $
+ * @version $Revision: 1.29 $, $Date: 2005/08/19 14:01:33 $
+ * @author $Author: arseniy $
  * @module general
  */
 public final class ObjectGroupEntities {
@@ -62,24 +62,15 @@ public final class ObjectGroupEntities {
 	}
 
 	private static void registerGroups() {
-		registerGroup(GENERAL_GROUP_CODE, 
-			GENERAL_GROUP,
-			new short[] { PARAMETER_TYPE_CODE, 
-				CHARACTERISTIC_TYPE_CODE, 
-				CHARACTERISTIC_CODE });
-		registerGroup(EVENT_GROUP_CODE, 
-			EVENT_GROUP,
-			new short[] { EVENT_TYPE_CODE, 
-				EVENTSOURCE_CODE, EVENT_CODE });
-		registerGroup(ADMINISTRATION_GROUP_CODE, 
-			ADMINISTRATION_GROUP,
-			new short[] { SYSTEMUSER_CODE, DOMAIN_CODE, 
-				SERVER_CODE, MCM_CODE, 
-				SERVERPROCESS_CODE, 
+		registerGroup(GENERAL_GROUP_CODE, GENERAL_GROUP, new short[] { CHARACTERISTIC_TYPE_CODE, CHARACTERISTIC_CODE });
+		registerGroup(EVENT_GROUP_CODE, EVENT_GROUP, new short[] { EVENT_TYPE_CODE, EVENTSOURCE_CODE, EVENT_CODE });
+		registerGroup(ADMINISTRATION_GROUP_CODE, ADMINISTRATION_GROUP, new short[] { SYSTEMUSER_CODE,
+				DOMAIN_CODE,
+				SERVER_CODE,
+				MCM_CODE,
+				SERVERPROCESS_CODE,
 				PERMATTR_CODE });
-		registerGroup(CONFIGURATION_GROUP_CODE, 
-			CONFIGURATION_GROUP,
-			new short[] { EQUIPMENT_TYPE_CODE,
+		registerGroup(CONFIGURATION_GROUP_CODE, CONFIGURATION_GROUP, new short[] { EQUIPMENT_TYPE_CODE,
 				PORT_TYPE_CODE,
 				MEASUREMENTPORT_TYPE_CODE,
 				TRANSPATH_TYPE_CODE,
@@ -95,9 +86,7 @@ public final class ObjectGroupEntities {
 				LINK_CODE,
 				CABLELINK_CODE,
 				CABLETHREAD_CODE });
-		registerGroup(MEASUREMENT_GROUP_CODE, 
-			MEASUREMENT_GROUP,
-			new short[] { MEASUREMENT_TYPE_CODE,
+		registerGroup(MEASUREMENT_GROUP_CODE, MEASUREMENT_GROUP, new short[] { MEASUREMENT_TYPE_CODE,
 				ANALYSIS_TYPE_CODE,
 				EVALUATION_TYPE_CODE,
 				MODELING_TYPE_CODE,
@@ -112,9 +101,7 @@ public final class ObjectGroupEntities {
 				CRONTEMPORALPATTERN_CODE,
 				INTERVALSTEMPORALPATTERN_CODE,
 				PERIODICALTEMPORALPATTERN_CODE });
-		registerGroup(SCHEME_GROUP_CODE, 
-			SCHEME_GROUP,
-			new short[] { CABLECHANNELINGITEM_CODE,
+		registerGroup(SCHEME_GROUP_CODE, SCHEME_GROUP, new short[] { CABLECHANNELINGITEM_CODE,
 				PATHELEMENT_CODE,
 				SCHEME_CODE,
 				SCHEMECABLELINK_CODE,
@@ -131,9 +118,7 @@ public final class ObjectGroupEntities {
 				SCHEMEPORT_CODE,
 				SCHEMEPROTOELEMENT_CODE,
 				SCHEMEPROTOGROUP_CODE });
-		registerGroup(MAP_GROUP_CODE, 
-			MAP_GROUP,
-			new short[] { SITENODE_TYPE_CODE,
+		registerGroup(MAP_GROUP_CODE, MAP_GROUP, new short[] { SITENODE_TYPE_CODE,
 				PHYSICALLINK_TYPE_CODE,
 				SITENODE_CODE,
 				TOPOLOGICALNODE_CODE,
@@ -143,12 +128,8 @@ public final class ObjectGroupEntities {
 				COLLECTOR_CODE,
 				MAP_CODE,
 				MAPLIBRARY_CODE });
-		registerGroup(RESOURCE_GROUP_CODE, 
-			RESOURCE_GROUP,
-			new short[] { IMAGERESOURCE_CODE, LAYOUT_ITEM_CODE });
-		registerGroup(MAPVIEW_GROUP_CODE, 
-			MAPVIEW_GROUP,
-			new short[] { MAPVIEW_CODE });
+		registerGroup(RESOURCE_GROUP_CODE, RESOURCE_GROUP, new short[] { IMAGERESOURCE_CODE, LAYOUT_ITEM_CODE });
+		registerGroup(MAPVIEW_GROUP_CODE, MAPVIEW_GROUP, new short[] { MAPVIEW_CODE });
 	}
 
 	private static void registerGroup(final short groupCode,

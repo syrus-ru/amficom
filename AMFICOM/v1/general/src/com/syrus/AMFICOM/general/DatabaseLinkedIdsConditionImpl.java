@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.13 2005/07/17 05:17:13 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.14 2005/08/19 14:01:33 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
@@ -47,7 +46,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/07/17 05:17:13 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/19 14:01:33 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -62,9 +61,6 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 		switch (super.condition.getEntityCode().shortValue()) {
 			case CHARACTERISTIC_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-
-					/* General */
-					case PARAMETER_TYPE_CODE:
 
 					/* Administration */
 					case SYSTEMUSER_CODE:
