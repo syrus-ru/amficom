@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.50 2005/08/18 14:13:00 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.51 2005/08/19 12:51:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -81,7 +81,7 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
  * 
  * 
  * 
- * @version $Revision: 1.50 $, $Date: 2005/08/18 14:13:00 $
+ * @version $Revision: 1.51 $, $Date: 2005/08/19 12:51:41 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -122,6 +122,8 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW, true);
 	}
 
@@ -285,16 +287,8 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 						this.aContext,
 						new MapMapEditorApplicationModelFactory()));
           
-		CreateMapReportCommand rc = new CreateMapReportCommand(this.aContext);
-		aModel.setCommand(MapEditorApplicationModel.ITEM_REPORT_CREATE, rc);
-
-//		aModel.setCommand("menuReportOpen", new CreateMapReportCommand(this.aContext));
-
-//		if (ClientSessionEnvironment.getInstance().sessionEstablished()) {
-//            this.internalDispatcher.firePropertyChange(new ContextChangeEvent(
-//					this,
-//					ContextChangeEvent.SESSION_OPENED_EVENT), true);
-//		}
+		aModel.setCommand(MapEditorApplicationModel.ITEM_REPORT_CREATE, 
+				new CreateMapReportCommand(this.aContext));
 	}
 
 	@Override
@@ -303,8 +297,10 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		if(this.aContext != null)
 			if(this.aContext.getDispatcher() != null)
 			{
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
-				this.aContext.getDispatcher().removePropertyChangeListener(MapEditorWindowArranger.EVENT_ARRANGE, this);				
+				this.aContext.getDispatcher().removePropertyChangeListener(
+						MapEvent.MAP_EVENT_TYPE, this);
+				this.aContext.getDispatcher().removePropertyChangeListener(
+						MapEditorWindowArranger.EVENT_ARRANGE, this);				
 				this.statusBar.removeDispatcher(this.aContext.getDispatcher());
 			}
 
@@ -312,8 +308,10 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		{
 			super.setContext(aContext);
 
-			aContext.getDispatcher().addPropertyChangeListener(MapEvent.MAP_EVENT_TYPE, this);
-			aContext.getDispatcher().addPropertyChangeListener(MapEditorWindowArranger.EVENT_ARRANGE, this);			
+			aContext.getDispatcher().addPropertyChangeListener(
+					MapEvent.MAP_EVENT_TYPE, this);
+			aContext.getDispatcher().addPropertyChangeListener(
+					MapEditorWindowArranger.EVENT_ARRANGE, this);			
 		}
 	}
 
@@ -321,9 +319,8 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 	public void propertyChange(PropertyChangeEvent pce)
 	{
 		super.propertyChange(pce);
-		if (		(pce.getPropertyName().equals(MapEditorWindowArranger.EVENT_ARRANGE))
-				&&	(pce.getSource().equals(this.desktopPane)))
-		{
+		if ((pce.getPropertyName().equals(MapEditorWindowArranger.EVENT_ARRANGE))
+				&&	(pce.getSource().equals(this.desktopPane))) {
 			this.windowArranger.arrange();
 		}
 		if(pce.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
@@ -348,7 +345,19 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, true);
-	
+
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS, true);
+				
 				aModel.fireModelChanged();
 				setTitle(LangModelMap.getString("MapView") + ": " + ((MapView )pce.getNewValue()).getName());
 			}
@@ -427,6 +436,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT, true);
 
@@ -435,6 +445,18 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_IMPORT, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN, true);
+
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS, true);
 
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_PROPERTIES, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_GENERAL, true);
