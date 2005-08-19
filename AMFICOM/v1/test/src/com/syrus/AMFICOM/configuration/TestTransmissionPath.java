@@ -1,5 +1,5 @@
 /*
- * $Id: TestTransmissionPath.java,v 1.5 2005/06/30 16:14:58 arseniy Exp $
+ * $Id: TestTransmissionPath.java,v 1.6 2005/08/19 15:55:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/06/30 16:14:58 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/19 15:55:21 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -60,6 +60,6 @@ public class TestTransmissionPath extends TestCase {
 				startPort.getId(),
 				finishPort.getId());
 
-		StorableObjectPool.flush(transmissionPath, true);
+		StorableObjectPool.flush(transmissionPath, DatabaseCommonTest.getSysUser().getId(), true);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCommonTest.java,v 1.6 2005/08/18 10:51:47 arseniy Exp $
+ * $Id: DatabaseCommonTest.java,v 1.7 2005/08/19 15:55:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -67,7 +67,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroupDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/18 10:51:47 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/19 15:55:21 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -93,7 +93,6 @@ public class DatabaseCommonTest extends SQLCommonTest {
 	}
 
 	private static void initDatabaseContext() {
-		DatabaseContext.registerDatabase(new ParameterTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicDatabase());
 

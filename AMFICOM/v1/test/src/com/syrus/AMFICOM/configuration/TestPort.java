@@ -1,5 +1,5 @@
 /*
- * $Id: TestPort.java,v 1.1 2005/06/30 16:14:17 arseniy Exp $
+ * $Id: TestPort.java,v 1.2 2005/08/19 15:55:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,6 +41,6 @@ public final class TestPort extends TestCase {
 
 		Port.createInstance(DatabaseCommonTest.getSysUser().getId(), portType, "port 1", equipment.getId());
 		Port.createInstance(DatabaseCommonTest.getSysUser().getId(), portType, "port 2", equipment.getId());
-		StorableObjectPool.flush(ObjectEntities.PORT_CODE, false);
+		StorableObjectPool.flush(ObjectEntities.PORT_CODE, DatabaseCommonTest.getSysUser().getId(), false);
 	}
 }

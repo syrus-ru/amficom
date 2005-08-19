@@ -1,5 +1,5 @@
 /*
- * $Id: TestInitialSetup.java,v 1.5 2005/08/19 15:55:21 arseniy Exp $
+ * $Id: TestInitialSetup.java,v 1.6 2005/08/19 15:57:33 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,12 +31,12 @@ import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.SQLCommonTest;
 import com.syrus.AMFICOM.general.TestDataType;
 import com.syrus.AMFICOM.general.TestMeasurementUnit;
-import com.syrus.AMFICOM.general.TestParameterTypeEnum;
+import com.syrus.AMFICOM.general.TestParameterType;
 import com.syrus.AMFICOM.measurement.TestAnalysisType;
 import com.syrus.AMFICOM.measurement.TestMeasurementType;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/19 15:55:21 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/19 15:57:33 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -59,7 +59,7 @@ public final class TestInitialSetup extends TestCase {
 		sqlCommonTest.addTest(new TestMeasurementUnit("testCreate"));
 
 		//-4.Create parameter types
-		sqlCommonTest.addTest(new TestParameterTypeEnum("testCreate"));
+		sqlCommonTest.addTest(new TestParameterType("testCreate"));
 
 		final DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
 

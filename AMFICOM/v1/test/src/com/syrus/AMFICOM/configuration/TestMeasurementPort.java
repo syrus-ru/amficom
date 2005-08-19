@@ -1,5 +1,5 @@
 /*
- * $Id: TestMeasurementPort.java,v 1.1 2005/07/01 13:27:27 arseniy Exp $
+ * $Id: TestMeasurementPort.java,v 1.2 2005/08/19 15:55:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -48,6 +48,6 @@ public final class TestMeasurementPort extends TestCase {
 				"Порт 1 на оптическом переключателе",
 				kis.getId(),
 				port.getId());
-		StorableObjectPool.flush(measurementPort, true);
+		StorableObjectPool.flush(measurementPort, DatabaseCommonTest.getSysUser().getId(), true);
 	}
 }

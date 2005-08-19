@@ -1,5 +1,5 @@
 /*
- * $Id: TestAnalysisType.java,v 1.6 2005/07/15 12:05:25 arseniy Exp $
+ * $Id: TestAnalysisType.java,v 1.7 2005/08/19 15:55:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -20,14 +21,10 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ParameterTypeCodename;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/15 12:05:25 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/19 15:55:21 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -44,86 +41,73 @@ public class TestAnalysisType extends TestCase {
 	}
 
 	public void testCreateInstance() throws ApplicationException {
-		AnalysisType analysisType = AnalysisType.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		final AnalysisType analysisType = AnalysisType.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				AnalysisType.CODENAME_DADARA,
 				"Анализ рефлектограмм",
-				Collections.<Identifier> emptySet(),
-				Collections.<Identifier> emptySet(),
-				Collections.<Identifier> emptySet(),
-				Collections.<Identifier> emptySet(),
+				Collections.<ParameterType> emptySet(),
+				Collections.<ParameterType> emptySet(),
+				Collections.<ParameterType> emptySet(),
+				Collections.<ParameterType> emptySet(),
 				Collections.<Identifier> emptySet());
-		StorableObjectPool.flush(analysisType, false);
+		StorableObjectPool.flush(analysisType, DatabaseCommonTest.getSysUser().getId(), false);
 	}
 
 	public void testChangeParameterTypes() throws ApplicationException {
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.ANALYSIS_TYPE_CODE);
-		AnalysisType analysisType = (AnalysisType) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
+		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.ANALYSIS_TYPE_CODE);
+		final AnalysisType analysisType = (AnalysisType) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 		System.out.println("Analysis type: '" + analysisType.getId() + "'");
 
-		Set<Identifier> inParTypIds = analysisType.getInParameterTypeIds();
-		for (Iterator it = inParTypIds.iterator(); it.hasNext();) {
-			System.out.println("IN: '" + it.next() + "'");
+		Set<ParameterType> inParTypes = analysisType.getInParameterTypes();
+		for (final ParameterType parameterType : inParTypes) {
+			System.out.println("IN: '" + parameterType.getCodename() + "', '" + parameterType.getDescription() + "'");
 		}
-		Set<Identifier> criParTypIds = analysisType.getCriteriaParameterTypeIds();
-		for (Iterator it = criParTypIds.iterator(); it.hasNext();) {
-			System.out.println("CRI: '" + it.next() + "'");
+		Set<ParameterType> criParTypes = analysisType.getCriteriaParameterTypes();
+		for (final ParameterType parameterType : criParTypes) {
+			System.out.println("CRI: '" + parameterType.getCodename() + "', '" + parameterType.getDescription() + "'");
 		}
-		Set<Identifier> etaParTypIds = analysisType.getEtalonParameterTypeIds();
-		for (Iterator it = etaParTypIds.iterator(); it.hasNext();) {
-			System.out.println("ETA: '" + it.next() + "'");
+		Set<ParameterType> etaParTypes = analysisType.getEtalonParameterTypes();
+		for (final ParameterType parameterType : etaParTypes) {
+			System.out.println("ETA: '" + parameterType.getCodename() + "', '" + parameterType.getDescription() + "'");
 		}
-		Set<Identifier> outParTypIds = analysisType.getOutParameterTypeIds();
-		for (Iterator it = outParTypIds.iterator(); it.hasNext();) {
-			System.out.println("OUT: '" + it.next() + "'");
+		Set<ParameterType> outParTypes = analysisType.getOutParameterTypes();
+		for (final ParameterType parameterType : outParTypes) {
+			System.out.println("OUT: '" + parameterType.getCodename() + "', '" + parameterType.getDescription() + "'");
 		}
+
 		Set<Identifier> measTypIds = analysisType.getMeasurementTypeIds();
 		for (Iterator it = measTypIds.iterator(); it.hasNext();) {
 			System.out.println("MT: '" + it.next() + "'");
 		}
 
-		ec = new EquivalentCondition(ObjectEntities.PARAMETER_TYPE_CODE);
-		final Set<ParameterType> parameterTypes = StorableObjectPool.getStorableObjectsByCondition(ec, true);
-		final Set<Identifier> parameterTypeIds = Identifier.createIdentifiers(parameterTypes);
-		for (final Identifier id : parameterTypeIds) {
-			System.out.println("Loaded: '" + id + "'");
-		}
-
-		TypicalCondition tc = new TypicalCondition(ParameterTypeCodename.REFLECTOGRAMMA.stringValue(),
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETER_TYPE_CODE,
-				StorableObjectWrapper.COLUMN_CODENAME);
-		inParTypIds = Collections.singleton(((ParameterType) StorableObjectPool.getStorableObjectsByCondition(tc, true).iterator().next()).getId());
-		criParTypIds = Collections.emptySet();
-		etaParTypIds = Collections.emptySet();
-		outParTypIds = Collections.emptySet();
-//		Iterator it = parameterTypeIds.iterator();
-//		int i;
-//
-//		inParTypIds = new HashSet(inParTypIds);
-//		i = 0;
-//		for (; it.hasNext() && i < 3; i++)
-//			inParTypIds.add(it.next());
-//		criParTypIds = new HashSet(criParTypIds);
-//		i = 0;
-//		for (; it.hasNext() && i < 3; i++)
-//			criParTypIds.add(it.next());
-//		etaParTypIds = new HashSet(etaParTypIds);
-//		i = 0;
-//		for (; it.hasNext() && i < 3; i++)
-//			etaParTypIds.add(it.next());
-//		outParTypIds = new HashSet(outParTypIds);
-//		i = 0;
-//		for (; it.hasNext() && i < 3; i++)
-//			outParTypIds.add(it.next());
+		inParTypes = new HashSet<ParameterType>();
+		inParTypes.add(ParameterType.REFLECTOGRAMMA);
+		inParTypes.remove(ParameterType.DADARA_ALARMS);
+		criParTypes = new HashSet<ParameterType>();
+		criParTypes.add(ParameterType.DADARA_CRITERIA);
+		etaParTypes = new HashSet<ParameterType>();
+		etaParTypes.add(ParameterType.DADARA_ETALON);
+		outParTypes = new HashSet<ParameterType>();
+		outParTypes.add(ParameterType.DADARA_ANALYSIS_RESULT);
+		outParTypes.add(ParameterType.DADARA_ALARMS);
 		
-		analysisType.setInParameterTypeIds(inParTypIds);
-		analysisType.setCriteriaParameterTypeIds(criParTypIds);
-		analysisType.setEtalonParameterTypeIds(etaParTypIds);
-		analysisType.setOutParameterTypeIds(outParTypIds);
+		analysisType.setInParameterTypes(inParTypes);
+		analysisType.setCriteriaParameterTypes(criParTypes);
+		analysisType.setEtalonParameterTypes(etaParTypes);
+		analysisType.setOutParameterTypes(outParTypes);
 
-		measTypIds = Collections.singleton(new Identifier("MeasurementType_19"));
-		analysisType.setMeasurementTypeIds(measTypIds);
+		StorableObjectPool.flush(analysisType, DatabaseCommonTest.getSysUser().getId(), true);
+	}
 
-		StorableObjectPool.flush(analysisType.getId(), true);
+	public void testChangeMeasurementTypes() throws ApplicationException {
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.ANALYSIS_TYPE_CODE);
+		final AnalysisType analysisType = (AnalysisType) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
+		System.out.println("Analysis type: '" + analysisType.getId() + "'");
+
+		ec = new EquivalentCondition(ObjectEntities.MEASUREMENT_TYPE_CODE);
+		final MeasurementType measurementType = (MeasurementType) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
+
+		analysisType.setMeasurementTypeIds(Collections.singleton(measurementType.getId()));
+
+		StorableObjectPool.flush(analysisType, DatabaseCommonTest.getSysUser().getId(), true);
 	}
 }

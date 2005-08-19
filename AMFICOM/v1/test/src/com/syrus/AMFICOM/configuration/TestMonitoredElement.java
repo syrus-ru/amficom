@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.8 2005/07/17 05:26:21 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.9 2005/08/19 15:55:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/07/17 05:26:21 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/19 15:55:21 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -38,7 +38,7 @@ public class TestMonitoredElement extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testCreate() throws ApplicationException {
+	public void testCreateInstance() throws ApplicationException {
 		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_CODE);
 		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final MeasurementPort measurementPort = (MeasurementPort) it.next();
@@ -61,7 +61,7 @@ public class TestMonitoredElement extends TestCase {
 				localAddress,
 				Collections.singleton(transmissionPath.getId()));
 
-		StorableObjectPool.flush(ObjectEntities.MONITOREDELEMENT_CODE, false);
+		StorableObjectPool.flush(ObjectEntities.MONITOREDELEMENT_CODE, DatabaseCommonTest.getSysUser().getId(), false);
 	}
 
 

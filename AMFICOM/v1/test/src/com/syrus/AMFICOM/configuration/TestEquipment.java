@@ -1,5 +1,5 @@
 /*
- * $Id: TestEquipment.java,v 1.2 2005/08/01 12:21:35 arseniy Exp $
+ * $Id: TestEquipment.java,v 1.3 2005/08/19 15:55:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ public final class TestEquipment extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void _testCreateInstance() throws ApplicationException {
+	public void testCreateInstance() throws ApplicationException {
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
 		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final EquipmentType equipmentType = (EquipmentType) it.next();
@@ -45,7 +45,7 @@ public final class TestEquipment extends TestCase {
 				domain.getId(),
 				equipmentType,
 				"Рефлектометр",
-				"Рефлектометр QP1640",
+				"Рефлектометр QP1640MR",
 				Identifier.VOID_IDENTIFIER,
 				"Nettest",
 				"Nettest",
@@ -57,14 +57,6 @@ public final class TestEquipment extends TestCase {
 				"4444",
 				"5555");
 
-		StorableObjectPool.flush(equipment, DatabaseCommonTest.getSysUser().getId(), false);
-	}
-
-	public void testUpdate() throws ApplicationException {
-		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.EQUIPMENT_CODE);
-		final Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
-		final Equipment equipment = (Equipment) it.next();
-		equipment.setDescription("Рефлектометр QP1640A");
 		StorableObjectPool.flush(equipment, DatabaseCommonTest.getSysUser().getId(), false);
 	}
 }

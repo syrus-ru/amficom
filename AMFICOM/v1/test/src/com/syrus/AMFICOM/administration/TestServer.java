@@ -1,5 +1,5 @@
 /*
- * $Id: TestServer.java,v 1.6 2005/08/18 10:53:04 arseniy Exp $
+ * $Id: TestServer.java,v 1.7 2005/08/19 15:55:21 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/18 10:53:04 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/19 15:55:21 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -54,7 +54,7 @@ public final class TestServer extends TestCase {
 		StorableObjectPool.flush(server, DatabaseCommonTest.getSysUser().getId(), true);
 	}
 
-	public void testRetrieve() throws ApplicationException {
+	public void _testRetrieve() throws ApplicationException {
 		final Server server = new Server(new Identifier("Server_30"));
 		System.out.println("Retrieved: " + server.getHostName());
 		final Set<Characteristic> characteristics = server.getCharacteristics(true);
