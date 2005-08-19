@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlModelingTypeImpl.java,v 1.4 2005/08/19 14:19:04 arseniy Exp $
+ * $Id: IdlModelingTypeImpl.java,v 1.5 2005/08/19 16:33:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,14 @@ import static java.util.logging.Level.SEVERE;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlParameterTypeEnum;
+import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.measurement.ModelingType;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/19 14:19:04 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/19 16:33:03 $
  * @module measurement
  */
 final class IdlModelingTypeImpl extends IdlModelingType {
@@ -38,8 +38,8 @@ final class IdlModelingTypeImpl extends IdlModelingType {
 			final long version,
 			final String codename,
 			final String description,
-			final IdlParameterTypeEnum inParameterTypes[],
-			final IdlParameterTypeEnum outParameterTypes[]) {
+			final IdlParameterType inParameterTypes[],
+			final IdlParameterType outParameterTypes[]) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;

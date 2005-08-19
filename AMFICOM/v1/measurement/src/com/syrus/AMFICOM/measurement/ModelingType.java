@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.50 2005/08/19 15:51:01 arseniy Exp $
+ * $Id: ModelingType.java,v 1.51 2005/08/19 16:33:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,13 +31,13 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlParameterTypeEnum;
+import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingTypeHelper;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/08/19 15:51:01 $
+ * @version $Revision: 1.51 $, $Date: 2005/08/19 16:33:03 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -181,8 +181,8 @@ public final class ModelingType extends ActionType {
 	public IdlModelingType getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		final IdlParameterTypeEnum[] inParTypes = ParameterType.createTransferables(this.inParameterTypes, orb);
-		final IdlParameterTypeEnum[] outParTypes = ParameterType.createTransferables(this.outParameterTypes, orb);
+		final IdlParameterType[] inParTypes = ParameterType.createTransferables(this.inParameterTypes, orb);
+		final IdlParameterType[] outParTypes = ParameterType.createTransferables(this.outParameterTypes, orb);
 
 		return IdlModelingTypeHelper.init(orb,
 				this.id.getTransferable(),

@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEvaluationTypeImpl.java,v 1.4 2005/08/19 14:19:04 arseniy Exp $
+ * $Id: IdlEvaluationTypeImpl.java,v 1.5 2005/08/19 16:33:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,14 +13,14 @@ import static java.util.logging.Level.SEVERE;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlParameterTypeEnum;
+import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/19 14:19:04 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/19 16:33:03 $
  * @module measurement
  */
 final class IdlEvaluationTypeImpl extends IdlEvaluationType {
@@ -38,10 +38,10 @@ final class IdlEvaluationTypeImpl extends IdlEvaluationType {
 			final long version,
 			final String codename,
 			final String description,
-			final IdlParameterTypeEnum inParameterTypes[],
-			final IdlParameterTypeEnum thresholdParameterTypes[],
-			final IdlParameterTypeEnum etalonParameterTypes[],
-			final IdlParameterTypeEnum outParameterTypes[],
+			final IdlParameterType inParameterTypes[],
+			final IdlParameterType thresholdParameterTypes[],
+			final IdlParameterType etalonParameterTypes[],
+			final IdlParameterType outParameterTypes[],
 			final IdlIdentifier measurementTypeIds[]) {
 		this.id = id;
 		this.created = created;
