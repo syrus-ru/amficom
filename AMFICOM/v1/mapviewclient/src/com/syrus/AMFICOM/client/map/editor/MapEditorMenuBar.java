@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.22 2005/08/18 14:14:20 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.23 2005/08/19 12:50:56 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель меню модуля "Редактор топологических схем".
- * @version $Revision: 1.22 $, $Date: 2005/08/18 14:14:20 $
+ * @version $Revision: 1.23 $, $Date: 2005/08/19 12:50:56 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -200,9 +200,9 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		menuMapLibraryRemoveLinkType.setName(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE);
 		menuMapLibraryRemoveLinkType.addActionListener(super.actionAdapter);
 		
-//		menuReport.setText(LangModelGeneral.getString("label_report"));
+		menuReport.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_REPORT));
 		menuReport.setName(MapEditorApplicationModel.ITEM_REPORT);
-//		menuReportCreate.setText(LangModelGeneral.getString("label_reportForTemplate"));
+		menuReportCreate.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_REPORT_CREATE));
 		menuReportCreate.setName(MapEditorApplicationModel.ITEM_REPORT_CREATE);
 		menuReportCreate.addActionListener(super.actionAdapter);
 		menuReport.add(menuReportCreate);
