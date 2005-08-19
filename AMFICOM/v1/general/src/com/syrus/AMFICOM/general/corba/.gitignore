@@ -8,7 +8,7 @@ IdVersion.java
 CommonServer.java
 IdlDataType.java
 IdlMeasurementUnit.java
-IdlParameterTypeEnum.java
+IdlParameterType.java
 IdentifierGeneratorServer.java
 IdlCharacteristic.java
 IdlCharacteristicType.java

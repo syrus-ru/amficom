@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.51 2005/08/19 15:50:00 arseniy Exp $
+ * $Id: ParameterType.java,v 1.52 2005/08/19 16:28:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,11 +14,11 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.general.corba.IdlParameterTypeEnum;
+import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/08/19 15:50:00 $
+ * @version $Revision: 1.52 $, $Date: 2005/08/19 16:28:26 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -65,43 +65,43 @@ public enum ParameterType implements TransferableObject {
 
 	public static ParameterType fromInt(final int code) {
 		switch (code) {
-			case IdlParameterTypeEnum._REF_WAVE_LENGTH:
+			case IdlParameterType._REF_WAVE_LENGTH:
 				return REF_WAVE_LENGTH;
-			case IdlParameterTypeEnum._REF_TRACE_LENGTH:
+			case IdlParameterType._REF_TRACE_LENGTH:
 				return REF_TRACE_LENGTH;
-			case IdlParameterTypeEnum._REF_RESOLUTION:
+			case IdlParameterType._REF_RESOLUTION:
 				return REF_RESOLUTION;
-			case IdlParameterTypeEnum._REF_PULSE_WIDTH_LOW_RES:
+			case IdlParameterType._REF_PULSE_WIDTH_LOW_RES:
 				return REF_PULSE_WIDTH_LOW_RES;
-			case IdlParameterTypeEnum._REF_PULSE_WIDTH_HIGH_RES:
+			case IdlParameterType._REF_PULSE_WIDTH_HIGH_RES:
 				return REF_PULSE_WIDTH_HIGH_RES;
-			case IdlParameterTypeEnum._REF_INDEX_OF_REFRACTION:
+			case IdlParameterType._REF_INDEX_OF_REFRACTION:
 				return REF_INDEX_OF_REFRACTION;
-			case IdlParameterTypeEnum._REF_AVERAGE_COUNT:
+			case IdlParameterType._REF_AVERAGE_COUNT:
 				return REF_AVERAGE_COUNT;
-			case IdlParameterTypeEnum._REF_FLAG_GAIN_SPLICE_ON:
+			case IdlParameterType._REF_FLAG_GAIN_SPLICE_ON:
 				return REF_FLAG_GAIN_SPLICE_ON;
-			case IdlParameterTypeEnum._REF_FLAG_LIFE_FIBER_DETECT:
+			case IdlParameterType._REF_FLAG_LIFE_FIBER_DETECT:
 				return REF_FLAG_LIFE_FIBER_DETECT;
 
-			case IdlParameterTypeEnum._REFLECTOGRAMMA:
+			case IdlParameterType._REFLECTOGRAMMA:
 				return REFLECTOGRAMMA;
-			case IdlParameterTypeEnum._REFLECTOGRAMMA_ETALON:
+			case IdlParameterType._REFLECTOGRAMMA_ETALON:
 				return REFLECTOGRAMMA_ETALON;
-			case IdlParameterTypeEnum._DADARA_ETALON:
+			case IdlParameterType._DADARA_ETALON:
 				return DADARA_ETALON;
-			case IdlParameterTypeEnum._DADARA_CRITERIA:
+			case IdlParameterType._DADARA_CRITERIA:
 				return DADARA_CRITERIA;
-			case IdlParameterTypeEnum._DADARA_ANALYSIS_RESULT:
+			case IdlParameterType._DADARA_ANALYSIS_RESULT:
 				return DADARA_ANALYSIS_RESULT;
-			case IdlParameterTypeEnum._DADARA_ALARMS:
+			case IdlParameterType._DADARA_ALARMS:
 				return DADARA_ALARMS;
 
-			case IdlParameterTypeEnum._PREDICTION_TIME:
+			case IdlParameterType._PREDICTION_TIME:
 				return PREDICTION_TIME;
-			case IdlParameterTypeEnum._PREDICTION_TIME_START:
+			case IdlParameterType._PREDICTION_TIME_START:
 				return PREDICTION_TIME_START;
-			case IdlParameterTypeEnum._PREDICTION_TIME_END:
+			case IdlParameterType._PREDICTION_TIME_END:
 				return PREDICTION_TIME_END;
 
 			default:
@@ -110,7 +110,7 @@ public enum ParameterType implements TransferableObject {
 		}
 	}
 
-	public static ParameterType fromTransferable(final IdlParameterTypeEnum idlParameterTypeEnum) {
+	public static ParameterType fromTransferable(final IdlParameterType idlParameterTypeEnum) {
 		return fromInt(idlParameterTypeEnum.value());
 	}
 
@@ -135,14 +135,14 @@ public enum ParameterType implements TransferableObject {
 	}
 
 	@SuppressWarnings("unused")
-	public IdlParameterTypeEnum getTransferable(final ORB orb) {
-		return IdlParameterTypeEnum.from_int(this.getCode());
+	public IdlParameterType getTransferable(final ORB orb) {
+		return IdlParameterType.from_int(this.getCode());
 	}
 
-	public static IdlParameterTypeEnum[] createTransferables(final Set<ParameterType> parameterTypes, final ORB orb) {
+	public static IdlParameterType[] createTransferables(final Set<ParameterType> parameterTypes, final ORB orb) {
 		assert parameterTypes != null: NON_NULL_EXPECTED;
 
-		final IdlParameterTypeEnum[] idlParameterTypes = new IdlParameterTypeEnum[parameterTypes.size()];
+		final IdlParameterType[] idlParameterTypes = new IdlParameterType[parameterTypes.size()];
 		int i = 0;
 		synchronized (parameterTypes) {
 			for (final ParameterType parameterType : parameterTypes) {
@@ -152,9 +152,9 @@ public enum ParameterType implements TransferableObject {
 		return idlParameterTypes;
 	}
 
-	public static Set<ParameterType> fromTransferables(final IdlParameterTypeEnum[] idlParameterTypes) {
+	public static Set<ParameterType> fromTransferables(final IdlParameterType[] idlParameterTypes) {
 		final Set<ParameterType> parameterTypes = new HashSet<ParameterType>(idlParameterTypes.length);
-		for (final IdlParameterTypeEnum idlParameterType : idlParameterTypes) {
+		for (final IdlParameterType idlParameterType : idlParameterTypes) {
 			parameterTypes.add(ParameterType.fromTransferable(idlParameterType));
 		}
 		return parameterTypes;
