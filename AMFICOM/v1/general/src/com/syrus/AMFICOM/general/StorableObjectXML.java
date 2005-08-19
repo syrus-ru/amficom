@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.38 2005/08/19 14:41:20 arseniy Exp $
+ * $Id: StorableObjectXML.java,v 1.39 2005/08/19 14:45:23 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.38 $, $Date: 2005/08/19 14:41:20 $
+ * @version $Revision: 1.39 $, $Date: 2005/08/19 14:45:23 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -112,8 +112,8 @@ public class StorableObjectXML {
 		return this.driver.getIdentifiers(entityCode);
 	}
 
-	public <T extends StorableObject> void updateObject(final T storableObject) throws IllegalDataException {
-		final StorableObjectWrapper<T> wrapper = StorableObjectWrapper.getWrapper(storableObject.getId().getMajor());
+	public void updateObject(final StorableObject storableObject) throws IllegalDataException {
+		final StorableObjectWrapper<StorableObject> wrapper = StorableObjectWrapper.getWrapper(storableObject.getId().getMajor());
 		final List<String> keys = wrapper.getKeys();
 		final Map<String, Object> objectMap = new HashMap<String, Object>();
 		for (final String key : keys) {
