@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.30 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.31 2005/08/19 12:53:15 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -28,8 +28,8 @@ import com.syrus.util.Log;
  * –азместить c[tvysq элемент на карте в соответствии с прив€зкой
  * или по координатам
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.31 $, $Date: 2005/08/19 12:53:15 $
  * @module mapviewclient
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle
@@ -123,7 +123,6 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 			}
 			// операци€ закончена - оповестить слушателей
 			this.logicalNetLayer.setCurrentMapElement(this.site);
-			this.logicalNetLayer.notifySchemeEvent(this.site);
 			long t7 = System.currentTimeMillis();
 			Log.debugMessage("PlaceSchemeElementCommand :: calculate coordinates " + (t2 - t1) + " ms", Level.INFO);
 			Log.debugMessage("PlaceSchemeElementCommand :: find scheme element " + (t3 - t2) + " ms", Level.INFO);
