@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveLinkTypeCommand.java,v 1.2 2005/08/17 14:14:18 arseniy Exp $
+ * $Id: MapEditorRemoveLinkTypeCommand.java,v 1.3 2005/08/19 12:52:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ public class MapEditorRemoveLinkTypeCommand extends AbstractCommand {
 			return;
 		}
 
-		physicalLinkType.getMapLibrary().removeChild(physicalLinkType);
+//		physicalLinkType.getMapLibrary().removeChild(physicalLinkType);
 		StorableObjectPool.delete(physicalLinkType.getId());
 		setResult(Command.RESULT_OK);
 	}

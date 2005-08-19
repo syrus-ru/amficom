@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveSiteTypeCommand.java,v 1.2 2005/08/17 14:14:18 arseniy Exp $
+ * $Id: MapEditorRemoveSiteTypeCommand.java,v 1.3 2005/08/19 12:52:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ public class MapEditorRemoveSiteTypeCommand extends AbstractCommand {
 			return;
 		}
 
-		siteNodeType.getMapLibrary().removeChild(siteNodeType);
+//		siteNodeType.getMapLibrary().removeChild(siteNodeType);
 		StorableObjectPool.delete(siteNodeType.getId());
 		setResult(Command.RESULT_OK);
 	}
