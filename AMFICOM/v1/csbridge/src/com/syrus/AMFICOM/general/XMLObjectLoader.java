@@ -1,5 +1,5 @@
 /*
- * $Id: XMLObjectLoader.java,v 1.9 2005/08/19 14:07:14 bob Exp $
+ * $Id: XMLObjectLoader.java,v 1.10 2005/08/19 14:46:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,8 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/19 14:07:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.10 $, $Date: 2005/08/19 14:46:19 $
+ * @author $Author: arseniy $
  * @module csbridge
  */
 public final class XMLObjectLoader implements ObjectLoader {
@@ -71,7 +71,7 @@ public final class XMLObjectLoader implements ObjectLoader {
 		}
 
 		for (final StorableObject storableObject : storableObjects) {
-			this.soXML.updateObject(storableObject, true);
+			this.soXML.updateObject(storableObject);
 		}
 		this.soXML.flush();
 	}
