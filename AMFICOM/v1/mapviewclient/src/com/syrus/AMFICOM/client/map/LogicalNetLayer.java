@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.115 2005/08/18 13:59:08 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.116 2005/08/19 12:53:49 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.115 $, $Date: 2005/08/18 13:59:08 $
+ * @version $Revision: 1.116 $, $Date: 2005/08/19 12:53:49 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer {
@@ -397,13 +397,6 @@ public final class LogicalNetLayer {
 		final Color background = p.getBackground();
 
 		Log.debugMessage("\n\n------------------ LogicalNetLayer.paint() called ----------------------", Level.INFO);
-		try {
-			throw new Exception("stacktrace");
-		} catch (Exception e) {
-			// Log.debugException(e, Log.FINE);
-			// e.printStackTrace();
-		}
-		// System.out.println("--------------------------------------");
 		final long f = System.currentTimeMillis();
 		if (MapPropertiesManager.isOptimizeLinks()) {
 			drawVisualElements(p, visibleBounds);
@@ -417,7 +410,6 @@ public final class LogicalNetLayer {
 		Log.debugMessage("\n--------------------- LogicalNetLayer.paint() finished in "
 				+ String.valueOf(d - f)
 				+ " ms -----------------\n", Level.INFO);
-		// System.out.println("--------------------------------------");
 
 		// revert graphics to previous settings
 		p.setColor(color);
@@ -622,74 +614,6 @@ public final class LogicalNetLayer {
 	}
 
 	/**
-	 * Генерация сообщеия о выборке элемента карты.
-	 * @param mapElement выбранный элемент карты
-	 */
-	public void notifySchemeEvent(final MapElement mapElement) {
-		Log.debugMessage(this.getClass().getName() + "::" + "notifySchemeEvent(" + mapElement + ")" + " | " + "method call", Level.FINER);
-/*		
-		SchemeNavigateEvent sne;
-		Dispatcher dispatcher = logicalNetLayer.mapMainFrame.this.aContext.getDispatcher();
-		try 
-		{
-			MapSiteNodeElement mapel = (MapSiteNodeElement )mapElement;
-
-			if(mapel.element_id != null && !mapel.element_id.equals(""))
-			{
-				SchemeElement se = (SchemeElement )Pool.get(SchemeElement.typ, mapel.element_id);
-//				System.out.println("notify SCHEME_ELEMENT_SELECTED_EVENT " + se.getId());
-				this.logicalNetLayer.performProcessing = false;
-				sne = new SchemeNavigateEvent(
-						new SchemeElement[] { se },
-						SchemeNavigateEvent.SCHEME_ELEMENT_SELECTED_EVENT);
-				dispatcher.notify(sne);
-				this.logicalNetLayer.performProcessing = true;
-				return;
-			}
-		} 
-		catch (Exception ex){ }
-
-		try
-		{
-			MapPhysicalLinkElement link = (MapPhysicalLinkElement )mapElement;
-
-			if(link.LINK_ID != null && !link.LINK_ID.equals(""))
-			{
-				SchemeCableLink scl = (SchemeCableLink )Pool.get(SchemeCableLink.typ, link.LINK_ID);
-//				System.out.println("notify SCHEME_CABLE_LINK_SELECTED_EVENT " + scl.getId());
-				this.logicalNetLayer.performProcessing = false;
-				sne = new SchemeNavigateEvent(
-						new SchemeCableLink[] { scl },
-						SchemeNavigateEvent.SCHEME_CABLE_LINK_SELECTED_EVENT);
-				dispatcher.notify(sne);
-				this.logicalNetLayer.performProcessing = true;
-				return;
-			}
-		} 
-		catch (Exception ex){ }
-
-		try 
-		{
-			MapTransmissionPathElement path = (MapTransmissionPathElement )mapElement;
-
-			if(path.PATH_ID != null && !path.PATH_ID.equals(""))
-			{
-				SchemePath sp = (SchemePath )Pool.get(SchemePath.typ, path.PATH_ID);
-//				System.out.println("notify SCHEME_PATH_SELECTED_EVENT " + sp.getId());
-				this.logicalNetLayer.performProcessing = false;
-				sne = new SchemeNavigateEvent(
-						new SchemePath[] { sp },
-						SchemeNavigateEvent.SCHEME_PATH_SELECTED_EVENT);
-				dispatcher.notify(sne);
-				this.logicalNetLayer.performProcessing = true;
-				return;
-			}
-		} 
-		catch (Exception ex){ } 
-*/
-	}
-
-	/**
 	 * Получить текущий фиксированный элемент. Используется в режиме
 	 * {@link MapState#MOVE_FIXDIST}.
 	 * 
@@ -751,7 +675,6 @@ public final class LogicalNetLayer {
 		if (!(curMapElement instanceof Selection)) {
 			this.mapView.getMap().setSelected(curMapElement, true);
 		}
-		this.notifySchemeEvent(this.currentMapElement);
 	}
 
 	/**
@@ -1010,7 +933,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.115 $, $Date: 2005/08/18 13:59:08 $
+	 * @version $Revision: 1.116 $, $Date: 2005/08/19 12:53:49 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1214,7 +1137,6 @@ public final class LogicalNetLayer {
 							nodesCalculated,
 							nodeLinksCalculated,
 							frontedge,
-							map,
 							color,
 							stroke,
 							pullAttributesFromController);
@@ -1245,8 +1167,6 @@ public final class LogicalNetLayer {
 	 *        Таблица содержащая информацию о том, обработан ли тот или иной узел.
 	 * @param nodeLinksCalculated
 	 * @param frontedge
-	 * @param map
-	 *        Объект "карта"
 	 * @param stroke
 	 * @param color
 	 */
@@ -1256,7 +1176,6 @@ public final class LogicalNetLayer {
 			final java.util.Map<AbstractNode, Boolean> nodesCalculated,
 			final java.util.Map<NodeLink, Boolean> nodeLinksCalculated,
 			final Collection<AbstractNode> frontedge,
-			final Map map,
 			final Color color,
 			final Stroke stroke,
 			final boolean pullAttributesFromController) throws MapDataException, MapConnectionException {
@@ -1470,7 +1389,6 @@ public final class LogicalNetLayer {
 						nodesCalculated,
 						nodeLinksCalculated,
 						frontedge,
-						map,
 						color,
 						stroke,
 						pullAttributesFromController);
