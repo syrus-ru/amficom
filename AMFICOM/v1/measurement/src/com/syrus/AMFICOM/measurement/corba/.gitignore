@@ -19,3 +19,6 @@ IdlParameterSet.java
 IdlPeriodicalTemporalPattern.java
 IdlResult.java
 IdlTest.java
+IdlMeasurementTypeEnum.java
+IdlAnalysisTypeEnum.java
+IdlModelingTypeEnum.java
