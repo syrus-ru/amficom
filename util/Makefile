@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.24 2005/08/04 13:54:57 bob Exp $
+# $Id: Makefile,v 1.25 2005/08/19 09:34:28 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -34,10 +34,7 @@ $(call checkenve,ORACLE_HOME)
 .PHONY: export
 export: $(LIBNAME) $(MODULE_NAME)client.jar $(MODULE_NAME)server.jar
 
-.PHONY: all
-all: .all
-
-.all: .sqlj
+.mach:	.sqlj
 	$(JAVAC) \
 		$(JAVACFLAGS) \
 		-classpath $(JDBCCLASSPATH):$(CLASSDIR) \
@@ -60,11 +57,15 @@ sqljclean:
 		$(foreach file, $(filter $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
 		.sqlj
 
-.PHONY: clean
-clean: sqljclean
+.PHONY:	cleanmach
+cleanmach:
 	$(RM) \
 		$(foreach file, $(filter-out $(foreach class, $(subst $(SRCDIR),$(CLASSDIR), $(subst .sqlj,, $(shell find $(SRCDIR) -name '*\.sqlj'))), $(foreach class_suffix, $(CLASS_SUFFIXES), $(class)$(class_suffix))), $(shell find $(CLASSDIR) -name '*\.class')), '$(file)') \
-		.all
+		.mach
+
+.PHONY:	clean
+clean:	sqljclean cleanmach
+	$(RM) $(LIBNAME)
 
 .PHONY: dist
 dist: distclean
@@ -80,15 +81,15 @@ distclean: clean
 		sqlj.properties \
 		*.jar
 
-$(LIBNAME): .all
+$(LIBNAME): .mach
 	$(JAR) cf $@ \
 		-C $(CLASSDIR) com
 
-$(MODULE_NAME)client.jar: .all
+$(MODULE_NAME)client.jar: .mach
 	$(JAR) cf $@ \
 		$(foreach file, $(filter-out $(foreach class, $(subst .,/, $(CLIENT_EXCLUDED_CLASSES)), $(foreach suffix, $(CLASS_SUFFIXES), $(class)$(suffix))), $(foreach classfile, $(shell find $(CLASSDIR) -name '*\.class'), $(subst $(CLASSDIR)/,,$(classfile)))), -C $(CLASSDIR) '$(file)')
 
-$(MODULE_NAME)server.jar: .all
+$(MODULE_NAME)server.jar: .mach
 	$(JAR) cf $@ \
 		$(foreach file, $(filter $(foreach class, $(subst .,/, $(SERVER_INCLUDED_CLASSES)), $(foreach suffix, $(CLASS_SUFFIXES), $(class)$(suffix))), $(foreach classfile, $(shell find $(CLASSDIR) -name '*\.class'), $(subst $(CLASSDIR)/,,$(classfile)))), -C $(CLASSDIR) '$(file)')
 
