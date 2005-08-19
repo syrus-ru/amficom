@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.51 2005/08/11 12:43:31 arseniy Exp $
+ * $Id: MapPopupMenu.java,v 1.52 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,8 +54,8 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 
 /**
  * Контекстное меню элемента карты
- * @author $Author: arseniy $
- * @version $Revision: 1.51 $, $Date: 2005/08/11 12:43:31 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.52 $, $Date: 2005/08/19 15:43:32 $
  * @module mapviewclient
  */
 public abstract class MapPopupMenu extends JPopupMenu {
@@ -227,7 +227,6 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		command.setNetMapViewer(this.netMapViewer);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
-		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 	}
 
 	protected void insertSiteInPlaceOfANode(TopologicalNode node, SiteNodeType proto) {

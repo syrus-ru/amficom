@@ -171,6 +171,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 	void removeLink()
 	{
 		super.removeMapElement(this.link);
+		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 	void addMark()
@@ -179,6 +180,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
 		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 	void newCollector() throws ApplicationException
@@ -187,7 +189,6 @@ public final class LinkPopupMenu extends MapPopupMenu
 		if(collector != null)
 		{
 			super.addLinkToCollector(collector, this.link);
-
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}

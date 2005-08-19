@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.35 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapDropTargetListener.java,v 1.36 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.35 $, $Date: 2005/08/11 12:43:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.36 $, $Date: 2005/08/19 15:43:32 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public final class MapDropTargetListener implements DropTargetListener
@@ -138,6 +138,7 @@ public final class MapDropTargetListener implements DropTargetListener
 		cmd.setLogicalNetLayer(logicalNetLayer);
 		logicalNetLayer.getCommandList().add(cmd);
 		logicalNetLayer.getCommandList().execute();
+		logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 	protected void schemeElementDropped(SchemeElement schemeElement, Point point)
@@ -159,7 +160,7 @@ public final class MapDropTargetListener implements DropTargetListener
 					cmd.setParameter(MoveSelectionCommandBundle.END_POINT, point);
 					logicalNetLayer.getCommandList().add(cmd);
 					logicalNetLayer.getCommandList().execute();
-					logicalNetLayer.sendSelectionChangeEvent();
+					logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 				} catch(MapConnectionException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();

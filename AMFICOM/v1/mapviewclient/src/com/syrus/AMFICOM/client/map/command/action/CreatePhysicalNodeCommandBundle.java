@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.24 2005/08/19 12:53:15 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.25 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.24 $, $Date: 2005/08/19 12:53:15 $
+ * @version $Revision: 1.25 $, $Date: 2005/08/19 15:43:32 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -84,8 +84,6 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 			physicalLink.removeNodeLink(this.nodeLink);
 			super.registerStateChange(physicalLink, pls, physicalLink.getState());
 
-			// операция закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(node);
 			setResult(Command.RESULT_OK);
 		}

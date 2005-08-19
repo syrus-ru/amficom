@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeEventHandler.java,v 1.1 2005/08/19 12:47:09 krupenn Exp $
+ * $Id: MapViewTreeEventHandler.java,v 1.2 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -120,8 +120,25 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 				}
 			}
 			if(sendSelectionEvent) {
-				dispatcher.firePropertyChange(new MapEvent(this, MapEvent.NEED_SELECT, toSelect));
-				dispatcher.firePropertyChange(new MapEvent(this, MapEvent.NEED_DESELECT, toDeSelect));
+
+				for(Iterator iter = toSelect.iterator(); iter.hasNext();) {
+					Object element = iter.next();
+					if(element instanceof MapElement) {
+						MapElement mapElement = (MapElement )element;
+						this.mapView.getMap().setSelected(mapElement, true);
+					}
+				}
+
+				for(Iterator iter = toDeSelect.iterator(); iter.hasNext();) {
+					Object element = iter.next();
+					if(element instanceof MapElement) {
+						MapElement mapElement = (MapElement )element;
+						this.mapView.getMap().setSelected(mapElement, false);
+					}
+				}
+
+				dispatcher.firePropertyChange(new MapEvent(this, MapEvent.UPDATE_SELECTION));
+				dispatcher.firePropertyChange(new MapEvent(this, MapEvent.SELECTION_CHANGED, this.mapView.getMap().getSelectedElements()));
 			}
 			this.performProcessing = true;
 		}

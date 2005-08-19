@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.24 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.25 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,8 +32,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/08/19 15:43:32 $
  * @module mapviewclient 
  */
 public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommandBundle
@@ -96,7 +96,6 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 			cablePath.addLink(this.link, newCableChannelingItem);
 
 			this.link.getBinding().add(cablePath);
-			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			setResult(Command.RESULT_OK);
 		}
 		catch(Throwable e)

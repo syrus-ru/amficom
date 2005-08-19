@@ -1,5 +1,5 @@
 /**
- * $Id: MapRemoveMapCommand.java,v 1.9 2005/08/18 14:10:21 krupenn Exp $
+ * $Id: MapRemoveMapCommand.java,v 1.10 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * убрать из вида выбранную схему 
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/08/18 14:10:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/19 15:43:32 $
  * @module mapviewclient
  */
 public class MapRemoveMapCommand extends AbstractCommand {
@@ -81,6 +81,10 @@ public class MapRemoveMapCommand extends AbstractCommand {
 		mapView.getMap().removeMap(map);
 		mapFrame.getContext().getDispatcher().firePropertyChange(
 				new MapEvent(this, MapEvent.MAP_VIEW_CHANGED, mapFrame.getMapView()));
+		mapFrame.getContext().getDispatcher().firePropertyChange(
+				new MapEvent(this, MapEvent.UPDATE_SELECTION));
+		mapFrame.getContext().getDispatcher().firePropertyChange(
+				new MapEvent(this, MapEvent.SELECTION_CHANGED, mapFrame.getMapView().getMap().getSelectedElements()));
 
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(

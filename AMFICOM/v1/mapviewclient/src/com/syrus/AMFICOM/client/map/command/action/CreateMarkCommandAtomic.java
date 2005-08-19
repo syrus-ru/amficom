@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommandAtomic.java,v 1.23 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.24 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -33,8 +33,8 @@ import com.syrus.util.Log;
 /**
  *  оманда создани€ метки на линии
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.23 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.24 $, $Date: 2005/08/19 15:43:32 $
  * @module mapviewclient
  */
 public class CreateMarkCommandAtomic extends MapActionCommand
@@ -120,7 +120,6 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 			mc.updateScaleCoefficient(this.mark);
 			mc.moveToFromStartLt(this.mark, this.distance);
 			// операци€ закончена - оповестить слушателей
-			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			this.logicalNetLayer.setCurrentMapElement(this.mark);
 			setResult(Command.RESULT_OK);
 		}

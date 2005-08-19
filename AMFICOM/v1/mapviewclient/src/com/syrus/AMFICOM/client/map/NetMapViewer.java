@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.41 2005/08/19 12:54:27 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.42 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,6 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Collection;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
@@ -82,7 +81,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.41 $, $Date: 2005/08/19 12:54:27 $
+ * @version $Revision: 1.42 $, $Date: 2005/08/19 15:43:32 $
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
@@ -182,6 +181,7 @@ public abstract class NetMapViewer {
 		command.setNetMapViewer(this);
 		this.getLogicalNetLayer().commandList.add(command);
 		this.getLogicalNetLayer().commandList.execute();
+		this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 	/**
@@ -398,7 +398,10 @@ public abstract class NetMapViewer {
 				MapEvent mapEvent = (MapEvent )pce;
 				String mapEventType = mapEvent.getMapEventType();
 
-				if(mapEventType.equals(MapEvent.COPY_TYPE)) {
+				if(mapEventType.equals(MapEvent.UPDATE_SELECTION)) {
+					updateSelectedElements();
+				}
+				else if(mapEventType.equals(MapEvent.COPY_TYPE)) {
 					Object selectedObject = pce.getNewValue();
 					if(selectedObject instanceof SiteNodeType) {
 						copyType((SiteNodeType)selectedObject);
@@ -423,7 +426,6 @@ public abstract class NetMapViewer {
 				else if(mapEventType.equals(MapEvent.MAP_CHANGED)) {
 					updateSelectedElements();
 					this.logicalNetLayer.updateZoom();
-					this.logicalNetLayer.sendSelectionChangeEvent();
 					repaint(false);
 				}
 				else if(mapEventType.equals(MapEvent.MAP_ELEMENT_CHANGED)) {
@@ -451,51 +453,6 @@ public abstract class NetMapViewer {
 				}
 				else if(mapEventType.equals(MapEvent.MAP_VIEW_CHANGED)) {
 					this.logicalNetLayer.calculateVisualElements();
-					this.logicalNetLayer.sendSelectionChangeEvent();
-					repaint(false);
-				}
-				else if(mapEventType.equals(MapEvent.NEED_SELECT)) {
-					Collection elements = (Collection )pce.getNewValue();
-					for(Iterator iter = elements.iterator(); iter.hasNext();) {
-						Object element = iter.next();
-						if(element instanceof MapElement) {
-							MapElement mapElement = (MapElement )element;
-							mapView.getMap().setSelected(mapElement, true);
-						}
-						else if(element instanceof SchemeElement) {
-							SchemeElement schemeElement = (SchemeElement)element;
-							MapElement mapElement = mapView.findElement(schemeElement);
-							if(mapElement != null)
-								mapView.getMap().setSelected(mapElement, true);
-						}
-						else if(element instanceof SchemeCableLink) {
-							SchemeCableLink schemeCableLink = (SchemeCableLink)element;
-							MapElement mapElement = mapView.findCablePath(schemeCableLink);
-							if(mapElement != null)
-								mapView.getMap().setSelected(mapElement, true);
-						}
-						else if(element instanceof SchemePath) {
-							SchemePath schemePath = (SchemePath)element;
-							MapElement mapElement = mapView.findMeasurementPath(schemePath);
-							if(mapElement != null)
-								mapView.getMap().setSelected(mapElement, true);
-						}
-					}
-					updateSelectedElements();
-					this.logicalNetLayer.sendSelectionChangeEvent();
-					repaint(false);
-				}
-				else if(mapEventType.equals(MapEvent.NEED_DESELECT)) {
-					Collection elements = (Collection )pce.getNewValue();
-					for(Iterator iter = elements.iterator(); iter.hasNext();) {
-						Object element = iter.next();
-						if(element instanceof MapElement) {
-							MapElement mapElement = (MapElement )element;
-							mapView.getMap().setSelected(mapElement, false);
-						}
-					}
-					updateSelectedElements();
-					this.logicalNetLayer.sendSelectionChangeEvent();
 					repaint(false);
 				}
 
@@ -504,13 +461,7 @@ public abstract class NetMapViewer {
 	
 				if(mapEventType.equals(MapEvent.SELECTION_CHANGED)) {
 					updateSelectedElements();
-					this.logicalNetLayer.sendSelectionChangeEvent();
 					repaint(false);
-					return;
-				}
-				else if(mapEventType.equals(MapEvent.DESELECT_ALL)) {
-					this.logicalNetLayer.deselectAll();
-					this.logicalNetLayer.sendSelectionChangeEvent();
 				}
 				else if(mapEventType.equals(MapEvent.MAP_NAVIGATE)) {
 					MapNavigateEvent mne = (MapNavigateEvent )mapEvent;
@@ -942,5 +893,6 @@ public abstract class NetMapViewer {
 				false);
 
 		this.logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
+		this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 }

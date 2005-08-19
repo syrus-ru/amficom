@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundLinkToPhysicalLinkCommandBundle;
@@ -68,16 +69,7 @@ public class UnboundLinkPopupMenu extends MapPopupMenu {
 			command.setNetMapViewer(this.netMapViewer);
 			this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 			this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
-
-			try {
-				this.netMapViewer.repaint(false);
-			} catch(MapConnectionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch(MapDataException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 

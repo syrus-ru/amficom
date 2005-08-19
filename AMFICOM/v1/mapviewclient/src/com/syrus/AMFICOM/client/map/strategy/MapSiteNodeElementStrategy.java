@@ -1,5 +1,5 @@
 /**
- * $Id: MapSiteNodeElementStrategy.java,v 1.25 2005/08/17 14:14:20 arseniy Exp $
+ * $Id: MapSiteNodeElementStrategy.java,v 1.26 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ package com.syrus.AMFICOM.client.map.strategy;
 
 import java.awt.Point;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapState;
@@ -27,8 +28,8 @@ import com.syrus.AMFICOM.mapview.Selection;
 
 /**
  * Стратегия управления узлом.
- * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/08/17 14:14:20 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.26 $, $Date: 2005/08/19 15:43:32 $
  * @module mapviewclient
  */
 public final class MapSiteNodeElementStrategy extends AbstractMapStrategy 

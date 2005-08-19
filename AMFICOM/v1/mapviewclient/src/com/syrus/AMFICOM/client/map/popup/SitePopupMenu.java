@@ -64,19 +64,6 @@ public final class SitePopupMenu extends MapPopupMenu {
 
 	void removeSite() {
 		super.removeMapElement(this.site);
-		// DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(site);
-		// command.setLogicalNetLayer(logicalNetLayer);
-		// getLogicalNetLayer().getCommandList().add(command);
-		// getLogicalNetLayer().getCommandList().execute();
-
-		try {
-			this.netMapViewer.repaint(false);
-		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 }

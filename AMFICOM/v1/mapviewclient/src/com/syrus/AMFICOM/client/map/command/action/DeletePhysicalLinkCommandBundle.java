@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.24 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.25 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,8 +36,8 @@ import com.syrus.util.Log;
  * состоит из последовательности атомарных действий
  * 
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.24 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.25 $, $Date: 2005/08/19 15:43:32 $
  * @module mapviewclient
  */
 public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
@@ -123,10 +123,8 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 					}
 				}
 			}
-			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		}
-		catch(Throwable e)
-		{
+		catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();

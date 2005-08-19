@@ -8,6 +8,7 @@ import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.props.MapVisualManager;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
@@ -108,6 +109,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 	void removeCablePath()
 	{
 		super.removeMapElement(this.path);
+		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 	void bind()
@@ -128,6 +130,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 		if(proto != null)
 		{
 			super.generatePathCabling(this.path, proto);
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 	

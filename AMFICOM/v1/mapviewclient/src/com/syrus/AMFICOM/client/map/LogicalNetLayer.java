@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.116 2005/08/19 12:53:49 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.117 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.116 $, $Date: 2005/08/19 12:53:49 $
+ * @version $Revision: 1.117 $, $Date: 2005/08/19 15:43:32 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer {
@@ -835,6 +835,7 @@ public final class LogicalNetLayer {
 		this.getCommandList().execute();
 
 		this.getMapState().setOperationMode(MapState.NO_OPERATION);
+		sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 	/**
@@ -933,7 +934,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.116 $, $Date: 2005/08/19 12:53:49 $
+	 * @version $Revision: 1.117 $, $Date: 2005/08/19 15:43:32 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {

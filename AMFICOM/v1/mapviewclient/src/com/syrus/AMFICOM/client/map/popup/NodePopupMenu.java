@@ -5,6 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
@@ -59,36 +60,14 @@ public final class NodePopupMenu extends MapPopupMenu {
 
 	void removeNode() {
 		super.removeMapElement(this.node);
-// DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(node);
-//		command.setLogicalNetLayer(logicalNetLayer);
-//		getLogicalNetLayer().getCommandList().add(command);
-//		getLogicalNetLayer().getCommandList().execute();
-
-		try {
-			this.netMapViewer.repaint(false);
-		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 	void placeSite() {
 		SiteNodeType proto = super.selectNodeProto();
 		if(proto != null) {
 			super.insertSiteInPlaceOfANode(this.node, proto);
-
-			try {
-				this.netMapViewer.repaint(false);
-			} catch(MapConnectionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch(MapDataException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 }

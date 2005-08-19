@@ -5,8 +5,7 @@ import java.awt.event.ActionListener;
 
 import javax.swing.JMenuItem;
 
-import com.syrus.AMFICOM.client.map.MapConnectionException;
-import com.syrus.AMFICOM.client.map.MapDataException;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.DeleteNodeCommandBundle;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
@@ -70,16 +69,7 @@ public class UnboundPopupMenu extends MapPopupMenu {
 		command.setNetMapViewer(this.netMapViewer);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
-
-		try {
-			this.netMapViewer.repaint(false);
-		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 	void bind() {
@@ -90,16 +80,7 @@ public class UnboundPopupMenu extends MapPopupMenu {
 			command.setNetMapViewer(this.netMapViewer);
 			this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 			this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
-
-			try {
-				this.netMapViewer.repaint(false);
-			} catch(MapConnectionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch(MapDataException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 
@@ -107,6 +88,7 @@ public class UnboundPopupMenu extends MapPopupMenu {
 		SiteNodeType proto = super.selectNodeProto();
 		if(proto != null) {
 			super.convertUnboundNodeToSite(this.unbound, proto);
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 }

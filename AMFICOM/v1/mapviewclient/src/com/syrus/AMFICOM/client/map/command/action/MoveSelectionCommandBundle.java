@@ -1,5 +1,5 @@
 /**
- * $Id: MoveSelectionCommandBundle.java,v 1.19 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: MoveSelectionCommandBundle.java,v 1.20 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
- * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.20 $, $Date: 2005/08/19 15:43:32 $
  * @module mapviewclient
  */
 public class MoveSelectionCommandBundle extends MapActionCommandBundle
@@ -149,13 +149,11 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	 * создать отдельные команды на перемещение для всех выделенных
 	 * точечных объектов
 	 */
-	protected void setElements()
-	{
+	protected void setElements() {
 		Map map = this.logicalNetLayer.getMapView().getMap();
 		Iterator iter = map.getSelectedElements().iterator();
 
-		while (iter.hasNext() )
-		{
+		while (iter.hasNext() ) {
 			MapElement mapElement = (MapElement )iter.next();
 			if(mapElement instanceof AbstractNode) {
 				AbstractNode node = (AbstractNode)mapElement;
@@ -171,9 +169,7 @@ public class MoveSelectionCommandBundle extends MapActionCommandBundle
 	}
 	
 	@Override
-	public void execute()
-	{
+	public void execute() {
 		super.execute();
-		this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 }

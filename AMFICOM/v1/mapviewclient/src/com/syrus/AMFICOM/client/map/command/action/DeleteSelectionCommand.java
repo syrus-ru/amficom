@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.25 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.26 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 /**
  * Удалить выбранные элементы карты. Команда является пучком команд 
  * (CommandBundle), удаляющих отдельные элементы.
- * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.26 $, $Date: 2005/08/19 15:43:32 $
  * @module mapviewclient
  */
 public class DeleteSelectionCommand extends MapActionCommandBundle {
@@ -223,7 +223,6 @@ public class DeleteSelectionCommand extends MapActionCommandBundle {
 
 		MapElement mapElement = com.syrus.AMFICOM.mapview.VoidElement.getInstance(this.logicalNetLayer.getMapView());
 
-		this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		this.logicalNetLayer.setCurrentMapElement(mapElement);
 	}
 

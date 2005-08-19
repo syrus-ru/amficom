@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.57 2005/08/12 14:52:33 arseniy Exp $
+ * $Id: MapMouseListener.java,v 1.58 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,7 @@ import java.util.logging.Level;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
@@ -54,8 +55,8 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.57 $, $Date: 2005/08/12 14:52:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.58 $, $Date: 2005/08/19 15:43:32 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public final class MapMouseListener implements MouseListener
@@ -504,6 +505,7 @@ public final class MapMouseListener implements MouseListener
 				strategy.doContextChanges(me);
 			}
 
+			logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 			logicalNetLayer.sendSelectionChangeEvent();
 		}
 		//					mapState.setActionMode(MapState.NULL_ACTION_MODE);

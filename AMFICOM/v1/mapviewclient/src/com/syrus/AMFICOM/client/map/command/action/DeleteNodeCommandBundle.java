@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.37 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.38 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -40,8 +40,8 @@ import com.syrus.util.Log;
 /**
  *   оманда удалени€ элемента наследника класса MapNodeElement.  оманда
  * состоит из  последовательности атомарных действий
- * @author $Author: arseniy $
- * @version $Revision: 1.37 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.38 $, $Date: 2005/08/19 15:43:32 $
  * @module mapviewclient
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -326,8 +326,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		}//if ( !node.isActive() )
 		else
 		// если узел активен, то при его удалении два фрагмента сливаютс€ в один
-		if ( topologicalNode.isActive() )
-		{
+		if ( topologicalNode.isActive() ) {
 			// получить смежные фрагменты линии
 			Iterator nodeLinksIterator = this.map.getNodeLinks(topologicalNode).iterator();
 			NodeLink nodeLinkLeft = 
@@ -371,19 +370,16 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			physicalLink.removeNodeLink(nodeLinkLeft);
 			physicalLink.removeNodeLink(nodeLinkRight);
 			
-			if(doRemoveLink)
-			{
+			if(doRemoveLink) {
 				// удал€етс€ лини€
 				super.removePhysicalLink(physicalLink);
-				if(nodeLeft instanceof TopologicalNode)
-				{
+				if(nodeLeft instanceof TopologicalNode) {
 					super.removeNode(nodeLeft);
 					if(nodeLeft != nodeRight)
 						super.removeNode(nodeRight);
 				}
 			}
-			else
-			{
+			else {
 				// создать новый фрагмент линии и добавить на карту и в линию
 				NodeLink newNodeLink = super.createNodeLink(physicalLink, nodeLeft, nodeRight);
 			}
@@ -399,9 +395,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	 * при этом с карты убираютс€ все кабельные пути, содержащие 
 	 * удал€емый элемент
 	 */
-	protected void deleteUnbound(UnboundNode unbound)
-		throws Throwable
-	{
+	protected void deleteUnbound(UnboundNode unbound) throws Throwable {
 		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))
 			return;
 
@@ -413,8 +407,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		List cablePaths = new LinkedList();
 		cablePaths.addAll(mapView.getCablePaths(unbound));
 		
-		for(Iterator it = cablePaths.iterator(); it.hasNext();)
-		{
+		for(Iterator it = cablePaths.iterator(); it.hasNext();) {
 			CablePath cpath = (CablePath)it.next();
 			super.removeCablePathLinks(cpath);
 			super.removeCablePath(cpath);
@@ -425,9 +418,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	/**
 	 * ”далить метку на физической линии
 	 */
-	public void deleteMark(Mark mark)
-		throws Throwable
-	{
+	public void deleteMark(Mark mark) throws Throwable {
 		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 			return;
 
@@ -438,9 +429,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	/**
 	 * ”далить маркер
 	 */
-	public void deleteMarker(Marker marker)
-		throws Throwable
-	{
+	public void deleteMarker(Marker marker) throws Throwable {
 		if ( !getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER))
 			return;
 
@@ -449,8 +438,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	}
 
 	@Override
-	public void execute()
-	{
+	public void execute() {
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
 		// узел может быть удален в результате атомарной команда в составе
@@ -463,31 +451,21 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		
 		try {
 			//¬ зависимости от того какого типа node и от флагов разрешени€ удал€ем
-			if ( this.node instanceof UnboundNode)
-			{
+			if ( this.node instanceof UnboundNode) {
 				this.deleteUnbound((UnboundNode)this.node);
 			}
-			else
-			if ( this.node instanceof SiteNode)
-			{
+			else if ( this.node instanceof SiteNode) {
 				this.deleteSite((SiteNode)this.node);
 			}
-			else
-			if ( this.node instanceof TopologicalNode)
-			{
+			else if ( this.node instanceof TopologicalNode) {
 				this.deletePhysicalNode((TopologicalNode)this.node);
 			}
-			else
-			if ( this.node instanceof Mark)
-			{
+			else if ( this.node instanceof Mark) {
 				this.deleteMark((Mark)this.node);
 			}
-			else
-			if ( this.node instanceof Marker)
-			{
+			else if ( this.node instanceof Marker) {
 				this.deleteMarker((Marker)this.node);
 			}
-			this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);

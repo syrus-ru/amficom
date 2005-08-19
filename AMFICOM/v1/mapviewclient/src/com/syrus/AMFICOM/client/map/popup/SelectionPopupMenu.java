@@ -168,16 +168,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 		command.setNetMapViewer(this.netMapViewer);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
-
-		try {
-			this.netMapViewer.repaint(false);
-		} catch(MapConnectionException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch(MapDataException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 	}
 
 	void insertSite() {
@@ -187,16 +178,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				TopologicalNode node = (TopologicalNode )it.next();
 				super.insertSiteInPlaceOfANode(node, proto);
 			}
-
-			try {
-				this.netMapViewer.repaint(false);
-			} catch(MapConnectionException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			} catch(MapDataException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 
@@ -231,15 +213,15 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 						alreadyBound.add(path);
 					}
 				}
-				else
-					if(me instanceof UnboundLink) {
-						CablePath path = ((UnboundLink )me).getCablePath();
-						if(!alreadyBound.contains(path)) {
-							super.generatePathCabling(path, proto);
-							alreadyBound.add(path);
-						}
+				else if(me instanceof UnboundLink) {
+					CablePath path = ((UnboundLink )me).getCablePath();
+					if(!alreadyBound.contains(path)) {
+						super.generatePathCabling(path, proto);
+						alreadyBound.add(path);
 					}
+				}
 			}
+			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
 

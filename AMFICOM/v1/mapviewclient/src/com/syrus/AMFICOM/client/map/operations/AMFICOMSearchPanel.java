@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.21 2005/08/17 14:14:19 arseniy Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.22 2005/08/19 15:43:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.21 $, $Date: 2005/08/17 14:14:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/08/19 15:43:32 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
  public class AMFICOMSearchPanel extends JPanel
@@ -394,6 +394,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 			MapElement mapE = (MapElement)this.model.getObject(selection[(i)]);
 			map.setSelected(mapE, true);
 		}
+		this.mapFrame.getContext().getDispatcher().firePropertyChange(
+				new MapEvent(this, MapEvent.UPDATE_SELECTION));		
 		this.mapFrame.getContext().getDispatcher().firePropertyChange(
 				new MapEvent(this, MapEvent.SELECTION_CHANGED, map.getSelectedElements()));		
 		
