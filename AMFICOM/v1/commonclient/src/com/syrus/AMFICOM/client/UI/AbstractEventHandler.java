@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractEventHandler.java,v 1.2 2005/08/02 13:03:21 arseniy Exp $
+ * $Id: AbstractEventHandler.java,v 1.3 2005/08/19 12:45:55 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,21 +10,23 @@ package com.syrus.AMFICOM.client.UI;
 
 import java.beans.PropertyChangeListener;
 
+import javax.swing.event.ChangeListener;
+
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/08/02 13:03:21 $
+ * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/08/19 12:45:55 $
  * @module commonclient
  */
 
-public abstract class AbstractEventHandler implements PropertyChangeListener {
+public abstract class AbstractEventHandler implements PropertyChangeListener, ChangeListener {
 	protected ApplicationContext aContext;
 	protected AbstractPropertiesFrame frame;
 	
 	public AbstractEventHandler(AbstractPropertiesFrame frame) {
 		this.frame = frame;
-		frame.setEventhandler(this);
+		frame.addEventhandler(this);
 	}
 	
 	public void setContext(ApplicationContext aContext) {

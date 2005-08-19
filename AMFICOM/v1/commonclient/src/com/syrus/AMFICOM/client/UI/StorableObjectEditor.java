@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectEditor.java,v 1.2 2005/08/02 13:03:21 arseniy Exp $
+ * $Id: StorableObjectEditor.java,v 1.3 2005/08/19 12:45:55 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,14 @@
 
 package com.syrus.AMFICOM.client.UI;
 
+import java.util.Collection;
+
 import javax.swing.JComponent;
 import javax.swing.event.ChangeListener;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/08/02 13:03:21 $
+ * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/08/19 12:45:55 $
  * @module commonclient
  */
 
@@ -37,4 +39,5 @@ public interface StorableObjectEditor {
 
 	void addChangeListener(ChangeListener listener);
 	void removeChangeListener(ChangeListener listener);
+	Collection<ChangeListener> getChangeListeners();
 }

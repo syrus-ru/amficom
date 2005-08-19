@@ -1,5 +1,5 @@
 /*-
- * $Id: IconedNode.java,v 1.5 2005/08/11 18:51:08 arseniy Exp $
+ * $Id: IconedNode.java,v 1.6 2005/08/19 12:45:55 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.logic.AbstractItem;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/11 18:51:08 $
+ * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/08/19 12:45:55 $
  * @module commonclient
  */
 
@@ -39,22 +39,22 @@ public class IconedNode extends AbstractItem implements Namable {
 	}
 	
 	public IconedNode(Namable object, Icon icon, boolean allowsChildren) {
-		this(object, object.getName(), icon, allowsChildren);
+		this.object = object;
+		this.name = object.getName();
+		this.icon = icon;
+		this.allowsChildren = allowsChildren;
 	}
 	
 	public IconedNode(Object object, String name, boolean allowsChildren) {
 		this(object, name, null, allowsChildren);
-		this.nameSet = true;
 	}
 	
 	public IconedNode(Object object, String name) {
 		this(object, name, null, true);
-		this.nameSet = true;
 	}
 	
 	public IconedNode(Object object, String name, Icon icon) {
 		this(object, name, icon, true);
-		this.nameSet = true;
 	}
 	
 	public IconedNode(Object object, String name, Icon icon, boolean allowsChildren) {
@@ -62,6 +62,7 @@ public class IconedNode extends AbstractItem implements Namable {
 		this.name = name;
 		this.icon = icon;
 		this.allowsChildren = allowsChildren;
+		this.nameSet = true;
 	}
 	
 	public void setCanHaveChildren(boolean canHaveChildren) {

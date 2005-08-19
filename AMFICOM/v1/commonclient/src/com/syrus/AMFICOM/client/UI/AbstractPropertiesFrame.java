@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractPropertiesFrame.java,v 1.3 2005/08/02 13:03:21 arseniy Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.4 2005/08/19 12:45:55 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,8 @@ package com.syrus.AMFICOM.client.UI;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Container;
+import java.util.LinkedList;
+import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JInternalFrame;
@@ -18,20 +20,18 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
-import javax.swing.event.ChangeEvent;
-import javax.swing.event.ChangeListener;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/02 13:03:21 $
+ * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/08/19 12:45:55 $
  * @module commonclient
  */
 
-public abstract class AbstractPropertiesFrame extends JInternalFrame implements ChangeListener {
-	protected AbstractEventHandler eventHandler;
+public abstract class AbstractPropertiesFrame extends JInternalFrame {
+	protected List<AbstractEventHandler> eventHandlers = new LinkedList<AbstractEventHandler>();
 	protected StorableObjectEditor editor;
 	protected JComponent emptyPane;
 	
@@ -67,27 +67,23 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame implements 
 		super.doDefaultCloseAction();
 	}
 	
-	public void setEventhandler(AbstractEventHandler eventHandler) {
-		this.eventHandler = eventHandler;
+	public void addEventhandler(AbstractEventHandler eventHandler) {
+		this.eventHandlers.add(eventHandler);
 	}
 	
 	public void setContext(ApplicationContext aContext) {
-		if (this.eventHandler != null) {
-			this.eventHandler.setContext(aContext);
+		for (AbstractEventHandler handler : this.eventHandlers) {
+			handler.setContext(aContext);
 		}
 	}
 	
 	public void setVisualManager(VisualManager manager) {
-		if (this.editor != null) {
-			this.editor.removeChangeListener(this);
-		}
 		JComponent comp = this.emptyPane;
 		this.editor = null;
 		if (manager != null) {
 			this.editor = getEditor(manager);
 			if (this.editor != null) {
 				comp = this.editor.getGUI();
-				this.editor.addChangeListener(this);
 			}
 		}
 		setPropertiesPane(comp);
@@ -102,11 +98,6 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame implements 
 				AbstractPropertiesFrame.this.updateUI();
 			}
 		});
-	}
-
-	public void stateChanged(ChangeEvent e) {
-		// TODO Auto-generated method stub
-		
 	}
 	
 	protected abstract StorableObjectEditor getEditor(VisualManager manager);

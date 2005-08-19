@@ -1,5 +1,5 @@
 /*-
- * $Id: DefaultStorableObjectEditor.java,v 1.2 2005/08/02 13:03:21 arseniy Exp $
+ * $Id: DefaultStorableObjectEditor.java,v 1.3 2005/08/19 12:45:55 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,13 +15,13 @@ import javax.swing.JComponent;
 import javax.swing.event.*;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/08/02 13:03:21 $
+ * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/08/19 12:45:55 $
  * @module commonclient
  */
 
 public abstract class DefaultStorableObjectEditor implements StorableObjectEditor {
-	List changeListeners = new LinkedList(); 
+	List<ChangeListener> changeListeners = new LinkedList<ChangeListener>(); 
 	UndoableKeyAdapter keyAdapter;
 	
 	protected DefaultStorableObjectEditor() {
@@ -36,8 +36,21 @@ public abstract class DefaultStorableObjectEditor implements StorableObjectEdito
 		this.changeListeners.remove(listener);
 	}
 	
+	public Collection<ChangeListener> getChangeListeners() {
+		return Collections.unmodifiableList(this.changeListeners);
+	}
+	
 	protected void addToUndoableListener(JComponent component) {
 		component.addKeyListener(this.keyAdapter);
+	}
+	
+	public void commitChanges() {
+		Object obj = getObject();
+		if (obj != null) {
+			for (ChangeListener changeListener : this.changeListeners) {
+				changeListener.stateChanged(new ChangeEvent(obj));
+			}
+		}
 	}
 	
 	protected class UndoableKeyAdapter extends KeyAdapter {
@@ -49,14 +62,9 @@ public abstract class DefaultStorableObjectEditor implements StorableObjectEdito
 		public void keyPressed(KeyEvent e) {
 			if(e.getKeyCode() == KeyEvent.VK_ENTER) {
 				this.editor.commitChanges();
-				Object obj = this.editor.getObject();
-				if (obj != null)
-					for (Iterator it = DefaultStorableObjectEditor.this.changeListeners.iterator(); it.hasNext();) {
-						((ChangeListener)it.next()).stateChanged(new ChangeEvent(obj));
-					}
-			}
-			if(e.getKeyCode() == KeyEvent.VK_ESCAPE)
+			} else if(e.getKeyCode() == KeyEvent.VK_ESCAPE) {
 				this.editor.setObject(this.editor.getObject());
+			}
 		}
 	}
 }
