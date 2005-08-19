@@ -1,5 +1,5 @@
 /*-
- * $Id: event.idl,v 1.22 2005/07/24 17:17:46 arseniy Exp $
+ * $Id: event.idl,v 1.23 2005/08/19 14:18:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ module event {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
 
-			public general::corba::IdlIdentifierSeq parameterTypeIds;
+			public general::corba::IdlParameterTypeEnumSeq parameterTypes;
 			public IdlUserAlertKindsSeq userAlertKinds;
 
 			factory init(in general::corba::IdlIdentifier id,
@@ -55,7 +55,7 @@ module event {
 					in long long version,
 					in general::corba::WString32 codename,
 					in general::corba::WString256 description,
-					in general::corba::IdlIdentifierSeq parameterTypeIds,
+					in general::corba::IdlParameterTypeEnumSeq parameterTypes,
 					in IdlUserAlertKindsSeq userAlertKinds);
 		};
 
@@ -80,7 +80,7 @@ module event {
 		valuetype IdlEvent : general::corba::IdlStorableObject {
 			typedef struct IdlEventParameter {
 				general::corba::IdlIdentifier id;
-				general::corba::IdlIdentifier _typeId;
+				general::corba::IdlParameterTypeEnum type;
 				wstring value;
 			} EventParameter;
 			typedef sequence<EventParameter> EventParameterSeq;

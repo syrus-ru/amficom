@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.102 2005/07/28 16:00:53 arseniy Exp $
+ * $Id: general.idl,v 1.103 2005/08/19 14:18:37 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,6 +55,42 @@ module general {
 			DATA_TYPE_RAW,
 			DATA_TYPE_BOOLEAN
 		};
+
+		enum IdlMeasurementUnit {
+			NONDIMENSIONAL,
+
+			KILOMETER,
+			METER,
+			NANOMETER,
+
+			SECOND,
+			NANOSECOND
+		};
+
+		enum IdlParameterTypeEnum {
+			REF_WAVE_LENGTH,
+			REF_TRACE_LENGTH,
+			REF_RESOLUTION,
+			REF_PULSE_WIDTH_LOW_RES,
+			REF_PULSE_WIDTH_HIGH_RES,
+			REF_INDEX_OF_REFRACTION,
+			REF_AVERAGE_COUNT,
+			REF_FLAG_GAIN_SPLICE_ON,
+			REF_FLAG_LIFE_FIBER_DETECT,
+
+			REFLECTOGRAMMA,
+			REFLECTOGRAMMA_ETALON,
+			DADARA_ETALON,
+			DADARA_CRITERIA,
+			DADARA_ANALYSIS_RESULT,
+			DADARA_ALARMS,
+
+			PREDICTION_TIME,
+			PREDICTION_TIME_START,
+			PREDICTION_TIME_END
+		};
+
+		typedef sequence<IdlParameterTypeEnum> IdlParameterTypeEnumSeq;
 
 
 //////////////////// Exceptions ///////////////////
@@ -244,30 +280,6 @@ module general {
 					in security::corba::IdlSessionKey sessionKey)
 					raises (AMFICOMRemoteException);
 		};
-
-
-////////////////////// ParameterType //////////////////////
-
-		valuetype IdlParameterType : IdlStorableObject {
-			public WString32 codename;
-			public WString256 description;
-
-			public WString128 name;
-			public IdlDataType dataType;
-
-			factory init(in IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in IdlIdentifier creatorId,
-					in IdlIdentifier modifierId,
-					in long long version,
-					in WString32 codename,
-					in WString256 description,
-					in WString128 name,
-					in IdlDataType dataType);
-		};
-
-		typedef sequence<IdlParameterType> IdlParameterTypeSeq;
 
 
 //////////////////// CharacteristicType ///////////////////

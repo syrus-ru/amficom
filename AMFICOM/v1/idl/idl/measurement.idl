@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.72 2005/07/24 17:17:46 arseniy Exp $
+ * $Id: measurement.idl,v 1.73 2005/08/19 14:18:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,8 +29,9 @@ module measurement {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
 
-			public general::corba::IdlIdentifierSeq inParameterTypeIds;
-			public general::corba::IdlIdentifierSeq outParameterTypeIds;
+			public general::corba::IdlParameterTypeEnumSeq inParameterTypes;
+			public general::corba::IdlParameterTypeEnumSeq outParameterTypes;
+
 			public general::corba::IdlIdentifierSeq measurementPortTypeIds;
 
 			factory init(in general::corba::IdlIdentifier id,
@@ -41,8 +42,8 @@ module measurement {
 					in long long version,
 					in general::corba::WString32 codename,
 					in general::corba::WString256 description,
-					in general::corba::IdlIdentifierSeq inParameterTypeIds,
-					in general::corba::IdlIdentifierSeq outParameterTypeIds,
+					in general::corba::IdlParameterTypeEnumSeq inParameterTypes,
+					in general::corba::IdlParameterTypeEnumSeq outParameterTypes,
 					in general::corba::IdlIdentifierSeq measurementPortTypeIds);
 		};
 
@@ -53,10 +54,10 @@ module measurement {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
 
-			public general::corba::IdlIdentifierSeq inParameterTypeIds;
-			public general::corba::IdlIdentifierSeq criteriaParameterTypeIds;
-			public general::corba::IdlIdentifierSeq etalonParameterTypeIds;
-			public general::corba::IdlIdentifierSeq outParameterTypeIds;
+			public general::corba::IdlParameterTypeEnumSeq inParameterTypes;
+			public general::corba::IdlParameterTypeEnumSeq criteriaParameterTypes;
+			public general::corba::IdlParameterTypeEnumSeq etalonParameterTypes;
+			public general::corba::IdlParameterTypeEnumSeq outParameterTypes;
 
 			public general::corba::IdlIdentifierSeq measurementTypeIds;
 
@@ -68,10 +69,10 @@ module measurement {
 					in long long version,
 					in general::corba::WString32 codename,
 					in general::corba::WString256 description,
-					in general::corba::IdlIdentifierSeq inParameterTypeIds,
-					in general::corba::IdlIdentifierSeq criteriaParameterTypeIds,
-					in general::corba::IdlIdentifierSeq etalonParameterTypeIds,
-					in general::corba::IdlIdentifierSeq outParameterTypeIds,
+					in general::corba::IdlParameterTypeEnumSeq inParameterTypes,
+					in general::corba::IdlParameterTypeEnumSeq criteriaParameterTypes,
+					in general::corba::IdlParameterTypeEnumSeq etalonParameterTypes,
+					in general::corba::IdlParameterTypeEnumSeq outParameterTypes,
 					in general::corba::IdlIdentifierSeq measurementTypeIds);
 		};
 
@@ -82,10 +83,10 @@ module measurement {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
 
-			public general::corba::IdlIdentifierSeq inParameterTypeIds;
-			public general::corba::IdlIdentifierSeq thresholdParameterTypeIds;
-			public general::corba::IdlIdentifierSeq etalonParameterTypeIds;
-			public general::corba::IdlIdentifierSeq outParameterTypeIds;
+			public general::corba::IdlParameterTypeEnumSeq inParameterTypes;
+			public general::corba::IdlParameterTypeEnumSeq thresholdParameterTypes;
+			public general::corba::IdlParameterTypeEnumSeq etalonParameterTypes;
+			public general::corba::IdlParameterTypeEnumSeq outParameterTypes;
 
 			public general::corba::IdlIdentifierSeq measurementTypeIds;
 
@@ -97,10 +98,10 @@ module measurement {
 					in long long version,
 					in general::corba::WString32 codename,
 					in general::corba::WString256 description,
-					in general::corba::IdlIdentifierSeq inParameterTypeIds,
-					in general::corba::IdlIdentifierSeq thresholdParameterTypeIds,
-					in general::corba::IdlIdentifierSeq etalonParameterTypeIds,
-					in general::corba::IdlIdentifierSeq outParameterTypeIds,
+					in general::corba::IdlParameterTypeEnumSeq inParameterTypes,
+					in general::corba::IdlParameterTypeEnumSeq thresholdParameterTypes,
+					in general::corba::IdlParameterTypeEnumSeq etalonParameterTypes,
+					in general::corba::IdlParameterTypeEnumSeq outParameterTypes,
 					in general::corba::IdlIdentifierSeq measurementTypeIds);
 		};
 
@@ -111,8 +112,8 @@ module measurement {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
 
-			public general::corba::IdlIdentifierSeq inParameterTypeIds;
-			public general::corba::IdlIdentifierSeq outParameterTypeIds;
+			public general::corba::IdlParameterTypeEnumSeq inParameterTypes;
+			public general::corba::IdlParameterTypeEnumSeq outParameterTypes;
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -122,8 +123,8 @@ module measurement {
 					in long long version,
 					in general::corba::WString32 codename,
 					in general::corba::WString256 description,
-					in general::corba::IdlIdentifierSeq inParameterTypeIds,
-					in general::corba::IdlIdentifierSeq outParameterTypeIds);
+					in general::corba::IdlParameterTypeEnumSeq inParameterTypes,
+					in general::corba::IdlParameterTypeEnumSeq outParameterTypes);
 		};
 
 
@@ -272,7 +273,7 @@ module measurement {
 
 		struct IdlParameter {
 			general::corba::IdlIdentifier id;
-			general::corba::IdlIdentifier _typeId;
+			general::corba::IdlParameterTypeEnum type;
 			::CORBA::OctetSeq value;
 		};
 		typedef sequence<IdlParameter> IdlParameterSeq;
