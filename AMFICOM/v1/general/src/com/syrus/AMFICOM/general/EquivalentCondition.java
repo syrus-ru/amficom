@@ -1,5 +1,5 @@
 /*
-* $Id: EquivalentCondition.java,v 1.13 2005/08/08 11:27:25 arseniy Exp $
+* $Id: EquivalentCondition.java,v 1.14 2005/08/19 07:56:51 bob Exp $
 *
 * Copyright ø 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlEqui
 /**
  * Equivalent (identical, allways true) condition
  * written with especial cynicism
- * @version $Revision: 1.13 $, $Date: 2005/08/08 11:27:25 $
- * @author ÷÷œ‘ $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/08/19 07:56:51 $
+ * @author ÷÷œ‘ $Author: bob $
  * @module general
  */
 public final class EquivalentCondition implements StorableObjectCondition {
@@ -75,5 +75,10 @@ public final class EquivalentCondition implements StorableObjectCondition {
 		final IdlStorableObjectCondition condition = new IdlStorableObjectCondition();
 		condition.equivalentCondition(transferable);
 		return condition;
+	}
+	
+	@Override
+	public String toString() {
+		return "all " + ObjectEntities.codeToString(this.entityCode);
 	}
 }

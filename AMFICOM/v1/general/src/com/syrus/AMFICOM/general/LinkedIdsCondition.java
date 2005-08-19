@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.48 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.49 2005/08/19 07:56:51 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.util.Log;
  * {@link #isNeedMore(Set)}and {@link #setEntityCode(Short)}.</li>
  * </ul>
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.48 $, $Date: 2005/08/08 11:27:25 $
+ * @author $Author: bob $
+ * @version $Revision: 1.49 $, $Date: 2005/08/19 07:56:51 $
  * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -421,4 +421,13 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 				IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
+	@Override
+	public String toString() {
+		StringBuffer buffer = new StringBuffer();
+		buffer.append("all ");
+		buffer.append(ObjectEntities.codeToString(this.delegate.entityCode));
+		buffer.append(" for linked ids ");
+		buffer.append(Identifier.createStrings(this.delegate.linkedIds));
+		return buffer.toString();
+	}
 }

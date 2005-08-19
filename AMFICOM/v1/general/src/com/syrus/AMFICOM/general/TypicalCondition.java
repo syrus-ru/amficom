@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.33 2005/08/08 11:27:26 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.34 2005/08/19 07:56:51 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -123,8 +123,8 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.33 $, $Date: 2005/08/08 11:27:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.34 $, $Date: 2005/08/19 07:56:51 $
+ * @author $Author: bob $
  * @module general
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -1297,5 +1297,219 @@ public class TypicalCondition implements StorableObjectCondition {
 
 	public final void setValue(final Object value) {
 		this.delegate.value = value;
+	}
+	
+	@Override
+	public String toString() {
+		final StringBuffer buffer = new StringBuffer(); 
+		buffer.append(this.delegate.key);
+		switch (this.delegate.type) {
+			case TypicalSort._TYPE_NUMBER_INT:
+			case TypicalSort._TYPE_NUMBER_DOUBLE:
+			case TypicalSort._TYPE_NUMBER_LONG:
+				switch (this.delegate.operation) {
+					case OperationSort._OPERATION_EQUALS: {
+						switch (this.delegate.type) {
+							case TypicalSort._TYPE_NUMBER_INT:
+								buffer.append(" int == ");
+								buffer.append(this.delegate.firstInt);
+								break;
+							case TypicalSort._TYPE_NUMBER_DOUBLE:
+								buffer.append(" double == ");
+								buffer.append(this.delegate.firstDouble);
+								break;
+							case TypicalSort._TYPE_NUMBER_LONG:
+								buffer.append(" long == ");
+								buffer.append(this.delegate.firstLong);
+								break;
+							default:
+								Log.errorMessage("TypicalCondition.toString | unknown number code " + this.delegate.type);
+								break;
+						}
+					}
+						break;
+					case OperationSort._OPERATION_GREAT: {
+						switch (this.delegate.type) {
+							case TypicalSort._TYPE_NUMBER_INT:
+								buffer.append(" int > ");
+								buffer.append(this.delegate.firstInt);
+								break;
+							case TypicalSort._TYPE_NUMBER_DOUBLE:
+								buffer.append(" double > ");
+								buffer.append(this.delegate.firstDouble);
+								break;
+							case TypicalSort._TYPE_NUMBER_LONG:
+								buffer.append(" long > ");
+								buffer.append(this.delegate.firstLong);
+								break;
+							default:
+								Log.errorMessage("TypicalCondition.toString | unknown number code " + this.delegate.type);
+								break;
+						}
+					}
+						break;
+					case OperationSort._OPERATION_LESS: {
+						switch (this.delegate.type) {
+							case TypicalSort._TYPE_NUMBER_INT:
+								buffer.append(" int < ");
+								buffer.append(this.delegate.firstInt);
+								break;
+							case TypicalSort._TYPE_NUMBER_DOUBLE:
+								buffer.append(" double < ");
+								buffer.append(this.delegate.firstDouble);
+								break;
+							case TypicalSort._TYPE_NUMBER_LONG:
+								buffer.append(" long < ");
+								buffer.append(this.delegate.firstLong);
+								break;
+							default:
+								Log.errorMessage("TypicalCondition.toString | unknown number code " + this.delegate.type);
+								break;
+						}
+					}
+						break;
+					case OperationSort._OPERATION_GREAT_EQUALS: {
+						switch (this.delegate.type) {
+							case TypicalSort._TYPE_NUMBER_INT:
+								buffer.append(" int >= ");
+								buffer.append(this.delegate.firstInt);
+								break;
+							case TypicalSort._TYPE_NUMBER_DOUBLE:
+								buffer.append(" double >= ");
+								buffer.append(this.delegate.firstDouble);
+								break;
+							case TypicalSort._TYPE_NUMBER_LONG:
+								buffer.append(" long >= ");
+								buffer.append(this.delegate.firstLong);
+								break;
+							default:
+								Log.errorMessage("TypicalCondition.toString | unknown number code " + this.delegate.type);
+								break;
+						}
+					}
+						break;
+					case OperationSort._OPERATION_LESS_EQUALS: {
+						switch (this.delegate.type) {
+							case TypicalSort._TYPE_NUMBER_INT:
+								buffer.append(" int <= ");
+								buffer.append(this.delegate.firstInt);
+								break;
+							case TypicalSort._TYPE_NUMBER_DOUBLE:
+								buffer.append(" double <= ");
+								buffer.append(this.delegate.firstDouble);
+								break;
+							case TypicalSort._TYPE_NUMBER_LONG:
+								buffer.append(" long <= ");
+								buffer.append(this.delegate.firstLong);
+								break;
+							default:
+								Log.errorMessage("TypicalCondition.toString | unknown number code " + this.delegate.type);
+								break;
+						}
+					}
+						break;
+					case OperationSort._OPERATION_IN_RANGE: {
+						switch (this.delegate.type) {
+							case TypicalSort._TYPE_NUMBER_INT:
+								buffer.append(" int in (");
+								buffer.append(this.delegate.firstInt);
+								buffer.append(", ");
+								buffer.append(this.delegate.secondInt);
+								buffer.append(")");
+								break;
+							case TypicalSort._TYPE_NUMBER_DOUBLE:
+								buffer.append(" double in (");
+								buffer.append(this.delegate.firstDouble);
+								buffer.append(", ");
+								buffer.append(this.delegate.secondDouble);
+								buffer.append(")");
+								break;
+							case TypicalSort._TYPE_NUMBER_LONG:
+								buffer.append(" long in (");
+								buffer.append(this.delegate.firstLong);
+								buffer.append(", ");
+								buffer.append(this.delegate.secondLong);
+								buffer.append(")");
+								break;
+							default:
+								Log.errorMessage("TypicalCondition.toString | unknown number code " + this.delegate.type);
+								break;
+						}
+					}
+						break;
+					default:
+						Log.errorMessage("TypicalCondition.toString | unknown operation code " + this.delegate.operation);
+						break;
+				}
+				break;
+			case TypicalSort._TYPE_STRING:
+				String v = this.delegate.value.toString();
+				buffer.append(" string is ");
+				switch (this.delegate.operation) {
+					case OperationSort._OPERATION_EQUALS:
+						buffer.append("equals ");
+						break;
+					case OperationSort._OPERATION_SUBSTRING:
+						buffer.append("substring of ");
+						break;
+					case OperationSort._OPERATION_REGEXP:
+						buffer.append("match regexp ");
+						break;
+					case OperationSort._OPERATION_CI_REGEXP:
+						buffer.append("match case insencetive regexp ");
+						break;
+					default:
+						Log.errorMessage("TypicalCondition.toString | unknown operation code " + this.delegate.operation);
+						break;
+				}
+				buffer.append(v);
+				break;
+			case TypicalSort._TYPE_DATE:
+				buffer.append(" date ");
+				switch (this.delegate.operation) {
+					case OperationSort._OPERATION_IN_RANGE:
+						buffer.append(" between ");
+						buffer.append(this.delegate.value);
+						buffer.append(" and ");
+						buffer.append(this.delegate.otherValue);
+						break;
+					case OperationSort._OPERATION_EQUALS:
+						buffer.append(" equals ");
+						buffer.append(this.delegate.value);
+						break;						
+					case OperationSort._OPERATION_GREAT:
+						buffer.append(" after ");
+						buffer.append(this.delegate.value);
+						break;
+					case OperationSort._OPERATION_GREAT_EQUALS:
+						buffer.append(" after or equals ");
+						buffer.append(this.delegate.value);
+						break;
+					case OperationSort._OPERATION_LESS:
+						buffer.append(" before ");
+						buffer.append(this.delegate.value);
+						break;
+					case OperationSort._OPERATION_LESS_EQUALS:
+						buffer.append(" before or equals ");
+						buffer.append(this.delegate.value);
+						break;
+					default:
+						Log.errorMessage("TypicalCondition.toString | unknown operation code " + this.delegate.operation);
+						break;
+				}
+				break;
+			case TypicalSort._TYPE_BOOLEAN:
+				switch (this.delegate.operation) {
+					case OperationSort._OPERATION_EQUALS:
+						buffer.append(" boolean is ");
+						buffer.append(this.delegate.value);
+						break;
+					default:
+						Log.errorMessage("TypicalCondition.toString | unknown operation code " + this.delegate.operation);
+						break;
+				}
+				break;
+		}
+		return buffer.toString();
 	}
 }
