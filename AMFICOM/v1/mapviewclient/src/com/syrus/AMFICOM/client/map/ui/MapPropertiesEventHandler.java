@@ -1,5 +1,5 @@
 /*-
- * $Id: MapPropertiesEventHandler.java,v 1.1 2005/08/18 13:54:58 krupenn Exp $
+ * $Id: MapPropertiesEventHandler.java,v 1.2 2005/08/19 12:49:54 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/08/18 13:54:58 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/19 12:49:54 $
  * @module schemeclient
  */
 
@@ -77,6 +77,8 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 					(JDesktopPane )this.frame.getParent());
 			if(mapFrame == null)
 				return;
+
+			StorableObjectEditor previousEditor = this.frame.getCurrentEditor();
 
 			NetMapViewer netMapViewer = mapFrame.getMapViewer();
 
@@ -150,6 +152,9 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 					cableEditor.setNetMapViewer(netMapViewer);
 				}
 				if(selectedObject != null) {
+					if(previousEditor != null) {
+						previousEditor.removeChangeListener(this);
+					}
 					editor.addChangeListener(this);
 					editor.setObject(selectedObject);
 				}
