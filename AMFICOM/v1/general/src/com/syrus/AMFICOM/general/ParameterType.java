@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.52 2005/08/19 16:28:26 arseniy Exp $
+ * $Id: ParameterType.java,v 1.53 2005/08/19 17:52:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/08/19 16:28:26 $
+ * @version $Revision: 1.53 $, $Date: 2005/08/19 17:52:10 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -110,8 +110,8 @@ public enum ParameterType implements TransferableObject {
 		}
 	}
 
-	public static ParameterType fromTransferable(final IdlParameterType idlParameterTypeEnum) {
-		return fromInt(idlParameterTypeEnum.value());
+	public static ParameterType fromTransferable(final IdlParameterType idlParameterType) {
+		return fromInt(idlParameterType.value());
 	}
 
 	public int getCode() {
