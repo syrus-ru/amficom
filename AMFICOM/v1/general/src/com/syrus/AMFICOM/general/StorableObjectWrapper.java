@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.16 2005/08/19 14:12:53 arseniy Exp $
+ * $Id: StorableObjectWrapper.java,v 1.17 2005/08/19 14:41:20 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.util.Wrapper;
  * a static method <code>getInstance()</code>.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/08/19 14:12:53 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/19 14:41:20 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -54,13 +54,13 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 	
 	public static final String VIEW_NAME = "view_name";
 
-	public static StorableObjectWrapper getWrapper(final short entityCode) throws IllegalDataException {
-		StorableObjectWrapper wrapper = null;
-		String className = ObjectGroupEntities.getPackageName(entityCode) + "."
+	public static <T extends StorableObject> StorableObjectWrapper<T> getWrapper(final short entityCode) throws IllegalDataException {
+		StorableObjectWrapper<T> wrapper = null;
+		final String className = ObjectGroupEntities.getPackageName(entityCode) + "."
 				+ ObjectEntities.codeToString(entityCode) + "Wrapper";
 		try {
-			Class clazz = Class.forName(className);
-			Method method = clazz.getMethod("getInstance", new Class[0]);
+			final Class clazz = Class.forName(className);
+			final Method method = clazz.getMethod("getInstance", new Class[0]);
 			wrapper = (StorableObjectWrapper) method.invoke(null, new Object[0]);
 
 		} catch (ClassNotFoundException e) {

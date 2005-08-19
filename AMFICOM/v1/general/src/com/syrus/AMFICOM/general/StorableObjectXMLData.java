@@ -1,5 +1,5 @@
 /*-
-* $Id: StorableObjectXMLData.java,v 1.1 2005/08/19 14:02:46 bob Exp $
+* $Id: StorableObjectXMLData.java,v 1.2 2005/08/19 14:41:20 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,31 +14,24 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/19 14:02:46 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/08/19 14:41:20 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
  */
 public abstract class StorableObjectXMLData {
 
-	public final Object getObject(final String className,
-	                      final String value) throws IllegalDataException {
+	public final Object getObject(final String className, final String value) throws IllegalDataException {
 		Object object = null;
 		if (className.equals(StorableObject.class.getName())) {
-			final Identifier id = value != null ? 
-					new Identifier(value) : 
-					Identifier.VOID_IDENTIFIER;
+			final Identifier id = value != null ? new Identifier(value) : Identifier.VOID_IDENTIFIER;
 			try {
 				object = StorableObjectPool.getStorableObject(id, true);
 			} catch (ApplicationException e) {
-				throw new IllegalDataException(
-					"StorableObjectXMLData.getObject | Caught ApplicationException "
-							+ e.getMessage());
+				throw new IllegalDataException("StorableObjectXMLData.getObject | Caught ApplicationException " + e.getMessage());
 			}
 		} else if (className.equals(Identifier.class.getName())) {
-			object = value != null ? 
-					new Identifier(value) : 
-					Identifier.VOID_IDENTIFIER;
+			object = value != null ? new Identifier(value) : Identifier.VOID_IDENTIFIER;
 		} else if (className.equals(StorableObjectVersion.class.getName())) {
 			object = new StorableObjectVersion(Long.parseLong(value));
 		} else if (className.equals(DataType.class.getName())) {
@@ -69,19 +62,19 @@ public abstract class StorableObjectXMLData {
 			if (value != null) {
 				byte[] bs = new byte[value.length() / 2];
 				for (int j = 0; j < bs.length; j++)
-					bs[j] = (byte) ((char) Integer.parseInt(
-						value.substring(j << 1, (j + 1) << 1), 16));
+					bs[j] = (byte) ((char) Integer.parseInt(value.substring(j << 1, (j + 1) << 1), 16));
 				object = bs;
-			} else
+			} else {
 				object = new byte[0];
+			}
 		} else {
 			object = value;
 		}
 		return object;
 	}
-	
+
 	public final String getClassName(final Object object) {
-		String className = object.getClass().getName();		
+		String className = object.getClass().getName();
 		if (object instanceof StorableObject) {
 			className = StorableObject.class.getName();
 		} else if (object instanceof Collection) {
@@ -91,7 +84,7 @@ public abstract class StorableObjectXMLData {
 		}
 		return className;
 	}
-	
+
 	public String getValue(final Object object) {
 		String value = null;
 		if (object == null) {

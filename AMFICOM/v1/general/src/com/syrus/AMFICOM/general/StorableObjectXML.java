@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.37 2005/08/19 14:03:56 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.38 2005/08/19 14:41:20 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.Log;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.37 $, $Date: 2005/08/19 14:03:56 $
- * @author $Author: bob $
+ * @version $Revision: 1.38 $, $Date: 2005/08/19 14:41:20 $
+ * @author $Author: arseniy $
  * @module general
  */
 public class StorableObjectXML {
@@ -46,12 +46,14 @@ public class StorableObjectXML {
 		this.driver = driver;
 	}
 
-	public <T extends StorableObject> T retrieve(final Identifier identifier) throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
+	public <T extends StorableObject> T retrieve(final Identifier identifier)
+			throws IllegalDataException,
+				ObjectNotFoundException,
+				RetrieveObjectException {
 		final Map<String, Object> objectMap = this.driver.getObjectMap(identifier);
 		final short entityCode = identifier.getMajor();
-		final T storableObject = this.<T>getStorableObject(identifier, (String) objectMap.get(CLASSNAME));
-		final StorableObjectWrapper wrapper = StorableObjectWrapper.getWrapper(entityCode);
+		final T storableObject = this.<T> getStorableObject(identifier, (String) objectMap.get(CLASSNAME));
+		final StorableObjectWrapper<T> wrapper = StorableObjectWrapper.getWrapper(entityCode);
 		storableObject.setAttributes((Date) objectMap.get(StorableObjectWrapper.COLUMN_CREATED),
 				(Date) objectMap.get(StorableObjectWrapper.COLUMN_MODIFIED),
 				(Identifier) objectMap.get(StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -69,18 +71,19 @@ public class StorableObjectXML {
 		}
 		return storableObject;
 	}
-	
-	public <T extends StorableObject> Set<T> retrieveButIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
-	throws RetrieveObjectException,
-		IllegalDataException {
+
+	public <T extends StorableObject> Set<T> retrieveButIdsByCondition(final Set<Identifier> ids,
+			final StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
 		Set<T> set = null;
 		final Set<Identifier> identifiers = this.reflectXMLCondition(condition).getIdsByCondition();
-		Log.debugMessage("StorableObjectXML.retrieveButIdsByCondition | identifiers:" + Identifier.createStrings(identifiers), Level.FINEST);
+		Log.debugMessage("StorableObjectXML.retrieveButIdsByCondition | identifiers:" + Identifier.createStrings(identifiers),
+				Level.FINEST);
 		identifiers.removeAll(ids);
-		Log.debugMessage("StorableObjectXML.retrieveButIdsByCondition | cleaned identifiers:" + Identifier.createStrings(identifiers), Level.FINEST);		
+		Log.debugMessage("StorableObjectXML.retrieveButIdsByCondition | cleaned identifiers:" + Identifier.createStrings(identifiers),
+				Level.FINEST);
 		for (final Identifier id : identifiers) {
 			try {
-				final T storableObject = this.<T>retrieve(id);
+				final T storableObject = this.<T> retrieve(id);
 				if (condition.isConditionTrue(storableObject)) {
 					if (set == null) {
 						set = new HashSet<T>();
@@ -89,12 +92,14 @@ public class StorableObjectXML {
 				}
 
 			} catch (ObjectNotFoundException e) {
-				final String msg = "StorableObjectXML.retrieveButIdsByCondition | object " + id.getIdentifierString()
-						+ " not found";
+				final String msg = "StorableObjectXML.retrieveButIdsByCondition | object " + id.getIdentifierString() + " not found";
 				throw new RetrieveObjectException(msg, e);
 			} catch (ApplicationException e) {
-				final String msg = "StorableObjectXML.retrieveButIdsByCondition | caught  " + e.getMessage() + " during check "
-						+ id.getIdentifierString() + " for condition ";
+				final String msg = "StorableObjectXML.retrieveButIdsByCondition | caught  "
+						+ e.getMessage()
+						+ " during check "
+						+ id.getIdentifierString()
+						+ " for condition ";
 				throw new RetrieveObjectException(msg, e);
 			}
 		}
@@ -102,29 +107,26 @@ public class StorableObjectXML {
 			set = Collections.emptySet();
 		return set;
 	}
-	
-	Set<Identifier> getIdentifiers(final short entityCode) throws IllegalDataException{
+
+	Set<Identifier> getIdentifiers(final short entityCode) throws IllegalDataException {
 		return this.driver.getIdentifiers(entityCode);
 	}
 
-	public void updateObject(final StorableObject storableObject, boolean force)
-			throws IllegalDataException, VersionCollisionException,
-			UpdateObjectException {
-		final StorableObjectWrapper wrapper = StorableObjectWrapper.getWrapper(storableObject.getId().getMajor());
+	public <T extends StorableObject> void updateObject(final T storableObject) throws IllegalDataException {
+		final StorableObjectWrapper<T> wrapper = StorableObjectWrapper.getWrapper(storableObject.getId().getMajor());
 		final List<String> keys = wrapper.getKeys();
 		final Map<String, Object> objectMap = new HashMap<String, Object>();
 		for (final String key : keys) {
 			objectMap.put(key, wrapper.getValue(storableObject, key));
 		}
 		final Identifier id = storableObject.getId();
-		{
-			final String className = storableObject.getClass().getName();
-			final String shortClassName = className.substring(className.lastIndexOf('.') + 1);
-			/* put short class name when id is not unambiguously define entity */
-			if (!shortClassName.equals(ObjectEntities.codeToString(id.getMajor())))
-				objectMap.put(CLASSNAME, shortClassName);
+		final String className = storableObject.getClass().getName();
+		final String shortClassName = className.substring(className.lastIndexOf('.') + 1);
+		/* put short class name when id is not unambiguously define entity */
+		if (!shortClassName.equals(ObjectEntities.codeToString(id.getMajor()))) {
+			objectMap.put(CLASSNAME, shortClassName);
 		}
-		
+
 		this.driver.deleteObject(id);
 
 		/**
@@ -141,15 +143,16 @@ public class StorableObjectXML {
 		storableObject.cleanupUpdate();
 	}
 
-	@SuppressWarnings("unchecked")
 	private <T extends StorableObject> T getStorableObject(final Identifier identifier, final String className) throws IllegalDataException {
 		final short entityCode = identifier.getMajor();
 		String clazzName;
-		if (className == null)
+		if (className == null) {
 			clazzName = ObjectGroupEntities.getPackageName(entityCode) + '.' + ObjectEntities.codeToString(entityCode);
-		else
+		}
+		else {
 			clazzName = ObjectGroupEntities.getPackageName(entityCode) + '.'
 					+ className.substring(className.lastIndexOf('.') + 1);
+		}
 		try {
 			final Class clazz = Class.forName(clazzName);
 			final Constructor[] constructors = clazz.getDeclaredConstructors();
@@ -202,23 +205,18 @@ public class StorableObjectXML {
 		}
 		throw new IllegalDataException("StorableObjectXML.getStorableObject | there is no constuctor(Identifier, Identifier, ...)");
 	}
-	
-	private XMLStorableObjectCondition reflectXMLCondition(final StorableObjectCondition condition) {
-		XMLStorableObjectCondition xmlStorableObjectCondition = null;
+
+	private <T extends StorableObjectCondition> XMLStorableObjectCondition<T> reflectXMLCondition(final StorableObjectCondition condition) {
+		XMLStorableObjectCondition<T> xmlStorableObjectCondition = null;
 		final String className = condition.getClass().getName();
 		final int lastPoint = className.lastIndexOf('.');
 		final String dbClassName = className.substring(0, lastPoint + 1) + "XML" + className.substring(lastPoint + 1);
 		try {
 			final Class clazz = Class.forName(dbClassName);
-			final Constructor constructor = 
-				clazz.getDeclaredConstructor(
-					new Class[] {
-							condition.getClass(),
-							StorableObjectXMLDriver.class});
+			final Constructor constructor = clazz.getDeclaredConstructor(new Class[] { condition.getClass(),
+					StorableObjectXMLDriver.class });
 			constructor.setAccessible(true);
-			xmlStorableObjectCondition = 
-				(XMLStorableObjectCondition) constructor.newInstance(
-					new Object[] {condition, this.driver});
+			xmlStorableObjectCondition = (XMLStorableObjectCondition) constructor.newInstance(new Object[] { condition, this.driver });
 		} catch (ClassNotFoundException e) {
 			Log.errorException(e);
 		} catch (SecurityException e) {
@@ -235,10 +233,12 @@ public class StorableObjectXML {
 			final Throwable cause = e.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
-				if (message == null)
+				if (message == null) {
 					assert false;
-				else
+				}
+				else {
 					assert false : message;
+				}
 			} else {
 				Log.errorException(e);
 			}

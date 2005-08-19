@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLStorableObjectCondition.java,v 1.1 2005/08/19 14:02:46 bob Exp $
+* $Id: XMLStorableObjectCondition.java,v 1.2 2005/08/19 14:41:20 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -24,43 +24,37 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/19 14:02:46 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/08/19 14:41:20 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
  */
 public abstract class XMLStorableObjectCondition<T extends StorableObjectCondition> extends StorableObjectXMLData {
 
-	protected T	condition;
-	protected StorableObjectXMLDriver	driver;
+	protected T condition;
+	protected StorableObjectXMLDriver driver;
 
-	protected XMLStorableObjectCondition(final T condition,
-	                           final StorableObjectXMLDriver driver) {
+	protected XMLStorableObjectCondition(final T condition, final StorableObjectXMLDriver driver) {
 		this.condition = condition;
 		this.driver = driver;
 	}
-	
+
 	public abstract Set<Identifier> getIdsByCondition() throws IllegalDataException;
-	
+
 	protected final String getBaseQuery() {
-		return "//" 
-			+ this.driver.getPackageName() 
-			+ "/"
-			+ "*[starts-with(name(),'" 
-				+ ObjectEntities.codeToString(this.condition.getEntityCode()) 
-				+ Identifier.SEPARATOR + "')]";
+		return "//"
+				+ this.driver.getPackageName()
+				+ "/"
+				+ "*[starts-with(name(),'"
+				+ ObjectEntities.codeToString(this.condition.getEntityCode())
+				+ Identifier.SEPARATOR
+				+ "')]";
 	}
-	
-	protected final Set<Identifier> getIdsByCondition(final String query,
-		final boolean useParent) 
-	throws IllegalDataException{
-		Log.debugMessage("XMLStorableObjectCondition.getIdsByCondition | query:"
-			+ query,
-			Level.FINEST);
+
+	protected final Set<Identifier> getIdsByCondition(final String query, final boolean useParent) throws IllegalDataException {
+		Log.debugMessage("XMLStorableObjectCondition.getIdsByCondition | query:" + query, Level.FINEST);
 		try {
-			final NodeList idNodeList = 
-				XPathAPI.selectNodeList(this.driver.getDoc(), 
-					query);
+			final NodeList idNodeList = XPathAPI.selectNodeList(this.driver.getDoc(), query);
 			final int size = idNodeList.getLength();
 			if (size == 0)
 				return Collections.emptySet();
@@ -71,25 +65,17 @@ public abstract class XMLStorableObjectCondition<T extends StorableObjectConditi
 				node = useParent ? node.getParentNode() : node;
 				idSet.add(new Identifier(node.getNodeName()));
 			}
-			
+
 			return idSet;
 		} catch (TransformerException e) {
-			final String msg = 
-				"XMLStorableObjectCondition.getIdsByCondition | Caught " 
-				+ e.getMessage();
+			final String msg = "XMLStorableObjectCondition.getIdsByCondition | Caught " + e.getMessage();
 			Log.errorMessage(msg);
 			throw new IllegalDataException(msg, e);
 		}
 	}
-	
-	public Set<Identifier> getIdsByCondition(final String field,
-			final String fieldValue) 
-	throws IllegalDataException{
-		return this.getIdsByCondition(this.getBaseQuery() 
-				+ '/' 
-				+ field 
-					+ "[text()='" + fieldValue + "']",
-			true);
+
+	public Set<Identifier> getIdsByCondition(final String field, final String fieldValue) throws IllegalDataException {
+		return this.getIdsByCondition(this.getBaseQuery() + '/' + field + "[text()='" + fieldValue + "']", true);
 	}
 
 }
