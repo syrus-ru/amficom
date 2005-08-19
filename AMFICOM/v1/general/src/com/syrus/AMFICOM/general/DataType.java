@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.2 2005/08/18 15:30:03 arseniy Exp $
+ * $Id: DataType.java,v 1.3 2005/08/19 14:10:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,26 +13,28 @@ import com.syrus.AMFICOM.general.corba.IdlDataType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/18 15:30:03 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/19 14:10:39 $
  * @author $Author: arseniy $
  * @module general
  */
 public enum DataType implements TransferableObject {
-	INTEGER("integer", "Integer"),
-	DOUBLE("double", "Double"),
-	STRING("string", "String"),
-	DATE("date", "Date"),
-	LONG("long", "Long"),
-	RAW("raw", "Raw"),
-	BOOLEAN("boolean", "Boolean");
+	INTEGER("integer"),
+	DOUBLE("double"),
+	STRING("string"),
+	DATE("date"),
+	LONG("long"),
+	RAW("raw"),
+	BOOLEAN("boolean");
+
+	private static final String KEY_ROOT = "DataType.Description.";
 
 	private final String codename;
 	private final String description;
 
 
-	private DataType(final String codename, final String description) {
+	private DataType(final String codename) {
 		this.codename = codename;
-		this.description = description;
+		this.description = LangModelGeneral.getString(KEY_ROOT + this.codename);
 	}
 
 	public static DataType fromInt(final int code) {
