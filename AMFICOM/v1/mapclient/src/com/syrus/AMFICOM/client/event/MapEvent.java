@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.7 2005/08/18 13:50:25 krupenn Exp $
+ * $Id: MapEvent.java,v 1.8 2005/08/19 15:42:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import java.beans.PropertyChangeEvent;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/08/18 13:50:25 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/19 15:42:19 $
  * @module mapclient_v2
  * @author $Author: krupenn $
  */
@@ -61,6 +61,9 @@ public class MapEvent extends PropertyChangeEvent {
 	/** Изменился список выбранных элементов на карте. */
 	public static final String SELECTION_CHANGED = "mapselectionchangedevent";
 
+	/** Изменился список выбранных элементов на карте. */
+	public static final String UPDATE_SELECTION = "mapupdateselectionevent";
+
 	/** Изменился список подключенных библиотек. */
 	public static final String LIBRARY_SET_CHANGED = "maplibrarysetchangedevent";
 
@@ -68,15 +71,6 @@ public class MapEvent extends PropertyChangeEvent {
 	public static final String NEED_REPAINT = "needrepaint";
 	/** Необходимо перерисовать карту, включая картографические объекты. */
 	public static final String NEED_FULL_REPAINT = "needfullrepaint";
-
-	/** Снять выделение со всех объектов. */
-	public static final String DESELECT_ALL = "deselectall";
-	
-	/** Необходимо выделить объекты. */
-	public static final String NEED_SELECT = "needselect";
-
-	/** Необходимо снять выделение с объектов. */
-	public static final String NEED_DESELECT = "needdeselect";
 
 	/** Копировать тип узла или линии. */
 	public static final String COPY_TYPE = "copytype";
