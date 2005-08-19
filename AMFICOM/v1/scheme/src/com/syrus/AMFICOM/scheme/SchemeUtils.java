@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.36 2005/08/13 09:11:17 max Exp $
+ * $Id: SchemeUtils.java,v 1.37 2005/08/19 16:11:14 arseniy Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,13 +16,14 @@ import java.util.HashSet;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
 
 /**
  * Functionality will be partially moved to appropriate model classes; partially
  * removed Œ¡»’ .
  *
- * @author $Author: max $
- * @version $Revision: 1.36 $, $Date: 2005/08/13 09:11:17 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/08/19 16:11:14 $
  * @module scheme
  */
 public class SchemeUtils {
@@ -86,7 +87,7 @@ public class SchemeUtils {
 	public static Set<SchemeElement> getTopologicalElements(final Scheme scheme) {
 		final Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
 		for (final SchemeElement schemeElement : scheme.getSchemeElements()) {
-			if (schemeElement.getSchemes().isEmpty()) {
+			if (schemeElement.getKind().value() == SchemeElementKind._EQUIPMENTED) {
 				schemeElements.add(schemeElement);
 			} else {
 				final Scheme scheme1 = schemeElement.getScheme();
@@ -106,10 +107,12 @@ public class SchemeUtils {
 	public static Set<SchemeCableLink> getTopologicalCableLinks(final Scheme scheme) {
 		final Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>(scheme.getSchemeCableLinks());
 		for (final SchemeElement schemeElement : scheme.getSchemeElements()) {
-			final Scheme scheme1 = schemeElement.getScheme();
-			if (scheme1 != null && scheme1.getKind() == CABLE_SUBNETWORK) {
-				for (final SchemeCableLink schemeCableLink : getTopologicalCableLinks(scheme1)) {
-					schemeCableLinks.add(schemeCableLink);
+			if (schemeElement.getKind().value() == SchemeElementKind._SCHEMED) {
+				final Scheme scheme1 = schemeElement.getScheme();
+				if (scheme1.getKind() == CABLE_SUBNETWORK) {
+					for (final SchemeCableLink schemeCableLink : getTopologicalCableLinks(scheme1)) {
+						schemeCableLinks.add(schemeCableLink);
+					}
 				}
 			}
 		}
@@ -120,8 +123,8 @@ public class SchemeUtils {
 	public static Set<SchemeCableLink> getAllCableLinks(final Scheme scheme) {
 		final Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>(scheme.getSchemeCableLinks());
 		for (final SchemeElement schemeElement : scheme.getSchemeElements()) {
-			final Scheme scheme1 = schemeElement.getScheme();
-			if (scheme1 != null) {
+			if (schemeElement.getKind().value() == SchemeElementKind._SCHEMED) {
+				final Scheme scheme1 = schemeElement.getScheme();
 				for (final SchemeCableLink schemeCableLink : getAllCableLinks(scheme1)) {
 					schemeCableLinks.add(schemeCableLink);
 				}
@@ -143,22 +146,24 @@ public class SchemeUtils {
 			return schemeElement;
 		}
 		for (final SchemeElement schemeElement1 : scheme.getSchemeElements()) {
-			final Scheme scheme1 = schemeElement1.getScheme();
-			if (scheme1 == null && getAllChildElements(schemeElement1).contains(schemeElement)) {
-				return schemeElement1;
-			}
-			final SchemeElement schemeElement2 = getTopologicalElement(scheme1, schemeElement);
-			if (schemeElement2 != null) {
-				return scheme1.getKind() == CABLE_SUBNETWORK ? schemeElement2 : schemeElement;
+			if (schemeElement.getKind().value() == SchemeElementKind._SCHEMED) {
+				final Scheme scheme1 = schemeElement1.getScheme();
+				if (getAllChildElements(schemeElement1).contains(schemeElement)) {
+					return schemeElement1;
+				}
+				final SchemeElement schemeElement2 = getTopologicalElement(scheme1, schemeElement);
+				if (schemeElement2 != null) {
+					return scheme1.getKind() == CABLE_SUBNETWORK ? schemeElement2 : schemeElement;
+				}
 			}
 		}
 		return null;
 	}
 
 	static Set<SchemeElement> getAllChildElements(final SchemeElement schemeElement) {
-		final Set<Scheme> schemes = schemeElement.getSchemes();
+
 		final Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
-		if (schemes.isEmpty()) {
+		if (schemeElement.getKind().value() == SchemeElementKind._EQUIPMENTED) {
 			for (final SchemeElement schemeElement1 : schemeElement.getSchemeElements()) {
 				for (final SchemeElement schemeElement2 : getAllChildElements(schemeElement1)) {
 					schemeElements.add(schemeElement2);
@@ -166,7 +171,7 @@ public class SchemeUtils {
 				schemeElements.add(schemeElement1);
 			}
 		} else {
-			for (final Scheme scheme : schemes) {
+			for (final Scheme scheme : schemeElement.getSchemes()) {
 				schemeElements.addAll(getAllTopLevelElements(scheme));
 			}
 		}
@@ -176,7 +181,7 @@ public class SchemeUtils {
 	public static Set<SchemeElement> getAllTopLevelElements(final Scheme scheme) {
 		final Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
 		for (final SchemeElement schemeElement : scheme.getSchemeElements()) {
-			if (schemeElement.getSchemes().isEmpty()) {
+			if (schemeElement.getKind().value() == SchemeElementKind._EQUIPMENTED) {
 				schemeElements.add(schemeElement);
 			} else {
 				for (final SchemeElement schemeElement2 : getAllTopLevelElements(schemeElement.getScheme())) {
@@ -194,9 +199,11 @@ public class SchemeUtils {
 			}
 		}
 		for (final SchemeElement schemeElement : scheme.getSchemeElements()) {
-			final Scheme scheme1 = schemeElement.getScheme();
-			if ((scheme1 == null && isSchemeElementContainsLink(schemeElement, schemeLinkId)) || isSchemeContainsLink(scheme1, schemeLinkId)) {
-				return true;
+			if (schemeElement.getKind().value() == SchemeElementKind._SCHEMED) {
+				final Scheme scheme1 = schemeElement.getScheme();
+				if ((isSchemeElementContainsLink(schemeElement, schemeLinkId)) || isSchemeContainsLink(scheme1, schemeLinkId)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -207,9 +214,11 @@ public class SchemeUtils {
 			return true;
 		}
 		for (final SchemeElement schemeElement1 : scheme.getSchemeElements()) {
-			final Scheme scheme1 = schemeElement1.getScheme();
-			if ((scheme1 == null && isSchemeElementContainsElement(schemeElement1, schemeElement)) || isSchemeContainsElement(scheme1, schemeElement)) {
-				return true;
+			if (schemeElement.getKind().value() == SchemeElementKind._SCHEMED) {
+				final Scheme scheme1 = schemeElement1.getScheme();
+				if ((isSchemeElementContainsElement(schemeElement1, schemeElement)) || isSchemeContainsElement(scheme1, schemeElement)) {
+					return true;
+				}
 			}
 		}
 		return false;
@@ -222,7 +231,7 @@ public class SchemeUtils {
 			}
 		}
 		for (final SchemeElement schemeElement1 : schemeElement.getSchemeElements()) {
-			if (schemeElement.getSchemes().isEmpty()
+			if (schemeElement.getKind().value() == SchemeElementKind._EQUIPMENTED
 					&& isSchemeElementContainsLink(schemeElement1, schemeLinkId)) {
 				return true;
 			}
@@ -238,7 +247,7 @@ public class SchemeUtils {
 		}
 		final Set<SchemeElement> schemeElements = schemeElement.getSchemeElements();
 		for (final SchemeElement schemeElement1 : schemeElements) {
-			if (schemeElement.getSchemes().isEmpty()
+			if (schemeElement.getKind().value() == SchemeElementKind._EQUIPMENTED
 					&& isSchemeElementContainsPort(schemeElement1, abstractSchemePort)) {
 				return true;
 			}
@@ -250,20 +259,24 @@ public class SchemeUtils {
 		if (schemeElement2.getParentSchemeElementId().equals(schemeElement1.getId())) {
 			return true;
 		}
-		for (final Scheme scheme : schemeElement1.getSchemes()) {
-			if (isSchemeContainsElement(scheme, schemeElement2)) {
-				return true;
-			}
-		}
-		for (final SchemeElement schemeElement : schemeElement1.getSchemeElements()) {
-			final Set<Scheme> schemes = schemeElement.getSchemes();
-			if (schemes.isEmpty()
-					&& isSchemeElementContainsElement(schemeElement, schemeElement2)) {
-				return true;
-			}
-			for (final Scheme scheme : schemes) {
+		if (schemeElement1.getKind().value() == SchemeElementKind._SCHEMED) {
+			for (final Scheme scheme : schemeElement1.getSchemes()) {
 				if (isSchemeContainsElement(scheme, schemeElement2)) {
 					return true;
+				}
+			}
+		} else {
+			for (final SchemeElement schemeElement : schemeElement1.getSchemeElements()) {
+				if (schemeElement.getKind().value() == SchemeElementKind._EQUIPMENTED) {
+					if (isSchemeElementContainsElement(schemeElement, schemeElement2)) {
+						return true;
+					}
+				} else {
+					for (final Scheme scheme : schemeElement.getSchemes()) {
+						if (isSchemeContainsElement(scheme, schemeElement2)) {
+							return true;
+						}
+					}
 				}
 			}
 		}
@@ -277,9 +290,11 @@ public class SchemeUtils {
 			}
 		}
 		for (final SchemeElement schemeElement : scheme.getSchemeElements()) {
-			final Scheme scheme1 = schemeElement.getScheme();
-			if (scheme1 != null && isSchemeContainsCableLink(scheme1, schemeCableLinkId)) {
-				return true;
+			if (schemeElement.getKind().value() == SchemeElementKind._SCHEMED) {
+				final Scheme scheme1 = schemeElement.getScheme();
+				if (isSchemeContainsCableLink(scheme1, schemeCableLinkId)) {
+					return true;
+				}
 			}
 		}
 		return false;

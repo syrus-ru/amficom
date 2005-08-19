@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.80 2005/08/16 07:17:21 max Exp $
+ * $Id: SchemeElement.java,v 1.81 2005/08/19 16:11:14 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
 /**
  * #04 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.80 $, $Date: 2005/08/16 07:17:21 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.81 $, $Date: 2005/08/19 16:11:14 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -667,9 +667,13 @@ public final class SchemeElement extends AbstractSchemeElement
 		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemeElements0()) {
 			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
 		}
-		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemes0()) {
-			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
-		}
+		// fix by Stas
+		// no need save(or delete!) subschemes this way
+		// they should save independently in order to save correct scheme image
+		// fact of saving tracked in client
+//		for (final ReverseDependencyContainer reverseDependencyContainer : this.getSchemes0()) {
+//			reverseDependencies.addAll(reverseDependencyContainer.getReverseDependencies());
+//		}
 		reverseDependencies.remove(null);
 		reverseDependencies.remove(VOID_IDENTIFIER);
 		return Collections.unmodifiableSet(reverseDependencies);
@@ -1532,6 +1536,29 @@ public final class SchemeElement extends AbstractSchemeElement
 		return Collections.unmodifiableSet(schemePorts);
 	}
 
+	public Set<SchemeCablePort> getAllSchemeCablePorts() {
+		final Set<SchemeCablePort> schemeCablePorts = new HashSet<SchemeCablePort>();
+		for (final SchemeElement schemeElement : getSchemeElements()) {
+			schemeCablePorts.addAll(schemeElement.getAllSchemeCablePorts());
+		}
+		for (final SchemeDevice schemeDevice : getSchemeDevices()) {
+			schemeCablePorts.addAll(schemeDevice.getSchemeCablePorts());
+		}
+		return Collections.unmodifiableSet(schemeCablePorts);
+	}
+
+	public Set<SchemePort> getAllSchemePorts() {
+		final Set<SchemePort> schemePorts = new HashSet<SchemePort>();
+		for (final SchemeElement schemeElement : getSchemeElements()) {
+			schemePorts.addAll(schemeElement.getAllSchemePorts());
+		}
+		for (final SchemeDevice schemeDevice : getSchemeDevices()) {
+			schemePorts.addAll(schemeDevice.getSchemePorts());
+		}
+		return Collections.unmodifiableSet(schemePorts);
+	}
+
+	
 	public SchemePath getAlarmedPath() {
 		throw new UnsupportedOperationException("Method not implemented");
 	}

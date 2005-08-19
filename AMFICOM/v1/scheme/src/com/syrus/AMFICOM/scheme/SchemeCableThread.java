@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.66 2005/08/16 12:13:00 max Exp $
+ * $Id: SchemeCableThread.java,v 1.67 2005/08/19 16:11:14 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,8 +61,8 @@ import com.syrus.util.Log;
 /**
  * #14 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.66 $, $Date: 2005/08/16 12:13:00 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.67 $, $Date: 2005/08/19 16:11:14 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -378,18 +378,25 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		assert schemeDevice != null;
 		final SchemePort sourceSchemePort = getSourceSchemePort();
 		final SchemePort targetSchemePort = getTargetSchemePort();
-		final Identifier sourceSchemeDeviceId = sourceSchemePort
-				.getParentSchemeDevice().getId();
-		final Identifier targetSchemeDeviceId = targetSchemePort
-				.getParentSchemeDevice().getId();
+		
+		// fix by Stas
+		// sourceSchemePort or targetSchemePort can be null 
 		final Identifier schemeDeviceId = schemeDevice.getId();
-		if (schemeDeviceId.equals(sourceSchemeDeviceId))
-			return sourceSchemePort;
-		else if (schemeDeviceId.equals(targetSchemeDeviceId))
-			return targetSchemePort;
-		else
-			throw new IllegalArgumentException(
-					"This scheme cable thread is in no way connected to the scheme device specified.");
+		if (sourceSchemePort != null) {
+			final Identifier sourceSchemeDeviceId = sourceSchemePort.getParentSchemeDevice().getId();
+			if (schemeDeviceId.equals(sourceSchemeDeviceId))
+				return sourceSchemePort;
+		}
+		if (targetSchemePort != null) {
+			final Identifier targetSchemeDeviceId = targetSchemePort.getParentSchemeDevice().getId();
+			if (schemeDeviceId.equals(targetSchemeDeviceId))
+				return targetSchemePort;
+		}
+		return null;
+		// fix by Stas
+		// no need to throw exception here. It's correct in the case of greater number of SCT in SCL then SP in SD
+//		throw new IllegalArgumentException(
+//					"This scheme cable thread is in no way connected to the scheme device specified.");
 	}
 
 	Identifier getSourceSchemePortId() {
