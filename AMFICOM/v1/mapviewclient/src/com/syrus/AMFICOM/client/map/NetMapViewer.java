@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.40 2005/08/18 14:04:49 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.41 2005/08/19 12:54:27 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.40 $, $Date: 2005/08/18 14:04:49 $
+ * @version $Revision: 1.41 $, $Date: 2005/08/19 12:54:27 $
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
@@ -140,9 +140,8 @@ public abstract class NetMapViewer {
 
 		if(this.logicalNetLayer.aContext != null)
 			if(this.logicalNetLayer.aContext.getApplicationModel() != null)
-				if (this.logicalNetLayer.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_INDICATION))
-		{
-			this.animateTimer = new AlarmIndicationTimer(this);
+				if (this.logicalNetLayer.aContext.getApplicationModel().isEnabled(MapApplicationModel.ACTION_INDICATION)) {
+					this.animateTimer = new AlarmIndicationTimer(this);
 		}
 	}
 
@@ -155,8 +154,7 @@ public abstract class NetMapViewer {
 	 * Осуществляет сохранение текущик параметров отображения карты для 
 	 * следующей сессии.
 	 */
-	public void saveConfig()
-	{
+	public void saveConfig() {
 		try {
 			MapPropertiesManager.setCenter(this.mapContext.getCenter());
 			MapPropertiesManager.setZoom(this.mapContext.getScale());
@@ -179,8 +177,7 @@ public abstract class NetMapViewer {
 	/**
 	 * Выполнить удаление выбранных элементов.
 	 */
-	public void delete()
-	{
+	public void delete(){
 		DeleteSelectionCommand command = new DeleteSelectionCommand();
 		command.setNetMapViewer(this);
 		this.getLogicalNetLayer().commandList.add(command);
@@ -335,8 +332,7 @@ public abstract class NetMapViewer {
 	 * Передать команду на отображение координат текущей точки в окне координат.
 	 * @param doublePoint географическая координата мыши
 	 */	
-	public void showLatLong(DoublePoint doublePoint)
-	{
+	public void showLatLong(DoublePoint doublePoint) {
 		LogicalNetLayer logicalNetLayer = this.getLogicalNetLayer();
 		if(logicalNetLayer.aContext == null)
 			return;
@@ -351,8 +347,7 @@ public abstract class NetMapViewer {
 	 * @param point экранная координата мыши
 	 */	
 	public void showLatLong(Point point)
-		throws MapConnectionException, MapDataException
-	{
+		throws MapConnectionException, MapDataException {
 		DoublePoint doublePoint = this.logicalNetLayer.getConverter().convertScreenToMap(point);
 		showLatLong(doublePoint);
 	}
@@ -361,8 +356,7 @@ public abstract class NetMapViewer {
 	 * Получить флаг отображения контекстного меню.
 	 * @return флаг
 	 */
-	public boolean isMenuShown()
-	{
+	public boolean isMenuShown() {
 		return this.menuShown;
 	}
 
@@ -370,8 +364,7 @@ public abstract class NetMapViewer {
 	 * Установить флаг отображения контекстного меню.
 	 * @param isMenuShown флаг
 	 */	
-	public void setMenuShown(boolean isMenuShown)
-	{
+	public void setMenuShown(boolean isMenuShown) {
 		this.menuShown = isMenuShown;
 	}
 
@@ -395,10 +388,8 @@ public abstract class NetMapViewer {
 		return this.mapShotImage;
 	}
 
-	public void propertyChange(PropertyChangeEvent pce)
-	{
-		try
-		{
+	public void propertyChange(PropertyChangeEvent pce) {
+		try {
 			MapViewController mapViewController = this.logicalNetLayer.getMapViewController();
 
 			MapView mapView = this.logicalNetLayer.getMapView();
@@ -406,261 +397,218 @@ public abstract class NetMapViewer {
 			if(pce.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
 				MapEvent mapEvent = (MapEvent )pce;
 				String mapEventType = mapEvent.getMapEventType();
-			if(mapEventType.equals(MapEvent.COPY_TYPE))
-			{
-				Object selectedObject = pce.getNewValue();
-				if(selectedObject instanceof SiteNodeType) {
-					copyType((SiteNodeType)selectedObject);
-				}
-				else if(selectedObject instanceof PhysicalLinkType) {
-					copyType((PhysicalLinkType)selectedObject);
-				}
-			}
-			if(mapEventType.equals(MapEvent.OTHER_SELECTED))
-			{
-				Object selectedObject = pce.getNewValue();
-				if(selectedObject instanceof PhysicalLinkType) {
-					this.logicalNetLayer.setCurrentPhysicalLinkType((PhysicalLinkType)selectedObject);
-				}
-			}
-			if(mapEventType.equals(MapEvent.NEED_FULL_REPAINT))
-			{
-				this.logicalNetLayer.calculateVisualElements();
-				repaint(true);
-				return;
-			}
-			if(mapEventType.equals(MapEvent.NEED_REPAINT))
-			{
-				repaint(false);
-				return;
-			}
 
-			if(mapEventType.equals(MapEvent.MAP_CHANGED))
-			{
-				updateSelectedElements();
-				this.logicalNetLayer.updateZoom();
-				this.logicalNetLayer.sendSelectionChangeEvent();
-				repaint(false);
-			}
-			else
-			if(mapEventType.equals(MapEvent.MAP_ELEMENT_CHANGED))
-			{
-				Object me = pce.getNewValue();
-				if(me instanceof SchemeElement)
-				{
-					mapViewController.scanElement((SchemeElement )me);
-					mapViewController.scanCables(((SchemeElement )me).getParentScheme());
-				}
-				else
-				if(me instanceof SchemeCableLink)
-				{
-					mapViewController.scanCable((SchemeCableLink )me);
-					mapViewController.scanPaths(((SchemeCableLink )me).getParentScheme());
-				}
-				else
-				if(me instanceof CablePath)
-				{
-					mapViewController.scanCable(((CablePath)me).getSchemeCableLink());
-					mapViewController.scanPaths(((CablePath)me).getSchemeCableLink().getParentScheme());
-				}
-				else
-				if(me instanceof SiteNode)
-				{
-					SiteNode site = (SiteNode)me;
-					SiteNodeController snc = (SiteNodeController)mapViewController.getController(site);
-					snc.updateScaleCoefficient(site);
-				}
-
-				this.logicalNetLayer.calculateVisualElements();
-				repaint(false);
-			}
-			else
-			if(mapEventType.equals(MapEvent.MAP_VIEW_CHANGED))
-			{
-				this.logicalNetLayer.calculateVisualElements();
-				this.logicalNetLayer.sendSelectionChangeEvent();
-				repaint(false);
-			}
-			else
-			if(mapEventType.equals(MapEvent.NEED_SELECT))
-			{
-				Collection elements = (Collection )pce.getNewValue();
-				for(Iterator iter = elements.iterator(); iter.hasNext();) {
-					Object element = iter.next();
-					if(element instanceof MapElement) {
-						MapElement mapElement = (MapElement )element;
-						mapView.getMap().setSelected(mapElement, true);
+				if(mapEventType.equals(MapEvent.COPY_TYPE)) {
+					Object selectedObject = pce.getNewValue();
+					if(selectedObject instanceof SiteNodeType) {
+						copyType((SiteNodeType)selectedObject);
 					}
-					else if(element instanceof SchemeElement) {
-						SchemeElement schemeElement = (SchemeElement)element;
-						MapElement mapElement = mapView.findElement(schemeElement);
-						if(mapElement != null)
+					else if(selectedObject instanceof PhysicalLinkType) {
+						copyType((PhysicalLinkType)selectedObject);
+					}
+				}
+				else if(mapEventType.equals(MapEvent.OTHER_SELECTED)) {
+					Object selectedObject = pce.getNewValue();
+					if(selectedObject instanceof PhysicalLinkType) {
+						this.logicalNetLayer.setCurrentPhysicalLinkType((PhysicalLinkType)selectedObject);
+					}
+				}
+				else if(mapEventType.equals(MapEvent.NEED_FULL_REPAINT)) {
+					this.logicalNetLayer.calculateVisualElements();
+					repaint(true);
+				}
+				else if(mapEventType.equals(MapEvent.NEED_REPAINT)) {
+					repaint(false);
+				}
+				else if(mapEventType.equals(MapEvent.MAP_CHANGED)) {
+					updateSelectedElements();
+					this.logicalNetLayer.updateZoom();
+					this.logicalNetLayer.sendSelectionChangeEvent();
+					repaint(false);
+				}
+				else if(mapEventType.equals(MapEvent.MAP_ELEMENT_CHANGED)) {
+					Object me = pce.getNewValue();
+					if(me instanceof SchemeElement) {
+						mapViewController.scanElement((SchemeElement )me);
+						mapViewController.scanCables(((SchemeElement )me).getParentScheme());
+					}
+					else if(me instanceof SchemeCableLink) {
+						mapViewController.scanCable((SchemeCableLink )me);
+						mapViewController.scanPaths(((SchemeCableLink )me).getParentScheme());
+					}
+					else if(me instanceof CablePath) {
+						mapViewController.scanCable(((CablePath)me).getSchemeCableLink());
+						mapViewController.scanPaths(((CablePath)me).getSchemeCableLink().getParentScheme());
+					}
+					else if(me instanceof SiteNode) {
+						SiteNode site = (SiteNode)me;
+						SiteNodeController snc = (SiteNodeController)mapViewController.getController(site);
+						snc.updateScaleCoefficient(site);
+					}
+	
+					this.logicalNetLayer.calculateVisualElements();
+					repaint(false);
+				}
+				else if(mapEventType.equals(MapEvent.MAP_VIEW_CHANGED)) {
+					this.logicalNetLayer.calculateVisualElements();
+					this.logicalNetLayer.sendSelectionChangeEvent();
+					repaint(false);
+				}
+				else if(mapEventType.equals(MapEvent.NEED_SELECT)) {
+					Collection elements = (Collection )pce.getNewValue();
+					for(Iterator iter = elements.iterator(); iter.hasNext();) {
+						Object element = iter.next();
+						if(element instanceof MapElement) {
+							MapElement mapElement = (MapElement )element;
 							mapView.getMap().setSelected(mapElement, true);
-					}
-					else if(element instanceof SchemeCableLink) {
-						SchemeCableLink schemeCableLink = (SchemeCableLink)element;
-						MapElement mapElement = mapView.findCablePath(schemeCableLink);
-						if(mapElement != null)
-							mapView.getMap().setSelected(mapElement, true);
-					}
-					else if(element instanceof SchemePath) {
-						SchemePath schemePath = (SchemePath)element;
-						MapElement mapElement = mapView.findMeasurementPath(schemePath);
-						if(mapElement != null)
-							mapView.getMap().setSelected(mapElement, true);
-					}
-				}
-				updateSelectedElements();
-				this.logicalNetLayer.sendSelectionChangeEvent();
-				repaint(false);
-			}
-			else
-			if(mapEventType.equals(MapEvent.NEED_DESELECT))
-			{
-				Collection elements = (Collection )pce.getNewValue();
-				for(Iterator iter = elements.iterator(); iter.hasNext();) {
-					Object element = iter.next();
-					if(element instanceof MapElement) {
-						MapElement mapElement = (MapElement )element;
-						mapView.getMap().setSelected(mapElement, false);
-					}
-				}
-				updateSelectedElements();
-				this.logicalNetLayer.sendSelectionChangeEvent();
-				repaint(false);
-			}
-
-			if(pce.getSource().equals(this.logicalNetLayer))
-				return;
-
-			if(mapEventType.equals(MapEvent.SELECTION_CHANGED))
-			{
-				updateSelectedElements();
-				this.logicalNetLayer.sendSelectionChangeEvent();
-				repaint(false);
-				return;
-			}
-			else
-			if(mapEventType.equals(MapEvent.DESELECT_ALL))
-			{
-				this.logicalNetLayer.deselectAll();
-				this.logicalNetLayer.sendSelectionChangeEvent();
-			}
-			else
-			if(mapEventType.equals(MapEvent.MAP_NAVIGATE))
-			{
-				MapNavigateEvent mne = (MapNavigateEvent )mapEvent;
-
-				//Здесь принимаюттся собитыя по создению и управлению маркером
-				if(mne.isDataMarkerCreated())
-				{
-					MeasurementPath path;
-					try
-					{
-						path = mapViewController.getMeasurementPathByMonitoredElementId(mne.getMeId());
-					}
-					catch (ApplicationException e)
-					{
-						e.printStackTrace();
-						return;
-					}
-
-					if(path != null)
-					{
-						Marker marker = new Marker(
-							mne.getMarkerId(),
-							LoginManager.getUserId(),
-			                mapView,
-							path,
-							mne.getMeId(),
-							LangModelMap.getString("Marker"));
-						mapView.addMarker(marker);
-
-						MarkerController mc = (MarkerController)mapViewController.getController(marker);
-						mc.moveToFromStartLo(marker, mne.getDistance());
-					}
-				}
-				else
-				if(mne.isDataEventMarkerCreated())
-				{
-					MeasurementPath path;
-					try
-					{
-						path = mapViewController.getMeasurementPathByMonitoredElementId(mne.getMeId());
-					}
-					catch (ApplicationException e)
-					{
-						e.printStackTrace();
-						return;
-					}
-
-					if(path != null)
-					{
-						EventMarker marker = new EventMarker(
-							mne.getMarkerId(),
-							LoginManager.getUserId(),
-			                mapView,
-							path,
-							mne.getMeId(),
-							LangModelMap.getString("Event"));
-						mapView.addMarker(marker);
-
-						MarkerController mc = (MarkerController)mapViewController.getController(marker);
-
-						mc.moveToFromStartLo(marker, mne.getDistance());
-					}
-				}
-				else
-				if(mne.isDataAlarmMarkerCreated())
-				{
-					MeasurementPath path;
-					try
-					{
-						path = mapViewController.getMeasurementPathByMonitoredElementId(mne.getMeId());
-					}
-					catch (ApplicationException e)
-					{
-						e.printStackTrace();
-						return;
-					}
-
-					AlarmMarker marker = null;
-					if(path != null)
-					{
-						for(Iterator it = mapView.getMarkers().iterator(); it.hasNext();)
-						{
-							try
-							{
-								marker = (AlarmMarker)it.next();
-								if(marker.getMeasurementPath().equals(path))
-									break;
-								marker = null;
-							}
-							catch(Exception ex)
-							{
-								ex.printStackTrace();
-							}
 						}
-						if(marker == null)
-						{
-							marker = new AlarmMarker(
+						else if(element instanceof SchemeElement) {
+							SchemeElement schemeElement = (SchemeElement)element;
+							MapElement mapElement = mapView.findElement(schemeElement);
+							if(mapElement != null)
+								mapView.getMap().setSelected(mapElement, true);
+						}
+						else if(element instanceof SchemeCableLink) {
+							SchemeCableLink schemeCableLink = (SchemeCableLink)element;
+							MapElement mapElement = mapView.findCablePath(schemeCableLink);
+							if(mapElement != null)
+								mapView.getMap().setSelected(mapElement, true);
+						}
+						else if(element instanceof SchemePath) {
+							SchemePath schemePath = (SchemePath)element;
+							MapElement mapElement = mapView.findMeasurementPath(schemePath);
+							if(mapElement != null)
+								mapView.getMap().setSelected(mapElement, true);
+						}
+					}
+					updateSelectedElements();
+					this.logicalNetLayer.sendSelectionChangeEvent();
+					repaint(false);
+				}
+				else if(mapEventType.equals(MapEvent.NEED_DESELECT)) {
+					Collection elements = (Collection )pce.getNewValue();
+					for(Iterator iter = elements.iterator(); iter.hasNext();) {
+						Object element = iter.next();
+						if(element instanceof MapElement) {
+							MapElement mapElement = (MapElement )element;
+							mapView.getMap().setSelected(mapElement, false);
+						}
+					}
+					updateSelectedElements();
+					this.logicalNetLayer.sendSelectionChangeEvent();
+					repaint(false);
+				}
+
+				if(pce.getSource().equals(this.logicalNetLayer))
+					return;
+	
+				if(mapEventType.equals(MapEvent.SELECTION_CHANGED)) {
+					updateSelectedElements();
+					this.logicalNetLayer.sendSelectionChangeEvent();
+					repaint(false);
+					return;
+				}
+				else if(mapEventType.equals(MapEvent.DESELECT_ALL)) {
+					this.logicalNetLayer.deselectAll();
+					this.logicalNetLayer.sendSelectionChangeEvent();
+				}
+				else if(mapEventType.equals(MapEvent.MAP_NAVIGATE)) {
+					MapNavigateEvent mne = (MapNavigateEvent )mapEvent;
+	
+					//Здесь принимаюттся собитыя по создению и управлению маркером
+					if(mne.isDataMarkerCreated()) {
+						MeasurementPath path;
+						try {
+							path = mapViewController.getMeasurementPathByMonitoredElementId(mne.getMeId());
+						} catch (ApplicationException e) {
+							e.printStackTrace();
+							return;
+						}
+	
+						if(path != null) {
+							Marker marker = new Marker(
 								mne.getMarkerId(),
 								LoginManager.getUserId(),
-								mapView,
+				                mapView,
 								path,
 								mne.getMeId(),
-								LangModelMap.getString("Alarm"));
+								LangModelMap.getString("Marker"));
 							mapView.addMarker(marker);
+	
+							MarkerController mc = (MarkerController)
+									mapViewController.getController(marker);
+							mc.moveToFromStartLo(marker, mne.getDistance());
 						}
-						else
-						{
-							marker.setId(mne.getMarkerId());
-						}
-
-						MarkerController mc = (MarkerController)mapViewController.getController(marker);
-
-						mc.moveToFromStartLo(marker, mne.getDistance());
 					}
+					else if(mne.isDataEventMarkerCreated()) {
+							MeasurementPath path;
+							try {
+								path = mapViewController
+									.getMeasurementPathByMonitoredElementId(
+											mne.getMeId());
+							} catch(ApplicationException e) {
+								e.printStackTrace();
+								return;
+							}
+	
+							if(path != null) {
+								EventMarker marker = new EventMarker(
+										mne.getMarkerId(),
+										LoginManager.getUserId(),
+										mapView,
+										path,
+										mne.getMeId(),
+										LangModelMap.getString("Event"));
+								mapView.addMarker(marker);
+	
+								MarkerController mc = (MarkerController) 
+										mapViewController.getController(marker);
+	
+								mc.moveToFromStartLo(marker, mne.getDistance());
+							}
+						}
+						else if(mne.isDataAlarmMarkerCreated()) {
+							MeasurementPath path;
+							try {
+								path = mapViewController
+									.getMeasurementPathByMonitoredElementId(
+											mne.getMeId());
+							} catch(ApplicationException e) {
+								e.printStackTrace();
+								return;
+							}
+	
+							AlarmMarker marker = null;
+							if(path != null) {
+								for(Iterator it = mapView.getMarkers().iterator(); it.hasNext();) {
+									try {
+										marker = (AlarmMarker) it.next();
+										if(marker.getMeasurementPath().equals(path))
+											break;
+										marker = null;
+									} catch(Exception ex) {
+										ex.printStackTrace();
+									}
+								}
+								if(marker == null) {
+									marker = new AlarmMarker(
+											mne.getMarkerId(),
+											LoginManager.getUserId(),
+											mapView,
+											path,
+											mne.getMeId(),
+											LangModelMap.getString("Alarm"));
+									mapView.addMarker(marker);
+								}
+								else {
+									marker.setId(mne.getMarkerId());
+								}
+	
+								MarkerController mc = (MarkerController) 
+										mapViewController.getController(marker);
+	
+								mc.moveToFromStartLo(marker, mne.getDistance());
+							}
 /*
 					boolean found = false;
 
@@ -803,6 +751,7 @@ public abstract class NetMapViewer {
 			} else {
 				StorableObjectPool.delete(newSiteNodeType.getId());
 			}
+			this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.LIBRARY_SET_CHANGED));
 		} catch(CreateObjectException e) {
 			e.printStackTrace();
 		} catch(ApplicationException e) {
