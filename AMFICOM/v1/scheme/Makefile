@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.30 2005/07/10 13:41:29 bass Exp $
+# $Id: Makefile,v 1.31 2005/08/19 14:48:33 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -13,7 +13,13 @@ IDL_SOURCES = $(IDLDIR)/scheme.idl
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,XMLBEANSCLASSPATH)
+$(call checkenve,SCOMP)
+$(call checkenve,SCOMPFLAGS)
 
+LIBNAME_GENERALXML=generalxml.jar
+LIBNAME_MAPXML=mapxml.jar
+LIBNAME_SCHEMEXML=schemexml.jar
 
 # Directories that contain both hand-written and generated files.
 DIRS_TO_SCRUB = \
@@ -24,6 +30,7 @@ SRCDIRS_TO_SCRUB = $(foreach dir,$(DIRS_TO_SCRUB),$(SRCDIR)/$(dir))
 
 APPCLASSPATH = $(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/map.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
+XMLCLASSPATH := $(LIBNAME_SCHEMEXML):$(LIBDIR)/$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
@@ -35,7 +42,7 @@ $(LIBNAME): .mach
 
 .mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
@@ -55,8 +62,34 @@ corba: .corba
 		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/*.java
 	touch $@
 
+
+#### XML ####
+.PHONY: xml
+xml: .xml
+
+.xml: $(LIBNAME_SCHEMEXML)
+	touch $@
+
+.PHONY: xmlinstall
+xmlinstall: .xml $(LIBDIR)
+	install -m 0644 $(LIBNAME_SCHEMEXML) $(LIBDIR)
+
+$(LIBNAME_SCHEMEXML): 
+	$(SCOMP) $(SCOMPFLAGS) -out $@ -cp $(XMLBEANSCLASSPATH):$(LIBDIR)/$(LIBNAME_GENERALXML) \
+		$(XMLDIR)/Scheme.xsd \
+		$(XMLDIR)/SchemeCableLink.xsd \
+		$(XMLDIR)/SchemeCableThread.xsd \
+		$(XMLDIR)/SchemeDevice.xsd \
+		$(XMLDIR)/SchemeElement.xsd \
+		$(XMLDIR)/SchemeLink.xsd \
+		$(XMLDIR)/SchemePort.xsd \
+		$(XMLDIR)/SchemeProtoElement.xsd \
+		$(XMLDIR)/SchemeProtoGroup.xsd \
+		$(XMLDIR)/Scheme.xsd
+
+
 .PHONY: clean
-clean: cleanmach cleancorba
+clean: cleanmach cleancorba cleanxml
 	$(RM) $(LIBNAME)
 
 .PHONY: cleanmach
@@ -68,6 +101,14 @@ cleanmach:
 cleancorba: idlclean
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/scheme/corba
 	$(RM) .corba
+
+.PHONY: cleanxml xmlclean
+cleanxml xmlclean:
+	$(RM) $(LIBNAME_SCHEMEXML)
+	$(RM) -r $(XMLSRCDIR)/com/syrus/amficom
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/amficom
+	$(RM) .xml
+
 
 #### Install ####
 .PHONY: install
