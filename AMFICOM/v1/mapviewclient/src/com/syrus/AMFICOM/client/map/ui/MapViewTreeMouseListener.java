@@ -1,0 +1,45 @@
+/**
+ * $Id: MapViewTreeMouseListener.java,v 1.1 2005/08/19 12:45:24 krupenn Exp $
+ *
+ * Syrus Systems
+ * Научно-технический центр
+ * Проект: АМФИКОМ
+ */
+package com.syrus.AMFICOM.client.map.ui;
+
+import java.awt.event.MouseAdapter;
+import java.awt.event.MouseEvent;
+
+import javax.swing.JPopupMenu;
+import javax.swing.JTree;
+import javax.swing.SwingUtilities;
+import javax.swing.tree.TreePath;
+
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.SiteNodeType;
+
+final class MapViewTreeMouseListener extends MouseAdapter {
+	private final ApplicationContext aContext;
+	private final JTree tree;
+
+	public MapViewTreeMouseListener(JTree tree, ApplicationContext context) {
+		this.tree = tree;
+		this.aContext = context;
+	}
+
+	public void mouseClicked(MouseEvent e) {
+		if(SwingUtilities.isRightMouseButton(e)) {
+			TreePath treePath = this.tree.getPathForLocation(e.getX(), e.getY());
+			Item item = (Item )treePath.getLastPathComponent();
+			Object object = item.getObject();
+			if(object instanceof SiteNodeType
+					|| object instanceof PhysicalLinkType) {
+				this.tree.setSelectionPath(treePath);
+				JPopupMenu popupMenu = new TreePopupMenu(object, this.aContext);
+				popupMenu.show(this.tree, e.getX(), e.getY());
+			}
+		}
+	}
+}
