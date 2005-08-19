@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.31 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.32 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PARAMETER_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
@@ -41,7 +40,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/19 14:19:04 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -57,10 +56,6 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 		switch (super.condition.getEntityCode().shortValue()) {
 			case ANALYSIS_TYPE_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case PARAMETER_TYPE_CODE:
-						return super.getLinkedQuery(AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
-								StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID,
-								ObjectEntities.ANATYPPARTYPLINK);
 					case MEASUREMENT_TYPE_CODE:
 						return super.getLinkedQuery(AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
 								MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
@@ -70,10 +65,6 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				}
 			case EVALUATION_TYPE_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case PARAMETER_TYPE_CODE:
-						return getLinkedQuery(EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID,
-								StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID,
-								ObjectEntities.EVATYPPARTYPLINK);
 					case MEASUREMENT_TYPE_CODE:
 						return super.getLinkedQuery(EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID,
 								MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisTypeDatabase.java,v 1.102 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.103 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.103 $, $Date: 2005/08/19 14:19:04 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -121,7 +121,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase<AnalysisType>
 	public void retrieve(final AnalysisType storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		super.retrieveEntity(storableObject);
-		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(storableObject));
+		super.retrieveParameterTypesByOneQuery(Collections.singleton(storableObject));
 		this.retrieveMeasurementTypeIdsByOneQuery(Collections.singleton(storableObject));
 	}
 
@@ -146,7 +146,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase<AnalysisType>
 	public void insert(final Set<AnalysisType> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
-			super.updateParameterTypeIds(storableObjects);
+			super.updateParameterTypes(storableObjects);
 			this.updateMeasurementTypeIds(storableObjects);
 		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
@@ -156,7 +156,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase<AnalysisType>
 	@Override
 	public void update(final Set<AnalysisType> storableObjects) throws UpdateObjectException {
 		super.updateEntities(storableObjects);
-		super.updateParameterTypeIds(storableObjects);
+		super.updateParameterTypes(storableObjects);
 		this.updateMeasurementTypeIds(storableObjects);
 	}
 
@@ -218,7 +218,7 @@ public final class AnalysisTypeDatabase extends ActionTypeDatabase<AnalysisType>
 	@Override
 	protected Set<AnalysisType> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		final Set<AnalysisType> objects = super.retrieveByCondition(conditionQuery);
-		super.retrieveParameterTypeIdsByOneQuery(objects);
+		super.retrieveParameterTypesByOneQuery(objects);
 		this.retrieveMeasurementTypeIdsByOneQuery(objects);
 		return objects;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementType.java,v 1.92 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.93 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,15 +29,17 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterTypeEnum;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlParameterTypeEnum;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementTypeHelper;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.93 $, $Date: 2005/08/19 14:19:04 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -65,8 +67,8 @@ public final class MeasurementType extends ActionType implements Namable {
 		}
 	}
 
-	private Set<Identifier> inParameterTypeIds;
-	private Set<Identifier> outParameterTypeIds;
+	private Set<ParameterTypeEnum> inParameterTypes;
+	private Set<ParameterTypeEnum> outParameterTypes;
 	private Set<Identifier> measurementPortTypeIds;
 
 	/**
@@ -75,8 +77,8 @@ public final class MeasurementType extends ActionType implements Namable {
 	MeasurementType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypeIds = new HashSet<Identifier>();
-		this.outParameterTypeIds = new HashSet<Identifier>();
+		this.inParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.outParameterTypes = new HashSet<ParameterTypeEnum>();
 		this.measurementPortTypeIds = new HashSet<Identifier>();
 
 		try {
@@ -107,8 +109,8 @@ public final class MeasurementType extends ActionType implements Namable {
 			final StorableObjectVersion version,
 			final String codename,
 			final String description,
-			final Set<Identifier> inParameterTypeIds,
-			final Set<Identifier> outParameterTypeIds,
+			final Set<ParameterTypeEnum> inParameterTypes,
+			final Set<ParameterTypeEnum> outParameterTypes,
 			final Set<Identifier> measurementPortTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
@@ -119,11 +121,11 @@ public final class MeasurementType extends ActionType implements Namable {
 				codename,
 				description);
 
-		this.inParameterTypeIds = new HashSet<Identifier>();
-		this.setInParameterTypeIds0(inParameterTypeIds);
+		this.inParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.setInParameterTypes0(inParameterTypes);
 
-		this.outParameterTypeIds = new HashSet<Identifier>();
-		this.setOutParameterTypeIds0(outParameterTypeIds);
+		this.outParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.setOutParameterTypes0(outParameterTypes);
 
 		this.measurementPortTypeIds = new HashSet<Identifier>();
 		this.setMeasurementPortTypeIds0(measurementPortTypeIds);
@@ -134,16 +136,16 @@ public final class MeasurementType extends ActionType implements Namable {
 	 * @param creatorId
 	 * @param codename
 	 * @param description
-	 * @param inParameterTypeIds
-	 * @param outParameterTypeIds
+	 * @param inParameterTypes
+	 * @param outParameterTypes
 	 * @param measurementPortTypeIds
 	 * @throws CreateObjectException
 	 */
 	public static MeasurementType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
-			final Set<Identifier> inParameterTypeIds,
-			final Set<Identifier> outParameterTypeIds,
+			final Set<ParameterTypeEnum> inParameterTypes,
+			final Set<ParameterTypeEnum> outParameterTypes,
 			final Set<Identifier> measurementPortTypeIds) throws CreateObjectException {
 		try {
 			final MeasurementType measurementType = new MeasurementType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENT_TYPE_CODE),
@@ -151,8 +153,8 @@ public final class MeasurementType extends ActionType implements Namable {
 					StorableObjectVersion.createInitial(),
 					codename,
 					description,
-					inParameterTypeIds,
-					outParameterTypeIds,
+					inParameterTypes,
+					outParameterTypes,
 					measurementPortTypeIds);
 
 			assert measurementType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -173,8 +175,9 @@ public final class MeasurementType extends ActionType implements Namable {
 		final IdlMeasurementType mtt = (IdlMeasurementType) transferable;
 		super.fromTransferable(mtt, mtt.codename, mtt.description);
 
-		this.inParameterTypeIds = Identifier.fromTransferables(mtt.inParameterTypeIds);
-		this.outParameterTypeIds = Identifier.fromTransferables(mtt.outParameterTypeIds);
+		this.inParameterTypes = ParameterTypeEnum.fromTransferables(mtt.inParameterTypes);
+		this.outParameterTypes = ParameterTypeEnum.fromTransferables(mtt.outParameterTypes);
+
 		this.measurementPortTypeIds = Identifier.fromTransferables(mtt.measurementPortTypeIds);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -187,8 +190,9 @@ public final class MeasurementType extends ActionType implements Namable {
 	public IdlMeasurementType getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		final IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
-		final IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
+		final IdlParameterTypeEnum[] inParTypes = ParameterTypeEnum.createTransferables(this.inParameterTypes, orb);
+		final IdlParameterTypeEnum[] outParTypes = ParameterTypeEnum.createTransferables(this.outParameterTypes, orb);
+
 		final IdlIdentifier[] measPortTypeIds = Identifier.createTransferables(this.measurementPortTypeIds);
 
 		return IdlMeasurementTypeHelper.init(orb,
@@ -200,8 +204,8 @@ public final class MeasurementType extends ActionType implements Namable {
 				this.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
-				inParTypeIds,
-				outParTypeIds,
+				inParTypes,
+				outParTypes,
 				measPortTypeIds);
 	}
 
@@ -211,17 +215,17 @@ public final class MeasurementType extends ActionType implements Namable {
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
-				&& this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET && !this.inParameterTypeIds.contains(null)
-				&& this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET && !this.outParameterTypeIds.contains(null)
+				&& this.inParameterTypes != null && this.inParameterTypes != Collections.EMPTY_SET && !this.inParameterTypes.contains(null)
+				&& this.outParameterTypes != null && this.outParameterTypes != Collections.EMPTY_SET && !this.outParameterTypes.contains(null)
 				&& this.measurementPortTypeIds != null && this.measurementPortTypeIds != Collections.EMPTY_SET && !this.measurementPortTypeIds.contains(null);
 	}
 
-	public Set<Identifier> getInParameterTypeIds() {
-		return Collections.unmodifiableSet(this.inParameterTypeIds);
+	public Set<ParameterTypeEnum> getInParameterTypes() {
+		return Collections.unmodifiableSet(this.inParameterTypes);
 	}
 
-	public Set<Identifier> getOutParameterTypeIds() {
-		return Collections.unmodifiableSet(this.outParameterTypeIds);
+	public Set<ParameterTypeEnum> getOutParameterTypes() {
+		return Collections.unmodifiableSet(this.outParameterTypes);
 	}
 
 	/**
@@ -248,60 +252,62 @@ public final class MeasurementType extends ActionType implements Namable {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void setParameterTypeIds(final Map<String, Set<Identifier>> parameterTypeIdsModeMap) {
-		assert parameterTypeIdsModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
-		this.setInParameterTypeIds0(parameterTypeIdsModeMap.get(ParameterMode.MODE_IN.stringValue()));
-		this.setOutParameterTypeIds0(parameterTypeIdsModeMap.get(ParameterMode.MODE_OUT.stringValue()));
+	protected synchronized void setParameterTypes(final Map<String, Set<ParameterTypeEnum>> parameterTypesModeMap) {
+		assert parameterTypesModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
+		this.setInParameterTypes0(parameterTypesModeMap.get(ParameterMode.MODE_IN.stringValue()));
+		this.setOutParameterTypes0(parameterTypesModeMap.get(ParameterMode.MODE_OUT.stringValue()));
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected Map<String, Set<Identifier>> getParameterTypeIdsModeMap() {
-		final Map<String, Set<Identifier>> parameterTypeIdsModeMap = new HashMap<String, Set<Identifier>>(2);
-		parameterTypeIdsModeMap.put(ParameterMode.MODE_IN.stringValue(), this.inParameterTypeIds);
-		parameterTypeIdsModeMap.put(ParameterMode.MODE_OUT.stringValue(), this.outParameterTypeIds);
-		return parameterTypeIdsModeMap;
+	protected Map<String, Set<ParameterTypeEnum>> getParameterTypesModeMap() {
+		final Map<String, Set<ParameterTypeEnum>> parameterTypesModeMap = new HashMap<String, Set<ParameterTypeEnum>>(2);
+		parameterTypesModeMap.put(ParameterMode.MODE_IN.stringValue(), this.inParameterTypes);
+		parameterTypesModeMap.put(ParameterMode.MODE_OUT.stringValue(), this.outParameterTypes);
+		return parameterTypesModeMap;
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setInParameterTypeIds0(final Set<Identifier> inParameterTypeIds) {
-		this.inParameterTypeIds.clear();
-		if (inParameterTypeIds != null)
-			this.inParameterTypeIds.addAll(inParameterTypeIds);
+	protected void setInParameterTypes0(final Set<ParameterTypeEnum> inParameterTypes) {
+		this.inParameterTypes.clear();
+		if (inParameterTypes != null) {
+			this.inParameterTypes.addAll(inParameterTypes);
+		}
 	}
 
 	/**
-	 * client setter for inParameterTypeIds
+	 * client setter for inParameterTypes
 	 *
-	 * @param inParameterTypeIds
-	 *            The inParameterTypeIds to set.
+	 * @param inParameterTypes
+	 *            The inParameterTypes to set.
 	 */
-	public void setInParameterTypeIds(final Set<Identifier> inParameterTypeIds) {
-		this.setInParameterTypeIds0(inParameterTypeIds);
+	public void setInParameterTypes(final Set<ParameterTypeEnum> inParameterTypes) {
+		this.setInParameterTypes0(inParameterTypes);
 		super.markAsChanged();		
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setOutParameterTypeIds0(final Set<Identifier> outParameterTypeIds) {
-		this.outParameterTypeIds.clear();
-		if (outParameterTypeIds != null)
-			this.outParameterTypeIds.addAll(outParameterTypeIds);
+	protected void setOutParameterTypes0(final Set<ParameterTypeEnum> outParameterTypes) {
+		this.outParameterTypes.clear();
+		if (outParameterTypes != null) {
+			this.outParameterTypes.addAll(outParameterTypes);
+		}
 	}
 
 	/**
-	 * client setter for outParameterTypeIds
+	 * client setter for outParameterTypes
 	 *
-	 * @param outParameterTypeIds
-	 *            The outParameterTypeIds to set.
+	 * @param outParameterTypes
+	 *            The outParameterTypes to set.
 	 */
-	public void setOutParameterTypeIds(final Set<Identifier> outParameterTypeIds) {
-		this.setOutParameterTypeIds0(outParameterTypeIds);
+	public void setOutParameterTypes(final Set<ParameterTypeEnum> outParameterTypes) {
+		this.setOutParameterTypes0(outParameterTypes);
 		super.markAsChanged();		
 	}
 
@@ -310,8 +316,9 @@ public final class MeasurementType extends ActionType implements Namable {
 	 */
 	protected void setMeasurementPortTypeIds0(final Set<Identifier> measurementPortTypeIds) {
 		this.measurementPortTypeIds.clear();
-		if (measurementPortTypeIds != null)
+		if (measurementPortTypeIds != null) {
 	     	this.measurementPortTypeIds.addAll(measurementPortTypeIds);
+		}
 	}
 
 	/**
@@ -336,14 +343,6 @@ public final class MeasurementType extends ActionType implements Namable {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-
-		if (this.inParameterTypeIds != null) {
-			dependencies.addAll(this.inParameterTypeIds);
-		}
-
-		if (this.outParameterTypeIds != null) {
-			dependencies.addAll(this.outParameterTypeIds);
-		}
 
 		if (this.measurementPortTypeIds != null) {
 			dependencies.addAll(this.measurementPortTypeIds);

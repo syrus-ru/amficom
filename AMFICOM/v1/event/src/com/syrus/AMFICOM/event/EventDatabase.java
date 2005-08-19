@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.41 2005/08/08 11:32:37 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.42 2005/08/19 14:19:12 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeEnum;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/08/08 11:32:37 $
+ * @version $Revision: 1.42 $, $Date: 2005/08/19 14:19:12 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -126,13 +126,14 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 	}	
 
 	private void retrieveEventParametersByOneQuery(final Set<Event> events) throws RetrieveObjectException {
-    if ((events == null) || (events.isEmpty()))
+    if ((events == null) || (events.isEmpty())) {
 			return;
+    }
 
     final StringBuffer stringBuffer = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
-				+ EventWrapper.LINK_COLUMN_PARAMETER_VALUE
+				+ StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
+				+ EventWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
 				+ EventWrapper.LINK_COLUMN_EVENT_ID
 				+ SQL_FROM + ObjectEntities.EVENTPARAMETER
 				+ SQL_WHERE);
@@ -150,14 +151,7 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 			resultSet = statement.executeQuery(stringBuffer.toString());
 
 			while (resultSet.next()) {
-				ParameterType parameterType;
-				try {
-					parameterType = (ParameterType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-							StorableObjectWrapper.COLUMN_TYPE_ID), true);
-				}
-				catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
+				final ParameterTypeEnum parameterType = ParameterTypeEnum.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE));
 				final EventParameter eventParameter = new EventParameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 						parameterType,
 						DatabaseString.fromQuerySubString(resultSet.getString(EventWrapper.LINK_COLUMN_PARAMETER_VALUE)));
@@ -244,10 +238,9 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 	private void insertEventParameters(final Event event) throws CreateObjectException {
 		final Identifier eventId = event.getId();
 		final Set<EventParameter> eventParameters = event.getParameters();
-		final String sql = SQL_INSERT_INTO + ObjectEntities.EVENTPARAMETER
-				+ OPEN_BRACKET
+		final String sql = SQL_INSERT_INTO + ObjectEntities.EVENTPARAMETER + OPEN_BRACKET
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
 				+ EventWrapper.LINK_COLUMN_EVENT_ID + COMMA
 				+ EventWrapper.LINK_COLUMN_PARAMETER_VALUE
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
@@ -258,29 +251,29 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 				+ CLOSE_BRACKET;
 
 		PreparedStatement preparedStatement = null;
-		
 		Identifier parameterId = null;
-		Identifier parameterTypeId = null;
+		ParameterTypeEnum parameterType = null;
 		Connection connection = null;
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 			for (final EventParameter eventParameter : eventParameters) {
 				parameterId = eventParameter.getId();
-				parameterTypeId = eventParameter.getType().getId();
+				parameterType = eventParameter.getType();
+
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, parameterId);
-				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
+				preparedStatement.setInt(2, parameterType.getCode());
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, eventId);
 				DatabaseString.setString(preparedStatement, 4, eventParameter.getValue(), SIZE_PARAMETER_VALUE_COLUMN);
 
-				Log.debugMessage("EventDatabase.insertEventParameters | Inserting parameter " + parameterTypeId.toString()
+				Log.debugMessage("EventDatabase.insertEventParameters | Inserting parameter " + parameterType.getDescription()
 						+ " for event '" + eventId + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}
 		}
 		catch (SQLException sqle) {
 			final String mesg = "EventDatabase.insertEventParameters | Cannot insert parameter '" + parameterId.toString()
-					+ "' of type '" + parameterTypeId.toString() + "' for event '" + eventId + "' -- " + sqle.getMessage();
+					+ "' of type '" + parameterType.getDescription() + "' for event '" + eventId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		}
 		finally {

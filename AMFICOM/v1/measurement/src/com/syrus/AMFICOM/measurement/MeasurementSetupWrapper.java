@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.23 2005/08/08 15:34:55 bob Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.24 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,18 +14,13 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.ParameterTypeEnum;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/08/08 15:34:55 $
- * @author $Author: bob $
+ * @version $Revision: 1.24 $, $Date: 2005/08/19 14:19:04 $
+ * @author $Author: arseniy $
  * @module measurement
  */
 public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSetup> {
@@ -113,29 +108,10 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 		for (int i = 0; i < parameters.length; i++) {				
 			final String string = parameters[i].getStringValue();
 			if (string != null) {
-				final ParameterType parameterType = (ParameterType) parameters[i].getType();
+				final ParameterTypeEnum parameterType = parameters[i].getType();
 				String s = parameterType.getDescription() + ": " + string;
 //				buffer.append(parameterType.getDescription() + ": " + string);
-				Set<Characteristic> characteristics = null;
-				try {
-					characteristics = parameterType.getCharacteristics(false);
-				} catch (ApplicationException ae) {
-					Log.errorException(ae);
-				}
-//				Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | ParameterType " + parameterType.getId() + ", "
-//					+ parameterType.getCodename() + ", characteristics size:" + characteristics.size(), Level.FINEST);
-				if (characteristics != null && !characteristics.isEmpty()) {
-					for (final Characteristic characteristic : characteristics) {
-						final StorableObjectType type = characteristic.getType();
-//						Log.debugMessage("MeasurementSetupWrapper.addSetParameterInfo | characteristic type codename " + type.getCodename(), Level.FINEST);
-						if (type.getCodename().startsWith(CharacteristicTypeCodenames.UNITS_PREFIX)) {
-//							buffer.append(' ' + characteristic.getValue());
-							s = s + ' ' + characteristic.getValue();
-							/* TODO check for all codename ?*/
-							break;
-						}
-					}
-				}
+				s = s + ' ' + parameterType.getMeasurementUnit().getName();
 //				buffer.append('\n');
 				infoList.add(s);
 			}

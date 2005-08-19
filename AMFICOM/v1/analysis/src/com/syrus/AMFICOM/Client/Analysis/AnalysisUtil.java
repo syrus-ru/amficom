@@ -16,13 +16,10 @@ import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
 import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ParameterTypeCodename;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.ParameterTypeEnum;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -51,10 +48,6 @@ import com.syrus.util.EasyDateFormatter;
 
 public class AnalysisUtil
 {
-	private static String DADARA_ETALON = ParameterTypeCodename.DADARA_ETALON.stringValue();
-	private static String REFLECTOGRAMMA_ETALON = ParameterTypeCodename.REFLECTOGRAMMA_ETALON.stringValue();
-	private static String DADARA_CRITERIA = ParameterTypeCodename.DADARA_CRITERIA.stringValue();
-
 	private AnalysisUtil()
 	{ // non-instantiable
 	}
@@ -87,9 +80,8 @@ public class AnalysisUtil
 		Parameter[] parameters = result1.getParameters();
 		for (int i = 0; i < parameters.length; i++) {
 			Parameter param = parameters[i];
-			ParameterType type = (ParameterType)param.getType();
-			if (type.getCodename().equals(
-					ParameterTypeCodename.REFLECTOGRAMMA.stringValue())) {
+			ParameterTypeEnum type = param.getType();
+			if (type.equals(ParameterTypeEnum.REFLECTOGRAMMA)) {
 				bs = new BellcoreReader().getData(param.getValue());
 			}
 		}
@@ -131,7 +123,7 @@ public class AnalysisUtil
 			Set<Result> results = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			for (Result result1 : results) {
 				for (Parameter parameter : result1.getParameters()) {
-					if (((ParameterType)parameter.getType()).getCodename().equals(ParameterTypeCodename.DADARA_ANALYSIS_RESULT.stringValue())) {
+					if (parameter.getType().equals(ParameterTypeEnum.DADARA_ANALYSIS_RESULT)) {
 						return (AnalysisResult) DataStreamableUtil.readDataStreamableFromBA(parameter.getValue(), AnalysisResult.getDSReader());
 					}
 				}
@@ -147,28 +139,6 @@ public class AnalysisUtil
 			throw new ApplicationException("No AnalysisResult found for Measurement " + m.getName());
 		}
 		return ar;
-	}
-
-	public static ParameterType getParameterType(String codename,
-			DataType dataType)
-	throws ApplicationException {
-		TypicalCondition pTypeCondition = new TypicalCondition(
-				codename,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PARAMETER_TYPE_CODE,
-				StorableObjectWrapper.COLUMN_CODENAME);
-
-			java.util.Set<ParameterType> parameterTypeSet =
-					StorableObjectPool.getStorableObjectsByCondition(
-							pTypeCondition, true);
-			if (parameterTypeSet.isEmpty())
-				throw new RetrieveObjectException("AnalysisUtil.getParameterType | parameter type with codename " + pTypeCondition.getValue() + " not found");
-
-			//return (ParameterType) parameterTypeSet.iterator().next();
-			ParameterType ret = parameterTypeSet.iterator().next();
-			if (ret.getDataType() != dataType)
-				throw new ApplicationException("unexpected dataType");
-			return ret;
 	}
 
 	public static AnalysisType getAnalysisType(String codename)
@@ -279,14 +249,14 @@ public class AnalysisUtil
 		Parameter[] params = etalonSet.getParameters();
 		for (int i = 0; i < params.length; i++)
 		{
-			ParameterType type = (ParameterType)params[i].getType();
-			if (type.getCodename().equals(DADARA_ETALON))
+			ParameterTypeEnum type = params[i].getType();
+			if (type.equals(ParameterTypeEnum.DADARA_ETALON))
 			{
 				etalonObj = (Etalon) DataStreamableUtil.
 					readDataStreamableFromBA(params[i].getValue(),
 							Etalon.getDSReader());
 			}
-			else if (type.getCodename().equals(REFLECTOGRAMMA_ETALON))
+			else if (type.equals(ParameterTypeEnum.REFLECTOGRAMMA_ETALON))
 			{
 				etalonBS = new BellcoreReader().getData(params[i].getValue());
 //				etalonBS.title = "etalon (" + (ms.getDescription().equals("")
@@ -318,8 +288,7 @@ public class AnalysisUtil
 		Parameter[] params = new Parameter[1];
 
 		{
-			ParameterType ptype = getParameterType(
-				DADARA_CRITERIA, DataType.RAW);
+			ParameterTypeEnum ptype = ParameterTypeEnum.DADARA_CRITERIA;
 			params[0] = Parameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(analysisParams));
 		}
@@ -342,14 +311,14 @@ public class AnalysisUtil
 	{
 		Parameter[] params = new Parameter[2];
 
-		ParameterType ptype = getParameterType(DADARA_ETALON, DataType.RAW);
+		ParameterTypeEnum ptype = ParameterTypeEnum.DADARA_ETALON;
 		params[0] = Parameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(
 						Heap.getEtalon()));
 
 		BellcoreStructure bs = Heap.getBSEtalonTrace();
 
-		ptype = getParameterType(REFLECTOGRAMMA_ETALON, DataType.RAW);
+		ptype = ParameterTypeEnum.REFLECTOGRAMMA_ETALON;
 		params[1] = Parameter.createInstance(ptype,
 				new BellcoreWriter().write(bs));
 
@@ -369,8 +338,8 @@ public class AnalysisUtil
 		Parameter[] params = criteriaSet.getParameters();
 		for (int i = 0; i < params.length; i++)
 		{
-			ParameterType p = (ParameterType)params[i].getType();
-			if (p.getCodename().equals(DADARA_CRITERIA))
+			ParameterTypeEnum p = params[i].getType();
+			if (p.equals(ParameterTypeEnum.DADARA_CRITERIA))
 				analysisParams = (AnalysisParameters)
 					DataStreamableUtil.readDataStreamableFromBA(
 							params[i].getValue(),
@@ -378,7 +347,7 @@ public class AnalysisUtil
 		}
 		if (analysisParams == null) {
 			throw new DataFormatException(
-					"No" + DADARA_CRITERIA);
+					"No" + ParameterTypeEnum.DADARA_CRITERIA.getCodename());
 		}
 		Heap.setMinuitAnalysisParams(analysisParams);
 		Heap.setMinuitInitialParamsFromCurrentAP();
@@ -396,15 +365,15 @@ public class AnalysisUtil
 		switch(ev.getEventType())
 		{
 		case SimpleReflectogramEvent.GAIN:
-			if (-((SpliceDetailedEvent)ev).getLoss() > CRIT_GAIN)
+			if (-((SpliceDetailedEvent)ev).getLoss() > CRIT_GAIN) {
 				return LangModelAnalyse.getString("eventTypeGain");
-			else
-				return LangModelAnalyse.getString("eventTypeGainAtWeld");
+			}
+			return LangModelAnalyse.getString("eventTypeGainAtWeld");
 		case SimpleReflectogramEvent.LOSS:
-			if (((SpliceDetailedEvent)ev).getLoss() > CRIT_LOSS)
+			if (((SpliceDetailedEvent)ev).getLoss() > CRIT_LOSS) {
 				return LangModelAnalyse.getString("eventTypeLossAtBend");
-			else
-				return LangModelAnalyse.getString("eventTypeLossAtWeld");
+			}
+			return LangModelAnalyse.getString("eventTypeLossAtWeld");
 		default:
 			return getSimpleEventNameByType(ev.getEventType());
 		}

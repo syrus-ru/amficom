@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogrammLoadDialog.java,v 1.27 2005/08/09 21:20:35 arseniy Exp $
+ * $Id: ReflectogrammLoadDialog.java,v 1.28 2005/08/19 14:23:55 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
-import java.util.Iterator;
 
 import javax.swing.Box;
 import javax.swing.JButton;
@@ -35,8 +34,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.ParameterTypeCodename;
+import com.syrus.AMFICOM.general.ParameterTypeEnum;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.logic.Item;
@@ -52,7 +50,7 @@ import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/08/09 21:20:35 $
+ * @version $Revision: 1.28 $, $Date: 2005/08/19 14:23:55 $
  * @author $Author: arseniy $
  * @module analysis
  */
@@ -241,8 +239,8 @@ public class ReflectogrammLoadDialog extends JDialog {
 		final Parameter[] parameters = this.result.getParameters();
 		for (int i = 0; i < parameters.length; i++) {
 			final Parameter param = parameters[i];
-			final ParameterType type = (ParameterType) param.getType();
-			if (type.getCodename().equals(ParameterTypeCodename.REFLECTOGRAMMA.stringValue())) {
+			final ParameterTypeEnum type = param.getType();
+			if (type.equals(ParameterTypeEnum.REFLECTOGRAMMA)) {
 				bs = new BellcoreReader().getData(param.getValue());
 			}
 		}

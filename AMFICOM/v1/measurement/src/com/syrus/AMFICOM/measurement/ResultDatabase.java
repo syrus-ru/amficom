@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.102 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.103 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeEnum;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.103 $, $Date: 2005/08/19 14:19:04 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -252,7 +252,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 		
 		final StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
 				+ ResultWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
 				+ ResultWrapper.LINK_COLUMN_RESULT_ID
 				+ SQL_FROM + ObjectEntities.RESULTPARAMETER
@@ -271,16 +271,10 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 			resultSet = statement.executeQuery(sql.toString());
 
 			while (resultSet.next()) {
-				ParameterType parameterType = null;
-				try {
-					parameterType = (ParameterType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-							StorableObjectWrapper.COLUMN_TYPE_ID), true);
-				} catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
+				final ParameterTypeEnum parameterType = ParameterTypeEnum.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE));
 				final Parameter parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
-														parameterType,
-														ByteArrayDatabase.toByteArray(resultSet.getBlob(ResultWrapper.LINK_COLUMN_PARAMETER_VALUE)));
+						parameterType,
+						ByteArrayDatabase.toByteArray(resultSet.getBlob(ResultWrapper.LINK_COLUMN_PARAMETER_VALUE)));
 				final Identifier resultId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.LINK_COLUMN_RESULT_ID);
 				Set<Parameter> resultParameters = resultParametersMap.get(resultId);
 				if (resultParameters == null) {
@@ -344,35 +338,36 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 	private void insertResultParameters(final Result result) throws CreateObjectException {
 		final Identifier resultId = result.getId();
 		final Parameter[] setParameters = result.getParameters();
-		final String sql = SQL_INSERT_INTO
-				+ ObjectEntities.RESULTPARAMETER + OPEN_BRACKET
+		final String sql = SQL_INSERT_INTO + ObjectEntities.RESULTPARAMETER + OPEN_BRACKET
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
 				+ ResultWrapper.LINK_COLUMN_RESULT_ID + COMMA
 				+ ResultWrapper.LINK_COLUMN_PARAMETER_VALUE
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION+ COMMA
-				+ SQL_FUNCTION_EMPTY_BLOB + CLOSE_BRACKET;
+				+ SQL_FUNCTION_EMPTY_BLOB
+				+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		Identifier parameterId = null;
-		Identifier parameterTypeId = null;
+		ParameterTypeEnum parameterType = null;
 		Connection connection = null;
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			for (int i = 0; i < setParameters.length; i++) {
-				parameterId = setParameters[i].getId();
-				parameterTypeId = setParameters[i].getType().getId();
+			for (final Parameter parameter : setParameters) {
+				parameterId = parameter.getId();
+				parameterType = parameter.getType();
+
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, parameterId);
-				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
+				preparedStatement.setInt(2, parameterType.getCode());
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, resultId);
 
-				Log.debugMessage("ResultDatabase.insertResultParameters | Inserting parameter " + parameterTypeId.toString()
+				Log.debugMessage("ResultDatabase.insertResultParameters | Inserting parameter " + parameterType.getDescription()
 						+ " for result " + resultId, Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
-				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
+				ByteArrayDatabase.saveAsBlob(parameter.getValue(),
 						connection,
 						ObjectEntities.RESULTPARAMETER,
 						ResultWrapper.LINK_COLUMN_PARAMETER_VALUE,
@@ -381,7 +376,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 			connection.commit();
 		} catch (SQLException sqle) {
 			final String mesg = "ResultDatabase.insertResultParameters | Cannot insert parameter '" + parameterId.toString()
-					+ "' of type '" + parameterTypeId.toString() + "' for result '" + resultId + "' -- " + sqle.getMessage();
+					+ "' of type '" + parameterType.getDescription() + "' for result '" + resultId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {

@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.75 2005/08/08 19:10:57 arseniy Exp $
+ * $Id: Result.java,v 1.76 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/08/08 19:10:57 $
+ * @version $Revision: 1.76 $, $Date: 2005/08/19 14:19:04 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -282,10 +282,6 @@ public final class Result extends StorableObject {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-
-		for (int i = 0; i < this.parameters.length; i++) {
-			dependencies.add(this.parameters[i].getType());
-		}
 
 		dependencies.add(this.action);
 

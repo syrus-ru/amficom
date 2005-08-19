@@ -1,5 +1,5 @@
 /*
- * $Id: ResultWrapper.java,v 1.16 2005/08/08 13:33:50 arseniy Exp $
+ * $Id: ResultWrapper.java,v 1.17 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeEnum;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/08 13:33:50 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/19 14:19:04 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -56,8 +56,9 @@ public class ResultWrapper extends StorableObjectWrapper<Result> {
 	}
 
 	public static ResultWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new ResultWrapper();
+		}
 		return instance;
 	}
 
@@ -109,7 +110,7 @@ public class ResultWrapper extends StorableObjectWrapper<Result> {
 				final Parameter[] resultParameters = new Parameter[resultParametersMap.size() / 3];
 				for (int i = 0; i < resultParameters.length; i++) {
 					final Identifier parameterId = (Identifier) resultParametersMap.get(COLUMN_ID + i);
-					final ParameterType parameterType = (ParameterType) resultParametersMap.get(COLUMN_TYPE_ID + i);
+					final ParameterTypeEnum parameterType = (ParameterTypeEnum) resultParametersMap.get(COLUMN_TYPE_ID + i);
 					final byte[] resultParameterValue = (byte[]) resultParametersMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
 
 					resultParameters[i] = new Parameter(parameterId, parameterType, resultParameterValue);

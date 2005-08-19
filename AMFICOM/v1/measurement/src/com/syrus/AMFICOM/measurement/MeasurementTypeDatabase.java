@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeDatabase.java,v 1.109 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: MeasurementTypeDatabase.java,v 1.110 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.109 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.110 $, $Date: 2005/08/19 14:19:04 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -120,7 +120,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase<Measuremen
 	public void retrieve(final MeasurementType storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		this.retrieveEntity(storableObject);
-		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(storableObject));
+		super.retrieveParameterTypesByOneQuery(Collections.singleton(storableObject));
 		this.retrieveMeasurementPortTypeIdsByOneQuery(Collections.singleton(storableObject));
 	}
 
@@ -146,7 +146,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase<Measuremen
 	public void insert(final Set<MeasurementType> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
-			super.updateParameterTypeIds(storableObjects);
+			super.updateParameterTypes(storableObjects);
 			this.updateMeasurementPortTypeIds(storableObjects);
 		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
@@ -156,7 +156,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase<Measuremen
 	@Override
 	public void update(final Set<MeasurementType> storableObjects) throws UpdateObjectException {
 		super.updateEntities(storableObjects);
-		super.updateParameterTypeIds(storableObjects);
+		super.updateParameterTypes(storableObjects);
 		this.updateMeasurementPortTypeIds(storableObjects);
 	}
 
@@ -224,7 +224,7 @@ public final class MeasurementTypeDatabase extends ActionTypeDatabase<Measuremen
 	protected Set<MeasurementType> retrieveByCondition(final String conditionQuery)
 			throws RetrieveObjectException, IllegalDataException {
 		final Set<MeasurementType> objects = super.retrieveByCondition(conditionQuery);
-		this.retrieveParameterTypeIdsByOneQuery(objects);
+		this.retrieveParameterTypesByOneQuery(objects);
 		this.retrieveMeasurementPortTypeIdsByOneQuery(objects);
 		return objects;
 	}

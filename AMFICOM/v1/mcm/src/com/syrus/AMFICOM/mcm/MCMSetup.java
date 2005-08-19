@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.6 2005/08/17 11:48:45 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.7 2005/08/19 14:21:42 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,8 @@ import com.syrus.AMFICOM.general.DataTypeDatabase;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.MeasurementUnitDatabase;
+import com.syrus.AMFICOM.general.ParameterTypeEnumDatabase;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -50,6 +52,8 @@ final class MCMSetup {
 		try {
 			/*Create locally hardcoded data*/
 			createDataTypes();
+			createMeasurementUnits();
+			createParameterTypes();
 
 			/*-Setup all base information about this MCM*/
 			bootstrap();
@@ -125,5 +129,13 @@ final class MCMSetup {
 
 	private static void createDataTypes() throws CreateObjectException {
 		DataTypeDatabase.insertDataTypes();
+	}
+
+	private static void createMeasurementUnits() throws CreateObjectException {
+		MeasurementUnitDatabase.insertMeasurementUnits();
+	}
+
+	private static void createParameterTypes() throws CreateObjectException {
+		ParameterTypeEnumDatabase.insertParameterTypes();
 	}
 }

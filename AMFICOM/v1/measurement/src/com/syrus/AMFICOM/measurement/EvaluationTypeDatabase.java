@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeDatabase.java,v 1.97 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: EvaluationTypeDatabase.java,v 1.98 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.98 $, $Date: 2005/08/19 14:19:04 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -122,7 +122,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase<EvaluationT
 	public void retrieve(final EvaluationType storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		super.retrieveEntity(storableObject);
-		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(storableObject));
+		super.retrieveParameterTypesByOneQuery(Collections.singleton(storableObject));
 		this.retrieveMeasurementTypeIdsByOneQuery(Collections.singleton(storableObject));
 	}
 
@@ -147,7 +147,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase<EvaluationT
 	public void insert(final Set<EvaluationType> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
-			super.updateParameterTypeIds(storableObjects);
+			super.updateParameterTypes(storableObjects);
 			this.updateMeasurementTypeIds(storableObjects);
 		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
@@ -157,7 +157,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase<EvaluationT
 	@Override
 	public void update(final Set<EvaluationType> storableObjects) throws UpdateObjectException {
 		super.updateEntities(storableObjects);
-		super.updateParameterTypeIds(storableObjects);
+		super.updateParameterTypes(storableObjects);
 		this.updateMeasurementTypeIds(storableObjects);
 	}
 
@@ -221,7 +221,7 @@ public final class EvaluationTypeDatabase extends ActionTypeDatabase<EvaluationT
 	@Override
 	protected Set<EvaluationType> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		final Set<EvaluationType> objects = super.retrieveByCondition(conditionQuery);
-		super.retrieveParameterTypeIdsByOneQuery(objects);
+		super.retrieveParameterTypesByOneQuery(objects);
 		this.retrieveMeasurementTypeIdsByOneQuery(objects);
 		return objects;
 	}

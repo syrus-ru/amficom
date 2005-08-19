@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingTypeDatabase.java,v 1.51 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: ModelingTypeDatabase.java,v 1.52 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.52 $, $Date: 2005/08/19 14:19:04 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -117,14 +117,14 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase<ModelingType>
 	public void retrieve(final ModelingType storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		this.retrieveEntity(storableObject);
-		super.retrieveParameterTypeIdsByOneQuery(Collections.singleton(storableObject));
+		super.retrieveParameterTypesByOneQuery(Collections.singleton(storableObject));
 	}
 
 	@Override
 	public void insert(final Set<ModelingType> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
-			super.updateParameterTypeIds(storableObjects);
+			super.updateParameterTypes(storableObjects);
 		} catch (UpdateObjectException uoe) {
 			throw new CreateObjectException(uoe);
 		}
@@ -133,7 +133,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase<ModelingType>
 	@Override
 	public void update(final Set<ModelingType> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
-		super.updateParameterTypeIds(storableObjects);
+		super.updateParameterTypes(storableObjects);
 	}
 
 	@Override
@@ -179,7 +179,7 @@ public final class ModelingTypeDatabase extends ActionTypeDatabase<ModelingType>
 	protected Set<ModelingType> retrieveByCondition(final String conditionQuery)
 			throws RetrieveObjectException, IllegalDataException {
 		final Set<ModelingType> objects = super.retrieveByCondition(conditionQuery);
-		super.retrieveParameterTypeIdsByOneQuery(objects);
+		super.retrieveParameterTypesByOneQuery(objects);
 		return objects;
 	}
 

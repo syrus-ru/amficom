@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEventTypeImpl.java,v 1.4 2005/08/08 11:32:37 arseniy Exp $
+ * $Id: IdlEventTypeImpl.java,v 1.5 2005/08/19 14:19:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,13 @@ import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.IdlUserAlertKinds;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlParameterTypeEnum;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/08 11:32:37 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/19 14:19:13 $
  * @module event
  */
 final class IdlEventTypeImpl extends IdlEventType {
@@ -38,7 +39,7 @@ final class IdlEventTypeImpl extends IdlEventType {
 			final long version,
 			final String codename,
 			final String description,
-			final IdlIdentifier[] parameterTypeIds,
+			final IdlParameterTypeEnum[] parameterTypes,
 			final IdlUserAlertKinds[] userAlertKinds) {
 		this.id = id;
 		this.created = created;
@@ -48,7 +49,7 @@ final class IdlEventTypeImpl extends IdlEventType {
 		this.version = version;
 		this.codename = codename;
 		this.description = description;
-		this.parameterTypeIds = parameterTypeIds;
+		this.parameterTypes = parameterTypes;
 		this.userAlertKinds = userAlertKinds;
 	}
 

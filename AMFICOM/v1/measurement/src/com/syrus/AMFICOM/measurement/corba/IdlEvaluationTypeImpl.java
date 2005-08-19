@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEvaluationTypeImpl.java,v 1.3 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: IdlEvaluationTypeImpl.java,v 1.4 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,13 +13,14 @@ import static java.util.logging.Level.SEVERE;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlParameterTypeEnum;
 import com.syrus.AMFICOM.measurement.EvaluationType;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/19 14:19:04 $
  * @module measurement
  */
 final class IdlEvaluationTypeImpl extends IdlEvaluationType {
@@ -37,10 +38,10 @@ final class IdlEvaluationTypeImpl extends IdlEvaluationType {
 			final long version,
 			final String codename,
 			final String description,
-			final IdlIdentifier inParameterTypeIds[],
-			final IdlIdentifier thresholdParameterTypeIds[],
-			final IdlIdentifier etalonParameterTypeIds[],
-			final IdlIdentifier outParameterTypeIds[],
+			final IdlParameterTypeEnum inParameterTypes[],
+			final IdlParameterTypeEnum thresholdParameterTypes[],
+			final IdlParameterTypeEnum etalonParameterTypes[],
+			final IdlParameterTypeEnum outParameterTypes[],
 			final IdlIdentifier measurementTypeIds[]) {
 		this.id = id;
 		this.created = created;
@@ -50,10 +51,10 @@ final class IdlEvaluationTypeImpl extends IdlEvaluationType {
 		this.version = version;
 		this.codename = codename;
 		this.description = description;
-		this.inParameterTypeIds = inParameterTypeIds;
-		this.thresholdParameterTypeIds = thresholdParameterTypeIds;
-		this.etalonParameterTypeIds = etalonParameterTypeIds;
-		this.outParameterTypeIds = outParameterTypeIds;
+		this.inParameterTypes = inParameterTypes;
+		this.thresholdParameterTypes = thresholdParameterTypes;
+		this.etalonParameterTypes = etalonParameterTypes;
+		this.outParameterTypes = outParameterTypes;
 		this.measurementTypeIds = measurementTypeIds;
 	}
 

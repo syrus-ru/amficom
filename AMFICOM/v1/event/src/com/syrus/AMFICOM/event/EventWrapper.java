@@ -1,5 +1,5 @@
 /*
- * $Id: EventWrapper.java,v 1.16 2005/08/08 13:36:20 arseniy Exp $
+ * $Id: EventWrapper.java,v 1.17 2005/08/19 14:19:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/08 13:36:20 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/19 14:19:13 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -43,8 +43,9 @@ public class EventWrapper extends StorableObjectWrapper<Event> {
 	}
 
 	public static EventWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new EventWrapper();
+		}
 		return instance;
 	}
 

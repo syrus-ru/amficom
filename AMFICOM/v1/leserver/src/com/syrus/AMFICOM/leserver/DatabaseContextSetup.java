@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.9 2005/08/08 11:42:21 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.10 2005/08/19 14:20:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,10 +20,9 @@ import com.syrus.AMFICOM.event.EventTypeDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:42:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/19 14:20:27 $
  * @author $Author: arseniy $
  * @module leserver
  */
@@ -33,7 +32,6 @@ final class DatabaseContextSetup {
 	}
 
 	public static void initDatabaseContext() {
-		DatabaseContext.registerDatabase(new ParameterTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicDatabase());
 		DatabaseContext.registerDatabase(new SystemUserDatabase());

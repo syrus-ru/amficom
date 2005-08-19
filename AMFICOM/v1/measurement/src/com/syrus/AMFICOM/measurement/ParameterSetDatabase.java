@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.13 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: ParameterSetDatabase.java,v 1.14 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,17 +19,15 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterType;
+import com.syrus.AMFICOM.general.ParameterTypeEnum;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -40,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/19 14:19:04 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -121,12 +119,13 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 	}
 
 	private void retrieveSetParametersByOneQuery(final Set<ParameterSet> sets) throws RetrieveObjectException {
-		if ((sets == null) || (sets.isEmpty()))
+		if ((sets == null) || (sets.isEmpty())) {
 			return;
+		}
 
 		final StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
 				+ ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE + COMMA
 				+ ParameterSetWrapper.LINK_COLUMN_SET_ID
 				+ SQL_FROM + ObjectEntities.PARAMETER + SQL_WHERE);
@@ -144,13 +143,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 			resultSet = statement.executeQuery(sql.toString());
 
 			while (resultSet.next()) {
-				ParameterType parameterType;
-				try {
-					final Identifier parameterTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
-					parameterType = (ParameterType) StorableObjectPool.getStorableObject(parameterTypeId, true);
-				} catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
+				final ParameterTypeEnum parameterType = ParameterTypeEnum.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE));
 				final Parameter parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 						parameterType,
 						ByteArrayDatabase.toByteArray(resultSet.getBlob(ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE)));
@@ -241,47 +234,46 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 		final Identifier setId = set.getId();		
 		final Parameter[] setParameters = set.getParameters();
 		Log.debugMessage("ParameterSetDatabase.insertSetParameters | setParameters count:" + setParameters.length, Log.DEBUGLEVEL01);
-		final String sql = SQL_INSERT_INTO
-			+ ObjectEntities.PARAMETER
-			+ OPEN_BRACKET
-			+ StorableObjectWrapper.COLUMN_ID  + COMMA
-			+ StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
-			+ ParameterSetWrapper.LINK_COLUMN_SET_ID + COMMA
-			+ ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE + CLOSE_BRACKET
-			+ SQL_VALUES
-			+ OPEN_BRACKET
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ QUESTION + COMMA
-			+ SQL_FUNCTION_EMPTY_BLOB + CLOSE_BRACKET;
-		Log.debugMessage("ParameterSetDatabase.insertSetParameters | try:" + sql, Log.DEBUGLEVEL01);
+		final String sql = SQL_INSERT_INTO + ObjectEntities.PARAMETER + OPEN_BRACKET
+				+ StorableObjectWrapper.COLUMN_ID  + COMMA
+				+ StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
+				+ ParameterSetWrapper.LINK_COLUMN_SET_ID + COMMA
+				+ ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE
+				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ QUESTION + COMMA
+				+ SQL_FUNCTION_EMPTY_BLOB
+				+ CLOSE_BRACKET;
+		Log.debugMessage("ParameterSetDatabase.insertSetParameters | Trying:" + sql, Log.DEBUGLEVEL01);
 		PreparedStatement preparedStatement = null;
 		Identifier parameterId = null;
-		Identifier parameterTypeId = null;
+		ParameterTypeEnum parameterType = null;
 		Connection connection = null;
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			for (int i = 0; i < setParameters.length; i++) {
-				parameterId = setParameters[i].getId();
-				parameterTypeId = setParameters[i].getType().getId();
+			for (final Parameter parameter : setParameters) {
+				parameterId = parameter.getId();
+				parameterType = parameter.getType();
+
 				DatabaseIdentifier.setIdentifier(preparedStatement, 1, parameterId);
-				DatabaseIdentifier.setIdentifier(preparedStatement, 2, parameterTypeId);
+				preparedStatement.setInt(2, parameterType.getCode());
 				DatabaseIdentifier.setIdentifier(preparedStatement, 3, setId);
 
-				Log.debugMessage("ParameterSetDatabase.insertSetParameters | Inserting parameter " + parameterTypeId.toString()
+				Log.debugMessage("ParameterSetDatabase.insertSetParameters | Inserting parameter " + parameterType.getDescription()
 						+ " for set '" + setId + "'", Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
-				ByteArrayDatabase.saveAsBlob(setParameters[i].getValue(),
-											 connection,
-											 ObjectEntities.PARAMETER,
-											 ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE,
-											 StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(parameterId));
+				ByteArrayDatabase.saveAsBlob(parameter.getValue(),
+						connection,
+						ObjectEntities.PARAMETER,
+						ParameterSetWrapper.LINK_COLUMN_PARAMETER_VALUE,
+						StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(parameterId));
 			}
 			connection.commit();
 		} catch (SQLException sqle) {
 			final String mesg = "ParameterSetDatabase.insertSetParameters | Cannot insert parameter '" + parameterId.toString()
-					+ "' of type '" + parameterTypeId.toString() + "' for set '" + setId + "' -- " + sqle.getMessage();
+					+ "' of type '" + parameterType.getDescription() + "' for set '" + setId + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
 			try {
@@ -309,8 +301,9 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 	}
 
 	private void updateSetMELinks(final Set<ParameterSet> sets) throws UpdateObjectException {
-		if (sets == null || sets.isEmpty())
+		if (sets == null || sets.isEmpty()) {
 			return;
+		}
 
 		final Map<Identifier, Set<Identifier>> meIdsMap = new HashMap<Identifier, Set<Identifier>>();
 		for (final ParameterSet set : sets) {

@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationType.java,v 1.85 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: EvaluationType.java,v 1.86 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,15 +28,17 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterTypeEnum;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.corba.IdlParameterTypeEnum;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlEvaluationType;
 import com.syrus.AMFICOM.measurement.corba.IdlEvaluationTypeHelper;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.86 $, $Date: 2005/08/19 14:19:04 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -66,10 +68,10 @@ public final class EvaluationType extends ActionType {
 		}
 	}
 
-	private Set<Identifier> inParameterTypeIds;
-	private Set<Identifier> thresholdParameterTypeIds;
-	private Set<Identifier> etalonParameterTypeIds;
-	private Set<Identifier> outParameterTypeIds;
+	private Set<ParameterTypeEnum> inParameterTypes;
+	private Set<ParameterTypeEnum> thresholdParameterTypes;
+	private Set<ParameterTypeEnum> etalonParameterTypes;
+	private Set<ParameterTypeEnum> outParameterTypes;
 
 	private Set<Identifier> measurementTypeIds;
 
@@ -79,10 +81,10 @@ public final class EvaluationType extends ActionType {
 	EvaluationType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypeIds = new HashSet<Identifier>();
-		this.thresholdParameterTypeIds = new HashSet<Identifier>();
-		this.etalonParameterTypeIds = new HashSet<Identifier>();
-		this.outParameterTypeIds = new HashSet<Identifier>();
+		this.inParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.thresholdParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.etalonParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.outParameterTypes = new HashSet<ParameterTypeEnum>();
 
 		this.measurementTypeIds = new HashSet<Identifier>();
 
@@ -114,10 +116,10 @@ public final class EvaluationType extends ActionType {
 			final StorableObjectVersion version,
 			final String codename,
 			final String description,
-			final Set<Identifier> inParameterTypeIds,
-			final Set<Identifier> thresholdParameterTypeIds,
-			final Set<Identifier> etalonParameterTypeIds,
-			final Set<Identifier> outParameterTypeIds,
+			final Set<ParameterTypeEnum> inParameterTypes,
+			final Set<ParameterTypeEnum> thresholdParameterTypes,
+			final Set<ParameterTypeEnum> etalonParameterTypes,
+			final Set<ParameterTypeEnum> outParameterTypes,
 			final Set<Identifier> measurementTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
@@ -128,17 +130,17 @@ public final class EvaluationType extends ActionType {
 				codename,
 				description);
 
-		this.inParameterTypeIds = new HashSet<Identifier>();
-		this.setInParameterTypeIds0(inParameterTypeIds);
+		this.inParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.setInParameterTypes0(inParameterTypes);
 
-		this.thresholdParameterTypeIds = new HashSet<Identifier>();
-		this.setThresholdParameterTypeIds0(thresholdParameterTypeIds);
+		this.thresholdParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.setThresholdParameterTypes0(thresholdParameterTypes);
 
-		this.etalonParameterTypeIds = new HashSet<Identifier>();
-		this.setEtalonParameterTypeIds0(etalonParameterTypeIds);
+		this.etalonParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.setEtalonParameterTypes0(etalonParameterTypes);
 
-		this.outParameterTypeIds = new HashSet<Identifier>();
-		this.setOutParameterTypeIds0(outParameterTypeIds);
+		this.outParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.setOutParameterTypes0(outParameterTypes);
 
 
 		this.measurementTypeIds = new HashSet<Identifier>();
@@ -151,20 +153,20 @@ public final class EvaluationType extends ActionType {
 	 * @param creatorId
 	 * @param codename
 	 * @param description
-	 * @param inParameterTypeIds
-	 * @param thresholdParameterTypeIds
-	 * @param etalonParameterTypeIds
-	 * @param outParameterTypeIds
+	 * @param inParameterTypes
+	 * @param thresholdParameterTypes
+	 * @param etalonParameterTypes
+	 * @param outParameterTypes
 	 * @param measurementTypeIds
 	 * @throws CreateObjectException
 	 */
 	public static EvaluationType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
-			final Set<Identifier> inParameterTypeIds,
-			final Set<Identifier> thresholdParameterTypeIds,
-			final Set<Identifier> etalonParameterTypeIds,
-			final Set<Identifier> outParameterTypeIds,
+			final Set<ParameterTypeEnum> inParameterTypes,
+			final Set<ParameterTypeEnum> thresholdParameterTypes,
+			final Set<ParameterTypeEnum> etalonParameterTypes,
+			final Set<ParameterTypeEnum> outParameterTypes,
 			final Set<Identifier> measurementTypeIds) throws CreateObjectException {
 		try {
 			final EvaluationType evaluationType = new EvaluationType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EVALUATION_TYPE_CODE),
@@ -172,10 +174,10 @@ public final class EvaluationType extends ActionType {
 					StorableObjectVersion.createInitial(),
 					codename,
 					description,
-					inParameterTypeIds,
-					thresholdParameterTypeIds,
-					etalonParameterTypeIds,
-					outParameterTypeIds,
+					inParameterTypes,
+					thresholdParameterTypes,
+					etalonParameterTypes,
+					outParameterTypes,
 					measurementTypeIds);
 
 			assert evaluationType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
@@ -196,10 +198,10 @@ public final class EvaluationType extends ActionType {
 		final IdlEvaluationType ett = (IdlEvaluationType) transferable;
 		super.fromTransferable(ett, ett.codename, ett.description);
 
-		this.inParameterTypeIds = Identifier.fromTransferables(ett.inParameterTypeIds);
-		this.thresholdParameterTypeIds = Identifier.fromTransferables(ett.thresholdParameterTypeIds);
-		this.etalonParameterTypeIds = Identifier.fromTransferables(ett.etalonParameterTypeIds);
-		this.outParameterTypeIds = Identifier.fromTransferables(ett.outParameterTypeIds);		
+		this.inParameterTypes = ParameterTypeEnum.fromTransferables(ett.inParameterTypes);
+		this.thresholdParameterTypes = ParameterTypeEnum.fromTransferables(ett.thresholdParameterTypes);
+		this.etalonParameterTypes = ParameterTypeEnum.fromTransferables(ett.etalonParameterTypes);
+		this.outParameterTypes = ParameterTypeEnum.fromTransferables(ett.outParameterTypes);		
 
 		this.measurementTypeIds = Identifier.fromTransferables(ett.measurementTypeIds);
 		
@@ -214,10 +216,11 @@ public final class EvaluationType extends ActionType {
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		final IdlIdentifier[] inParTypeIds = Identifier.createTransferables(this.inParameterTypeIds);
-		final IdlIdentifier[] thresholdParTypeIds = Identifier.createTransferables(this.thresholdParameterTypeIds);
-		final IdlIdentifier[] etalonParTypeIds = Identifier.createTransferables(this.etalonParameterTypeIds);
-		final IdlIdentifier[] outParTypeIds = Identifier.createTransferables(this.outParameterTypeIds);
+		final IdlParameterTypeEnum[] inParTypes = ParameterTypeEnum.createTransferables(this.inParameterTypes, orb);
+		final IdlParameterTypeEnum[] thresholdParTypes = ParameterTypeEnum.createTransferables(this.thresholdParameterTypes, orb);
+		final IdlParameterTypeEnum[] etalonParTypes = ParameterTypeEnum.createTransferables(this.etalonParameterTypes, orb);
+		final IdlParameterTypeEnum[] outParTypes = ParameterTypeEnum.createTransferables(this.outParameterTypes, orb);
+
 		final IdlIdentifier[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
 
 		return IdlEvaluationTypeHelper.init(orb,
@@ -229,10 +232,10 @@ public final class EvaluationType extends ActionType {
 				this.version.longValue(),
 				super.codename,
 				super.description != null ? super.description : "",
-				inParTypeIds,
-				thresholdParTypeIds,
-				etalonParTypeIds,
-				outParTypeIds,
+				inParTypes,
+				thresholdParTypes,
+				etalonParTypes,
+				outParTypes,
 				measTypIds);
 	}
 	
@@ -245,27 +248,27 @@ public final class EvaluationType extends ActionType {
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
-				&& this.inParameterTypeIds != null && this.inParameterTypeIds != Collections.EMPTY_SET && !this.inParameterTypeIds.contains(null)
-				&& this.thresholdParameterTypeIds != null && this.thresholdParameterTypeIds != Collections.EMPTY_SET && !this.thresholdParameterTypeIds.contains(null)
-				&& this.etalonParameterTypeIds != null && this.etalonParameterTypeIds != Collections.EMPTY_SET && !this.etalonParameterTypeIds.contains(null)
-				&& this.outParameterTypeIds != null && this.outParameterTypeIds != Collections.EMPTY_SET && !this.outParameterTypeIds.contains(null)
+				&& this.inParameterTypes != null && this.inParameterTypes != Collections.EMPTY_SET && !this.inParameterTypes.contains(null)
+				&& this.thresholdParameterTypes != null && this.thresholdParameterTypes != Collections.EMPTY_SET && !this.thresholdParameterTypes.contains(null)
+				&& this.etalonParameterTypes != null && this.etalonParameterTypes != Collections.EMPTY_SET && !this.etalonParameterTypes.contains(null)
+				&& this.outParameterTypes != null && this.outParameterTypes != Collections.EMPTY_SET && !this.outParameterTypes.contains(null)
 				&& this.measurementTypeIds != null && this.measurementTypeIds != Collections.EMPTY_SET && !this.measurementTypeIds.contains(null);
 	}
 
-	public Set<Identifier> getInParameterTypeIds() {
-		return Collections.unmodifiableSet(this.inParameterTypeIds);
+	public Set<ParameterTypeEnum> getInParameterTypes() {
+		return Collections.unmodifiableSet(this.inParameterTypes);
 	}
 
-	public Set<Identifier> getThresholdParameterTypeIds() {
-		return Collections.unmodifiableSet(this.thresholdParameterTypeIds);
+	public Set<ParameterTypeEnum> getThresholdParameterTypes() {
+		return Collections.unmodifiableSet(this.thresholdParameterTypes);
 	}
 
-	public Set<Identifier> getEtalonParameterTypeIds() {
-		return Collections.unmodifiableSet(this.etalonParameterTypeIds);
+	public Set<ParameterTypeEnum> getEtalonParameterTypes() {
+		return Collections.unmodifiableSet(this.etalonParameterTypes);
 	}
 
-	public Set<Identifier> getOutParameterTypeIds() {
-		return Collections.unmodifiableSet(this.outParameterTypeIds);
+	public Set<ParameterTypeEnum> getOutParameterTypes() {
+		return Collections.unmodifiableSet(this.outParameterTypes);
 	}
 
 	public Set<Identifier> getMeasurementTypeIds() {
@@ -296,104 +299,108 @@ public final class EvaluationType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void setParameterTypeIds(final Map<String, Set<Identifier>> parameterTypeIdsModeMap) {
-		assert parameterTypeIdsModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
-		this.setInParameterTypeIds0(parameterTypeIdsModeMap.get(ParameterMode.MODE_IN.stringValue()));
-		this.setThresholdParameterTypeIds0(parameterTypeIdsModeMap.get(ParameterMode.MODE_THRESHOLD.stringValue()));
-		this.setEtalonParameterTypeIds0(parameterTypeIdsModeMap.get(ParameterMode.MODE_ETALON.stringValue()));
-		this.setOutParameterTypeIds0(parameterTypeIdsModeMap.get(ParameterMode.MODE_OUT.stringValue()));
+	protected synchronized void setParameterTypes(final Map<String, Set<ParameterTypeEnum>> parameterTypesModeMap) {
+		assert parameterTypesModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
+		this.setInParameterTypes0(parameterTypesModeMap.get(ParameterMode.MODE_IN.stringValue()));
+		this.setThresholdParameterTypes0(parameterTypesModeMap.get(ParameterMode.MODE_THRESHOLD.stringValue()));
+		this.setEtalonParameterTypes0(parameterTypesModeMap.get(ParameterMode.MODE_ETALON.stringValue()));
+		this.setOutParameterTypes0(parameterTypesModeMap.get(ParameterMode.MODE_OUT.stringValue()));
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected Map<String, Set<Identifier>> getParameterTypeIdsModeMap() {
-		final Map<String, Set<Identifier>> parameterTypeIdsModeMap = new HashMap<String, Set<Identifier>>(4);
-		parameterTypeIdsModeMap.put(ParameterMode.MODE_IN.stringValue(), this.inParameterTypeIds);
-		parameterTypeIdsModeMap.put(ParameterMode.MODE_THRESHOLD.stringValue(), this.thresholdParameterTypeIds);
-		parameterTypeIdsModeMap.put(ParameterMode.MODE_ETALON.stringValue(), this.etalonParameterTypeIds);
-		parameterTypeIdsModeMap.put(ParameterMode.MODE_OUT.stringValue(), this.outParameterTypeIds);
-		return parameterTypeIdsModeMap;
+	protected Map<String, Set<ParameterTypeEnum>> getParameterTypesModeMap() {
+		final Map<String, Set<ParameterTypeEnum>> parameterTypesModeMap = new HashMap<String, Set<ParameterTypeEnum>>(4);
+		parameterTypesModeMap.put(ParameterMode.MODE_IN.stringValue(), this.inParameterTypes);
+		parameterTypesModeMap.put(ParameterMode.MODE_THRESHOLD.stringValue(), this.thresholdParameterTypes);
+		parameterTypesModeMap.put(ParameterMode.MODE_ETALON.stringValue(), this.etalonParameterTypes);
+		parameterTypesModeMap.put(ParameterMode.MODE_OUT.stringValue(), this.outParameterTypes);
+		return parameterTypesModeMap;
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setInParameterTypeIds0(final Set<Identifier> inParameterTypeIds) {
-		this.inParameterTypeIds.clear();
-		if (inParameterTypeIds != null)
-			this.inParameterTypeIds.addAll(inParameterTypeIds);
+	protected void setInParameterTypes0(final Set<ParameterTypeEnum> inParameterTypes) {
+		this.inParameterTypes.clear();
+		if (inParameterTypes != null) {
+			this.inParameterTypes.addAll(inParameterTypes);
+		}
 	}
 	
 	/**
-	 * client setter for inParameterTypeIds
+	 * client setter for inParameterTypes
 	 *
-	 * @param inParameterTypeIds
-	 *            The inParameterTypeIds to set.
+	 * @param inParameterTypes
+	 *            The inParameterTypes to set.
 	 */
-	public void setInParameterTypeIds(final Set<Identifier> inParameterTypeIds) {
-		this.setInParameterTypeIds0(inParameterTypeIds);
+	public void setInParameterTypes(final Set<ParameterTypeEnum> inParameterTypes) {
+		this.setInParameterTypes0(inParameterTypes);
 		super.markAsChanged();		
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setThresholdParameterTypeIds0(final Set<Identifier> thresholdParameterTypeIds) {
-		this.thresholdParameterTypeIds.clear();
-		if (thresholdParameterTypeIds != null)
-			this.thresholdParameterTypeIds.addAll(thresholdParameterTypeIds);
+	protected void setThresholdParameterTypes0(final Set<ParameterTypeEnum> thresholdParameterTypes) {
+		this.thresholdParameterTypes.clear();
+		if (thresholdParameterTypes != null) {
+			this.thresholdParameterTypes.addAll(thresholdParameterTypes);
+		}
 	}
 
 	/**
-	 * client setter for thresholdParameterTypeIds
+	 * client setter for thresholdParameterTypes
 	 *
-	 * @param thresholdParameterTypeIds
-	 *            The thresholdParameterTypeIds to set.
+	 * @param thresholdParameterTypes
+	 *            The thresholdParameterTypes to set.
 	 */
-	public void setThresholdParameterTypeIds(final Set<Identifier> thresholdParameterTypeIds) {
-		this.setThresholdParameterTypeIds0(thresholdParameterTypeIds);
+	public void setThresholdParameterTypes(final Set<ParameterTypeEnum> thresholdParameterTypes) {
+		this.setThresholdParameterTypes0(thresholdParameterTypes);
 		super.markAsChanged();
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setEtalonParameterTypeIds0(final Set<Identifier> etalonParameterTypeIds) {
-		this.etalonParameterTypeIds.clear();
-		if (etalonParameterTypeIds != null)
-			this.etalonParameterTypeIds.addAll(etalonParameterTypeIds);
+	protected void setEtalonParameterTypes0(final Set<ParameterTypeEnum> etalonParameterTypes) {
+		this.etalonParameterTypes.clear();
+		if (etalonParameterTypes != null) {
+			this.etalonParameterTypes.addAll(etalonParameterTypes);
+		}
 	}
 
 	/**
-	 * client setter for etalonParameterTypeIds
+	 * client setter for etalonParameterTypes
 	 *
-	 * @param etalonParameterTypeIds
-	 *            The etalonParameterTypeIds to set.
+	 * @param etalonParameterTypes
+	 *            The etalonParameterTypes to set.
 	 */
-	public void setEtalonParameterTypeIds(final Set<Identifier> etalonParameterTypeIds) {
-		this.setEtalonParameterTypeIds0(etalonParameterTypeIds);
+	public void setEtalonParameterTypes(final Set<ParameterTypeEnum> etalonParameterTypes) {
+		this.setEtalonParameterTypes0(etalonParameterTypes);
 		super.markAsChanged();
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setOutParameterTypeIds0(final Set<Identifier> outParameterTypeIds) {
-		this.outParameterTypeIds.clear();
-		if (outParameterTypeIds != null)
-			this.outParameterTypeIds.addAll(outParameterTypeIds);
+	protected void setOutParameterTypes0(final Set<ParameterTypeEnum> outParameterTypes) {
+		this.outParameterTypes.clear();
+		if (outParameterTypes != null) {
+			this.outParameterTypes.addAll(outParameterTypes);
+		}
 	}
 
 	/**
-	 * client setter for outParameterTypeIds
+	 * client setter for outParameterTypes
 	 *
-	 * @param outParameterTypeIds
-	 *            The outParameterTypeIds to set.
+	 * @param outParameterTypes
+	 *            The outParameterTypes to set.
 	 */
-	public void setOutParameterTypeIds(final Set<Identifier> outParameterTypeIds) {
-		this.setOutParameterTypeIds0(outParameterTypeIds);
+	public void setOutParameterTypes(final Set<ParameterTypeEnum> outParameterTypes) {
+		this.setOutParameterTypes0(outParameterTypes);
 		super.markAsChanged();
 	}
 
@@ -402,8 +409,9 @@ public final class EvaluationType extends ActionType {
 	 */
 	protected void setMeasurementTypeIds0(final Set<Identifier> measurementTypeIds) {
 		this.measurementTypeIds.clear();
-		if (measurementTypeIds != null)
+		if (measurementTypeIds != null) {
 			this.measurementTypeIds.addAll(measurementTypeIds);
+		}
 	}
 
 	/**
@@ -423,22 +431,6 @@ public final class EvaluationType extends ActionType {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		if (this.inParameterTypeIds != null) {
-			dependencies.addAll(this.inParameterTypeIds);
-		}
-
-		if (this.thresholdParameterTypeIds != null) {
-			dependencies.addAll(this.thresholdParameterTypeIds);
-		}
-
-		if (this.etalonParameterTypeIds != null) {
-			dependencies.addAll(this.etalonParameterTypeIds);
-		}
-
-		if (this.outParameterTypeIds != null) {
-			dependencies.addAll(this.outParameterTypeIds);
-		}
-
 
 		if (this.measurementTypeIds != null) {
 			dependencies.addAll(this.measurementTypeIds);

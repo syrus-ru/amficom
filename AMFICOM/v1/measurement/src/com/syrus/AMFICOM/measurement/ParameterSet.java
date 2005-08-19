@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.15 2005/08/08 19:10:57 arseniy Exp $
+ * $Id: ParameterSet.java,v 1.16 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSo
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/08 19:10:57 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/19 14:19:04 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -402,10 +402,6 @@ public final class ParameterSet extends StorableObject {
 
 		if (this.monitoredElementIds != null) {
 			dependencies.addAll(this.monitoredElementIds);
-		}
-
-		for (int i = 0; i < this.parameters.length; i++) {
-			dependencies.add(this.parameters[i].getType());
 		}
 
 		return dependencies;

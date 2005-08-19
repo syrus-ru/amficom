@@ -1,5 +1,5 @@
 /*
- * $Id: ActionType.java,v 1.15 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: ActionType.java,v 1.16 2005/08/19 14:19:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,11 +13,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ParameterTypeEnum;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/19 14:19:04 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -62,7 +63,7 @@ public abstract class ActionType extends StorableObjectType {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 	}
 
-	protected abstract void setParameterTypeIds(Map<String, Set<Identifier>> parameterTypeIdsModeMap);
+	protected abstract void setParameterTypes(final Map<String, Set<ParameterTypeEnum>> parameterTypesModeMap);
 
-	protected abstract Map<String, Set<Identifier>> getParameterTypeIdsModeMap();
+	protected abstract Map<String, Set<ParameterTypeEnum>> getParameterTypesModeMap();
 }

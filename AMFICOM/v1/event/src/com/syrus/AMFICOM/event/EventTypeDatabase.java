@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.38 2005/08/08 11:32:37 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.39 2005/08/19 14:19:13 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.ParameterTypeEnum;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -39,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/08/08 11:32:37 $
+ * @version $Revision: 1.39 $, $Date: 2005/08/19 14:19:13 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -115,26 +116,26 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	public void retrieve(final EventType storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		this.retrieveEntity(storableObject);
-		this.retrieveParameterTypeIdsByOneQuery(Collections.singleton(storableObject));
+		this.retrieveParameterTypesByOneQuery(Collections.singleton(storableObject));
 		this.retrieveUserAlertKindsByOneQuery(Collections.singleton(storableObject));
 	}
 
-	private void retrieveParameterTypeIdsByOneQuery(final Set<EventType> eventTypes) throws RetrieveObjectException {
+	private void retrieveParameterTypesByOneQuery(final Set<EventType> eventTypes) throws RetrieveObjectException {
 		if ((eventTypes == null) || (eventTypes.isEmpty())) {
 			return;
 		}
-
-		final Map<Identifier, Set<Identifier>> eventParamaterTypeIdsMap = this.retrieveLinkedEntityIds(eventTypes,
-				ObjectEntities.EVENTTYPPARTYPLINK,
-				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
-				StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
-
-		for (final EventType eventType : eventTypes) {
-			final Identifier eventTypeId = eventType.getId();
-			final Set<Identifier> paramaterTypeIds = eventParamaterTypeIdsMap.get(eventTypeId);
-
-			eventType.setParameterTypeIds0(paramaterTypeIds);
-		}
+//
+//		final Map<Identifier, Set<Identifier>> eventParamaterTypesMap = this.retrieveLinkedEntityIds(eventTypes,
+//				ObjectEntities.EVENTTYPPARTYPLINK,
+//				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
+//				StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
+//
+//		for (final EventType eventType : eventTypes) {
+//			final Identifier eventTypeId = eventType.getId();
+//			final Set<Identifier> paramaterTypeIds = eventParamaterTypesMap.get(eventTypeId);
+//
+//			eventType.setParameterTypes0(paramaterTypeIds);
+//		}
 	}
 
 	private void retrieveUserAlertKindsByOneQuery(final Set<EventType> eventTypes) throws RetrieveObjectException {
@@ -225,7 +226,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	public void insert(final Set<EventType> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 		try {
-			this.updateParameterTypeIds(storableObjects);
+			this.updateParameterTypes(storableObjects);
 			this.updateUserAlertKinds(storableObjects);
 		}
 		catch (UpdateObjectException uoe) {
@@ -240,25 +241,25 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	@Override
 	public void update(final Set<EventType> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
-		this.updateParameterTypeIds(storableObjects);
+		this.updateParameterTypes(storableObjects);
 		this.updateUserAlertKinds(storableObjects);
 	}
 
-	private void updateParameterTypeIds(final Set<EventType> eventTypes) throws UpdateObjectException {
+	private void updateParameterTypes(final Set<EventType> eventTypes) throws UpdateObjectException {
 		if ((eventTypes == null) || (eventTypes.isEmpty())) {
 			return;
 		}
 
-		final Map<Identifier, Set<Identifier>> parameterTypeIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		final Map<Identifier, Set<ParameterTypeEnum>> parameterTypeIdsMap = new HashMap<Identifier, Set<ParameterTypeEnum>>();
 		for (final EventType eventType : eventTypes) {
-			final Set<Identifier> parameterTypeIds = eventType.getParameterTypeIds();
-			parameterTypeIdsMap.put(eventType.getId(), parameterTypeIds);
+			final Set<ParameterTypeEnum> parameterTypes = eventType.getParameterTypes();
+			parameterTypeIdsMap.put(eventType.getId(), parameterTypes);
 		}
-
-		super.updateLinkedEntityIds(parameterTypeIdsMap,
-				ObjectEntities.EVENTTYPPARTYPLINK,
-				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
-				StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
+//
+//		super.updateLinkedEntityIds(parameterTypeIdsMap,
+//				ObjectEntities.EVENTTYPPARTYPLINK,
+//				EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID,
+//				StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_ID);
 	}
 
 	private void updateUserAlertKinds(final Set<EventType> eventTypes) throws UpdateObjectException {
@@ -571,7 +572,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	@Override
 	protected Set<EventType> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		final Set<EventType> objects = super.retrieveByCondition(conditionQuery);
-		this.retrieveParameterTypeIdsByOneQuery(objects);
+		this.retrieveParameterTypesByOneQuery(objects);
 		this.retrieveUserAlertKindsByOneQuery(objects);
 		return objects;
 	}

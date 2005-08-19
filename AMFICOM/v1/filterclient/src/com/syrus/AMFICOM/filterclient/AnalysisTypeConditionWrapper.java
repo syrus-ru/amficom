@@ -11,13 +11,12 @@ import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/09 22:22:14 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/19 14:22:04 $
  * @author $Author: arseniy $
  * @module filterclient
  */
@@ -25,7 +24,6 @@ public class AnalysisTypeConditionWrapper implements ConditionWrapper {
 
 	private static short entityCode = ObjectEntities.ANALYSIS_TYPE_CODE;
 
-	private ArrayList<ParameterType> parameterTypes;
 	private ArrayList<MeasurementType> measurementTypes;
 
 	private Map<String, String[]> keyLinkedNames = new HashMap<String, String[]>();
@@ -38,25 +36,15 @@ public class AnalysisTypeConditionWrapper implements ConditionWrapper {
 	private static String[] keyNames = { PARAM, MT };
 	private static byte[] keyTypes = { ConditionWrapper.LIST, ConditionWrapper.LIST };
 
-	public AnalysisTypeConditionWrapper(final Set<AnalysisType> initialAnalysisTypes,
-			final Set<ParameterType> parameterTypes,
-			final Set<MeasurementType> measurementTypes) {
-		this.parameterTypes = new ArrayList<ParameterType>(parameterTypes);
+	public AnalysisTypeConditionWrapper(final Set<AnalysisType> initialAnalysisTypes, final Set<MeasurementType> measurementTypes) {
 		this.measurementTypes = new ArrayList<MeasurementType>(measurementTypes);
 
 		for (final AnalysisType analysisType : initialAnalysisTypes) {
 			this.storableObjectInitialName.put(analysisType.getId(), analysisType.getDescription());
 		}
 
-		final String[] paramNames = new String[this.parameterTypes.size()];
-		int i = 0;
-		for (final ParameterType parameterType : this.parameterTypes) {
-			paramNames[i++] = parameterType.getName();
-		}
-		this.keyLinkedNames.put(keys[0], paramNames);
-
 		final String[] mtNames = new String[this.measurementTypes.size()];
-		i = 0;
+		int i = 0;
 		for (final MeasurementType measurementType : this.measurementTypes) {
 			mtNames[i++] = measurementType.getDescription();
 		}
@@ -92,12 +80,9 @@ public class AnalysisTypeConditionWrapper implements ConditionWrapper {
 	}
 
 	public Object getLinkedObject(final String key, final int indexNumber) throws IllegalDataException {
-		if (key.equals(keys[0])) {
-			return this.parameterTypes.get(indexNumber).getId();
-		} else if (key.equals(keys[1])) {
+		if (key.equals(keys[1])) {
 			return this.measurementTypes.get(indexNumber).getId();
-		} else {
-			throw new IllegalDataException("AnalysisTypeConditionWrapper.getLinkedObject | Wrong key");
 		}
+		throw new IllegalDataException("AnalysisTypeConditionWrapper.getLinkedObject | Wrong key");
 	}
 }
