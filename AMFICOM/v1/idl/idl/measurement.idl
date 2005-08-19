@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.74 2005/08/19 16:32:08 arseniy Exp $
+ * $Id: measurement.idl,v 1.75 2005/08/19 17:51:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,10 @@ module measurement {
 
 ////////////////////////// MeasurementType ///////////////////////////	
 
+		enum IdlMeasurementTypeEnum {
+			REFLECTOMETRY
+		};
+
 		valuetype IdlMeasurementType : general::corba::IdlStorableObject {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
@@ -49,6 +53,10 @@ module measurement {
 
 
 ////////////////////////// AnalysisType ///////////////////////////
+
+		enum IdlAnalysisTypeEnum {
+			DADARA
+		};
 
 		valuetype IdlAnalysisType : general::corba::IdlStorableObject {
 			public general::corba::WString32 codename;
@@ -107,6 +115,10 @@ module measurement {
 
 
 ////////////////////////// ModelingType ///////////////////////////
+
+		enum IdlModelingTypeEnum {
+			DADARA_MODELING
+		};
 
 		valuetype IdlModelingType : general::corba::IdlStorableObject {
 			public general::corba::WString32 codename;
