@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.21 2005/08/19 16:29:58 stas Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.22 2005/08/19 16:41:54 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/08/19 16:29:58 $
+ * @version $Revision: 1.22 $, $Date: 2005/08/19 16:41:54 $
  * @module schemeclient
  */
 
@@ -254,8 +254,8 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		if (this.type != null) {
 			this.tfNameText.setText(this.type.getDescription());
 		
-			Set<ParameterTypeEnum> inPTypes = this.type.getInParameterTypes();
-			Set<ParameterTypeEnum> outPTypes = this.type.getOutParameterTypes();
+			Set<ParameterType> inPTypes = this.type.getInParameterTypes();
+			Set<ParameterType> outPTypes = this.type.getOutParameterTypes();
 			
 //				Collection inPTypes = StorableObjectPool.getStorableObjects(inPTypeIds, true);
 //				Collection outPTypes = StorableObjectPool.getStorableObjects(outPTypeIds, true);
@@ -384,7 +384,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		root.addChild(input);
 		root.addChild(output);
 		
-		for (ParameterTypeEnum parameterType : ParameterTypeEnum.values()) {
+		for (ParameterType parameterType : ParameterType.values()) {
 			input.addChild(new CheckableNode(parameterType.getCodename(), parameterType.getDescription(), false));
 			output.addChild(new CheckableNode(parameterType.getCodename(), parameterType.getDescription(), false));
 		}
