@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.25 2005/08/19 15:51:01 arseniy Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.26 2005/08/19 16:22:05 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,10 +16,9 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/08/19 15:51:01 $
+ * @version $Revision: 1.26 $, $Date: 2005/08/19 16:22:05 $
  * @author $Author: arseniy $
  * @module measurement
  */

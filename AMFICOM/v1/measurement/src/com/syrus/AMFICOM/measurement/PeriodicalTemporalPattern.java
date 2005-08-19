@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.19 2005/08/08 11:31:46 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.20 2005/08/19 16:22:05 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,11 +26,10 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
-import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/19 16:22:05 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement

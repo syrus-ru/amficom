@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.144 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: Test.java,v 1.145 2005/08/19 16:22:05 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -44,13 +44,12 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.ContinuousTestTimeStamps;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.PeriodicalTestTimeStamps;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
-import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.144 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.145 $, $Date: 2005/08/19 16:22:05 $
  * @author $Author: arseniy $
  * @module measurement
  */

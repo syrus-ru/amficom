@@ -1,5 +1,5 @@
 /*-
-* $Id: IntervalsTemporalPattern.java,v 1.33 2005/08/08 11:31:45 arseniy Exp $
+* $Id: IntervalsTemporalPattern.java,v 1.34 2005/08/19 16:22:05 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -40,12 +40,11 @@ import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPattern;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternPackage.IntervalDuration;
 import com.syrus.AMFICOM.measurement.corba.IdlIntervalsTemporalPatternPackage.IntervalTemporalPatternId;
-import com.syrus.AMFICOM.resource.LangModelMeasurement;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.34 $, $Date: 2005/08/19 16:22:05 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
