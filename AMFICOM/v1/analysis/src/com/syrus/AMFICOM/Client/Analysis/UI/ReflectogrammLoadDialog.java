@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectogrammLoadDialog.java,v 1.28 2005/08/19 14:23:55 arseniy Exp $
+ * $Id: ReflectogrammLoadDialog.java,v 1.29 2005/08/19 15:54:41 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.logic.Item;
@@ -50,7 +50,7 @@ import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/08/19 14:23:55 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/19 15:54:41 $
  * @author $Author: arseniy $
  * @module analysis
  */
@@ -239,8 +239,8 @@ public class ReflectogrammLoadDialog extends JDialog {
 		final Parameter[] parameters = this.result.getParameters();
 		for (int i = 0; i < parameters.length; i++) {
 			final Parameter param = parameters[i];
-			final ParameterTypeEnum type = param.getType();
-			if (type.equals(ParameterTypeEnum.REFLECTOGRAMMA)) {
+			final ParameterType type = param.getType();
+			if (type.equals(ParameterType.REFLECTOGRAMMA)) {
 				bs = new BellcoreReader().getData(param.getValue());
 			}
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.49 2005/08/19 14:19:04 arseniy Exp $
+ * $Id: ModelingType.java,v 1.50 2005/08/19 15:51:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlParameterTypeEnum;
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingTypeHelper;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/08/19 14:19:04 $
+ * @version $Revision: 1.50 $, $Date: 2005/08/19 15:51:01 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -65,8 +65,8 @@ public final class ModelingType extends ActionType {
 		}
 	}
 
-	private Set<ParameterTypeEnum> inParameterTypes;
-	private Set<ParameterTypeEnum> outParameterTypes;
+	private Set<ParameterType> inParameterTypes;
+	private Set<ParameterType> outParameterTypes;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -74,8 +74,8 @@ public final class ModelingType extends ActionType {
 	ModelingType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypes = new HashSet<ParameterTypeEnum>();
-		this.outParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.inParameterTypes = new HashSet<ParameterType>();
+		this.outParameterTypes = new HashSet<ParameterType>();
 
 		try {
 			DatabaseContext.getDatabase(ObjectEntities.MODELING_TYPE_CODE).retrieve(this);
@@ -105,8 +105,8 @@ public final class ModelingType extends ActionType {
 			final StorableObjectVersion version,
 			final String codename,
 			final String description,
-			final Set<ParameterTypeEnum> inParameterTypes,
-			final Set<ParameterTypeEnum> outParameterTypes) {
+			final Set<ParameterType> inParameterTypes,
+			final Set<ParameterType> outParameterTypes) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -116,10 +116,10 @@ public final class ModelingType extends ActionType {
 				codename,
 				description);
 
-		this.inParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.inParameterTypes = new HashSet<ParameterType>();
 		this.setInParameterTypes0(inParameterTypes);
 
-		this.outParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.outParameterTypes = new HashSet<ParameterType>();
 		this.setOutParameterTypes0(outParameterTypes);
 	}
 
@@ -135,8 +135,8 @@ public final class ModelingType extends ActionType {
 	public static ModelingType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
-			final Set<ParameterTypeEnum> inParameterTypes,
-			final Set<ParameterTypeEnum> outParameterTypes) throws CreateObjectException {
+			final Set<ParameterType> inParameterTypes,
+			final Set<ParameterType> outParameterTypes) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0 || description == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
 		}
@@ -168,8 +168,8 @@ public final class ModelingType extends ActionType {
 		final IdlModelingType mtt = (IdlModelingType) transferable;
 		super.fromTransferable(mtt, mtt.codename, mtt.description);
 
-		this.inParameterTypes = ParameterTypeEnum.fromTransferables(mtt.inParameterTypes);
-		this.outParameterTypes = ParameterTypeEnum.fromTransferables(mtt.outParameterTypes);
+		this.inParameterTypes = ParameterType.fromTransferables(mtt.inParameterTypes);
+		this.outParameterTypes = ParameterType.fromTransferables(mtt.outParameterTypes);
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -181,8 +181,8 @@ public final class ModelingType extends ActionType {
 	public IdlModelingType getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		
-		final IdlParameterTypeEnum[] inParTypes = ParameterTypeEnum.createTransferables(this.inParameterTypes, orb);
-		final IdlParameterTypeEnum[] outParTypes = ParameterTypeEnum.createTransferables(this.outParameterTypes, orb);
+		final IdlParameterTypeEnum[] inParTypes = ParameterType.createTransferables(this.inParameterTypes, orb);
+		final IdlParameterTypeEnum[] outParTypes = ParameterType.createTransferables(this.outParameterTypes, orb);
 
 		return IdlModelingTypeHelper.init(orb,
 				this.id.getTransferable(),
@@ -210,11 +210,11 @@ public final class ModelingType extends ActionType {
 				&& this.outParameterTypes != null && this.outParameterTypes != Collections.EMPTY_SET && !this.outParameterTypes.contains(null);
 	}
 
-	public Set<ParameterTypeEnum> getInParameterTypes() {
+	public Set<ParameterType> getInParameterTypes() {
 		return Collections.unmodifiableSet(this.inParameterTypes);
 	}
 
-	public Set<ParameterTypeEnum> getOutParameterTypes() {
+	public Set<ParameterType> getOutParameterTypes() {
 		return Collections.unmodifiableSet(this.outParameterTypes);
 	}
 
@@ -242,7 +242,7 @@ public final class ModelingType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void setParameterTypes(final Map<String, Set<ParameterTypeEnum>> parameterTypesModeMap) {
+	protected synchronized void setParameterTypes(final Map<String, Set<ParameterType>> parameterTypesModeMap) {
 		assert parameterTypesModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.setInParameterTypes0(parameterTypesModeMap.get(ParameterMode.MODE_IN.stringValue()));
 		this.setOutParameterTypes0(parameterTypesModeMap.get(ParameterMode.MODE_OUT.stringValue()));
@@ -252,8 +252,8 @@ public final class ModelingType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected Map<String, Set<ParameterTypeEnum>> getParameterTypesModeMap() {
-		final Map<String, Set<ParameterTypeEnum>> parameterTypeIdsModeMap = new HashMap<String, Set<ParameterTypeEnum>>(2);
+	protected Map<String, Set<ParameterType>> getParameterTypesModeMap() {
+		final Map<String, Set<ParameterType>> parameterTypeIdsModeMap = new HashMap<String, Set<ParameterType>>(2);
 		parameterTypeIdsModeMap.put(ParameterMode.MODE_IN.stringValue(), this.inParameterTypes);
 		parameterTypeIdsModeMap.put(ParameterMode.MODE_OUT.stringValue(), this.outParameterTypes);
 		return parameterTypeIdsModeMap;
@@ -262,7 +262,7 @@ public final class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setInParameterTypes0(final Set<ParameterTypeEnum> inParameterTypes) {
+	protected void setInParameterTypes0(final Set<ParameterType> inParameterTypes) {
 		this.inParameterTypes.clear();
 		if (inParameterTypes != null) {
 			this.inParameterTypes.addAll(inParameterTypes);
@@ -275,7 +275,7 @@ public final class ModelingType extends ActionType {
 	 * @param inParameterTypes
 	 *            The inParameterTypeIds to set.
 	 */
-	public void setInParameterTypes(final Set<ParameterTypeEnum> inParameterTypes) {
+	public void setInParameterTypes(final Set<ParameterType> inParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		super.markAsChanged();		
 	}
@@ -283,7 +283,7 @@ public final class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setOutParameterTypes0(final Set<ParameterTypeEnum> outParameterTypes) {
+	protected void setOutParameterTypes0(final Set<ParameterType> outParameterTypes) {
 		this.outParameterTypes.clear();
 		if (outParameterTypes != null) {
 			this.outParameterTypes.addAll(outParameterTypes);
@@ -296,7 +296,7 @@ public final class ModelingType extends ActionType {
 	 * @param outParameterTypes
 	 *            The outParameterTypeIds to set.
 	 */
-	public void setOutParameterTypes(final Set<ParameterTypeEnum> outParameterTypes) {
+	public void setOutParameterTypes(final Set<ParameterType> outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);
 		super.markAsChanged();
 	}

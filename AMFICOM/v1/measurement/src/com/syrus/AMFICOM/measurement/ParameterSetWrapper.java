@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetWrapper.java,v 1.10 2005/08/19 14:19:04 arseniy Exp $
+ * $Id: ParameterSetWrapper.java,v 1.11 2005/08/19 15:51:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,12 +16,12 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/19 14:19:04 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/19 15:51:01 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -111,7 +111,7 @@ public class ParameterSetWrapper extends StorableObjectWrapper<ParameterSet> {
 				final Parameter[] setParameters = new Parameter[setParameterMap.size() / 3];
 				for (int i = 0; i < setParameters.length; i++) {
 					final Identifier parameterId = (Identifier) setParameterMap.get(COLUMN_ID + i);
-					final ParameterTypeEnum parameterType = (ParameterTypeEnum) setParameterMap.get(COLUMN_TYPE_ID + i);
+					final ParameterType parameterType = (ParameterType) setParameterMap.get(COLUMN_TYPE_ID + i);
 					final byte[] setParameterValue = (byte[]) setParameterMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
 
 					setParameters[i] = new Parameter(parameterId, parameterType, setParameterValue);

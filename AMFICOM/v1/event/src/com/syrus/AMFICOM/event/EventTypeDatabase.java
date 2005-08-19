@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.39 2005/08/19 14:19:13 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.40 2005/08/19 15:52:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/08/19 14:19:13 $
+ * @version $Revision: 1.40 $, $Date: 2005/08/19 15:52:05 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -250,9 +250,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			return;
 		}
 
-		final Map<Identifier, Set<ParameterTypeEnum>> parameterTypeIdsMap = new HashMap<Identifier, Set<ParameterTypeEnum>>();
+		final Map<Identifier, Set<ParameterType>> parameterTypeIdsMap = new HashMap<Identifier, Set<ParameterType>>();
 		for (final EventType eventType : eventTypes) {
-			final Set<ParameterTypeEnum> parameterTypes = eventType.getParameterTypes();
+			final Set<ParameterType> parameterTypes = eventType.getParameterTypes();
 			parameterTypeIdsMap.put(eventType.getId(), parameterTypes);
 		}
 //

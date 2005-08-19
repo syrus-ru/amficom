@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterTypeEnumDatabase.java,v 1.1 2005/08/19 14:07:19 arseniy Exp $
+ * $Id: ParameterTypeEnumDatabase.java,v 1.2 2005/08/19 15:50:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/19 14:07:19 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/19 15:50:00 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -67,7 +67,7 @@ public final class ParameterTypeEnumDatabase {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
 
-			for (final ParameterTypeEnum parameterType : ParameterTypeEnum.values()) {
+			for (final ParameterType parameterType : ParameterType.values()) {
 				code = parameterType.getCode();
 				codename = parameterType.getCodename();
 				dataType = parameterType.getDataType();

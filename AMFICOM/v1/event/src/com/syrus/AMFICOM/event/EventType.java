@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.44 2005/08/19 14:19:13 arseniy Exp $
+ * $Id: EventType.java,v 1.45 2005/08/19 15:52:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.general.corba.IdlParameterTypeEnum;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/08/19 14:19:13 $
+ * @version $Revision: 1.45 $, $Date: 2005/08/19 15:52:05 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -51,13 +51,13 @@ public final class EventType extends StorableObjectType {
 
 	public static final String CODENAME_MEASUREMENT_ALARM = "measurement_alarm";
 
-	private Set<ParameterTypeEnum> parameterTypes;
+	private Set<ParameterType> parameterTypes;
 	private Map<Identifier, Set<AlertKind>> userAlertKindsMap;	//Map <Identifier userId, Set <AlertKind> alertKinds>
 
 	EventType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.parameterTypes = new HashSet<ParameterTypeEnum>();
+		this.parameterTypes = new HashSet<ParameterType>();
 		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
 
 		try {
@@ -84,7 +84,7 @@ public final class EventType extends StorableObjectType {
 			final StorableObjectVersion version,
 			final String codename,
 			final String description,
-			final Set<ParameterTypeEnum> parameterTypeIds,
+			final Set<ParameterType> parameterTypeIds,
 			final Map<Identifier, Set<AlertKind>> userAlertKindsMap) {
 		super(id,
 				new Date(System.currentTimeMillis()),
@@ -95,7 +95,7 @@ public final class EventType extends StorableObjectType {
 				codename,
 				description);
 
-		this.parameterTypes = new HashSet<ParameterTypeEnum>();
+		this.parameterTypes = new HashSet<ParameterType>();
 		this.setParameterTypes0(parameterTypeIds);
 
 		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
@@ -115,7 +115,7 @@ public final class EventType extends StorableObjectType {
 	public static EventType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
-			final Set<ParameterTypeEnum> parameterTypes,
+			final Set<ParameterType> parameterTypes,
 			final Map<Identifier, Set<AlertKind>> userAlertKindsMap) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null)
 			throw new IllegalArgumentException("Argument is null'");
@@ -145,7 +145,7 @@ public final class EventType extends StorableObjectType {
 
 		super.fromTransferable(ett, ett.codename, ett.description);
 
-		this.parameterTypes = ParameterTypeEnum.fromTransferables(ett.parameterTypes);
+		this.parameterTypes = ParameterType.fromTransferables(ett.parameterTypes);
 
 		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>(ett.userAlertKinds.length);
 		for (int i = 0; i < ett.userAlertKinds.length; i++) {
@@ -169,7 +169,7 @@ public final class EventType extends StorableObjectType {
 	public IdlEventType getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		final IdlParameterTypeEnum[] parTypesT = ParameterTypeEnum.createTransferables(this.parameterTypes, orb);
+		final IdlParameterTypeEnum[] parTypesT = ParameterType.createTransferables(this.parameterTypes, orb);
 
 		final IdlUserAlertKinds[] userAlertKindsT = new IdlUserAlertKinds[this.userAlertKindsMap.size()];
 		int i, j;
@@ -218,11 +218,11 @@ public final class EventType extends StorableObjectType {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 	}
 
-	public Set<ParameterTypeEnum> getParameterTypes() {
+	public Set<ParameterType> getParameterTypes() {
 		return Collections.unmodifiableSet(this.parameterTypes);
 	}
 
-	protected void setParameterTypes0(final Set<ParameterTypeEnum> parameterTypes) {
+	protected void setParameterTypes0(final Set<ParameterType> parameterTypes) {
 		this.parameterTypes.clear();
 		if (parameterTypes != null) {
 			this.parameterTypes.addAll(parameterTypes);
@@ -235,7 +235,7 @@ public final class EventType extends StorableObjectType {
 	 * @param parameterTypes
 	 *        The inParameterTypeIds to set.
 	 */
-	public void setParameterTypes(final Set<ParameterTypeEnum> parameterTypes) {
+	public void setParameterTypes(final Set<ParameterType> parameterTypes) {
 		this.setParameterTypes0(parameterTypes);
 		this.markAsChanged();
 	}

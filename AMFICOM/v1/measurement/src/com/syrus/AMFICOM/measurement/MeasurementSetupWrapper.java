@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.24 2005/08/19 14:19:04 arseniy Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.25 2005/08/19 15:51:01 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,12 @@ import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/08/19 14:19:04 $
+ * @version $Revision: 1.25 $, $Date: 2005/08/19 15:51:01 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -108,7 +108,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 		for (int i = 0; i < parameters.length; i++) {				
 			final String string = parameters[i].getStringValue();
 			if (string != null) {
-				final ParameterTypeEnum parameterType = parameters[i].getType();
+				final ParameterType parameterType = parameters[i].getType();
 				String s = parameterType.getDescription() + ": " + string;
 //				buffer.append(parameterType.getDescription() + ": " + string);
 				s = s + ' ' + parameterType.getMeasurementUnit().getName();

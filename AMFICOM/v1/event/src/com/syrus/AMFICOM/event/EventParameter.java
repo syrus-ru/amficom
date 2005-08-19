@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.22 2005/08/19 14:19:13 arseniy Exp $
+ * $Id: EventParameter.java,v 1.23 2005/08/19 15:52:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,33 +16,33 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/08/19 14:19:13 $
+ * @version $Revision: 1.23 $, $Date: 2005/08/19 15:52:05 $
  * @author $Author: arseniy $
  * @module event
  */
 public final class EventParameter implements Identifiable, TransferableObject {
 	private Identifier id;
-	private ParameterTypeEnum type;
+	private ParameterType type;
 	private String value;
 
 	public EventParameter(final IdlEventParameter ept) {
 		this.id = new Identifier(ept.id);
-		this.type = ParameterTypeEnum.fromTransferable(ept.type);
+		this.type = ParameterType.fromTransferable(ept.type);
 		this.value = ept.value;
 	}
 
-	protected EventParameter(final Identifier id, final ParameterTypeEnum type, final String value) {
+	protected EventParameter(final Identifier id, final ParameterType type, final String value) {
 		this.id = id;
 		this.type = type;
 		this.value = value;
 	}
 
-	public static EventParameter createInstance(final ParameterTypeEnum type, final String value) throws CreateObjectException {
+	public static EventParameter createInstance(final ParameterType type, final String value) throws CreateObjectException {
 		if (type == null || value == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
 		}
@@ -71,7 +71,7 @@ public final class EventParameter implements Identifiable, TransferableObject {
 		return this.id;
 	}
 
-	public ParameterTypeEnum getType() {
+	public ParameterType getType() {
 		return this.type;
 	}
 

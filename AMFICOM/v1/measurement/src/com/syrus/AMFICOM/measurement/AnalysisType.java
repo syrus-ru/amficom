@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisType.java,v 1.90 2005/08/19 14:19:04 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.91 2005/08/19 15:51:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisTypeHelper;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/08/19 14:19:04 $
+ * @version $Revision: 1.91 $, $Date: 2005/08/19 15:51:01 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -68,10 +68,10 @@ public final class AnalysisType extends ActionType {
 		}
 	}
 
-	private Set<ParameterTypeEnum> inParameterTypes;
-	private Set<ParameterTypeEnum> criteriaParameterTypes;
-	private Set<ParameterTypeEnum> etalonParameterTypes;
-	private Set<ParameterTypeEnum> outParameterTypes;
+	private Set<ParameterType> inParameterTypes;
+	private Set<ParameterType> criteriaParameterTypes;
+	private Set<ParameterType> etalonParameterTypes;
+	private Set<ParameterType> outParameterTypes;
 
 	private Set<Identifier> measurementTypeIds;
 
@@ -81,10 +81,10 @@ public final class AnalysisType extends ActionType {
 	AnalysisType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypes = new HashSet<ParameterTypeEnum>();
-		this.criteriaParameterTypes = new HashSet<ParameterTypeEnum>();
-		this.etalonParameterTypes = new HashSet<ParameterTypeEnum>();
-		this.outParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.inParameterTypes = new HashSet<ParameterType>();
+		this.criteriaParameterTypes = new HashSet<ParameterType>();
+		this.etalonParameterTypes = new HashSet<ParameterType>();
+		this.outParameterTypes = new HashSet<ParameterType>();
 
 		this.measurementTypeIds = new HashSet<Identifier>();
 
@@ -116,10 +116,10 @@ public final class AnalysisType extends ActionType {
 			final StorableObjectVersion version,
 			final String codename,
 			final String description,
-			final Set<ParameterTypeEnum> inParameterTypes,
-			final Set<ParameterTypeEnum> criteriaParameterTypes,
-			final Set<ParameterTypeEnum> etalonParameterTypes,
-			final Set<ParameterTypeEnum> outParameterTypes,
+			final Set<ParameterType> inParameterTypes,
+			final Set<ParameterType> criteriaParameterTypes,
+			final Set<ParameterType> etalonParameterTypes,
+			final Set<ParameterType> outParameterTypes,
 			final Set<Identifier> measurementTypeIds) {
 		super(id,
 				new Date(System.currentTimeMillis()),
@@ -130,16 +130,16 @@ public final class AnalysisType extends ActionType {
 				codename,
 				description);
 
-		this.inParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.inParameterTypes = new HashSet<ParameterType>();
 		this.setInParameterTypes0(inParameterTypes);
 
-		this.criteriaParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.criteriaParameterTypes = new HashSet<ParameterType>();
 		this.setCriteriaParameterTypes0(criteriaParameterTypes);
 
-		this.etalonParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.etalonParameterTypes = new HashSet<ParameterType>();
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 
-		this.outParameterTypes = new HashSet<ParameterTypeEnum>();
+		this.outParameterTypes = new HashSet<ParameterType>();
 		this.setOutParameterTypes0(outParameterTypes);
 
 
@@ -162,10 +162,10 @@ public final class AnalysisType extends ActionType {
 	public static AnalysisType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
-			final Set<ParameterTypeEnum> inParameterTypes,
-			final Set<ParameterTypeEnum> criteriaParameterTypes,
-			final Set<ParameterTypeEnum> etalonParameterTypes,
-			final Set<ParameterTypeEnum> outParameterTypes,
+			final Set<ParameterType> inParameterTypes,
+			final Set<ParameterType> criteriaParameterTypes,
+			final Set<ParameterType> etalonParameterTypes,
+			final Set<ParameterType> outParameterTypes,
 			final Set<Identifier> measurementTypeIds) throws CreateObjectException {		
 
 		try {
@@ -198,10 +198,10 @@ public final class AnalysisType extends ActionType {
 		final IdlAnalysisType att = (IdlAnalysisType) transferable;
 		super.fromTransferable(att, att.codename, att.description);
 
-		this.inParameterTypes = ParameterTypeEnum.fromTransferables(att.inParameterTypes);
-		this.criteriaParameterTypes = ParameterTypeEnum.fromTransferables(att.criteriaParameterTypes);
-		this.etalonParameterTypes = ParameterTypeEnum.fromTransferables(att.etalonParameterTypes);
-		this.outParameterTypes = ParameterTypeEnum.fromTransferables(att.outParameterTypes);
+		this.inParameterTypes = ParameterType.fromTransferables(att.inParameterTypes);
+		this.criteriaParameterTypes = ParameterType.fromTransferables(att.criteriaParameterTypes);
+		this.etalonParameterTypes = ParameterType.fromTransferables(att.etalonParameterTypes);
+		this.outParameterTypes = ParameterType.fromTransferables(att.outParameterTypes);
 
 		this.measurementTypeIds = Identifier.fromTransferables(att.measurementTypeIds);
 		
@@ -215,10 +215,10 @@ public final class AnalysisType extends ActionType {
 	public IdlAnalysisType getTransferable(final ORB orb) {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
-		final IdlParameterTypeEnum[] inParTypes = ParameterTypeEnum.createTransferables(this.inParameterTypes, orb);
-		final IdlParameterTypeEnum[] criteriaParTypes = ParameterTypeEnum.createTransferables(this.criteriaParameterTypes, orb);
-		final IdlParameterTypeEnum[] etalonParTypes = ParameterTypeEnum.createTransferables(this.etalonParameterTypes, orb);
-		final IdlParameterTypeEnum[] outParTypes = ParameterTypeEnum.createTransferables(this.outParameterTypes, orb);
+		final IdlParameterTypeEnum[] inParTypes = ParameterType.createTransferables(this.inParameterTypes, orb);
+		final IdlParameterTypeEnum[] criteriaParTypes = ParameterType.createTransferables(this.criteriaParameterTypes, orb);
+		final IdlParameterTypeEnum[] etalonParTypes = ParameterType.createTransferables(this.etalonParameterTypes, orb);
+		final IdlParameterTypeEnum[] outParTypes = ParameterType.createTransferables(this.outParameterTypes, orb);
 
 		final IdlIdentifier[] measTypIds = Identifier.createTransferables(this.measurementTypeIds);
 
@@ -248,19 +248,19 @@ public final class AnalysisType extends ActionType {
 				&& this.measurementTypeIds != null && this.measurementTypeIds != Collections.EMPTY_SET && !this.measurementTypeIds.contains(null);
 	}
 
-	public Set<ParameterTypeEnum> getInParameterTypes() {
+	public Set<ParameterType> getInParameterTypes() {
 		return Collections.unmodifiableSet(this.inParameterTypes);
 	}
 
-	public Set<ParameterTypeEnum> getCriteriaParameterTypes() {
+	public Set<ParameterType> getCriteriaParameterTypes() {
 		return Collections.unmodifiableSet(this.criteriaParameterTypes);
 	}
 
-	public Set<ParameterTypeEnum> getEtalonParameterTypes() {
+	public Set<ParameterType> getEtalonParameterTypes() {
 		return Collections.unmodifiableSet(this.etalonParameterTypes);
 	}
 
-	public Set<ParameterTypeEnum> getOutParameterTypes() {
+	public Set<ParameterType> getOutParameterTypes() {
 		return Collections.unmodifiableSet(this.outParameterTypes);
 	}
 
@@ -292,7 +292,7 @@ public final class AnalysisType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void setParameterTypes(final Map<String, Set<ParameterTypeEnum>> parameterTypesModeMap) {
+	protected synchronized void setParameterTypes(final Map<String, Set<ParameterType>> parameterTypesModeMap) {
 		assert parameterTypesModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.setInParameterTypes0(parameterTypesModeMap.get(ParameterMode.MODE_IN.stringValue()));
 		this.setCriteriaParameterTypes0(parameterTypesModeMap.get(ParameterMode.MODE_CRITERION.stringValue()));
@@ -304,8 +304,8 @@ public final class AnalysisType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected Map<String, Set<ParameterTypeEnum>> getParameterTypesModeMap() {
-		final Map<String, Set<ParameterTypeEnum>> parameterTypesModeMap = new HashMap<String, Set<ParameterTypeEnum>>(4);
+	protected Map<String, Set<ParameterType>> getParameterTypesModeMap() {
+		final Map<String, Set<ParameterType>> parameterTypesModeMap = new HashMap<String, Set<ParameterType>>(4);
 		parameterTypesModeMap.put(ParameterMode.MODE_IN.stringValue(), this.inParameterTypes);
 		parameterTypesModeMap.put(ParameterMode.MODE_CRITERION.stringValue(), this.criteriaParameterTypes);
 		parameterTypesModeMap.put(ParameterMode.MODE_ETALON.stringValue(), this.etalonParameterTypes);
@@ -316,7 +316,7 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setInParameterTypes0(final Set<ParameterTypeEnum> inParameterTypes) {
+	protected void setInParameterTypes0(final Set<ParameterType> inParameterTypes) {
 		this.inParameterTypes.clear();
 		if (inParameterTypes != null) {
 			this.inParameterTypes.addAll(inParameterTypes);
@@ -329,7 +329,7 @@ public final class AnalysisType extends ActionType {
 	 * @param inParameterTypes
 	 *            The inParameterTypes to set.
 	 */
-	public void setInParameterTypes(final Set<ParameterTypeEnum> inParameterTypes) {
+	public void setInParameterTypes(final Set<ParameterType> inParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		super.markAsChanged();		
 	}
@@ -337,7 +337,7 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setCriteriaParameterTypes0(final Set<ParameterTypeEnum> criteriaParameterTypes) {
+	protected void setCriteriaParameterTypes0(final Set<ParameterType> criteriaParameterTypes) {
 		this.criteriaParameterTypes.clear();
 		if (criteriaParameterTypes != null) {
 			this.criteriaParameterTypes.addAll(criteriaParameterTypes);
@@ -349,7 +349,7 @@ public final class AnalysisType extends ActionType {
 	 * @param thresholdParameterTypes
 	 *            The thresholdParameterTypes to set.
 	 */
-	public void setCriteriaParameterTypes(final Set<ParameterTypeEnum> thresholdParameterTypes) {
+	public void setCriteriaParameterTypes(final Set<ParameterType> thresholdParameterTypes) {
 		this.setCriteriaParameterTypes0(thresholdParameterTypes);
 		super.markAsChanged();
 	}
@@ -357,7 +357,7 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setEtalonParameterTypes0(final Set<ParameterTypeEnum> etalonParameterTypes) {
+	protected void setEtalonParameterTypes0(final Set<ParameterType> etalonParameterTypes) {
 		this.etalonParameterTypes.clear();
 		if (etalonParameterTypes != null) {
 			this.etalonParameterTypes.addAll(etalonParameterTypes);
@@ -369,7 +369,7 @@ public final class AnalysisType extends ActionType {
 	 * @param etalonParameterTypes
 	 *            The etalonParameterTypes to set.
 	 */
-	public void setEtalonParameterTypes(final Set<ParameterTypeEnum> etalonParameterTypes) {
+	public void setEtalonParameterTypes(final Set<ParameterType> etalonParameterTypes) {
 		this.setEtalonParameterTypes0(etalonParameterTypes);
 		super.markAsChanged();
 	}
@@ -377,7 +377,7 @@ public final class AnalysisType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setOutParameterTypes0(final Set<ParameterTypeEnum> outParameterTypes) {
+	protected void setOutParameterTypes0(final Set<ParameterType> outParameterTypes) {
 		this.outParameterTypes.clear();
 		if (outParameterTypes != null) {
 			this.outParameterTypes.addAll(outParameterTypes);
@@ -390,7 +390,7 @@ public final class AnalysisType extends ActionType {
 	 * @param outParameterTypes
 	 *            The outParameterTypes to set.
 	 */
-	public void setOutParameterTypes(final Set<ParameterTypeEnum> outParameterTypes) {
+	public void setOutParameterTypes(final Set<ParameterType> outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);
 		super.markAsChanged();
 	}	

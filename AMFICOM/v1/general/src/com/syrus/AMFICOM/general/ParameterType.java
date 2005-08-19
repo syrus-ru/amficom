@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterTypeEnum.java,v 1.1 2005/08/19 14:06:53 arseniy Exp $
+ * $Id: ParameterType.java,v 1.51 2005/08/19 15:50:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,11 @@ import com.syrus.AMFICOM.general.corba.IdlParameterTypeEnum;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/19 14:06:53 $
+ * @version $Revision: 1.51 $, $Date: 2005/08/19 15:50:00 $
  * @author $Author: arseniy $
  * @module general
  */
-public enum ParameterTypeEnum implements TransferableObject {
+public enum ParameterType implements TransferableObject {
 	REF_WAVE_LENGTH("ref_wvlen", DataType.INTEGER, MeasurementUnit.NANOMETER),
 	REF_TRACE_LENGTH("ref_trclen", DataType.DOUBLE, MeasurementUnit.KILOMETER),
 	REF_RESOLUTION("ref_res", DataType.DOUBLE, MeasurementUnit.METER),
@@ -56,14 +56,14 @@ public enum ParameterTypeEnum implements TransferableObject {
 	private String description;
 
 
-	private ParameterTypeEnum(final String codename, final DataType dataType, final MeasurementUnit measurementUnit) {
+	private ParameterType(final String codename, final DataType dataType, final MeasurementUnit measurementUnit) {
 		this.codename = codename;
 		this.dataType = dataType;
 		this.measurementUnit = measurementUnit;
 		this.description = LangModelGeneral.getString(KEY_ROOT + this.codename);
 	}
 
-	public static ParameterTypeEnum fromInt(final int code) {
+	public static ParameterType fromInt(final int code) {
 		switch (code) {
 			case IdlParameterTypeEnum._REF_WAVE_LENGTH:
 				return REF_WAVE_LENGTH;
@@ -110,7 +110,7 @@ public enum ParameterTypeEnum implements TransferableObject {
 		}
 	}
 
-	public static ParameterTypeEnum fromTransferable(final IdlParameterTypeEnum idlParameterTypeEnum) {
+	public static ParameterType fromTransferable(final IdlParameterTypeEnum idlParameterTypeEnum) {
 		return fromInt(idlParameterTypeEnum.value());
 	}
 
@@ -139,23 +139,23 @@ public enum ParameterTypeEnum implements TransferableObject {
 		return IdlParameterTypeEnum.from_int(this.getCode());
 	}
 
-	public static IdlParameterTypeEnum[] createTransferables(final Set<ParameterTypeEnum> parameterTypes, final ORB orb) {
+	public static IdlParameterTypeEnum[] createTransferables(final Set<ParameterType> parameterTypes, final ORB orb) {
 		assert parameterTypes != null: NON_NULL_EXPECTED;
 
 		final IdlParameterTypeEnum[] idlParameterTypes = new IdlParameterTypeEnum[parameterTypes.size()];
 		int i = 0;
 		synchronized (parameterTypes) {
-			for (final ParameterTypeEnum parameterType : parameterTypes) {
+			for (final ParameterType parameterType : parameterTypes) {
 				idlParameterTypes[i++] = parameterType.getTransferable(orb);
 			}
 		}
 		return idlParameterTypes;
 	}
 
-	public static Set<ParameterTypeEnum> fromTransferables(final IdlParameterTypeEnum[] idlParameterTypes) {
-		final Set<ParameterTypeEnum> parameterTypes = new HashSet<ParameterTypeEnum>(idlParameterTypes.length);
+	public static Set<ParameterType> fromTransferables(final IdlParameterTypeEnum[] idlParameterTypes) {
+		final Set<ParameterType> parameterTypes = new HashSet<ParameterType>(idlParameterTypes.length);
 		for (final IdlParameterTypeEnum idlParameterType : idlParameterTypes) {
-			parameterTypes.add(ParameterTypeEnum.fromTransferable(idlParameterType));
+			parameterTypes.add(ParameterType.fromTransferable(idlParameterType));
 		}
 		return parameterTypes;
 	}

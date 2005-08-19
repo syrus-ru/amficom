@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.103 2005/08/19 14:19:04 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.104 2005/08/19 15:51:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/08/19 14:19:04 $
+ * @version $Revision: 1.104 $, $Date: 2005/08/19 15:51:01 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -271,7 +271,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 			resultSet = statement.executeQuery(sql.toString());
 
 			while (resultSet.next()) {
-				final ParameterTypeEnum parameterType = ParameterTypeEnum.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE));
+				final ParameterType parameterType = ParameterType.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE));
 				final Parameter parameter = new Parameter(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID),
 						parameterType,
 						ByteArrayDatabase.toByteArray(resultSet.getBlob(ResultWrapper.LINK_COLUMN_PARAMETER_VALUE)));
@@ -351,7 +351,7 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 				+ CLOSE_BRACKET;
 		PreparedStatement preparedStatement = null;
 		Identifier parameterId = null;
-		ParameterTypeEnum parameterType = null;
+		ParameterType parameterType = null;
 		Connection connection = null;
 		try {
 			connection = DatabaseConnection.getConnection();

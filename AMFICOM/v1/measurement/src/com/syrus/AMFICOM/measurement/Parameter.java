@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.11 2005/08/19 14:19:04 arseniy Exp $
+ * $Id: Parameter.java,v 1.12 2005/08/19 15:51:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlParameter;
 import com.syrus.AMFICOM.resource.LangModelMeasurement;
@@ -30,14 +30,14 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/19 14:19:04 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/19 15:51:01 $
  * @author $Author: arseniy $
  * @module measurement
  */
 
 public final class Parameter implements TransferableObject, Identifiable {
 	private Identifier id;
-	private ParameterTypeEnum type;
+	private ParameterType type;
 	private byte[] value;	
 
 	public static final String ID_TYPE = "type";
@@ -47,7 +47,7 @@ public final class Parameter implements TransferableObject, Identifiable {
 	 */
 	public Parameter(final IdlParameter pt) {
 		this.id = new Identifier(pt.id);
-		this.type = ParameterTypeEnum.fromTransferable(pt.type);
+		this.type = ParameterType.fromTransferable(pt.type);
 		this.value = new byte[pt.value.length];
 		System.arraycopy(pt.value, 0, this.value, 0, this.value.length);
 
@@ -57,13 +57,13 @@ public final class Parameter implements TransferableObject, Identifiable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected Parameter(final Identifier id, final ParameterTypeEnum type, final byte[] value) {
+	protected Parameter(final Identifier id, final ParameterType type, final byte[] value) {
 		this.id = id;
 		this.type = type;
 		this.value = value;
 	}
 
-	public static Parameter createInstance(final ParameterTypeEnum type, final byte[] value) throws CreateObjectException {
+	public static Parameter createInstance(final ParameterType type, final byte[] value) throws CreateObjectException {
 		try {
 			final Parameter setParameter = new Parameter(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PARAMETER_CODE),
 					type,
@@ -99,7 +99,7 @@ public final class Parameter implements TransferableObject, Identifiable {
 		return this.id;
 	}
 
-	public ParameterTypeEnum getType() {
+	public ParameterType getType() {
 		return this.type;
 	}
 
@@ -200,7 +200,7 @@ public final class Parameter implements TransferableObject, Identifiable {
 		return null;
 	}
 
-	public static byte[] getValueForType(final Parameter[] parameters, final ParameterTypeEnum parameterType)
+	public static byte[] getValueForType(final Parameter[] parameters, final ParameterType parameterType)
 			throws ObjectNotFoundException {
 		for (final Parameter parameter : parameters) {
 			if (parameter.getType().equals(parameterType)) {
@@ -222,7 +222,7 @@ public final class Parameter implements TransferableObject, Identifiable {
 	public static byte[] getValueByTypeCodename(final Parameter[] parameters, final String keyCodename)
 			throws ObjectNotFoundException {
 		for (final Parameter parameter : parameters) {
-			final ParameterTypeEnum parameterType = parameter.getType();
+			final ParameterType parameterType = parameter.getType();
 			if (parameterType.getCodename().equals(keyCodename)) {
 				return parameter.getValue();
 			}

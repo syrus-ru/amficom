@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -80,8 +80,8 @@ public class AnalysisUtil
 		Parameter[] parameters = result1.getParameters();
 		for (int i = 0; i < parameters.length; i++) {
 			Parameter param = parameters[i];
-			ParameterTypeEnum type = param.getType();
-			if (type.equals(ParameterTypeEnum.REFLECTOGRAMMA)) {
+			ParameterType type = param.getType();
+			if (type.equals(ParameterType.REFLECTOGRAMMA)) {
 				bs = new BellcoreReader().getData(param.getValue());
 			}
 		}
@@ -123,7 +123,7 @@ public class AnalysisUtil
 			Set<Result> results = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			for (Result result1 : results) {
 				for (Parameter parameter : result1.getParameters()) {
-					if (parameter.getType().equals(ParameterTypeEnum.DADARA_ANALYSIS_RESULT)) {
+					if (parameter.getType().equals(ParameterType.DADARA_ANALYSIS_RESULT)) {
 						return (AnalysisResult) DataStreamableUtil.readDataStreamableFromBA(parameter.getValue(), AnalysisResult.getDSReader());
 					}
 				}
@@ -249,14 +249,14 @@ public class AnalysisUtil
 		Parameter[] params = etalonSet.getParameters();
 		for (int i = 0; i < params.length; i++)
 		{
-			ParameterTypeEnum type = params[i].getType();
-			if (type.equals(ParameterTypeEnum.DADARA_ETALON))
+			ParameterType type = params[i].getType();
+			if (type.equals(ParameterType.DADARA_ETALON))
 			{
 				etalonObj = (Etalon) DataStreamableUtil.
 					readDataStreamableFromBA(params[i].getValue(),
 							Etalon.getDSReader());
 			}
-			else if (type.equals(ParameterTypeEnum.REFLECTOGRAMMA_ETALON))
+			else if (type.equals(ParameterType.REFLECTOGRAMMA_ETALON))
 			{
 				etalonBS = new BellcoreReader().getData(params[i].getValue());
 //				etalonBS.title = "etalon (" + (ms.getDescription().equals("")
@@ -288,7 +288,7 @@ public class AnalysisUtil
 		Parameter[] params = new Parameter[1];
 
 		{
-			ParameterTypeEnum ptype = ParameterTypeEnum.DADARA_CRITERIA;
+			ParameterType ptype = ParameterType.DADARA_CRITERIA;
 			params[0] = Parameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(analysisParams));
 		}
@@ -311,14 +311,14 @@ public class AnalysisUtil
 	{
 		Parameter[] params = new Parameter[2];
 
-		ParameterTypeEnum ptype = ParameterTypeEnum.DADARA_ETALON;
+		ParameterType ptype = ParameterType.DADARA_ETALON;
 		params[0] = Parameter.createInstance(ptype,
 				DataStreamableUtil.writeDataStreamableToBA(
 						Heap.getEtalon()));
 
 		BellcoreStructure bs = Heap.getBSEtalonTrace();
 
-		ptype = ParameterTypeEnum.REFLECTOGRAMMA_ETALON;
+		ptype = ParameterType.REFLECTOGRAMMA_ETALON;
 		params[1] = Parameter.createInstance(ptype,
 				new BellcoreWriter().write(bs));
 
@@ -338,8 +338,8 @@ public class AnalysisUtil
 		Parameter[] params = criteriaSet.getParameters();
 		for (int i = 0; i < params.length; i++)
 		{
-			ParameterTypeEnum p = params[i].getType();
-			if (p.equals(ParameterTypeEnum.DADARA_CRITERIA))
+			ParameterType p = params[i].getType();
+			if (p.equals(ParameterType.DADARA_CRITERIA))
 				analysisParams = (AnalysisParameters)
 					DataStreamableUtil.readDataStreamableFromBA(
 							params[i].getValue(),
@@ -347,7 +347,7 @@ public class AnalysisUtil
 		}
 		if (analysisParams == null) {
 			throw new DataFormatException(
-					"No" + ParameterTypeEnum.DADARA_CRITERIA.getCodename());
+					"No" + ParameterType.DADARA_CRITERIA.getCodename());
 		}
 		Heap.setMinuitAnalysisParams(analysisParams);
 		Heap.setMinuitInitialParamsFromCurrentAP();

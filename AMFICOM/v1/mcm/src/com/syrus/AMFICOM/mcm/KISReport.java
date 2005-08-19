@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.50 2005/08/19 14:21:42 arseniy Exp $
+ * $Id: KISReport.java,v 1.51 2005/08/19 15:54:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,14 +12,14 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ParameterTypeEnum;
+import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.Result;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/08/19 14:21:42 $
+ * @version $Revision: 1.51 $, $Date: 2005/08/19 15:54:32 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -41,7 +41,7 @@ final class KISReport {
 
 			final Parameter[] parameters = new Parameter[this.parameterCodenames.length];
 			for (int i = 0; i < parameters.length; i++) {
-				parameters[i] = Parameter.createInstance(ParameterTypeEnum.REFLECTOGRAMMA, this.parameterValues[i]);
+				parameters[i] = Parameter.createInstance(ParameterType.REFLECTOGRAMMA, this.parameterValues[i]);
 			}
 
 			final Result result = measurement.createResult(LoginManager.getUserId(), parameters);
