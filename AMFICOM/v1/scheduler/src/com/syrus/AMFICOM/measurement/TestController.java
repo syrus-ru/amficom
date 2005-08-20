@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.17 2005/08/09 17:56:27 arseniy Exp $
+ * $Id: TestController.java,v 1.18 2005/08/20 19:53:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,6 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -35,7 +33,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/09 17:56:27 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/20 19:53:26 $
  * @author $Author: arseniy $
  * @module module
  */

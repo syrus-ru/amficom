@@ -12,9 +12,9 @@ import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.TraceResource;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.io.BellcoreStructure;
 
 public class AnalysisFrame extends ScalableFrame

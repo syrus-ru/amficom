@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.20 2005/08/19 16:27:28 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.21 2005/08/20 19:58:10 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,9 +38,6 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.MeasurementPortTypeWrapper;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
@@ -53,6 +50,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.measurement.MeasurementPort;
+import com.syrus.AMFICOM.measurement.MeasurementPortType;
+import com.syrus.AMFICOM.measurement.MeasurementPortTypeWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -60,8 +60,8 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2005/08/19 16:27:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/08/20 19:58:10 $
  * @module schemeclient
  */
 

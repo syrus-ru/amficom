@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.15 2005/08/19 16:27:28 stas Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.16 2005/08/20 19:58:10 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,8 +47,6 @@ import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeWrapper;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.KISWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -58,6 +56,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.measurement.KIS;
+import com.syrus.AMFICOM.measurement.KISWrapper;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.EquipmentTypeCodenames;
 import com.syrus.AMFICOM.resource.LangModelScheme;
@@ -67,8 +67,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/08/19 16:27:28 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/08/20 19:58:10 $
  * @module schemeclient
  */
 

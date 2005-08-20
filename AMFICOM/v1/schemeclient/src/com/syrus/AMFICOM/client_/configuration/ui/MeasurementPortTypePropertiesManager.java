@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypePropertiesManager.java,v 1.9 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: MeasurementPortTypePropertiesManager.java,v 1.10 2005/08/20 19:58:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,12 @@ import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.ui.EmptyStorableObjectEditor;
-import com.syrus.AMFICOM.configuration.MeasurementPortTypeWrapper;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.measurement.MeasurementPortTypeWrapper;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:58:06 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/20 19:58:10 $
  * @module schemeclient
  */
 

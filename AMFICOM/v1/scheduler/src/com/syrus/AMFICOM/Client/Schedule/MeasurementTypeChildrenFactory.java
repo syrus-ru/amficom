@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.8 2005/08/08 11:50:59 arseniy Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.9 2005/08/20 19:53:26 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,10 +21,6 @@ import java.util.logging.Level;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -34,11 +30,15 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.measurement.KIS;
+import com.syrus.AMFICOM.measurement.MeasurementPort;
+import com.syrus.AMFICOM.measurement.MeasurementPortType;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/08 11:50:59 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/20 19:53:26 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler

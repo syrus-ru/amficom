@@ -7,13 +7,13 @@ import java.util.Set;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
+import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.io.BellcoreStructure;
 

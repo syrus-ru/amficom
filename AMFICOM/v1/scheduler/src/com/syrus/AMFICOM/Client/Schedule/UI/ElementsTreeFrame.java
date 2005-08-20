@@ -24,8 +24,6 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -37,7 +35,9 @@ import com.syrus.AMFICOM.logic.ItemTreeIconLabelCellRenderer;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.logic.SelectionListener;
 import com.syrus.AMFICOM.logic.ServiceItem;
+import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 
 public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeListener {
 

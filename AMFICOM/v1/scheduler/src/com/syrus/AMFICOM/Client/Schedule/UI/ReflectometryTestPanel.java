@@ -37,8 +37,6 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
@@ -52,7 +50,9 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Test;
@@ -61,7 +61,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/08/19 15:53:31 $
+ * @version $Revision: 1.67 $, $Date: 2005/08/20 19:53:26 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler

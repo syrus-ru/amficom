@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.16 2005/08/08 11:59:52 arseniy Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.17 2005/08/20 19:55:44 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,6 @@ import java.util.logging.Level;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.MonitoredElementWrapper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -40,6 +38,8 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.PopulatableItem;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
+import com.syrus.AMFICOM.measurement.MonitoredElementWrapper;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/08 11:59:52 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/20 19:55:44 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module analysis

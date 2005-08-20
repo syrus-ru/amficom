@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.7 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.8 2005/08/20 19:58:10 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
@@ -34,6 +33,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.measurement.MeasurementPortType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/08 11:58:06 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/20 19:58:10 $
  * @module schemeclient
  */
 

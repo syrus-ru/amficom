@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.6 2005/08/08 11:59:52 arseniy Exp $
+ * $Id: ResultChildrenFactory.java,v 1.7 2005/08/20 19:55:44 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,6 @@ import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.MonitoredElementWrapper;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
 import com.syrus.AMFICOM.filterclient.MeasurementConditionWrapper;
 import com.syrus.AMFICOM.filterclient.MeasurementSetupConditionWrapper;
@@ -56,6 +54,8 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
+import com.syrus.AMFICOM.measurement.MonitoredElementWrapper;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.ResultWrapper;
 import com.syrus.AMFICOM.measurement.Test;
@@ -68,7 +68,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/08 11:59:52 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/20 19:55:44 $
  * @module analysis
  */
 

@@ -36,10 +36,10 @@ import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 
 public class PlanPanel extends JPanel implements 

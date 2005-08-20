@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.22 2005/08/19 15:41:34 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.23 2005/08/20 19:58:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,6 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -51,14 +50,15 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.measurement.MeasurementPortType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/08/19 15:41:34 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/08/20 19:58:10 $
  * @module schemeclient
  */
 

@@ -19,10 +19,10 @@ import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**

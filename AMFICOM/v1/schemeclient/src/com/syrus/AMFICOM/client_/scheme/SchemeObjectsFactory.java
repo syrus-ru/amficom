@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.26 2005/08/19 16:41:54 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.27 2005/08/20 19:58:10 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,11 +27,8 @@ import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
-import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
@@ -48,6 +45,9 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.measurement.KIS;
+import com.syrus.AMFICOM.measurement.MeasurementPort;
+import com.syrus.AMFICOM.measurement.MeasurementPortType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.LangModelScheme;
@@ -71,8 +71,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.26 $, $Date: 2005/08/19 16:41:54 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/08/20 19:58:10 $
  * @module schemeclient
  */
 

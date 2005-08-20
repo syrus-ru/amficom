@@ -8,13 +8,13 @@ import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
