@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.29 2005/08/19 14:01:33 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.30 2005/08/20 19:32:35 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/08/19 14:01:33 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/20 19:32:35 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -72,17 +72,13 @@ public final class ObjectGroupEntities {
 				PERMATTR_CODE });
 		registerGroup(CONFIGURATION_GROUP_CODE, CONFIGURATION_GROUP, new short[] { EQUIPMENT_TYPE_CODE,
 				PORT_TYPE_CODE,
-				MEASUREMENTPORT_TYPE_CODE,
 				TRANSPATH_TYPE_CODE,
 				LINK_TYPE_CODE,
 				CABLELINK_TYPE_CODE,
 				CABLETHREAD_TYPE_CODE,
 				EQUIPMENT_CODE,
 				PORT_CODE,
-				MEASUREMENTPORT_CODE,
 				TRANSPATH_CODE,
-				KIS_CODE,
-				MONITOREDELEMENT_CODE,
 				LINK_CODE,
 				CABLELINK_CODE,
 				CABLETHREAD_CODE });
@@ -100,7 +96,11 @@ public final class ObjectGroupEntities {
 				TEST_CODE,
 				CRONTEMPORALPATTERN_CODE,
 				INTERVALSTEMPORALPATTERN_CODE,
-				PERIODICALTEMPORALPATTERN_CODE });
+				PERIODICALTEMPORALPATTERN_CODE,
+				MEASUREMENTPORT_TYPE_CODE,
+				MEASUREMENTPORT_CODE,
+				KIS_CODE,
+				MONITOREDELEMENT_CODE });
 		registerGroup(SCHEME_GROUP_CODE, SCHEME_GROUP, new short[] { CABLECHANNELINGITEM_CODE,
 				PATHELEMENT_CODE,
 				SCHEME_CODE,
@@ -132,9 +132,7 @@ public final class ObjectGroupEntities {
 		registerGroup(MAPVIEW_GROUP_CODE, MAPVIEW_GROUP, new short[] { MAPVIEW_CODE });
 	}
 
-	private static void registerGroup(final short groupCode,
-	                                  final String group, 
-	                                  final short[] entityCodes) {
+	private static void registerGroup(final short groupCode, final String group, final short[] entityCodes) {
 		assert CODE_NAME_MAP.get(groupCode) == null;
 		CODE_NAME_MAP.put(groupCode, group);
 		assert NAME_CODE_MAP.get(group) == 0;

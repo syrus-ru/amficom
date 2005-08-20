@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.77 2005/08/19 14:01:33 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.78 2005/08/20 19:32:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/08/19 14:01:33 $
+ * @version $Revision: 1.78 $, $Date: 2005/08/20 19:32:34 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -32,7 +32,6 @@ public final class ObjectEntities {
 
 	public static final String EQUIPMENT_TYPE = "EquipmentType";
 	public static final String PORT_TYPE = "PortType";
-	public static final String MEASUREMENTPORT_TYPE = "MeasurementPortType";
 	public static final String TRANSPATH_TYPE = "TransmissionPathType";
 	public static final String LINK_TYPE = "LinkType";
 	public static final String CABLELINK_TYPE = "CableLinkType";
@@ -48,6 +47,7 @@ public final class ObjectEntities {
 	public static final String MNTTYPANATYPEVATYP = "MntTypAnaTypEvaTyp";
 	public static final String MODELING_TYPE = "ModelingType";
 	public static final String MODTYPPARTYPLINK = "ModTypParTypLink";
+	public static final String MEASUREMENTPORT_TYPE = "MeasurementPortType";
 //	public static final String KIS_TYPE = "KISType";
 
 	public static final String SITENODE_TYPE = "SiteNodeType";
@@ -77,9 +77,6 @@ public final class ObjectEntities {
 	public static final String PORT = "Port";
 	public static final String TRANSPATH = "TransmissionPath";
 	public static final String TRANSPATHMELINK = "TransmissionPathMELink";
-	public static final String KIS = "KIS";
-	public static final String MEASUREMENTPORT = "MeasurementPort";
-	public static final String MONITOREDELEMENT = "MonitoredElement";
 	public static final String LINK = "Link";
 	public static final String CABLETHREAD = "CableThread";
 	public static final String CABLELINK = "CableLink";
@@ -94,6 +91,7 @@ public final class ObjectEntities {
 	public static final String MEASUREMENT = "Measurement";
 	public static final String ANALYSIS = "Analysis";
 	public static final String EVALUATION = "Evaluation";
+	public static final String MODELING = "Modeling";
 	public static final String TEST = "Test";
 	public static final String MSTESTLINK = "MeasurementSetupTestLink";
 	public static final String RESULT = "Result";
@@ -101,7 +99,9 @@ public final class ObjectEntities {
 	public static final String CRONTEMPORALPATTERN = "CronTemporalPattern";
 	public static final String INTERVALSTEMPORALPATTERN = "ITempPattern";
 	public static final String PERIODICALTEMPORALPATTERN = "PeriodicalTemporalPattern";
-	public static final String MODELING = "Modeling";
+	public static final String MEASUREMENTPORT = "MeasurementPort";
+	public static final String KIS = "KIS";
+	public static final String MONITOREDELEMENT = "MonitoredElement";
 
 	/*        Scheme        */
 	public static final String CABLECHANNELINGITEM = "CableChannelingItem";
@@ -207,21 +207,16 @@ public final class ObjectEntities {
 	public static final short EQUIPMENT_CODE = CONFIGURATION_MIN_CODE;
 	public static final short PORT_CODE = 0x0182;
 	public static final short TRANSPATH_CODE = 0x0183;
-	public static final short KIS_CODE = 0x0184;
-	public static final short MEASUREMENTPORT_CODE = 0x0185;
-	public static final short MONITOREDELEMENT_CODE = 0x0186;
-	public static final short LINK_CODE = 0x0187;
-	public static final short CABLETHREAD_CODE = 0x0188;
-	public static final short CABLELINK_CODE = 0x0189;
+	public static final short LINK_CODE = 0x0184;
+	public static final short CABLETHREAD_CODE = 0x0185;
+	public static final short CABLELINK_CODE = 0x0186;
 
 	public static final short EQUIPMENT_TYPE_CODE = 0x01C1;
 	public static final short PORT_TYPE_CODE = 0x01C2;
-	public static final short MEASUREMENTPORT_TYPE_CODE = 0x01C3;
-	public static final short LINK_TYPE_CODE = 0x01C4;
-//  	public static final short KIS_TYPE_CODE = 0x01C5;
-	public static final short TRANSPATH_TYPE_CODE = 0x01C6;
-	public static final short CABLETHREAD_TYPE_CODE = 0x01C7;
-	public static final short CABLELINK_TYPE_CODE = 0x01C8;
+	public static final short LINK_TYPE_CODE = 0x01C3;
+	public static final short TRANSPATH_TYPE_CODE = 0x01C4;
+	public static final short CABLETHREAD_TYPE_CODE = 0x01C5;
+	public static final short CABLELINK_TYPE_CODE = 0x01C6;
 
 	public static final short CONFIGURATION_MAX_CODE = 0x0200;
 
@@ -244,11 +239,15 @@ public final class ObjectEntities {
 	public static final short CRONTEMPORALPATTERN_CODE = 0x020B;
 	public static final short INTERVALSTEMPORALPATTERN_CODE = 0x020C;
 	public static final short PERIODICALTEMPORALPATTERN_CODE = 0x020D;
+	public static final short MEASUREMENTPORT_CODE = 0x020E;
+	public static final short KIS_CODE = 0x020F;
+	public static final short MONITOREDELEMENT_CODE = 0x0210;
 
 	public static final short MEASUREMENT_TYPE_CODE = 0x0241;
 	public static final short ANALYSIS_TYPE_CODE = 0x0242;
 	public static final short EVALUATION_TYPE_CODE = 0x0243;
 	public static final short MODELING_TYPE_CODE = 0x0244;
+	public static final short MEASUREMENTPORT_TYPE_CODE = 0x0245;
 
 	public static final short MEASUREMENT_MAX_CODE = 0x0280;
 
