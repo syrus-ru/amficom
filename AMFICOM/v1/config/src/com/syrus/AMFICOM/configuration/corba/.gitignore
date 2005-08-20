@@ -11,12 +11,8 @@ IdlCableThread.java
 IdlCableThreadType.java
 IdlEquipment.java
 IdlEquipmentType.java
-IdlKIS.java
 IdlLink.java
 IdlLinkType.java
-IdlMeasurementPort.java
-IdlMeasurementPortType.java
-IdlMonitoredElement.java
 IdlPort.java
 IdlPortType.java
 IdlTransmissionPath.java

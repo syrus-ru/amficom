@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.27 2005/07/27 15:59:22 bass Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.28 2005/08/20 19:23:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/08/20 19:23:20 $
+ * @author $Author: arseniy $
  * @module config
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -44,8 +44,9 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final Identifier id = (Identifier) it.next();
 				if (id.getMajor() == ObjectEntities.DOMAIN_CODE) {
 					final Domain domain = (Domain) StorableObjectPool.getStorableObject(id, true);
-					if (dmDomain.isChild(domain))
+					if (dmDomain.isChild(domain)) {
 						condition = true;
+					}
 				}
 			}
 		} catch (final ApplicationException ae) {
@@ -100,33 +101,6 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
-			case ObjectEntities.KIS_CODE:
-				KIS kis = (KIS) storableObject;
-				switch (this.linkedEntityCode) {
-					case ObjectEntities.MCM_CODE:
-						condition = super.conditionTest(kis.getMCMId());
-						break;
-					case ObjectEntities.DOMAIN_CODE:
-						condition = this.checkDomain(kis);
-						break;
-					default:
-						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
-								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
-								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
-				}
-				break;
-			case ObjectEntities.MONITOREDELEMENT_CODE:
-				MonitoredElement monitoredElement = (MonitoredElement) storableObject;
-				switch (this.linkedEntityCode) {
-					case ObjectEntities.DOMAIN_CODE:
-						condition = this.checkDomain(monitoredElement);
-						break;
-					default:
-						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
-								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
-								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
-				}
-				break;
 			case ObjectEntities.PORT_CODE:
 				Port port = (Port) storableObject;
 				switch (this.linkedEntityCode) {
@@ -137,34 +111,6 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 						try {
 							Equipment equipment1 = (Equipment) StorableObjectPool.getStorableObject(port.getEquipmentId(), true);
 							condition = this.checkDomain(equipment1);
-						} catch (ApplicationException ae) {
-							Log.errorException(ae);
-						}
-						break;
-					default:
-						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
-								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
-								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
-				}
-				break;
-			case ObjectEntities.MEASUREMENTPORT_CODE:
-				MeasurementPort measurementPort = (MeasurementPort) storableObject;
-				switch (this.linkedEntityCode) {
-					case ObjectEntities.KIS_CODE:
-						condition = super.conditionTest(measurementPort.getKISId());
-						break;
-					case ObjectEntities.MCM_CODE:
-						try {
-							KIS kis1 = (KIS) StorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
-							condition = super.conditionTest(kis1.getMCMId());
-						} catch (ApplicationException ae) {
-							Log.errorException(ae);
-						}
-						break;
-					case ObjectEntities.DOMAIN_CODE:
-						try {
-							KIS kis1 = (KIS) StorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
-							condition = this.checkDomain(kis1);
 						} catch (ApplicationException ae) {
 							Log.errorException(ae);
 						}
@@ -189,10 +135,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case ObjectEntities.CABLETHREAD_TYPE_CODE:
 			case ObjectEntities.EQUIPMENT_CODE:
 			case ObjectEntities.TRANSPATH_CODE:
-			case ObjectEntities.KIS_CODE:
-			case ObjectEntities.MONITOREDELEMENT_CODE:
 			case ObjectEntities.PORT_CODE:
-			case ObjectEntities.MEASUREMENTPORT_CODE:
 				this.entityCode = entityCode;
 				break;
 			default:
