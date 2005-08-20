@@ -1,5 +1,5 @@
 /*
- * $Id: TestInitialSetup.java,v 1.6 2005/08/19 15:57:33 arseniy Exp $
+ * $Id: TestInitialSetup.java,v 1.7 2005/08/20 19:44:24 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,10 +19,6 @@ import com.syrus.AMFICOM.administration.TestServerProcess;
 import com.syrus.AMFICOM.administration.TestSystemUser;
 import com.syrus.AMFICOM.configuration.TestEquipment;
 import com.syrus.AMFICOM.configuration.TestEquipmentType;
-import com.syrus.AMFICOM.configuration.TestKIS;
-import com.syrus.AMFICOM.configuration.TestMeasurementPort;
-import com.syrus.AMFICOM.configuration.TestMeasurementPortType;
-import com.syrus.AMFICOM.configuration.TestMonitoredElement;
 import com.syrus.AMFICOM.configuration.TestPort;
 import com.syrus.AMFICOM.configuration.TestPortType;
 import com.syrus.AMFICOM.configuration.TestTransmissionPath;
@@ -33,10 +29,14 @@ import com.syrus.AMFICOM.general.TestDataType;
 import com.syrus.AMFICOM.general.TestMeasurementUnit;
 import com.syrus.AMFICOM.general.TestParameterType;
 import com.syrus.AMFICOM.measurement.TestAnalysisType;
+import com.syrus.AMFICOM.measurement.TestKIS;
+import com.syrus.AMFICOM.measurement.TestMeasurementPort;
+import com.syrus.AMFICOM.measurement.TestMeasurementPortType;
 import com.syrus.AMFICOM.measurement.TestMeasurementType;
+import com.syrus.AMFICOM.measurement.TestMonitoredElement;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/19 15:57:33 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/20 19:44:24 $
  * @author $Author: arseniy $
  * @module test
  */

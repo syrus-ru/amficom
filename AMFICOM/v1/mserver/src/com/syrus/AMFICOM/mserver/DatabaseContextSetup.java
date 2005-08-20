@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.36 2005/08/19 14:20:44 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.37 2005/08/20 19:46:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,12 +18,8 @@ import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
-import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.LinkDatabase;
 import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
-import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
-import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
-import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
@@ -37,16 +33,20 @@ import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.IntervalsTemporalPatternDatabase;
+import com.syrus.AMFICOM.measurement.KISDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementPortDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
+import com.syrus.AMFICOM.measurement.MonitoredElementDatabase;
 import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.TestDatabase;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/08/19 14:20:44 $
+ * @version $Revision: 1.37 $, $Date: 2005/08/20 19:46:05 $
  * @author $Author: arseniy $
  * @module mserver
  */
@@ -68,23 +68,20 @@ final class DatabaseContextSetup {
 
 		DatabaseContext.registerDatabase(new EquipmentTypeDatabase());
 		DatabaseContext.registerDatabase(new PortTypeDatabase());
-		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
 		DatabaseContext.registerDatabase(new LinkTypeDatabase());
 		DatabaseContext.registerDatabase(new CableLinkTypeDatabase());
 		DatabaseContext.registerDatabase(new CableThreadTypeDatabase());
 		DatabaseContext.registerDatabase(new EquipmentDatabase());
 		DatabaseContext.registerDatabase(new PortDatabase());
-		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
-		DatabaseContext.registerDatabase(new KISDatabase());
-		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
 		DatabaseContext.registerDatabase(new LinkDatabase());
 		DatabaseContext.registerDatabase(new CableThreadDatabase());
 
 		DatabaseContext.registerDatabase(new MeasurementTypeDatabase());
 		DatabaseContext.registerDatabase(new AnalysisTypeDatabase());
 		DatabaseContext.registerDatabase(new EvaluationTypeDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
 		DatabaseContext.registerDatabase(new MeasurementDatabase());
 		DatabaseContext.registerDatabase(new AnalysisDatabase());
 		DatabaseContext.registerDatabase(new EvaluationDatabase());
@@ -95,5 +92,8 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new CronTemporalPatternDatabase());
 		DatabaseContext.registerDatabase(new IntervalsTemporalPatternDatabase());
 		DatabaseContext.registerDatabase(new PeriodicalTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
+		DatabaseContext.registerDatabase(new KISDatabase());
+		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
 	}
 }

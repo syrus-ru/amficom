@@ -1,25 +1,24 @@
 /*
- * $Id: TestMeasurementPort.java,v 1.3 2005/08/20 19:40:40 arseniy Exp $
+ * $Id: TestMeasurementPort.java,v 1.1 2005/08/20 19:45:03 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
-package com.syrus.AMFICOM.configuration;
+package com.syrus.AMFICOM.measurement;
 
 import java.util.Iterator;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
 
+import com.syrus.AMFICOM.configuration.Equipment;
+import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.KIS;
-import com.syrus.AMFICOM.measurement.MeasurementPort;
-import com.syrus.AMFICOM.measurement.MeasurementPortType;
 
 public final class TestMeasurementPort extends TestCase {
 

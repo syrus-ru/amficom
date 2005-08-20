@@ -1,11 +1,11 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.10 2005/08/20 19:40:40 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.1 2005/08/20 19:45:03 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
-package com.syrus.AMFICOM.configuration;
+package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
 import java.util.Iterator;
@@ -14,17 +14,16 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.configuration.corba.IdlMonitoredElementPackage.MonitoredElementSort;
+import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.measurement.MeasurementPort;
-import com.syrus.AMFICOM.measurement.MonitoredElement;
+import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/20 19:40:40 $
+ * @version $Revision: 1.1 $, $Date: 2005/08/20 19:45:03 $
  * @author $Author: arseniy $
  * @module config_v1
  */
