@@ -21,7 +21,7 @@ temp
 *.swp
 *.tar
 *.trc
-.all
+.mach
 .idl
 .settings
 .sqlj
