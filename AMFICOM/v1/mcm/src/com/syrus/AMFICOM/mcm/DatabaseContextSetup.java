@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.32 2005/08/19 14:21:42 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.33 2005/08/20 19:57:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,10 +15,6 @@ import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
-import com.syrus.AMFICOM.configuration.KISDatabase;
-import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
-import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
-import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
@@ -32,9 +28,13 @@ import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationDatabase;
 import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.IntervalsTemporalPatternDatabase;
+import com.syrus.AMFICOM.measurement.KISDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementPortDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
+import com.syrus.AMFICOM.measurement.MonitoredElementDatabase;
 import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.ResultDatabase;
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.measurement.TestDatabase;
 
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/08/19 14:21:42 $
+ * @version $Revision: 1.33 $, $Date: 2005/08/20 19:57:39 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -64,17 +64,14 @@ final class DatabaseContextSetup {
 
 		DatabaseContext.registerDatabase(new EquipmentTypeDatabase());
 		DatabaseContext.registerDatabase(new PortTypeDatabase());
-		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
 //		DatabaseContext.registerDatabase(new LinkTypeDatabase());
 //		DatabaseContext.registerDatabase(new CableLinkTypeDatabase());
 //		DatabaseContext.registerDatabase(new CableThreadTypeDatabase());
 		DatabaseContext.registerDatabase(new EquipmentDatabase());
 		DatabaseContext.registerDatabase(new PortDatabase());
-		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
-		DatabaseContext.registerDatabase(new KISDatabase());
-		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
 //		DatabaseContext.registerDatabase(new LinkDatabase());
 //		DatabaseContext.registerDatabase(new CableLinkDatabase());
 //		DatabaseContext.registerDatabase(new CableThreadDatabase());
@@ -83,6 +80,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new AnalysisTypeDatabase());
 		DatabaseContext.registerDatabase(new EvaluationTypeDatabase());
 //		DatabaseContext.registerDatabase(new ModelingTypeDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
 		DatabaseContext.registerDatabase(new MeasurementDatabase());
 		DatabaseContext.registerDatabase(new AnalysisDatabase());
 		DatabaseContext.registerDatabase(new EvaluationDatabase());
@@ -94,5 +92,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new CronTemporalPatternDatabase());
 		DatabaseContext.registerDatabase(new IntervalsTemporalPatternDatabase());
 		DatabaseContext.registerDatabase(new PeriodicalTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new KISDatabase());
+		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
 	}
 }

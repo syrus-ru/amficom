@@ -1,5 +1,5 @@
 /*-
- * $Id: TCPKISConnection.java,v 1.15 2005/08/17 11:48:45 arseniy Exp $
+ * $Id: TCPKISConnection.java,v 1.16 2005/08/20 19:57:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,14 +10,14 @@ package com.syrus.AMFICOM.mcm;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/08/17 11:48:45 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/20 19:57:39 $
  * @module mcm
  */
 final class TCPKISConnection implements KISConnection {

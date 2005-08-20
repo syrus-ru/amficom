@@ -1,5 +1,5 @@
 /*-
- * $Id: KISConnectionManager.java,v 1.6 2005/08/02 12:17:04 arseniy Exp $
+ * $Id: KISConnectionManager.java,v 1.7 2005/08/20 19:57:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,13 +12,13 @@ import com.syrus.AMFICOM.general.Identifier;
 
 import com.syrus.util.KISConnectionLRUMap;
 import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.configuration.KIS;
+import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/02 12:17:04 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/20 19:57:39 $
  * @module mcm
  */
 final class KISConnectionManager/* extends SleepButWorkThread*/ {

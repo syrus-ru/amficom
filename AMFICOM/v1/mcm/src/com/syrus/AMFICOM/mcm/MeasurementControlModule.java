@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.117 2005/08/08 16:13:52 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.118 2005/08/20 19:57:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,6 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.SystemUser;
-import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -41,6 +40,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.mcm.corba.MCMPOATie;
+import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.117 $, $Date: 2005/08/08 16:13:52 $
+ * @version $Revision: 1.118 $, $Date: 2005/08/20 19:57:39 $
  * @author $Author: arseniy $
  * @module mcm
  */

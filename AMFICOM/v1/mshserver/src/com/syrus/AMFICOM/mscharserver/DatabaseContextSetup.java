@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.4 2005/08/08 11:45:43 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.5 2005/08/20 19:57:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroupDatabase;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/08 11:45:43 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/20 19:57:08 $
  * @module mscharserver
  */
 final class DatabaseContextSetup {
@@ -63,7 +63,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new DomainDatabase());
 		DatabaseContext.registerDatabase(new ServerDatabase());
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
-		
+
 		DatabaseContext.registerDatabase(new ImageResourceDatabase());
 
 		DatabaseContext.registerDatabase(new SiteNodeTypeDatabase());
