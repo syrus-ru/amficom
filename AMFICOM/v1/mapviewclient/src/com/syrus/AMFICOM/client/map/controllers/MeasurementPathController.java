@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.32 2005/08/15 14:30:35 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.33 2005/08/20 20:04:45 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
@@ -32,6 +31,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 
 /**
  * Контроллер топологическиго пути.
- * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/08/15 14:30:35 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.33 $, $Date: 2005/08/20 20:04:45 $
  * @module mapviewclient
  */
 public final class MeasurementPathController extends AbstractLinkController {

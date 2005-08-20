@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlKISImpl.java,v 1.1 2005/08/20 19:25:23 arseniy Exp $
+ * $Id: IdlKISImpl.java,v 1.2 2005/08/20 20:03:29 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.1 $, $Date: 2005/08/20 19:25:23 $
- * @module config
+ * @version $Revision: 1.2 $, $Date: 2005/08/20 20:03:29 $
+ * @module measurement
  */
 final class IdlKISImpl extends IdlKIS {
 	private static final long serialVersionUID = 6006824965310693760L;
