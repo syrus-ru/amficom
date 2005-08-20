@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.160 2005/08/16 09:00:20 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.161 2005/08/20 17:57:35 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.160 $, $Date: 2005/08/16 09:00:20 $
+ * @version $Revision: 1.161 $, $Date: 2005/08/20 17:57:35 $
  * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -681,6 +681,14 @@ public final class StorableObjectPool {
 		if (SAVING_OBJECT_IDS.contains(id)) {
 			if (storableObject.isChanged()) {
 				DEPENDENCY_SORTED_CONTAINER.moveIfAlreadyPresent(storableObject, dependencyLevel);
+				final Set<Identifiable> dependencies = storableObject.getDependencies();
+				for (final Identifiable identifiable : dependencies) {
+					assert identifiable != null : ErrorMessages.NON_NULL_EXPECTED;
+					StorableObject dependencyObject = fromIdentifiable(identifiable);
+					if (dependencyObject != null) {
+						checkChangedWithDependencies(dependencyObject, dependencyLevel + 1);
+					}
+				}
 			}
 			return;
 		}
@@ -690,29 +698,7 @@ public final class StorableObjectPool {
 		final Set<Identifiable> dependencies = storableObject.getDependencies();
 		for (final Identifiable identifiable : dependencies) {
 			assert identifiable != null : ErrorMessages.NON_NULL_EXPECTED;
-			if (identifiable.getId().isVoid()) {
-				continue;
-			}
-
-			StorableObject dependencyObject = null;
-			if (identifiable instanceof Identifier) {
-				final Identifier dependencyObjectId = (Identifier) identifiable;
-				final short entityCode = dependencyObjectId.getMajor();
-				final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
-				if (objectPool != null) {
-					dependencyObject = objectPool.unmodifiableGet(dependencyObjectId);
-				}
-				else {
-					Log.errorMessage("StorableObjectPool.checkChangedWithDependencies(Identifier) | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
-							+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
-				}
-			} else if (identifiable instanceof StorableObject) {
-				dependencyObject = (StorableObject) identifiable;
-			} else {
-				throw new IllegalDataException("dependency for object '" + id
-						+ "' neither Identifier nor StorableObject -- " + identifiable.getClass().getName());
-			}
-
+			StorableObject dependencyObject = fromIdentifiable(identifiable);
 			if (dependencyObject != null) {
 				checkChangedWithDependencies(dependencyObject, dependencyLevel + 1);
 			}
@@ -722,6 +708,31 @@ public final class StorableObjectPool {
 			Log.debugMessage("StorableObjectPool.checkChangedWithDependencies | Object '" + storableObject.getId() + "' is changed",
 					Log.DEBUGLEVEL10);
 			DEPENDENCY_SORTED_CONTAINER.put(storableObject, dependencyLevel);
+		}
+	}
+
+	private static final StorableObject fromIdentifiable(final Identifiable identifiable) throws IllegalDataException {
+		if (identifiable.getId().isVoid()) {
+			return null;
+		}
+
+		if (identifiable instanceof Identifier) {
+			final Identifier id = (Identifier) identifiable;
+			final short entityCode = id.getMajor();
+			final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
+			if (objectPool != null) {
+				return objectPool.unmodifiableGet(id);
+			}
+			Log.errorMessage("StorableObjectPool.fromIdentifiable | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
+			return null;
+		}
+		else if (identifiable instanceof StorableObject) {
+			return (StorableObject) identifiable;
+		}
+		else {
+			throw new IllegalDataException("Object '" + identifiable.getId()
+					+ "' neither Identifier nor StorableObject -- " + identifiable.getClass().getName());
 		}
 	}
 
