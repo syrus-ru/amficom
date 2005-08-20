@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.3 2005/06/16 13:26:45 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.4 2005/08/20 19:40:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,54 +8,29 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import com.syrus.AMFICOM.administration.AdministrationStorableObjectPool;
-import com.syrus.AMFICOM.administration.DatabaseAdministrationObjectLoader;
 import com.syrus.AMFICOM.administration.DomainDatabase;
 import com.syrus.AMFICOM.administration.MCMDatabase;
 import com.syrus.AMFICOM.administration.ServerDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.SystemUserDatabase;
-import com.syrus.AMFICOM.configuration.DatabaseConfigurationObjectLoader;
 import com.syrus.AMFICOM.configuration.CableLinkTypeDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadDatabase;
 import com.syrus.AMFICOM.configuration.CableThreadTypeDatabase;
-import com.syrus.AMFICOM.configuration.ConfigurationStorableObjectPool;
 import com.syrus.AMFICOM.configuration.EquipmentDatabase;
 import com.syrus.AMFICOM.configuration.EquipmentTypeDatabase;
-import com.syrus.AMFICOM.configuration.KISDatabase;
 import com.syrus.AMFICOM.configuration.LinkDatabase;
 import com.syrus.AMFICOM.configuration.LinkTypeDatabase;
-import com.syrus.AMFICOM.configuration.MeasurementPortDatabase;
-import com.syrus.AMFICOM.configuration.MeasurementPortTypeDatabase;
-import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 import com.syrus.AMFICOM.configuration.PortDatabase;
 import com.syrus.AMFICOM.configuration.PortTypeDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathDatabase;
 import com.syrus.AMFICOM.configuration.TransmissionPathTypeDatabase;
-import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ParameterTypeDatabase;
 import com.syrus.AMFICOM.general.CharacteristicDatabase;
 import com.syrus.AMFICOM.general.CharacteristicTypeDatabase;
-import com.syrus.AMFICOM.general.DatabaseGeneralObjectLoader;
-import com.syrus.AMFICOM.general.GeneralStorableObjectPool;
-import com.syrus.AMFICOM.measurement.DatabaseMeasurementObjectLoader;
-import com.syrus.AMFICOM.measurement.AnalysisDatabase;
-import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
-import com.syrus.AMFICOM.measurement.EvaluationDatabase;
-import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementStorableObjectPool;
-import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
-import com.syrus.AMFICOM.measurement.ModelingDatabase;
-import com.syrus.AMFICOM.measurement.ResultDatabase;
-import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
-import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
-import com.syrus.AMFICOM.measurement.TestDatabase;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/16 13:26:45 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/20 19:40:40 $
  * @author $Author: arseniy $
  * @module cmserver_v1
  */
@@ -76,7 +51,6 @@ public class DatabaseContextSetup {
 	}
 
 	public static void initDatabaseContext() {
-		DatabaseContext.registerDatabase(new ParameterTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicTypeDatabase());
 		DatabaseContext.registerDatabase(new CharacteristicDatabase());
 
@@ -88,17 +62,13 @@ public class DatabaseContextSetup {
 
 		DatabaseContext.registerDatabase(new EquipmentTypeDatabase());
 		DatabaseContext.registerDatabase(new PortTypeDatabase());
-		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathTypeDatabase());
 		DatabaseContext.registerDatabase(new LinkTypeDatabase());
 		DatabaseContext.registerDatabase(new CableLinkTypeDatabase());
 		DatabaseContext.registerDatabase(new CableThreadTypeDatabase());
 		DatabaseContext.registerDatabase(new EquipmentDatabase());
 		DatabaseContext.registerDatabase(new PortDatabase());
-		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
 		DatabaseContext.registerDatabase(new TransmissionPathDatabase());
-		DatabaseContext.registerDatabase(new KISDatabase());
-		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
 		DatabaseContext.registerDatabase(new LinkDatabase());
 		DatabaseContext.registerDatabase(new CableThreadDatabase());
 
@@ -106,6 +76,7 @@ public class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new AnalysisTypeDatabase());
 		DatabaseContext.registerDatabase(new EvaluationTypeDatabase());
 		DatabaseContext.registerDatabase(new ModelingTypeDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
 		DatabaseContext.registerDatabase(new MeasurementDatabase());
 		DatabaseContext.registerDatabase(new AnalysisDatabase());
 		DatabaseContext.registerDatabase(new EvaluationDatabase());
@@ -117,6 +88,9 @@ public class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new CronTemporalPatternDatabase());
 		DatabaseContext.registerDatabase(new IntervalsTemporalPatternDatabase());
 		DatabaseContext.registerDatabase(new PeriodicalTemporalPatternDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
+		DatabaseContext.registerDatabase(new KISDatabase());
+		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
 	}
 
 	public static void initObjectPools() {

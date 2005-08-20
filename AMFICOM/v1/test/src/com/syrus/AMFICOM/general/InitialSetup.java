@@ -1,5 +1,5 @@
 /*-
- * $Id: InitialSetup.java,v 1.3 2005/06/19 18:43:56 arseniy Exp $
+ * $Id: InitialSetup.java,v 1.4 2005/08/20 19:40:40 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,10 +20,6 @@ import com.syrus.AMFICOM.administration.User;
 import com.syrus.AMFICOM.administration.corba.UserSort;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
@@ -34,11 +30,15 @@ import com.syrus.AMFICOM.configuration.corba.PortTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.EvaluationType;
+import com.syrus.AMFICOM.measurement.KIS;
+import com.syrus.AMFICOM.measurement.MeasurementPort;
+import com.syrus.AMFICOM.measurement.MeasurementPortType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/06/19 18:43:56 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/20 19:40:40 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module test

@@ -1,5 +1,5 @@
 /*
- * $Id: TestTestCase.java,v 1.1 2005/04/22 16:12:48 cvsadmin Exp $
+ * $Id: TestTestCase.java,v 1.2 2005/08/20 19:40:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,6 @@ import java.util.Date;
 import java.util.Iterator;
 
 import com.syrus.AMFICOM.configuration.ConfigurationDatabaseContext;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -32,8 +30,8 @@ import com.syrus.AMFICOM.measurement.corba.TestTemporalType;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/04/22 16:12:48 $
- * @author $Author: cvsadmin $
+ * @version $Revision: 1.2 $, $Date: 2005/08/20 19:40:40 $
+ * @author $Author: arseniy $
  * @module tools
  */
 public class TestTestCase extends AbstractMeasurementTestCase {

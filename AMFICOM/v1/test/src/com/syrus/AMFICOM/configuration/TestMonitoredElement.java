@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.9 2005/08/19 15:55:21 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.10 2005/08/20 19:40:40 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,9 +20,11 @@ import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.MeasurementPort;
+import com.syrus.AMFICOM.measurement.MonitoredElement;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/19 15:55:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/20 19:40:40 $
  * @author $Author: arseniy $
  * @module config_v1
  */

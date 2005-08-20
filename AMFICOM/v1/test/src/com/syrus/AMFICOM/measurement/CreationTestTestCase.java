@@ -1,5 +1,5 @@
 /*
- * $Id: CreationTestTestCase.java,v 1.2 2005/06/02 14:31:02 arseniy Exp $
+ * $Id: CreationTestTestCase.java,v 1.3 2005/08/20 19:40:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.List;
 
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -36,7 +34,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/02 14:31:02 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/20 19:40:40 $
  * @author $Author: arseniy $
  * @module tools
  */

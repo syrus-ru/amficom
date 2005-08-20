@@ -1,5 +1,5 @@
 /*
- * $Id: TestCharacteristicQP1640A.java,v 1.1 2005/07/12 15:54:06 arseniy Exp $
+ * $Id: TestCharacteristicQP1640A.java,v 1.2 2005/08/20 19:40:40 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,14 +15,13 @@ import java.util.Set;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
-import com.syrus.AMFICOM.general.corba.DataType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.measurement.MeasurementPortType;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/12 15:54:06 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/20 19:40:40 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -51,7 +50,7 @@ public class TestCharacteristicQP1640A extends TestCase {
 			CharacteristicTypeCodenames.UNITS_TRACE_LENGTH,
 			CharacteristicTypeCodenames.UNITS_PULSE_WIDTH,
 			CharacteristicTypeCodenames.UNITS_RESOLUTION };
-	private static final String[] PARAMETER_TYPE_CODENAMES = new String[] { ParameterTypeCodename.TRACE_WAVELENGTH.stringValue(),
+	private static final String[] PARAMETER_TYPE_CODENAMES = new String[] { ParameterType.REF_WAVE_LENGTH.getCodename(),
 			ParameterTypeCodename.TRACE_LENGTH.stringValue(),
 			ParameterTypeCodename.TRACE_PULSE_WIDTH_HIGH_RES.stringValue(),
 			ParameterTypeCodename.TRACE_PULSE_WIDTH_LOW_RES.stringValue(),

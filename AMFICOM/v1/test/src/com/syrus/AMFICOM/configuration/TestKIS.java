@@ -1,5 +1,5 @@
 /*
- * $Id: TestKIS.java,v 1.3 2005/08/19 15:55:21 arseniy Exp $
+ * $Id: TestKIS.java,v 1.4 2005/08/20 19:40:40 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.KIS;
 
 public final class TestKIS extends TestCase {
 

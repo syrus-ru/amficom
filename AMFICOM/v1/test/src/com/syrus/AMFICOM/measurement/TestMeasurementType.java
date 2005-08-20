@@ -1,5 +1,5 @@
 /*
- * $Id: TestMeasurementType.java,v 1.7 2005/08/19 15:55:21 arseniy Exp $
+ * $Id: TestMeasurementType.java,v 1.8 2005/08/20 19:40:40 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.util.Set;
 import junit.framework.Test;
 import junit.framework.TestCase;
 
-import com.syrus.AMFICOM.configuration.MeasurementPortType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
@@ -24,7 +23,7 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/19 15:55:21 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/20 19:40:40 $
  * @author $Author: arseniy $
  * @module test
  */

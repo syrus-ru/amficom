@@ -1,5 +1,5 @@
 /*
- * $Id: UnitsOfQP1643ACharacteristrics.java,v 1.4 2005/06/19 18:43:56 arseniy Exp $
+ * $Id: UnitsOfQP1643ACharacteristrics.java,v 1.5 2005/08/20 19:40:40 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,13 @@ package com.syrus.AMFICOM.general;
 
 import junit.framework.Test;
 
-import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.general.corba.CharacteristicSort;
 import com.syrus.AMFICOM.general.corba.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.DataType;
+import com.syrus.AMFICOM.measurement.MeasurementPort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/06/19 18:43:56 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/20 19:40:40 $
  * @author $Author: arseniy $
  * @module tools
  */

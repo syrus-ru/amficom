@@ -1,5 +1,5 @@
 /*
- * $Id: SetTestCase.java,v 1.2 2005/06/02 14:31:02 arseniy Exp $
+ * $Id: SetTestCase.java,v 1.3 2005/08/20 19:40:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,6 @@ import java.util.List;
 
 import junit.framework.Test;
 
-import com.syrus.AMFICOM.configuration.MonitoredElement;
-import com.syrus.AMFICOM.configuration.MonitoredElementDatabase;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -34,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.Set_Transferable;
 import com.syrus.util.ByteArray;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/06/02 14:31:02 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/20 19:40:40 $
  * @author $Author: arseniy $
  * @module tools
  */
