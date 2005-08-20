@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.55 2005/08/16 12:22:10 max Exp $
+ * $Id: AbstractSchemePort.java,v 1.56 2005/08/20 19:49:52 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,6 @@ import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Set;
 
-import com.syrus.AMFICOM.configuration.MeasurementPort;
 import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
@@ -48,12 +47,13 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.55 $, $Date: 2005/08/16 12:22:10 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.56 $, $Date: 2005/08/20 19:49:52 $
  * @module scheme
  */
 public abstract class AbstractSchemePort

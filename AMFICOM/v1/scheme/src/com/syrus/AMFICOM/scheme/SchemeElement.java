@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.81 2005/08/19 16:11:14 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.82 2005/08/20 19:49:52 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
-import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -61,6 +60,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElement;
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.81 $, $Date: 2005/08/19 16:11:14 $
+ * @version $Revision: 1.82 $, $Date: 2005/08/20 19:49:52 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
