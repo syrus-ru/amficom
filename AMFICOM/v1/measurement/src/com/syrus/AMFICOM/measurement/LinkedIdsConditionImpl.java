@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.54 2005/08/19 14:19:04 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.55 2005/08/20 19:25:23 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,8 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -22,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/08/19 14:19:04 $
+ * @version $Revision: 1.55 $, $Date: 2005/08/20 19:25:23 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -33,6 +35,25 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		this.linkedIds = linkedIds;
 		this.linkedEntityCode = linkedEntityCode.shortValue();
 		this.entityCode = entityCode;
+	}
+
+	private boolean checkDomain(final DomainMember domainMember) {
+		boolean condition = false;
+		try {
+			final Domain dmDomain = (Domain) StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
+			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
+				final Identifier id = (Identifier) it.next();
+				if (id.getMajor() == ObjectEntities.DOMAIN_CODE) {
+					final Domain domain = (Domain) StorableObjectPool.getStorableObject(id, true);
+					if (dmDomain.isChild(domain)) {
+						condition = true;
+					}
+				}
+			}
+		} catch (final ApplicationException ae) {
+			Log.errorException(ae);
+		}
+		return condition;
 	}
 
 	/**
@@ -190,6 +211,61 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
+			case ObjectEntities.MEASUREMENTPORT_CODE:
+				MeasurementPort measurementPort = (MeasurementPort) storableObject;
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.KIS_CODE:
+						condition = super.conditionTest(measurementPort.getKISId());
+						break;
+					case ObjectEntities.MCM_CODE:
+						try {
+							final KIS kis1 = (KIS) StorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
+							condition = super.conditionTest(kis1.getMCMId());
+						} catch (ApplicationException ae) {
+							Log.errorException(ae);
+						}
+						break;
+					case ObjectEntities.DOMAIN_CODE:
+						try {
+							KIS kis1 = (KIS) StorableObjectPool.getStorableObject(measurementPort.getKISId(), true);
+							condition = this.checkDomain(kis1);
+						} catch (ApplicationException ae) {
+							Log.errorException(ae);
+						}
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
+				break;
+			case ObjectEntities.KIS_CODE:
+				KIS kis = (KIS) storableObject;
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.MCM_CODE:
+						condition = super.conditionTest(kis.getMCMId());
+						break;
+					case ObjectEntities.DOMAIN_CODE:
+						condition = this.checkDomain(kis);
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
+				break;
+			case ObjectEntities.MONITOREDELEMENT_CODE:
+				MonitoredElement monitoredElement = (MonitoredElement) storableObject;
+				switch (this.linkedEntityCode) {
+					case ObjectEntities.DOMAIN_CODE:
+						condition = this.checkDomain(monitoredElement);
+						break;
+					default:
+						throw new IllegalObjectEntityException(LINKED_ENTITY_CODE_NOT_REGISTERED + this.linkedEntityCode
+								+ ", " + ObjectEntities.codeToString(this.linkedEntityCode),
+								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+				}
+				break;
 			default:
 				throw new IllegalObjectEntityException(ENTITY_CODE_NOT_REGISTERED + this.entityCode
 						+ ", " + ObjectEntities.codeToString(this.entityCode),
@@ -210,6 +286,9 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case ObjectEntities.MEASUREMENTSETUP_CODE:
 			case ObjectEntities.RESULT_CODE:
 			case ObjectEntities.TEST_CODE:
+			case ObjectEntities.KIS_CODE:
+			case ObjectEntities.MONITOREDELEMENT_CODE:
+			case ObjectEntities.MEASUREMENTPORT_CODE:
 				this.entityCode = entityCode;
 				break;
 			default:

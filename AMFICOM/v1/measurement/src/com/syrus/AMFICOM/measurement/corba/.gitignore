@@ -19,6 +19,10 @@ IdlParameterSet.java
 IdlPeriodicalTemporalPattern.java
 IdlResult.java
 IdlTest.java
+IdlMeasurementPortType.java
+IdlMeasurementPort.java
+IdlKIS.java
+IdlMonitoredElement.java
 IdlMeasurementTypeEnum.java
 IdlAnalysisTypeEnum.java
 IdlModelingTypeEnum.java

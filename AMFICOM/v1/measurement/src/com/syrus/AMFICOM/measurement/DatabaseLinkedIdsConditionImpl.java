@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.32 2005/08/19 14:19:04 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.33 2005/08/20 19:25:23 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,10 @@ package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EVALUATION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EVALUATION_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
@@ -30,9 +32,7 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
 
-import com.syrus.AMFICOM.configuration.KISWrapper;
-import com.syrus.AMFICOM.configuration.MeasurementPortWrapper;
-import com.syrus.AMFICOM.configuration.MonitoredElementWrapper;
+import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/08/19 14:19:04 $
+ * @version $Revision: 1.33 $, $Date: 2005/08/20 19:25:23 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -187,6 +187,34 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}
+			case MEASUREMENTPORT_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+					case KIS_CODE:
+						return super.getQuery(MeasurementPortWrapper.COLUMN_KIS_ID);
+					case MCM_CODE:
+						return super.getLinkedQuery(MeasurementPortWrapper.COLUMN_KIS_ID,
+								StorableObjectWrapper.COLUMN_ID,
+								KISWrapper.COLUMN_MCM_ID,
+								ObjectEntities.KIS);
+					case DOMAIN_CODE:
+						return super.getLinkedQuery(MeasurementPortWrapper.COLUMN_KIS_ID,
+								StorableObjectWrapper.COLUMN_ID,
+								DomainMember.COLUMN_DOMAIN_ID,
+								ObjectEntities.KIS);
+					default:
+						throw super.newExceptionLinkedEntityIllegal();
+				}
+			case KIS_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+					case MCM_CODE:
+						return super.getQuery(KISWrapper.COLUMN_MCM_ID);
+					case DOMAIN_CODE:
+						return super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
+					default:
+						throw super.newExceptionLinkedEntityIllegal();
+				}
+			case MONITOREDELEMENT_CODE:
+				return super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
 			default:
 				throw super.newExceptionEntityIllegal();
 		}

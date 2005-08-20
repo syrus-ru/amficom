@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.112 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.113 2005/08/20 19:25:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,6 @@ import java.util.HashSet;
 import java.util.Map;
 import java.util.Set;
 
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
@@ -44,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.112 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.113 $, $Date: 2005/08/20 19:25:23 $
  * @author $Author: arseniy $
  * @module measurement
  */

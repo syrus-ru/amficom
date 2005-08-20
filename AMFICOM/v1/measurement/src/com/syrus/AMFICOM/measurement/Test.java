@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.145 2005/08/19 16:22:05 arseniy Exp $
+ * $Id: Test.java,v 1.146 2005/08/20 19:25:23 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -16,9 +16,6 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.configuration.KIS;
-import com.syrus.AMFICOM.configuration.MeasurementPort;
-import com.syrus.AMFICOM.configuration.MonitoredElement;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -49,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.145 $, $Date: 2005/08/19 16:22:05 $
+ * @version $Revision: 1.146 $, $Date: 2005/08/20 19:25:23 $
  * @author $Author: arseniy $
  * @module measurement
  */
