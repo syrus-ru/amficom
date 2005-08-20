@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterTypeEnumDatabase.java,v 1.2 2005/08/19 15:50:00 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.36 2005/08/20 20:14:38 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,11 +25,11 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/19 15:50:00 $
+ * @version $Revision: 1.36 $, $Date: 2005/08/20 20:14:38 $
  * @author $Author: arseniy $
  * @module general
  */
-public final class ParameterTypeEnumDatabase {
+public final class ParameterTypeDatabase {
 	private static final String TABLE_PARAMETERTYPE = "ParameterType";
 	private static final String COLUMN_CODE = "code";
 	private static final String COLUMN_CODENAME = "codename";
@@ -37,7 +37,7 @@ public final class ParameterTypeEnumDatabase {
 	private static final String COLUMN_MEASUREMENT_UNIT_CODE = "measurement_unit_code";
 	private static final String COLUMN_DESCRIPTION = "description";
 
-	private ParameterTypeEnumDatabase() {
+	private ParameterTypeDatabase() {
 		//Empty
 	}
 
