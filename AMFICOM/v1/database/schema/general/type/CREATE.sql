@@ -1,4 +1,3 @@
--- $Id: CREATE.sql,v 1.5 2005/06/15 07:50:18 bass Exp $
+-- $Id: CREATE.sql,v 1.6 2005/08/21 15:11:08 arseniy Exp $
 
-@@parametertype;
 @@characteristictype;

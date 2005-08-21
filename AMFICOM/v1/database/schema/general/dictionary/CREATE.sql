@@ -1,3 +1,5 @@
--- $Id: CREATE.sql,v 1.2 2005/06/15 07:50:18 bass Exp $
+-- $Id: CREATE.sql,v 1.3 2005/08/21 15:11:08 arseniy Exp $
 
 @@datatype.sql
+@@measurementunit.sql
+@@parametertype.sql

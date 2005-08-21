@@ -1,15 +1,15 @@
--- $Id: eventparameter.sql,v 1.6 2005/06/15 17:03:09 bass Exp $
+-- $Id: eventparameter.sql,v 1.7 2005/08/21 15:11:08 arseniy Exp $
 
 CREATE TABLE EventParameter (
  id NUMBER(19),
- type_id NOT NULL,
+ type_code NOT NULL,
  event_id NOT NULL,
  value VARCHAR2(256 CHAR) NOT NULL,
 --
  CONSTRAINT evpar_pk PRIMARY KEY (id),
 --
- CONSTRAINT evpar_partype_fk FOREIGN KEY (type_id)
-  REFERENCES ParameterType (id) ON DELETE CASCADE,
+ CONSTRAINT evpar_partype_fk FOREIGN KEY (type_code)
+  REFERENCES ParameterType (code) ON DELETE CASCADE,
  CONSTRAINT evpar_event_fk FOREIGN KEY (event_id)
   REFERENCES Event (id) ON DELETE CASCADE
 );

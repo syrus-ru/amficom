@@ -1,4 +1,4 @@
--- $Id: CREATE.sql,v 1.10 2005/06/15 07:50:17 bass Exp $
+-- $Id: CREATE.sql,v 1.11 2005/08/21 15:11:08 arseniy Exp $
 
 REM user
 @@./user/CREATE;
@@ -17,6 +17,9 @@ REM configuration
 
 REM measurement
 @@./measurement/CREATE;
+
+REM event
+@@./event/CREATE;
 
 REM map
 @@./map/CREATE;
