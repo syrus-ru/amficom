@@ -2,12 +2,10 @@
 
 TEST_CLASS = TestInitialSetup
 TEST_PACKAGE = com.syrus.AMFICOM.setup
-#TEST_CLASS=TestCharacteristicQP1640A
-#TEST_PACKAGE=com.syrus.AMFICOM.general
 #TEST_CLASS=TestIdentifier
 #TEST_PACKAGE=com.syrus.AMFICOM.general
-#TEST_CLASS=TestCMServer
-#TEST_PACKAGE=com.syrus.AMFICOM.cmserver
+#TEST_CLASS=TestSystemUser
+#TEST_PACKAGE=com.syrus.AMFICOM.administration
 
 JAVA_SUFFIX = .java
 CLASS_SUFFIX = .class

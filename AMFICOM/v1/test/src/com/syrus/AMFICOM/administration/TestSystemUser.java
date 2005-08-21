@@ -1,5 +1,5 @@
 /*
- * $Id: TestSystemUser.java,v 1.7 2005/08/18 10:53:04 arseniy Exp $
+ * $Id: TestSystemUser.java,v 1.8 2005/08/21 16:12:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/18 10:53:04 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/21 16:12:06 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -46,7 +46,7 @@ public final class TestSystemUser extends TestCase {
 
 	public static Test suite() {
 		final DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
-		databaseCommonTest.addTestSuite(TestSystemUser.class);
+		databaseCommonTest.addTest(new TestSystemUser("testSetPassword"));
 		return databaseCommonTest.createTestSetup();
 	}
 

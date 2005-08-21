@@ -1,5 +1,5 @@
 /*
- * $Id: TestInitialSetup.java,v 1.7 2005/08/20 19:44:24 arseniy Exp $
+ * $Id: TestInitialSetup.java,v 1.8 2005/08/21 16:12:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.configuration.TestTransmissionPath;
 import com.syrus.AMFICOM.configuration.TestTransmissionPathType;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.SQLCommonTest;
+import com.syrus.AMFICOM.general.TestCharacteristicQP1640A;
 import com.syrus.AMFICOM.general.TestDataType;
 import com.syrus.AMFICOM.general.TestMeasurementUnit;
 import com.syrus.AMFICOM.general.TestParameterType;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.measurement.TestMeasurementType;
 import com.syrus.AMFICOM.measurement.TestMonitoredElement;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/20 19:44:24 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/21 16:12:06 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -89,6 +90,8 @@ public final class TestInitialSetup extends TestCase {
 
 		databaseCommonTest.addTestSuite(TestMeasurementType.class);
 		databaseCommonTest.addTestSuite(TestAnalysisType.class);
+
+		databaseCommonTest.addTest(new TestCharacteristicQP1640A("testCreate"));
 
 		//- Create test suite contains all operations
 		TestSuite testSuite = new TestSuite();

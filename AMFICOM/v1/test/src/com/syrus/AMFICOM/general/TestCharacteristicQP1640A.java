@@ -1,5 +1,5 @@
 /*
- * $Id: TestCharacteristicQP1640A.java,v 1.2 2005/08/20 19:40:40 arseniy Exp $
+ * $Id: TestCharacteristicQP1640A.java,v 1.3 2005/08/21 16:12:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/20 19:40:40 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/21 16:12:06 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -34,10 +34,6 @@ public class TestCharacteristicQP1640A extends TestCase {
 	private static final String IOR = "1.468200";
 	private static final String AVERAGES = "4096 32768 262144";
 	private static final String MAX_POINTS = "262144";
-	private static final String UNITS_WVLEN = "нм";
-	private static final String UNITS_TRCLEN = "км";
-	private static final String UNITS_PULSWD = "нс";
-	private static final String UNITS_RES = "м";
 	private static final String[] CODENAMES = new String[] { CharacteristicTypeCodenames.TRACE_WAVELENGTH,
 			CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + WAVELENGTH + CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX,
 			CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + WAVELENGTH + CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES_SUFFIX,
@@ -50,11 +46,6 @@ public class TestCharacteristicQP1640A extends TestCase {
 			CharacteristicTypeCodenames.UNITS_TRACE_LENGTH,
 			CharacteristicTypeCodenames.UNITS_PULSE_WIDTH,
 			CharacteristicTypeCodenames.UNITS_RESOLUTION };
-	private static final String[] PARAMETER_TYPE_CODENAMES = new String[] { ParameterType.REF_WAVE_LENGTH.getCodename(),
-			ParameterTypeCodename.TRACE_LENGTH.stringValue(),
-			ParameterTypeCodename.TRACE_PULSE_WIDTH_HIGH_RES.stringValue(),
-			ParameterTypeCodename.TRACE_PULSE_WIDTH_LOW_RES.stringValue(),
-			ParameterTypeCodename.TRACE_RESOLUTION.stringValue(), };
 
 	public TestCharacteristicQP1640A(final String name) {
 		super(name);
@@ -71,12 +62,9 @@ public class TestCharacteristicQP1640A extends TestCase {
 		final MeasurementPortType measurementPortType = (MeasurementPortType) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 
 		final Map<String, CharacteristicType> characteristicTypeMap = this.retrieveExistingCharacteristicTypes();
-		final Map<String, ParameterType> parameterTypeMap = this.retrieveParameterTypes();
 		String codename;
 		String description;
 		CharacteristicType characteristicType;
-		String parameterTypeCodename;
-		ParameterType parameterType;
 		final Identifier userId = DatabaseCommonTest.getSysUser().getId();
 
 		/*
@@ -90,7 +78,7 @@ public class TestCharacteristicQP1640A extends TestCase {
 					codename,
 					description,
 					"Длина волны",
-					DataType.DATA_TYPE_INTEGER,
+					DataType.INTEGER,
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 			characteristicTypeMap.put(codename, characteristicType);
 		}
@@ -114,7 +102,7 @@ public class TestCharacteristicQP1640A extends TestCase {
 					codename,
 					description,
 					"Длина рефлектограммы",
-					DataType.DATA_TYPE_DOUBLE,
+					DataType.DOUBLE,
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 			characteristicTypeMap.put(codename, characteristicType);
 		}
@@ -138,7 +126,7 @@ public class TestCharacteristicQP1640A extends TestCase {
 					codename,
 					description,
 					"Ширина импульса",
-					DataType.DATA_TYPE_LONG,
+					DataType.LONG,
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 			characteristicTypeMap.put(codename, characteristicType);
 		}
@@ -162,7 +150,7 @@ public class TestCharacteristicQP1640A extends TestCase {
 					codename,
 					description,
 					"Ширина импульса",
-					DataType.DATA_TYPE_LONG,
+					DataType.LONG,
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 			characteristicTypeMap.put(codename, characteristicType);
 		}
@@ -186,7 +174,7 @@ public class TestCharacteristicQP1640A extends TestCase {
 					codename,
 					description,
 					"Разрешение",
-					DataType.DATA_TYPE_DOUBLE,
+					DataType.DOUBLE,
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 			characteristicTypeMap.put(codename, characteristicType);
 		}
@@ -203,7 +191,7 @@ public class TestCharacteristicQP1640A extends TestCase {
 					codename,
 					description,
 					"Показатель преломления",
-					DataType.DATA_TYPE_DOUBLE,
+					DataType.DOUBLE,
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 			characteristicTypeMap.put(codename, characteristicType);
 		}
@@ -220,7 +208,7 @@ public class TestCharacteristicQP1640A extends TestCase {
 					codename,
 					description,
 					"Количество усреднений",
-					DataType.DATA_TYPE_DOUBLE,
+					DataType.DOUBLE,
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 			characteristicTypeMap.put(codename, characteristicType);
 		}
@@ -237,132 +225,22 @@ public class TestCharacteristicQP1640A extends TestCase {
 					codename,
 					description,
 					"Максимальное количество точек",
-					DataType.DATA_TYPE_INTEGER,
+					DataType.INTEGER,
 					CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL);
 			characteristicTypeMap.put(codename, characteristicType);
 		}
 		Characteristic.createInstance(userId, characteristicType, codename, description, MAX_POINTS, measurementPortType, false, false);
-
-		/*
-		 * units_wvlen
-		 */
-		parameterTypeCodename = ParameterTypeCodename.TRACE_WAVELENGTH.stringValue();
-		parameterType = parameterTypeMap.get(parameterTypeCodename);
-		if (parameterType == null) {
-			fail("Cannot find parameter type for codename '" + parameterTypeCodename + "'");
-		}
-		codename = CharacteristicTypeCodenames.UNITS_WAVELENGTH;
-		description = "Единицы измерения длин волн";
-		characteristicType = characteristicTypeMap.get(codename);
-		if (characteristicType == null) {
-			characteristicType = CharacteristicType.createInstance(userId,
-					codename,
-					description,
-					"Единицы измерения",
-					DataType.DATA_TYPE_STRING,
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
-			characteristicTypeMap.put(codename, characteristicType);
-		}
-		Characteristic.createInstance(userId, characteristicType, codename, description, UNITS_WVLEN, parameterType, false, false);
-
-		/*
-		 * units_trclen
-		 */
-		parameterTypeCodename = ParameterTypeCodename.TRACE_LENGTH.stringValue();
-		parameterType = parameterTypeMap.get(parameterTypeCodename);
-		if (parameterType == null) {
-			fail("Cannot find parameter type for codename '" + parameterTypeCodename + "'");
-		}
-		codename = CharacteristicTypeCodenames.UNITS_TRACE_LENGTH;
-		description = "Единицы измерения длин рефлектограмм";
-		characteristicType = characteristicTypeMap.get(codename);
-		if (characteristicType == null) {
-			characteristicType = CharacteristicType.createInstance(userId,
-					codename,
-					description,
-					"Единицы измерения",
-					DataType.DATA_TYPE_STRING,
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
-			characteristicTypeMap.put(codename, characteristicType);
-		}
-		Characteristic.createInstance(userId, characteristicType, codename, description, UNITS_TRCLEN, parameterType, false, false);
-
-		/*
-		 * units_pulswd for ref_pulswd_high_res
-		 */
-		parameterTypeCodename = ParameterTypeCodename.TRACE_PULSE_WIDTH_HIGH_RES.stringValue();
-		parameterType = parameterTypeMap.get(parameterTypeCodename);
-		if (parameterType == null) {
-			fail("Cannot find parameter type for codename '" + parameterTypeCodename + "'");
-		}
-		codename = CharacteristicTypeCodenames.UNITS_PULSE_WIDTH;
-		description = "Единицы измерения ширины импульса";
-		characteristicType = characteristicTypeMap.get(codename);
-		if (characteristicType == null) {
-			characteristicType = CharacteristicType.createInstance(userId,
-					codename,
-					description,
-					"Единицы измерения",
-					DataType.DATA_TYPE_STRING,
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
-			characteristicTypeMap.put(codename, characteristicType);
-		}
-		Characteristic.createInstance(userId, characteristicType, codename, description, UNITS_PULSWD, parameterType, false, false);
-
-		/*
-		 * units_pulswd for ref_pulswd_low_res
-		 */
-		parameterTypeCodename = ParameterTypeCodename.TRACE_PULSE_WIDTH_LOW_RES.stringValue();
-		parameterType = parameterTypeMap.get(parameterTypeCodename);
-		if (parameterType == null) {
-			fail("Cannot find parameter type for codename '" + parameterTypeCodename + "'");
-		}
-		codename = CharacteristicTypeCodenames.UNITS_PULSE_WIDTH;
-		description = "Единицы измерения ширины импульса";
-		characteristicType = characteristicTypeMap.get(codename);
-		if (characteristicType == null) {
-			characteristicType = CharacteristicType.createInstance(userId,
-					codename,
-					description,
-					"Единицы измерения",
-					DataType.DATA_TYPE_STRING,
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
-			characteristicTypeMap.put(codename, characteristicType);
-		}
-		Characteristic.createInstance(userId, characteristicType, codename, description, UNITS_PULSWD, parameterType, false, false);
-		
-		/*
-		 * units_res
-		 */
-		parameterTypeCodename = ParameterTypeCodename.TRACE_RESOLUTION.stringValue();
-		parameterType = parameterTypeMap.get(parameterTypeCodename);
-		if (parameterType == null) {
-			fail("Cannot find parameter type for codename '" + parameterTypeCodename + "'");
-		}
-		codename = CharacteristicTypeCodenames.UNITS_RESOLUTION;
-		description = "Единицы измерения разрешения";
-		characteristicType = characteristicTypeMap.get(codename);
-		if (characteristicType == null) {
-			characteristicType = CharacteristicType.createInstance(userId,
-					codename,
-					description,
-					"Единицы измерения",
-					DataType.DATA_TYPE_STRING,
-					CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL);
-			characteristicTypeMap.put(codename, characteristicType);
-		}
-		Characteristic.createInstance(userId, characteristicType, codename, description, UNITS_RES, parameterType, false, false);
 		
 		/*
 		 * Save all new objects
 		 */
-		StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, false);
+		StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, DatabaseCommonTest.getSysUser().getId(), false);
 	}
 
 	private Map<String, CharacteristicType> retrieveExistingCharacteristicTypes() throws ApplicationException {
 		final Map<String, CharacteristicType> characteristicTypeMap = new HashMap<String, CharacteristicType>();
 
-		final Set<TypicalCondition> conditions = new HashSet<TypicalCondition>();
+		final Set<StorableObjectCondition> conditions = new HashSet<StorableObjectCondition>();
 		for (int i = 0; i < CODENAMES.length; i++) {
 			conditions.add(new TypicalCondition(CODENAMES[i],
 					OperationSort.OPERATION_EQUALS,
@@ -376,24 +254,5 @@ public class TestCharacteristicQP1640A extends TestCase {
 		}
 
 		return characteristicTypeMap;
-	}
-
-	private Map<String , ParameterType> retrieveParameterTypes() throws ApplicationException {
-		final Map<String, ParameterType> parameterTypeMap = new HashMap<String, ParameterType>();
-
-		final Set<TypicalCondition> conditions = new HashSet<TypicalCondition>();
-		for (int i = 0; i < PARAMETER_TYPE_CODENAMES.length; i++) {
-			conditions.add(new TypicalCondition(PARAMETER_TYPE_CODENAMES[i],
-					OperationSort.OPERATION_EQUALS,
-					ObjectEntities.PARAMETER_TYPE_CODE,
-					StorableObjectWrapper.COLUMN_CODENAME));
-		}
-		final CompoundCondition cc = new CompoundCondition(conditions, CompoundConditionSort.OR);
-		final Set<ParameterType> parameterTypes = StorableObjectPool.getStorableObjectsByCondition(cc, true);
-		for (final ParameterType parameterType : parameterTypes) {
-			parameterTypeMap.put(parameterType.getCodename(), parameterType);
-		}
-
-		return parameterTypeMap;
 	}
 }
