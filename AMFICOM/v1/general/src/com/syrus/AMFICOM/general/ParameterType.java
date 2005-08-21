@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.53 2005/08/19 17:52:10 arseniy Exp $
+ * $Id: ParameterType.java,v 1.54 2005/08/21 16:33:18 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,9 @@ package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 
+import java.util.Collection;
+import java.util.EnumSet;
 import java.util.HashSet;
-import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
@@ -18,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/08/19 17:52:10 $
+ * @version $Revision: 1.54 $, $Date: 2005/08/21 16:33:18 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -139,7 +140,7 @@ public enum ParameterType implements TransferableObject {
 		return IdlParameterType.from_int(this.getCode());
 	}
 
-	public static IdlParameterType[] createTransferables(final Set<ParameterType> parameterTypes, final ORB orb) {
+	public static IdlParameterType[] createTransferables(final EnumSet<ParameterType> parameterTypes, final ORB orb) {
 		assert parameterTypes != null: NON_NULL_EXPECTED;
 
 		final IdlParameterType[] idlParameterTypes = new IdlParameterType[parameterTypes.size()];
@@ -152,11 +153,13 @@ public enum ParameterType implements TransferableObject {
 		return idlParameterTypes;
 	}
 
-	public static Set<ParameterType> fromTransferables(final IdlParameterType[] idlParameterTypes) {
-		final Set<ParameterType> parameterTypes = new HashSet<ParameterType>(idlParameterTypes.length);
+	public static EnumSet<ParameterType> fromTransferables(final IdlParameterType[] idlParameterTypes) {
+		assert idlParameterTypes != null: NON_NULL_EXPECTED;
+
+		final Collection<ParameterType> parameterTypes = new HashSet<ParameterType>(idlParameterTypes.length);
 		for (final IdlParameterType idlParameterType : idlParameterTypes) {
 			parameterTypes.add(ParameterType.fromTransferable(idlParameterType));
 		}
-		return parameterTypes;
+		return EnumSet.copyOf(parameterTypes);
 	}
 }
