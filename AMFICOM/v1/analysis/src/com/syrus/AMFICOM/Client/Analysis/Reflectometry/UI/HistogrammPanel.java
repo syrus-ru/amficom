@@ -7,6 +7,9 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
+import java.io.OutputStream;
+import java.io.PrintStream;
+import java.util.Formatter;
 
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -155,11 +158,11 @@ public class HistogrammPanel extends ScaledGraphPanel
 
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_SCALE_DIGITS));
 		StringBuilder sb = new StringBuilder();
-		sb.append(String.valueOf(Math.round(level * 100.0)));
-		sb.append("% \u2014 "); // тире
-		sb.append(MathRef.round_3(level2thresh(this.level)));
-		sb.append(" ");
-		sb.append(LangModelAnalyse.getString("dB"));
+		Formatter formatter = new Formatter(sb);
+		formatter.format("%2.0f %% \u2014 %.3f %s", // \u2014 - тире
+				new Double(level * 100.0),
+				new Double(level2thresh(this.level)),
+				LangModelAnalyse.getString("dB"));
 		String str = sb.toString();
 		g.drawString(str,
 				jw - g.getFontMetrics().stringWidth(str) - 6,
