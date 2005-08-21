@@ -1,4 +1,4 @@
--- $Id: kis.sql,v 1.16 2005/06/15 17:03:09 bass Exp $
+-- $Id: kis.sql,v 1.1 2005/08/21 16:40:32 arseniy Exp $
 
 CREATE TABLE KIS (
  id NUMBER(19),

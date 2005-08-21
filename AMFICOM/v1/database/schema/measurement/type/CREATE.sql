@@ -1,4 +1,4 @@
--- $Id: CREATE.sql,v 1.5 2005/06/15 07:50:19 bass Exp $
+-- $Id: CREATE.sql,v 1.6 2005/08/21 16:44:22 arseniy Exp $
 
 @@measurementtype;
 @@analysistype;
@@ -10,3 +10,4 @@
 @@modtyppartyplink;
 @@mnttypanatypevatyp;
 @@mnttypmeasporttyplink;
+@@measurementporttype;

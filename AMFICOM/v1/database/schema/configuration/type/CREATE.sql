@@ -1,8 +1,7 @@
--- $Id: CREATE.sql,v 1.12 2005/06/15 09:28:25 bass Exp $
+-- $Id: CREATE.sql,v 1.13 2005/08/21 16:44:22 arseniy Exp $
 
 @@equipmenttype;
 @@porttype;
-@@measurementporttype;
 @@linktype;
 @@cablelinktype;
 @@cablethreadtype;

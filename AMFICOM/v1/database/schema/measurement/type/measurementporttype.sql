@@ -1,4 +1,4 @@
--- $Id: measurementporttype.sql,v 1.11 2005/06/15 17:03:09 bass Exp $
+-- $Id: measurementporttype.sql,v 1.1 2005/08/21 16:40:32 arseniy Exp $
 
 CREATE TABLE MeasurementPortType (
  id NUMBER(19),

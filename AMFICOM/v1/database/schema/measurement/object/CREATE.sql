@@ -1,4 +1,4 @@
--- $Id: CREATE.sql,v 1.9 2005/07/11 19:07:42 arseniy Exp $
+-- $Id: CREATE.sql,v 1.10 2005/08/21 16:44:22 arseniy Exp $
 
 @@parameterset;
 @@setmelink;
@@ -16,3 +16,6 @@
 @@modeling;
 @@result;
 @@resultparameter;
+@@kis;
+@@measurementport;
+@@monitoredelement;
