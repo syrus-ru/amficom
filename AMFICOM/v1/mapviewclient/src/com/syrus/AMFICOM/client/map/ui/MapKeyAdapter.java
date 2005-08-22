@@ -1,5 +1,5 @@
 /**
- * $Id: MapKeyAdapter.java,v 1.14 2005/08/19 15:43:32 krupenn Exp $
+ * $Id: MapKeyAdapter.java,v 1.15 2005/08/22 11:36:07 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.map.NodeLink;
  * обработчик событий клавиатуры в окне карты. »спользуетс€ дл€ изменени€ 
  * режима обработки действий (SHIFT, ALT, CTRL) и дл€ удалени€ выбранных 
  * элементов (DEL)
- * @version $Revision: 1.14 $, $Date: 2005/08/19 15:43:32 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/22 11:36:07 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -48,7 +48,8 @@ public final class MapKeyAdapter extends KeyAdapter
 		LogicalNetLayer logicalNetLayer = this.viewer.getLogicalNetLayer();
 		if (ke.isAltDown())
 		{
-			logicalNetLayer.getMapState().setActionMode(MapState.ALT_LINK_ACTION_MODE);
+			if(logicalNetLayer.getMapState().getActionMode() == MapState.NULL_ACTION_MODE)
+				logicalNetLayer.getMapState().setActionMode(MapState.ALT_LINK_ACTION_MODE);
 		}
 
 //		if (ke.isShiftDown() && ke.isControlDown())
@@ -59,11 +60,13 @@ public final class MapKeyAdapter extends KeyAdapter
 //		{
 			if (ke.isShiftDown())
 			{
-				logicalNetLayer.getMapState().setActionMode(MapState.SELECT_ACTION_MODE);
+				if(logicalNetLayer.getMapState().getActionMode() == MapState.NULL_ACTION_MODE)
+					logicalNetLayer.getMapState().setActionMode(MapState.SELECT_ACTION_MODE);
 			}
 			if(ke.isControlDown())
 			{
-				logicalNetLayer.getMapState().setActionMode(MapState.MOVE_ACTION_MODE);
+				if(logicalNetLayer.getMapState().getActionMode() == MapState.NULL_ACTION_MODE)
+					logicalNetLayer.getMapState().setActionMode(MapState.MOVE_ACTION_MODE);
 			}
 //		}
 
@@ -114,7 +117,8 @@ public final class MapKeyAdapter extends KeyAdapter
 	@Override
 	public void keyReleased(KeyEvent ke)
 	{
-		this.viewer.getLogicalNetLayer().getMapState().setActionMode(MapState.NULL_ACTION_MODE);
+		if(this.viewer.getLogicalNetLayer().getMapState().getMouseMode() == MapState.MOUSE_NONE)
+			this.viewer.getLogicalNetLayer().getMapState().setActionMode(MapState.NULL_ACTION_MODE);
 	}
 
 	@Override

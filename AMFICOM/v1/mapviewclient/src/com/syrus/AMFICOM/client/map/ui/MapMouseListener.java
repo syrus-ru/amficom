@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.58 2005/08/19 15:43:32 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.59 2005/08/22 11:36:07 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.58 $, $Date: 2005/08/19 15:43:32 $
+ * @version $Revision: 1.59 $, $Date: 2005/08/22 11:36:07 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -190,7 +190,7 @@ public final class MapMouseListener implements MouseListener
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		mapState.setMouseMode(MapState.MOUSE_NONE);
+//		mapState.setMouseMode(MapState.MOUSE_NONE);
 	}
 
 	private boolean checkDescreteNavigation(Point point) throws MapConnectionException, MapDataException {
@@ -506,10 +506,9 @@ public final class MapMouseListener implements MouseListener
 			}
 
 			logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
-			logicalNetLayer.sendSelectionChangeEvent();
 		}
 		//					mapState.setActionMode(MapState.NULL_ACTION_MODE);
-		this.netMapViewer.repaint(false);
+//		this.netMapViewer.repaint(false);
 	}
 
 	/**
