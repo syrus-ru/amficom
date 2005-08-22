@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.39 2005/08/19 14:45:23 arseniy Exp $
+ * $Id: StorableObjectXML.java,v 1.40 2005/08/22 12:09:15 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.general;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
-import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.List;
@@ -32,8 +31,8 @@ import com.syrus.util.Log;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.39 $, $Date: 2005/08/19 14:45:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/08/22 12:09:15 $
+ * @author $Author: bob $
  * @module general
  */
 public class StorableObjectXML {
@@ -52,23 +51,8 @@ public class StorableObjectXML {
 				RetrieveObjectException {
 		final Map<String, Object> objectMap = this.driver.getObjectMap(identifier);
 		final short entityCode = identifier.getMajor();
-		final T storableObject = this.<T> getStorableObject(identifier, (String) objectMap.get(CLASSNAME));
-		final StorableObjectWrapper<T> wrapper = StorableObjectWrapper.getWrapper(entityCode);
-		storableObject.setAttributes((Date) objectMap.get(StorableObjectWrapper.COLUMN_CREATED),
-				(Date) objectMap.get(StorableObjectWrapper.COLUMN_MODIFIED),
-				(Identifier) objectMap.get(StorableObjectWrapper.COLUMN_CREATOR_ID),
-				(Identifier) objectMap.get(StorableObjectWrapper.COLUMN_MODIFIER_ID),
-				(StorableObjectVersion) objectMap.get(StorableObjectWrapper.COLUMN_VERSION));
-		objectMap.remove(CLASSNAME);
-		objectMap.remove(StorableObjectWrapper.COLUMN_ID);
-		objectMap.remove(StorableObjectWrapper.COLUMN_CREATED);
-		objectMap.remove(StorableObjectWrapper.COLUMN_MODIFIED);
-		objectMap.remove(StorableObjectWrapper.COLUMN_CREATOR_ID);
-		objectMap.remove(StorableObjectWrapper.COLUMN_MODIFIER_ID);
-		objectMap.remove(StorableObjectWrapper.COLUMN_VERSION);
-		for (final String key : objectMap.keySet()) {
-			wrapper.setValue(storableObject, key, objectMap.get(key));
-		}
+		AbstractStorableObjectXML<T> handler = XMLContext.getXMLHandler(entityCode);
+		T storableObject = handler.getStorableObject(objectMap);
 		return storableObject;
 	}
 
@@ -141,69 +125,6 @@ public class StorableObjectXML {
 		objectMap.put(StorableObjectWrapper.COLUMN_VERSION, storableObject.getVersion());
 		this.driver.putObjectMap(storableObject.getId(), objectMap);
 		storableObject.cleanupUpdate();
-	}
-
-	private <T extends StorableObject> T getStorableObject(final Identifier identifier, final String className) throws IllegalDataException {
-		final short entityCode = identifier.getMajor();
-		String clazzName;
-		if (className == null) {
-			clazzName = ObjectGroupEntities.getPackageName(entityCode) + '.' + ObjectEntities.codeToString(entityCode);
-		}
-		else {
-			clazzName = ObjectGroupEntities.getPackageName(entityCode) + '.'
-					+ className.substring(className.lastIndexOf('.') + 1);
-		}
-		try {
-			final Class clazz = Class.forName(clazzName);
-			final Constructor[] constructors = clazz.getDeclaredConstructors();
-			for (int i = 0; i < constructors.length; i++) {
-				Class[] parameterTypes = constructors[i].getParameterTypes();
-				if (parameterTypes.length >= 2 && parameterTypes[0].equals(Identifier.class)
-						&& parameterTypes[1].equals(Identifier.class)) {
-					final Constructor constructor = constructors[i];
-					constructor.setAccessible(true);
-					final Object[] initArgs = new Object[parameterTypes.length];
-					initArgs[0] = identifier;
-					for (int j = 1; j < parameterTypes.length; j++) {
-						if (parameterTypes[j].equals(boolean.class)) {
-							initArgs[j] = Boolean.FALSE;
-						} else if (parameterTypes[j].equals(int.class)) {
-							initArgs[j] = new Integer(0);
-						} else if (parameterTypes[j].equals(short.class)) {
-							initArgs[j] = new Short((short) 0);
-						} else if (parameterTypes[j].equals(long.class)) {
-							initArgs[j] = new Long(0);
-						} else if (parameterTypes[j].equals(double.class)) {
-							initArgs[j] = new Double(0.0);
-						} else if (parameterTypes[j].equals(float.class)) {
-							initArgs[j] = new Float(0.0);
-						} else if (parameterTypes[j].equals(byte.class)) {
-							initArgs[j] = new Byte((byte) 0);
-						} else
-							initArgs[j] = null;
-					}
-					try {
-						return (T) constructor.newInstance(initArgs);
-					} catch (IllegalArgumentException e) {
-						throw new IllegalDataException(
-														"StorableObjectXML.getStorableObject | Caught an IllegalArgumentException");
-					} catch (InstantiationException e) {
-						throw new IllegalDataException(
-														"StorableObjectXML.getStorableObject | Caught an InstantiationException");
-					} catch (IllegalAccessException e) {
-						throw new IllegalDataException(
-														"StorableObjectXML.getStorableObject | Caught an IllegalAccessException");
-					} catch (InvocationTargetException e) {
-						throw new IllegalDataException(
-														"StorableObjectXML.getStorableObject | Caught an InvocationTargetException");
-					}
-				}
-			}
-		} catch (ClassNotFoundException e) {
-			throw new IllegalDataException("StorableObjectXML.getStorableObject | Class " + clazzName
-					+ " not found on the classpath - " + e.getMessage());
-		}
-		throw new IllegalDataException("StorableObjectXML.getStorableObject | there is no constuctor(Identifier, Identifier, ...)");
 	}
 
 	private <T extends StorableObjectCondition> XMLStorableObjectCondition<T> reflectXMLCondition(final StorableObjectCondition condition) {
