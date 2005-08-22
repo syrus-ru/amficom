@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.39 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: MapPropertiesManager.java,v 1.40 2005/08/22 07:49:42 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.39 $, $Date: 2005/08/12 14:49:41 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.40 $, $Date: 2005/08/22 07:49:42 $
  * @module mapviewclient
  */
 public final class MapPropertiesManager 
@@ -89,6 +89,8 @@ public final class MapPropertiesManager
  	protected static final String KEY_TOPO_IMAGE_MAX_TIMEWAIT = "topoImageMaxTimeWait";
  	protected static final String KEY_MOVE_MOUSE_NAVIGATING = "moveMouseNavigating";
 	protected static final String KEY_NAVIGATE_AREA_SIZE = "navigateAreaSize";
+	protected static final String KEY_USE_VIRTUAL_DISK = "useVirtualDisk";
+	protected static final String KEY_VIRTUAL_DISK_PATH = "virtualDiskPath";	
 
  	
 	public static final double DEFAULT_ZOOM = 1.0D;
@@ -103,6 +105,9 @@ public final class MapPropertiesManager
 	private static final String DEFAULT_TOPO_IMAGE_MAX_TIMEWAIT = "30000";
 	private static final String DEFAULT_MOVE_MOUSE_NAVIGATING = "false";
 	private static final String DEFAULT_NAVIGATE_AREA_SIZE = "0.03";
+	private static final String DEFAULT_USE_VIRTUAL_DISK = "true";
+	private static final String DEFAULT_VIRTUAL_DISK_PATH = "";
+	
 
 	/* values read from inifile. */
 	protected static String dataBasePath = "";
@@ -118,6 +123,8 @@ public final class MapPropertiesManager
 	protected static boolean optimizeLinks = false;
 	protected static long topoImageMaxTimeWait = 30000;
 	protected static boolean moveMouseNavigating = true;
+	protected static boolean useVirtualDisk = true;
+	protected static String virtualDiskPath = "";	
 	/**
 	 * Величина габарита области границы (при входе в неё происходит смещение экрана)
 	 * в процентах от габарита окна карты
@@ -345,6 +352,8 @@ public final class MapPropertiesManager
 	 	defaults.put(KEY_TOPO_IMAGE_MAX_TIMEWAIT, DEFAULT_TOPO_IMAGE_MAX_TIMEWAIT);
 	 	defaults.put(KEY_MOVE_MOUSE_NAVIGATING, DEFAULT_MOVE_MOUSE_NAVIGATING);
 		defaults.put(KEY_NAVIGATE_AREA_SIZE, DEFAULT_NAVIGATE_AREA_SIZE);
+		defaults.put(KEY_USE_VIRTUAL_DISK, DEFAULT_USE_VIRTUAL_DISK);
+		defaults.put(KEY_VIRTUAL_DISK_PATH, DEFAULT_VIRTUAL_DISK_PATH);		
 	}
 	
 	static
@@ -470,6 +479,14 @@ public final class MapPropertiesManager
 		return navigateAreaSize;
 	}
 	
+ 	public static boolean isVirtualDiskUsed() {
+		return useTopologicalImageCache;
+	}
+
+ 	public static String getVirtualDiskPath() {
+ 		return virtualDiskPath;
+ 	}
+	
 	/**
 	 * Установить значения из инициализационного файла.
 	 */
@@ -555,6 +572,18 @@ public final class MapPropertiesManager
 			navigateAreaSize = Double.parseDouble(defaults.getProperty(KEY_NAVIGATE_AREA_SIZE));
 		}
 
+		try {
+			useVirtualDisk = Boolean.parseBoolean(properties.getProperty(KEY_USE_VIRTUAL_DISK));
+		} catch (Exception e) {
+			useVirtualDisk = Boolean.parseBoolean(defaults.getProperty(KEY_USE_VIRTUAL_DISK));
+		}
+		
+		try {
+			virtualDiskPath = properties.getProperty(KEY_VIRTUAL_DISK_PATH);
+		} catch (Exception e) {
+			virtualDiskPath = defaults.getProperty(KEY_VIRTUAL_DISK_PATH);
+		}
+		
 		try {
 			textBackground = new Color(Integer.parseInt(properties.getProperty(KEY_TEXT_BACKGROUND)));
 		} catch (Exception e) {
