@@ -1,5 +1,5 @@
 /*
- * $Id: ActionTypeDatabase.java,v 1.15 2005/08/19 15:51:01 arseniy Exp $
+ * $Id: ActionTypeDatabase.java,v 1.16 2005/08/22 15:06:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
-import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/19 15:51:01 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/22 15:06:21 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -48,11 +48,11 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 			return;
 		}
 
-		final Map<Identifier, Map<String, Set<ParameterType>>> dbParameterTypesMap = this.retrieveDBParameterTypesMap(actionTypes);
+		final Map<Identifier, Map<String, EnumSet<ParameterType>>> dbParameterTypesMap = this.retrieveDBParameterTypesMap(actionTypes);
 
 		for (final ActionType actionType : actionTypes) {
 			final Identifier actionTypeId = actionType.getId();
-			Map<String, Set<ParameterType>> parameterTypesModeMap = dbParameterTypesMap.get(actionTypeId);
+			Map<String, EnumSet<ParameterType>> parameterTypesModeMap = dbParameterTypesMap.get(actionTypeId);
 			if (parameterTypesModeMap == null) {
 				parameterTypesModeMap = Collections.emptyMap();
 			}
@@ -61,7 +61,7 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 		}
 	}
 
-	private Map<Identifier, Map<String, Set<ParameterType>>> retrieveDBParameterTypesMap(final Set<T> actionTypes)
+	private Map<Identifier, Map<String, EnumSet<ParameterType>>> retrieveDBParameterTypesMap(final Set<T> actionTypes)
 			throws RetrieveObjectException {
 		final String tableName = this.getParameterTypeLinkTableName();
 		final String actionTypeColumnName = this.getActionTypeColumnName();
@@ -73,7 +73,7 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 				+ SQL_WHERE);
 		sql.append(idsEnumerationString(actionTypes, actionTypeColumnName, true));
 
-		final Map<Identifier, Map<String, Set<ParameterType>>> dbParTypesMap = new HashMap<Identifier, Map<String, Set<ParameterType>>>();
+		final Map<Identifier, Map<String, EnumSet<ParameterType>>> dbParTypesMap = new HashMap<Identifier, Map<String, EnumSet<ParameterType>>>();
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -88,15 +88,15 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 				final ParameterType parameterType = ParameterType.fromInt(resultSet.getInt(StorableObjectWrapper.LINK_COLUMN_PARAMETER_TYPE_CODE));
 				final String parameterMode = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.LINK_COLUMN_PARAMETER_MODE));
 
-				Map<String, Set<ParameterType>> parTypesModeMap = dbParTypesMap.get(actionTypeId);
+				Map<String, EnumSet<ParameterType>> parTypesModeMap = dbParTypesMap.get(actionTypeId);
 				if (parTypesModeMap == null) {
-					parTypesModeMap = new HashMap<String, Set<ParameterType>>();
+					parTypesModeMap = new HashMap<String, EnumSet<ParameterType>>();
 					dbParTypesMap.put(actionTypeId, parTypesModeMap);
 				}
 
-				Set<ParameterType> parameterTypes = parTypesModeMap.get(parameterMode);
+				EnumSet<ParameterType> parameterTypes = parTypesModeMap.get(parameterMode);
 				if (parameterTypes == null) {
-					parameterTypes = new HashSet<ParameterType>();
+					parameterTypes = EnumSet.noneOf(ParameterType.class);
 					parTypesModeMap.put(parameterMode, parameterTypes);
 				}
 
@@ -138,14 +138,14 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 			return;
 		}
 
-		Map<Identifier, Map<String, Set<ParameterType>>> dbParameterTypesMap = null;
+		Map<Identifier, Map<String, EnumSet<ParameterType>>> dbParameterTypesMap = null;
 		try {
 			dbParameterTypesMap = this.retrieveDBParameterTypesMap(actionTypes);
 		} catch (RetrieveObjectException roe) {
 			throw new UpdateObjectException(roe);
 		}
 
-		final Map<Identifier, Map<String, Set<ParameterType>>> parameterTypesMap = new HashMap<Identifier, Map<String, Set<ParameterType>>>(actionTypes.size());
+		final Map<Identifier, Map<String, EnumSet<ParameterType>>> parameterTypesMap = new HashMap<Identifier, Map<String, EnumSet<ParameterType>>>(actionTypes.size());
 		for (final ActionType actionType : actionTypes) {
 			parameterTypesMap.put(actionType.getId(), actionType.getParameterTypesModeMap());
 		}
@@ -153,29 +153,29 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 		this.updateParameterTypes(parameterTypesMap, dbParameterTypesMap);
 	}
 
-	private void updateParameterTypes(final Map<Identifier, Map<String, Set<ParameterType>>> parameterTypesMap,
-			final Map<Identifier, Map<String, Set<ParameterType>>> dbParameterTypesMap) throws UpdateObjectException {
-		final Map<Identifier, Map<String, Set<ParameterType>>> insertParameterTypesMap = new HashMap<Identifier, Map<String, Set<ParameterType>>>();
-		final Map<Identifier, Set<ParameterType>> deleteParameterTypesMap = new HashMap<Identifier, Set<ParameterType>>();
+	private void updateParameterTypes(final Map<Identifier, Map<String, EnumSet<ParameterType>>> parameterTypesMap,
+			final Map<Identifier, Map<String, EnumSet<ParameterType>>> dbParameterTypesMap) throws UpdateObjectException {
+		final Map<Identifier, Map<String, EnumSet<ParameterType>>> insertParameterTypesMap = new HashMap<Identifier, Map<String, EnumSet<ParameterType>>>();
+		final Map<Identifier, EnumSet<ParameterType>> deleteParameterTypesMap = new HashMap<Identifier, EnumSet<ParameterType>>();
 		for (final Identifier actionTypeId : parameterTypesMap.keySet()) {
-			final Map<String, Set<ParameterType>> parameterTypesModeMap = parameterTypesMap.get(actionTypeId);
-			final Map<String, Set<ParameterType>> dbParameterTypesModeMap = dbParameterTypesMap.get(actionTypeId);
+			final Map<String, EnumSet<ParameterType>> parameterTypesModeMap = parameterTypesMap.get(actionTypeId);
+			final Map<String, EnumSet<ParameterType>> dbParameterTypesModeMap = dbParameterTypesMap.get(actionTypeId);
 			if (dbParameterTypesModeMap != null) {
 				for (final String parameterMode : parameterTypesModeMap.keySet()) {
-					final Set<ParameterType> parameterTypes = parameterTypesModeMap.get(parameterMode);
-					final Set<ParameterType> dbParameterTypes = dbParameterTypesModeMap.get(parameterMode);
+					final EnumSet<ParameterType> parameterTypes = parameterTypesModeMap.get(parameterMode);
+					final EnumSet<ParameterType> dbParameterTypes = dbParameterTypesModeMap.get(parameterMode);
 					if (dbParameterTypes != null) {
 						for (final ParameterType parameterType : parameterTypes) {
 							if (!dbParameterTypes.contains(parameterType)) {
 								//Insert parameter type
-								Map<String, Set<ParameterType>> altParameterTypesModeMap = insertParameterTypesMap.get(actionTypeId);
+								Map<String, EnumSet<ParameterType>> altParameterTypesModeMap = insertParameterTypesMap.get(actionTypeId);
 								if (altParameterTypesModeMap == null) {
-									altParameterTypesModeMap = new HashMap<String, Set<ParameterType>>();
+									altParameterTypesModeMap = new HashMap<String, EnumSet<ParameterType>>();
 									insertParameterTypesMap.put(actionTypeId, altParameterTypesModeMap);
 								}
-								Set<ParameterType> altParameterTypes = altParameterTypesModeMap.get(parameterMode);
+								EnumSet<ParameterType> altParameterTypes = altParameterTypesModeMap.get(parameterMode);
 								if (altParameterTypes == null) {
-									altParameterTypes = new HashSet<ParameterType>();
+									altParameterTypes = EnumSet.noneOf(ParameterType.class);
 									altParameterTypesModeMap.put(parameterMode, altParameterTypes);
 								}
 								altParameterTypes.add(parameterType);
@@ -184,9 +184,9 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 						for (final ParameterType parameterType : dbParameterTypes) {
 							if (!parameterTypes.contains(parameterType)) {
 								//Delete if (!parameterTypes.contains(parameterType)) {
-								Set<ParameterType> altParameterTypes = deleteParameterTypesMap.get(actionTypeId);
+								EnumSet<ParameterType> altParameterTypes = deleteParameterTypesMap.get(actionTypeId);
 								if (altParameterTypes == null) {
-									altParameterTypes = new HashSet<ParameterType>();
+									altParameterTypes = EnumSet.noneOf(ParameterType.class);
 									deleteParameterTypesMap.put(actionTypeId, altParameterTypes);
 								}
 								altParameterTypes.add(parameterType);
@@ -195,9 +195,9 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 					}	//if (dbParameterTypes != null)
 					else {
 						//Insert all par types for this mode and this action type id
-						Map<String, Set<ParameterType>> altParameterTypesModeMap = insertParameterTypesMap.get(actionTypeId);
+						Map<String, EnumSet<ParameterType>> altParameterTypesModeMap = insertParameterTypesMap.get(actionTypeId);
 						if (altParameterTypesModeMap == null) {
-							altParameterTypesModeMap = new HashMap<String, Set<ParameterType>>();
+							altParameterTypesModeMap = new HashMap<String, EnumSet<ParameterType>>();
 							insertParameterTypesMap.put(actionTypeId, altParameterTypesModeMap);
 						}
 						altParameterTypesModeMap.put(parameterMode, parameterTypes);
@@ -206,9 +206,9 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 				for (final String parameterMode : dbParameterTypesModeMap.keySet()) {
 					if (!parameterTypesModeMap.containsKey(parameterMode)) {
 						//Delete all par types for this mode and this action type id
-						Set<ParameterType> altParameterTypes = deleteParameterTypesMap.get(actionTypeId);
+						EnumSet<ParameterType> altParameterTypes = deleteParameterTypesMap.get(actionTypeId);
 						if (altParameterTypes == null) {
-							altParameterTypes = new HashSet<ParameterType>();
+							altParameterTypes = EnumSet.noneOf(ParameterType.class);
 							deleteParameterTypesMap.put(actionTypeId, altParameterTypes);
 						}
 						altParameterTypes.addAll(dbParameterTypesModeMap.get(parameterMode));
@@ -217,7 +217,7 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 			}	//if (dbParameterTypesModeMap != null)
 			else {
 				//Insert all par types for this action type id
-				final Map<String, Set<ParameterType>> altParameterTypesModeMap = new HashMap<String, Set<ParameterType>>();
+				final Map<String, EnumSet<ParameterType>> altParameterTypesModeMap = new HashMap<String, EnumSet<ParameterType>>();
 				altParameterTypesModeMap.putAll(parameterTypesModeMap);
 				insertParameterTypesMap.put(actionTypeId, altParameterTypesModeMap);
 			}
@@ -232,7 +232,7 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 		}
 	}
 
-	private void deleteParameterTypes(final Map<Identifier, Set<ParameterType>> parameterTypesMap) {
+	private void deleteParameterTypes(final Map<Identifier, EnumSet<ParameterType>> parameterTypesMap) {
 		if (parameterTypesMap == null || parameterTypesMap.isEmpty()) {
 			return;
 		}
@@ -243,7 +243,7 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
 
 		for (final Identifier actionTypeId : parameterTypesMap.keySet()) {
-			final Set<ParameterType> deleteParameterTypes = parameterTypesMap.get(actionTypeId);
+			final EnumSet<ParameterType> deleteParameterTypes = parameterTypesMap.get(actionTypeId);
 			sql.append(SQL_OR);
 			sql.append(OPEN_BRACKET);
 			sql.append(actionTypeColumnName + EQUALS + DatabaseIdentifier.toSQLString(actionTypeId)
@@ -287,7 +287,7 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 		}
 	}
 
-	private void insertParameterTypes(final Map<Identifier, Map<String, Set<ParameterType>>> parameterTypesMap)
+	private void insertParameterTypes(final Map<Identifier, Map<String, EnumSet<ParameterType>>> parameterTypesMap)
 			throws CreateObjectException {
 		if (parameterTypesMap == null || parameterTypesMap.isEmpty()) {
 			return;
@@ -313,9 +313,9 @@ public abstract class ActionTypeDatabase<T extends ActionType> extends StorableO
 			preparedStatement = connection.prepareStatement(sql);
 
 			for (final Identifier actionTypeId : parameterTypesMap.keySet()) {
-				final Map<String, Set<ParameterType>> parameterTypesModeMap = parameterTypesMap.get(actionTypeId);
+				final Map<String, EnumSet<ParameterType>> parameterTypesModeMap = parameterTypesMap.get(actionTypeId);
 				for (final String parameterMode : parameterTypesModeMap.keySet()) {
-					final Set<ParameterType> insertParameterTypes = parameterTypesModeMap.get(parameterMode);
+					final EnumSet<ParameterType> insertParameterTypes = parameterTypesModeMap.get(parameterMode);
 					for (final ParameterType parameterType : insertParameterTypes) {
 						DatabaseIdentifier.setIdentifier(preparedStatement, 1, actionTypeId);
 						preparedStatement.setInt(2, parameterType.getCode());

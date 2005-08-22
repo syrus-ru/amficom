@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingType.java,v 1.51 2005/08/19 16:33:03 arseniy Exp $
+ * $Id: ModelingType.java,v 1.52 2005/08/22 15:06:21 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -37,7 +38,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingTypeHelper;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/08/19 16:33:03 $
+ * @version $Revision: 1.52 $, $Date: 2005/08/22 15:06:21 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -65,8 +66,8 @@ public final class ModelingType extends ActionType {
 		}
 	}
 
-	private Set<ParameterType> inParameterTypes;
-	private Set<ParameterType> outParameterTypes;
+	private EnumSet<ParameterType> inParameterTypes;
+	private EnumSet<ParameterType> outParameterTypes;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -74,8 +75,8 @@ public final class ModelingType extends ActionType {
 	ModelingType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.inParameterTypes = new HashSet<ParameterType>();
-		this.outParameterTypes = new HashSet<ParameterType>();
+		this.inParameterTypes = EnumSet.noneOf(ParameterType.class);
+		this.outParameterTypes = EnumSet.noneOf(ParameterType.class);
 
 		try {
 			DatabaseContext.getDatabase(ObjectEntities.MODELING_TYPE_CODE).retrieve(this);
@@ -105,8 +106,8 @@ public final class ModelingType extends ActionType {
 			final StorableObjectVersion version,
 			final String codename,
 			final String description,
-			final Set<ParameterType> inParameterTypes,
-			final Set<ParameterType> outParameterTypes) {
+			final EnumSet<ParameterType> inParameterTypes,
+			final EnumSet<ParameterType> outParameterTypes) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -116,10 +117,10 @@ public final class ModelingType extends ActionType {
 				codename,
 				description);
 
-		this.inParameterTypes = new HashSet<ParameterType>();
+		this.inParameterTypes = EnumSet.noneOf(ParameterType.class);
 		this.setInParameterTypes0(inParameterTypes);
 
-		this.outParameterTypes = new HashSet<ParameterType>();
+		this.outParameterTypes = EnumSet.noneOf(ParameterType.class);
 		this.setOutParameterTypes0(outParameterTypes);
 	}
 
@@ -135,8 +136,8 @@ public final class ModelingType extends ActionType {
 	public static ModelingType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
-			final Set<ParameterType> inParameterTypes,
-			final Set<ParameterType> outParameterTypes) throws CreateObjectException {
+			final EnumSet<ParameterType> inParameterTypes,
+			final EnumSet<ParameterType> outParameterTypes) throws CreateObjectException {
 		if (creatorId == null || codename == null || codename.length() == 0 || description == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
 		}
@@ -210,12 +211,12 @@ public final class ModelingType extends ActionType {
 				&& this.outParameterTypes != null && this.outParameterTypes != Collections.EMPTY_SET && !this.outParameterTypes.contains(null);
 	}
 
-	public Set<ParameterType> getInParameterTypes() {
-		return Collections.unmodifiableSet(this.inParameterTypes);
+	public EnumSet<ParameterType> getInParameterTypes() {
+		return this.inParameterTypes.clone();
 	}
 
-	public Set<ParameterType> getOutParameterTypes() {
-		return Collections.unmodifiableSet(this.outParameterTypes);
+	public EnumSet<ParameterType> getOutParameterTypes() {
+		return this.outParameterTypes.clone();
 	}
 
 	/**
@@ -242,7 +243,7 @@ public final class ModelingType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected synchronized void setParameterTypes(final Map<String, Set<ParameterType>> parameterTypesModeMap) {
+	protected synchronized void setParameterTypes(final Map<String, EnumSet<ParameterType>> parameterTypesModeMap) {
 		assert parameterTypesModeMap != null : ErrorMessages.NON_NULL_EXPECTED;
 		this.setInParameterTypes0(parameterTypesModeMap.get(ParameterMode.MODE_IN.stringValue()));
 		this.setOutParameterTypes0(parameterTypesModeMap.get(ParameterMode.MODE_OUT.stringValue()));
@@ -252,8 +253,8 @@ public final class ModelingType extends ActionType {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected Map<String, Set<ParameterType>> getParameterTypesModeMap() {
-		final Map<String, Set<ParameterType>> parameterTypeIdsModeMap = new HashMap<String, Set<ParameterType>>(2);
+	protected Map<String, EnumSet<ParameterType>> getParameterTypesModeMap() {
+		final Map<String, EnumSet<ParameterType>> parameterTypeIdsModeMap = new HashMap<String, EnumSet<ParameterType>>(2);
 		parameterTypeIdsModeMap.put(ParameterMode.MODE_IN.stringValue(), this.inParameterTypes);
 		parameterTypeIdsModeMap.put(ParameterMode.MODE_OUT.stringValue(), this.outParameterTypes);
 		return parameterTypeIdsModeMap;
@@ -262,7 +263,7 @@ public final class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setInParameterTypes0(final Set<ParameterType> inParameterTypes) {
+	protected void setInParameterTypes0(final EnumSet<ParameterType> inParameterTypes) {
 		this.inParameterTypes.clear();
 		if (inParameterTypes != null) {
 			this.inParameterTypes.addAll(inParameterTypes);
@@ -275,7 +276,7 @@ public final class ModelingType extends ActionType {
 	 * @param inParameterTypes
 	 *            The inParameterTypeIds to set.
 	 */
-	public void setInParameterTypes(final Set<ParameterType> inParameterTypes) {
+	public void setInParameterTypes(final EnumSet<ParameterType> inParameterTypes) {
 		this.setInParameterTypes0(inParameterTypes);
 		super.markAsChanged();		
 	}
@@ -283,7 +284,7 @@ public final class ModelingType extends ActionType {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected void setOutParameterTypes0(final Set<ParameterType> outParameterTypes) {
+	protected void setOutParameterTypes0(final EnumSet<ParameterType> outParameterTypes) {
 		this.outParameterTypes.clear();
 		if (outParameterTypes != null) {
 			this.outParameterTypes.addAll(outParameterTypes);
@@ -296,7 +297,7 @@ public final class ModelingType extends ActionType {
 	 * @param outParameterTypes
 	 *            The outParameterTypeIds to set.
 	 */
-	public void setOutParameterTypes(final Set<ParameterType> outParameterTypes) {
+	public void setOutParameterTypes(final EnumSet<ParameterType> outParameterTypes) {
 		this.setOutParameterTypes0(outParameterTypes);
 		super.markAsChanged();
 	}
