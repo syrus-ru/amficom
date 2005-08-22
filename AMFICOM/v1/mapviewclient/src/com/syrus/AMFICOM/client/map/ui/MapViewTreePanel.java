@@ -10,6 +10,8 @@ import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.filter.UI.FilterPanel;
+import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 
@@ -31,9 +33,10 @@ public final class MapViewTreePanel extends JPanel {
 
 		Item root = new IconedNode("root", LangModelGeneral.getString("root"));
 
-		IconedTreeUI treeUI = new IconedTreeUI(root);
+		IconedTreeUI iconedTreeUI = new IconedTreeUI(root);
+		TreeFilterUI flterTreeUI = new TreeFilterUI(iconedTreeUI, new FilterPanel());
 
-		JTree tree = treeUI.getTree();
+		JTree tree = iconedTreeUI.getTree();
 
 		ItemTreeModel treeModel = (ItemTreeModel )tree.getModel();
 		treeModel.setAllwaysSort(false);
@@ -43,7 +46,7 @@ public final class MapViewTreePanel extends JPanel {
 		tree.addTreeSelectionListener(new MapViewTreeEventHandler(tree, this.aContext, model, root));
 		tree.addMouseListener(new MapViewTreeMouseListener(tree, this.aContext));
 
-		this.add(treeUI.getPanel(), BorderLayout.CENTER);
+		this.add(flterTreeUI.getPanel(), BorderLayout.CENTER);
 	}
 
 }
