@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.47 2005/08/22 14:36:42 arseniy Exp $
+ * $Id: EventType.java,v 1.48 2005/08/22 14:47:46 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/08/22 14:36:42 $
+ * @version $Revision: 1.48 $, $Date: 2005/08/22 14:47:46 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -219,8 +219,8 @@ public final class EventType extends StorableObjectType {
 		super.setAttributes(created, modified, creatorId, modifierId, version, codename, description);
 	}
 
-	public Set<ParameterType> getParameterTypes() {
-		return Collections.unmodifiableSet(this.parameterTypes);
+	public EnumSet<ParameterType> getParameterTypes() {
+		return this.parameterTypes.clone();
 	}
 
 	protected void setParameterTypes0(final EnumSet<ParameterType> parameterTypes) {
