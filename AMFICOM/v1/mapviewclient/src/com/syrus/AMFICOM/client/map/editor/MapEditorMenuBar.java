@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMenuBar.java,v 1.23 2005/08/19 12:50:56 krupenn Exp $
+ * $Id: MapEditorMenuBar.java,v 1.24 2005/08/22 11:31:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель меню модуля "Редактор топологических схем".
- * @version $Revision: 1.23 $, $Date: 2005/08/19 12:50:56 $
+ * @version $Revision: 1.24 $, $Date: 2005/08/22 11:31:54 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -71,7 +71,8 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		final JMenuItem menuViewGeneral = new JMenuItem();
 		final JMenuItem menuViewAdditional = new JMenuItem();
 		final JMenuItem menuViewCharacteristics = new JMenuItem();
-		final JMenuItem menuViewSetup = new JMenuItem();
+		final JMenuItem menuViewMapChooser = new JMenuItem();
+		final JMenuItem menuViewMapLayers = new JMenuItem();
 		final JMenuItem menuViewMap = new JMenuItem();
 		final JMenuItem menuViewMapScheme = new JMenuItem();
 		final JMenuItem menuViewAll = new JMenuItem();
@@ -91,9 +92,12 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		menuViewCharacteristics.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS));
 		menuViewCharacteristics.setName(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS);
 		menuViewCharacteristics.addActionListener(super.actionAdapter);
-		menuViewSetup.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
-		menuViewSetup.setName(MapEditorApplicationModel.ITEM_VIEW_CONTROLS);
-		menuViewSetup.addActionListener(super.actionAdapter);
+		menuViewMapChooser.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_MAP_CHOOSER));
+		menuViewMapChooser.setName(MapEditorApplicationModel.ITEM_VIEW_MAP_CHOOSER);
+		menuViewMapChooser.addActionListener(super.actionAdapter);
+		menuViewMapLayers.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS));
+		menuViewMapLayers.setName(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS);
+		menuViewMapLayers.addActionListener(super.actionAdapter);
 		menuViewMap.setText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_MAP));
 		menuViewMap.setName(MapEditorApplicationModel.ITEM_VIEW_MAP);
 		menuViewMap.addActionListener(super.actionAdapter);
@@ -210,7 +214,8 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 		menuView.add(menuViewGeneral);
 		menuView.add(menuViewAdditional);
 		menuView.add(menuViewCharacteristics);
-		menuView.add(menuViewSetup);
+		menuView.add(menuViewMapChooser);
+		menuView.add(menuViewMapLayers);
 		menuView.add(menuViewMap);
 		menuView.add(menuViewMapScheme);
 		menuView.addSeparator();
@@ -288,8 +293,11 @@ public class MapEditorMenuBar extends AbstractMainMenuBar {
 				menuViewCharacteristics.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS));
 				menuViewCharacteristics.setEnabled(MapEditorMenuBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS));
 		
-				menuViewSetup.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
-				menuViewSetup.setEnabled(MapEditorMenuBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
+				menuViewMapChooser.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_MAP_CHOOSER));
+				menuViewMapChooser.setEnabled(MapEditorMenuBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP_CHOOSER));
+		
+				menuViewMapLayers.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS));
+				menuViewMapLayers.setEnabled(MapEditorMenuBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS));
 		
 				menuViewMap.setVisible(MapEditorMenuBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_MAP));
 				menuViewMap.setEnabled(MapEditorMenuBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP));

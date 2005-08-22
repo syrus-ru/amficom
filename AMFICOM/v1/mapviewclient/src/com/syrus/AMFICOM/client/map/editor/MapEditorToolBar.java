@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.18 2005/08/18 14:14:20 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.19 2005/08/22 11:31:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 /**
  * Панель инструментов модуля "Редактор топологических схем". 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/08/18 14:14:20 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/22 11:31:54 $
  * @module mapviewclient
  */
 public class MapEditorToolBar extends AbstractMainToolBar {
@@ -89,7 +89,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 	/**
 	 * <img src="images/mapsetup.gif">.
 	 */
-	JButton menuViewSetup = new JButton();
+	JButton menuViewMapLayers = new JButton();
 
 	public static final int IMG_SIZE = 16;
 	public static final int BTN_SIZE = 24;
@@ -192,13 +192,13 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapViewRemoveScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME);
 		this.menuMapViewRemoveScheme.addActionListener(super.actionListener);
 
-		this.menuViewSetup.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/mapsetup.gif").
+		this.menuViewMapLayers.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/map_layers.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
-		this.menuViewSetup.setMaximumSize(buttonSize);
-		this.menuViewSetup.setPreferredSize(buttonSize);
-		this.menuViewSetup.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
-		this.menuViewSetup.setName(MapEditorApplicationModel.ITEM_VIEW_CONTROLS);
-		this.menuViewSetup.addActionListener(super.actionListener);
+		this.menuViewMapLayers.setMaximumSize(buttonSize);
+		this.menuViewMapLayers.setPreferredSize(buttonSize);
+		this.menuViewMapLayers.setToolTipText(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS));
+		this.menuViewMapLayers.setName(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS);
+		this.menuViewMapLayers.addActionListener(super.actionListener);
 
 		add(this.menuMapNew);
 		add(this.menuMapOpen);
@@ -216,7 +216,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		add(this.menuMapViewAddScheme);
 		add(this.menuMapViewRemoveScheme);
 		addSeparator();
-		add(this.menuViewSetup);
+		add(this.menuViewMapLayers);
 		addSeparator();
 
 		this.addApplicationModelListener(new ApplicationModelListener() {
@@ -254,8 +254,8 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 				MapEditorToolBar.this.menuMapViewRemoveScheme.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
 				MapEditorToolBar.this.menuMapViewRemoveScheme.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME));
 		
-				MapEditorToolBar.this.menuViewSetup.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
-				MapEditorToolBar.this.menuViewSetup.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
+				MapEditorToolBar.this.menuViewMapLayers.setVisible(MapEditorToolBar.this.applicationModel.isVisible(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS));
+				MapEditorToolBar.this.menuViewMapLayers.setEnabled(MapEditorToolBar.this.applicationModel.isEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS));
 			}
 		});
 	}

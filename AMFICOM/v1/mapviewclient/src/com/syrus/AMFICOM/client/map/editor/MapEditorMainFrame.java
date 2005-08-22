@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.51 2005/08/19 12:51:41 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.52 2005/08/22 11:31:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,8 @@ import com.syrus.AMFICOM.client.map.command.editor.ViewAdditionalPropertiesComma
 import com.syrus.AMFICOM.client.map.command.editor.ViewCharacteristicsCommand;
 import com.syrus.AMFICOM.client.map.command.editor.ViewGeneralPropertiesCommand;
 import com.syrus.AMFICOM.client.map.command.editor.ViewMapAllCommand;
-import com.syrus.AMFICOM.client.map.command.editor.ViewMapControlsCommand;
+import com.syrus.AMFICOM.client.map.command.editor.ViewMapChooserCommand;
+import com.syrus.AMFICOM.client.map.command.editor.ViewMapLayersCommand;
 import com.syrus.AMFICOM.client.map.command.editor.ViewMapViewNavigatorCommand;
 import com.syrus.AMFICOM.client.map.command.editor.ViewMapWindowCommand;
 import com.syrus.AMFICOM.client.map.command.map.CreateMapReportCommand;
@@ -81,7 +82,7 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
  * 
  * 
  * 
- * @version $Revision: 1.51 $, $Date: 2005/08/19 12:51:41 $
+ * @version $Revision: 1.52 $, $Date: 2005/08/22 11:31:54 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -268,8 +269,12 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				new ViewCharacteristicsCommand(
 						this.desktopPane, 
 						this.aContext));
-		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_CONTROLS, 
-				new ViewMapControlsCommand(
+		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_MAP_CHOOSER, 
+				new ViewMapChooserCommand(
+						this.desktopPane, 
+						this.aContext));
+		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS, 
+				new ViewMapLayersCommand(
 						this.desktopPane, 
 						this.aContext));
 		aModel.setCommand(MapEditorApplicationModel.ITEM_VIEW_MAP, 
@@ -462,7 +467,8 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_GENERAL, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_ADDITIONAL, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS, true);
-		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_CONTROLS, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP_CHOOSER, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_ALL, true);
