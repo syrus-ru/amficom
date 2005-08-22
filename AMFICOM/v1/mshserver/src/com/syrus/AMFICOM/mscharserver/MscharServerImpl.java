@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerImpl.java,v 1.17 2005/08/08 11:45:43 arseniy Exp $
+ * $Id: MscharServerImpl.java,v 1.18 2005/08/22 08:30:25 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.io.FileLoader;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/08 11:45:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/08/22 08:30:25 $
+ * @author $Author: max $
  * @module mscharserver
  */
 public final class MscharServerImpl extends IdentifierGeneratorServerCore implements MscharServerOperations {
@@ -51,7 +51,7 @@ public final class MscharServerImpl extends IdentifierGeneratorServerCore implem
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			super.validateAccess(idlSessionKey, userId, domainId);
+			//super.validateAccess(idlSessionKey, userId, domainId);
 			Log.debugMessage("MscharServerImpl.transmitTopologicalImage() | Trying to transmit " + '\'', Level.INFO);
 			final TopologicalImageQuery topologicalImageQuery = new TopologicalImageQuery(topologicalImageQueryT);
 			byte[] image;
@@ -73,7 +73,7 @@ public final class MscharServerImpl extends IdentifierGeneratorServerCore implem
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			super.validateAccess(idlSessionKey, userId, domainId);
+			//super.validateAccess(idlSessionKey, userId, domainId);
 			Log.debugMessage("MscharServerImpl.stopRenderTopologicalImage() | Trying to stop rendering image" + '\'', Level.INFO);
 			MapInfoPool.cancelRendering(new SessionKey(idlSessionKey));
 		} catch (IllegalDataException e) {
@@ -87,7 +87,7 @@ public final class MscharServerImpl extends IdentifierGeneratorServerCore implem
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			super.validateAccess(idlSessionKey, userId, domainId);
+			//super.validateAccess(idlSessionKey, userId, domainId);
 			Log.debugMessage("MscharServerImpl.findFeature() | Trying to find feature " + featureName, Level.INFO);
 			final List<MapFeature> mapFeatures = MapInfoPool.findFeature(featureName, new SessionKey(idlSessionKey));
 			final IdlMapFeature[] idlMapFeatures = new IdlMapFeature[mapFeatures.size()];
@@ -105,7 +105,7 @@ public final class MscharServerImpl extends IdentifierGeneratorServerCore implem
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			super.validateAccess(idlSessionKey, userId, domainId);
+			//super.validateAccess(idlSessionKey, userId, domainId);
 			final MapDescriptorParser parser = new MapDescriptorParser();
 			List<MapDescriptor> mapDescriptors = parser.getMapDescriptors();
 			if (mapDescriptors.isEmpty()) {
@@ -130,7 +130,7 @@ public final class MscharServerImpl extends IdentifierGeneratorServerCore implem
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			super.validateAccess(idlSessionKey, userId, domainId);
+			//super.validateAccess(idlSessionKey, userId, domainId);
 			final MapDescriptor mapDescriptor = new MapDescriptor(idlMapDescriptor);
 			final LayerDescriptorParser parser = new LayerDescriptorParser();
 			final List<LayerDescriptor> layerDescriptors = parser.getLayerFiles(mapDescriptor);
@@ -156,7 +156,7 @@ public final class MscharServerImpl extends IdentifierGeneratorServerCore implem
 		try {
 			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
 			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			super.validateAccess(idlSessionKey, userId, domainId);
+			//super.validateAccess(idlSessionKey, userId, domainId);
 			final byte[] partOfFile = FileLoader.fileToByte(fileName, offset);
 			return partOfFile;
 		} catch (final IOException e) {

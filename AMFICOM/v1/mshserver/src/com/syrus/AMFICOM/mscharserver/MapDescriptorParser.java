@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDescriptorParser.java,v 1.2 2005/08/01 13:32:33 arseniy Exp $
+ * $Id: MapDescriptorParser.java,v 1.3 2005/08/22 08:30:25 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 package com.syrus.AMFICOM.mscharserver;
 
 import java.io.File;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
@@ -23,8 +22,8 @@ import com.syrus.util.Log;
 
 /**
  * @author max
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/08/01 13:32:33 $
+ * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/08/22 08:30:25 $
  * @module mshserver_v1
  */
 
@@ -44,9 +43,8 @@ public class MapDescriptorParser {
 			Log.errorException(e);
 			return mapDescriptors;
 		}
-		final List mapNodeList = document.selectNodes("//map");
-		for (final Iterator it = mapNodeList.iterator(); it.hasNext();) {
-			final Node node = (Node) it.next();
+		final List<Node> mapNodeList = document.selectNodes("//map");
+		for (Node node : mapNodeList) {
 			final Node nameNode = node.selectSingleNode("name");
 			final Node mdfNode = node.selectSingleNode("mdf");
 			if (nameNode == null || mdfNode == null) {
