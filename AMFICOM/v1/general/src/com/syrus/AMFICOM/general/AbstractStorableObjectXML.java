@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractStorableObjectXML.java,v 1.1 2005/08/22 12:08:27 bob Exp $
+* $Id: AbstractStorableObjectXML.java,v 1.2 2005/08/22 13:54:40 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/22 12:08:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/22 13:54:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general
@@ -58,6 +58,11 @@ public abstract class AbstractStorableObjectXML<T extends StorableObject> {
 	protected final Long getLong(final Map<String, Object> objectMap, 
 	                                   final String key) {
 		return (Long) objectMap.get(key);
+	}
+	
+	protected final Short getShort(final Map<String, Object> objectMap, 
+	                                 final String key) {
+		return (Short) objectMap.get(key);
 	}
 	
 	protected final String getString(final Map<String, Object> objectMap, 
