@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.27 2005/08/20 19:58:10 arseniy Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.28 2005/08/22 15:15:27 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.client_.scheme;
 
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -72,7 +73,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/08/20 19:58:10 $
+ * @version $Revision: 1.28 $, $Date: 2005/08/22 15:15:27 $
  * @module schemeclient
  */
 
@@ -95,7 +96,12 @@ public class SchemeObjectsFactory {
 	
 	public static MeasurementType createMeasurementType(String codename) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		MeasurementType type = MeasurementType.createInstance(userId, codename, EMPTY, Collections.<ParameterType>emptySet(), Collections.<ParameterType>emptySet(), Collections.<Identifier>emptySet());
+		MeasurementType type = MeasurementType.createInstance(userId,
+				codename,
+				EMPTY,
+				EnumSet.noneOf(ParameterType.class),
+				EnumSet.noneOf(ParameterType.class),
+				Collections.<Identifier> emptySet());
 		return type;
 	}
 
