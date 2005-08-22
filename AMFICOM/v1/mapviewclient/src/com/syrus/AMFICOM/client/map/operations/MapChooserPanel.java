@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.12 2005/08/22 07:49:12 peskovsky Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.13 2005/08/22 11:34:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,15 +32,15 @@ import com.syrus.util.Log;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.12 $, $Date: 2005/08/22 07:49:12 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.13 $, $Date: 2005/08/22 11:34:40 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapChooserPanel extends JPanel
 {
 	GridBagLayout gridBagLayout1 = new GridBagLayout();
 
-	JButton selectButton = new JButton();
+//	JButton selectButton = new JButton();
 
 	/**
 	 * список возможных видов карты
@@ -66,14 +66,14 @@ public class MapChooserPanel extends JPanel
 		this.setToolTipText(LangModelMap.getString("ChooseMap"));
 		this.setLayout(this.gridBagLayout1);
 		this.setSize(new Dimension(370, 629));
-		this.selectButton.setText(LangModelGeneral.getString("Button.OK"));
-		this.selectButton.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
-					mapSelected();
-				}
-			});
+//		this.selectButton.setText(LangModelGeneral.getString("Button.OK"));
+//		this.selectButton.addActionListener(new ActionListener()
+//			{
+//				public void actionPerformed(ActionEvent e)
+//				{
+//					mapSelected();
+//				}
+//			});
 		GridBagConstraints constraints = new GridBagConstraints();
 
 		constraints.gridx = 0;
@@ -89,18 +89,18 @@ public class MapChooserPanel extends JPanel
 		constraints.ipady = 0;
 		this.add(this.combo, constraints);
 
-		constraints.gridx = 0;
-		constraints.gridy = 1;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.weightx = 0.0;
-		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.CENTER;
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = new Insets(5, 5, 5, 5);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.add(this.selectButton, constraints);
+//		constraints.gridx = 0;
+//		constraints.gridy = 1;
+//		constraints.gridwidth = 1;
+//		constraints.gridheight = 1;
+//		constraints.weightx = 0.0;
+//		constraints.weighty = 0.0;
+//		constraints.anchor = GridBagConstraints.CENTER;
+//		constraints.fill = GridBagConstraints.NONE;
+//		constraints.insets = new Insets(5, 5, 5, 5);
+//		constraints.ipadx = 0;
+//		constraints.ipady = 0;
+//		this.add(this.selectButton, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 2;
@@ -114,25 +114,6 @@ public class MapChooserPanel extends JPanel
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.add(Box.createVerticalGlue(), constraints);
-	}
-
-	/**
-	 * обработка выбора нового вида карты
-	 * смена вида осуществляется в отдельном thread'е
-	 */
-	void mapSelected()
-	{
-		if(this.mapFrame == null)
-			return;
-		
-		Thread t = new Thread(new Runnable() 
-		{
-			public void run() 
-			{
-				changeMap();
-			}
-		});
-		t.start();
 	}
 
 	/**
@@ -175,6 +156,25 @@ public class MapChooserPanel extends JPanel
 	public MapFrame getMapFrame() 
 	{
 		return this.mapFrame;
+	}
+
+	/**
+	 * обработка выбора нового вида карты
+	 * смена вида осуществляется в отдельном thread'е
+	 */
+	public void mapSelected()
+	{
+		if(this.mapFrame == null)
+			return;
+		
+		Thread t = new Thread(new Runnable() 
+		{
+			public void run() 
+			{
+				changeMap();
+			}
+		});
+		t.start();
 	}
 
 	void changeMap() 
