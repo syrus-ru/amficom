@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.66 2005/08/18 14:17:30 krupenn Exp $
+ * $Id: MapFrame.java,v 1.67 2005/08/22 12:35:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.client.map.MapImageRendererFactory;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
+import com.syrus.AMFICOM.client.map.command.editor.ViewMapChooserCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.CenterSelectionCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.HandPanCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.MapModeCommand;
@@ -77,7 +78,7 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @version $Revision: 1.66 $, $Date: 2005/08/18 14:17:30 $
+ * @version $Revision: 1.67 $, $Date: 2005/08/22 12:35:39 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -131,7 +132,17 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 		this.mapConnection.setPath(MapPropertiesManager.getDataBasePath());
 		this.mapConnection.setView(MapPropertiesManager.getDataBaseView());
 		this.mapConnection.setURL(MapPropertiesManager.getDataBaseURL());
-		this.mapConnection.connect();
+			try {
+				this.mapConnection.connect();
+			} catch(MapConnectionException e) {
+				int result = ViewMapChooserCommand.chooseMap(this.mapConnection);
+				if(result == JOptionPane.OK_OPTION) {
+					this.mapConnection.connect();
+				}
+				else {
+					throw e;
+				}
+			}
 
 		final MapImageLoader loader = this.mapConnection.createImageLoader();
 		final MapContext mapContext = this.mapConnection.createMapContext();
