@@ -10,7 +10,7 @@ SERVERCP=$(LIB)\util.jar;$(LIB)\general.jar;$(LIB)\event.jar;$(LIB)\admin.jar;$(
 CLIENTSERVERCP=$(LIB)\leserver_interface.jar;$(LIB)\cmserver_interface.jar;$(LIB)\mscharserver_interface.jar;$(LIB)\csbridge.jar
 CLIENTCP=$(LIB)\filterclient.jar;$(LIB)\commonclient.jar;$(LIB)\generalclient.jar;$(LIB)\dadara.jar;$(LIB)\schemeclient.jar;$(LIB)\mapclient.jar;$(LIB)\mapviewclient.jar;$(LIB)\mapperservlet.jar
 
-CLASSPATH=$(SERVERCP);$(CLIENTSERVERCP);$(CLIENTCP);$(LAYOUTCP);$(MAPINFOCP);$(SERVLETCP)
+CLASSPATH=$(SERVERCP);$(CLIENTSERVERCP);$(CLIENTCP);$(LAYOUTCP);$(MAPINFOCP);$(SERVLETCP);$(DOM4JCP)
 
 .PHONY:	$(TARGET)
 

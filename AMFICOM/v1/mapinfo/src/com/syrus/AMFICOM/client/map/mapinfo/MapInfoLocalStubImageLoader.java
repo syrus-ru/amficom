@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.8 2005/08/22 15:13:37 krupenn Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.9 2005/08/22 15:16:47 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/08/22 15:13:37 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/22 15:16:47 $
  * @module mapinfo
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectionListener {
@@ -52,8 +52,12 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 		}
 	}
 
-	public void mapConnectionChanged() {
-		
+	public void mapConnectionChanged() throws MapConnectionException {
+		try {
+			this.renderer.setMapDefinition(this.connection.getPath());
+		} catch (IOException e) {
+			throw new MapConnectionException("Failed initializing MapJLocalRenderer");
+		}
 	}
 
 	/*
