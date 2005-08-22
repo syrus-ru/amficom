@@ -1,5 +1,5 @@
 /*
- * $Id: ViewMapChooserCommand.java,v 1.2 2005/08/22 12:35:04 krupenn Exp $
+ * $Id: ViewMapChooserCommand.java,v 1.3 2005/08/22 15:12:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapSaveAsCommand;
@@ -30,7 +31,7 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.2 $, $Date: 2005/08/22 12:35:04 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/22 15:12:15 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand
@@ -69,6 +70,9 @@ public class ViewMapChooserCommand extends AbstractCommand {
 		
 		if (result == JOptionPane.OK_OPTION) {
 			mapChooserPanel.mapSelected();
+			this.mapFrame.getMapViewer().getLogicalNetLayer()
+					.getContext().getDispatcher().firePropertyChange(
+							new MapEvent(this, MapEvent.NEED_FULL_REPAINT));
 		}		
 		setResult(Command.RESULT_OK);
 	}
@@ -85,7 +89,7 @@ public class ViewMapChooserCommand extends AbstractCommand {
 		int result = JOptionPane.showOptionDialog(
 				Environment.getActiveWindow(), 
 				mapChooserPanel,
-				LangModelGeneral.getString("select map view"),
+				LangModelGeneral.getString("chooseMap"),
 				JOptionPane.OK_CANCEL_OPTION, 
 				JOptionPane.PLAIN_MESSAGE, 
 				null,
