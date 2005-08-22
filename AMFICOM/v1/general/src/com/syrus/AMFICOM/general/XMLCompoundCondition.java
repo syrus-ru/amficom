@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLCompoundCondition.java,v 1.2 2005/08/22 12:08:50 bob Exp $
+* $Id: XMLCompoundCondition.java,v 1.3 2005/08/22 13:55:08 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,12 +20,15 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/22 12:08:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/22 13:55:08 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general
  */
 public class XMLCompoundCondition extends XMLStorableObjectCondition<CompoundCondition> {
+	
+	private static final String	COMPOUND_CONDITION_INIT			= 
+		"XMLCompoundCondition.reflectXMLCondition() | ";
 	
 	@SuppressWarnings("unused")
 	private XMLCompoundCondition(final CompoundCondition condition,
@@ -77,33 +80,38 @@ public class XMLCompoundCondition extends XMLStorableObjectCondition<CompoundCon
 	
 	private XMLStorableObjectCondition reflectXMLCondition(final StorableObjectCondition soCondition) {
 		XMLStorableObjectCondition xmlStorableObjectCondition = null;
-		Class< ? extends StorableObjectCondition> clazz1 = soCondition.getClass();
-		final String className = clazz1.isAnonymousClass() ?
-				clazz1.getSuperclass().getName() : 
-				clazz1.getName();		
+		Class soConditionClazz = soCondition.getClass();
+		if (soConditionClazz.isAnonymousClass()) {
+			soConditionClazz = soConditionClazz.getSuperclass();
+		}
+		final String className = soConditionClazz.getName();		
 		final int lastPoint = className.lastIndexOf('.');
 		final String xmlClassName = className.substring(0, lastPoint + 1) 
 			+ "XML" 
 			+ className.substring(lastPoint + 1);
 		try {
-			Log.debugMessage("XMLCompoundCondition.reflectXMLCondition | try reflect " + xmlClassName,
-				Level.FINEST);
 			final Class clazz = Class.forName(xmlClassName);
 			final Constructor constructor = 
 				clazz.getDeclaredConstructor(
 					new Class[] {
-							soCondition.getClass(),
+							soConditionClazz,
 							StorableObjectXMLDriver.class});
 			constructor.setAccessible(true);
 			xmlStorableObjectCondition = 
 				(XMLStorableObjectCondition) constructor.newInstance(
 					new Object[] {soCondition, this.driver});
 		} catch (ClassNotFoundException e) {
+			Log.debugMessage(COMPOUND_CONDITION_INIT + "Class " + className
+				+ " not found on the classpath"
+			, Level.WARNING);
 			Log.errorException(e);
 		} catch (SecurityException e) {
 			Log.errorException(e);
 		} catch (NoSuchMethodException e) {
 			Log.errorException(e);
+			Log.debugMessage(COMPOUND_CONDITION_INIT + "class "
+				+ className + " doesn't have the constructor expected"
+			, Level.WARNING);
 		} catch (IllegalArgumentException e) {
 			Log.errorException(e);
 		} catch (InstantiationException e) {
