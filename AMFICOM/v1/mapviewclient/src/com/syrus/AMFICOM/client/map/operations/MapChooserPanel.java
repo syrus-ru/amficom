@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.13 2005/08/22 11:34:40 krupenn Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.14 2005/08/22 12:34:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.13 $, $Date: 2005/08/22 11:34:40 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/22 12:34:38 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -50,15 +50,15 @@ public class MapChooserPanel extends JPanel
 	/**
 	 * окно карты
 	 */
-	private MapFrame mapFrame;
+	private MapConnection connection;
 	
 	/**
 	 * По умолчанию
 	 */
-	public MapChooserPanel(MapFrame mapFrame)
+	public MapChooserPanel(MapConnection connection)
 	{
 		jbInit();
-		setMapFrame(mapFrame);
+		setMapConnection(connection);
 	}
 
 	private void jbInit()
@@ -121,13 +121,13 @@ public class MapChooserPanel extends JPanel
 	 */
 	public synchronized void refreshMapList() {
 		this.combo.removeAllItems();
-		if (this.mapFrame == null) {
+		if (this.connection == null) {
 			return;
 		}
 
 		List<String> availableViews;
 		try {
-			availableViews = this.mapFrame.getMapConnection().getAvailableViews();
+			availableViews = this.connection.getAvailableViews();
 		} catch(MapDataException e) {
 			Log.debugMessage("Cannot get views: " + e.getMessage(), Level.SEVERE);
 			Log.debugException(e, Level.SEVERE);
@@ -137,7 +137,7 @@ public class MapChooserPanel extends JPanel
 		for (final String view : availableViews) {
 			this.combo.addItem(view);
 		}
-		final String currentMap = this.mapFrame.getMapConnection().getView();
+		final String currentMap = this.connection.getView();
 		if (null == currentMap) {
 			if (this.combo.getModel().getSize() != 0) {
 				this.combo.setSelectedIndex(0);
@@ -147,15 +147,10 @@ public class MapChooserPanel extends JPanel
 			this.combo.setSelectedItem(currentMap);
 	}
 	
-	public void setMapFrame(MapFrame mmf) 
+	public void setMapConnection(MapConnection connection) 
 	{
-		this.mapFrame = mmf;
+		this.connection = connection;
 		refreshMapList();
-	}
-
-	public MapFrame getMapFrame() 
-	{
-		return this.mapFrame;
 	}
 
 	/**
@@ -164,7 +159,7 @@ public class MapChooserPanel extends JPanel
 	 */
 	public void mapSelected()
 	{
-		if(this.mapFrame == null)
+		if(this.connection == null)
 			return;
 		
 		Thread t = new Thread(new Runnable() 
@@ -179,19 +174,18 @@ public class MapChooserPanel extends JPanel
 
 	void changeMap() 
 	{
-		MapConnection connection = this.mapFrame.getMapConnection(); 
 		String name = (String )this.combo.getSelectedItem();
-		String previousView = connection.getView(); 
+		String previousView = this.connection.getView(); 
 		try
 		{
-			connection.setView(name);
-			connection.connect();
+			this.connection.setView(name);
+			this.connection.connect();
 		}
 		catch(MapConnectionException e)
 		{
 			Log.debugMessage("Cannot change view: " + e.getMessage(), Level.SEVERE);
 			Log.debugException(e, Level.SEVERE);
-			connection.setView(previousView);
+			this.connection.setView(previousView);
 		}
 	}
 }
