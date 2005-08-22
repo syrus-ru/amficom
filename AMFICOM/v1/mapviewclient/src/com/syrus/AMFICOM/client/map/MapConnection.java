@@ -1,5 +1,5 @@
 /**
- * $Id: MapConnection.java,v 1.12 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: MapConnection.java,v 1.13 2005/08/22 15:11:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,17 +7,21 @@
  */
 package com.syrus.AMFICOM.client.map;
 
+import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/11 12:43:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/08/22 15:11:04 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public abstract class MapConnection {
+	
+	protected List<MapConnectionListener> listeners = new LinkedList<MapConnectionListener>();
+
 	public abstract boolean connect() throws MapConnectionException;
 
 	public abstract boolean release() throws MapConnectionException;
@@ -53,6 +57,22 @@ public abstract class MapConnection {
 	 */
 	public abstract List<String> getAvailableViews() throws MapDataException;
 
+	public void addMapConnectionListener(MapConnectionListener listener) {
+		this.listeners.add(listener);
+	}
+	
+	public void removeMapConnectionListener(MapConnectionListener listener) {
+		this.listeners.remove(listener);
+	}
+	
+	protected void fireMapConnectionChanged() throws MapConnectionException {
+		synchronized(this.listeners) {
+			for(MapConnectionListener listener : this.listeners) {
+				listener.mapConnectionChanged();
+			}
+		}
+	}
+	
 	public static MapConnection create(final String connectionClass) throws MapConnectionException {
 		Log.debugMessage("method call MapConnection.create()", Level.FINER);
 
