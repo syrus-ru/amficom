@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLCompoundCondition.java,v 1.1 2005/08/19 14:02:46 bob Exp $
+* $Id: XMLCompoundCondition.java,v 1.2 2005/08/22 12:08:50 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,13 +13,14 @@ import java.lang.reflect.InvocationTargetException;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
+import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/19 14:02:46 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/22 12:08:50 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general
@@ -76,13 +77,18 @@ public class XMLCompoundCondition extends XMLStorableObjectCondition<CompoundCon
 	
 	private XMLStorableObjectCondition reflectXMLCondition(final StorableObjectCondition soCondition) {
 		XMLStorableObjectCondition xmlStorableObjectCondition = null;
-		final String className = soCondition.getClass().getName();
+		Class< ? extends StorableObjectCondition> clazz1 = soCondition.getClass();
+		final String className = clazz1.isAnonymousClass() ?
+				clazz1.getSuperclass().getName() : 
+				clazz1.getName();		
 		final int lastPoint = className.lastIndexOf('.');
-		final String dbClassName = className.substring(0, lastPoint + 1) 
+		final String xmlClassName = className.substring(0, lastPoint + 1) 
 			+ "XML" 
 			+ className.substring(lastPoint + 1);
 		try {
-			final Class clazz = Class.forName(dbClassName);
+			Log.debugMessage("XMLCompoundCondition.reflectXMLCondition | try reflect " + xmlClassName,
+				Level.FINEST);
+			final Class clazz = Class.forName(xmlClassName);
 			final Constructor constructor = 
 				clazz.getDeclaredConstructor(
 					new Class[] {
