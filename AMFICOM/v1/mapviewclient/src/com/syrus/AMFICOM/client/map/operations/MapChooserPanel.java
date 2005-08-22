@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.11 2005/08/12 14:52:33 arseniy Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.12 2005/08/22 07:49:12 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,6 +22,7 @@ import javax.swing.JButton;
 import javax.swing.JComboBox;
 import javax.swing.JPanel;
 
+import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
@@ -31,8 +32,8 @@ import com.syrus.util.Log;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.11 $, $Date: 2005/08/12 14:52:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/08/22 07:49:12 $
+ * @author $Author: peskovsky $
  * @module mapviewclient
  */
 public class MapChooserPanel extends JPanel
@@ -178,19 +179,19 @@ public class MapChooserPanel extends JPanel
 
 	void changeMap() 
 	{
+		MapConnection connection = this.mapFrame.getMapConnection(); 
 		String name = (String )this.combo.getSelectedItem();
-		String previousView = this.mapFrame.getMapConnection().getView(); 
+		String previousView = connection.getView(); 
 		try
 		{
-			this.mapFrame.getMapConnection().setView(name);
-			this.mapFrame.getMapConnection().connect();
+			connection.setView(name);
+			connection.connect();
 		}
 		catch(MapConnectionException e)
 		{
 			Log.debugMessage("Cannot change view: " + e.getMessage(), Level.SEVERE);
 			Log.debugException(e, Level.SEVERE);
-			e.printStackTrace();
-			this.mapFrame.getMapConnection().setView(previousView);
+			connection.setView(previousView);
 		}
 	}
 }
