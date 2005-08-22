@@ -1,5 +1,5 @@
 /*-
- * $Id: MapPropertiesEventHandler.java,v 1.2 2005/08/19 12:49:54 krupenn Exp $
+ * $Id: MapPropertiesEventHandler.java,v 1.3 2005/08/22 15:55:01 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/08/19 12:49:54 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/22 15:55:01 $
  * @module schemeclient
  */
 
@@ -161,7 +161,7 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 			}
 		}
 		long f = System.currentTimeMillis();
-		Log.debugMessage(this.getClass().getName() + "::propertyChange(" + pce.getPropertyName() + ") -------- " + (f - d0) + " ms --------- " + mesg2, Level.INFO);
+//		Log.debugMessage(this.getClass().getName() + "::propertyChange(" + pce.getPropertyName() + ") -------- " + (f - d0) + " ms --------- " + mesg2, Level.INFO);
 	}
 
 	public void stateChanged(ChangeEvent e) {

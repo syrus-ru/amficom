@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeEventHandler.java,v 1.2 2005/08/19 15:43:32 krupenn Exp $
+ * $Id: MapViewTreeEventHandler.java,v 1.3 2005/08/22 15:55:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -195,7 +195,7 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 
 		this.performProcessing = true;
 		long f = System.currentTimeMillis();
-		Log.debugMessage("MapViewTreePanel::propertyChange(" + pce.getPropertyName() + ") -------- " + (f - d) + " ms ---------", Level.INFO);
+//		Log.debugMessage("MapViewTreePanel::propertyChange(" + pce.getPropertyName() + ") -------- " + (f - d) + " ms ---------", Level.INFO);
 	}
 
 	public void updateTree(MapView mapView) {
