@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDescriptor.java,v 1.2 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: MapDescriptor.java,v 1.3 2005/08/22 06:20:29 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,12 +11,12 @@ import com.syrus.AMFICOM.map.corba.IdlMapDescriptor;
 
 /**
  * @author max
- * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/08/08 11:35:11 $
+ * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/08/22 06:20:29 $
  * @module map
  */
 
-public class MapDescriptor {
+public class MapDescriptor implements MapFileDescriptor {
 	
 	private String mapName;
 	private String fileName;
