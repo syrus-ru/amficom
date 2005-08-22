@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.29 2005/08/18 14:06:44 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.30 2005/08/22 11:39:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Команда отображает окно карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/08/18 14:06:44 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/22 11:39:19 $
  * @module mapviewclient
  */
 public class ViewMapWindowCommand extends AbstractCommand {
@@ -96,14 +96,14 @@ public class ViewMapWindowCommand extends AbstractCommand {
 							LangModelGeneral.getString("Finished")));
 			setResult(Command.RESULT_OK);
 		} catch(MapConnectionException e) {
-			this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
+			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					"Нет соединения с сервером картографической информации",
 					"",
 					JOptionPane.ERROR_MESSAGE);
 		} catch(MapDataException e) {
-			this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
+			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					"Ошибка доступа к картографическим данным",
