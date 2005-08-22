@@ -1,5 +1,5 @@
 /**
- * $Id: MoveNodeCommand.java,v 1.17 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: MoveNodeCommand.java,v 1.18 2005/08/22 11:33:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,8 +21,8 @@ import com.syrus.util.Log;
 
 /**
  * Перемещение узла.
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/08/22 11:33:00 $
  * @module mapviewclient
  */
 public class MoveNodeCommand extends MapActionCommand
@@ -31,6 +31,11 @@ public class MoveNodeCommand extends MapActionCommand
 	 * начальная позиция перемещаемого элемента
 	 */
 	DoublePoint initialLocation;
+
+	/**
+	 * конечная позиция перемещаемого элемента
+	 */
+	DoublePoint newLocation;
 
 	/**
 	 * абсолютное смещение по оси абсцисс
@@ -84,14 +89,20 @@ public class MoveNodeCommand extends MapActionCommand
 	{
 		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 		
-		DoublePoint nodeLocation = this.node.getLocation();
+		this.newLocation = this.node.getLocation();
 
-		nodeLocation.setLocation(this.initialLocation.getX() + this.deltaX, this.initialLocation.getY() + this.deltaY);
+		this.newLocation.setLocation(this.initialLocation.getX() + this.deltaX, this.initialLocation.getY() + this.deltaY);
 
-		this.node.setLocation(nodeLocation);
+		this.node.setLocation(this.newLocation);
 		setResult(Command.RESULT_OK);
 	}
 	
+	@Override
+	public void redo()
+	{
+		this.node.setLocation(this.newLocation);
+	}
+
 	@Override
 	public void undo()
 	{
