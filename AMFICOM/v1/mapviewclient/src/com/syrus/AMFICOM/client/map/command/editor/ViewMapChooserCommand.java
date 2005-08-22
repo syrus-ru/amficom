@@ -1,5 +1,5 @@
 /*
- * $Id: ViewMapChooserCommand.java,v 1.1 2005/08/22 11:30:05 krupenn Exp $
+ * $Id: ViewMapChooserCommand.java,v 1.2 2005/08/22 12:35:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import javax.swing.JDesktopPane;
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapSaveAsCommand;
 import com.syrus.AMFICOM.client.map.operations.MapChooserPanel;
@@ -29,7 +30,7 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.1 $, $Date: 2005/08/22 11:30:05 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/22 12:35:04 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand
@@ -39,7 +40,7 @@ public class ViewMapChooserCommand extends AbstractCommand {
 
 	ApplicationContext aContext;
 	
-	MapChooserPanel mapChooserPanel = null;
+	static MapChooserPanel mapChooserPanel = null;
 	
 	MapFrame mapFrame;
 
@@ -64,28 +65,32 @@ public class ViewMapChooserCommand extends AbstractCommand {
 			return;
 		}
 
-		if(this.mapChooserPanel == null)
-			this.mapChooserPanel = new MapChooserPanel(this.mapFrame);
-		else
-			this.mapChooserPanel.setMapFrame(this.mapFrame);
+		int result = chooseMap(this.mapFrame.getMapConnection());
 		
+		if (result == JOptionPane.OK_OPTION) {
+			mapChooserPanel.mapSelected();
+		}		
+		setResult(Command.RESULT_OK);
+	}
+
+
+	public static int chooseMap(MapConnection connection) {
+		if(mapChooserPanel == null)
+			mapChooserPanel = new MapChooserPanel(connection);
+		else
+			mapChooserPanel.setMapConnection(connection);
+
 		final String okButton = LangModelGeneral.getString("Button.OK");
 		final String cancelButton = LangModelGeneral.getString("Button.Cancel");
 		int result = JOptionPane.showOptionDialog(
 				Environment.getActiveWindow(), 
-				this.mapChooserPanel,
+				mapChooserPanel,
 				LangModelGeneral.getString("select map view"),
 				JOptionPane.OK_CANCEL_OPTION, 
 				JOptionPane.PLAIN_MESSAGE, 
 				null,
 				new Object[] { okButton, cancelButton }, 
 				okButton);
-		
-		if (result == JOptionPane.OK_OPTION) {
-			this.mapChooserPanel.mapSelected();
-		}		
-		setResult(Command.RESULT_OK);
+		return result;
 	}
-
-
 }
