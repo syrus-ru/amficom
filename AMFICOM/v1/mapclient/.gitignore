@@ -1,0 +1,15 @@
+classes
+docs
+lib
+test
+.settings
+*.deploy
+*.jpr
+*.jpx
+*.tar
+*.gz
+*.jar
+*.swp
+.mach
+Makefile.inc
+.pmd
