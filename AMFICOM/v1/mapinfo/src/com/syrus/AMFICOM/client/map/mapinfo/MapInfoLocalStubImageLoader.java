@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.7 2005/08/22 11:46:35 peskovsky Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.8 2005/08/22 15:13:37 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.mapinfo.mapj.FeatureLayer;
 import com.mapinfo.mapj.LayerType;
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapConnectionListener;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.client.map.SpatialObject;
@@ -28,11 +29,11 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.7 $, $Date: 2005/08/22 11:46:35 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.8 $, $Date: 2005/08/22 15:13:37 $
  * @module mapinfo
  */
-public class MapInfoLocalStubImageLoader implements MapImageLoader {
+public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectionListener {
 
 	private MapJLocalRenderer renderer;
 
@@ -49,6 +50,10 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader {
 		} catch (IOException e) {
 			throw new MapConnectionException("Failed initializing MapJLocalRenderer");
 		}
+	}
+
+	public void mapConnectionChanged() {
+		
 	}
 
 	/*

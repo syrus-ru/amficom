@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoConnection.java,v 1.11 2005/08/22 11:46:35 peskovsky Exp $
+ * $Id: MapInfoConnection.java,v 1.12 2005/08/22 15:13:37 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/22 11:46:35 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.12 $, $Date: 2005/08/22 15:13:37 $
+ * @author $Author: krupenn $
  * @module mapinfo
  */
 public abstract class MapInfoConnection extends MapConnection {
@@ -65,6 +65,8 @@ public abstract class MapInfoConnection extends MapConnection {
 
 		System.out.println("Units " + this.localMapJ.getDistanceUnits().toString());
 		this.localMapJ.setDistanceUnits(LinearUnit.meter);
+
+		fireMapConnectionChanged();
 
 		return true;
 	}

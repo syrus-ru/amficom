@@ -15,7 +15,9 @@ public class MapInfoLocalConnection extends MapInfoConnection {
 	 */
 	@Override
 	public MapImageLoader createImageLoader() throws MapConnectionException {
-		return new MapInfoLocalStubImageLoader(this);
+		MapInfoLocalStubImageLoader mapInfoLocalStubImageLoader = new MapInfoLocalStubImageLoader(this);
+		this.addMapConnectionListener(mapInfoLocalStubImageLoader);
+		return mapInfoLocalStubImageLoader;
 	}
 	
 	/* (non-Javadoc)
