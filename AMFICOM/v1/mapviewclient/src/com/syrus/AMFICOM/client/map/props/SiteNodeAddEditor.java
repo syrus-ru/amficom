@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
@@ -441,7 +442,10 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		if(element != null) {
 			if(element instanceof SchemeElement) {
 				SchemeElement schemeElement = (SchemeElement )element;
-				this.schemePane.openSchemeImageResource(schemeElement.getSchemeCell(), false);
+				SchemeActions.openSchemeImageResource(
+						this.schemePane.getGraph(),
+						schemeElement.getSchemeCell(),
+						false);
 				this.crossingScrollPane.setVisible(false);
 				this.schemePane.getGraph().setVisible(true);
 				sen = true;
