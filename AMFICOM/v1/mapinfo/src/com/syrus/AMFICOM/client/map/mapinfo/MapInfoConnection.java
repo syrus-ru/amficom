@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoConnection.java,v 1.10 2005/08/11 13:55:50 arseniy Exp $
+ * $Id: MapInfoConnection.java,v 1.11 2005/08/22 11:46:35 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/11 13:55:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/08/22 11:46:35 $
+ * @author $Author: peskovsky $
  * @module mapinfo
  */
 public abstract class MapInfoConnection extends MapConnection {
@@ -53,7 +53,7 @@ public abstract class MapInfoConnection extends MapConnection {
 		this.localMapJ = new MapJ(); // this MapJ object
 
 		// Query for image locations and load the geoset
-		final String mapDefinitionFile = this.getPath() + this.getView();
+		final String mapDefinitionFile = this.getPath();
 		try {
 			System.out.println("MapImagePanel - Loading geoset...");
 			this.localMapJ.loadMapDefinition(mapDefinitionFile);
@@ -84,7 +84,7 @@ public abstract class MapInfoConnection extends MapConnection {
 	}
 
 	@Override
-	public void setView(final String name) {
+	public void setView(final String name){
 		Log.debugMessage(getClass().getName() + "::" + "setView(" + name + ")" + " | " + "method call", Level.FINER);
 
 		this.dataBaseView = name;
@@ -93,11 +93,6 @@ public abstract class MapInfoConnection extends MapConnection {
 	@Override
 	public String getPath() {
 		return this.dataBasePath;
-	}
-
-	@Override
-	public String getView() {
-		return this.dataBaseView;
 	}
 
 	@Override
@@ -112,17 +107,11 @@ public abstract class MapInfoConnection extends MapConnection {
 		return this.mapperServletURL;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.Client.Map.MapConnection#getAvailableViews()
-	 */
 	@Override
-	public List<String> getAvailableViews() throws MapDataException {
-		final List<String> listToReturn = new ArrayList<String>();
-		listToReturn.add(this.getPath() + this.getView());
-
-		return listToReturn;
+	public String getView() {
+		return this.dataBaseView;
 	}
-
+	
 	public MapJ getLocalMapJ() {
 		return this.localMapJ;
 	}

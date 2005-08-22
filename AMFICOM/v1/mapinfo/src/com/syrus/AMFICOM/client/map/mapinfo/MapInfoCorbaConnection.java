@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoCorbaConnection.java,v 1.4 2005/08/11 12:36:44 arseniy Exp $
+ * $Id: MapInfoCorbaConnection.java,v 1.5 2005/08/22 11:46:35 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,17 +7,24 @@
  */
 package com.syrus.AMFICOM.client.map.mapinfo;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
 import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.MscharClientServantManager;
+import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.CommonServer;
+import com.syrus.AMFICOM.map.corba.IdlMapDescriptor;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServerHelper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/11 12:36:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/08/22 11:46:35 $
+ * @author $Author: peskovsky $
  * @module mapinfo
  */
 public class MapInfoCorbaConnection extends MapInfoConnection {
@@ -38,12 +45,6 @@ public class MapInfoCorbaConnection extends MapInfoConnection {
 		return flag;
 	}
 
-	@Override
-	public boolean release() throws MapConnectionException {
-		final boolean flag = super.release();
-		return flag;
-	}
-
 	/*
 	 * (non-Javadoc)
 	 * 
@@ -56,5 +57,23 @@ public class MapInfoCorbaConnection extends MapInfoConnection {
 
 	public MscharServer getMscharServer() {
 		return this.mscharServer;
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.Client.Map.MapConnection#getAvailableViews()
+	 */
+	@Override
+	public List<String> getAvailableViews() throws MapDataException {
+		final List<String> listToReturn = new ArrayList<String>();
+		try {
+			IdlMapDescriptor[] mapDescriptors = this.mscharServer.getMapDescriptors(LoginManager.getSessionKeyTransferable());
+			for (int i = 0; i < mapDescriptors.length; i++){
+				listToReturn.add(mapDescriptors[i].name);
+			}
+		} catch (AMFICOMRemoteException e) {
+			throw new MapDataException("Failed getting map descriptors list");
+		}
+
+		return listToReturn;
 	}
 }
