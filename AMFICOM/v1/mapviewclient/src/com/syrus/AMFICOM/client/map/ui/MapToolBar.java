@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.30 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapToolBar.java,v 1.31 2005/08/22 11:36:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.30 $, $Date: 2005/08/11 12:43:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/08/22 11:36:34 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public final class MapToolBar extends JPanel 
@@ -69,8 +69,8 @@ public final class MapToolBar extends JPanel
 	private JToggleButton showCablePathToggleButton = new JToggleButton();
 	private JToggleButton showTransPathToggleButton = new JToggleButton();
 
-	private JToggleButton undoButton = new JToggleButton();
-	private JToggleButton redoButton = new JToggleButton();
+	private JButton undoButton = new JButton();
+	private JButton redoButton = new JButton();
 
 	private JButton optionsButton = new JButton();
 	private JButton layersButton = new JButton();
@@ -539,8 +539,33 @@ public final class MapToolBar extends JPanel
 		constraints.ipady = 0;
 		innerPanel.add(this.layersButton, constraints);
 
-
 		constraints.gridx = 17;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,10,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.undoButton, constraints);
+
+		constraints.gridx = 18;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(1,0,1,0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(this.redoButton, constraints);
+
+		constraints.gridx = 19;
 		constraints.gridy = 0;
 		constraints.gridwidth = 1;
 		constraints.gridheight = 1;
