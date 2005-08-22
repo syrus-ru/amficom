@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.6 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.7 2005/08/22 11:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Íàó÷íî-òåõíè÷åñêèé öåíòð
@@ -17,9 +17,9 @@ package com.syrus.AMFICOM.client.model;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/08/11 12:43:32 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/22 11:37:44 $
  * @module mapviewclient
- * @author $Author: arseniy $
+ * @author $Author: krupenn $
  */
 public class MapEditorApplicationModel extends ApplicationModel 
 {
@@ -64,7 +64,8 @@ public class MapEditorApplicationModel extends ApplicationModel
 	public static final String ITEM_VIEW_GENERAL = "menuViewGeneral";
 	public static final String ITEM_VIEW_ADDITIONAL = "menuViewAdditional";
 	public static final String ITEM_VIEW_CHARACTERISTICS = "menuViewÑharacteristics";
-	public static final String ITEM_VIEW_CONTROLS = "menuViewControls";
+	public static final String ITEM_VIEW_MAP_CHOOSER = "menuViewMapChooser";
+	public static final String ITEM_VIEW_MAP_LAYERS = "menuViewMapLayers";
 	public static final String ITEM_VIEW_MAP = "menuViewMap";
 	public static final String ITEM_VIEW_NAVIGATOR = "menuViewNavigator";
 	public static final String ITEM_VIEW_ALL = "menuViewAll";
@@ -120,7 +121,8 @@ public class MapEditorApplicationModel extends ApplicationModel
 		add(MapEditorApplicationModel.ITEM_VIEW);
 		add(MapEditorApplicationModel.ITEM_VIEW_GENERAL);
 		add(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS);
-		add(MapEditorApplicationModel.ITEM_VIEW_CONTROLS);
+		add(MapEditorApplicationModel.ITEM_VIEW_MAP_CHOOSER);
+		add(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS);
 		add(MapEditorApplicationModel.ITEM_VIEW_MAP);
 		add(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR);
 		add(MapEditorApplicationModel.ITEM_VIEW_ALL);
