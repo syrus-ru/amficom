@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.10 2005/08/19 12:49:19 krupenn Exp $ 
+ * $Id: MapTreeModel.java,v 1.11 2005/08/22 15:55:42 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный Интеллектуальный 
@@ -19,14 +19,26 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
+import com.syrus.AMFICOM.client.map.CollectorConditionWrapper;
+import com.syrus.AMFICOM.client.map.MapUtils;
+import com.syrus.AMFICOM.client.map.PhysicalLinkConditionWrapper;
+import com.syrus.AMFICOM.client.map.SiteNodeConditionWrapper;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
+import com.syrus.AMFICOM.filterclient.MonitoredElementConditionWrapper;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.map.Collector;
@@ -37,9 +49,11 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.newFilter.Filter;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/19 12:49:19 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/22 15:55:42 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -201,11 +215,11 @@ public class MapTreeModel implements ChildrenFactory {
 
 	void populateMapNode(PopulatableIconedNode node) {
 		PopulatableIconedNode mapsNode;
-		PopulatableIconedNode sitesNode;
-		PopulatableIconedNode externalNodesNode;
+		FiltrableIconedNode sitesNode;
+		FiltrableIconedNode externalNodesNode;
 		PopulatableIconedNode nodesNode;
-		PopulatableIconedNode linksNode;
-		PopulatableIconedNode collectorsNode;
+		FiltrableIconedNode linksNode;
+		FiltrableIconedNode collectorsNode;
 
 		if(node.getChildren().size() == 0) {
 			mapsNode = new PopulatableIconedNode(
@@ -217,21 +231,25 @@ public class MapTreeModel implements ChildrenFactory {
 //			mapsNode.populate();
 			node.addChild(mapsNode);
 
-			externalNodesNode = new PopulatableIconedNode(
-					this,
-					MapTreeModel.EXTERNAL_NODES_BRANCH,
-					getObjectName(MapTreeModel.EXTERNAL_NODES_BRANCH),
-					folderIcon,
-					true);
+			externalNodesNode = new FiltrableIconedNode();
+			externalNodesNode.setObject(MapTreeModel.EXTERNAL_NODES_BRANCH);
+			externalNodesNode.setIcon(folderIcon);
+			externalNodesNode.setName(getObjectName(MapTreeModel.EXTERNAL_NODES_BRANCH));
+			externalNodesNode.setChildrenFactory(this);
+			externalNodesNode.setCanHaveChildren(true);
+			externalNodesNode.setDefaultCondition(null);
+			externalNodesNode.setFilter(new Filter(new SiteNodeConditionWrapper(), null));
 //			externalNodesNode.populate();
 			node.addChild(externalNodesNode);
 
-			sitesNode = new PopulatableIconedNode(
-					this,
-					MapViewController.ELEMENT_SITENODE,
-					getObjectName(MapViewController.ELEMENT_SITENODE),
-					folderIcon,
-					true);
+			sitesNode = new FiltrableIconedNode();
+			sitesNode.setObject(MapViewController.ELEMENT_SITENODE);
+			sitesNode.setIcon(folderIcon);
+			sitesNode.setName(getObjectName(MapViewController.ELEMENT_SITENODE));
+			sitesNode.setChildrenFactory(this);
+			sitesNode.setCanHaveChildren(true);
+			sitesNode.setDefaultCondition(null);
+			sitesNode.setFilter(new Filter(new SiteNodeConditionWrapper(), null));
 //			sitesNode.populate();
 			node.addChild(sitesNode);
 
@@ -244,21 +262,25 @@ public class MapTreeModel implements ChildrenFactory {
 //			nodesNode.populate();
 			node.addChild(nodesNode);
 
-			linksNode = new PopulatableIconedNode(
-					this,
-					MapViewController.ELEMENT_PHYSICALLINK,
-					getObjectName(MapViewController.ELEMENT_PHYSICALLINK),
-					folderIcon,
-					true);
+			linksNode = new FiltrableIconedNode();
+			linksNode.setObject(MapViewController.ELEMENT_PHYSICALLINK);
+			linksNode.setIcon(folderIcon);
+			linksNode.setName(getObjectName(MapViewController.ELEMENT_PHYSICALLINK));
+			linksNode.setChildrenFactory(this);
+			linksNode.setCanHaveChildren(true);
+			linksNode.setDefaultCondition(null);
+			linksNode.setFilter(new Filter(new PhysicalLinkConditionWrapper(), null));
 //			linksNode.populate();
 			node.addChild(linksNode);
 
-			collectorsNode = new PopulatableIconedNode(
-					this,
-					MapViewController.ELEMENT_COLLECTOR,
-					getObjectName(MapViewController.ELEMENT_COLLECTOR),
-					folderIcon,
-					true);
+			collectorsNode = new FiltrableIconedNode();
+			collectorsNode.setObject(MapViewController.ELEMENT_COLLECTOR);
+			collectorsNode.setIcon(folderIcon);
+			collectorsNode.setName(getObjectName(MapViewController.ELEMENT_COLLECTOR));
+			collectorsNode.setChildrenFactory(this);
+			collectorsNode.setCanHaveChildren(true);
+			collectorsNode.setDefaultCondition(null);
+			collectorsNode.setFilter(new Filter(new CollectorConditionWrapper(), null));
 //			collectorsNode.populate();
 			node.addChild(collectorsNode);
 		}
@@ -318,7 +340,16 @@ public class MapTreeModel implements ChildrenFactory {
 		Item parentNode = node.getParent();
 		Map map = (Map )parentNode.getObject();
 
-		java.util.Collection types = this.getSiteNodeTypes(map);
+		Set siteNodes = map.getSiteNodes();
+		
+		try {
+			StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
+			siteNodes = MapUtils.applyCondition(siteNodes, condition);
+		} catch (Exception e) {
+			Log.debugException(e, Level.SEVERE);
+		}
+
+		java.util.Collection types = this.getSiteNodeTypes(siteNodes);
 
 		java.util.Map nodePresense = new HashMap();
 
@@ -372,7 +403,16 @@ public class MapTreeModel implements ChildrenFactory {
 		Item parentNode2 = parentNode.getParent();
 		Map map = (Map )parentNode2.getObject();
 
-		List siteNodes = getSiteNodeTypeNodes(map, type);
+		Set siteNodesSet = map.getSiteNodes();
+		
+		try {
+			StorableObjectCondition condition = ((FiltrableIconedNode)parentNode).getResultingCondition();
+			siteNodesSet = MapUtils.applyCondition(siteNodesSet, condition);
+		} catch (Exception e) {
+			Log.debugException(e, Level.SEVERE);
+		}
+
+		List siteNodes = getSiteNodeTypeNodes(siteNodesSet, type);
 
 		java.util.Map nodePresense = new HashMap();
 
@@ -416,6 +456,13 @@ public class MapTreeModel implements ChildrenFactory {
 		Map map = (Map )parentNode.getObject();
 
 		Set siteNodes = map.getExternalNodes();
+		
+		try {
+			StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
+			siteNodes = MapUtils.applyCondition(siteNodes, condition);
+		} catch (Exception e) {
+			Log.debugException(e, Level.SEVERE);
+		}
 
 		java.util.Map nodePresense = new HashMap();
 
@@ -506,7 +553,16 @@ public class MapTreeModel implements ChildrenFactory {
 		Item parentNode = node.getParent();
 		Map map = (Map )parentNode.getObject();
 
-		List links = new ArrayList(map.getPhysicalLinks());
+		Set linksSet = map.getPhysicalLinks();
+
+		try {
+			StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
+			linksSet = MapUtils.applyCondition(linksSet, condition);
+		} catch (Exception e) {
+			Log.debugException(e, Level.SEVERE);
+		}
+		List links = new ArrayList(linksSet);
+		
 		Collections.sort(links, MapTreeModel.mapElementComparator);
 
 		java.util.Map nodePresense = new HashMap();
@@ -549,7 +605,15 @@ public class MapTreeModel implements ChildrenFactory {
 		Item parentNode = node.getParent();
 		Map map = (Map )parentNode.getObject();
 
-		List collectors = new ArrayList(map.getCollectors());
+		Set collectorsSet = map.getCollectors();
+
+		try {
+			StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
+			collectorsSet = MapUtils.applyCondition(collectorsSet, condition);
+		} catch (Exception e) {
+			Log.debugException(e, Level.SEVERE);
+		}
+		List collectors = new ArrayList(collectorsSet);
 		Collections.sort(collectors, MapTreeModel.mapElementComparator);
 
 		java.util.Map nodePresense = new HashMap();
@@ -588,18 +652,18 @@ public class MapTreeModel implements ChildrenFactory {
 		}
 	}
 
-	java.util.Collection getSiteNodeTypes(Map map) {
+	java.util.Collection getSiteNodeTypes(Set siteNodes) {
 		java.util.Collection types = new HashSet();
-		for(Iterator it = map.getSiteNodes().iterator(); it.hasNext();) {
+		for(Iterator it = siteNodes.iterator(); it.hasNext();) {
 			SiteNode site = (SiteNode )it.next();
 			types.add(site.getType());
 		}
 		return types;
 	}
 
-	java.util.List getSiteNodeTypeNodes(Map map, SiteNodeType type) {
+	java.util.List getSiteNodeTypeNodes(Set siteNodes, SiteNodeType type) {
 		List list = new LinkedList();
-		for(Iterator it = map.getSiteNodes().iterator(); it.hasNext();) {
+		for(Iterator it = siteNodes.iterator(); it.hasNext();) {
 			SiteNode site = (SiteNode ) it.next();
 			if(site.getType().equals(type))
 				list.add(site);
