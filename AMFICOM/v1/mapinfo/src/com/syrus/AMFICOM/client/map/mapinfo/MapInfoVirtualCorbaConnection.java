@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoVirtualCorbaConnection.java,v 1.1 2005/08/22 11:47:34 peskovsky Exp $
+ * $Id: MapInfoVirtualCorbaConnection.java,v 1.2 2005/08/22 13:31:00 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -152,7 +152,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 		return layerDescriptors;
 	}
 	
-	public void syncronizeMap(final MapDescriptor mapDescriptor) {
+	public void syncronizeMap(final MapDescriptor mapDescriptor) throws MapConnectionException{
 		String cacheDir = ApplicationProperties.getString(CACHE_DIR, "cache") + MAPS_LOADED_DIR;
 		File cacheDirFile = new File(cacheDir);
 		if(!cacheDirFile.isDirectory()) {
@@ -169,6 +169,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 		File localMDF = new File(localMapDir, mapDescriptor.getFileName());
 		compareAndLoadFile(localMDF, mapDescriptor);
 		patchMapMDF(localMDF, localMDF.getParentFile().getAbsolutePath());
+		this.setPath(localMDF.getAbsolutePath());		
 		//Запись файлов слоёв в локальный дисковый кэш		
 		final List<LayerDescriptor> layerDescriptors = getLayerDescriptors(mapDescriptor);
 		for (LayerDescriptor descriptor : layerDescriptors) {
@@ -176,7 +177,6 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 			compareAndLoadFile(localLayer, descriptor);
 		}
 
-		this.setPath(localMDF.getAbsolutePath());		
 		if (MapPropertiesManager.isVirtualDiskUsed()){
 			//Если используем виртуальынй диск
 			String virtualDiskPath = MapPropertiesManager.getVirtualDiskPath() + MAPS_LOADED_DIR;
@@ -195,34 +195,41 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 			File virtualDiskMDF = new File(virtualDiskMapDir, mapDescriptor.getFileName());
 			compareAndLoadFile(virtualDiskMDF, mapDescriptor);
 			patchMapMDF(virtualDiskMDF, virtualDiskMDF.getParentFile().getAbsolutePath());
+			this.setPath(virtualDiskMDF.getAbsolutePath());
 			
 			//Копируем файлы слоёв на виртуальный диск			
-			byte[] buffer = new byte[1024];
+			byte[] buffer = new byte[BUFF_SIZE];
 			int bytesRead;
 			try {
 				for (LayerDescriptor descriptor : layerDescriptors) {
 					File diskCacheLayer = new File(localMapDir, descriptor.getFileName());
 					File virtualDiskLayer = new File(virtualDiskMapDir, descriptor.getFileName());
 					
-					FileInputStream inputStream = new FileInputStream(diskCacheLayer);
-					FileOutputStream outputStream =  new FileOutputStream(virtualDiskLayer);
+					boolean toCopy = false;
 					
-					while ((bytesRead = inputStream.read(buffer)) > 0){
-						//TODO Проверить
-						outputStream.write(buffer,0,bytesRead);
+					if(virtualDiskLayer.exists()) {
+						if(		!virtualDiskLayer.isFile() 
+							|| virtualDiskLayer.length() != diskCacheLayer.length() 
+							|| virtualDiskLayer.lastModified() != diskCacheLayer.lastModified())
+							toCopy = true;
+					} else
+						toCopy = true;
+					
+					if (toCopy){
+						FileInputStream inputStream = new FileInputStream(diskCacheLayer);
+						FileOutputStream outputStream =  new FileOutputStream(virtualDiskLayer);
+						
+						while ((bytesRead = inputStream.read(buffer)) > 0){
+							outputStream.write(buffer,0,bytesRead);
+						}
+						inputStream.close();				
+						outputStream.close();
 					}
-					inputStream.close();				
-					outputStream.close();
 				}
 			} catch (FileNotFoundException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				throw new MapConnectionException("MapInfoCorbaImageLoader.syncronizeMap | Failed while copying files to virtual drive!");
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}
-			
-			this.setPath(virtualDiskMDF.getAbsolutePath());			
+				throw new MapConnectionException("MapInfoCorbaImageLoader.syncronizeMap | Failed while copying files to virtual drive!");			}
 		}
 	}
 	
