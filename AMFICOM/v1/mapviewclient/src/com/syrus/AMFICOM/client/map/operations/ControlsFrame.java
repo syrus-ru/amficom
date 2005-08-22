@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.11 2005/08/18 14:14:44 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.12 2005/08/22 11:33:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * <li> Поиск элементов АМФИКОМ
  * <lI> Поиск географических объектов
  * <li> Управление отображением слоев
- * @version $Revision: 1.11 $
+ * @version $Revision: 1.12 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -44,11 +44,6 @@ import com.syrus.AMFICOM.mapview.MapView;
 	BorderLayout borderLayout1 = new BorderLayout();
 
 	/**
-	 * панель выбора вида
-	 */
-	MapChooserPanel mapChooserPanel;
-	
-	/**
 	 * панель поиска географических объектов
 	 */
 	SpatialSearchPanel mapSearchPanel;
@@ -57,11 +52,6 @@ import com.syrus.AMFICOM.mapview.MapView;
 	 * панель поиска элементов АМФИКОМ
 	 */
 	AMFICOMSearchPanel searchPanel;
-	
-	/**
-	 * панель управления отображением слоев
-	 */
-	LayersPanel layersPanel;
 	
 	/**
 	 * панель закладок
@@ -78,10 +68,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 	 */
 	public ControlsFrame(MapFrame mapFrame, ApplicationContext aContext) {
 		setContext(aContext);
-		this.mapChooserPanel = new MapChooserPanel(mapFrame);
 		this.mapSearchPanel = new SpatialSearchPanel(mapFrame);
 		this.searchPanel = new AMFICOMSearchPanel(mapFrame);
-		this.layersPanel = new LayersPanel(mapFrame);
 		jbInit();
 	}
 
@@ -118,16 +106,12 @@ import com.syrus.AMFICOM.mapview.MapView;
 					ex.printStackTrace();
 				}
 			}
-			if(mapEventType.equals(MapEvent.MAP_VIEW_SCALE_CHANGED))
-				this.layersPanel.setVisibility();
 		}
 	}
 
 	public void setMapFrame(MapFrame mapFrame) {
-		this.mapChooserPanel.setMapFrame(mapFrame);
 		this.searchPanel.setMapFrame(mapFrame);
 		this.mapSearchPanel.setMapFrame(mapFrame);
-		this.layersPanel.setMapFrame(mapFrame);
 	}
 
 	private void jbInit() {
@@ -138,7 +122,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 
-		this.setTitle(LangModelMap.getString(MapEditorApplicationModel.ITEM_VIEW_CONTROLS));
+		this.setTitle("yf [th? yf [th!");
 		this.getContentPane().setLayout(this.borderLayout1);
 		this.setSize(new Dimension(370, 629));
 		
@@ -152,17 +136,6 @@ import com.syrus.AMFICOM.mapview.MapView;
 				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_search.gif")
 					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
 					this.mapSearchPanel);
-		
-		this.tabbedPane.addTab(
-				"", 
-				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_layers.gif")
-					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
-					this.layersPanel);
-		this.tabbedPane.addTab(
-				"", 
-				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_prop.gif")
-					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
-					this.mapChooserPanel);
 		
 		this.getContentPane().add(this.tabbedPane, BorderLayout.CENTER);
 	}
