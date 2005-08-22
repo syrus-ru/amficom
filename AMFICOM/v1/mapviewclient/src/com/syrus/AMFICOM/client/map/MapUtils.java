@@ -1,5 +1,5 @@
 /**
- * $Id: MapUtils.java,v 1.1 2005/08/22 15:47:50 krupenn Exp $
+ * $Id: MapUtils.java,v 1.2 2005/08/22 15:54:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,13 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 
+/**
+ * 
+ * @version $Revision: 1.2 $, $Date: 2005/08/22 15:54:38 $
+ * @author krupenn
+ * @author $Author: krupenn $
+ * @module mapviewclient
+ */
 public class MapUtils {
 
 	public static Set<StorableObject> applyCondition(Set<StorableObject> objects, StorableObjectCondition condition) throws IllegalObjectEntityException {
