@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.46 2005/08/19 16:34:56 arseniy Exp $
+ * $Id: EventType.java,v 1.47 2005/08/22 14:36:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.event;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -41,7 +42,7 @@ import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/08/19 16:34:56 $
+ * @version $Revision: 1.47 $, $Date: 2005/08/22 14:36:42 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -51,13 +52,13 @@ public final class EventType extends StorableObjectType {
 
 	public static final String CODENAME_MEASUREMENT_ALARM = "measurement_alarm";
 
-	private Set<ParameterType> parameterTypes;
+	private EnumSet<ParameterType> parameterTypes;
 	private Map<Identifier, Set<AlertKind>> userAlertKindsMap;	//Map <Identifier userId, Set <AlertKind> alertKinds>
 
 	EventType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
-		this.parameterTypes = new HashSet<ParameterType>();
+		this.parameterTypes = EnumSet.noneOf(ParameterType.class);
 		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
 
 		try {
@@ -84,7 +85,7 @@ public final class EventType extends StorableObjectType {
 			final StorableObjectVersion version,
 			final String codename,
 			final String description,
-			final Set<ParameterType> parameterTypeIds,
+			final EnumSet<ParameterType> parameterTypes,
 			final Map<Identifier, Set<AlertKind>> userAlertKindsMap) {
 		super(id,
 				new Date(System.currentTimeMillis()),
@@ -95,8 +96,8 @@ public final class EventType extends StorableObjectType {
 				codename,
 				description);
 
-		this.parameterTypes = new HashSet<ParameterType>();
-		this.setParameterTypes0(parameterTypeIds);
+		this.parameterTypes = EnumSet.noneOf(ParameterType.class);
+		this.setParameterTypes0(parameterTypes);
 
 		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
 		this.setUserAlertKindsMap0(userAlertKindsMap);
@@ -115,7 +116,7 @@ public final class EventType extends StorableObjectType {
 	public static EventType createInstance(final Identifier creatorId,
 			final String codename,
 			final String description,
-			final Set<ParameterType> parameterTypes,
+			final EnumSet<ParameterType> parameterTypes,
 			final Map<Identifier, Set<AlertKind>> userAlertKindsMap) throws CreateObjectException {
 		if (creatorId == null || codename == null || description == null)
 			throw new IllegalArgumentException("Argument is null'");
@@ -222,7 +223,7 @@ public final class EventType extends StorableObjectType {
 		return Collections.unmodifiableSet(this.parameterTypes);
 	}
 
-	protected void setParameterTypes0(final Set<ParameterType> parameterTypes) {
+	protected void setParameterTypes0(final EnumSet<ParameterType> parameterTypes) {
 		this.parameterTypes.clear();
 		if (parameterTypes != null) {
 			this.parameterTypes.addAll(parameterTypes);
@@ -235,7 +236,7 @@ public final class EventType extends StorableObjectType {
 	 * @param parameterTypes
 	 *        The inParameterTypeIds to set.
 	 */
-	public void setParameterTypes(final Set<ParameterType> parameterTypes) {
+	public void setParameterTypes(final EnumSet<ParameterType> parameterTypes) {
 		this.setParameterTypes0(parameterTypes);
 		this.markAsChanged();
 	}
