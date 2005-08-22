@@ -1,5 +1,5 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.4 2005/08/11 17:45:53 arseniy Exp $
+ * $Id: MapJLocalRenderer.java,v 1.5 2005/08/22 15:06:16 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/11 17:45:53 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.5 $, $Date: 2005/08/22 15:06:16 $
  * @module mapinfo
  */
 public class MapJLocalRenderer {
@@ -53,36 +53,34 @@ public class MapJLocalRenderer {
 
 	public MapJLocalRenderer(final String fileToLoad) throws IOException {
 		Log.debugMessage("RunningThread - Constructor - Initializing MapJ.", Level.FINEST);
-		this.mapJObject = MapJLocalRenderer.createMapJ(fileToLoad);
+		this.initializeMapJ();
+		this.setMapDefinition(fileToLoad);		
 	}
 
 	/**
 	 * Создаёт объект MapJ и загружает картографические данные.
-	 * 
-	 * @return Готовый к использованию объект MapJ для работы с картографическими
-	 *         данными
-	 * @throws IOException
 	 */
-	public static MapJ createMapJ(final String fileToLoad) throws IOException {
+	public void initializeMapJ(){
 		Log.debugMessage("RunningThread - Initializing MapJ instance...", Level.FINEST);
-		// instantiate a MapJ and set the bounds
-		final MapJ returnValue = new MapJ(); // this MapJ object
+		//instantiate a MapJ and set the bounds
+		this.mapJObject = new MapJ(); // this MapJ object
+		this.mapJObject.setDistanceUnits(LinearUnit.meter);
+	}
 
-		// Query for image locations and load the geoset
+	public void setMapDefinition(final String fileToLoad) throws IOException {
+		if (this.renderer == null)
+			return;
+		
 		try {
 			Log.debugMessage("RunningThread - Loading geoset...", Level.FINEST);
-			returnValue.loadMapDefinition(fileToLoad);
+			this.mapJObject.loadMapDefinition(fileToLoad);
 			Log.debugMessage("RunningThread - Map definition " + fileToLoad + " has been loaded.", Level.FINEST);
 		} catch (IOException e) {
 			Log.debugMessage("RunningThread - ERROR!!! - Can't load geoset: " + fileToLoad, Level.SEVERE);
 			throw e;
 		}
-
-		returnValue.setDistanceUnits(LinearUnit.meter);
-
-		return returnValue;
 	}
-
+	
 	public Image renderImage(final TopologicalImageQuery query) throws Exception {
 		this.stopRendering = false;
 
@@ -92,6 +90,7 @@ public class MapJLocalRenderer {
 		if ((this.imageBuffer == null) || (this.imageBuffer.getWidth() != miWidth) || (this.imageBuffer.getHeight() != miHeight)) {
 			this.imageBuffer = new BufferedImage(miWidth, miHeight, BufferedImage.TYPE_USHORT_565_RGB);
 			Log.debugMessage("RunningThread - Constructor - Creating MapXtreme renderer.", Level.FINEST);
+			
 			this.renderer = new LocalRenderer(this.imageBuffer);
 			Log.debugMessage("RunningThread - Constructor - MapXtreme renderer created.", Level.FINEST);
 		}
