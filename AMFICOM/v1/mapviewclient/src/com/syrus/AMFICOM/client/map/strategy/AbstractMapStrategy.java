@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractMapStrategy.java,v 1.8 2005/08/18 14:16:04 krupenn Exp $
+ * $Id: AbstractMapStrategy.java,v 1.9 2005/08/22 11:35:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
  * или изменением состояния мыши и клавиатуры.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/08/18 14:16:04 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/22 11:35:12 $
  * @module mapviewclient
  */
 abstract class AbstractMapStrategy implements MapStrategy
@@ -66,18 +66,18 @@ abstract class AbstractMapStrategy implements MapStrategy
 	/**
 	 * @inheritDoc
 	 */
-	public void doContextChanges(MouseEvent mapElement)
+	public void doContextChanges(MouseEvent mouseEvent)
 		throws MapConnectionException, MapDataException
 	{
-		Log.debugMessage(getClass().getName() + "::" + "doContextChanges(" + mapElement + ")" + " | " + "method call", Level.FINER);
+		Log.debugMessage(getClass().getName() + "::" + "doContextChanges(" + mouseEvent + ")" + " | " + "method call", Level.FINER);
 		
 		MapState mapState = this.logicalNetLayer.getMapState();
 
 		int mouseMode = mapState.getMouseMode();
 
-		Point point = mapElement.getPoint();
+		Point point = mouseEvent.getPoint();
 
-		if(SwingUtilities.isLeftMouseButton(mapElement))
+		if(SwingUtilities.isLeftMouseButton(mouseEvent))
 		{
 			if(mouseMode == MapState.MOUSE_PRESSED)
 			{
