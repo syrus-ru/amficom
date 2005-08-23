@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeEventHandler.java,v 1.3 2005/08/22 15:55:21 krupenn Exp $
+ * $Id: MapViewTreeEventHandler.java,v 1.4 2005/08/23 09:44:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,23 +7,29 @@
  */
 package com.syrus.AMFICOM.client.map.ui;
 
+import java.awt.Image;
+import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.logging.Level;
 
+import javax.swing.ImageIcon;
 import javax.swing.JTree;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
 import javax.swing.tree.TreePath;
 
+import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.map.Map;
@@ -46,9 +52,11 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 	private MapView mapView = null;
 	private final MapViewTreeModel model;
 	private final Item root;
+	private final IconedTreeUI iconedTreeUI;
 
-	public MapViewTreeEventHandler(JTree tree, ApplicationContext context, MapViewTreeModel model, Item root) {
-		this.tree = tree;
+	public MapViewTreeEventHandler(IconedTreeUI iconedTreeUI, ApplicationContext context, MapViewTreeModel model, Item root) {
+		this.iconedTreeUI = iconedTreeUI;
+		this.tree = iconedTreeUI.getTree();
 		this.model = model;
 		this.root = root;
 		setContext(context);
@@ -155,10 +163,10 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 			MapEvent mapEvent = (MapEvent )pce;
 			String mapEventType = mapEvent.getMapEventType();
 
-			if(	mapEventType.equals(MapEvent.MAP_VIEW_CLOSED)) {
+			if(mapEventType.equals(MapEvent.MAP_VIEW_CLOSED)) {
 				updateTree(null);
 			}
-			if(	mapEventType.equals(MapEvent.MAP_VIEW_SELECTED)) {
+			else if(mapEventType.equals(MapEvent.MAP_VIEW_SELECTED)) {
 				MapView mapView = (MapView )pce.getNewValue();
 				if(this.model == null 
 						|| this.mapView == null 
@@ -166,20 +174,20 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 					updateTree(mapView);
 				}
 			}
-			if(	mapEventType.equals(MapEvent.MAP_CHANGED)) {
+			else if(mapEventType.equals(MapEvent.MAP_CHANGED)) {
 				updateTree(this.mapView);
 			}
-			if(	mapEventType.equals(MapEvent.MAP_SELECTED)) {
+			else if(mapEventType.equals(MapEvent.MAP_SELECTED)) {
 				updateTree(this.mapView);
 			}
-			if(	mapEventType.equals(MapEvent.LIBRARY_SET_CHANGED)) {
+			else if(mapEventType.equals(MapEvent.LIBRARY_SET_CHANGED)) {
 				updateTree(this.mapView);
 			}
-			if(	mapEventType.equals(MapEvent.MAP_VIEW_CHANGED)) {
+			else if(mapEventType.equals(MapEvent.MAP_VIEW_CHANGED)) {
 				MapView mapView = (MapView )pce.getNewValue();
 				updateTree(mapView);
 			}
-			if(mapEventType.equals(MapEvent.SELECTION_CHANGED)) {
+			else if(mapEventType.equals(MapEvent.SELECTION_CHANGED)) {
 				Collection selection = (Collection )pce.getNewValue();
 				Collection items = this.model.findNodes(this.root, selection);
 				this.tree.getSelectionModel().clearSelection();
@@ -189,6 +197,25 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 					TreePath path = new TreePath(treeModel.getPathToRoot(node));
 					this.tree.getSelectionModel().addSelectionPath(path);
 					this.tree.scrollPathToVisible(path);
+				}
+			}
+			else if(mapEventType.equals(MapEvent.MAP_FRAME_SHOWN)) {
+				MapFrame mapFrame = (MapFrame) mapEvent.getNewValue();
+				Collection items = this.iconedTreeUI.findNodes(this.root, Collections.singletonList(TopologyTreeModel.TOPOLOGY_BRANCH), false);
+				for(Iterator it = items.iterator(); it.hasNext();) {
+					PopulatableIconedNode pin = (PopulatableIconedNode )it.next();
+					TopologyTreeModel model = (TopologyTreeModel)pin.getChildrenFactory();
+					model.setNetMapViewer(mapFrame.getMapViewer());
+				}
+			}
+			else if(mapEventType.equals(MapEvent.MAP_REPAINTED)) {
+				MapFrame mapFrame = (MapFrame) mapEvent.getNewValue();
+				Collection items = this.iconedTreeUI.findNodes(this.root, Collections.singletonList(TopologyTreeModel.TOPOLOGY_BRANCH), false);
+				for(Iterator it = items.iterator(); it.hasNext();) {
+					PopulatableIconedNode pin = (PopulatableIconedNode )it.next();
+					if(pin.isPopulated()) {
+						pin.populate();
+					}
 				}
 			}
 		}
@@ -226,6 +253,14 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 						true);
 				this.model.populate(item);
 				this.root.addChild(item);
+
+				PopulatableIconedNode topologyNode = new PopulatableIconedNode(
+						new TopologyTreeModel(),
+						TopologyTreeModel.TOPOLOGY_BRANCH,
+						LangModelMap.getString(TopologyTreeModel.TOPOLOGY_BRANCH),
+						MapViewTreeModel.folderIcon,
+						true);
+				this.root.addChild(topologyNode);
 			}
 		}
 		else {
@@ -240,6 +275,14 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 						true);
 				this.model.populate(item);
 				this.root.addChild(item);
+
+				PopulatableIconedNode topologyNode = new PopulatableIconedNode(
+						new TopologyTreeModel(),
+						TopologyTreeModel.TOPOLOGY_BRANCH,
+						LangModelMap.getString(TopologyTreeModel.TOPOLOGY_BRANCH),
+						MapViewTreeModel.folderIcon,
+						true);
+				this.root.addChild(topologyNode);
 			}
 		}
 		this.mapView = mapView;
