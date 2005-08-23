@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.40 2005/08/22 12:09:15 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.41 2005/08/23 06:14:08 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.40 $, $Date: 2005/08/22 12:09:15 $
+ * @version $Revision: 1.41 $, $Date: 2005/08/23 06:14:08 $
  * @author $Author: bob $
  * @module general
  */
@@ -98,17 +98,17 @@ public class StorableObjectXML {
 
 	public void updateObject(final StorableObject storableObject) throws IllegalDataException {
 		final StorableObjectWrapper<StorableObject> wrapper = StorableObjectWrapper.getWrapper(storableObject.getId().getMajor());
-		final List<String> keys = wrapper.getKeys();
+		AbstractStorableObjectXML handler = XMLContext.getXMLHandler(storableObject.getId().getMajor());
+		final List<String> keys = handler.getKeys();
 		final Map<String, Object> objectMap = new HashMap<String, Object>();
 		for (final String key : keys) {
 			objectMap.put(key, wrapper.getValue(storableObject, key));
 		}
 		final Identifier id = storableObject.getId();
-		final String className = storableObject.getClass().getName();
-		final String shortClassName = className.substring(className.lastIndexOf('.') + 1);
+		final String className = storableObject.getClass().getSimpleName();
 		/* put short class name when id is not unambiguously define entity */
-		if (!shortClassName.equals(ObjectEntities.codeToString(id.getMajor()))) {
-			objectMap.put(CLASSNAME, shortClassName);
+		if (!className.equals(ObjectEntities.codeToString(id.getMajor()))) {
+			objectMap.put(CLASSNAME, className);
 		}
 
 		this.driver.deleteObject(id);
