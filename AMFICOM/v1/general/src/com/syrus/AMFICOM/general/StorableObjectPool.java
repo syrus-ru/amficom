@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.161 2005/08/20 17:57:35 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.162 2005/08/23 15:52:14 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.161 $, $Date: 2005/08/20 17:57:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.162 $, $Date: 2005/08/23 15:52:14 $
+ * @author $Author: bob $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
  * (т. е. объектами, идентификаторы которых помещены в DELETED_IDS_MAP). Проверять так:
@@ -214,7 +214,7 @@ public final class StorableObjectPool {
 				final LRUMap objectPool = (LRUMap) obj;
 				objectPoolMap.put(entityCode, objectPool);
 				Log.debugMessage("StorableObjectPool.addObjectPool | Pool for '" + ObjectEntities.codeToString(entityCode)
-						+ "'/" + entityCode + " of size " + objectPoolSize + " added", Log.DEBUGLEVEL07);
+						+ "'/" + entityCode + " of size " + objectPoolSize + " added", Log.DEBUGLEVEL10);
 			} else
 				throw new UnsupportedOperationException("StorableObjectPool.addObjectPool | Object pool class "
 						+ objectPoolClass.getName() + " must extend LRUMap");

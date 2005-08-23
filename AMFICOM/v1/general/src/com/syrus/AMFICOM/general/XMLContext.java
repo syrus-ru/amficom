@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLContext.java,v 1.1 2005/08/22 12:08:27 bob Exp $
+* $Id: XMLContext.java,v 1.2 2005/08/23 15:52:14 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,13 +10,11 @@ package com.syrus.AMFICOM.general;
 
 import gnu.trove.TShortObjectHashMap;
 
-import java.util.logging.Level;
-
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/22 12:08:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/23 15:52:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general
@@ -38,7 +36,7 @@ public final class XMLContext {
 				+ entity + " already registered";
 		Log.debugMessage("XMLContext.registerXML() | XML Handler for type: "
 				+ entity + " registered",
-				Level.FINEST);
+				Log.DEBUGLEVEL10);
 		ENTITY_CODE_XML_MAP.put(entityCode, xml);
 	}
 
