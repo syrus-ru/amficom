@@ -82,11 +82,11 @@ public class AnalyseMainToolBar extends AbstractMainToolBar {
 			}
 
 			public void modelChanged(String e[]) {
-				buttonFileOpen.setVisible(true);
-				buttonFileOpen.setEnabled(true);
-
 				ApplicationModel aModel = AnalyseMainToolBar.this.getApplicationModel();
 
+				buttonFileOpen.setVisible(aModel.isVisible("menuFileOpen"));
+				buttonFileOpen.setEnabled(aModel.isEnabled("menuFileOpen"));
+				
 				traceDownload.setVisible(aModel.isVisible("menuTraceDownload"));
 				traceDownload.setEnabled(aModel.isEnabled("menuTraceDownload"));
 				traceAddCompare.setVisible(aModel.isVisible("menuTraceAddCompare"));
