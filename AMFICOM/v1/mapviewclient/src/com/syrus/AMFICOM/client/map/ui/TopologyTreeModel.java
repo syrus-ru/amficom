@@ -1,5 +1,5 @@
 /**
- * $Id: TopologyTreeModel.java,v 1.1 2005/08/23 09:40:02 krupenn Exp $
+ * $Id: TopologyTreeModel.java,v 1.2 2005/08/23 14:20:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,10 +10,12 @@ package com.syrus.AMFICOM.client.map.ui;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.geom.Rectangle2D;
+import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Map;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
@@ -25,6 +27,7 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.client.map.TopologyConditionWrapper;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -37,7 +40,11 @@ public class TopologyTreeModel implements ChildrenFactory {
 
 	public static final String TOPOLOGY_BRANCH = "topology";
 
+	private static final String NONAME_BRANCH = "noname";
+
 	static final int IMG_SIZE = 16;
+
+	public static final String UPDATE_STRUNG = "updating";
 
 	static ImageIcon layerIcon = new ImageIcon(Toolkit.getDefaultToolkit()
 			.getImage("images/layers.gif").getScaledInstance(
@@ -46,6 +53,8 @@ public class TopologyTreeModel implements ChildrenFactory {
 					Image.SCALE_SMOOTH));
 
 	NetMapViewer netMapViewer = null;
+	
+	static Map<Item, SpatialLayerPopulateThread> threads = new HashMap<Item, SpatialLayerPopulateThread>(); 
 	
 	public TopologyTreeModel() {
 		// empty
@@ -116,64 +125,134 @@ public class TopologyTreeModel implements ChildrenFactory {
 	}
 
 	void populateLayerNode(PopulatableIconedNode node) {
-		Item parentNode = node.getParent();
-		SpatialLayer spatialLayer = (SpatialLayer )parentNode.getObject();
-
-		try {
-			List<SpatialObject> objects;
-			MapImageLoader mapImageLoader = this.netMapViewer.getRenderer().getLoader();
-
-			try {
-				StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
-				if(condition != null) {
-					TypicalCondition typicalCondition = (TypicalCondition)condition;
-					objects = mapImageLoader.findSpatialObjects(spatialLayer, (String)typicalCondition.getValue());
-				}
-				else {
-					Rectangle2D.Double bounds = this.netMapViewer.getVisibleBounds();
-					objects = mapImageLoader.findSpatialObjects(spatialLayer, bounds);
-				}
-			} catch (Exception e) {
-				Log.debugException(e, Level.SEVERE);
-				return;
+		SpatialLayerPopulateThread populateThread = threads.get(node);
+		if(populateThread != null) {
+			if(populateThread.isRunning()) {
+				populateThread.stopRunning();
 			}
-
-			java.util.Map nodePresense = new HashMap();
-
-			List toRemove = new LinkedList();
-
-			for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
-				IconedNode childNode = (IconedNode) iter
-						.next();
-				SpatialObject spatialObject = (SpatialObject) childNode.getObject();
-				if(objects.contains(spatialObject)) {
-					nodePresense.put(spatialObject, childNode);
-				}
-				else
-					toRemove.add(childNode);
-			}
-			for(Iterator it = toRemove.iterator(); it.hasNext();) {
-				Item childItem = (Item) it.next();
-				childItem.setParent(null);
-			}
-
-			for(SpatialObject spatialObject : objects) {
-				Item childNode = (Item) nodePresense.get(spatialObject);
-				if(childNode == null) {
-					IconedNode newItem = new IconedNode(
-							spatialObject,
-							spatialObject.getLabel(),
-							false);
-					node.addChild(newItem);
-				}
-			}
-		} catch(Exception e) {
-			Log.debugException(e, Level.SEVERE);
 		}
+		populateThread = new SpatialLayerPopulateThread(node);
+		populateThread.start();
+		threads.put(node, populateThread);
 	}
 
 	public void setNetMapViewer(NetMapViewer netMapViewer) {
 		this.netMapViewer = netMapViewer;
 	}
 
+	class SpatialLayerPopulateThread extends Thread {
+
+		private final PopulatableIconedNode node;
+
+		private boolean running = false;
+
+		private String initialName = null;
+		
+		public SpatialLayerPopulateThread(PopulatableIconedNode node) {
+			this.node = node;
+		}
+
+		public void stopRunning() {
+			System.out.println("stop populating \'" + this.node.getName() + "\'");
+			this.running = false;
+			finalAction();
+		}
+		
+		public void run() {
+			try {
+				this.running = true;
+
+				System.out.println("start poplating \'" + this.node.getName() + "\'");
+
+				initialAction();
+
+				for(Iterator iter = new LinkedList(this.node.getChildren()).iterator(); iter.hasNext();) {
+					if(!this.running) {
+						finalAction();
+						return;
+					}
+					IconedNode childNode = (IconedNode) iter.next();
+					childNode.setParent(null);
+				}
+
+				System.out.println("children of \'" + this.initialName + "\' are removed");
+
+				List<SpatialObject> objects;
+				SpatialLayer spatialLayer = (SpatialLayer )this.node.getObject();
+				MapImageLoader mapImageLoader = TopologyTreeModel.this.netMapViewer.getRenderer().getLoader();
+
+				try {
+					StorableObjectCondition condition = ((FiltrableIconedNode)this.node).getResultingCondition();
+					if(condition != null) {
+						TypicalCondition typicalCondition = (TypicalCondition)condition;
+						objects = mapImageLoader.findSpatialObjects(spatialLayer, (String)typicalCondition.getValue());
+					}
+					else {
+						if(spatialLayer.isVisible() && spatialLayer.isVisibleAtScale(TopologyTreeModel.this.netMapViewer.getMapContext().getScale())) {
+							Rectangle2D.Double bounds = TopologyTreeModel.this.netMapViewer.getVisibleBounds();
+							objects = mapImageLoader.findSpatialObjects(spatialLayer, bounds);
+						}
+						else {
+							objects = Collections.emptyList();
+						}
+					}
+				} catch (Exception e) {
+					Log.debugException(e, Level.SEVERE);
+					this.running = false;
+					finalAction();
+					return;
+				}
+				if(!this.running) {
+					finalAction();
+					return;
+				}
+				
+				System.out.println("found " + objects.size() + " entities of \'" + this.initialName + "\'");
+
+				for(SpatialObject spatialObject : objects) {
+					if(!this.running) {
+						finalAction();
+						return;
+					}
+					String label = spatialObject.getLabel();
+					if(label == null || label.length() == 0) {
+						label = LangModelMap.getString(NONAME_BRANCH);
+					}
+					IconedNode newItem = new IconedNode(
+							spatialObject,
+							label,
+							false);
+					this.node.addChild(newItem);
+				}
+			} catch(Exception e) {
+				Log.debugException(e, Level.SEVERE);
+				System.out.println("processing \'" + this.initialName + "\' terminated by " + e.getMessage());
+			}
+			finally {
+				finalAction();
+				System.out.println("finish processing \'" + this.initialName + "\'");
+				this.running = false;
+			}
+		}
+
+		private void finalAction() {
+			if(this.initialName != null) {
+				this.node.setName(this.initialName);
+				System.out.println("Set initial name \'" + this.initialName + "\'");
+			}
+		}
+
+		private void initialAction() {
+			this.initialName = this.node.getName();
+			String updatingName = this.initialName + " " + LangModelMap.getString(UPDATE_STRUNG);
+			this.node.setName(updatingName);
+			System.out.println("Set temporal name \'" + updatingName + "\'");
+		}
+
+		public boolean isRunning() {
+			return this.running;
+		}
+		
+	}
 }
+
