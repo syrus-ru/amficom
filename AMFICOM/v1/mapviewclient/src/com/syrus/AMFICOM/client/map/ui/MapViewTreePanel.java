@@ -43,7 +43,7 @@ public final class MapViewTreePanel extends JPanel {
 
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 
-		tree.addTreeSelectionListener(new MapViewTreeEventHandler(tree, this.aContext, model, root));
+		tree.addTreeSelectionListener(new MapViewTreeEventHandler(iconedTreeUI, this.aContext, model, root));
 		tree.addMouseListener(new MapViewTreeMouseListener(tree, this.aContext));
 
 		this.add(flterTreeUI.getPanel(), BorderLayout.CENTER);
