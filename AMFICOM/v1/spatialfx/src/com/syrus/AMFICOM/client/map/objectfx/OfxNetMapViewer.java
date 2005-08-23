@@ -1,5 +1,5 @@
 /**
- * $Id: OfxNetMapViewer.java,v 1.9 2005/06/20 15:38:54 krupenn Exp $
+ * $Id: OfxNetMapViewer.java,v 1.10 2005/08/23 14:36:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,7 @@ import javax.swing.JPanel;
 import com.ofx.component.swing.JMapViewer;
 import com.ofx.geometry.SxDoublePoint;
 import com.ofx.geometry.SxRectangle;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapContext;
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.client.map.SpatialObject;
 
 /**
  * 
- * @version $Revision: 1.9 $, $Date: 2005/06/20 15:38:54 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/23 14:36:57 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -110,6 +111,7 @@ public class OfxNetMapViewer extends NetMapViewer
 	{
 		this.mapConnection.getSpatialLayer().postDirtyEvent();
 		this.mapConnection.getSpatialLayer().postPaintEvent();
+		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_REPAINTED));
 	}
 	
 	public Rectangle2D.Double getVisibleBounds()

@@ -11,6 +11,7 @@ import java.util.logging.Level;
 import javax.swing.JComponent;
 
 import com.mapinfo.util.DoubleRect;
+import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -107,9 +108,9 @@ public class MapInfoNetMapViewer extends NetMapViewer {
 		final long t1 = System.currentTimeMillis();
 		if (fullRepaint) {
 			Log.debugMessage(" MIFLNL - repaint - Entered full repaint", Level.FINEST);
-
 			this.visualComponent.setMapImage(this.renderer.getImage());
 			Log.debugMessage(" MIFLNL - repaint - Exiting full repaint", Level.FINEST);
+			this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_REPAINTED));
 		}
 
 		final long t2 = System.currentTimeMillis();
