@@ -1,5 +1,5 @@
 /*
- * $Id: XMLIdentifierGeneratorServer.java,v 1.9 2005/08/12 15:01:06 arseniy Exp $
+ * $Id: XMLIdentifierGeneratorServer.java,v 1.10 2005/08/23 15:01:53 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,15 +12,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedSet;
 import java.util.TreeSet;
-import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/12 15:01:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/08/23 15:01:53 $
+ * @author $Author: bob $
  * @module csbridge
  */
 public class XMLIdentifierGeneratorServer implements IdentifierGeneratorServer, IGSConnectionManager {
@@ -49,7 +48,7 @@ public class XMLIdentifierGeneratorServer implements IdentifierGeneratorServer, 
 				if (!ids.isEmpty()) {
 					id = ids.last();
 					Log.debugMessage("XMLIdentifierGeneratorServer.getGeneratedIdentifier | last id is " + id.getIdentifierString(),
-							Level.FINEST);
+							Log.DEBUGLEVEL10);
 				}
 
 				count = new Long((id != null) ? id.getMinor() : -1);
