@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLStorableObjectCondition.java,v 1.2 2005/08/19 14:41:20 arseniy Exp $
+* $Id: XMLStorableObjectCondition.java,v 1.3 2005/08/23 11:31:44 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.general;
 import java.util.Collections;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.logging.Level;
 
 import javax.xml.transform.TransformerException;
 
@@ -24,8 +23,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/19 14:41:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/08/23 11:31:44 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -52,7 +51,7 @@ public abstract class XMLStorableObjectCondition<T extends StorableObjectConditi
 	}
 
 	protected final Set<Identifier> getIdsByCondition(final String query, final boolean useParent) throws IllegalDataException {
-		Log.debugMessage("XMLStorableObjectCondition.getIdsByCondition | query:" + query, Level.FINEST);
+		Log.debugMessage("XMLStorableObjectCondition.getIdsByCondition | query:" + query, Log.DEBUGLEVEL10);
 		try {
 			final NodeList idNodeList = XPathAPI.selectNodeList(this.driver.getDoc(), query);
 			final int size = idNodeList.getLength();

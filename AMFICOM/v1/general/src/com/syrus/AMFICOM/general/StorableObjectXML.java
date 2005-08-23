@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectXML.java,v 1.41 2005/08/23 06:14:08 bob Exp $
+ * $Id: StorableObjectXML.java,v 1.42 2005/08/23 11:31:44 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
 import com.syrus.util.Log;
 
@@ -31,7 +30,7 @@ import com.syrus.util.Log;
  * {@link com.syrus.AMFICOM.general.Characteristic}) which must have static
  * getInstance method.
  *
- * @version $Revision: 1.41 $, $Date: 2005/08/23 06:14:08 $
+ * @version $Revision: 1.42 $, $Date: 2005/08/23 11:31:44 $
  * @author $Author: bob $
  * @module general
  */
@@ -61,10 +60,10 @@ public class StorableObjectXML {
 		Set<T> set = null;
 		final Set<Identifier> identifiers = this.reflectXMLCondition(condition).getIdsByCondition();
 		Log.debugMessage("StorableObjectXML.retrieveButIdsByCondition | identifiers:" + Identifier.createStrings(identifiers),
-				Level.FINEST);
+				Log.DEBUGLEVEL10);
 		identifiers.removeAll(ids);
 		Log.debugMessage("StorableObjectXML.retrieveButIdsByCondition | cleaned identifiers:" + Identifier.createStrings(identifiers),
-				Level.FINEST);
+				Log.DEBUGLEVEL10);
 		for (final Identifier id : identifiers) {
 			try {
 				final T storableObject = this.<T> retrieve(id);
