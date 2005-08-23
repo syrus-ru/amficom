@@ -181,10 +181,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	public static final Color	COLOR_WARNING_SELECTED				= Color.YELLOW;
 
 	public SchedulerModel(ApplicationContext aContext) {
-		// this.aContext = aContext;
 		this.dispatcher = aContext.getDispatcher();
 
-		// this.dispatcher.register(this, TimeStampsEditor.DATE_OPERATION);
 		this.dispatcher.addPropertyChangeListener(COMMAND_CLEAN, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_NAME, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_TEMPORAL_STAMPS, this);
@@ -200,16 +198,13 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.dispatcher.addPropertyChangeListener(COMMAND_ADD_NEW_MEASUREMENT_SETUP, this);
 
 		//
-		this.add("menuSession");
-		this.add("menuSessionNew");
-		this.add("menuSessionClose");
-		this.add("menuSessionOptions");
-		this.add("menuSessionConnection");
-		this.add("menuSessionChangePassword");
-		this.add("menuSessionSave");
-		this.add("menuSessionUndo");
-		this.add("menuSessionDomain");
-		this.add("menuExit");
+		this.add(MENU_SESSION);
+		this.add(MENU_SESSION_NEW);
+		this.add(MENU_SESSION_CLOSE);
+		this.add(MENU_SESSION_OPTIONS);
+		this.add(MENU_SESSION_CHANGE_PASSWORD);
+		this.add(MENU_SESSION_DOMAIN);
+		this.add(MENU_EXIT);
 
 		this.add(ScheduleMainMenuBar.MENU_VIEW);
 		this.add(ScheduleMainMenuBar.MENU_VIEW_PLAN);
@@ -226,10 +221,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 		this.add(ApplicationModel.MENU_HELP);
 		this.add(ApplicationModel.MENU_HELP_ABOUT);
-
-		this.setVisible("menuSessionSave", false);
-		this.setVisible("menuSessionUndo", false);
-		this.setVisible("menuSessionOptions", false);
 
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW, true);
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_PLAN, true);
@@ -261,28 +252,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
-		// Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" +
-		// commandName, getClass().getName());
-		// if (commandName.equals(TimeStampsEditor.DATE_OPERATION)) {
-		// if (this.selectedTestIds != null && this.selectedTestIds.isChanged())
-		// {
-		// TestTemporalType temporalType =
-		// this.selectedTestIds.getTemporalType();
-		// switch(temporalType.value()) {
-		// case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-		// Log.debugMessage("SchedulerModel.operationPerformed | selected test "
-		// + this.selectedTestIds.getId(), Log.FINEST);
-		// Log.debugMessage("SchedulerModel.operationPerformed | selected test
-		// was " + this.selectedTestIds.getStartTime(), Log.FINEST);
-		// this.selectedTestIds.setStartTime((Date) obj);
-		// Log.debugMessage("SchedulerModel.operationPerformed | selected test
-		// now " + this.selectedTestIds.getStartTime(), Log.FINEST);
-		// this.refreshTests();
-		// break;
-		// }
-		// }
-		// }
-		// else
 		if (propertyName.equals(COMMAND_CLEAN)) {
 			if (this.testIds != null)
 				this.testIds.clear();
@@ -294,27 +263,20 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			}
 		} else if (propertyName.equals(COMMAND_SET_ANALYSIS_TYPE)) {
 			this.analysisTypeId = (Identifier) evt.getNewValue();
-			// this.generateTest();
 		}
 //		else if (propertyName.equals(COMMAND_SET_EVALUATION_TYPE)) {
 //			this.evaluationTypeId = (Identifier) evt.getNewValue();
-//			// this.generateTest();
 //		} 
 		else if (propertyName.equals(COMMAND_SET_MEASUREMENT_TYPE)) {
 			this.measurementType = (MeasurementType) evt.getNewValue();
-			// this.generateTest();
 		} else if (propertyName.equals(COMMAND_SET_MONITORED_ELEMENT)) {
 			this.monitoredElement = (MonitoredElement) evt.getNewValue();
-			// this.generateTest();
 		} else if (propertyName.equals(COMMAND_SET_SET)) {
 			this.set = (ParameterSet) evt.getNewValue();
-			// this.generateTest();
 		} else if (propertyName.equals(COMMAND_SET_MEASUREMENT_SETUP)) {
 			this.measurementSetup = (MeasurementSetup) evt.getNewValue();
-			// this.generateTest();
 		} else if (propertyName.equals(COMMAND_SET_TEMPORAL_STAMPS)) {
 			this.testTimeStamps = (TestTemporalStamps) evt.getNewValue();
-			// this.generateTest();
 		} else if (propertyName.equals(COMMAND_SET_NAME)) {
 			this.name = (String) evt.getNewValue();
 		} else if (propertyName.equals(COMMAND_REFRESH_TIME_STAMPS)) {
