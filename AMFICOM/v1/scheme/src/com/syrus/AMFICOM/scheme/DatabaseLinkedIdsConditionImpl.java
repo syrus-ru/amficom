@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.30 2005/08/16 07:39:52 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.31 2005/08/23 07:43:20 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,13 +37,11 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.map.SiteNodeWrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.30 $, $Date: 2005/08/16 07:39:52 $
+ * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2005/08/23 07:43:20 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -55,6 +53,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 	/**
 	 * @see com.syrus.AMFICOM.general.DatabaseStorableObjectCondition#getSQLQuery()
 	 */
+	@SuppressWarnings("static-access")
 	public String getSQLQuery() throws IllegalObjectEntityException {
 		switch (super.condition.getEntityCode().shortValue()) {
 			case SCHEMEPROTOGROUP_CODE:
