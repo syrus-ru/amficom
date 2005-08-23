@@ -1,5 +1,5 @@
 /**
- * $Id: MapInfoServletImageLoader.java,v 1.5 2005/08/12 15:04:32 arseniy Exp $
+ * $Id: MapInfoServletImageLoader.java,v 1.6 2005/08/23 10:12:14 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client.map.mapinfo;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.geom.Rectangle2D.Double;
 import java.io.EOFException;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -223,68 +224,19 @@ public class MapInfoServletImageLoader implements MapImageLoader {
 		return this.connection;
 	}
 
-	/*
-	 * (non-Javadoc)
-	 * 
-	 * @see com.syrus.AMFICOM.client.map.MapImageLoader#findSpatialObjects(java.lang.String)
-	 */
-	public List<SpatialObject> findSpatialObjects(final String searchText) throws MapConnectionException, MapDataException {
-		final List<SpatialObject> resultList = new ArrayList<SpatialObject>();
 
-		try {
-			final String requestString = this.uriString + this.createSearchCommandString(searchText);
-			final URI mapServerURI = new URI(requestString);
-			final URL mapServerURL = new URL(mapServerURI.toASCIIString());
-			final URLConnection urlConnection = mapServerURL.openConnection();
-
-			System.out.println("MIServletImageLoader - searchText - Conection opened");
-
-			if (urlConnection.getInputStream() == null) {
-				return resultList;
-			}
-
-			final ObjectInputStream ois = new ObjectInputStream(urlConnection.getInputStream());
-
-			System.out.println("MIFLNL - searchText - ObjectInputStream exists");
-
-			// reading possible error from server
-			try {
-				final Object readObject = ois.readObject();
-				if (readObject instanceof String) {
-					// Environment.log(
-					// Environment.LOG_LEVEL_FINER,
-					// (String )readObject);
-					return resultList;
-				}
-			} catch (IOException optExc) {
-				//Nothing
-			}
-
-			// reading names and centers
-			try {
-				for (;;) {
-					final double xCoord = ois.readDouble();
-					final double yCoord = ois.readDouble();
-					final String featureName = (String) ois.readObject();
-
-					resultList.add(new MapInfoSpatialObject(new DoublePoint(xCoord, yCoord), featureName));
-				}
-			} catch (EOFException eofExc) {
-				//Nothing
-			}
-			System.out.println("MIFLNL - searchText - Spatial objects read");
-
-			ois.close();
-			System.out.println("MIFLNL - searchText - Stream closed");
-		}
-
-		catch (Exception exc) {
-			exc.printStackTrace();
-		}
-
-		return resultList;
+	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
+		// TODO Требуется реализация на сервере
+		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
+		return searchResultsList;
 	}
 
+	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapConnectionException, MapDataException {
+		// TODO Требуется реализация на сервере
+		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
+		return searchResultsList;
+	}
+	
 	private String createSearchCommandString(final String nameToSearch) {
 		String result = "";
 		result += "?" + ServletCommandNames.COMMAND_NAME + "=" + ServletCommandNames.CN_SEARCH_NAME;

@@ -9,10 +9,10 @@ import com.syrus.AMFICOM.client.map.SpatialLayer;
 public class MapInfoSpatialLayer implements SpatialLayer {
 	private boolean visible = true;
 
-	private FeatureLayer mapLayer = null;
+	private FeatureLayer featureLayer = null;
 
 	public MapInfoSpatialLayer(final FeatureLayer mapLayer) {
-		this.mapLayer = mapLayer;
+		this.featureLayer = mapLayer;
 	}
 
 	public MapInfoSpatialLayer() {// empty
@@ -26,7 +26,7 @@ public class MapInfoSpatialLayer implements SpatialLayer {
 		boolean returnValue = false;
 		try {
 			// Проверяем видны ли надписи на текущем масштабе на сервере
-			returnValue = this.mapLayer.isAutoLabel();
+			returnValue = this.featureLayer.isAutoLabel();
 		} catch (Exception exc) {
 			exc.printStackTrace();
 		}
@@ -40,9 +40,9 @@ public class MapInfoSpatialLayer implements SpatialLayer {
 	public boolean isVisibleAtScale(final double scale) {
 		boolean returnValue = false;
 		try {
-			if (this.mapLayer.isZoomLayer()) {
-				final Distance minZoom = this.mapLayer.getMinZoom();
-				final Distance maxZoom = this.mapLayer.getMaxZoom();
+			if (this.featureLayer.isZoomLayer()) {
+				final Distance minZoom = this.featureLayer.getMinZoom();
+				final Distance maxZoom = this.featureLayer.getMaxZoom();
 				if ((minZoom.getScalarValue() < scale) && (scale < maxZoom.getScalarValue())) {
 					returnValue = true;
 				}
@@ -73,6 +73,10 @@ public class MapInfoSpatialLayer implements SpatialLayer {
 	}
 
 	public String getName() {
-		return this.mapLayer.getName();
+		return this.featureLayer.getName();
+	}
+
+	public FeatureLayer getFeatureLayer() {
+		return this.featureLayer;
 	}
 }

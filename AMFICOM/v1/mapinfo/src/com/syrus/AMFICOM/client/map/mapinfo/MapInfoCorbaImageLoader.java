@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.6 2005/08/18 14:06:06 max Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.7 2005/08/23 10:12:14 peskovsky Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ import static com.syrus.io.FileLoader.BUFF_SIZE;
 import static com.syrus.io.FileLoader.NULL_STUB;
 
 import java.awt.Image;
+import java.awt.geom.Rectangle2D.Double;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.FileOutputStream;
@@ -32,6 +33,7 @@ import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapImageLoader;
+import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
@@ -52,8 +54,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/18 14:06:06 $
- * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2005/08/23 10:12:14 $
+ * @author $Author: peskovsky $
  * @module mapinfo
  */
 
@@ -119,40 +121,40 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		return this.connection;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.client.map.MapImageLoader#findSpatialObjects(java.lang.String)
-	 */
-	public List<SpatialObject> findSpatialObjects(final String searchText) throws MapConnectionException, MapDataException {
-		final List<SpatialObject> resultList = new ArrayList<SpatialObject>();
-
-		final IdlSessionKey keyt = LoginManager.getSessionKeyTransferable();
-		IdlMapFeature[] objectsFound;
-
-		long t1 = 0, t2 = 0;
-
-		try {
-			final MscharServer mscharServer = this.connection.getMscharServer();
-			t1 = System.currentTimeMillis();
-			objectsFound = mscharServer.findFeature(searchText, keyt);
-			t2 = System.currentTimeMillis();
-		} catch (AMFICOMRemoteException e) {
-			Log.errorMessage("TopologicalImageLoader.loadTopologicalImage |" + e.getMessage());
-			return null;
-		}
-		Log.debugMessage("MapInfoCorbaImageLoader.findSpatialObjects | " + "searched for " + (t2 - t1) + " ms.", Level.INFO);
-
-		if ((objectsFound.length == 1) && (objectsFound[0].name.equals(""))) {
-			return resultList;
-		}
-
-		for (final IdlMapFeature mapFeature : objectsFound) {
-			final MapInfoSpatialObject spatialObject = new MapInfoSpatialObject(new DoublePoint(mapFeature.centerX, mapFeature.centerY),
-					mapFeature.name);
-			resultList.add(spatialObject);
-		}
-
-		return resultList;
-	}
+//	/* (non-Javadoc)
+//	 * @see com.syrus.AMFICOM.client.map.MapImageLoader#findSpatialObjects(java.lang.String)
+//	 */
+//	public List<SpatialObject> findSpatialObjects(final String searchText) throws MapConnectionException, MapDataException {
+//		final List<SpatialObject> resultList = new ArrayList<SpatialObject>();
+//
+//		final IdlSessionKey keyt = LoginManager.getSessionKeyTransferable();
+//		IdlMapFeature[] objectsFound;
+//
+//		long t1 = 0, t2 = 0;
+//
+//		try {
+//			final MscharServer mscharServer = this.connection.getMscharServer();
+//			t1 = System.currentTimeMillis();
+//			objectsFound = mscharServer.findFeature(searchText, keyt);
+//			t2 = System.currentTimeMillis();
+//		} catch (AMFICOMRemoteException e) {
+//			Log.errorMessage("TopologicalImageLoader.loadTopologicalImage |" + e.getMessage());
+//			return null;
+//		}
+//		Log.debugMessage("MapInfoCorbaImageLoader.findSpatialObjects | " + "searched for " + (t2 - t1) + " ms.", Level.INFO);
+//
+//		if ((objectsFound.length == 1) && (objectsFound[0].name.equals(""))) {
+//			return resultList;
+//		}
+//
+//		for (final IdlMapFeature mapFeature : objectsFound) {
+//			final MapInfoSpatialObject spatialObject = new MapInfoSpatialObject(new DoublePoint(mapFeature.centerX, mapFeature.centerY),
+//					mapFeature.name);
+//			resultList.add(spatialObject);
+//		}
+//
+//		return resultList;
+//	}
 	
 	public List<MapDescriptor> getMapDescriptors() {
 		final MscharServer serv = this.connection.getMscharServer();
@@ -312,5 +314,17 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		} catch (IOException e) {
 			Log.errorMessage("LayerFilesParser.patchMapMDF() | IOException " + e.getMessage());
 		}
+	}
+
+	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
+		// TODO Требуется реализация на сервере
+		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
+		return searchResultsList;
+	}
+
+	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapConnectionException, MapDataException {
+		// TODO Требуется реализация на сервере
+		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
+		return searchResultsList;
 	}
 }
