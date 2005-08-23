@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.10 2005/08/23 10:12:14 peskovsky Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.11 2005/08/23 11:04:20 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.10 $, $Date: 2005/08/23 10:12:14 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2005/08/23 11:04:20 $
  * @module mapinfo
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectionListener {
@@ -140,10 +140,10 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 
 	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapConnectionException, MapDataException {
 		final com.mapinfo.util.DoubleRect areaBounds = new com.mapinfo.util.DoubleRect(
-				bounds.x,
-				bounds.y,
-				bounds.width,
-				bounds.height);
+				bounds.getMinX(),
+				bounds.getMinY(),
+				bounds.getMaxX(),
+				bounds.getMaxY());
 		
 		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
 
