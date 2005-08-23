@@ -27,6 +27,7 @@ impl:
 		-sourcepath $(SRC) \
 		$(SRC)\com\syrus\AMFICOM\client\event\MapEvent.java \
 		$(SRC)\com\syrus\AMFICOM\client\event\MapNavigateEvent.java \
+		$(SRC)\com\syrus\AMFICOM\client\map\*.java \
 		$(SRC)\com\syrus\AMFICOM\client\resource\LangModelMap.java \
 		$(SRC)\com\syrus\AMFICOM\client\resource\MiscUtil.java
 
