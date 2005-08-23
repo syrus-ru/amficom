@@ -61,8 +61,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/08/20 19:53:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.68 $, $Date: 2005/08/23 10:46:11 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -129,7 +129,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	private JComboBox		waveLengthComboBox;
 	JComboBox				maxDistanceComboBox;
-	JCheckBox				pulseWidthCheckBox;
+	JCheckBox				highResolutionCheckBox;
 	JComboBox				pulseWidthHiResComboBox;
 	JComboBox				pulseWidthLowResComboBox;
 	JComboBox				resolutionComboBox;
@@ -151,7 +151,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	private JLabel			countOfAverageOutLabel;
 	private JLabel			resolutionLabel;
 	private JLabel			maxDistanceLabel;
-
+	private JLabel 			pulseWidthLabel;
+	
 	Identifier				setId;
 
 	long					maxPoints;
@@ -190,14 +191,14 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						} else if (type.equals(ParameterType.REF_RESOLUTION)) {
 							value = this.resolutionComboBox.getSelectedItem();
 						} else if (type.equals(ParameterType.REF_PULSE_WIDTH_HIGH_RES)) {
-							if (this.pulseWidthCheckBox.isSelected()) {
+							if (this.highResolutionCheckBox.isSelected()) {
 								value = this.pulseWidthHiResComboBox.getSelectedItem();
 							} else {
 								value = this.pulseWidthLowResComboBox.getSelectedItem();
 								typeUnchanged = ParameterType.REF_PULSE_WIDTH_LOW_RES;
 							}
 						} else if (type.equals(ParameterType.REF_PULSE_WIDTH_LOW_RES)) {
-							if (!this.pulseWidthCheckBox.isSelected()) {
+							if (!this.highResolutionCheckBox.isSelected()) {
 								value = this.pulseWidthLowResComboBox.getSelectedItem();
 							} else {
 								value = this.pulseWidthHiResComboBox.getSelectedItem();
@@ -231,7 +232,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						} else if (type.equals(ParameterType.REF_RESOLUTION)) {
 							value = this.resolutionComboBox.getSelectedItem();
 						} else if (type.equals(ParameterType.REF_PULSE_WIDTH_HIGH_RES)) {
-							if (this.pulseWidthCheckBox.isSelected()) {
+							if (this.highResolutionCheckBox.isSelected()) {
 								value = this.pulseWidthHiResComboBox.getSelectedItem();
 							} else {
 								this.unchangedObjects.remove(type);
@@ -248,7 +249,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 								}
 							}
 						} else if (type.equals(ParameterType.REF_PULSE_WIDTH_LOW_RES)) {
-							if (!this.pulseWidthCheckBox.isSelected()) {
+							if (!this.highResolutionCheckBox.isSelected()) {
 								value = this.pulseWidthLowResComboBox.getSelectedItem();
 							} else {
 								this.unchangedObjects.remove(type);
@@ -346,7 +347,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 				params[2] = Parameter.createInstance(ParameterType.REF_RESOLUTION, byteArray.getBytes());
 
-				if (this.pulseWidthCheckBox.isSelected()) {
+				if (this.highResolutionCheckBox.isSelected()) {
 					final Object pulse = this.pulseWidthHiResComboBox.getSelectedItem();
 					if (pulse == null) {
 						throw new IllegalArgumentException(LangModelSchedule.getString("Error.PulseWidthIsNotSet")); //$NON-NLS-1$
@@ -441,7 +442,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		final Object resolution = this.resolutionComboBox.getSelectedItem();
 		this.unchangedObjects.put(ParameterType.REF_RESOLUTION, resolution != null ? resolution.toString() : null);
 
-		if (this.pulseWidthCheckBox.isSelected()) {
+		if (this.highResolutionCheckBox.isSelected()) {
 			final Object pulse = this.pulseWidthHiResComboBox.getSelectedItem();
 			this.unchangedObjects.put(ParameterType.REF_PULSE_WIDTH_HIGH_RES, pulse != null ? pulse.toString() : null);
 		} else {
@@ -469,8 +470,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				+ this.getUnit(ParameterType.REF_WAVE_LENGTH));
 		this.countOfAverageOutLabel.setText(ParameterType.REF_AVERAGE_COUNT.getDescription()
 				+ this.getUnit(ParameterType.REF_AVERAGE_COUNT));
-		this.pulseWidthCheckBox.setText(ParameterType.REF_PULSE_WIDTH_HIGH_RES.getDescription()
-				+ this.getUnit(ParameterType.REF_PULSE_WIDTH_HIGH_RES));
+//		this.pulseWidthCheckBox.setText(ParameterType.REF_PULSE_WIDTH_HIGH_RES.getDescription()
+//				+ this.getUnit(ParameterType.REF_PULSE_WIDTH_HIGH_RES));
+		this.pulseWidthLabel.setText(LangModelSchedule.getString("Text.PulseWidth") 
+			+ this.getUnit(ParameterType.REF_PULSE_WIDTH_HIGH_RES));
 //		this.pulseWidthHiResLabel.setText(ParameterType.REF_PULSE_WIDTH_HIGH_RES.getDescription()
 //				+ this.getUnit(ParameterType.REF_PULSE_WIDTH_HIGH_RES));
 //		this.pulseWidthLowResLabel.setText(ParameterType.REF_PULSE_WIDTH_LOW_RES.getDescription()
@@ -485,7 +488,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	private String getUnit(final ParameterType parameterType) {
-		return ',' + parameterType.getMeasurementUnit().getName();
+		String name = parameterType.getMeasurementUnit().getName();
+		return name.trim().length() > 0 ? ',' + name : "";
 	}
 
 	private ByteArray getByteArray(final String value, final ParameterType parameterType) {
@@ -900,13 +904,13 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				this.selectCBValue(this.resolutionComboBox, stringValue);
 			} else if (parameterType.equals(ParameterType.REF_PULSE_WIDTH_HIGH_RES)) {
 				this.selectCBValue(this.pulseWidthHiResComboBox, stringValue);
-				if (!this.pulseWidthCheckBox.isSelected()) {
-					this.pulseWidthCheckBox.doClick();
+				if (!this.highResolutionCheckBox.isSelected()) {
+					this.highResolutionCheckBox.doClick();
 				}
 			} else if (parameterType.equals(ParameterType.REF_PULSE_WIDTH_LOW_RES)) {
 				this.selectCBValue(this.pulseWidthLowResComboBox, stringValue);
-				if (this.pulseWidthCheckBox.isSelected()) {
-					this.pulseWidthCheckBox.doClick();
+				if (this.highResolutionCheckBox.isSelected()) {
+					this.highResolutionCheckBox.doClick();
 				}
 			}
 		}
@@ -921,7 +925,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 		this.waveLengthComboBox = new JComboBox();
 		this.maxDistanceComboBox = new JComboBox();
-		this.pulseWidthCheckBox = new JCheckBox("Use HiRes pulse width");
+		this.highResolutionCheckBox = new JCheckBox(LangModelSchedule.getString("Text.HighResolution"));
 		this.pulseWidthHiResComboBox = new JComboBox();
 		this.pulseWidthLowResComboBox = new JComboBox();
 		this.resolutionComboBox = new JComboBox();
@@ -932,10 +936,11 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.countOfAverageOutLabel = new JLabel(LangModelSchedule.getString("Text.AverageQuantity")); //$NON-NLS-1$
 		this.resolutionLabel = new JLabel(LangModelSchedule.getString("Text.Resolution")); //$NON-NLS-1$
 		this.maxDistanceLabel = new JLabel(LangModelSchedule.getString("Text.Distance")); //$NON-NLS-1$
+		this.pulseWidthLabel = new JLabel(LangModelSchedule.getString("Text.PulseWidth")); //$NON-NLS-1$
 
-		this.gsOptionBox = new JCheckBox();
-		this.bcOptionBox = new JCheckBox();
-		this.lfdOptionBox = new JCheckBox();
+		this.gsOptionBox = new JCheckBox(LangModelSchedule.getString("Text.GainSplice"));
+		this.bcOptionBox = new JCheckBox(LangModelSchedule.getString("Text.BoxCar"));
+		this.lfdOptionBox = new JCheckBox(LangModelSchedule.getString("Text.LiveFiberDetect"));
 
 		this.refractTextField.addActionListener(new ActionListener() {
 
@@ -1016,7 +1021,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			}
 		});
 
-		this.pulseWidthCheckBox.addActionListener(new ActionListener() {
+		this.highResolutionCheckBox.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				JCheckBox checkBox = (JCheckBox) e.getSource();
@@ -1039,7 +1044,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.refractTextField.addActionListener(changeActionListener);
 		this.waveLengthComboBox.addActionListener(changeActionListener);
 		this.averageQuantityComboBox.addActionListener(changeActionListener);
-		this.pulseWidthCheckBox.addActionListener(changeActionListener);
+		this.highResolutionCheckBox.addActionListener(changeActionListener);
 		this.pulseWidthHiResComboBox.addActionListener(changeActionListener);
 		this.pulseWidthLowResComboBox.addActionListener(changeActionListener);
 		this.resolutionComboBox.addActionListener(changeActionListener);
@@ -1051,10 +1056,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	private void createGUI() {
 		this.skip = true;
 		this.createUIItems();
-		this.setLayout(new GridBagLayout());
-		
-		this.bcOptionBox.setSelected(false);
-		this.bcOptionBox.setEnabled(true);
+		this.setLayout(new GridBagLayout());		
 
 		GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
@@ -1084,13 +1086,17 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.add(this.averageQuantityComboBox, gbc);
 
 		gbc.weightx = 1.0;
-		this.add(this.pulseWidthCheckBox, gbc);
+		this.add(this.highResolutionCheckBox, gbc);
 
+		gbc.gridwidth = GridBagConstraints.RELATIVE;
+		this.add(this.pulseWidthLabel, gbc);
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		gbc.weightx = 0.0;
 		this.add(this.pulseWidthHiResComboBox, gbc);
 
 		this.add(this.pulseWidthLowResComboBox, gbc);
 
-		this.pulseWidthCheckBox.doClick();
+		this.highResolutionCheckBox.doClick();
 
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
@@ -1107,17 +1113,23 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.add(this.resolutionComboBox, gbc);
 		
 		gbc.weightx = 1.0;
-		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		this.add(new JLabel(LangModelSchedule.getString("Text.GainSplice")), gbc); //$NON-NLS-1$
-		gbc.weightx = 0.0;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
+//		gbc.gridwidth = GridBagConstraints.RELATIVE;
+//		this.add(new JLabel(LangModelSchedule.getString("Text.GainSplice")), gbc); //$NON-NLS-1$
+//		gbc.weightx = 0.0;
+//		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		this.add(this.gsOptionBox, gbc);
 
 		gbc.weightx = 1.0;
-		gbc.gridwidth = GridBagConstraints.RELATIVE;
-		this.add(new JLabel(LangModelSchedule.getString("Text.LiveFiberDetect")), gbc); //$NON-NLS-1$
-		gbc.weightx = 0.0;
-		gbc.gridwidth = GridBagConstraints.REMAINDER;
+//		this.add(this.bcOptionBox, gbc);
+		this.bcOptionBox.setSelected(false);
+		this.bcOptionBox.setEnabled(false);
+
+		
+		gbc.weightx = 1.0;
+//		gbc.gridwidth = GridBagConstraints.RELATIVE;
+//		this.add(new JLabel(LangModelSchedule.getString("Text.LiveFiberDetect")), gbc); //$NON-NLS-1$
+//		gbc.weightx = 0.0;
+//		gbc.gridwidth = GridBagConstraints.REMAINDER;
 		this.add(this.lfdOptionBox, gbc);
 
 		gbc.weighty = 1.0;
