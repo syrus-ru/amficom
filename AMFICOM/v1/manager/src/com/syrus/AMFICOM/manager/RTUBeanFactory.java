@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.11 2005/08/15 14:20:05 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.12 2005/08/23 07:52:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,16 +18,16 @@ import static com.syrus.AMFICOM.manager.RTUBeanWrapper.PROPERTY_MCMS_REFRESHED;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
-import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
+import com.syrus.AMFICOM.measurement.KIS;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/23 07:52:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

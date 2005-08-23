@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.13 2005/08/17 15:59:40 bob Exp $
+ * $Id: AbstractBean.java,v 1.14 2005/08/23 07:52:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/23 07:52:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -32,6 +32,8 @@ public abstract class AbstractBean {
 
 	protected JPanel		propertyPanel;
 
+	protected JGraphText	graphText;
+	
 	protected AbstractBean() {
 		// nothing
 	}
@@ -95,6 +97,10 @@ public abstract class AbstractBean {
 	@Override
 	public String toString() {
 		return this.getClass().getName() + " is " + this.codeName + '/' + this.getName() + '/';
+	}
+	
+	public final void setGraphText(final JGraphText graphText) {
+		this.graphText = graphText;
 	}
 
 }

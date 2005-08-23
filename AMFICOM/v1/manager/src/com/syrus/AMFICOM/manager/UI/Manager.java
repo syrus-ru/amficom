@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.4 2005/08/17 15:59:40 bob Exp $
+* $Id: Manager.java,v 1.5 2005/08/23 07:52:33 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.manager.UI;
 
 import java.util.Set;
 
+import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
@@ -21,6 +22,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.DataType;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -32,7 +34,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/23 07:52:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -72,12 +74,12 @@ public class Manager extends AbstractApplication {
 			
 			
 			try {
-				
-				
 				TypicalCondition tc = new TypicalCondition("sys", OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEMUSER_CODE, SystemUserWrapper.COLUMN_LOGIN);
-				Set<StorableObject> storableObjectsByCondition = StorableObjectPool.getStorableObjectsByCondition(tc, true);
+				Set<SystemUser> systemUserWithLoginSys = StorableObjectPool.getStorableObjectsByCondition(tc, true);
 
-				LoginManager.setUserId(storableObjectsByCondition.iterator().next().getId());
+				assert !systemUserWithLoginSys.isEmpty() : "There is no sys user";
+				
+				LoginManager.setUserId(systemUserWithLoginSys.iterator().next().getId());
 				
 //				createCharacteristicTypes();
 				

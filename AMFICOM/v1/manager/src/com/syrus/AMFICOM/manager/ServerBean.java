@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBean.java,v 1.5 2005/08/17 15:59:40 bob Exp $
+ * $Id: ServerBean.java,v 1.6 2005/08/23 07:52:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/23 07:52:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -94,5 +94,4 @@ public class ServerBean extends Bean {
 		// TODO Auto-generated method stub
 		
 	}
-	
 }

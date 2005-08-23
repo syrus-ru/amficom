@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.21 2005/08/17 15:59:40 bob Exp $
+ * $Id: JGraphText.java,v 1.22 2005/08/23 07:52:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.22 $, $Date: 2005/08/23 07:52:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -718,6 +718,8 @@ public class JGraphText implements GraphSelectionListener {
 			
 			AbstractBean bean = factory.createBean(name);
 			
+			bean.setGraphText(this);
+			
 			itemCell = this.createChild(
 				parentCell, 
 				title != null ? title : bean.getName(), 
@@ -727,6 +729,8 @@ public class JGraphText implements GraphSelectionListener {
 				0, 
 				0, 
 				factory.getImage());
+			
+			
 		}
 		
 		return itemCell;
@@ -1006,7 +1010,7 @@ public class JGraphText implements GraphSelectionListener {
 			public void actionPerformed(ActionEvent e) {
 				try {
 					AbstractBean bean = factory.createBean(perspective);
-					
+					bean.setGraphText(JGraphText.this);
 					if (this.entityIndices == null) {
 						this.entityIndices = new HashMap<String, Integer>();
 					}

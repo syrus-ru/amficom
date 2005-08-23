@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.11 2005/08/17 15:59:40 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.12 2005/08/23 07:52:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,9 @@ import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/23 07:52:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -89,8 +89,6 @@ public class NetBeanFactory extends AbstractBeanFactory {
 					System.out.println("NetBeanFactory.applyTargetPort() | oldParentDomainId:"
 						+ oldParentDomainId + ", parentDomainId: " + parentDomainId);
 					
-					assert !oldParentDomainId.isVoid();
-					
 					TypicalCondition typicalCondition = 
 						new TypicalCondition(this.getCodeName(), 
 							OperationSort.OPERATION_EQUALS, 
@@ -113,7 +111,10 @@ public class NetBeanFactory extends AbstractBeanFactory {
 					
 					for(LayoutItem layoutItem : beanChildrenLayoutItems) {
 						String name1 = layoutItem.getName();
-						
+						layoutItem.setLayoutName(parentDomainId.getIdentifierString());
+						System.out.println(".applyTargetPort() | setLayoutName " + parentDomainId.getIdentifierString() + " to " + layoutItem.getId());
+						System.out.println(".applyTargetPort() | getLayoutName: " + layoutItem.getLayoutName());
+						System.out.println("NetBeanFactory.applyTargetPort() | name1 " + name1);
 						if (name1.startsWith(ARMBeanFactory.ARM_CODENAME)) {
 							
 							System.out.println(".applyTargetPort() | arm:" + name1);
@@ -125,35 +126,46 @@ public class NetBeanFactory extends AbstractBeanFactory {
 								linkedIdsCondition2, 
 								true, 
 								true);
+
 							
-//							{
-//							Set<PermissionAttributes> permissionAttributes = 
-//								StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.PERMATTR_CODE), true);
-//								for(PermissionAttributes pa : permissionAttributes) {
-//									System.out.println(".applyTargetPort() | " + pa.getId() + ", " + pa.getUserId() + ", " + pa.getDomainId());
-//								}
-//							}
-							
-							 Domain oldDomain = 
-								(Domain) StorableObjectPool.getStorableObject(oldParentDomainId, true); 
-							for(LayoutItem item : armChildrenLayoutItems) {
-								PermissionAttributes permissionAttributes = 
-									oldDomain.getPermissionAttributes(new Identifier(item.getName()));
-								
-								System.out.println(".applyTargetPort() | " + item.getName());
-								
-								if (permissionAttributes == null) {
-									continue;
+							if (oldParentDomainId.isVoid()) {
+								for(LayoutItem item : armChildrenLayoutItems) {
+									System.out.println(".applyTargetPort() | setLayoutName " + parentDomainId.getIdentifierString() + " to " + item.getId());
+									item.setLayoutName(parentDomainId.getIdentifierString());
+									Identifier userId = new Identifier(item.getName());
+									PermissionAttributes attributes = 
+										PermissionAttributes.createInstance(LoginManager.getUserId(),
+										parentDomainId,
+										userId, 
+										0);
+									
+									System.out.println(".applyTargetPort() | create new PermissionAttributes: " + attributes.getId());
 								}
-								
-								if (parentDomainId.isVoid()) {
-									System.out.println(".applyTargetPort() | delete " + permissionAttributes.getId());
-									StorableObjectPool.delete(permissionAttributes.getId());
-								} else {
-									System.out.println(".applyTargetPort() | setDomainId " + parentDomainId
-										+ " to "
-										+ permissionAttributes.getId() );
-									permissionAttributes.setDomainId(parentDomainId);
+							} else {
+								 Domain oldDomain = 
+									(Domain) StorableObjectPool.getStorableObject(oldParentDomainId, true); 
+								for(LayoutItem item : armChildrenLayoutItems) {
+									System.out.println(".applyTargetPort() | setLayoutName " + parentDomainId.getIdentifierString() + " to " + item.getId());
+									item.setLayoutName(parentDomainId.getIdentifierString());
+									PermissionAttributes permissionAttributes = 
+										oldDomain.getPermissionAttributes(new Identifier(item.getName()));
+									
+									System.out.println(".applyTargetPort() | " + item.getName());
+									
+									if (permissionAttributes == null) {
+										System.err.println(".applyTargetPort() | permissionAttributes null");
+										continue;
+									}
+									
+									if (parentDomainId.isVoid()) {
+										System.out.println(".applyTargetPort() | delete " + permissionAttributes.getId());
+										StorableObjectPool.delete(permissionAttributes.getId());
+									} else {
+										System.out.println(".applyTargetPort() | setDomainId " + parentDomainId
+											+ " to "
+											+ permissionAttributes.getId() );
+										permissionAttributes.setDomainId(parentDomainId);
+									}
 								}
 							}
 						} else {

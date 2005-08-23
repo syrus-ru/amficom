@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBean.java,v 1.5 2005/08/17 15:59:40 bob Exp $
+ * $Id: RTUBean.java,v 1.6 2005/08/23 07:52:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,21 @@
 
 package com.syrus.AMFICOM.manager;
 
-import static com.syrus.AMFICOM.manager.RTUBeanWrapper.*;
+import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_DESCRIPTION;
+import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_HOSTNAME;
+import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_MCM_ID;
+import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_NAME;
+import static com.syrus.AMFICOM.manager.RTUBeanWrapper.KEY_PORT;
 
 import java.beans.PropertyChangeEvent;
 
-import com.syrus.AMFICOM.configuration.KIS;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.KIS;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/23 07:52:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -117,4 +121,5 @@ public class RTUBean extends Bean {
 		// TODO Auto-generated method stub
 		
 	}
+	
 }

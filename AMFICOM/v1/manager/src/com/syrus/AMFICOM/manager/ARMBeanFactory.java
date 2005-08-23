@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.9 2005/08/15 14:20:05 bob Exp $
+ * $Id: ARMBeanFactory.java,v 1.10 2005/08/23 07:52:33 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,8 @@ package com.syrus.AMFICOM.manager;
 
 import com.syrus.AMFICOM.general.Identifier;
 
-
-
-
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/23 07:52:33 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -56,8 +53,7 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 		AbstractBean bean = new NonStorableBean();
 		bean.setValidator(this.getValidator());
 		bean.setCodeName(codename);
-		bean.setId(Identifier.VOID_IDENTIFIER);
-		
+		bean.setId(Identifier.VOID_IDENTIFIER);		
 		return bean;
 	}
 	
@@ -79,5 +75,6 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 			};
 		}
 		return this.validator;
-	}
+	}	
+	
 }
