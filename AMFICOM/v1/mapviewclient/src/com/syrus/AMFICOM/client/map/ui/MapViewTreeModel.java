@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.22 2005/08/17 14:14:20 arseniy Exp $ Syrus
+ * $Id: MapViewTreeModel.java,v 1.23 2005/08/23 09:45:24 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/08/17 14:14:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/08/23 09:45:24 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapViewTreeModel implements ChildrenFactory {
@@ -64,9 +64,6 @@ public class MapViewTreeModel implements ChildrenFactory {
 					Image.SCALE_SMOOTH));
 
 	public static MapLibraryComparator libraryComparator = new MapLibraryComparator();
-
-	MapSchemeTreeModel schemeTreeModel;
-	MapTreeModel mapTreeModel;
 
 	private static MapViewTreeModel instance;
 	
@@ -155,6 +152,7 @@ public class MapViewTreeModel implements ChildrenFactory {
 					true);
 //			mapNode.populate();
 			node.addChild(librariesNode);
+			
 		}
 		else {
 			for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
