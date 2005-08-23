@@ -1,5 +1,5 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.5 2005/08/22 15:06:16 peskovsky Exp $
+ * $Id: MapJLocalRenderer.java,v 1.6 2005/08/23 07:01:58 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.5 $, $Date: 2005/08/22 15:06:16 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/23 07:01:58 $
  * @module mapinfo
  */
 public class MapJLocalRenderer {
@@ -68,7 +68,7 @@ public class MapJLocalRenderer {
 	}
 
 	public void setMapDefinition(final String fileToLoad) throws IOException {
-		if (this.renderer == null)
+		if (this.mapJObject == null)
 			return;
 		
 		try {
