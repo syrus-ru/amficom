@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.40 2005/08/22 07:49:42 peskovsky Exp $
+ * $Id: MapPropertiesManager.java,v 1.41 2005/08/23 10:07:27 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.40 $, $Date: 2005/08/22 07:49:42 $
+ * @version $Revision: 1.41 $, $Date: 2005/08/23 10:07:27 $
  * @module mapviewclient
  */
 public final class MapPropertiesManager 
@@ -781,6 +781,9 @@ public final class MapPropertiesManager
 			Properties properties = new Properties(defaults);
 
 			properties.load(new FileInputStream(iniFileName));
+			properties.setProperty(KEY_DATA_BASE_PATH, dataBasePath);
+			properties.setProperty(KEY_DATA_BASE_VIEW, dataBaseView);
+			
 			properties.setProperty(KEY_LAST_LONGITUDE, Double.toString(lastLong));
 			properties.setProperty(KEY_LAST_LATITUDE, Double.toString(lastLat));
 			properties.setProperty(KEY_LAST_ZOOM, Double.toString(lastZoom));			
