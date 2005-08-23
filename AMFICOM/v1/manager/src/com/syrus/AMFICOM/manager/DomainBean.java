@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.7 2005/08/23 15:02:14 bob Exp $
+ * $Id: DomainBean.java,v 1.8 2005/08/23 15:51:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/23 15:02:14 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/23 15:51:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -159,7 +159,7 @@ public class DomainBean extends Bean {
 		Identifier parentId = Identifier.VOID_IDENTIFIER;
 		if (newPort != null) {
 			parentId = ((DomainBean) newPort.getUserObject()).getId();
-		}
+		}		
 		System.out.println("DomainBean.applyTargetPort() | " + domain.getId() + ", set parent " + parentId); 
 		this.domain.setDomainId(parentId);
 	}

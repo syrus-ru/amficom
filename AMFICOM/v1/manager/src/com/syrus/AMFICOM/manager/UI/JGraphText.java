@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.23 2005/08/23 15:02:15 bob Exp $
+ * $Id: JGraphText.java,v 1.24 2005/08/23 15:51:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.manager.UI;
  */
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/08/23 15:02:15 $
+ * @version $Revision: 1.24 $, $Date: 2005/08/23 15:51:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -108,6 +108,7 @@ import com.syrus.AMFICOM.manager.ServerBeanFactory;
 import com.syrus.AMFICOM.manager.UserBeanFactory;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
+import com.syrus.util.Log;
 
 public class JGraphText implements GraphSelectionListener {	
 	
@@ -227,7 +228,7 @@ public class JGraphText implements GraphSelectionListener {
 				
 				if (changed != null && removed == null) {
 					for(Object changedObject : changed) {
-						System.out.println(".graphChanged() | changedObject " + changedObject + '[' + changedObject.getClass().getName() + ']');
+						Log.debugMessage(".graphChanged() | changedObject " + changedObject + '[' + changedObject.getClass().getName() + ']', Log.DEBUGLEVEL10);
 						if (model.isPort(changedObject)) {
 							TreeNode[] pathToRoot = JGraphText.this.treeModel.getPathToRoot((TreeNode) changedObject);
 							if (pathToRoot != null) {
@@ -237,23 +238,21 @@ public class JGraphText implements GraphSelectionListener {
 							Edge edge = (Edge) changedObject;
 							final MPort source = (MPort) edge.getSource();
 							final MPort target = (MPort) edge.getTarget();
-							System.out.println(".graphChanged() | " + source  +" -> " + target);						
-							
-							
-							AbstractBean bean = (AbstractBean) source.getUserObject();
+							Log.debugMessage(".graphChanged() | " + source  +" -> " + target,
+								Log.DEBUGLEVEL10);
+							AbstractBean bean = source.getUserObject();
 							
 							
 							ConnectionSet connectionSet = change.getConnectionSet();							
 							MPort source2 = (MPort) connectionSet.getPort(edge, true);
 							MPort target2 = (MPort) connectionSet.getPort(edge, false);
 
-							System.out.println(".graphChanged() | ' " + source2  +" -> " + target2);
+							Log.debugMessage(".graphChanged() | ' " + source2  +" -> " + target2, Log.DEBUGLEVEL10);
 							
 							if (target2 == null) {
-								AbstractBean bean2 = (AbstractBean) source2.getUserObject();
-								System.out
-										.println("JGraphText.createModelListener() | " + bean2);
-//								bean2.applyTargetPort(target2, null);
+								AbstractBean bean2 = source2.getUserObject();
+								Log.debugMessage("JGraphText.createModelListener() | " + bean2, Log.DEBUGLEVEL10);
+								bean2.applyTargetPort(null, null);
 							}
 							bean.applyTargetPort(target2, target);
 							
@@ -369,7 +368,7 @@ public class JGraphText implements GraphSelectionListener {
 							MPort source = (MPort) connectionSet.getPort(edge, true);
 							MPort target = (MPort) connectionSet.getPort(edge, false);
 							
-							AbstractBean bean = (AbstractBean) source.getUserObject();
+							AbstractBean bean = source.getUserObject();
 							
 							try {
 								CompoundCondition compoundCondition = 

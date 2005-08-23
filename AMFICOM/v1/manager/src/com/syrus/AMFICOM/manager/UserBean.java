@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.11 2005/08/23 15:02:15 bob Exp $
+ * $Id: UserBean.java,v 1.12 2005/08/23 15:51:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,9 +44,10 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/23 15:02:15 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/23 15:51:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -394,7 +395,7 @@ public class UserBean extends Bean implements  ARMItem {
 	public void setDomainId(Identifier oldDomainId,
 							Identifier newDomainId) {
 		try {
-			System.out.println("UserBean.setDomainId() | " + this.id + ", oldDomainId:" + oldDomainId + ", newDomainId:" + newDomainId);
+			Log.debugMessage("UserBean.setDomainId() | " + this.id + ", oldDomainId:" + oldDomainId + ", newDomainId:" + newDomainId, Log.DEBUGLEVEL10);
 			
 			if (oldDomainId.isVoid()) {
 				PermissionAttributes attributes = 
@@ -403,7 +404,7 @@ public class UserBean extends Bean implements  ARMItem {
 					this.id, 
 					0);
 				
-				System.out.println("UserBean.setDomainId() | create new PermissionAttributes: " + attributes.getId());
+				Log.debugMessage("UserBean.setDomainId() | create new PermissionAttributes: " + attributes.getId(), Log.DEBUGLEVEL10);
 			} else {
 				 Domain oldDomain = 
 					(Domain) StorableObjectPool.getStorableObject(oldDomainId, true); 
@@ -416,12 +417,12 @@ public class UserBean extends Bean implements  ARMItem {
 				}
 				
 				if (newDomainId.isVoid()) {
-					System.out.println("UserBean.setDomainId() | delete " + permissionAttributes.getId());
+					Log.debugMessage("UserBean.setDomainId() | delete " + permissionAttributes.getId(), Log.DEBUGLEVEL10);
 					StorableObjectPool.delete(permissionAttributes.getId());
 				} else {
-					System.out.println("UserBean.setDomainId() | setDomainId " + newDomainId
+					Log.debugMessage("UserBean.setDomainId() | setDomainId " + newDomainId
 						+ " to "
-						+ permissionAttributes.getId() );
+						+ permissionAttributes.getId(), Log.DEBUGLEVEL10);
 					permissionAttributes.setDomainId(newDomainId);
 				}
 			}
