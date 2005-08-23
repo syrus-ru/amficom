@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.42 2005/08/19 15:43:32 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.43 2005/08/23 14:17:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.event.MapNavigateEvent;
 import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
+import com.syrus.AMFICOM.client.map.command.navigate.CenterSelectionCommand;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.MarkerController;
 import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
@@ -46,12 +47,14 @@ import com.syrus.AMFICOM.client.map.ui.MapKeyAdapter;
 import com.syrus.AMFICOM.client.map.ui.MapMouseListener;
 import com.syrus.AMFICOM.client.map.ui.MapMouseMotionListener;
 import com.syrus.AMFICOM.client.map.ui.MapToolTippedPanel;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -81,7 +84,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.42 $, $Date: 2005/08/19 15:43:32 $
+ * @version $Revision: 1.43 $, $Date: 2005/08/23 14:17:11 $
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
@@ -400,6 +403,26 @@ public abstract class NetMapViewer {
 
 				if(mapEventType.equals(MapEvent.UPDATE_SELECTION)) {
 					updateSelectedElements();
+				}
+				else if(mapEventType.equals(MapEvent.DO_SELECT)) {
+					Object selectedObject = pce.getNewValue();
+					if(selectedObject instanceof MapElement) {
+						MapElement mapElement = (MapElement)selectedObject;
+
+						this.logicalNetLayer.deselectAll();
+						Map map = this.logicalNetLayer.getMapView().getMap();
+						map.setSelected(mapElement, true);
+
+						updateSelectedElements();
+						
+						Command centerCommand = new CenterSelectionCommand(this.logicalNetLayer.getContext().getApplicationModel(), this);
+						centerCommand.execute();
+					}
+					else if(selectedObject instanceof SpatialObject) {
+						SpatialObject spatialObject = (SpatialObject)selectedObject;
+						centerSpatialObject(spatialObject);
+						repaint(true);		
+					}
 				}
 				else if(mapEventType.equals(MapEvent.COPY_TYPE)) {
 					Object selectedObject = pce.getNewValue();
