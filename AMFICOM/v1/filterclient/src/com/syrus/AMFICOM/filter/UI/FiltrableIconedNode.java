@@ -1,5 +1,5 @@
 /*-
- * $Id: FiltrableIconedNode.java,v 1.1 2005/06/22 07:30:17 max Exp $
+ * $Id: FiltrableIconedNode.java,v 1.2 2005/08/23 09:44:52 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.newFilter.Filter;
 
 /**
  * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/06/22 07:30:17 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/23 09:44:52 $
  * @module commonclient_v1
  */
 
@@ -55,6 +55,6 @@ public class FiltrableIconedNode extends PopulatableIconedNode implements Filtra
 		} else if (this.filter != null && this.filter.getCondition() != null) {
 			return this.filter.getCondition();
 		}
-		throw new IllegalStateException("Object badly initialized");
+		return null;
 	}
 }
