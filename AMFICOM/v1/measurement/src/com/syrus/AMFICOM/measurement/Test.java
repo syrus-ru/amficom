@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.146 2005/08/20 19:25:23 arseniy Exp $
+ * $Id: Test.java,v 1.147 2005/08/23 09:13:46 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.146 $, $Date: 2005/08/20 19:25:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.147 $, $Date: 2005/08/23 09:13:46 $
+ * @author $Author: bob $
  * @module measurement
  */
 
@@ -371,6 +371,9 @@ public final class Test extends StorableObject {
 	 * @param analysisTypeId The analysisTypeId to set.
 	 */
 	public void setAnalysisTypeId(final Identifier analysisTypeId) {
+		
+		assert analysisTypeId != null : ErrorMessages.NON_NULL_EXPECTED;
+		
 		this.analysisTypeId = analysisTypeId;
 		super.markAsChanged();
 	}
@@ -386,6 +389,9 @@ public final class Test extends StorableObject {
 	 * @param evaluationTypeId The evaluationTypeId to set.
 	 */
 	public void setEvaluationTypeId(final Identifier evaluationTypeId) {
+		
+		assert evaluationTypeId != null : ErrorMessages.NON_NULL_EXPECTED;
+		
 		this.evaluationTypeId = evaluationTypeId;
 		super.markAsChanged();
 	}
@@ -394,6 +400,9 @@ public final class Test extends StorableObject {
 	 * @param measurementTypeId The measurementTypeId to set.
 	 */
 	public void setMeasurementTypeId(final Identifier measurementTypeId) {
+		
+		assert measurementTypeId != null : ErrorMessages.NON_NULL_EXPECTED;
+		
 		this.measurementTypeId = measurementTypeId;
 		super.markAsChanged();
 	}
