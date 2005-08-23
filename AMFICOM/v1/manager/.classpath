@@ -11,5 +11,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/csbridge"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/leserver"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
