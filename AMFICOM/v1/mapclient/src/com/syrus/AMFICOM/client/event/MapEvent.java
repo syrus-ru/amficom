@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.9 2005/08/23 09:38:59 krupenn Exp $
+ * $Id: MapEvent.java,v 1.10 2005/08/23 14:16:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import java.beans.PropertyChangeEvent;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/08/23 09:38:59 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/23 14:16:29 $
  * @module mapclient_v2
  * @author $Author: krupenn $
  */
@@ -66,6 +66,9 @@ public class MapEvent extends PropertyChangeEvent {
 
 	/** Изменился список подключенных библиотек. */
 	public static final String LIBRARY_SET_CHANGED = "maplibrarysetchangedevent";
+
+	/** Необходимо перерисовать карту. */
+	public static final String DO_SELECT = "doselect";
 
 	/** Необходимо перерисовать карту. */
 	public static final String NEED_REPAINT = "needrepaint";
