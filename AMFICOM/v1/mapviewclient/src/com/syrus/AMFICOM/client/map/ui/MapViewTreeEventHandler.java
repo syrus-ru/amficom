@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeEventHandler.java,v 1.4 2005/08/23 09:44:34 krupenn Exp $
+ * $Id: MapViewTreeEventHandler.java,v 1.5 2005/08/23 14:18:08 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -7,8 +7,6 @@
  */
 package com.syrus.AMFICOM.client.map.ui;
 
-import java.awt.Image;
-import java.awt.Toolkit;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Collection;
@@ -16,22 +14,26 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
 
-import javax.swing.ImageIcon;
 import javax.swing.JTree;
+import javax.swing.event.TreeExpansionEvent;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
+import javax.swing.event.TreeWillExpandListener;
+import javax.swing.tree.ExpandVetoException;
 import javax.swing.tree.TreePath;
 
+import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
+import com.syrus.AMFICOM.logic.Populatable;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapLibrary;
@@ -41,9 +43,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.util.Log;
 
-public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyChangeListener {
+public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyChangeListener, TreeWillExpandListener {
 
 	private boolean performProcessing = true;
 	private ApplicationContext aContext = null;
@@ -209,7 +210,6 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 				}
 			}
 			else if(mapEventType.equals(MapEvent.MAP_REPAINTED)) {
-				MapFrame mapFrame = (MapFrame) mapEvent.getNewValue();
 				Collection items = this.iconedTreeUI.findNodes(this.root, Collections.singletonList(TopologyTreeModel.TOPOLOGY_BRANCH), false);
 				for(Iterator it = items.iterator(); it.hasNext();) {
 					PopulatableIconedNode pin = (PopulatableIconedNode )it.next();
@@ -287,5 +287,23 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 		}
 		this.mapView = mapView;
 		this.tree.updateUI();
+	}
+
+	public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {
+		// nothing
+	}
+
+	public void treeWillCollapse(TreeExpansionEvent event) throws ExpandVetoException {
+		final TreePath path = event.getPath();
+		final Object lastPathComponent = path.getLastPathComponent();
+		if (lastPathComponent instanceof IconedNode) {
+			IconedNode node = (IconedNode)lastPathComponent;
+			if(node.getObject() instanceof SpatialLayer) {
+				PopulatableIconedNode parent = (PopulatableIconedNode)node.getParent();
+				node.setParent(null);
+				parent.populate();
+			}
+			
+		}
 	}
 }
