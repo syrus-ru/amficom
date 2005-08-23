@@ -1,5 +1,5 @@
 /*
- * $Id: PopulatableIconedNode.java,v 1.3 2005/08/11 18:51:08 arseniy Exp $
+ * $Id: PopulatableIconedNode.java,v 1.4 2005/08/23 09:07:05 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,13 +16,13 @@ import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Populatable;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/11 18:51:08 $
+ * @author $Author: max $
+ * @version $Revision: 1.4 $, $Date: 2005/08/23 09:07:05 $
  * @module commonclient
  */
 
 public class PopulatableIconedNode extends IconedNode implements Populatable, Visualizable {
-	private ChildrenFactory factory;
+	private ChildrenFactory childrenFactory;
 	private boolean populated = false;
 
 	public PopulatableIconedNode() {
@@ -59,27 +59,33 @@ public class PopulatableIconedNode extends IconedNode implements Populatable, Vi
 	
 	public PopulatableIconedNode(ChildrenFactory factory, Object object, String name, Icon icon, boolean allowsChildren) {
 		super(object, name, icon, allowsChildren);
-		this.factory = factory;
+		this.childrenFactory = factory;
 	}
 
 	public void populate() {
-		if (this.factory != null) {
-			this.factory.populate(this);
+		if (this.childrenFactory != null) {
+			this.childrenFactory.populate(this);
 			this.populated = true;
 		}
 	}
 	
 	public VisualManager getVisualManager() {
-		if (this.factory instanceof VisualManagerFactory)
-			return ((VisualManagerFactory)this.factory).getVisualManager(this);
+		if (this.childrenFactory instanceof VisualManagerFactory)
+			return ((VisualManagerFactory)this.childrenFactory).getVisualManager(this);
 		return null;
 	}
 
 	public void setChildrenFactory(ChildrenFactory childrenFactory) {
-		this.factory = childrenFactory;
+		this.childrenFactory = childrenFactory;
 	}
 	
 	public boolean isPopulated() {
 		return this.populated;
 	}
+
+	public ChildrenFactory getChildrenFactory() {
+		return this.childrenFactory;
+	}
+	
+	
 }
