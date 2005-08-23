@@ -199,7 +199,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 			this.useAnalysisSetups.setEnabled(false);
 			this.useWOAnalysisSetups.setEnabled(false);
 
-			this.useAnalysisBox = new JCheckBox(LangModelSchedule.getString("Perform analisys"), false); //$NON-NLS-1$
+			this.useAnalysisBox = new JCheckBox(LangModelSchedule.getString("Text.PerformAnalisys"), false); //$NON-NLS-1$
 			patternPanel.add(this.useAnalysisBox, gbc);
 			this.useAnalysisBox.setEnabled(false);
 
