@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.11 2005/08/22 15:55:42 krupenn Exp $ 
+ * $Id: MapTreeModel.java,v 1.12 2005/08/23 09:41:54 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный Интеллектуальный 
@@ -33,11 +33,6 @@ import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
-import com.syrus.AMFICOM.filterclient.MonitoredElementConditionWrapper;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
@@ -53,7 +48,7 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/22 15:55:42 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/23 09:41:54 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -344,7 +339,9 @@ public class MapTreeModel implements ChildrenFactory {
 		
 		try {
 			StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
-			siteNodes = MapUtils.applyCondition(siteNodes, condition);
+			if(condition != null) {
+				siteNodes = MapUtils.applyCondition(siteNodes, condition);
+			}
 		} catch (Exception e) {
 			Log.debugException(e, Level.SEVERE);
 		}
@@ -407,7 +404,9 @@ public class MapTreeModel implements ChildrenFactory {
 		
 		try {
 			StorableObjectCondition condition = ((FiltrableIconedNode)parentNode).getResultingCondition();
-			siteNodesSet = MapUtils.applyCondition(siteNodesSet, condition);
+			if(condition != null) {
+				siteNodesSet = MapUtils.applyCondition(siteNodesSet, condition);
+			}
 		} catch (Exception e) {
 			Log.debugException(e, Level.SEVERE);
 		}
@@ -459,7 +458,9 @@ public class MapTreeModel implements ChildrenFactory {
 		
 		try {
 			StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
-			siteNodes = MapUtils.applyCondition(siteNodes, condition);
+			if(condition != null) {
+				siteNodes = MapUtils.applyCondition(siteNodes, condition);
+			}
 		} catch (Exception e) {
 			Log.debugException(e, Level.SEVERE);
 		}
@@ -557,7 +558,9 @@ public class MapTreeModel implements ChildrenFactory {
 
 		try {
 			StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
-			linksSet = MapUtils.applyCondition(linksSet, condition);
+			if(condition != null) {
+				linksSet = MapUtils.applyCondition(linksSet, condition);
+			}
 		} catch (Exception e) {
 			Log.debugException(e, Level.SEVERE);
 		}
@@ -609,7 +612,9 @@ public class MapTreeModel implements ChildrenFactory {
 
 		try {
 			StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
-			collectorsSet = MapUtils.applyCondition(collectorsSet, condition);
+			if(condition != null) {
+				collectorsSet = MapUtils.applyCondition(collectorsSet, condition);
+			}
 		} catch (Exception e) {
 			Log.debugException(e, Level.SEVERE);
 		}
