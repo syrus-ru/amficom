@@ -1,5 +1,5 @@
 /**
- * $Id: MapImageLoader.java,v 1.9 2005/08/23 09:40:58 krupenn Exp $
+ * $Id: MapImageLoader.java,v 1.10 2005/08/23 10:05:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,7 @@ import java.util.List;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/23 09:40:58 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/23 10:05:17 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -37,7 +37,7 @@ public interface MapImageLoader {
 	 * @return список найденных объектов ({@link SpatialObject})
 	 * @deprecated
 	 */
-	List<SpatialObject> findSpatialObjects(final String searchText) throws MapConnectionException, MapDataException;
+//	List<SpatialObject> findSpatialObjects(final String searchText) throws MapConnectionException, MapDataException;
 	
 	/**
 	 * Произвести поиск географических объектов по подстроке в указанном слое.
