@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.6 2005/08/17 15:59:40 bob Exp $
+ * $Id: DomainBean.java,v 1.7 2005/08/23 15:02:14 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/23 15:02:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -50,9 +50,7 @@ public class DomainBean extends Bean {
 
 				public void actionPerformed(ActionEvent e) {
 					
-					DefaultGraphCell cell2 =  (DefaultGraphCell) cell;
-					
-					MPort port = (MPort) cell2.getChildAt(0);
+					MPort port = (MPort) ((DefaultGraphCell) cell).getChildAt(0);
 					
 					List<Port> ports = graph.isDirect() ? port.getTargets() : port.getSources();
 					
@@ -77,7 +75,7 @@ public class DomainBean extends Bean {
 						}
 					}
 					
-					graph.currentPerspectiveLabel.setText(LangModelManager.getString("Label.SelectedDomain") + ':' + cell2.getUserObject());
+					graph.currentPerspectiveLabel.setText(LangModelManager.getString("Label.SelectedDomain") + ':' + ((DefaultGraphCell) cell).getUserObject());
 					
 					graph.domainsButton.setEnabled(true);
 					
@@ -95,7 +93,9 @@ public class DomainBean extends Bean {
 
 					graph.mcmButton.setEnabled(true);
 					
-					graph.showOnlyDescendants(cell2);
+					graph.setPerspective(new DomainPerpective(DomainBean.this));
+					
+					graph.showOnlyDescendants((DefaultGraphCell) cell);
 					
 					graph.showOnly(new String[] {NetBeanFactory.NET_CODENAME, 
 							ObjectEntities.SYSTEMUSER, 
@@ -104,7 +104,7 @@ public class DomainBean extends Bean {
 							ObjectEntities.SERVER, 
 							ObjectEntities.MCM});
 					
-					graph.setPerspective(new DomainPerpective(DomainBean.this));
+					
 				}
 			});
 			return popupMenu;

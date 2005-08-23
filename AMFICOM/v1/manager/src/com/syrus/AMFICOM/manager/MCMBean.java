@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBean.java,v 1.4 2005/08/17 15:59:40 bob Exp $
+ * $Id: MCMBean.java,v 1.5 2005/08/23 15:02:14 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,12 +20,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/23 15:02:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class MCMBean extends Bean {
+public class MCMBean extends Bean implements DomainNetworkItem {
 
 	private MCM mcm;
 	
@@ -124,5 +124,10 @@ public class MCMBean extends Bean {
 	public void applyTargetPort(MPort oldPort, MPort newPort) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	public void setDomainId(final Identifier oldDomainId,
+	                        final Identifier newDomainId) {
+		this.mcm.setDomainId(newDomainId);
 	}
 }

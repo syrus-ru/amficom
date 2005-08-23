@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspective.java,v 1.1 2005/08/17 15:59:40 bob Exp $
+* $Id: DomainsPerspective.java,v 1.2 2005/08/23 15:02:15 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.manager.Perspective;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/23 15:02:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -47,14 +47,11 @@ public class DomainsPerspective extends AbstractCommand {
 		this.graphText.serverButton.setEnabled(false);
 
 		this.graphText.mcmButton.setEnabled(false);
-		
-		this.graphText.showOnly(new String[] {NetBeanFactory.NET_CODENAME, 
-				ObjectEntities.DOMAIN});
+
 		this.graphText.treeModel.setRoot(null);
 		
 		this.graphText.domainsButton.setEnabled(false);
-		
-		
+
 		if (this.perspective == null) {
 			this.perspective = new Perspective() {
 				public String getPerspectiveName() {
@@ -64,6 +61,11 @@ public class DomainsPerspective extends AbstractCommand {
 		}
 		
 		this.graphText.setPerspective(this.perspective);
+
+		this.graphText.showOnly(new String[] {NetBeanFactory.NET_CODENAME, 
+				ObjectEntities.DOMAIN});
+		
+		
 
 	}
 }

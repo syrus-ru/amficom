@@ -1,3 +1,10 @@
+/*-
+ * $Id: MCMBeanWrapper.java,v 1.5 2005/08/23 15:02:15 bob Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.manager;
 
@@ -20,16 +27,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 import com.syrus.util.Wrapper;
 
-/*-
- * $Id: MCMBeanWrapper.java,v 1.4 2005/08/12 06:46:31 bob Exp $
- *
- * Copyright ¿ 2005 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
- */
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/12 06:46:31 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/23 15:02:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -114,7 +114,6 @@ public class MCMBeanWrapper implements Wrapper {
 				new EquivalentCondition(entityCode), 
 				true);			
 			for(StorableObject storableObject : storableObjects) {
-				System.out.println("MCMBeanWrapper.refreshServerMap() | " + ((Namable)storableObject).getName());
 				map.put(((Namable)storableObject).getName(), 
 					storableObject.getId());
 			}
@@ -199,8 +198,6 @@ public class MCMBeanWrapper implements Wrapper {
 									Object objectKey,
 									Object objectValue) {
 		// TODO Auto-generated method stub
-		System.out.println("MCMBeanWrapper.setPropertyValue()");
-
 	}
 
 	public void setValue(	Object object,

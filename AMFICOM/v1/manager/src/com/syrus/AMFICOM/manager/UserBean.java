@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.10 2005/08/17 15:59:40 bob Exp $
+ * $Id: UserBean.java,v 1.11 2005/08/23 15:02:15 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,11 +26,14 @@ import org.jgraph.graph.AttributeMap;
 import org.jgraph.graph.DefaultEdge;
 import org.jgraph.graph.GraphConstants;
 
+import com.syrus.AMFICOM.administration.Domain;
+import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
+import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -43,12 +46,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/23 15:02:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class UserBean extends Bean {
+public class UserBean extends Bean implements  ARMItem {
 
 	List<String>	names;
 	
@@ -388,4 +391,46 @@ public class UserBean extends Bean {
 			UserBeanWrapper.USER_STREET);
 	}
 
+	public void setDomainId(Identifier oldDomainId,
+							Identifier newDomainId) {
+		try {
+			System.out.println("UserBean.setDomainId() | " + this.id + ", oldDomainId:" + oldDomainId + ", newDomainId:" + newDomainId);
+			
+			if (oldDomainId.isVoid()) {
+				PermissionAttributes attributes = 
+					PermissionAttributes.createInstance(LoginManager.getUserId(),
+					newDomainId,
+					this.id, 
+					0);
+				
+				System.out.println("UserBean.setDomainId() | create new PermissionAttributes: " + attributes.getId());
+			} else {
+				 Domain oldDomain = 
+					(Domain) StorableObjectPool.getStorableObject(oldDomainId, true); 
+				PermissionAttributes permissionAttributes = 
+					oldDomain.getPermissionAttributes(this.id);
+				
+				if (permissionAttributes == null) {
+					System.err.println(".applyTargetPort() | permissionAttributes null");
+					return;
+				}
+				
+				if (newDomainId.isVoid()) {
+					System.out.println("UserBean.setDomainId() | delete " + permissionAttributes.getId());
+					StorableObjectPool.delete(permissionAttributes.getId());
+				} else {
+					System.out.println("UserBean.setDomainId() | setDomainId " + newDomainId
+						+ " to "
+						+ permissionAttributes.getId() );
+					permissionAttributes.setDomainId(newDomainId);
+				}
+			}
+		} catch (CreateObjectException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+	}
 }

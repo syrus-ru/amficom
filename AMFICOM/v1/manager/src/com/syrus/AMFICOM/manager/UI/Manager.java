@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.5 2005/08/23 07:52:33 bob Exp $
+* $Id: Manager.java,v 1.6 2005/08/23 15:02:15 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.manager.UI;
 
+import java.awt.Toolkit;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.SystemUser;
@@ -22,10 +23,8 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.DataType;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
@@ -34,7 +33,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/23 07:52:33 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/23 15:02:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -51,7 +50,8 @@ public class Manager extends AbstractApplication {
 	protected void init() {
 		super.init();
 		super.aContext.setApplicationModel(new ManagerModel(super.aContext));				
-		super.startMainFrame(new ManagerMainFrame(super.aContext), null);
+		super.startMainFrame(new ManagerMainFrame(super.aContext), 
+			Toolkit.getDefaultToolkit().getImage("images/main/administrate_mini.gif"));
 	}
 
 	public static void main(String[] args) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.10 2005/08/23 07:52:33 bob Exp $
+ * $Id: ARMBeanFactory.java,v 1.11 2005/08/23 15:02:14 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,10 +8,22 @@
 
 package com.syrus.AMFICOM.manager;
 
+import java.util.Set;
+
+import org.jgraph.graph.DefaultGraphCell;
+
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.resource.LayoutItem;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/23 07:52:33 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/23 15:02:14 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -50,7 +62,7 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 	@Override
 	public AbstractBean createBean(final String codename) {
 		++super.count;
-		AbstractBean bean = new NonStorableBean();
+		AbstractBean bean = new ARMBean();
 		bean.setValidator(this.getValidator());
 		bean.setCodeName(codename);
 		bean.setId(Identifier.VOID_IDENTIFIER);		
@@ -77,4 +89,48 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 		return this.validator;
 	}	
 	
+	private class ARMBean extends NonStorableBean implements DomainNetworkItem {
+		
+		public void setDomainId(Identifier oldDomainId,
+								Identifier newDomainId) {
+			try {
+				TypicalCondition typicalCondition = 
+					new TypicalCondition(this.getCodeName(), 
+						OperationSort.OPERATION_EQUALS, 
+						ObjectEntities.LAYOUT_ITEM_CODE, 
+						StorableObjectWrapper.COLUMN_NAME);
+
+				Set<LayoutItem> beanLayoutItems = StorableObjectPool.getStorableObjectsByCondition(
+					typicalCondition, 
+					true, 
+					true);
+				
+				LinkedIdsCondition linkedIdsCondition = 
+					new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
+						ObjectEntities.LAYOUT_ITEM_CODE);
+				
+				Set<LayoutItem> beanChildrenLayoutItems =  StorableObjectPool.getStorableObjectsByCondition(
+					linkedIdsCondition, 
+					true, 
+					true);
+				
+				for(LayoutItem layoutItem : beanChildrenLayoutItems) {
+					layoutItem.setLayoutName(newDomainId.getIdentifierString());
+					DefaultGraphCell cell = this.graphText.getCell(layoutItem);
+					MPort port = (MPort) cell.getChildAt(0);
+					
+					AbstractBean portBean = port.getUserObject();
+					if (portBean instanceof ARMItem) {
+						ARMItem item = (ARMItem) portBean;
+						item.setDomainId(oldDomainId, newDomainId);
+					}
+				}
+			} catch (ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+			
+		}
+		
+	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBean.java,v 1.6 2005/08/23 07:52:33 bob Exp $
+ * $Id: ServerBean.java,v 1.7 2005/08/23 15:02:15 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,12 +22,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/23 07:52:33 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/23 15:02:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class ServerBean extends Bean {
+public class ServerBean extends Bean implements DomainNetworkItem {
 
 	private Server server;
 	
@@ -94,4 +94,10 @@ public class ServerBean extends Bean {
 		// TODO Auto-generated method stub
 		
 	}
+	
+	public void setDomainId(final Identifier oldDomainId,
+	                        final Identifier newDomainId) {
+		this.server.setDomainId(newDomainId);
+	}
+
 }

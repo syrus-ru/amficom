@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerMarqueeHandler.java,v 1.1 2005/08/17 15:59:40 bob Exp $
+* $Id: ManagerMarqueeHandler.java,v 1.2 2005/08/23 15:02:15 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.manager.MPort;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/23 15:02:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -164,7 +164,10 @@ public class ManagerMarqueeHandler extends BasicMarqueeHandler {
 			// connect((Port) firstPort.getCell(), (Port) port.getCell());
 			MPort sourcePort = (MPort) this.firstPort.getCell();
 			MPort targetPort = (MPort) this.port.getCell();
-			DefaultEdge edge = this.graphText.createEdge((DefaultGraphCell)sourcePort.getParent(), (DefaultGraphCell)targetPort.getParent());
+			DefaultEdge edge = this.graphText.createEdge(
+				(DefaultGraphCell)sourcePort.getParent(), 
+				(DefaultGraphCell)targetPort.getParent(),
+				this.graphText.perspective.getPerspectiveName());
 			
 			
 			

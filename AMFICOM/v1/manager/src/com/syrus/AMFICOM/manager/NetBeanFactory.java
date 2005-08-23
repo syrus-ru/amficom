@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.12 2005/08/23 07:52:33 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.13 2005/08/23 15:02:15 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.manager;
 
 import java.util.Set;
+
+import org.jgraph.graph.DefaultGraphCell;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -28,7 +30,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/23 07:52:33 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/23 15:02:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -71,24 +73,23 @@ public class NetBeanFactory extends AbstractBeanFactory {
 			@Override
 			public void applyTargetPort(MPort oldPort, MPort newPort) {
 				System.out.println("NetBeanFactory.createBean() | " + oldPort + ", " + newPort);
-				
-				try {
-					
-					Identifier parentDomainId = Identifier.VOID_IDENTIFIER;
-					
-					if (newPort != null) {
-						parentDomainId = ((DomainBean)newPort.getUserObject()).getId();
-					}
-					
-					Identifier oldParentDomainId = Identifier.VOID_IDENTIFIER;
-					
-					if (oldPort != null) {
-						oldParentDomainId = ((DomainBean)oldPort.getUserObject()).getId();
-					}
 
-					System.out.println("NetBeanFactory.applyTargetPort() | oldParentDomainId:"
-						+ oldParentDomainId + ", parentDomainId: " + parentDomainId);
-					
+				Identifier parentDomainId = Identifier.VOID_IDENTIFIER;
+				
+				if (newPort != null) {
+					parentDomainId = ((DomainBean)newPort.getUserObject()).getId();
+				}
+				
+				Identifier oldParentDomainId = Identifier.VOID_IDENTIFIER;
+				
+				if (oldPort != null) {
+					oldParentDomainId = ((DomainBean)oldPort.getUserObject()).getId();
+				}
+
+				System.out.println("NetBeanFactory.applyTargetPort() | oldParentDomainId:"
+					+ oldParentDomainId + ", parentDomainId: " + parentDomainId);
+
+				try {
 					TypicalCondition typicalCondition = 
 						new TypicalCondition(this.getCodeName(), 
 							OperationSort.OPERATION_EQUALS, 
@@ -111,10 +112,18 @@ public class NetBeanFactory extends AbstractBeanFactory {
 					
 					for(LayoutItem layoutItem : beanChildrenLayoutItems) {
 						String name1 = layoutItem.getName();
-						layoutItem.setLayoutName(parentDomainId.getIdentifierString());
-						System.out.println(".applyTargetPort() | setLayoutName " + parentDomainId.getIdentifierString() + " to " + layoutItem.getId());
-						System.out.println(".applyTargetPort() | getLayoutName: " + layoutItem.getLayoutName());
-						System.out.println("NetBeanFactory.applyTargetPort() | name1 " + name1);
+						layoutItem.setLayoutName(parentDomainId.getIdentifierString());						
+						DefaultGraphCell cell = this.graphText.getCell(layoutItem);						
+						MPort port = (MPort) cell.getChildAt(0);
+						
+						AbstractBean portBean = port.getUserObject();
+						if (portBean instanceof DomainNetworkItem) {
+							DomainNetworkItem domainNetworkItem = (DomainNetworkItem) portBean;
+							domainNetworkItem.setDomainId(oldParentDomainId, parentDomainId);
+						}
+						
+						
+						if (false) {
 						if (name1.startsWith(ARMBeanFactory.ARM_CODENAME)) {
 							
 							System.out.println(".applyTargetPort() | arm:" + name1);
@@ -178,9 +187,12 @@ public class NetBeanFactory extends AbstractBeanFactory {
 								domainMember.setDomainId(parentDomainId);
 							}
 						}
-						
+						}
 						
 					}
+					
+					this.graphText.valueChanged(null);
+					
 				} catch (ApplicationException e) {
 					// TODO Auto-generated catch block
 					e.printStackTrace();
