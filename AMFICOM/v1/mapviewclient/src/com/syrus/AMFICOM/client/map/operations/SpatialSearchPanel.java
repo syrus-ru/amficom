@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.13 2005/08/11 17:23:00 arseniy Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.14 2005/08/23 10:08:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель поиска географических объектов
- * @version $Revision: 1.13 $, $Date: 2005/08/11 17:23:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/08/23 10:08:29 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
  public class SpatialSearchPanel extends JPanel {
@@ -219,16 +219,16 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 	 */
 	public void search() {
 		this.searchButton.setEnabled(false);
-		try {
-			final List<SpatialObject> found = this.mapFrame.getMapViewer().getRenderer().getLoader().findSpatialObjects(this.searchText);
-			this.foundList.setListData(found.toArray());
-		} catch (MapConnectionException e) {
-			this.foundList.setListData(new String[] { e.getMessage() });
-			e.printStackTrace();
-		} catch (MapDataException e) {
-			this.foundList.setListData(new String[] { e.getMessage() });
-			e.printStackTrace();
-		}
+//		try {
+//			final List<SpatialObject> found = this.mapFrame.getMapViewer().getRenderer().getLoader().findSpatialObjects(this.searchText);
+//			this.foundList.setListData(found.toArray());
+//		} catch (MapConnectionException e) {
+//			this.foundList.setListData(new String[] { e.getMessage() });
+//			e.printStackTrace();
+//		} catch (MapDataException e) {
+//			this.foundList.setListData(new String[] { e.getMessage() });
+//			e.printStackTrace();
+//		}
 		this.searchButton.setEnabled(true);
 		this.searching = false;
 	}
