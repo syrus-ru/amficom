@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeMouseListener.java,v 1.1 2005/08/19 12:45:24 krupenn Exp $
+ * $Id: MapViewTreeMouseListener.java,v 1.2 2005/08/23 14:18:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,8 +15,11 @@ import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.tree.TreePath;
 
+import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
@@ -39,6 +42,21 @@ final class MapViewTreeMouseListener extends MouseAdapter {
 				this.tree.setSelectionPath(treePath);
 				JPopupMenu popupMenu = new TreePopupMenu(object, this.aContext);
 				popupMenu.show(this.tree, e.getX(), e.getY());
+			}
+		}
+		else if(SwingUtilities.isLeftMouseButton(e)) {
+			if(e.getClickCount() == 2) {
+				TreePath treePath = this.tree.getPathForLocation(e.getX(), e.getY());
+				Item item = (Item )treePath.getLastPathComponent();
+				Object object = item.getObject();
+				if(object instanceof MapElement) {
+					this.aContext.getDispatcher().firePropertyChange(
+							new MapEvent(this, MapEvent.DO_SELECT, object));		
+				}
+				else if(object instanceof SpatialObject) {
+					this.aContext.getDispatcher().firePropertyChange(
+							new MapEvent(this, MapEvent.DO_SELECT, object));		
+				}
 			}
 		}
 	}
