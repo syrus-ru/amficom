@@ -129,6 +129,9 @@ public class OfxSpatialLayer implements SpatialLayer
 	}
 
 	public boolean isVisibleAtScale(double scale) {
-		return true;
+		SxMapLayerInterface sxmaplayerinterface = this.sxMapViewer.getNamedLayer(this.className);
+		if(sxmaplayerinterface != null)
+			return sxmaplayerinterface.isWithinDisplayRange(scale);
+		return false;
 	}
 }
