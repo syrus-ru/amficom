@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.147 2005/08/23 09:13:46 bob Exp $
+ * $Id: Test.java,v 1.148 2005/08/23 09:15:25 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
@@ -41,12 +42,12 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.ContinuousTestTimeStamps;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.PeriodicalTestTimeStamps;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
+import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.147 $, $Date: 2005/08/23 09:13:46 $
+ * @version $Revision: 1.148 $, $Date: 2005/08/23 09:15:25 $
  * @author $Author: bob $
  * @module measurement
  */
@@ -99,10 +100,9 @@ public final class Test extends StorableObject {
 			measurement = Measurement.createInstance(measurementCreatorId,
 					(MeasurementType) StorableObjectPool.getStorableObject(this.measurementTypeId, true),
 					this.monitoredElement.getId(),
-					LangModelMeasurement.getString("created by Test") + ":'"
-						+ this.getDescription()
-						+ "' " + LangModelMeasurement.getString("at.time")
-						+ " " + DatabaseDate.SDF.format(new Date(System.currentTimeMillis())),
+                    LangModelMeasurement.getString("RR") + "-"
+                    		+ this.monitoredElement.getName() + "-"
+                    		+ EasyDateFormatter.formatDate(this.getStartTime()),
 					this.mainMeasurementSetup,
 					startTime,
 					this.monitoredElement.getLocalAddress(),
@@ -169,7 +169,6 @@ public final class Test extends StorableObject {
 	 * @param analysisTypeId
 	 * @param evaluationTypeId
 	 * @param monitoredElement
-	 * @param returnType
 	 * @param description
 	 * @param measurementSetupIds
 	 * @throws CreateObjectException
