@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.28 2005/08/19 15:43:32 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.29 2005/08/24 08:19:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,6 @@ package com.syrus.AMFICOM.client.map.strategy;
 import java.awt.Point;
 import java.util.Iterator;
 
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapState;
@@ -31,7 +30,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * Стратегия управления непривязанным узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/08/19 15:43:32 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/24 08:19:59 $
  * @module mapviewclient
  */
 public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy 

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.26 2005/08/19 15:43:32 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.27 2005/08/24 08:19:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.awt.Point;
 import java.util.logging.Level;
 
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
@@ -30,7 +29,7 @@ import com.syrus.util.Log;
  * (drag/drop), в точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/08/19 15:43:32 $
+ * @version $Revision: 1.27 $, $Date: 2005/08/24 08:19:58 $
  * @module mapviewclient
  */
 public class CreateSiteCommandAtomic extends MapActionCommand

@@ -1,5 +1,5 @@
 /*-
- * $Id: MapPropertiesEventHandler.java,v 1.3 2005/08/22 15:55:01 krupenn Exp $
+ * $Id: MapPropertiesEventHandler.java,v 1.4 2005/08/24 08:19:59 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.client.map.ui;
 
 import java.beans.PropertyChangeEvent;
 import java.util.Collection;
-import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
 import javax.swing.event.ChangeEvent;
@@ -37,11 +36,10 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.util.Log;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/08/22 15:55:01 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/24 08:19:59 $
  * @module schemeclient
  */
 

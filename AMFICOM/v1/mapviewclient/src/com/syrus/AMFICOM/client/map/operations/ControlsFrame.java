@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.12 2005/08/22 11:33:37 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.13 2005/08/24 08:19:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,8 +23,6 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
@@ -33,7 +31,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * <li> Поиск элементов АМФИКОМ
  * <lI> Поиск географических объектов
  * <li> Управление отображением слоев
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */

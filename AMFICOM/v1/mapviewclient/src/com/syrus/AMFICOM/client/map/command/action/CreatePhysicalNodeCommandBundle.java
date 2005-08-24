@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.25 2005/08/19 15:43:32 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.26 2005/08/24 08:19:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,7 +13,6 @@ package com.syrus.AMFICOM.client.map.command.action;
 import java.awt.Point;
 import java.util.logging.Level;
 
-import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
@@ -30,7 +29,7 @@ import com.syrus.util.Log;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.25 $, $Date: 2005/08/19 15:43:32 $
+ * @version $Revision: 1.26 $, $Date: 2005/08/24 08:19:58 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
