@@ -15,5 +15,6 @@
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/mscharserver_interface.jar"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mapinfo-common"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/dom4j"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
