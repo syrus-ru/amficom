@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.67 2005/08/22 12:35:39 krupenn Exp $
+ * $Id: MapFrame.java,v 1.68 2005/08/24 10:21:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,6 +63,8 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.resource.DoublePoint;
@@ -78,7 +80,7 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @version $Revision: 1.67 $, $Date: 2005/08/22 12:35:39 $
+ * @version $Revision: 1.68 $, $Date: 2005/08/24 10:21:26 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -383,7 +385,10 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
 			if (ret == JOptionPane.YES_OPTION) {
-				// TODO cancel changes
+				// TODO should clean only changes in map, mapview, mapview.schemes
+				StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MAP_CODE);
+				StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.MAPVIEW_CODE);
+				StorableObjectPool.cleanChangedStorableObjects(ObjectEntities.SCHEME_CODE);
 				changesPresent = false;
 			}
 		}
