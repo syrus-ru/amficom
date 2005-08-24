@@ -1,5 +1,5 @@
 /*-
-* $Id: Checker.java,v 1.1 2005/08/12 06:30:53 bob Exp $
+* $Id: Checker.java,v 1.2 2005/08/24 08:06:10 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodenames
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/12 06:30:53 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/24 08:06:10 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module csbridge
@@ -31,7 +31,7 @@ public abstract class Checker {
 	 * @return true if permission for login user is enable
 	 * @throws ApplicationException 
 	 */
-	public boolean isPermited(PermissionCodenames codename) 
+	public static boolean isPermitted(PermissionCodenames codename) 
 	throws ApplicationException {
 		Domain domain = 
 			StorableObjectPool.getStorableObject(LoginManager.getDomainId(), true);
