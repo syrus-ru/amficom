@@ -11,7 +11,7 @@ ORACLECLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14_g.jar:$ORACLE_HOME/jdbc/lib/orai18
 
 EXTCLASSPATH=$EXTLIB/trove.jar:$EXTLIB/jdom.jar:$EXTLIB/micsys.jar:$EXTLIB/miutil.jar:$EXTLIB/mxj.jar:$EXTLIB/commons-logging.jar:$EXTLIB/mxjgeom.jar:$EXTLIB/miappletsup.jar:$EXTLIB/xercesImpl.jar:$EXTLIB/mxjtabdp.jar:$EXTLIB/xbean.jar:$EXTLIB/mistyles.jar:$EXTLIB/dom4j-1.6.jar:$EXTLIB/jaxen-1.1-beta-6.jar
 
-APPCLASSPATH=$LIB/filter.jar:$LIB/mscharserver.jar:$LIB/general.jar:$LIB/administration.jar:$LIB/configuration.jar:$LIB/csbridge.jar:$LIB/leserver_interface.jar:$LIB/map.jar:$LIB/scheme.jar:$LIB/util.jar:$LIB/resource.jar:$LIB/mapview.jar
+APPCLASSPATH=$LIB/filter.jar:$LIB/mscharserver.jar:$LIB/general.jar:$LIB/administration.jar:$LIB/configuration.jar:$LIB/measurement.jar:$LIB/csbridge.jar:$LIB/leserver_interface.jar:$LIB/map.jar:$LIB/scheme.jar:$LIB/util.jar:$LIB/resource.jar:$LIB/mapview.jar
 
 
 JAVA="$JAVA -agentlib:jdwp=transport=dt_socket,address=8004,server=y,suspend=n"

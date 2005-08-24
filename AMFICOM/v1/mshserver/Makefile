@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.19 2005/08/01 10:54:57 arseniy Exp $
+# $Id: Makefile,v 1.20 2005/08/24 15:35:24 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -21,7 +21,7 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar
+APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/leserver_interface.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(MAPINFO_LIBDIR)/jdom.jar:$(MAPINFO_LIBDIR)/micsys.jar:$(MAPINFO_LIBDIR)/miutil.jar:$(MAPINFO_LIBDIR)/mxj.jar:$(MAPINFO_LIBDIR)/mxjgeom.jar:$(EXTLIBDIR)/dom4j-1.6.jar
 
 
