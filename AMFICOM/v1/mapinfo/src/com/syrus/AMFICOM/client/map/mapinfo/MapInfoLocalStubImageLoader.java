@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.11 2005/08/23 11:04:20 krupenn Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.12 2005/08/24 06:36:20 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,12 @@ import java.util.logging.Level;
 
 import com.mapinfo.dp.Feature;
 import com.mapinfo.dp.FeatureSet;
+import com.mapinfo.dp.PassThroughQueryException;
+import com.mapinfo.dp.QueryParams;
+import com.mapinfo.dp.jdbc.QueryBuilder;
+import com.mapinfo.dp.jdbc.SpatialQueryDef;
 import com.mapinfo.mapj.FeatureLayer;
+import com.mapinfo.mapj.Layer;
 import com.mapinfo.mapj.LayerType;
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
@@ -31,8 +36,8 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/08/23 11:04:20 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.12 $, $Date: 2005/08/24 06:36:20 $
  * @module mapinfo
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectionListener {
@@ -102,7 +107,28 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
 		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
 
-		final FeatureLayer currLayer = ((MapInfoSpatialLayer)layer).getFeatureLayer();
+//		final FeatureLayer currLayer = ((MapInfoSpatialLayer)layer).getFeatureLayer();
+//		final List labelColumnNames = currLayer.getLabelProperties().getLabelColumns();
+//		try {
+//			final FeatureSet featureSet = currLayer.searchByAttributes(
+//					labelColumnNames,
+//					labelColumnNames,
+//					QueryParams.ALL_PARAMS);
+//			
+//			Feature feature = null;
+//			while ((feature = featureSet.getNextFeature()) != null) {
+//				final String featureName = feature.getAttribute(0).getString();
+//				final com.mapinfo.util.DoublePoint featureCentre = feature.getGeometry().getBounds().center();
+//					
+//				final MapInfoSpatialObject spatialObject = new MapInfoSpatialObject(new DoublePoint(featureCentre.x, featureCentre.y),
+//						featureName);
+//
+//				searchResultsList.add(spatialObject);
+//			}
+//		} catch (Exception e) {
+//			throw new MapDataException("Error while searching at region");
+//		}
+		final FeatureLayer currLayer = ((MapInfoSpatialLayer)layer).getFeatureLayer();		
 		try {
 			// Название колонки с надписями
 			final List labelColumnsList = currLayer.getLabelProperties().getLabelColumns();
@@ -149,33 +175,54 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 
 		final FeatureLayer currLayer = ((MapInfoSpatialLayer)layer).getFeatureLayer();
 		try {
-			// Название колонки с надписями
-			final List labelColumnsList = currLayer.getLabelProperties().getLabelColumns();
-
-			if (!labelColumnsList.isEmpty()) {
-				final FeatureSet fs = currLayer.searchAll(labelColumnsList, null);
-	
-				Feature feature = null;
-				// Loop until FeatureSet.getNextFeature() returns null
-				while ((feature = fs.getNextFeature()) != null) {
-					final String featureName = feature.getAttribute(0).getString();
-	
-					final com.mapinfo.util.DoubleRect featureBounds = feature.getGeometry().getBounds();
-					final com.mapinfo.util.DoublePoint featureCentre = featureBounds.center();
-					if (!featureBounds.intersects(areaBounds))
-						continue;
+			final FeatureSet featureSet = currLayer.searchWithinRectangle(
+					currLayer.getLabelProperties().getLabelColumns(),
+					areaBounds,
+					QueryParams.ALL_PARAMS);
+			
+			Feature feature = null;
+			while ((feature = featureSet.getNextFeature()) != null) {
+				final String featureName = feature.getAttribute(0).getString();
+				final com.mapinfo.util.DoublePoint featureCentre = feature.getGeometry().getBounds().center();
 					
-					final MapInfoSpatialObject spatialObject = new MapInfoSpatialObject(new DoublePoint(featureCentre.x, featureCentre.y),
-							featureName);
-	
-					searchResultsList.add(spatialObject);
-				}
+				final MapInfoSpatialObject spatialObject = new MapInfoSpatialObject(new DoublePoint(featureCentre.x, featureCentre.y),
+						featureName);
+
+				searchResultsList.add(spatialObject);
 			}
-		} catch (Exception exc) {
-			Log.errorMessage("MapInfoLocalStubImageLoader.findSpatialObjects | "
-					+ "ERROR!!! - Failed searching at layer \"" + currLayer.getName()
-					+ "\" with message \"" + exc.getMessage() + "\".");
+		} catch (Exception e) {
+			throw new MapDataException("Error while searching at region");
 		}
+		
+//		final FeatureLayer currLayer = ((MapInfoSpatialLayer)layer).getFeatureLayer();
+//		try {
+//			// Название колонки с надписями
+//			final List labelColumnsList = currLayer.getLabelProperties().getLabelColumns();
+//
+//			if (!labelColumnsList.isEmpty()) {
+//				final FeatureSet fs = currLayer.searchAll(labelColumnsList, null);
+//	
+//				Feature feature = null;
+//				// Loop until FeatureSet.getNextFeature() returns null
+//				while ((feature = fs.getNextFeature()) != null) {
+//					final String featureName = feature.getAttribute(0).getString();
+//	
+//					final com.mapinfo.util.DoubleRect featureBounds = feature.getGeometry().getBounds();
+//					final com.mapinfo.util.DoublePoint featureCentre = featureBounds.center();
+//					if (!featureBounds.intersects(areaBounds))
+//						continue;
+//					
+//					final MapInfoSpatialObject spatialObject = new MapInfoSpatialObject(new DoublePoint(featureCentre.x, featureCentre.y),
+//							featureName);
+//	
+//					searchResultsList.add(spatialObject);
+//				}
+//			}
+//		} catch (Exception exc) {
+//			Log.errorMessage("MapInfoLocalStubImageLoader.findSpatialObjects | "
+//					+ "ERROR!!! - Failed searching at layer \"" + currLayer.getName()
+//					+ "\" with message \"" + exc.getMessage() + "\".");
+//		}
 
 		return searchResultsList;
 	}
