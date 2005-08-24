@@ -1,5 +1,5 @@
 /*-
- * $Id: Dispatcher.java,v 1.12 2005/08/15 08:55:35 bob Exp $
+ * $Id: Dispatcher.java,v 1.13 2005/08/24 08:05:43 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.12 $, $Date: 2005/08/15 08:55:35 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/24 08:05:43 $
  * @author $Author: bob $
  * @author Kholshin Stanislav
  * @author Vladimir Dolzhenko
@@ -105,7 +105,7 @@ public class Dispatcher {
 			}
 		} else {
 			Log.debugMessage("Dispatcher.firePropertyChange | listener for '" + propertyName
-					+ "' is " + (listeners == null ? "'null'" : "empty"), Level.FINEST);
+					+ "' is " + (listeners == null ? "'null'" : "empty"), Log.DEBUGLEVEL10);
 		}
 	}
 }
