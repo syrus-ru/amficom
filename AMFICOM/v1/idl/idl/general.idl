@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.104 2005/08/19 16:28:15 arseniy Exp $
+ * $Id: general.idl,v 1.105 2005/08/24 11:31:20 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,10 +42,12 @@ module general {
 		typedef string<32> String32;
 		typedef wstring<32> WString32;
 		typedef wstring<64> WString64;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<WString64> WString64Seq;
 		typedef wstring<128> WString128;
 		typedef wstring<256> WString256;
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		enum IdlDataType {
 			DATA_TYPE_INTEGER,
 			DATA_TYPE_DOUBLE,
@@ -56,6 +58,7 @@ module general {
 			DATA_TYPE_BOOLEAN
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		enum IdlMeasurementUnit {
 			NONDIMENSIONAL,
 
@@ -67,6 +70,7 @@ module general {
 			NANOSECOND
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		enum IdlParameterType {
 			REF_WAVE_LENGTH,
 			REF_TRACE_LENGTH,
@@ -90,12 +94,15 @@ module general {
 			PREDICTION_TIME_END
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdlParameterType> IdlParameterTypeSeq;
 
 
 //////////////////// Exceptions ///////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		exception AMFICOMRemoteException {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum IdlErrorCode {
 				ERROR_LOGIN_NOT_FOUND,
 				ERROR_ILLEGAL_DATA,
@@ -114,6 +121,7 @@ module general {
 				ERROR_ACCESS_VALIDATION,
 				ERROR_UNKNOWN
 			} errorCode;
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum IdlCompletionStatus {
 				COMPLETED_YES,
 				COMPLETED_NO,
@@ -122,16 +130,18 @@ module general {
 			wstring message;
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		exception IdlCreateObjectException {
 			wstring detailMessage;
 		};
-	/*
+#if 0
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		exception RemoteVersionCollisionException {
 			long long desiredVersion;
 			long long actualVersion;
 			wstring message;
 		};
-	*/
+#endif // 0
 
 
 //////////////////// Identifier ///////////////////
@@ -140,11 +150,13 @@ module general {
 			long long identifierCode;
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdlIdentifier> IdlIdentifierSeq;
 
 
 //////////////////// StorableObject ///////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlStorableObject {
 			public IdlIdentifier id;
 			public long long created;
@@ -163,12 +175,15 @@ module general {
 					in long long version);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdlStorableObject> IdlStorableObjectSeq;
 
 
 ///////////////////////////// Condition ////////////////////////
 
-		union IdlStorableObjectCondition switch (enum IdlStorableObjectConditionSort {
+		union IdlStorableObjectCondition switch (
+			/*\u002a\u002f@SuppressWarnings("all")/**/
+			enum IdlStorableObjectConditionSort {
 				EQUIVALENT,
 				LINKED_IDS,
 				TYPICAL,
@@ -189,6 +204,7 @@ module general {
 					WString256 key;
 					WString256 value;
 					WString256 otherValue;
+					/*\u002a\u002f@SuppressWarnings("all")/**/
 					enum TypicalSort {
 						TYPE_NUMBER_INT,
 						TYPE_NUMBER_LONG,
@@ -197,6 +213,7 @@ module general {
 						TYPE_DATE,
 						TYPE_BOOLEAN
 					} sort;
+					/*\u002a\u002f@SuppressWarnings("all")/**/
 					enum OperationSort {
 						OPERATION_EQUALS,
 						OPERATION_GREAT,
@@ -211,6 +228,7 @@ module general {
 				} typicalCondition;
 			case COMPOUND:
 				struct IdlCompoundCondition {
+					/*\u002a\u002f@SuppressWarnings("all")/**/
 					enum CompoundConditionSort {
 						AND,
 						OR} sort;
@@ -226,32 +244,33 @@ module general {
 ///////////////////////// Common server interfaces //////////////////////////
 
 		/**
-		* superinterface for all verifiable references
-		*/
+		 * superinterface for all verifiable references
+		\u002a\u002f@SuppressWarnings("all")/**/
 		abstract interface Verifiable {
 			void verify(in octet i);
 		};
 
 		/**
-		* superinterface for identifier generators
-		*/
+		 * superinterface for identifier generators
+		\u002a\u002f@SuppressWarnings("all")/**/
 		abstract interface IdentifierGeneratorServer {
 			IdlIdentifier getGeneratedIdentifier(in unsigned short entity) raises (AMFICOMRemoteException);
 			IdlIdentifierSeq getGeneratedIdentifierRange(in unsigned short entity, in unsigned long size) raises (AMFICOMRemoteException);
 		};
 
 		/**
-		* pair (object id, version)
-		*/
+		 * pair (object id, version)
+		 */
 		struct IdVersion {
 			IdlIdentifier id;
 			long long version;
 		};
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdVersion> IdVersionSeq;
 
 		/**
-		* common interface for all servers
-		*/
+		 * common interface for all servers
+		\u002a\u002f@SuppressWarnings("all")/**/
 		abstract interface CommonServer : Verifiable {
 #pragma version CommonServer 3.0
 
@@ -284,7 +303,9 @@ module general {
 
 //////////////////// CharacteristicType ///////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlCharacteristicType : IdlStorableObject {
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum CharacteristicTypeSort {
 				CHARACTERISTICTYPESORT_OPTICAL,
 				CHARACTERISTICTYPESORT_ELECTRICAL,
@@ -312,11 +333,13 @@ module general {
 					in CharacteristicTypeSort sort);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdlCharacteristicType> IdlCharacteristicTypeSeq;
 
 
 ////////////////////// Characteristic /////////////////////
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlCharacteristic : IdlStorableObject {
 			public IdlIdentifier _typeId;
 			public WString128 name;
@@ -341,6 +364,7 @@ module general {
 					in boolean visible);
 		};
 
+		/*\u002a\u002f@SuppressWarnings("all")/**/
 		typedef sequence<IdlCharacteristic> IdlCharacteristicSeq;
 
 	};

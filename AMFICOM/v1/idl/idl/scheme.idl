@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.35 2005/08/11 14:37:59 max Exp $
+ * $Id: scheme.idl,v 1.36 2005/08/24 11:31:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -141,7 +141,7 @@ module scheme {
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlSchemeElement : IdlAbstractSchemeElement {
-		
+			/*\u002a\u002f@SuppressWarnings("all")/**/
 			enum SchemeElementKind {
 				EQUIPMENTED,
 				SCHEMED
