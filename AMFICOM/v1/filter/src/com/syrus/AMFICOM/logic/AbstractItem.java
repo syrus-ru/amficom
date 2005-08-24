@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.14 2005/08/08 11:37:22 arseniy Exp $
+ * $Id: AbstractItem.java,v 1.15 2005/08/24 07:48:07 max Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import java.util.List;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:37:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/08/24 07:48:07 $
+ * @author $Author: max $
  * @author Vladimir Dolzhenko
  * @module filter
  */
@@ -206,4 +206,11 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 		className = lastDotIndex >= 0 ? className.substring(lastDotIndex + 1) : className;
 		return this.getName() + '{' + className + '}';
 	}
+	
+	public void clearChildren() {
+		for (Item child : this.children) {
+			child.setParent(null);
+		}
+	}
+	
 }
