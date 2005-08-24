@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.53 2005/08/17 16:00:22 bob Exp $
+ * $Id: Domain.java,v 1.54 2005/08/24 11:33:34 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,15 +33,14 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/08/17 16:00:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.54 $, $Date: 2005/08/24 11:33:34 $
+ * @author $Author: bass $
  * @module administration
  */
 
