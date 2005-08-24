@@ -1,5 +1,5 @@
 /**
- * $Id: OfxImageLoader.java,v 1.4 2005/08/24 08:02:15 krupenn Exp $
+ * $Id: OfxImageLoader.java,v 1.5 2005/08/24 13:55:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
  * 
  * 
  * 
- * @version $Revision: 1.4 $, $Date: 2005/08/24 08:02:15 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/24 13:55:35 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -118,7 +118,7 @@ public class OfxImageLoader implements MapImageLoader {
 	public Set<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
 		Set<SpatialObject> found = new HashSet<SpatialObject>();
 		OfxSpatialLayer ofxSpatialLayer = (OfxSpatialLayer)layer;
-		findInLayer(ofxSpatialLayer.className, searchText, found);
+		findInLayer(ofxSpatialLayer.className, searchText.toLowerCase(), found);
 		return found;
 	}
 
