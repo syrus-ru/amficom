@@ -36,8 +36,8 @@ public class CreateEtalonCommand extends AbstractCommand
 		Collection bsColl = Heap.getBSCollection();
 
 		// если не открыта ни одна р/г, просто игнорируем команду.
-		// в такой ситуации она не должна была запускаться,
-		// т.ч. обработка ошибки, в принципе, не нужна
+		// В такой ситуации команда не должна была вызываться,
+		// поэтому никакая user-friendly обработка этой ошибки не нужна.
 		if (bsColl.isEmpty())
 			return;
 
