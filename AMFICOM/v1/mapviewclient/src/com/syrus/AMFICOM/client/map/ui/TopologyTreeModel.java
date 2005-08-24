@@ -1,5 +1,5 @@
 /**
- * $Id: TopologyTreeModel.java,v 1.2 2005/08/23 14:20:12 krupenn Exp $
+ * $Id: TopologyTreeModel.java,v 1.3 2005/08/24 07:33:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
@@ -177,7 +178,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 
 				System.out.println("children of \'" + this.initialName + "\' are removed");
 
-				List<SpatialObject> objects;
+				Set<SpatialObject> objects;
 				SpatialLayer spatialLayer = (SpatialLayer )this.node.getObject();
 				MapImageLoader mapImageLoader = TopologyTreeModel.this.netMapViewer.getRenderer().getLoader();
 
@@ -193,7 +194,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 							objects = mapImageLoader.findSpatialObjects(spatialLayer, bounds);
 						}
 						else {
-							objects = Collections.emptyList();
+							objects = Collections.emptySet();
 						}
 					}
 				} catch (Exception e) {
