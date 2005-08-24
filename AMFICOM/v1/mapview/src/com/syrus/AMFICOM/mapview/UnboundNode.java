@@ -1,12 +1,9 @@
-/**
- * $Id: UnboundNode.java,v 1.29 2005/08/12 14:27:00 arseniy Exp $
+/*-
+ * $Id: UnboundNode.java,v 1.30 2005/08/24 15:00:29 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.mapview;
@@ -32,8 +29,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * Непривязанный элемент. Сооветствует элеименту схемы, не привязанному
  * ни к какому элементу топологической схемы.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.29 $, $Date: 2005/08/12 14:27:00 $
+ * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/08/24 15:00:29 $
  * @module mapview
  */
 public final class UnboundNode extends SiteNode

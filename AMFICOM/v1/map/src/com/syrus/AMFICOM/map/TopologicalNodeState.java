@@ -1,10 +1,9 @@
-/**
- * $Id: TopologicalNodeState.java,v 1.5 2005/08/08 11:35:11 arseniy Exp $
+/*-
+ * $Id: TopologicalNodeState.java,v 1.6 2005/08/24 15:00:28 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
@@ -17,9 +16,9 @@ import com.syrus.util.HashCodeGenerator;
  *
  *
  *
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:35:11 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/24 15:00:28 $
  * @module map
- * @author $Author: arseniy $
+ * @author $Author: bass $
  */
 public final class TopologicalNodeState extends NodeState {
 	public boolean active;

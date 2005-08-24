@@ -1,9 +1,9 @@
-/*
- * $Id: FilterExpressionInterface.java,v 1.6 2005/08/09 21:10:10 arseniy Exp $
+/*-
+ * $Id: FilterExpressionInterface.java,v 1.7 2005/08/24 15:00:29 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.filter;
@@ -12,7 +12,7 @@ import java.io.*;
 import java.util.List;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/09 21:10:10 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/24 15:00:29 $
  * @module filter
  */
 public interface FilterExpressionInterface {

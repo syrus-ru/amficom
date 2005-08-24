@@ -1,10 +1,9 @@
-/**
- * $Id: NodeState.java,v 1.8 2005/08/12 14:24:16 arseniy Exp $
+/*-
+ * $Id: NodeState.java,v 1.9 2005/08/24 15:00:28 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
@@ -20,9 +19,9 @@ import java.util.HashMap;
  *
  *
  *
- * @version $Revision: 1.8 $, $Date: 2005/08/12 14:24:16 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/24 15:00:28 $
  * @module map
- * @author $Author: arseniy $
+ * @author $Author: bass $
  */
 public class NodeState extends MapElementState {
 	public String name;

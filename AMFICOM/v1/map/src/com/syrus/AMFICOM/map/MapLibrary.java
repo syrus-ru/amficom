@@ -1,10 +1,11 @@
-/**
- * $Id: MapLibrary.java,v 1.13 2005/08/16 11:00:38 krupenn Exp $
+/*-
+ * $Id: MapLibrary.java,v 1.14 2005/08/24 15:00:28 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.map;
 
 import static java.util.logging.Level.SEVERE;
@@ -51,8 +52,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/16 11:00:38 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/08/24 15:00:28 $
+ * @author $Author: bass $
  * @module map
  */
 public class MapLibrary extends StorableObject implements Identifiable, Namable, Library, XMLBeansTransferable {

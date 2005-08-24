@@ -1,10 +1,11 @@
-/*
- * $Id: ImportUIDMapDatabase.java,v 1.4 2005/08/18 13:28:22 krupenn Exp $
+/*-
+ * $Id: ImportUIDMapDatabase.java,v 1.5 2005/08/24 15:00:28 bass Exp $
  *
- * Syrus Systems
- * Научно-Технический Центр
- * Проект: АМФИКОМ
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general;
 
 import java.sql.Connection;
@@ -21,8 +22,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.5 $
+ * @author $Author: bass $
  * @author krupenn
  * @module map
  */

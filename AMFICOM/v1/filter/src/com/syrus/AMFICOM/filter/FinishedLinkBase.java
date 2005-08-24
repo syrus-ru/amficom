@@ -1,15 +1,15 @@
-/*
- * $Id: FinishedLinkBase.java,v 1.4 2005/08/09 21:10:10 arseniy Exp $
+/*-
+ * $Id: FinishedLinkBase.java,v 1.5 2005/08/24 15:00:29 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.filter;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/09 21:10:10 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/24 15:00:29 $
  * @module filter
  */
 public class FinishedLinkBase extends ProSchemeElementBase {

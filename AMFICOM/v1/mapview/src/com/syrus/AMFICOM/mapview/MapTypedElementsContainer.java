@@ -1,10 +1,11 @@
-/**
- * $Id: MapTypedElementsContainer.java,v 1.3 2005/08/12 14:27:00 arseniy Exp $
+/*-
+ * $Id: MapTypedElementsContainer.java,v 1.4 2005/08/24 15:00:30 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.mapview;
 
 import java.util.Collections;

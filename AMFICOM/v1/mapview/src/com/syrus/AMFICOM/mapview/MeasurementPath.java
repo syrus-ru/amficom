@@ -1,12 +1,9 @@
 /*-
- * $Id: MeasurementPath.java,v 1.42 2005/08/15 14:07:33 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.43 2005/08/24 15:00:29 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.mapview;
@@ -38,8 +35,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Элемент пути.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.42 $, $Date: 2005/08/15 14:07:33 $
+ * @author $Author: bass $
+ * @version $Revision: 1.43 $, $Date: 2005/08/24 15:00:29 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {

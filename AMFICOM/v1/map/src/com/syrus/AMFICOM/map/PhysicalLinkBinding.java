@@ -1,12 +1,9 @@
-/**
- * $Id: PhysicalLinkBinding.java,v 1.12 2005/08/12 14:24:16 arseniy Exp $
+/*-
+ * $Id: PhysicalLinkBinding.java,v 1.13 2005/08/24 15:00:28 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
@@ -23,8 +20,8 @@ import com.syrus.AMFICOM.resource.IntPoint;
  * включает всебя список кабелей, которые проходят по данному тоннелю,
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/08/12 14:24:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/08/24 15:00:28 $
  * @module map
  */
 public final class PhysicalLinkBinding {

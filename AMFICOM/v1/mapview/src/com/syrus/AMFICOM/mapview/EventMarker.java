@@ -1,12 +1,9 @@
-/**
- * $Id: EventMarker.java,v 1.10 2005/08/15 14:08:55 krupenn Exp $
+/*-
+ * $Id: EventMarker.java,v 1.11 2005/08/24 15:00:30 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.mapview;
@@ -15,8 +12,8 @@ import com.syrus.AMFICOM.general.Identifier;
 
 /**
  * Стационарный маркер собития на пути.
- * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/08/15 14:08:55 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/08/24 15:00:30 $
  * @module mapview
  * @todo EventMarker functionality
  */

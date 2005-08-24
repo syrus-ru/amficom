@@ -1,10 +1,9 @@
 /*-
- * $Id: Selection.java,v 1.24 2005/08/24 10:09:28 krupenn Exp $
+ * $Id: Selection.java,v 1.25 2005/08/24 15:00:29 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный
- * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.mapview;
@@ -20,8 +19,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Набор выбранных элементов.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/08/24 10:09:28 $
+ * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/08/24 15:00:29 $
  * @module mapview
  */
 public final class Selection extends MapTypedElementsContainer implements MapElement {

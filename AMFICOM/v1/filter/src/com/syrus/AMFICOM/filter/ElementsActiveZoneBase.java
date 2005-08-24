@@ -1,9 +1,9 @@
-/*
- * $Id: ElementsActiveZoneBase.java,v 1.5 2005/08/09 19:41:15 arseniy Exp $
+/*-
+ * $Id: ElementsActiveZoneBase.java,v 1.6 2005/08/24 15:00:29 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.filter;
@@ -12,7 +12,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/09 19:41:15 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/24 15:00:29 $
  * @module filter
  */
 public class ElementsActiveZoneBase extends ProSchemeElementBase {

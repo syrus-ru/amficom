@@ -1,12 +1,9 @@
-/**
- * $Id: IntPoint.java,v 1.1 2005/08/12 14:21:50 arseniy Exp $
+/*-
+ * $Id: IntPoint.java,v 1.2 2005/08/24 15:00:30 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.resource;
@@ -14,11 +11,11 @@ package com.syrus.AMFICOM.resource;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * Пара целых чисел, соответствующих, например, координатам объекта в
- * целочисленной двумерной плоскости.
+ * \u041f\u0430\u0440\u0430 \u0446\u0435\u043b\u044b\u0445 \u0447\u0438\u0441\u0435\u043b, \u0441\u043e\u043e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044e\u0449\u0438\u0445, \u043d\u0430\u043f\u0440\u0438\u043c\u0435\u0440, \u043a\u043e\u043e\u0440\u0434\u0438\u043d\u0430\u0442\u0430\u043c \u043e\u0431\u044a\u0435\u043a\u0442\u0430 \u0432
+ * \u0446\u0435\u043b\u043e\u0447\u0438\u0441\u043b\u0435\u043d\u043d\u043e\u0439 \u0434\u0432\u0443\u043c\u0435\u0440\u043d\u043e\u0439 \u043f\u043b\u043e\u0441\u043a\u043e\u0441\u0442\u0438.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.1 $, $Date: 2005/08/12 14:21:50 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/08/24 15:00:30 $
  * @module resource
  */
 public class IntPoint implements Cloneable {

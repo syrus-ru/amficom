@@ -1,18 +1,19 @@
-/**
- * $Id: ClonedIdsPool.java,v 1.3 2005/08/12 12:26:28 arseniy Exp $
+/*-
+ * $Id: ClonedIdsPool.java,v 1.4 2005/08/24 15:00:29 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general;
 
 import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/12 12:26:28 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/08/24 15:00:29 $
+ * @author $Author: bass $
  * @module general
  */
 public class ClonedIdsPool {

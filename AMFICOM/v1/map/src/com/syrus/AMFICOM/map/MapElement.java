@@ -1,12 +1,9 @@
 /*-
- * $Id: MapElement.java,v 1.19 2005/08/12 14:24:16 arseniy Exp $
+ * $Id: MapElement.java,v 1.20 2005/08/24 15:00:28 bass Exp $
  *
- * Syrus Systems
- * Научно-технический центр
- * Проект: АМФИКОМ Автоматизированный МногоФункциональный
- *         Интеллектуальный Комплекс Объектного Мониторинга
- *
- * Платформа: java 1.4.1
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.map;
@@ -22,8 +19,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *
  *
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/08/12 14:24:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/08/24 15:00:28 $
  * @module map
  */
 public interface MapElement extends Characterizable, Namable {
