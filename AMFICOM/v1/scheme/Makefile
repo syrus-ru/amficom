@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.32 2005/08/20 19:49:52 arseniy Exp $
+# $Id: Makefile,v 1.33 2005/08/24 11:32:37 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -76,7 +76,7 @@ xmlinstall: .xml $(LIBDIR)
 
 $(LIBNAME_SCHEMEXML): 
 	$(SCOMP) $(SCOMPFLAGS) -out $@ -cp $(XMLBEANSCLASSPATH):$(LIBDIR)/$(LIBNAME_GENERALXML) \
-		$(XMLDIR)/Scheme.xsd \
+		$(XMLDIR)/CableChannelingItem.xsd \
 		$(XMLDIR)/SchemeCableLink.xsd \
 		$(XMLDIR)/SchemeCableThread.xsd \
 		$(XMLDIR)/SchemeDevice.xsd \

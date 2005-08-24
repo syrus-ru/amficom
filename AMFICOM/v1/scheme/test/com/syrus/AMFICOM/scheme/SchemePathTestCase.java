@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.16 2005/08/04 18:55:05 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.17 2005/08/24 11:33:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,11 +41,11 @@ import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.map.DoublePoint;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
+import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
@@ -55,7 +55,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/08/04 18:55:05 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/24 11:33:04 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -303,7 +303,7 @@ public final class SchemePathTestCase extends TestCase {
 		final SchemePort startSchemePort0 = SchemePort.createInstance(userId, "startSchemePort0", IdlDirectionType._IN, schemeDevice0);
 		final SchemePort endSchemePort0 = SchemePort.createInstance(userId, "endSchemePort0", IdlDirectionType._OUT, schemeDevice0);
 		final SchemeCableLink schemeCableLink0 = SchemeCableLink.createInstance(userId, "schemeCableLink0", scheme0);
-		final SiteNodeType siteNodeType0 = SiteNodeType.createInstance(userId, SiteNodeTypeSort.ATS, "codename", "siteNodeType0", "", Identifier.VOID_IDENTIFIER, false, MapLibrary.createInstance(userId, null)); 
+		final SiteNodeType siteNodeType0 = SiteNodeType.createInstance(userId, SiteNodeTypeSort.ATS, "codename", "siteNodeType0", "", Identifier.VOID_IDENTIFIER, false, MapLibrary.createInstance(userId, null).getId());
 		final SiteNode siteNode0 = SiteNode.createInstance(userId, new DoublePoint(), siteNodeType0);
 		final SiteNode siteNode1 = SiteNode.createInstance(userId, new DoublePoint(), siteNodeType0);
 
