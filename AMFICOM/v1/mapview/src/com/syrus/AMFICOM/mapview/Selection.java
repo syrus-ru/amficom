@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.23 2005/08/12 14:27:00 arseniy Exp $
+ * $Id: Selection.java,v 1.24 2005/08/24 10:09:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,10 +20,9 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Набор выбранных элементов.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.23 $, $Date: 2005/08/12 14:27:00 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.24 $, $Date: 2005/08/24 10:09:28 $
  * @module mapview
- * @todo copy/paste, properties
  */
 public final class Selection extends MapTypedElementsContainer implements MapElement {
 	/**
