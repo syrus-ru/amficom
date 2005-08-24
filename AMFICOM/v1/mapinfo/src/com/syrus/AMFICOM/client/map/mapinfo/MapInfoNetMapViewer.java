@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.client.map.mapinfo;
 
 import java.awt.Cursor;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.dnd.DropTarget;
 import java.awt.event.MouseEvent;
 import java.awt.geom.Rectangle2D;
@@ -152,7 +153,15 @@ public class MapInfoNetMapViewer extends NetMapViewer {
 	 */
 	@Override
 	public void handDragged(final MouseEvent me) throws MapConnectionException, MapDataException {
-		// empty
+		Point startPoint = this.logicalNetLayer.getStartPoint();
+		int shiftX = (int )(me.getX() - startPoint.getX());
+		int shiftY = (int )(me.getY() - startPoint.getY());
+
+		//todo repaint visualComponent with shift 
+//		this.visualComponent.repaint(
+//				this.visualComponent.getGraphics(),
+//				shiftX,
+//				shiftY);
 	}
 
 	/*
