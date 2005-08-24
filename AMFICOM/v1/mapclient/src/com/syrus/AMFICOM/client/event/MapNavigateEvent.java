@@ -1,5 +1,5 @@
 /**
- * $Id: MapNavigateEvent.java,v 1.5 2005/08/18 13:47:14 krupenn Exp $
+ * $Id: MapNavigateEvent.java,v 1.6 2005/08/24 08:18:23 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.general.Identifier;
  *
  *
  *
- * @version $Revision: 1.5 $, $Date: 2005/08/18 13:47:14 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/24 08:18:23 $
  * @module mapclient_v2
  * @author $Author: krupenn $
  */
@@ -135,13 +135,13 @@ public class MapNavigateEvent extends MapEvent {
 
 	public MapNavigateEvent(
 			Object source,
-			int mapEventType,
+			int mapNavigateEventType,
 			Identifier markerId,
 			double distance,
 			Identifier schemePathId,
 			Identifier meId)
 	{
-		super(source, MAP_NAVIGATE);
+		this(source, mapNavigateEventType);
 		this.markerId = markerId;
 		this.distance = distance;
 		this.schemePathId = schemePathId;
@@ -150,14 +150,14 @@ public class MapNavigateEvent extends MapEvent {
 
 	public MapNavigateEvent(
 			Object source,
-			int typ,
+			int mapNavigateEventType,
 			Identifier markerId,
 			double distance,
 			Identifier schemePathId,
 			Identifier meId,
 			Identifier schemePathElementId)
 	{
-		this(source, typ, markerId, distance, schemePathId, meId);
+		this(source, mapNavigateEventType, markerId, distance, schemePathId, meId);
 		this.schemePathElementId = schemePathElementId;
 	}
 
