@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.68 2005/08/24 08:15:42 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.69 2005/08/24 10:08:59 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,10 +66,8 @@ import com.syrus.util.Log;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: krupenn $
- * @version $Revision: 1.68 $, $Date: 2005/08/24 08:15:42 $
+ * @version $Revision: 1.69 $, $Date: 2005/08/24 10:08:59 $
  * @module map
- * @todo make 'sort' persistent (update database scheme as well)
- * @todo make 'mapLibrary' persistent
  */
 public final class SiteNodeType extends StorableObjectType 
 		implements Characterizable, Namable, LibraryEntry, XMLBeansTransferable {

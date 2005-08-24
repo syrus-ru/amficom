@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.72 2005/08/16 11:00:38 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.73 2005/08/24 10:08:59 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,13 +55,8 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: krupenn $
- * @version $Revision: 1.72 $, $Date: 2005/08/16 11:00:38 $
+ * @version $Revision: 1.73 $, $Date: 2005/08/24 10:08:59 $
  * @module map
- * @todo add 'topological' to constructor
- * @todo make 'topological' persistent
- * @todo make 'sort' persistent (update database scheme as well)
- * @todo make 'mapLibrary' persistent
- * @todo make 'bindingDimension' persistent
  */
 public final class PhysicalLinkType extends StorableObjectType 
 		implements Characterizable, Namable, LibraryEntry, XMLBeansTransferable {
@@ -91,8 +86,6 @@ public final class PhysicalLinkType extends StorableObjectType
 	/**
 	 * Размерность тоннеля. Для тоннеля обозначает размерность матрицы труб в
 	 * разрезе, для участка коллектора - число полок и мест на полках
-	 *
-	 * @todo добавить сохранение в БД (make persistent)
 	 */
 	private IntDimension bindingDimension;
 

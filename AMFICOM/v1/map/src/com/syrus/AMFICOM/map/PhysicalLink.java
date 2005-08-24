@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.94 2005/08/16 11:00:38 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.95 2005/08/24 10:08:59 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,10 +66,8 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: krupenn $
- * @version $Revision: 1.94 $, $Date: 2005/08/16 11:00:38 $
+ * @version $Revision: 1.95 $, $Date: 2005/08/24 10:08:59 $
  * @module map
- * @todo make binding.dimension persistent (just as bindingDimension for PhysicalLinkType)
- * @todo nodeLinks should be transient
  */
 public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XMLBeansTransferable {
 

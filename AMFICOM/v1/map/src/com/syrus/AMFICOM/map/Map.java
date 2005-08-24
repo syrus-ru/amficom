@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.75 2005/08/16 11:00:38 krupenn Exp $
+ * $Id: Map.java,v 1.76 2005/08/24 10:08:59 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,11 +54,8 @@ import com.syrus.AMFICOM.map.corba.IdlMapHelper;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.75 $, $Date: 2005/08/16 11:00:38 $
+ * @version $Revision: 1.76 $, $Date: 2005/08/24 10:08:59 $
  * @module map
- * @todo make maps persistent
- * @todo make externalNodes persistent
- * @todo make mapLibraries persistent
  */
 public final class Map extends DomainMember implements Namable, XMLBeansTransferable {
 

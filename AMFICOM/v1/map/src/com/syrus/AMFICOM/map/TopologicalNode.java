@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.64 2005/08/16 11:00:38 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.65 2005/08/24 10:08:59 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,9 +44,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: krupenn $
- * @version $Revision: 1.64 $, $Date: 2005/08/16 11:00:38 $
+ * @version $Revision: 1.65 $, $Date: 2005/08/24 10:08:59 $
  * @module map
- * @todo physicalLink should be transient
  */
 public final class TopologicalNode extends AbstractNode implements XMLBeansTransferable{
 
@@ -242,7 +241,6 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 			e.printStackTrace();
 		}
 		return null;
-		// return this.map.getNodeLink(this).getPhysicalLink();
 	}
 
 	public void setPhysicalLink(final PhysicalLink physicalLink) {
