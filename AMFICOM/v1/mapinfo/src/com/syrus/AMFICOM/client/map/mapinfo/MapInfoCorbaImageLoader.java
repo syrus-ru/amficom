@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.7 2005/08/23 10:12:14 peskovsky Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.8 2005/08/24 07:29:48 peskovsky Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,8 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
+import java.util.TreeSet;
 import java.util.logging.Level;
 
 import org.dom4j.Document;
@@ -37,14 +39,12 @@ import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
-import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.map.LayerDescriptor;
 import com.syrus.AMFICOM.map.MapDescriptor;
 import com.syrus.AMFICOM.map.MapFileDescriptor;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.AMFICOM.map.corba.IdlLayerDescriptor;
 import com.syrus.AMFICOM.map.corba.IdlMapDescriptor;
-import com.syrus.AMFICOM.map.corba.IdlMapFeature;
 import com.syrus.AMFICOM.map.corba.IdlRenderedImage;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServer;
@@ -54,7 +54,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/23 10:12:14 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/24 07:29:48 $
  * @author $Author: peskovsky $
  * @module mapinfo
  */
@@ -316,15 +316,15 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		}
 	}
 
-	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
+	public Set<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
 		// TODO Требуется реализация на сервере
-		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
+		final Set<SpatialObject> searchResultsList = new TreeSet<SpatialObject>();
 		return searchResultsList;
 	}
 
-	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapConnectionException, MapDataException {
+	public Set<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapConnectionException, MapDataException {
 		// TODO Требуется реализация на сервере
-		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
+		final Set<SpatialObject> searchResultsList = new TreeSet<SpatialObject>();
 		return searchResultsList;
 	}
 }

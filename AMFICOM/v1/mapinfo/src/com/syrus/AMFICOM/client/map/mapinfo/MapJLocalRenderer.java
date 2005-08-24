@@ -1,5 +1,5 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.6 2005/08/23 07:01:58 peskovsky Exp $
+ * $Id: MapJLocalRenderer.java,v 1.7 2005/08/24 07:29:48 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.6 $, $Date: 2005/08/23 07:01:58 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/24 07:29:48 $
  * @module mapinfo
  */
 public class MapJLocalRenderer {
@@ -208,31 +208,8 @@ public class MapJLocalRenderer {
 			}
 		}
 	}
-	//    
-	// public static void main (String[] args)
-	// {
-	//  		boolean[] layerVis = {true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true,true};
-	//  		TopologicalImageQuery tiq = new TopologicalImageQuery(800,800,37.59,55.81, 2001.0000000345,layerVis,layerVis);
-	//			MapJLocalRenderer renderer = null;
-	//			try {
-	//				renderer = new MapJLocalRenderer(MapPropertiesManager.getDataBasePath() + MapPropertiesManager.getDataBaseView());
-	//			} catch (IOException e1) {
-	//				// TODO Auto-generated catch block
-	//				e1.printStackTrace();
-	//			}
-	//			
-	//			for (int i = 0; i < 10; i++ )
-	//			{
-	//	  		Image result = null;
-	//	  		try {
-	//				Log.debugMessage("MapJLocalRenderer.main | start", Log.FINEST);
-	//				result = renderer.renderToStream(tiq);
-	//				tiq.setTopoCenterX(tiq.getTopoCenterX() + 0.01);
-	//			} catch (Exception e)
-	//			{
-	//				// TODO Auto-generated catch block
-	//				e.printStackTrace();
-	//			}
-	//			}
-	//    }
+
+	public MapJ getMapJObject() {
+		return this.mapJObject;
+	}
 }
