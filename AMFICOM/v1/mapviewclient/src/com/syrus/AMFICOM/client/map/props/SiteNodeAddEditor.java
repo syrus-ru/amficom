@@ -466,15 +466,6 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				sen = !(startNode.equals(this.site))
 						&& !(endNode.equals(this.site));
 			}
-			// TODO demo cheat
-//			else
-//			if(element.equals("йн 17-221")) {
-//				this.schemePanel.getGraph().setVisible(false);
-//				this.crossingScrollPane.setVisible(true);
-//				
-//				this.crossingPanel.setCable(null);
-//			}
-			//
 			else {
 				this.schemePane.getGraph().setVisible(false);
 				this.crossingPanel.setCable(null);
@@ -577,9 +568,6 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 					this.cablesBranch.add(cableNode);
 				}
 			}
-			// TODO demo cheat!
-//			this.cablesBranch.add(new DefaultMutableTreeNode("йн 17-221"));
-			//
 		}
 
 		return this.root;

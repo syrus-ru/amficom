@@ -464,10 +464,6 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 
 			this.tunnelLayout.setBinding(binding);
 
-			// TODO demo cheat!
-//			this.cableList.addElements(Collections.singletonList(this.physicalLink));
-			//
-			
 			List list = binding.getBindObjects();
 			if(list != null) {
 				this.cableList.addElements(list);

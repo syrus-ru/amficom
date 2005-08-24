@@ -135,11 +135,6 @@ public class TunnelLayout implements PropertyChangeListener {
 		removeSelection();
 		this.activeCoordinates = this.binding.getBinding(or);
 
-		// TODO demo cheat!
-//		if(n > 1 && m > 2)
-//			this.activeCoordinates = new IntPoint(0, 2);
-		//
-
 		if(this.activeCoordinates != null)
 			this.ugoTabbedPane.getGraph().setSelectionCell(this.cells[this.activeCoordinates.x][this.activeCoordinates.y]);
 	}

@@ -98,12 +98,6 @@ public class SiteCrossingPanel extends JPanel {
 				}
 			}
 		}
-		// TODO demo cheat!
-//		else {
-//			this.index1 = 1;
-//			this.index2 = 2;
-//		}
-		//
 
 		repaint();
 	}
@@ -163,10 +157,7 @@ public class SiteCrossingPanel extends JPanel {
 			}
 		}
 
-		// TODO demo cheat
 		if(this.cpath != null && cnt > 0) {
-//		if(cnt > 0) {
-		//
 			double added = 2 * Math.PI / cnt;
 			if(this.index1 != -1) {
 				double a = Math.PI + this.index1 * added;
