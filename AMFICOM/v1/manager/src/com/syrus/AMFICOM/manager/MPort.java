@@ -1,5 +1,5 @@
 /*-
- * $Id: MPort.java,v 1.6 2005/08/24 14:05:47 bob Exp $
+ * $Id: MPort.java,v 1.7 2005/08/24 16:00:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import org.jgraph.graph.Edge;
 import org.jgraph.graph.Port;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/24 14:05:47 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/24 16:00:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -152,7 +152,7 @@ public class MPort extends DefaultGraphCell implements Port {
 		return c;
 	}
 	
-	private void updateCache() {
+	public void updateCache() {
 		this.sources.clear();
 		this.targets.clear();
 		for(Edge edge : this.edges) {
