@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.8 2005/08/23 15:51:53 bob Exp $
+ * $Id: DomainBean.java,v 1.9 2005/08/24 14:05:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,10 +27,10 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.manager.UI.JGraphText;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/23 15:51:53 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -40,8 +40,7 @@ public class DomainBean extends Bean {
 	Domain domain;
 	
 	@Override
-	public JPopupMenu getMenu(	final JGraphText graph,
-								final Object cell) {
+	public JPopupMenu getMenu(final Object cell) {
 
 		if (cell != null) {
 			final JPopupMenu popupMenu = new JPopupMenu();
@@ -52,7 +51,7 @@ public class DomainBean extends Bean {
 					
 					MPort port = (MPort) ((DefaultGraphCell) cell).getChildAt(0);
 					
-					List<Port> ports = graph.isDirect() ? port.getTargets() : port.getSources();
+					List<Port> ports = DomainBean.this.graphText.isDirect() ? port.getTargets() : port.getSources();
 					
 					if (ports.isEmpty()) {
 						JOptionPane.showMessageDialog(popupMenu, 
@@ -64,6 +63,7 @@ public class DomainBean extends Bean {
 					
 					for(Port port2 : ports) {
 						MPort port3 = (MPort) port2;
+						Log.debugMessage("DomainBean.getMenu | " + port3, Log.DEBUGLEVEL09);
 						AbstractBean bean2 = port3.getBean();
 						
 						if (bean2 == null || !bean2.getCodeName().startsWith(NetBeanFactory.NET_CODENAME)) {
@@ -75,29 +75,29 @@ public class DomainBean extends Bean {
 						}
 					}
 					
-					graph.currentPerspectiveLabel.setText(LangModelManager.getString("Label.SelectedDomain") + ':' + ((DefaultGraphCell) cell).getUserObject());
+					DomainBean.this.graphText.currentPerspectiveLabel.setText(LangModelManager.getString("Label.SelectedDomain") + ':' + ((DefaultGraphCell) cell).getUserObject());
 					
-					graph.domainsButton.setEnabled(true);
+					DomainBean.this.graphText.domainsButton.setEnabled(true);
 					
-					graph.domainButton.setEnabled(false);
+					DomainBean.this.graphText.domainButton.setEnabled(false);
 					
-					graph.netButton.setEnabled(false);
+					DomainBean.this.graphText.netButton.setEnabled(false);
 					
-					graph.userButton.setEnabled(true);
+					DomainBean.this.graphText.userButton.setEnabled(true);
 
-					graph.armButton.setEnabled(true);
+					DomainBean.this.graphText.armButton.setEnabled(true);
 
-					graph.rtuButton.setEnabled(true);
+					DomainBean.this.graphText.rtuButton.setEnabled(true);
 
-					graph.serverButton.setEnabled(true);
+					DomainBean.this.graphText.serverButton.setEnabled(true);
 
-					graph.mcmButton.setEnabled(true);
+					DomainBean.this.graphText.mcmButton.setEnabled(true);
 					
-					graph.setPerspective(new DomainPerpective(DomainBean.this));
+					DomainBean.this.graphText.setPerspective(new DomainPerpective(DomainBean.this));
 					
-					graph.showOnlyDescendants((DefaultGraphCell) cell);
+					DomainBean.this.graphText.showOnlyDescendants((DefaultGraphCell) cell);
 					
-					graph.showOnly(new String[] {NetBeanFactory.NET_CODENAME, 
+					DomainBean.this.graphText.showOnly(new String[] {NetBeanFactory.NET_CODENAME, 
 							ObjectEntities.SYSTEMUSER, 
 							ARMBeanFactory.ARM_CODENAME, 
 							ObjectEntities.KIS, 
@@ -160,7 +160,7 @@ public class DomainBean extends Bean {
 		if (newPort != null) {
 			parentId = ((DomainBean) newPort.getUserObject()).getId();
 		}		
-		System.out.println("DomainBean.applyTargetPort() | " + domain.getId() + ", set parent " + parentId); 
+		System.out.println("DomainBean.applyTargetPort() | " + this.domain.getId() + ", set parent " + parentId); 
 		this.domain.setDomainId(parentId);
 	}
 	

@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanWrapper.java,v 1.5 2005/08/23 15:02:15 bob Exp $
+ * $Id: MCMBeanWrapper.java,v 1.6 2005/08/24 14:05:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
@@ -24,12 +25,11 @@ import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.manager.UI.JGraphText;
 import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/23 15:02:15 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -53,7 +53,7 @@ public class MCMBeanWrapper implements Wrapper {
 	private Map<String, Identifier> 	serverIdMap;
 	private Map<String, Identifier> 	userIdMap;
 	
-	private MCMBeanWrapper() {
+	private MCMBeanWrapper(final Dispatcher dispatcher) {
 		// empty private constructor
 		String[] keysArray = new String[] { KEY_NAME, 
 				KEY_DESCRIPTION, 
@@ -65,24 +65,26 @@ public class MCMBeanWrapper implements Wrapper {
 		this.serverIdMap  = new HashMap<String, Identifier>();
 		this.userIdMap  = new HashMap<String, Identifier>();		
 
-		JGraphText.entityDispatcher.addPropertyChangeListener(
+//		Dispatcher dispatcher = bean.graphText.getDispatcher();
+		
+		dispatcher.addPropertyChangeListener(
 			ObjectEntities.SYSTEMUSER,
 			new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
 					refreshUsers();
-					JGraphText.entityDispatcher.firePropertyChange(
+					dispatcher.firePropertyChange(
 						new PropertyChangeEvent(MCMBeanWrapper.this, PROPERTY_USERS_REFRESHED, null, null));
 				}
 			});
 		
-		JGraphText.entityDispatcher.addPropertyChangeListener(
+		dispatcher.addPropertyChangeListener(
 			ObjectEntities.SERVER,
 			new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
 					refreshServers();
-					JGraphText.entityDispatcher.firePropertyChange(
+					dispatcher.firePropertyChange(
 						new PropertyChangeEvent(MCMBeanWrapper.this, PROPERTY_SERVERS_REFRESHED, null, null));
 				}
 			});
@@ -91,9 +93,9 @@ public class MCMBeanWrapper implements Wrapper {
 		this.refreshUsers();
 	}
 
-	public static MCMBeanWrapper getInstance() {
+	public static MCMBeanWrapper getInstance(final Dispatcher dispatcher) {
 		if (instance == null) {
-			instance = new MCMBeanWrapper();
+			instance = new MCMBeanWrapper(dispatcher);
 		}
 		return instance;
 	}

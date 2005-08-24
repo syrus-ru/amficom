@@ -1,3 +1,10 @@
+/*-
+ * $Id: RTUBeanWrapper.java,v 1.8 2005/08/24 14:05:47 bob Exp $
+ *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 
 package com.syrus.AMFICOM.manager;
 
@@ -11,24 +18,17 @@ import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.administration.MCM;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.manager.UI.JGraphText;
 import com.syrus.util.Wrapper;
 
-/*-
- * $Id: RTUBeanWrapper.java,v 1.7 2005/08/15 14:20:05 bob Exp $
- *
- * Copyright ¿ 2005 Syrus Systems.
- * Dept. of Science & Technology.
- * Project: AMFICOM.
- */
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -49,7 +49,7 @@ public class RTUBeanWrapper implements Wrapper {
 	
 	private Map<String, Identifier> 	mcmIdMap;
 	
-	private RTUBeanWrapper() {
+	private RTUBeanWrapper(final Dispatcher dispatcher) {
 		this.keys = Collections.unmodifiableList(
 			Arrays.asList(
 				new String[] { KEY_NAME, 
@@ -60,13 +60,13 @@ public class RTUBeanWrapper implements Wrapper {
 		
 		this.mcmIdMap  = new HashMap<String, Identifier>();
 
-		JGraphText.entityDispatcher.addPropertyChangeListener(
+		dispatcher.addPropertyChangeListener(
 			ObjectEntities.MCM,
 			new PropertyChangeListener() {
 
 				public void propertyChange(PropertyChangeEvent evt) {
 					refreshMCMs();
-					JGraphText.entityDispatcher.firePropertyChange(
+					dispatcher.firePropertyChange(
 						new PropertyChangeEvent(RTUBeanWrapper.this, 
 							PROPERTY_MCMS_REFRESHED, 
 							null, 
@@ -77,9 +77,9 @@ public class RTUBeanWrapper implements Wrapper {
 		this.refreshMCMs();
 	}
 
-	public static RTUBeanWrapper getInstance() {
+	public static RTUBeanWrapper getInstance(final Dispatcher dispatcher) {
 		if (instance == null) {
-			instance = new RTUBeanWrapper();
+			instance = new RTUBeanWrapper(dispatcher);
 		}
 		return instance;
 	}

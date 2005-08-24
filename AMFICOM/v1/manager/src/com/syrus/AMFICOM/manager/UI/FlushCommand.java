@@ -1,5 +1,5 @@
 /*-
-* $Id: FlushCommand.java,v 1.1 2005/08/17 15:59:40 bob Exp $
+* $Id: FlushCommand.java,v 1.2 2005/08/24 14:05:47 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.manager.LangModelManager;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -29,6 +29,7 @@ public class FlushCommand extends AbstractCommand {
 	@Override
 	public void execute() {
 		try {
+			StorableObjectPool.flush(ObjectEntities.LAYOUT_ITEM_CODE, LoginManager.getUserId(), true);
 			StorableObjectPool.flush(ObjectEntities.CHARACTERISTIC_CODE, LoginManager.getUserId(), true);
 			StorableObjectPool.flush(ObjectEntities.PERMATTR_CODE, LoginManager.getUserId(), true);
 			StorableObjectPool.flush(ObjectEntities.DOMAIN_CODE, LoginManager.getUserId(), true);

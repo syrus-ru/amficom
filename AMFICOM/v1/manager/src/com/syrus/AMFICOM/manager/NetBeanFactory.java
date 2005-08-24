@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.13 2005/08/23 15:02:15 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.14 2005/08/24 14:05:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,27 +10,22 @@ package com.syrus.AMFICOM.manager;
 
 import java.util.Set;
 
-import org.jgraph.graph.DefaultGraphCell;
-
-import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.manager.UI.JGraphText;
 import com.syrus.AMFICOM.resource.LayoutItem;
+import com.syrus.util.Log;
 
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/23 15:02:15 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -43,18 +38,19 @@ public class NetBeanFactory extends AbstractBeanFactory {
 	
 	private Validator validator;
 	
-	private NetBeanFactory() {
+	private NetBeanFactory(final JGraphText graphText) {
 		super("Entity.Net", 
 			"Entity.Net", 
 			"com/syrus/AMFICOM/manager/resources/icons/cloud.gif", 
 			"com/syrus/AMFICOM/manager/resources/cloud.png");
+		super.graphText = graphText;
 	}
 	
-	public static final NetBeanFactory getInstance() {
+	public static final NetBeanFactory getInstance(final JGraphText graphText) {
 		if(instance == null) {
 			synchronized (NetBeanFactory.class) {
 				if(instance == null) {
-					instance = new NetBeanFactory();
+					instance = new NetBeanFactory(graphText);
 				}
 			}
 		}		
@@ -72,7 +68,7 @@ public class NetBeanFactory extends AbstractBeanFactory {
 		final AbstractBean bean = new NonStorableBean() {
 			@Override
 			public void applyTargetPort(MPort oldPort, MPort newPort) {
-				System.out.println("NetBeanFactory.createBean() | " + oldPort + ", " + newPort);
+				Log.debugMessage("NetBeanFactory.createBean() | " + oldPort + ", " + newPort, Log.DEBUGLEVEL10);
 
 				Identifier parentDomainId = Identifier.VOID_IDENTIFIER;
 				
@@ -86,8 +82,8 @@ public class NetBeanFactory extends AbstractBeanFactory {
 					oldParentDomainId = ((DomainBean)oldPort.getUserObject()).getId();
 				}
 
-				System.out.println("NetBeanFactory.applyTargetPort() | oldParentDomainId:"
-					+ oldParentDomainId + ", parentDomainId: " + parentDomainId);
+				Log.debugMessage("NetBeanFactory.applyTargetPort() | oldParentDomainId:"
+					+ oldParentDomainId + ", parentDomainId: " + parentDomainId, Log.DEBUGLEVEL10);
 
 				try {
 					TypicalCondition typicalCondition = 
@@ -111,84 +107,21 @@ public class NetBeanFactory extends AbstractBeanFactory {
 						true);
 					
 					for(LayoutItem layoutItem : beanChildrenLayoutItems) {
-						String name1 = layoutItem.getName();
-						layoutItem.setLayoutName(parentDomainId.getIdentifierString());						
-						DefaultGraphCell cell = this.graphText.getCell(layoutItem);						
-						MPort port = (MPort) cell.getChildAt(0);
-						
-						AbstractBean portBean = port.getUserObject();
-						if (portBean instanceof DomainNetworkItem) {
-							DomainNetworkItem domainNetworkItem = (DomainNetworkItem) portBean;
-							domainNetworkItem.setDomainId(oldParentDomainId, parentDomainId);
+						if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
+							final String layoutName = !parentDomainId.isVoid() ? 
+									parentDomainId.getIdentifierString() : 
+									ObjectEntities.DOMAIN;
+							Log.debugMessage("NetBean.setDomainId | " 
+								+ layoutItem.getId() + ", "
+								+ layoutItem.getName() 
+								+ ", layoutName:" 
+								+ layoutName, 
+							Log.DEBUGLEVEL09);		
+							layoutItem.setLayoutName(layoutName);						
+							DomainNetworkItem portBean = 
+								(DomainNetworkItem) this.graphText.getCell(layoutItem);						
+							portBean.setDomainId(oldParentDomainId, parentDomainId);
 						}
-						
-						
-						if (false) {
-						if (name1.startsWith(ARMBeanFactory.ARM_CODENAME)) {
-							
-							System.out.println(".applyTargetPort() | arm:" + name1);
-							LinkedIdsCondition linkedIdsCondition2 = 
-								new LinkedIdsCondition(layoutItem.getId(),
-									ObjectEntities.LAYOUT_ITEM_CODE);
-							
-							Set<LayoutItem> armChildrenLayoutItems =  StorableObjectPool.getStorableObjectsByCondition(
-								linkedIdsCondition2, 
-								true, 
-								true);
-
-							
-							if (oldParentDomainId.isVoid()) {
-								for(LayoutItem item : armChildrenLayoutItems) {
-									System.out.println(".applyTargetPort() | setLayoutName " + parentDomainId.getIdentifierString() + " to " + item.getId());
-									item.setLayoutName(parentDomainId.getIdentifierString());
-									Identifier userId = new Identifier(item.getName());
-									PermissionAttributes attributes = 
-										PermissionAttributes.createInstance(LoginManager.getUserId(),
-										parentDomainId,
-										userId, 
-										0);
-									
-									System.out.println(".applyTargetPort() | create new PermissionAttributes: " + attributes.getId());
-								}
-							} else {
-								 Domain oldDomain = 
-									(Domain) StorableObjectPool.getStorableObject(oldParentDomainId, true); 
-								for(LayoutItem item : armChildrenLayoutItems) {
-									System.out.println(".applyTargetPort() | setLayoutName " + parentDomainId.getIdentifierString() + " to " + item.getId());
-									item.setLayoutName(parentDomainId.getIdentifierString());
-									PermissionAttributes permissionAttributes = 
-										oldDomain.getPermissionAttributes(new Identifier(item.getName()));
-									
-									System.out.println(".applyTargetPort() | " + item.getName());
-									
-									if (permissionAttributes == null) {
-										System.err.println(".applyTargetPort() | permissionAttributes null");
-										continue;
-									}
-									
-									if (parentDomainId.isVoid()) {
-										System.out.println(".applyTargetPort() | delete " + permissionAttributes.getId());
-										StorableObjectPool.delete(permissionAttributes.getId());
-									} else {
-										System.out.println(".applyTargetPort() | setDomainId " + parentDomainId
-											+ " to "
-											+ permissionAttributes.getId() );
-										permissionAttributes.setDomainId(parentDomainId);
-									}
-								}
-							}
-						} else {
-							Identifier identifier = new Identifier(name1);
-							StorableObject storableObject = StorableObjectPool.getStorableObject(identifier, true);
-							if (storableObject instanceof DomainMember) {
-								DomainMember domainMember = (DomainMember)storableObject;
-								System.out.println(".applyTargetPort() | setDomainId " + parentDomainId 
-									+ " to " + domainMember.getId());
-								domainMember.setDomainId(parentDomainId);
-							}
-						}
-						}
-						
 					}
 					
 					this.graphText.valueChanged(null);
@@ -199,10 +132,16 @@ public class NetBeanFactory extends AbstractBeanFactory {
 				}
 			}
 		};
+		bean.setGraphText(super.graphText);
 		bean.setCodeName(codename);
 		bean.setValidator(this.getValidator());
 		bean.setId(Identifier.VOID_IDENTIFIER);
 		return bean;
+	}
+	
+	@Override
+	public String getCodename() {
+		return NET_CODENAME;
 	}
 	
 	private final Validator getValidator() {

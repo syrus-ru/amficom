@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBeanFactory.java,v 1.7 2005/08/15 14:20:05 bob Exp $
+ * $Id: ServerBeanFactory.java,v 1.8 2005/08/24 14:05:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,9 @@
 
 package com.syrus.AMFICOM.manager;
 
-import static com.syrus.AMFICOM.manager.ServerBeanWrapper.*;
+import static com.syrus.AMFICOM.manager.ServerBeanWrapper.KEY_DESCRIPTION;
+import static com.syrus.AMFICOM.manager.ServerBeanWrapper.KEY_HOSTNAME;
+import static com.syrus.AMFICOM.manager.ServerBeanWrapper.KEY_NAME;
 
 import java.beans.PropertyChangeEvent;
 
@@ -23,7 +25,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -32,18 +34,19 @@ public class ServerBeanFactory extends TabledBeanFactory {
 	
 	private static ServerBeanFactory instance;
 	
-	private ServerBeanFactory() {
+	private ServerBeanFactory(final JGraphText graphText) {
 		super("Entity.Server", 
 			"Entity.Server", 
 			"com/syrus/AMFICOM/manager/resources/icons/server.gif", 
 			"com/syrus/AMFICOM/manager/resources/server.png");
+		super.graphText = graphText;
 	}
 	
-	public static final ServerBeanFactory getInstance() {
+	public static final ServerBeanFactory getInstance(final JGraphText graphText) {
 		if(instance == null) {
 			synchronized (ServerBeanFactory.class) {
 				if(instance == null) {
-					instance = new ServerBeanFactory();
+					instance = new ServerBeanFactory(graphText);
 				}
 			}
 		}		
@@ -69,6 +72,7 @@ public class ServerBeanFactory extends TabledBeanFactory {
 	@Override
 	protected AbstractBean createBean(Identifier identifier) {
 		ServerBean bean = new ServerBean();
+		bean.setGraphText(super.graphText);
 		bean.setId(identifier);
 		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());
@@ -80,7 +84,7 @@ public class ServerBeanFactory extends TabledBeanFactory {
 		bean.addPropertyChangeListener(this.listener);
 		bean.setPropertyPanel(this.panel);
 		
-		JGraphText.entityDispatcher.firePropertyChange(
+		super.graphText.getDispatcher().firePropertyChange(
 			new PropertyChangeEvent(this, ObjectEntities.SERVER, null, bean));
 		
 		return bean;
@@ -101,5 +105,10 @@ public class ServerBeanFactory extends TabledBeanFactory {
 			};
 		}
 		return this.validator;
+	}
+	
+	@Override
+	public String getCodename() {
+		return ObjectEntities.SERVER;
 	}
 }

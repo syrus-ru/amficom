@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.12 2005/08/15 14:20:05 bob Exp $
+* $Id: UserBeanFactory.java,v 1.13 2005/08/24 14:05:47 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -52,12 +52,12 @@ public class UserBeanFactory extends TabledBeanFactory {
 	private static UserBeanFactory instance;
 	
 	private List<String> names;
-	private UserBeanFactory() {
+	private UserBeanFactory(final JGraphText graphText) {
 		super("Entity.User", 
 			"Entity.User", 
 			"com/syrus/AMFICOM/manager/resources/icons/user.gif", 
 			"com/syrus/AMFICOM/manager/resources/user.gif");
-		
+		super.graphText = graphText;
 		this.names = new ArrayList<String>();
 		this.names.add(LangModelManager.getString("Entity.User.Subscriber"));
 		this.names.add(null);
@@ -71,11 +71,11 @@ public class UserBeanFactory extends TabledBeanFactory {
 		this.names.add(null);
 	}
 	
-	public static final UserBeanFactory getInstance() {
+	public static final UserBeanFactory getInstance(final JGraphText graphText) {
 		if (instance == null) {
 			synchronized (UserBeanFactory.class) {
 				if (instance == null) {
-					instance = new UserBeanFactory();
+					instance = new UserBeanFactory(graphText);
 				}				
 			}
 		}
@@ -124,6 +124,7 @@ public class UserBeanFactory extends TabledBeanFactory {
 	@Override
 	protected AbstractBean createBean(Identifier identifier) {
 		UserBean bean = new UserBean(this.names);
+		bean.setGraphText(super.graphText);
 		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());		
 
@@ -150,11 +151,16 @@ public class UserBeanFactory extends TabledBeanFactory {
 		
 		bean.setPropertyPanel(this.panel);
 		
-		JGraphText.entityDispatcher.firePropertyChange(
+		super.graphText.getDispatcher().firePropertyChange(
 			new PropertyChangeEvent(this, ObjectEntities.SYSTEMUSER, null, bean));
 
 		
 		return bean;
+	}
+	
+	@Override
+	public String getCodename() {
+		return ObjectEntities.SYSTEMUSER;
 	}
 	
 	private Validator getValidator() {

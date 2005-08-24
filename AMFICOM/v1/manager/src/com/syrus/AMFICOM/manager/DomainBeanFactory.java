@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.11 2005/08/17 15:59:40 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.12 2005/08/24 14:05:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,11 +14,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -27,18 +28,19 @@ public class DomainBeanFactory extends TabledBeanFactory {
 	
 	private static DomainBeanFactory instance;
 	
-	private DomainBeanFactory() {
+	private DomainBeanFactory(final JGraphText graphText) {
 		super("Entity.Domain", 
 			"Entity.Domain", 
 			"com/syrus/AMFICOM/manager/resources/icons/cloud.gif", 
 			"com/syrus/AMFICOM/manager/resources/cloud.png");
+		super.graphText = graphText;
 	}
 	
-	public static final DomainBeanFactory getInstance() {
+	public static final DomainBeanFactory getInstance(final JGraphText graphText) {
 		if(instance == null) {
 			synchronized (DomainBeanFactory.class) {
 				if(instance == null) {
-					instance = new DomainBeanFactory();
+					instance = new DomainBeanFactory(graphText);
 				}
 			}
 		}		
@@ -56,7 +58,7 @@ public class DomainBeanFactory extends TabledBeanFactory {
 	@Override
 	protected AbstractBean createBean(final Identifier id) {
 		DomainBean bean = new DomainBean();
-		
+		bean.setGraphText(super.graphText);
 		bean.setCodeName(id.getIdentifierString());
 		bean.setValidator(this.getValidator());
 		bean.setId(id);		
@@ -80,9 +82,6 @@ public class DomainBeanFactory extends TabledBeanFactory {
 				
 				public boolean isValid(	AbstractBean sourceBean,
 										AbstractBean targetBean) {
-					
-//					System.out.println("DomainBeanFactory.isValid() | sourceBean:" + sourceBean +", \n\ttargetBean:"+targetBean);
-					
 					return sourceBean != null && 
 						targetBean != null && 
 						(sourceBean.getCodeName().startsWith(ObjectEntities.DOMAIN) ||
@@ -92,5 +91,10 @@ public class DomainBeanFactory extends TabledBeanFactory {
 			};
 		}
 		return this.validator;
+	}
+	
+	@Override
+	public String getCodename() {
+		return ObjectEntities.DOMAIN;
 	}
 }

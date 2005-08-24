@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.14 2005/08/23 07:52:33 bob Exp $
+ * $Id: AbstractBean.java,v 1.15 2005/08/24 14:05:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,31 @@
 
 package com.syrus.AMFICOM.manager;
 
+import java.util.Set;
+
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 
 import org.jgraph.graph.DefaultEdge;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.manager.UI.JGraphText;
+import com.syrus.AMFICOM.resource.LayoutItem;
+import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/23 07:52:33 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -60,8 +75,7 @@ public abstract class AbstractBean {
 		return this.propertyPanel;
 	}
 
-	public JPopupMenu getMenu(	final JGraphText graph,
-								final Object cell) {
+	public JPopupMenu getMenu(final Object cell) {
 		return null;
 	}
 
@@ -101,6 +115,39 @@ public abstract class AbstractBean {
 	
 	public final void setGraphText(final JGraphText graphText) {
 		this.graphText = graphText;
+	}
+	
+	protected final LayoutItem getLayoutItem(final String layoutName,
+	                                         final String codename) throws ApplicationException {
+		CompoundCondition compoundCondition = 
+			new CompoundCondition(new TypicalCondition(
+				layoutName, 
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.LAYOUT_ITEM_CODE,
+				LayoutItemWrapper.COLUMN_LAYOUT_NAME),
+				CompoundConditionSort.AND,
+				new LinkedIdsCondition(
+					LoginManager.getUserId(),
+					ObjectEntities.LAYOUT_ITEM_CODE) {
+					@Override
+					public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
+						return storableObjects.isEmpty();
+					}
+				});
+		
+		compoundCondition.addCondition(new TypicalCondition(
+			codename, 
+			OperationSort.OPERATION_EQUALS,
+			ObjectEntities.LAYOUT_ITEM_CODE,
+			StorableObjectWrapper.COLUMN_NAME));
+		
+		Set<LayoutItem> layoutItems = 
+			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);
+		
+		if (layoutItems.isEmpty()) {
+			return null;
+		}
+		return layoutItems.iterator().next();
 	}
 
 }

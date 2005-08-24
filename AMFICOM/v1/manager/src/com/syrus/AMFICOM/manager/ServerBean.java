@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBean.java,v 1.7 2005/08/23 15:02:15 bob Exp $
+ * $Id: ServerBean.java,v 1.8 2005/08/24 14:05:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,10 +19,9 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/23 15:02:15 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -68,7 +67,7 @@ public class ServerBean extends Bean implements DomainNetworkItem {
 				(name2 != null && !name2.equals(name) ||
 				!name.equals(name2))) {
 			this.server.setName(name);
-			JGraphText.entityDispatcher.firePropertyChange(
+			this.graphText.getDispatcher().firePropertyChange(
 				new PropertyChangeEvent(this, ObjectEntities.SERVER, null, this));
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_NAME, name2, name));
 		}		

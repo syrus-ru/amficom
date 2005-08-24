@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.12 2005/08/23 15:51:53 bob Exp $
+ * $Id: UserBean.java,v 1.13 2005/08/24 14:05:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,11 +43,10 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.manager.UI.JGraphText;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/23 15:51:53 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -94,8 +93,7 @@ public class UserBean extends Bean implements  ARMItem {
 	}
 
 	@Override
-	public JPopupMenu getMenu(	final JGraphText graphText,
-								final Object cell) {
+	public JPopupMenu getMenu(final Object cell) {
 
 		if (cell != null) {
 			JPopupMenu popupMenu = new JPopupMenu();
@@ -111,10 +109,10 @@ public class UserBean extends Bean implements  ARMItem {
 								GraphConstants.setValue(attributeMap, name1);
 								Map viewMap = new Hashtable();
 								viewMap.put(cell, attributeMap);
-								graphText.getGraph().getModel().edit(viewMap, null, null, null);
+								UserBean.this.graphText.getGraph().getModel().edit(viewMap, null, null, null);
 							} catch (ApplicationException e1) {
 								e1.printStackTrace();
-								JOptionPane.showMessageDialog(graphText.getGraph(), 
+								JOptionPane.showMessageDialog(UserBean.this.graphText.getGraph(), 
 									e1.getMessage(), 
 									LangModelManager.getString("Error"),
 									JOptionPane.ERROR_MESSAGE);
@@ -149,12 +147,12 @@ public class UserBean extends Bean implements  ARMItem {
 						GraphConstants.setValue(attributeMap, string);
 						Map viewMap = new Hashtable();
 						viewMap.put(cell, attributeMap);
-						JGraph graph = graphText.getGraph();
+						JGraph graph = UserBean.this.graphText.getGraph();
 						graph.getModel().edit(viewMap, null, null, null);
 						graph.getSelectionModel().setSelectionCell(cell);
 					} catch (ApplicationException e1) {
 						e1.printStackTrace();
-						JOptionPane.showMessageDialog(graphText.getGraph(), 
+						JOptionPane.showMessageDialog(UserBean.this.graphText.getGraph(), 
 							e1.getMessage(), 
 							LangModelManager.getString("Error"),
 							JOptionPane.ERROR_MESSAGE);
@@ -241,7 +239,7 @@ public class UserBean extends Bean implements  ARMItem {
 				!name.equals(name2))) {
 			String oldValue = name2;
 			this.user.setName(name);
-			JGraphText.entityDispatcher.firePropertyChange(
+			this.graphText.getDispatcher().firePropertyChange(
 				new PropertyChangeEvent(this, ObjectEntities.SYSTEMUSER, null, this));
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, UserBeanWrapper.NAME, oldValue, name));
 		}

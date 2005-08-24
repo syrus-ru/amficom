@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanFactory.java,v 1.9 2005/08/15 14:20:05 bob Exp $
+ * $Id: MCMBeanFactory.java,v 1.10 2005/08/24 14:05:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import com.syrus.AMFICOM.administration.MCM;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -38,18 +39,19 @@ public class MCMBeanFactory extends TabledBeanFactory {
 	
 	private static MCMBeanFactory instance;
 	
-	private MCMBeanFactory() {
+	private MCMBeanFactory(final JGraphText graphText) {
 		super("Entity.MeasurementContolModule", 
 			"Entity.MeasurementContolModule.acronym", 
 			"com/syrus/AMFICOM/manager/resources/icons/mcm.gif", 
 			"com/syrus/AMFICOM/manager/resources/mcm.png");
+		super.graphText = graphText;
 	}
 	
-	public static final MCMBeanFactory getInstance() {
+	public static final MCMBeanFactory getInstance(final JGraphText graphText) {
 		if(instance == null) {
 			synchronized (MCMBeanFactory.class) {
 				if(instance == null) {
-					instance = new MCMBeanFactory();
+					instance = new MCMBeanFactory(graphText);
 				}
 			}
 		}		
@@ -78,11 +80,14 @@ public class MCMBeanFactory extends TabledBeanFactory {
 	@Override
 	public AbstractBean createBean(Identifier identifier) {
 		final MCMBean bean = new MCMBean();
+		bean.setGraphText(super.graphText);
 		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());
 		bean.setId(identifier);			
 		
-		JGraphText.entityDispatcher.addPropertyChangeListener(
+		Dispatcher dispatcher = super.graphText.getDispatcher();
+		
+		dispatcher.addPropertyChangeListener(
 			PROPERTY_USERS_REFRESHED,
 			new PropertyChangeListener() {
 
@@ -91,7 +96,7 @@ public class MCMBeanFactory extends TabledBeanFactory {
 				}
 			});
 		
-		JGraphText.entityDispatcher.addPropertyChangeListener(
+		dispatcher.addPropertyChangeListener(
 			PROPERTY_SERVERS_REFRESHED,
 			new PropertyChangeListener() {
 
@@ -101,7 +106,7 @@ public class MCMBeanFactory extends TabledBeanFactory {
 			});
 
 		bean.table = super.getTable(bean, 
-			MCMBeanWrapper.getInstance(),
+			MCMBeanWrapper.getInstance(dispatcher),
 			new String[] { KEY_NAME, 
 				KEY_DESCRIPTION, 
 				KEY_HOSTNAME,
@@ -110,7 +115,7 @@ public class MCMBeanFactory extends TabledBeanFactory {
 		bean.addPropertyChangeListener(this.listener);
 		bean.setPropertyPanel(this.panel);
 		
-		JGraphText.entityDispatcher.firePropertyChange(
+		dispatcher.firePropertyChange(
 			new PropertyChangeEvent(this, ObjectEntities.MCM, null, bean));
 		
 		return bean;
@@ -130,5 +135,10 @@ public class MCMBeanFactory extends TabledBeanFactory {
 			};
 		}
 		return this.validator;
+	}
+	
+	@Override
+	public String getCodename() {
+		return ObjectEntities.MCM;
 	}
 }

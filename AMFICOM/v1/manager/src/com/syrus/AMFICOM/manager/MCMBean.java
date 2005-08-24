@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBean.java,v 1.5 2005/08/23 15:02:14 bob Exp $
+ * $Id: MCMBean.java,v 1.6 2005/08/24 14:05:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,11 @@
 
 package com.syrus.AMFICOM.manager;
 
-import static com.syrus.AMFICOM.manager.MCMBeanWrapper.*;
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_DESCRIPTION;
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_HOSTNAME;
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_NAME;
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_SERVER_ID;
+import static com.syrus.AMFICOM.manager.MCMBeanWrapper.KEY_USER_ID;
 
 import java.beans.PropertyChangeEvent;
 
@@ -17,10 +21,9 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.manager.UI.JGraphText;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/23 15:02:14 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -67,7 +70,7 @@ public class MCMBean extends Bean implements DomainNetworkItem {
 				!name.equals(name2))) {
 			this.mcm.setName(name);
 			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_NAME, name2, name));
-			JGraphText.entityDispatcher.firePropertyChange(
+			this.graphText.getDispatcher().firePropertyChange(
 				new PropertyChangeEvent(this, ObjectEntities.MCM, null, this));
 
 		}		

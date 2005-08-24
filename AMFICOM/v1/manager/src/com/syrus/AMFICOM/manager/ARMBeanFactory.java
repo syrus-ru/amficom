@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.11 2005/08/23 15:02:14 bob Exp $
+ * $Id: ARMBeanFactory.java,v 1.12 2005/08/24 14:05:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,6 @@ package com.syrus.AMFICOM.manager;
 
 import java.util.Set;
 
-import org.jgraph.graph.DefaultGraphCell;
-
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -20,10 +18,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.manager.UI.JGraphText;
 import com.syrus.AMFICOM.resource.LayoutItem;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/23 15:02:14 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -36,18 +36,19 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 	
 	private Validator validator;
 	
-	private ARMBeanFactory() {
+	private ARMBeanFactory(final JGraphText graphText) {
 		super("Entity.AutomatedWorkplace", 
 			"Entity.AutomatedWorkplace.acronym", 
 			"com/syrus/AMFICOM/manager/resources/icons/arm.gif", 
 			"com/syrus/AMFICOM/manager/resources/arm.gif");
+		super.graphText = graphText;
 	}
 	
-	public static final ARMBeanFactory getInstance() {
+	public static final ARMBeanFactory getInstance(final JGraphText graphText) {
 		if(instance == null) {
 			synchronized (ARMBeanFactory.class) {
 				if(instance == null) {
-					instance = new ARMBeanFactory();
+					instance = new ARMBeanFactory(graphText);
 				}
 			}
 		}		
@@ -63,6 +64,7 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 	public AbstractBean createBean(final String codename) {
 		++super.count;
 		AbstractBean bean = new ARMBean();
+		bean.setGraphText(super.graphText);
 		bean.setValidator(this.getValidator());
 		bean.setCodeName(codename);
 		bean.setId(Identifier.VOID_IDENTIFIER);		
@@ -115,15 +117,21 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 					true);
 				
 				for(LayoutItem layoutItem : beanChildrenLayoutItems) {
-					layoutItem.setLayoutName(newDomainId.getIdentifierString());
-					DefaultGraphCell cell = this.graphText.getCell(layoutItem);
-					MPort port = (MPort) cell.getChildAt(0);
-					
-					AbstractBean portBean = port.getUserObject();
-					if (portBean instanceof ARMItem) {
-						ARMItem item = (ARMItem) portBean;
-						item.setDomainId(oldDomainId, newDomainId);
-					}
+					if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
+						final String layoutName = !newDomainId.isVoid() ? 
+								newDomainId.getIdentifierString() : 
+								ObjectEntities.DOMAIN;
+						Log.debugMessage("ARMBean.setDomainId | "
+							+ layoutItem.getId() + ", "
+							+ layoutItem.getName() 
+							+ ", layoutName:" 
+							+ layoutName, 
+						Log.DEBUGLEVEL09);						
+						layoutItem.setLayoutName(layoutName);
+						DomainNetworkItem portBean = 
+							(DomainNetworkItem) this.graphText.getCell(layoutItem);
+						portBean.setDomainId(oldDomainId, newDomainId);
+					}					
 				}
 			} catch (ApplicationException e) {
 				// TODO Auto-generated catch block
@@ -132,5 +140,10 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 			
 		}
 		
+	}
+	
+	@Override
+	public String getCodename() {
+		return ARMBeanFactory.ARM_CODENAME;
 	}
 }

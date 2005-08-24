@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.12 2005/08/23 07:52:33 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.13 2005/08/24 14:05:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.manager.UI.JGraphText;
 import com.syrus.AMFICOM.measurement.KIS;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/23 07:52:33 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -36,18 +36,19 @@ public class RTUBeanFactory extends TabledBeanFactory {
 	
 	private static RTUBeanFactory instance;
 	
-	private RTUBeanFactory() {
+	private RTUBeanFactory(final JGraphText graphText) {
 		super("Entity.RemoteTestUnit", 
 			"Entity.RemoteTestUnit.acronym", 
 			"com/syrus/AMFICOM/manager/resources/icons/rtu.gif", 
 			"com/syrus/AMFICOM/manager/resources/rtu.png");
+		super.graphText = graphText;
 	}
 	
-	public static final RTUBeanFactory getInstance() {
+	public static final RTUBeanFactory getInstance(final JGraphText graphText) {
 		if(instance == null) {
 			synchronized (RTUBeanFactory.class) {
 				if(instance == null) {
-					instance = new RTUBeanFactory();
+					instance = new RTUBeanFactory(graphText);
 				}
 			}
 		}		
@@ -74,6 +75,7 @@ public class RTUBeanFactory extends TabledBeanFactory {
 	@Override
 	public AbstractBean createBean(Identifier identifier) {
 		final RTUBean bean = new RTUBean();
+		bean.setGraphText(super.graphText);
 		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());
 		bean.setId(identifier);	
@@ -81,14 +83,14 @@ public class RTUBeanFactory extends TabledBeanFactory {
 
 		
 		bean.table = super.getTable(bean, 
-			RTUBeanWrapper.getInstance(),
+			RTUBeanWrapper.getInstance(bean.graphText.getDispatcher()),
 			new String[] { KEY_NAME, 
 				KEY_DESCRIPTION, 
 				KEY_MCM_ID,
 				KEY_HOSTNAME,
 				KEY_PORT});
 		
-		JGraphText.entityDispatcher.addPropertyChangeListener(
+		bean.graphText.getDispatcher().addPropertyChangeListener(
 			PROPERTY_MCMS_REFRESHED,
 			new PropertyChangeListener() {
 
@@ -119,4 +121,8 @@ public class RTUBeanFactory extends TabledBeanFactory {
 		return this.validator;
 	}
 	
+	@Override
+	public String getCodename() {
+		return ObjectEntities.KIS;
+	}
 }

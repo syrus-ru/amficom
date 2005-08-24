@@ -1,5 +1,5 @@
 /*-
- * $Id: MPort.java,v 1.5 2005/08/23 15:02:15 bob Exp $
+ * $Id: MPort.java,v 1.6 2005/08/24 14:05:47 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import org.jgraph.graph.Edge;
 import org.jgraph.graph.Port;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/23 15:02:15 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/24 14:05:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -110,7 +110,7 @@ public class MPort extends DefaultGraphCell implements Port {
 	 * Returns the anchor of this port.
 	 */
 	public Set getEdges() {
-		return new HashSet(edges);
+		return new HashSet(this.edges);
 	}
 
 	/**
