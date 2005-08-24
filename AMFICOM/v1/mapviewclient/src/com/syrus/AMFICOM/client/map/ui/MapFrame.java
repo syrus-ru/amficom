@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.68 2005/08/24 10:21:26 krupenn Exp $
+ * $Id: MapFrame.java,v 1.69 2005/08/24 14:03:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -80,7 +80,7 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @version $Revision: 1.68 $, $Date: 2005/08/24 10:21:26 $
+ * @version $Revision: 1.69 $, $Date: 2005/08/24 14:03:14 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -139,7 +139,7 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 			} catch(MapConnectionException e) {
 				int result = ViewMapChooserCommand.chooseMap(this.mapConnection);
 				if(result == JOptionPane.OK_OPTION) {
-					this.mapConnection.connect();
+//					this.mapConnection.connect();
 				}
 				else {
 					throw e;
