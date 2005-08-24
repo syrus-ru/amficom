@@ -1,5 +1,5 @@
 /**
- * $Id: TopologyTreeModel.java,v 1.3 2005/08/24 07:33:15 krupenn Exp $
+ * $Id: TopologyTreeModel.java,v 1.4 2005/08/24 14:07:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -167,13 +167,15 @@ public class TopologyTreeModel implements ChildrenFactory {
 
 				initialAction();
 
-				for(Iterator iter = new LinkedList(this.node.getChildren()).iterator(); iter.hasNext();) {
-					if(!this.running) {
-						finalAction();
-						return;
+				synchronized(this.node) {
+					for(Iterator iter = new LinkedList(this.node.getChildren()).iterator(); iter.hasNext();) {
+						if(!this.running) {
+							finalAction();
+							return;
+						}
+						IconedNode childNode = (IconedNode) iter.next();
+						childNode.setParent(null);
 					}
-					IconedNode childNode = (IconedNode) iter.next();
-					childNode.setParent(null);
 				}
 
 				System.out.println("children of \'" + this.initialName + "\' are removed");
