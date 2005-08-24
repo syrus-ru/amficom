@@ -1,5 +1,5 @@
 /*-
- * $Id: LayerDescriptorParser.java,v 1.4 2005/08/22 09:42:47 max Exp $
+ * $Id: LayerDescriptorParser.java,v 1.5 2005/08/24 15:35:52 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.util.Log;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.4 $, $Date: 2005/08/22 09:42:47 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/08/24 15:35:52 $
  * @module mshserver_v1
  */
 
@@ -40,7 +40,7 @@ public class LayerDescriptorParser {
 			Log.errorException(e);
 			return layerFiles;
 		}
-		@SuppressWarnings("unchecked")
+
 		final List<Node> layerNodeList = document.selectNodes("//MapDefinitionLayer");
 		for (Node node : layerNodeList) {
 			final Node layerNameNode = node.selectSingleNode("ServerQuery/Table");
