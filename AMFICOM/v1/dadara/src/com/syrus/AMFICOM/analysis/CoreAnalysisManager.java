@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.107 2005/08/24 16:09:00 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.108 2005/08/24 16:13:14 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.107 $, $Date: 2005/08/24 16:09:00 $
+ * @version $Revision: 1.108 $, $Date: 2005/08/24 16:13:14 $
  * @module
  */
 
@@ -430,8 +430,7 @@ public class CoreAnalysisManager
 			boolean needNoiseInfo,
 			boolean needMFInfo,
 			AnalysisParameters ap)
-	throws IncompatibleTracesException
-	{
+	throws IncompatibleTracesException {
 		// определяем число входных р/г
 		final int N_TRACES = bsColl.size();
 
@@ -448,26 +447,25 @@ public class CoreAnalysisManager
 
 		double[] noiseAcc = null; // needs no initialization
 
-		for (Iterator<BellcoreStructure> it = bsColl.iterator(); it.hasNext(); isFirst = false)
-		{
+		for (Iterator<BellcoreStructure> it = bsColl.iterator(); it.hasNext(); isFirst = false) {
 			TracePreAnalysis tpa =
 				makePreAnalysis(it.next(), needNoiseInfo);
 
 			if (isFirst) {
 				double[] y = tpa.y.clone(); // double[] array copying
 				res.av = new TracePreAnalysis(tpa, y);
-			}
-			else {
+			} else {
 				res.av.setMinLength(tpa.traceLength);
 				addDoubleArray(res.av.y, tpa.y, res.av.traceLength);
 				res.av.checkTracesCompatibility(tpa);
 			}
 
 			if (needNoiseInfo) {
-				if (isFirst)
+				if (isFirst) {
 					noiseAcc = tpa.getNoise(); // клонирование необязательно, т.к. можно усреднять прямо в этом массиве 
-				else
+				} else {
 					addDoubleArray(noiseAcc, tpa.getNoise(), res.av.traceLength);
+				}
 			}
 
 			if (needMFInfo) {
@@ -479,8 +477,7 @@ public class CoreAnalysisManager
 					// need to make one more copy, so cloning once only
 					res.minYMF = yMF;
 					res.maxYMF = yMF.clone();
-				}
-				else {
+				} else {
 					// элементы массивов res.(min|max)YMF, выходящие за пределы
 					// res.av.tracelength, не будут обрабатываться (там останется мусор)
 					ReflectogramMath.updateMinArray(res.minYMF, yMF);
@@ -490,13 +487,15 @@ public class CoreAnalysisManager
 		}
 
 		// convert sum to average for avY
-		for (int i = 0; i < res.av.traceLength; i++)
+		for (int i = 0; i < res.av.traceLength; i++) {
 			res.av.y[i] /= N_TRACES;
+		}
 
 		if (needNoiseInfo) {
 			// convert sum to average for avNoise
-			for (int i = 0; i < res.av.traceLength; i++)
+			for (int i = 0; i < res.av.traceLength; i++) {
 				noiseAcc[i] /= N_TRACES;
+			}
 
 			res.av.avNoise = noiseAcc;
 
