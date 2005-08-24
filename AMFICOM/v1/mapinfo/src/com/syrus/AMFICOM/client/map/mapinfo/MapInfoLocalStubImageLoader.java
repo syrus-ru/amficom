@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.14 2005/08/24 08:02:41 krupenn Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.15 2005/08/24 10:17:09 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/08/24 08:02:41 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/24 10:17:09 $
  * @module mapinfo
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectionListener {
@@ -126,7 +126,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 					searchResultsSet.add(spatialObject);
 				}
 			} catch (Exception e) {
-				throw new MapDataException("Error while searching at region");
+				throw new MapDataException("Error while searching at region", e);
 			}
 		}
 
