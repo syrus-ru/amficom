@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.31 2005/08/22 11:36:07 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.32 2005/08/24 14:05:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.31 $, $Date: 2005/08/22 11:36:07 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/24 14:05:05 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -184,26 +184,44 @@ public final class MapMouseMotionListener implements MouseMotionListener
 				}
 			}
 		
-		if(mapState.getActionMode() == MapState.NULL_ACTION_MODE)
-		if(MapPropertiesManager.isDescreteNavigation()) {
-			Dimension imageSize = this.netMapViewer.getVisualComponent().getSize();
-			int mouseX = me.getPoint().x;
-			int mouseY = me.getPoint().y;
-
-			int cursorX =
-				(mouseX < imageSize.width * MapPropertiesManager.getNavigateAreaSize()) 
-				? 0
-				: (mouseX < imageSize.width * (1 - MapPropertiesManager.getNavigateAreaSize())) 
-				? 1
-				:2;
-			int cursorY =
-				(mouseY < imageSize.height * MapPropertiesManager.getNavigateAreaSize()) 
-				? 0
-				: (mouseY < imageSize.height * (1 - MapPropertiesManager.getNavigateAreaSize())) 
-				? 1
-				: 2;
-
-			this.netMapViewer.setCursor(cursors[cursorX][cursorY]);
+		if(mapState.getActionMode() == MapState.NULL_ACTION_MODE) {
+			if(mapState.getOperationMode() == MapState.NO_OPERATION) {
+				if(MapPropertiesManager.isDescreteNavigation()) {
+					Dimension imageSize = this.netMapViewer.getVisualComponent().getSize();
+					int mouseX = me.getPoint().x;
+					int mouseY = me.getPoint().y;
+		
+					int cursorX =
+						(mouseX < imageSize.width * MapPropertiesManager.getNavigateAreaSize()) 
+						? 0
+						: (mouseX < imageSize.width * (1 - MapPropertiesManager.getNavigateAreaSize())) 
+						? 1
+						:2;
+					int cursorY =
+						(mouseY < imageSize.height * MapPropertiesManager.getNavigateAreaSize()) 
+						? 0
+						: (mouseY < imageSize.height * (1 - MapPropertiesManager.getNavigateAreaSize())) 
+						? 1
+						: 2;
+		
+					this.netMapViewer.setCursor(cursors[cursorX][cursorY]);
+				}
+			}
+			else if(mapState.getOperationMode() == MapState.MOVE_HAND) {
+				this.netMapViewer.setCursor(Cursor.getPredefinedCursor(Cursor.HAND_CURSOR));
+			}
+			else if(mapState.getActionMode() == MapState.MEASURE_DISTANCE) {
+				this.netMapViewer.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+			}
+			else if(mapState.getActionMode() == MapState.MOVE_TO_CENTER) {
+				this.netMapViewer.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+			}
+			else if(mapState.getActionMode() == MapState.ZOOM_TO_RECT) {
+				this.netMapViewer.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+			}
+			else if(mapState.getActionMode() == MapState.ZOOM_TO_POINT) {
+				this.netMapViewer.setCursor(Cursor.getPredefinedCursor(Cursor.CROSSHAIR_CURSOR));
+			}
 		}
 
 		mapState.setMouseMode(MapState.MOUSE_NONE);
