@@ -40,7 +40,7 @@ RTUTransceiver::RTUTransceiver(const unsigned int timewait,
 
 	if (this->initialize_OTDR_cards()) {
 
-//		print_available_parameters(this->otdr_cards[0]);
+		print_available_parameters(this->otdr_cards[0]);
 
 		this->initialize_OTAUs();
 
@@ -478,16 +478,23 @@ int RTUTransceiver::switch_OTAU(char* local_address, int la_length) {
 	int otau_port;
 
 	printf("RTUTransceiver | Getting new fiber address parameters...\n");
-	if (! this->parse_local_address(local_address, la_length, com_port,otau_id, otau_port))
+	if (! this->parse_local_address(local_address, la_length, com_port, otau_id, otau_port))
 		return 0;
 
-	if ((com_port <= 0) || (com_port > this->com_port_number)) {
-		printf ("RTUTransceiver | %d -- Incorrect value of COM port!\n", com_port);
+	printf("COM port: %d, OTAU: %d, OTAUs on COM port: %d\n", com_port, otau_id, this->otau_numbers[com_port - 1]);
+	if ((com_port < 1) || (com_port > this->com_port_number)) {
+		printf ("RTUTransceiver | %d -- Incorrect value of COM port! Must be in [%u; %u]\n", com_port, 1, this->com_port_number);
 		return 0;
 	}
-	if ((otau_id < 0) || (otau_id > this->otau_numbers[com_port - 1])) {
-		printf ("RTUTransceiver | %d -- Incorrect value of OTAU ID!\n", otau_id);
+	if (this->otau_numbers[com_port - 1] == 0) {
+		printf ("RTUTransceiver | No OTAUs on COM port %d\n", com_port);
 		return 0;
+	}
+	else {
+		if ((otau_id < 0) || (otau_id > this->otau_numbers[com_port - 1] - 1)) {
+			printf ("RTUTransceiver | %d -- Incorrect value of OTAU ID! Must be in [%u; %u] for COM%d\n", otau_id, 0, this->otau_numbers[com_port - 1] - 1, com_port);
+			return 0;
+		}
 	}
 
 	if (this->last_used_com_port != NULL) {
@@ -504,7 +511,7 @@ int RTUTransceiver::switch_OTAU(char* local_address, int la_length) {
 	char* mesgcomm = new char[OTAU_COMMAND_CONNECT_LENGTH];
 	memset(mesgcomm, 0, OTAU_COMMAND_CONNECT_LENGTH);
 
-	int j = sprintf (mesgcomm, "%s", OTAU_COMMAND_CONNECT1);
+	int j = sprintf(mesgcomm, "%s", OTAU_COMMAND_CONNECT1);
 	
 	if (otau_id < 10) {
 		j += sprintf(mesgcomm + j, "%s", "0");
@@ -548,7 +555,7 @@ int RTUTransceiver::switch_OTAU(char* local_address, int la_length) {
 	delete[] reply;
 	delete[] mesgcomm;
 
-	return 1;
+	return reply_length > 0;
 }
 
 int RTUTransceiver::parse_local_address(char* local_address,
@@ -791,7 +798,7 @@ int RTUTransceiver::get_point_spacing_index(const double res, const WORD otdr_ca
 		float* point_spacings = new float[MAX_SPACINGS];
 		QPOTDRGetAvailSpacings(otdr_card, point_spacings);
 		//FIXME: Total number of values is 8, but QPOTDRGetMaxPointSpacings returns 7
-		ret = get_index_in_array((float)res, point_spacings, max_point_spacings + 1);
+		ret = get_index_in_array((float)res, point_spacings, MAX_SPACINGS);
 		delete[] point_spacings;
 	}
 	else {
@@ -1006,9 +1013,11 @@ void RTUTransceiver::print_available_parameters(const WORD otdr_card) {
 	float* waves = new float[MAX_WAVES];
 	QPOTDRGetAvailWaves(otdr_card, waves);
 	for (i = 0; i < max_waves; i++) {
+		//Wavelength
 		printf("Wave length: %f\n", waves[i]);
 		int j;
 
+		//Ranges
 		int max_ranges = QPOTDRGetMaxRanges(otdr_card, waves[i]);
 		if (max_ranges <= 0) {
 			printf("RTUTransceiver | ERROR: QPOTDRGetMaxRanges returned error\n");
@@ -1021,6 +1030,7 @@ void RTUTransceiver::print_available_parameters(const WORD otdr_card) {
 			printf("\tRange: %f\n", ranges[j]);
 		delete[] ranges;
 
+		//Pulse width (for low and high resolution modes)
 		int max_pulse_widths = QPOTDRGetMaxPulses(otdr_card, waves[i]);
 		if (max_pulse_widths <= 0) {
 			printf("RTUTransceiver | ERROR: QPOTDRGetMaxPulses returned error\n");
@@ -1029,13 +1039,27 @@ void RTUTransceiver::print_available_parameters(const WORD otdr_card) {
 		}
 		DWORD* pulse_widths = new DWORD[MAX_PULSES];
 		QPOTDRGetAvailPulses(otdr_card, waves[i], pulse_widths);
-		for (j = 0; j < max_pulse_widths; j++)
-			printf("\tPulse width: %u\n", pulse_widths[j]);
+		for (j = 0; j < max_pulse_widths; j++) {
+			const int flag_pulswd_low_res = pulse_widths[j] & 0x00000001;
+			if (flag_pulswd_low_res) {
+				const short pulswd = pulse_widths[j] >> 16;
+				printf("\tPulse witdh low res\t%u\n", pulswd);
+			}
+		}
+		for (j = 0; j < max_pulse_widths; j++) {
+			const int flag_pulswd_low_res = pulse_widths[j] & 0x00000001;
+			if (!flag_pulswd_low_res) {
+				const short pulswd = pulse_widths[j] >> 16;
+				printf("\tPulse witdh high res\t%u\n", pulswd);
+			}
+		}
 		delete[] pulse_widths;
 
+		//Index of refraction
 		float ior = QPOTDRGetDefaultIOR(otdr_card, waves[i]);
 		printf("\t Index of refraction: %f\n", ior);
 
+		//Number of averages
 		int max_averages = QPOTDRGetMaxAverages(otdr_card, waves[i]);
 		if (max_averages <= 0) {
 			printf("RTUTransceiver | ERROR: QPOTDRGetMaxAverages returned error\n");
@@ -1051,6 +1075,7 @@ void RTUTransceiver::print_available_parameters(const WORD otdr_card) {
 
 	delete[] waves;
 
+	//Point spacing
 	int max_point_spacings = QPOTDRGetMaxPointSpacings(otdr_card);
 	if (max_point_spacings <= 0) {
 		printf("RTUTransceiver | ERROR: QPOTDRGetMaxPointSpacings returned error\n");
@@ -1058,7 +1083,8 @@ void RTUTransceiver::print_available_parameters(const WORD otdr_card) {
 	}
 	float* point_spacings = new float[MAX_SPACINGS];
 	QPOTDRGetAvailSpacings(otdr_card, point_spacings);
-	for (i = 0; i < max_point_spacings; i++)
+	//FIXME: Total number of values is 8, but QPOTDRGetMaxPointSpacings returns 7
+	for (i = 0; i < MAX_SPACINGS; i++)
 		printf("Point spacing: %f\n", point_spacings[i]);
 	delete[] point_spacings;
 }
