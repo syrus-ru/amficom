@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.34 2005/08/15 14:08:40 krupenn Exp $
+ * $Id: Marker.java,v 1.35 2005/08/24 08:16:09 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.mapview;
 
 import java.util.Date;
-import java.util.List;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -24,7 +23,6 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.AMFICOM.map.NodeLink;
-import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
@@ -48,7 +46,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *
  *
  *
- * @version $Revision: 1.34 $, $Date: 2005/08/15 14:08:40 $
+ * @version $Revision: 1.35 $, $Date: 2005/08/24 08:16:09 $
  * @module mapview
  * @author $Author: krupenn $
  */
@@ -178,8 +176,6 @@ public class Marker extends AbstractNode {
 	 *        пользователь
 	 * @param mapView
 	 *        вид карты
-	 * @param opticalDistance
-	 *        оптическа€ дистанци€ от начала пути
 	 * @param path
 	 *        измерительный путь
 	 * @param monitoredElementId

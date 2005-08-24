@@ -1,5 +1,5 @@
 /**
- * $Id: CablePath.java,v 1.31 2005/08/17 14:16:05 arseniy Exp $
+ * $Id: CablePath.java,v 1.32 2005/08/24 08:16:09 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 /**
  * Ёлемент кабельного пути. ќписывает прив€зку кабел€ к топологическим лини€м.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2005/08/17 14:16:05 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.32 $, $Date: 2005/08/24 08:16:09 $
  * @module mapview
  */
 public final class CablePath implements MapElement {
@@ -180,7 +180,7 @@ public final class CablePath implements MapElement {
 	 * {@inheritDoc}
 	 * 
 	 * @throws ApplicationException
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
 	 */
 	public Set<Characteristic> getCharacteristics(final boolean usePool)
 			throws ApplicationException {
@@ -285,7 +285,7 @@ public final class CablePath implements MapElement {
 	/**
 	 * Suppress since this class is transient
 	 */
-	public void setLocation(DoublePoint location) {
+	public void setLocation(@SuppressWarnings("unused") DoublePoint location) {
 		throw new UnsupportedOperationException();
 	}
 
