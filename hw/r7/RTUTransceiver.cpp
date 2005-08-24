@@ -14,7 +14,7 @@ const char* RTUTransceiver::PARAMETER_NAME_PULSE_WIDTH_HIGH_RES = "ref_pulswd_hi
 const char* RTUTransceiver::PARAMETER_NAME_IOR = "ref_ior";
 const char* RTUTransceiver::PARAMETER_NAME_SCANS = "ref_scans";
 const char* RTUTransceiver::PARAMETER_NAME_FLAG_GAIN_SPLICE_ON = "ref_flag_gain_splice_on";
-const char* RTUTransceiver::PARAMETER_NAME_FLAG_LIVE_FIBER_DETECT = "ref_flag_live_fiber_detect";
+const char* RTUTransceiver::PARAMETER_NAME_FLAG_LIVE_FIBER_DETECT = "ref_flag_life_fiber_detect";
 const char* RTUTransceiver::PARAMETER_NAME_REFLECTOGRAMMA = "reflectogramma";
 
 //////////////////////////////////////////////////////////////////////
