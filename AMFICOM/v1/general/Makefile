@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.58 2005/08/21 15:17:27 arseniy Exp $
+# $Id: Makefile,v 1.59 2005/08/24 11:32:25 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -63,6 +63,7 @@ corba: .corba
 	touch $@
 #### XML ####
 .PHONY: xml
+xml: .xml
 
 .xml: $(LIBNAME_GENERALXML)
 	touch $@
