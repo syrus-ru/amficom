@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeEventHandler.java,v 1.5 2005/08/23 14:18:08 krupenn Exp $
+ * $Id: MapViewTreeEventHandler.java,v 1.6 2005/08/24 07:32:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,7 +33,6 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
-import com.syrus.AMFICOM.logic.Populatable;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapLibrary;
@@ -299,9 +298,10 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 		if (lastPathComponent instanceof IconedNode) {
 			IconedNode node = (IconedNode)lastPathComponent;
 			if(node.getObject() instanceof SpatialLayer) {
-				PopulatableIconedNode parent = (PopulatableIconedNode)node.getParent();
-				node.setParent(null);
-				parent.populate();
+				// todo: node.removeAll(); node.setPopulated(false);
+//				PopulatableIconedNode parent = (PopulatableIconedNode)node.getParent();
+//				node.setParent(null);
+//				parent.populate();
 			}
 			
 		}
