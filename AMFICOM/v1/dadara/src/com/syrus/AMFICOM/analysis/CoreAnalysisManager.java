@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.106 2005/07/22 06:39:50 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.107 2005/08/24 16:09:00 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.106 $, $Date: 2005/07/22 06:39:50 $
+ * @version $Revision: 1.107 $, $Date: 2005/08/24 16:09:00 $
  * @module
  */
 
@@ -548,6 +548,8 @@ public class CoreAnalysisManager
 	 * <li> если ни одной - бросает IllegalArgumentException
 	 *      (see {@link #findTracesAverages(Collection, boolean, boolean, AnalysisParameters)}).
 	 * </ul>
+	 * @todo использовать на входе Collection<Trace>
+	 * вместо Collection<BellcoreStructure>, а не проводить анализ заново
 	 * @param bsColl коллекция входных р/г.
 	 *   Должна быть непуста, а р/г должны иметь одинаковые параметры
 	 *   регистрации, используемые в анализе
@@ -576,6 +578,29 @@ public class CoreAnalysisManager
 			mtm.updateThreshToContain(av.av.y, av.av.y, MTM_DY_MARGIN, MTM_DY_FACTOR_BS_BASED);
 		}
 		return mtm;
+	}
+
+	/**
+	 * Расширяет эталонный MTM по непустому набору рефлектограмм и параметрам
+	 * анализа, чтобы включить все аналитические кривые
+	 * @todo использовать на входе Collection<Trace>
+	 * вместо Collection<BellcoreStructure>, а не проводить анализ заново
+	 * @param mtm расширяемый MTM
+	 * @param bsColl коллекция р/г
+	 * @param ap параметры, с которыми анализировать эти р/г
+	 * @throws IllegalArgumentException если bsColl пуст
+	 *   ({@link #findTracesAverages})
+	 * @throws IncompatibleTracesException если bsColl содержит р/г
+	 *   с разными длинами, разрешением, длительностью импульса или
+	 *   показателем преломления ({@link #findTracesAverages})
+	 */
+	public static void updateEtalon(ModelTraceManager mtm,
+			Collection<BellcoreStructure> bsColl,
+			AnalysisParameters ap)
+	throws IncompatibleTracesException, IllegalArgumentException {
+		TracesAverages av = findTracesAverages(bsColl, true, true, ap);
+		// extend to max dev of _mf_
+		mtm.updateThreshToContain(av.maxYMF, av.minYMF, MTM_DY_MARGIN, MTM_DY_FACTOR_MF_BASED); 
 	}
 
 	/**
