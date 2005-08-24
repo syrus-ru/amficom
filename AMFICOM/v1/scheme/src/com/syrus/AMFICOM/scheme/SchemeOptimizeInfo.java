@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.57 2005/08/15 15:18:44 max Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.58 2005/08/24 13:23:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
 /**
  * #05 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.57 $, $Date: 2005/08/15 15:18:44 $
+ * @author $Author: bass $
+ * @version $Revision: 1.58 $, $Date: 2005/08/24 13:23:34 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -620,21 +620,35 @@ public final class SchemeOptimizeInfo extends StorableObject
 	}
 
 	/**
-	 * @param parentScheme
+	 * @param parentSchemeId
 	 */
-	public void setParentScheme(final Scheme parentScheme) {
-		assert this.parentSchemeId != null: OBJECT_NOT_INITIALIZED;
-		assert !this.parentSchemeId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
-		if (parentScheme == null) {
+	void setParentSchemeId(final Identifier parentSchemeId) {
+		assert this.parentSchemeId != null : OBJECT_NOT_INITIALIZED;
+		assert !this.parentSchemeId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
+
+		assert parentSchemeId != null : NON_NULL_EXPECTED;
+		final boolean parentSchemeIdVoid = parentSchemeId.isVoid();
+		assert parentSchemeIdVoid || parentSchemeId.getMajor() == SCHEME_CODE;
+
+		if (parentSchemeIdVoid) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(super.id);
 			return;
 		}
-		final Identifier newParentSchemeId = parentScheme.getId();
-		if (this.parentSchemeId.equals(newParentSchemeId))
+		if (this.parentSchemeId.equals(parentSchemeId)) {
 			return;
-		this.parentSchemeId = newParentSchemeId;
+		}
+		this.parentSchemeId = parentSchemeId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setParentSchemeId(Identifier)}.
+	 *
+	 * @param parentScheme
+	 */
+	public void setParentScheme(final Scheme parentScheme) {
+		this.setParentSchemeId(Identifier.possiblyVoid(parentScheme));
 	}
 
 	public void setPrice(double price) {
@@ -750,13 +764,5 @@ public final class SchemeOptimizeInfo extends StorableObject
 		this.nodesCutProb = schemeOptimizeInfo.nodesCutProb;
 		this.survivorRate = schemeOptimizeInfo.survivorRate;
 		this.parentSchemeId = new Identifier(schemeOptimizeInfo.parentSchemeId);
-	}
-	
-	void setParentSchemeId(Identifier parentSchemeId) {
-//		 TODO: inroduce additional sanity checks
-		assert parentSchemeId != null : NON_NULL_EXPECTED;
-		assert parentSchemeId.isVoid() || parentSchemeId.getMajor() == SCHEME_CODE;
-		this.parentSchemeId = parentSchemeId;
-		super.markAsChanged();
 	}
 }
