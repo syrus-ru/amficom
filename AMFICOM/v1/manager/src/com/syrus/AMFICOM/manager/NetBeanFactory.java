@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.14 2005/08/24 14:05:47 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.15 2005/08/24 16:02:18 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.manager;
 
+import java.util.Iterator;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -25,7 +26,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/24 14:05:47 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/24 16:02:18 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -97,6 +98,13 @@ public class NetBeanFactory extends AbstractBeanFactory {
 						true, 
 						true);
 					
+					for(Iterator<LayoutItem> it = beanLayoutItems.iterator(); it.hasNext();) {
+						LayoutItem layoutItem = it.next();
+						if (!layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
+							it.remove();
+						}
+					}
+					
 					LinkedIdsCondition linkedIdsCondition = 
 						new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
 							ObjectEntities.LAYOUT_ITEM_CODE);
@@ -105,6 +113,8 @@ public class NetBeanFactory extends AbstractBeanFactory {
 						linkedIdsCondition, 
 						true, 
 						true);
+					
+					beanChildrenLayoutItems.addAll(beanLayoutItems);
 					
 					for(LayoutItem layoutItem : beanChildrenLayoutItems) {
 						if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
@@ -117,10 +127,13 @@ public class NetBeanFactory extends AbstractBeanFactory {
 								+ ", layoutName:" 
 								+ layoutName, 
 							Log.DEBUGLEVEL09);		
-							layoutItem.setLayoutName(layoutName);						
-							DomainNetworkItem portBean = 
-								(DomainNetworkItem) this.graphText.getCell(layoutItem);						
-							portBean.setDomainId(oldParentDomainId, parentDomainId);
+							layoutItem.setLayoutName(layoutName);
+							
+							AbstractBean cell = this.graphText.getCell(layoutItem);
+							if (cell instanceof DomainNetworkItem) {
+								DomainNetworkItem portBean = (DomainNetworkItem) cell;						
+								portBean.setDomainId(oldParentDomainId, parentDomainId);
+							}
 						}
 					}
 					
