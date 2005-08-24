@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.59 2005/08/22 11:36:07 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.60 2005/08/24 14:03:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.59 $, $Date: 2005/08/22 11:36:07 $
+ * @version $Revision: 1.60 $, $Date: 2005/08/24 14:03:48 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -518,7 +518,7 @@ public final class MapMouseListener implements MouseListener
 	private void finishMoveHand(MouseEvent me) throws MapConnectionException, MapDataException {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		MapCoordinatesConverter converter = logicalNetLayer.getConverter(); 
-		if(!MapPropertiesManager.isDescreteNavigation()) {
+//		if(!MapPropertiesManager.isDescreteNavigation()) {
 			DoublePoint center = this.netMapViewer.getMapContext().getCenter();
 			DoublePoint p1 = converter.convertScreenToMap(logicalNetLayer.getStartPoint());
 			DoublePoint p2 = converter.convertScreenToMap(me.getPoint());
@@ -526,8 +526,7 @@ public final class MapMouseListener implements MouseListener
 			double dy = p1.getY() - p2.getY();
 			center.setLocation(center.getX() + dx, center.getY() + dy);
 			this.netMapViewer.setCenter(center);
-//			logicalNetLayer.getMapView().setCenter(center);
-		}
+//		}
 	}
 
 	/**
