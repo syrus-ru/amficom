@@ -1,5 +1,5 @@
 /*
- * $Id: LoadingThreadTest.java,v 1.3 2005/08/11 13:55:41 arseniy Exp $
+ * $Id: LoadingThreadTest.java,v 1.4 2005/08/24 10:19:20 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.client.map.cache.TopologicalImageCache;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/11 13:55:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.4 $, $Date: 2005/08/24 10:19:20 $
  * @module mapviewclient_modifying
  */
 public class LoadingThreadTest extends TestCase {
@@ -74,44 +74,39 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -119,17 +114,17 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -141,7 +136,7 @@ public class LoadingThreadTest extends TestCase {
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+	
 				e1.printStackTrace();
 			}
 			
@@ -174,10 +169,10 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		} catch (MapDataException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		}
 		
@@ -195,10 +190,10 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -209,7 +204,7 @@ public class LoadingThreadTest extends TestCase {
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+	
 				e1.printStackTrace();
 			}
 			
@@ -242,10 +237,10 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		} catch (MapDataException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		}
 		
@@ -275,27 +270,27 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -306,7 +301,7 @@ public class LoadingThreadTest extends TestCase {
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+	
 				e1.printStackTrace();
 			}
 			
@@ -339,10 +334,10 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		} catch (MapDataException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		}
 		
@@ -372,27 +367,27 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -403,7 +398,7 @@ public class LoadingThreadTest extends TestCase {
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+	
 				e1.printStackTrace();
 			}
 			
@@ -435,10 +430,10 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		} catch (MapDataException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		}
 		
@@ -468,27 +463,27 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -499,7 +494,7 @@ public class LoadingThreadTest extends TestCase {
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+	
 				e1.printStackTrace();
 			}
 			
@@ -534,10 +529,10 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		} catch (MapDataException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		}
 		
@@ -578,44 +573,44 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -626,7 +621,7 @@ public class LoadingThreadTest extends TestCase {
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+	
 				e1.printStackTrace();
 			}
 			
@@ -660,10 +655,10 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		} catch (MapDataException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		}
 		
@@ -704,44 +699,44 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -752,7 +747,7 @@ public class LoadingThreadTest extends TestCase {
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+	
 				e1.printStackTrace();
 			}
 			
@@ -786,10 +781,10 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		} catch (MapDataException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		}
 		
@@ -830,44 +825,44 @@ public class LoadingThreadTest extends TestCase {
   		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
@@ -875,17 +870,17 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.changeRequestPriority(tiq1,TopologicalImageQuery.PRIORITY_BACKGROUND_LOW);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -897,7 +892,7 @@ public class LoadingThreadTest extends TestCase {
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+	
 				e1.printStackTrace();
 			}
 			
@@ -930,10 +925,10 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		} catch (MapDataException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		}
 		
@@ -974,44 +969,44 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
@@ -1021,17 +1016,17 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.changeRequestPriority(tiq2,TopologicalImageQuery.PRIORITY_EXPRESS);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -1043,7 +1038,7 @@ public class LoadingThreadTest extends TestCase {
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+	
 				e1.printStackTrace();
 			}
 			
@@ -1076,10 +1071,10 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		} catch (MapDataException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		}
 		
@@ -1120,44 +1115,44 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
@@ -1165,17 +1160,17 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.changeRequestPriority(tiq,TopologicalImageQuery.PRIORITY_BACKGROUND_MIDDLE);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -1187,7 +1182,7 @@ public class LoadingThreadTest extends TestCase {
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+	
 				e1.printStackTrace();
 			}
 			
@@ -1217,10 +1212,10 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		} catch (MapDataException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		}
 		
@@ -1261,44 +1256,44 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
@@ -1306,17 +1301,17 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.changeRequestPriority(tiq,TopologicalImageQuery.PRIORITY_EXPRESS);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -1328,7 +1323,7 @@ public class LoadingThreadTest extends TestCase {
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+	
 				e1.printStackTrace();
 			}
 			
@@ -1359,10 +1354,10 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		} catch (MapDataException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		}
 		
@@ -1392,27 +1387,27 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
@@ -1420,17 +1415,17 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.removeRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -1442,7 +1437,7 @@ public class LoadingThreadTest extends TestCase {
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+	
 				e1.printStackTrace();
 			}
 			
@@ -1474,10 +1469,10 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.clearQueue();
 		} catch (MapConnectionException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		} catch (MapDataException e2) {
-			// TODO Auto-generated catch block
+
 			e2.printStackTrace();
 		}
 		
@@ -1518,44 +1513,44 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			loadingThread.addRequest(tiq);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq1);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.addRequest(tiq2);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -1563,17 +1558,17 @@ public class LoadingThreadTest extends TestCase {
 		try {
 			Thread.sleep(BETWEEN_COMMANDS_TIME);
 		} catch (InterruptedException e1) {
-			// TODO Auto-generated catch block
+
 			e1.printStackTrace();
 		}
 		
 		try {
 			loadingThread.removeRequest(tiq1);
 		} catch (MapConnectionException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		} catch (MapDataException e) {
-			// TODO Auto-generated catch block
+
 			e.printStackTrace();
 		}
 		
@@ -1584,7 +1579,7 @@ public class LoadingThreadTest extends TestCase {
 			{
 				Thread.sleep(10);
 			} catch (InterruptedException e1) {
-				// TODO Auto-generated catch block
+	
 				e1.printStackTrace();
 			}
 			

@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundleTestCase.java,v 1.4 2005/08/12 14:49:42 arseniy Exp $
+ * $Id: DeleteNodeLinkCommandBundleTestCase.java,v 1.5 2005/08/24 10:19:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,12 +19,12 @@ import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalNodeCommandAtom
 import com.syrus.AMFICOM.client.map.command.action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.DeleteNodeLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
-import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 public class DeleteNodeLinkCommandBundleTestCase extends TestCase {
 
