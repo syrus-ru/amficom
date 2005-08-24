@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeEventHandler.java,v 1.6 2005/08/24 07:32:42 krupenn Exp $
+ * $Id: MapViewTreeEventHandler.java,v 1.7 2005/08/24 08:19:47 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -298,10 +298,8 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 		if (lastPathComponent instanceof IconedNode) {
 			IconedNode node = (IconedNode)lastPathComponent;
 			if(node.getObject() instanceof SpatialLayer) {
-				// todo: node.removeAll(); node.setPopulated(false);
-//				PopulatableIconedNode parent = (PopulatableIconedNode)node.getParent();
-//				node.setParent(null);
-//				parent.populate();
+				PopulatableIconedNode populatable = (PopulatableIconedNode)node;
+				populatable.clearChildren();
 			}
 			
 		}
