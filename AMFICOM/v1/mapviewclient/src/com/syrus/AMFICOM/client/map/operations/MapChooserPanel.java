@@ -1,5 +1,5 @@
 /*
- * Название: $Id: MapChooserPanel.java,v 1.15 2005/08/24 08:19:58 krupenn Exp $
+ * Название: $Id: MapChooserPanel.java,v 1.16 2005/08/24 14:02:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.util.Log;
 
 /**
  * панель выбора вида карты
- * @version $Revision: 1.15 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/24 14:02:25 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -157,14 +157,16 @@ public class MapChooserPanel extends JPanel
 		if(this.connection == null)
 			return;
 		
-		Thread t = new Thread(new Runnable() 
-		{
-			public void run() 
-			{
-				changeMap();
-			}
-		});
-		t.start();
+		changeMap();
+
+//		Thread t = new Thread(new Runnable() 
+//		{
+//			public void run() 
+//			{
+//				changeMap();
+//			}
+//		});
+//		t.start();
 	}
 
 	void changeMap() 
@@ -181,6 +183,11 @@ public class MapChooserPanel extends JPanel
 			Log.debugMessage("Cannot change view: " + e.getMessage(), Level.SEVERE);
 			Log.debugException(e, Level.SEVERE);
 			this.connection.setView(previousView);
+			try {
+				this.connection.connect();
+			} catch(MapConnectionException e1) {
+				e1.printStackTrace();
+			}
 		}
 	}
 }
