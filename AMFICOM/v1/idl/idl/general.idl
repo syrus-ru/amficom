@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.105 2005/08/24 11:31:20 bass Exp $
+ * $Id: general.idl,v 1.106 2005/08/24 11:46:17 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -134,14 +134,14 @@ module general {
 		exception IdlCreateObjectException {
 			wstring detailMessage;
 		};
-#if 0
-		/*\u002a\u002f@SuppressWarnings("all")/**/
+
+/*
 		exception RemoteVersionCollisionException {
 			long long desiredVersion;
 			long long actualVersion;
 			wstring message;
 		};
-#endif // 0
+*/
 
 
 //////////////////// Identifier ///////////////////
