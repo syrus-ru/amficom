@@ -228,7 +228,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
 
-//		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG);
+		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG);
 
 		aModel.setVisible("menuTestSetup", false);
 		aModel.setVisible("menuNetStudy", false);

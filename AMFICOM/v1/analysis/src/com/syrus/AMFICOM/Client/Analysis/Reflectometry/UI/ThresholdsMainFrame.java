@@ -267,7 +267,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
 
-//		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG);
+		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG);
 
 		aModel.setVisible("menuAnalyseUpload", false);
 		aModel.setVisible("menuAnalyseSaveCriteria", false);

@@ -381,7 +381,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setEnabled("menuReport", true);
 		aModel.setEnabled("menuWindow", true);
 
-//		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG);
+		aModel.setEnabled("menuFileOpen", AnalyseMainFrameSimplified.DEBUG);
 
 		aModel.setVisible("menuAnalyseSaveCriteria", false);
 		aModel.setVisible("menuSaveEtalon", false);
