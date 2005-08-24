@@ -1,5 +1,5 @@
 /**
- * $Id: OfxImageLoader.java,v 1.3 2005/08/23 10:06:05 krupenn Exp $
+ * $Id: OfxImageLoader.java,v 1.4 2005/08/24 08:02:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,8 +13,8 @@ package com.syrus.AMFICOM.client.map.objectfx;
 import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.util.Enumeration;
-import java.util.LinkedList;
-import java.util.List;
+import java.util.HashSet;
+import java.util.Set;
 
 import com.ofx.geometry.SxRectangle;
 import com.ofx.query.SxQueryResultInterface;
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
  * 
  * 
  * 
- * @version $Revision: 1.3 $, $Date: 2005/08/23 10:06:05 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/24 08:02:15 $
  * @author $Author: krupenn $
  * @module spatialfx_v1
  */
@@ -78,7 +78,7 @@ public class OfxImageLoader implements MapImageLoader {
 	 * @param searchText
 	 * @param found
 	 */
-	private void findInLayer(String layerName, String searchText, List found) {
+	private void findInLayer(String layerName, String searchText, Set found) {
 		String sampleLowCase;
 		SxQueryResultInterface objects = this.mapConnection.getSxMapViewer().getQuery().getObjects(layerName);
 		for(Enumeration en = objects.elements(); en.hasMoreElements();) {
@@ -91,7 +91,7 @@ public class OfxImageLoader implements MapImageLoader {
 		}
 	}
 
-	private void findInLayer(String layerName, SxRectangle bounds, List found) {
+	private void findInLayer(String layerName, SxRectangle bounds, Set found) {
 		SxQueryResultInterface objects = this.mapConnection.getSxMapViewer().getQuery().getObjects(layerName);
 		for(Enumeration en = objects.elements(); en.hasMoreElements();) {
 			SxSpatialObject obj = (SxSpatialObject)en.nextElement();
@@ -115,15 +115,15 @@ public class OfxImageLoader implements MapImageLoader {
 		return this.mapConnection;
 	}
 
-	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
-		List<SpatialObject> found = new LinkedList<SpatialObject>();
+	public Set<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
+		Set<SpatialObject> found = new HashSet<SpatialObject>();
 		OfxSpatialLayer ofxSpatialLayer = (OfxSpatialLayer)layer;
 		findInLayer(ofxSpatialLayer.className, searchText, found);
 		return found;
 	}
 
-	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, Rectangle2D.Double bounds) throws MapConnectionException, MapDataException {
-		List<SpatialObject> found = new LinkedList<SpatialObject>();
+	public Set<SpatialObject> findSpatialObjects(SpatialLayer layer, Rectangle2D.Double bounds) throws MapConnectionException, MapDataException {
+		Set<SpatialObject> found = new HashSet<SpatialObject>();
 		OfxSpatialLayer ofxSpatialLayer = (OfxSpatialLayer)layer;
 		findInLayer(
 				ofxSpatialLayer.className, 
