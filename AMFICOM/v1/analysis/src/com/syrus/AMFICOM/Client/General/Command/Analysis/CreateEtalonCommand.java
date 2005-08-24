@@ -15,10 +15,7 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.measurement.Action;
 import com.syrus.AMFICOM.measurement.Measurement;
-import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.io.BellcoreStructure;
 
@@ -58,8 +55,33 @@ public class CreateEtalonCommand extends AbstractCommand
 		ModelTraceManager mtm;
 		BellcoreStructure bs;
 		try {
-			mtm = CoreAnalysisManager.makeEtalon(bsColl, ap);
-			bs = CoreAnalysisManager.getMostTypicalTrace(bsColl);
+			if (Heap.hasEtalon()) { // если эталон уже есть
+				// расширяем эталон (содержит ли bsColl эталонную р/г,
+				// не должно влиять на результат, т.к. она уже должна быть
+				// покрыта этим эталоном)
+				mtm = Heap.getMTMEtalon();
+				CoreAnalysisManager.updateEtalon(mtm, bsColl, ap);
+				// Согласно текущему поведению Heap, эталон уже входит в bsColl,
+				// поэтому мы
+				// выбираем наиболее типичную с учетом существующего эталона.
+				//
+				// На самом деле это не очень точно, и корректнее было бы
+				// учитывать эталон с весом, равным количеству рефлектограмм,
+				// по которым он был создан, но которые в данный момент не
+				// загружены.
+				//
+				// С другой стороны, самым простым (и, видимо, вполне приемлемым)
+				// решением было бы вообще не менять эталонную bs.
+				//
+				// Текущее же решение (учитывающее старый эталон и новые р/г
+				// с одинаковым весом), несмотря на свою матем. нестрогость,
+				// имеет преимущество перед описанными двумя за счет
+				// эффекта "забывания" (уменьшения веса) старых р/г
+				bs = CoreAnalysisManager.getMostTypicalTrace(bsColl);
+			} else { // если эталона еще нет
+				mtm = CoreAnalysisManager.makeEtalon(bsColl, ap);
+				bs = CoreAnalysisManager.getMostTypicalTrace(bsColl);
+			}
 			String name = LangModelAnalyse.getString("etalon");
 			{
 				// определяем временное название для эталона
