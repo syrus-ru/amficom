@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.31 2005/08/22 11:36:34 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.32 2005/08/24 10:21:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.31 $, $Date: 2005/08/22 11:36:34 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/24 10:21:45 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -618,7 +618,7 @@ public final class MapToolBar extends JPanel
 		command.setParameter("button", this.showIndicationButton);
 		
 		// OPERATION_HAND_PAN not accessible with descrete navigation
-		this.aModel.setAccessible(MapApplicationModel.OPERATION_HAND_PAN, !MapPropertiesManager.isDescreteNavigation());
+//		this.aModel.setAccessible(MapApplicationModel.OPERATION_HAND_PAN, !MapPropertiesManager.isDescreteNavigation());
 
 		this.aModel.setSelected(MapApplicationModel.MODE_LINK, true);
 		this.aModel.setSelected(MapApplicationModel.MODE_NODES, true);
