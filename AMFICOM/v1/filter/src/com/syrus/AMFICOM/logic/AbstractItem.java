@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.16 2005/08/24 09:34:42 max Exp $
+ * $Id: AbstractItem.java,v 1.17 2005/08/24 14:13:06 max Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/24 09:34:42 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/24 14:13:06 $
  * @author $Author: max $
  * @author Vladimir Dolzhenko
  * @module filter
@@ -208,8 +208,12 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 	}
 	
 	public void clearChildren() {
-		for (Item child : new LinkedList<Item>(this.children)) {
-			child.setParent(null);
+		List<Item> removedChildren = new LinkedList<Item>(this.children);
+		this.children.clear();
+		for(Item child : removedChildren) {
+			if(child instanceof AbstractItem) {
+				((AbstractItem)child).fireParentChanged(child, this, null, this);
+			}
 		}
 	}
 	
