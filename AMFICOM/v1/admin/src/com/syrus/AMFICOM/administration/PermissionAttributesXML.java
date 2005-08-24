@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributesXML.java,v 1.1 2005/08/22 12:09:35 bob Exp $
+* $Id: PermissionAttributesXML.java,v 1.2 2005/08/24 11:34:02 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.AbstractStorableObjectXML;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/22 12:09:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/08/24 11:34:02 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module admin
  */
@@ -46,6 +46,7 @@ public class PermissionAttributesXML extends AbstractStorableObjectXML<Permissio
 		return keys;
 	}
 	
+	@SuppressWarnings("boxing")
 	@Override
 	public PermissionAttributes getStorableObject(final Map<String, Object> objectMap) {
 		PermissionAttributes permissionAttributes = 
@@ -57,6 +58,5 @@ public class PermissionAttributesXML extends AbstractStorableObjectXML<Permissio
 				this.getLong(objectMap, COLUMN_PERMISSION_MASK));
 		return permissionAttributes;
 	}
-	
 }
 
