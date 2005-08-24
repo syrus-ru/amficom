@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.25 2005/08/24 14:05:47 bob Exp $
+ * $Id: JGraphText.java,v 1.26 2005/08/24 16:02:52 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -107,7 +107,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/08/24 14:05:47 $
+ * @version $Revision: 1.26 $, $Date: 2005/08/24 16:02:52 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -248,6 +248,9 @@ public class JGraphText implements GraphSelectionListener {
 							Edge edge = (Edge) changedObject;
 							final MPort source = (MPort) edge.getSource();
 							final MPort target = (MPort) edge.getTarget();
+							source.updateCache();
+							target.updateCache();
+							
 							Log.debugMessage(".graphChanged() | " + source  +" -> " + target,
 								Log.DEBUGLEVEL10);
 							AbstractBean bean = source.getUserObject();
@@ -258,6 +261,10 @@ public class JGraphText implements GraphSelectionListener {
 							MPort target2 = (MPort) connectionSet.getPort(edge, false);
 
 							Log.debugMessage(".graphChanged() | ' " + source2  +" -> " + target2, Log.DEBUGLEVEL10);
+							
+							if (source2 != null) {
+								source2.updateCache();
+							}
 							
 							if (target2 == null) {
 								AbstractBean bean2 = source2.getUserObject();
@@ -275,6 +282,8 @@ public class JGraphText implements GraphSelectionListener {
 									// TODO Auto-generated catch block
 									e1.printStackTrace();
 								}
+							} else {
+								target2.updateCache();
 							}
 							bean.applyTargetPort(target2, target);
 							
