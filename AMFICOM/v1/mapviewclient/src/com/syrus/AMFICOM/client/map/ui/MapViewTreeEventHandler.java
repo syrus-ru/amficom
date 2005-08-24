@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeEventHandler.java,v 1.7 2005/08/24 08:19:47 krupenn Exp $
+ * $Id: MapViewTreeEventHandler.java,v 1.8 2005/08/24 14:05:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -200,20 +200,24 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 				}
 			}
 			else if(mapEventType.equals(MapEvent.MAP_FRAME_SHOWN)) {
-				MapFrame mapFrame = (MapFrame) mapEvent.getNewValue();
-				Collection items = this.iconedTreeUI.findNodes(this.root, Collections.singletonList(TopologyTreeModel.TOPOLOGY_BRANCH), false);
-				for(Iterator it = items.iterator(); it.hasNext();) {
-					PopulatableIconedNode pin = (PopulatableIconedNode )it.next();
-					TopologyTreeModel model = (TopologyTreeModel)pin.getChildrenFactory();
-					model.setNetMapViewer(mapFrame.getMapViewer());
+				if(this.iconedTreeUI.isLinkObjects()) {
+					MapFrame mapFrame = (MapFrame) mapEvent.getNewValue();
+					Collection items = this.iconedTreeUI.findNodes(this.root, Collections.singletonList(TopologyTreeModel.TOPOLOGY_BRANCH), false);
+					for(Iterator it = items.iterator(); it.hasNext();) {
+						PopulatableIconedNode pin = (PopulatableIconedNode )it.next();
+						TopologyTreeModel model = (TopologyTreeModel)pin.getChildrenFactory();
+						model.setNetMapViewer(mapFrame.getMapViewer());
+					}
 				}
 			}
 			else if(mapEventType.equals(MapEvent.MAP_REPAINTED)) {
-				Collection items = this.iconedTreeUI.findNodes(this.root, Collections.singletonList(TopologyTreeModel.TOPOLOGY_BRANCH), false);
-				for(Iterator it = items.iterator(); it.hasNext();) {
-					PopulatableIconedNode pin = (PopulatableIconedNode )it.next();
-					if(pin.isPopulated()) {
-						pin.populate();
+				if(this.iconedTreeUI.isLinkObjects()) {
+					Collection items = this.iconedTreeUI.findNodes(this.root, Collections.singletonList(TopologyTreeModel.TOPOLOGY_BRANCH), false);
+					for(Iterator it = items.iterator(); it.hasNext();) {
+						PopulatableIconedNode pin = (PopulatableIconedNode )it.next();
+						if(pin.isPopulated()) {
+							pin.populate();
+						}
 					}
 				}
 			}
