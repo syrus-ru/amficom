@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: SchemeProtoGroup.xsd,v 1.1 2005/08/17 07:39:11 max Exp $
+<!-- $Id: SchemeProtoGroup.xsd,v 1.2 2005/08/24 07:45:17 stas Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/scheme/xml"
@@ -28,14 +28,14 @@
   </xsd:complexType>
 
   <xsd:complexType name="SchemeProtoGroup">
-    <xsd:sequence>
+    <xsd:all>
       <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="symbol" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="schemeprotogroups" type="scheme:SchemeProtoGroups" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="schemeprotoelements" type="scheme:SchemeProtoElements" minOccurs="0" maxOccurs="1"/>
-    </xsd:sequence>
+    </xsd:all>
   </xsd:complexType>
 
 </xsd:schema>
