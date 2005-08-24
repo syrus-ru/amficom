@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.5 2005/08/20 19:57:08 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.6 2005/08/24 18:01:38 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,6 +26,10 @@ import com.syrus.AMFICOM.map.SiteNodeDatabase;
 import com.syrus.AMFICOM.map.SiteNodeTypeDatabase;
 import com.syrus.AMFICOM.map.TopologicalNodeDatabase;
 import com.syrus.AMFICOM.mapview.MapViewDatabase;
+import com.syrus.AMFICOM.measurement.KISDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementPortDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementPortTypeDatabase;
+import com.syrus.AMFICOM.measurement.MonitoredElementDatabase;
 import com.syrus.AMFICOM.resource.ImageResourceDatabase;
 import com.syrus.AMFICOM.scheme.CableChannelingItemDatabase;
 import com.syrus.AMFICOM.scheme.PathElementDatabase;
@@ -47,7 +51,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroupDatabase;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/20 19:57:08 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/24 18:01:38 $
  * @module mscharserver
  */
 final class DatabaseContextSetup {
@@ -63,6 +67,11 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new DomainDatabase());
 		DatabaseContext.registerDatabase(new ServerDatabase());
 		DatabaseContext.registerDatabase(new ServerProcessDatabase());
+
+		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
+		DatabaseContext.registerDatabase(new MeasurementPortDatabase());
+		DatabaseContext.registerDatabase(new KISDatabase());
+		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
 
 		DatabaseContext.registerDatabase(new ImageResourceDatabase());
 
