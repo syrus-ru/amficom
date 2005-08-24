@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.108 2005/08/24 16:13:14 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.109 2005/08/24 16:28:55 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.108 $, $Date: 2005/08/24 16:13:14 $
+ * @version $Revision: 1.109 $, $Date: 2005/08/24 16:28:55 $
  * @module
  */
 
@@ -581,9 +581,16 @@ public class CoreAnalysisManager
 
 	/**
 	 * Расширяет эталонный MTM по непустому набору рефлектограмм и параметрам
-	 * анализа, чтобы включить все аналитические кривые
-	 * @todo использовать на входе Collection<Trace>
-	 * вместо Collection<BellcoreStructure>, а не проводить анализ заново
+	 * анализа, чтобы включить все аналитические кривые.
+	 * <p>
+	 * XXX Было бы неплохо использовать на входе Collection&lt;Trace&gt;
+	 * вместо Collection&lt;BellcoreStructure&gt;, чтобы не проводить анализ
+	 * заново,
+	 * однако здесь нам важно, чтобы скорректированный MTM строго покрывал
+	 * а/к, построенные при <b>текущих</b> значениях параметров анализа.
+	 * Поэтому использовать результаты анализа, имеющиеся в Trace, можно будет
+	 * только когда Trace сможет как-то поддерживать изменяющиеся AP.
+	 * </p>
 	 * @param mtm расширяемый MTM
 	 * @param bsColl коллекция р/г
 	 * @param ap параметры, с которыми анализировать эти р/г
