@@ -1,5 +1,5 @@
 /*-
- * $Id: FiltrableIconedNode.java,v 1.2 2005/08/23 09:44:52 max Exp $
+ * $Id: FiltrableIconedNode.java,v 1.3 2005/08/25 10:54:39 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.newFilter.Filter;
 
 /**
  * @author $Author: max $
- * @version $Revision: 1.2 $, $Date: 2005/08/23 09:44:52 $
- * @module commonclient_v1
+ * @version $Revision: 1.3 $, $Date: 2005/08/25 10:54:39 $
+ * @module filterclient
  */
 
 public class FiltrableIconedNode extends PopulatableIconedNode implements Filtrable {
