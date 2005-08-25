@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryTreeModel.java,v 1.3 2005/08/17 14:14:20 arseniy Exp $
+ * $Id: MapLibraryTreeModel.java,v 1.4 2005/08/25 16:02:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -108,12 +108,9 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 		MapLibrary library = (MapLibrary )parentNode.getObject();
 
 		List siteNodeTypeChildren = new ArrayList();
-		for(Iterator iter = library.getChildren().iterator(); iter.hasNext();) {
-			LibraryEntry entry = (LibraryEntry )iter.next();
-			if(entry instanceof SiteNodeType) {
-				if(((SiteNodeType)entry).isTopological()) {
-					siteNodeTypeChildren.add(entry);
-				}
+		for(SiteNodeType siteNodeType : library.getSiteNodeTypes()) {
+			if(siteNodeType.isTopological()) {
+				siteNodeTypeChildren.add(siteNodeType);
 			}
 		}
 		Collections.sort(siteNodeTypeChildren, MapLibraryTreeModel.nodeTypeComparator);
@@ -158,12 +155,9 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 		MapLibrary library = (MapLibrary )parentNode.getObject();
 
 		List physicalLinkTypeChildren = new ArrayList();
-		for(Iterator iter = library.getChildren().iterator(); iter.hasNext();) {
-			LibraryEntry entry = (LibraryEntry )iter.next();
-			if(entry instanceof PhysicalLinkType) {
-				if(((PhysicalLinkType)entry).isTopological()) {
-					physicalLinkTypeChildren.add(entry);
-				}
+		for(PhysicalLinkType physicalLinkType : library.getPhysicalLinkTypes()) {
+			if(physicalLinkType.isTopological()) {
+				physicalLinkTypeChildren.add(physicalLinkType);
 			}
 		}
 		Collections.sort(physicalLinkTypeChildren, MapLibraryTreeModel.linkTypeComparator);
