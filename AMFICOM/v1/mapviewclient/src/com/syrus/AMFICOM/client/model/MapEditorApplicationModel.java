@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.7 2005/08/22 11:37:44 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.8 2005/08/25 16:02:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ package com.syrus.AMFICOM.client.model;
  * 
  * 
  * 
- * @version $Revision: 1.7 $, $Date: 2005/08/22 11:37:44 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/25 16:02:57 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -113,6 +113,8 @@ public class MapEditorApplicationModel extends ApplicationModel
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE);
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS);
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE);
+		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT);
+		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT);
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE);
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE);
 		add(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE);
