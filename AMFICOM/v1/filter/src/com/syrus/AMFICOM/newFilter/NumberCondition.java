@@ -1,5 +1,5 @@
 /*
- * $Id: NumberCondition.java,v 1.3 2005/08/09 22:00:24 arseniy Exp $
+ * $Id: NumberCondition.java,v 1.4 2005/08/25 10:29:00 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,16 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/09 22:00:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/08/25 10:29:00 $
+ * @author $Author: max $
  * @module filter
  */
-public class NumberCondition {
+public class NumberCondition implements TemporalCondition {
+	
+	private String equals;
+	private String from;
+	private String to;
+	private boolean includeBounds;
 	
 	public NumberCondition() {
 		this.equals = new String();
@@ -27,12 +32,6 @@ public class NumberCondition {
 		this.to = to;
 		this.includeBounds = includeBounds;
 	}
-	
-	private String equals;
-	private String from;
-	private String to;
-	private boolean includeBounds;
-	
 	
 	public String getEquals() {
 		return this.equals;
@@ -57,5 +56,12 @@ public class NumberCondition {
 	}
 	public void setTo(String to) {
 		this.to = to;
+	}
+	
+	public boolean isEmpty() {
+		if(this.equals.equals("") && this.from.equals("") && this.to.equals("")) {
+			return true;
+		}
+		return false;
 	}
 }

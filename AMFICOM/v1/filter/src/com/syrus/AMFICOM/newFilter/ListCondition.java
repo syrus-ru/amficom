@@ -1,5 +1,5 @@
 /*
- * $Id: ListCondition.java,v 1.4 2005/08/09 22:00:24 arseniy Exp $
+ * $Id: ListCondition.java,v 1.5 2005/08/25 10:30:33 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,11 +8,11 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/09 22:00:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/08/25 10:30:33 $
+ * @author $Author: max $
  * @module filter
  */
-public class ListCondition {
+public class ListCondition implements TemporalCondition {
 	
 	
 	private int[] selectedIndices;
@@ -46,5 +46,12 @@ public class ListCondition {
 	}
 	public int[] getSelectedIndices() {
 		return this.selectedIndices;
+	}
+	
+	public boolean isEmpty() {
+		if(this.selectedIndices.length == 0) {
+			return true;
+		}
+		return false;
 	}
 }
