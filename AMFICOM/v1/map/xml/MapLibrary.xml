@@ -1,18 +1,19 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: MapLibrary.xml,v 1.8 2005/08/16 10:57:52 krupenn Exp $
+<!-- $Id: MapLibrary.xml,v 1.9 2005/08/25 15:41:25 krupenn Exp $
 -->
 <map:library
 	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
 	xmlns:map="http://syrus.com/AMFICOM/map/xml"
-	importtype="ucm">
+	importtype="amficom">
     <map:uid>default</map:uid>
     <map:name>default</map:name>
     <map:codename>defaultlibrary</map:codename>
     <map:description/>
 	<map:physicallinktypes>
 		<map:physicallinktype>
-			<map:uid>1</map:uid>
+			<map:uid>deflink1</map:uid>
 			<map:name>Коллектор</map:name>
+			<map:codename>defaultcollector</map:codename>
 			<map:description/>
 			<map:sort>collector</map:sort>
 			<map:dimension_x>2</map:dimension_x>
@@ -23,8 +24,9 @@
 			</map:characteristics>
 		</map:physicallinktype>
 		<map:physicallinktype>
-			<map:uid>1</map:uid>
+			<map:uid>deflink2</map:uid>
 			<map:name>Тонель</map:name>
+			<map:codename>defaulttunnel</map:codename>
 			<map:description/>
 			<map:sort>tunnel</map:sort>
 			<map:dimension_x>3</map:dimension_x>
@@ -35,8 +37,9 @@
 			</map:characteristics>
 		</map:physicallinktype>
 		<map:physicallinktype>
-			<map:uid>1</map:uid>
+			<map:uid>deflink3</map:uid>
 			<map:name>Прокладка по зданию</map:name>
+			<map:codename>defaultindoor</map:codename>
 			<map:description/>
 			<map:sort>indoor</map:sort>
 			<map:dimension_x>1</map:dimension_x>
@@ -48,8 +51,9 @@
 			</map:characteristics>
 		</map:physicallinktype>
 		<map:physicallinktype>
-			<map:uid>1</map:uid>
+			<map:uid>deflink4</map:uid>
 			<map:name>Подводная прокладка</map:name>
+			<map:codename>defaultsubmarine</map:codename>
 			<map:description/>
 			<map:sort>submarine</map:sort>
 			<map:dimension_x>3</map:dimension_x>
@@ -61,8 +65,9 @@
 			</map:characteristics>
 		</map:physicallinktype>
 		<map:physicallinktype>
-			<map:uid>1</map:uid>
+			<map:uid>deflink5</map:uid>
 			<map:name>Навесная линия</map:name>
+			<map:codename>defaultoverhead</map:codename>
 			<map:description/>
 			<map:sort>overhead</map:sort>
 			<map:dimension_x>6</map:dimension_x>
@@ -76,45 +81,51 @@
 	</map:physicallinktypes>
 	<map:sitenodetypes>
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>defsite1</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>Колодец</map:name>
+			<map:codename>defaultwell</map:codename>
 			<map:topological>true</map:topological>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>2</map:uid>
+			<map:uid>defsite2</map:uid>
 			<map:sort>building</map:sort>
 			<map:image>images/building.gif</map:image>
 			<map:name>Здание</map:name>
+			<map:codename>defaultbuilding</map:codename>
 			<map:topological>true</map:topological>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>3</map:uid>
+			<map:uid>defsite3</map:uid>
 			<map:sort>piquet</map:sort>
 			<map:image>images/piquet.gif</map:image>
 			<map:name>Пикет</map:name>
+			<map:codename>defaultpiquet</map:codename>
 			<map:topological>true</map:topological>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>4</map:uid>
+			<map:uid>defsite4</map:uid>
 			<map:sort>cableinlet</map:sort>
 			<map:image>images/cableinlet.gif</map:image>
 			<map:name>Кабельный ввод</map:name>
+			<map:codename>defaultcableinlet</map:codename>
 			<map:topological>true</map:topological>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>5</map:uid>
+			<map:uid>defsite5</map:uid>
 			<map:sort>ats</map:sort>
 			<map:image>images/ats.gif</map:image>
 			<map:name>Телефонный узел</map:name>
+			<map:codename>defaultats</map:codename>
 			<map:topological>true</map:topological>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>6</map:uid>
+			<map:uid>defsite6</map:uid>
 			<map:sort>tower</map:sort>
 			<map:image>images/tower.gif</map:image>
 			<map:name></map:name>
+			<map:codename>defaulttower</map:codename>
 			<map:topological>true</map:topological>
 		</map:sitenodetype>
 	</map:sitenodetypes>

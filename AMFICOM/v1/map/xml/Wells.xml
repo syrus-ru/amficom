@@ -1,9 +1,10 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: Wells.xml,v 1.2 2005/08/16 10:57:52 krupenn Exp $
+﻿<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: Wells.xml,v 1.3 2005/08/25 15:41:25 krupenn Exp $
 -->
 <map:library
 	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
-	xmlns:map="http://syrus.com/AMFICOM/map/xml">
+	xmlns:map="http://syrus.com/AMFICOM/map/xml"
+	importtype="amficom">
 	<map:uid>wells</map:uid>
     <map:name>Колодцы кабельной канализации</map:name>
     <map:codename>wells</map:codename>
@@ -11,10 +12,11 @@
 	<map:physicallinktypes/>
 	<map:sitenodetypes>
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well1</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>ККС-1</map:name>
+			<map:codename>well_KKS_1</map:codename>
 			<map:description>Устанавливается на распределительных сетях при длине пролета до 60м. Допускается монтаж муфт кабелей ТПП до 50 пар. При транзитной прокладке кабеля (без муфт) емкость проходящих кабеле не должна превышать 100 пар</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -23,10 +25,11 @@
 			</map:characteristics>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well2</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>ККС-2</map:name>
+			<map:codename>well_KKS_2</map:codename>
 			<map:description>Допускается монтаж муфт кабелей ТПП до 200x2x0,5 или 300x2x0,32</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -35,10 +38,11 @@
 			</map:characteristics>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well3</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>ККС-3</map:name>
+			<map:codename>well_KKS_3</map:codename>
 			<map:description>Допускается монтаж муфт кабелей ТПП до 400x2x0.5; ТГ до 600x2x0,5; ТПП с 0,32 до 800x2</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -47,10 +51,11 @@
 			</map:characteristics>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well4</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>ККС-4</map:name>
+			<map:codename>well_KKS_4</map:codename>
 			<map:description>Допускается монтаж кабелей местных сетей емкостью до 1200x2</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -59,10 +64,11 @@
 			</map:characteristics>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well5</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>ККС-5</map:name>
+			<map:codename>well_KKS_5</map:codename>
 			<map:description>Допускается монтаж кабелей местных сетей всех емкостей и установка HPП аппаратуры ИКМ для ГТС</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -72,10 +78,11 @@
 		</map:sitenodetype>
 
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well6</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>ККС-5М</map:name>
+			<map:codename>well_KKS_5M</map:codename>
 			<map:description>Колодец кабельной канализации связи для размещения контейнеров НРП аппаратуры систем передачи ИКМ-30, ИКМ-30-4, ИКМ-120-4</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -83,10 +90,11 @@
 		</map:sitenodetype>
 
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well7</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>ККСр-3</map:name>
+			<map:codename>well_KKSr_3</map:codename>
 			<map:description>Колодец разветвительный</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -94,10 +102,11 @@
 			</map:characteristics>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well8</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
-			<map:name>ККС-4</map:name>
+			<map:name>ККСр-4</map:name>
+			<map:codename>well_KKSr_4</map:codename>
 			<map:description>Колодец разветвительный</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -105,10 +114,11 @@
 			</map:characteristics>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well9</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
-			<map:name>ККС-5</map:name>
+			<map:name>ККСр-5</map:name>
+			<map:codename>well_KKSr_5</map:codename>
 			<map:description>Колодец разветвительный</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -117,10 +127,11 @@
 		</map:sitenodetype>
 
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well10</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>ККСС-1</map:name>
+			<map:codename>well_KKSS_1</map:codename>
 			<map:description>Колодец кабельной канализации связи специального типа, проходной на 36 каналов</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -128,10 +139,11 @@
 			</map:characteristics>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well11</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>ККССу-1</map:name>
+			<map:codename>well_KKSSu_1</map:codename>
 			<map:description>Колодец кабельной канализации связи специального типа, угловой на 36 каналов</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -139,10 +151,11 @@
 			</map:characteristics>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well12</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>ККССр-1</map:name>
+			<map:codename>well_KKSSr_1</map:codename>
 			<map:description>Колодец кабельной канализации связи специального типа, разветвительный на 36 каналов</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -151,10 +164,11 @@
 		</map:sitenodetype>
 
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well13</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>ККСС-2</map:name>
+			<map:codename>well_KKSS_2</map:codename>
 			<map:description>Колодец кабельной канализации связи специального типа, проходной на 48 каналов</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -162,10 +176,11 @@
 			</map:characteristics>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well14</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>ККССу-2</map:name>
+			<map:codename>well_KKSSu_2</map:codename>
 			<map:description>Колодец кабельной канализации связи специального типа, угловой на 48 каналов</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
@@ -173,10 +188,11 @@
 			</map:characteristics>
 		</map:sitenodetype>
 		<map:sitenodetype>
-			<map:uid>1</map:uid>
+			<map:uid>well15</map:uid>
 			<map:sort>well</map:sort>
 			<map:image>images/well.gif</map:image>
 			<map:name>ККССр-2</map:name>
+			<map:codename>well_KKSSr_2</map:codename>
 			<map:description>Колодец кабельной канализации связи специального типа, разветвительный на 48 каналов</map:description>
 			<map:topological>true</map:topological>
 			<map:characteristics>
