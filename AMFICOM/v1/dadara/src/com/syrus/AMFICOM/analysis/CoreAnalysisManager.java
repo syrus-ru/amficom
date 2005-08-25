@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.109 2005/08/24 16:28:55 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.110 2005/08/25 16:53:05 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.109 $, $Date: 2005/08/24 16:28:55 $
+ * @version $Revision: 1.110 $, $Date: 2005/08/25 16:53:05 $
  * @module
  */
 
@@ -749,9 +749,10 @@ public class CoreAnalysisManager
 
 		ModelTrace mt = ar.getMTAE().getModelTrace();
 
-		// начало конца волокна по эталону 
-		int etMinLength = etMTM.getMTAE().getSimpleEvent(
-				etMTM.getMTAE().getNEvents() - 1).getBegin();
+		// начало конца волокна по эталону
+		int etMinLength = etMTM.getMTAE().getNEvents() > 0
+				? etMTM.getMTAE().getSimpleEvent(etMTM.getMTAE().getNEvents() - 1).getBegin()
+				: 0; // если в эталоне нет событий, считаем его длину нулевой
 
 		// НЕ добавляем к результатам анализа найденную длину р/г и фитированную кривую - это пока не нужно
 //	  outParameters.put(CODENAME_DADARA_TRACELENGTH, ByteArray.toByteArray(traceLength));
