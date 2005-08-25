@@ -20,5 +20,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jgraphpad"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mapclient"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/filterclient"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
