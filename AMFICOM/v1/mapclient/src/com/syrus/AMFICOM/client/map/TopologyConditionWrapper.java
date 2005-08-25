@@ -1,5 +1,5 @@
 /**
- * $Id: TopologyConditionWrapper.java,v 1.2 2005/08/24 10:09:57 krupenn Exp $
+ * $Id: TopologyConditionWrapper.java,v 1.3 2005/08/25 11:16:22 max Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.client.map;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ConditionWrapper;
@@ -23,13 +23,15 @@ public class TopologyConditionWrapper implements ConditionWrapper {
 	
 	private final static String NAME = LangModelMap.getString("Name");
 		
-	private static Collection<ConditionKey> keys = new ArrayList<ConditionKey>();
+	private static List<ConditionKey> keys = new ArrayList<ConditionKey>();
+	
+	public static final ConditionKey NAME_CONDITION_KEY = new ConditionKey(StorableObjectWrapper.COLUMN_NAME, NAME, ConditionWrapper.STRING);
 	
 	static {
-		keys.add(new ConditionKey(StorableObjectWrapper.COLUMN_NAME, NAME, ConditionWrapper.STRING));
+		keys.add(NAME_CONDITION_KEY);
 	}
 	
-	public Collection<ConditionKey> getKeys() {
+	public List<ConditionKey> getKeys() {
 		return keys;
 	}
 	

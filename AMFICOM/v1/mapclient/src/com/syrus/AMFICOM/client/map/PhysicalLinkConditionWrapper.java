@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkConditionWrapper.java,v 1.1 2005/08/22 16:03:03 krupenn Exp $
+ * $Id: PhysicalLinkConditionWrapper.java,v 1.2 2005/08/25 11:14:03 max Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.client.map;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -21,13 +21,15 @@ public class PhysicalLinkConditionWrapper implements ConditionWrapper {
 	
 	private final static String NAME = "Entity name";
 		
-	private static Collection<ConditionKey> keys = new ArrayList<ConditionKey>();
+	private static List<ConditionKey> keys = new ArrayList<ConditionKey>();
+	
+	public static final ConditionKey NAME_CONDITION_KEY = new ConditionKey(StorableObjectWrapper.COLUMN_NAME, NAME, ConditionWrapper.STRING);
 	
 	static {
-		keys.add(new ConditionKey(StorableObjectWrapper.COLUMN_NAME, NAME, ConditionWrapper.STRING));
+		keys.add(NAME_CONDITION_KEY);
 	}
 	
-	public Collection<ConditionKey> getKeys() {
+	public List<ConditionKey> getKeys() {
 		return keys;
 	}
 	
