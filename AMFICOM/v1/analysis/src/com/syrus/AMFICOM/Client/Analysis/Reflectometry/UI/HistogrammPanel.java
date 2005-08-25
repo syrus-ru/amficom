@@ -7,8 +7,6 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Stroke;
 import java.awt.event.MouseEvent;
-import java.io.OutputStream;
-import java.io.PrintStream;
 import java.util.Formatter;
 
 import javax.swing.SwingUtilities;
