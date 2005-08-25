@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.4 2005/08/18 19:39:03 arseniy Exp $
+# $Id: Makefile,v 1.5 2005/08/25 20:24:38 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -13,7 +13,7 @@ ARCHFILE := $(MODULE_NAME).tar.gz
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/mapviewclient.jar:$(LIBDIR)/mscharserver_interface.jar
+APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/mapclient.jar:$(LIBDIR)/mapviewclient.jar:$(LIBDIR)/mscharserver_interface.jar
 EXTCLASSPATH := $(EXTLIBDIR)/xalan.jar:$(EXTLIBDIR)/dom4j-1.6.jar
 
 MAPINFODIR := $(EXTLIBDIR)/mapinfo
