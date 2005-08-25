@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.43 2005/08/23 14:17:11 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.44 2005/08/25 16:00:49 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,7 +23,6 @@ import java.awt.image.BufferedImage;
 import java.beans.PropertyChangeEvent;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
 
@@ -34,7 +33,7 @@ import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
+import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.client.map.command.navigate.CenterSelectionCommand;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
@@ -56,6 +55,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * <br> реализаци€ com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализаци€ com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.43 $, $Date: 2005/08/23 14:17:11 $
+ * @version $Revision: 1.44 $, $Date: 2005/08/25 16:00:49 $
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
@@ -486,184 +486,138 @@ public abstract class NetMapViewer {
 					updateSelectedElements();
 					repaint(false);
 				}
-				else if(mapEventType.equals(MapEvent.MAP_NAVIGATE)) {
-					MapNavigateEvent mne = (MapNavigateEvent )mapEvent;
-	
-					//«десь принимаюттс€ собиты€ по создению и управлению маркером
-					if(mne.isDataMarkerCreated()) {
-						MeasurementPath path;
-						try {
-							path = mapViewController.getMeasurementPathByMonitoredElementId(mne.getMeId());
-						} catch (ApplicationException e) {
-							e.printStackTrace();
-							return;
-						}
-	
-						if(path != null) {
-							Marker marker = new Marker(
+			}
+			else if(pce.getPropertyName().equals(MarkerEvent.MARKER_EVENT)) {
+				MarkerEvent mne = (MarkerEvent) pce;
+
+				// «десь принимаюттс€ собиты€ по создению и управлению маркером
+				if(mne.getMarkerEventType() == MarkerEvent.MARKER_CREATED_EVENT) {
+					MeasurementPath path;
+					try {
+						path = mapViewController
+							.getMeasurementPathByMonitoredElementId(mne.getMeId());
+					} catch(ApplicationException e) {
+						e.printStackTrace();
+						return;
+					}
+
+					if(path != null) {
+						Marker marker = new Marker(
 								mne.getMarkerId(),
 								LoginManager.getUserId(),
-				                mapView,
+								mapView,
 								path,
 								mne.getMeId(),
 								LangModelMap.getString("Marker"));
-							mapView.addMarker(marker);
-	
-							MarkerController mc = (MarkerController)
-									mapViewController.getController(marker);
-							mc.moveToFromStartLo(marker, mne.getDistance());
-						}
-					}
-					else if(mne.isDataEventMarkerCreated()) {
-							MeasurementPath path;
-							try {
-								path = mapViewController
-									.getMeasurementPathByMonitoredElementId(
-											mne.getMeId());
-							} catch(ApplicationException e) {
-								e.printStackTrace();
-								return;
-							}
-	
-							if(path != null) {
-								EventMarker marker = new EventMarker(
-										mne.getMarkerId(),
-										LoginManager.getUserId(),
-										mapView,
-										path,
-										mne.getMeId(),
-										LangModelMap.getString("Event"));
-								mapView.addMarker(marker);
-	
-								MarkerController mc = (MarkerController) 
-										mapViewController.getController(marker);
-	
-								mc.moveToFromStartLo(marker, mne.getDistance());
-							}
-						}
-						else if(mne.isDataAlarmMarkerCreated()) {
-							MeasurementPath path;
-							try {
-								path = mapViewController
-									.getMeasurementPathByMonitoredElementId(
-											mne.getMeId());
-							} catch(ApplicationException e) {
-								e.printStackTrace();
-								return;
-							}
-	
-							AlarmMarker marker = null;
-							if(path != null) {
-								for(Iterator it = mapView.getMarkers().iterator(); it.hasNext();) {
-									try {
-										marker = (AlarmMarker) it.next();
-										if(marker.getMeasurementPath().equals(path))
-											break;
-										marker = null;
-									} catch(Exception ex) {
-										ex.printStackTrace();
-									}
-								}
-								if(marker == null) {
-									marker = new AlarmMarker(
-											mne.getMarkerId(),
-											LoginManager.getUserId(),
-											mapView,
-											path,
-											mne.getMeId(),
-											LangModelMap.getString("Alarm"));
-									mapView.addMarker(marker);
-								}
-								else {
-									marker.setId(mne.getMarkerId());
-								}
-	
-								MarkerController mc = (MarkerController) 
-										mapViewController.getController(marker);
-	
-								mc.moveToFromStartLo(marker, mne.getDistance());
-							}
-/*
-					boolean found = false;
+						mapView.addMarker(marker);
 
-					MapPhysicalLinkElement link = 
-					getMapView().findCablePath(mne.getSchemePathElementId());
-					if(link != null)
-					{
-						link.setAlarmState(true);
-						link.select();
+						MarkerController mc = (MarkerController) 
+							mapViewController.getController(marker);
+						mc.moveToFromStartLo(marker, mne.getOpticalDistance());
 					}
-					else
-					{
-						MapSiteNodeElement node = findMapElementByCableLink(mne.linkID);
-						if(node != null)
-						{
-							node.setAlarmState(true);
-							node.select();
-						}
-					}
-*/
 				}
-				else
-				if(mne.isDataMarkerMoved())
-				{
+				else if(mne.getMarkerEventType() == MarkerEvent.EVENTMARKER_CREATED_EVENT) {
+					MeasurementPath path;
+					try {
+						path = mapViewController
+							.getMeasurementPathByMonitoredElementId(mne.getMeId());
+					} catch(ApplicationException e) {
+						e.printStackTrace();
+						return;
+					}
+
+					if(path != null) {
+						EventMarker marker = new EventMarker(
+								mne.getMarkerId(),
+								LoginManager.getUserId(),
+								mapView,
+								path,
+								mne.getMeId(),
+								LangModelMap.getString("Event"));
+						mapView.addMarker(marker);
+
+						MarkerController mc = (MarkerController) 
+							mapViewController.getController(marker);
+						mc.moveToFromStartLo(marker, mne.getOpticalDistance());
+					}
+				}
+				else if(mne.getMarkerEventType() == MarkerEvent.ALARMMARKER_CREATED_EVENT) {
+					MeasurementPath path;
+					try {
+						path = mapViewController
+							.getMeasurementPathByMonitoredElementId(mne.getMeId());
+					} catch(ApplicationException e) {
+						e.printStackTrace();
+						return;
+					}
+
+					AlarmMarker marker = null;
+					if(path != null) {
+						for(Marker marker1 : mapView.getMarkers()) {
+							if(marker1 instanceof AlarmMarker
+									&&marker1.getMeasurementPath().equals(path)) {
+								marker = (AlarmMarker)marker1;
+								break;
+							}
+						}
+
+						if(marker == null) {
+							marker = new AlarmMarker(
+									mne.getMarkerId(),
+									LoginManager.getUserId(),
+									mapView,
+									path,
+									mne.getMeId(),
+									LangModelMap.getString("Alarm"));
+							mapView.addMarker(marker);
+						}
+						else {
+							marker.setId(mne.getMarkerId());
+						}
+
+						MarkerController mc = (MarkerController) 
+							mapViewController.getController(marker);
+						mc.moveToFromStartLo(marker, mne.getOpticalDistance());
+
+						PhysicalLink physicalLink = marker.getNodeLink().getPhysicalLink();
+						this.animateTimer.container.add(physicalLink);
+						// todo alarm marker can belink to site node, not link
+					}
+				}
+				else if(mne.getMarkerEventType() == MarkerEvent.MARKER_MOVED_EVENT) {
 					Marker marker = mapView.getMarker(mne.getMarkerId());
-					if(marker != null)
-					{
+					if(marker != null) {
 						final MeasurementPath measurementPath = marker.getMeasurementPath();
-						if (measurementPath.getSchemePath() == null)
+						if(measurementPath.getSchemePath() == null)
 							measurementPath.setSchemePath((SchemePath) mne.getSchemePath());
 
-						MarkerController mc = (MarkerController)mapViewController.getController(marker);
-
-						mc.moveToFromStartLo(marker, mne.getDistance());
+						MarkerController mc = (MarkerController) 
+								mapViewController.getController(marker);
+						mc.moveToFromStartLo(marker, mne.getOpticalDistance());
 					}
 				}
-				else
-				if(mne.isDataMarkerSelected())
-				{
+				else if(mne.getMarkerEventType() == MarkerEvent.MARKER_SELECTED_EVENT) {
 					Marker marker = mapView.getMarker(mne.getMarkerId());
 					if(marker != null)
 						mapView.getMap().setSelected(marker, true);
 				}
-				else
-				if(mne.isDataMarkerDeselected())
-				{
+				else if(mne.getMarkerEventType() == MarkerEvent.MARKER_DESELECTED_EVENT) {
 					Marker marker = mapView.getMarker(mne.getMarkerId());
 					if(marker != null)
 						mapView.getMap().setSelected(marker, false);
 				}
-				else
-				if(mne.isDataMarkerDeleted())
-				{
+				else if(mne.getMarkerEventType() == MarkerEvent.MARKER_DELETED_EVENT) {
 					Marker marker = mapView.getMarker(mne.getMarkerId());
 					if(marker != null)
 						mapView.removeMarker(marker);
-					if(marker instanceof AlarmMarker)
-					{
-/*
-						AlarmMarker amarker = (AlarmMarker)marker;
-						MapPhysicalLinkElement link = findMapLinkByCableLink(marker.link_id);
-						if(link != null)
-						{
-							link.setAlarmState(false);
-							link.deselect();
-						}
-						else
-						{
-							MapSiteNodeElement node = findMapElementByCableLink(marker.link_id);
-							if(node != null)
-							{
-								node.setAlarmState(false);
-								node.deselect();
-							}
-						}
-*/
+					if(marker instanceof AlarmMarker) {
+						PhysicalLink physicalLink = marker.getNodeLink().getPhysicalLink();
+						this.animateTimer.container.remove(physicalLink);
+						// todo alarm marker can belink to site node, not link
 					}
 				}
 
 				repaint(false);
-			}
 			}
 			else
 			if(pce.getPropertyName().equals(ObjectSelectedEvent.TYPE))

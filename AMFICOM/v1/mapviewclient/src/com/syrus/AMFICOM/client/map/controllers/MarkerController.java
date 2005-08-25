@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.32 2005/08/15 14:30:21 krupenn Exp $
+ * $Id: MarkerController.java,v 1.33 2005/08/25 16:01:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import java.util.SortedSet;
 
 import javax.swing.ImageIcon;
 
-import com.syrus.AMFICOM.client.event.MapNavigateEvent;
+import com.syrus.AMFICOM.client.event.MarkerEvent;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Контроллер маркера.
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/08/15 14:30:21 $
+ * @version $Revision: 1.33 $, $Date: 2005/08/25 16:01:41 $
  * @module mapviewclient
  */
 public class MarkerController extends AbstractNodeController {
@@ -615,8 +615,8 @@ public class MarkerController extends AbstractNodeController {
 	 * @param marker маркер
 	 */
 	public void notifyMarkerCreated(final Marker marker) {
-		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapNavigateEvent(this,
-				MapNavigateEvent.MAP_MARKER_CREATED_EVENT,
+		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MarkerEvent(this,
+				MarkerEvent.MARKER_CREATED_EVENT,
 				marker.getId(),
 				getFromStartLengthLf(marker),
 				marker.getMeasurementPath().getSchemePath().getId(),
@@ -628,8 +628,8 @@ public class MarkerController extends AbstractNodeController {
 	 * @param marker маркер
 	 */
 	public void notifyMarkerDeleted(final Marker marker) {
-		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapNavigateEvent(this,
-				MapNavigateEvent.MAP_MARKER_DELETED_EVENT,
+		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MarkerEvent(this,
+				MarkerEvent.MARKER_DELETED_EVENT,
 				marker.getId(),
 				0.0D,
 				marker.getMeasurementPath().getSchemePath().getId(),
@@ -641,8 +641,8 @@ public class MarkerController extends AbstractNodeController {
 	 * @param marker маркер
 	 */
 	public void notifyMarkerMoved(final Marker marker) {
-		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapNavigateEvent(this,
-				MapNavigateEvent.MAP_MARKER_MOVED_EVENT,
+		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MarkerEvent(this,
+				MarkerEvent.MARKER_MOVED_EVENT,
 				marker.getId(),
 				getFromStartLengthLo(marker),
 				marker.getMeasurementPath().getSchemePath().getId(),
