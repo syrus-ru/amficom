@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalScheme.java,v 1.13 2005/08/09 21:10:10 arseniy Exp $
+ * $Id: LogicalScheme.java,v 1.14 2005/08/25 10:33:02 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.logic.LogicalItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/09 21:10:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/08/25 10:33:02 $
+ * @author $Author: max $
  * @module filter
  */
 public class LogicalScheme {
@@ -122,6 +122,11 @@ public class LogicalScheme {
 	}
 
 	public void addCondition(final String keyName, final StorableObjectCondition condition) {
+		LogicalItem item = getItem(keyName);
+		if(item != null) {
+			item.setCondition(condition);
+			return;
+		}
 		final String name = CONDITION + (this.keyNames.size() + 1);
 		this.keyNames.add(keyName);
 		final LogicalItem newItem = new LogicalItem(name, condition);
@@ -239,5 +244,20 @@ public class LogicalScheme {
 		}
 		return conditionBuff;
 	}
+	
+	StorableObjectCondition getCondition(String keyName) {
+		LogicalItem conditionItem = getItem(keyName);
+		return conditionItem.getCondition();
+	}
+	
+	private LogicalItem getItem(String keyName) {
+		int index = this.keyNames.indexOf(keyName);
+		if(index == -1) {
+			return null;
+		}
+		String name = CONDITION + (index + 1);
+		return findConditionItem(name, this.rootItem);
+	}
+	
 
 }
