@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.180 2005/08/19 14:16:57 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.181 2005/08/25 16:01:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.180 $, $Date: 2005/08/19 14:16:57 $
+ * @version $Revision: 1.181 $, $Date: 2005/08/25 16:01:50 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -376,8 +376,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			String idColumnName,
 			String linkedIdColumnName)
 			throws RetrieveObjectException {
-		if (storableObjects == null || storableObjects.isEmpty())
+		if (storableObjects == null || storableObjects.isEmpty()) {
 			return Collections.emptyMap();
+		}
 
 		final StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ idColumnName + COMMA
@@ -396,11 +397,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			resultSet = statement.executeQuery(sql.toString());
 
 			final Map<Identifier, Set<Identifier>> linkedEntityIdsMap = new HashMap<Identifier, Set<Identifier>>();
-			Identifier storabeObjectId;
-			Set<Identifier> linkedEntityIds;
 			while (resultSet.next()) {
-				storabeObjectId = DatabaseIdentifier.getIdentifier(resultSet, idColumnName);
-				linkedEntityIds = linkedEntityIdsMap.get(storabeObjectId);
+				final Identifier storabeObjectId = DatabaseIdentifier.getIdentifier(resultSet, idColumnName);
+				Set<Identifier> linkedEntityIds = linkedEntityIdsMap.get(storabeObjectId);
 				if (linkedEntityIds == null) {
 					linkedEntityIds = new HashSet<Identifier>();
 					linkedEntityIdsMap.put(storabeObjectId, linkedEntityIds);
