@@ -1,5 +1,5 @@
 /*
- * $Id: FilterView.java,v 1.9 2005/08/08 11:37:22 arseniy Exp $
+ * $Id: FilterView.java,v 1.10 2005/08/25 10:50:46 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:37:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/08/25 10:50:46 $
+ * @author $Author: max $
  * @module filter
  */
 public interface FilterView {
@@ -31,10 +31,13 @@ public interface FilterView {
 	void drawDateCondition(DateCondition dateCondition);
 	
 	int getSelectedKeyIndex();
+	int getSelectedConditionIndex();
+	int[] getSelectedConditionIndecies();
 	
 	String[] getSelectedConditionNames();
 	
 	Object changeKeyRef();
+	Object changeConditionRef();
 	Object removeConditionRef();
 	Object addConditionRef();
 	Object createLogicalSchemeRef();
@@ -46,14 +49,16 @@ public interface FilterView {
 	void setStringCondition(StringCondition stringCondition);
 	void setListCondition(ListCondition listCondition);
 	void setDateCondition(DateCondition dateCondition);
+	void setKeyNames(String keyNames[]);
+	void setSelectedKey(int selectedConditionIndex);
+	void setSelectedCondition(int ceratedConditionIndex);
 	
-	//void refreshFilteredEntities(String[] filteredNames);
+	
+	void refresh();
 	void refreshCreatedConditions(Object[] conditionNames);
 	void refreshResultConditionString(String stringCondition);
 	void enableAdd(boolean b);
 	void enableRemoveButton(boolean b);
 	void createStartCalendar();
 	void createEndCalendar();
-	
-	
 }
