@@ -1,5 +1,5 @@
 /*
- * $Id: ConditionWrapper.java,v 1.1 2005/08/09 20:29:44 arseniy Exp $
+ * $Id: ConditionWrapper.java,v 1.2 2005/08/25 10:33:41 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,14 +8,14 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.Collection;
+import java.util.List;
 
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/09 20:29:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/08/25 10:33:41 $
+ * @author $Author: max $
  * @module general
  */
 public interface ConditionWrapper {
@@ -28,6 +28,6 @@ public interface ConditionWrapper {
 	byte CONSTRAINT = 5;
 	byte DATE	= 6;
 
-	Collection<ConditionKey> getKeys();
+	List<ConditionKey> getKeys();
 	short getEntityCode();
 }
