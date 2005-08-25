@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.21 2005/08/25 14:16:25 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.22 2005/08/25 14:22:36 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/08/25 14:16:25 $
+ * @version $Revision: 1.22 $, $Date: 2005/08/25 14:22:36 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module measurement
@@ -136,7 +136,7 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 		for (long time = this.startTime; time <= this.endTime; time += this.period) {
 			this.times.add(new Date(time));
 		}
-	}		
+	}
 	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
