@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.40 2005/08/19 15:52:05 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.41 2005/08/25 20:15:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -40,7 +40,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/08/19 15:52:05 $
+ * @version $Revision: 1.41 $, $Date: 2005/08/25 20:15:02 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -193,7 +193,7 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			return dbEventTypeUserAlertKindsMap;
 		}
 		catch (SQLException sqle) {
-			String mesg = "Cannot retrieve event type user alert kinds";
+			final String mesg = "Cannot retrieve event type user alert kinds";
 			throw new RetrieveObjectException(mesg, sqle);
 		}
 		finally {
@@ -432,8 +432,9 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 	}
 
 	private void deleteUserAlertKinds(final Map<Identifier, Map<Identifier, Set<AlertKind>>> deleteUserAlertKindsMap) {
-		if (deleteUserAlertKindsMap == null || deleteUserAlertKindsMap.isEmpty())
+		if (deleteUserAlertKindsMap == null || deleteUserAlertKindsMap.isEmpty()) {
 			return;
+		}
 
 		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + ObjectEntities.EVENTTYPEUSERALERT
 				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
