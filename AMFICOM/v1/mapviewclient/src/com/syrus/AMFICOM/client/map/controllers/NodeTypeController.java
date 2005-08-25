@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.42 2005/08/23 09:41:16 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.43 2005/08/25 16:41:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.42 $, $Date: 2005/08/23 09:41:16 $
+ * @version $Revision: 1.43 $, $Date: 2005/08/25 16:41:02 $
  * @module mapviewclient
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -180,7 +180,8 @@ public class NodeTypeController extends AbstractNodeController {
 	}
 
 	static SiteNodeType getSiteNodeType(final String codename, final boolean useLoader) throws ApplicationException {
-		final StorableObjectCondition pTypeCondition = new TypicalCondition(codename,
+		final StorableObjectCondition pTypeCondition = new TypicalCondition(
+				codename,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.SITENODE_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
@@ -213,7 +214,8 @@ public class NodeTypeController extends AbstractNodeController {
 			final boolean isTopological) throws ApplicationException {
 		SiteNodeType type = getSiteNodeType(codename, true);
 		if (type == null) {
-			type = SiteNodeType.createInstance(userId,
+			type = SiteNodeType.createInstance(
+					userId,
 					sort,
 					codename,
 					LangModelMap.getString(codename),
