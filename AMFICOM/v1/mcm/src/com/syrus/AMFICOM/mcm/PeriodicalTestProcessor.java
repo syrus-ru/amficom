@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.45 2005/08/18 09:15:28 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.46 2005/08/25 14:25:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/08/18 09:15:28 $
+ * @version $Revision: 1.46 $, $Date: 2005/08/25 14:25:23 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -73,12 +73,17 @@ final class PeriodicalTestProcessor extends TestProcessor {
 					for (Iterator it = times.iterator(); it.hasNext();)
 						Log.debugMessage("time: " + it.next(), Log.DEBUGLEVEL09);
 //--------
-					this.timeStampsList.addAll(times);
-					if (!this.timeStampsList.isEmpty())
+					if (!times.isEmpty()) {
+						this.timeStampsList.addAll(times);
 						timeStamp = this.timeStampsList.remove(0);
+					}
+					else {
+						super.lastMeasurementAcquisition = true;
+					}
 				}
-				else
+				else {
 					super.lastMeasurementAcquisition = true;
+				}
 			}
 		}
 		return timeStamp;
