@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlResultImpl.java,v 1.3 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: IdlResultImpl.java,v 1.4 2005/08/25 20:13:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/25 20:13:57 $
  * @module measurement
  */
 final class IdlResultImpl extends IdlResult {
@@ -38,7 +38,6 @@ final class IdlResultImpl extends IdlResult {
 			final long version,
 			final IdlIdentifier measurementId,
 			final IdlIdentifier analysisId,
-			final IdlIdentifier evaluationId,
 			final IdlIdentifier modelingId,
 			final ResultSort sort,
 			final IdlParameter parameters[]) {
@@ -50,7 +49,6 @@ final class IdlResultImpl extends IdlResult {
 		this.version = version;
 		this.measurementId = measurementId;
 		this.analysisId = analysisId;
-		this.evaluationId = evaluationId;
 		this.modelingId = modelingId;
 		this.sort = sort;
 		this.parameters = parameters;

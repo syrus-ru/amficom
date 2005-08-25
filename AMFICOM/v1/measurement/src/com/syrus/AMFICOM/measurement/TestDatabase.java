@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.113 2005/08/20 19:25:23 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.114 2005/08/25 20:13:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.113 $, $Date: 2005/08/20 19:25:23 $
+ * @version $Revision: 1.114 $, $Date: 2005/08/25 20:13:57 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -66,9 +66,8 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				+ TestWrapper.COLUMN_START_TIME + COMMA
 				+ TestWrapper.COLUMN_END_TIME + COMMA
 				+ TestWrapper.COLUMN_TEMPORAL_PATTERN_ID + COMMA
-				+ TestWrapper.COLUMN_MEASUREMENT_TYPE_ID + COMMA
-				+ TestWrapper.COLUMN_ANALYSIS_TYPE_ID + COMMA
-				+ TestWrapper.COLUMN_EVALUATION_TYPE_ID + COMMA
+				+ TestWrapper.COLUMN_MEASUREMENT_TYPE_CODE + COMMA
+				+ TestWrapper.COLUMN_ANALYSIS_TYPE_CODE + COMMA
 				+ TestWrapper.COLUMN_GROUP_TEST_ID + COMMA
 				+ TestWrapper.COLUMN_STATUS + COMMA
 				+ TestWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
@@ -82,7 +81,6 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues =  QUESTION + COMMA
-				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -106,9 +104,8 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			+ ((startTime != null) ? DatabaseDate.toUpdateSubString(startTime) : SQL_NULL ) + COMMA
 			+ ((endTime != null) ? DatabaseDate.toUpdateSubString(endTime) : SQL_NULL ) + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getTemporalPatternId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(test.getMeasurementTypeId()) + COMMA
-			+ DatabaseIdentifier.toSQLString(test.getAnalysisTypeId()) + COMMA			
-			+ DatabaseIdentifier.toSQLString(test.getEvaluationTypeId()) + COMMA
+			+ Integer.toString(test.getMeasurementType().getCode()) + COMMA
+			+ Integer.toString(test.getAnalysisType().getCode()) + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getGroupTestId()) + COMMA
 			+ test.getStatus().value() + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getMonitoredElement().getId()) + COMMA
@@ -135,9 +132,8 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		preparedStatement.setTimestamp(++startParameterNumber, (startTime != null) ? (new Timestamp(startTime.getTime())) : null);
 		preparedStatement.setTimestamp(++startParameterNumber, (endTime != null) ? (new Timestamp(endTime.getTime())) : null);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getTemporalPatternId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMeasurementTypeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAnalysisTypeId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getEvaluationTypeId());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getMeasurementType().getCode());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getAnalysisType().getCode());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getGroupTestId());
 		preparedStatement.setInt(++startParameterNumber, storableObject.getStatus().value());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElement().getId());
@@ -162,7 +158,6 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				null,
 				null,
 				null,
-				null,
 				null) : storableObject;
 
 		MonitoredElement monitoredElement;
@@ -182,9 +177,8 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_START_TIME),
 				DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_END_TIME),
 				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_TEMPORAL_PATTERN_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_MEASUREMENT_TYPE_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_ANALYSIS_TYPE_ID),
-				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_EVALUATION_TYPE_ID),
+				MeasurementType.fromInt(resultSet.getInt(TestWrapper.COLUMN_MEASUREMENT_TYPE_CODE)),
+				AnalysisType.fromInt(resultSet.getInt(TestWrapper.COLUMN_ANALYSIS_TYPE_CODE)),
 				DatabaseIdentifier.getIdentifier(resultSet, TestWrapper.COLUMN_GROUP_TEST_ID),
 				resultSet.getInt(TestWrapper.COLUMN_STATUS),
 				monitoredElement,
@@ -202,8 +196,9 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 	}
 
 	private void retrieveMeasurementSetupTestLinksByOneQuery(final Set<Test> tests) throws RetrieveObjectException {
-		if ((tests == null) || (tests.isEmpty()))
+		if ((tests == null) || (tests.isEmpty())) {
 			return;
+		}
 
 		final Map<Identifier, Set<Identifier>> msIdsMap = this.retrieveLinkedEntityIds(tests,
 				ObjectEntities.MSTESTLINK,
@@ -224,11 +219,11 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 
 		final String testIdStr = DatabaseIdentifier.toSQLString(test.getId());
 		final String sql = SQL_SELECT
-			+ StorableObjectWrapper.COLUMN_ID
-			+ SQL_FROM + ObjectEntities.MEASUREMENT
-			+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
-				+ SQL_AND + MeasurementWrapper.COLUMN_STATUS + EQUALS + Integer.toString(measurementStatus.value())
-			+ SQL_ORDER_BY + MeasurementWrapper.COLUMN_START_TIME + " ASC";
+				+ StorableObjectWrapper.COLUMN_ID
+				+ SQL_FROM + ObjectEntities.MEASUREMENT
+				+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
+					+ SQL_AND + MeasurementWrapper.COLUMN_STATUS + EQUALS + Integer.toString(measurementStatus.value())
+				+ SQL_ORDER_BY + MeasurementWrapper.COLUMN_START_TIME + " ASC";
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -251,18 +246,26 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			throw new RetrieveObjectException(ae);
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-				if (resultSet != null)
-					resultSet.close();
-				statement = null;
-				resultSet = null;
+				try {
+					if (resultSet != null) {
+						resultSet.close();
+						resultSet = null;
+					}
+				} finally {
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
 			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			} finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-				}
 			}
 		}
 		return measurements;

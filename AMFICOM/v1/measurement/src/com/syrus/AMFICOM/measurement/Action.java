@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.36 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: Action.java,v 1.37 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,18 +14,16 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.37 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @module measurement
  */
 
-public abstract class Action extends StorableObject implements TypedObject {
+public abstract class Action extends StorableObject {
 	private static final long serialVersionUID = 8504255613322384909L;
 
 	ActionType type;
@@ -100,13 +98,8 @@ public abstract class Action extends StorableObject implements TypedObject {
 				&& (entityCode == ObjectEntities.MEASUREMENT_CODE || entityCode == ObjectEntities.MODELING_CODE || this.parentAction != null);
 	}
 
-	public StorableObjectType getType() {
+	public ActionType getType() {
 		return this.type;
-	}
-	
-	public void setType(final ActionType type) {
-		this.type = type;
-		super.markAsChanged();
 	}
 
 	public Identifier getMonitoredElementId() {

@@ -1,5 +1,5 @@
 /*
- * $Id: Result.java,v 1.76 2005/08/19 14:19:04 arseniy Exp $
+ * $Id: Result.java,v 1.77 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/08/19 14:19:04 $
+ * @version $Revision: 1.77 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -115,9 +115,6 @@ public final class Result extends StorableObject {
 			case ResultSort._RESULT_SORT_ANALYSIS:
 				actionId = new Identifier(rt.analysisId);
 				break;
-			case ResultSort._RESULT_SORT_EVALUATION:
-				actionId = new Identifier(rt.evaluationId);
-				break;
 			case ResultSort._RESULT_SORT_MODELING:
 				actionId = new Identifier(rt.modelingId);
 				break;
@@ -158,9 +155,6 @@ public final class Result extends StorableObject {
 						? nonVoidIdlIdentifier
 						: voidIdlIdentifier,
 				(this.sort == ResultSort._RESULT_SORT_ANALYSIS)
-						? nonVoidIdlIdentifier
-						: voidIdlIdentifier,
-				(this.sort == ResultSort._RESULT_SORT_EVALUATION)
 						? nonVoidIdlIdentifier
 						: voidIdlIdentifier,
 				(this.sort == ResultSort._RESULT_SORT_MODELING)

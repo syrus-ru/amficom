@@ -1,5 +1,5 @@
 /*
- * $Id: Modeling.java,v 1.59 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: Modeling.java,v 1.60 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,10 +31,11 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlModeling;
 import com.syrus.AMFICOM.measurement.corba.IdlModelingHelper;
+import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.60 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @author arseniy
  * @module measurement
@@ -104,9 +105,7 @@ public final class Modeling extends Action {
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlModeling mt = (IdlModeling) transferable;
-		super.fromTransferable(mt, null, new Identifier(mt.monitoredElementId), null);
-
-		super.type = (ModelingType) StorableObjectPool.getStorableObject(new Identifier(mt._typeId), true);
+		super.fromTransferable(mt, ModelingType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), null);
 
 		this.argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(mt.argumentSetId), true);
 
@@ -129,7 +128,7 @@ public final class Modeling extends Action {
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
 				this.version.longValue(),
-				super.type.getId().getTransferable(),
+				(IdlModelingType) super.type.getTransferable(orb),
 				super.monitoredElementId.getTransferable(),
 				this.name,
 				this.argumentSet.getId().getTransferable());
@@ -220,7 +219,6 @@ public final class Modeling extends Action {
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 		final Set<Identifiable> dependencies =  new HashSet<Identifiable>();
-		dependencies.add(this.type);
 		dependencies.add(this.argumentSet);
 		return dependencies;
 	}
@@ -235,8 +233,7 @@ public final class Modeling extends Action {
 	protected boolean isValid() {
 		return super.isValid() && this.name != null && this.argumentSet != null;
 	}
-	
-	
+
 	/**
 	 * @param argumentSet The argumentSet to set.
 	 */
@@ -244,6 +241,7 @@ public final class Modeling extends Action {
 		this.argumentSet = argumentSet;
 		super.markAsChanged();
 	}
+
 	/**
 	 * @param name The name to set.
 	 */

@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisDatabase.java,v 1.70 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: AnalysisDatabase.java,v 1.71 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.71 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -45,7 +45,7 @@ public final class AnalysisDatabase extends StorableObjectDatabase<Analysis> {
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+			columns = StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
 					+ AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
 					+ AnalysisWrapper.COLUMN_MEASUREMENT_ID + COMMA
 					+ StorableObjectWrapper.COLUMN_NAME + COMMA
@@ -69,7 +69,7 @@ public final class AnalysisDatabase extends StorableObjectDatabase<Analysis> {
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final Analysis storableObject) throws IllegalDataException {
 		final Measurement measurement = storableObject.getMeasurement();
-		final String values = DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+		final String values = Integer.toString(storableObject.getType().getCode()) + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getMonitoredElementId()) + COMMA
 			+ DatabaseIdentifier.toSQLString((measurement != null) ? measurement.getId() : VOID_IDENTIFIER) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
@@ -81,7 +81,7 @@ public final class AnalysisDatabase extends StorableObjectDatabase<Analysis> {
 	protected int setEntityForPreparedStatementTmpl(final Analysis storableObject, final PreparedStatement preparedStatement, int startParameterNumber)
 			throws IllegalDataException, SQLException {
 		final Measurement measurement = storableObject.getMeasurement();
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getType().getCode());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElementId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, (measurement != null) ? measurement.getId() : VOID_IDENTIFIER);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
@@ -102,12 +102,9 @@ public final class AnalysisDatabase extends StorableObjectDatabase<Analysis> {
 						null,
 						null)
 					: storableObject;
-		AnalysisType analysisType;
 		Measurement measurement = null;
 		ParameterSet criteriaSet;
 		try {
-			final Identifier analysisTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
-			analysisType = (AnalysisType) StorableObjectPool.getStorableObject(analysisTypeId, true);
 			final Identifier measurementId = DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_MEASUREMENT_ID);
 			if (measurementId != VOID_IDENTIFIER) {
 				measurement = StorableObjectPool.getStorableObject(measurementId, true);
@@ -122,7 +119,7 @@ public final class AnalysisDatabase extends StorableObjectDatabase<Analysis> {
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				analysisType,
+				AnalysisType.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE)),
 				DatabaseIdentifier.getIdentifier(resultSet, AnalysisWrapper.COLUMN_MONITORED_ELEMENT_ID),
 				measurement,
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),

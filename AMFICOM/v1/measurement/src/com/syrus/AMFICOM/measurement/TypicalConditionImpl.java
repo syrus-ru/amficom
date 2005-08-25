@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.18 2005/08/20 19:25:23 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.19 2005/08/25 20:13:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/20 19:25:23 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/25 20:13:57 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -117,8 +117,6 @@ final class TypicalConditionImpl extends TypicalCondition {
 		Wrapper wrapper;
 		if (storableObject instanceof Test) {
 			wrapper = TestWrapper.getInstance();
-		} else if (storableObject instanceof MeasurementType) {
-			wrapper = MeasurementTypeWrapper.getInstance();
 		} else if (storableObject instanceof PeriodicalTemporalPattern) {
 			wrapper = PeriodicalTemporalPatternWrapper.getInstance();
 		} else if (storableObject instanceof MonitoredElement) {

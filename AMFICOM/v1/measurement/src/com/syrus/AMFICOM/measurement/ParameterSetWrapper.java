@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetWrapper.java,v 1.11 2005/08/19 15:51:01 arseniy Exp $
+ * $Id: ParameterSetWrapper.java,v 1.12 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/19 15:51:01 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -83,7 +83,7 @@ public class ParameterSetWrapper extends StorableObjectWrapper<ParameterSet> {
 				final Map<String, Object> values = new HashMap<String, Object>(parameters.length * 3);
 				for (int i = 0; i < parameters.length; i++) {
 					values.put(COLUMN_ID + i, parameters[i].getId());
-					values.put(COLUMN_TYPE_ID + i, parameters[i].getType());
+					values.put(COLUMN_TYPE_CODE + i, parameters[i].getType());
 					values.put(LINK_COLUMN_PARAMETER_VALUE + i, parameters[i].getValue());
 				}
 				return values;
@@ -111,7 +111,7 @@ public class ParameterSetWrapper extends StorableObjectWrapper<ParameterSet> {
 				final Parameter[] setParameters = new Parameter[setParameterMap.size() / 3];
 				for (int i = 0; i < setParameters.length; i++) {
 					final Identifier parameterId = (Identifier) setParameterMap.get(COLUMN_ID + i);
-					final ParameterType parameterType = (ParameterType) setParameterMap.get(COLUMN_TYPE_ID + i);
+					final ParameterType parameterType = (ParameterType) setParameterMap.get(COLUMN_TYPE_CODE + i);
 					final byte[] setParameterValue = (byte[]) setParameterMap.get(LINK_COLUMN_PARAMETER_VALUE + i);
 
 					setParameters[i] = new Parameter(parameterId, parameterType, setParameterValue);

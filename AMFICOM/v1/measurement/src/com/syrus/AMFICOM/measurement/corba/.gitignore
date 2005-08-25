@@ -4,16 +4,11 @@
 *Factory.java
 _*Stub.java
 IdlAnalysis.java
-IdlAnalysisType.java
 IdlCronTemporalPattern.java
-IdlEvaluation.java
-IdlEvaluationType.java
 IdlIntervalsTemporalPattern.java
 IdlMeasurement.java
 IdlMeasurementSetup.java
-IdlMeasurementType.java
 IdlModeling.java
-IdlModelingType.java
 IdlParameter.java
 IdlParameterSet.java
 IdlPeriodicalTemporalPattern.java
@@ -23,6 +18,6 @@ IdlMeasurementPortType.java
 IdlMeasurementPort.java
 IdlKIS.java
 IdlMonitoredElement.java
-IdlMeasurementTypeEnum.java
-IdlAnalysisTypeEnum.java
-IdlModelingTypeEnum.java
+IdlMeasurementType.java
+IdlAnalysisType.java
+IdlModelingType.java

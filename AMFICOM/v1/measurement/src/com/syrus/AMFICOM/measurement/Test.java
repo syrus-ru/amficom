@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.148 2005/08/23 09:15:25 bob Exp $
+ * $Id: Test.java,v 1.149 2005/08/25 20:13:57 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -47,8 +47,8 @@ import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.148 $, $Date: 2005/08/23 09:15:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.149 $, $Date: 2005/08/25 20:13:57 $
+ * @author $Author: arseniy $
  * @module measurement
  */
 
@@ -57,9 +57,8 @@ public final class Test extends StorableObject {
 
 	private int temporalType;
 	private TestTimeStamps timeStamps;
-	private Identifier measurementTypeId;
-	private Identifier analysisTypeId;
-	private Identifier evaluationTypeId;
+	private MeasurementType measurementType;
+	private AnalysisType analysisType;
 	private int status;
 	private MonitoredElement monitoredElement;
 	private String description;
@@ -91,18 +90,19 @@ public final class Test extends StorableObject {
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	public Measurement createMeasurement(final Identifier measurementCreatorId, final Date startTime) throws CreateObjectException {
-		if (this.status != TestStatus._TEST_STATUS_PROCESSING)
+		if (this.status != TestStatus._TEST_STATUS_PROCESSING) {
 			throw new CreateObjectException("Status of test '" + this.id + "' is " + this.status
 					+ ", not " + TestStatus._TEST_STATUS_PROCESSING + " (PROCESSING)");
+		}
 
 		Measurement measurement;
 		try {
 			measurement = Measurement.createInstance(measurementCreatorId,
-					(MeasurementType) StorableObjectPool.getStorableObject(this.measurementTypeId, true),
+					this.measurementType,
 					this.monitoredElement.getId(),
-                    LangModelMeasurement.getString("RR") + "-"
-                    		+ this.monitoredElement.getName() + "-"
-                    		+ EasyDateFormatter.formatDate(this.getStartTime()),
+					LangModelMeasurement.getString("RR") + "-"
+							+ this.monitoredElement.getName() + "-"
+							+ EasyDateFormatter.formatDate(this.getStartTime()),
 					this.mainMeasurementSetup,
 					startTime,
 					this.monitoredElement.getLocalAddress(),
@@ -118,7 +118,7 @@ public final class Test extends StorableObject {
 
 		return measurement;
 	}	
-	
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -129,9 +129,8 @@ public final class Test extends StorableObject {
 			final Date endTime,
 			final Identifier temporalPatternId,
 			final int temporalType,
-			final Identifier measurementTypeId,
-			final Identifier analysisTypeId,
-			final Identifier evaluationTypeId,
+			final MeasurementType measurementType,
+			final AnalysisType analysisType,
 			final Identifier groupTestId,
 			final MonitoredElement monitoredElement,
 			final String description,
@@ -146,9 +145,8 @@ public final class Test extends StorableObject {
 		this.temporalType = temporalType;
 		if (startTime != null)
 			this.timeStamps = new TestTimeStamps(this.temporalType, startTime, endTime, temporalPatternId);
-		this.measurementTypeId = measurementTypeId;
-		this.analysisTypeId = analysisTypeId;
-		this.evaluationTypeId = evaluationTypeId;
+		this.measurementType = measurementType;
+		this.analysisType = analysisType;
 		this.groupTestId = groupTestId;
 		this.monitoredElement = monitoredElement;
 		this.description = description;
@@ -165,8 +163,8 @@ public final class Test extends StorableObject {
 	 * @param endTime
 	 * @param temporalPatternId
 	 * @param temporalType
-	 * @param measurementTypeId
-	 * @param analysisTypeId
+	 * @param measurementType
+	 * @param analysisType
 	 * @param evaluationTypeId
 	 * @param monitoredElement
 	 * @param description
@@ -178,9 +176,8 @@ public final class Test extends StorableObject {
 			final Date endTime,
 			final Identifier temporalPatternId,
 			final TestTemporalType temporalType,
-			final Identifier measurementTypeId,
-			final Identifier analysisTypeId,
-			final Identifier evaluationTypeId,
+			final MeasurementType measurementType,
+			final AnalysisType analysisType,
 			final Identifier groupTestId,
 			final MonitoredElement monitoredElement,
 			final String description,
@@ -193,9 +190,8 @@ public final class Test extends StorableObject {
 					endTime,
 					temporalPatternId,
 					temporalType.value(),
-					measurementTypeId,
-					analysisTypeId,
-					evaluationTypeId,
+					measurementType,
+					analysisType,
 					groupTestId,
 					monitoredElement,
 					description,
@@ -232,9 +228,8 @@ public final class Test extends StorableObject {
 		super.fromTransferable(tt);
 		this.temporalType = tt.timeStamps.discriminator().value();
 		this.timeStamps = new TestTimeStamps(tt.timeStamps);
-		this.measurementTypeId = new Identifier(tt.measurementTypeId);
-		this.analysisTypeId = new Identifier(tt.analysisTypeId);
-		this.evaluationTypeId = new Identifier(tt.evaluationTypeId);
+		this.measurementType = MeasurementType.fromTransferable(tt.measurementType);
+		this.analysisType = AnalysisType.fromTransferable(tt.analysisType);
 
 		this.status = tt.status.value();
 		this.groupTestId = new Identifier(tt.groupTestId);
@@ -264,9 +259,8 @@ public final class Test extends StorableObject {
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.timeStamps != null && this.timeStamps.isValid()
-				&& this.measurementTypeId != null
-				&& this.analysisTypeId != null
-				&& this.evaluationTypeId != null
+				&& this.measurementType != null
+				&& this.analysisType != null
 				&& this.monitoredElement != null
 				&& this.description != null
 				&& this.measurementSetupIds != null
@@ -279,8 +273,12 @@ public final class Test extends StorableObject {
 		return ObjectEntities.TEST_CODE;
 	}
 
-	public Identifier getAnalysisTypeId() {
-		return this.analysisTypeId;
+	public MeasurementType getMeasurementType() {
+		return this.measurementType;
+	}
+
+	public AnalysisType getAnalysisType() {
+		return this.analysisType;
 	}
 
 	public String getDescription() {
@@ -296,20 +294,12 @@ public final class Test extends StorableObject {
 		super.markAsChanged();
 	}
 
-	public Identifier getEvaluationTypeId() {
-		return this.evaluationTypeId;
-	}
-
 	public Set<Identifier> getMeasurementSetupIds() {
 		return Collections.unmodifiableSet(this.measurementSetupIds);
 	}
 
 	public Identifier getMainMeasurementSetupId() {
 		return this.mainMeasurementSetup.getId();
-	}
-
-	public Identifier getMeasurementTypeId() {
-		return this.measurementTypeId;
 	}
 
 	public MonitoredElement getMonitoredElement() {
@@ -355,9 +345,8 @@ public final class Test extends StorableObject {
 				this.modifierId.getTransferable(),
 				this.version.longValue(),
 				this.timeStamps.getTransferable(orb),
-				this.measurementTypeId.getTransferable(),
-				this.analysisTypeId.getTransferable(),
-				this.evaluationTypeId.getTransferable(),
+				this.measurementType.getTransferable(orb),
+				this.analysisType.getTransferable(orb),
 				this.groupTestId.getTransferable(),
 				TestStatus.from_int(this.status),
 				this.monitoredElement.getId().getTransferable(),
@@ -367,13 +356,24 @@ public final class Test extends StorableObject {
 	}
 
 	/**
-	 * @param analysisTypeId The analysisTypeId to set.
+	 * @param measurementType The measurementType to set.
 	 */
-	public void setAnalysisTypeId(final Identifier analysisTypeId) {
+	public void setMeasurementType(final MeasurementType measurementType) {
 		
-		assert analysisTypeId != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert measurementType != null : ErrorMessages.NON_NULL_EXPECTED;
 		
-		this.analysisTypeId = analysisTypeId;
+		this.measurementType = measurementType;
+		super.markAsChanged();
+	}
+
+	/**
+	 * @param analysisType The analysisType to set.
+	 */
+	public void setAnalysisType(final AnalysisType analysisType) {
+		
+		assert analysisType != null : ErrorMessages.NON_NULL_EXPECTED;
+		
+		this.analysisType = analysisType;
 		super.markAsChanged();
 	}
 	/**
@@ -384,27 +384,6 @@ public final class Test extends StorableObject {
 		super.markAsChanged();
 	}
 
-	/**
-	 * @param evaluationTypeId The evaluationTypeId to set.
-	 */
-	public void setEvaluationTypeId(final Identifier evaluationTypeId) {
-		
-		assert evaluationTypeId != null : ErrorMessages.NON_NULL_EXPECTED;
-		
-		this.evaluationTypeId = evaluationTypeId;
-		super.markAsChanged();
-	}
-
-	/**
-	 * @param measurementTypeId The measurementTypeId to set.
-	 */
-	public void setMeasurementTypeId(final Identifier measurementTypeId) {
-		
-		assert measurementTypeId != null : ErrorMessages.NON_NULL_EXPECTED;
-		
-		this.measurementTypeId = measurementTypeId;
-		super.markAsChanged();
-	}
 	/**
 	 * @param monitoredElement The monitoredElement to set.
 	 */
@@ -461,9 +440,8 @@ public final class Test extends StorableObject {
 			final Date startTime,
 			final Date endTime,
 			final Identifier temporalPatternId,
-			final Identifier measurementTypeId,
-			final Identifier analysisTypeId,
-			final Identifier evaluationTypeId,
+			final MeasurementType measurementType,
+			final AnalysisType analysisType,
 			final Identifier groupTestId,
 			final int status,
 			final MonitoredElement monitoredElement,
@@ -480,9 +458,8 @@ public final class Test extends StorableObject {
 			endTime,
 			temporalPatternId);
 
-		this.measurementTypeId = measurementTypeId;
-		this.analysisTypeId = analysisTypeId;
-		this.evaluationTypeId = evaluationTypeId;
+		this.measurementType = measurementType;
+		this.analysisType = analysisType;
 		this.groupTestId = groupTestId;
 		this.status = status;
 		this.monitoredElement = monitoredElement;
@@ -495,16 +472,18 @@ public final class Test extends StorableObject {
 	 */
 	protected synchronized void setMeasurementSetupIds0(final Set<Identifier> measurementSetupIds) {
 		this.measurementSetupIds.clear();
-		if (measurementSetupIds != null)
+		if (measurementSetupIds != null) {
 			this.measurementSetupIds.addAll(measurementSetupIds);
+		}
 
-		if (!this.measurementSetupIds.isEmpty())
+		if (!this.measurementSetupIds.isEmpty()) {
 			try {
 				this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupIds.iterator().next(),
 						true);
 			} catch (ApplicationException ae) {
 				Log.errorException(ae);
 			}
+		}
 	}
 
 	public void setMeasurementSetupIds(final Set<Identifier> measurementSetupIds) {
@@ -550,15 +529,6 @@ public final class Test extends StorableObject {
 		}
 
 		dependencies.addAll(this.measurementSetupIds);
-		dependencies.add(this.measurementTypeId);
-
-		if (!this.analysisTypeId.isVoid()) {
-			dependencies.add(this.analysisTypeId);
-		}
-
-		if (!this.evaluationTypeId.isVoid()) {
-			dependencies.add(this.evaluationTypeId);
-		}
 
 		dependencies.add(this.monitoredElement);
 		return dependencies;

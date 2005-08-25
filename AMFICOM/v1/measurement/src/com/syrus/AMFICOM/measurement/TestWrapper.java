@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.22 2005/08/20 19:25:23 arseniy Exp $
+ * $Id: TestWrapper.java,v 1.23 2005/08/25 20:13:57 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,16 +20,15 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/08/20 19:25:23 $
+ * @version $Revision: 1.23 $, $Date: 2005/08/25 20:13:57 $
  * @author $Author: arseniy $
  * @module measurement
  */
 public class TestWrapper extends StorableObjectWrapper<Test> {
 
-	public static final String COLUMN_ANALYSIS_TYPE_ID = "analysis_type_id";
+	public static final String COLUMN_MEASUREMENT_TYPE_CODE = "measurement_type_code";
+	public static final String COLUMN_ANALYSIS_TYPE_CODE = "analysis_type_code";
 	public static final String COLUMN_END_TIME = "end_time";
-	public static final String COLUMN_EVALUATION_TYPE_ID = "evaluation_type_id";
-	public static final String COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
 	public static final String COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
 	public static final String COLUMN_START_TIME = "start_time";
 	public static final String COLUMN_STATUS = "status";
@@ -50,9 +49,8 @@ public class TestWrapper extends StorableObjectWrapper<Test> {
 				COLUMN_START_TIME,
 				COLUMN_END_TIME,
 				COLUMN_TEMPORAL_PATTERN_ID,
-				COLUMN_MEASUREMENT_TYPE_ID,
-				COLUMN_ANALYSIS_TYPE_ID,
-				COLUMN_EVALUATION_TYPE_ID,
+				COLUMN_MEASUREMENT_TYPE_CODE,
+				COLUMN_ANALYSIS_TYPE_CODE,
 				COLUMN_GROUP_TEST_ID,
 				COLUMN_STATUS,
 				COLUMN_MONITORED_ELEMENT_ID,
@@ -83,34 +81,43 @@ public class TestWrapper extends StorableObjectWrapper<Test> {
 	public Object getValue(final Test test, final String key) {
 		final Object value = super.getValue(test, key);
 		if (value == null && test != null) {
-			if (key.equals(COLUMN_TEMPORAL_TYPE))
+			if (key.equals(COLUMN_TEMPORAL_TYPE)) {
 				return new Integer(test.getTemporalType().value());
-			if (key.equals(COLUMN_START_TIME))
+			}
+			if (key.equals(COLUMN_START_TIME)) {
 				return test.getStartTime();
+			}
 			if (key.equals(COLUMN_END_TIME)) {
 				Date endTime = test.getEndTime();
 				return endTime == null ? test.getStartTime() : endTime;
 			}
-			if (key.equals(COLUMN_TEMPORAL_PATTERN_ID))
+			if (key.equals(COLUMN_TEMPORAL_PATTERN_ID)) {
 				return test.getTemporalPatternId();
-			if (key.equals(COLUMN_MEASUREMENT_TYPE_ID))
-				return test.getMeasurementTypeId();
-			if (key.equals(COLUMN_ANALYSIS_TYPE_ID))
-				return test.getAnalysisTypeId();
-			if (key.equals(COLUMN_EVALUATION_TYPE_ID))
-				return test.getEvaluationTypeId();
-			if (key.equals(COLUMN_GROUP_TEST_ID))
+			}
+			if (key.equals(COLUMN_MEASUREMENT_TYPE_CODE)) {
+				return test.getMeasurementType();
+			}
+			if (key.equals(COLUMN_ANALYSIS_TYPE_CODE)) {
+				return test.getAnalysisType();
+			}
+			if (key.equals(COLUMN_GROUP_TEST_ID)) {
 				return test.getGroupTestId();
-			if (key.equals(COLUMN_STATUS))
+			}
+			if (key.equals(COLUMN_STATUS)) {
 				return new Integer(test.getStatus().value());
-			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
+			}
+			if (key.equals(COLUMN_MONITORED_ELEMENT_ID)) {
 				return test.getMonitoredElement();
-			if (key.equals(COLUMN_DESCRIPTION))
+			}
+			if (key.equals(COLUMN_DESCRIPTION)) {
 				return test.getDescription();
-			if (key.equals(COLUMN_NUMBER_OF_MEASUREMENTS))
+			}
+			if (key.equals(COLUMN_NUMBER_OF_MEASUREMENTS)) {
 				return new Integer(test.getNumberOfMeasurements());
-			if (key.equals(LINK_COLUMN_MEASUREMENT_SETUP_ID))
+			}
+			if (key.equals(LINK_COLUMN_MEASUREMENT_SETUP_ID)) {
 				return test.getMeasurementSetupIds();
+			}
 		}
 		return value;
 	}
@@ -134,14 +141,11 @@ public class TestWrapper extends StorableObjectWrapper<Test> {
 			else if (key.equals(COLUMN_TEMPORAL_PATTERN_ID)) {
 				test.setTemporalPatternId((Identifier) value);
 			}
-			else if (key.equals(COLUMN_MEASUREMENT_TYPE_ID)) {
-				test.setMeasurementTypeId((Identifier) value);
+			else if (key.equals(COLUMN_MEASUREMENT_TYPE_CODE)) {
+				test.setMeasurementType((MeasurementType) value);
 			}
-			else if (key.equals(COLUMN_ANALYSIS_TYPE_ID)) {
-				test.setAnalysisTypeId((Identifier) value);
-			}
-			else if (key.equals(COLUMN_EVALUATION_TYPE_ID)) {
-				test.setEvaluationTypeId((Identifier) value);
+			else if (key.equals(COLUMN_ANALYSIS_TYPE_CODE)) {
+				test.setAnalysisType((AnalysisType) value);
 			}
 			else if (key.equals(COLUMN_GROUP_TEST_ID)) {
 				test.setGroupTestId((Identifier) value);
@@ -190,11 +194,13 @@ public class TestWrapper extends StorableObjectWrapper<Test> {
 				|| key.equals(COLUMN_END_TIME)) {
 			return Date.class;
 		}
-		if (key.equals(COLUMN_TEMPORAL_PATTERN_ID)
-				|| key.equals(COLUMN_MEASUREMENT_TYPE_ID)
-				|| key.equals(COLUMN_ANALYSIS_TYPE_ID)
-				|| key.equals(COLUMN_EVALUATION_TYPE_ID)
-				|| key.equals(COLUMN_GROUP_TEST_ID)) {
+		if (key.equals(COLUMN_MEASUREMENT_TYPE_CODE)) {
+			return MeasurementType.class;
+		}
+		if (key.equals(COLUMN_ANALYSIS_TYPE_CODE)) {
+			return AnalysisType.class;
+		}
+		if (key.equals(COLUMN_TEMPORAL_PATTERN_ID) || key.equals(COLUMN_GROUP_TEST_ID)) {
 			return Identifier.class;
 		}
 		if (key.equals(COLUMN_MONITORED_ELEMENT_ID)) {

@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingWrapper.java,v 1.11 2005/08/08 13:33:50 arseniy Exp $
+ * $Id: ModelingWrapper.java,v 1.12 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/08 13:33:50 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -31,15 +31,15 @@ public class ModelingWrapper extends StorableObjectWrapper<Modeling> {
 
 	private ModelingWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_TYPE_ID, COLUMN_MONITORED_ELEMENT_ID, COLUMN_ARGUMENT_SET_ID,
-				COLUMN_NAME};
+		final String[] keysArray = new String[] { COLUMN_TYPE_CODE, COLUMN_MONITORED_ELEMENT_ID, COLUMN_ARGUMENT_SET_ID, COLUMN_NAME };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static ModelingWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new ModelingWrapper();
+		}
 		return instance;
 	}
 
@@ -56,14 +56,18 @@ public class ModelingWrapper extends StorableObjectWrapper<Modeling> {
 	public Object getValue(final Modeling modeling, final String key) {
 		final Object value = super.getValue(modeling, key);
 		if (value == null && modeling != null) {
-			if (key.equals(COLUMN_TYPE_ID))
+			if (key.equals(COLUMN_TYPE_CODE)) {
 				return modeling.getType();
-			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
+			}
+			if (key.equals(COLUMN_MONITORED_ELEMENT_ID)) {
 				return modeling.getMonitoredElementId();
-			if (key.equals(COLUMN_ARGUMENT_SET_ID))
+			}
+			if (key.equals(COLUMN_ARGUMENT_SET_ID)) {
 				return modeling.getArgumentSet();
-			if (key.equals(COLUMN_NAME))
+			}
+			if (key.equals(COLUMN_NAME)) {
 				return modeling.getName();
+			}
 		}
 		return value;
 	}
@@ -75,14 +79,15 @@ public class ModelingWrapper extends StorableObjectWrapper<Modeling> {
 	@Override
 	public void setValue(final Modeling modeling, final String key, final Object value) {
 		if (modeling != null) {
-			if (key.equals(COLUMN_TYPE_ID))
-				modeling.setType((ActionType) value);
-			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
+			if (key.equals(COLUMN_MONITORED_ELEMENT_ID)) {
 				modeling.setMonitoredElementId((Identifier) value);
-			else if (key.equals(COLUMN_ARGUMENT_SET_ID))
+			}
+			else if (key.equals(COLUMN_ARGUMENT_SET_ID)) {
 				modeling.setArgumentSet((ParameterSet) value);
-			else if (key.equals(COLUMN_NAME))
+			}
+			else if (key.equals(COLUMN_NAME)) {
 				modeling.setName((String) value);
+			}
 		}
 	}
 
@@ -105,7 +110,7 @@ public class ModelingWrapper extends StorableObjectWrapper<Modeling> {
 		if (clazz != null) {
 			return clazz;
 		}
-		if (key.equals(COLUMN_TYPE_ID)) {
+		if (key.equals(COLUMN_TYPE_CODE)) {
 			return ModelingType.class;
 		}
 		if (key.equals(COLUMN_MONITORED_ELEMENT_ID)) {

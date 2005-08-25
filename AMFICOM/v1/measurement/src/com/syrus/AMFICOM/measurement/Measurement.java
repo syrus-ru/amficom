@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.90 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: Measurement.java,v 1.91 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,12 +32,13 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurement;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementHelper;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.91 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -111,8 +112,9 @@ public final class Measurement extends Action {
 		this.name = name;
 		this.setup = setup;
 		this.startTime = startTime;
-		if (this.setup != null)
+		if (this.setup != null) {
 			this.duration = this.setup.getMeasurementDuration();
+		}
 		this.status = MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED;
 		this.localAddress = localAddress;
 		this.testId = testId;
@@ -124,13 +126,9 @@ public final class Measurement extends Action {
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlMeasurement mt = (IdlMeasurement) transferable;
-		super.fromTransferable(mt, null, new Identifier(mt.monitoredElementId), null);
+		super.fromTransferable(mt, MeasurementType.fromTransferable(mt.type), new Identifier(mt.monitoredElementId), null);
 
-		super.type = (MeasurementType) StorableObjectPool.getStorableObject(new Identifier(mt._typeId),
-			true);
-
-		this.setup = (MeasurementSetup) StorableObjectPool.getStorableObject(
-			new Identifier(mt.setupId), true);
+		this.setup = (MeasurementSetup) StorableObjectPool.getStorableObject(new Identifier(mt.setupId), true);
 
 		this.name = mt.name;
 		this.startTime = new Date(mt.startTime);
@@ -138,7 +136,7 @@ public final class Measurement extends Action {
 		this.status = mt.status.value();
 		this.localAddress = mt.localAddress;
 		this.testId = new Identifier(mt.testId);
-		
+
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
@@ -147,9 +145,9 @@ public final class Measurement extends Action {
 	 */
 	@Override
 	public IdlMeasurement getTransferable(final ORB orb) {
-		
+
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
+
 		return IdlMeasurementHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -157,7 +155,7 @@ public final class Measurement extends Action {
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
 				this.version.longValue(),
-				super.type.getId().getTransferable(),
+				(IdlMeasurementType) super.type.getTransferable(orb),
 				super.monitoredElementId.getTransferable(),
 				this.name,
 				this.setup.getId().getTransferable(),
@@ -196,11 +194,6 @@ public final class Measurement extends Action {
 
 	public Date getStartTime() {
 		return this.startTime;
-	}
-	
-	public void setStartTime(final Date startTime) {
-		this.startTime = startTime;
-		super.markAsChanged();
 	}
 
 	public long getDuration() {
@@ -330,18 +323,11 @@ public final class Measurement extends Action {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.add(this.type);
 		dependencies.add(this.testId);
 		dependencies.add(this.setup);
 		return dependencies;
 	}
-	/**
-	 * @param localAddress The localAddress to set.
-	 */
-	public void setLocalAddress(final String localAddress) {
-		this.localAddress = localAddress;
-		super.markAsChanged();
-	}
+
 	/**
 	 * @param status The status to set.
 	 */
@@ -349,11 +335,5 @@ public final class Measurement extends Action {
 		this.status = status.value();
 		super.markAsChanged();
 	}
-	/**
-	 * @param testId The testId to set.
-	 */
-	public void setTestId(final Identifier testId) {
-		this.testId = testId;
-		super.markAsChanged();
-	}
+
 }

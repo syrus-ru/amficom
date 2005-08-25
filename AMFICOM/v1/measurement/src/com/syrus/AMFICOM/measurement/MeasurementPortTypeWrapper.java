@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeWrapper.java,v 1.2 2005/08/20 20:03:29 arseniy Exp $
+ * $Id: MeasurementPortTypeWrapper.java,v 1.3 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,11 +15,14 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/20 20:03:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @module measurement
  */
 public final class MeasurementPortTypeWrapper extends StorableObjectWrapper<MeasurementPortType> {
+
+	public static final String LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID = "measurement_port_type_id";
+	public static final String LINK_COLUMN_MEASUREMENT_TYPE_CODE = "measurement_type_code";
 
 	private static MeasurementPortTypeWrapper instance;
 
@@ -27,14 +30,15 @@ public final class MeasurementPortTypeWrapper extends StorableObjectWrapper<Meas
 
 	private MeasurementPortTypeWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME };
+		final String[] keysArray = new String[] { COLUMN_CODENAME, COLUMN_DESCRIPTION, COLUMN_NAME, LINK_COLUMN_MEASUREMENT_TYPE_CODE };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static MeasurementPortTypeWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new MeasurementPortTypeWrapper();
+		}
 		return instance;
 	}
 
@@ -68,12 +72,15 @@ public final class MeasurementPortTypeWrapper extends StorableObjectWrapper<Meas
 	@Override
 	public void setValue(final MeasurementPortType object, final String key, final Object value) {
 		if (object != null) {
-			if (key.equals(COLUMN_NAME))
+			if (key.equals(COLUMN_NAME)) {
 				object.setName((String) value);
-			else if (key.equals(COLUMN_DESCRIPTION))
+			}
+			else if (key.equals(COLUMN_DESCRIPTION)) {
 				object.setDescription((String) value);
-			else if (key.equals(COLUMN_CODENAME))
+			}
+			else if (key.equals(COLUMN_CODENAME)) {
 				object.setCodename((String) value);
+			}
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.33 2005/08/20 19:25:23 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.34 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,17 +9,12 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EVALUATION_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EVALUATION_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MCM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTSETUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MODELING_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
@@ -40,7 +35,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/08/20 19:25:23 $
+ * @version $Revision: 1.34 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -54,44 +49,10 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 	public String getSQLQuery() throws IllegalObjectEntityException {
 		StringBuffer stringBuffer;
 		switch (super.condition.getEntityCode().shortValue()) {
-			case ANALYSIS_TYPE_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-					case MEASUREMENT_TYPE_CODE:
-						return super.getLinkedQuery(AnalysisTypeWrapper.LINK_COLUMN_ANALYSIS_TYPE_ID,
-								MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
-								ObjectEntities.MNTTYPANATYPEVATYP);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
-				}
-			case EVALUATION_TYPE_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-					case MEASUREMENT_TYPE_CODE:
-						return super.getLinkedQuery(EvaluationTypeWrapper.LINK_COLUMN_EVALUATION_TYPE_ID,
-								MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
-								ObjectEntities.MNTTYPANATYPEVATYP);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
-				}
-			case MEASUREMENT_TYPE_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-					case MEASUREMENTPORT_TYPE_CODE:
-						return super.getLinkedQuery(MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
-								MeasurementTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID,
-								ObjectEntities.MNTTYPEMEASPORTTYPELINK);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
-				}
 			case ANALYSIS_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case MEASUREMENT_CODE:
 						return super.getQuery(AnalysisWrapper.COLUMN_MEASUREMENT_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
-				}
-			case EVALUATION_CODE:
-				switch (super.condition.getLinkedEntityCode()) {
-					case MEASUREMENT_CODE:
-						return super.getQuery(EvaluationWrapper.COLUMN_MEASUREMENT_ID);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}
@@ -108,10 +69,6 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 						return super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 									MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID,
 									ObjectEntities.MSMELINK);
-					case MEASUREMENT_TYPE_CODE:
-						return super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
-							MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID,
-							ObjectEntities.MSMTLINK);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}
@@ -127,18 +84,9 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 								AnalysisWrapper.COLUMN_MEASUREMENT_ID,
 								ObjectEntities.ANALYSIS));
 						stringBuffer.append(CLOSE_BRACKET);
-						stringBuffer.append(SQL_OR);
-						stringBuffer.append(OPEN_BRACKET);
-						stringBuffer.append(super.getLinkedQuery(ResultWrapper.COLUMN_EVALUATION_ID,
-								StorableObjectWrapper.COLUMN_ID,
-								AnalysisWrapper.COLUMN_MEASUREMENT_ID,
-								ObjectEntities.EVALUATION));
-						stringBuffer.append(CLOSE_BRACKET);
 						return stringBuffer.toString();
 					case ANALYSIS_CODE:
 						return super.getQuery(ResultWrapper.COLUMN_ANALYSIS_ID);
-					case EVALUATION_CODE:
-						return super.getQuery(ResultWrapper.COLUMN_EVALUATION_ID);
 					case MODELING_CODE:
 						return super.getQuery(ResultWrapper.COLUMN_MODELING_ID);
 					default:

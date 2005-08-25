@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.104 2005/08/19 15:51:01 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.105 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.104 $, $Date: 2005/08/19 15:51:01 $
+ * @version $Revision: 1.105 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -60,7 +60,6 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 		if (columns == null) {
 			columns = ResultWrapper.COLUMN_MEASUREMENT_ID + COMMA
 					+ ResultWrapper.COLUMN_ANALYSIS_ID + COMMA
-					+ ResultWrapper.COLUMN_EVALUATION_ID + COMMA
 					+ ResultWrapper.COLUMN_MODELING_ID + COMMA
 					+ ResultWrapper.COLUMN_SORT;
 		}
@@ -70,16 +69,10 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 	@Override
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
-			StringBuffer buffer = new StringBuffer(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			buffer.append(COMMA);
-			buffer.append(QUESTION);
-			updateMultipleSQLValues = buffer.toString();
+			updateMultipleSQLValues = QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION + COMMA
+					+ QUESTION;
 		}
 		return updateMultipleSQLValues;
 	}
@@ -96,8 +89,6 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
-				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
 				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
@@ -106,22 +97,8 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
-				buffer.append(COMMA);
-				break;
-			case ResultSort._RESULT_SORT_EVALUATION:
-				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
-				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
-				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(storableObject.getAction().getId()));
-				buffer.append(COMMA);
-				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
-				buffer.append(COMMA);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
-				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(VOID_IDENTIFIER));
@@ -147,22 +124,13 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAction().getId());
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
 				break;
 			case ResultSort._RESULT_SORT_ANALYSIS:
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAction().getId());
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
-				break;
-			case ResultSort._RESULT_SORT_EVALUATION:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAction().getId());
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
 				break;
 			case ResultSort._RESULT_SORT_MODELING:
-				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, VOID_IDENTIFIER);					
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAction().getId());
@@ -212,14 +180,6 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 					throw new RetrieveObjectException(e);
 				}
 				break;
-			case ResultSort._RESULT_SORT_EVALUATION:
-				try {
-					final Identifier actionId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_EVALUATION_ID);
-					action = (Evaluation) StorableObjectPool.getStorableObject(actionId, true);
-				} catch (Exception e) {
-					throw new RetrieveObjectException(e);
-				}
-				break;
 			case ResultSort._RESULT_SORT_MODELING:
 				try {
 					final Identifier actionId = DatabaseIdentifier.getIdentifier(resultSet, ResultWrapper.COLUMN_MODELING_ID);
@@ -247,8 +207,9 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 	 * @throws RetrieveObjectException
 	 */
 	private void retrieveResultParametersByOneQuery(final Set<Result> results) throws RetrieveObjectException {
-		if ((results == null) || (results.isEmpty()))
-			return;		
+		if ((results == null) || (results.isEmpty())) {
+			return;
+		}
 		
 		final StringBuffer sql = new StringBuffer(SQL_SELECT
 				+ StorableObjectWrapper.COLUMN_ID + COMMA
@@ -332,7 +293,6 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 		for (final Result result : storableObjects) {
 			this.insertResultParameters(result);
 		}
-
 	}
 
 	private void insertResultParameters(final Result result) throws CreateObjectException {

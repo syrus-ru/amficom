@@ -1,5 +1,5 @@
 /*
- * $Id: Analysis.java,v 1.81 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: Analysis.java,v 1.82 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,10 +31,11 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysis;
 import com.syrus.AMFICOM.measurement.corba.IdlAnalysisHelper;
+import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.82 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -104,13 +105,13 @@ public final class Analysis extends Action {
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		final IdlAnalysis at = (IdlAnalysis) transferable;
-		super.fromTransferable(at, null, new Identifier(at.monitoredElementId), null);
+		super.fromTransferable(at, AnalysisType.fromTransferable(at.type), new Identifier(at.monitoredElementId), null);
 
-		super.type = (AnalysisType) StorableObjectPool.getStorableObject(new Identifier(at._typeId), true);
 		this.name = at.name;
 		final Identifier parentActionId = new Identifier(at.measurementId);
 		super.parentAction = (!parentActionId.equals(Identifier.VOID_IDENTIFIER))
-				? (Action) StorableObjectPool.getStorableObject(parentActionId, true) : null;
+				? (Action) StorableObjectPool.getStorableObject(parentActionId, true)
+					: null;
 
 		this.criteriaSet = (ParameterSet) StorableObjectPool.getStorableObject(new Identifier(at.criteriaSetId), true);
 
@@ -132,14 +133,13 @@ public final class Analysis extends Action {
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
 				this.version.longValue(),
-				super.type.getId().getTransferable(),
+				(IdlAnalysisType) super.type.getTransferable(orb),
 				super.monitoredElementId.getTransferable(),
-				(super.parentAction != null) ? super.parentAction.getId().getTransferable()
-						: Identifier.VOID_IDENTIFIER.getTransferable(),
+				((super.parentAction != null) ? super.parentAction.getId() : Identifier.VOID_IDENTIFIER).getTransferable(),
 				this.name != null ? this.name : "",
 				this.criteriaSet.getId().getTransferable());
 	}
-	
+
 	/**
 	 * <p>
 	 * <b>Clients must never explicitly call this method. </b>
@@ -157,7 +157,7 @@ public final class Analysis extends Action {
 	public Measurement getMeasurement() {
 		return (Measurement) super.parentAction;
 	}
-	
+
 	public void setMeasurement(final Measurement measurement) {
 		super.parentAction = measurement;
 		super.markAsChanged();
@@ -176,7 +176,7 @@ public final class Analysis extends Action {
 		this.criteriaSet = criteriaSet;
 		super.markAsChanged();
 	}
-	
+
 	public ParameterSet getCriteriaSet() {
 		return this.criteriaSet;
 	}
@@ -257,13 +257,14 @@ public final class Analysis extends Action {
 	@Override
 	public Set<Identifiable> getDependencies() {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-		
+
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.add(this.type);
+
 		//	Measurement, if exists
 		if (super.parentAction != null) {
 			dependencies.add(super.parentAction);
 		}
+
 		dependencies.add(this.criteriaSet);
 		return dependencies;
 	}

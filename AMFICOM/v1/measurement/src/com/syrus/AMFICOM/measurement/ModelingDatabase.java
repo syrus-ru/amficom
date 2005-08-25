@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.51 2005/07/27 18:20:26 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.52 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/07/27 18:20:26 $
+ * @version $Revision: 1.52 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @module module_name
  */
@@ -43,7 +43,7 @@ public final class ModelingDatabase extends StorableObjectDatabase<Modeling> {
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+			columns = StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
 				+ ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ ModelingWrapper.COLUMN_ARGUMENT_SET_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME;
@@ -63,23 +63,23 @@ public final class ModelingDatabase extends StorableObjectDatabase<Modeling> {
 	}
 
 	@Override
-	protected int setEntityForPreparedStatementTmpl(final Modeling storableObject,
-			final PreparedStatement preparedStatement,
-			int startParameterNumber) throws IllegalDataException, SQLException {
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElementId());
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getArgumentSet().getId());
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
-		return startParameterNumber;
-	}
-
-	@Override
   protected String getUpdateSingleSQLValuesTmpl(final Modeling storableObject) throws IllegalDataException {
-  	final String values = DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+  	final String values = Integer.toString(storableObject.getType().getCode()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getMonitoredElementId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getArgumentSet().getId()) + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE;
 		return values;
+	}
+
+	@Override
+	protected int setEntityForPreparedStatementTmpl(final Modeling storableObject,
+			final PreparedStatement preparedStatement,
+			int startParameterNumber) throws IllegalDataException, SQLException {
+		preparedStatement.setInt(++startParameterNumber, storableObject.getType().getCode());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElementId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getArgumentSet().getId());
+		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
+		return startParameterNumber;
 	}
 
 	@Override
@@ -94,11 +94,8 @@ public final class ModelingDatabase extends StorableObjectDatabase<Modeling> {
 						null,
 						null)
 					: storableObject;
-		ModelingType modelingType;
 		ParameterSet argumentSet;
 		try {
-			final Identifier modelingTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
-			modelingType = (ModelingType) StorableObjectPool.getStorableObject(modelingTypeId, true);
 			final Identifier argumentSetId = DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_ARGUMENT_SET_ID);
 			argumentSet = (ParameterSet) StorableObjectPool.getStorableObject(argumentSetId, true);
 		} catch (ApplicationException ae) {
@@ -110,7 +107,7 @@ public final class ModelingDatabase extends StorableObjectDatabase<Modeling> {
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				modelingType,
+				ModelingType.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE)),
 				DatabaseIdentifier.getIdentifier(resultSet, ModelingWrapper.COLUMN_MONITORED_ELEMENT_ID),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				argumentSet);

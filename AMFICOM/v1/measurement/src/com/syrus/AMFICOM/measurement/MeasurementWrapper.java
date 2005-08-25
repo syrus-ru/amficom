@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementWrapper.java,v 1.12 2005/08/08 13:33:50 arseniy Exp $
+ * $Id: MeasurementWrapper.java,v 1.13 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/08 13:33:50 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -38,7 +38,7 @@ public class MeasurementWrapper extends StorableObjectWrapper<Measurement> {
 
 	private MeasurementWrapper() {
 		// empty private constructor
-		final String[] keysArray = new String[] { COLUMN_TYPE_ID,
+		final String[] keysArray = new String[] { COLUMN_TYPE_CODE,
 				COLUMN_MONITORED_ELEMENT_ID,
 				COLUMN_NAME,
 				COLUMN_SETUP_ID,
@@ -52,8 +52,9 @@ public class MeasurementWrapper extends StorableObjectWrapper<Measurement> {
 	}
 
 	public static MeasurementWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new MeasurementWrapper();
+		}
 		return instance;
 	}
 
@@ -70,22 +71,30 @@ public class MeasurementWrapper extends StorableObjectWrapper<Measurement> {
 	public Object getValue(final Measurement measurement, final String key) {
 		final Object value = super.getValue(measurement, key);
 		if (value == null && measurement != null) {
-			if (key.equals(COLUMN_TYPE_ID))
+			if (key.equals(COLUMN_TYPE_CODE)) {
 				return measurement.getType();
-			if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
+			}
+			if (key.equals(COLUMN_MONITORED_ELEMENT_ID)) {
 				return measurement.getMonitoredElementId();
-			if (key.equals(COLUMN_NAME))
+			}
+			if (key.equals(COLUMN_NAME)) {
 				return measurement.getName();
-			if (key.equals(COLUMN_SETUP_ID))
+			}
+			if (key.equals(COLUMN_SETUP_ID)) {
 				return measurement.getSetup();
-			if (key.equals(COLUMN_START_TIME))
+			}
+			if (key.equals(COLUMN_START_TIME)) {
 				return measurement.getStartTime();
-			if (key.equals(COLUMN_STATUS))
+			}
+			if (key.equals(COLUMN_STATUS)) {
 				return new Integer(measurement.getStatus().value());
-			if (key.equals(COLUMN_LOCAL_ADDRESS))
+			}
+			if (key.equals(COLUMN_LOCAL_ADDRESS)) {
 				return measurement.getLocalAddress();
-			if (key.equals(COLUMN_TEST_ID))
+			}
+			if (key.equals(COLUMN_TEST_ID)) {
 				return measurement.getTestId();
+			}
 		}
 		return value;
 	}
@@ -97,22 +106,18 @@ public class MeasurementWrapper extends StorableObjectWrapper<Measurement> {
 	@Override
 	public void setValue(final Measurement measurement, final String key, final Object value) {
 		if (measurement != null) {
-			if (key.equals(COLUMN_TYPE_ID))
-				measurement.setType((ActionType) value);
-			else if (key.equals(COLUMN_MONITORED_ELEMENT_ID))
+			if (key.equals(COLUMN_MONITORED_ELEMENT_ID)) {
 				measurement.setMonitoredElementId((Identifier) value);
-			else if (key.equals(COLUMN_NAME))
+			}
+			else if (key.equals(COLUMN_NAME)) {
 				measurement.setName((String) value);
-			else if (key.equals(COLUMN_SETUP_ID))
+			}
+			else if (key.equals(COLUMN_SETUP_ID)) {
 				measurement.setSetup((MeasurementSetup) value);
-			else if (key.equals(COLUMN_START_TIME))
-				measurement.setStartTime((Date) value);
-			else if (key.equals(COLUMN_STATUS))
+			}
+			else if (key.equals(COLUMN_STATUS)) {
 				measurement.setStatus(MeasurementStatus.from_int(((Integer) value).intValue()));
-			else if (key.equals(COLUMN_LOCAL_ADDRESS))
-				measurement.setLocalAddress((String) value);
-			else if (key.equals(COLUMN_TEST_ID))
-				measurement.setTestId((Identifier) value);
+			}
 		}
 	}
 
@@ -131,7 +136,7 @@ public class MeasurementWrapper extends StorableObjectWrapper<Measurement> {
 		if (clazz != null) {
 			return clazz;
 		}
-		if (key.equals(COLUMN_TYPE_ID)) {
+		if (key.equals(COLUMN_TYPE_CODE)) {
 			return MeasurementType.class;
 		}
 		if (key.equals(COLUMN_MONITORED_ELEMENT_ID)

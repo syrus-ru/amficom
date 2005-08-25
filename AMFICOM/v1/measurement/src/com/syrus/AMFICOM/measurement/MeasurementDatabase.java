@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.91 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.92 2005/08/25 20:13:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.92 $, $Date: 2005/08/25 20:13:56 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -52,7 +52,7 @@ public final class MeasurementDatabase extends StorableObjectDatabase<Measuremen
 	@Override
 	protected String getColumnsTmpl() {
 		if (columns == null) {
-			columns = StorableObjectWrapper.COLUMN_TYPE_ID + COMMA
+			columns = StorableObjectWrapper.COLUMN_TYPE_CODE + COMMA
 				+ MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_NAME + COMMA
 				+ MeasurementWrapper.COLUMN_SETUP_ID + COMMA
@@ -83,7 +83,7 @@ public final class MeasurementDatabase extends StorableObjectDatabase<Measuremen
 
 	@Override
 	protected String getUpdateSingleSQLValuesTmpl(final Measurement storableObject) throws IllegalDataException {
-		final String sql = DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
+		final String sql = Integer.toString(storableObject.getType().getCode()) + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getMonitoredElementId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 			+ DatabaseIdentifier.toSQLString(storableObject.getSetup().getId()) + COMMA
@@ -99,7 +99,7 @@ public final class MeasurementDatabase extends StorableObjectDatabase<Measuremen
 	protected int setEntityForPreparedStatementTmpl(final Measurement storableObject,
 			final PreparedStatement preparedStatement,
 			int startParameterNumber) throws IllegalDataException, SQLException {
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getType().getId());
+		preparedStatement.setInt(++startParameterNumber, storableObject.getType().getCode());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElementId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSetup().getId());
@@ -128,11 +128,8 @@ public final class MeasurementDatabase extends StorableObjectDatabase<Measuremen
 					: storableObject;		
 
 		final String name = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME));
-		MeasurementType measurementType;
 		MeasurementSetup measurementSetup;
 		try {
-			final Identifier measurementTypeId = DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_TYPE_ID);
-			measurementType = (MeasurementType) StorableObjectPool.getStorableObject(measurementTypeId, true);
 			final Identifier measurementSetupId = DatabaseIdentifier.getIdentifier(resultSet, MeasurementWrapper.COLUMN_SETUP_ID);
 			measurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(measurementSetupId, true);
 		} catch (ApplicationException ae) {
@@ -143,7 +140,7 @@ public final class MeasurementDatabase extends StorableObjectDatabase<Measuremen
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_MODIFIER_ID),
 				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
-				measurementType,
+				MeasurementType.fromInt(resultSet.getInt(StorableObjectWrapper.COLUMN_TYPE_CODE)),
 				DatabaseIdentifier.getIdentifier(resultSet, MeasurementWrapper.COLUMN_MONITORED_ELEMENT_ID),
 				name,
 				measurementSetup,

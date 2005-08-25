@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlAnalysisImpl.java,v 1.3 2005/08/08 11:31:46 arseniy Exp $
+ * $Id: IdlAnalysisImpl.java,v 1.4 2005/08/25 20:13:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/08 11:31:46 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/25 20:13:57 $
  * @module measurement
  */
 final class IdlAnalysisImpl extends IdlAnalysis {
@@ -35,7 +35,7 @@ final class IdlAnalysisImpl extends IdlAnalysis {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
-			final IdlIdentifier typeId,
+			final IdlAnalysisType type,
 			final IdlIdentifier monitoredElementId,
 			final IdlIdentifier measurementId,
 			final String name,
@@ -46,7 +46,7 @@ final class IdlAnalysisImpl extends IdlAnalysis {
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
-		this._typeId = typeId;
+		this.type = type;
 		this.monitoredElementId = monitoredElementId;
 		this.measurementId = measurementId;
 		this.name = name;

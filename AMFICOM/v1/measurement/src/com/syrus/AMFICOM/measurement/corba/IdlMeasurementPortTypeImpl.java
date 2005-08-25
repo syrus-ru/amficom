@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlMeasurementPortTypeImpl.java,v 1.2 2005/08/20 20:03:29 arseniy Exp $
+ * $Id: IdlMeasurementPortTypeImpl.java,v 1.3 2005/08/25 20:13:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.2 $, $Date: 2005/08/20 20:03:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/25 20:13:57 $
  * @module measurement
  */
 final class IdlMeasurementPortTypeImpl extends IdlMeasurementPortType {
@@ -38,7 +38,8 @@ final class IdlMeasurementPortTypeImpl extends IdlMeasurementPortType {
 			final long version,
 			final String codename,
 			final String description,
-			final String name) {
+			final String name,
+			final IdlMeasurementType[] measurementTypes) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
@@ -48,6 +49,7 @@ final class IdlMeasurementPortTypeImpl extends IdlMeasurementPortType {
 		this.codename = codename;
 		this.description = description;
 		this.name = name;
+		this.measurementTypes = measurementTypes;
 	}
 
 	/**
