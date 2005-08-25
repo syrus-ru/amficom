@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2005/08/20 20:04:45 arseniy Exp $
+# $Id: Makefile,v 1.4 2005/08/25 20:23:00 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -14,7 +14,7 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,XMLBEANSCLASSPATH)
 
-APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/mapclient.jar:$(LIBDIR)/schemeclient.jar
+APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/mapview.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/filterclient.jar:$(LIBDIR)/mapclient.jar:$(LIBDIR)/schemeclient.jar
 XMLCLASSPATH := $(LIBDIR)/generalxml.jar:$(LIBDIR)/mapxml.jar
 EXTCLASSPATH := $(EXTLIBDIR)/jgraphpad.jar
 
