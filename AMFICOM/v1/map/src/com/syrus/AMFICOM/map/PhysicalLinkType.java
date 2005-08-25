@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.74 2005/08/25 15:57:34 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.75 2005/08/25 16:40:19 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: krupenn $
- * @version $Revision: 1.74 $, $Date: 2005/08/25 15:57:34 $
+ * @version $Revision: 1.75 $, $Date: 2005/08/25 16:40:19 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -352,7 +352,7 @@ public final class PhysicalLinkType extends StorableObjectType
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(ObjectEntities.PHYSICALLINK_CODE, xmlPhysicalLinkType.getUid().getStringValue()),
+		super(clonedIdsPool.getClonedId(ObjectEntities.PHYSICALLINK_TYPE_CODE, xmlPhysicalLinkType.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,

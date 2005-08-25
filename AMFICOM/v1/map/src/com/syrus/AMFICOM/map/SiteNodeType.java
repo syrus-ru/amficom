@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.70 2005/08/25 15:57:34 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.71 2005/08/25 16:40:19 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: krupenn $
- * @version $Revision: 1.70 $, $Date: 2005/08/25 15:57:34 $
+ * @version $Revision: 1.71 $, $Date: 2005/08/25 16:40:19 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -335,7 +335,7 @@ public final class SiteNodeType extends StorableObjectType
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(ObjectEntities.SITENODE_CODE, xmlSiteNodeType.getUid().getStringValue()),
+		super(clonedIdsPool.getClonedId(ObjectEntities.SITENODE_TYPE_CODE, xmlSiteNodeType.getUid().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
