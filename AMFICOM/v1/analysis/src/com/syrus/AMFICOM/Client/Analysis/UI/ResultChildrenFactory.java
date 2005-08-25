@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.8 2005/08/25 11:27:03 max Exp $
+ * $Id: ResultChildrenFactory.java,v 1.9 2005/08/25 11:48:09 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: max $
- * @version $Revision: 1.8 $, $Date: 2005/08/25 11:27:03 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/25 11:48:09 $
  * @module analysis
  */
 
@@ -280,7 +280,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					
 //					item6.setDefaultOperation(CompoundConditionSort.OR);
 					Filter f = new Filter(new TestConditionWrapper());
-					f.addCondition(timeCondition, new ConditionKey(TestWrapper.COLUMN_START_TIME, "Start time", ConditionWrapper.DATE));
+					f.addCondition(timeCondition, TestConditionWrapper.START_TIME_CONDITION_KEY);
 					item6.setFilter(f);
 					item.addChild(item6);
 				} catch (CreateObjectException e) {

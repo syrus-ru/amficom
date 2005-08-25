@@ -1,5 +1,5 @@
 /*
- * $Id: Filter.java,v 1.16 2005/08/25 10:52:06 max Exp $
+ * $Id: Filter.java,v 1.17 2005/08/25 11:47:11 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,9 +14,10 @@ import java.util.List;
 import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/25 10:52:06 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/25 11:47:11 $
  * @author $Author: max $
  * @module misc
  */
@@ -51,9 +52,9 @@ public class Filter {
 		this.filterViews.remove(view);
 	}
 	
-	public void addCondition(final StorableObjectCondition condition, final ConditionKey key) throws IllegalDataException {
+	public void addCondition(final StorableObjectCondition condition, final ConditionKey key) {
 		if (!this.keys.contains(key)) {
-			throw new IllegalDataException("Filter.addCondition | Wrong key (you must select it from appropriate condition wrapper)");
+			Log.errorMessage("Illegal data: Filter.addCondition | Wrong key (you must select it from appropriate condition wrapper)");
 		}
 		addCondition0(condition, key);
 	}
