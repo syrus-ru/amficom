@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.10 2005/08/23 14:16:29 krupenn Exp $
+ * $Id: MapEvent.java,v 1.11 2005/08/25 15:59:02 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import java.beans.PropertyChangeEvent;
  * 
  * 
  * 
- * @version $Revision: 1.10 $, $Date: 2005/08/23 14:16:29 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/25 15:59:02 $
  * @module mapclient_v2
  * @author $Author: krupenn $
  */
@@ -50,8 +50,6 @@ public class MapEvent extends PropertyChangeEvent {
 
 	public static final String OTHER_SELECTED = "otherselectedevent";
 
-	/** Управление элементами на карте. */
-	public static final String MAP_NAVIGATE = "mapnavigateevent";
 	/** Поместить элемент на карту. */
 	public static final String PLACE_ELEMENT = "placeelement";
 
