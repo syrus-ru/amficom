@@ -1,5 +1,5 @@
 /*
- * $Id: EvaluationTypeConditionWrapper.java,v 1.7 2005/08/19 14:22:04 arseniy Exp $
+ * $Id: EvaluationTypeConditionWrapper.java,v 1.8 2005/08/25 10:56:12 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/19 14:22:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/25 10:56:12 $
+ * @author $Author: max $
  * @module filterclient
  */
 public class EvaluationTypeConditionWrapper implements ConditionWrapper {
@@ -71,7 +71,7 @@ public class EvaluationTypeConditionWrapper implements ConditionWrapper {
 		return this.storableObjectInitialName.get(id);
 	}
 
-	public Collection<ConditionKey> getKeys() {
+	public List<ConditionKey> getKeys() {
 		return Collections.emptyList();
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: MonitoredElementConditionWrapper.java,v 1.4 2005/08/09 20:34:31 arseniy Exp $
+ * $Id: MonitoredElementConditionWrapper.java,v 1.5 2005/08/25 10:56:12 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,7 @@
 package com.syrus.AMFICOM.filterclient;
 
 import java.util.ArrayList;
-import java.util.Collection;
+import java.util.List;
 
 import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 /**
  * @author Maxim Selivanov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/09 20:34:31 $
+ * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2005/08/25 10:56:12 $
  * @module filterclient
  */
 public class MonitoredElementConditionWrapper implements ConditionWrapper {
@@ -26,13 +26,13 @@ public class MonitoredElementConditionWrapper implements ConditionWrapper {
 	
 	private final static String NAME = "Entity name";
 		
-	private static Collection<ConditionKey> keys = new ArrayList<ConditionKey>();
+	private static List<ConditionKey> keys = new ArrayList<ConditionKey>();
 	
 	static {
 		keys.add(new ConditionKey(StorableObjectWrapper.COLUMN_NAME, NAME, ConditionWrapper.STRING));
 	}
 	
-	public Collection<ConditionKey> getKeys() {
+	public List<ConditionKey> getKeys() {
 		return keys;
 	}
 	
