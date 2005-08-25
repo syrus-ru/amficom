@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.37 2005/08/17 11:48:45 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.38 2005/08/25 20:30:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/08/17 11:48:45 $
+ * @version $Revision: 1.38 $, $Date: 2005/08/25 20:30:40 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -58,18 +58,8 @@ final class AnalysisEvaluationProcessor {
 		final Identifier monitoredElementId = test.getMonitoredElement().getId();
 		final MeasurementSetup measurementSetup = measurement.getSetup();
 
-		final Identifier analysisTypeId = test.getAnalysisTypeId();
-		AnalysisType analysisType = null;
-		try {
-			if (analysisTypeId != null) {
-				analysisType = (AnalysisType) StorableObjectPool.getStorableObject(analysisTypeId, true);
-			}
-		}
-		catch (ApplicationException ae) {
-			throw new AnalysisException("Cannot load analysis type '" + analysisTypeId
-					+ "' for test '" + test.getId() + "' -- " + ae.getMessage(), ae);
-		}
-		if (analysisType != null) {
+		AnalysisType analysisType = test.getAnalysisType();
+		if (!analysisType.equals(AnalysisType.UNKNOWN)) {
 			Analysis analysis = createAnalysis(analysisType, monitoredElementId, measurement, measurementSetup.getCriteriaSet());
 			return new Result[] { analyseAndEvaluate(measurementResult, analysis, measurementSetup.getEtalon()) };
 		}

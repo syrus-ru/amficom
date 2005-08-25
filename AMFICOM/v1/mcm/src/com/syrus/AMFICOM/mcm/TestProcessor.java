@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.63 2005/08/17 11:48:45 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.64 2005/08/25 20:30:40 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/08/17 11:48:45 $
+ * @version $Revision: 1.64 $, $Date: 2005/08/25 20:30:40 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -148,10 +148,9 @@ abstract class TestProcessor extends SleepButWorkThread {
 									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
 						}
 						break;
-					case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED:
+					case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED:
 						results = lastMeasurement.getResults(true);
 						Result analysisResult = null;
-						Result evaluationResult = null;
 						if (results != null && !results.isEmpty()) {
 							for (final Result result : results) {
 								switch (result.getSort().value()) {
@@ -160,9 +159,6 @@ abstract class TestProcessor extends SleepButWorkThread {
 										break;
 									case ResultSort._RESULT_SORT_ANALYSIS:
 										analysisResult = result;
-										break;
-									case ResultSort._RESULT_SORT_EVALUATION:
-										evaluationResult = result;
 										break;
 								}
 							}
@@ -181,14 +177,6 @@ abstract class TestProcessor extends SleepButWorkThread {
 						}
 						else {
 							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find analysis result for measurement '"
-									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
-						}
-						if (evaluationResult != null) {
-							Log.debugMessage("TestProcessor.startWithProcessingTest | Found evaluation result for measurement '"
-									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')", Log.DEBUGLEVEL08);
-						}
-						else {
-							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find evaluation result for measurement '"
 									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
 						}
 
@@ -261,7 +249,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 					}
 				}
 
-				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED);
+				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ANALYZED);
 
 				try {
 					StorableObjectPool.flush(ObjectEntities.RESULT_CODE, LoginManager.getUserId(), false);

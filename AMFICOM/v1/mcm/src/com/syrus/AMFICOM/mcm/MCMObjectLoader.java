@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.20 2005/08/08 11:46:55 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.21 2005/08/25 20:30:40 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 package com.syrus.AMFICOM.mcm;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.ANALYSIS_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.EVALUATION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TEST_CODE;
@@ -35,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/08/08 11:46:55 $
+ * @version $Revision: 1.21 $, $Date: 2005/08/25 20:30:40 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -59,7 +58,6 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		switch (entityCode) {
 			case MEASUREMENT_CODE:
 			case ANALYSIS_CODE:
-			case EVALUATION_CODE:
 			case RESULT_CODE:
 				return this.databaseObjectLoader.loadStorableObjects(ids);
 			default:
@@ -78,7 +76,6 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		switch (entityCode) {
 			case MEASUREMENT_CODE:
 			case ANALYSIS_CODE:
-			case EVALUATION_CODE:
 			case RESULT_CODE:
 				return this.databaseObjectLoader.loadStorableObjectsButIdsByCondition(ids, condition);
 			default:
@@ -230,7 +227,6 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		switch (entityCode) {
 			case MEASUREMENT_CODE:
 			case ANALYSIS_CODE:
-			case EVALUATION_CODE:
 			case TEST_CODE:
 				this.databaseObjectLoader.saveStorableObjects(storableObjects);
 				super.saveStorableObjects(storableObjects);
