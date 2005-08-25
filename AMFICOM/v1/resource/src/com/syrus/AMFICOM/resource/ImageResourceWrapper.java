@@ -1,5 +1,5 @@
 /*
- * $Id: ImageResourceWrapper.java,v 1.16 2005/08/12 09:57:28 bob Exp $
+ * $Id: ImageResourceWrapper.java,v 1.17 2005/08/25 14:18:27 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/12 09:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/08/25 14:18:27 $
+ * @author $Author: max $
  * @module resource
  */
 public class ImageResourceWrapper extends StorableObjectWrapper<AbstractImageResource> {
@@ -92,6 +92,8 @@ public class ImageResourceWrapper extends StorableObjectWrapper<AbstractImageRes
 						return ((BitmapImageResource) abstractImageResource).getCodename();
 					case ImageResourceSort._FILE:
 						return ((FileImageResource) abstractImageResource).getCodename();
+					case ImageResourceSort._SCHEME:
+						return "";
 				}
 			}
 			if (key.equals(COLUMN_DATA)) {
