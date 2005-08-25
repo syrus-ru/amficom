@@ -1,5 +1,5 @@
 /**
- * $Id: TopologyTreeModel.java,v 1.4 2005/08/24 14:07:01 krupenn Exp $
+ * $Id: TopologyTreeModel.java,v 1.5 2005/08/25 11:22:08 max Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -115,7 +115,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 					newItem.setChildrenFactory(this);
 					newItem.setCanHaveChildren(true);
 					newItem.setDefaultCondition(null);
-					newItem.setFilter(new Filter(new TopologyConditionWrapper(), null));
+					newItem.setFilter(new Filter(new TopologyConditionWrapper()));
 					//				newItem.populate();
 					node.addChild(newItem);
 				}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.12 2005/08/23 09:41:54 krupenn Exp $ 
+ * $Id: MapTreeModel.java,v 1.13 2005/08/25 11:22:08 max Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный Интеллектуальный 
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/23 09:41:54 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/08/25 11:22:08 $
+ * @author $Author: max $
  * @module mapviewclient
  */
 public class MapTreeModel implements ChildrenFactory {
@@ -233,7 +233,7 @@ public class MapTreeModel implements ChildrenFactory {
 			externalNodesNode.setChildrenFactory(this);
 			externalNodesNode.setCanHaveChildren(true);
 			externalNodesNode.setDefaultCondition(null);
-			externalNodesNode.setFilter(new Filter(new SiteNodeConditionWrapper(), null));
+			externalNodesNode.setFilter(new Filter(new SiteNodeConditionWrapper()));
 //			externalNodesNode.populate();
 			node.addChild(externalNodesNode);
 
@@ -244,7 +244,7 @@ public class MapTreeModel implements ChildrenFactory {
 			sitesNode.setChildrenFactory(this);
 			sitesNode.setCanHaveChildren(true);
 			sitesNode.setDefaultCondition(null);
-			sitesNode.setFilter(new Filter(new SiteNodeConditionWrapper(), null));
+			sitesNode.setFilter(new Filter(new SiteNodeConditionWrapper()));
 //			sitesNode.populate();
 			node.addChild(sitesNode);
 
@@ -264,7 +264,7 @@ public class MapTreeModel implements ChildrenFactory {
 			linksNode.setChildrenFactory(this);
 			linksNode.setCanHaveChildren(true);
 			linksNode.setDefaultCondition(null);
-			linksNode.setFilter(new Filter(new PhysicalLinkConditionWrapper(), null));
+			linksNode.setFilter(new Filter(new PhysicalLinkConditionWrapper()));
 //			linksNode.populate();
 			node.addChild(linksNode);
 
@@ -275,7 +275,7 @@ public class MapTreeModel implements ChildrenFactory {
 			collectorsNode.setChildrenFactory(this);
 			collectorsNode.setCanHaveChildren(true);
 			collectorsNode.setDefaultCondition(null);
-			collectorsNode.setFilter(new Filter(new CollectorConditionWrapper(), null));
+			collectorsNode.setFilter(new Filter(new CollectorConditionWrapper()));
 //			collectorsNode.populate();
 			node.addChild(collectorsNode);
 		}

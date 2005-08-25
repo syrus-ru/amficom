@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.7 2005/08/20 19:55:44 arseniy Exp $
+ * $Id: ResultChildrenFactory.java,v 1.8 2005/08/25 11:27:03 max Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/20 19:55:44 $
+ * @author $Author: max $
+ * @version $Revision: 1.8 $, $Date: 2005/08/25 11:27:03 $
  * @module analysis
  */
 
@@ -134,7 +134,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					item2.setName(LangModelAnalyse.getString("monitoredElements"));
 					item2.setChildrenFactory(this);
 					item2.setDefaultCondition(new LinkedIdsCondition(LoginManager.getDomainId(), ObjectEntities.MONITOREDELEMENT_CODE));
-					item2.setFilter(new Filter(new MonitoredElementConditionWrapper(), null));
+					item2.setFilter(new Filter(new MonitoredElementConditionWrapper()));
 					item.addChild(item2);
 				}
 			} else if (s.equals(MONITOREDELEMENTS)) {
@@ -279,7 +279,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					item6.setDefaultCondition(condition);
 					
 //					item6.setDefaultOperation(CompoundConditionSort.OR);
-					Filter f = new Filter(new TestConditionWrapper(), null);
+					Filter f = new Filter(new TestConditionWrapper());
 					f.addCondition(timeCondition, new ConditionKey(TestWrapper.COLUMN_START_TIME, "Start time", ConditionWrapper.DATE));
 					item6.setFilter(f);
 					item.addChild(item6);
@@ -310,7 +310,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 						item2.setChildrenFactory(this);
 						item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_MEASUREMENT_SETUP));
 						item2.setDefaultCondition(new LinkedIdsCondition(ms.getId(), ObjectEntities.TEST_CODE));
-						item2.setFilter(new Filter(new TestConditionWrapper(), null));
+						item2.setFilter(new Filter(new TestConditionWrapper()));
 							// XXX add possibility to insert item in arbitrary location
 							//		item.addChildAt(item2, i);
 						item.addChild(item2);
@@ -338,7 +338,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 				item3.setName(LangModelAnalyse.getString("on_setup"));
 				item3.setChildrenFactory(this);
 				item3.setDefaultCondition(new LinkedIdsCondition(me.getId(), ObjectEntities.MEASUREMENTSETUP_CODE));
-				item3.setFilter(new Filter(new MeasurementSetupConditionWrapper(), null));
+				item3.setFilter(new Filter(new MeasurementSetupConditionWrapper()));
 				item.addChild(item3);
 				
 			}
@@ -365,7 +365,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					item2.setName(sdf.format(test.getStartTime()));
 					item2.setChildrenFactory(this);
 					item2.setDefaultCondition(new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_CODE));
-					item2.setFilter(new Filter(new MeasurementConditionWrapper(), null));
+					item2.setFilter(new Filter(new MeasurementConditionWrapper()));
 					item2.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_TESTING));
 						//XXX add possibility to insert item in arbitrary location
 //						item.addChildAt(item2, i);
