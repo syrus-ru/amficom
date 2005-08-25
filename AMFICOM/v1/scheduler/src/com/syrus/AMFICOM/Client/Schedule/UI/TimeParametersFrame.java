@@ -8,6 +8,8 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentAdapter;
+import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Calendar;
@@ -766,8 +768,8 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.panel.add(Box.createVerticalGlue(), gbc);
 			
 			this.synchroRadioButton.doClick();
-			this.periodicalRadioButton.doClick();
 			this.oneRadioButton.doClick();
+			this.periodicalRadioButton.doClick();		
 			
 		}
 		
@@ -1338,7 +1340,7 @@ public class TimeParametersFrame extends JInternalFrame {
 
 	}
 
-	private TimeParametersPanel	timeParametersPanel;
+	TimeParametersPanel	timeParametersPanel;
 
 	public TimeParametersFrame(ApplicationContext aContext) {
 		setTitle(LangModelSchedule.getString("TemporalType.Title")); //$NON-NLS-1$
@@ -1347,6 +1349,15 @@ public class TimeParametersFrame extends JInternalFrame {
 		setClosable(true);
 		setIconifiable(true);
 		this.timeParametersPanel = new TimeParametersPanel(aContext);
+		
+		// TODO may be more right impl of fullsize ?
+		this.addComponentListener(new ComponentAdapter() {
+			@Override
+			public void componentShown(ComponentEvent e) {
+				TimeParametersFrame.this.timeParametersPanel.oneRadioButton.doClick();
+				TimeParametersFrame.this.removeComponentListener(this);
+			}
+		});
 		this.getContentPane().add(this.timeParametersPanel.panel, BorderLayout.CENTER);
 	}
 	
