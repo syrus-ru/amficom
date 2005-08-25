@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeMouseListener.java,v 1.2 2005/08/23 14:18:42 krupenn Exp $
+ * $Id: MapViewTreeMouseListener.java,v 1.3 2005/08/25 06:45:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,6 +47,8 @@ final class MapViewTreeMouseListener extends MouseAdapter {
 		else if(SwingUtilities.isLeftMouseButton(e)) {
 			if(e.getClickCount() == 2) {
 				TreePath treePath = this.tree.getPathForLocation(e.getX(), e.getY());
+				if(treePath == null)
+					return;
 				Item item = (Item )treePath.getLastPathComponent();
 				Object object = item.getObject();
 				if(object instanceof MapElement) {
