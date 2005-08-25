@@ -735,7 +735,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 					idSet.add(identifier);
 					identifier = SchedulerModel.this.monitoredElement.getId();
 					idSet.add(identifier);
-					condition = new CompoundCondition(measurementTypeCondition, CompoundConditionSort.OR,
+					condition = new CompoundCondition(measurementTypeCondition, CompoundConditionSort.AND,
 														monitoredElementCondition);
 				} else {
 					idSet = Collections.singleton(identifier);
