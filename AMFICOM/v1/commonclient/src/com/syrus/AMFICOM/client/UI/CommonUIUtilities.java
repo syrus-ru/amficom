@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/11 18:51:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/25 17:23:48 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -141,13 +141,18 @@ public final class CommonUIUtilities {
 
 	public static synchronized void invokeAsynchronously(final Runnable doRun,
 											final String dialogTitle) {
-		new Thread() {
+		class AThread extends Thread {
+
+			// XXX very ugly workaround,
+			// we should not use the pair setVisible/dispose from concurrent threads
+			boolean	flag;
 
 			@Override
 			public void run() {
 				/**
 				 * @todo Set dialog's parent depending on app context.
 				 */
+				this.flag = true;
 				final JDialog jDialog = new JDialog(Environment.getActiveWindow(), dialogTitle, true);
 				jDialog.setResizable(false);
 
@@ -170,7 +175,12 @@ public final class CommonUIUtilities {
 
 					@Override
 					public void run() {
-						jDialog.setVisible(true);
+						if (AThread.this.flag) {
+							jDialog.setVisible(true);
+							if (!AThread.this.flag) {
+								jDialog.dispose();
+							}
+						}
 					}
 				};
 				dialogThread.start();
@@ -181,7 +191,10 @@ public final class CommonUIUtilities {
 					ie.printStackTrace();
 				}
 				jDialog.dispose();
+				this.flag = false;
 			}
-		}.start();
+		}
+		
+		new AThread().start();
 	}
 }
