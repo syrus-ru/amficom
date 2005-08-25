@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.14 2005/08/24 15:00:28 bass Exp $
+ * $Id: MapLibrary.java,v 1.15 2005/08/25 15:57:03 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/24 15:00:28 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/08/25 15:57:03 $
+ * @author $Author: krupenn $
  * @module map
  */
 public class MapLibrary extends StorableObject implements Identifiable, Namable, Library, XMLBeansTransferable {
@@ -358,6 +358,8 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 				creatorId,
 				version);
 		this.fromXMLTransferable(xmlMapLibrary, clonedIdsPool, importType);
+		this.parentMapLibraryId = Identifier.VOID_IDENTIFIER;
+
 	}
 
 	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
