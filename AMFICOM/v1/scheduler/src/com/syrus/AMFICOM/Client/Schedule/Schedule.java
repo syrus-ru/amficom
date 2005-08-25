@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Schedule;
 
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
+import com.syrus.util.Log;
 
 public class Schedule extends AbstractApplication {
 	private static final String APPLICATION_NAME = "scheduler";
@@ -19,6 +20,10 @@ public class Schedule extends AbstractApplication {
 	}
 
 	public static void main(String[] args) {
-		new Schedule();
+		try {
+			new Schedule();
+		} catch(Exception e) {
+			Log.errorException(e);
+		}
 	}
 }
