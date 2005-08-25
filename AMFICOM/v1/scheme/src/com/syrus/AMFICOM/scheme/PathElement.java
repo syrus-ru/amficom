@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.65 2005/08/13 11:13:19 max Exp $
+ * $Id: PathElement.java,v 1.66 2005/08/25 14:01:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * its {@link PathElement#getName() getName()} method actually returns
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
- * @author $Author: max $
- * @version $Revision: 1.65 $, $Date: 2005/08/13 11:13:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.66 $, $Date: 2005/08/25 14:01:30 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -639,12 +639,19 @@ public final class PathElement extends StorableObject
 	 * @see PathMember#getSequentialNumber()
 	 */
 	public int getSequentialNumber() {
-//XXX During saving on server this method cannot work correctly.
-//XXX This is because method getPathMembers() of SchemePath cannot return SchemeElement's,
-//XXX which not saved yet.
-//XXX May be it not need to check, that this owner contains this. 
-//		assert this.getParentPathOwner().assertContains(this);
+		assert this.getParentPathOwner().assertContains(this);
 		return this.sequentialNumber;
+	}
+
+	/**
+	 * @param sequentialNumber
+	 */
+	private void setSequentialNumber(final int sequentialNumber) {
+		if (this.sequentialNumber == sequentialNumber) {
+			return;
+		}
+		this.sequentialNumber = sequentialNumber;
+		super.markAsChanged();
 	}
 
 	Identifier getStartAbstractSchemePortId() {
@@ -842,6 +849,20 @@ public final class PathElement extends StorableObject
 	}
 
 	/**
+	 * @param parentSchemePathId
+	 */
+	void setParentSchemePathId(final Identifier parentSchemePathId) {
+		assert parentSchemePathId != null : NON_NULL_EXPECTED;
+		assert parentSchemePathId.isVoid() || parentSchemePathId.getMajor() == SCHEMEPATH_CODE;
+
+		if (this.parentSchemePathId.equals(parentSchemePathId)) {
+			return;
+		}
+		this.parentSchemePathId = parentSchemePathId;
+		super.markAsChanged();
+	}
+
+	/**
 	 * <p><em>Removes</em> itself from the old {@code SchemePath} and
 	 * <em>adds</em> to the end of the new {@code SchemePath} if it&apos;s
 	 * non-{@code null} (accordingly adjusting own
@@ -891,15 +912,20 @@ public final class PathElement extends StorableObject
 		}
 	}
 
+	/**
+	 * A wrapper around {@link #setParentSchemePathId(Identifier)}.
+	 *
+	 * @param newParentSchemePathId
+	 * @param newSequentialNumber
+	 */
 	private void setParentPathOwner(final Identifier newParentSchemePathId,
 			final int newSequentialNumber) {
-		this.parentSchemePathId = newParentSchemePathId;
-		super.markAsChanged();
+		this.setParentSchemePathId(newParentSchemePathId);
 		if (newParentSchemePathId.isVoid()) {
-			this.sequentialNumber = -1;
+			this.setSequentialNumber(-1);
 			StorableObjectPool.delete(super.id);
 		} else {
-			this.sequentialNumber = newSequentialNumber;
+			this.setSequentialNumber(newSequentialNumber);
 		}
 	}
 
@@ -1146,14 +1172,6 @@ public final class PathElement extends StorableObject
 		assert startAbstractSchemePortId != null : NON_NULL_EXPECTED;
 		assert startAbstractSchemePortId.isVoid() || startAbstractSchemePortId.getMajor() == SCHEMEPORT_CODE || startAbstractSchemePortId.getMajor() == SCHEMECABLEPORT_CODE;
 		this.startAbstractSchemePortId = startAbstractSchemePortId;
-		super.markAsChanged();
-	}
-
-	void setParentSchemePathId(Identifier parentSchemePathId) {
-		// TODO: inroduce additional sanity checks
-		assert parentSchemePathId != null : NON_NULL_EXPECTED;
-		assert parentSchemePathId.isVoid() || parentSchemePathId.getMajor() == SCHEMEPATH_CODE;
-		this.parentSchemePathId = parentSchemePathId;
 		super.markAsChanged();
 	}
 

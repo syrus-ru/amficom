@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.73 2005/08/16 12:14:36 max Exp $
+ * $Id: SchemePath.java,v 1.74 2005/08/25 14:01:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
 /**
  * #16 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.73 $, $Date: 2005/08/16 12:14:36 $
+ * @author $Author: bass $
+ * @version $Revision: 1.74 $, $Date: 2005/08/25 14:01:30 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -734,9 +734,17 @@ public final class SchemePath extends StorableObject
 	 * @see SchemeCableLink#assertContains(CableChannelingItem)
 	 */
 	boolean assertContains(final PathElement pathElement) {
-		final SortedSet<PathElement> pathElements = this.getPathMembers();
+		/*
+		 * The second precondition is intentionally turned off since
+		 * getPathMembers() cannot always return the correct number of
+		 * path members when the code is executed server-side (path
+		 * members preceding the one in question may be not saved yet).
+		 *
+		 * Making a path member depend on its precursor (if any) may be
+		 * a solution, but it'll complicate the code too much.
+		 */
 		return pathElement.getParentSchemePathId().equals(super.id)
-				&& pathElements.headSet(pathElement).size() == pathElement.sequentialNumber;
+				&& (true || this.getPathMembers().headSet(pathElement).size() == pathElement.sequentialNumber);
 	}
 
 	/**
