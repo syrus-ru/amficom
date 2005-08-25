@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: LinkType.xsd,v 1.2 2005/08/25 12:54:47 stas Exp $
+<!-- $Id: CableLinkType.xsd,v 1.1 2005/08/25 12:54:47 stas Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/config/xml"
@@ -10,49 +10,35 @@
 
   <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
 
-  <xsd:element name="linktypes" type="config:LinkTypes">
+  <xsd:include schemaLocation="LinkType.xsd"/>
 
-    <xsd:key name="linktypeuid">
-      <xsd:selector xpath="config:linktype"/>
+  <xsd:element name="cablelinktypes" type="config:CableLinkTypes">
+
+    <xsd:key name="cablelinktypeuid">
+      <xsd:selector xpath="config:cablelinktype"/>
       <xsd:field xpath="@uid"/>
     </xsd:key>
 
   </xsd:element>
 
-  <xsd:complexType name="LinkTypes">
+  <xsd:complexType name="CableLinkTypes">
     <xsd:sequence>
-      <xsd:element name="linktype" type="config:LinkType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="cablelinktype" type="config:CableLinkType" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
 
-  <xsd:complexType name="LinkType">
+  <xsd:complexType name="CableLinkType">
     <xsd:all>
       <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="kind" type="config:LinkTypeKind" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="sort" type="config:LinkTypeSort" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="imageId" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="manufacturer" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="manufacturerCode" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="cablethreadtypes" type="config:CableThreadTypes" minOccurs="0" maxOccurs="1"/>
     </xsd:all>
   </xsd:complexType>
-
-  <xsd:simpleType name="LinkTypeSort">
-      <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="optical"/>
-            <xsd:enumeration value="copper"/>
-            <xsd:enumeration value="air"/>
-            <xsd:enumeration value="powerline"/>
-      </xsd:restriction>
-  </xsd:simpleType>
-
-  <xsd:simpleType name="LinkTypeKind">
-      <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="simple"/>
-            <xsd:enumeration value="cable"/>
-      </xsd:restriction>
-  </xsd:simpleType>
 
 </xsd:schema>
