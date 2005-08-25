@@ -1,0 +1,27 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!-- $Id: ConfigurationLibrary.xsd,v 1.1 2005/08/25 11:40:59 bass Exp $
+-->
+<xsd:schema 
+	targetNamespace="http://syrus.com/AMFICOM/config/xml"
+	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+	xmlns:config="http://syrus.com/AMFICOM/config/xml"
+	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault="qualified">
+
+  <xsd:element name="library" type="config:ConfigurationLibrary"/>
+
+  <xsd:complexType name="ConfigurationLibrary">
+    <xsd:all>
+      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="linktypes" type="config:LinkTypes" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="cablelinktypes" type="config:LinkTypes" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="cablethreadtypes" type="config:CableThreadTypes" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="porttypes" type="config:PortTypes" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="equipmenttypes" type="config:EquipmentTypes" minOccurs="1" maxOccurs="1"/>
+    </xsd:all>
+	<xsd:attribute name="importtype" type="xsd:string" use="required"/>
+  </xsd:complexType>
+</xsd:schema>
