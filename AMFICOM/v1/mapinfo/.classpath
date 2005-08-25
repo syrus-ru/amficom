@@ -13,5 +13,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/mapinfo-common"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/dom4j"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mapclient"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
