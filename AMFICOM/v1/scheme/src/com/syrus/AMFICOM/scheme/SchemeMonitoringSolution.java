@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.62 2005/08/16 12:14:17 max Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.63 2005/08/25 11:33:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.util.Log;
 /**
  * #08 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.62 $, $Date: 2005/08/16 12:14:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.63 $, $Date: 2005/08/25 11:33:19 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -466,62 +466,88 @@ public final class SchemeMonitoringSolution
 	}
 
 	/**
-	 * @param parentSchemeOptimizeInfo
+	 * @param parentSchemeOptimizeInfoId
 	 */
-	public void setParentSchemeOptimizeInfo(final SchemeOptimizeInfo parentSchemeOptimizeInfo) {
+	void setParentSchemeOptimizeInfoId(final Identifier parentSchemeOptimizeInfoId) {
 		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
-		assert this.parentSchemeId.isVoid() ^ this.parentSchemeOptimizeInfoId.isVoid() : OBJECT_BADLY_INITIALIZED;
+		final boolean thisParentSchemeOptimizeInfoIdVoid = this.parentSchemeOptimizeInfoId.isVoid();
+		assert this.parentSchemeId.isVoid() ^ thisParentSchemeOptimizeInfoIdVoid : OBJECT_BADLY_INITIALIZED;
 		
-		final Identifier newParentSchemeOptimizeInfoId = Identifier.possiblyVoid(parentSchemeOptimizeInfo);
-		if (this.parentSchemeOptimizeInfoId.equals(newParentSchemeOptimizeInfoId)) {
+		assert parentSchemeOptimizeInfoId != null : NON_NULL_EXPECTED;
+		final boolean parentSchemeOptimizeInfoIdVoid = parentSchemeOptimizeInfoId.isVoid();
+		assert parentSchemeOptimizeInfoIdVoid || parentSchemeOptimizeInfoId.getMajor() == SCHEMEOPTIMIZEINFO_CODE;
+		
+		if (this.parentSchemeOptimizeInfoId.equals(parentSchemeOptimizeInfoId)) {
 			Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
 			return;
 		}
 
-		if (this.parentSchemeOptimizeInfoId.isVoid()) {
+		if (thisParentSchemeOptimizeInfoIdVoid) {
 			/*
 			 * Erasing old object-type value, setting new object
 			 * value.
 			 */
 			this.parentSchemeId = VOID_IDENTIFIER;
-		} else if (newParentSchemeOptimizeInfoId.isVoid()) {
+		} else if (parentSchemeOptimizeInfoIdVoid) {
 			/*
 			 * Erasing old object value, preserving old object-type
 			 * value. This point is not assumed to be reached unless
 			 * initial object value has already been set (i. e.
 			 * there already is object-type value to preserve).
 			 */
-			this.parentSchemeId = this.getParentSchemeOptimizeInfo().getParentScheme().getId();
+			this.parentSchemeId = this.getParentSchemeOptimizeInfo().getParentSchemeId();
 		}
-		this.parentSchemeOptimizeInfoId = newParentSchemeOptimizeInfoId;
+		this.parentSchemeOptimizeInfoId = parentSchemeOptimizeInfoId;
 		super.markAsChanged();
 	}
 
 	/**
+	 * A wrapper around {@link #setParentSchemeOptimizeInfoId(Identifier)}.
+	 *
+	 * @param parentSchemeOptimizeInfo
+	 */
+	public void setParentSchemeOptimizeInfo(final SchemeOptimizeInfo parentSchemeOptimizeInfo) {
+		this.setParentSchemeOptimizeInfoId(Identifier.possiblyVoid(parentSchemeOptimizeInfo));
+	}
+
+	/**
+	 * @param parentSchemeId
+	 */
+	void setParentSchemeId(final Identifier parentSchemeId) {
+		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
+		final boolean thisParentSchemeIdVoid = this.parentSchemeId.isVoid();
+		assert thisParentSchemeIdVoid ^ this.parentSchemeOptimizeInfoId.isVoid() : OBJECT_BADLY_INITIALIZED;
+
+		assert parentSchemeId != null : NON_NULL_EXPECTED;
+		final boolean parentSchemeIdVoid = parentSchemeId.isVoid();
+		assert parentSchemeIdVoid || parentSchemeId.getMajor() == SCHEME_CODE;
+
+		if (thisParentSchemeIdVoid) {
+			this.getParentSchemeOptimizeInfo().setParentSchemeId(parentSchemeId);
+		} else {
+			if (parentSchemeIdVoid) {
+				Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
+				StorableObjectPool.delete(super.id);
+				return;
+			}
+	
+			if (this.parentSchemeId.equals(parentSchemeId)) {
+				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
+				return;
+			}
+			this.parentSchemeId = parentSchemeId;
+			super.markAsChanged();
+		}
+	}
+
+	/**
+	 * A wrapper around {@link #setParentSchemeId(Identifier)}.
+	 *
 	 * @param parentScheme must be non-{@code null}, otherwise the object
 	 *        will be deleted from pool. 
 	 */
 	public void setParentScheme(final Scheme parentScheme) {
-		assert this.parentSchemeId != null && this.parentSchemeOptimizeInfoId != null : OBJECT_NOT_INITIALIZED;
-		assert this.parentSchemeId.isVoid() ^ this.parentSchemeOptimizeInfoId.isVoid() : OBJECT_BADLY_INITIALIZED;
-
-		if (parentScheme == null) {
-			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
-			StorableObjectPool.delete(super.id);
-			return;
-		}
-
-		if (!this.parentSchemeOptimizeInfoId.isVoid()) {
-			this.getParentSchemeOptimizeInfo().setParentScheme(parentScheme);
-		} else {
-			final Identifier newParentSchemeId = parentScheme.getId();
-			if (this.parentSchemeId.equals(newParentSchemeId)) {
-				Log.debugMessage(ACTION_WILL_RESULT_IN_NOTHING, INFO);
-				return;
-			}
-			this.parentSchemeId = newParentSchemeId;
-			super.markAsChanged();
-		}
+		this.setParentSchemeId(Identifier.possiblyVoid(parentScheme));
 	}
 
 	public void setPrice(final int price) {
@@ -602,13 +628,5 @@ public final class SchemeMonitoringSolution
 		this.active = schemeMonitoringSolution.active;
 		this.parentSchemeId = new Identifier(schemeMonitoringSolution.parentSchemeId);
 		this.parentSchemeOptimizeInfoId = new Identifier(schemeMonitoringSolution.parentSchemeOptimizeInfoId);
-	}
-
-	void setParentSchemeId(Identifier parentSchemeId) {
-//		 TODO: inroduce additional sanity checks
-		assert parentSchemeId != null : NON_NULL_EXPECTED;
-		assert parentSchemeId.isVoid() || parentSchemeId.getMajor() == SCHEME_CODE;
-		this.parentSchemeId = parentSchemeId;
-		super.markAsChanged();
 	}
 }

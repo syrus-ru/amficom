@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolutionWrapper.java,v 1.10 2005/08/15 15:17:54 max Exp $
+ * $Id: SchemeMonitoringSolutionWrapper.java,v 1.11 2005/08/25 11:33:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/15 15:17:54 $
- * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2005/08/25 11:33:19 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class SchemeMonitoringSolutionWrapper extends StorableObjectWrapper<SchemeMonitoringSolution> {
@@ -119,7 +119,7 @@ public final class SchemeMonitoringSolutionWrapper extends StorableObjectWrapper
 			} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
 				schemeMonitoringSolution.setParentSchemeId((Identifier) value);
 			} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
-				schemeMonitoringSolution.parentSchemeOptimizeInfoId = (Identifier) value;
+				schemeMonitoringSolution.setParentSchemeOptimizeInfoId((Identifier) value);
 			}
 		}
 	}
