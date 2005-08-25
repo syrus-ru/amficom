@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.27 2005/08/18 17:16:13 arseniy Exp $
+ * $Id: SchemeSampleData.java,v 1.28 2005/08/25 11:26:47 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: arseniy $
- * @version $Revision: 1.27 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.28 $
  * @module mapviewclient
  */
 public final class SchemeSampleData {
@@ -67,8 +67,8 @@ public final class SchemeSampleData {
 	private static void scheme1(Identifier userId, Identifier domainId) throws ApplicationException
 	{
 		EquipmentType equipmentType = EquipmentType.createInstance(userId, "sample", "desc", "name", "manu", "code"); 
-		LinkType lt = LinkType.createInstance(userId, "1", "2", "3", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "8", "9", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
-		CableLinkType clt = CableLinkType.createInstance(userId, "4", "5", "6", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "8", "7", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
+		LinkType lt = LinkType.createInstance(userId, "1", "2", "3", LinkTypeSort.LINKTYPESORT_COPPER, "8", "9", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
+		CableLinkType clt = CableLinkType.createInstance(userId, "4", "5", "6", LinkTypeSort.LINKTYPESORT_OPTICAL, "8", "7", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test", "7", "CTT", 0, lt, clt); 
 		
 		scheme1 = Scheme.createInstance(userId, "Схемка (бол)", IdlKind.NETWORK, domainId);
@@ -190,8 +190,8 @@ public final class SchemeSampleData {
 	private static void scheme2(Identifier userId, Identifier domainId) throws ApplicationException
 	{
 		EquipmentType equipmentType = EquipmentType.createInstance(userId, "samle2", "desc2", "name2", "manu2", "code2"); 
-		LinkType lt = LinkType.createInstance(userId, "6", "5", "4", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "2", "3", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
-		CableLinkType clt = CableLinkType.createInstance(userId, "3", "2", "1", LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, "4", "5", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
+		LinkType lt = LinkType.createInstance(userId, "6", "5", "4", LinkTypeSort.LINKTYPESORT_OPTICAL, "2", "3", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
+		CableLinkType clt = CableLinkType.createInstance(userId, "3", "2", "1", LinkTypeSort.LINKTYPESORT_OPTICAL, "4", "5", IdentifierPool.getGeneratedIdentifier(ObjectEntities.IMAGERESOURCE_CODE));
 		CableThreadType ctt = CableThreadType.createInstance(userId, "test2", "", "CTT2", 0, lt, clt); 
 
 		scheme2 = Scheme.createInstance(userId, "Схемочка (мал)", IdlKind.NETWORK, domainId);
