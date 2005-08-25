@@ -90,11 +90,12 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 				treeFrame.setSize(w / 5, h);
 
 				propsFrame.pack();
+				timeFrame.pack();
 				propsFrame.setSize(w / 5, propsFrame.getHeight());
 //				saveFrame.pack();
 //				saveFrame.setSize(w / 5, saveFrame.getHeight());
 				tableFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), 2 * h / 5);
-				timeFrame.setSize(w / 5, h / 3);
+//				timeFrame.setSize(w / 5, h / 3);
 				planFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), h - tableFrame.getHeight());
 
 				treeFrame.setLocation(0, 0);
