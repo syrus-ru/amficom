@@ -233,7 +233,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 	private double level2thresh(double level1) {
 		double thresh = 0.0;
 		for (int i = 0; i < threshold.length; i++) {
-			if (threshold[i] < level1) {
+			if (threshold[i] <= level1) {
 				thresh = i * Kx * alpha;
 				break;
 			}
