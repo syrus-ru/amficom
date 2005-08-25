@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorWindowArranger.java,v 1.19 2005/08/22 11:30:55 krupenn Exp $
+ * $Id: MapEditorWindowArranger.java,v 1.20 2005/08/25 11:30:25 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
-import com.syrus.AMFICOM.client.map.operations.ControlsFrame;
 import com.syrus.AMFICOM.client.map.ui.MapAdditionalPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapCharacteristicPropertiesFrame;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
@@ -23,7 +22,7 @@ import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/08/22 11:30:55 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/25 11:30:25 $
  * @module mapviewclient
  */
 
@@ -64,17 +63,17 @@ public class MapEditorWindowArranger extends WindowArranger
 		if (treeFrame != null)
 		{
 			normalize(treeFrame);
-			treeFrame.setSize(w / 5, h * 4 / 5);
+			treeFrame.setSize(w / 5, h);
 			treeFrame.setLocation(0, 0);
 		}
 
-		ControlsFrame controlsFrame = MapDesktopCommand.findControlsFrame(this.desktop);
-		if (controlsFrame != null)		
-		{
-			normalize(controlsFrame);		
-			controlsFrame.setSize(w / 5, h / 5);
-			controlsFrame.setLocation(0, h * 4 / 5);
-		}
+//		ControlsFrame controlsFrame = MapDesktopCommand.findControlsFrame(this.desktop);
+//		if (controlsFrame != null)		
+//		{
+//			normalize(controlsFrame);		
+//			controlsFrame.setSize(w / 5, h / 5);
+//			controlsFrame.setLocation(0, h * 4 / 5);
+//		}
 
 /*----- Правая сторона ------*/
 		MapGeneralPropertiesFrame propFrame = MapDesktopCommand.findMapGeneralPropertiesFrame(this.desktop);
