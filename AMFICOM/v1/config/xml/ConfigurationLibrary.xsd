@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: ConfigurationLibrary.xsd,v 1.2 2005/08/25 12:54:47 stas Exp $
+<!-- $Id: ConfigurationLibrary.xsd,v 1.3 2005/08/25 13:18:29 stas Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/config/xml"
@@ -17,7 +17,7 @@
       <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="linktypes" type="config:LinkTypes" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="cablelinktypes" type="config:LinkTypes" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="cablelinktypes" type="config:CableLinkTypes" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="porttypes" type="config:PortTypes" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="equipmenttypes" type="config:EquipmentTypes" minOccurs="0" maxOccurs="1"/>
     </xsd:all>
