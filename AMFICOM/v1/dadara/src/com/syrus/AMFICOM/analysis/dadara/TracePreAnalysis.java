@@ -1,5 +1,5 @@
 /*-
- * $Id: TracePreAnalysis.java,v 1.3 2005/07/22 06:39:51 saa Exp $
+ * $Id: TracePreAnalysis.java,v 1.4 2005/08/25 16:53:32 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ package com.syrus.AMFICOM.analysis.dadara;
  * чувствительностью, определяемой шумом одной рефлектограммы.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.3 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/25 16:53:32 $
  * @module
  */
 public class TracePreAnalysis {
@@ -26,7 +26,7 @@ public class TracePreAnalysis {
 	public double pulseWidth = 0; // units = ns
 
 	// данные пре-анализа
-	public int traceLength; // длина до ухода р/г у шум
+	public int traceLength; // для одной р/г - длина до ухода р/г у шум; для совокупности - может быть дополнительно уменьшена до длины модельной кривой
 	public double[] avNoise; // уровень шума (чувствительность) для анализа (<noise>)
 	public double[] noiseAv; // уровень шума (точность аппроксимации) для фитировки (noise<>), может указывать на тот же массив, что и avNoise
 
