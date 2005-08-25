@@ -770,9 +770,9 @@ public class TestParametersPanel implements PropertyChangeListener {
 //		System.out.println("TestParametersPanel.selectComboBox() | " + (this.analysisComboBox.getSelectedItem() == null));
 		
 //		Object evaluationSelectedItem = this.evaluationComboBox.getSelectedItem();
-		Object analysisSelectedItem = this.analysisComboBox.getSelectedItem();
+		Object selectedItem = cb.getSelectedItem();
 		
-		if (analysisSelectedItem != null
+		if (selectedItem != null
 				&& !this.useAnalysisSetupsCheckBox.isSelected()) {
 			this.useAnalysisSetupsCheckBox.doClick();
 		}
