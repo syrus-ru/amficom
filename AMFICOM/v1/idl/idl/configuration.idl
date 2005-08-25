@@ -1,5 +1,5 @@
 /*-
- * $Id: configuration.idl,v 1.103 2005/08/20 19:33:23 arseniy Exp $
+ * $Id: configuration.idl,v 1.104 2005/08/25 12:20:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -103,9 +103,10 @@ module configuration {
 
 		valuetype IdlAbstractLinkType : general::corba::IdlStorableObject {
 			enum LinkTypeSort {
-				LINKTYPESORT_OPTICAL_FIBER,
-				LINKTYPESORT_ETHERNET,
-				LINKTYPESORT_GSM
+				LINKTYPESORT_OPTICAL,
+				LINKTYPESORT_COPPER,
+				LINKTYPESORT_AIR, 
+				LINKTYPESORT_POWERLINE
 			};
 
 			public general::corba::WString32 codename;
