@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.69 2005/08/24 10:08:59 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.70 2005/08/25 15:57:34 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,19 +66,19 @@ import com.syrus.util.Log;
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
  * @author $Author: krupenn $
- * @version $Revision: 1.69 $, $Date: 2005/08/24 10:08:59 $
+ * @version $Revision: 1.70 $, $Date: 2005/08/25 15:57:34 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
 		implements Characterizable, Namable, LibraryEntry, XMLBeansTransferable {
 
-	public static final String DEFAULT_WELL = "well";
-	public static final String DEFAULT_PIQUET = "piquet";
-	public static final String DEFAULT_ATS = "ats";
-	public static final String DEFAULT_BUILDING = "building";
+	public static final String DEFAULT_WELL = "defaultwell";
+	public static final String DEFAULT_PIQUET = "defaultpiquet";
+	public static final String DEFAULT_ATS = "defaultats";
+	public static final String DEFAULT_BUILDING = "defaultbuilding";
 	public static final String DEFAULT_UNBOUND = "unbound";
-	public static final String DEFAULT_CABLE_INLET = "cableinlet";
-	public static final String DEFAULT_TOWER = "tower";
+	public static final String DEFAULT_CABLE_INLET = "defaultcableinlet";
+	public static final String DEFAULT_TOWER = "defaulttower";
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -388,7 +388,7 @@ public final class SiteNodeType extends StorableObjectType
 			if(siteNodeType == null) {
 				siteNodeType = new SiteNodeType(creatorId,
 						StorableObjectVersion.createInitial(),
-						xmlSiteNodeType.getSort().toString(),
+						xmlSiteNodeType.getCodename(),
 						xmlSiteNodeType.getDescription(),
 						xmlSiteNodeType,
 						clonedIdsPool, 
@@ -475,7 +475,7 @@ public final class SiteNodeType extends StorableObjectType
 
 			BitmapImageResource bitmapImageResource = BitmapImageResource.createInstance(
 					userId,
-					file.getAbsolutePath(),
+					codename,
 					data);
 			StorableObjectPool.flush(bitmapImageResource, userId, true);
 			return bitmapImageResource.getId();

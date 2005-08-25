@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.73 2005/08/24 10:08:59 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.74 2005/08/25 15:57:34 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,22 +55,22 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: krupenn $
- * @version $Revision: 1.73 $, $Date: 2005/08/24 10:08:59 $
+ * @version $Revision: 1.74 $, $Date: 2005/08/25 15:57:34 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
 		implements Characterizable, Namable, LibraryEntry, XMLBeansTransferable {
 
 	/** тоннель */
-	public static final String DEFAULT_TUNNEL = "tunnel";
+	public static final String DEFAULT_TUNNEL = "defaulttunnel";
 	/** участок коллектора */
-	public static final String DEFAULT_COLLECTOR = "collector";
+	public static final String DEFAULT_COLLECTOR = "defaultcollector";
 	/** внутренняя проводка */
-	public static final String DEFAULT_INDOOR = "indoor";
+	public static final String DEFAULT_INDOOR = "defaultindoor";
 	/** подводная линия */
-	public static final String DEFAULT_SUBMARINE = "submarine";
+	public static final String DEFAULT_SUBMARINE = "defaultsubmarine";
 	/** навесная линия */
-	public static final String DEFAULT_OVERHEAD = "overhead";
+	public static final String DEFAULT_OVERHEAD = "defaultoverhead";
 	/** непривязанный кабель */
 	public static final String DEFAULT_UNBOUND = "cable";
 
@@ -396,7 +396,7 @@ public final class PhysicalLinkType extends StorableObjectType
 			if(physicalLinkType == null) {
 				physicalLinkType = new PhysicalLinkType(creatorId,
 						StorableObjectVersion.createInitial(),
-						xmlPhysicalLinkType.getSort().toString(),
+						xmlPhysicalLinkType.getCodename(),
 						xmlPhysicalLinkType.getDescription(),
 						xmlPhysicalLinkType,
 						clonedIdsPool, 
