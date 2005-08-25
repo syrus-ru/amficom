@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.76 2005/08/20 19:33:23 arseniy Exp $
+ * $Id: measurement.idl,v 1.77 2005/08/25 20:13:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,118 +26,23 @@ module measurement {
 
 ////////////////////////// MeasurementType ///////////////////////////	
 
-		enum IdlMeasurementTypeEnum {
+		enum IdlMeasurementType {
 			REFLECTOMETRY
 		};
-
-		valuetype IdlMeasurementType : general::corba::IdlStorableObject {
-			public general::corba::WString32 codename;
-			public general::corba::WString256 description;
-
-			public general::corba::IdlParameterTypeSeq inParameterTypes;
-			public general::corba::IdlParameterTypeSeq outParameterTypes;
-
-			public general::corba::IdlIdentifierSeq measurementPortTypeIds;
-
-			factory init(in general::corba::IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::IdlIdentifier creatorId,
-					in general::corba::IdlIdentifier modifierId,
-					in long long version,
-					in general::corba::WString32 codename,
-					in general::corba::WString256 description,
-					in general::corba::IdlParameterTypeSeq inParameterTypes,
-					in general::corba::IdlParameterTypeSeq outParameterTypes,
-					in general::corba::IdlIdentifierSeq measurementPortTypeIds);
-		};
+		typedef sequence <IdlMeasurementType> IdlMeasurementTypeSeq;
 
 
 ////////////////////////// AnalysisType ///////////////////////////
 
-		enum IdlAnalysisTypeEnum {
+		enum IdlAnalysisType {
 			DADARA
-		};
-
-		valuetype IdlAnalysisType : general::corba::IdlStorableObject {
-			public general::corba::WString32 codename;
-			public general::corba::WString256 description;
-
-			public general::corba::IdlParameterTypeSeq inParameterTypes;
-			public general::corba::IdlParameterTypeSeq criteriaParameterTypes;
-			public general::corba::IdlParameterTypeSeq etalonParameterTypes;
-			public general::corba::IdlParameterTypeSeq outParameterTypes;
-
-			public general::corba::IdlIdentifierSeq measurementTypeIds;
-
-			factory init(in general::corba::IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::IdlIdentifier creatorId,
-					in general::corba::IdlIdentifier modifierId,
-					in long long version,
-					in general::corba::WString32 codename,
-					in general::corba::WString256 description,
-					in general::corba::IdlParameterTypeSeq inParameterTypes,
-					in general::corba::IdlParameterTypeSeq criteriaParameterTypes,
-					in general::corba::IdlParameterTypeSeq etalonParameterTypes,
-					in general::corba::IdlParameterTypeSeq outParameterTypes,
-					in general::corba::IdlIdentifierSeq measurementTypeIds);
-		};
-
-
-////////////////////////// EvaluationType ///////////////////////////
-
-		valuetype IdlEvaluationType : general::corba::IdlStorableObject {
-			public general::corba::WString32 codename;
-			public general::corba::WString256 description;
-
-			public general::corba::IdlParameterTypeSeq inParameterTypes;
-			public general::corba::IdlParameterTypeSeq thresholdParameterTypes;
-			public general::corba::IdlParameterTypeSeq etalonParameterTypes;
-			public general::corba::IdlParameterTypeSeq outParameterTypes;
-
-			public general::corba::IdlIdentifierSeq measurementTypeIds;
-
-			factory init(in general::corba::IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::IdlIdentifier creatorId,
-					in general::corba::IdlIdentifier modifierId,
-					in long long version,
-					in general::corba::WString32 codename,
-					in general::corba::WString256 description,
-					in general::corba::IdlParameterTypeSeq inParameterTypes,
-					in general::corba::IdlParameterTypeSeq thresholdParameterTypes,
-					in general::corba::IdlParameterTypeSeq etalonParameterTypes,
-					in general::corba::IdlParameterTypeSeq outParameterTypes,
-					in general::corba::IdlIdentifierSeq measurementTypeIds);
 		};
 
 
 ////////////////////////// ModelingType ///////////////////////////
 
-		enum IdlModelingTypeEnum {
+		enum IdlModelingType {
 			DADARA_MODELING
-		};
-
-		valuetype IdlModelingType : general::corba::IdlStorableObject {
-			public general::corba::WString32 codename;
-			public general::corba::WString256 description;
-
-			public general::corba::IdlParameterTypeSeq inParameterTypes;
-			public general::corba::IdlParameterTypeSeq outParameterTypes;
-
-			factory init(in general::corba::IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::IdlIdentifier creatorId,
-					in general::corba::IdlIdentifier modifierId,
-					in long long version,
-					in general::corba::WString32 codename,
-					in general::corba::WString256 description,
-					in general::corba::IdlParameterTypeSeq inParameterTypes,
-					in general::corba::IdlParameterTypeSeq outParameterTypes);
 		};
 
 
@@ -148,12 +53,12 @@ module measurement {
 				MEASUREMENT_STATUS_SCHEDULED,
 				MEASUREMENT_STATUS_ACQUIRING,
 				MEASUREMENT_STATUS_ACQUIRED,
-				MEASUREMENT_STATUS_ANALYZED_OR_EVALUATED,
+				MEASUREMENT_STATUS_ANALYZED,
 				MEASUREMENT_STATUS_COMPLETED,
 				MEASUREMENT_STATUS_ABORTED
 			};
 
-			public general::corba::IdlIdentifier _typeId;
+			public IdlMeasurementType type;
 			public general::corba::IdlIdentifier monitoredElementId;
 
 			public general::corba::WString128 name;
@@ -171,7 +76,7 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::IdlIdentifier _typeId,
+					in IdlMeasurementType type,
 					in general::corba::IdlIdentifier monitoredElementId,
 					in general::corba::WString128 name,
 					in general::corba::IdlIdentifier setupId,
@@ -186,7 +91,7 @@ module measurement {
 //////////////////// Analysis ///////////////////////
 
 		valuetype IdlAnalysis : general::corba::IdlStorableObject {
-			public general::corba::IdlIdentifier _typeId;
+			public IdlAnalysisType type;
 			public general::corba::IdlIdentifier monitoredElementId;
 			public general::corba::IdlIdentifier measurementId;
 
@@ -200,7 +105,7 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::IdlIdentifier _typeId,
+					in IdlAnalysisType type,
 					in general::corba::IdlIdentifier monitoredElementId,
 					in general::corba::IdlIdentifier measurementId,
 					in general::corba::WString128 name,
@@ -208,32 +113,10 @@ module measurement {
 		};
 
 
-//////////////////// Evaluation /////////////////////
-
-		valuetype IdlEvaluation : general::corba::IdlStorableObject {
-			public general::corba::IdlIdentifier _typeId;
-			public general::corba::IdlIdentifier monitoredElementId;
-			public general::corba::IdlIdentifier measurementId;
-
-			public general::corba::IdlIdentifier thresholdSetId;
-
-			factory init(in general::corba::IdlIdentifier id,
-					in long long created,
-					in long long modified,
-					in general::corba::IdlIdentifier creatorId,
-					in general::corba::IdlIdentifier modifierId,
-					in long long version,
-					in general::corba::IdlIdentifier _typeId,
-					in general::corba::IdlIdentifier monitoredElementId,
-					in general::corba::IdlIdentifier measurementId,
-					in general::corba::IdlIdentifier thresholdSetId);
-		};
-
-
 /////////////////// Modeling /////////////////////
 
 		valuetype IdlModeling : general::corba::IdlStorableObject {
-			public general::corba::IdlIdentifier _typeId;
+			public IdlModelingType type;
 			public general::corba::IdlIdentifier monitoredElementId;
 
 			public general::corba::WString128 name;
@@ -246,7 +129,7 @@ module measurement {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in general::corba::IdlIdentifier _typeId,
+					in IdlModelingType type,
 					in general::corba::IdlIdentifier monitoredElementId,
 					in general::corba::WString128 name,
 					in general::corba::IdlIdentifier argumentSetId);
@@ -298,13 +181,11 @@ module measurement {
 			enum ResultSort {
 				RESULT_SORT_MEASUREMENT,
 				RESULT_SORT_ANALYSIS,
-				RESULT_SORT_EVALUATION,
 				RESULT_SORT_MODELING
 			};
 
 			public general::corba::IdlIdentifier measurementId;
 			public general::corba::IdlIdentifier analysisId;
-			public general::corba::IdlIdentifier evaluationId;
 			public general::corba::IdlIdentifier modelingId;
 			public ResultSort sort;
 			public IdlParameterSeq parameters;
@@ -317,7 +198,6 @@ module measurement {
 					in long long version,
 					in general::corba::IdlIdentifier measurementId,
 					in general::corba::IdlIdentifier analysisId,
-					in general::corba::IdlIdentifier evaluationId,
 					in general::corba::IdlIdentifier modelingId,
 					in ResultSort sort,
 					in IdlParameterSeq parameters);
@@ -385,9 +265,8 @@ module measurement {
 			};
 
 			public IdlTestTimeStamps timeStamps;
-			public general::corba::IdlIdentifier measurementTypeId;
-			public general::corba::IdlIdentifier analysisTypeId;
-			public general::corba::IdlIdentifier evaluationTypeId;
+			public IdlMeasurementType measurementType;
+			public IdlAnalysisType analysisType;
 			public general::corba::IdlIdentifier groupTestId;
 			public TestStatus status;
 			public general::corba::IdlIdentifier monitoredElementId;
@@ -402,9 +281,8 @@ module measurement {
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
 					in IdlTestTimeStamps timeStamps,
-					in general::corba::IdlIdentifier measurementTypeId,
-					in general::corba::IdlIdentifier analysisTypeId,
-					in general::corba::IdlIdentifier evaluationTypeId,
+					in IdlMeasurementType measurementType,
+					in IdlAnalysisType analysisType,
 					in general::corba::IdlIdentifier groupTestId,
 					in TestStatus status,
 					in general::corba::IdlIdentifier monitoredElementId,
@@ -478,6 +356,7 @@ module measurement {
 			public general::corba::WString32 codename;
 			public general::corba::WString256 description;
 			public general::corba::WString128 name;
+			public IdlMeasurementTypeSeq measurementTypes;
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -487,7 +366,8 @@ module measurement {
 					in long long version,
 					in general::corba::WString32 codename,
 					in general::corba::WString256 description,
-					in general::corba::WString128 name);
+					in general::corba::WString128 name,
+					in IdlMeasurementTypeSeq measurementTypes);
 		};
 
 
