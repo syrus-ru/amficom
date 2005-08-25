@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.53 2005/08/13 11:11:53 max Exp $
+ * $Id: CableChannelingItem.java,v 1.54 2005/08/25 14:01:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
 /**
  * #15 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.53 $, $Date: 2005/08/13 11:11:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.54 $, $Date: 2005/08/25 14:01:12 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -333,6 +333,17 @@ public final class CableChannelingItem
 		return this.sequentialNumber;
 	}
 
+	/**
+	 * @param sequentialNumber
+	 */
+	private void setSequentialNumber(final int sequentialNumber) {
+		if (this.sequentialNumber == sequentialNumber) {
+			return;
+		}
+		this.sequentialNumber = sequentialNumber;
+		super.markAsChanged();
+	}
+
 	Identifier getStartSiteNodeId() {
 		assert this.startSiteNodeId != null
 				&& !this.startSiteNodeId.isVoid()
@@ -432,26 +443,53 @@ public final class CableChannelingItem
 	}
 
 	/**
-	 * @param endSiteNode
+	 * @param endSiteNodeId
 	 */
-	public void setEndSiteNode(final SiteNode endSiteNode) {
+	void setEndSiteNodeId(final Identifier endSiteNodeId) {
 		assert this.startSiteNodeId != null
 				&& !this.startSiteNodeId.isVoid()
 				&& this.endSiteNodeId != null
-				&& !this.endSiteNodeId.isVoid(): OBJECT_NOT_INITIALIZED;
-		assert !this.endSiteNodeId.equals(this.startSiteNodeId): CIRCULAR_DEPS_PROHIBITED;
-		assert endSiteNode != null: NON_NULL_EXPECTED;
-		final Identifier newEndSiteNodeId = endSiteNode.getId();
-		if (this.endSiteNodeId.equals(newEndSiteNodeId))
+				&& !this.endSiteNodeId.isVoid() : OBJECT_NOT_INITIALIZED;
+		assert !this.endSiteNodeId.equals(this.startSiteNodeId) : CIRCULAR_DEPS_PROHIBITED;
+
+		assert endSiteNodeId != null : NON_NULL_EXPECTED;
+		assert !endSiteNodeId.isVoid() : NON_VOID_EXPECTED;
+		assert endSiteNodeId.getMajor() == SITENODE_CODE;
+
+		if (this.endSiteNodeId.equals(endSiteNodeId)) {
 			return;
-		this.endSiteNodeId = newEndSiteNodeId;
+		}
+		this.endSiteNodeId = endSiteNodeId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setEndSiteNodeId(Identifier)}.
+	 *
+	 * @param endSiteNode
+	 */
+	public void setEndSiteNode(final SiteNode endSiteNode) {
+		this.setEndSiteNodeId(Identifier.possiblyVoid(endSiteNode));
 	}
 
 	public void setEndSpare(final double endSpare) {
 		if (this.endSpare == endSpare)
 			return;
 		this.endSpare = endSpare;
+		super.markAsChanged();
+	}
+
+	/**
+	 * @param parentSchemeCableLinkId
+	 */
+	void setParentSchemeCableLinkId(final Identifier parentSchemeCableLinkId) {
+		assert parentSchemeCableLinkId != null : NON_NULL_EXPECTED;
+		assert parentSchemeCableLinkId.isVoid() || parentSchemeCableLinkId.getMajor() == SCHEMECABLELINK_CODE;
+
+		if (this.parentSchemeCableLinkId.equals(parentSchemeCableLinkId)) {
+			return;
+		}
+		this.parentSchemeCableLinkId = parentSchemeCableLinkId;
 		super.markAsChanged();
 	}
 
@@ -506,15 +544,20 @@ public final class CableChannelingItem
 		}
 	}
 
+	/**
+	 * A wrapper around {@link #setParentSchemeCableLinkId(Identifier)}.
+	 *
+	 * @param newParentSchemeCableLinkId
+	 * @param newSequentialNumber
+	 */
 	private void setParentPathOwner(final Identifier newParentSchemeCableLinkId,
 			final int newSequentialNumber) {
-		this.parentSchemeCableLinkId = newParentSchemeCableLinkId;
-		super.markAsChanged();
+		this.setParentSchemeCableLinkId(newParentSchemeCableLinkId);
 		if (newParentSchemeCableLinkId.isVoid()) {
-			this.sequentialNumber = -1;
+			this.setSequentialNumber(-1);
 			StorableObjectPool.delete(super.id);
 		} else {
-			this.sequentialNumber = newSequentialNumber;
+			this.setSequentialNumber(newSequentialNumber);
 		}
 	}
 
@@ -529,14 +572,26 @@ public final class CableChannelingItem
 	}
 
 	/**
+	 * @param physicalLinkId
+	 */
+	void setPhysicalLinkId(final Identifier physicalLinkId) {
+		assert physicalLinkId != null : NON_NULL_EXPECTED;
+		assert physicalLinkId.isVoid() || physicalLinkId.getMajor() == PHYSICALLINK_CODE;
+
+		if (this.physicalLinkId.equals(physicalLinkId)) {
+			return;
+		}
+		this.physicalLinkId = physicalLinkId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setPhysicalLinkId(Identifier)}.
+	 *
 	 * @param physicalLink
 	 */
 	public void setPhysicalLink(final PhysicalLink physicalLink) {
-		final Identifier newPhysicalLinkId = Identifier.possiblyVoid(physicalLink);
-		if (this.physicalLinkId.equals(newPhysicalLinkId))
-			return;
-		this.physicalLinkId = newPhysicalLinkId;
-		super.markAsChanged();
+		this.setPhysicalLinkId(Identifier.possiblyVoid(physicalLink));
 	}
 
 	public void setPlaceY(final int placeY) {
@@ -554,20 +609,33 @@ public final class CableChannelingItem
 	}
 
 	/**
-	 * @param startSiteNode
+	 * @param startSiteNodeId
 	 */
-	public void setStartSiteNode(final SiteNode startSiteNode) {
+	void setStartSiteNodeId(final Identifier startSiteNodeId) {
 		assert this.startSiteNodeId != null
 				&& !this.startSiteNodeId.isVoid()
 				&& this.endSiteNodeId != null
-				&& !this.endSiteNodeId.isVoid(): OBJECT_NOT_INITIALIZED;
-		assert !this.startSiteNodeId.equals(this.endSiteNodeId): CIRCULAR_DEPS_PROHIBITED;
-		assert startSiteNode != null: NON_NULL_EXPECTED;
-		final Identifier newStartSiteNodeId = startSiteNode.getId();
-		if (this.startSiteNodeId.equals(newStartSiteNodeId))
+				&& !this.endSiteNodeId.isVoid() : OBJECT_NOT_INITIALIZED;
+		assert !this.startSiteNodeId.equals(this.endSiteNodeId) : CIRCULAR_DEPS_PROHIBITED;
+
+		assert startSiteNodeId != null : NON_NULL_EXPECTED;
+		assert !startSiteNodeId.isVoid() : NON_VOID_EXPECTED;
+		assert startSiteNodeId.getMajor() == SITENODE_CODE;
+
+		if (this.startSiteNodeId.equals(startSiteNodeId)) {
 			return;
-		this.startSiteNodeId = newStartSiteNodeId;
+		}
+		this.startSiteNodeId = startSiteNodeId;
 		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setStartSiteNodeId(Identifier)}
+	 *
+	 * @param startSiteNode
+	 */
+	public void setStartSiteNode(final SiteNode startSiteNode) {
+		this.setStartSiteNodeId(Identifier.possiblyVoid(startSiteNode));
 	}
 
 	public void setStartSpare(final double startSpare) {
@@ -628,7 +696,7 @@ public final class CableChannelingItem
 		final int thatSequentialNumber = that.getSequentialNumber();
 		assert this.sequentialNumber != thatSequentialNumber;
 
-		if (this.sequentialNumber - thatSequentialNumber == -1) {
+		if (thatSequentialNumber - this.sequentialNumber == 1) {
 			/*-
 			 * This one is already situated immediately before that.
 			 */
@@ -670,7 +738,7 @@ public final class CableChannelingItem
 		final int thatSequentialNumber = that.getSequentialNumber();
 		assert this.sequentialNumber != thatSequentialNumber;
 
-		if (thatSequentialNumber - this.sequentialNumber == 1) {
+		if (this.sequentialNumber - thatSequentialNumber == 1) {
 			/*-
 			 * This one is already situated immediately after that.
 			 */
@@ -696,42 +764,4 @@ public final class CableChannelingItem
 		}
 		super.markAsChanged();
 	}
-
-	void setEndSiteNodeId(Identifier endSiteNodeId) {
-		// TODO: inroduce additional sanity checks
-		assert endSiteNodeId != null : NON_NULL_EXPECTED;
-		assert endSiteNodeId.isVoid()
-				|| endSiteNodeId.getMajor() == SITENODE_CODE;
-		this.endSiteNodeId = endSiteNodeId;
-		super.markAsChanged();
-	}
-
-	void setPhysicalLinkId(Identifier physicalLinkId) {
-		// TODO: inroduce additional sanity checks
-		assert physicalLinkId != null : NON_NULL_EXPECTED;
-		assert physicalLinkId.isVoid()
-				|| physicalLinkId.getMajor() == PHYSICALLINK_CODE;
-		this.physicalLinkId = physicalLinkId;
-		super.markAsChanged();
-	}
-
-	void setStartSiteNodeId(Identifier startSiteNodeId) {
-		// TODO: inroduce additional sanity checks
-		assert startSiteNodeId != null : NON_NULL_EXPECTED;
-		assert startSiteNodeId.isVoid()
-				|| startSiteNodeId.getMajor() == SITENODE_CODE;
-		this.startSiteNodeId = startSiteNodeId;
-		super.markAsChanged();
-	}
-
-	void setParentPathOwnerId(Identifier parentPathOwnerId) {
-		// TODO: inroduce additional sanity checks
-		assert parentPathOwnerId != null : NON_NULL_EXPECTED;
-		assert parentPathOwnerId.isVoid() 
-				|| parentPathOwnerId.getMajor() == SCHEMECABLELINK_CODE;
-		this.parentSchemeCableLinkId = parentPathOwnerId;
-		super.markAsChanged();		
-	}
-	
-	
 }

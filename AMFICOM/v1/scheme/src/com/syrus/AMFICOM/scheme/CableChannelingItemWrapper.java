@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItemWrapper.java,v 1.11 2005/08/13 11:19:27 max Exp $
+ * $Id: CableChannelingItemWrapper.java,v 1.12 2005/08/25 14:01:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/13 11:19:27 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2005/08/25 14:01:12 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class CableChannelingItemWrapper extends StorableObjectWrapper<CableChannelingItem> {
@@ -138,7 +138,7 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper<Cabl
 			} else if (key.equals(COLUMN_END_SITE_NODE_ID)) {
 				cableChannelingItem.setEndSiteNodeId((Identifier) value);
 			} else if (key.equals(COLUMN_PARENT_SCHEME_CABLE_LINK_ID)) {
-				cableChannelingItem.setParentPathOwnerId((Identifier) value);
+				cableChannelingItem.setParentSchemeCableLinkId((Identifier) value);
 			}
 		}
 	}
