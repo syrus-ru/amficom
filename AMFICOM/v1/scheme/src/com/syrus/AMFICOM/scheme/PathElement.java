@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.66 2005/08/25 14:01:30 bass Exp $
+ * $Id: PathElement.java,v 1.67 2005/08/25 15:31:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/08/25 14:01:30 $
+ * @version $Revision: 1.67 $, $Date: 2005/08/25 15:31:37 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -727,22 +727,6 @@ public final class PathElement extends StorableObject
 				this.sequentialNumber, data);
 	}
 
-	public void setAbstractSchemeElement(final AbstractSchemeElement abstractSchemeElement) {
-		switch (this.kind.value()) {
-			case _SCHEME_CABLE_LINK:
-				setSchemeCableLink((SchemeCableLink) abstractSchemeElement);
-				break;
-			case _SCHEME_ELEMENT:
-				setSchemeElement((SchemeElement) abstractSchemeElement);
-				break;
-			case _SCHEME_LINK:
-				setSchemeLink((SchemeLink) abstractSchemeElement);
-				break;
-			default:
-				throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
-		}
-	}
-
 	/**
 	 * @param created
 	 * @param modified
@@ -939,10 +923,6 @@ public final class PathElement extends StorableObject
 		super.markAsChanged();
 	}
 
-	public void setSchemeCableLink(final SchemeCableLink schemeCableLink) {
-		getSchemeCableThread().setParentSchemeCableLink(schemeCableLink);
-	}
-
 	public void setSchemeCableThread(final SchemeCableThread schemeCableThread) {
 		if (this.kind != SCHEME_CABLE_LINK)
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
@@ -952,14 +932,6 @@ public final class PathElement extends StorableObject
 			return;
 		this.schemeCableThreadId = newSchemeCableThreadId;
 		super.markAsChanged();
-	}
-
-	public void setSchemeElement(final SchemeElement schemeElement) {
-		// XXX it won't work in case of first SE (when initially set SE, and then endPort)  
-		final SchemeDevice parentSchemeDevice = getStartAbstractSchemePort().getParentSchemeDevice();
-		assert (parentSchemeDevice == getEndAbstractSchemePort().getParentSchemeDevice()): NO_COMMON_PARENT;
-		//XXX it's not correct. in case of set need to change ports along with SchemeElement
-		parentSchemeDevice.setParentSchemeElement(schemeElement);
 	}
 
 	public void setSchemeLink(final SchemeLink schemeLink) {
