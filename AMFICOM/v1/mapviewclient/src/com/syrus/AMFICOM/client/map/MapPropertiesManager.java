@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.41 2005/08/23 10:07:27 peskovsky Exp $
+ * $Id: MapPropertiesManager.java,v 1.42 2005/08/25 11:28:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,8 +55,8 @@ import com.syrus.util.Log;
  * <li>center
  * <li>zoom
  * 
- * @author $Author: peskovsky $
- * @version $Revision: 1.41 $, $Date: 2005/08/23 10:07:27 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.42 $, $Date: 2005/08/25 11:28:05 $
  * @module mapviewclient
  */
 public final class MapPropertiesManager 
@@ -105,7 +105,7 @@ public final class MapPropertiesManager
 	private static final String DEFAULT_TOPO_IMAGE_MAX_TIMEWAIT = "30000";
 	private static final String DEFAULT_MOVE_MOUSE_NAVIGATING = "false";
 	private static final String DEFAULT_NAVIGATE_AREA_SIZE = "0.03";
-	private static final String DEFAULT_USE_VIRTUAL_DISK = "true";
+	private static final String DEFAULT_USE_VIRTUAL_DISK = "false";
 	private static final String DEFAULT_VIRTUAL_DISK_PATH = "";
 	
 
@@ -316,6 +316,10 @@ public final class MapPropertiesManager
 	private static Properties defaults = new Properties();
 
 	static {
+		defaults.put(KEY_DATA_BASE_PATH, "");
+		defaults.put(KEY_DATA_BASE_VIEW, "");
+		defaults.put(KEY_DATA_BASE_URL, "");
+
 		defaults.put(KEY_TEXT_BACKGROUND, DEFAULT_TEXT_BACKGROUND);
 		defaults.put(KEY_TEXT_COLOR, DEFAULT_TEXT_COLOR);
 		defaults.put(KEY_FONT, DEFAULT_FONT);
