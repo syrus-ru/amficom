@@ -133,7 +133,7 @@ public class FileOpenCommand extends AbstractCommand
 		chooser.addChoosableFileFilter(all);
 		int returnVal = chooser.showOpenDialog(Environment.getActiveWindow());
 		if(returnVal == JFileChooser.APPROVE_OPTION)
-		{
+		try {
 			File selectedFile = chooser.getSelectedFile();
 			BellcoreStructure bs = loadBS(selectedFile);
 
@@ -155,6 +155,7 @@ public class FileOpenCommand extends AbstractCommand
 			} catch (IOException ex)
 			{
 			}
+		} finally {
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 		}
 	}
