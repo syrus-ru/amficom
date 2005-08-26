@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.97 2005/08/25 20:13:56 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.98 2005/08/26 18:15:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/08/25 20:13:56 $
+ * @version $Revision: 1.98 $, $Date: 2005/08/26 18:15:03 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -118,5 +118,10 @@ public enum MeasurementType implements ActionType {
 			measurementTypes.add(MeasurementType.fromTransferable(idlParameterType));
 		}
 		return EnumSet.copyOf(measurementTypes);
+	}
+
+	@Override
+	public String toString() {
+		return this.getCodename();
 	}
 }

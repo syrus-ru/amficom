@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.94 2005/08/25 20:13:56 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.95 2005/08/26 18:15:03 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/08/25 20:13:56 $
+ * @version $Revision: 1.95 $, $Date: 2005/08/26 18:15:03 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -112,4 +112,8 @@ public enum AnalysisType implements TransferableObject, ActionType {
 		return IdlAnalysisType.from_int(this.getCode());
 	}
 
+	@Override
+	public String toString() {
+		return this.getCodename();
+	}
 }
