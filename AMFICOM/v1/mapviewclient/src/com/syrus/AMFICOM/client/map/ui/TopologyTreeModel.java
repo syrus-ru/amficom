@@ -1,5 +1,5 @@
 /**
- * $Id: TopologyTreeModel.java,v 1.5 2005/08/25 11:22:08 max Exp $
+ * $Id: TopologyTreeModel.java,v 1.6 2005/08/26 10:46:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -108,15 +108,22 @@ public class TopologyTreeModel implements ChildrenFactory {
 			for(SpatialLayer layer : layers) {
 				Item childNode = (Item) nodePresense.get(layer);
 				if(childNode == null) {
-					FiltrableIconedNode newItem = new FiltrableIconedNode();
-					newItem.setObject(layer);
-					newItem.setIcon(layerIcon);
-					newItem.setName(layer.getName());
-					newItem.setChildrenFactory(this);
-					newItem.setCanHaveChildren(true);
-					newItem.setDefaultCondition(null);
-					newItem.setFilter(new Filter(new TopologyConditionWrapper()));
-					//				newItem.populate();
+					Item newItem;
+					if(this.netMapViewer.getMapContext().getMapConnection().searchIsAvailableForLayer(layer)) {
+						FiltrableIconedNode filterableItem = new FiltrableIconedNode();
+						filterableItem.setObject(layer);
+						filterableItem.setIcon(layerIcon);
+						filterableItem.setName(layer.getName());
+						filterableItem.setChildrenFactory(this);
+						filterableItem.setCanHaveChildren(true);
+						filterableItem.setDefaultCondition(null);
+						filterableItem.setFilter(new Filter(new TopologyConditionWrapper()));
+						newItem = filterableItem;
+					}
+					else {
+						PopulatableIconedNode populatableItem = new PopulatableIconedNode(this, layer, layer.getName(), layerIcon, true);
+						newItem = populatableItem;
+					}
 					node.addChild(newItem);
 				}
 			}
@@ -185,7 +192,10 @@ public class TopologyTreeModel implements ChildrenFactory {
 				MapImageLoader mapImageLoader = TopologyTreeModel.this.netMapViewer.getRenderer().getLoader();
 
 				try {
-					StorableObjectCondition condition = ((FiltrableIconedNode)this.node).getResultingCondition();
+					StorableObjectCondition condition = null;
+					if(this.node instanceof FiltrableIconedNode) {
+						condition = ((FiltrableIconedNode)this.node).getResultingCondition();
+					}
 					if(condition != null) {
 						TypicalCondition typicalCondition = (TypicalCondition)condition;
 						objects = mapImageLoader.findSpatialObjects(spatialLayer, (String)typicalCondition.getValue());
