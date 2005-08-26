@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.95 2005/08/24 10:08:59 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.96 2005/08/26 10:52:18 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: krupenn $
- * @version $Revision: 1.95 $, $Date: 2005/08/24 10:08:59 $
+ * @version $Revision: 1.96 $, $Date: 2005/08/26 10:52:18 $
  * @module map
  */
 public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XMLBeansTransferable {
@@ -259,6 +259,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.selected = false;
 
 		this.binding = new PhysicalLinkBinding(new IntDimension(plt.dimensionX, plt.dimensionY));
+		this.nodeLinks = new ArrayList<NodeLink>();
 	}
 
 	@Override
@@ -987,6 +988,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			if(existingIdentifier != null) {
 				physicalLink = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(physicalLink != null) {
+					clonedIdsPool.setExistingId(uid, existingIdentifier);
 					physicalLink.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
 				}
 				else{
