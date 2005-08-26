@@ -1,7 +1,6 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Graphics;
 
 import javax.swing.JPanel;
@@ -144,16 +143,6 @@ public class SimpleGraphPanel extends JPanel
 		this.end = end;
 	}
 
-	public void setGraphSize(Dimension d)
-	{
-		Dimension dim = getSize();
-		double kx = d.getWidth() / dim.getWidth();
-		double ky = d.getHeight() / dim.getHeight();
-		scaleX *= kx;
-		scaleY *= ky;
-		super.setSize(d);
-	}
-
 	public void setDefaultScales()
 	{
 		setGraphBounds(0, y.length);
@@ -208,8 +197,10 @@ public class SimpleGraphPanel extends JPanel
 		int[] yArr = new int[N + 1];
 		for (int j = 0; j <= N; j++)
 		{
-			xArr[j] = (int )((j + xT0 - start) * scaleX + 1);
-			yArr[j] = (int )((maxY - y1[j + i0] - top) * scaleY);
+//			xArr[j] = (int )((j + xT0 - start) * scaleX + 1);
+//			yArr[j] = (int )((maxY - y1[j + i0] - top) * scaleY);
+			xArr[j] = index2coord(j + xT0);
+			yArr[j] = value2coord(y1[j + i0]);
 			// XXX: to avoid rounding errors, we could use smth like this:
 			//double vx = (j + xT0 - start) * scaleX + 1;
 			//double vy = (maxY - y[j + i0] - top) * scaleY;
@@ -241,5 +232,36 @@ public class SimpleGraphPanel extends JPanel
 
 	protected boolean isShowGraph() {
 		return true;
+	}
+
+	protected double getTrueScaleX() {
+		return scaleX;
+	}
+
+	protected double getTrueScaleY() {
+		return -scaleY;
+	}
+
+	protected int coord2index(int coord) {
+		return (int)(coord / scaleX + .5) + start;
+	}
+
+	protected double coord2indexF(int coord) {
+		return coord / scaleX + start;
+	}
+
+	protected int index2coord(int index) {
+		// FIXME - выяснить, нужен ли (+1) здесь и в value2coord
+		// если нужен - привести в соответствие index2coord и coord2index
+		//return (int)(((double)(index - start))*scaleX+.5)+1;
+		return (int)((index - start) * scaleX + .5);
+	}
+
+	protected int value2coord(double value) {
+		return (int)Math.round((maxY - value - top) * scaleY);
+	}
+
+	protected double coord2value(int coord) {
+		return maxY - top - coord / scaleY;
 	}
 }

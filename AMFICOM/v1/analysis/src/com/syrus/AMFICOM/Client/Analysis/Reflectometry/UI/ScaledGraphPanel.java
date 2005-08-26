@@ -270,43 +270,4 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		if (d < 5000.) return 5000.;
 		return 10000.;
 	}
-
-	protected double getTrueScaleX()
-	{
-		return scaleX;
-	}
-
-	protected double getTrueScaleY()
-	{
-		return -scaleY;
-	}
-
-	protected int coord2index(int coord)
-	{
-		return (int)(coord / scaleX + .5) + start;
-	}
-	
-	// бывает также надо знать неокругленное значение координаты
-	protected double coord2indexF(int coord)
-	{
-		return coord / scaleX + start;
-	}
-
-	protected int index2coord(int index)
-	{
-		// FIXME - выяснить, нужен ли (+1) здесь и в value2coord
-		// если нужен - привести в соответствие index2coord и coord2index
-		//return (int)(((double)(index - start))*scaleX+.5)+1;
-		return (int)((index - start) * scaleX + .5);
-	}
-
-	protected int value2coord(double value)
-	{
-		return (int)Math.round((maxY - value - top) * scaleY);
-	}
-
-	protected double coord2value(int coord)
-	{
-		return maxY - top - coord / scaleY;
-	}
 }
