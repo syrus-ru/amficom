@@ -141,26 +141,6 @@ public class AnalysisUtil
 		return ar;
 	}
 
-	public static AnalysisType getAnalysisType(String codename)
-	throws ApplicationException
-	{
-		StorableObjectCondition aTypeCondition =
-			new TypicalCondition(
-				codename,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.ANALYSIS_TYPE_CODE,
-				StorableObjectWrapper.COLUMN_CODENAME);			
-
-		Collection<AnalysisType> aTypes = StorableObjectPool.
-				getStorableObjectsByCondition(aTypeCondition, true);
-		for (AnalysisType type: aTypes)
-		{
-			if (type.getCodename().equals(codename))
-				return type;
-		}
-		throw new ApplicationException("getAnalysisType parametertype not found");
-	}
-
 	/**
 	 * Method for loading CriteriaSet for certain TestSetup to Pool.
 	 * If there is no CriteriaSet attached to TestSetup new CriteriaSet
