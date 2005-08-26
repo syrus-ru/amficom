@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.18 2005/08/20 19:53:26 arseniy Exp $
+ * $Id: TestController.java,v 1.19 2005/08/26 09:38:41 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,8 +33,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/20 19:53:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/08/26 09:38:41 $
+ * @author $Author: bob $
  * @module module
  */
 public class TestController implements Wrapper<Test> {
@@ -226,14 +226,7 @@ public class TestController implements Wrapper<Test> {
 				}
 			}
 			else if (key.equals(KEY_MEASUREMENT_TYPE)) {
-				try {
-					final MeasurementType measurementType = StorableObjectPool.getStorableObject(test.getMeasurementTypeId(), true);
-					value = measurementType.getDescription();
-				} catch (ApplicationException e) {
-					Log.errorMessage("TestController.getValue | key='" + key + "', cannot get " + test.getMeasurementTypeId()
-							+ " -- " + e.getMessage());
-					Log.errorException(e);
-				}
+				value = test.getMeasurementType().getDescription();
 			} else if (key.equals(KEY_START_TIME)) {
 				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 				value = sdf.format(test.getStartTime());

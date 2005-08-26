@@ -61,7 +61,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/08/23 10:46:11 $
+ * @version $Revision: 1.69 $, $Date: 2005/08/26 09:38:41 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -803,7 +803,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 												LangModelSchedule.getString("created by Scheduler") + " /" + sdf.format(new Date()) + "/",
 												measurementSetup.getMeasurementDuration(),
 												measurementSetup.getMonitoredElementIds(),
-												measurementSetup.getMeasurementTypeIds());
+												measurementSetup.getMeasurementTypes());
 										measurementSetupId = measurementSetup1.getId();
 										this.unchangedMeasurementSetupNewMap.put(measurementSetup.getId(), measurementSetupId);
 									}

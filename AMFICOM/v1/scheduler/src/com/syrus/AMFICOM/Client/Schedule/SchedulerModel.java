@@ -14,6 +14,7 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -52,7 +53,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.logic.IconPopulatableItem;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
+import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
+import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.ParameterSet;
@@ -140,7 +143,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	// private KIS kis = null;
 	private String				name								= null;
 	MonitoredElement			monitoredElement					= null;
-	private Identifier			analysisTypeId						= null;
+	private AnalysisType			analysisType						= null;
 //	private Identifier			evaluationTypeId					= null;
 	private ParameterSet		set									= null;
 	private MeasurementSetup	measurementSetup					= null;
@@ -262,7 +265,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				AbstractMainFrame.showErrorMessage(Environment.getActiveWindow(), e);
 			}
 		} else if (propertyName.equals(COMMAND_SET_ANALYSIS_TYPE)) {
-			this.analysisTypeId = (Identifier) evt.getNewValue();
+			this.analysisType = (AnalysisType) evt.getNewValue();
 		}
 //		else if (propertyName.equals(COMMAND_SET_EVALUATION_TYPE)) {
 //			this.evaluationTypeId = (Identifier) evt.getNewValue();
@@ -337,8 +340,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		// this.testTemporalStampsEditor.setTemporalPatterns(temporalPatterns);
 
 		{
-			final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENT_TYPE_CODE);
-			final Set<MeasurementType> measurementTypes = StorableObjectPool.getStorableObjectsByCondition(ec, true);
+//			final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENT_TYPE_CODE);
+//			final Set<MeasurementType> measurementTypes = StorableObjectPool.getStorableObjectsByCondition(ec, true);
 
 			// LinkedIdsCondition domainCondition = new
 			// LinkedIdsCondition(sessionInterface.getDomainIdentifier(),
@@ -348,19 +351,31 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			// ConfigurationStorableObjectPool.getStorableObjectsByCondition(
 			// domainCondition, true);
 
-			final Collection<IconPopulatableItem> measurementTypeItems = new ArrayList<IconPopulatableItem>(measurementTypes.size());
+			MeasurementType[] measurementTypes = MeasurementType.values();
+			final Collection<IconPopulatableItem> measurementTypeItems = new ArrayList<IconPopulatableItem>(measurementTypes.length);
 
 			final MeasurementTypeChildrenFactory childrenFactory = new MeasurementTypeChildrenFactory(LoginManager.getDomainId());
-			for (Iterator iter = measurementTypes.iterator(); iter.hasNext();) {
-				MeasurementType measurementType1 = (MeasurementType) iter.next();
+			
+			for(MeasurementType measurementType : measurementTypes) {
 				IconPopulatableItem measurementTypeItem = new IconPopulatableItem();
 				measurementTypeItem.setChildrenFactory(childrenFactory);
 				measurementTypeItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
-				Log.debugMessage("SchedulerModel.refreshEditors | measurementType1: " + measurementType1.getName(), Log.DEBUGLEVEL07);
-				measurementTypeItem.setName(measurementType1.getName());
-				measurementTypeItem.setObject(measurementType1.getId());
+//				Log.debugMessage("SchedulerModel.refreshEditors | measurementType1: " + measurementType1.getName(), Log.DEBUGLEVEL07);
+				measurementTypeItem.setName(measurementType.getDescription());
+				measurementTypeItem.setObject(measurementType);
 				measurementTypeItems.add(measurementTypeItem);
 			}
+			
+//			for (Iterator iter = measurementTypes.iterator(); iter.hasNext();) {
+//				MeasurementType measurementType1 = (MeasurementType) iter.next();
+//				IconPopulatableItem measurementTypeItem = new IconPopulatableItem();
+//				measurementTypeItem.setChildrenFactory(childrenFactory);
+//				measurementTypeItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
+////				Log.debugMessage("SchedulerModel.refreshEditors | measurementType1: " + measurementType1.getName(), Log.DEBUGLEVEL07);
+//				measurementTypeItem.setName(measurementType1.getName());
+//				measurementTypeItem.setObject(measurementType1.getId());
+//				measurementTypeItems.add(measurementTypeItem);
+//			}
 
 			// this.elementsViewer.setElements(measurementTypeItems);
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_TYPES, null, measurementTypeItems));
@@ -368,7 +383,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
 					COMMAND_SET_ANALYSIS_TYPES,
 					null,
-					StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.ANALYSIS_TYPE_CODE), true, true)));
+					AnalysisType.values()));
 
 //			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
 //					COMMAND_SET_EVALUATION_TYPES,
@@ -406,7 +421,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
 					COMMAND_SET_MEASUREMENT_TYPE,
 					null,
-					StorableObjectPool.getStorableObject(test.getMeasurementTypeId(), true)));
+					test.getMeasurementType()));
 			MonitoredElement monitoredElement1 = test.getMonitoredElement();
 			// MeasurementPort measurementPort = (MeasurementPort)
 			// ConfigurationStorableObjectPool.getStorableObject(
@@ -416,7 +431,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			// true));
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MONITORED_ELEMENT, null, monitoredElement1));
 
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_ANALYSIS_TYPE, this, test.getAnalysisTypeId()));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_ANALYSIS_TYPE, this, test.getAnalysisType()));
 //			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
 //					COMMAND_SET_EVALUATION_TYPE,
 //					null,
@@ -678,7 +693,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 	public void setSelectedMeasurementType(final MeasurementType measurementType) {
 		if (this.measurementType == null || measurementType == null
-				|| !this.measurementType.getId().equals(measurementType.getId())) {
+				|| !this.measurementType.equals(measurementType)) {
 			this.measurementType = measurementType;
 			this.refreshMeasurementSetups();
 		}
@@ -701,7 +716,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.monitoredElement = monitoredElement;
 		}
 
-		if (this.measurementType == null || measurementType == null || !this.measurementType.getId().equals(measurementType.getId())) {
+		if (this.measurementType == null || measurementType == null || !this.measurementType.equals(measurementType)) {
 			changed = true;
 			this.measurementType = measurementType;
 		}
@@ -717,13 +732,15 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		// public void run() {
 		StorableObjectCondition condition = null;
 
-		LinkedIdsCondition measurementTypeCondition = null;
+		TypicalCondition measurementTypeCondition = null;
 		Identifier identifier = null;
 		Set<Identifier> idSet = null;
 
 		if (SchedulerModel.this.measurementType != null) {
-			identifier = SchedulerModel.this.measurementType.getId();
-			measurementTypeCondition = new LinkedIdsCondition(identifier, ObjectEntities.MEASUREMENTSETUP_CODE);
+			measurementTypeCondition = new TypicalCondition(this.measurementType,
+				OperationSort.OPERATION_IN,
+				ObjectEntities.MEASUREMENTSETUP_CODE,
+				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
 		}
 
 		if (SchedulerModel.this.monitoredElement != null) {
@@ -853,7 +870,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							LangModelSchedule.getString("created by Scheduler") + " /" + sdf.format(new Date()) + "/",
 							1000 * 60 * 10,
 							Collections.singleton(this.monitoredElement.getId()),
-							Collections.singleton(this.measurementType.getId()));
+							EnumSet.of(this.measurementType));
 					if (this.measurementSetupIdMap != null) {
 						this.measurementSetupIdMap.clear();
 					}
@@ -877,12 +894,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 								endTime,
 								temporalPattern == null ? Identifier.VOID_IDENTIFIER : temporalPattern.getId(),
 								temporalType,
-								this.measurementType.getId(),
-								this.analysisTypeId == null ? Identifier.VOID_IDENTIFIER : this.analysisTypeId,
-//								this.evaluationTypeId == null ? 
-										Identifier.VOID_IDENTIFIER 
-//										: this.evaluationTypeId
-										,
+								this.measurementType,
+								this.analysisType,
 								Identifier.VOID_IDENTIFIER,
 								this.monitoredElement,
 								this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
@@ -923,13 +936,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							startTime,
 							endTime,
 							temporalPattern == null ? Identifier.VOID_IDENTIFIER : temporalPattern.getId(),
-							this.measurementType.getId(),
-							this.analysisTypeId == null ? Identifier.VOID_IDENTIFIER : this.analysisTypeId,
+							this.measurementType,
+							this.analysisType,
 							test.getGroupTestId(),
-//							this.evaluationTypeId == null ? 
-									Identifier.VOID_IDENTIFIER 
-//									: this.evaluationTypeId
-									,
 							test.getStatus().value(),
 							this.monitoredElement,
 							this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
@@ -1057,9 +1066,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 								null,
 								Identifier.VOID_IDENTIFIER,
 								TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME,
-								testGroup.getMeasurementTypeId(),
-								testGroup.getAnalysisTypeId(),
-								testGroup.getEvaluationTypeId(),
+								testGroup.getMeasurementType(),
+								testGroup.getAnalysisType(),
 								testGroupId,
 								testGroup.getMonitoredElement(),
 								testGroup.getDescription(),
@@ -1153,9 +1161,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 									endDate,
 									selectedTest.getTemporalPatternId(),
 									selectedTest.getTemporalType(),
-									selectedTest.getMeasurementTypeId(),
-									selectedTest.getAnalysisTypeId(),
-									selectedTest.getEvaluationTypeId(),
+									selectedTest.getMeasurementType(),
+									selectedTest.getAnalysisType(),
 									testGroupId,
 									selectedTest.getMonitoredElement(),
 									selectedTest.getDescription(),
