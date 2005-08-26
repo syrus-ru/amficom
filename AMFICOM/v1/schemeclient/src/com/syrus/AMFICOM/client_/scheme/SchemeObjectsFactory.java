@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.29 2005/08/26 09:58:30 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.30 2005/08/26 10:10:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.29 $, $Date: 2005/08/26 09:58:30 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/26 10:10:10 $
  * @module schemeclient
  */
 
@@ -117,13 +117,13 @@ public class SchemeObjectsFactory {
 	
 	public static LinkType createLinkType(String codename) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		LinkType type = LinkType.createInstance(userId, codename, EMPTY, codename, LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, EMPTY, EMPTY, Identifier.VOID_IDENTIFIER);
+		LinkType type = LinkType.createInstance(userId, codename, EMPTY, codename, LinkTypeSort.LINKTYPESORT_OPTICAL, EMPTY, EMPTY, Identifier.VOID_IDENTIFIER);
 		return type;
 	}
 	
 	public static CableLinkType createCableLinkType(String codename) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		CableLinkType type = CableLinkType.createInstance(userId, codename, EMPTY, codename, LinkTypeSort.LINKTYPESORT_OPTICAL_FIBER, EMPTY, EMPTY, Identifier.VOID_IDENTIFIER);
+		CableLinkType type = CableLinkType.createInstance(userId, codename, EMPTY, codename, LinkTypeSort.LINKTYPESORT_OPTICAL, EMPTY, EMPTY, Identifier.VOID_IDENTIFIER);
 		return type;
 	}
 	
