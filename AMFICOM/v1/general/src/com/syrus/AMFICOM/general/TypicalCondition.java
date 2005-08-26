@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.37 2005/08/26 09:29:53 bob Exp $
+ * $Id: TypicalCondition.java,v 1.38 2005/08/26 09:32:48 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -124,7 +124,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.37 $, $Date: 2005/08/26 09:29:53 $
+ * @version $Revision: 1.38 $, $Date: 2005/08/26 09:32:48 $
  * @author $Author: bob $
  * @module general
  */
@@ -1601,6 +1601,21 @@ public class TypicalCondition implements StorableObjectCondition {
 				switch (this.delegate.operation) {
 					case OperationSort._OPERATION_EQUALS:
 						buffer.append(" [boolean] is ");
+						buffer.append(this.delegate.value);
+						break;
+					default:
+						Log.errorMessage("TypicalCondition.toString | unknown operation code " + this.delegate.operation);
+						break;
+				}
+				break;
+			case TypicalSort._TYPE_ENUM:
+				switch (this.delegate.operation) {
+					case OperationSort._OPERATION_EQUALS:
+						buffer.append(" [enum] is ");
+						buffer.append(this.delegate.value);
+						break;
+					case OperationSort._OPERATION_IN:
+						buffer.append(" [enum] is in ");
 						buffer.append(this.delegate.value);
 						break;
 					default:
