@@ -1,5 +1,5 @@
 /*
- * $Id: MapJLocalRenderer.java,v 1.7 2005/08/24 07:29:48 peskovsky Exp $
+ * $Id: MapJLocalRenderer.java,v 1.8 2005/08/26 16:05:03 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.7 $, $Date: 2005/08/24 07:29:48 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.8 $, $Date: 2005/08/26 16:05:03 $
  * @module mapinfo
  */
 public class MapJLocalRenderer {
@@ -122,7 +122,7 @@ public class MapJLocalRenderer {
 
 		Log.debugMessage("MapJLocalRenderer.renderToStream | total " + (time3 - time1) + "\n		"
 				+ (time2 - time1) + " (rendered image)\n"
-				+ "\n		" + (time3 - time2) + " created new BufferedImage.", Level.INFO);
+				+ "\n		" + (time3 - time2) + " created new BufferedImage.", Level.FINE);
 
 		return imageToReturn;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MapImagePanel.java,v 1.16 2005/08/26 09:59:39 peskovsky Exp $
+ * $Id: MapImagePanel.java,v 1.17 2005/08/26 16:05:03 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/26 09:59:39 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.17 $, $Date: 2005/08/26 16:05:03 $
+ * @author $Author: krupenn $
  * @module mapinfo
  */
 public class MapImagePanel extends JPanel {
@@ -98,7 +98,7 @@ public class MapImagePanel extends JPanel {
 		
 		final long t2 = System.currentTimeMillis();
 
-		Log.debugMessage("MapImagePanel.paintComponent | total " + (t2 - t1) + " ms.", Level.INFO); 
+		Log.debugMessage("MapImagePanel.paintComponent | total " + (t2 - t1) + " ms.", Level.FINE); 
 	}
 
 	public void paintComponent(final Graphics g, int shiftX, int shiftY) {
@@ -132,7 +132,7 @@ public class MapImagePanel extends JPanel {
 
 		Log.debugMessage("MapImagePanel.paintComponent with Shift | total " + (t3 - t1) + " (ms)\n" + "		"
 				+ (t2 - t1) + " ms (painting background)\n" + "		"
-				+ (t3 - t2) + " ms (result image paint)\n", Level.INFO);
+				+ (t3 - t2) + " ms (result image paint)\n", Level.FINE);
 	}
 	
 	public void refreshLayerImage() throws MapConnectionException, MapDataException {
@@ -156,6 +156,6 @@ public class MapImagePanel extends JPanel {
 		final long t3 = System.currentTimeMillis();
 		Log.debugMessage("MapImagePanel.refreshLayerImage | total " + (t3 - t1) + "\n		"
 				+ (t2 - t1) + " ms (painted mapImage to resultImage) " + "\n		"
-				+ (t3 - t2) + " ms (painted LogicalNetLayer), ms.", Level.INFO);
+				+ (t3 - t2) + " ms (painted LogicalNetLayer), ms.", Level.FINE);
 	}
 }

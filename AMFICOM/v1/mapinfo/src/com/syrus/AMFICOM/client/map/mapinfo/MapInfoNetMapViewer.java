@@ -123,7 +123,7 @@ public class MapInfoNetMapViewer extends NetMapViewer {
 		Log.debugMessage("MapInfoNetMapViewer.repaint | finished in " + (t3 - t1) + " ms \n"
 				+ "		" + (t2 - t1) + " ms (image loaded)\n"
 				+ "		" + (t3 - t2) + " ms (LogicalNetLayer image painted to the buffer)\n"				
-				+ "		" + (t4 - t3) + " ms (visual component repainted).", Level.INFO);
+				+ "		" + (t4 - t3) + " ms (visual component repainted).", Level.FINE);
 	}
 
 	/*

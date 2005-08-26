@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.8 2005/08/24 07:29:48 peskovsky Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.9 2005/08/26 16:05:03 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/24 07:29:48 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.9 $, $Date: 2005/08/26 16:05:03 $
+ * @author $Author: krupenn $
  * @module mapinfo
  */
 
@@ -109,7 +109,7 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		Log.debugMessage("MapInfoCorbaImageLoader.renderMapImage | " + (t1 - t0) + " (creating transf and session key)"
 				+ (t2 - t1) + " (getting session ref)"
 				+ (t3 - t2) + "rendering"
-				+ (t4 - t3) + "creating image", Level.INFO);
+				+ (t4 - t3) + "creating image", Level.FINE);
 
 		return bufferedImage;
 	}

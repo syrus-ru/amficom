@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.17 2005/08/26 08:15:00 peskovsky Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.18 2005/08/26 16:05:03 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.17 $, $Date: 2005/08/26 08:15:00 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/08/26 16:05:03 $
  * @module mapinfo
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectionListener {
@@ -51,7 +51,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 
 			//Осуществляется ПЕРВЫЙ поиск по всем слоям с надписями - тот, который сильно тормозит из-за
 			//MapJшного кэширования таблиц.
-			Log.debugMessage("MapInfoLocalStubImageLoader.MapInfoLocalStubImageLoader | Starting first search.", Level.INFO);
+			Log.debugMessage("MapInfoLocalStubImageLoader.MapInfoLocalStubImageLoader | Starting first search.", Level.FINE);
 			long t1 = System.currentTimeMillis();
 			
 			for (SpatialLayer spatialLayer : this.connection.getLayers()){
@@ -63,7 +63,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 					this.findSpatialObjects(miSpatialLayer,FIRST_SEARCH_STRING);
 			}
 			long t2 = System.currentTimeMillis();			
-			Log.debugMessage("MapInfoLocalStubImageLoader.MapInfoLocalStubImageLoader | First search completed ( "+ (t2 - t1) + " ms).", Level.INFO);
+			Log.debugMessage("MapInfoLocalStubImageLoader.MapInfoLocalStubImageLoader | First search completed ( "+ (t2 - t1) + " ms).", Level.FINE);
 		} catch (MapDataException e) {
 			throw new MapConnectionException("Error while first search.");
 		} catch (IOException e) {
@@ -195,7 +195,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 					+ sumGettingStringAttributes + "ms - sumGettingStringAttributes\n"
 					+ sumComparingStrings + "ms - sumComparingStrings\n"
 					+ sumGettingCenters + "ms - sumGettingCenters\n"
-					+ sumCreatingObjects + "ms - sumCreatingObjects\n",Level.INFO);
+					+ sumCreatingObjects + "ms - sumCreatingObjects\n",Level.FINE);
 			
 		} catch (Exception e) {
 			throw new MapDataException("Error while searching at region", e);
