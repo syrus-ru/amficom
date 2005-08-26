@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.74 2005/08/25 14:01:30 bass Exp $
+ * $Id: SchemePath.java,v 1.75 2005/08/26 13:45:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRE
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
@@ -72,7 +71,7 @@ import com.syrus.util.Log;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/08/25 14:01:30 $
+ * @version $Revision: 1.75 $, $Date: 2005/08/26 13:45:53 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -364,7 +363,7 @@ public final class SchemePath extends StorableObject
 	 * @param transmissionPathId
 	 * @param parentSchemeMonitoringSolutionId
 	 */
-	synchronized void setAttributes(final Date created,
+	void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
@@ -373,17 +372,19 @@ public final class SchemePath extends StorableObject
 			final String description,
 			final Identifier transmissionPathId,
 			final Identifier parentSchemeMonitoringSolutionId) {
-		super.setAttributes(created, modified, creatorId, modifierId, version);
-
-		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
-		assert description != null : NON_NULL_EXPECTED;
-		assert transmissionPathId != null : NON_NULL_EXPECTED;
-		assert parentSchemeMonitoringSolutionId != null && !parentSchemeMonitoringSolutionId.isVoid() : NON_NULL_EXPECTED;
-
-		this.name = name;
-		this.description = description;
-		this.transmissionPathId = transmissionPathId;
-		this.parentSchemeMonitoringSolutionId = parentSchemeMonitoringSolutionId;
+		synchronized (this) {
+			super.setAttributes(created, modified, creatorId, modifierId, version);
+	
+			assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
+			assert description != null : NON_NULL_EXPECTED;
+			assert transmissionPathId != null : NON_NULL_EXPECTED;
+			assert parentSchemeMonitoringSolutionId != null && !parentSchemeMonitoringSolutionId.isVoid() : NON_NULL_EXPECTED;
+	
+			this.name = name;
+			this.description = description;
+			this.transmissionPathId = transmissionPathId;
+			this.parentSchemeMonitoringSolutionId = parentSchemeMonitoringSolutionId;
+		}
 	}
 
 	/**
@@ -392,8 +393,9 @@ public final class SchemePath extends StorableObject
 	public void setDescription(final String description) {
 		assert this.description != null : OBJECT_NOT_INITIALIZED;
 		assert description != null : NON_NULL_EXPECTED;
-		if (this.description.equals(description))
+		if (this.description.equals(description)) {
 			return;
+		}
 		this.description = description;
 		super.markAsChanged();
 	}
@@ -404,37 +406,66 @@ public final class SchemePath extends StorableObject
 	public void setName(final String name) {
 		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
-		if (this.name.equals(name))
+		if (this.name.equals(name)) {
 			return;
+		}
 		this.name = name;
 		super.markAsChanged();
 	}
 
-	public void setParentSchemeMonitoringSolution(final SchemeMonitoringSolution parentSchemeMonitoringSolution) {
+	/**
+	 * @param parentSchemeMonitoringSolutionId
+	 */
+	void setParentSchemeMonitoringSolutionId(final Identifier parentSchemeMonitoringSolutionId) {
 		assert this.parentSchemeMonitoringSolutionId != null : OBJECT_NOT_INITIALIZED;
 		assert !this.parentSchemeMonitoringSolutionId.isVoid() : EXACTLY_ONE_PARENT_REQUIRED;
-		if (parentSchemeMonitoringSolution == null) {
+
+		assert parentSchemeMonitoringSolutionId != null : NON_NULL_EXPECTED;
+		final boolean parentSchemeMonitoringSolutionVoid = parentSchemeMonitoringSolutionId.isVoid();
+		assert parentSchemeMonitoringSolutionVoid || parentSchemeMonitoringSolutionId.getMajor() == SCHEMEMONITORINGSOLUTION_CODE;
+
+		if (parentSchemeMonitoringSolutionVoid) {
 			Log.debugMessage(OBJECT_WILL_DELETE_ITSELF_FROM_POOL, WARNING);
 			StorableObjectPool.delete(super.id);
 			return;
 		}
-		final Identifier newParentSchemeMonitoringSolutionId = Identifier.possiblyVoid(parentSchemeMonitoringSolution);
-		if (this.parentSchemeMonitoringSolutionId.equals(newParentSchemeMonitoringSolutionId)) {
+		if (this.parentSchemeMonitoringSolutionId.equals(parentSchemeMonitoringSolutionId)) {
 			return;
 		}
-		this.parentSchemeMonitoringSolutionId = newParentSchemeMonitoringSolutionId;
+		this.parentSchemeMonitoringSolutionId = parentSchemeMonitoringSolutionId;
 		super.markAsChanged();
 	}
 
 	/**
+	 * A wrapper around {@link #setParentSchemeMonitoringSolutionId(Identifier)}.
+	 *
+	 * @param parentSchemeMonitoringSolution
+	 */
+	public void setParentSchemeMonitoringSolution(final SchemeMonitoringSolution parentSchemeMonitoringSolution) {
+		this.setParentSchemeMonitoringSolutionId(Identifier.possiblyVoid(parentSchemeMonitoringSolution));
+	}
+
+	/**
+	 * @param transmissionPathId
+	 */
+	void setTransmissionPathId(final Identifier transmissionPathId) {
+		assert transmissionPathId != null : NON_NULL_EXPECTED;
+		assert transmissionPathId.isVoid() || transmissionPathId.getMajor() == TRANSPATH_CODE;
+
+		if (this.transmissionPathId.equals(transmissionPathId)) {
+			return;
+		}
+		this.transmissionPathId = transmissionPathId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setTransmissionPathId(Identifier)}.
+	 *
 	 * @param transmissionPath
 	 */
 	public void setTransmissionPath(final TransmissionPath transmissionPath) {
-		final Identifier newTransmissionPathId = Identifier.possiblyVoid(transmissionPath);
-		if (this.transmissionPathId.equals(newTransmissionPathId))
-			return;
-		this.transmissionPathId = newTransmissionPathId;
-		super.markAsChanged();
+		this.setTransmissionPathId(Identifier.possiblyVoid(transmissionPath));
 	}
 
 	/**
@@ -443,17 +474,19 @@ public final class SchemePath extends StorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
-		final IdlSchemePath schemePath = (IdlSchemePath) transferable;
-		try {
-			super.fromTransferable(schemePath);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
+	protected void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
+		synchronized (this) {
+			final IdlSchemePath schemePath = (IdlSchemePath) transferable;
+			try {
+				super.fromTransferable(schemePath);
+			} catch (final ApplicationException ae) {
+				throw new CreateObjectException(ae);
+			}
+			this.name = schemePath.name;
+			this.description = schemePath.description;
+			this.transmissionPathId = new Identifier(schemePath.transmissionPathId);
+			this.parentSchemeMonitoringSolutionId = new Identifier(schemePath.parentSchemeMonitoringSolutionId);
 		}
-		this.name = schemePath.name;
-		this.description = schemePath.description;
-		this.transmissionPathId = new Identifier(schemePath.transmissionPathId);
-		this.parentSchemeMonitoringSolutionId = new Identifier(schemePath.parentSchemeMonitoringSolutionId);
 	}
 
 	/**
@@ -501,8 +534,7 @@ public final class SchemePath extends StorableObject
 	 */
 	public SchemeElement getStartSchemeElement() {
 		final SortedSet<PathElement> pathElements = this.getPathMembers();
-		if (pathElements.isEmpty())
-			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
 		final PathElement startPathElement = pathElements.first();
 		assert startPathElement.getKind().value() == IdlKind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
 		return startPathElement.getSchemeElement();
@@ -514,8 +546,7 @@ public final class SchemePath extends StorableObject
 	 */
 	public SchemeElement getEndSchemeElement() {
 		final SortedSet<PathElement> pathElements = this.getPathMembers();
-		if (pathElements.isEmpty())
-			throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
+		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
 		final PathElement endPathElement = pathElements.last();
 		assert endPathElement.getKind().value() == IdlKind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
 		return endPathElement.getSchemeElement();
@@ -523,9 +554,7 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param pathElement
-	 * @deprecated
 	 */
-	@Deprecated
 	public PathElement getNextNode(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
@@ -544,8 +573,9 @@ public final class SchemePath extends StorableObject
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
 		final SortedSet<PathElement> pathElements  = getPathMembers().tailSet(pathElement);
-		if (pathElements.size() == 1)
+		if (pathElements.size() == 1) {
 			return null;
+		}
 		final Iterator<PathElement> pathElementIterator = pathElements.iterator();
 		pathElementIterator.next();
 		return pathElementIterator.next();
@@ -597,8 +627,9 @@ public final class SchemePath extends StorableObject
 	 */
 	public PathElement getPathElementByOpticalDistance(final double opticalDistance) {
 		final SortedSet<PathElement> pathElements = getPathMembers();
-		if (pathElements.isEmpty())
+		if (pathElements.isEmpty()) {
 			return null;
+		}
 
 		double opticalLength = 0;
 		for (final PathElement pathElement : pathElements) {
@@ -612,13 +643,12 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param physicalDistance
-	 * @deprecated
 	 */
-	@Deprecated
 	public PathElement getPathElementByPhysicalDistance(final double physicalDistance) {
 		final SortedSet<PathElement> pathElements = getPathMembers();
-		if (pathElements.isEmpty())
+		if (pathElements.isEmpty()) {
 			return null;
+		}
 
 		double physicalLength = 0;
 		for (final PathElement pathElement : pathElements) {
@@ -651,9 +681,7 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param pathElement
-	 * @deprecated
 	 */
-	@Deprecated
 	public double[] getPhysicalDistanceFromStart(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
@@ -674,14 +702,13 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param pathElement
-	 * @deprecated
 	 */
-	@Deprecated
 	public PathElement getPreviousNode(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
-		if (pathElement.getKind().value() == IdlKind._SCHEME_ELEMENT && pathElement.hasOpticalPort())
+		if (pathElement.getKind().value() == IdlKind._SCHEME_ELEMENT && pathElement.hasOpticalPort()) {
 			return pathElement;
+		}
 
 		PathElement previousNode = null;
 		for (final PathElement pathElement1 : getPathMembers().headSet(pathElement)) {
@@ -719,13 +746,12 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param totalOpticalength
-	 * @deprecated
 	 */
-	@Deprecated
 	public void setTotalOpticalLength(final double totalOpticalength) {
 		final SortedSet<PathElement> pathElements = getPathMembers();
-		if (pathElements.isEmpty())
+		if (pathElements.isEmpty()) {
 			return;
+		}
 		setOpticalLength(pathElements.first(), pathElements.last(), totalOpticalength);
 	}
 
@@ -774,12 +800,14 @@ public final class SchemePath extends StorableObject
 				break;
 			}
 		}
-		if (oldOpticalLength == 0)
+		if (oldOpticalLength == 0) {
 			return;
+		}
 		
 		final double k = opticalLength / oldOpticalLength;
-		if (Math.abs(k - 1) < .001)
+		if (Math.abs(k - 1) < .001) {
 			return;
+		}
 		for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
 			SchemeUtils.setOpticalLength(pathElement, SchemeUtils.getOpticalLength(pathElement) * k);
 //			if (pathElement == endPathElement) {}
@@ -787,22 +815,5 @@ public final class SchemePath extends StorableObject
 				break;
 			}
 		}
-	}
-
-	void setTransmissionPathId(Identifier transmissionPathId) {
-//		TODO: inroduce additional sanity checks
-		assert transmissionPathId != null : NON_NULL_EXPECTED;
-		assert transmissionPathId.isVoid() || transmissionPathId.getMajor() == TRANSPATH_CODE;
-		this.transmissionPathId = transmissionPathId;
-		super.markAsChanged();
-	}
-
-	void setParentSchemeMonitoringSolutionId(
-			Identifier parentSchemeMonitoringSolutionId) {
-//		TODO: inroduce additional sanity checks
-		assert parentSchemeMonitoringSolutionId != null : NON_NULL_EXPECTED;
-		assert parentSchemeMonitoringSolutionId.isVoid() || parentSchemeMonitoringSolutionId.getMajor() == SCHEMEMONITORINGSOLUTION_CODE;
-		this.parentSchemeMonitoringSolutionId = parentSchemeMonitoringSolutionId;
-		super.markAsChanged();
 	}
 }
