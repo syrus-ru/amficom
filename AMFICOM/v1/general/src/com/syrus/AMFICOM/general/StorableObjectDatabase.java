@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.182 2005/08/26 18:12:24 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.183 2005/08/26 18:30:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,12 +26,13 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.182 $, $Date: 2005/08/26 18:12:24 $
+ * @version $Revision: 1.183 $, $Date: 2005/08/26 18:30:54 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -487,8 +488,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				}
 				try {
 					linkedCodes.add(EnumUtil.reflectFromInt(enumClass, resultSet.getInt(linkedCodeColumnName)));
-				} catch (IllegalDataException ide) {
-					Log.errorException(ide);
+				} catch (IllegalArgumentException iae) {
+					Log.errorException(iae);
 				}
 			}
 			
