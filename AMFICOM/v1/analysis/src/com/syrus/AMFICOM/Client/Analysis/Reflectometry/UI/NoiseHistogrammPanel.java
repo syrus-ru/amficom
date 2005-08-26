@@ -39,13 +39,13 @@ public class NoiseHistogrammPanel extends ScaledGraphPanel {
 	}
 
 	public void paint(Graphics g) {
+		paint_scales(g);
 		if (showAll) {
 			((Graphics2D) g).setStroke((Stroke)UIManager.get(AnalysisResourceKeys.STROKE_NOISE_HISTOGRAMM));
 			color = UIManager.getColor(AnalysisResourceKeys.COLOR_PRIMARY_TRACE);
 			paint_trace(g);
 			((Graphics2D) g).setStroke((Stroke)UIManager.get(AnalysisResourceKeys.STROKE_DEFAULT));
 		}
-		paint_scales(g);
 		paint_scale_digits(g);
 	}
 
