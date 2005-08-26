@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.14 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.15 2005/08/26 10:36:23 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $
+ * @author $Author: max $
  * @module map
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -53,7 +53,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final Map map = (Map) storableObject;
 				switch (this.linkedEntityCode) {
 				case ObjectEntities.DOMAIN_CODE:
-					return super.conditionTest(map.getId());
+					return super.conditionTest(map.getDomainId());
 				default:
 					throw newExceptionLinkedEntityIllegal();
 				}
