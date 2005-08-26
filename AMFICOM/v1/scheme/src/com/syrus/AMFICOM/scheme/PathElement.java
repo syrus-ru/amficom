@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.67 2005/08/25 15:31:37 bass Exp $
+ * $Id: PathElement.java,v 1.68 2005/08/26 08:20:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.67 $, $Date: 2005/08/25 15:31:37 $
+ * @version $Revision: 1.68 $, $Date: 2005/08/26 08:20:01 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -181,7 +181,7 @@ public final class PathElement extends StorableObject
 		 * Here and below: this will work since current object is not
 		 * yet put to the pool.
 		 */
-		this.sequentialNumber = parentSchemePath == null
+		this.sequentialNumber = (parentSchemePath == null)
 				? -1
 				: parentSchemePath.getPathMembers().size();
 		this.kind = SCHEME_ELEMENT;
@@ -217,7 +217,7 @@ public final class PathElement extends StorableObject
 			final SchemePath parentSchemePath,
 			final SchemeCableThread schemeCableThread) {
 		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
-		this.sequentialNumber = parentSchemePath == null
+		this.sequentialNumber = (parentSchemePath == null)
 				? -1
 				: parentSchemePath.getPathMembers().size();
 		this.kind = SCHEME_CABLE_LINK;
@@ -253,7 +253,7 @@ public final class PathElement extends StorableObject
 			final SchemePath parentSchemePath,
 			final SchemeLink schemeLink) {
 		this(id, created, modified, creatorId, modifierId, version, parentSchemePath);
-		this.sequentialNumber = parentSchemePath == null
+		this.sequentialNumber = (parentSchemePath == null)
 				? -1
 				: parentSchemePath.getPathMembers().size();
 		this.kind = SCHEME_LINK;
@@ -519,8 +519,9 @@ public final class PathElement extends StorableObject
 	 * A wrapper around {@link #getEndAbstractSchemePortId()}.
 	 */
 	public AbstractSchemePort getEndAbstractSchemePort() {
-		if (this.kind != SCHEME_ELEMENT)
+		if (this.kind != SCHEME_ELEMENT) {
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
+		}
 
 		try {
 			return StorableObjectPool.getStorableObject(this.getEndAbstractSchemePortId(), true);
@@ -582,8 +583,9 @@ public final class PathElement extends StorableObject
 	 * A wrapper around {@link #getSchemeCableThreadId()}.
 	 */
 	public SchemeCableThread getSchemeCableThread() {
-		if (this.kind != SCHEME_CABLE_LINK)
+		if (this.kind != SCHEME_CABLE_LINK) {
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
+		}
 
 		try {
 			return StorableObjectPool.getStorableObject(this.getSchemeCableThreadId(), true);
@@ -597,15 +599,16 @@ public final class PathElement extends StorableObject
 		final AbstractSchemePort startAbstractSchemePort = this.getStartAbstractSchemePort();
 		final AbstractSchemePort endAbstractSchemePort = this.getEndAbstractSchemePort();
 		SchemeDevice parentSchemeDevice;
-		if (startAbstractSchemePort != null) {
-			parentSchemeDevice = startAbstractSchemePort.getParentSchemeDevice();
-			assert endAbstractSchemePort == null || endAbstractSchemePort.getParentSchemeDevice().getId().equals(parentSchemeDevice.getId()) : NO_COMMON_PARENT;
-		} else if (endAbstractSchemePort != null) {
+		if (startAbstractSchemePort == null) {
+			if (endAbstractSchemePort == null) {
+				Log.debugMessage("PathElement.getSchemeElement() | Both (abstract) scheme ports of this path element are null. Seems strange, unless it's the only element of its parent path. Returning null as well.",
+						SEVERE);
+				return null;
+			}
 			parentSchemeDevice = endAbstractSchemePort.getParentSchemeDevice();
 		} else {
-			Log.debugMessage("PathElement.getSchemeElement() | Both (abstract) scheme ports of this path element are null. Seems strange, unless it's the only element of its parent path. Returning null as well.",
-					SEVERE);
-			return null;
+			parentSchemeDevice = startAbstractSchemePort.getParentSchemeDevice();
+			assert endAbstractSchemePort == null || endAbstractSchemePort.getParentSchemeDevice().getId().equals(parentSchemeDevice.getId()) : NO_COMMON_PARENT;
 		}
 		assert parentSchemeDevice != null;
 		return parentSchemeDevice.getParentSchemeElement();
@@ -622,8 +625,9 @@ public final class PathElement extends StorableObject
 	 * A wrapper around {@link #getSchemeLinkId()}.
 	 */
 	public SchemeLink getSchemeLink() {
-		if (this.kind != SCHEME_LINK)
+		if (this.kind != SCHEME_LINK) {
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
+		}
 
 		try {
 			return StorableObjectPool.getStorableObject(this.getSchemeLinkId(), true);
@@ -683,8 +687,9 @@ public final class PathElement extends StorableObject
 	 * A wrapper around {@link #getStartAbstractSchemePortId()}.
 	 */
 	public AbstractSchemePort getStartAbstractSchemePort() {
-		if (this.kind != SCHEME_ELEMENT)
+		if (this.kind != SCHEME_ELEMENT) {
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
+		}
 
 		try {
 			return StorableObjectPool.getStorableObject(this.getStartAbstractSchemePortId(), true);
@@ -741,7 +746,7 @@ public final class PathElement extends StorableObject
 	 * @param schemeCableThreadId
 	 * @param schemeLinkId
 	 */
-	synchronized void setAttributes(final Date created,
+	void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
 			final Identifier modifierId,
@@ -753,43 +758,45 @@ public final class PathElement extends StorableObject
 			final Identifier endAbstractSchemePortId,
 			final Identifier schemeCableThreadId,
 			final Identifier schemeLinkId) {
-		super.setAttributes(created, modified, creatorId, modifierId, version);
-
-		assert parentSchemePathId != null && !parentSchemePathId.isVoid(): NON_VOID_EXPECTED;
-		assert sequentialNumber != -1;
-		assert kind != null && startAbstractSchemePortId != null
-				&& endAbstractSchemePortId != null
-				&& schemeCableThreadId != null
-				&& schemeLinkId != null : NON_NULL_EXPECTED;
-		switch (kind.value()) {
-			case _SCHEME_ELEMENT:
-				assert (sequentialNumber == 0 || !startAbstractSchemePortId.isVoid())
-						&& schemeCableThreadId.isVoid()
-						&& schemeLinkId.isVoid();
-				break;
-			case _SCHEME_CABLE_LINK:
-				assert startAbstractSchemePortId.isVoid()
-						&& endAbstractSchemePortId.isVoid()
-						&& !schemeCableThreadId.isVoid()
-						&& schemeLinkId.isVoid();
-				break;
-			case _SCHEME_LINK:
-				assert startAbstractSchemePortId.isVoid()
-						&& endAbstractSchemePortId.isVoid()
-						&& schemeCableThreadId.isVoid()
-						&& !schemeLinkId.isVoid();
-				break;
-			default:
-				assert false;
+		synchronized (this) {
+			super.setAttributes(created, modified, creatorId, modifierId, version);
+	
+			assert parentSchemePathId != null && !parentSchemePathId.isVoid(): NON_VOID_EXPECTED;
+			assert sequentialNumber != -1;
+			assert kind != null && startAbstractSchemePortId != null
+					&& endAbstractSchemePortId != null
+					&& schemeCableThreadId != null
+					&& schemeLinkId != null : NON_NULL_EXPECTED;
+			switch (kind.value()) {
+				case _SCHEME_ELEMENT:
+					assert (sequentialNumber == 0 || !startAbstractSchemePortId.isVoid())
+							&& schemeCableThreadId.isVoid()
+							&& schemeLinkId.isVoid();
+					break;
+				case _SCHEME_CABLE_LINK:
+					assert startAbstractSchemePortId.isVoid()
+							&& endAbstractSchemePortId.isVoid()
+							&& !schemeCableThreadId.isVoid()
+							&& schemeLinkId.isVoid();
+					break;
+				case _SCHEME_LINK:
+					assert startAbstractSchemePortId.isVoid()
+							&& endAbstractSchemePortId.isVoid()
+							&& schemeCableThreadId.isVoid()
+							&& !schemeLinkId.isVoid();
+					break;
+				default:
+					assert false;
+			}
+	
+			this.parentSchemePathId = parentSchemePathId;
+			this.sequentialNumber = sequentialNumber;
+			this.kind = kind;
+			this.startAbstractSchemePortId = startAbstractSchemePortId;
+			this.endAbstractSchemePortId = endAbstractSchemePortId;
+			this.schemeCableThreadId = schemeCableThreadId;
+			this.schemeLinkId = schemeLinkId;
 		}
-
-		this.parentSchemePathId = parentSchemePathId;
-		this.sequentialNumber = sequentialNumber;
-		this.kind = kind;
-		this.startAbstractSchemePortId = startAbstractSchemePortId;
-		this.endAbstractSchemePortId = endAbstractSchemePortId;
-		this.schemeCableThreadId = schemeCableThreadId;
-		this.schemeLinkId = schemeLinkId;
 	}
 
 	/**
@@ -799,10 +806,39 @@ public final class PathElement extends StorableObject
 		getAbstractSchemeElement().setDescription(description);
 	}
 
-	public void setEndAbstractSchemePort(final AbstractSchemePort endAbstractSchemePort) {
-		if (this.kind != SCHEME_ELEMENT)
+	/**
+	 * @param endAbstractSchemePortId
+	 */
+	void setEndAbstractSchemePortId(final Identifier endAbstractSchemePortId) {
+		if (this.kind != SCHEME_ELEMENT) {
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
-		assert endAbstractSchemePort != null: NON_NULL_EXPECTED;
+		}
+		assert endAbstractSchemePortId != null : NON_NULL_EXPECTED;
+		assert !endAbstractSchemePortId.isVoid() : NON_VOID_EXPECTED;
+		assert endAbstractSchemePortId.getMajor() == SCHEMEPORT_CODE || endAbstractSchemePortId.getMajor() == SCHEMECABLEPORT_CODE;
+
+		if (this.endAbstractSchemePortId.equals(endAbstractSchemePortId)) {
+			return;
+		}
+		this.endAbstractSchemePortId = endAbstractSchemePortId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setEndAbstractSchemePortId(Identifier)}.
+	 *
+	 * @param endAbstractSchemePort
+	 */
+	public void setEndAbstractSchemePort(final AbstractSchemePort endAbstractSchemePort) {
+		/*
+		 * The two following checks are doubled in the modifier method
+		 * for id.
+		 */
+		if (this.kind != SCHEME_ELEMENT) {
+			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
+		}
+		assert endAbstractSchemePort != null : NON_NULL_EXPECTED;
+
 		/*
 		 * Either the object is not yet initialized (which is very
 		 * unlikely), or ensure that starting and ending ports belong to
@@ -814,11 +850,7 @@ public final class PathElement extends StorableObject
 		assert (isFirst() && this.startAbstractSchemePortId.isVoid())
 				|| getStartAbstractSchemePort().getParentSchemeDevice()
 				== endAbstractSchemePort.getParentSchemeDevice(): NO_COMMON_PARENT;
-		final Identifier newEndAbstractSchemePortId = endAbstractSchemePort.getId();
-		if (this.endAbstractSchemePortId.equals(newEndAbstractSchemePortId))
-			return;
-		this.endAbstractSchemePortId = newEndAbstractSchemePortId;
-		super.markAsChanged();
+		this.setEndAbstractSchemePortId(Identifier.possiblyVoid(endAbstractSchemePort));
 	}
 
 	/**
@@ -872,7 +904,7 @@ public final class PathElement extends StorableObject
 			return;
 		}
 
-		int newSequentialNumber = parentSchemePath == null
+		int newSequentialNumber = (parentSchemePath == null)
 				? -1
 				: parentSchemePath.getPathMembers().size();
 		final Iterator<PathElement> pathElementIterator =
@@ -923,32 +955,93 @@ public final class PathElement extends StorableObject
 		super.markAsChanged();
 	}
 
+	/**
+	 * @param schemeCableThreadId
+	 */
+	void setSchemeCableThreadId(final Identifier schemeCableThreadId) {
+		if (this.kind != SCHEME_CABLE_LINK) {
+			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
+		}
+		assert schemeCableThreadId != null : NON_NULL_EXPECTED;
+		assert !schemeCableThreadId.isVoid() : NON_VOID_EXPECTED;
+		assert schemeCableThreadId.getMajor() == SCHEMECABLETHREAD_CODE;
+
+		if (this.schemeCableThreadId.equals(schemeCableThreadId)) {
+			return;
+		}
+		this.schemeCableThreadId = schemeCableThreadId;
+		super.markAsChanged();
+	}
+
+	/**
+	 * A wrapper around {@link #setSchemeCableThreadId(Identifier)}.
+	 *
+	 * @param schemeCableThread
+	 */
 	public void setSchemeCableThread(final SchemeCableThread schemeCableThread) {
-		if (this.kind != SCHEME_CABLE_LINK)
+		this.setSchemeCableThreadId(Identifier.possiblyVoid(schemeCableThread));
+	}
+
+	/**
+	 * @param schemeLinkId
+	 */
+	void setSchemeLinkId(final Identifier schemeLinkId) {
+		if (this.kind != SCHEME_LINK) {
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
-		assert schemeCableThread != null: NON_NULL_EXPECTED;
-		final Identifier newSchemeCableThreadId = schemeCableThread.getId();
-		if (this.schemeCableThreadId.equals(newSchemeCableThreadId))
+		}
+		assert schemeLinkId != null : NON_NULL_EXPECTED;
+		assert !schemeLinkId.isVoid() : NON_VOID_EXPECTED;
+		assert schemeLinkId.getMajor() == SCHEMELINK_CODE;
+
+		if (this.schemeLinkId.equals(schemeLinkId)) {
 			return;
-		this.schemeCableThreadId = newSchemeCableThreadId;
+		}
+		this.schemeLinkId = schemeLinkId;
 		super.markAsChanged();
 	}
 
+	/**
+	 * A wrapper around {@link #setSchemeLinkId(Identifier)}.
+	 *
+	 * @param schemeLink
+	 */
 	public void setSchemeLink(final SchemeLink schemeLink) {
-		if (this.kind != SCHEME_LINK)
+		this.setSchemeLinkId(Identifier.possiblyVoid(schemeLink));
+	}
+
+	/**
+	 * @param startAbstractSchemePortId
+	 */
+	void setStartAbstractSchemePortId(final Identifier startAbstractSchemePortId) {
+		if (this.kind != SCHEME_ELEMENT) {
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
-		assert schemeLink != null: NON_NULL_EXPECTED;
-		final Identifier newSchemeLinkId = schemeLink.getId();
-		if (this.schemeLinkId.equals(newSchemeLinkId))
+		}
+		assert startAbstractSchemePortId != null : NON_NULL_EXPECTED;
+		assert !startAbstractSchemePortId.isVoid() : NON_VOID_EXPECTED;
+		assert startAbstractSchemePortId.getMajor() == SCHEMEPORT_CODE || startAbstractSchemePortId.getMajor() == SCHEMECABLEPORT_CODE;
+
+		if (this.startAbstractSchemePortId.equals(startAbstractSchemePortId)) {
 			return;
-		this.schemeLinkId = newSchemeLinkId;
+		}
+		this.startAbstractSchemePortId = startAbstractSchemePortId;
 		super.markAsChanged();
 	}
 
+	/**
+	 * A wrapper around {@link #setStartAbstractSchemePortId(Identifier)}.
+	 *
+	 * @param startAbstractSchemePort
+	 */
 	public void setStartAbstractSchemePort(final AbstractSchemePort startAbstractSchemePort) {
-		if (this.kind != SCHEME_ELEMENT)
+		/*
+		 * The two following checks are doubled in the modifier method
+		 * for id.
+		 */
+		if (this.kind != SCHEME_ELEMENT) {
 			throw new UnsupportedOperationException(OBJECT_STATE_ILLEGAL);
+		}
 		assert startAbstractSchemePort != null: NON_NULL_EXPECTED;
+
 		/*
 		 * Either the object is not yet initialized (which is very
 		 * unlikely), or ensure that starting and ending ports belong to
@@ -960,11 +1053,7 @@ public final class PathElement extends StorableObject
 		assert (isLast() && this.endAbstractSchemePortId.isVoid())
 				|| getEndAbstractSchemePort().getParentSchemeDevice()
 				== startAbstractSchemePort.getParentSchemeDevice(): NO_COMMON_PARENT;
-		final Identifier newStartAbstractSchemePortId = startAbstractSchemePort.getId();
-		if (this.startAbstractSchemePortId.equals(newStartAbstractSchemePortId))
-			return;
-		this.startAbstractSchemePortId = newStartAbstractSchemePortId;
-		super.markAsChanged();
+		this.setStartAbstractSchemePortId(Identifier.possiblyVoid(startAbstractSchemePort));
 	}
 
 	/**
@@ -972,43 +1061,45 @@ public final class PathElement extends StorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
-		final IdlPathElement pathElement = (IdlPathElement) transferable;
-		try {
-			super.fromTransferable(pathElement);
-		} catch (final ApplicationException ae) {
-			/*
-			 * Never. Arseniy, don't add any error-handling code,
-			 * please.
-			 */
-			assert false;
-		}
-		this.parentSchemePathId = new Identifier(pathElement.parentSchemePathId);
-		this.sequentialNumber = pathElement.sequentialNumber;
-		final IdlData data = pathElement.data;
-		this.kind = data.discriminator();
-		switch (this.kind.value()) {
-			case _SCHEME_ELEMENT:
-				final IdlSchemeElementData schemeElementData = data.schemeElementData();
-				this.startAbstractSchemePortId = new Identifier(schemeElementData.startAbstractSchemePortId);
-				this.endAbstractSchemePortId = new Identifier(schemeElementData.endAbstractSchemePortId);
-				this.schemeCableThreadId = VOID_IDENTIFIER;
-				this.schemeLinkId = VOID_IDENTIFIER;
-				break;
-			case _SCHEME_CABLE_LINK:
-				this.startAbstractSchemePortId = VOID_IDENTIFIER;
-				this.endAbstractSchemePortId = VOID_IDENTIFIER;
-				this.schemeCableThreadId = new Identifier(data.schemeCableThreadId());
-				this.schemeLinkId = VOID_IDENTIFIER;
-				break;
-			case _SCHEME_LINK:
-				this.startAbstractSchemePortId = VOID_IDENTIFIER;
-				this.endAbstractSchemePortId = VOID_IDENTIFIER;
-				this.schemeCableThreadId = VOID_IDENTIFIER;
-				this.schemeLinkId = new Identifier(data.schemeLinkId());
-				break;
-			default:
+	protected void fromTransferable(final IdlStorableObject transferable) {
+		synchronized (this) {
+			final IdlPathElement pathElement = (IdlPathElement) transferable;
+			try {
+				super.fromTransferable(pathElement);
+			} catch (final ApplicationException ae) {
+				/*
+				 * Never. Arseniy, don't add any error-handling code,
+				 * please.
+				 */
 				assert false;
+			}
+			this.parentSchemePathId = new Identifier(pathElement.parentSchemePathId);
+			this.sequentialNumber = pathElement.sequentialNumber;
+			final IdlData data = pathElement.data;
+			this.kind = data.discriminator();
+			switch (this.kind.value()) {
+				case _SCHEME_ELEMENT:
+					final IdlSchemeElementData schemeElementData = data.schemeElementData();
+					this.startAbstractSchemePortId = new Identifier(schemeElementData.startAbstractSchemePortId);
+					this.endAbstractSchemePortId = new Identifier(schemeElementData.endAbstractSchemePortId);
+					this.schemeCableThreadId = VOID_IDENTIFIER;
+					this.schemeLinkId = VOID_IDENTIFIER;
+					break;
+				case _SCHEME_CABLE_LINK:
+					this.startAbstractSchemePortId = VOID_IDENTIFIER;
+					this.endAbstractSchemePortId = VOID_IDENTIFIER;
+					this.schemeCableThreadId = new Identifier(data.schemeCableThreadId());
+					this.schemeLinkId = VOID_IDENTIFIER;
+					break;
+				case _SCHEME_LINK:
+					this.startAbstractSchemePortId = VOID_IDENTIFIER;
+					this.endAbstractSchemePortId = VOID_IDENTIFIER;
+					this.schemeCableThreadId = VOID_IDENTIFIER;
+					this.schemeLinkId = new Identifier(data.schemeLinkId());
+					break;
+				default:
+					assert false;
+			}
 		}
 	}
 
@@ -1113,45 +1204,15 @@ public final class PathElement extends StorableObject
 	boolean hasOpticalPort() {
 		final AbstractSchemePort startAbstractSchemePort = getStartAbstractSchemePort();
 		if (startAbstractSchemePort instanceof SchemePort
-				&& startAbstractSchemePort.getPortType().getSort() == PORTTYPESORT_OPTICAL)
+				&& startAbstractSchemePort.getPortType().getSort() == PORTTYPESORT_OPTICAL) {
 			return true;
+		}
 		
 		final AbstractSchemePort endAbstractSchemePort = getEndAbstractSchemePort();
 		if (endAbstractSchemePort instanceof SchemePort
-				&& endAbstractSchemePort.getPortType().getSort() == PORTTYPESORT_OPTICAL)
+				&& endAbstractSchemePort.getPortType().getSort() == PORTTYPESORT_OPTICAL) {
 			return true;
+		}
 		return false;
-	}
-
-	void setEndAbstractSchemePortId(Identifier endAbstractSchemePortId) {
-		// TODO: inroduce additional sanity checks
-		assert endAbstractSchemePortId != null : NON_NULL_EXPECTED;
-		assert endAbstractSchemePortId.isVoid() || endAbstractSchemePortId.getMajor() == SCHEMEPORT_CODE || endAbstractSchemePortId.getMajor() == SCHEMECABLEPORT_CODE;
-		this.endAbstractSchemePortId = endAbstractSchemePortId;
-		super.markAsChanged();
-	}
-
-	void setSchemeCableThreadId(Identifier schemeCableThreadId) {
-		// TODO: inroduce additional sanity checks
-		assert schemeCableThreadId != null : NON_NULL_EXPECTED;
-		assert schemeCableThreadId.isVoid() || schemeCableThreadId.getMajor() == SCHEMECABLETHREAD_CODE;
-		this.schemeCableThreadId = schemeCableThreadId;
-		super.markAsChanged();
-	}
-
-	void setStartAbstractSchemePortId(Identifier startAbstractSchemePortId) {
-		// TODO: inroduce additional sanity checks
-		assert startAbstractSchemePortId != null : NON_NULL_EXPECTED;
-		assert startAbstractSchemePortId.isVoid() || startAbstractSchemePortId.getMajor() == SCHEMEPORT_CODE || startAbstractSchemePortId.getMajor() == SCHEMECABLEPORT_CODE;
-		this.startAbstractSchemePortId = startAbstractSchemePortId;
-		super.markAsChanged();
-	}
-
-	void setSchemeLinkId(Identifier schemeLinkId) {
-		// TODO: inroduce additional sanity checks
-		assert schemeLinkId != null : NON_NULL_EXPECTED;
-		assert schemeLinkId.isVoid() || schemeLinkId.getMajor() == SCHEMELINK_CODE;
-		this.schemeLinkId = schemeLinkId;
-		super.markAsChanged();
 	}
 }
