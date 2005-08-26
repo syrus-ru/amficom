@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.107 2005/08/26 09:08:39 bob Exp $
+ * $Id: general.idl,v 1.108 2005/08/26 09:28:29 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -211,7 +211,8 @@ module general {
 						TYPE_NUMBER_DOUBLE,
 						TYPE_STRING,
 						TYPE_DATE,
-						TYPE_BOOLEAN
+						TYPE_BOOLEAN,
+						TYPE_ENUM
 					} sort;
 					/*\u002a\u002f@SuppressWarnings("all")/**/
 					enum OperationSort {
