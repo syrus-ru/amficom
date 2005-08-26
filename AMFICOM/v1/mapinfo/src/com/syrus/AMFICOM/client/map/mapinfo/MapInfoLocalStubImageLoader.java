@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.16 2005/08/24 13:28:18 peskovsky Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.17 2005/08/26 08:15:00 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,16 +10,14 @@ package com.syrus.AMFICOM.client.map.mapinfo;
 import java.awt.Image;
 import java.awt.geom.Rectangle2D.Double;
 import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
 import java.util.Set;
 import java.util.TreeSet;
+import java.util.logging.Level;
 
-import com.mapinfo.dp.Attribute;
 import com.mapinfo.dp.Feature;
 import com.mapinfo.dp.FeatureSet;
 import com.mapinfo.dp.QueryParams;
-import com.mapinfo.dp.TableInfo;
 import com.mapinfo.mapj.FeatureLayer;
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
@@ -30,14 +28,15 @@ import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.16 $, $Date: 2005/08/24 13:28:18 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/26 08:15:00 $
  * @module mapinfo
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectionListener {
-
+	private final static String FIRST_SEARCH_STRING = "XXX";
 	private MapJLocalRenderer renderer;
 
 	private MapInfoConnection connection;
@@ -47,9 +46,26 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 
 		// Setting logger to log nothing.
 		System.setProperty("org.apache.commons.logging.Log", "com.syrus.AMFICOM.client.map.EmptyLog");
-
 		try {
 			this.renderer = new MapJLocalRenderer(this.connection.getPath());
+
+			//Осуществляется ПЕРВЫЙ поиск по всем слоям с надписями - тот, который сильно тормозит из-за
+			//MapJшного кэширования таблиц.
+			Log.debugMessage("MapInfoLocalStubImageLoader.MapInfoLocalStubImageLoader | Starting first search.", Level.INFO);
+			long t1 = System.currentTimeMillis();
+			
+			for (SpatialLayer spatialLayer : this.connection.getLayers()){
+				if (!this.connection.searchIsAvailableForLayer(spatialLayer))
+					continue;
+
+				MapInfoSpatialLayer miSpatialLayer = (MapInfoSpatialLayer)spatialLayer;
+				if (miSpatialLayer.getFeatureLayer().getLabelProperties().getLabelColumns().size() != 0)
+					this.findSpatialObjects(miSpatialLayer,FIRST_SEARCH_STRING);
+			}
+			long t2 = System.currentTimeMillis();			
+			Log.debugMessage("MapInfoLocalStubImageLoader.MapInfoLocalStubImageLoader | First search completed ( "+ (t2 - t1) + " ms).", Level.INFO);
+		} catch (MapDataException e) {
+			throw new MapConnectionException("Error while first search.");
 		} catch (IOException e) {
 			throw new MapConnectionException("Failed initializing MapJLocalRenderer");
 		}
@@ -117,36 +133,73 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 //			columnNames.add(tableInfo.getColumnName(i));
 	
 		try {
+			long sumGettingFeature = 0;
+			long sumGettingStringAttributes = 0;
+			long sumComparingStrings = 0;
+			long sumGettingCenters = 0;
+			long sumCreatingObjects = 0;			
+			
+			long t1 = System.currentTimeMillis();
 			final FeatureSet featureSet = currLayer.searchAll(
 					columnNames,
 					QueryParams.GEOM_ONLY_PARAMS);
 				
-				Feature feature = null;
-				String featureName = null;
-				while ((feature = featureSet.getNextFeature()) != null) {
-					boolean toAdd = false;
-					for (int i = 0; i < columnNames.size(); i++){
-						featureName = feature.getAttribute(i).getString();
-						if (featureName.toLowerCase().contains(minimizedSearchText)){
-							toAdd = true;
-							break;
-						}
-					}
+			long t2 = System.currentTimeMillis();
+			
+			Feature feature = null;
+			String featureName = null;
+		
+			long t2start = System.currentTimeMillis();
+			long t2end = System.currentTimeMillis();			
+			while ((feature = featureSet.getNextFeature()) != null) {
+				t2start = System.currentTimeMillis();
+				sumGettingFeature += (t2start - t2end);
 
-					if (!toAdd)
-						continue;
-					
-					final com.mapinfo.util.DoublePoint featureCentre = feature.getGeometry().getBounds().center();
-					final MapInfoSpatialObject spatialObject = new MapInfoSpatialObject(
-							new DoublePoint(featureCentre.x, featureCentre.y),
-							featureName);
-	
-					searchResultsSet.add(spatialObject);
+				boolean toAdd = false;
+				for (int i = 0; i < columnNames.size(); i++){
+					long t23 = System.currentTimeMillis();					
+					featureName = feature.getAttribute(i).getString();
+					long t24 = System.currentTimeMillis();
+					sumGettingStringAttributes += (t24 - t23);					
+					if (featureName.toLowerCase().contains(minimizedSearchText)){
+						toAdd = true;
+						break;
+					}
+					long t25 = System.currentTimeMillis();
+					sumComparingStrings += (t25 - t24);
 				}
-				featureSet.dispose();
-			} catch (Exception e) {
-				throw new MapDataException("Error while searching at region", e);
+
+				if (!toAdd){
+					t2end = System.currentTimeMillis();					
+					continue;
+				}
+				long t26 = System.currentTimeMillis();				
+				final com.mapinfo.util.DoublePoint featureCentre = feature.getGeometry().getBounds().center();
+				long t27 = System.currentTimeMillis();
+				sumGettingCenters += (t27 - t26);
+				final MapInfoSpatialObject spatialObject = new MapInfoSpatialObject(
+						new DoublePoint(featureCentre.x, featureCentre.y),
+						featureName);
+				long t28 = System.currentTimeMillis();				
+				sumCreatingObjects += (t28 - t27);
+				searchResultsSet.add(spatialObject);
+				t2end = System.currentTimeMillis();				
 			}
+			long t3 = System.currentTimeMillis();			
+			featureSet.dispose();
+			
+			Log.debugMessage("MapInfoLocalStubImageLoader.findSpatialObjects | " + 
+					+ (t2 - t1) + "ms - searching all\n"
+					+ (t3 - t2) + "ms - comparing all, particulary:\n"
+					+ sumGettingFeature + "ms - sumGettingFeature\n"
+					+ sumGettingStringAttributes + "ms - sumGettingStringAttributes\n"
+					+ sumComparingStrings + "ms - sumComparingStrings\n"
+					+ sumGettingCenters + "ms - sumGettingCenters\n"
+					+ sumCreatingObjects + "ms - sumCreatingObjects\n",Level.INFO);
+			
+		} catch (Exception e) {
+			throw new MapDataException("Error while searching at region", e);
+		}
 	
 //		Attribute attributeToFind = new Attribute(searchText);
 //		for (String columnName : (List<String>)labelColumnNames){
