@@ -1,12 +1,18 @@
-/*
- * $Id: Port.java,v 1.85 2005/08/08 14:23:52 arseniy Exp $
+/*-
+ * $Id: Port.java,v 1.86 2005/08/26 10:25:56 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -28,7 +34,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -36,10 +41,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/08/08 14:23:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.86 $, $Date: 2005/08/26 10:25:56 $
+ * @author $Author: bass $
  * @module config
  */
 public final class Port extends StorableObject implements Characterizable, TypedObject {
@@ -55,7 +61,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.PORT_CODE).retrieve(this);
+			DatabaseContext.getDatabase(PORT_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -103,7 +109,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final Port port = new Port(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORT_CODE),
+			final Port port = new Port(IdentifierPool.getGeneratedIdentifier(PORT_CODE),
 						creatorId,
 						StorableObjectVersion.createInitial(),
 						type,
@@ -209,10 +215,34 @@ public final class Port extends StorableObject implements Characterizable, Typed
 		this.equipmentId = equipmentId;
 		super.markAsChanged();
 	}
+
+	/**
+	 * @param typeId
+	 */
+	public void setTypeId(final Identifier typeId) {
+		assert typeId != null : NON_NULL_EXPECTED;
+		assert !typeId.isVoid() : NON_VOID_EXPECTED;
+		assert typeId.getMajor() == PORT_TYPE_CODE;
+
+		if (typeId.equals(this.type.getId())) {
+			return;
+		}
+		try {
+			this.setType(StorableObjectPool.<PortType>getStorableObject(typeId, true));
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+		}
+	}
+
 	/**
 	 * @param type The type to set.
 	 */
 	public void setType(final PortType type) {
+		assert type != null : NON_NULL_EXPECTED;
+
+		if (this.type.equals(type)) {
+			return;
+		}
 		this.type = type;
 		super.markAsChanged();
 	}
