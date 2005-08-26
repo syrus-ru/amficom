@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkDatabase.java,v 1.33 2005/08/26 09:43:17 max Exp $
+ * $Id: NodeLinkDatabase.java,v 1.34 2005/08/26 10:16:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,11 +21,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
-import com.syrus.util.database.DatabaseString;
-
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/08/26 09:43:17 $
+ * @version $Revision: 1.34 $, $Date: 2005/08/26 10:16:55 $
  * @author $Author: max $
  * @module map
  */
