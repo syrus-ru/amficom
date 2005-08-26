@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.181 2005/08/25 16:01:50 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.182 2005/08/26 18:12:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -30,7 +31,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.181 $, $Date: 2005/08/25 16:01:50 $
+ * @version $Revision: 1.182 $, $Date: 2005/08/26 18:12:24 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -329,7 +330,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	public final Set<T> retrieveButIdsByCondition(final Set<Identifier> ids,
 			final StorableObjectCondition condition) throws RetrieveObjectException, IllegalDataException {
-		StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
+		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, false);
 
 		if (condition != null) {
 			stringBuffer.append(SQL_AND);
@@ -349,7 +350,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 	}
 
-	public final Set<T> retrieveByIdsByCondition(Set<Identifier> ids, StorableObjectCondition condition)
+	public final Set<T> retrieveByIdsByCondition(final Set<Identifier> ids, final StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {
 		final StringBuffer stringBuffer = idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true);
 
@@ -364,19 +365,19 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	/**
 	 * Map&lt;StorableObject, List&lt;Identifier&gt;&gt;
 	 *
-	 * @param storableObjects
+	 * @param identifiables
 	 *            List&lt;StorableObject&gt;
 	 * @param tableName
 	 * @param idColumnName
 	 * @param linkedIdColumnName
 	 * @throws RetrieveObjectException
 	 */
-	protected final Map<Identifier, Set<Identifier>> retrieveLinkedEntityIds(Set<T> storableObjects,
-			String tableName,
-			String idColumnName,
-			String linkedIdColumnName)
+	protected final Map<Identifier, Set<Identifier>> retrieveLinkedEntityIds(final Set<? extends Identifiable> identifiables,
+			final String tableName,
+			final String idColumnName,
+			final String linkedIdColumnName)
 			throws RetrieveObjectException {
-		if (storableObjects == null || storableObjects.isEmpty()) {
+		if (identifiables == null || identifiables.isEmpty()) {
 			return Collections.emptyMap();
 		}
 
@@ -385,7 +386,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				+ linkedIdColumnName
 				+ SQL_FROM + tableName
 				+ SQL_WHERE);
-		sql.append(idsEnumerationString(storableObjects, idColumnName, true));
+		sql.append(idsEnumerationString(identifiables, idColumnName, true));
 
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -437,6 +438,90 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				Log.errorException(sqle1);
 			}
 		}
+	}
+
+	/**
+	 * 
+	 * @param <E>
+	 * @param identifiables
+	 * @param enumClass
+	 * @param tableName
+	 * @param idColumnName
+	 * @param linkedCodeColumnName
+	 * @return Map of Identifiers and Enum sets 
+	 * @throws RetrieveObjectException
+	 */
+	protected final <E extends Enum<E>> Map<Identifier, EnumSet<E>> retrieveLinkedEnums(final Set<? extends Identifiable> identifiables,
+			final Class<E> enumClass,
+			final String tableName,
+			final String idColumnName,
+			final String linkedCodeColumnName)
+			throws RetrieveObjectException {
+		if (identifiables == null || identifiables.isEmpty()) {
+			return Collections.emptyMap();
+		}
+
+		final StringBuffer sql = new StringBuffer(SQL_SELECT
+				+ idColumnName + COMMA
+				+ linkedCodeColumnName
+				+ SQL_FROM + tableName
+				+ SQL_WHERE);
+		sql.append(idsEnumerationString(identifiables, idColumnName, true));
+
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.createStatement();
+			Log.debugMessage(this.getEntityName() + "Database.retrieveLinkedEnums | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql.toString());
+
+			final Map<Identifier, EnumSet<E>> linkedCodesMap = new HashMap<Identifier, EnumSet<E>>();
+			while (resultSet.next()) {
+				final Identifier storabeObjectId = DatabaseIdentifier.getIdentifier(resultSet, idColumnName);
+				EnumSet<E> linkedCodes = linkedCodesMap.get(storabeObjectId);
+				if (linkedCodes == null) {
+					linkedCodes = EnumSet.noneOf(enumClass);
+					linkedCodesMap.put(storabeObjectId, linkedCodes);
+				}
+				try {
+					linkedCodes.add(EnumUtil.reflectFromInt(enumClass, resultSet.getInt(linkedCodeColumnName)));
+				} catch (IllegalDataException ide) {
+					Log.errorException(ide);
+				}
+			}
+			
+		} catch (SQLException sqle) {
+			final String mesg = this.getEntityName()
+					+ "Database.retrieveLinkedEnums | Cannot retrieve linked entity identifiers for entity -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		} finally {
+			try {
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					try {
+						if (resultSet != null) {
+							resultSet.close();
+							resultSet = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+
+		return null;
 	}
 
 	public static boolean isPresentInDatabase(final Identifier id) throws RetrieveObjectException {
@@ -670,7 +755,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	 *            List&lt;Identifier&gt; physicalLinkIds&gt;
 	 * @throws CreateObjectException
 	 */
-	private final void insertLinkedEntityIds(final Map<Identifier, Set<Identifier>> idLinkedObjectIdsMap,
+	protected final void insertLinkedEntityIds(final Map<Identifier, Set<Identifier>> idLinkedObjectIdsMap,
 			final String tableName,
 			final String idColumnName,
 			final String linkedIdColumnName) throws CreateObjectException {
@@ -715,6 +800,85 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			}
 			final String mesg = this.getEntityName()
 					+ "Database.insertLinkedEntityIds | Cannot insert linked entity  '" + linkedId
+					+ "' for '" + id + "' -- " + sqle.getMessage();
+			throw new CreateObjectException(mesg, sqle);
+		} finally {
+			try {
+				try {
+					if (preparedStatement != null) {
+						preparedStatement.close();
+						preparedStatement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+
+	/**
+	 * 
+	 * @param <E>
+	 * @param idLinkedCodeMap
+	 * @param tableName
+	 * @param idColumnName
+	 * @param linkedCodeColumnName
+	 * @throws CreateObjectException
+	 */
+	protected final <E extends Enum<E>> void insertLinkedEnums(final Map<Identifier, EnumSet<E>> idLinkedCodeMap,
+			final String tableName,
+			final String idColumnName,
+			final String linkedCodeColumnName) throws CreateObjectException {
+		if (idLinkedCodeMap == null || idLinkedCodeMap.isEmpty()) {
+			return;
+		}
+
+		final String sql = SQL_INSERT_INTO + tableName + OPEN_BRACKET
+				+ idColumnName + COMMA
+				+ linkedCodeColumnName
+				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
+				+ QUESTION + COMMA
+				+ QUESTION
+				+ CLOSE_BRACKET;
+		PreparedStatement preparedStatement = null;
+		Connection connection = null;
+		Identifier id = null;
+		E linkedEnum = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			preparedStatement = connection.prepareStatement(sql);
+			for (final Iterator<Identifier> idIt = idLinkedCodeMap.keySet().iterator(); idIt.hasNext();) {
+				id = idIt.next();
+				final EnumSet<E> linkedCodes = idLinkedCodeMap.get(id);
+				for (final Iterator<E> linkedCodeIt = linkedCodes.iterator(); linkedCodeIt.hasNext();) {
+					linkedEnum = linkedCodeIt.next();
+					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
+					if (linkedEnum instanceof Codeable) {
+						preparedStatement.setInt(2, ((Codeable) linkedEnum).getCode());
+					} else {
+						preparedStatement.setInt(2, linkedEnum.ordinal());
+					}
+					Log.debugMessage(this.getEntityName() + "Database.insertLinkedEnums | Inserting linked enum  '"
+							+ linkedEnum + "' for '" + id + "'", Log.DEBUGLEVEL09);
+					preparedStatement.executeUpdate();
+				}
+				connection.commit();
+			}
+		} catch (SQLException sqle) {
+			if (connection != null) {
+				try {
+					connection.rollback();
+				} catch (SQLException sqle1) {
+					Log.errorException(sqle1);
+				}
+			}
+			final String mesg = this.getEntityName()
+					+ "Database.insertLinkedEnums | Cannot insert linked enum  '" + linkedEnum
 					+ "' for '" + id + "' -- " + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
 		} finally {
@@ -886,55 +1050,11 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			return;
 		}
 
-		final StringBuffer sql = new StringBuffer(SQL_SELECT + idColumnName + COMMA + linkedIdColumnName + SQL_FROM + tableName + SQL_WHERE);
-		sql.append(idsEnumerationString(idLinkedIdMap.keySet(), idColumnName, true));
-
-		final Map<Identifier, Set<Identifier>> dbLinkedObjIdsMap = new HashMap<Identifier, Set<Identifier>>();
-
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = null;
+		Map<Identifier, Set<Identifier>> dbLinkedObjIdsMap = null;
 		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.updateLinkedEntities | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql.toString());
-
-			while (resultSet.next()) {
-				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, idColumnName);
-				Set<Identifier> dbLinkedObjIds = dbLinkedObjIdsMap.get(id);
-				if (dbLinkedObjIds == null) {
-					dbLinkedObjIds = new HashSet<Identifier>();
-					dbLinkedObjIdsMap.put(id, dbLinkedObjIds);
-				}
-				dbLinkedObjIds.add(DatabaseIdentifier.getIdentifier(resultSet, linkedIdColumnName));
-			}
-		} catch (SQLException sqle) {
-			String mesg = this.getEntityName() + "Database.updateLinkedEntities | SQLException: " + sqle.getMessage();
-			throw new UpdateObjectException(mesg, sqle);
-		} finally {
-			try {
-				try {
-					if (statement != null) {
-						statement.close();
-						statement = null;
-					}
-				} finally {
-					try {
-						if (resultSet != null) {
-							resultSet.close();
-							resultSet = null;
-						}
-					} finally {
-						if (connection != null) {
-							DatabaseConnection.releaseConnection(connection);
-							connection = null;
-						}
-					}
-				}
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
+			dbLinkedObjIdsMap = this.retrieveLinkedEntityIds(idLinkedIdMap.keySet(), tableName, idColumnName, linkedIdColumnName);
+		} catch (RetrieveObjectException roe) {
+			throw new UpdateObjectException(roe);
 		}
 
 		final Map<Identifier, Set<Identifier>> insertIdsMap = new HashMap<Identifier, Set<Identifier>>();
@@ -969,15 +1089,98 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					}
 				}
 
+				// Insert all linked ids for this id
 			} else {
-				insertIdsMap.put(id, linkedObjIds);
+				Set<Identifier> alteringIds = insertIdsMap.get(id);
+				if (alteringIds == null) {
+					alteringIds = new HashSet<Identifier>();
+					insertIdsMap.put(id, alteringIds);
+				}
+				alteringIds.addAll(linkedObjIds);
 			}
 
 		}
 
+		this.deleteLinkedEntityIds(deleteIdsMap, tableName, idColumnName, linkedIdColumnName);
 		try {
 			this.insertLinkedEntityIds(insertIdsMap, tableName, idColumnName, linkedIdColumnName);
-			this.deleteLinkedEntityIds(deleteIdsMap, tableName, idColumnName, linkedIdColumnName);
+		} catch (CreateObjectException e) {
+			throw new UpdateObjectException(e);
+		}
+	}
+
+	/**
+	 * 
+	 * @param <E>
+	 * @param idLinkedCodeMap
+	 * @param enumClass
+	 * @param tableName
+	 * @param idColumnName
+	 * @param linkedCodeColumnName
+	 * @throws UpdateObjectException
+	 */
+	protected final <E extends Enum<E>> void updateLinkedEnums(final Map<Identifier, EnumSet<E>> idLinkedCodeMap,
+			final Class<E> enumClass,
+			final String tableName,
+			final String idColumnName,
+			final String linkedCodeColumnName) throws UpdateObjectException {
+		if (idLinkedCodeMap == null || idLinkedCodeMap.isEmpty()) {
+			return;
+		}
+
+		Map<Identifier, EnumSet<E>> dbIdLinkedCodeMap = null;
+		try {
+			dbIdLinkedCodeMap = this.retrieveLinkedEnums(idLinkedCodeMap.keySet(), enumClass, tableName, idColumnName, linkedCodeColumnName);
+		} catch (RetrieveObjectException roe) {
+			throw new UpdateObjectException(roe);
+		}
+
+		final Map<Identifier, EnumSet<E>> insertCodesMap = new HashMap<Identifier, EnumSet<E>>();
+		final Map<Identifier, EnumSet<E>> deleteCodesMap = new HashMap<Identifier, EnumSet<E>>();
+		for (final Identifier id : idLinkedCodeMap.keySet()) {
+			final EnumSet<E> codes = idLinkedCodeMap.get(id);
+			final EnumSet<E> dbCodes = dbIdLinkedCodeMap.get(id);
+			if (dbCodes != null) {
+
+				//Prepare map for insertion
+				for (final E code : codes) {
+					if (!dbCodes.contains(code)) {
+						EnumSet<E> altCodes = insertCodesMap.get(id);
+						if (altCodes == null) {
+							altCodes = EnumSet.noneOf(enumClass);
+							insertCodesMap.put(id, altCodes);
+						}
+						altCodes.add(code);
+					}
+				}
+
+				//Prepare map for delete
+				for (final E code :dbCodes) {
+					if (!codes.contains(code)) {
+						EnumSet<E> altCodes = deleteCodesMap.get(id);
+						if (altCodes == null) {
+							altCodes = EnumSet.noneOf(enumClass);
+							deleteCodesMap.put(id, altCodes);
+						}
+						altCodes.add(code);
+					}
+				}
+
+				// Insert all linked codes for this id
+			} else {
+				EnumSet<E> altCodes = insertCodesMap.get(id);
+				if (altCodes == null) {
+					altCodes = EnumSet.noneOf(enumClass);
+					insertCodesMap.put(id, altCodes);
+				}
+				altCodes.addAll(codes);
+			}
+
+		}
+
+		this.deleteLinkedEnums(deleteCodesMap, tableName, idColumnName, linkedCodeColumnName);
+		try {
+			this.insertLinkedEnums(insertCodesMap, tableName, idColumnName, linkedCodeColumnName);
 		} catch (CreateObjectException e) {
 			throw new UpdateObjectException(e);
 		}
@@ -1125,6 +1328,63 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 	}
 
+	/**
+	 * 
+	 * @param <E>
+	 * @param idLinkedCodeMap
+	 * @param tableName
+	 * @param idColumnName
+	 * @param linkedCodeColumnName
+	 */
+	private final <E extends Enum<E>> void deleteLinkedEnums(final Map<Identifier, EnumSet<E>> idLinkedCodeMap,
+			final String tableName,
+			final String idColumnName,
+			final String linkedCodeColumnName) {
+		if (idLinkedCodeMap == null || idLinkedCodeMap.isEmpty()) {
+			return;
+		}
+
+		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + tableName
+				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
+
+		for (final Identifier id : idLinkedCodeMap.keySet()) {
+			final EnumSet<E> linkedCodes = idLinkedCodeMap.get(id);
+
+			sql.append(SQL_OR + OPEN_BRACKET + idColumnName + EQUALS + DatabaseIdentifier.toSQLString(id) + SQL_AND + OPEN_BRACKET);
+			sql.append(enumsEnumerationString(linkedCodes, linkedCodeColumnName, true));
+			sql.append(CLOSE_BRACKET);
+			sql.append(CLOSE_BRACKET);
+		}
+
+		Statement statement = null;
+		Connection connection = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.createStatement();
+			Log.debugMessage(this.getEntityName() + "Database.deleteLinkedEnums | Trying: " + sql, Log.DEBUGLEVEL09);
+			statement.executeUpdate(sql.toString());
+			connection.commit();
+		} catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		} finally {
+			try {
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
+	}
+
 	// //////////////////// misc /////////////////////////
 
 	/**
@@ -1194,6 +1454,42 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			stringBuffer.append((inList ? SQL_OR : SQL_AND) + voidSql + CLOSE_BRACKET);
 		}
 
+		return stringBuffer;
+	}
+
+	/**
+	 * Supports only non-null codes
+	 * @param enums
+	 * @param codeColumn
+	 * @param inList
+	 * @return String for "WHERE" subclause of SQL query
+	 */
+	protected final <E extends Enum<E>> StringBuffer enumsEnumerationString(final EnumSet<E> enums,
+			final String codeColumn,
+			final boolean inList) {
+		final StringBuffer stringBuffer = new StringBuffer(OPEN_BRACKET + codeColumn + (inList ? SQL_IN : SQL_NOT_IN) + OPEN_BRACKET);
+		int i = 0;
+		for (final Iterator<E> it = enums.iterator(); it.hasNext(); i++) {
+			final E code = it.next();
+			if (code instanceof Codeable) {
+				stringBuffer.append(((Codeable) code).getCode());
+			} else {
+				stringBuffer.append(code.ordinal());
+			}
+			if (it.hasNext()) {
+				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0)) {
+					stringBuffer.append(COMMA);
+				} else {
+					stringBuffer.append(CLOSE_BRACKET);
+					stringBuffer.append(inList ? SQL_OR : SQL_AND);
+					stringBuffer.append(codeColumn);
+					stringBuffer.append((inList ? SQL_IN : SQL_NOT_IN));
+					stringBuffer.append(OPEN_BRACKET);
+				}
+			}
+		}
+		stringBuffer.append(CLOSE_BRACKET);
+		stringBuffer.append(CLOSE_BRACKET);
 		return stringBuffer;
 	}
 
