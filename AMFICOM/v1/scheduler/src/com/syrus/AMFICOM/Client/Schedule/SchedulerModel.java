@@ -301,12 +301,12 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 		final MeasurementTypeChildrenFactory childrenFactory = new MeasurementTypeChildrenFactory(LoginManager.getDomainId());
 		
-		for(MeasurementType measurementType : measurementTypes) {
+		for(final MeasurementType measurementType1 : measurementTypes) {
 			IconPopulatableItem measurementTypeItem = new IconPopulatableItem();
 			measurementTypeItem.setChildrenFactory(childrenFactory);
 			measurementTypeItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
-			measurementTypeItem.setName(measurementType.getDescription());
-			measurementTypeItem.setObject(measurementType);
+			measurementTypeItem.setName(measurementType1.getDescription());
+			measurementTypeItem.setObject(measurementType1);
 			measurementTypeItems.add(measurementTypeItem);
 		}
 
@@ -574,7 +574,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			measurementTypeCondition = new TypicalCondition(this.measurementType,
 				OperationSort.OPERATION_IN,
 				ObjectEntities.MEASUREMENTSETUP_CODE,
-				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
+				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE);
 		}
 
 		if (SchedulerModel.this.monitoredElement != null) {
