@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.114 2005/08/25 20:13:57 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.115 2005/08/26 18:18:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.114 $, $Date: 2005/08/25 20:13:57 $
+ * @version $Revision: 1.115 $, $Date: 2005/08/26 18:18:22 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -390,34 +390,31 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 	@Override
 	public void insert(final Set<Test> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
-		try {
-			this.updateMeasurementSetupIds(storableObjects);
-		} catch (UpdateObjectException uoe) {
-			throw new CreateObjectException(uoe);
-		}
+
+		final Map<Identifier, Set<Identifier>> measurementSetupIdsMap = createMeasurementSetupIdsMap(storableObjects);
+		super.insertLinkedEntityIds(measurementSetupIdsMap,
+				ObjectEntities.MSTESTLINK,
+				TestWrapper.LINK_COLUMN_TEST_ID,
+				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
 	}
 
 	@Override
 	public void update(final Set<Test> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
-		this.updateMeasurementSetupIds(storableObjects);
-	}
 
-	private void updateMeasurementSetupIds(final Set<Test> tests) throws UpdateObjectException {
-		if (tests == null || tests.isEmpty()) {
-			return;
-		}
-
-		final Map<Identifier, Set<Identifier>> measurementSetupIdsMap = new HashMap<Identifier, Set<Identifier>>();
-		for (final Test test : tests) {
-			final Set<Identifier> measurementSetupIds = test.getMeasurementSetupIds();
-			measurementSetupIdsMap.put(test.getId(), measurementSetupIds);
-		}
-
+		final Map<Identifier, Set<Identifier>> measurementSetupIdsMap = createMeasurementSetupIdsMap(storableObjects);
 		super.updateLinkedEntityIds(measurementSetupIdsMap,
 				ObjectEntities.MSTESTLINK,
 				TestWrapper.LINK_COLUMN_TEST_ID,
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
+	}
+
+	private static Map<Identifier, Set<Identifier>> createMeasurementSetupIdsMap(final Set<Test> tests) {
+		final Map<Identifier, Set<Identifier>> measurementSetupIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		for (final Test test : tests) {
+			measurementSetupIdsMap.put(test.getId(), test.getMeasurementSetupIds());
+		}
+		return measurementSetupIdsMap;
 	}
 
 	@Override
