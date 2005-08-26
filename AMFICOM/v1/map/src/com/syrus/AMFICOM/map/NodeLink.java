@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.71 2005/08/16 11:00:38 krupenn Exp $
+ * $Id: NodeLink.java,v 1.72 2005/08/26 09:43:17 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.71 $, $Date: 2005/08/16 11:00:38 $
+ * @author $Author: max $
+ * @version $Revision: 1.72 $, $Date: 2005/08/26 09:43:17 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -152,7 +152,6 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		final IdlNodeLink nlt = (IdlNodeLink) transferable;
 		super.fromTransferable(nlt);
 
-		this.name = nlt.name;
 		this.length = nlt.length;
 
 		this.physicalLink = StorableObjectPool.getStorableObject(new Identifier(nlt.physicalLinkId), true);
@@ -174,7 +173,6 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
 				this.version.longValue(),
-				this.name,
 				this.physicalLink.getId().getTransferable(),
 				this.startNode.getId().getTransferable(),
 				this.endNode.getId().getTransferable(),
@@ -300,13 +298,11 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
-			final String name,
 			final PhysicalLink physicalLink,
 			final AbstractNode startNode,
 			final AbstractNode endNode,
 			final double length) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
-		this.name = name;
 		this.physicalLink = physicalLink;
 		this.startNode = startNode;
 		this.endNode = endNode;

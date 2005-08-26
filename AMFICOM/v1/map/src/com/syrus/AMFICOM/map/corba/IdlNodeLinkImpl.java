@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlNodeLinkImpl.java,v 1.4 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: IdlNodeLinkImpl.java,v 1.5 2005/08/26 09:43:17 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/08 11:35:11 $
+ * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2005/08/26 09:43:17 $
  * @module map
  */
 final class IdlNodeLinkImpl extends IdlNodeLink {
@@ -35,7 +35,6 @@ final class IdlNodeLinkImpl extends IdlNodeLink {
 			final IdlIdentifier creatorId,
 			final IdlIdentifier modifierId,
 			final long version,
-			final String name,
 			final IdlIdentifier physicalLinkId,
 			final IdlIdentifier startNodeId,
 			final IdlIdentifier endNodeId,
@@ -46,7 +45,6 @@ final class IdlNodeLinkImpl extends IdlNodeLink {
 		this.creatorId = creatorId;
 		this.modifierId = modifierId;
 		this.version = version;
-		this.name = name;
 		this.physicalLinkId = physicalLinkId;
 		this.startNodeId = startNodeId;
 		this.endNodeId = endNodeId;
