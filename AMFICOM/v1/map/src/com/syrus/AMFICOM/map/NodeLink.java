@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.72 2005/08/26 09:43:17 max Exp $
+ * $Id: NodeLink.java,v 1.73 2005/08/26 10:52:24 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: max $
- * @version $Revision: 1.72 $, $Date: 2005/08/26 09:43:17 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.73 $, $Date: 2005/08/26 10:52:24 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -513,6 +513,7 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 			if(existingIdentifier != null) {
 				nodeLink = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(nodeLink != null) {
+					clonedIdsPool.setExistingId(uid, existingIdentifier);
 					nodeLink.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
 				}
 				else{

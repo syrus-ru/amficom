@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.75 2005/08/25 16:40:19 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.76 2005/08/26 10:52:24 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: krupenn $
- * @version $Revision: 1.75 $, $Date: 2005/08/25 16:40:19 $
+ * @version $Revision: 1.76 $, $Date: 2005/08/26 10:52:24 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -387,6 +387,7 @@ public final class PhysicalLinkType extends StorableObjectType
 			if(existingIdentifier != null) {
 				physicalLinkType = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(physicalLinkType != null) {
+					clonedIdsPool.setExistingId(uid, existingIdentifier);
 					physicalLinkType.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
 				}
 				else{

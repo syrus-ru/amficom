@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.68 2005/08/16 11:00:38 krupenn Exp $
+ * $Id: Collector.java,v 1.69 2005/08/26 10:52:24 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.68 $, $Date: 2005/08/16 11:00:38 $
+ * @version $Revision: 1.69 $, $Date: 2005/08/26 10:52:24 $
  * @module map
  */
 public final class Collector extends StorableObject implements MapElement, XMLBeansTransferable {
@@ -414,6 +414,7 @@ public final class Collector extends StorableObject implements MapElement, XMLBe
 			if(existingIdentifier != null) {
 				collector = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(collector != null) {
+					clonedIdsPool.setExistingId(uid, existingIdentifier);
 					collector.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
 				}
 				else{

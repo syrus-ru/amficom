@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.15 2005/08/25 15:57:03 krupenn Exp $
+ * $Id: MapLibrary.java,v 1.16 2005/08/26 10:52:24 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/25 15:57:03 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/26 10:52:24 $
  * @author $Author: krupenn $
  * @module map
  */
@@ -398,6 +398,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 			if(existingIdentifier != null) {
 				mapLibrary = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(mapLibrary != null) {
+					clonedIdsPool.setExistingId(uid, existingIdentifier);
 					mapLibrary.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
 				}
 				else{

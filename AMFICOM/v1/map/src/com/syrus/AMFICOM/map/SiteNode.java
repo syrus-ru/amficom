@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.69 2005/08/16 11:00:38 krupenn Exp $
+ * $Id: SiteNode.java,v 1.70 2005/08/26 10:52:24 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: krupenn $
- * @version $Revision: 1.69 $, $Date: 2005/08/16 11:00:38 $
+ * @version $Revision: 1.70 $, $Date: 2005/08/26 10:52:24 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
@@ -394,6 +394,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
 			SiteNode siteNode = null;
 			if(existingIdentifier != null) {
+				clonedIdsPool.setExistingId(uid, existingIdentifier);
 				siteNode = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(siteNode != null) {
 					siteNode.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
