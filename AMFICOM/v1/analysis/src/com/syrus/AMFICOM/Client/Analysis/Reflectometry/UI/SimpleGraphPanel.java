@@ -143,6 +143,13 @@ public class SimpleGraphPanel extends JPanel
 		this.end = end;
 	}
 
+	/**
+	 * Судя по всему, этот метод не влияет на масштаб
+	 * окон в модуле, т.к. после его вызова (или невызова) масштаб все равно
+	 * принудительно устанавливается через прямой доступ к полям масштаба из
+	 * соответствующих LayeredPanel'ов.
+	 */
+	@Deprecated
 	public void setDefaultScales()
 	{
 		setGraphBounds(0, y.length);
