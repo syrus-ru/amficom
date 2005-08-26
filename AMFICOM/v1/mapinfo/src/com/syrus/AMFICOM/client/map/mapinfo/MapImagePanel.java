@@ -1,5 +1,5 @@
 /*
- * $Id: MapImagePanel.java,v 1.15 2005/08/26 09:35:10 peskovsky Exp $
+ * $Id: MapImagePanel.java,v 1.16 2005/08/26 09:59:39 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/26 09:35:10 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/26 09:59:39 $
  * @author $Author: peskovsky $
  * @module mapinfo
  */
@@ -91,18 +91,14 @@ public class MapImagePanel extends JPanel {
 	@Override
 	public void paintComponent(final Graphics g) {
 		final long t1 = System.currentTimeMillis();
-		super.paintComponent(g);
+		if (this.resultImage != null && g != null)
+			g.drawImage(this.resultImage, 0, 0, this.getWidth(), this.getHeight(), this);
+		else
+			super.paintComponent(g);
+		
 		final long t2 = System.currentTimeMillis();
 
-		if (this.resultImage != null && g != null) {
-			g.drawImage(this.resultImage, 0, 0, this.getWidth(), this.getHeight(), this);
-		}
-
-		final long t3 = System.currentTimeMillis();
-
-		Log.debugMessage("MapImagePanel.paintComponent | total " + (t3 - t1) + " (ms)\n" + "		"
-				+ (t2 - t1) + " ms (super paint)\n" + "		"
-				+ (t3 - t2) + " ms (result image paint)\n", Level.INFO);
+		Log.debugMessage("MapImagePanel.paintComponent | total " + (t2 - t1) + " ms.", Level.INFO); 
 	}
 
 	public void paintComponent(final Graphics g, int shiftX, int shiftY) {
