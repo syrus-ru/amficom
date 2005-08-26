@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.104 2005/08/26 18:16:19 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.105 2005/08/26 18:52:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.measurement;
 
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.MSMELINK;
+import static com.syrus.AMFICOM.general.ObjectEntities.MSMTLINK;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -36,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.104 $, $Date: 2005/08/26 18:16:19 $
+ * @version $Revision: 1.105 $, $Date: 2005/08/26 18:52:26 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -181,7 +183,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 		}
 
 		final Map<Identifier, Set<Identifier>> meIdsMap = this.retrieveLinkedEntityIds(measurementSetups,
-				ObjectEntities.MSMELINK,
+				MSMELINK,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 
@@ -200,7 +202,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 
 		final Map<Identifier, EnumSet<MeasurementType>> mtMap = super.retrieveLinkedEnums(measurementSetups,
 				MeasurementType.class,
-				ObjectEntities.MSMTLINK,
+				MSMTLINK,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE);
 		for (final MeasurementSetup measurementSetup : measurementSetups) {
@@ -217,13 +219,13 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 
 		final Map<Identifier, Set<Identifier>> meIdsMap = createMonitoredElementIdsMap(storableObjects);
 		super.insertLinkedEntityIds(meIdsMap,
-				ObjectEntities.MSMELINK,
+				MSMELINK,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 
 		final Map<Identifier, EnumSet<MeasurementType>> mtMap = createMeasurementTypesMap(storableObjects);
 		super.insertLinkedEnums(mtMap,
-				ObjectEntities.MSMTLINK,
+				MSMTLINK,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE);
 	}
@@ -234,14 +236,14 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 
 		final Map<Identifier, Set<Identifier>> meIdsMap = createMonitoredElementIdsMap(storableObjects);
 		super.updateLinkedEntityIds(meIdsMap,
-				ObjectEntities.MSMELINK,
+				MSMELINK,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 
 		final Map<Identifier, EnumSet<MeasurementType>> mtMap = createMeasurementTypesMap(storableObjects);
 		super.updateLinkedEnums(mtMap,
 				MeasurementType.class,
-				ObjectEntities.MSMTLINK,
+				MSMTLINK,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE);
 	}
