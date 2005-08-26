@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnit.java,v 1.1 2005/08/19 14:02:41 arseniy Exp $
+ * $Id: MeasurementUnit.java,v 1.2 2005/08/26 18:03:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.corba.IdlMeasurementUnit;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/19 14:02:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/26 18:03:53 $
  * @author $Author: arseniy $
  * @module general
  */
-public enum MeasurementUnit {
+public enum MeasurementUnit implements Codeable {
 	NONDIMENSIONAL("nondimensional"),
 
 	KILOMETER("km"),

@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.3 2005/08/19 14:10:39 arseniy Exp $
+ * $Id: DataType.java,v 1.4 2005/08/26 18:03:53 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,11 @@ import com.syrus.AMFICOM.general.corba.IdlDataType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/19 14:10:39 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/26 18:03:53 $
  * @author $Author: arseniy $
  * @module general
  */
-public enum DataType implements TransferableObject {
+public enum DataType implements TransferableObject, Codeable {
 	INTEGER("integer"),
 	DOUBLE("double"),
 	STRING("string"),
