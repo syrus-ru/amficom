@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.23 2005/08/20 19:58:10 arseniy Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.24 2005/08/26 09:58:30 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,9 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
-import java.util.HashSet;
+import java.util.EnumSet;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -43,11 +42,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
@@ -57,8 +52,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.23 $, $Date: 2005/08/20 19:58:10 $
+ * @author $Author: stas $
+ * @version $Revision: 1.24 $, $Date: 2005/08/26 09:58:30 $
  * @module schemeclient
  */
 
@@ -248,18 +243,12 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 			this.tfNameText.setText(this.type.getName());
 			this.taDescriptionArea.setText(this.type.getDescription());
 
-			try {
-				LinkedIdsCondition condition = new LinkedIdsCondition(this.type.getId(), ObjectEntities.MEASUREMENT_TYPE_CODE);
-				Collection mPTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-				
-				for (Iterator it = this.measurementTypeNodes.iterator(); it.hasNext();) {
-					CheckableNode node = (CheckableNode)it.next();
-					node.setChecked(mPTypes.contains(node.getObject()));
-				}
-				this.trTestTypeTree.updateUI();
-			} catch (ApplicationException e) {
-				Log.errorException(e);
+			Collection mTypes = this.type.getMeasurementTypes();
+			for (Iterator it = this.measurementTypeNodes.iterator(); it.hasNext();) {
+				CheckableNode node = (CheckableNode)it.next();
+				node.setChecked(mTypes.contains(node.getObject()));
 			}
+			this.trTestTypeTree.updateUI();
 		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);
@@ -299,26 +288,17 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		this.type.setName(this.tfNameText.getText());
 		this.type.setDescription(this.taDescriptionArea.getText());
 
+		EnumSet<MeasurementType> mTypeSet = EnumSet.noneOf(MeasurementType.class);
+		
 		for (Iterator it = this.measurementTypeNodes.iterator(); it.hasNext();) {
 			CheckableNode node = (CheckableNode)it.next();
-			MeasurementType mtype = (MeasurementType) node.getObject();
 			if (node.isChecked()) {
-				Collection<Identifier> pTypes = mtype.getMeasurementPortTypeIds();
-				if (!pTypes.contains(this.type.getId())) {
-					Set<Identifier> newPTypes = new HashSet<Identifier>(pTypes);
-					newPTypes.add(this.type.getId());
-					mtype.setMeasurementPortTypeIds(newPTypes);
-				}
-			} else {
-				Collection<Identifier> pTypes = mtype.getMeasurementPortTypeIds();
-				// TODO add/remove MeasurementPortType to/from MeasurementType
-				if (pTypes.contains(this.type.getId())) {
-					Set<Identifier> newPTypes = new HashSet<Identifier>(pTypes);
-					newPTypes.remove(this.type.getId());
-					mtype.setMeasurementPortTypeIds(newPTypes);
-				}
+				MeasurementType mtype = (MeasurementType) node.getObject();
+				mTypeSet.add(mtype);
 			}
 		}
+		this.type.setMeasurementTypes(mTypeSet);
+		
 		try {
 			StorableObjectPool.flush(this.type.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
@@ -330,17 +310,8 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 	Item createRoot() {
 		Item root1 = new IconedNode(SchemeResourceKeys.ROOT, LangModelScheme.getString(SchemeResourceKeys.ROOT));
 		
-		EquivalentCondition condition = new EquivalentCondition(
-				ObjectEntities.MEASUREMENT_TYPE_CODE);
-		try {
-			Collection allMPTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-			for (Iterator it = allMPTypes.iterator(); it.hasNext();) {
-				MeasurementType t = (MeasurementType) it.next();
-					root1.addChild(new CheckableNode(t, false));
-			}
-		} 
-		catch (ApplicationException e) {
-			Log.errorException(e);
+		for (MeasurementType t : MeasurementType.values()) {
+				root1.addChild(new CheckableNode(t, t.getCodename(), false));
 		}
 		return root1;
 	}

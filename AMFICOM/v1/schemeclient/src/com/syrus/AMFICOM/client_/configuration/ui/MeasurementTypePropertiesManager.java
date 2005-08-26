@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypePropertiesManager.java,v 1.10 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: MeasurementTypePropertiesManager.java,v 1.11 2005/08/26 09:58:30 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,11 +13,11 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.ui.EmptyStorableObjectEditor;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.measurement.MeasurementTypeWrapper;
+//import com.syrus.AMFICOM.measurement.MeasurementTypeWrapper;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.11 $, $Date: 2005/08/26 09:58:30 $
  * @module schemeclient
  */
 
@@ -73,7 +73,9 @@ public class MeasurementTypePropertiesManager implements VisualManager {
 	 * @see VisualManager#getController()
 	 */
 	public StorableObjectWrapper getController() {
-		return MeasurementTypeWrapper.getInstance();
+		return null;
+		// XXX need MeasurementTypeWrapper?
+		//MeasurementTypeWrapper.getInstance();
 	}
 
 	/**

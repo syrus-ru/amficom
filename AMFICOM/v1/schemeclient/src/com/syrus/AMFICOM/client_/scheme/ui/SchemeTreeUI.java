@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.13 2005/08/19 15:41:35 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.14 2005/08/26 09:58:30 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/08/19 15:41:35 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/26 09:58:30 $
  * @module schemeclient
  */
 
@@ -95,7 +95,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 								SchemeProtoElement proto = (SchemeProtoElement)object;
 								Set<Identifiable> ids = proto.getReverseDependencies();
 								StorableObjectPool.delete(ids);
-								proto.setParentSchemeProtoGroup(null);
+								StorableObjectPool.delete(proto.getId());
 								TreePath parentPath = selectedPath.getParentPath();
 								SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
 								updateRecursively((Item)parentPath.getLastPathComponent());

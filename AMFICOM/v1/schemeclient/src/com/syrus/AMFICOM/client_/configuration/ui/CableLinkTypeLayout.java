@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.9 2005/08/19 15:41:34 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.10 2005/08/26 09:58:30 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.resource.NumberedComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/26 09:58:30 $
  * @module schemeclient
  */
 
@@ -102,10 +102,11 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		this.aContext = aContext;
 	}
 	
+//XXX check use of numbered comparator
 	private List<CableThreadType> getSortedThreadTypes() {
 		List<CableThreadType> threads = new ArrayList<CableThreadType>(this.type.getCableThreadTypes(false));
 		Collections.sort(threads, new NumberedComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
-				StorableObjectWrapper.COLUMN_NAME));
+				StorableObjectWrapper.COLUMN_CODENAME));
 		return threads;
 	}
 

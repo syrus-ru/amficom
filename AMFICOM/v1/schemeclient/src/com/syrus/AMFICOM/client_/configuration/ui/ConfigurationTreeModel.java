@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.8 2005/08/20 19:58:10 arseniy Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.9 2005/08/26 09:58:30 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/20 19:58:10 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/08/26 09:58:30 $
  * @module schemeclient
  */
 
@@ -293,23 +293,10 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 	}
 	
 	private void createMeasurementTypes(Item node, Collection contents) {
-		try {
-			EquivalentCondition condition = new EquivalentCondition(
-					ObjectEntities.MEASUREMENT_TYPE_CODE);
-			Collection<StorableObject> measurementTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-
-			Collection toAdd = CommonUIUtilities.getObjectsToAdd(measurementTypes, contents);
-			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(measurementTypes, node.getChildren());
-			for (Item child : toRemove) {
-				child.setParent(null);
-			}
-			for (Iterator it = toAdd.iterator(); it.hasNext();) {
-				MeasurementType type = (MeasurementType)it.next();
+		if (contents.isEmpty()) {
+			for (MeasurementType type : MeasurementType.values()) {
 				node.addChild(new PopulatableIconedNode(this, type, type.getDescription(), false));
 			}
-		} 
-		catch (ApplicationException ex) {
-			ex.printStackTrace();
 		}
 	}
 }

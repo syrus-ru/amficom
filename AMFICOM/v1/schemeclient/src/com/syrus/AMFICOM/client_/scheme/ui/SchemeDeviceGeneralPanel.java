@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.8 2005/08/19 15:41:35 stas Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.9 2005/08/26 09:58:30 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
@@ -56,7 +57,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/08/19 15:41:35 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/26 09:58:30 $
  * @module schemeclient
  */
 
@@ -153,7 +154,7 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 	public void setObject(Object or) {
 		this.schemeDevice = (SchemeDevice)or;
 		this.combo.removeAllItems();
-		
+//	XXX check use of numbered comparator
 		if (this.schemeDevice != null) {
 			List<SchemePort> sPorts = new ArrayList<SchemePort>(this.schemeDevice.getSchemePorts());
 			Comparator<SchemePort> sorter1 = new NumberedComparator<SchemePort>(

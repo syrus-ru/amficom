@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.21 2005/08/19 15:41:34 stas Exp $
+ * $Id: SchemeActions.java,v 1.22 2005/08/26 09:58:30 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
+import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -84,7 +85,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.22 $, $Date: 2005/08/26 09:58:30 $
  * @module schemeclient
  */
 
@@ -803,6 +804,7 @@ public class SchemeActions {
 		List<SchemePort> ports = new ArrayList<SchemePort>(findPorts(sp.getParentSchemeDevice(), direction));
 		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(sl.getSchemeCableThreads());	
 		
+//	XXX check use of numbered comparator
 		Collections.sort(ports, new NumberedComparator<SchemePort>(SchemePortWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
 		Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
 

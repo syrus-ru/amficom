@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.23 2005/08/20 19:58:10 arseniy Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.24 2005/08/26 09:58:30 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,9 +28,6 @@ import javax.swing.JTextField;
 import javax.swing.JTree;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
-import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
-import com.syrus.AMFICOM.Client.Resource.MiscUtil;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.tree.CheckableNode;
 import com.syrus.AMFICOM.client.UI.tree.CheckableTreeUI;
@@ -38,9 +35,7 @@ import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
-import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
@@ -53,8 +48,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.23 $, $Date: 2005/08/20 19:58:10 $
+ * @author $Author: stas $
+ * @version $Revision: 1.24 $, $Date: 2005/08/26 09:58:30 $
  * @module schemeclient
  */
 
@@ -71,7 +66,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 	JTree trParametersTree;
 	JLabel lbPortTypesLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MEASUREMENT_PORT_TYPES));
 	Item portsRoot;
-	JTree trPortTypesTree;
+//	JTree trPortTypesTree;
 	JPanel pnGeneralPanel = new JPanel();
 	List allInPTypeNodes;
 	List allOutPTypeNodes;
@@ -102,10 +97,10 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		this.trParametersTree = parametersTreeUI.getTree();
 		this.trParametersTree.setRootVisible(false);
 		
-		this.portsRoot = createPortsRoot();
-		CheckableTreeUI portsTreeUI = new CheckableTreeUI(this.portsRoot);
-		this.trPortTypesTree = portsTreeUI.getTree();
-		this.trPortTypesTree.setRootVisible(false);
+//		this.portsRoot = createPortsRoot();
+//		CheckableTreeUI portsTreeUI = new CheckableTreeUI(this.portsRoot);
+//		this.trPortTypesTree = portsTreeUI.getTree();
+//		this.trPortTypesTree.setRootVisible(false);
 				
 		this.allInPTypeNodes = getParameterTypeNodes(SchemeResourceKeys.INPUT);
 		this.allOutPTypeNodes = getParameterTypeNodes(SchemeResourceKeys.OUTPUT);
@@ -154,18 +149,18 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbPanel0.setConstraints( lbPortTypesLabel, gbcPanel0 );
 		pnPanel0.add( lbPortTypesLabel );
 
-		JScrollPane scpPortTypesTree = new JScrollPane( trPortTypesTree );
-		gbcPanel0.gridx = 1;
-		gbcPanel0.gridy = 6;
-		gbcPanel0.gridwidth = 2;
-		gbcPanel0.gridheight = 2;
-		gbcPanel0.fill = GridBagConstraints.BOTH;
-		gbcPanel0.weightx = 1;
-		gbcPanel0.weighty = 1;
-		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets( 0,2,0,2 );
-		gbPanel0.setConstraints( scpPortTypesTree, gbcPanel0 );
-		pnPanel0.add( scpPortTypesTree );
+//		JScrollPane scpPortTypesTree = new JScrollPane( trPortTypesTree );
+//		gbcPanel0.gridx = 1;
+//		gbcPanel0.gridy = 6;
+//		gbcPanel0.gridwidth = 2;
+//		gbcPanel0.gridheight = 2;
+//		gbcPanel0.fill = GridBagConstraints.BOTH;
+//		gbcPanel0.weightx = 1;
+//		gbcPanel0.weighty = 1;
+//		gbcPanel0.anchor = GridBagConstraints.NORTH;
+//		gbcPanel0.insets = new Insets( 0,2,0,2 );
+//		gbPanel0.setConstraints( scpPortTypesTree, gbcPanel0 );
+//		pnPanel0.add( scpPortTypesTree );
 
 		GridBagLayout gbGeneralPanel = new GridBagLayout();
 		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
@@ -223,10 +218,10 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 //		pnGeneralPanel.setBackground(Color.WHITE);
 //		pnPanel0.setBackground(Color.WHITE);
 		scpParametersTree.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-		scpPortTypesTree.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
+//		scpPortTypesTree.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
 		addToUndoableListener(tfNameText);
-		addToUndoableListener(trPortTypesTree);
+//		addToUndoableListener(trPortTypesTree);
 		addToUndoableListener(trParametersTree);
 		
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
@@ -269,17 +264,17 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 				}
 			this.trParametersTree.updateUI();
 				
-			Set mPTypeIds = this.type.getMeasurementPortTypeIds();
-			try {
-				Collection mPTypes = StorableObjectPool.getStorableObjects(mPTypeIds, true);
-				for (Iterator it = this.allMPTypeNodes.iterator(); it.hasNext();) {
-					CheckableNode node = (CheckableNode)it.next();
-					node.setChecked(mPTypes.contains(node.getObject()));
-				}
-			} catch (ApplicationException e1) {
-				Log.errorException(e1);
-			}
-			this.trPortTypesTree.updateUI();
+//			Set mPTypeIds = this.type.getMeasurementPortTypeIds();
+//			try {
+//				Collection mPTypes = StorableObjectPool.getStorableObjects(mPTypeIds, true);
+//				for (Iterator it = this.allMPTypeNodes.iterator(); it.hasNext();) {
+//					CheckableNode node = (CheckableNode)it.next();
+//					node.setChecked(mPTypes.contains(node.getObject()));
+//				}
+//			} catch (ApplicationException e1) {
+//				Log.errorException(e1);
+//			}
+//			this.trPortTypesTree.updateUI();
 		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			for (Iterator it = this.allInPTypeNodes.iterator(); it.hasNext();) {
@@ -295,14 +290,14 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 				CheckableNode node = (CheckableNode)it.next();
 				node.setChecked(false);
 			}
-			this.trPortTypesTree.updateUI();
+//			this.trPortTypesTree.updateUI();
 		}
 	}
 	
 	@Override
 	public void commitChanges() {
 		super.commitChanges();
-		if (MiscUtil.validName(this.tfNameText.getText())) {
+	/*	if (MiscUtil.validName(this.tfNameText.getText())) {
 			if (this.type == null) {
 				try {
 					this.type = SchemeObjectsFactory.createMeasurementType(this.tfNameText.getText());
@@ -316,7 +311,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 			} else {
 //				apply();
 			}
-		}
+		}*/
 	}
 	/*
 	private void apply() {

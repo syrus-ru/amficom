@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.7 2005/08/19 15:41:35 stas Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.8 2005/08/26 09:58:30 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.ThreadCell;
+import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.NumberedComparator;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/19 15:41:35 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/26 09:58:30 $
  * @module schemeclient
  */
 
@@ -97,6 +98,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		}
 	}
 	
+//XXX check use of numbered comparator
 	private List<SchemeCableThread> getSortedCableThreads() {
 		Set<SchemeCableThread> schemeCableThreads = this.link.getSchemeCableThreads();
 		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(schemeCableThreads);

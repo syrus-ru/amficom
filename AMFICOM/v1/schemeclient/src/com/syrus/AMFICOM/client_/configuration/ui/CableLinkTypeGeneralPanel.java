@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.10 2005/08/19 15:41:34 stas Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.11 2005/08/26 09:58:30 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/26 09:58:30 $
  * @module schemeclient
  */
 
@@ -510,11 +510,12 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		return this.linkType;
 	}
 	
+	//XXX check use of numbered comparator 
 	private List<CableThreadType> getSortedThreadTypes() {
 		Set<CableThreadType> cableThreadTypes = this.linkType.getCableThreadTypes(false);
 		List<CableThreadType> threads = new ArrayList<CableThreadType>(cableThreadTypes);
 		Collections.sort(threads, new NumberedComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
-				StorableObjectWrapper.COLUMN_NAME));
+				StorableObjectWrapper.COLUMN_CODENAME));
 		return threads;
 	}
 
@@ -615,10 +616,11 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 					tlType = (LinkType)linkTypes.iterator().next();
 				}
 				
+				// FIXME check name creation: need codename - number; name - "fiberX"
 				for (int i = oldSize; i < newSize; i++) {
 					this.sortedTheradTypes.add(SchemeObjectsFactory.createCableThreadType(
+							Integer.toString(i + 1),
 							LangModelScheme.getString(SchemeResourceKeys.THREAD) + (i + 1), 
-							Integer.toString(i + 1), 
 							tlType, this.linkType));
 				}
 			} else if (oldSize > newSize) { // remove

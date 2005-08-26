@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.28 2005/08/22 15:15:27 arseniy Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.29 2005/08/26 09:58:30 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.client_.scheme;
 
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.Map;
 import java.util.Set;
@@ -43,7 +42,6 @@ import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.measurement.KIS;
@@ -72,8 +70,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.28 $, $Date: 2005/08/22 15:15:27 $
+ * @author $Author: stas $
+ * @version $Revision: 1.29 $, $Date: 2005/08/26 09:58:30 $
  * @module schemeclient
  */
 
@@ -94,20 +92,20 @@ public class SchemeObjectsFactory {
 		return eqt;
 	}
 	
-	public static MeasurementType createMeasurementType(String codename) throws CreateObjectException {
-		Identifier userId = LoginManager.getUserId();
-		MeasurementType type = MeasurementType.createInstance(userId,
-				codename,
-				EMPTY,
-				EnumSet.noneOf(ParameterType.class),
-				EnumSet.noneOf(ParameterType.class),
-				Collections.<Identifier> emptySet());
-		return type;
-	}
+//	public static MeasurementType createMeasurementType(String codename) throws CreateObjectException {
+//		Identifier userId = LoginManager.getUserId();
+//		MeasurementType type = MeasurementType.createInstance(userId,
+//				codename,
+//				EMPTY,
+//				EnumSet.noneOf(ParameterType.class),
+//				EnumSet.noneOf(ParameterType.class),
+//				Collections.<Identifier> emptySet());
+//		return type;
+//	}
 
 	public static MeasurementPortType createMeasurementPortType(String codename) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
-		MeasurementPortType type = MeasurementPortType.createInstance(userId, codename, EMPTY, EMPTY);
+		MeasurementPortType type = MeasurementPortType.createInstance(userId, codename, EMPTY, EMPTY, EnumSet.noneOf(MeasurementType.class));
 		return type;
 	}
 	
