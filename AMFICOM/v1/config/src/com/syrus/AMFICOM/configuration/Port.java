@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.86 2005/08/26 10:25:56 bass Exp $
+ * $Id: Port.java,v 1.87 2005/08/26 11:06:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/08/26 10:25:56 $
+ * @version $Revision: 1.87 $, $Date: 2005/08/26 11:06:19 $
  * @author $Author: bass $
  * @module config
  */
@@ -155,6 +155,10 @@ public final class Port extends StorableObject implements Characterizable, Typed
 				this.type.getId().getTransferable(),
 				this.description,
 				this.equipmentId.getTransferable());
+	}
+
+	public Identifier getTypeId() {
+		return this.getType().getId();
 	}
 
 	public PortType getType() {
