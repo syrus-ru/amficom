@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.42 2005/08/25 11:28:05 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.43 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.42 $, $Date: 2005/08/25 11:28:05 $
+ * @version $Revision: 1.43 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
 public final class MapPropertiesManager 
@@ -778,7 +778,7 @@ public final class MapPropertiesManager
 	 */
 	public static void saveIniFile()
 	{
-		Log.debugMessage("method call MapPropertiesManager.saveIniFile()", Level.FINER);
+		Log.debugMessage("method call MapPropertiesManager.saveIniFile()", Level.FINE);
 
 		try
 		{

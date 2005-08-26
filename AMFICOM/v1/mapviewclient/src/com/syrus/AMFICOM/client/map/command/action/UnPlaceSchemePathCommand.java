@@ -1,12 +1,12 @@
 /**
- * $Id: UnPlaceSchemePathCommand.java,v 1.18 2005/08/17 14:14:17 arseniy Exp $
+ * $Id: UnPlaceSchemePathCommand.java,v 1.19 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  *
  * Платформа: java 1.4.1
-*/
+ */
 
 package com.syrus.AMFICOM.client.map.command.action;
 
@@ -19,27 +19,29 @@ import com.syrus.util.Log;
 /**
  * убрать привязку измерительного пути с карты
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/08/17 14:14:17 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class UnPlaceSchemePathCommand extends MapActionCommandBundle
-{
+public class UnPlaceSchemePathCommand extends MapActionCommandBundle {
 	/**
 	 * Выбранный фрагмент линии
 	 */
 	MeasurementPath path = null;
 
-	public UnPlaceSchemePathCommand(MeasurementPath path)
-	{
+	public UnPlaceSchemePathCommand(MeasurementPath path) {
 		super();
 		this.path = path;
 	}
 
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		Log.debugMessage(
+				getClass().getName() + "::execute() | "
+					+ "unplace measurement path "
+					+ this.path.getName()
+					+ " (" + this.path.getId() + ")", 
+				Level.FINEST);
 
 		try {
 			super.removeMeasurementPath(this.path);

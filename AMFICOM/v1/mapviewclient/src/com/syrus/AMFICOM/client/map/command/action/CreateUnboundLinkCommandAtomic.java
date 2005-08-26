@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandAtomic.java,v 1.20 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: CreateUnboundLinkCommandAtomic.java,v 1.21 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,60 +22,59 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.util.Log;
 
 /**
- * создание непривязанной линии, внесение ее в пул и на карту - 
- * атомарное действие 
- * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/08/17 14:14:16 $
+ * создание непривязанной линии, внесение ее в пул и на карту - атомарное
+ * действие
+ * 
+ * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class CreateUnboundLinkCommandAtomic extends MapActionCommand
-{
+public class CreateUnboundLinkCommandAtomic extends MapActionCommand {
 	UnboundLink link;
-	
+
 	AbstractNode startNode;
 	AbstractNode endNode;
-	
+
 	Map map;
-	
+
 	public CreateUnboundLinkCommandAtomic(
 			AbstractNode startNode,
-			AbstractNode endNode)
-	{
+			AbstractNode endNode) {
 		super(MapActionCommand.ACTION_DRAW_LINE);
 		this.startNode = startNode;
 		this.endNode = endNode;
 	}
-	
-	public UnboundLink getLink()
-	{
+
+	public UnboundLink getLink() {
 		return this.link;
 	}
-	
+
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | "
+				+ "create UnboundLink with start at node " 
+				+ this.startNode.getName() + " (" + this.startNode.getId() 
+				+ ") and end at node " + this.endNode.getName() 
+				+ " (" + this.endNode.getId() + ")", 
+			Level.FINEST);
 
 		this.map = this.logicalNetLayer.getMapView().getMap();
-		
-		try
-		{
-			this.link = (UnboundLink )UnboundLink.createInstance(
+
+		try {
+			this.link = (UnboundLink) UnboundLink.createInstance(
 					LoginManager.getUserId(),
-					this.startNode, 
-					this.endNode, 
+					this.startNode,
+					this.endNode,
 					this.logicalNetLayer.getUnboundLinkType());
-	
+
 			this.map.addPhysicalLink(this.link);
 			setResult(Command.RESULT_OK);
-		}
-		catch (ApplicationException e)
-		{
+		} catch(ApplicationException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();
 		}
 	}
-	
-}
 
+}

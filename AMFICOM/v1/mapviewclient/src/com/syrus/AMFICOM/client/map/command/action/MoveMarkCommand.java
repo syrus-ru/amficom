@@ -1,5 +1,5 @@
 /**
- * $Id: MoveMarkCommand.java,v 1.17 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: MoveMarkCommand.java,v 1.18 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,14 +22,14 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * Команда перемещения метки. вызывает только функцию "обновить состояние 
+ * Команда перемещения метки. вызывает только функцию "обновить состояние
  * местоположения"
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/17 14:14:16 $
+ * 
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class MoveMarkCommand extends MapActionCommand
-{
+public class MoveMarkCommand extends MapActionCommand {
 	DoublePoint initialLocation;
 	double initialDistance;
 
@@ -37,39 +37,40 @@ public class MoveMarkCommand extends MapActionCommand
 	double distance;
 
 	Mark mark;
-	
+
 	MarkController markController;
 
-	public MoveMarkCommand(Mark mark)
-	{
+	public MoveMarkCommand(Mark mark) {
 		super(MapActionCommand.ACTION_DRAW_NODE);
 		this.mark = mark;
 		this.initialLocation = mark.getLocation();
 		this.initialDistance = mark.getDistance();
-//		setState(mark.getState());
+		// setState(mark.getState());
 	}
 
 	@Override
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals(MoveSelectionCommandBundle.DELTA_X))
-		{
+	public void setParameter(String field, Object value) {
+		if(field.equals(MoveSelectionCommandBundle.DELTA_X)) {
 			execute();
 		}
-		else
-		if(field.equals(MoveSelectionCommandBundle.DELTA_Y))
-		{
+		else if(field.equals(MoveSelectionCommandBundle.DELTA_Y)) {
 			execute();
 		}
 	}
 
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | "
+				+ "move mark "
+				+ this.mark.getName() 
+				+ " (" + this.mark.getId() + ")"
+				+ " to distance " + this.distance, 
+			Level.FINEST);
 
 		try {
-			this.markController = (MarkController )super.logicalNetLayer.getMapViewController().getController(this.mark);
+			this.markController = (MarkController) 
+				super.logicalNetLayer.getMapViewController().getController(this.mark);
 			this.distance = this.mark.getDistance();
 			this.markController.moveToFromStartLt(this.mark, this.distance);
 			setResult(Command.RESULT_OK);
@@ -79,10 +80,9 @@ public class MoveMarkCommand extends MapActionCommand
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
-	public void undo()
-	{
+	public void undo() {
 		try {
 			this.markController.moveToFromStartLt(this.mark, this.distance);
 		} catch(MapConnectionException e) {
@@ -95,10 +95,11 @@ public class MoveMarkCommand extends MapActionCommand
 	}
 
 	@Override
-	public void redo()
-	{
+	public void redo() {
 		try {
-			this.markController.moveToFromStartLt(this.mark, this.initialDistance);
+			this.markController.moveToFromStartLt(
+					this.mark,
+					this.initialDistance);
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

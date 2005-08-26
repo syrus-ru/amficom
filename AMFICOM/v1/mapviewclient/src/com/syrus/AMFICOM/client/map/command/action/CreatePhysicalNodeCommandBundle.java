@@ -1,12 +1,12 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.26 2005/08/24 08:19:58 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.27 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  *
  * Платформа: java 1.4.1
-*/
+ */
 
 package com.syrus.AMFICOM.client.map.command.action;
 
@@ -24,50 +24,52 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * В данном классе реализуется алгоритм добавления топологического узла на 
- * фрагмент линии. При этом фрагмент линии удаляется, и вместо него создаются 
+ * В данном классе реализуется алгоритм добавления топологического узла на
+ * фрагмент линии. При этом фрагмент линии удаляется, и вместо него создаются
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.26 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.27 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
-public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
-{
+public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle {
 	/**
 	 * Выбранный фрагмент линии
 	 */
 	NodeLink nodeLink;
-	
+
 	Map map;
-	
+
 	/**
 	 * точка, в которой создается новый топологический узел
 	 */
 	Point point;
 
-	public CreatePhysicalNodeCommandBundle(
-			NodeLink nodeLink,
-			Point point)
-	{
+	public CreatePhysicalNodeCommandBundle(NodeLink nodeLink, Point point) {
 		super();
 		this.nodeLink = nodeLink;
 		this.point = point;
 	}
 
 	@Override
-	public void execute()
-	{
-		try
-		{
-			Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
-			DoublePoint coordinatePoint = this.logicalNetLayer.getConverter().convertScreenToMap(this.point);
+	public void execute() {
+		try {
+			Log.debugMessage(
+				getClass().getName() + "::execute() | "
+					+ "create topological node on node link "
+					+ this.nodeLink.getName() 
+					+ " (" + this.nodeLink.getId() + ")", 
+				Level.FINEST);
+			DoublePoint coordinatePoint = this.logicalNetLayer.getConverter()
+					.convertScreenToMap(this.point);
 			this.map = this.logicalNetLayer.getMapView().getMap();
 			// получить линию связи, которой принадлежит фрагмент
 			PhysicalLink physicalLink = this.nodeLink.getPhysicalLink();
 			// создать новый активный топологический узел
-			TopologicalNode node = super.createPhysicalNode(physicalLink, coordinatePoint);
+			TopologicalNode node = super.createPhysicalNode(
+					physicalLink,
+					coordinatePoint);
 			super.changePhysicalNodeActivity(node, true);
 			// взять начальный и конечный узлы фрагмента
 			AbstractNode startNode = this.nodeLink.getStartNode();
@@ -85,9 +87,7 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle
 
 			this.logicalNetLayer.setCurrentMapElement(node);
 			setResult(Command.RESULT_OK);
-		}
-		catch(Throwable e)
-		{
+		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();

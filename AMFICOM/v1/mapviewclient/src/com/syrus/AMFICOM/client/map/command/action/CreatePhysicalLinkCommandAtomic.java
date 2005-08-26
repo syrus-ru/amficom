@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalLinkCommandAtomic.java,v 1.20 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: CreatePhysicalLinkCommandAtomic.java,v 1.21 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,52 +24,51 @@ import com.syrus.util.Log;
 /**
  * создание физической линии, внесение ее в пул и на карту - 
  * атомарное действие 
- * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class CreatePhysicalLinkCommandAtomic extends MapActionCommand
-{
+public class CreatePhysicalLinkCommandAtomic extends MapActionCommand {
 	/** создаваемая линия */
 	PhysicalLink link;
-	
+
 	/** начальный узел */
 	AbstractNode startNode;
-	
+
 	/** конечный узел */
 	AbstractNode endNode;
-	
+
 	public CreatePhysicalLinkCommandAtomic(
 			AbstractNode startNode,
-			AbstractNode endNode)
-	{
+			AbstractNode endNode) {
 		super(MapActionCommand.ACTION_DRAW_LINE);
 		this.startNode = startNode;
 		this.endNode = endNode;
 	}
-	
-	public PhysicalLink getLink()
-	{
+
+	public PhysicalLink getLink() {
 		return this.link;
 	}
-	
-	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
-		try
-		{
+	@Override
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | "
+				+ "create PhysicalLink with start at node " 
+				+ this.startNode.getName() + " (" + this.startNode.getId() 
+				+ ") and end at node " + this.endNode.getName() 
+				+ " (" + this.endNode.getId() + ")", 
+			Level.FINEST);
+
+		try {
 			this.link = PhysicalLink.createInstance(
 					LoginManager.getUserId(),
-					this.startNode.getId(), 
-					this.endNode.getId(), 
+					this.startNode.getId(),
+					this.endNode.getId(),
 					this.logicalNetLayer.getCurrentPhysicalLinkType());
 			this.logicalNetLayer.getMapView().getMap().addPhysicalLink(this.link);
 			setResult(Command.RESULT_OK);
-		}
-		catch (CreateObjectException e)
-		{
+		} catch(CreateObjectException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();
@@ -79,17 +78,14 @@ public class CreatePhysicalLinkCommandAtomic extends MapActionCommand
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
-	public void redo()
-	{
+	public void redo() {
 		this.logicalNetLayer.getMapView().getMap().addPhysicalLink(this.link);
 	}
-	
+
 	@Override
-	public void undo()
-	{
+	public void undo() {
 		this.logicalNetLayer.getMapView().getMap().removePhysicalLink(this.link);
 	}
 }
-

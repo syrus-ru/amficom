@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveMeasurementPathCommandAtomic.java,v 1.17 2005/08/17 14:14:17 arseniy Exp $
+ * $Id: RemoveMeasurementPathCommandAtomic.java,v 1.18 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,45 +18,47 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.util.Log;
 
 /**
- * удаление измерительного пути из карты - атомарное действие 
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/17 14:14:17 $
+ * удаление измерительного пути из карты - атомарное действие
+ * 
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class RemoveMeasurementPathCommandAtomic extends MapActionCommand
-{
+public class RemoveMeasurementPathCommandAtomic extends MapActionCommand {
 	MeasurementPath measuremetnPath;
-	
-	public RemoveMeasurementPathCommandAtomic(MeasurementPath mp)
-	{
+
+	public RemoveMeasurementPathCommandAtomic(MeasurementPath mp) {
 		super(MapActionCommand.ACTION_DROP_LINE);
 		this.measuremetnPath = mp;
 	}
-	
-	public MeasurementPath getPath()
-	{
+
+	public MeasurementPath getPath() {
 		return this.measuremetnPath;
 	}
-	
-	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
-		this.logicalNetLayer.getMapView().removeMeasurementPath(this.measuremetnPath);
+	@Override
+	public void execute() {
+		Log.debugMessage(
+				getClass().getName() + "::execute() | "
+					+ "remove measurement path "
+					+ this.measuremetnPath.getName()
+					+ " (" + this.measuremetnPath.getId() + ")", 
+				Level.FINEST);
+
+		this.logicalNetLayer.getMapView().removeMeasurementPath(
+				this.measuremetnPath);
 		setResult(Command.RESULT_OK);
 	}
 
 	@Override
-	public void redo()
-	{
-		this.logicalNetLayer.getMapView().removeMeasurementPath(this.measuremetnPath);
+	public void redo() {
+		this.logicalNetLayer.getMapView().removeMeasurementPath(
+				this.measuremetnPath);
 	}
 
 	@Override
-	public void undo()
-	{
-		this.logicalNetLayer.getMapView().addMeasurementPath(this.measuremetnPath);
+	public void undo() {
+		this.logicalNetLayer.getMapView().addMeasurementPath(
+				this.measuremetnPath);
 	}
 }
-

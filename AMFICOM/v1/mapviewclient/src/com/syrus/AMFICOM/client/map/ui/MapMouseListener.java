@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.61 2005/08/26 10:46:05 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.62 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.61 $, $Date: 2005/08/26 10:46:05 $
+ * @version $Revision: 1.62 $, $Date: 2005/08/26 15:39:54 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -160,7 +160,7 @@ public final class MapMouseListener implements MouseListener
 						long d = System.currentTimeMillis();
 						defaultAction(me);
 						long f = System.currentTimeMillis();
-						Log.debugMessage("defaultAction -------- " + (f - d) + " ms ---------", Level.INFO);
+						Log.debugMessage("defaultAction -------- " + (f - d) + " ms ---------", Level.FINE);
 					} catch(MapConnectionException e2) {
 						// TODO Auto-generated catch block
 						e2.printStackTrace();
@@ -177,7 +177,7 @@ public final class MapMouseListener implements MouseListener
 					}
 					catch(Exception e)
 					{
-						Log.debugMessage("MapMouseListener::mousePressed | current execution point with call stack:", Level.FINER);
+						Log.debugMessage("MapMouseListener::mousePressed | current execution point with call stack:", Level.SEVERE);
 						Log.debugException(e, Level.SEVERE);
 					}
 					break;
@@ -317,7 +317,7 @@ public final class MapMouseListener implements MouseListener
 			long d = System.currentTimeMillis();
 			this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 			long f = System.currentTimeMillis();
-			Log.debugMessage("sendSelectionChangeEvent -------- " + (d0 - d1) + " " + (d - d0) + " " + (f - d) + " ms ---------", Level.INFO);
+			Log.debugMessage("sendSelectionChangeEvent -------- " + (d0 - d1) + " " + (d - d0) + " " + (f - d) + " ms ---------", Level.FINE);
 		}
 		else
 		if (SwingUtilities.isRightMouseButton(me))
@@ -465,8 +465,8 @@ public final class MapMouseListener implements MouseListener
 						}
 						catch(Exception e)
 						{
-							Log.debugMessage("MapMouseListener::mouseReleased | current execution point with call stack:", Level.FINER);
-							Log.debugException(e, Level.FINER);
+							Log.debugMessage("MapMouseListener::mouseReleased | current execution point with call stack:", Level.SEVERE);
+							Log.debugException(e, Level.SEVERE);
 						}
 						break;
 				}//switch (mapState.getOperationMode()

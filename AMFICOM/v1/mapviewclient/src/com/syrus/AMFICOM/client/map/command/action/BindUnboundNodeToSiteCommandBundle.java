@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.28 2005/08/24 08:19:58 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.29 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,16 +32,15 @@ import com.syrus.util.Log;
 /**
  *  Команда привязывания непривязанного элемента к узлу.
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
-{
+public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle {
 	/**
 	 * привязываемый элемент.
 	 */
 	UnboundNode unbound;
-	
+
 	/**
 	 * узел.
 	 */
@@ -52,28 +51,26 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 	 */
 	Map map;
 
-	public BindUnboundNodeToSiteCommandBundle(
-			UnboundNode unbound, 
-			SiteNode site)
-	{
+	public BindUnboundNodeToSiteCommandBundle(UnboundNode unbound, SiteNode site) {
 		this.unbound = unbound;
 		this.site = site;
 	}
-	
-	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
-		try
-		{
+	@Override
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | " 
+				+ "bind " + this.unbound.getId() + " to " 
+				+ this.site.getName() + " (" + this.site.getId() + ")", 
+			Level.FINEST);
+
+		try {
 			MapView mapView = this.logicalNetLayer.getMapView();
 			this.map = mapView.getMap();
 			// список кабельных путей, включающий привязываемый элемент
 			List cablePaths = mapView.getCablePaths(this.unbound);
 			// обновляются концевые узлы кабельных путей
-			for(Iterator it = cablePaths.iterator(); it.hasNext();)
-			{
+			for(Iterator it = cablePaths.iterator(); it.hasNext();) {
 				CablePath cablePath = (CablePath)it.next();
 				if(cablePath.getEndNode().equals(this.unbound))
 					cablePath.setEndNode(this.site);
@@ -92,8 +89,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 			// список кабельных путей, включающий привязываемый элемент
 			List measurementPaths = mapView.getMeasurementPaths(this.unbound);
 			// обновляются концевые узлы кабельных путей
-			for(Iterator it = measurementPaths.iterator(); it.hasNext();)
-			{
+			for(Iterator it = measurementPaths.iterator(); it.hasNext();) {
 				MeasurementPath mp = (MeasurementPath )it.next();
 				if(mp.getEndNode().equals(this.unbound))
 					mp.setEndNode(this.site);
@@ -101,8 +97,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 					mp.setStartNode(this.site);
 			}
 			//При привязывании меняются концевые узлы линий и фрагментов линий
-			for(Iterator it = this.map.getNodeLinks(this.unbound).iterator(); it.hasNext();)
-			{
+			for(Iterator it = this.map.getNodeLinks(this.unbound).iterator(); it.hasNext();) {
 				NodeLink nodeLink = (NodeLink)it.next();
 				PhysicalLink physicalLink = nodeLink.getPhysicalLink();
 
@@ -127,9 +122,7 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle
 			super.removeNode(this.unbound);
 			SchemeElement se = this.unbound.getSchemeElement();
 			se.setSiteNode(this.site);
-		}
-		catch(Throwable e)
-		{
+		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();

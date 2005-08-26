@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.31 2005/08/24 08:19:58 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.32 2005/08/26 15:39:54 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * вставить сетевой узел вместо топологического узла
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle {
@@ -47,7 +47,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 	/**
 	 * тип создаваемого сетевого узла
 	 */
-	SiteNodeType proto;
+	SiteNodeType type;
 
 	/**
 	 * линия, на которой находится топологический узел
@@ -62,14 +62,18 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 	Map map;
 
 	public InsertSiteCommandBundle(TopologicalNode node, SiteNodeType proto) {
-		this.proto = proto;
+		this.type = proto;
 		this.node = node;
 	}
 
 	@Override
 	public void execute() {
-		Log.debugMessage(getClass()
-				.getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+		Log.debugMessage(
+			getClass().getName() + "::execute() | " 
+				+ "insert site of type "
+				+ this.type.getName() + " (" + this.type.getId() + ") " 
+				+ "instead of topological node " + this.node.getId(), 
+			Level.FINEST);
 
 		if(!this.aContext.getApplicationModel().isEnabled(
 				MapApplicationModel.ACTION_EDIT_MAP))
@@ -80,7 +84,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 		try {
 			this.link = this.node.getPhysicalLink();
 			// создать новый узел
-			this.site = super.createSite(this.node.getLocation(), this.proto);
+			this.site = super.createSite(this.node.getLocation(), this.type);
 			this.site.setName(this.node.getName());
 			SiteNodeController snc = (SiteNodeController )this.logicalNetLayer
 					.getMapViewController().getController(this.site);

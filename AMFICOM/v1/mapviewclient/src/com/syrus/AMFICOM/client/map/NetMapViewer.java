@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.44 2005/08/25 16:00:49 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.45 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.44 $, $Date: 2005/08/25 16:00:49 $
+ * @version $Revision: 1.45 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
@@ -760,7 +760,7 @@ public abstract class NetMapViewer {
 			MapContext mapContext,
 			MapImageRenderer renderer)
 				throws MapDataException {
-		Log.debugMessage("method call NetMapViewer.create()", Level.FINER);
+		Log.debugMessage("method call NetMapViewer.create()", Level.FINE);
 
 		try {
 			Class clazz = Class.forName(viewerClass);

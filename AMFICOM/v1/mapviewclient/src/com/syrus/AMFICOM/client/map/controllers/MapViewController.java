@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.48 2005/08/24 08:19:58 krupenn Exp $
+ * $Id: MapViewController.java,v 1.49 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.48 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.49 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
 public final class MapViewController {
@@ -401,10 +401,10 @@ public final class MapViewController {
 			}
 		}
 		long t5 = System.currentTimeMillis();
-		Log.debugMessage("scanCable :: get start node for scl " + (t2 - t1) + " ms", Level.INFO);
-		Log.debugMessage("scanCable :: get end node for scl " + (t3 - t2) + " ms", Level.INFO);
-		Log.debugMessage("scanCable :: find cable path " + (t4 - t3) + " ms", Level.INFO);
-		Log.debugMessage("scanCable :: placeElement(scl) " + (t5 - t4) + " ms", Level.INFO);
+		Log.debugMessage("scanCable :: get start node for scl " + (t2 - t1) + " ms", Level.FINE);
+		Log.debugMessage("scanCable :: get end node for scl " + (t3 - t2) + " ms", Level.FINE);
+		Log.debugMessage("scanCable :: find cable path " + (t4 - t3) + " ms", Level.FINE);
+		Log.debugMessage("scanCable :: placeElement(scl) " + (t5 - t4) + " ms", Level.FINE);
 	}
 	
 	/**
@@ -423,9 +423,9 @@ public final class MapViewController {
 		long t3 = System.currentTimeMillis();
 		scanPaths(scheme);
 		long t4 = System.currentTimeMillis();
-		Log.debugMessage("scanCables :: SchemeUtils.getTopologicalCableLinks(scheme) " + (t2 - t1) + " ms", Level.INFO);
-		Log.debugMessage("scanCables :: scanCable(scl) : topologicalCableLinks " + (t3 - t2) + " ms", Level.INFO);
-		Log.debugMessage("scanCables :: scanPaths(scheme); " + (t4 - t3) + " ms", Level.INFO);
+		Log.debugMessage("scanCables :: SchemeUtils.getTopologicalCableLinks(scheme) " + (t2 - t1) + " ms", Level.FINE);
+		Log.debugMessage("scanCables :: scanCable(scl) : topologicalCableLinks " + (t3 - t2) + " ms", Level.FINE);
+		Log.debugMessage("scanCables :: scanPaths(scheme); " + (t4 - t3) + " ms", Level.FINE);
 	}
 
 	/**
@@ -454,10 +454,10 @@ public final class MapViewController {
 		}
 		}
 		long t5 = System.currentTimeMillis();
-		Log.debugMessage("scanPath :: get start node for sp " + (t2 - t1) + " ms", Level.INFO);
-		Log.debugMessage("scanPath :: get end node for sp " + (t3 - t2) + " ms", Level.INFO);
-		Log.debugMessage("scanPath :: find measurement path " + (t4 - t3) + " ms", Level.INFO);
-		Log.debugMessage("scanPath :: placeElement(sp) " + (t5 - t4) + " ms", Level.INFO);
+		Log.debugMessage("scanPath :: get start node for sp " + (t2 - t1) + " ms", Level.FINE);
+		Log.debugMessage("scanPath :: get end node for sp " + (t3 - t2) + " ms", Level.FINE);
+		Log.debugMessage("scanPath :: find measurement path " + (t4 - t3) + " ms", Level.FINE);
+		Log.debugMessage("scanPath :: placeElement(sp) " + (t5 - t4) + " ms", Level.FINE);
 	}
 
 	/**
@@ -473,8 +473,8 @@ public final class MapViewController {
 			this.scanPath(schemePath);
 		}
 		long t3 = System.currentTimeMillis();
-		Log.debugMessage("scanPaths :: scheme.getTopologicalPaths() " + (t2 - t1) + " ms", Level.INFO);
-		Log.debugMessage("scanPaths :: scanPath(schemePath) : topologicalPaths " + (t3 - t2) + " ms", Level.INFO);
+		Log.debugMessage("scanPaths :: scheme.getTopologicalPaths() " + (t2 - t1) + " ms", Level.FINE);
+		Log.debugMessage("scanPaths :: scanPath(schemePath) : topologicalPaths " + (t3 - t2) + " ms", Level.FINE);
 	}
 
 	/**

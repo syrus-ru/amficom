@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.28 2005/08/24 08:19:58 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.29 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,11 +37,10 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
-{
+public class CreateNodeLinkCommandBundle extends MapActionCommandBundle {
 	/**
 	 * константа используется для передачи в команду параметра (конечной
 	 * точки для фрагмента)
@@ -64,91 +63,64 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	 * 
 	 * @param startNode
 	 */
-	public CreateNodeLinkCommandBundle(AbstractNode startNode)
-	{
+	public CreateNodeLinkCommandBundle(AbstractNode startNode) {
 		super();
 		this.startNode = startNode;
 	}
 
 	@Override
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals(END_POINT))
-		{
-			this.endPoint = (Point )value;
+	public void setParameter(String field, Object value) {
+		if(field.equals(END_POINT)) {
+			this.endPoint = (Point) value;
 		}
 	}
 
-	void createSiteToSite(AbstractNode endNode)
-		throws Throwable
-	{
+	void createSiteToSite(AbstractNode endNode) throws Throwable {
 		// создается новая физическая линия из одного фрагмента
-		
 		this.physicalLink = super.createPhysicalLink(this.startNode, endNode);
-
 		this.nodeLink = super.createNodeLink(this.physicalLink, this.startNode, endNode);
 	}
 
-	void createSiteToNewNode(DoublePoint mapEndPoint)
-		throws Throwable
-	{
+	void createSiteToNewNode(DoublePoint mapEndPoint) throws Throwable {
 		this.physicalLink = super.createPhysicalLink(this.startNode, this.startNode);
-
 		AbstractNode endNode = super.createPhysicalNode(this.physicalLink, mapEndPoint);
-		
 		this.physicalLink.setEndNode(endNode);
-
 		this.nodeLink = super.createNodeLink(this.physicalLink, this.startNode, endNode);
 	}
 
-	void createSiteToNode(TopologicalNode endNode)
-		throws Throwable
-	{
+	void createSiteToNode(TopologicalNode endNode) throws Throwable {
 		this.physicalLink = endNode.getPhysicalLink();
-
 		MapElementState pls = this.physicalLink.getState();
-
 		this.nodeLink = super.createNodeLink(this.physicalLink, this.startNode, endNode);
-
 		super.changePhysicalNodeActivity(endNode, true);
 
 		// Коррекция начального и конечного узлов линии
 		if(this.physicalLink.getEndNode().equals(endNode))
 			this.physicalLink.setEndNode(this.physicalLink.getStartNode());
 		this.physicalLink.setStartNode(this.startNode);
-
 		super.registerStateChange(this.physicalLink, pls, this.physicalLink.getState());
 	}
 
-	void createNodeToSite(SiteNode endNode)
-		throws Throwable
-	{
+	void createNodeToSite(SiteNode endNode) throws Throwable {
 		// существующая физическая линия завершается на узле site
-
-		TopologicalNode mpne = (TopologicalNode )this.startNode;
-
-		this.physicalLink = mpne.getPhysicalLink();
-
+		TopologicalNode topologicalNode = (TopologicalNode )this.startNode;
+		this.physicalLink = topologicalNode.getPhysicalLink();
 		MapElementState pls = this.physicalLink.getState();
-
 		this.nodeLink = super.createNodeLink(this.physicalLink, this.startNode, endNode);
 
-		super.changePhysicalNodeActivity(mpne, true);
+		super.changePhysicalNodeActivity(topologicalNode, true);
 
 		// Коррекция начального и конечного узлов линии
 		if(this.physicalLink.getStartNode().equals(this.startNode))
 			this.physicalLink.setStartNode(this.physicalLink.getEndNode());
 		this.physicalLink.setEndNode(endNode);
-
 		super.registerStateChange(this.physicalLink, pls, this.physicalLink.getState());
 	}
 
-	void createNodeToNewNode(DoublePoint mapEndPoint)
-		throws Throwable
-	{
-		TopologicalNode smpne = (TopologicalNode )this.startNode;
+	void createNodeToNewNode(DoublePoint mapEndPoint) throws Throwable {
+		TopologicalNode startTopologicalNode = (TopologicalNode )this.startNode;
 
-		this.physicalLink = smpne.getPhysicalLink();
+		this.physicalLink = startTopologicalNode.getPhysicalLink();
 
 		MapElementState pls = this.physicalLink.getState();
 
@@ -156,7 +128,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 
 		this.nodeLink = super.createNodeLink(this.physicalLink, this.startNode, endNode);
 
-		super.changePhysicalNodeActivity(smpne, true);
+		super.changePhysicalNodeActivity(startTopologicalNode, true);
 
 		// Коррекция начального и конечного узлов линии
 		if(this.physicalLink.getStartNode().equals(this.startNode))
@@ -166,9 +138,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 		super.registerStateChange(this.physicalLink, pls, this.physicalLink.getState());
 	}
 
-	void createNodeToNode(TopologicalNode endNode)
-		throws Throwable
-	{
+	void createNodeToNode(TopologicalNode endNode) throws Throwable {
 		TopologicalNode startTopologicalNode = (TopologicalNode )this.startNode;
 		TopologicalNode endTopologicalNode = endNode;
 
@@ -187,9 +157,8 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 			this.physicalLink.setStartNode(this.physicalLink.getEndNode());
 		this.physicalLink.setEndNode(endNode);
 
-		if(physicalLinkToRemove != null)
-			if(!physicalLinkToRemove.equals(this.physicalLink))
-		{
+		if(physicalLinkToRemove != null
+				&& !physicalLinkToRemove.equals(this.physicalLink)) {
 			MapElementState pls2 = physicalLinkToRemove.getState();
 	
 			// отдельный список, поскольку используется операция удаления
@@ -197,8 +166,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 			nodeLinksToMove.addAll(physicalLinkToRemove.getNodeLinks());
 	
 			// Перенос фрагментов линии из одной линии в другую
-			for(Iterator it = nodeLinksToMove.iterator(); it.hasNext();)
-			{
+			for(Iterator it = nodeLinksToMove.iterator(); it.hasNext();) {
 				NodeLink mnle = (NodeLink)it.next();
 				mnle.setPhysicalLink(this.physicalLink);
 			}			
@@ -218,11 +186,13 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 	}
 
 	@Override
-	public void execute()
-	{
-		try
-		{
-			Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		try {
+			Log.debugMessage(
+				getClass().getName() + "::execute() | "
+					+ "create node link from node " + this.startNode.getName()
+					+ " (" + this.startNode.getId() + ")", 
+				Level.FINEST);
 			// анализируется элемент в точке, в которой отпущена мышка		
 			MapElement curElementAtPoint = this.logicalNetLayer.getMapElementAtPoint(this.endPoint, this.netMapViewer.getVisibleBounds());
 			// если мышка отпущена на том же элементе, то линию не рисовать
@@ -233,83 +203,64 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle
 			DoublePoint mapEndPoint = this.logicalNetLayer.getConverter().convertScreenToMap(this.endPoint);
 			// если в конечной точке уже есть элемент, проверяем, какой это узел
 			if ( curElementAtPoint != null
-				&& curElementAtPoint instanceof AbstractNode)
-			{
+				&& curElementAtPoint instanceof AbstractNode) {
 				endNode = (AbstractNode )curElementAtPoint;
 
 				// конечный элемент - топологический узел
-				if(endNode instanceof TopologicalNode)
-				{
+				if(endNode instanceof TopologicalNode) {
 					TopologicalNode mpne = (TopologicalNode )endNode;
 			
 					// если он активный, то есть находится в середине другой линии,
 					// то в той же точке создается новый
-					if(mpne.isActive())
-					{
+					if(mpne.isActive()) {
 						// node created with fake this.physicalLink
 						// should be later updated (e.g. through call to
 						// nodelink.setPhysicalLink or node.setPhysicalLink)
 						endNode = null;
 //					endNode = super.createPhysicalNode(mpne.getPhysicalLink(), mapEndPoint);
 					}
-					else
-					// если он - концевой для линии, то замкнуть новый фрагмент
-					// на него (дорисовка существующей линии или объелинение
-					// физических линий)
-					{
+					else {
+						// если он - концевой для линии, то замкнуть новый фрагмент
+						// на него (дорисовка существующей линии или объелинение
+						// физических линий)
 						super.changePhysicalNodeActivity(mpne, true);
 					}
 				}
 			}
-			else
-			// Если в конечной точке нет элемента, то создаем новый конечный 
-			// топологический узел
-			{
+			else {
+				// Если в конечной точке нет элемента, то создаем новый конечный 
+				// топологический узел
 				endNode = null;
 //			endNode = super.createPhysicalNode(mapEndPoint);
 			}
-			if(endNode == null)
-			{
-				if (this.startNode instanceof SiteNode)
-				{
+			if(endNode == null) {
+				if (this.startNode instanceof SiteNode) {
 					createSiteToNewNode(mapEndPoint);
 				}
-				else
-				if (this.startNode instanceof TopologicalNode)
-				{
+				else if (this.startNode instanceof TopologicalNode) {
 					createNodeToNewNode(mapEndPoint);
 				}
 			}
-			else
-			{
+			else {
 				if (this.startNode instanceof SiteNode 
-					&& endNode instanceof SiteNode )
-				{
+					&& endNode instanceof SiteNode ) {
 					createSiteToSite(endNode);
 				}
-				else
-				if ( this.startNode instanceof SiteNode
-					&& endNode instanceof TopologicalNode )
-				{
+				else if ( this.startNode instanceof SiteNode
+					&& endNode instanceof TopologicalNode ) {
 					createSiteToNode((TopologicalNode )endNode);
 				}
-				else
-				if ( this.startNode instanceof TopologicalNode
-					&& endNode instanceof SiteNode )
-				{
+				else if ( this.startNode instanceof TopologicalNode
+					&& endNode instanceof SiteNode ) {
 					createNodeToSite((SiteNode )endNode);
 				}
-				else
-				if ( this.startNode instanceof TopologicalNode 
-					&& endNode instanceof TopologicalNode )
-				{
+				else if ( this.startNode instanceof TopologicalNode 
+					&& endNode instanceof TopologicalNode ) {
 					createNodeToNode((TopologicalNode )endNode);
 				}
 			}
 			setResult(Command.RESULT_OK);
-		}
-		catch(Throwable e)
-		{
+		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();

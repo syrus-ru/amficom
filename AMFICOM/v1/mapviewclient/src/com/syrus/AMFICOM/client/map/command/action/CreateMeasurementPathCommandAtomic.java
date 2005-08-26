@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMeasurementPathCommandAtomic.java,v 1.19 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: CreateMeasurementPathCommandAtomic.java,v 1.20 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,48 +20,51 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
 
 /**
- * создание прокладки измерительного пути 
+ * создание прокладки измерительного пути
  * 
- * 
- * 
- * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.20 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class CreateMeasurementPathCommandAtomic extends MapActionCommand
-{
+public class CreateMeasurementPathCommandAtomic extends MapActionCommand {
 	/** создаваемый измерительный путь */
 	MeasurementPath measurementPath;
-	
+
 	/** схемный путь */
 	SchemePath schemePath;
-	
+
 	/** начальный узел */
 	AbstractNode startNode;
-	
+
 	/** конечный узел */
 	AbstractNode endNode;
-	
+
 	public CreateMeasurementPathCommandAtomic(
 			SchemePath schemePath,
 			AbstractNode startNode,
-			AbstractNode endNode)
-	{
+			AbstractNode endNode) {
 		super(MapActionCommand.ACTION_DRAW_LINE);
 		this.schemePath = schemePath;
 		this.startNode = startNode;
 		this.endNode = endNode;
 	}
-	
-	public MeasurementPath getPath()
-	{
+
+	public MeasurementPath getPath() {
 		return this.measurementPath;
 	}
-	
+
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | " 
+				+ "create MeasurementPath for SchemePath " 
+				+ this.schemePath.getName() 
+				+ " (" + this.schemePath.getId() 
+				+ ") with start at node " + this.startNode.getName() 
+				+ " (" + this.startNode.getId() 
+				+ ") and end at node " + this.endNode.getName() 
+				+ " (" + this.endNode.getId() + ")", 
+			Level.FINEST);
 		
 		this.measurementPath = MeasurementPath.createInstance(
 				this.schemePath,

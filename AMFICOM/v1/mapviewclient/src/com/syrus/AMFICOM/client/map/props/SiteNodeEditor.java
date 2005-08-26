@@ -401,7 +401,7 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 			long d = System.currentTimeMillis();
 			Collection types = NodeTypeController.getTopologicalNodeTypes();
 			long f = System.currentTimeMillis();
-			Log.debugMessage("SiteNodeEditor::NodeTypeController.getTopologicalNodeTypes() -------- " + (f - d) + " ms ---------", Level.INFO);
+			Log.debugMessage("SiteNodeEditor::NodeTypeController.getTopologicalNodeTypes() -------- " + (f - d) + " ms ---------", Level.FINE);
 
 			this.typeComboBox.setEnabled(true);
 			this.typeComboBox.addElements(types);

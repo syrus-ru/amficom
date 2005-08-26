@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveNodeCommandAtomic.java,v 1.17 2005/08/17 14:14:17 arseniy Exp $
+ * $Id: RemoveNodeCommandAtomic.java,v 1.18 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,49 +19,47 @@ import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.util.Log;
 
 /**
- * удаление узла из карты - атомарное действие 
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/17 14:14:17 $
+ * удаление узла из карты - атомарное действие
+ * 
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class RemoveNodeCommandAtomic extends MapActionCommand
-{
+public class RemoveNodeCommandAtomic extends MapActionCommand {
 	AbstractNode node;
-	
-	public RemoveNodeCommandAtomic(AbstractNode node)
-	{
+
+	public RemoveNodeCommandAtomic(AbstractNode node) {
 		super(MapActionCommand.ACTION_DROP_LINE);
 		this.node = node;
 	}
-	
-	public AbstractNode getNode()
-	{
+
+	public AbstractNode getNode() {
 		return this.node;
 	}
-	
+
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		Log.debugMessage(
+				getClass().getName() + "::execute() | "
+					+ "remove node "
+					+ this.node.getName()
+					+ " (" + this.node.getId() + ")", 
+				Level.FINEST);
 
 		this.logicalNetLayer.getMapView().getMap().removeNode(this.node);
-		if(this.node instanceof Marker)
-		{
-			this.logicalNetLayer.getMapView().removeMarker((Marker)this.node);
+		if(this.node instanceof Marker) {
+			this.logicalNetLayer.getMapView().removeMarker((Marker) this.node);
 		}
 		setResult(Command.RESULT_OK);
 	}
-	
+
 	@Override
-	public void redo()
-	{
+	public void redo() {
 		this.logicalNetLayer.getMapView().getMap().removeNode(this.node);
 	}
-	
+
 	@Override
-	public void undo()
-	{
+	public void undo() {
 		this.logicalNetLayer.getMapView().getMap().addNode(this.node);
 	}
 }
-

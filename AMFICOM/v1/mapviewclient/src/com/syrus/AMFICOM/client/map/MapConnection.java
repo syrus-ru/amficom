@@ -1,5 +1,5 @@
 /**
- * $Id: MapConnection.java,v 1.14 2005/08/26 08:13:05 peskovsky Exp $
+ * $Id: MapConnection.java,v 1.15 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,8 +16,8 @@ import java.util.logging.Level;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/26 08:13:05 $
- * @author $Author: peskovsky $
+ * @version $Revision: 1.15 $, $Date: 2005/08/26 15:39:54 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public abstract class MapConnection {
@@ -113,7 +113,7 @@ public abstract class MapConnection {
 	}
 	
 	public static MapConnection create(final String connectionClass) throws MapConnectionException {
-		Log.debugMessage("method call MapConnection.create()", Level.FINER);
+		Log.debugMessage("method call MapConnection.create()", Level.FINE);
 
 		MapConnection connection = null;
 		try {

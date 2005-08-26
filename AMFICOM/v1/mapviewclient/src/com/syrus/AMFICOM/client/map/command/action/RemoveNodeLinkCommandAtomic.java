@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveNodeLinkCommandAtomic.java,v 1.12 2005/08/17 14:14:17 arseniy Exp $
+ * $Id: RemoveNodeLinkCommandAtomic.java,v 1.13 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,45 +18,46 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.util.Log;
 
 /**
- * удаление фрагмента линии связи из карты - атомарное действие 
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/08/17 14:14:17 $
+ * удаление фрагмента линии связи из карты - атомарное действие
+ * 
+ * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class RemoveNodeLinkCommandAtomic extends MapActionCommand
-{
+public class RemoveNodeLinkCommandAtomic extends MapActionCommand {
 	NodeLink nodeLink;
-	
-	public RemoveNodeLinkCommandAtomic(NodeLink nodeLink)
-	{
+
+	public RemoveNodeLinkCommandAtomic(NodeLink nodeLink) {
 		super(MapActionCommand.ACTION_DROP_LINE);
 		this.nodeLink = nodeLink;
 	}
-	
-	public NodeLink getNodeLink()
-	{
+
+	public NodeLink getNodeLink() {
 		return this.nodeLink;
 	}
-	
-	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
-		this.logicalNetLayer.getMapView().getMap().removeNodeLink(this.nodeLink);
+	@Override
+	public void execute() {
+		Log.debugMessage(
+				getClass().getName() + "::execute() | "
+					+ "remove node link "
+					+ this.nodeLink.getName()
+					+ " (" + this.nodeLink.getId() + ")", 
+				Level.FINEST);
+
+		this.logicalNetLayer.getMapView().getMap()
+				.removeNodeLink(this.nodeLink);
 		setResult(Command.RESULT_OK);
 	}
-	
+
 	@Override
-	public void redo()
-	{
-		this.logicalNetLayer.getMapView().getMap().removeNodeLink(this.nodeLink);
+	public void redo() {
+		this.logicalNetLayer.getMapView().getMap()
+				.removeNodeLink(this.nodeLink);
 	}
-	
+
 	@Override
-	public void undo()
-	{
+	public void undo() {
 		this.logicalNetLayer.getMapView().getMap().addNodeLink(this.nodeLink);
 	}
 }
-

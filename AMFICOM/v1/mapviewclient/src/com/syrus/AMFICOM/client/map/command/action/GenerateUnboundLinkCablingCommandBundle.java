@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.28 2005/08/24 08:19:58 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.29 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -29,22 +29,23 @@ import com.syrus.util.Log;
 
 /**
  *  оманда генерации тоннел€ по неприв€занной линии.
+ * 
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBundle
-{
+public class GenerateUnboundLinkCablingCommandBundle extends
+		MapActionCommandBundle {
 	/**
 	 * кабельный путь
 	 */
 	CablePath cablePath;
-	
+
 	/**
 	 * неприв€занна€ лини€
 	 */
 	UnboundLink unbound;
-	
+
 	/**
 	 * созданный тоннель
 	 */
@@ -57,16 +58,21 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 
 	Map map;
 
-	public GenerateUnboundLinkCablingCommandBundle(UnboundLink unbound)
-	{
+	public GenerateUnboundLinkCablingCommandBundle(UnboundLink unbound) {
 		this.unbound = unbound;
 		this.cablePath = unbound.getCablePath();
 	}
-	
+
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | "
+			+ "generate cabling for unbound link "
+			+ " (" + this.unbound.getId() + ") "
+			+ "in cable path "
+			+ this.cablePath.getName() 
+			+ " (" + this.cablePath.getId() + ")", 
+			Level.FINEST);
 
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();
@@ -82,8 +88,7 @@ public class GenerateUnboundLinkCablingCommandBundle extends MapActionCommandBun
 					this.unbound.getStartNode(), 
 					this.unbound.getEndNode());
 			// перенести фрагменты линии в сгенерированный тоннель
-			for(Iterator it2 = new LinkedList(this.unbound.getNodeLinks()).iterator(); it2.hasNext();)
-			{
+			for(Iterator it2 = new LinkedList(this.unbound.getNodeLinks()).iterator(); it2.hasNext();) {
 				NodeLink mnle = (NodeLink)it2.next();
 				mnle.setPhysicalLink(this.link);
 			}

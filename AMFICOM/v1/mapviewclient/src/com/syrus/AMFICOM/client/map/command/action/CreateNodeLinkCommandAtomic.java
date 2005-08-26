@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandAtomic.java,v 1.17 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: CreateNodeLinkCommandAtomic.java,v 1.18 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,70 +24,71 @@ import com.syrus.util.Log;
 /**
  * создание фрагмента линии связи, внесение ее в пул и на карту - 
  * атомарное действие 
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class CreateNodeLinkCommandAtomic extends MapActionCommand
-{
+public class CreateNodeLinkCommandAtomic extends MapActionCommand {
 	/**
 	 * создаваемый фрагмент линии
 	 */
 	NodeLink nodeLink;
-	
+
 	AbstractNode startNode;
 	AbstractNode endNode;
 	PhysicalLink physicalLink;
-	
+
 	public CreateNodeLinkCommandAtomic(
 			PhysicalLink physicalLink,
 			AbstractNode startNode,
-			AbstractNode endNode)
-	{
+			AbstractNode endNode) {
 		super(MapActionCommand.ACTION_DRAW_LINE);
 		this.physicalLink = physicalLink;
 		this.startNode = startNode;
 		this.endNode = endNode;
 	}
-	
-	public NodeLink getNodeLink()
-	{
+
+	public NodeLink getNodeLink() {
 		return this.nodeLink;
 	}
-	
-	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
-		try
-		{
+	@Override
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | "
+				+ "create NodeLink for link " 
+				+ this.physicalLink.getName() 
+				+ " (" + this.physicalLink.getId() 
+				+ ") with start at node " + this.startNode.getName() 
+				+ " (" + this.startNode.getId() 
+				+ ") and end at node " + this.endNode.getName() 
+				+ " (" + this.endNode.getId() + ")", 
+			Level.FINEST);
+
+		try {
 			this.nodeLink = NodeLink.createInstance(
 					LoginManager.getUserId(),
-					this.physicalLink, 
-					this.startNode, 
+					this.physicalLink,
+					this.startNode,
 					this.endNode);
 
-			this.logicalNetLayer.getMapView().getMap().addNodeLink(this.nodeLink);
+			this.logicalNetLayer.getMapView().getMap().addNodeLink(
+					this.nodeLink);
 			setResult(Command.RESULT_OK);
-		}
-		catch (CreateObjectException e)
-		{
+		} catch(CreateObjectException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
-	public void redo()
-	{
+	public void redo() {
 		this.logicalNetLayer.getMapView().getMap().addNodeLink(this.nodeLink);
 	}
-	
+
 	@Override
-	public void undo()
-	{
+	public void undo() {
 		this.logicalNetLayer.getMapView().getMap().removeNodeLink(this.nodeLink);
 	}
 }

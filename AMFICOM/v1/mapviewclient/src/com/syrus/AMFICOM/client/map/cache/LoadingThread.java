@@ -1,5 +1,5 @@
 /**
- * $Id: LoadingThread.java,v 1.12 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: LoadingThread.java,v 1.13 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -157,7 +157,7 @@ public class LoadingThread extends Thread {
                         + "		" + (t2 - t1) + " ms (setting layer visibilities)\n"
                         + "		" + (t3 - t2) + " ms (requesting for rendering)\n"
                         + "		" + (t4 - t3) + " ms (after synchronized)\n"
-                        + "		" + (t5 - t4) + " ms (setting image) ms.",Level.INFO);
+                        + "		" + (t5 - t4) + " ms (setting image) ms.",Level.FINER);
 
                 this.state.setValue(State.STATE_IDLE);
                 this.requestCurrentlyProcessed = null;

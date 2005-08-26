@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementStateChangeCommand.java,v 1.12 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: MapElementStateChangeCommand.java,v 1.13 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -19,48 +19,51 @@ import com.syrus.AMFICOM.map.MapElementState;
 import com.syrus.util.Log;
 
 /**
- * атомарна€ команда изменени€ состо€ни€ элемента карты 
+ * атомарна€ команда изменени€ состо€ни€ элемента карты
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public final class MapElementStateChangeCommand extends MapActionCommand
-{
+public final class MapElementStateChangeCommand extends MapActionCommand {
 	MapElement me;
 	MapElementState initialState;
 	MapElementState finalState;
-	
-	public MapElementStateChangeCommand(MapElement me, MapElementState initialState, MapElementState finalState)
-	{
+
+	public MapElementStateChangeCommand(
+			MapElement me,
+			MapElementState initialState,
+			MapElementState finalState) {
 		super(MapActionCommand.ACTION_DROP_LINE);
 		this.me = me;
 		this.initialState = initialState;
 		this.finalState = finalState;
 	}
-	
-	public MapElement getElement()
-	{
+
+	public MapElement getElement() {
 		return this.me;
 	}
-	
+
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | "
+				+ "state change for element " 
+				+ this.me.getName() + " (" + this.me.getId() + ") from\n"
+				+ this.initialState.toString() + " \nto\n"
+				+ this.finalState.toString(), 
+			Level.FINEST);
 		this.me.revert(this.finalState);
 		setResult(Command.RESULT_OK);
 	}
-	
+
 	@Override
-	public void redo()
-	{
+	public void redo() {
 		this.me.revert(this.finalState);
 	}
-	
+
 	@Override
-	public void undo()
-	{
+	public void undo() {
 		this.me.revert(this.initialState);
 	}
 }

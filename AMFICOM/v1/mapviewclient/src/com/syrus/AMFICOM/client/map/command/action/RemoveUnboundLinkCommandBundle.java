@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveUnboundLinkCommandBundle.java,v 1.14 2005/08/17 14:14:17 arseniy Exp $
+ * $Id: RemoveUnboundLinkCommandBundle.java,v 1.15 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,30 +18,32 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.util.Log;
 
 /**
- * удаление неприв€занно линии из карты, включа€ элементы, из
- * которых она состоит
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/17 14:14:17 $
+ * удаление неприв€занно линии из карты, включа€ элементы, из которых она
+ * состоит
+ * 
+ * @author $Author: krupenn $
+ * @version $Revision: 1.15 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class RemoveUnboundLinkCommandBundle extends MapActionCommandBundle
-{
+public class RemoveUnboundLinkCommandBundle extends MapActionCommandBundle {
 	UnboundLink unbound;
-	
-	public RemoveUnboundLinkCommandBundle(UnboundLink unbound)
-	{
+
+	public RemoveUnboundLinkCommandBundle(UnboundLink unbound) {
 		this.unbound = unbound;
 	}
-	
-	public UnboundLink getUnbound()
-	{
+
+	public UnboundLink getUnbound() {
 		return this.unbound;
 	}
-	
+
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		Log.debugMessage(
+				getClass().getName() + "::execute() | "
+					+ "remove unbound link "
+					+ this.unbound.getName()
+					+ " (" + this.unbound.getId() + ")", 
+				Level.FINEST);
 
 		try {
 			super.removeUnboundLink(this.unbound);
@@ -54,4 +56,3 @@ public class RemoveUnboundLinkCommandBundle extends MapActionCommandBundle
 	}
 
 }
-

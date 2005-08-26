@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.26 2005/08/24 08:19:58 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.27 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -36,11 +36,10 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.27 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
-{
+public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle {
 	/**
 	 * ”дал€емый фрагмент
 	 */
@@ -51,17 +50,19 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 	 */
 	Map map;
 
-	public DeletePhysicalLinkCommandBundle(PhysicalLink link)
-	{
+	public DeletePhysicalLinkCommandBundle(PhysicalLink link) {
 		super();
 		this.link = link;
 	}
 
 
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | " 
+				+ "delete physical link " 
+				+ this.link.getName() + " (" + this.link.getId() + ")", 
+			Level.FINEST);
 		
 		// св€зь может быть удалена в результате атомарной команды в составе
 		// другой команды удалени€, в этом случае у неЄ будет выставлен
@@ -71,25 +72,21 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 
 		setResult(Command.RESULT_OK);
 
-		try
-		{
+		try {
 			MapView mapView = this.logicalNetLayer.getMapView();
 			this.map = mapView.getMap();
 			List cablePathsToScan = mapView.getCablePaths(this.link);
 			this.link.sortNodes();
 			/// удал€ютс€ все топологические узлы линии
-			for(Iterator it = this.link.getSortedNodes().iterator(); it.hasNext();)
-			{
+			for(Iterator it = this.link.getSortedNodes().iterator(); it.hasNext();) {
 				AbstractNode ne = (AbstractNode)it.next();
-				if(ne instanceof TopologicalNode)
-				{
+				if(ne instanceof TopologicalNode) {
 					TopologicalNode node = (TopologicalNode)ne;
 					super.removeNode(node);
 				}
 			}
 			// удал€ютс€ все фрагменты линии
-			for(Iterator it = this.link.getNodeLinks().iterator(); it.hasNext();)
-			{
+			for(Iterator it = this.link.getNodeLinks().iterator(); it.hasNext();) {
 				NodeLink nodeLink = (NodeLink)it.next();
 				super.removeNodeLink(nodeLink);
 			}
@@ -97,8 +94,7 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 			super.removePhysicalLink(this.link);
 			// провер€ютс€ все кабельные пути, которые проходили по удаленной линии,
 			// и прохождение по ней замен€етс€ неприв€занной св€зью
-			for(Iterator it = cablePathsToScan.iterator(); it.hasNext();)
-			{
+			for(Iterator it = cablePathsToScan.iterator(); it.hasNext();) {
 				CablePath cablePath = (CablePath)it.next();
 				
 				UnboundLink unbound = super.createUnboundLinkWithNodeLink(
@@ -122,8 +118,7 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle
 					}
 				}
 			}
-		}
-		catch(Throwable e) {
+		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();

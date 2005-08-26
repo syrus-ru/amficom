@@ -1,12 +1,12 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.27 2005/08/24 08:19:58 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.28 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  *
  * Платформа: java 1.4.1
-*/
+ */
 
 package com.syrus.AMFICOM.client.map.command.action;
 
@@ -25,107 +25,97 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * Разместить сетевой элемент на карте. используется при переносе 
- * (drag/drop), в точке point (в экранных координатах)
+ * Разместить сетевой элемент на карте. используется при переносе (drag/drop), в
+ * точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.28 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class CreateSiteCommandAtomic extends MapActionCommand
-{
+public class CreateSiteCommandAtomic extends MapActionCommand {
 	/**
 	 * создаваемый узел
 	 */
 	SiteNode site;
-	
+
 	/** тип создаваемого элемента */
-	SiteNodeType proto;
-	
+	SiteNodeType type;
+
 	Map map;
-	
+
 	/**
 	 * экранная точка, в которой создается новый топологический узел
 	 */
 	Point point = null;
-	
+
 	/**
 	 * географическая точка, в которой создается новый топологический узел.
 	 * может инициализироваться по point
 	 */
 	DoublePoint coordinatePoint = null;
 
-	public CreateSiteCommandAtomic(
-			SiteNodeType proto,
-			DoublePoint dpoint)
-	{
+	public CreateSiteCommandAtomic(SiteNodeType proto, DoublePoint dpoint) {
 		super(MapActionCommand.ACTION_DRAW_NODE);
-		this.proto = proto;
+		this.type = proto;
 		this.coordinatePoint = dpoint;
 	}
 
-	public CreateSiteCommandAtomic(
-			SiteNodeType proto,
-			Point point)
-	{
+	public CreateSiteCommandAtomic(SiteNodeType proto, Point point) {
 		super(MapActionCommand.ACTION_DRAW_NODE);
-		this.proto = proto;
+		this.type = proto;
 		this.point = point;
 	}
 
-	public SiteNode getSite()
-	{
+	public SiteNode getSite() {
 		return this.site;
 	}
 
 	@Override
-	public void execute()
-	{
-		try
-		{
-			Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
-			if ( !getLogicalNetLayer().getContext().getApplicationModel()
+	public void execute() {
+		try {
+			Log.debugMessage(
+				getClass().getName() + "::execute() | "
+					+ "create site node of type "
+					+ this.type.getName() 
+					+ " (" + this.type.getId() + ")", 
+				Level.FINEST);
+			if(!getLogicalNetLayer().getContext().getApplicationModel()
 					.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 				return;
 			if(this.coordinatePoint == null)
-				this.coordinatePoint = this.logicalNetLayer.getConverter().convertScreenToMap(this.point);
+				this.coordinatePoint = this.logicalNetLayer.getConverter()
+						.convertScreenToMap(this.point);
 			this.map = this.logicalNetLayer.getMapView().getMap();
 			// создать новый узел
-			try
-			{
+			try {
 				this.site = SiteNode.createInstance(
 						LoginManager.getUserId(),
 						this.coordinatePoint,
-						this.proto);
-			}
-			catch (CreateObjectException e)
-			{
+						this.type);
+			} catch(CreateObjectException e) {
 				e.printStackTrace();
 			}
-			SiteNodeController snc = (SiteNodeController)getLogicalNetLayer().getMapViewController().getController(this.site);
+			SiteNodeController snc = (SiteNodeController) getLogicalNetLayer()
+					.getMapViewController().getController(this.site);
 			snc.updateScaleCoefficient(this.site);
 			this.map.addNode(this.site);
 
 			this.logicalNetLayer.setCurrentMapElement(this.site);
 			setResult(Command.RESULT_OK);
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
-	public void undo()
-	{
+	public void undo() {
 		this.map.removeNode(this.site);
 	}
-	
+
 	@Override
-	public void redo()
-	{
+	public void redo() {
 		this.map.addNode(this.site);
 	}
 }

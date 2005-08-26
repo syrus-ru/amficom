@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.33 2005/08/24 08:19:58 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.34 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -31,25 +31,26 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Log;
 
 /**
- *   оманда генерации тоннелей в соответствии с прохождением кабел€.
- *  из непроложенных линий генерируютс€ тоннели и кабель прив€зываетс€ к ним.
- *  ”же существующа€ прив€зка сохран€етс€. ѕо неприв€занным элементам 
- *  генерируютс€ сетевые узла и схемные элементы прив€зываютс€ к ним.
+ *  оманда генерации тоннелей в соответствии с прохождением кабел€. из
+ * непроложенных линий генерируютс€ тоннели и кабель прив€зываетс€ к ним. ”же
+ * существующа€ прив€зка сохран€етс€. ѕо неприв€занным элементам генерируютс€
+ * сетевые узла и схемные элементы прив€зываютс€ к ним.
+ * 
  * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.34 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundle
-{
+public class GenerateCablePathCablingCommandBundle extends
+		MapActionCommandBundle {
 	/**
 	 * ”дал€емый узел
 	 */
 	CablePath cablePath;
-	
+
 	/**
 	 * тип узлов дл€ генерации вместо неприв€занных элементов
 	 */
-	SiteNodeType proto;
+	SiteNodeType type;
 
 	/**
 	 *  арта, на которой производитс€ операци€
@@ -59,17 +60,22 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 	Map map;
 
 	public GenerateCablePathCablingCommandBundle(
-			CablePath cablePath, 
-			SiteNodeType proto)
-	{
+			CablePath cablePath,
+			SiteNodeType proto) {
 		this.cablePath = cablePath;
-		this.proto = proto;
+		this.type = proto;
 	}
-	
+
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		Log.debugMessage(
+				getClass().getName() + "::execute() | " 
+					+ "generate cabling for cable path "
+					+ this.cablePath.getName() 
+					+ " (" + this.cablePath.getId() + ") "
+					+ "using site node type " + this.type.getName() 
+					+ " )" + this.type.getId() + ")", 
+				Level.FINEST);
 
 		this.mapView = this.logicalNetLayer.getMapView();
 		this.map = this.mapView.getMap();
@@ -151,7 +157,7 @@ public class GenerateCablePathCablingCommandBundle extends MapActionCommandBundl
 		{
 			CreateSiteCommandAtomic command = 
 					new CreateSiteCommandAtomic(
-						this.proto, 
+						this.type, 
 						site.getLocation());
 			command.setLogicalNetLayer(this.logicalNetLayer);
 			command.execute();

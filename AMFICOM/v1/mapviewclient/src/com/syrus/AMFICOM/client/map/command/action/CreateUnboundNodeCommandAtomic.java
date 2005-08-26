@@ -1,12 +1,12 @@
 /**
- * $Id: CreateUnboundNodeCommandAtomic.java,v 1.23 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: CreateUnboundNodeCommandAtomic.java,v 1.24 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  *
  * Платформа: java 1.4.1
-*/
+ */
 
 package com.syrus.AMFICOM.client.map.command.action;
 
@@ -25,73 +25,70 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * Разместить сетевой элемент на карте. используется при переносе 
- * (drag/drop), в точке point (в экранных координатах)
+ * Разместить сетевой элемент на карте. используется при переносе (drag/drop), в
+ * точке point (в экранных координатах)
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.23 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.24 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclietn_v1
  */
-public class CreateUnboundNodeCommandAtomic extends MapActionCommand
-{
+public class CreateUnboundNodeCommandAtomic extends MapActionCommand {
 	/**
 	 * создаваемый узел
 	 */
 	UnboundNode unbound;
 
-	SchemeElement schemeElement;	
+	SchemeElement schemeElement;
 
 	Map map;
-	
+
 	/**
 	 * географическая точка, в которой создается новый топологический узел.
 	 * может инициализироваться по point
 	 */
 	DoublePoint coordinatePoint = null;
 
-	public CreateUnboundNodeCommandAtomic(
-			SchemeElement se,
-			DoublePoint dpoint)
-	{
+	public CreateUnboundNodeCommandAtomic(SchemeElement se, DoublePoint dpoint) {
 		super(MapActionCommand.ACTION_DRAW_NODE);
 		this.schemeElement = se;
 		this.coordinatePoint = dpoint;
 	}
 
-	public UnboundNode getUnbound()
-	{
+	public UnboundNode getUnbound() {
 		return this.unbound;
 	}
 
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | "
+				+ "create unbound node for scheme element "
+				+ this.schemeElement.getName() 
+				+ " (" + this.schemeElement.getId() + ")", 
+			Level.FINEST);
 
-		if ( !getLogicalNetLayer().getContext().getApplicationModel()
-				.isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))
+		if(!getLogicalNetLayer().getContext().getApplicationModel().isEnabled(
+				MapApplicationModel.ACTION_EDIT_BINDING))
 			return;
-		
+
 		this.map = this.logicalNetLayer.getMapView().getMap();
 
-		try
-		{
+		try {
 			// создать новый узел
 			this.unbound = UnboundNode.createInstance(
-				LoginManager.getUserId(),
-				this.schemeElement,
-				this.coordinatePoint,
-				this.logicalNetLayer.getUnboundNodeType());
-			
-			UnboundNodeController unc = (UnboundNodeController)getLogicalNetLayer().getMapViewController().getController(this.unbound);
+					LoginManager.getUserId(),
+					this.schemeElement,
+					this.coordinatePoint,
+					this.logicalNetLayer.getUnboundNodeType());
+
+			UnboundNodeController unc = (UnboundNodeController) getLogicalNetLayer()
+					.getMapViewController().getController(this.unbound);
 
 			unc.updateScaleCoefficient(this.unbound);
-		
+
 			this.map.addNode(this.unbound);
 			setResult(Command.RESULT_OK);
-		}
-		catch (CreateObjectException e)
-		{
+		} catch(CreateObjectException e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();
@@ -101,16 +98,14 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand
 			e.printStackTrace();
 		}
 	}
-	
+
 	@Override
-	public void undo()
-	{
+	public void undo() {
 		this.map.removeNode(this.unbound);
 	}
-	
+
 	@Override
-	public void redo()
-	{
+	public void redo() {
 		this.map.addNode(this.unbound);
 	}
 }

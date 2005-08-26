@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommandAtomic.java,v 1.25 2005/08/24 08:19:58 krupenn Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.26 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -33,11 +33,10 @@ import com.syrus.util.Log;
  *  оманда создани€ метки на линии
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.26 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class CreateMarkCommandAtomic extends MapActionCommand
-{
+public class CreateMarkCommandAtomic extends MapActionCommand {
 	/**
 	 * созданный элемент метки
 	 */
@@ -62,68 +61,66 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 
 	public CreateMarkCommandAtomic(
 			PhysicalLink link,
-			Point point)
-	{
+			Point point) {
 		super(MapActionCommand.ACTION_DRAW_NODE);
 		this.link = link;
 		this.point = point;
 	}
 
 	@Override
-	public void execute()
-	{
-		try
-		{
-			Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		try {
+			Log.debugMessage(
+				getClass().getName() + "::execute() | " 
+					+ "create mark at link " + this.link.getName() 
+					+ " (" + this.link.getId() + ")", 
+				Level.FINEST);
+
 			if ( !getLogicalNetLayer().getContext().getApplicationModel()
-					.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
+					.isEnabled(MapApplicationModel.ACTION_EDIT_MAP)) {
 				return;
+			}
 			MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
 			this.map = this.logicalNetLayer.getMapView().getMap();
 			this.link.sortNodeLinks();
 			this.distance = 0.0;
 			AbstractNode node = this.link.getStartNode();
-			for(Iterator it = this.link.getNodeLinks().iterator(); it.hasNext();)
-			{
-				NodeLink mnle = (NodeLink)it.next();
+			for(Iterator it = this.link.getNodeLinks().iterator(); it.hasNext();) {
+				NodeLink nodeLink = (NodeLink)it.next();
 
-				NodeLinkController nlc = (NodeLinkController)getLogicalNetLayer().getMapViewController().getController(mnle);
+				NodeLinkController nlc = (NodeLinkController)
+					getLogicalNetLayer().getMapViewController().getController(nodeLink);
 
-				if(nlc.isMouseOnElement(mnle, this.point))
-				{
+				if(nlc.isMouseOnElement(nodeLink, this.point)) {
 					DoublePoint dpoint = converter.convertScreenToMap(this.point);
 					this.distance += converter.distance(node.getLocation(), dpoint);
 					break;
 				}
-				nlc.updateLengthLt(mnle);
-				this.distance += mnle.getLengthLt();
+				nlc.updateLengthLt(nodeLink);
+				this.distance += nodeLink.getLengthLt();
 
-				if(mnle.getStartNode().equals(node))
-					node = mnle.getEndNode();
+				if(nodeLink.getStartNode().equals(node))
+					node = nodeLink.getEndNode();
 				else
-					node = mnle.getStartNode();
+					node = nodeLink.getStartNode();
 			}
-			try
-			{
+			try {
 				this.mark = Mark.createInstance(
 						LoginManager.getUserId(),
 						this.link, 
 						this.distance);
-			}
-			catch (CreateObjectException e)
-			{
+			} catch (CreateObjectException e) {
 				e.printStackTrace();
 			}
 			this.map.addNode(this.mark);
-			MarkController mc = (MarkController)getLogicalNetLayer().getMapViewController().getController(this.mark);
+			MarkController mc = (MarkController)
+				getLogicalNetLayer().getMapViewController().getController(this.mark);
 			mc.updateScaleCoefficient(this.mark);
 			mc.moveToFromStartLt(this.mark, this.distance);
 			// операци€ закончена - оповестить слушателей
 			this.logicalNetLayer.setCurrentMapElement(this.mark);
 			setResult(Command.RESULT_OK);
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();
@@ -131,14 +128,12 @@ public class CreateMarkCommandAtomic extends MapActionCommand
 	}
 	
 	@Override
-	public void undo()
-	{
+	public void undo() {
 		this.map.removeNode(this.mark);
 	}
 	
 	@Override
-	public void redo()
-	{
+	public void redo() {
 		this.map.addNode(this.mark);
 	}
 }

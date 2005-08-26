@@ -1,5 +1,5 @@
 /**
- * $Id: MapState.java,v 1.11 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: MapState.java,v 1.12 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -11,22 +11,23 @@
 
 package com.syrus.AMFICOM.client.map;
 
+import java.util.HashMap;
+import java.util.Map;
+import java.util.logging.Level;
+
+import com.syrus.util.Log;
+
 /**
- * —осто€ние карты. ¬ фиксированный момент времени состоит из:
- * 	- состо€ние мыши (mouseMode)
- *  - включенный режим (operationMode)
- *  - действие над элементами в нулевом режиме (actionMode)
- *   -режим отображени€ линий (showMode)
+ * —осто€ние карты. ¬ фиксированный момент времени состоит из: - состо€ние мыши
+ * (mouseMode) - включенный режим (operationMode) - действие над элементами в
+ * нулевом режиме (actionMode) -режим отображени€ линий (showMode)
  * 
- * 
- * 
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public final class MapState 
-{
-	//‘лаги дополнительного состо€ни€ действий над картой
+public final class MapState {
+	// ‘лаги дополнительного состо€ни€ действий над картой
 
 	/** ѕустой режим. */
 	public static final int NULL_ACTION_MODE = 100;
@@ -42,11 +43,11 @@ public final class MapState
 	public static final int SELECT_MARKER_ACTION_MODE = 105;
 	/** –ежим рисовани€ линий (NodeLink и т.д.). */
 	public static final int DRAW_LINES_ACTION_MODE = 106;
-	
+
 	/** ‘лаг дополнительного состо€ни€ действий. */
 	protected int actionMode = NULL_ACTION_MODE;
 
-	//‘лаги состо€ни€ мыши
+	// ‘лаги состо€ни€ мыши
 	/** с мышью ничего не происходит. */
 	public static final int MOUSE_NONE = 200;
 	/** мышь нажата. */
@@ -61,7 +62,7 @@ public final class MapState
 	/** ‘лаг состо€ни€ мыши. */
 	protected int mouseMode = MOUSE_NONE;
 
-	//‘лаги состо€ни€ режмов дл€ работы с картой
+	// ‘лаги состо€ни€ режмов дл€ работы с картой
 	/** ѕустой режим. */
 	public static final int NO_OPERATION = 300;
 	/** –ежим приближени€ точки. */
@@ -97,77 +98,140 @@ public final class MapState
 	/** ‘лаг режима отображени€ линий на карте. */
 	protected int showMode = SHOW_PHYSICAL_LINK;
 
+	static Map<Integer, String> actionModeNames = new HashMap<Integer, String>();
+	static Map<Integer, String> operationModeNames = new HashMap<Integer, String>();
+	static Map<Integer, String> mouseModeNames = new HashMap<Integer, String>();
+	static Map<Integer, String> showModeNames = new HashMap<Integer, String>();
+
+	static {
+		actionModeNames.put(NULL_ACTION_MODE, "NULL_ACTION_MODE");
+		actionModeNames.put(ALT_LINK_ACTION_MODE, "ALT_LINK_ACTION_MODE");
+		actionModeNames.put(MOVE_ACTION_MODE, "MOVE_ACTION_MODE");
+		actionModeNames.put(DRAW_ACTION_MODE, "DRAW_ACTION_MODE");
+		actionModeNames.put(SELECT_ACTION_MODE, "SELECT_ACTION_MODE");
+		actionModeNames.put(SELECT_MARKER_ACTION_MODE, "SELECT_MARKER_ACTION_MODE");
+		actionModeNames.put(DRAW_LINES_ACTION_MODE, "DRAW_LINES_ACTION_MODE");
+
+		operationModeNames.put(NO_OPERATION, "NO_OPERATION");
+		operationModeNames.put(ZOOM_TO_POINT, "ZOOM_TO_POINT");
+		operationModeNames.put(ZOOM_TO_RECT, "ZOOM_TO_RECT");
+		operationModeNames.put(MOVE_TO_CENTER, "MOVE_TO_CENTER");
+		operationModeNames.put(MOVE_HAND, "MOVE_HAND");
+		operationModeNames.put(NODELINK_SIZE_EDIT, "NODELINK_SIZE_EDIT");
+		operationModeNames.put(MEASURE_DISTANCE, "MEASURE_DISTANCE");
+		operationModeNames.put(MOVE_FIXDIST, "MOVE_FIXDIST");
+		operationModeNames.put(NAVIGATE, "NAVIGATE");
+
+		mouseModeNames.put(MOUSE_NONE, "MOUSE_NONE");
+		mouseModeNames.put(MOUSE_PRESSED, "MOUSE_PRESSED");
+		mouseModeNames.put(MOUSE_RELEASED, "MOUSE_RELEASED");
+		mouseModeNames.put(MOUSE_MOVED, "MOUSE_MOVED");
+		mouseModeNames.put(MOUSE_DRAGGED, "MOUSE_DRAGGED");
+
+		showModeNames.put(SHOW_NODE_LINK, "SHOW_NODE_LINK");
+		showModeNames.put(SHOW_PHYSICAL_LINK, "SHOW_PHYSICAL_LINK");
+		showModeNames.put(SHOW_CABLE_PATH, "SHOW_CABLE_PATH");
+		showModeNames.put(SHOW_MEASUREMENT_PATH, "SHOW_MEASUREMENT_PATH");
+	}
+
 	/**
 	 * ѕолучить переменную режим мыши.
+	 * 
 	 * @return режим мыши
 	 */
-	public int getMouseMode()
-	{
+	public int getMouseMode() {
 		return this.mouseMode;
 	}
 
 	/**
 	 * ”становить режим мыши.
+	 * 
 	 * @param mode режим мыши
 	 */
-	public void setMouseMode(int mode)
-	{
+	public void setMouseMode(int mode) {
 		this.mouseMode = mode;
+		Log.debugMessage("Set mouse mode " + mouseModeToString(), Level.FINEST);
 	}
 
 	/**
 	 * ѕолучить дополнительное состо€ние действий.
+	 * 
 	 * @return дополнительное состо€ние действий
 	 */
-	public int getActionMode()
-	{
+	public int getActionMode() {
 		return this.actionMode;
 	}
 
 	/**
 	 * ”становить дополнительное состо€ние действий.
+	 * 
 	 * @param mode дополнительное состо€ние действий
 	 */
-	public void setActionMode(int mode)
-	{
+	public void setActionMode(int mode) {
 		this.actionMode = mode;
+		Log.debugMessage("Set action mode " + actionModeToString(), Level.FINEST);
 	}
 
 	/**
 	 * ѕолучить режим карты.
+	 * 
 	 * @return режим карты
 	 */
-	public int getOperationMode()
-	{
+	public int getOperationMode() {
 		return this.operationMode;
 	}
 
 	/**
 	 * ”становить режим карты.
+	 * 
 	 * @param mode режим карты
 	 */
-	public void setOperationMode(int mode)
-	{
+	public void setOperationMode(int mode) {
 		this.operationMode = mode;
+		Log.debugMessage("Set operation mode " + operationModeToString(), Level.FINEST);
 	}
 
 	/**
 	 * ѕолучить режим отображени€.
+	 * 
 	 * @return режим отображени€
 	 */
-	public int getShowMode()
-	{
+	public int getShowMode() {
 		return this.showMode;
 	}
 
 	/**
 	 * ”становить режим отображени€.
+	 * 
 	 * @param mode режим отображени€
 	 */
-	public void setShowMode(int mode)
-	{
+	public void setShowMode(int mode) {
 		this.showMode = mode;
+		Log.debugMessage("Set show mode " + showModeToString(), Level.FINEST);
 	}
 
+	public String actionModeToString() {
+		return actionModeNames.get(this.actionMode);
+	}
+
+	public String operationModeToString() {
+		return operationModeNames.get(this.operationMode);
+	}
+
+	public String mouseModeToString() {
+		return mouseModeNames.get(this.mouseMode);
+	}
+
+	public String showModeToString() {
+		return showModeNames.get(this.showMode);
+	}
+
+	@Override
+	public String toString() {
+		return "MapState [action = " + actionModeToString() 
+				+ ", operation = " + operationModeToString() 
+				+ ", mouse = " + mouseModeToString()
+				+ ", show = " + showModeToString() + "]";
+	}
 
 }

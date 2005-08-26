@@ -1,12 +1,12 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.31 2005/08/19 12:53:15 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.32 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
  *
  * Платформа: java 1.4.1
-*/
+ */
 
 package com.syrus.AMFICOM.client.map.command.action;
 
@@ -25,32 +25,31 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * Разместить c[tvysq элемент на карте в соответствии с привязкой
- * или по координатам
+ * Разместить c[tvysq элемент на карте в соответствии с привязкой или по
+ * координатам
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/08/19 12:53:15 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class PlaceSchemeElementCommand extends MapActionCommandBundle
-{
+public class PlaceSchemeElementCommand extends MapActionCommandBundle {
 	/**
 	 * Размещеный узел
 	 */
 	SiteNode site = null;
-	
+
 	/**
 	 * созданный непривязанный элемент
 	 */
 	UnboundNode unbound = null;
-	
+
 	/**
 	 * размещаемый схемный элемент
 	 */
 	SchemeElement schemeElement = null;
-	
+
 	Map map;
-	
+
 	/**
 	 * экранная точка, в которой размещается элемент
 	 */
@@ -63,25 +62,24 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 
 	public PlaceSchemeElementCommand(
 			SchemeElement schemeElement,
-			DoublePoint dpoint)
-	{
+			DoublePoint dpoint) {
 		this.schemeElement = schemeElement;
 		this.coordinatePoint = dpoint;
 	}
 
-
-	public PlaceSchemeElementCommand(
-			SchemeElement se,
-			Point point)
-	{
+	public PlaceSchemeElementCommand(SchemeElement se, Point point) {
 		this.schemeElement = se;
 		this.point = point;
 	}
 
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | "
+				+ "place scheme element "
+				+ this.schemeElement.getName()
+				+ " (" + this.schemeElement.getId() + ")",
+			Level.FINEST);
 
 		if ( !this.aContext.getApplicationModel()
 				.isEnabled(MapApplicationModel.ACTION_EDIT_BINDING))
@@ -124,12 +122,12 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle
 			// операция закончена - оповестить слушателей
 			this.logicalNetLayer.setCurrentMapElement(this.site);
 			long t7 = System.currentTimeMillis();
-			Log.debugMessage("PlaceSchemeElementCommand :: calculate coordinates " + (t2 - t1) + " ms", Level.INFO);
-			Log.debugMessage("PlaceSchemeElementCommand :: find scheme element " + (t3 - t2) + " ms", Level.INFO);
-			Log.debugMessage("PlaceSchemeElementCommand :: get map element at point " + (t4 - t3) + " ms", Level.INFO);
-			Log.debugMessage("PlaceSchemeElementCommand :: create unbound node " + (t5 - t4) + " ms", Level.INFO);
-			Log.debugMessage("PlaceSchemeElementCommand :: scan cables " + (t6 - t5) + " ms", Level.INFO);
-			Log.debugMessage("PlaceSchemeElementCommand :: notify " + (t7 - t6) + " ms", Level.INFO);
+			Log.debugMessage("PlaceSchemeElementCommand :: calculate coordinates " + (t2 - t1) + " ms", Level.FINE);
+			Log.debugMessage("PlaceSchemeElementCommand :: find scheme element " + (t3 - t2) + " ms", Level.FINE);
+			Log.debugMessage("PlaceSchemeElementCommand :: get map element at point " + (t4 - t3) + " ms", Level.FINE);
+			Log.debugMessage("PlaceSchemeElementCommand :: create unbound node " + (t5 - t4) + " ms", Level.FINE);
+			Log.debugMessage("PlaceSchemeElementCommand :: scan cables " + (t6 - t5) + " ms", Level.FINE);
+			Log.debugMessage("PlaceSchemeElementCommand :: notify " + (t7 - t6) + " ms", Level.FINE);
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);

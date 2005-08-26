@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandBundle.java,v 1.13 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: CreateUnboundLinkCommandBundle.java,v 1.14 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -19,45 +19,49 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.util.Log;
 
 /**
- * создание неприв€занной линии, состо€щей из одного фрагмента, 
- * внесение ее в пул и на карту
- * @author $Author: arseniy $
- * @version $Revision: 1.13 $, $Date: 2005/08/17 14:14:16 $
+ * создание неприв€занной линии, состо€щей из одного фрагмента, внесение ее в
+ * пул и на карту
+ * 
+ * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class CreateUnboundLinkCommandBundle extends MapActionCommandBundle
-{
+public class CreateUnboundLinkCommandBundle extends MapActionCommandBundle {
 	UnboundLink unbound;
-	
+
 	AbstractNode startNode;
 	AbstractNode endNode;
 
 	public CreateUnboundLinkCommandBundle(
 			AbstractNode startNode,
-			AbstractNode endNode)
-	{
+			AbstractNode endNode) {
 		this.startNode = startNode;
 		this.endNode = endNode;
 	}
-	
-	public UnboundLink getUnbound()
-	{
+
+	public UnboundLink getUnbound() {
 		return this.unbound;
 	}
-	
+
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | "
+				+ "create UnboundLink with start at node " 
+				+ this.startNode.getName() + " (" + this.startNode.getId() 
+				+ ") and end at node " + this.endNode.getName() 
+				+ " (" + this.endNode.getId() + ")", 
+			Level.FINEST);
 
 		try {
-			this.unbound = super.createUnboundLinkWithNodeLink(this.startNode, this.endNode);
+			this.unbound = super.createUnboundLinkWithNodeLink(
+					this.startNode,
+					this.endNode);
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();
 		}
 	}
-	
-}
 
+}

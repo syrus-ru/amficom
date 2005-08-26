@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.26 2005/08/24 08:19:58 krupenn Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.27 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -32,41 +32,42 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.27 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient 
  */
-public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommandBundle
-{
+public class BindUnboundLinkToPhysicalLinkCommandBundle extends
+		MapActionCommandBundle {
 	/**
 	 * прив€зываема€ лини€
 	 */
 	UnboundLink unbound;
-	
+
 	/**
 	 * тоннель
 	 */
 	PhysicalLink link;
-	
+
 	/**
 	 *  арта, на которой производитс€ операци€
 	 */
 	Map map;
 
 	public BindUnboundLinkToPhysicalLinkCommandBundle(
-		UnboundLink unbound, 
-		PhysicalLink link)
-	{
+			UnboundLink unbound,
+			PhysicalLink link) {
 		this.unbound = unbound;
 		this.link = link;
 	}
-	
-	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
-		try
-		{
+	@Override
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | " 
+				+ "bind " + this.unbound.getId() 
+				+ " to " + this.link.getName() + " (" + this.link.getId() + ")", 
+			Level.FINEST);
+
+		try {
 			List endNodesList = new ArrayList(2);
 			endNodesList.add(this.unbound.getStartNode());
 			endNodesList.add(this.unbound.getEndNode());
@@ -96,9 +97,7 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends MapActionCommand
 
 			this.link.getBinding().add(cablePath);
 			setResult(Command.RESULT_OK);
-		}
-		catch(Throwable e)
-		{
+		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();

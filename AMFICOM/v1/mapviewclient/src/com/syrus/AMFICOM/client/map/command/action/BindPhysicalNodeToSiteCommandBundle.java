@@ -1,5 +1,5 @@
 /**
- * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.31 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: BindPhysicalNodeToSiteCommandBundle.java,v 1.32 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -30,17 +30,16 @@ import com.syrus.util.Log;
  *   оманда прив€зывани€ топологического узла, принадлежащего
  *  неприв€занному кабелю, к элементу узла. ѕри этом лини€, которой 
  *  принадлежит данный узел, делитс€ на 2 части
- * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.32 $, $Date: 2005/08/26 15:39:54 $
  * @module mapclient_v1
  */
-public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
-{
+public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle {
 	/**
 	 * ѕеретаскиваемый узел
 	 */
 	TopologicalNode node;
-	
+
 	/** ”зел, к которому прив€зываетс€ топологический узел */
 	SiteNode site;
 
@@ -55,27 +54,27 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 	Map map;
 
 	public BindPhysicalNodeToSiteCommandBundle(
-			TopologicalNode node, 
-			SiteNode site)
-	{
+			TopologicalNode node,
+			SiteNode site) {
 		this.node = node;
 		this.site = site;
 	}
-	
-	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
 
-		try
-		{
+	@Override
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | " 
+				+ "bind " + this.node.getId() 
+				+ " to " + this.site.getName() + " (" + this.site.getId() + ")", 
+			Level.FINEST);
+
+		try {
 			this.mapView = this.logicalNetLayer.getMapView();
 			this.map = this.mapView.getMap();
 			UnboundLink link = (UnboundLink)this.node.getPhysicalLink();
 			// находим "ливый" и "правый" узлы, одновременно обновл€ем
 			// концевые узлы фрагментов
-			for(Iterator it = this.map.getNodeLinks(this.node).iterator(); it.hasNext();)
-			{
+			for(Iterator it = this.map.getNodeLinks(this.node).iterator(); it.hasNext();) {
 				NodeLink nodeLink = (NodeLink)it.next();
 
 				if(nodeLink.getStartNode().equals(this.node))
@@ -124,9 +123,7 @@ public class BindPhysicalNodeToSiteCommandBundle extends MapActionCommandBundle
 					this.site,
 					null);
 			link.setStartNode(this.site);
-		}
-		catch(Throwable e)
-		{
+		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();

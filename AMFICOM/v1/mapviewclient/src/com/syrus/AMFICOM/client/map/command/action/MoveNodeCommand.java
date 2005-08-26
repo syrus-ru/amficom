@@ -1,5 +1,5 @@
 /**
- * $Id: MoveNodeCommand.java,v 1.18 2005/08/22 11:33:00 krupenn Exp $
+ * $Id: MoveNodeCommand.java,v 1.19 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,12 +21,12 @@ import com.syrus.util.Log;
 
 /**
  * Перемещение узла.
+ * 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/08/22 11:33:00 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class MoveNodeCommand extends MapActionCommand
-{
+public class MoveNodeCommand extends MapActionCommand {
 	/**
 	 * начальная позиция перемещаемого элемента
 	 */
@@ -49,11 +49,10 @@ public class MoveNodeCommand extends MapActionCommand
 
 	/**
 	 * перемещаемый элемент
-	 */	
+	 */
 	AbstractNode node;
 
-	public MoveNodeCommand(AbstractNode node)
-	{
+	public MoveNodeCommand(AbstractNode node) {
 		super(MapActionCommand.ACTION_MOVE_SELECTION);
 		this.node = node;
 
@@ -62,50 +61,50 @@ public class MoveNodeCommand extends MapActionCommand
 	}
 
 	@Override
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals(MoveSelectionCommandBundle.DELTA_X))
-		{
-			this.deltaX = Double.parseDouble((String )value);
+	public void setParameter(String field, Object value) {
+		if(field.equals(MoveSelectionCommandBundle.DELTA_X)) {
+			this.deltaX = Double.parseDouble((String) value);
 			execute();
 		}
-		else
-		if(field.equals(MoveSelectionCommandBundle.DELTA_Y))
-		{
-			this.deltaY = Double.parseDouble((String )value);
+		else if(field.equals(MoveSelectionCommandBundle.DELTA_Y)) {
+			this.deltaY = Double.parseDouble((String) value);
 			execute();
 		}
 	}
 
 	@Override
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer)
-	{
+	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer) {
 		this.logicalNetLayer = logicalNetLayer;
 		this.aContext = logicalNetLayer.getContext();
 	}
-	
+
 	@Override
-	public void execute()
-	{
-		Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
-		
+	public void execute() {
+		Log.debugMessage(
+			getClass().getName() + "::execute() | "
+				+ "move node "
+				+ this.node.getName() 
+				+ " (" + this.node.getId() + ")"
+				+ " to new location ",
+			Level.FINEST);
+
 		this.newLocation = this.node.getLocation();
 
-		this.newLocation.setLocation(this.initialLocation.getX() + this.deltaX, this.initialLocation.getY() + this.deltaY);
+		this.newLocation.setLocation(
+				this.initialLocation.getX() + this.deltaX,
+				this.initialLocation.getY() + this.deltaY);
 
 		this.node.setLocation(this.newLocation);
 		setResult(Command.RESULT_OK);
 	}
-	
+
 	@Override
-	public void redo()
-	{
+	public void redo() {
 		this.node.setLocation(this.newLocation);
 	}
 
 	@Override
-	public void undo()
-	{
+	public void undo() {
 		this.node.setLocation(this.initialLocation);
 	}
 }

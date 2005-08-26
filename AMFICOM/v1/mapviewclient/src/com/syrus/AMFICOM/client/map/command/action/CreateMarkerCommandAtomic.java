@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.29 2005/08/24 08:19:58 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.30 2005/08/26 15:39:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,11 +35,10 @@ import com.syrus.util.Log;
  * Команда создания метки на линии
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/26 15:39:54 $
  * @module mapviewclient
  */
-public class CreateMarkerCommandAtomic extends MapActionCommand
-{
+public class CreateMarkerCommandAtomic extends MapActionCommand {
 	/**
 	 * созданный элемент метки
 	 */
@@ -62,21 +61,21 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 	 */
 	Point point;
 
-	public CreateMarkerCommandAtomic(
-			MeasurementPath path,
-			Point point)
-	{
+	public CreateMarkerCommandAtomic(MeasurementPath path, Point point) {
 		super(MapActionCommand.ACTION_DRAW_NODE);
 		this.path = path;
 		this.point = point;
 	}
 
 	@Override
-	public void execute()
-	{
-		try
-		{
-			Log.debugMessage(getClass().getName() + "::" + "execute()" + " | " + "method call", Level.FINER);
+	public void execute() {
+		try {
+			Log.debugMessage(
+				getClass().getName() + "::execute() | " 
+					+ "create marker at path " + this.path.getName() 
+					+ " (" + this.path.getId() + ")", 
+				Level.FINEST);
+
 			if ( !getLogicalNetLayer().getContext().getApplicationModel()
 					.isEnabled(MapApplicationModel.ACTION_USE_MARKER))
 				return;
@@ -85,19 +84,16 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 			AbstractNode node = this.path.getStartNode();
 			this.path.sortPathElements();
 			List nodeLinks = this.path.getSortedNodeLinks();
-			for(Iterator it = nodeLinks.iterator(); it.hasNext();)
-			{
+			for(Iterator it = nodeLinks.iterator(); it.hasNext();) {
 				NodeLink mnle = (NodeLink)it.next();
 
 				NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(mnle);
 				MeasurementPathController mpc = (MeasurementPathController )getLogicalNetLayer().getMapViewController().getController(this.path);
 
-				if(nlc.isMouseOnElement(mnle, this.point))
-				{
+				if(nlc.isMouseOnElement(mnle, this.point)) {
 					DoublePoint dpoint = converter.convertScreenToMap(this.point);
 
-					try
-					{
+					try {
 						this.marker = Marker.createInstance(
 								LoginManager.getUserId(),
 								this.mapView, 
@@ -116,9 +112,7 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 						mc.updateScaleCoefficient(this.marker);
 
 						mc.notifyMarkerCreated(this.marker);
-					}
-					catch (ApplicationException e)
-					{
+					} catch (ApplicationException e) {
 						e.printStackTrace();
 					}
 
@@ -130,13 +124,11 @@ public class CreateMarkerCommandAtomic extends MapActionCommand
 			}
 			this.logicalNetLayer.setCurrentMapElement(this.marker);
 			setResult(Command.RESULT_OK);
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			setException(e);
 			setResult(Command.RESULT_NO);
 			e.printStackTrace();
 		}
 	}
-	
+
 }
