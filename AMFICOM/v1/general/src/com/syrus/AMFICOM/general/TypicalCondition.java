@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.39 2005/08/26 18:33:18 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.40 2005/08/26 18:46:17 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -124,7 +124,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.39 $, $Date: 2005/08/26 18:33:18 $
+ * @version $Revision: 1.40 $, $Date: 2005/08/26 18:46:17 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -213,8 +213,11 @@ public class TypicalCondition implements StorableObjectCondition {
 			final Constructor ctor = Class.forName(className).getDeclaredConstructor(
 				new Class[] { Enum.class, OperationSort.class, Short.class, String.class});
 			ctor.setAccessible(true);
-			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { e.ordinal(),
-					operation, entityCode, key});
+			final int intValue = (e instanceof Codeable) ? ((Codeable) e).getCode() : e.ordinal();
+			this.delegate = (TypicalCondition) ctor.newInstance(new Object[] { new Integer(intValue),
+					operation,
+					new Short(entityCode),
+					key });
 		} catch (ClassNotFoundException cnfe) {
 			Log.debugMessage(TYPICAL_CONDITION_INIT + "Class " + className
 					+ " not found on the classpath"
@@ -269,7 +272,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			if (this.delegate == null) {
 				this.delegate = createDummyCondition();
 				this.delegate.key = key;
-				this.delegate.entityCode = entityCode;
+				this.delegate.entityCode = new Short(entityCode);
 				this.delegate.type = TypicalSort._TYPE_ENUM;
 				this.delegate.value = e;
 				this.delegate.operation = operation.value();
