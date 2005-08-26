@@ -49,20 +49,6 @@ public class NoiseHistogrammPanel extends ScaledGraphPanel {
 		paint_scale_digits(g);
 	}
 
-	/*
-	protected void paint_trace(Graphics g) {
-		Color c = UIManager.getColor(AnalysisResourceKeys.COLOR_PRIMARY_TRACE);
-		g.setColor(c);
-
-		for (int i = Math.max(0, -start); i < Math.min(end + 1, y.length) - start - 1; i++) {
-			g.fillRect((int) (i * scaleX + 1), (int) ((maxY - y[i + start] - top)
-					* scaleY - 1), (int) (scaleX + 1),
-					(int) ((maxY - bottom) * scaleY + 1));
-		}
-//		traceColor = UIManager.getColor(AnalysisResourceKeys.COLOR_PRIMARY_TRACE);
-//		super.paint_trace(g);
-	}*/
-
 	public void updateHistogrammData() {
 		// get reflectogram
 		BellcoreStructure bs = Heap.getBSPrimaryTrace();
