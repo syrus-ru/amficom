@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.162 2005/08/23 15:52:14 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.163 2005/08/26 09:29:38 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.162 $, $Date: 2005/08/23 15:52:14 $
+ * @version $Revision: 1.163 $, $Date: 2005/08/26 09:29:38 $
  * @author $Author: bob $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -466,6 +466,9 @@ public final class StorableObjectPool {
 					if (!objectPool.containsKey(id)) {
 						storableObjects.add(storableObject);
 						objectPool.put(id, storableObject);
+					} else {
+						Log.errorMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | " +
+								"object " + id + " have not found during search, but after loading yet in the pool");
 					}
 				}
 			}
