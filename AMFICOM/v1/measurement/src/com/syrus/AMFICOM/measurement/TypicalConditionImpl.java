@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.19 2005/08/25 20:13:57 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.20 2005/08/26 09:36:03 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,11 +19,23 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/25 20:13:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/08/26 09:36:03 $
+ * @author $Author: bob $
  * @module measurement
  */
 final class TypicalConditionImpl extends TypicalCondition {
+	@SuppressWarnings("unused")
+	private TypicalConditionImpl(final Enum e,
+			final OperationSort operation,
+			final Short entityCode,
+			final String key) {
+		this.value = e;
+		this.type = TypicalSort._TYPE_ENUM;
+		this.operation = operation.value();
+		this.entityCode = entityCode;
+		this.key = key;
+	}
+	
 	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final int firstInt,
 			final int secondInt,
@@ -121,6 +133,8 @@ final class TypicalConditionImpl extends TypicalCondition {
 			wrapper = PeriodicalTemporalPatternWrapper.getInstance();
 		} else if (storableObject instanceof MonitoredElement) {
 			wrapper = MonitoredElementWrapper.getInstance();
+		} else if (storableObject instanceof MeasurementSetup) {
+			wrapper = MeasurementSetupWrapper.getInstance();
 		} else {
 			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
