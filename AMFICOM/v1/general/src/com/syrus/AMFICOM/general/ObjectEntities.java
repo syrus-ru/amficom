@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.79 2005/08/25 20:02:30 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.80 2005/08/26 09:11:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/08/25 20:02:30 $
+ * @version $Revision: 1.80 $, $Date: 2005/08/26 09:11:12 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -271,9 +271,6 @@ public final class ObjectEntities {
 	public static final short KIS_CODE = 0x020F;
 	public static final short MONITOREDELEMENT_CODE = 0x0210;
 
-//	public static final short MEASUREMENT_TYPE_CODE = 0x0241;
-//	public static final short ANALYSIS_TYPE_CODE = 0x0242;
-//	public static final short MODELING_TYPE_CODE = 0x0244;
 	public static final short MEASUREMENTPORT_TYPE_CODE = 0x0245;
 
 	public static final short MEASUREMENT_MAX_CODE = 0x0280;

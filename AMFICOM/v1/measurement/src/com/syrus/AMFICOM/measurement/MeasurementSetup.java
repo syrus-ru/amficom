@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.90 2005/08/26 08:08:53 bob Exp $
+ * $Id: MeasurementSetup.java,v 1.91 2005/08/26 09:10:26 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/08/26 08:08:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.91 $, $Date: 2005/08/26 09:10:26 $
+ * @author $Author: arseniy $
  * @module measurement
  */
 
@@ -278,18 +278,20 @@ public final class MeasurementSetup extends StorableObject {
 	}
 
 	public String[] getParameterTypeCodenames() {
-		Parameter[] parameters = this.parameterSet.getParameters();
-		String[] parameterTypeCodenames = new String[parameters.length];
-		for (int i = 0; i < parameters.length; i++)
+		final Parameter[] parameters = this.parameterSet.getParameters();
+		final String[] parameterTypeCodenames = new String[parameters.length];
+		for (int i = 0; i < parameters.length; i++) {
 			parameterTypeCodenames[i] = parameters[i].getType().getCodename();
+		}
 		return parameterTypeCodenames;
 	}
 
 	public byte[][] getParameterValues() {
-		Parameter[] parameters = this.parameterSet.getParameters();
-		byte[][] parameterValues = new byte[parameters.length][];
-		for (int i = 0; i < parameters.length; i++)
+		final Parameter[] parameters = this.parameterSet.getParameters();
+		final byte[][] parameterValues = new byte[parameters.length][];
+		for (int i = 0; i < parameters.length; i++) {
 			parameterValues[i] = parameters[i].getValue();
+		}
 		return parameterValues;
 	}
 
@@ -352,8 +354,9 @@ public final class MeasurementSetup extends StorableObject {
 	 */
 	protected synchronized void setMonitoredElementIds0(final Set<Identifier> monitoredElementIds) {
 		this.monitoredElementIds.clear();
-		if (monitoredElementIds != null)
+		if (monitoredElementIds != null) {
 			this.monitoredElementIds.addAll(monitoredElementIds);
+		}
 	}
 
 	/**
