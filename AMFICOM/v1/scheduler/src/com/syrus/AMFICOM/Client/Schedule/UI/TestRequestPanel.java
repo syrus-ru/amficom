@@ -114,8 +114,7 @@ public class TestRequestPanel extends JPanel implements PropertyChangeListener {
 			try {
 				this.nameTextField.setText(test.getDescription());
 
-				MeasurementType measurementType = (MeasurementType) StorableObjectPool.getStorableObject(
-					test.getMeasurementTypeId(), true);
+				MeasurementType measurementType = test.getMeasurementType();
 				this.typeTextField.setText(measurementType.getDescription());
 
 				SystemUser user = (SystemUser) StorableObjectPool.getStorableObject(test.getCreatorId(), true);

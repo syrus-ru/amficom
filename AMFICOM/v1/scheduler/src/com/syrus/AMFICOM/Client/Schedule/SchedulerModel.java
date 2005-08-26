@@ -40,7 +40,6 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -72,16 +71,10 @@ import com.syrus.util.WrapperComparator;
  */
 public class SchedulerModel extends ApplicationModel implements PropertyChangeListener {
 
-	// public static final String COMMAND_ADD_PARAM_PANEL = "AddParamPanel";
-	// //$NON-NLS-1$
-
 	public static final String	COMMAND_CHANGE_KIS					= "ChangeKIS";
 	public static final String	COMMAND_CHANGE_ME_TYPE				= "ChangeMEType";
 
-	// //$NON-NLS-1$
 	public static final String	COMMAND_CLEAN						= "Clean";
-
-	// private static final boolean CREATE_ALLOW = true;
 
 	private static final int	FLAG_APPLY							= 1 << 1;
 	private static final int	FLAG_CREATE							= 1 << 2;
@@ -89,7 +82,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 	private int					flag								= 0;
 
-	// private ObjectResourceTreeModel treeModel;
 	private Set<Identifier>		testIds								= new HashSet<Identifier>();
 	private Identifier			selectedFirstTestId;
 	Set<Identifier>				selectedTestIds;
@@ -107,11 +99,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 	public static final String	COMMAND_GET_ANALYSIS_TYPE			= "GetAnalysisType";
 	public static final String	COMMAND_SET_ANALYSIS_TYPE			= "SetAnalysisType";
-	public static final String	COMMAND_SET_ANALYSIS_TYPES			= "SetAnalysisTypes";
-
-//	public static final String	COMMAND_GET_EVALUATION_TYPE			= "GetEvaluationType";
-//	public static final String	COMMAND_SET_EVALUATION_TYPE			= "SetEvaluationType";
-//	public static final String	COMMAND_SET_EVALUATION_TYPES		= "SetEvaluationTypes";
 
 	public static final String	COMMAND_GET_SET						= "GetSet";
 	public static final String	COMMAND_SET_SET						= "SetSet";
@@ -119,9 +106,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	public static final String	COMMAND_GET_MEASUREMENT_SETUP		= "GetMeasurementSetup";
 	public static final String	COMMAND_SET_MEASUREMENT_SETUP		= "SetMeasurementSetup";
 	public static final String	COMMAND_SET_MEASUREMENT_SETUPS		= "SetMeasurementSetups";
-
-//	public static final String	COMMAND_GET_RETURN_TYPE				= "GetReturnType";
-//	public static final String	COMMAND_SET_RETURN_TYPE				= "SetReturnType";
 
 	public static final String	COMMAND_GET_TEMPORAL_STAMPS			= "GetTestTemporalStamps";
 	public static final String	COMMAND_SET_TEMPORAL_STAMPS			= "SetTestTemporalStamps";
@@ -139,12 +123,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 	MeasurementType				measurementType						= null;
 
-	// private IntervalsEditor intervalsEditor;
-	// private KIS kis = null;
 	private String				name								= null;
 	MonitoredElement			monitoredElement					= null;
-	private AnalysisType			analysisType						= null;
-//	private Identifier			evaluationTypeId					= null;
+	private AnalysisType		analysisType						= null;
 	private ParameterSet		set									= null;
 	private MeasurementSetup	measurementSetup					= null;
 	private TestTemporalStamps	testTimeStamps						= null;
@@ -190,11 +171,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_NAME, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_TEMPORAL_STAMPS, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_SET, this);
-//		this.dispatcher.addPropertyChangeListener(COMMAND_SET_RETURN_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_MONITORED_ELEMENT, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_MEASUREMENT_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_MEASUREMENT_SETUP, this);
-//		this.dispatcher.addPropertyChangeListener(COMMAND_SET_EVALUATION_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_ANALYSIS_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_REFRESH_TIME_STAMPS, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_GROUP_TEST, this);
@@ -246,31 +225,16 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		return this.testIds;
 	}
 
-	// /**
-	// * @return Returns the treeModel.
-	// */
-	// public ObjectResourceTreeModel getTreeModel() {
-	// return this.treeModel;
-	// }
-
 	public void propertyChange(PropertyChangeEvent evt) {
 		String propertyName = evt.getPropertyName();
 		if (propertyName.equals(COMMAND_CLEAN)) {
-			if (this.testIds != null)
+			if (this.testIds != null) {
 				this.testIds.clear();
-
-			try {
-				this.refreshEditors();
-			} catch (ApplicationException e) {
-				AbstractMainFrame.showErrorMessage(Environment.getActiveWindow(), e);
 			}
+			this.refreshEditors();
 		} else if (propertyName.equals(COMMAND_SET_ANALYSIS_TYPE)) {
 			this.analysisType = (AnalysisType) evt.getNewValue();
-		}
-//		else if (propertyName.equals(COMMAND_SET_EVALUATION_TYPE)) {
-//			this.evaluationTypeId = (Identifier) evt.getNewValue();
-//		} 
-		else if (propertyName.equals(COMMAND_SET_MEASUREMENT_TYPE)) {
+		} else if (propertyName.equals(COMMAND_SET_MEASUREMENT_TYPE)) {
 			this.measurementType = (MeasurementType) evt.getNewValue();
 		} else if (propertyName.equals(COMMAND_SET_MONITORED_ELEMENT)) {
 			this.monitoredElement = (MonitoredElement) evt.getNewValue();
@@ -331,87 +295,24 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.refreshTests();
 	}
 
-	private void refreshEditors() throws ApplicationException {
-		// Collection temporalPatterns =
-		// MeasurementStorableObjectPool.getStorableObjectsByCondition(
-		// new
-		// EquivalentCondition(ObjectEntities.CRONTEMPORALPATTERN_CODE),
-		// true);
-		// this.testTemporalStampsEditor.setTemporalPatterns(temporalPatterns);
+	private void refreshEditors() {
+		MeasurementType[] measurementTypes = MeasurementType.values();
+		final Collection<IconPopulatableItem> measurementTypeItems = new ArrayList<IconPopulatableItem>(measurementTypes.length);
 
-		{
-//			final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENT_TYPE_CODE);
-//			final Set<MeasurementType> measurementTypes = StorableObjectPool.getStorableObjectsByCondition(ec, true);
-
-			// LinkedIdsCondition domainCondition = new
-			// LinkedIdsCondition(sessionInterface.getDomainIdentifier(),
-			// ObjectEntities.ME_ENTITY_CODE);
-			//
-			// Collection monitoredElements =
-			// ConfigurationStorableObjectPool.getStorableObjectsByCondition(
-			// domainCondition, true);
-
-			MeasurementType[] measurementTypes = MeasurementType.values();
-			final Collection<IconPopulatableItem> measurementTypeItems = new ArrayList<IconPopulatableItem>(measurementTypes.length);
-
-			final MeasurementTypeChildrenFactory childrenFactory = new MeasurementTypeChildrenFactory(LoginManager.getDomainId());
-			
-			for(MeasurementType measurementType : measurementTypes) {
-				IconPopulatableItem measurementTypeItem = new IconPopulatableItem();
-				measurementTypeItem.setChildrenFactory(childrenFactory);
-				measurementTypeItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
-//				Log.debugMessage("SchedulerModel.refreshEditors | measurementType1: " + measurementType1.getName(), Log.DEBUGLEVEL07);
-				measurementTypeItem.setName(measurementType.getDescription());
-				measurementTypeItem.setObject(measurementType);
-				measurementTypeItems.add(measurementTypeItem);
-			}
-			
-//			for (Iterator iter = measurementTypes.iterator(); iter.hasNext();) {
-//				MeasurementType measurementType1 = (MeasurementType) iter.next();
-//				IconPopulatableItem measurementTypeItem = new IconPopulatableItem();
-//				measurementTypeItem.setChildrenFactory(childrenFactory);
-//				measurementTypeItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
-////				Log.debugMessage("SchedulerModel.refreshEditors | measurementType1: " + measurementType1.getName(), Log.DEBUGLEVEL07);
-//				measurementTypeItem.setName(measurementType1.getName());
-//				measurementTypeItem.setObject(measurementType1.getId());
-//				measurementTypeItems.add(measurementTypeItem);
-//			}
-
-			// this.elementsViewer.setElements(measurementTypeItems);
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_TYPES, null, measurementTypeItems));
-
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-					COMMAND_SET_ANALYSIS_TYPES,
-					null,
-					AnalysisType.values()));
-
-//			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-//					COMMAND_SET_EVALUATION_TYPES,
-//					null,
-//					StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.EVALUATION_TYPE_CODE),
-//							true,
-//							true)));
-
-			// if (!monitoredElements.isEmpty()) {
-			// LinkedIdsCondition linkedIdsCondition;
-			// {
-			// java.util.Set meIdList = new HashSet(monitoredElements.size());
-			// for (Iterator it = monitoredElements.iterator(); it.hasNext();) {
-			// MonitoredElement me = (MonitoredElement) it.next();
-			// meIdList.add(me.getId());
-			// }
-			// linkedIdsCondition = new LinkedIdsCondition(meIdList,
-			// ObjectEntities.MS_ENTITY_CODE);
-			// }
-			// java.util.Set measurementSetups =
-			// MeasurementStorableObjectPool.getStorableObjectsByCondition(
-			// linkedIdsCondition, true);
-			//
-			// this.measurementSetupEditor.setMeasurementSetups(measurementSetups);
-			// }
-			this.refreshMeasurementSetups();
+		final MeasurementTypeChildrenFactory childrenFactory = new MeasurementTypeChildrenFactory(LoginManager.getDomainId());
+		
+		for(MeasurementType measurementType : measurementTypes) {
+			IconPopulatableItem measurementTypeItem = new IconPopulatableItem();
+			measurementTypeItem.setChildrenFactory(childrenFactory);
+			measurementTypeItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
+			measurementTypeItem.setName(measurementType.getDescription());
+			measurementTypeItem.setObject(measurementType);
+			measurementTypeItems.add(measurementTypeItem);
 		}
 
+		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_TYPES, null, measurementTypeItems));
+
+		this.refreshMeasurementSetups();
 	}
 
 	private void refreshTest() throws ApplicationException {
@@ -423,19 +324,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 					null,
 					test.getMeasurementType()));
 			MonitoredElement monitoredElement1 = test.getMonitoredElement();
-			// MeasurementPort measurementPort = (MeasurementPort)
-			// ConfigurationStorableObjectPool.getStorableObject(
-			// monitoredElement.getMeasurementPortId(), true);
-			// this.kisEditor.setKIS((KIS)
-			// ConfigurationStorableObjectPool.getStorableObject(measurementPort.getKISId(),
-			// true));
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MONITORED_ELEMENT, null, monitoredElement1));
 
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_ANALYSIS_TYPE, this, test.getAnalysisType()));
-//			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-//					COMMAND_SET_EVALUATION_TYPE,
-//					null,
-//					test.getEvaluationTypeId()));
 
 			final Set<Identifier> measurementSetupIds = test.getMeasurementSetupIds();
 			if (!measurementSetupIds.isEmpty()) {
@@ -443,14 +334,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				final MeasurementSetup measurementSetup1 = (MeasurementSetup) StorableObjectPool.getStorableObject(mainMeasurementSetupId,
 						true);
 				if (measurementSetup1 != null) {
-					// this.refreshMeasurementSetups();
-					// this.dispatcher.firePropertyChange(new
-					// PropertyChangeEvent(this, COMMAND_SET_SET, null,
-					// measurementSetup1.getParameterSet()));
-					// if (this.setEditor != null) {
-					// this.setEditor.setSet(measurementSetup1.getParameterSet());
-					// }
-					// this.measurementSetupEditor.setMeasurementSetup(measurementSetup1);
 					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP,
 																				null, measurementSetup1));
 				}
@@ -484,17 +367,12 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 					test.getStartTime(),
 					test.getEndTime(),
 					temporalPattern);
-			// this.testTemporalStampsEditor.setTestTemporalStamps(timeStamps);
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_TEMPORAL_STAMPS, null, timeStamps));
 		}
 
 	}
 
 	private void refreshTests() {
-		// for (int i = 0; i < this.testsEditors.length; i++) {
-		// this.testsEditors[i].updateTests();
-		// }
-
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
 		try {
 			this.refreshTest();
@@ -502,14 +380,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			AbstractMainFrame.showErrorMessage(Environment.getActiveWindow(), e);
 		}
 	}
-
-	// /**
-	// * @param treeModel
-	// * The treeModel to set.
-	// */
-	// public void setTreeModel(ObjectResourceTreeModel treeModel) {
-	// this.treeModel = treeModel;
-	// }
 
 	public void applyTest() {
 		this.flag = FLAG_APPLY;
@@ -530,9 +400,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_ANALYSIS_TYPE, null, null));
 		}
-//		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
-//			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_EVALUATION_TYPE, null, null));
-//		}
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.set = null;
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_SET, null, null));
@@ -541,37 +408,12 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.measurementSetup = null;
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_MEASUREMENT_SETUP, null, null));
 		}
-//		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
-//			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_RETURN_TYPE, null, null));
-//		}
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_TEMPORAL_STAMPS, null, null));
 		}
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_NAME, null, null));
 		}
-
-		// this.measurementType =
-		// this.measurementTypeEditor.getMeasurementType();
-		// if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
-		// this.kis = this.kisEditor.getKIS();
-		// if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
-		// this.monitoredElement =
-		// this.monitoredElementEditor.getMonitoredElement();
-		// if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
-		// this.analysisType = this.analysisTypeEditor.getAnalysisType();
-		// if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
-		// this.evaluationType = this.evaluationTypeEditor.getEvaluationType();
-		// if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
-		// this.set = this.setEditor.getSet();
-		// if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
-		// this.measurementSetup =
-		// this.measurementSetupEditor.getMeasurementSetup();
-		// if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
-		// this.returnType = this.returnTypeEditor.getReturnType();
-		// if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE)
-		// this.testTimeStamps =
-		// this.testTemporalStampsEditor.getTestTemporalStamps();
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.generateTest();
 		}
@@ -582,9 +424,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	}
 
 	public void updateTests(final long startTime, final long endTime) throws ApplicationException {
-		// Environment.log(Environment.LOG_LEVEL_INFO, "updateTests",
-		// getClass().getName()); //$NON-NLS-1$
-		// this.setCursor(UIStorage.WAIT_CURSOR);
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelSchedule.getString("StatusMessage.UpdatingTests"))); //$NON-NLS-1$
@@ -670,8 +509,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			}
 			this.selectedTestIds.add(selectedTestId);
 			this.refreshTest();
-			// this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-			// COMMAND_REFRESH_TEST, null, null));
 		} else {
 			Log.debugMessage("SchedulerModel.setSelectedTest | selectedTest is " + selectedTest, Level.FINEST);
 		}
@@ -685,10 +522,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.measurementSetup = null;
 		this.set = null;
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TEST, null, null));
-		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP,
-			null, null));
-		// this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-		// COMMAND_REFRESH_TEST, null, null));
+		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP, null, null));
 	}
 
 	public void setSelectedMeasurementType(final MeasurementType measurementType) {
@@ -795,11 +629,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							} else {
 								measurementSetups = StorableObjectPool.getStorableObjects(measurementSetupIds, true);
 							}
-
-//							for(final MeasurementSetup measurementSetup1 : measurementSetups) {
-//								System.out.println("refreshMeasurementSetups | " + measurementSetup1.getId() + ", " + measurementSetup1.getDescription());
-//							}
-
 							SchedulerModel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
 									COMMAND_SET_MEASUREMENT_SETUPS,
 									null,
@@ -819,10 +648,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 					final MeasurementSetup measurementSetup1 = (MeasurementSetup) StorableObjectPool.getStorableObject(mainMeasurementSetupId,
 							true);
 					if (measurementSetup1 != null) {
-						// SchedulerModel.this.dispatcher
-						// .firePropertyChange(new PropertyChangeEvent(this,
-						// COMMAND_SET_SET, null,
-						// measurementSetup1.getParameterSet()));
 						SchedulerModel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
 								COMMAND_SET_MEASUREMENT_SETUP,
 								null,

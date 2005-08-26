@@ -93,20 +93,32 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 		this.schedulerModel.setBreakData();
 		return null;
 	}
+	
+	public MeasurementType getMeasurementType() {
+		final JTree tree = this.treePanel.getTree();
+		final TreePath treePath = tree.getSelectionPath();
+		if (treePath != null) {
+			for (int i = 0; i < treePath.getPathCount(); i++) {
+				final Object nodeObject = treePath.getPathComponent(i);
+				if (nodeObject instanceof Item) {
+					final Item item = (Item) nodeObject;
+					Object object = item.getObject();
+					if (object instanceof MeasurementType) {
+						return (MeasurementType) object;
+					}
+				}
+			}
+		}
+		JOptionPane.showMessageDialog(this,
+				LangModelSchedule.getString("Have not choosen Measurement element"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+				JOptionPane.OK_OPTION);
+		this.schedulerModel.setBreakData();
+		return null;
+	}
 
 	public KIS getKIS() {
 		try {
 			return (KIS) StorableObjectPool.getStorableObject(this.getObject(ObjectEntities.KIS_CODE), true);
-		} catch (ApplicationException e) {
-			//
-		}
-		return null;
-	}
-
-	public MeasurementType getMeasurementType() {
-		try {
-			final Identifier measurementTypeId = this.getObject(ObjectEntities.MEASUREMENT_TYPE_CODE);
-			return measurementTypeId != null ? (MeasurementType) StorableObjectPool.getStorableObject(measurementTypeId, true) : null;
 		} catch (ApplicationException e) {
 			//
 		}
@@ -240,11 +252,8 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 											break;
 										}
 										final Object object2 = parent1.getObject();
-										if (object2 instanceof Identifier) {
-											final Identifier identifier2 = (Identifier) object2;
-											if (identifier2.getMajor() == ObjectEntities.MEASUREMENT_TYPE_CODE) {
-												break;
-											}
+										if (object2 instanceof MeasurementType) {
+											break;
 										}
 									}
 
@@ -259,9 +268,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 											try {
 												ElementsTreeFrame.this.schedulerModel.setSelectedMonitoredElement((MonitoredElement) StorableObjectPool.getStorableObject(identifier,
 														true),
-														parent != null
-																? (MeasurementType) StorableObjectPool.getStorableObject((Identifier) parent.getObject(), true)
-																	: null);
+														parent != null ? (MeasurementType) parent.getObject() : null);
 											} catch (ApplicationException e) {
 												AbstractMainFrame.showErrorMessage(ElementsTreeFrame.this, e);
 											}
@@ -269,17 +276,10 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 									});
 
 								}
-									break;
-								case ObjectEntities.MEASUREMENT_TYPE_CODE: {
-									try {
-										ElementsTreeFrame.this.schedulerModel.setSelectedMeasurementType((MeasurementType) StorableObjectPool.getStorableObject(identifier,
-												true));
-									} catch (ApplicationException e) {
-										AbstractMainFrame.showErrorMessage(ElementsTreeFrame.this, e);
-									}
-								}
-									break;
+									break;								
 							}
+						} else if (object instanceof MeasurementType) {
+							ElementsTreeFrame.this.schedulerModel.setSelectedMeasurementType((MeasurementType) object);
 						}
 					}
 
