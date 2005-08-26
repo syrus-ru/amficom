@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoVirtualCorbaConnection.java,v 1.2 2005/08/22 13:31:00 peskovsky Exp $
+ * $Id: MapInfoVirtualCorbaConnection.java,v 1.3 2005/08/26 09:35:24 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import static com.syrus.io.FileLoader.NULL_STUB;
 public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 	private static final String	CACHE_DIR	= "CacheDir";
 	private static final String	MAPS_LOADED_DIR	= "/mapsLoadedDir";	
-	private MscharServer mscharServer;	
+	private MscharServer mscharServer;
 
 	@Override
 	public MapImageLoader createImageLoader() throws MapConnectionException {
