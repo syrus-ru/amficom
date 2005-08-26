@@ -109,7 +109,7 @@ public class SaveTestSetupCommand extends AbstractCommand
 					name,
 					msTest.getMeasurementDuration(),
 					msTest.getMonitoredElementIds(),
-					msTest.getMeasurementTypeIds());
+					msTest.getMeasurementTypes());
 			StorableObjectPool.putStorableObject(measurementSetup);
 		} catch (CreateObjectException e) {
 			GUIUtil.showCreateObjectProblemError();
