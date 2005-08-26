@@ -13,8 +13,6 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.io.BellcoreStructure;
 
-// TEST VERSION!
-
 public class NoiseHistogrammPanel extends ScaledGraphPanel {
 	private int nBins = 400;
 
