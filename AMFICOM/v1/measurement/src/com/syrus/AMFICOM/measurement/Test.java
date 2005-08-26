@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.149 2005/08/25 20:13:57 arseniy Exp $
+ * $Id: Test.java,v 1.150 2005/08/26 08:08:53 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -47,8 +47,8 @@ import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.149 $, $Date: 2005/08/25 20:13:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.150 $, $Date: 2005/08/26 08:08:53 $
+ * @author $Author: bob $
  * @module measurement
  */
 
@@ -165,7 +165,6 @@ public final class Test extends StorableObject {
 	 * @param temporalType
 	 * @param measurementType
 	 * @param analysisType
-	 * @param evaluationTypeId
 	 * @param monitoredElement
 	 * @param description
 	 * @param measurementSetupIds

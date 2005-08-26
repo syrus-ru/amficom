@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.89 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.90 2005/08/26 08:08:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.measurement;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.EnumSet;
 import java.util.HashSet;
 import java.util.Set;
 
@@ -34,10 +35,11 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetup;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/08/08 11:31:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.90 $, $Date: 2005/08/26 08:08:53 $
+ * @author $Author: bob $
  * @module measurement
  */
 
@@ -56,7 +58,7 @@ public final class MeasurementSetup extends StorableObject {
 	private long measurementDuration;
 
 	private Set<Identifier> monitoredElementIds;
-	private Set<Identifier> measurementTypeIds;
+	private EnumSet<MeasurementType> measurementTypes;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -65,7 +67,7 @@ public final class MeasurementSetup extends StorableObject {
 		super(id);
 
 		this.monitoredElementIds = new HashSet<Identifier>();
-		this.measurementTypeIds = new HashSet<Identifier>();
+		this.measurementTypes = EnumSet.noneOf(MeasurementType.class);
 
 		try {
 			DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTSETUP_CODE).retrieve(this);
@@ -99,8 +101,8 @@ public final class MeasurementSetup extends StorableObject {
 			final ParameterSet etalon,
 			final String description,
 			final long measurementDuration,
-			final Set<Identifier> monitoredElementIds,
-			final Set<Identifier> measurementTypeIds) {
+			final Set<Identifier> monitoredElementIds,			
+			final EnumSet<MeasurementType> measurementTypes) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -117,8 +119,8 @@ public final class MeasurementSetup extends StorableObject {
 		this.monitoredElementIds = new HashSet<Identifier>();
 		this.setMonitoredElementIds0(monitoredElementIds);
 
-		this.measurementTypeIds = new HashSet<Identifier>();
-		this.setMeasurementTypeIds0(measurementTypeIds);
+		this.measurementTypes = EnumSet.noneOf(MeasurementType.class);
+		this.setMeasurementTypes0(measurementTypes);
 	}
 	
 	/**
@@ -141,7 +143,7 @@ public final class MeasurementSetup extends StorableObject {
 			final String description,
 			final long measurementDuration,
 			final Set<Identifier> monitoredElementIds,
-			final Set<Identifier> measurementTypeIds) throws CreateObjectException {
+			final EnumSet<MeasurementType> measurementTypes) throws CreateObjectException {
 
 		try {
 			final MeasurementSetup measurementSetup = new MeasurementSetup(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MEASUREMENTSETUP_CODE),
@@ -154,7 +156,7 @@ public final class MeasurementSetup extends StorableObject {
 				description,
 				measurementDuration,
 				monitoredElementIds,
-				measurementTypeIds);
+				measurementTypes);
 
 			assert measurementSetup.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
@@ -192,7 +194,7 @@ public final class MeasurementSetup extends StorableObject {
 		this.measurementDuration = mst.measurementDuration;
 
 		this.monitoredElementIds = Identifier.fromTransferables(mst.monitoredElementIds);
-		this.measurementTypeIds = Identifier.fromTransferables(mst.measurementTypeIds);
+		this.measurementTypes = MeasurementType.fromTransferables(mst.measurementTypes);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -205,7 +207,7 @@ public final class MeasurementSetup extends StorableObject {
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final IdlIdentifier[] meIds = Identifier.createTransferables(this.monitoredElementIds);
-		final IdlIdentifier[] mtIds = Identifier.createTransferables(this.measurementTypeIds);
+		final IdlMeasurementType[] mts = MeasurementType.createTransferables(this.measurementTypes, orb);
 
 		final IdlIdentifier voidIdlIdentifier = Identifier.VOID_IDENTIFIER.getTransferable();
 		return IdlMeasurementSetupHelper.init(orb,
@@ -222,7 +224,7 @@ public final class MeasurementSetup extends StorableObject {
 				this.description,
 				this.measurementDuration,
 				meIds,
-				mtIds);
+				mts);
 	}
 
 	/**
@@ -236,7 +238,7 @@ public final class MeasurementSetup extends StorableObject {
 				&& this.parameterSet != null
 				&& this.description != null
 				&& this.monitoredElementIds != null && !this.monitoredElementIds.isEmpty()
-				&& this.measurementTypeIds != null && !this.measurementTypeIds.isEmpty();
+				&& this.measurementTypes != null && !this.measurementTypes.isEmpty();
 	}
 
 	public short getEntityCode() {
@@ -271,8 +273,8 @@ public final class MeasurementSetup extends StorableObject {
 		return Collections.unmodifiableSet(this.monitoredElementIds);
 	}
 
-	public Set<Identifier> getMeasurementTypeIds() {
-		return Collections.unmodifiableSet(this.measurementTypeIds);
+	public EnumSet<MeasurementType> getMeasurementTypes() {
+		return EnumSet.copyOf(this.measurementTypes);
 	}
 
 	public String[] getParameterTypeCodenames() {
@@ -356,20 +358,21 @@ public final class MeasurementSetup extends StorableObject {
 
 	/**
 	 * Client setter for measurement type ids
-	 * @param measurementTypeIds
+	 * @param measurementTypes
 	 */
-	public void setMeasurementTypeIds(final Set<Identifier> measurementTypeIds) {
-		this.setMeasurementTypeIds0(measurementTypeIds);
+	public void setMeasurementTypes(final EnumSet<MeasurementType> measurementTypes) {
+		this.setMeasurementTypes0(measurementTypes);
 		super.markAsChanged();
 	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setMeasurementTypeIds0(final Set<Identifier> measurementTypeIds) {
-		this.measurementTypeIds.clear();
-		if (measurementTypeIds != null)
-			this.measurementTypeIds.addAll(measurementTypeIds);
+	protected synchronized void setMeasurementTypes0(final EnumSet<MeasurementType> measurementTypes) {
+		this.measurementTypes.clear();
+		if (measurementTypes != null) {
+			this.measurementTypes.addAll(measurementTypes);
+		}
 	}
 
 	/**
@@ -463,7 +466,6 @@ public final class MeasurementSetup extends StorableObject {
 		}
 
 		dependencies.addAll(this.monitoredElementIds);
-		dependencies.addAll(this.measurementTypeIds);
 
 		return dependencies;
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.102 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.103 2005/08/26 08:08:53 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2005/08/08 11:31:45 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.103 $, $Date: 2005/08/26 08:08:53 $
+ * @author $Author: bob $
  * @module measurement
  */
 
@@ -205,7 +205,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 			final Identifier msId = measurementSetup.getId();
 			final Set<Identifier> measurementTypeIds = mtIdsMap.get(msId);
 
-			measurementSetup.setMeasurementTypeIds0(measurementTypeIds);
+			measurementSetup.setMeasurementTypes0(measurementTypeIds);
 		}
 	}
 
@@ -251,7 +251,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 
 		final Map<Identifier, Set<Identifier>> mtIdsMap = new HashMap<Identifier, Set<Identifier>>();
 		for (final MeasurementSetup measurementSetup : measurementSetups) {
-			final Set<Identifier> mtIds = measurementSetup.getMeasurementTypeIds();
+			final Set<Identifier> mtIds = measurementSetup.getMeasurementTypes();
 			mtIdsMap.put(measurementSetup.getId(), mtIds);
 		}
 

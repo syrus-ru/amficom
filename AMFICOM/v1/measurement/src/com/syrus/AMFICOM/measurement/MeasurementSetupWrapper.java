@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.26 2005/08/19 16:22:05 arseniy Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.27 2005/08/26 08:08:53 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.measurement;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.List;
 import java.util.Set;
 
@@ -18,8 +19,8 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/08/19 16:22:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.27 $, $Date: 2005/08/26 08:08:53 $
+ * @author $Author: bob $
  * @module measurement
  */
 public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSetup> {
@@ -86,7 +87,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
 				return measurementSetup.getMonitoredElementIds();
 			if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_ID))
-				return measurementSetup.getMeasurementTypeIds();
+				return measurementSetup.getMeasurementTypes();
 			if (key.equals(SUMMARY_INFO)) {
 				return this.getMeasurementSetupInfo(measurementSetup);
 			}
@@ -164,7 +165,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
 				measurementSetup.setMonitoredElementIds((Set) value);
 			if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_ID))
-				measurementSetup.setMeasurementTypeIds((Set) value);
+				measurementSetup.setMeasurementTypes((EnumSet) value);
 		}
 	}
 
@@ -197,9 +198,11 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 				|| key.equals(SUMMARY_INFO)) {
 			return String.class;
 		}
-		if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID) 
-				|| key.equals(LINK_COLUMN_MEASUREMENT_TYPE_ID)) {
+		if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID)) {
 			return Set.class;
+		}
+		if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_ID)) {
+			return EnumSet.class;
 		}
 		return null;
 	}
