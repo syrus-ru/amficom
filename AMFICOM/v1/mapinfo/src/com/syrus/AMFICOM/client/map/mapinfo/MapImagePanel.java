@@ -1,5 +1,5 @@
 /*
- * $Id: MapImagePanel.java,v 1.14 2005/08/11 13:55:50 arseniy Exp $
+ * $Id: MapImagePanel.java,v 1.15 2005/08/26 09:35:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,7 @@
  */
 package com.syrus.AMFICOM.client.map.mapinfo;
 
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.event.ComponentAdapter;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/11 13:55:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/08/26 09:35:10 $
+ * @author $Author: peskovsky $
  * @module mapinfo
  */
 public class MapImagePanel extends JPanel {
@@ -104,6 +105,40 @@ public class MapImagePanel extends JPanel {
 				+ (t3 - t2) + " ms (result image paint)\n", Level.INFO);
 	}
 
+	public void paintComponent(final Graphics g, int shiftX, int shiftY) {
+		final long t1 = System.currentTimeMillis();
+		g.setColor(Color.GRAY);
+
+		if(shiftX > 0)
+			g.fillRect(0, 0, shiftX, this.getHeight());
+		else
+			if(shiftX < 0)
+				g.fillRect(this.getWidth() + shiftX, 0, -shiftX, this
+						.getHeight());
+
+		if(shiftY > 0)
+			g.fillRect(0, 0, this.getWidth(), shiftY);
+		else
+			if(shiftY < 0)
+				g.fillRect(
+						0,
+						this.getHeight() + shiftY,
+						this.getWidth(),
+						-shiftY);
+
+		final long t2 = System.currentTimeMillis();
+
+		if (this.resultImage != null && g != null) {
+			g.drawImage(this.resultImage, shiftX, shiftY, this.getWidth(), this.getHeight(), this);
+		}
+
+		final long t3 = System.currentTimeMillis();
+
+		Log.debugMessage("MapImagePanel.paintComponent with Shift | total " + (t3 - t1) + " (ms)\n" + "		"
+				+ (t2 - t1) + " ms (painting background)\n" + "		"
+				+ (t3 - t2) + " ms (result image paint)\n", Level.INFO);
+	}
+	
 	public void refreshLayerImage() throws MapConnectionException, MapDataException {
 		if (this.resultImage == null) {
 			return;

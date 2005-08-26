@@ -158,10 +158,10 @@ public class MapInfoNetMapViewer extends NetMapViewer {
 		int shiftY = (int )(me.getY() - startPoint.getY());
 
 		//todo repaint visualComponent with shift 
-//		this.visualComponent.repaint(
-//				this.visualComponent.getGraphics(),
-//				shiftX,
-//				shiftY);
+		this.visualComponent.paintComponent(
+				this.visualComponent.getGraphics(),
+				shiftX,
+				shiftY);
 	}
 
 	/*
