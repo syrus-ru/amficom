@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupWrapper.java,v 1.27 2005/08/26 08:08:53 bob Exp $
+ * $Id: MeasurementSetupWrapper.java,v 1.28 2005/08/26 18:16:19 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/08/26 08:08:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.28 $, $Date: 2005/08/26 18:16:19 $
+ * @author $Author: arseniy $
  * @module measurement
  */
 public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSetup> {
@@ -32,7 +32,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 	public static final String COLUMN_THRESHOLD_SET_ID = "threshold_set_id";
 	public static final String SUMMARY_INFO = "summary_info";
 	public static final String LINK_COLUMN_MONITORED_ELEMENT_ID = "monitored_element_id";
-	public static final String LINK_COLUMN_MEASUREMENT_TYPE_ID = "measurement_type_id";
+	public static final String LINK_COLUMN_MEASUREMENT_TYPE_CODE = "measurement_type_code";
 	public static final String LINK_COLUMN_MEASUREMENT_SETUP_ID = "measurement_setup_id";
 
 	private static MeasurementSetupWrapper instance;
@@ -48,14 +48,15 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 				COLUMN_DESCRIPTION,
 				COLUMN_MEASUREMENT_DURAION,
 				LINK_COLUMN_MONITORED_ELEMENT_ID,
-				LINK_COLUMN_MEASUREMENT_TYPE_ID};
+				LINK_COLUMN_MEASUREMENT_TYPE_CODE};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static MeasurementSetupWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new MeasurementSetupWrapper();
+		}
 		return instance;
 	}
 
@@ -72,26 +73,33 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 	public Object getValue(final MeasurementSetup measurementSetup, final String key) {
 		final Object value = super.getValue(measurementSetup, key);
 		if (value == null && measurementSetup != null) {
-			if (key.equals(COLUMN_PARAMETER_SET_ID))
+			if (key.equals(COLUMN_PARAMETER_SET_ID)) {
 				return measurementSetup.getParameterSet();
-			if (key.equals(COLUMN_CRITERIA_SET_ID))
+			}
+			if (key.equals(COLUMN_CRITERIA_SET_ID)) {
 				return measurementSetup.getCriteriaSet();
-			if (key.equals(COLUMN_THRESHOLD_SET_ID))
+			}
+			if (key.equals(COLUMN_THRESHOLD_SET_ID)) {
 				return measurementSetup.getThresholdSet();
-			if (key.equals(COLUMN_ETALON_ID))
+			}
+			if (key.equals(COLUMN_ETALON_ID)) {
 				return measurementSetup.getEtalon();
-			if (key.equals(COLUMN_DESCRIPTION))
+			}
+			if (key.equals(COLUMN_DESCRIPTION)) {
 				return measurementSetup.getDescription();
-			if (key.equals(COLUMN_MEASUREMENT_DURAION))
+			}
+			if (key.equals(COLUMN_MEASUREMENT_DURAION)) {
 				return new Long(measurementSetup.getMeasurementDuration());
-			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
+			}
+			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID)) {
 				return measurementSetup.getMonitoredElementIds();
-			if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_ID))
+			}
+			if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_CODE)) {
 				return measurementSetup.getMeasurementTypes();
+			}
 			if (key.equals(SUMMARY_INFO)) {
 				return this.getMeasurementSetupInfo(measurementSetup);
 			}
-
 		}
 		return value;
 	}
@@ -164,7 +172,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 				measurementSetup.setMeasurementDuration(((Long) value).longValue());
 			if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID))
 				measurementSetup.setMonitoredElementIds((Set) value);
-			if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_ID))
+			if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_CODE))
 				measurementSetup.setMeasurementTypes((EnumSet) value);
 		}
 	}
@@ -201,7 +209,7 @@ public class MeasurementSetupWrapper extends StorableObjectWrapper<MeasurementSe
 		if (key.equals(LINK_COLUMN_MONITORED_ELEMENT_ID)) {
 			return Set.class;
 		}
-		if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_ID)) {
+		if (key.equals(LINK_COLUMN_MEASUREMENT_TYPE_CODE)) {
 			return EnumSet.class;
 		}
 		return null;

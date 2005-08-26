@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.103 2005/08/26 08:08:53 bob Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.104 2005/08/26 18:16:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,6 +14,7 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.Collections;
+import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
@@ -35,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/08/26 08:08:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.104 $, $Date: 2005/08/26 18:16:19 $
+ * @author $Author: arseniy $
  * @module measurement
  */
 
@@ -72,7 +73,6 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 				+ QUESTION + COMMA
 				+ QUESTION;
 		}
-
 		return updateMultipleSQLValues;
 	}	
 
@@ -171,13 +171,14 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		super.retrieveEntity(storableObject);
 		this.retrieveMeasurementSetupMELinksByOneQuery(Collections.singleton(storableObject));
-		this.retrieveMeasurementTypeIdsByOneQuery(Collections.singleton(storableObject));
+		this.retrieveMeasurementTypesByOneQuery(Collections.singleton(storableObject));
 	}
 
 	private void retrieveMeasurementSetupMELinksByOneQuery(final Set<MeasurementSetup> measurementSetups)
 			throws RetrieveObjectException {
-		if ((measurementSetups == null) || (measurementSetups.isEmpty()))
+		if ((measurementSetups == null) || (measurementSetups.isEmpty())) {
 			return;
+		}
 
 		final Map<Identifier, Set<Identifier>> meIdsMap = this.retrieveLinkedEntityIds(measurementSetups,
 				ObjectEntities.MSMELINK,
@@ -192,73 +193,73 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 		}
 	}
 
-	private void retrieveMeasurementTypeIdsByOneQuery(final Set<MeasurementSetup> measurementSetups) throws RetrieveObjectException {
-		if ((measurementSetups == null) || (measurementSetups.isEmpty()))
+	private void retrieveMeasurementTypesByOneQuery(final Set<MeasurementSetup> measurementSetups) throws RetrieveObjectException {
+		if ((measurementSetups == null) || (measurementSetups.isEmpty())) {
 			return;
+		}
 
-		final Map<Identifier, Set<Identifier>> mtIdsMap = this.retrieveLinkedEntityIds(measurementSetups,
+		final Map<Identifier, EnumSet<MeasurementType>> mtMap = super.retrieveLinkedEnums(measurementSetups,
+				MeasurementType.class,
 				ObjectEntities.MSMTLINK,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
-				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
-
+				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE);
 		for (final MeasurementSetup measurementSetup : measurementSetups) {
 			final Identifier msId = measurementSetup.getId();
-			final Set<Identifier> measurementTypeIds = mtIdsMap.get(msId);
+			final EnumSet<MeasurementType> measurementTypes = mtMap.get(msId);
 
-			measurementSetup.setMeasurementTypes0(measurementTypeIds);
+			measurementSetup.setMeasurementTypes0(measurementTypes);
 		}
 	}
 
 	@Override
 	public void insert(final Set<MeasurementSetup> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
-		try {
-			this.updateMeasurementSetupMELinks(storableObjects);
-			this.updateMeasurementTypeIds(storableObjects);
-		} catch (UpdateObjectException uoe) {
-			throw new CreateObjectException(uoe);
-		}
+
+		final Map<Identifier, Set<Identifier>> meIdsMap = createMonitoredElementIdsMap(storableObjects);
+		super.insertLinkedEntityIds(meIdsMap,
+				ObjectEntities.MSMELINK,
+				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
+				MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
+
+		final Map<Identifier, EnumSet<MeasurementType>> mtMap = createMeasurementTypesMap(storableObjects);
+		super.insertLinkedEnums(mtMap,
+				ObjectEntities.MSMTLINK,
+				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
+				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE);
 	}
 
 	@Override
 	public void update(final Set<MeasurementSetup> storableObjects) throws UpdateObjectException {
 		super.updateEntities(storableObjects);
-		this.updateMeasurementSetupMELinks(storableObjects);
-		this.updateMeasurementTypeIds(storableObjects);
-	}
 
-	private void updateMeasurementSetupMELinks(final Set<MeasurementSetup> measurementSetups)
-			throws UpdateObjectException {
-		if (measurementSetups == null || measurementSetups.isEmpty())
-			return;
-
-		final Map<Identifier, Set<Identifier>> meIdsMap = new HashMap<Identifier, Set<Identifier>>();
-		for (final MeasurementSetup measurementSetup : measurementSetups) {
-			final Set<Identifier> meIds = measurementSetup.getMonitoredElementIds();
-			meIdsMap.put(measurementSetup.getId(), meIds);
-		}
-
+		final Map<Identifier, Set<Identifier>> meIdsMap = createMonitoredElementIdsMap(storableObjects);
 		super.updateLinkedEntityIds(meIdsMap,
 				ObjectEntities.MSMELINK,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 				MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
-	}
 
-	private void updateMeasurementTypeIds(final Set<MeasurementSetup> measurementSetups)
-			throws UpdateObjectException {
-		if (measurementSetups == null || measurementSetups.isEmpty())
-			return;
-
-		final Map<Identifier, Set<Identifier>> mtIdsMap = new HashMap<Identifier, Set<Identifier>>();
-		for (final MeasurementSetup measurementSetup : measurementSetups) {
-			final Set<Identifier> mtIds = measurementSetup.getMeasurementTypes();
-			mtIdsMap.put(measurementSetup.getId(), mtIds);
-		}
-
-		super.updateLinkedEntityIds(mtIdsMap,
+		final Map<Identifier, EnumSet<MeasurementType>> mtMap = createMeasurementTypesMap(storableObjects);
+		super.updateLinkedEnums(mtMap,
+				MeasurementType.class,
 				ObjectEntities.MSMTLINK,
 				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
-				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_ID);
+				MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE);
+	}
+
+	private static Map<Identifier, Set<Identifier>> createMonitoredElementIdsMap(final Set<MeasurementSetup> measurementSetups) {
+		final Map<Identifier, Set<Identifier>> meIdsMap = new HashMap<Identifier, Set<Identifier>>();
+		for (final MeasurementSetup measurementSetup : measurementSetups) {
+			meIdsMap.put(measurementSetup.getId(), measurementSetup.getMonitoredElementIds());
+		}
+		return meIdsMap;
+	}
+
+	private static Map<Identifier, EnumSet<MeasurementType>> createMeasurementTypesMap(final Set<MeasurementSetup> measurementSetups) {
+		final Map<Identifier, EnumSet<MeasurementType>> measurementTypesMap = new HashMap<Identifier, EnumSet<MeasurementType>>();
+		for (final MeasurementSetup measurementSetup : measurementSetups) {
+			measurementTypesMap.put(measurementSetup.getId(), measurementSetup.getMeasurementTypes());
+		}
+		return measurementTypesMap;
 	}
 
 	@Override
@@ -266,7 +267,7 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 			throws RetrieveObjectException, IllegalDataException {
 		final Set<MeasurementSetup> objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveMeasurementSetupMELinksByOneQuery(objects);
-		this.retrieveMeasurementTypeIdsByOneQuery(objects);
+		this.retrieveMeasurementTypesByOneQuery(objects);
 		return objects;
 	}
 
