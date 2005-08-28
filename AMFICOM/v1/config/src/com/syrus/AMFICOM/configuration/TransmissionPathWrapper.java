@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathWrapper.java,v 1.19 2005/08/10 11:24:07 bob Exp $
+ * $Id: TransmissionPathWrapper.java,v 1.20 2005/08/28 15:54:17 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,20 +8,20 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-
-import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
+import com.syrus.AMFICOM.general.TableNames;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/10 11:24:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.20 $, $Date: 2005/08/28 15:54:17 $
+ * @author $Author: arseniy $
  * @module config
  */
 public final class TransmissionPathWrapper extends StorableObjectWrapper<TransmissionPath> {
@@ -44,14 +44,15 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper<Transmi
 		final String[] keysArray = new String[] { COLUMN_DESCRIPTION, 
 				COLUMN_DOMAIN_ID, 
 				COLUMN_NAME, 
-				ObjectEntities.TRANSPATHMELINK };
+				TableNames.TRANSMISSIONPATH_ME_LINK };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static TransmissionPathWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new TransmissionPathWrapper();
+		}
 		return instance;
 	}
 
@@ -80,7 +81,7 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper<Transmi
 				return transmissionPath.getStartPortId();
 			if (key.equals(COLUMN_FINISH_PORT_ID))
 				return transmissionPath.getFinishPortId();
-			if (key.equals(ObjectEntities.TRANSPATHMELINK))
+			if (key.equals(TableNames.TRANSMISSIONPATH_ME_LINK))
 				return transmissionPath.getMonitoredElementIds();
 		}
 		return value;
@@ -133,8 +134,9 @@ public final class TransmissionPathWrapper extends StorableObjectWrapper<Transmi
 				|| key.equals(COLUMN_FINISH_PORT_ID)
 				|| key.equals(COLUMN_DOMAIN_ID))
 			return Identifier.class;
-		if (key.equals(ObjectEntities.EQUIPMENTMELINK))
+		if (key.equals(TableNames.TRANSMISSIONPATH_ME_LINK)) {
 			return Set.class;
+		}
 		return null;
 	}
 }

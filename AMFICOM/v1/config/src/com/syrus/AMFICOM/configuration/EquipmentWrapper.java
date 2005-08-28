@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentWrapper.java,v 1.21 2005/08/10 11:24:07 bob Exp $
+ * $Id: EquipmentWrapper.java,v 1.22 2005/08/28 15:54:17 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,19 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
+
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-
-import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
+import com.syrus.AMFICOM.general.TableNames;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/08/10 11:24:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.22 $, $Date: 2005/08/28 15:54:17 $
+ * @author $Author: arseniy $
  * @module config
  */
 public final class EquipmentWrapper extends StorableObjectWrapper<Equipment> {
@@ -72,7 +72,7 @@ public final class EquipmentWrapper extends StorableObjectWrapper<Equipment> {
 				COLUMN_SW_SERIAL,
 				COLUMN_SW_VERSION,
 				COLUMN_INVENTORY_NUMBER,
-				ObjectEntities.EQUIPMENTMELINK };
+				TableNames.EQUIPMENT_ME_LINK };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
@@ -124,7 +124,7 @@ public final class EquipmentWrapper extends StorableObjectWrapper<Equipment> {
 				return equipment.getSwVersion();
 			if (key.equals(COLUMN_INVENTORY_NUMBER))
 				return equipment.getInventoryNumber();
-			if (key.equals(ObjectEntities.EQUIPMENTMELINK))
+			if (key.equals(TableNames.EQUIPMENT_ME_LINK))
 				return equipment.getMonitoredElementIds();
 		}
 		return value;
