@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.32 2005/08/11 10:21:41 arseniy Exp $
+# $Id: Makefile.inc,v 1.33 2005/08/28 11:34:06 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -129,7 +129,7 @@ ifeq ($(SCOMP),)
 SCOMP=$(XMLBEANS_HOME)/bin/scomp
 endif
 
-SCOMPFLAGS = -src $(XMLSRCDIR) -d $(XMLCLASSDIR)
+SCOMPFLAGS = -javasource 1.5 -src $(XMLSRCDIR) -d $(XMLCLASSDIR)
 
 ENCODING ?= KOI8-R
 JAVAC_WARNOFF_FLAG = -nowarn
