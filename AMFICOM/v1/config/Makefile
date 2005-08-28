@@ -45,9 +45,9 @@ idlclean:
 .PHONY: corba
 corba: .corba
 
-.corba: $(CLASSDIR) .idl
+.corba: $(CLASSDIR) .idl .xml
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/corba/*.java
 	touch $@
