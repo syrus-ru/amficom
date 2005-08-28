@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.60 2005/08/28 11:32:59 bass Exp $
+# $Id: Makefile,v 1.61 2005/08/28 13:27:31 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -76,7 +76,8 @@ $(LIBNAME_GENERALXML):
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
 		$(XMLDIR)/Identifier.xsd \
 		$(XMLDIR)/Characteristic.xsd \
-		$(XMLDIR)/CharacteristicType.xsd
+		$(XMLDIR)/CharacteristicType.xsd \
+		$(XMLDIR)/general.xsdconfig
 
 .PHONY: clean
 clean: cleanmach cleancorba cleanxml
@@ -96,8 +97,8 @@ cleancorba: idlclean
 .PHONY: cleanxml xmlclean
 cleanxml xmlclean:
 	$(RM) $(LIBNAME_GENERALXML)
-	$(RM) -r $(XMLSRCDIR)/com/syrus/amficom
-	$(RM) -r $(XMLCLASSDIR)/com/syrus/amficom
+	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general/xml
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/general/xml
 	$(RM) .xml
 
 #### Install ####
