@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.85 2005/08/08 14:23:52 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.86 2005/08/28 15:44:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.85 $, $Date: 2005/08/08 14:23:52 $
+ * @version $Revision: 1.86 $, $Date: 2005/08/28 15:44:10 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -59,7 +59,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_CODE).retrieve(this);
+			DatabaseContext.getDatabase(ObjectEntities.TRANSMISSIONPATH_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -113,7 +113,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final TransmissionPath transmissionPath = new TransmissionPath(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATH_CODE),
+			final TransmissionPath transmissionPath = new TransmissionPath(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSMISSIONPATH_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					domainId,

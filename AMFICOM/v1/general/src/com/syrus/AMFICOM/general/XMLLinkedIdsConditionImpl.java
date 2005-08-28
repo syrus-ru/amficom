@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLLinkedIdsConditionImpl.java,v 1.1 2005/08/22 13:54:22 bob Exp $
+* $Id: XMLLinkedIdsConditionImpl.java,v 1.2 2005/08/28 15:43:15 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -43,15 +43,15 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
 
 import java.util.Set;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/22 13:54:22 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/08/28 15:43:15 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -87,7 +87,7 @@ public class XMLLinkedIdsConditionImpl extends XMLLinkedIdsCondition {
 					case EQUIPMENT_CODE:
 					case PORT_CODE:
 					case MEASUREMENTPORT_CODE:
-					case TRANSPATH_CODE:
+					case TRANSMISSIONPATH_CODE:
 					case KIS_CODE:
 					case LINK_CODE:
 					case CABLELINK_CODE:

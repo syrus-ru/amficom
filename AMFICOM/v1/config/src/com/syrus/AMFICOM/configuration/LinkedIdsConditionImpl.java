@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.28 2005/08/20 19:23:20 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.29 2005/08/28 15:44:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/08/20 19:23:20 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/28 15:44:10 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -83,7 +83,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
-			case ObjectEntities.TRANSPATH_CODE:
+			case ObjectEntities.TRANSMISSIONPATH_CODE:
 				TransmissionPath transmissionPath = (TransmissionPath) storableObject;
 				switch (this.linkedEntityCode) {
 					case ObjectEntities.PORT_CODE:
@@ -134,7 +134,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 		switch (entityCode.shortValue()) {
 			case ObjectEntities.CABLETHREAD_TYPE_CODE:
 			case ObjectEntities.EQUIPMENT_CODE:
-			case ObjectEntities.TRANSPATH_CODE:
+			case ObjectEntities.TRANSMISSIONPATH_CODE:
 			case ObjectEntities.PORT_CODE:
 				this.entityCode = entityCode;
 				break;

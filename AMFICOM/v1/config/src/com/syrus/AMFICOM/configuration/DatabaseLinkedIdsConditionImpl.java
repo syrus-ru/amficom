@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.18 2005/08/20 19:23:20 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.19 2005/08/28 15:44:10 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/20 19:23:20 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/28 15:44:10 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -42,7 +42,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				return super.getQuery(CableThreadTypeWrapper.COLUMN_CABLE_LINK_TYPE_ID);
 			case EQUIPMENT_CODE:
 				return super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
-			case TRANSPATH_CODE:
+			case TRANSMISSIONPATH_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
 					case PORT_CODE:
 						return OPEN_BRACKET

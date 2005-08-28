@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.70 2005/07/27 15:58:51 bass Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.71 2005/08/28 15:44:10 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/07/27 15:58:51 $
- * @author $Author: bass $
+ * @version $Revision: 1.71 $, $Date: 2005/08/28 15:44:10 $
+ * @author $Author: arseniy $
  * @module config
  */
 
@@ -37,7 +37,7 @@ public final class TransmissionPathDatabase extends StorableObjectDatabase<Trans
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.TRANSPATH_CODE;
+		return ObjectEntities.TRANSMISSIONPATH_CODE;
 	}
 
 	@Override

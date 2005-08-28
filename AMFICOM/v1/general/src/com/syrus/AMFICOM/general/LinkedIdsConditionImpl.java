@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.18 2005/08/19 14:01:33 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.19 2005/08/28 15:43:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SERVER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
@@ -51,7 +51,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/19 14:01:33 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/28 15:43:15 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -99,7 +99,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					case EQUIPMENT_CODE:
 					case PORT_CODE:
 					case MEASUREMENTPORT_CODE:
-					case TRANSPATH_CODE:
+					case TRANSMISSIONPATH_CODE:
 					case KIS_CODE:
 					case LINK_CODE:
 					case CABLELINK_CODE:

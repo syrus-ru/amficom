@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.75 2005/08/26 13:45:53 bass Exp $
+ * $Id: SchemePath.java,v 1.76 2005/08/28 15:45:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPATH_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
@@ -70,8 +70,8 @@ import com.syrus.util.Log;
 /**
  * #16 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/08/26 13:45:53 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.76 $, $Date: 2005/08/28 15:45:58 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -321,7 +321,7 @@ public final class SchemePath extends StorableObject
 
 	Identifier getTransmissionPathId() {
 		assert this.transmissionPathId != null: OBJECT_NOT_INITIALIZED;
-		assert this.transmissionPathId.isVoid() || this.transmissionPathId.getMajor() == TRANSPATH_CODE;
+		assert this.transmissionPathId.isVoid() || this.transmissionPathId.getMajor() == TRANSMISSIONPATH_CODE;
 		return this.transmissionPathId;
 	}
 
@@ -450,7 +450,7 @@ public final class SchemePath extends StorableObject
 	 */
 	void setTransmissionPathId(final Identifier transmissionPathId) {
 		assert transmissionPathId != null : NON_NULL_EXPECTED;
-		assert transmissionPathId.isVoid() || transmissionPathId.getMajor() == TRANSPATH_CODE;
+		assert transmissionPathId.isVoid() || transmissionPathId.getMajor() == TRANSMISSIONPATH_CODE;
 
 		if (this.transmissionPathId.equals(transmissionPathId)) {
 			return;

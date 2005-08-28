@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceDatabase.java,v 1.24 2005/08/08 11:32:37 arseniy Exp $
+ * $Id: EventSourceDatabase.java,v 1.25 2005/08/28 15:45:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/08/08 11:32:37 $
+ * @version $Revision: 1.25 $, $Date: 2005/08/28 15:45:24 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -91,7 +91,7 @@ public final class EventSourceDatabase extends StorableObjectDatabase<EventSourc
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				break;
-			case ObjectEntities.TRANSPATH_CODE:
+			case ObjectEntities.TRANSMISSIONPATH_CODE:
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
 				DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, Identifier.VOID_IDENTIFIER);
@@ -152,7 +152,7 @@ public final class EventSourceDatabase extends StorableObjectDatabase<EventSourc
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				break;
-			case ObjectEntities.TRANSPATH_CODE:
+			case ObjectEntities.TRANSMISSIONPATH_CODE:
 				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
 				buffer.append(COMMA);
 				buffer.append(DatabaseIdentifier.toSQLString(Identifier.VOID_IDENTIFIER));
@@ -203,7 +203,7 @@ public final class EventSourceDatabase extends StorableObjectDatabase<EventSourc
 			case ObjectEntities.EQUIPMENT_CODE:
 				sourceEntityId = DatabaseIdentifier.getIdentifier(resultSet, EventSourceWrapper.COLUMN_EQUIPMENT_ID);
 				break;
-			case ObjectEntities.TRANSPATH_CODE:
+			case ObjectEntities.TRANSMISSIONPATH_CODE:
 				sourceEntityId = DatabaseIdentifier.getIdentifier(resultSet, EventSourceWrapper.COLUMN_TRANSMISSION_PATH_ID);
 				break;
 			case ObjectEntities.LINK_CODE:

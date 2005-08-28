@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.14 2005/08/19 14:01:33 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.15 2005/08/28 15:43:15 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,11 +42,11 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SYSTEMUSER_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/19 14:01:33 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/28 15:43:15 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -79,7 +79,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					case EQUIPMENT_CODE:
 					case PORT_CODE:
 					case MEASUREMENTPORT_CODE:
-					case TRANSPATH_CODE:
+					case TRANSMISSIONPATH_CODE:
 					case KIS_CODE:
 					case LINK_CODE:
 					case CABLELINK_CODE:

@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectGroupEntities.java,v 1.31 2005/08/25 20:02:30 arseniy Exp $
+ * $Id: ObjectGroupEntities.java,v 1.32 2005/08/28 15:43:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/08/25 20:02:30 $
+ * @version $Revision: 1.32 $, $Date: 2005/08/28 15:43:15 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -78,7 +78,7 @@ public final class ObjectGroupEntities {
 				CABLETHREAD_TYPE_CODE,
 				EQUIPMENT_CODE,
 				PORT_CODE,
-				TRANSPATH_CODE,
+				TRANSMISSIONPATH_CODE,
 				LINK_CODE,
 				CABLELINK_CODE,
 				CABLETHREAD_CODE });
