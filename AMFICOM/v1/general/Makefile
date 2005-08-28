@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.61 2005/08/28 13:27:31 bass Exp $
+# $Id: Makefile,v 1.62 2005/08/28 13:47:47 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -97,7 +97,13 @@ cleancorba: idlclean
 .PHONY: cleanxml xmlclean
 cleanxml xmlclean:
 	$(RM) $(LIBNAME_GENERALXML)
-	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general/xml
+	if [ -f $(XMLSRCDIR)/com/syrus/AMFICOM/general/xml/.cvsignore ]; \
+	then \
+		cd $(XMLSRCDIR)/com/syrus/AMFICOM/general/xml && \
+		$(RM) -r $(shell cat <$(XMLSRCDIR)/com/syrus/AMFICOM/general/xml/.cvsignore) \
+	else \
+		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general/xml; \
+	fi
 	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/general/xml
 	$(RM) .xml
 
