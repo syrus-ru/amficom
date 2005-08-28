@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalCondition.java,v 1.11 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: DatabaseTypicalCondition.java,v 1.12 2005/08/28 16:41:33 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
  * }
  * </pre>
  *
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:27:25 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/28 16:41:33 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -103,6 +103,16 @@ public final class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondi
 	@Override
 	protected String getColumnName() throws IllegalObjectEntityException {
 		return this.delegate.getColumnName();
+	}
+
+	@Override
+	protected String getLinkedColumnName() throws IllegalObjectEntityException {
+		return this.delegate.getLinkedColumnName();
+	}
+
+	@Override
+	protected String getLinkedTableName() throws IllegalObjectEntityException {
+		return this.delegate.getLinkedTableName();
 	}
 
 	@Override

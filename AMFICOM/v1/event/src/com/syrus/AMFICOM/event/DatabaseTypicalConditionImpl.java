@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalConditionImpl.java,v 1.10 2005/08/08 11:32:37 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.11 2005/08/28 16:41:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/08 11:32:37 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/28 16:41:55 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -39,6 +39,18 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 						IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 		return null;
+	}
+
+	@Override
+	protected String getLinkedColumnName() throws IllegalObjectEntityException {
+		throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
+				+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+	}
+
+	@Override
+	protected String getLinkedTableName() throws IllegalObjectEntityException {
+		throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
+				+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 	}
 
 }

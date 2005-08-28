@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.10 2005/08/08 11:27:25 arseniy Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.11 2005/08/28 16:41:33 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,17 +8,26 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.EQUALS;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FROM;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_IN;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
+
 import java.util.Date;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.TypicalSort;
+import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/08 11:27:25 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/28 16:41:33 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -31,14 +40,40 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 	}
 
 	protected abstract String getColumnName() throws IllegalObjectEntityException;
-	
+
+	protected abstract String getLinkedColumnName() throws IllegalObjectEntityException;
+
+	protected abstract String getLinkedTableName() throws IllegalObjectEntityException;
+
+	private String getLinkedSubQuery() throws IllegalObjectEntityException {
+		switch (this.condition.getType().value()) {
+			case TypicalSort._TYPE_ENUM:
+				final Enum e = (Enum) this.condition.getValue();
+				return StorableObjectWrapper.COLUMN_ID + SQL_IN + OPEN_BRACKET
+						+ SQL_SELECT + this.getColumnName()
+						+ SQL_FROM + this.getLinkedTableName()
+						+ SQL_WHERE + this.getLinkedColumnName() + EQUALS + EnumUtil.getCode(e)
+						+ CLOSE_BRACKET;
+			default:
+				Log.errorMessage("Illegal type of condition: " + this.condition.getType().value());
+				return DatabaseStorableObjectCondition.FALSE_CONDITION;
+		}
+	}
+
 	public Short getEntityCode() {
 		return this.condition.getEntityCode();
 	}
-	
+
 	public String getSQLQuery() throws IllegalObjectEntityException {
-		StringBuffer buffer = new StringBuffer();
+		final StringBuffer buffer = new StringBuffer();
 		switch (this.condition.getType().value()) {
+			case TypicalSort._TYPE_ENUM:
+				switch (this.condition.getOperation().value()) {
+					case OperationSort._OPERATION_IN:
+						buffer.append(this.getLinkedSubQuery());
+						break;
+				}
+				break;
 			case TypicalSort._TYPE_NUMBER_INT:
 			case TypicalSort._TYPE_NUMBER_DOUBLE:
 			case TypicalSort._TYPE_NUMBER_LONG:

@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.14 2005/08/25 20:13:56 arseniy Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.15 2005/08/28 16:41:51 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,11 +11,12 @@ package com.syrus.AMFICOM.measurement;
 import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.TableNames;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/25 20:13:56 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/28 16:41:51 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -46,12 +47,39 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 					return PeriodicalTemporalPatternWrapper.COLUMN_PERIOD;
 				}
 				break;
+			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
+				if (this.condition.getKey().equals(MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE)) {
+					return MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
+				}
+				break;
 			default:
 				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
 						+ "' and key '" + this.condition.getKey()
 						+ "' are not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 		return null;
+	}
+
+	@Override
+	protected String getLinkedColumnName() throws IllegalObjectEntityException {
+		switch (super.condition.getEntityCode().shortValue()) {
+			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
+				return MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID;
+			default:
+				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
+						+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+		}
+	}
+
+	@Override
+	protected String getLinkedTableName() throws IllegalObjectEntityException {
+		switch (super.condition.getEntityCode().shortValue()) {
+			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
+				return TableNames.MNTPORTTYPMNTTYPLINK;
+			default:
+				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
+						+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+		}
 	}
 
 }
