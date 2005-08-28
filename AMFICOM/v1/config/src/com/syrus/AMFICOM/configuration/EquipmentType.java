@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.80 2005/08/08 14:23:52 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.81 2005/08/28 11:53:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -34,15 +35,17 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.amficom.configuration.xml.XmlEquipmentType;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/08/08 14:23:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.81 $, $Date: 2005/08/28 11:53:01 $
+ * @author $Author: bass $
  * @module config
  */
 
-public final class EquipmentType extends StorableObjectType implements Characterizable, Namable {
+public final class EquipmentType extends StorableObjectType implements Characterizable, Namable, XmlBeansTransferable<XmlEquipmentType> {
 	private static final long serialVersionUID = 9157517478787463967L;
 
 	private String name;
@@ -138,6 +141,20 @@ public final class EquipmentType extends StorableObjectType implements Character
 	}
 
 	/**
+	 * @param xmlObject
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(org.apache.xmlbeans.XmlObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(final XmlEquipmentType xmlObject,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @param orb
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
@@ -156,6 +173,13 @@ public final class EquipmentType extends StorableObjectType implements Character
 				this.name != null ? this.name : "",
 				this.manufacturer != null ? this.manufacturer : "",
 				this.manufacturerCode != null ? this.manufacturerCode : "");
+	}
+
+	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlEquipmentType getXmlTransferable() {
+		throw new UnsupportedOperationException();
 	}
 
 	protected synchronized void setAttributes(final Date created,

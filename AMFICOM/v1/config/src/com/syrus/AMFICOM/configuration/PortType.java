@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.77 2005/08/08 14:23:52 arseniy Exp $
+ * $Id: PortType.java,v 1.78 2005/08/28 11:53:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -36,15 +37,17 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.amficom.configuration.xml.XmlPortType;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/08/08 14:23:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.78 $, $Date: 2005/08/28 11:53:01 $
+ * @author $Author: bass $
  * @module config
  */
 
-public final class PortType extends StorableObjectType implements Characterizable, Namable {
+public final class PortType extends StorableObjectType implements Characterizable, Namable, XmlBeansTransferable<XmlPortType> {
 	private static final long serialVersionUID = -115251480084275101L;
 
 	private String name;
@@ -143,6 +146,20 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	}
 
 	/**
+	 * @param xmlObject
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(org.apache.xmlbeans.XmlObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(final XmlPortType xmlObject,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @param orb
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
@@ -160,6 +177,13 @@ public final class PortType extends StorableObjectType implements Characterizabl
 				this.name != null ? this.name : "",
 				PortTypeSort.from_int(this.sort),
 				PortTypeKind.from_int(this.kind));
+	}
+
+	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlPortType getXmlTransferable() {
+		throw new UnsupportedOperationException();
 	}
 
 	protected synchronized void setAttributes(final Date created,

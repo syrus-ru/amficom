@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.68 2005/08/05 16:50:02 arseniy Exp $
+ * $Id: LinkType.java,v 1.69 2005/08/28 11:53:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.configuration.corba.IdlLinkType;
 import com.syrus.AMFICOM.configuration.corba.IdlLinkTypeHelper;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -30,15 +31,17 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.amficom.configuration.xml.XmlLinkType;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/08/05 16:50:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.69 $, $Date: 2005/08/28 11:53:01 $
+ * @author $Author: bass $
  * @module config
  */
 
-public final class LinkType extends AbstractLinkType {
+public final class LinkType extends AbstractLinkType implements XmlBeansTransferable<XmlLinkType> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -151,6 +154,20 @@ public final class LinkType extends AbstractLinkType {
 	}
 
 	/**
+	 * @param xmlObject
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(org.apache.xmlbeans.XmlObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(final XmlLinkType xmlObject,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @param orb
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
@@ -169,6 +186,13 @@ public final class LinkType extends AbstractLinkType {
 				this.name != null ? this.name : "",
 				LinkTypeSort.from_int(this.sort), this.manufacturer, this.manufacturerCode,
 				this.imageId.getTransferable());
+	}
+
+	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlLinkType getXmlTransferable() {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override

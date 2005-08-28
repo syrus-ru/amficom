@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.53 2005/08/05 16:50:02 arseniy Exp $
+ * $Id: CableThreadType.java,v 1.54 2005/08/28 11:53:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,7 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.configuration.corba.IdlCableThreadType;
 import com.syrus.AMFICOM.configuration.corba.IdlCableThreadTypeHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -33,7 +34,9 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.amficom.configuration.xml.XmlCableThreadType;
 
 /**
  * <code>CableThreadType</code>, among other fields, contain references to
@@ -41,12 +44,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.53 $, $Date: 2005/08/05 16:50:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.54 $, $Date: 2005/08/28 11:53:01 $
+ * @author $Author: bass $
  * @module config
  */
 
-public final class CableThreadType extends StorableObjectType implements Namable {
+public final class CableThreadType extends StorableObjectType implements Namable, XmlBeansTransferable<XmlCableThreadType> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -149,6 +152,20 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	}
 
 	/**
+	 * @param xmlObject
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(org.apache.xmlbeans.XmlObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(final XmlCableThreadType xmlObject,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @param orb
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
 	 */
@@ -167,6 +184,13 @@ public final class CableThreadType extends StorableObjectType implements Namable
 				this.color,
 				this.linkType.getId().getTransferable(),
 				this.cableLinkType.getId().getTransferable());
+	}
+
+	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlCableThreadType getXmlTransferable() {
+		throw new UnsupportedOperationException();
 	}
 
 	protected synchronized void setAttributes(final Date created,

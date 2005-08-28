@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.62 2005/08/05 17:58:13 arseniy Exp $
+ * $Id: CableLinkType.java,v 1.63 2005/08/28 11:53:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.configuration.corba.IdlCableLinkType;
 import com.syrus.AMFICOM.configuration.corba.IdlCableLinkTypeHelper;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
@@ -31,15 +32,17 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.amficom.configuration.xml.XmlCableLinkType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/08/05 17:58:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.63 $, $Date: 2005/08/28 11:53:01 $
+ * @author $Author: bass $
  * @module config
  */
-public final class CableLinkType extends AbstractLinkType {
+public final class CableLinkType extends AbstractLinkType implements XmlBeansTransferable<XmlCableLinkType> {
 
 	private static final long serialVersionUID = 3257007652839372857L;
 
@@ -145,7 +148,21 @@ public final class CableLinkType extends AbstractLinkType {
 		this.imageId = new Identifier(cltt.imageId);
 		this.name = cltt.name;
 	}
-	
+
+	/**
+	 * @param xmlObject
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(org.apache.xmlbeans.XmlObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(final XmlCableLinkType xmlObject,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
+	}
+
 	/**
 	 * @param orb
 	 * @see com.syrus.AMFICOM.general.TransferableObject#getTransferable(org.omg.CORBA.ORB)
@@ -167,6 +184,13 @@ public final class CableLinkType extends AbstractLinkType {
 				this.manufacturer,
 				this.manufacturerCode,
 				this.imageId.getTransferable());
+	}
+
+	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlCableLinkType getXmlTransferable() {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
