@@ -1,9 +1,9 @@
-/*
- * $Id: TestAnalysisType.java,v 1.8 2005/08/28 16:43:51 arseniy Exp $
- * 
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+/*-
+ * $Id: TestModelingType.java,v 1.1 2005/08/28 16:44:21 arseniy Exp $
+ *
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.measurement;
 
@@ -18,9 +18,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.SQLCommonTest;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -28,25 +25,28 @@ import com.syrus.AMFICOM.general.TableNames;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
+import junit.framework.Test;
+import junit.framework.TestCase;
+
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/28 16:43:51 $
+ * @version $Revision: 1.1 $, $Date: 2005/08/28 16:44:21 $
  * @author $Author: arseniy $
  * @module test
  */
-public class TestAnalysisType extends TestCase {
+public final class TestModelingType extends TestCase {
 
-	public TestAnalysisType(final String name) {
+	public TestModelingType(final String name) {
 		super(name);
 	}
 
 	public static Test suite() {
 		final SQLCommonTest commonTest = new SQLCommonTest();
-		commonTest.addTestSuite(TestAnalysisType.class);
+		commonTest.addTestSuite(TestModelingType.class);
 		return commonTest.createTestSetup();
 	}
 
 	public void testCreateAll() throws CreateObjectException {
-		final String sql = SQL_INSERT_INTO + TableNames.ANALYSIS_TYPE + OPEN_BRACKET
+		final String sql = SQL_INSERT_INTO + TableNames.MODELING_TYPE + OPEN_BRACKET
 				+ StorableObjectWrapper.COLUMN_CODE + COMMA
 				+ StorableObjectWrapper.COLUMN_CODENAME
 				+ CLOSE_BRACKET + SQL_VALUES + OPEN_BRACKET
@@ -58,11 +58,11 @@ public class TestAnalysisType extends TestCase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql);
-			Log.debugMessage("TestAnalysisType.testCreateAll | Trying: " + sql, Log.DEBUGLEVEL09);
-			for (final AnalysisType analysisType : AnalysisType.values()) {
-				preparedStatement.setInt(1, analysisType.getCode());
-				preparedStatement.setString(2, analysisType.getCodename());
-				Log.debugMessage("TestAnalysisType.testCreateAll | Inserting analysis type '" + analysisType.getCodename() + "'",
+			Log.debugMessage("TestModelingType.testCreateAll | Trying: " + sql, Log.DEBUGLEVEL09);
+			for (final ModelingType modelingType : ModelingType.values()) {
+				preparedStatement.setInt(1, modelingType.getCode());
+				preparedStatement.setString(2, modelingType.getCodename());
+				Log.debugMessage("TestModelingType.testCreateAll | Inserting modiling type '" + modelingType.getCodename() + "'",
 						Log.DEBUGLEVEL09);
 				preparedStatement.executeUpdate();
 			}

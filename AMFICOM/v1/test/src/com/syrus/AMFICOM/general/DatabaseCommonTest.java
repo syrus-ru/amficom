@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCommonTest.java,v 1.8 2005/08/20 19:40:40 arseniy Exp $
+ * $Id: DatabaseCommonTest.java,v 1.9 2005/08/28 16:43:51 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,19 +29,14 @@ import com.syrus.AMFICOM.event.EventDatabase;
 import com.syrus.AMFICOM.event.EventSourceDatabase;
 import com.syrus.AMFICOM.event.EventTypeDatabase;
 import com.syrus.AMFICOM.measurement.AnalysisDatabase;
-import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
 import com.syrus.AMFICOM.measurement.CronTemporalPatternDatabase;
-import com.syrus.AMFICOM.measurement.EvaluationDatabase;
-import com.syrus.AMFICOM.measurement.EvaluationTypeDatabase;
 import com.syrus.AMFICOM.measurement.IntervalsTemporalPatternDatabase;
 import com.syrus.AMFICOM.measurement.KISDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementPortDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementSetupDatabase;
-import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
 import com.syrus.AMFICOM.measurement.ModelingDatabase;
-import com.syrus.AMFICOM.measurement.ModelingTypeDatabase;
 import com.syrus.AMFICOM.measurement.MonitoredElementDatabase;
 import com.syrus.AMFICOM.measurement.ParameterSetDatabase;
 import com.syrus.AMFICOM.measurement.PeriodicalTemporalPatternDatabase;
@@ -67,7 +62,7 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroupDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/20 19:40:40 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/28 16:43:51 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -114,14 +109,9 @@ public class DatabaseCommonTest extends SQLCommonTest {
 		DatabaseContext.registerDatabase(new LinkDatabase());
 		DatabaseContext.registerDatabase(new CableThreadDatabase());
 
-		DatabaseContext.registerDatabase(new MeasurementTypeDatabase());
-		DatabaseContext.registerDatabase(new AnalysisTypeDatabase());
-		DatabaseContext.registerDatabase(new EvaluationTypeDatabase());
-		DatabaseContext.registerDatabase(new ModelingTypeDatabase());
 		DatabaseContext.registerDatabase(new MeasurementPortTypeDatabase());
 		DatabaseContext.registerDatabase(new MeasurementDatabase());
 		DatabaseContext.registerDatabase(new AnalysisDatabase());
-		DatabaseContext.registerDatabase(new EvaluationDatabase());
 		DatabaseContext.registerDatabase(new ModelingDatabase());
 		DatabaseContext.registerDatabase(new MeasurementSetupDatabase());
 		DatabaseContext.registerDatabase(new ResultDatabase());

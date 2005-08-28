@@ -1,11 +1,13 @@
 /*
- * $Id: TestMeasurementPortType.java,v 1.1 2005/08/20 19:45:03 arseniy Exp $
+ * $Id: TestMeasurementPortType.java,v 1.2 2005/08/28 16:43:51 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.measurement;
+
+import java.util.EnumSet;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -30,7 +32,8 @@ public final class TestMeasurementPortType extends TestCase {
 		final MeasurementPortType measurementPortType = MeasurementPortType.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				"reflectometry",
 				"В него лазер светит",
-				"Рефлектометрический");
+				"Рефлектометрический",
+				EnumSet.of(MeasurementType.REFLECTOMETRY));
 		StorableObjectPool.flush(measurementPortType, DatabaseCommonTest.getSysUser().getId(), false);
 	}
 }

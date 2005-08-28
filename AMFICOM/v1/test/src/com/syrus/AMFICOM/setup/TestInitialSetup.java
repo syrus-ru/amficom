@@ -1,5 +1,5 @@
 /*
- * $Id: TestInitialSetup.java,v 1.8 2005/08/21 16:12:06 arseniy Exp $
+ * $Id: TestInitialSetup.java,v 1.9 2005/08/28 16:43:51 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,17 +27,16 @@ import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.SQLCommonTest;
 import com.syrus.AMFICOM.general.TestCharacteristicQP1640A;
 import com.syrus.AMFICOM.general.TestDataType;
-import com.syrus.AMFICOM.general.TestMeasurementUnit;
-import com.syrus.AMFICOM.general.TestParameterType;
 import com.syrus.AMFICOM.measurement.TestAnalysisType;
 import com.syrus.AMFICOM.measurement.TestKIS;
 import com.syrus.AMFICOM.measurement.TestMeasurementPort;
 import com.syrus.AMFICOM.measurement.TestMeasurementPortType;
 import com.syrus.AMFICOM.measurement.TestMeasurementType;
+import com.syrus.AMFICOM.measurement.TestModelingType;
 import com.syrus.AMFICOM.measurement.TestMonitoredElement;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/21 16:12:06 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/28 16:43:51 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -52,15 +51,12 @@ public final class TestInitialSetup extends TestCase {
 
 		//-1. Create system administrator
 		sqlCommonTest.addTest(new TestCreateSysUser("testCreateSysUser"));
-		
+
 		//-2.Create data types
-		sqlCommonTest.addTest(new TestDataType("testCreate"));
-
-		//-3.Create measurement units
-		sqlCommonTest.addTest(new TestMeasurementUnit("testCreate"));
-
-		//-4.Create parameter types
-		sqlCommonTest.addTest(new TestParameterType("testCreate"));
+		sqlCommonTest.addTest(new TestDataType("testCreateAll"));
+		sqlCommonTest.addTest(new TestMeasurementType("testCreateAll"));
+		sqlCommonTest.addTest(new TestAnalysisType("testCreateAll"));
+		sqlCommonTest.addTest(new TestModelingType("testCreateAll"));
 
 		final DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
 
@@ -79,17 +75,14 @@ public final class TestInitialSetup extends TestCase {
 		databaseCommonTest.addTest(new TestEquipmentType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestPortType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestTransmissionPathType("testCreateInstance"));
-		databaseCommonTest.addTest(new TestMeasurementPortType("testCreateInstance"));
-
 		databaseCommonTest.addTest(new TestEquipment("testCreateInstance"));
 		databaseCommonTest.addTest(new TestPort("testCreateInstance"));
 		databaseCommonTest.addTest(new TestTransmissionPath("testCreateInstance"));
+
+		databaseCommonTest.addTest(new TestMeasurementPortType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestKIS("testCreateInstance"));
 		databaseCommonTest.addTest(new TestMeasurementPort("testCreateInstance"));
 		databaseCommonTest.addTest(new TestMonitoredElement("testCreateInstance"));
-
-		databaseCommonTest.addTestSuite(TestMeasurementType.class);
-		databaseCommonTest.addTestSuite(TestAnalysisType.class);
 
 		databaseCommonTest.addTest(new TestCharacteristicQP1640A("testCreate"));
 
