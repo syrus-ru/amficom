@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.11 2005/08/26 09:58:30 stas Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.12 2005/08/28 08:28:08 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/26 09:58:30 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/28 08:28:08 $
  * @module schemeclient
  */
 
@@ -521,7 +521,6 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 
 	public void setObject(Object or) {
 		this.linkType = (CableLinkType) or;
-		this.sortedTheradTypes = Collections.EMPTY_LIST;
 		
 		if (this.linkType != null) {
 			this.tfNameText.setText(this.linkType.getName());
@@ -535,6 +534,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);
 			this.tfManufacturerText.setText(SchemeResourceKeys.EMPTY);
 			this.tfManufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
+			this.sortedTheradTypes = new LinkedList<CableThreadType>();
 		}
 		
 		this.cashedFields = new HashMap<CableThreadType, ThreadTypeFields>();
@@ -568,7 +568,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 					this.linkType = SchemeObjectsFactory.createCableLinkType(this.tfNameText.getText());
 					apply();
 					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.linkType.getId(), SchemeEvent.CREATE_OBJECT));
-					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.linkType.getId(), CableLinkTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.CABLELINK_TYPE));
+					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.linkType, CableLinkTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.CABLELINK_TYPE));
 				} 
 				catch (CreateObjectException e) {
 					Log.errorException(e);
