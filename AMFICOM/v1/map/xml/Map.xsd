@@ -1,11 +1,11 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: Map.xsd,v 1.7 2005/08/15 14:53:28 krupenn Exp $
+<!-- $Id: Map.xsd,v 1.8 2005/08/28 19:17:54 bass Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/map/xml"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns:map="http://syrus.com/AMFICOM/map/xml"
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	xmlns:general="http://syrus.com/AMFICOM/general/xml"
 	elementFormDefault="qualified">
 
   <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
@@ -16,39 +16,39 @@
   <xsd:include schemaLocation="NodeLink.xsd"/>
   <xsd:include schemaLocation="Collector.xsd"/>
 
-  <xsd:element name="maps" type="map:Maps">
+  <xsd:element name="maps" type="map:XmlMapSeq">
 
-    <xsd:unique name="mapuid">
+    <xsd:unique name="mapId">
       <xsd:selector xpath="map:map"/>
-      <xsd:field xpath="@uid"/>
+      <xsd:field xpath="@id"/>
     </xsd:unique>
 
   </xsd:element>
 
-  <xsd:complexType name="Maps">
+  <xsd:complexType name="XmlMap">
+    <xsd:all>
+      <xsd:element name="id" type="general:XmlIdentifier" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="mapLibraryEntries" type="map:XmlMapLibraryEntrySeq" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="topologicalNodes" type="map:XmlTopologicalNodeSeq" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="siteNodes" type="map:XmlSiteNodeSeq" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="physicalLinks" type="map:XmlPhysicalLinkSeq" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="nodeLinks" type="map:XmlNodeLinkSeq" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="collectors" type="map:XmlCollectorSeq" minOccurs="0" maxOccurs="1"/>
+    </xsd:all>
+	<xsd:attribute name="importType" type="xsd:string" use="required"/>
+  </xsd:complexType>
+
+  <xsd:complexType name="XmlMapSeq">
     <xsd:sequence>
-      <xsd:element name="map" type="map:Map" minOccurs="1" maxOccurs="unbounded"/>
+      <xsd:element name="map" type="map:XmlMap" minOccurs="1" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
 
-  <xsd:complexType name="Map">
-    <xsd:all>
-      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="maplibraries" type="map:MapLibraryEntries" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="topologicalnodes" type="map:TopologicalNodes" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="sitenodes" type="map:SiteNodes" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="physicallinks" type="map:PhysicalLinks" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="nodelinks" type="map:NodeLinks" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="collectors" type="map:Collectors" minOccurs="0" maxOccurs="1"/>
-    </xsd:all>
-	<xsd:attribute name="importtype" type="xsd:string" use="required"/>
-  </xsd:complexType>
-
-  <xsd:complexType name="MapLibraryEntries">
+  <xsd:complexType name="XmlMapLibraryEntrySeq">
     <xsd:sequence>
-      <xsd:element name="maplibrary" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
+      <xsd:element name="mapLibraryEntry" type="xsd:string" minOccurs="1" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
 

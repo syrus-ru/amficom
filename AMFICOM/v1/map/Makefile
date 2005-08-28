@@ -79,7 +79,8 @@ $(LIBNAME_MAPXML):
 		$(XMLDIR)/SiteNode.xsd \
 		$(XMLDIR)/SiteNodeType.xsd \
 		$(XMLDIR)/TopologicalNode.xsd \
-		$(XMLDIR)/MapLibrary.xsd
+		$(XMLDIR)/MapLibrary.xsd \
+		$(XMLDIR)/map.xsdconfig
 
 .PHONY: clean
 clean: cleanmach cleancorba cleanxml
@@ -102,8 +103,8 @@ cleancorba: idlclean
 .PHONY: cleanxml xmlclean
 cleanxml xmlclean:
 	$(RM) $(LIBNAME_MAPXML)
-	$(RM) -r $(XMLSRCDIR)/com/syrus/amficom
-	$(RM) -r $(XMLCLASSDIR)/com/syrus/amficom
+	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/map/xml
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/map/xml
 	$(RM) .xml
 
 #### Install ####

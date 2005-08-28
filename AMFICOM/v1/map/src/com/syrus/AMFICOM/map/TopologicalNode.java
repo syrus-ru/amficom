@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.67 2005/08/26 10:52:24 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.68 2005/08/28 19:17:54 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,9 +33,11 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.XMLBeansTransferable;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
+import com.syrus.AMFICOM.map.xml.XmlTopologicalNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
@@ -43,11 +45,11 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: krupenn $
- * @version $Revision: 1.67 $, $Date: 2005/08/26 10:52:24 $
+ * @author $Author: bass $
+ * @version $Revision: 1.68 $, $Date: 2005/08/28 19:17:54 $
  * @module map
  */
-public final class TopologicalNode extends AbstractNode implements XMLBeansTransferable{
+public final class TopologicalNode extends AbstractNode implements XmlBeansTransferable<XmlTopologicalNode> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -314,29 +316,23 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 		}
 	}
 
-	public XmlObject getXMLTransferable() {
-		final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = com.syrus.amficom.map.xml.TopologicalNode.Factory.newInstance();
-		this.fillXMLTransferable(xmlTopologicalNode);
-		return xmlTopologicalNode;
-	}
-
-	public void fillXMLTransferable(final XmlObject xmlObject) {
-		final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode) xmlObject;
-
-		final com.syrus.amficom.general.xml.UID uid = xmlTopologicalNode.addNewUid();
+	public XmlTopologicalNode getXmlTransferable() {
+		final XmlTopologicalNode xmlTopologicalNode = XmlTopologicalNode.Factory.newInstance();
+		final XmlIdentifier uid = xmlTopologicalNode.addNewId();
 		uid.setStringValue(this.id.toString());
 		xmlTopologicalNode.setX(this.location.getX());
 		xmlTopologicalNode.setY(this.location.getY());
 		xmlTopologicalNode.setActive(this.active);
+		return xmlTopologicalNode;
 	}
 
 	TopologicalNode(final Identifier creatorId,
 			final StorableObjectVersion version,
-			final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode,
+			final XmlTopologicalNode xmlTopologicalNode,
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(ObjectEntities.TOPOLOGICALNODE_CODE, xmlTopologicalNode.getUid().getStringValue()),
+		super(clonedIdsPool.getClonedId(ObjectEntities.TOPOLOGICALNODE_CODE, xmlTopologicalNode.getId().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -346,12 +342,10 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 				"",
 				new DoublePoint(0, 0));
 		this.selected = false;
-		this.fromXMLTransferable(xmlTopologicalNode, clonedIdsPool, importType);
+		this.fromXmlTransferable(xmlTopologicalNode, clonedIdsPool, importType);
 	}
 
-	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
-		final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode) xmlObject;
-
+	public void fromXmlTransferable(final XmlTopologicalNode xmlTopologicalNode, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
 		this.active = xmlTopologicalNode.getActive();
 		super.location.setLocation(xmlTopologicalNode.getX(), xmlTopologicalNode.getY());
 	}
@@ -359,20 +353,18 @@ public final class TopologicalNode extends AbstractNode implements XMLBeansTrans
 	public static TopologicalNode createInstance(
 			final Identifier creatorId,
 			final String importType,
-			final XmlObject xmlObject,
+			final XmlTopologicalNode xmlTopologicalNode,
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
-		final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = (com.syrus.amficom.map.xml.TopologicalNode) xmlObject;
-
 		try {
-			String uid = xmlTopologicalNode.getUid().getStringValue();
+			String uid = xmlTopologicalNode.getId().getStringValue();
 			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
 			TopologicalNode topologicalNode = null;
 			if(existingIdentifier != null) {
 				topologicalNode = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(topologicalNode != null) {
 					clonedIdsPool.setExistingId(uid, existingIdentifier);
-					topologicalNode.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
+					topologicalNode.fromXmlTransferable(xmlTopologicalNode, clonedIdsPool, importType);
 				}
 				else{
 					ImportUIDMapDatabase.delete(importType, uid);

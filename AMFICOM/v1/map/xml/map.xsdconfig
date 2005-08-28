@@ -1,0 +1,6 @@
+<xb:config xmlns:map = "http://syrus.com/AMFICOM/map/xml" 
+		xmlns:xb = "http://www.bea.com/2002/09/xbean/config">
+	<xb:namespace uri = "http://syrus.com/AMFICOM/map/xml">
+		<xb:package>com.syrus.AMFICOM.map.xml</xb:package>
+	</xb:namespace>
+</xb:config>

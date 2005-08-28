@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.73 2005/08/26 10:52:24 krupenn Exp $
+ * $Id: NodeLink.java,v 1.74 2005/08/28 19:17:54 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,15 @@
 
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -21,24 +25,24 @@ import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.XMLBeansTransferable;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlNodeLink;
 import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
+import com.syrus.AMFICOM.map.xml.XmlNodeLink;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
@@ -46,11 +50,11 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.73 $, $Date: 2005/08/26 10:52:24 $
+ * @author $Author: bass $
+ * @version $Revision: 1.74 $, $Date: 2005/08/28 19:17:54 $
  * @module map
  */
-public final class NodeLink extends StorableObject implements MapElement, XMLBeansTransferable {
+public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -73,7 +77,7 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.NODELINK_CODE).retrieve(this);
+			DatabaseContext.getDatabase(NODELINK_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -127,7 +131,7 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final NodeLink nodeLink = new NodeLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.NODELINK_CODE),
+			final NodeLink nodeLink = new NodeLink(IdentifierPool.getGeneratedIdentifier(NODELINK_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					name,
@@ -137,7 +141,7 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 					length);
 			physicalLink.addNodeLink(nodeLink);
 
-			assert nodeLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert nodeLink.isValid() : OBJECT_STATE_ILLEGAL;
 
 			nodeLink.markAsChanged();
 
@@ -431,7 +435,7 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.physicalLink);
@@ -440,57 +444,49 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 		return dependencies;
 	}
 
-	public XmlObject getXMLTransferable() {
-		final com.syrus.amficom.map.xml.NodeLink xmlNodeLink = com.syrus.amficom.map.xml.NodeLink.Factory.newInstance();
-		fillXMLTransferable(xmlNodeLink);
-		return xmlNodeLink;
-	}
-
-	public void fillXMLTransferable(final XmlObject xmlObject) {
-		final com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink) xmlObject; 
-
-		com.syrus.amficom.general.xml.UID uid = xmlNodeLink.addNewUid();
+	public XmlNodeLink getXmlTransferable() {
+		final XmlNodeLink xmlNodeLink = XmlNodeLink.Factory.newInstance();
+		XmlIdentifier uid = xmlNodeLink.addNewId();
 		uid.setStringValue(this.id.toString());
-
+		
 		xmlNodeLink.setLength(this.length);
-
-		uid = xmlNodeLink.addNewPhysicallinkuid();
+		
+		uid = xmlNodeLink.addNewPhysicalLinkId();
 		uid.setStringValue(this.physicalLink.getId().toString());
-
-		uid = xmlNodeLink.addNewStartnodeuid();
+		
+		uid = xmlNodeLink.addNewStartNodeId();
 		uid.setStringValue(this.startNode.getId().toString());
-
-		uid = xmlNodeLink.addNewEndnodeuid();
+		
+		uid = xmlNodeLink.addNewEndNodeId();
 		uid.setStringValue(this.endNode.getId().toString());
+		return xmlNodeLink;
 	}
 
 	NodeLink(final Identifier creatorId,
 			final StorableObjectVersion version,
-			final com.syrus.amficom.map.xml.NodeLink xmlNodeLink,
+			final XmlNodeLink xmlNodeLink,
 			final ClonedIdsPool clonedIdsPool, 
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(ObjectEntities.NODELINK_CODE, xmlNodeLink.getUid().getStringValue()),
+		super(clonedIdsPool.getClonedId(NODELINK_CODE, xmlNodeLink.getId().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
 				version);
 		this.selected = false;
-		this.fromXMLTransferable(xmlNodeLink, clonedIdsPool, importType);
+		this.fromXmlTransferable(xmlNodeLink, clonedIdsPool, importType);
 	}
 
-	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
-		final com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink) xmlObject;
-
+	public void fromXmlTransferable(final XmlNodeLink xmlNodeLink, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
 		this.length = xmlNodeLink.getLength();
 
-		final Identifier physicalLinkId1 = clonedIdsPool.getClonedId(ObjectEntities.PHYSICALLINK_CODE,
-				xmlNodeLink.getPhysicallinkuid().getStringValue());
-		final Identifier startNodeId1 = clonedIdsPool.getClonedId(ObjectEntities.SITENODE_CODE,
-				xmlNodeLink.getStartnodeuid().getStringValue());
-		final Identifier endNodeId1 = clonedIdsPool.getClonedId(ObjectEntities.SITENODE_CODE,
-				xmlNodeLink.getEndnodeuid().getStringValue());
+		final Identifier physicalLinkId1 = clonedIdsPool.getClonedId(PHYSICALLINK_CODE,
+				xmlNodeLink.getPhysicalLinkId().getStringValue());
+		final Identifier startNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE,
+				xmlNodeLink.getStartNodeId().getStringValue());
+		final Identifier endNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE,
+				xmlNodeLink.getEndNodeId().getStringValue());
 
 		this.physicalLink = StorableObjectPool.getStorableObject(physicalLinkId1, false);
 		this.startNode = StorableObjectPool.getStorableObject(startNodeId1, true);
@@ -501,20 +497,18 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 	public static NodeLink createInstance(
 			final Identifier creatorId, 
 			final String importType, 
-			final XmlObject xmlObject, 
+			final XmlNodeLink xmlNodeLink, 
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
-		final com.syrus.amficom.map.xml.NodeLink xmlNodeLink = (com.syrus.amficom.map.xml.NodeLink) xmlObject;
-
 		try {
-			String uid = xmlNodeLink.getUid().getStringValue();
+			String uid = xmlNodeLink.getId().getStringValue();
 			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
 			NodeLink nodeLink = null;
 			if(existingIdentifier != null) {
 				nodeLink = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(nodeLink != null) {
 					clonedIdsPool.setExistingId(uid, existingIdentifier);
-					nodeLink.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
+					nodeLink.fromXmlTransferable(xmlNodeLink, clonedIdsPool, importType);
 				}
 				else{
 					ImportUIDMapDatabase.delete(importType, uid);
@@ -524,7 +518,7 @@ public final class NodeLink extends StorableObject implements MapElement, XMLBea
 				nodeLink = new NodeLink(creatorId, StorableObjectVersion.createInitial(), xmlNodeLink, clonedIdsPool, importType);
 				ImportUIDMapDatabase.insert(importType, uid, nodeLink.id);
 			}
-			assert nodeLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert nodeLink.isValid() : OBJECT_STATE_ILLEGAL;
 			nodeLink.markAsChanged();
 			return nodeLink;
 		} catch (Exception e) {

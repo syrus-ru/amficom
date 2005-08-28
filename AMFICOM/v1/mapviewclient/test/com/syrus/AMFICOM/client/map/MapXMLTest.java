@@ -1,5 +1,5 @@
 /**
- * $Id: MapXMLTest.java,v 1.3 2005/08/15 14:46:18 krupenn Exp $
+ * $Id: MapXMLTest.java,v 1.4 2005/08/28 19:17:53 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,21 +18,22 @@ import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlException;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
+
 import org.w3c.dom.Node;
 import org.w3c.dom.NodeList;
 
 import com.syrus.AMFICOM.client.map.controllers.AbstractLinkController;
-import com.syrus.amficom.general.xml.Characteristic;
-import com.syrus.amficom.general.xml.Characteristics;
-import com.syrus.amficom.general.xml.UID;
-import com.syrus.amficom.map.xml.LibraryDocument;
-import com.syrus.amficom.map.xml.MapLibrary;
-import com.syrus.amficom.map.xml.PhysicalLinkType;
-import com.syrus.amficom.map.xml.PhysicalLinkTypeSort;
-import com.syrus.amficom.map.xml.PhysicalLinkTypes;
-import com.syrus.amficom.map.xml.SiteNodeType;
-import com.syrus.amficom.map.xml.SiteNodeTypeSort;
-import com.syrus.amficom.map.xml.SiteNodeTypes;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.AMFICOM.map.xml.MapLibraryDocument;
+import com.syrus.AMFICOM.map.xml.XmlMapLibrary;
+import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkType;
+import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkTypeSeq;
+import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkTypeSort;
+import com.syrus.AMFICOM.map.xml.XmlSiteNodeType;
+import com.syrus.AMFICOM.map.xml.XmlSiteNodeTypeSeq;
+import com.syrus.AMFICOM.map.xml.XmlSiteNodeTypeSort;
 
 public class MapXMLTest {
 
@@ -72,7 +73,7 @@ public class MapXMLTest {
 
 	       try {
 	           // Parse the instance into the type generated from the schema.
-	           doc = LibraryDocument.Factory.parse(xmlfile);
+	           doc = MapLibraryDocument.Factory.parse(xmlfile);
 	       }
 	       catch(XmlException e){
 	           e.printStackTrace();
@@ -113,7 +114,7 @@ public class MapXMLTest {
 	    * new Instance to a file(args[1]).
 	    */
 	   public void createDocument(String file){
-		   LibraryDocument doc;
+		   MapLibraryDocument doc;
 
 	       XmlOptions xmlOptions = new XmlOptions();
 	       xmlOptions.setSavePrettyPrint();
@@ -122,35 +123,35 @@ public class MapXMLTest {
 		   prefixes.put("http://syrus.com/AMFICOM/general/xml", "gen");
 		   xmlOptions.setSaveSuggestedPrefixes(prefixes);
 
-		   doc = LibraryDocument.Factory.newInstance(xmlOptions);
-		   MapLibrary lib = doc.addNewLibrary();
-		   SiteNodeTypes types = lib.addNewSitenodetypes();
-	       SiteNodeType node = types.addNewSitenodetype();
-		   UID uid = node.addNewUid();
+		   doc = MapLibraryDocument.Factory.newInstance(xmlOptions);
+		   XmlMapLibrary lib = doc.addNewMapLibrary();
+		   XmlSiteNodeTypeSeq types = lib.addNewSiteNodeTypes();
+		   XmlSiteNodeType node = types.addNewSiteNodeType();
+		   XmlIdentifier uid = node.addNewId();
 		   uid.setStringValue("test");
 		   node.setDescription("desc");
 		   node.setImage("img");
 		   node.setName("namma");
-		   node.setSort(SiteNodeTypeSort.BUILDING);
+		   node.setSort(XmlSiteNodeTypeSort.BUILDING);
 		   node.setTopological(true);
 
-		   PhysicalLinkTypes ltypes = lib.addNewPhysicallinktypes();
-	       PhysicalLinkType lnode = ltypes.addNewPhysicallinktype();
-		   uid = lnode.addNewUid();
+		   XmlPhysicalLinkTypeSeq ltypes = lib.addNewPhysicalLinkTypes();
+		   XmlPhysicalLinkType lnode = ltypes.addNewPhysicalLinkType();
+		   uid = lnode.addNewId();
 		   uid.setStringValue("test1");
 		   lnode.setDescription("desc2");
 		   lnode.setName("namma2");
-		   lnode.setSort(PhysicalLinkTypeSort.INDOOR);
+		   lnode.setSort(XmlPhysicalLinkTypeSort.INDOOR);
 		   lnode.setDimensionX(BigInteger.valueOf(1));
 		   lnode.setDimensionY(BigInteger.valueOf(1));
-		   Characteristics chars = lnode.addNewCharacteristics();
-		   Characteristic char1 = chars.addNewCharacteristic();
+		   XmlCharacteristicSeq chars = lnode.addNewCharacteristics();
+		   XmlCharacteristic char1 = chars.addNewCharacteristic();
 		   char1.setTypecodename(AbstractLinkController.ATTRIBUTE_STYLE);
 		   char1.setValue("dashed");
-		   Characteristic char2 = chars.addNewCharacteristic();
+		   XmlCharacteristic char2 = chars.addNewCharacteristic();
 		   char2.setTypecodename(AbstractLinkController.ATTRIBUTE_COLOR);
 		   char2.setValue(String.valueOf(0xFF004000));
-		   Characteristic char3 = chars.addNewCharacteristic();
+		   XmlCharacteristic char3 = chars.addNewCharacteristic();
 		   char3.setTypecodename(AbstractLinkController.ATTRIBUTE_THICKNESS);
 		   char3.setValue(String.valueOf(1));
 

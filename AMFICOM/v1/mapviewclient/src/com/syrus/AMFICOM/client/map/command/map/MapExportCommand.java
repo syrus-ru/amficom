@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.21 2005/08/17 14:14:18 arseniy Exp $ Syrus
+ * $Id: MapExportCommand.java,v 1.22 2005/08/28 19:17:53 bass Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -24,6 +24,9 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.xml.MapsDocument;
+import com.syrus.AMFICOM.map.xml.XmlMap;
+import com.syrus.AMFICOM.map.xml.XmlMapSeq;
 import com.syrus.util.Log;
 
 /**
@@ -32,8 +35,8 @@ import com.syrus.util.Log;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/08/17 14:14:18 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/08/28 19:17:53 $
  * @module mapviewclient
  */
 public class MapExportCommand extends ExportCommand {
@@ -92,12 +95,12 @@ public class MapExportCommand extends ExportCommand {
 		prefixes.put("http://syrus.com/AMFICOM/map/xml", "map");
 		xmlOptions.setSaveSuggestedPrefixes(prefixes);
 
-		com.syrus.amficom.map.xml.MapsDocument doc = 
-			com.syrus.amficom.map.xml.MapsDocument.Factory.newInstance(xmlOptions);
+		MapsDocument doc = 
+			MapsDocument.Factory.newInstance(xmlOptions);
 
-		com.syrus.amficom.map.xml.Maps xmlMaps = doc.addNewMaps();
+		XmlMapSeq xmlMaps = doc.addNewMaps();
 
-		xmlMaps.setMapArray(new com.syrus.amficom.map.xml.Map[] {(com.syrus.amficom.map.xml.Map)map.getXMLTransferable()});
+		xmlMaps.setMapArray(new XmlMap[] {map.getXmlTransferable()});
 		
 		// Validate the new XML
 		boolean isXmlValid = validateXml(doc);

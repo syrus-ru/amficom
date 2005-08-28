@@ -1,42 +1,42 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: TopologicalNode.xsd,v 1.6 2005/08/08 17:50:53 max Exp $
+<!-- $Id: TopologicalNode.xsd,v 1.7 2005/08/28 19:17:54 bass Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/map/xml"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns:map="http://syrus.com/AMFICOM/map/xml"
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	xmlns:general="http://syrus.com/AMFICOM/general/xml"
 	elementFormDefault="qualified">
 
   <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
 
-  <xsd:element name="topologicalnodes" type="map:TopologicalNodes">
+  <xsd:element name="topologicalNodes" type="map:XmlTopologicalNodeSeq">
 
-    <xsd:key name="topologicalnodeuid">
-      <xsd:selector xpath="map:topologicalnodes/map:topologicalnode"/>
-      <xsd:field xpath="@uid"/>
+    <xsd:key name="topologicalNodeId">
+      <xsd:selector xpath="map:topologicalNodes/map:topologicalNode"/>
+      <xsd:field xpath="@id"/>
     </xsd:key>
 
-    <xsd:key name="nodeuid">
-      <xsd:selector xpath="map:topologicalnodes/map:topologicalnode"/>
-      <xsd:field xpath="@uid"/>
+    <xsd:key name="abstractNodeId">
+      <xsd:selector xpath="map:topologicalNodes/map:topologicalNode"/>
+      <xsd:field xpath="@id"/>
     </xsd:key>
 
   </xsd:element>
 
-  <xsd:complexType name="TopologicalNodes">
-    <xsd:sequence>
-      <xsd:element name="topologicalnode" type="map:TopologicalNode" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <xsd:complexType name="TopologicalNode">
+  <xsd:complexType name="XmlTopologicalNode">
     <xsd:all>
-      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="id" type="general:XmlIdentifier" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="x" type="xsd:double" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="y" type="xsd:double" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="active" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
     </xsd:all>
+  </xsd:complexType>
+
+  <xsd:complexType name="XmlTopologicalNodeSeq">
+    <xsd:sequence>
+      <xsd:element name="topologicalNode" type="map:XmlTopologicalNode" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
   </xsd:complexType>
 
 </xsd:schema>

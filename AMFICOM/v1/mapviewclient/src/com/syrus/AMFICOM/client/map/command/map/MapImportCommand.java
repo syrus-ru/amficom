@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.39 2005/08/18 14:08:53 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.40 2005/08/28 19:17:53 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,6 +46,9 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
+import com.syrus.AMFICOM.map.xml.MapsDocument;
+import com.syrus.AMFICOM.map.xml.XmlMap;
+import com.syrus.AMFICOM.map.xml.XmlMapSeq;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.util.Log;
 
@@ -55,8 +58,8 @@ import com.syrus.util.Log;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.39 $, $Date: 2005/08/18 14:08:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2005/08/28 19:17:53 $
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {
@@ -167,8 +170,8 @@ public class MapImportCommand extends ImportCommand {
 
 		// Create an instance of a type generated from schema to hold the XML.
 		// Parse the instance into the type generated from the schema.
-		com.syrus.amficom.map.xml.MapsDocument doc = 
-			com.syrus.amficom.map.xml.MapsDocument.Factory.parse(xmlfile);
+		MapsDocument doc = 
+			MapsDocument.Factory.parse(xmlfile);
 
 		if(!validateXml(doc)) {
 			throw new XmlException("Invalid XML");
@@ -184,14 +187,14 @@ public class MapImportCommand extends ImportCommand {
 		String user_dir = System.getProperty("user.dir");
 		System.setProperty("user.dir",  xmlfile.getParent());
 
-		com.syrus.amficom.map.xml.Maps xmlMaps = doc.getMaps();
-		com.syrus.amficom.map.xml.Map[] xmlMapsArray = xmlMaps.getMapArray();
+		XmlMapSeq xmlMaps = doc.getMaps();
+		XmlMap[] xmlMapsArray = xmlMaps.getMapArray();
 		for(int i = 0; i < xmlMapsArray.length; i++) {
-			com.syrus.amficom.map.xml.Map xmlMap = xmlMapsArray[i];
+			XmlMap xmlMap = xmlMapsArray[i];
 			map = Map.createInstance(
 					userId,
 					domainId,
-					xmlMap.getImporttype(),
+					xmlMap.getImportType(),
 					xmlMap,
 					new ClonedIdsPool());
 			map.setName(map.getName()

@@ -1,56 +1,55 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: SiteNode.xsd,v 1.6 2005/08/08 17:50:52 max Exp $
+<!-- $Id: SiteNode.xsd,v 1.7 2005/08/28 19:17:54 bass Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/map/xml"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns:map="http://syrus.com/AMFICOM/map/xml"
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	xmlns:general="http://syrus.com/AMFICOM/general/xml"
 	elementFormDefault="qualified">
 
   <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
 
   <xsd:include schemaLocation="SiteNodeType.xsd"/>
 
-  <xsd:element name="sitenodes" type="map:SiteNodes">
+  <xsd:element name="siteNodes" type="map:XmlSiteNodeSeq">
 
-    <xsd:key name="sitenodeuid">
-      <xsd:selector xpath="map:sitenodes/map:sitenode"/>
-      <xsd:field xpath="@uid"/>
+    <xsd:key name="siteNodeId">
+      <xsd:selector xpath="map:siteNodes/map:siteNode"/>
+      <xsd:field xpath="@id"/>
     </xsd:key>
 
-    <xsd:key name="nodeuid">
-      <xsd:selector xpath="map:sitenodes/map:sitenode"/>
-      <xsd:field xpath="@uid"/>
+    <xsd:key name="abstractNodeId">
+      <xsd:selector xpath="map:siteNodes/map:siteNode"/>
+      <xsd:field xpath="@id"/>
     </xsd:key>
 
-<!--
-    <xsd:keyref name="dummy" refer="map:sitenodetypeuid">
-      <xsd:selector xpath="map:sitenode"/>
-      <xsd:field xpath="@sitenodetypeuid"/>
+    <xsd:keyref name="dummyBar" refer="map:siteNodeTypeId">
+      <xsd:selector xpath="map:siteNode"/>
+      <xsd:field xpath="@siteNodeTypeId"/>
     </xsd:keyref>
--->
+
   </xsd:element>
 
-  <xsd:complexType name="SiteNodes">
-    <xsd:sequence>
-      <xsd:element name="sitenode" type="map:SiteNode" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <xsd:complexType name="SiteNode">
+  <xsd:complexType name="XmlSiteNode">
     <xsd:all>
-      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="id" type="general:XmlIdentifier" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="sitenodetypeuid" type="map:SiteNodeTypeSort" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="siteNodeTypeId" type="map:XmlSiteNodeTypeSort" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="x" type="xsd:double" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="y" type="xsd:double" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="city" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="street" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="building" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="characteristics" type="gen:Characteristics" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="characteristics" type="general:XmlCharacteristicSeq" minOccurs="0" maxOccurs="1"/>
     </xsd:all>
+  </xsd:complexType>
+
+  <xsd:complexType name="XmlSiteNodeSeq">
+    <xsd:sequence>
+      <xsd:element name="siteNode" type="map:XmlSiteNode" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
   </xsd:complexType>
 
 </xsd:schema>

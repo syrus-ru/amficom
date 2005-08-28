@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.78 2005/08/26 11:30:58 krupenn Exp $
+ * $Id: Map.java,v 1.79 2005/08/28 19:17:54 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -18,6 +22,7 @@ import java.util.List;
 import java.util.Set;
 
 import org.apache.xmlbeans.XmlObject;
+
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.DomainMember;
@@ -25,7 +30,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -33,7 +37,6 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -41,23 +44,36 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.XMLBeansTransferable;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlMap;
 import com.syrus.AMFICOM.map.corba.IdlMapHelper;
+import com.syrus.AMFICOM.map.xml.XmlCollector;
+import com.syrus.AMFICOM.map.xml.XmlCollectorSeq;
+import com.syrus.AMFICOM.map.xml.XmlMap;
+import com.syrus.AMFICOM.map.xml.XmlMapLibraryEntrySeq;
+import com.syrus.AMFICOM.map.xml.XmlNodeLink;
+import com.syrus.AMFICOM.map.xml.XmlNodeLinkSeq;
+import com.syrus.AMFICOM.map.xml.XmlPhysicalLink;
+import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkSeq;
+import com.syrus.AMFICOM.map.xml.XmlSiteNode;
+import com.syrus.AMFICOM.map.xml.XmlSiteNodeSeq;
+import com.syrus.AMFICOM.map.xml.XmlTopologicalNode;
+import com.syrus.AMFICOM.map.xml.XmlTopologicalNodeSeq;
 
 /**
  * Топологическая схема, которая содержит в себе набор связанных друг с другом
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.78 $, $Date: 2005/08/26 11:30:58 $
+ * @author $Author: bass $
+ * @version $Revision: 1.79 $, $Date: 2005/08/28 19:17:54 $
  * @module map
  */
-public final class Map extends DomainMember implements Namable, XMLBeansTransferable {
+public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -89,7 +105,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.MAP_CODE).retrieve(this);
+			DatabaseContext.getDatabase(MAP_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -136,14 +152,14 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final Map map = new Map(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MAP_CODE),
+			final Map map = new Map(IdentifierPool.getGeneratedIdentifier(MAP_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					domainId,
 					name,
 					description);
 
-			assert map.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert map.isValid() : OBJECT_STATE_ILLEGAL;
 
 			map.markAsChanged();
 
@@ -197,7 +213,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.siteNodes);
@@ -969,77 +985,69 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		return returnLinks;
 	}
 
-	public XmlObject getXMLTransferable() {
-		final com.syrus.amficom.map.xml.Map xmlMap = com.syrus.amficom.map.xml.Map.Factory.newInstance();
-		this.fillXMLTransferable(xmlMap);
-		return xmlMap;
-	}
-
-	public void fillXMLTransferable(final XmlObject xmlObject) {
-		final com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map) xmlObject;
-
-		final com.syrus.amficom.general.xml.UID uid = xmlMap.addNewUid();
+	public XmlMap getXmlTransferable() {
+		final XmlMap xmlMap = XmlMap.Factory.newInstance();
+		final XmlIdentifier uid = xmlMap.addNewId();
 		uid.setStringValue(this.id.toString());
 		xmlMap.setName(this.name);
 		xmlMap.setDescription(this.description);
-
-		final com.syrus.amficom.map.xml.TopologicalNodes xmlTopologicalNodes = xmlMap.addNewTopologicalnodes();
-		final com.syrus.amficom.map.xml.SiteNodes xmlSiteNodes = xmlMap.addNewSitenodes();
-		final com.syrus.amficom.map.xml.PhysicalLinks xmlPhysicalLinks = xmlMap.addNewPhysicallinks();
-		final com.syrus.amficom.map.xml.NodeLinks xmlNodeLinks = xmlMap.addNewNodelinks();
-		final com.syrus.amficom.map.xml.Collectors xmlCollectors = xmlMap.addNewCollectors();
+		
+		final XmlTopologicalNodeSeq xmlTopologicalNodes = xmlMap.addNewTopologicalNodes();
+		final XmlSiteNodeSeq xmlSiteNodes = xmlMap.addNewSiteNodes();
+		final XmlPhysicalLinkSeq xmlPhysicalLinks = xmlMap.addNewPhysicalLinks();
+		final XmlNodeLinkSeq xmlNodeLinks = xmlMap.addNewNodeLinks();
+		final XmlCollectorSeq xmlCollectors = xmlMap.addNewCollectors();
 				
 		final Collection<XmlObject> xmlTopologicalNodesArray = new LinkedList<XmlObject>();
 		for (final TopologicalNode topologicalNode : this.getTopologicalNodes()) {
-			xmlTopologicalNodesArray.add(topologicalNode.getXMLTransferable());
+			xmlTopologicalNodesArray.add(topologicalNode.getXmlTransferable());
 		}
-		xmlTopologicalNodes.setTopologicalnodeArray(xmlTopologicalNodesArray.toArray(new com.syrus.amficom.map.xml.TopologicalNode[xmlTopologicalNodesArray.size()]));
-
+		xmlTopologicalNodes.setTopologicalNodeArray(xmlTopologicalNodesArray.toArray(new XmlTopologicalNode[xmlTopologicalNodesArray.size()]));
+		
 		final Collection<XmlObject> xmlSiteNodesArray = new LinkedList<XmlObject>();
 		for (final SiteNode siteNode : this.getSiteNodes()) {
-			xmlSiteNodesArray.add(siteNode.getXMLTransferable());
+			xmlSiteNodesArray.add(siteNode.getXmlTransferable());
 		}
-		xmlSiteNodes.setSitenodeArray(xmlSiteNodesArray.toArray(new com.syrus.amficom.map.xml.SiteNode[xmlSiteNodesArray.size()]));
-
+		xmlSiteNodes.setSiteNodeArray(xmlSiteNodesArray.toArray(new XmlSiteNode[xmlSiteNodesArray.size()]));
+		
 		final Collection<XmlObject> xmlPhysicalLinksArray = new LinkedList<XmlObject>();
 		for (final PhysicalLink physicalLink : this.getPhysicalLinks()) {
-			xmlPhysicalLinksArray.add(physicalLink.getXMLTransferable());
+			xmlPhysicalLinksArray.add(physicalLink.getXmlTransferable());
 		}
-		xmlPhysicalLinks.setPhysicallinkArray(xmlPhysicalLinksArray.toArray(new com.syrus.amficom.map.xml.PhysicalLink[xmlPhysicalLinksArray.size()]));
-
+		xmlPhysicalLinks.setPhysicalLinkArray(xmlPhysicalLinksArray.toArray(new XmlPhysicalLink[xmlPhysicalLinksArray.size()]));
+		
 		final Collection<XmlObject> xmlNodeLinksArray = new LinkedList<XmlObject>();
 		for (final NodeLink nodeLink : this.getNodeLinks()) {
-			xmlNodeLinksArray.add(nodeLink.getXMLTransferable());
+			xmlNodeLinksArray.add(nodeLink.getXmlTransferable());
 		}
-		xmlNodeLinks.setNodelinkArray(xmlNodeLinksArray.toArray(new com.syrus.amficom.map.xml.NodeLink[xmlNodeLinksArray.size()]));
-
+		xmlNodeLinks.setNodeLinkArray(xmlNodeLinksArray.toArray(new XmlNodeLink[xmlNodeLinksArray.size()]));
+		
 		final Collection<XmlObject> xmlCollectorsArray = new LinkedList<XmlObject>();
 		for (final Collector collector : this.getCollectors()) {
-			xmlCollectorsArray.add(collector.getXMLTransferable());
+			xmlCollectorsArray.add(collector.getXmlTransferable());
 		}
-		xmlCollectors.setCollectorArray(xmlCollectorsArray.toArray(new com.syrus.amficom.map.xml.Collector[xmlCollectorsArray.size()]));
+		xmlCollectors.setCollectorArray(xmlCollectorsArray.toArray(new XmlCollector[xmlCollectorsArray.size()]));
+		return xmlMap;
 	}
 
 	Map(final Identifier creatorId,
 			final StorableObjectVersion version,
 			final Identifier domainId,
-			final com.syrus.amficom.map.xml.Map xmlMap,
+			final XmlMap xmlMap,
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(ObjectEntities.MAP_CODE, xmlMap.getUid().getStringValue()),
+		super(clonedIdsPool.getClonedId(MAP_CODE, xmlMap.getId().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
 				creatorId,
 				version,
 				domainId);
-		this.fromXMLTransferable(xmlMap, clonedIdsPool, importType);
+		this.fromXmlTransferable(xmlMap, clonedIdsPool, importType);
 	}
 
-	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool, String importType) throws ApplicationException {
-		final com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map) xmlObject; 
-
+	public void fromXmlTransferable(final XmlMap xmlMap, final ClonedIdsPool clonedIdsPool, String importType) throws ApplicationException {
 		this.name = xmlMap.getName();
 		this.description = xmlMap.getDescription();
 
@@ -1057,52 +1065,41 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 		this.externalNodes = new HashSet<SiteNode>();
 		this.mapLibraries = new HashSet<MapLibrary>();
 		
-		final com.syrus.amficom.map.xml.MapLibraryEntries mapLibraryEntries = xmlMap.getMaplibraries();
+		final XmlMapLibraryEntrySeq mapLibraryEntries = xmlMap.getMapLibraryEntries();
 		if(mapLibraryEntries != null) {
-			final String[] xmlMapLibraryEntriesArray = mapLibraryEntries.getMaplibraryArray();
-			for (int i = 0; i < xmlMapLibraryEntriesArray.length; i++) {
+			for (final String xmlMapLibraryEntry : mapLibraryEntries.getMapLibraryEntryArray()) {
 				StorableObjectCondition pTypeCondition = new TypicalCondition(
-						xmlMapLibraryEntriesArray[i], 
+						xmlMapLibraryEntry, 
 						OperationSort.OPERATION_EQUALS,
-						ObjectEntities.MAPLIBRARY_CODE,
+						MAPLIBRARY_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME);
 	
 				Collection<MapLibrary> pTypes =
 					StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
 				if(pTypes.size() == 0) {
-					throw new ApplicationException("Library " + xmlMapLibraryEntriesArray[i] + " does not exist. Cannot proceed with import");
+					throw new ApplicationException("Library " + xmlMapLibraryEntry + " does not exist. Cannot proceed with import");
 				}
 				this.addMapLibrary(pTypes.iterator().next());
 			}
 		}
 
-		final com.syrus.amficom.map.xml.TopologicalNode[] xmlTopologicalNodesArray = xmlMap.getTopologicalnodes().getTopologicalnodeArray();
-		for (int i = 0; i < xmlTopologicalNodesArray.length; i++) {
-			final com.syrus.amficom.map.xml.TopologicalNode xmlTopologicalNode = xmlTopologicalNodesArray[i];
+		for (final XmlTopologicalNode xmlTopologicalNode : xmlMap.getTopologicalNodes().getTopologicalNodeArray()) {
 			this.addNode(TopologicalNode.createInstance(this.creatorId, importType, xmlTopologicalNode, clonedIdsPool));
 		}
 
-		final com.syrus.amficom.map.xml.SiteNode[] xmlSiteNodesArray = xmlMap.getSitenodes().getSitenodeArray();
-		for (int i = 0; i < xmlSiteNodesArray.length; i++) {
-			final com.syrus.amficom.map.xml.SiteNode xmlSiteNode = xmlSiteNodesArray[i];
+		for (final XmlSiteNode xmlSiteNode : xmlMap.getSiteNodes().getSiteNodeArray()) {
 			this.addNode(SiteNode.createInstance(this.creatorId, importType, xmlSiteNode, clonedIdsPool));
 		}
 
-		final com.syrus.amficom.map.xml.PhysicalLink[] xmlPhysicalLinksArray = xmlMap.getPhysicallinks().getPhysicallinkArray();
-		for (int i = 0; i < xmlPhysicalLinksArray.length; i++) {
-			final com.syrus.amficom.map.xml.PhysicalLink xmlPhysicalLink = xmlPhysicalLinksArray[i];
+		for (final XmlPhysicalLink xmlPhysicalLink : xmlMap.getPhysicalLinks().getPhysicalLinkArray()) {
 			this.addPhysicalLink(PhysicalLink.createInstance(this.creatorId, importType, xmlPhysicalLink, clonedIdsPool));
 		}
 
-		final com.syrus.amficom.map.xml.NodeLink[] xmlNodeLinksArray = xmlMap.getNodelinks().getNodelinkArray();
-		for (int i = 0; i < xmlNodeLinksArray.length; i++) {
-			final com.syrus.amficom.map.xml.NodeLink xmlNodeLink = xmlNodeLinksArray[i];
+		for (final XmlNodeLink xmlNodeLink : xmlMap.getNodeLinks().getNodeLinkArray()) {
 			this.addNodeLink(NodeLink.createInstance(this.creatorId, importType, xmlNodeLink, clonedIdsPool));
 		}
 
-		final com.syrus.amficom.map.xml.Collector[] xmlCollectorsArray = xmlMap.getCollectors().getCollectorArray();
-		for (int i = 0; i < xmlCollectorsArray.length; i++) {
-			final com.syrus.amficom.map.xml.Collector xmlCollector = xmlCollectorsArray[i];
+		for (final XmlCollector xmlCollector : xmlMap.getCollectors().getCollectorArray()) {
 			this.addCollector(Collector.createInstance(this.creatorId, importType, xmlCollector, clonedIdsPool));
 		}
 	}
@@ -1111,20 +1108,18 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 			final Identifier creatorId,
 			final Identifier domainId,
 			final String importType,
-			final XmlObject xmlObject,
+			final XmlMap xmlMap,
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
-		final com.syrus.amficom.map.xml.Map xmlMap = (com.syrus.amficom.map.xml.Map) xmlObject;
-
 		try {
-			String uid = xmlMap.getUid().getStringValue();
+			String uid = xmlMap.getId().getStringValue();
 			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
 			Map map = null;
 			if(existingIdentifier != null) {
 				map = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(map != null) {
 					clonedIdsPool.setExistingId(uid, existingIdentifier);
-					map.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
+					map.fromXmlTransferable(xmlMap, clonedIdsPool, importType);
 				}
 				else{
 					ImportUIDMapDatabase.delete(importType, uid);
@@ -1134,7 +1129,7 @@ public final class Map extends DomainMember implements Namable, XMLBeansTransfer
 				map = new Map(creatorId, StorableObjectVersion.createInitial(), domainId, xmlMap, clonedIdsPool, importType);
 				ImportUIDMapDatabase.insert(importType, uid, map.id);
 			}
-			assert map.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert map.isValid() : OBJECT_STATE_ILLEGAL;
 			map.markAsChanged();
 
 			return map;

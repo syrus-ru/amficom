@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.72 2005/08/26 10:52:24 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.73 2005/08/28 19:17:54 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,11 @@
 
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
 
 import java.io.File;
@@ -18,7 +23,6 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -28,7 +32,6 @@ import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -36,7 +39,6 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -45,14 +47,17 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.XMLBeansTransferable;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypeHelper;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
+import com.syrus.AMFICOM.map.xml.XmlSiteNodeType;
+import com.syrus.AMFICOM.map.xml.XmlSiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -65,12 +70,12 @@ import com.syrus.util.Log;
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: krupenn $
- * @version $Revision: 1.72 $, $Date: 2005/08/26 10:52:24 $
+ * @author $Author: bass $
+ * @version $Revision: 1.73 $, $Date: 2005/08/28 19:17:54 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
-		implements Characterizable, Namable, LibraryEntry, XMLBeansTransferable {
+		implements Characterizable, Namable, LibraryEntry, XmlBeansTransferable<XmlSiteNodeType> {
 
 	public static final String DEFAULT_WELL = "defaultwell";
 	public static final String DEFAULT_PIQUET = "defaultpiquet";
@@ -99,7 +104,7 @@ public final class SiteNodeType extends StorableObjectType
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.SITENODE_TYPE_CODE).retrieve(this);
+			DatabaseContext.getDatabase(SITENODE_TYPE_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -153,11 +158,11 @@ public final class SiteNodeType extends StorableObjectType
 				&& description != null 
 				&& imageId != null 
 				&& sort != null
-				&& mapLibraryId != null : ErrorMessages.NON_NULL_EXPECTED;
-		assert !mapLibraryId.isVoid() : ErrorMessages.NON_VOID_EXPECTED;
+				&& mapLibraryId != null : NON_NULL_EXPECTED;
+		assert !mapLibraryId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final SiteNodeType siteNodeType = new SiteNodeType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_TYPE_CODE),
+			final SiteNodeType siteNodeType = new SiteNodeType(IdentifierPool.getGeneratedIdentifier(SITENODE_TYPE_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					sort,
@@ -168,7 +173,7 @@ public final class SiteNodeType extends StorableObjectType
 					topological,
 					mapLibraryId);
 
-			assert siteNodeType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert siteNodeType.isValid() : OBJECT_STATE_ILLEGAL;
 
 			siteNodeType.markAsChanged();
 
@@ -296,22 +301,15 @@ public final class SiteNodeType extends StorableObjectType
 		this.sort = sort;
 	}
 
-	public XmlObject getXMLTransferable() {
-		final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = com.syrus.amficom.map.xml.SiteNodeType.Factory.newInstance();
-		this.fillXMLTransferable(xmlSiteNodeType);
-		return xmlSiteNodeType;
-	}
-
-	public void fillXMLTransferable(final XmlObject xmlObject) {
-		final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType) xmlObject;
-
-		final com.syrus.amficom.general.xml.UID uid = xmlSiteNodeType.addNewUid();
+	public XmlSiteNodeType getXmlTransferable() {
+		final XmlSiteNodeType xmlSiteNodeType = XmlSiteNodeType.Factory.newInstance();
+		final XmlIdentifier uid = xmlSiteNodeType.addNewId();
 		uid.setStringValue(this.id.toString());
 		xmlSiteNodeType.setName(this.name);
 		xmlSiteNodeType.setDescription(this.description);
-		xmlSiteNodeType.setSort(com.syrus.amficom.map.xml.SiteNodeTypeSort.Enum.forInt(this.sort.value()));
+		xmlSiteNodeType.setSort(XmlSiteNodeTypeSort.Enum.forInt(this.sort.value()));
 		xmlSiteNodeType.setTopological(this.isTopological());
-
+		
 		String imageCodeName = "";
 		try {
 			final AbstractImageResource ir = StorableObjectPool.getStorableObject(this.getImageId(), false);
@@ -325,17 +323,18 @@ public final class SiteNodeType extends StorableObjectType
 			e.printStackTrace();
 		}
 		xmlSiteNodeType.setImage(imageCodeName);
+		return xmlSiteNodeType;
 	}
 
 	SiteNodeType(final Identifier creatorId,
 			final StorableObjectVersion version,
 			final String codename,
 			final String description,
-			final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType,
+			final XmlSiteNodeType xmlSiteNodeType,
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(ObjectEntities.SITENODE_TYPE_CODE, xmlSiteNodeType.getUid().getStringValue()),
+		super(clonedIdsPool.getClonedId(SITENODE_TYPE_CODE, xmlSiteNodeType.getId().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -343,12 +342,10 @@ public final class SiteNodeType extends StorableObjectType
 				version,
 				codename,
 				description);
-		this.fromXMLTransferable(xmlSiteNodeType, clonedIdsPool, importType);
+		this.fromXmlTransferable(xmlSiteNodeType, clonedIdsPool, importType);
 	}
 
-	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
-		final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType )xmlObject;
-
+	public void fromXmlTransferable(final XmlSiteNodeType xmlSiteNodeType, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
 		this.name = xmlSiteNodeType.getName();
 		this.description = xmlSiteNodeType.getDescription();
 		this.sort = SiteNodeTypeSort.from_int(xmlSiteNodeType.getSort().intValue());
@@ -367,20 +364,18 @@ public final class SiteNodeType extends StorableObjectType
 	public static SiteNodeType createInstance(
 			final Identifier creatorId,
 			final String importType,
-			final XmlObject xmlObject,
+			final XmlSiteNodeType xmlSiteNodeType,
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
-		final com.syrus.amficom.map.xml.SiteNodeType xmlSiteNodeType = (com.syrus.amficom.map.xml.SiteNodeType) xmlObject;
-
 		try {
-			String uid = xmlSiteNodeType.getUid().getStringValue();
+			String uid = xmlSiteNodeType.getId().getStringValue();
 			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
 			SiteNodeType siteNodeType = null;
 			if(existingIdentifier != null) {
 				siteNodeType = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(siteNodeType != null) {
 					clonedIdsPool.setExistingId(uid, existingIdentifier);
-					siteNodeType.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
+					siteNodeType.fromXmlTransferable(xmlSiteNodeType, clonedIdsPool, importType);
 				}
 				else{
 					ImportUIDMapDatabase.delete(importType, uid);
@@ -396,7 +391,7 @@ public final class SiteNodeType extends StorableObjectType
 						importType);
 				ImportUIDMapDatabase.insert(importType, uid, siteNodeType.id);
 			}
-			assert siteNodeType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert siteNodeType.isValid() : OBJECT_STATE_ILLEGAL;
 			siteNodeType.markAsChanged();
 			return siteNodeType;
 		} catch (Exception e) {
@@ -456,7 +451,7 @@ public final class SiteNodeType extends StorableObjectType
 		StorableObjectCondition condition = new TypicalCondition(
 				codename,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.IMAGERESOURCE_CODE,
+				IMAGERESOURCE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 		final Set<AbstractBitmapImageResource> bitMaps = 
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);

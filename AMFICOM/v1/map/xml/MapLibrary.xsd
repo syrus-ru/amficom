@@ -1,27 +1,28 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: MapLibrary.xsd,v 1.7 2005/08/16 10:57:52 krupenn Exp $
+<!-- $Id: MapLibrary.xsd,v 1.8 2005/08/28 19:17:54 bass Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/map/xml"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
 	xmlns:map="http://syrus.com/AMFICOM/map/xml"
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	xmlns:general="http://syrus.com/AMFICOM/general/xml"
 	elementFormDefault="qualified">
 
   <xsd:include schemaLocation="SiteNodeType.xsd"/>
   <xsd:include schemaLocation="PhysicalLinkType.xsd"/>
 
-  <xsd:element name="library" type="map:MapLibrary"/>
+  <xsd:element name="mapLibrary" type="map:XmlMapLibrary"/>
 
-  <xsd:complexType name="MapLibrary">
+  <xsd:complexType name="XmlMapLibrary">
     <xsd:all>
-      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="id" type="general:XmlIdentifier" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="physicallinktypes" type="map:PhysicalLinkTypes" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="sitenodetypes" type="map:SiteNodeTypes" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="physicalLinkTypes" type="map:XmlPhysicalLinkTypeSeq" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="siteNodeTypes" type="map:XmlSiteNodeTypeSeq" minOccurs="1" maxOccurs="1"/>
     </xsd:all>
-	<xsd:attribute name="importtype" type="xsd:string" use="required"/>
+	<xsd:attribute name="importType" type="xsd:string" use="required"/>
   </xsd:complexType>
+
 </xsd:schema>

@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.70 2005/08/26 10:52:24 krupenn Exp $
+ * $Id: SiteNode.java,v 1.71 2005/08/28 19:17:54 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,25 +8,26 @@
 
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
+
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
 
-import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -35,10 +36,13 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.XMLBeansTransferable;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
+import com.syrus.AMFICOM.map.xml.XmlSiteNode;
+import com.syrus.AMFICOM.map.xml.XmlSiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
@@ -53,11 +57,11 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: krupenn $
- * @version $Revision: 1.70 $, $Date: 2005/08/26 10:52:24 $
+ * @author $Author: bass $
+ * @version $Revision: 1.71 $, $Date: 2005/08/28 19:17:54 $
  * @module map
  */
-public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTransferable {
+public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -74,7 +78,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.SITENODE_CODE).retrieve(this);
+			DatabaseContext.getDatabase(SITENODE_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -147,7 +151,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final SiteNode siteNode = new SiteNode(IdentifierPool.getGeneratedIdentifier(ObjectEntities.SITENODE_CODE),
+			final SiteNode siteNode = new SiteNode(IdentifierPool.getGeneratedIdentifier(SITENODE_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					siteNodeType.getImageId(),
@@ -160,7 +164,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 					street,
 					building);
 
-			assert siteNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert siteNode.isValid() : OBJECT_STATE_ILLEGAL;
 
 			siteNode.markAsChanged();
 
@@ -178,7 +182,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.type);
@@ -210,7 +214,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 				this.building);
 	}
 
-	public StorableObjectType getType() {
+	public SiteNodeType getType() {
 		return this.type;
 	}
 
@@ -298,38 +302,30 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		}
 	}
 
-	public XmlObject getXMLTransferable() {
-		final com.syrus.amficom.map.xml.SiteNode xmlSiteNode = com.syrus.amficom.map.xml.SiteNode.Factory.newInstance();
-		this.fillXMLTransferable(xmlSiteNode);
-		return xmlSiteNode;
-	}
-
-	public void fillXMLTransferable(final XmlObject xmlObject) {
-		final com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode) xmlObject; 
-
-		final SiteNodeType siteNodeType = (SiteNodeType) this.getType(); 
-
-		final com.syrus.amficom.general.xml.UID uid = xmlSiteNode.addNewUid();
+	public XmlSiteNode getXmlTransferable() {
+		final XmlSiteNode xmlSiteNode = XmlSiteNode.Factory.newInstance();
+		final XmlIdentifier uid = xmlSiteNode.addNewId();
 		uid.setStringValue(this.id.toString());
 		xmlSiteNode.setName(this.name);
 		xmlSiteNode.setDescription(this.description);
-		xmlSiteNode.setSitenodetypeuid(com.syrus.amficom.map.xml.SiteNodeTypeSort.Enum.forInt(siteNodeType.getSort().value()));
+		xmlSiteNode.setSiteNodeTypeId(XmlSiteNodeTypeSort.Enum.forInt(this.getType().getSort().value()));
 		xmlSiteNode.setX(this.location.getX());
 		xmlSiteNode.setY(this.location.getY());
 		xmlSiteNode.setCity(this.city);
 		xmlSiteNode.setStreet(this.street);
 		xmlSiteNode.setBuilding(this.building);
+		return xmlSiteNode;
 	}
 
 	SiteNode(final Identifier creatorId,
 			final StorableObjectVersion version,
-			final com.syrus.amficom.map.xml.SiteNode xmlSiteNode,
+			final XmlSiteNode xmlSiteNode,
 			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 			throws CreateObjectException,
 				ApplicationException {
 
-		super(clonedIdsPool.getClonedId(ObjectEntities.SITENODE_CODE, xmlSiteNode.getUid().getStringValue()),
+		super(clonedIdsPool.getClonedId(SITENODE_CODE, xmlSiteNode.getId().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -338,16 +334,14 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 				"",
 				"",
 				new DoublePoint(0, 0));
-		if (xmlSiteNode.getUid().getStringValue().equals("507133")) {
+		if (xmlSiteNode.getId().getStringValue().equals("507133")) {
 			System.out.println("id for 507133 is " + this.id.toString());
 		}
 		this.selected = false;
-		this.fromXMLTransferable(xmlSiteNode, clonedIdsPool, importType);
+		this.fromXmlTransferable(xmlSiteNode, clonedIdsPool, importType);
 	}
 
-	public void fromXMLTransferable(final XmlObject xmlObject, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
-		final com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode) xmlObject;
-
+	public void fromXmlTransferable(final XmlSiteNode xmlSiteNode, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
 		this.name = xmlSiteNode.getName();
 		this.description = xmlSiteNode.getDescription();
 		this.city = xmlSiteNode.getCity();
@@ -355,10 +349,10 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 		this.building = xmlSiteNode.getBuilding();
 		super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
 
-		String typeCodeName1 = xmlSiteNode.getSitenodetypeuid().toString();
+		String typeCodeName1 = xmlSiteNode.getSiteNodeTypeId().toString();
 		final TypicalCondition condition = new TypicalCondition(typeCodeName1,
 				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.SITENODE_TYPE_CODE,
+				SITENODE_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
@@ -383,21 +377,19 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 	public static SiteNode createInstance(
 			final Identifier creatorId,
 			final String importType,
-			final XmlObject xmlObject, 
+			final XmlSiteNode xmlSiteNode, 
 			final ClonedIdsPool clonedIdsPool)
 			throws CreateObjectException {
 
-		final com.syrus.amficom.map.xml.SiteNode xmlSiteNode = (com.syrus.amficom.map.xml.SiteNode) xmlObject;
-
 		try {
-			String uid = xmlSiteNode.getUid().getStringValue();
+			String uid = xmlSiteNode.getId().getStringValue();
 			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
 			SiteNode siteNode = null;
 			if(existingIdentifier != null) {
 				clonedIdsPool.setExistingId(uid, existingIdentifier);
 				siteNode = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(siteNode != null) {
-					siteNode.fromXMLTransferable(xmlObject, clonedIdsPool, importType);
+					siteNode.fromXmlTransferable(xmlSiteNode, clonedIdsPool, importType);
 				}
 				else{
 					ImportUIDMapDatabase.delete(importType, uid);
@@ -407,7 +399,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XMLBeansTrans
 				siteNode = new SiteNode(creatorId, StorableObjectVersion.createInitial(), xmlSiteNode, clonedIdsPool, importType);
 				ImportUIDMapDatabase.insert(importType, uid, siteNode.id);
 			}
-			assert siteNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert siteNode.isValid() : OBJECT_STATE_ILLEGAL;
 			siteNode.markAsChanged();
 			return siteNode;
 		} catch (Exception e) {

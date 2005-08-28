@@ -1,5 +1,5 @@
 /*
- * $Id: MapLibraryImportCommand.java,v 1.7 2005/08/18 14:09:56 krupenn Exp $
+ * $Id: MapLibraryImportCommand.java,v 1.8 2005/08/28 19:17:53 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,6 +39,8 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
+import com.syrus.AMFICOM.map.xml.MapLibraryDocument;
+import com.syrus.AMFICOM.map.xml.XmlMapLibrary;
 import com.syrus.util.Log;
 
 /**
@@ -47,8 +49,8 @@ import com.syrus.util.Log;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/08/18 14:09:56 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/08/28 19:17:53 $
  * @module mapviewclient
  */
 public class MapLibraryImportCommand extends ImportCommand {
@@ -141,8 +143,8 @@ public class MapLibraryImportCommand extends ImportCommand {
 
 		// Create an instance of a type generated from schema to hold the XML.
 		// Parse the instance into the type generated from the schema.
-		com.syrus.amficom.map.xml.LibraryDocument doc = 
-			com.syrus.amficom.map.xml.LibraryDocument.Factory.parse(xmlfile);
+		MapLibraryDocument doc = 
+			MapLibraryDocument.Factory.parse(xmlfile);
 
 		if(!validateXml(doc)) {
 			throw new XmlException("Invalid XML");
@@ -153,9 +155,9 @@ public class MapLibraryImportCommand extends ImportCommand {
 		String user_dir = System.getProperty("user.dir");
 		System.setProperty("user.dir",  xmlfile.getParent());
 
-		com.syrus.amficom.map.xml.MapLibrary xmlLibrary = doc.getLibrary();
+		XmlMapLibrary xmlLibrary = doc.getMapLibrary();
 		
-		mapLibrary = MapLibrary.createInstance(userId, xmlLibrary.getImporttype(), xmlLibrary, new ClonedIdsPool());
+		mapLibrary = MapLibrary.createInstance(userId, xmlLibrary.getImportType(), xmlLibrary, new ClonedIdsPool());
 
 		System.setProperty("user.dir",  user_dir);
 
