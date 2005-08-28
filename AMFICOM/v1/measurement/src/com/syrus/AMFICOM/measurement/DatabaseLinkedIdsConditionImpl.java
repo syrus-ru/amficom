@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.34 2005/08/25 20:13:56 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.35 2005/08/28 15:44:53 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_IN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
+import static com.syrus.AMFICOM.general.TableNames.MEASUREMENTSETUP_ME_LINK;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
@@ -33,9 +34,10 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TableNames;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/08/25 20:13:56 $
+ * @version $Revision: 1.35 $, $Date: 2005/08/28 15:44:53 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -68,7 +70,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					case MONITOREDELEMENT_CODE:
 						return super.getLinkedQuery(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID,
 									MeasurementSetupWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID,
-									ObjectEntities.MSMELINK);
+									MEASUREMENTSETUP_ME_LINK);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}
@@ -129,7 +131,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					case MEASUREMENTSETUP_CODE:
 						return super.getLinkedQuery(TestWrapper.LINK_COLUMN_TEST_ID, 
 								TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID, 
-								ObjectEntities.MSTESTLINK);
+								TableNames.MEASUREMENTSETUP_TEST_LINK);
 					case TEST_CODE:
 						return super.getQuery(TestWrapper.COLUMN_GROUP_TEST_ID);
 					default:
