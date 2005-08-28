@@ -1,4 +1,4 @@
--- $Id: measurementporttype.sql,v 1.1 2005/08/21 16:40:32 arseniy Exp $
+-- $Id: measurementporttype.sql,v 1.2 2005/08/28 14:29:24 arseniy Exp $
 
 CREATE TABLE MeasurementPortType (
  id NUMBER(19),
@@ -13,10 +13,10 @@ CREATE TABLE MeasurementPortType (
 --
  name VARCHAR2(128 CHAR),
 --
- CONSTRAINT mptype_pk PRIMARY KEY (id),
- CONSTRAINT mptype_creator_fk FOREIGN KEY (creator_id)
+ CONSTRAINT mptyp_pk PRIMARY KEY (id),
+ CONSTRAINT mptyp_creator_fk FOREIGN KEY (creator_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
- CONSTRAINT mptype_modifier_fk FOREIGN KEY (modifier_id)
+ CONSTRAINT mptyp_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE
 );
 

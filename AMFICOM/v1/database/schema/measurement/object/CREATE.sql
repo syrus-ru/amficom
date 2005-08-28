@@ -1,7 +1,12 @@
--- $Id: CREATE.sql,v 1.10 2005/08/21 16:44:22 arseniy Exp $
+-- $Id: CREATE.sql,v 1.11 2005/08/28 14:29:24 arseniy Exp $
 
+@@kis;
+@@measurementport;
+@@monitoredelement;
+@@equipmentmelink;
+@@transmissionpathmelink;
 @@parameterset;
-@@setmelink;
+@@parametersetmelink;
 @@parameter;
 @@measurementsetup;
 @@measurementsetupmelink;
@@ -12,10 +17,7 @@
 @@measurementsetuptestlink;
 @@measurement;
 @@analysis;
-@@evaluation;
 @@modeling;
 @@result;
 @@resultparameter;
-@@kis;
-@@measurementport;
-@@monitoredelement;
+

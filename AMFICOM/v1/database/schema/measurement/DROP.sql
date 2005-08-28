@@ -1,4 +1,5 @@
--- $Id: DROP.sql,v 1.3 2005/06/15 07:50:18 bass Exp $
+-- $Id: DROP.sql,v 1.4 2005/08/28 14:29:24 arseniy Exp $
 
 @@measurement/object/DROP;
 @@measurement/type/DROP;
+@@measurement/dictionary/DROP;

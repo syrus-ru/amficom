@@ -1,12 +1,8 @@
--- $Id: DROP.sql,v 1.11 2005/08/21 16:44:22 arseniy Exp $
+-- $Id: DROP.sql,v 1.12 2005/08/28 14:29:24 arseniy Exp $
 
-DROP TABLE monitoredelement;
-DROP TABLE measurementport;
-DROP TABLE kis;
 DROP TABLE ResultParameter;
 DROP TABLE Result;
 DROP TABLE Modeling;
-DROP TABLE Evaluation;
 DROP TABLE Analysis;
 DROP TABLE Measurement;
 DROP TABLE MeasurementSetupTestLink;
@@ -18,21 +14,25 @@ DROP TABLE MeasurementSetupMTLink;
 DROP TABLE MeasurementSetupMELink;
 DROP TABLE MeasurementSetup;
 DROP TABLE Parameter;
-DROP TABLE SetMELink;
+DROP TABLE ParameterSetMELink;
 DROP TABLE ParameterSet;
+DROP TABLE TransmissionPathMELink;
+DROP TABLE EquipmentMELink;
+DROP TABLE MonitoredElement;
+DROP TABLE MeasurementPort;
+DROP TABLE KIS;
 
-DROP SEQUENCE monitoredelement_seq;
-DROP SEQUENCE measurementport_seq;
-DROP SEQUENCE kis_seq;
-DROP SEQUENCE resultparameter_seq;
-DROP SEQUENCE result_seq;
-DROP SEQUENCE test_seq;
+DROP SEQUENCE ResultParameter_seq;
+DROP SEQUENCE Result_seq;
+DROP SEQUENCE Test_seq;
 DROP SEQUENCE PeriodicalTemporalPattern_Seq;
 DROP SEQUENCE CronTemporalPattern_Seq;
-DROP SEQUENCE modeling_seq;
-DROP SEQUENCE evaluaition_seq;
-DROP SEQUENCE analysis_seq;
-DROP SEQUENCE measurement_seq;
-DROP SEQUENCE measurementsetup_seq;
-DROP SEQUENCE parameter_seq;
-DROP SEQUENCE parameterset_seq;
+DROP SEQUENCE Modeling_seq;
+DROP SEQUENCE Analysis_seq;
+DROP SEQUENCE Measurement_seq;
+DROP SEQUENCE MeasurementSetup_seq;
+DROP SEQUENCE Parameter_seq;
+DROP SEQUENCE ParameterSet_seq;
+DROP SEQUENCE MonitoredElement_seq;
+DROP SEQUENCE MeasurementPort_seq;
+DROP SEQUENCE KIS_seq;

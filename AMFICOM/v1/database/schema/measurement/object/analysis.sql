@@ -1,4 +1,4 @@
--- $Id: analysis.sql,v 1.12 2005/06/15 17:03:09 bass Exp $
+-- $Id: analysis.sql,v 1.13 2005/08/28 14:29:24 arseniy Exp $
 
 CREATE TABLE Analysis (
  id NUMBER(19),
@@ -8,7 +8,7 @@ CREATE TABLE Analysis (
  modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- type_id NOT NULL,
+ type_code NOT NULL,
  monitored_element_id NOT NULL,
  measurement_id,
  name VARCHAR2(128 CHAR),
@@ -21,8 +21,8 @@ CREATE TABLE Analysis (
  CONSTRAINT ana_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
 --
- CONSTRAINT ana_anatype_fk FOREIGN KEY (type_id)
-  REFERENCES AnalysisType (id) ON DELETE CASCADE,
+ CONSTRAINT ana_anatype_fk FOREIGN KEY (type_code)
+  REFERENCES AnalysisType (code) ON DELETE CASCADE,
  CONSTRAINT ana_me_fk FOREIGN KEY (monitored_element_id)
   REFERENCES MonitoredElement (id) ON DELETE CASCADE,
  CONSTRAINT ana_mnt_fk FOREIGN KEY (measurement_id)
@@ -32,4 +32,4 @@ CREATE TABLE Analysis (
   REFERENCES ParameterSet (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE analysis_seq ORDER;
+CREATE SEQUENCE Analysis_seq ORDER;

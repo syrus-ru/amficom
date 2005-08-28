@@ -1,4 +1,4 @@
--- $Id: test.sql,v 1.14 2005/08/17 15:10:35 arseniy Exp $
+-- $Id: test.sql,v 1.15 2005/08/28 14:29:24 arseniy Exp $
 
 CREATE TABLE Test (
  id NUMBER(19),
@@ -13,9 +13,8 @@ CREATE TABLE Test (
  end_time DATE,
  temporal_pattern_id NUMBER(19),
 --
- measurement_type_id NOT NULL,
- analysis_type_id,
- evaluation_type_id,
+ measurement_type_code NOT NULL,
+ analysis_type_code,
  group_test_id,
 --
  status NUMBER(2, 0) NOT NULL,
@@ -32,17 +31,15 @@ CREATE TABLE Test (
 -- CONSTRAINT test_ctp_fk FOREIGN KEY (cron_temporal_pattern_id)
 --  REFERENCES CronTemporalPattern (id) ON DELETE CASCADE,
 --
- CONSTRAINT test_mnttype_fk FOREIGN KEY (measurement_type_id)
-  REFERENCES MeasurementType (id) ON DELETE CASCADE,
-CONSTRAINT test_anatype_fk FOREIGN KEY (analysis_type_id)
-  REFERENCES AnalysisType (id) ON DELETE CASCADE,
-CONSTRAINT test_evatype_fk FOREIGN KEY (evaluation_type_id)
-  REFERENCES EvaluationType (id) ON DELETE CASCADE,
-CONSTRAINT test_grouptest_fk FOREIGN KEY (group_test_id)
+ CONSTRAINT test_mnttype_fk FOREIGN KEY (measurement_type_code)
+  REFERENCES MeasurementType (code) ON DELETE CASCADE,
+ CONSTRAINT test_anatype_fk FOREIGN KEY (analysis_type_code)
+  REFERENCES AnalysisType (code) ON DELETE CASCADE,
+ CONSTRAINT test_grouptest_fk FOREIGN KEY (group_test_id)
   REFERENCES Test (id) ON DELETE CASCADE,
 --
  CONSTRAINT test_me_fk FOREIGN KEY (monitored_element_id)
   REFERENCES MonitoredElement (id) ON DELETE CASCADE
 );
 
-CREATE SEQUENCE test_seq ORDER;
+CREATE SEQUENCE Test_seq ORDER;

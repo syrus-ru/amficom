@@ -1,6 +1,6 @@
--- $Id: setmelink.sql,v 1.7 2005/06/15 17:03:09 bass Exp $
+-- $Id: parametersetmelink.sql,v 1.1 2005/08/28 14:29:24 arseniy Exp $
 
-CREATE TABLE SetMELink (
+CREATE TABLE ParameterSetMELink (
  set_id NOT NULL,
  monitored_element_id NOT NULL,
 --

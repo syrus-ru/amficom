@@ -1,4 +1,4 @@
--- $Id: modeling.sql,v 1.11 2005/06/15 17:03:09 bass Exp $
+-- $Id: modeling.sql,v 1.12 2005/08/28 14:29:24 arseniy Exp $
 
 CREATE TABLE Modeling (
  id NUMBER(19),
@@ -8,7 +8,7 @@ CREATE TABLE Modeling (
  modifier_id NOT NULL,
  version NUMBER(19) NOT NULL,
 --
- type_id NOT NULL,
+ type_code NOT NULL,
  monitored_element_id NOT NULL,
 --
  name VARCHAR(128),
@@ -21,8 +21,8 @@ CREATE TABLE Modeling (
  CONSTRAINT mod_modifier_fk FOREIGN KEY (modifier_id)
   REFERENCES SystemUser (id) ON DELETE CASCADE,
 --
- CONSTRAINT mod_modtype_fk FOREIGN KEY (type_id)
-  REFERENCES ModelingType (id) ON DELETE CASCADE,
+ CONSTRAINT mod_modtype_fk FOREIGN KEY (type_code)
+  REFERENCES ModelingType (code) ON DELETE CASCADE,
  CONSTRAINT mod_me_fk FOREIGN KEY (monitored_element_id)
   REFERENCES MonitoredElement (id) ON DELETE CASCADE,
 --

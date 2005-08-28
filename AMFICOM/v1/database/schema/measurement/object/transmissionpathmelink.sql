@@ -1,4 +1,4 @@
--- $Id: transmissionpathmelink.sql,v 1.6 2005/06/15 17:03:09 bass Exp $
+-- $Id: transmissionpathmelink.sql,v 1.1 2005/08/28 14:29:24 arseniy Exp $
 
 CREATE TABLE TransmissionPathMELink (
  transmission_path_id,
