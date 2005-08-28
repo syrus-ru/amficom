@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.4 2005/08/26 18:16:19 arseniy Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.5 2005/08/28 15:16:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,7 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import static com.syrus.AMFICOM.general.ObjectEntities.MNTPORTTYPMNTTYPLINK;
+import static com.syrus.AMFICOM.general.TableNames.MNTPORTTYPMNTTYPLINK;
 import static com.syrus.AMFICOM.measurement.MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID;
 import static com.syrus.AMFICOM.measurement.MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
 
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/26 18:16:19 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/28 15:16:33 $
  * @author $Author: arseniy $
  * @module measurement
  */

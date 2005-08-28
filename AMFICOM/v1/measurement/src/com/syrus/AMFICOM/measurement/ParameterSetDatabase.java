@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.15 2005/08/19 15:51:01 arseniy Exp $
+ * $Id: ParameterSetDatabase.java,v 1.16 2005/08/28 15:16:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TableNames;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.util.Log;
 import com.syrus.util.database.ByteArrayDatabase;
@@ -38,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/19 15:51:01 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/28 15:16:33 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -204,7 +205,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 		}
 
 		final Map<Identifier, Set<Identifier>> meIdsMap = this.retrieveLinkedEntityIds(sets,
-				ObjectEntities.SETMELINK,
+				TableNames.PARAMETERSETMELINK,
 				ParameterSetWrapper.LINK_COLUMN_SET_ID,
 				ParameterSetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 
@@ -312,7 +313,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 		}
 
 		super.updateLinkedEntityIds(meIdsMap,
-				ObjectEntities.SETMELINK,
+				TableNames.PARAMETERSETMELINK,
 				ParameterSetWrapper.LINK_COLUMN_SET_ID,
 				ParameterSetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
 	}
@@ -329,7 +330,7 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
 			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.SETMELINK
+					+ TableNames.PARAMETERSETMELINK
 					+ SQL_WHERE + ParameterSetWrapper.LINK_COLUMN_SET_ID + EQUALS + setIdStr);
 			statement.executeUpdate(SQL_DELETE_FROM
 					+ ObjectEntities.PARAMETER

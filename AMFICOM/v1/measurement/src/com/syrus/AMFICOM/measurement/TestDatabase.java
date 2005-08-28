@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.115 2005/08/26 18:18:22 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.116 2005/08/28 15:16:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.TableNames.MEASUREMENTSETUP_TEST_LINK;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -43,7 +45,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.115 $, $Date: 2005/08/26 18:18:22 $
+ * @version $Revision: 1.116 $, $Date: 2005/08/28 15:16:33 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -201,7 +203,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		}
 
 		final Map<Identifier, Set<Identifier>> msIdsMap = this.retrieveLinkedEntityIds(tests,
-				ObjectEntities.MSTESTLINK,
+				MEASUREMENTSETUP_TEST_LINK,
 				LINK_COLMN_TEST_ID,
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
 
@@ -393,7 +395,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 
 		final Map<Identifier, Set<Identifier>> measurementSetupIdsMap = createMeasurementSetupIdsMap(storableObjects);
 		super.insertLinkedEntityIds(measurementSetupIdsMap,
-				ObjectEntities.MSTESTLINK,
+				MEASUREMENTSETUP_TEST_LINK,
 				TestWrapper.LINK_COLUMN_TEST_ID,
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
 	}
@@ -404,7 +406,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 
 		final Map<Identifier, Set<Identifier>> measurementSetupIdsMap = createMeasurementSetupIdsMap(storableObjects);
 		super.updateLinkedEntityIds(measurementSetupIdsMap,
-				ObjectEntities.MSTESTLINK,
+				MEASUREMENTSETUP_TEST_LINK,
 				TestWrapper.LINK_COLUMN_TEST_ID,
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
 	}
