@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.17 2005/08/24 11:33:04 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.18 2005/08/28 18:43:57 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/08/24 11:33:04 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/28 18:43:57 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -165,8 +165,8 @@ public final class SchemePathTestCase extends TestCase {
 		final Identifier domainId = new Identifier("Domain_0");
 		final Identifier imageId = new Identifier("ImageResource_0");
 
-		final LinkType linkType = LinkType.createInstance(userId, "codename", "description", "name", LinkTypeSort.LINKTYPESORT_ETHERNET, "manufacturer", "manufactirer code", imageId);
-		final CableLinkType cableLinkType = CableLinkType.createInstance(userId, "codename", "description", "name", LinkTypeSort.LINKTYPESORT_GSM, "manufactirer", "manufactirer code", imageId);
+		final LinkType linkType = LinkType.createInstance(userId, "codename", "description", "name", LinkTypeSort.LINKTYPESORT_AIR, "manufacturer", "manufactirer code", imageId);
+		final CableLinkType cableLinkType = CableLinkType.createInstance(userId, "codename", "description", "name", LinkTypeSort.LINKTYPESORT_COPPER, "manufactirer", "manufactirer code", imageId);
 		final CableThreadType cableThreadType = CableThreadType.createInstance(userId, "codename", "description", "name", 0, linkType, cableLinkType);
 
 		final String schemeName = "a scheme";
@@ -631,8 +631,8 @@ public final class SchemePathTestCase extends TestCase {
 		final Identifier domainId = new Identifier("Domain_0");
 		final Identifier imageId = new Identifier("ImageResource_0");
 
-		final LinkType linkType0 = LinkType.createInstance(userId, "codename", "description", "linkType0", LinkTypeSort.LINKTYPESORT_ETHERNET, "manufacturer", "manufactirer code", imageId);
-		final CableLinkType cableLinkType0 = CableLinkType.createInstance(userId, "codename", "description", "cableLinkType0", LinkTypeSort.LINKTYPESORT_GSM, "manufactirer", "manufactirer code", imageId);
+		final LinkType linkType0 = LinkType.createInstance(userId, "codename", "description", "linkType0", LinkTypeSort.LINKTYPESORT_OPTICAL, "manufacturer", "manufactirer code", imageId);
+		final CableLinkType cableLinkType0 = CableLinkType.createInstance(userId, "codename", "description", "cableLinkType0", LinkTypeSort.LINKTYPESORT_POWERLINE, "manufactirer", "manufactirer code", imageId);
 		final CableThreadType cableThreadType0 = CableThreadType.createInstance(userId, "codename", "description", "cableThreadType0", 0, linkType0, cableLinkType0);
 
 		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
