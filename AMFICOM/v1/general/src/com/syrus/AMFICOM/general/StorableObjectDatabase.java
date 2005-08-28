@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.184 2005/08/28 13:50:52 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.185 2005/08/28 16:40:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.184 $, $Date: 2005/08/28 13:50:52 $
+ * @version $Revision: 1.185 $, $Date: 2005/08/28 16:40:20 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -492,7 +492,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					Log.errorException(iae);
 				}
 			}
-			
+
+			return linkedCodesMap;
 		} catch (SQLException sqle) {
 			final String mesg = this.getEntityName()
 					+ "Database.retrieveLinkedEnums | Cannot retrieve linked entity identifiers for entity -- " + sqle.getMessage();
@@ -521,8 +522,6 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				Log.errorException(sqle1);
 			}
 		}
-
-		return null;
 	}
 
 	public static boolean isPresentInDatabase(final Identifier id) throws RetrieveObjectException {

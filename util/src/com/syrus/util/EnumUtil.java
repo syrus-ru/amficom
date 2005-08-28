@@ -1,5 +1,5 @@
 /*-
- * $Id: EnumUtil.java,v 1.2 2005/08/28 13:45:59 arseniy Exp $
+ * $Id: EnumUtil.java,v 1.3 2005/08/28 16:39:52 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/28 13:45:59 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/28 16:39:52 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -42,7 +42,7 @@ public final class EnumUtil {
 		}
 
 		try {
-			return (E) fromIntMethod.invoke(new Integer(intValue));
+			return (E) fromIntMethod.invoke(null, new Integer(intValue));
 		} catch (Exception e) {
 			Log.errorException(e);
 			throw new IllegalArgumentException(e.getMessage(), e);
@@ -52,7 +52,7 @@ public final class EnumUtil {
 
 	private static Method reflectMethodFromInt(final Class enumClass) {
 		try {
-			return enumClass.getMethod(METHOD_NAME_FROM_INT);
+			return enumClass.getDeclaredMethod(METHOD_NAME_FROM_INT, Integer.TYPE);
 		} catch (Exception e) {
 			throw new IllegalArgumentException(e.getMessage(), e);
 		}
