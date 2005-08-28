@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.183 2005/08/26 18:30:54 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.184 2005/08/28 13:50:52 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.183 $, $Date: 2005/08/26 18:30:54 $
+ * @version $Revision: 1.184 $, $Date: 2005/08/28 13:50:52 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -859,11 +859,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 				for (final Iterator<E> linkedCodeIt = linkedCodes.iterator(); linkedCodeIt.hasNext();) {
 					linkedEnum = linkedCodeIt.next();
 					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
-					if (linkedEnum instanceof Codeable) {
-						preparedStatement.setInt(2, ((Codeable) linkedEnum).getCode());
-					} else {
-						preparedStatement.setInt(2, linkedEnum.ordinal());
-					}
+					preparedStatement.setInt(2, EnumUtil.getCode(linkedEnum));
 					Log.debugMessage(this.getEntityName() + "Database.insertLinkedEnums | Inserting linked enum  '"
 							+ linkedEnum + "' for '" + id + "'", Log.DEBUGLEVEL09);
 					preparedStatement.executeUpdate();
@@ -1472,11 +1468,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		int i = 0;
 		for (final Iterator<E> it = enums.iterator(); it.hasNext(); i++) {
 			final E code = it.next();
-			if (code instanceof Codeable) {
-				stringBuffer.append(((Codeable) code).getCode());
-			} else {
-				stringBuffer.append(code.ordinal());
-			}
+			stringBuffer.append(EnumUtil.getCode(code));
 			if (it.hasNext()) {
 				if (((i + 1) % MAXIMUM_EXPRESSION_NUMBER != 0)) {
 					stringBuffer.append(COMMA);
