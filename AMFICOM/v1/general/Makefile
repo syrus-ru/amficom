@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.59 2005/08/24 11:32:25 bass Exp $
+# $Id: Makefile,v 1.60 2005/08/28 11:32:59 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -74,7 +74,7 @@ xmlinstall: .xml $(LIBDIR)
 
 $(LIBNAME_GENERALXML):
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
-		$(XMLDIR)/General.xsd \
+		$(XMLDIR)/Identifier.xsd \
 		$(XMLDIR)/Characteristic.xsd \
 		$(XMLDIR)/CharacteristicType.xsd
 

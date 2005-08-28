@@ -1,13 +1,13 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: General.xsd,v 1.5 2005/08/08 17:52:30 max Exp $
+<!-- $Id: Identifier.xsd,v 1.1 2005/08/28 11:32:59 bass Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/general/xml"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	xmlns:general="http://syrus.com/AMFICOM/general/xml"
 	elementFormDefault="qualified">
 
-  <xsd:complexType name="UID">
+  <xsd:complexType name="XmlIdentifier">
     <xsd:simpleContent>
       <xsd:extension base="xsd:string">
         <xsd:attribute name="generated" type="xsd:boolean" use="prohibited"/>
