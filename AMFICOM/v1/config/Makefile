@@ -19,6 +19,7 @@ LIBNAME_GENERALXML = generalxml.jar
 LIBNAME_CONFIGXML = configxml.jar
 
 APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
+XMLCLASSPATH := $(LIBNAME_CONFIGXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
@@ -31,7 +32,7 @@ $(LIBNAME): .mach
 
 .mach: .corba .xml $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
