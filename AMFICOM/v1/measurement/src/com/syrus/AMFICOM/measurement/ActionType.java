@@ -1,5 +1,5 @@
 /*-
- * $Id: ActionType.java,v 1.20 2005/08/26 18:13:31 arseniy Exp $
+ * $Id: ActionType.java,v 1.21 2005/08/28 15:15:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,11 +7,11 @@
  */
 package com.syrus.AMFICOM.measurement;
 
-import com.syrus.AMFICOM.general.Codeable;
 import com.syrus.AMFICOM.general.TransferableObject;
+import com.syrus.util.Codeable;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/08/26 18:13:31 $
+ * @version $Revision: 1.21 $, $Date: 2005/08/28 15:15:25 $
  * @author $Author: arseniy $
  * @module measurement
  */
