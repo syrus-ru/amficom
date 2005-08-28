@@ -1,4 +1,4 @@
-<xb:config xmlns:configuration = "http://syrus.com/AMFICOM/general/xml" 
+<xb:config xmlns:configuration = "http://syrus.com/AMFICOM/configuration/xml" 
 		xmlns:xb = "http://www.bea.com/2002/09/xbean/config">
 	<xb:namespace uri = "http://syrus.com/AMFICOM/configuration/xml">
 		<xb:package>com.syrus.AMFICOM.configuration.xml</xb:package>
