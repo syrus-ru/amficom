@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.69 2005/08/28 11:53:01 bass Exp $
+ * $Id: LinkType.java,v 1.70 2005/08/28 13:28:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.configuration.corba.IdlLinkType;
 import com.syrus.AMFICOM.configuration.corba.IdlLinkTypeHelper;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
+import com.syrus.AMFICOM.configuration.xml.XmlLinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -33,10 +34,9 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.amficom.configuration.xml.XmlLinkType;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/08/28 11:53:01 $
+ * @version $Revision: 1.70 $, $Date: 2005/08/28 13:28:17 $
  * @author $Author: bass $
  * @module config
  */

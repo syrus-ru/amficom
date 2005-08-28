@@ -69,7 +69,8 @@ $(LIBNAME_CONFIGXML):
 		$(XMLDIR)/ConfigurationLibrary.xsd \
 		$(XMLDIR)/EquipmentType.xsd \
 		$(XMLDIR)/LinkType.xsd \
-		$(XMLDIR)/PortType.xsd
+		$(XMLDIR)/PortType.xsd \
+		$(XMLDIR)/configuration.xsdconfig
 
 .PHONY: clean
 clean: cleanmach cleancorba xmlclean
@@ -88,8 +89,8 @@ cleancorba: idlclean
 .PHONY: xmlclean cleanxml
 xmlclean cleanxml:
 	$(RM) $(LIBNAME_CONFIGXML)
-	$(RM) -r $(XMLSRCDIR)/com/syrus/amficom
-	$(RM) -r $(XMLCLASSDIR)/com/syrus/amficom
+	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/configuration/xml
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/configuration/xml
 	$(RM) .xml
 
 #### Install ####

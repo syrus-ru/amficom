@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.63 2005/08/28 11:53:01 bass Exp $
+ * $Id: CableLinkType.java,v 1.64 2005/08/28 13:28:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.configuration.corba.IdlCableLinkType;
 import com.syrus.AMFICOM.configuration.corba.IdlCableLinkTypeHelper;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
+import com.syrus.AMFICOM.configuration.xml.XmlCableLinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -34,11 +35,10 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.amficom.configuration.xml.XmlCableLinkType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/08/28 11:53:01 $
+ * @version $Revision: 1.64 $, $Date: 2005/08/28 13:28:17 $
  * @author $Author: bass $
  * @module config
  */

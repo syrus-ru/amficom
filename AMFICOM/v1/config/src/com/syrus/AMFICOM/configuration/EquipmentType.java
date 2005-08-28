@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.81 2005/08/28 11:53:01 bass Exp $
+ * $Id: EquipmentType.java,v 1.82 2005/08/28 13:28:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,6 +16,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.corba.IdlEquipmentType;
 import com.syrus.AMFICOM.configuration.corba.IdlEquipmentTypeHelper;
+import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -37,10 +38,9 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.amficom.configuration.xml.XmlEquipmentType;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/08/28 11:53:01 $
+ * @version $Revision: 1.82 $, $Date: 2005/08/28 13:28:17 $
  * @author $Author: bass $
  * @module config
  */

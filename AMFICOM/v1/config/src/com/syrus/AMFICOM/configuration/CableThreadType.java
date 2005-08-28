@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.54 2005/08/28 11:53:01 bass Exp $
+ * $Id: CableThreadType.java,v 1.55 2005/08/28 13:28:17 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,6 +17,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.corba.IdlCableThreadType;
 import com.syrus.AMFICOM.configuration.corba.IdlCableThreadTypeHelper;
+import com.syrus.AMFICOM.configuration.xml.XmlCableThreadType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -36,7 +37,6 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.amficom.configuration.xml.XmlCableThreadType;
 
 /**
  * <code>CableThreadType</code>, among other fields, contain references to
@@ -44,7 +44,7 @@ import com.syrus.amficom.configuration.xml.XmlCableThreadType;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.54 $, $Date: 2005/08/28 11:53:01 $
+ * @version $Revision: 1.55 $, $Date: 2005/08/28 13:28:17 $
  * @author $Author: bass $
  * @module config
  */
