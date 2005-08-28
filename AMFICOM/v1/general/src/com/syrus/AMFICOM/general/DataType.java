@@ -1,5 +1,5 @@
 /*-
- * $Id: DataType.java,v 1.4 2005/08/26 18:03:53 arseniy Exp $
+ * $Id: DataType.java,v 1.5 2005/08/28 13:48:40 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,10 +10,11 @@ package com.syrus.AMFICOM.general;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlDataType;
+import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/26 18:03:53 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/28 13:48:40 $
  * @author $Author: arseniy $
  * @module general
  */
