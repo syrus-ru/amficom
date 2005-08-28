@@ -1,5 +1,5 @@
 /*-
- * $Id: EnumUtil.java,v 1.1 2005/08/26 18:31:14 arseniy Exp $
+ * $Id: EnumUtil.java,v 1.2 2005/08/28 13:45:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,9 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/26 18:31:14 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/28 13:45:59 $
  * @author $Author: arseniy $
- * @module general
+ * @module util
  */
 public final class EnumUtil {
 	private static final String METHOD_NAME_FROM_INT = "fromInt";
@@ -24,6 +24,10 @@ public final class EnumUtil {
 	private EnumUtil() {
 		//singleton
 		assert false;
+	}
+
+	public static int getCode(final Enum<?> e) {
+		return (e instanceof Codeable) ? ((Codeable) e).getCode() : e.ordinal();
 	}
 
 	public static <E extends Enum<E>> E reflectFromInt(final Class<E> enumClass, final int intValue) {
