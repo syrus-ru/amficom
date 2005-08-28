@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.23 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: AbstractDatabaseLinkedIdsCondition.java,v 1.24 2005/08/28 15:13:36 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/08/08 11:27:25 $
+ * @version $Revision: 1.24 $, $Date: 2005/08/28 15:13:36 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -40,14 +40,13 @@ public abstract class AbstractDatabaseLinkedIdsCondition implements DatabaseStor
 				linkedColumnIdName,
 				linkedColumnTargetName,
 				linkedTableName);
-
 	}
 
 	protected String getLinkedQuery(final String columnName,
 									final String linkedColumnIdName,
 									final String linkedColumnTargetName,
 									final String linkedTableName) {
-		StringBuffer query = new StringBuffer();
+		final StringBuffer query = new StringBuffer();
 		query.append(columnName);
 		query.append(StorableObjectDatabase.SQL_IN);
 		query.append(StorableObjectDatabase.OPEN_BRACKET);

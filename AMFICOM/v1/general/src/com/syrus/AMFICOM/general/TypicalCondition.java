@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.41 2005/08/28 12:14:11 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.42 2005/08/28 15:14:35 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -124,7 +124,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.41 $, $Date: 2005/08/28 12:14:11 $
+ * @version $Revision: 1.42 $, $Date: 2005/08/28 15:14:35 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -1306,7 +1306,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						result = (this.value == object);
 						break;
 					case OperationSort._OPERATION_IN:
-						EnumSet enumSet = (EnumSet) object;
+						final EnumSet enumSet = (EnumSet) object;
 						result = enumSet.contains(this.value);
 						break;
 					default:
