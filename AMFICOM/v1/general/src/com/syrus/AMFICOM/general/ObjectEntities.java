@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.80 2005/08/26 09:11:12 arseniy Exp $
+ * $Id: ObjectEntities.java,v 1.81 2005/08/28 15:14:19 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/08/26 09:11:12 $
+ * @version $Revision: 1.81 $, $Date: 2005/08/28 15:14:19 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -67,29 +67,17 @@ public final class ObjectEntities {
 
 	/*	##################################### Measurement ##################################### */
 
-	/*	Type	*/
-//	public static final String MEASUREMENT_TYPE = "MeasurementType";
-//	public static final String MNTTYPPARTYPLINK = "MntTypParTypLink";
-//	public static final String MNTTYPEMEASPORTTYPELINK = "MntTypMeasPortTypLink";
-//	public static final String ANALYSIS_TYPE = "AnalysisType";
-//	public static final String ANATYPPARTYPLINK = "AnaTypParTypLink";
-//	public static final String MODELING_TYPE = "ModelingType";
-//	public static final String MODTYPPARTYPLINK = "ModTypParTypLink";
+	/*	Type */
 	public static final String MEASUREMENTPORT_TYPE = "MeasurementPortType";
-	public static final String MNTPORTTYPMNTTYPLINK = "MntPortTypMntTypLink";
 
 	/*	Object */
 	public static final String PARAMETERSET = "ParameterSet";
 	public static final String PARAMETER = "Parameter";
-	public static final String SETMELINK = "SetMELink";
 	public static final String MEASUREMENTSETUP = "MeasurementSetup";
-	public static final String MSMELINK = "MeasurementSetupMELink";
-	public static final String MSMTLINK = "MeasurementSetupMTLink";
 	public static final String MEASUREMENT = "Measurement";
 	public static final String ANALYSIS = "Analysis";
 	public static final String MODELING = "Modeling";
 	public static final String TEST = "Test";
-	public static final String MSTESTLINK = "MeasurementSetupTestLink";
 	public static final String RESULT = "Result";
 	public static final String RESULTPARAMETER = "ResultParameter";
 	public static final String CRONTEMPORALPATTERN = "CronTemporalPattern";
@@ -98,8 +86,6 @@ public final class ObjectEntities {
 	public static final String MEASUREMENTPORT = "MeasurementPort";
 	public static final String KIS = "KIS";
 	public static final String MONITOREDELEMENT = "MonitoredElement";
-	public static final String EQUIPMENTMELINK = "EquipmentMELink";
-	public static final String TRANSPATHMELINK = "TransmissionPathMELink";
 
 
 	/*	##################################### Event ##################################### */
