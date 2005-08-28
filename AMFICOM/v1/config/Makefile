@@ -10,7 +10,13 @@ SERVICE_NAME = mongol
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,XMLBEANSCLASSPATH)
+$(call checkenve,SCOMP)
+$(call checkenve,SCOMPFLAGS)
 
+
+LIBNAME_GENERALXML = generalxml.jar
+LIBNAME_CONFIGXML = configxml.jar
 
 APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
@@ -23,7 +29,7 @@ $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
-.mach: .corba $(CLASSDIR)
+.mach: .corba .xml $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
@@ -45,8 +51,27 @@ corba: .corba
 		$(SRCDIR)/com/syrus/AMFICOM/configuration/corba/*.java
 	touch $@
 
+.PHONY: xml
+xml: .xml
+
+.xml: $(LIBNAME_CONFIGXML)
+	touch $@
+
+.PHONY: xmlinstall
+xmlinstall: .xml $(LIBDIR)
+	install -m 0644 $(LIBNAME_CONFIGXML) $(LIBDIR)
+
+$(LIBNAME_CONFIGXML):
+	$(SCOMP) $(SCOMPFLAGS) -out $@ -cp $(XMLBEANSCLASSPATH):$(LIBDIR)/$(LIBNAME_GENERALXML) \
+		$(XMLDIR)/CableLinkType.xsd \
+		$(XMLDIR)/CableThreadType.xsd \
+		$(XMLDIR)/ConfigurationLibrary.xsd \
+		$(XMLDIR)/EquipmentType.xsd \
+		$(XMLDIR)/LinkType.xsd \
+		$(XMLDIR)/PortType.xsd
+
 .PHONY: clean
-clean: cleanmach cleancorba
+clean: cleanmach cleancorba xmlclean
 	$(RM) $(LIBNAME)
 
 .PHONY: cleanmach
@@ -58,6 +83,13 @@ cleanmach:
 cleancorba: idlclean
 	$(RM) -r $(CLASSDIR)/com/syrus/AMFICOM/configuration/corba
 	$(RM) .corba
+
+.PHONY: xmlclean cleanxml
+xmlclean cleanxml:
+	$(RM) $(LIBNAME_CONFIGXML)
+	$(RM) -r $(XMLSRCDIR)/com/syrus/amficom
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/amficom
+	$(RM) .xml
 
 #### Install ####
 .PHONY: install

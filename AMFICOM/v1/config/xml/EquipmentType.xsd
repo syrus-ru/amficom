@@ -1,33 +1,33 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: EquipmentType.xsd,v 1.1 2005/08/25 11:40:59 bass Exp $
+<!-- $Id: EquipmentType.xsd,v 1.2 2005/08/28 11:33:27 bass Exp $
 -->
 <xsd:schema 
-	targetNamespace="http://syrus.com/AMFICOM/config/xml"
+	targetNamespace="http://syrus.com/AMFICOM/configuration/xml"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:config="http://syrus.com/AMFICOM/config/xml"
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	xmlns:configuration="http://syrus.com/AMFICOM/configuration/xml"
+	xmlns:general="http://syrus.com/AMFICOM/general/xml"
 	elementFormDefault="qualified">
 
   <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
 
-  <xsd:element name="equipmenttypes" type="config:EquipmentTypes">
+  <xsd:element name="equipmentTypes" type="configuration:XmlEquipmentTypeSeq">
 
-    <xsd:key name="equipmenttypeuid">
-      <xsd:selector xpath="config:equipmenttype"/>
-      <xsd:field xpath="@uid"/>
+    <xsd:key name="equipmentTypeId">
+      <xsd:selector xpath="configuration:equipmentType"/>
+      <xsd:field xpath="@id"/>
     </xsd:key>
 
   </xsd:element>
 
-  <xsd:complexType name="EquipmentTypes">
+  <xsd:complexType name="XmlEquipmentTypeSeq">
     <xsd:sequence>
-      <xsd:element name="equipmenttype" type="config:EquipmentType" minOccurs="0" maxOccurs="unbounded"/>
+      <xsd:element name="equipmentType" type="configuration:XmlEquipmentType" minOccurs="0" maxOccurs="unbounded"/>
     </xsd:sequence>
   </xsd:complexType>
 
-  <xsd:complexType name="EquipmentType">
+  <xsd:complexType name="XmlEquipmentType">
     <xsd:all>
-      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="id" type="general:XmlIdentifier" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>

@@ -1,40 +1,40 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: CableThreadType.xsd,v 1.1 2005/08/25 11:40:59 bass Exp $
+<!-- $Id: CableThreadType.xsd,v 1.2 2005/08/28 11:33:27 bass Exp $
 -->
 <xsd:schema 
-	targetNamespace="http://syrus.com/AMFICOM/config/xml"
+	targetNamespace="http://syrus.com/AMFICOM/configuration/xml"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:config="http://syrus.com/AMFICOM/config/xml"
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	xmlns:configuration="http://syrus.com/AMFICOM/configuration/xml"
+	xmlns:general="http://syrus.com/AMFICOM/general/xml"
 	elementFormDefault="qualified">
 
   <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
 
-  <xsd:element name="cablethreadtypes" type="config:CableThreadTypes">
+  <xsd:element name="cableThreadTypes" type="configuration:XmlCableThreadTypeSeq">
 
-    <xsd:key name="cablethreadtypeuid">
-      <xsd:selector xpath="config:cablethreadtype"/>
-      <xsd:field xpath="@uid"/>
+    <xsd:key name="cableThreadTypeId">
+      <xsd:selector xpath="configuration:cableThreadType"/>
+      <xsd:field xpath="@id"/>
     </xsd:key>
 
   </xsd:element>
 
-  <xsd:complexType name="CableThreadTypes">
-    <xsd:sequence>
-      <xsd:element name="cablethreadtype" type="config:CableThreadType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <xsd:complexType name="CableThreadType">
+  <xsd:complexType name="XmlCableThreadType">
     <xsd:all>
-      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="id" type="general:XmlIdentifier" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="color" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="linktypeuid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="cablelinktypeuid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="linkTypeId" type="general:XmlIdentifier" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="cableLinkTypeId" type="general:XmlIdentifier" minOccurs="1" maxOccurs="1"/>
     </xsd:all>
+  </xsd:complexType>
+
+  <xsd:complexType name="XmlCableThreadTypeSeq">
+    <xsd:sequence>
+      <xsd:element name="cableThreadType" type="configuration:XmlCableThreadType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
   </xsd:complexType>
 
 </xsd:schema>

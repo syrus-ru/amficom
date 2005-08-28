@@ -1,25 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: ConfigurationLibrary.xsd,v 1.3 2005/08/25 13:18:29 stas Exp $
+<!-- $Id: ConfigurationLibrary.xsd,v 1.4 2005/08/28 11:33:27 bass Exp $
 -->
 <xsd:schema 
-	targetNamespace="http://syrus.com/AMFICOM/config/xml"
+	targetNamespace="http://syrus.com/AMFICOM/configuration/xml"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:config="http://syrus.com/AMFICOM/config/xml"
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	xmlns:configuration="http://syrus.com/AMFICOM/configuration/xml"
+	xmlns:general="http://syrus.com/AMFICOM/general/xml"
 	elementFormDefault="qualified">
 
-  <xsd:element name="library" type="config:ConfigurationLibrary"/>
+  <xsd:element name="library" type="configuration:XmlConfigurationLibrary"/>
 
-  <xsd:complexType name="ConfigurationLibrary">
+  <xsd:complexType name="XmlConfigurationLibrary">
     <xsd:all>
-      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="id" type="general:XmlIdentifier" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
       <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="linktypes" type="config:LinkTypes" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="cablelinktypes" type="config:CableLinkTypes" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="porttypes" type="config:PortTypes" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="equipmenttypes" type="config:EquipmentTypes" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="linkTypes" type="configuration:XmlLinkTypeSeq" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="cableLinkTypes" type="configuration:XmlCableLinkTypeSeq" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="portTypes" type="configuration:XmlPortTypeSeq" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="equipmentTypes" type="configuration:XmlEquipmentTypeSeq" minOccurs="0" maxOccurs="1"/>
     </xsd:all>
 	<xsd:attribute name="importtype" type="xsd:string" use="required"/>
   </xsd:complexType>

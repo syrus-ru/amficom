@@ -1,45 +1,25 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: LinkType.xsd,v 1.2 2005/08/25 12:54:47 stas Exp $
+<!-- $Id: LinkType.xsd,v 1.3 2005/08/28 11:33:27 bass Exp $
 -->
 <xsd:schema 
-	targetNamespace="http://syrus.com/AMFICOM/config/xml"
+	targetNamespace="http://syrus.com/AMFICOM/configuration/xml"
 	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:config="http://syrus.com/AMFICOM/config/xml"
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+	xmlns:configuration="http://syrus.com/AMFICOM/configuration/xml"
+	xmlns:general="http://syrus.com/AMFICOM/general/xml"
 	elementFormDefault="qualified">
 
   <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
 
-  <xsd:element name="linktypes" type="config:LinkTypes">
+  <xsd:element name="linkTypes" type="configuration:XmlLinkTypeSeq">
 
-    <xsd:key name="linktypeuid">
-      <xsd:selector xpath="config:linktype"/>
-      <xsd:field xpath="@uid"/>
+    <xsd:key name="linkTypeId">
+      <xsd:selector xpath="configuration:linkType"/>
+      <xsd:field xpath="@id"/>
     </xsd:key>
 
   </xsd:element>
 
-  <xsd:complexType name="LinkTypes">
-    <xsd:sequence>
-      <xsd:element name="linktype" type="config:LinkType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <xsd:complexType name="LinkType">
-    <xsd:all>
-      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="kind" type="config:LinkTypeKind" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="sort" type="config:LinkTypeSort" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="imageId" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="manufacturer" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="manufacturerCode" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-    </xsd:all>
-  </xsd:complexType>
-
-  <xsd:simpleType name="LinkTypeSort">
+  <xsd:simpleType name="XmlLinkTypeSort">
       <xsd:restriction base="xsd:string">
             <xsd:enumeration value="optical"/>
             <xsd:enumeration value="copper"/>
@@ -48,11 +28,31 @@
       </xsd:restriction>
   </xsd:simpleType>
 
-  <xsd:simpleType name="LinkTypeKind">
+  <xsd:simpleType name="XmlLinkTypeKind">
       <xsd:restriction base="xsd:string">
             <xsd:enumeration value="simple"/>
             <xsd:enumeration value="cable"/>
       </xsd:restriction>
   </xsd:simpleType>
+
+  <xsd:complexType name="XmlLinkType">
+    <xsd:all>
+      <xsd:element name="id" type="general:XmlIdentifier" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="kind" type="configuration:XmlLinkTypeKind" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="sort" type="configuration:XmlLinkTypeSort" minOccurs="1" maxOccurs="1"/>
+      <xsd:element name="imageId" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="manufacturer" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+      <xsd:element name="manufacturerCode" type="xsd:string" minOccurs="0" maxOccurs="1"/>
+    </xsd:all>
+  </xsd:complexType>
+
+  <xsd:complexType name="XmlLinkTypeSeq">
+    <xsd:sequence>
+      <xsd:element name="linkType" type="configuration:XmlLinkType" minOccurs="0" maxOccurs="unbounded"/>
+    </xsd:sequence>
+  </xsd:complexType>
 
 </xsd:schema>
