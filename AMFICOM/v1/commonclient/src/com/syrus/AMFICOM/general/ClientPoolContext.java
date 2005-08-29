@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPoolContext.java,v 1.14 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: ClientPoolContext.java,v 1.15 2005/08/29 11:58:20 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/02 13:03:22 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/29 11:58:20 $
  * @author $Author: arseniy $
  * @module commonclient
  */
@@ -20,10 +20,12 @@ class ClientPoolContext extends PoolContext {
 	private static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
 	private static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
 	private static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
+	protected static final String KEY_MEASUREMENT_POOL_SIZE = "MeasurementPoolSize";
 
 	private static final int GENERAL_POOL_SIZE = 1000;
 	private static final int ADMINISTRATION_POOL_SIZE = 1000;
 	private static final int CONFIGURATION_POOL_SIZE = 1000;
+	protected static final int MEASUREMENT_POOL_SIZE = 1000;
 
 	ObjectLoader objectLoader;
 

@@ -1,5 +1,5 @@
 /*
- * $Id: MscharClientPoolContext.java,v 1.9 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: MscharClientPoolContext.java,v 1.10 2005/08/29 11:58:20 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.general;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/02 13:03:22 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/29 11:58:20 $
  * @author $Author: arseniy $
  * @module commonclient
  */
@@ -34,11 +34,14 @@ final class MscharClientPoolContext extends ClientPoolContext {
 	public void init() {
 		super.init();
 
+		final int measurementPoolSize = ApplicationProperties.getInt(KEY_MEASUREMENT_POOL_SIZE, MEASUREMENT_POOL_SIZE);
+
 		final int resourcePoolSize = ApplicationProperties.getInt(KEY_RESOURCE_POOL_SIZE, RESOURCE_POOL_SIZE);
 		final int mapPoolSize = ApplicationProperties.getInt(KEY_MAP_POOL_SIZE, MAP_POOL_SIZE);
 		final int schemePoolSize = ApplicationProperties.getInt(KEY_SCHEME_POOL_SIZE, SCHEME_POOL_SIZE);
 		final int mapViewPoolSize = ApplicationProperties.getInt(KEY_MAPVIEW_POOL_SIZE, MAP_VIEW_POOL_SIZE);
 
+		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, measurementPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.RESOURCE_GROUP_CODE, resourcePoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MAP_GROUP_CODE, mapPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.SCHEME_GROUP_CODE, schemePoolSize);
