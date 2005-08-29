@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkConditionWrapper.java,v 1.2 2005/08/25 11:14:03 max Exp $
+ * $Id: PhysicalLinkConditionWrapper.java,v 1.3 2005/08/29 09:32:29 max Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ import java.util.List;
 import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.map.PhysicalLinkWrapper;
 import com.syrus.AMFICOM.newFilter.ConditionKey;
 
 public class PhysicalLinkConditionWrapper implements ConditionWrapper {
@@ -20,13 +21,16 @@ public class PhysicalLinkConditionWrapper implements ConditionWrapper {
 	private final static short entityCode = ObjectEntities.PHYSICALLINK_CODE;
 	
 	private final static String NAME = "Entity name";
-		
+	private final static String STREET = "Street";
+	
 	private static List<ConditionKey> keys = new ArrayList<ConditionKey>();
 	
 	public static final ConditionKey NAME_CONDITION_KEY = new ConditionKey(StorableObjectWrapper.COLUMN_NAME, NAME, ConditionWrapper.STRING);
+	public static final ConditionKey STREET_CONDITION_KEY = new ConditionKey(PhysicalLinkWrapper.COLUMN_STREET, STREET, ConditionWrapper.STRING);
 	
 	static {
 		keys.add(NAME_CONDITION_KEY);
+		keys.add(STREET_CONDITION_KEY);
 	}
 	
 	public List<ConditionKey> getKeys() {
