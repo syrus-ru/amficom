@@ -10,10 +10,12 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.util.ResourceBundle;
 
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
@@ -24,14 +26,15 @@ import javax.swing.JTextField;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.client_.general.ui_.ChoosableFileFilter;
 import com.syrus.impexp.ImportExportException;
+import com.syrus.util.ApplicationProperties;
 
 /**
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/05/25 16:06:51 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2005/08/29 13:04:00 $
  * @module mapviewclient_v1
  */
-public class UniCableMapDialog extends JDialog 
+public class UniCableMapDialog extends JFrame 
 {
 	private JTextArea logTextArea = new JTextArea();
 	private BorderLayout borderLayout1 = new BorderLayout();
@@ -71,7 +74,7 @@ public class UniCableMapDialog extends JDialog
 	 */
 	public UniCableMapDialog(Frame parent, String title, boolean modal)
 	{
-		super(parent, title, modal);
+		super(title);
 		try
 		{
 			jbInit();
@@ -89,6 +92,12 @@ public class UniCableMapDialog extends JDialog
 	 */
 	private void jbInit() throws Exception
 	{
+		final String	BUNDLE_NAME		= "impexp";
+		ApplicationProperties.init(BUNDLE_NAME);
+		
+		String input = ApplicationProperties.getString("base", "");
+		String output = ApplicationProperties.getString("output", "");
+		
 		Dimension size = new Dimension(600, 330);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
@@ -187,9 +196,10 @@ public class UniCableMapDialog extends JDialog
 		this.usernameField.setText("sysdba");
 		this.passwordField.setText("masterkey");
 		this.hostField.setText("localhost");
-		this.databaseField.setText("d:/My Documents/ISM/doc/Resident/tel.gdb");
-		this.exportFileField.setText("d:/My Documents/ISM/prog/java/AMFICOm/run/Data/ucm/testucm.xml");
+		this.databaseField.setText(input);
+		this.exportFileField.setText(output);
 
+		this.connectButton.setEnabled(true);
 		this.importButton.setEnabled(false);
 		this.disconnectButton.setEnabled(false);
 	}
@@ -204,30 +214,34 @@ public class UniCableMapDialog extends JDialog
 					this.hostField.getText(),
 					this.databaseField.getText());
 			this.statusLabel.setText("Connected!");
+			this.connectButton.setEnabled(false);
 			this.importButton.setEnabled(true);
 			this.disconnectButton.setEnabled(true);
 		}
 		catch (ImportExportException ex)
 		{
 			this.statusLabel.setText(ex.getMessage());
+			this.connectButton.setEnabled(true);
 			this.importButton.setEnabled(false);
 			this.disconnectButton.setEnabled(false);
 		}
 	}
 
-	void disconnectButton_actionPerformed(ActionEvent e)
+	void disconnectButton_actionPerformed(@SuppressWarnings("unused") ActionEvent e)
 	{
 		this.ucmDatabase.close();
 		this.statusLabel.setText("Disconnected!");
+		this.connectButton.setEnabled(true);
 		this.importButton.setEnabled(false);
 		this.disconnectButton.setEnabled(false);
 	}
 
 	void importButton_actionPerformed(ActionEvent e)
 	{
-		UniCableMapExportCommand command = new UniCableMapExportCommand(
-			this.ucmDatabase, 
-			this.exportFileField.getText());
+//		UniCableMapExportCommand command = new UniCableMapExportCommand(
+//			this.ucmDatabase, 
+//			this.exportFileField.getText());
+		UCMSchemeExportCommand command = new UCMSchemeExportCommand(this.ucmDatabase);
 		command.execute();
 		this.statusLabel.setText("OK!");
 	}
