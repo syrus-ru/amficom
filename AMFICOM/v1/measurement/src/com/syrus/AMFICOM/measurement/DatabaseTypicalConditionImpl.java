@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.16 2005/08/29 11:04:57 arseniy Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.17 2005/08/29 14:56:46 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/29 11:04:57 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/29 14:56:46 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -52,6 +52,11 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 					return MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID;
 				}
 				break;
+			case ObjectEntities.MEASUREMENTSETUP_CODE:
+				if (this.condition.getKey().equals(MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE)) {
+					return MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID;
+				}
+				break;
 			default:
 				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
 						+ "' and key '" + this.condition.getKey()
@@ -65,6 +70,8 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 		switch (super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
 				return MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
+			case ObjectEntities.MEASUREMENTSETUP_CODE:
+				return MeasurementSetupWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
 			default:
 				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
 						+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
@@ -76,6 +83,8 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 		switch (super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
 				return TableNames.MNTPORTTYPMNTTYPLINK;
+			case ObjectEntities.MEASUREMENTSETUP_CODE:
+				return TableNames.MEASUREMENTSETUP_MT_LINK;
 			default:
 				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
 						+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
