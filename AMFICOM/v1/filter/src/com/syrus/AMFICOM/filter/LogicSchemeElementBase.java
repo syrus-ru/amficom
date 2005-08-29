@@ -1,5 +1,5 @@
 /*-
- * $Id: LogicSchemeElementBase.java,v 1.5 2005/08/24 15:00:29 bass Exp $
+ * $Id: LogicSchemeElementBase.java,v 1.6 2005/08/29 09:44:13 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,12 @@
 
 package com.syrus.AMFICOM.filter;
 
+import java.util.logging.Level;
+
+import com.syrus.util.Log;
+
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/24 15:00:29 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/29 09:44:13 $
  * @module filter
  */
 public class LogicSchemeElementBase extends ProSchemeElementBase
@@ -53,13 +57,13 @@ public class LogicSchemeElementBase extends ProSchemeElementBase
 			final int y,
 			final LogicSchemeBase logicScheme) {
 		if (!((type.equals(LogicSchemeElementBase.tCondition)) || (type.equals(LogicSchemeElementBase.tOperand)) || (type.equals(LogicSchemeElementBase.tResult)))) {
-			System.out.print("Scheme element should have one of these" + "types: Condition, Operand or Result!!");
+			Log.debugMessage("LogicSchemeElementBase.<init> Scheme element should have one of these" + "types: Condition, Operand or Result!!", Level.FINEST);
 			return;
 		}
 
 		if ((type.equals(LogicSchemeElementBase.tOperand))
 				&& !((operandType.equals(LogicSchemeElementBase.otAnd)) || (operandType.equals(LogicSchemeElementBase.otOr)))) {
-			System.out.print("Operand should be AND or OR");
+			Log.debugMessage("LogicSchemeElementBase.<init> Operand should be AND or OR", Level.FINEST);
 			return;
 		}
 
