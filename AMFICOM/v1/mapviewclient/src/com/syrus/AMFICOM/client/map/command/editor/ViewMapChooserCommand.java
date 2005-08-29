@@ -1,5 +1,5 @@
 /*
- * $Id: ViewMapChooserCommand.java,v 1.4 2005/08/24 14:01:59 krupenn Exp $
+ * $Id: ViewMapChooserCommand.java,v 1.5 2005/08/29 08:17:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.util.Log;
 
 /**
@@ -31,7 +32,7 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.4 $, $Date: 2005/08/24 14:01:59 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/29 08:17:24 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand
@@ -89,7 +90,7 @@ public class ViewMapChooserCommand extends AbstractCommand {
 		int result = JOptionPane.showOptionDialog(
 				Environment.getActiveWindow(), 
 				mapChooserPanel,
-				LangModelGeneral.getString("chooseMap"),
+				LangModelMap.getString("ChooseMap"),
 				JOptionPane.OK_CANCEL_OPTION, 
 				JOptionPane.PLAIN_MESSAGE, 
 				null,
