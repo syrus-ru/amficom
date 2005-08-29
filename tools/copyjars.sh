@@ -26,7 +26,7 @@ then
 fi
 
 
-LIBDIR=$AMFICOM_HOME/lib
+LIBDIR=`echo ${AMFICOM_HOME} | sed "s|~|${HOME}|g"`/lib
 
 FILES="general.jar \
 administration.jar \
