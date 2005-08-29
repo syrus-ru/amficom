@@ -80,9 +80,12 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 				final Object nodeObject = treePath.getPathComponent(i);
 				if (nodeObject instanceof Item) {
 					final Item item = (Item) nodeObject;
-					final Identifier identifier = (Identifier) item.getObject();
-					if (identifier != null && entityCode == identifier.getMajor()) {
-						return identifier;
+					Object object = item.getObject();
+					if (object instanceof Identifier) {
+						final Identifier identifier = (Identifier) object;
+						if (identifier != null && entityCode == identifier.getMajor()) {
+							return identifier;
+						}
 					}
 				}
 			}
