@@ -4,9 +4,9 @@ import java.util.ArrayList;
 import java.util.Collection;
 
 public class UniCableMapBuf {
-	public Collection params;
+	public Collection<UniCableMapParameter> params;
 	
 	public UniCableMapBuf() {
-		this.params = new ArrayList();
+		this.params = new ArrayList<UniCableMapParameter>();
 	}
 }

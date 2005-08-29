@@ -15,8 +15,8 @@ import com.syrus.impexp.ImportExportException;
 
 /**
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/04/22 09:42:50 $
+ * @author $Author: stas $
+ * @version $Revision: 1.3 $, $Date: 2005/08/29 13:02:31 $
  * @module mapviewclient_v1
  */
 public class UniCableMapDatabase {
@@ -33,7 +33,7 @@ public class UniCableMapDatabase {
 	public IntHashtable linkTypes = new IntHashtable();
 	public IntHashtable parameterTypes = new IntHashtable();
 
-	public IntTreeMap type_elements = new IntTreeMap();
+	public IntTreeMap<IntTreeMap<UniCableMapObject>> type_elements = new IntTreeMap<IntTreeMap<UniCableMapObject>>();
 
 	public UniCableMapDatabase(
 		String username,
@@ -125,7 +125,7 @@ public class UniCableMapDatabase {
 				if(ucmType == null)
 					System.out.println("NULL! " + ucmObject);
 
-				IntTreeMap elements = (IntTreeMap )this.type_elements.get(ucmObject.typ.un);
+				IntTreeMap<UniCableMapObject> elements = this.type_elements.get(ucmObject.typ.un);
 				elements.put(ucmObject.un, ucmObject);
 
 				more = resultSet.next();
@@ -144,9 +144,10 @@ public class UniCableMapDatabase {
 			Integer key = (Integer )it.next();
 			UniCableMapType ucmType = (UniCableMapType )
 				this.objectTypes.get(key.intValue());
-			IntTreeMap elements = (IntTreeMap )this.type_elements.get(key.intValue());
+			IntTreeMap elements = this.type_elements.get(key.intValue());
 			if(ucmType.text != null 
-					&& UniCableMapType.map_objects.contains(ucmType.text)
+					&& (UniCableMapType.map_objects.contains(ucmType.text) || 
+							UniCableMapType.scheme_objects.contains(ucmType.text))
 					&& elements.size() != 0) {
 				System.out.println("TYPE: " + ucmType.text + " (" + ucmType.un + ") COUNT: " + 
 					elements.size());
@@ -178,7 +179,7 @@ public class UniCableMapDatabase {
 
 				if(this.objectTypes.get(ucmType.un) == null) {
 					this.objectTypes.put(ucmType.un, ucmType);
-					this.type_elements.put(ucmType.un, new IntTreeMap());
+					this.type_elements.put(ucmType.un, new IntTreeMap<UniCableMapObject>());
 //				System.out.println("	public static final String UCM_" + ucmType.text + " = \"" + ucmType.text + "\";");
 				}		
 				more = resultSet.next();
@@ -342,16 +343,16 @@ public class UniCableMapDatabase {
 		ucmLink.mod = getLinkType(mod);
 	}
 
-	public Collection getObjects(UniCableMapType ucmType) {
-		Collection objects = new LinkedList();
-		IntTreeMap elements = (IntTreeMap )this.type_elements.get(ucmType.un);
-		objects.addAll(elements.values());
-		return objects;
+	public Collection<UniCableMapObject> getObjects(UniCableMapType ucmType) {
+		Collection<UniCableMapObject> objects1 = new LinkedList<UniCableMapObject>();
+		IntTreeMap<UniCableMapObject> elements = this.type_elements.get(ucmType.un);
+		objects1.addAll(elements.values());
+		return objects1;
 	}
 
-	public Collection getChildren(UniCableMapObject ucmParent)
+	public Collection<UniCableMapLink> getChildren(UniCableMapObject ucmParent)
 			throws SQLException {
-		Collection objects = new LinkedList();
+		Collection<UniCableMapLink> objects1 = new LinkedList<UniCableMapLink>();
 		UniCableMapLink.byParentStatement.clearParameters();
 		UniCableMapLink.byParentStatement.setInt(1, ucmParent.un);
 		ResultSet resultSet = UniCableMapLink.byParentStatement.executeQuery();
@@ -359,15 +360,15 @@ public class UniCableMapDatabase {
 		while(more) {
 			UniCableMapLink ucmLink = new UniCableMapLink();
 			parseUniCableMapLink(resultSet, ucmLink);
-			objects.add(ucmLink);
+			objects1.add(ucmLink);
 			more = resultSet.next();
 		}
-		return objects;
+		return objects1;
 	}
 
-	public Collection getChildren(UniCableMapObject ucmParent, UniCableMapLinkType ucmLinkType)
+	public Collection<UniCableMapLink> getChildren(UniCableMapObject ucmParent, UniCableMapLinkType ucmLinkType)
 			throws SQLException {
-		Collection objects = new LinkedList();
+		Collection<UniCableMapLink> objects1 = new LinkedList<UniCableMapLink>();
 		UniCableMapLink.byParentTypedStatement.clearParameters();
 		UniCableMapLink.byParentTypedStatement.setInt(1, ucmParent.un);
 		UniCableMapLink.byParentTypedStatement.setInt(2, ucmLinkType.un);
@@ -376,15 +377,15 @@ public class UniCableMapDatabase {
 		while(more) {
 			UniCableMapLink ucmLink = new UniCableMapLink();
 			parseUniCableMapLink(resultSet, ucmLink);
-			objects.add(ucmLink);
+			objects1.add(ucmLink);
 			more = resultSet.next();
 		}
-		return objects;
+		return objects1;
 	}
 
-	public Collection getParents(UniCableMapObject ucmChild) 
+	public Collection<UniCableMapLink> getParents(UniCableMapObject ucmChild) 
 			throws SQLException {
-		Collection objects = new LinkedList();
+		Collection<UniCableMapLink> objects1 = new LinkedList<UniCableMapLink>();
 		UniCableMapLink.byChildStatement.clearParameters();
 		UniCableMapLink.byChildStatement.setInt(1, ucmChild.un);
 		ResultSet resultSet = UniCableMapLink.byChildStatement.executeQuery();
@@ -392,15 +393,15 @@ public class UniCableMapDatabase {
 		while(more) {
 			UniCableMapLink ucmLink = new UniCableMapLink();
 			parseUniCableMapLink(resultSet, ucmLink);
-			objects.add(ucmLink);
+			objects1.add(ucmLink);
 			more = resultSet.next();
 		}
-		return objects;
+		return objects1;
 	}
 
-	public Collection getParents(UniCableMapObject ucmChild, UniCableMapLinkType ucmLinkType) 
+	public Collection<UniCableMapLink> getParents(UniCableMapObject ucmChild, UniCableMapLinkType ucmLinkType) 
 			throws SQLException {
-		Collection objects = new LinkedList();
+		Collection<UniCableMapLink> objects1 = new LinkedList<UniCableMapLink>();
 		UniCableMapLink.byChildTypedStatement.clearParameters();
 		UniCableMapLink.byChildTypedStatement.setInt(1, ucmChild.un);
 		UniCableMapLink.byChildTypedStatement.setInt(2, ucmLinkType.un);
@@ -409,10 +410,10 @@ public class UniCableMapDatabase {
 		while(more) {
 			UniCableMapLink ucmLink = new UniCableMapLink();
 			parseUniCableMapLink(resultSet, ucmLink);
-			objects.add(ucmLink);
+			objects1.add(ucmLink);
 			more = resultSet.next();
 		}
-		return objects;
+		return objects1;
 	}
 
 	public UniCableMapObject getObject(int objectUn) 
@@ -499,7 +500,7 @@ public class UniCableMapDatabase {
 		{
 			ucmObjectType = new UniCableMapType();
 			this.objectTypes.put(typeUn, ucmObjectType);
-			this.type_elements.put(typeUn, new IntTreeMap());
+			this.type_elements.put(typeUn, new IntTreeMap<UniCableMapObject>());
 			parseUniCableMapObject(resultSet, ucmObjectType);
 		}
 		return ucmObjectType;
