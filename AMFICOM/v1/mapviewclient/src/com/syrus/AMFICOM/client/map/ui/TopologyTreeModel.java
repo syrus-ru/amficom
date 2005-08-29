@@ -1,5 +1,5 @@
 /**
- * $Id: TopologyTreeModel.java,v 1.8 2005/08/29 12:16:44 peskovsky Exp $
+ * $Id: TopologyTreeModel.java,v 1.9 2005/08/29 16:16:21 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -80,24 +80,23 @@ public class TopologyTreeModel implements ChildrenFactory {
 
 		try {
 			MapImageLoader mapImageLoader = this.netMapViewer.getRenderer().getLoader();
-			List<SpatialLayer> layers = mapImageLoader.getMapConnection()
-					.getLayers();
+			List<SpatialLayer> layers = mapImageLoader.getMapConnection().getLayers();
 
-			java.util.Map nodePresense = new HashMap();
+			java.util.Map<SpatialLayer, Item> nodePresense = new HashMap<SpatialLayer, Item>();
 
-			List toRemove = new LinkedList();
+			List<Item> toRemove = new LinkedList<Item>();
 
-			for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
-				PopulatableIconedNode childNode = (PopulatableIconedNode) iter
-						.next();
+			for (Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
+				PopulatableIconedNode childNode = (PopulatableIconedNode) iter.next();
 				SpatialLayer layer = (SpatialLayer) childNode.getObject();
-				if(layers.contains(layer)) {
-					if(childNode.isPopulated())
+				if (layers.contains(layer)) {
+					if (childNode.isPopulated()) {
 						childNode.populate();
+					}
 					nodePresense.put(layer, childNode);
-				}
-				else
+				} else {
 					toRemove.add(childNode);
+				}
 			}
 			for(Iterator it = toRemove.iterator(); it.hasNext();) {
 				Item childItem = (Item) it.next();
@@ -105,7 +104,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 			}
 
 			for(SpatialLayer layer : layers) {
-				Item childNode = (Item) nodePresense.get(layer);
+				Item childNode = nodePresense.get(layer);
 				if(childNode == null) {
 					Item newItem;
 					if(this.netMapViewer.getMapContext().getMapConnection().searchIsAvailableForLayer(layer)) {
@@ -165,6 +164,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 			finalAction();
 		}
 		
+		@Override
 		public void run() {
 			try {
 				this.running = true;
@@ -174,7 +174,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 				initialAction();
 
 				synchronized(this.node) {
-					for(Iterator iter = new LinkedList(this.node.getChildren()).iterator(); iter.hasNext();) {
+					for(Iterator iter = new LinkedList<Item>(this.node.getChildren()).iterator(); iter.hasNext();) {
 						if(!this.running) {
 							finalAction();
 							return;
