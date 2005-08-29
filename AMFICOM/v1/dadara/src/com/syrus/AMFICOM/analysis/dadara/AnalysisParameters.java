@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.13 2005/08/18 14:05:28 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.14 2005/08/29 09:39:31 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,121 +13,27 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 /**
+ * Набор параметров анализа с контролем допустимости (согласованности) набора.
+ * Если нужно изменить сразу несколько аргументов - используйте методы
+ * {@link #getStorageClone()} и {@link #setAllFrom(AnalysisParametersStorage)}
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/08/18 14:05:28 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/29 09:39:31 $
+ * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
 public class AnalysisParameters
 implements DataStreamable, Cloneable
 {
-	private static final double DEFAULT_THRESHOLD_TO_SPLICE_RATIO = 0.4;
-	private static final double[] RECOMMENDED_NOISE_FACTORS = new double[] {
-		0.7, 1.0, 1.3, 1.5, 2.0, 2.5, 3.0 }; // XXX: remove 0.7 and 3.0
 	private static DSReader reader;
 
-	private double[] param; // основные параметры анализа
-
-	// дополнительные параметры анализа - экспериментальная версия
-	private double tau2nrs = 1.0;
-	private int nrsMin = 15;
-	private double rsaCrit = 0.5;
-	private double nrs2rsaSmall = 1.5;
-	private double nrs2rsaBig = 10.0;
-	private double l2rsaBig = 0.1;
-
-	// еще дополнительный параметр
-	private double scaleFactor = 1.0;
-
-	/**
-	 * Определяет допустимость набора параметров.
-	 * @return true, если набор допустим, false, если недопустим
-	 */
-	public boolean isCorrect() {
-		// проверяем основные параметры
-		final double MIN_MIN_THRESHOLD = 0.0001; // FIXME: debug: MIN_MIN_THRESHOLD should be >= 0.001
-		if (getMinThreshold() < MIN_MIN_THRESHOLD)
-			return false;
-		if (getMinSplice() < getMinThreshold())
-			return false;
-		if (getMinConnector() < getMinSplice())
-			return false;
-		if (getMinEnd() < getMinConnector())
-			return false;
-
-		// проверяем дополнительные параметры
-		if (this.tau2nrs < 0)
-			return false;
-		if (this.nrsMin < 0)
-			return false;
-		if (this.tau2nrs == 0 && this.nrsMin == 0)
-			return false;
-		if (this.rsaCrit < 0)
-			return false;
-		if (this.nrs2rsaSmall <= 0)
-			return false;
-		if (this.nrs2rsaBig < this.nrs2rsaSmall)
-			return false;
-		if (this.l2rsaBig < 0)
-			return false;
-
-		if (this.scaleFactor < 1.0)
-			return false;
-		if (this.scaleFactor > 10) // XXX
-			return false;
-
-		return true;
-	}
-
-	public double getMinThreshold() {
-		return this.param[0];
-	}
-	public double getMinSplice() {
-		return this.param[1];
-	}
-	public double getMinConnector() {
-		return this.param[2];
-	}
-	public double getMinEnd() {
-		return this.param[3];
-	}
-	public double getNoiseFactor() {
-		return this.param[4];
-	}
-
-	public void setMinThreshold(double v) {
-		this.param[0] = v;
-	}
-
-	public void setMinSplice(double v) {
-		this.param[1] = v;
-	}
-
-	public void setSensitivity(double v) {
-		this.setMinSplice(v);
-		this.setMinThreshold(v * DEFAULT_THRESHOLD_TO_SPLICE_RATIO);
-	}
-
-	public double getSentitivity() {
-		return getMinSplice();
-	}
-
-	public void setMinConnector(double v) {
-		this.param[2] = v;
-	}
-
-	public void setMinEnd(double v) {
-		this.param[3] = v;
-	}
-
-	public void setNoiseFactor(double v) {
-		this.param[4] = v;
-	}
+	private AnalysisParametersStorage storage;
+	private AnalysisParametersStorage testStorage = null;
 
 	/**
 	 * @return список рекомендуемых значений noiseFactor
 	 */
 	public static double[] getRecommendedNoiseFactors() {
-		return RECOMMENDED_NOISE_FACTORS.clone();
+		return AnalysisParametersStorage.getRecommendedNoiseFactors();
 	}
 
 	public AnalysisParameters(double minThreshold,
@@ -135,94 +41,100 @@ implements DataStreamable, Cloneable
 			double minConnector,
 			double minEnd,
 			double noiseFactor)
-	{
-		this.param = new double[] {
+	throws InvalidAnalysisParametersException {
+		this.storage = new AnalysisParametersStorage(
 			minThreshold,
 			minSplice,
 			minConnector,
 			minEnd,
-			noiseFactor
-		};
+			noiseFactor);
+		checkStorage(this.storage);
 	}
 
 	public AnalysisParameters(DataInputStream dis)
-	throws IOException {
-		this.param = new double[5];
-		this.param[0] = dis.readDouble();
-		this.param[1] = dis.readDouble();
-		this.param[2] = dis.readDouble();
-		this.param[3] = dis.readDouble();
-		this.param[4] = dis.readDouble();
-	}
-
-	// returns true if all fields were initialized,
-	// false otherwise.
-	private boolean setParamsFromString(String val) {
-		int i = 0;
-		int bind = -1;
-		int ind = val.indexOf(";");
-		while ((ind != -1) && (i < this.param.length)) {
-			this.param[i++] = Double.parseDouble(val.substring(bind + 1, ind));
-			bind = ind;
-			ind = val.indexOf(";", bind + 1);
-		}
-		return i == this.param.length;
+	throws IOException, InvalidAnalysisParametersException {
+		this.storage = new AnalysisParametersStorage(dis);
+		checkStorage(this.storage);
 	}
 
 	/**
 	 * creates via string of parameters using the default values
 	 * @param val text representation of parameters
 	 * @param defaults default values
+	 * @throws InvalidAnalysisParametersException
 	 */
-	public AnalysisParameters(String val, AnalysisParameters defaults) {
-		this.param = defaults.param.clone();
-		setParamsFromString(val);
+	public AnalysisParameters(String val, AnalysisParameters defaults)
+	throws InvalidAnalysisParametersException {
+		this.storage = new AnalysisParametersStorage(val, defaults.storage);
+		checkStorage(this.storage);
 	}
 
 	/**
 	 * creates via string of parameters
 	 * @param val text representation of parameters
+	 * @throws InvalidAnalysisParametersException 
 	 * @throws IllegalArgumentException if input string is malformed
 	 */
-	public AnalysisParameters(String val) {
-		this.param = new double[5];
-		if (!setParamsFromString(val))
-			throw new IllegalArgumentException(
-					"couldn't parse analysis parameters string");
+	public AnalysisParameters(String val)
+	throws InvalidAnalysisParametersException {
+		this.storage = new AnalysisParametersStorage(val);
+		checkStorage(this.storage);
+	}
+
+	/**
+	 * @return {@link AnalysisParametersStorage} для данного объекта
+	 */
+	public AnalysisParametersStorage getStorageClone() {
+		return (AnalysisParametersStorage) this.storage.clone();
+	}
+
+	/**
+	 * Устанавливает параметры по заданному {@link AnalysisParametersStorage}
+	 * @param aps устанавливаемый набор параметров
+	 * @throws InvalidAnalysisParametersException если заданный набор
+	 * параметров недопустим 
+	 */
+	public void setAllFrom(AnalysisParametersStorage aps)
+	throws InvalidAnalysisParametersException {
+		// проверяем допустимость данного набора.
+		// Если недопустим - бросаем исключение
+		checkStorage(aps);
+		// Набор допустим. Загружаем его
+		this.storage.setAllFrom(aps);
 	}
 
 	@Override
 	public String toString() {
-		String str = "";
-		for (int i = 0; i < this.param.length; i++)
-			str = str + String.valueOf(this.param[i]) + ";";
-		return str;
+		return storage.toString();
 	}
 
 	@Override
 	public Object clone() {
 		try {
 			AnalysisParameters ret = (AnalysisParameters)super.clone();
-			ret.param = this.param.clone();
+			ret.storage = getStorageClone();
 			return ret;
 		} catch (CloneNotSupportedException e) {
 			throw new InternalError("Unexpected exception: " + e.getMessage());
 		}
 	}
+
 	private static class DSReader implements DataStreamable.Reader {
 		public DataStreamable readFromDIS(DataInputStream dis)
 		throws IOException, SignatureMismatchException {
-			return new AnalysisParameters (dis);
+			try {
+				return new AnalysisParameters (dis);
+			} catch (InvalidAnalysisParametersException e) {
+				// если считан недопустимый набор парамеров,
+				// считаем это ошибкой входного потока
+				throw new SignatureMismatchException("IllegalAnalysisParameters");
+			}
 		}
 	}
 
 	public void writeToDOS(DataOutputStream dos)
 	throws IOException {
-		dos.writeDouble(this.param[0]);
-		dos.writeDouble(this.param[1]);
-		dos.writeDouble(this.param[2]);
-		dos.writeDouble(this.param[3]);
-		dos.writeDouble(this.param[4]);
+		storage.writeToDOS(dos);
 	}
 	
 	public static DataStreamable.Reader getReader() {
@@ -231,48 +143,168 @@ implements DataStreamable, Cloneable
 		}
 		return reader;
 	}
+
 	public double getL2rsaBig() {
-		return this.l2rsaBig;
+		return storage.getL2rsaBig();
 	}
-	public void setL2rsaBig(double big) {
-		this.l2rsaBig = big;
+
+	public double getMinConnector() {
+		return storage.getMinConnector();
 	}
+
+	public double getMinEnd() {
+		return storage.getMinEnd();
+	}
+
+	public double getMinSplice() {
+		return storage.getMinSplice();
+	}
+
+	public double getMinThreshold() {
+		return storage.getMinThreshold();
+	}
+
+	public double getNoiseFactor() {
+		return storage.getNoiseFactor();
+	}
+
 	public double getNrs2rsaBig() {
-		return this.nrs2rsaBig;
+		return storage.getNrs2rsaBig();
 	}
-	public void setNrs2rsaBig(double nrs2rsaBig) {
-		this.nrs2rsaBig = nrs2rsaBig;
-	}
+
 	public double getNrs2rsaSmall() {
-		return this.nrs2rsaSmall;
+		return storage.getNrs2rsaSmall();
 	}
-	public void setNrs2rsaSmall(double nrs2rsaSmall) {
-		this.nrs2rsaSmall = nrs2rsaSmall;
-	}
+
 	public int getNrsMin() {
-		return this.nrsMin;
+		return storage.getNrsMin();
 	}
-	public void setNrsMin(int nrsMin) {
-		this.nrsMin = nrsMin;
-	}
+
 	public double getRsaCrit() {
-		return this.rsaCrit;
-	}
-	public void setRsaCrit(double rsaCrit) {
-		this.rsaCrit = rsaCrit;
-	}
-	public double getTau2nrs() {
-		return this.tau2nrs;
-	}
-	public void setTau2nrs(double tau2nrs) {
-		this.tau2nrs = tau2nrs;
+		return storage.getRsaCrit();
 	}
 
 	public double getScaleFactor() {
-		return this.scaleFactor;
+		return storage.getScaleFactor();
 	}
 
-	public void setScaleFactor(double scaleFactor) {
-		this.scaleFactor = scaleFactor;
+	public double getSentitivity() {
+		return storage.getSentitivity();
+	}
+
+	public double getTau2nrs() {
+		return storage.getTau2nrs();
+	}
+
+	public void setL2rsaBig(double big)
+	throws InvalidAnalysisParametersException {
+		// создаем копию набора параметров
+		AnalysisParametersStorage test = getTestStorage();
+		// устанавливаем новый параметр
+		test.setL2rsaBig(big);
+		// проверяем его допустимость. Если недопустим - бросаем исключение
+		checkStorage(test);
+		// Набор допустим. Загружаем его
+		this.storage.setAllFrom(test);
+	}
+
+	public void setMinConnector(double v)
+	throws InvalidAnalysisParametersException {
+		AnalysisParametersStorage test = getTestStorage();
+		test.setMinConnector(v);
+		setAllFrom(test);
+	}
+
+	public void setMinEnd(double v)
+	throws InvalidAnalysisParametersException {
+		AnalysisParametersStorage test = getTestStorage();
+		test.setMinEnd(v);
+		setAllFrom(test);
+	}
+
+	public void setMinSplice(double v)
+	throws InvalidAnalysisParametersException {
+		AnalysisParametersStorage test = getTestStorage();
+		test.setMinSplice(v);
+		setAllFrom(test);
+	}
+
+	public void setMinThreshold(double v)
+	throws InvalidAnalysisParametersException {
+		AnalysisParametersStorage test = getTestStorage();
+		test.setMinThreshold(v);
+		setAllFrom(test);
+	}
+
+	public void setNoiseFactor(double v)
+	throws InvalidAnalysisParametersException {
+		AnalysisParametersStorage test = getTestStorage();
+		test.setNoiseFactor(v);
+		setAllFrom(test);
+	}
+
+	public void setNrs2rsaBig(double nrs2rsaBig)
+	throws InvalidAnalysisParametersException {
+		AnalysisParametersStorage test = getTestStorage();
+		test.setNrs2rsaBig(nrs2rsaBig);
+		setAllFrom(test);
+	}
+
+	public void setNrs2rsaSmall(double nrs2rsaSmall)
+	throws InvalidAnalysisParametersException {
+		AnalysisParametersStorage test = getTestStorage();
+		test.setNrs2rsaSmall(nrs2rsaSmall);
+		setAllFrom(test);
+	}
+
+	public void setNrsMin(int nrsMin)
+	throws InvalidAnalysisParametersException {
+		AnalysisParametersStorage test = getTestStorage();
+		test.setNrsMin(nrsMin);
+		setAllFrom(test);
+	}
+
+	public void setRsaCrit(double rsaCrit)
+	throws InvalidAnalysisParametersException {
+		AnalysisParametersStorage test = getTestStorage();
+		test.setRsaCrit(rsaCrit);
+		setAllFrom(test);
+	}
+
+	public void setScaleFactor(double scaleFactor)
+	throws InvalidAnalysisParametersException {
+		AnalysisParametersStorage test = getTestStorage();
+		test.setScaleFactor(scaleFactor);
+		setAllFrom(test);
+	}
+
+	public void setSensitivity(double v)
+	throws InvalidAnalysisParametersException {
+		AnalysisParametersStorage test = getTestStorage();
+		test.setSensitivity(v);
+		setAllFrom(test);
+	}
+
+	public void setTau2nrs(double tau2nrs)
+	throws InvalidAnalysisParametersException {
+		AnalysisParametersStorage test = getTestStorage();
+		test.setTau2nrs(tau2nrs);
+		setAllFrom(test);
+	}
+
+	private static void checkStorage(AnalysisParametersStorage aps)
+	throws InvalidAnalysisParametersException {
+		if (! aps.isCorrect()) {
+			throw new InvalidAnalysisParametersException();
+		}
+	}
+
+	private AnalysisParametersStorage getTestStorage() {
+		if (testStorage == null) {
+			testStorage = (AnalysisParametersStorage) this.storage.clone();
+			return testStorage;
+		}
+		testStorage.setAllFrom(this.storage);
+		return testStorage;
 	}
 }
