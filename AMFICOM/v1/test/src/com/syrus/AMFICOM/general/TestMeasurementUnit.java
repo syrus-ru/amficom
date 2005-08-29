@@ -1,5 +1,5 @@
 /*-
- * $Id: TestMeasurementUnit.java,v 1.1 2005/08/19 15:57:33 arseniy Exp $
+ * $Id: TestMeasurementUnit.java,v 1.2 2005/08/29 10:00:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/19 15:57:33 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/29 10:00:32 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -28,6 +28,6 @@ public final class TestMeasurementUnit extends TestCase {
 	}
 
 	public void testCreate() throws CreateObjectException {
-		MeasurementUnitDatabase.insertMeasurementUnits();
+		MeasurementUnitDatabase.insertAll();
 	}
 }

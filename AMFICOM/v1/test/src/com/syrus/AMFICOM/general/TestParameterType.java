@@ -1,5 +1,5 @@
 /*-
- * $Id: TestParameterType.java,v 1.16 2005/08/20 20:15:12 arseniy Exp $
+ * $Id: TestParameterType.java,v 1.17 2005/08/29 10:00:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/20 20:15:12 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/29 10:00:32 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -28,6 +28,6 @@ public final class TestParameterType extends TestCase {
 	}
 
 	public void testCreate() throws CreateObjectException {
-		ParameterTypeDatabase.insertParameterTypes();
+		ParameterTypeDatabase.insertAll();
 	}
 }

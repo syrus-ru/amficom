@@ -1,5 +1,5 @@
 /*
- * $Id: TestInitialSetup.java,v 1.9 2005/08/28 16:43:51 arseniy Exp $
+ * $Id: TestInitialSetup.java,v 1.10 2005/08/29 10:00:32 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,6 +27,8 @@ import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.SQLCommonTest;
 import com.syrus.AMFICOM.general.TestCharacteristicQP1640A;
 import com.syrus.AMFICOM.general.TestDataType;
+import com.syrus.AMFICOM.general.TestMeasurementUnit;
+import com.syrus.AMFICOM.general.TestParameterType;
 import com.syrus.AMFICOM.measurement.TestAnalysisType;
 import com.syrus.AMFICOM.measurement.TestKIS;
 import com.syrus.AMFICOM.measurement.TestMeasurementPort;
@@ -36,7 +38,7 @@ import com.syrus.AMFICOM.measurement.TestModelingType;
 import com.syrus.AMFICOM.measurement.TestMonitoredElement;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/28 16:43:51 $
+ * @version $Revision: 1.10 $, $Date: 2005/08/29 10:00:32 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -52,8 +54,10 @@ public final class TestInitialSetup extends TestCase {
 		//-1. Create system administrator
 		sqlCommonTest.addTest(new TestCreateSysUser("testCreateSysUser"));
 
-		//-2.Create data types
+		//-2.Create dictionaries
 		sqlCommonTest.addTest(new TestDataType("testCreateAll"));
+		sqlCommonTest.addTest(new TestMeasurementUnit("testCreateAll"));
+		sqlCommonTest.addTest(new TestParameterType("testCreateAll"));
 		sqlCommonTest.addTest(new TestMeasurementType("testCreateAll"));
 		sqlCommonTest.addTest(new TestAnalysisType("testCreateAll"));
 		sqlCommonTest.addTest(new TestModelingType("testCreateAll"));

@@ -1,5 +1,5 @@
 /*
- * $Id: TestDataType.java,v 1.3 2005/08/28 16:43:51 arseniy Exp $
+ * $Id: TestDataType.java,v 1.4 2005/08/29 10:00:32 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,6 @@ public final class TestDataType extends TestCase {
 	}
 
 	public void testCreateAll() throws CreateObjectException {
-		DataTypeDatabase.insertDataTypes();
+		DataTypeDatabase.insertAll();
 	}
 }
