@@ -16,10 +16,10 @@ $(call checkenve,SCOMPFLAGS)
 
 
 LIBNAME_GENERALXML = generalxml.jar
-LIBNAME_CONFIGXML = configxml.jar
+LIBNAME_CONFIGURATIONXML = $(MODULE_NAME)xml.jar
 
 APPCLASSPATH := $(LIBDIR)/administration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/util.jar
-XMLCLASSPATH := $(LIBNAME_CONFIGXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
+XMLCLASSPATH := $(LIBNAME_CONFIGURATIONXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
@@ -55,14 +55,14 @@ corba: .corba
 .PHONY: xml
 xml: .xml
 
-.xml: $(LIBNAME_CONFIGXML)
+.xml: $(LIBNAME_CONFIGURATIONXML)
 	touch $@
 
 .PHONY: xmlinstall
 xmlinstall: .xml $(LIBDIR)
-	install -m 0644 $(LIBNAME_CONFIGXML) $(LIBDIR)
+	install -m 0644 $(LIBNAME_CONFIGURATIONXML) $(LIBDIR)
 
-$(LIBNAME_CONFIGXML):
+$(LIBNAME_CONFIGURATIONXML):
 	$(SCOMP) $(SCOMPFLAGS) -out $@ -cp $(XMLBEANSCLASSPATH):$(LIBDIR)/$(LIBNAME_GENERALXML) \
 		$(XMLDIR)/CableLinkType.xsd \
 		$(XMLDIR)/CableThreadType.xsd \
@@ -88,7 +88,7 @@ cleancorba: idlclean
 
 .PHONY: xmlclean cleanxml
 xmlclean cleanxml:
-	$(RM) $(LIBNAME_CONFIGXML)
+	$(RM) $(LIBNAME_CONFIGURATIONXML)
 	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/configuration/xml
 	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/configuration/xml
 	$(RM) .xml
