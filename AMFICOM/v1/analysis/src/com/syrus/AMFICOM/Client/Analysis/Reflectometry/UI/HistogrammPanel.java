@@ -87,16 +87,16 @@ public class HistogrammPanel extends ScaledGraphPanel
 		this.alpha = normMx / normS / tmp;
 	}
 
-	protected void updColorModel()
-	{
+	@Override
+	protected void updColorModel() {
 		super.updColorModel();
 
 		gaussColor = UIManager.getColor(AnalysisResourceKeys.COLOR_CONNECTOR);
 		thresholdColor = UIManager.getColor(AnalysisResourceKeys.COLOR_END);
 	}
 
-	public void paint(Graphics g)
-	{
+	@Override
+	public void paint(Graphics g) {
 		paint_trace(g);
 		paint_scales(g);
 		if (showAll) {
@@ -107,8 +107,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 		paint_level(g);
 	}
 
-	protected void paint_trace(Graphics g)
-	{
+	@Override
+	protected void paint_trace(Graphics g) {
 		g.setColor(color);
 
 		for (int i= Math.max(0, -start); i < Math.min (end + 1, y.length) - start - 1; i++)
@@ -169,8 +169,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 	}
 
 	// use this method to paint scale digits for krivulka in dB  
-	protected void paint_scale_digits(Graphics g)
-	{
+	@Override
+	protected void paint_scale_digits(Graphics g) {
 		super.paint_scale_digits(g);
 				
 		//int jh = getHeight();
@@ -186,14 +186,13 @@ public class HistogrammPanel extends ScaledGraphPanel
 			g.drawString(String.valueOf(MathRef.round_2 ((i + (int)(start * Kx / m) ) * m   * alpha * 1000d)), (int)(i * delta + x - 12), 10);
 	}
 
-	protected void this_mousePressed(MouseEvent e)
-	{
+	@Override
+	protected void this_mousePressed(MouseEvent e) {
 		startpos = e.getPoint();
 		currpos = e.getPoint();
 
 		if (SwingUtilities.isRightMouseButton(e) ||
-				Math.abs(currpos.y-(int)((maxY - level - top)*scaleY)) < MOUSE_COUPLING)
-		{
+				Math.abs(currpos.y-(int)((maxY - level - top)*scaleY)) < MOUSE_COUPLING) {
 			moveLevel = true;
 			updateLevel(coord2value(currpos.y));
 			setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
@@ -204,10 +203,9 @@ public class HistogrammPanel extends ScaledGraphPanel
 		super.this_mousePressed(e);
 	}
 
-	protected void this_mouseDragged(MouseEvent e)
-	{
-		if (moveLevel)
-		{
+	@Override
+	protected void this_mouseDragged(MouseEvent e) {
+		if (moveLevel) {
 			upd_currpos(e);
 
 			updateLevel(coord2value(currpos.y));
@@ -217,10 +215,9 @@ public class HistogrammPanel extends ScaledGraphPanel
 		super.this_mouseDragged(e);
 	}
 
-	protected void this_mouseReleased(MouseEvent e)
-	{
-		if (moveLevel)
-		{
+	@Override
+	protected void this_mouseReleased(MouseEvent e) {
+		if (moveLevel) {
 			moveLevel = false;
 			setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
 			parent.repaint();
