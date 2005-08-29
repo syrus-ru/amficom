@@ -254,18 +254,18 @@ public class HistogrammPanel extends ScaledGraphPanel
 		return ap.getSentitivity();
 	}
 
+	/**
+	 * пытается установить новое значение уровня
+	 */
 	private void updateLevel(double v) {
 		double vThresh = level2thresh(v);
 		if (vThresh > 0) {
 			AnalysisParameters ap = Heap.getMinuitAnalysisParams();
 			try {
 				// try to change sensitivity
-				ap.setSensitivity(vThresh);
-				// success, apply changes
-				this.level = v;
-				movedHere = true;
+				ap.setSensitivity(vThresh, true);
+				// success, apply changes (we are one of subscribers!)
 				Heap.notifyAnalysisParametersUpdated(); // FIXME: implement other senders and subscribers
-				movedHere = false;
 			} catch (InvalidAnalysisParametersException e) {
 				// just ignore
 			}
