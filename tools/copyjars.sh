@@ -29,12 +29,15 @@ fi
 LIBDIR=`echo ${AMFICOM_HOME} | sed "s|~|${HOME}|g"`/lib
 
 FILES="general.jar \
+generalxml.jar \
 administration.jar \
 configuration.jar \
+configurationxml.jar \
 measurement.jar \
 event.jar \
 resource.jar \
 map.jar \
+mapxml.jar \
 scheme.jar \
 mapview.jar \
 filter.jar \
