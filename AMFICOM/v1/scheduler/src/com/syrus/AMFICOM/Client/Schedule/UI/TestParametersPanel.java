@@ -149,7 +149,11 @@ public class TestParametersPanel implements PropertyChangeListener {
 															int index,
 															boolean isSelected,
 															boolean cellHasFocus) {
-				return super.getListCellRendererComponent(list, ((AnalysisType)value).getDescription(), index, isSelected,
+				AnalysisType analysisType = ((AnalysisType)value);
+				return super.getListCellRendererComponent(list, 
+					analysisType != null ? analysisType.getDescription() : null, 
+					index, 
+					isSelected,
 					cellHasFocus);
 			}
 		});
