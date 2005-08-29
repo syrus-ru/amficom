@@ -52,7 +52,6 @@ public class HistogrammPanel extends ScaledGraphPanel
 	private Color thresholdColor;
 
 	private boolean moveLevel = false;
-	private boolean movedHere = false;
 
 	public HistogrammPanel(ResizableLayeredPanel panel, double[] y, double deltaX)
 	{
@@ -268,7 +267,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 		try {
 			// try to change sensitivity
 			ap.setSensitivity(level2thresh(v), true);
-			// success, apply changes (we are one of subscribers!)
+			// success, apply changes
+			// NB: мы *должны* будем получить и обработать уведомление
 			Heap.notifyAnalysisParametersUpdated(); // FIXME: implement other senders and subscribers
 		} catch (InvalidAnalysisParametersException e) {
 			// just ignore
@@ -276,8 +276,6 @@ public class HistogrammPanel extends ScaledGraphPanel
 	}
 
 	public void updAnalysisParameters() {
-		if (movedHere)
-			return;
 		double level1 = getHeapLevel();
 		if (level1 == this.level)
 			return;
