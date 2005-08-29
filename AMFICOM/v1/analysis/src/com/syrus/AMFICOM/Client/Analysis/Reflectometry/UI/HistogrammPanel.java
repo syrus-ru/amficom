@@ -38,7 +38,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 	private static final Stroke GAUSS_STROKE = new BasicStroke(GAUSS_W);
 	private static final Stroke THRESHOLD_STROKE = new BasicStroke(1);
 
-	private double level = 0.2;
+	private double level;
 
 	// transfer coefficient dB/km to dB 
 	private double alpha = 0.0;
@@ -66,6 +66,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 			updateHistogrammData(0, mtae.getModelTrace().getLength() - 1);
 		else
 			updateHistogrammData(0, y.length / 2);
+
+		this.level = getHeapLevel();
 	}
 
 	public void init()
@@ -152,8 +154,8 @@ public class HistogrammPanel extends ScaledGraphPanel
 		g.setColor(Color.RED);
 		int jw = getWidth();
 
-		g.drawLine(10, (int)((maxY - level - top) * scaleY - 1),
-							 jw - 10, (int)((maxY - level - top) * scaleY - 1));
+		g.drawLine(10, value2coord(this.level),
+				 jw - 10, value2coord(this.level));
 
 		g.setColor(UIManager.getColor(AnalysisResourceKeys.COLOR_SCALE_DIGITS));
 		StringBuilder sb = new StringBuilder();
@@ -254,6 +256,10 @@ public class HistogrammPanel extends ScaledGraphPanel
 		return ap.getSentitivity();
 	}
 
+	private double getHeapLevel() {
+		return thresh2level(getHeapThreshold());
+	}
+
 	/**
 	 * пытается установить новое значение уровня
 	 */
@@ -275,7 +281,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 	public void updAnalysisParameters() {
 		if (movedHere)
 			return;
-		double level1 = thresh2level(getHeapThreshold());
+		double level1 = getHeapLevel();
 		if (level1 == this.level)
 			return;
 		this.level = level1;
