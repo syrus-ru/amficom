@@ -61,7 +61,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/08/26 09:38:41 $
+ * @version $Revision: 1.70 $, $Date: 2005/08/29 14:24:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -927,7 +927,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.maxDistanceComboBox = new JComboBox();
 		this.highResolutionCheckBox = new JCheckBox(LangModelSchedule.getString("Text.HighResolution"));
 		this.pulseWidthHiResComboBox = new JComboBox();
+		this.pulseWidthHiResComboBox.setMaximumRowCount(15);
 		this.pulseWidthLowResComboBox = new JComboBox();
+		this.pulseWidthLowResComboBox.setMaximumRowCount(15);
 		this.resolutionComboBox = new JComboBox();
 		this.averageQuantityComboBox = new JComboBox();
 
