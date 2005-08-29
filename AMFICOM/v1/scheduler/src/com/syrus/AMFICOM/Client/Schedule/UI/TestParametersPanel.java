@@ -375,13 +375,11 @@ public class TestParametersPanel implements PropertyChangeListener {
 		}
 	}
 
-	public Identifier getAnalysisTypeId() {
-		Identifier analysisTypeId = null;
+	public AnalysisType getAnalysisType() {
 		if (this.tabbedPane.getSelectedIndex() == 0 && this.useAnalysisSetupsCheckBox.isSelected()) {
-			Identifiable identifiable = (Identifiable) this.analysisComboBox.getSelectedItem();
-			analysisTypeId = identifiable != null ? identifiable.getId() : Identifier.VOID_IDENTIFIER;
+			return (AnalysisType) this.analysisComboBox.getSelectedItem();
 		}
-		return analysisTypeId;
+		return AnalysisType.UNKNOWN;
 	}
 
 	public MeasurementSetup getMeasurementSetup() {
@@ -584,9 +582,8 @@ public class TestParametersPanel implements PropertyChangeListener {
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_SET)) {
 			this.setSet((ParameterSet) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE)) {
-			Identifier analysisTypeId = this.getAnalysisTypeId();
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_ANALYSIS_TYPE,
-																		null, analysisTypeId));
+																		null, this.getAnalysisType()));
 		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP)) {
 			MeasurementSetup measurementSetup1 = getMeasurementSetup();
 			if (measurementSetup1 != null) {

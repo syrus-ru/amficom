@@ -123,11 +123,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 	public static final String	COMMAND_DATE_OPERATION				= "DateOperation";
 
-	MeasurementType				measurementType						= null;
+	MeasurementType				measurementType						= MeasurementType.UNKNOWN;
 
 	private String				name								= null;
 	MonitoredElement			monitoredElement					= null;
-	private AnalysisType		analysisType						= null;
+	private AnalysisType		analysisType						= AnalysisType.UNKNOWN;
 	private ParameterSet		set									= null;
 	private MeasurementSetup	measurementSetup					= null;
 	private TestTemporalStamps	testTimeStamps						= null;

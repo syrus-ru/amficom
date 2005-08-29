@@ -116,7 +116,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 				LangModelSchedule.getString("Have not choosen Measurement element"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 				JOptionPane.OK_OPTION);
 		this.schedulerModel.setBreakData();
-		return null;
+		return MeasurementType.UNKNOWN;
 	}
 
 	public KIS getKIS() {
