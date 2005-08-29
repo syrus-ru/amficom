@@ -264,17 +264,14 @@ public class HistogrammPanel extends ScaledGraphPanel
 	 * пытается установить новое значение уровня
 	 */
 	private void updateLevel(double v) {
-		double vThresh = level2thresh(v);
-		if (vThresh > 0) {
-			AnalysisParameters ap = Heap.getMinuitAnalysisParams();
-			try {
-				// try to change sensitivity
-				ap.setSensitivity(vThresh, true);
-				// success, apply changes (we are one of subscribers!)
-				Heap.notifyAnalysisParametersUpdated(); // FIXME: implement other senders and subscribers
-			} catch (InvalidAnalysisParametersException e) {
-				// just ignore
-			}
+		AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+		try {
+			// try to change sensitivity
+			ap.setSensitivity(level2thresh(v), true);
+			// success, apply changes (we are one of subscribers!)
+			Heap.notifyAnalysisParametersUpdated(); // FIXME: implement other senders and subscribers
+		} catch (InvalidAnalysisParametersException e) {
+			// just ignore
 		}
 	}
 
