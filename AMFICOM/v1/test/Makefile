@@ -4,7 +4,7 @@
 #TEST_PACKAGE = com.syrus.AMFICOM.setup
 #TEST_CLASS=TestIdentifier
 #TEST_PACKAGE=com.syrus.AMFICOM.general
-TEST_CLASS=TestMeasurementPortType
+TEST_CLASS=TestKIS
 TEST_PACKAGE=com.syrus.AMFICOM.measurement
 #TEST_CLASS=TestSystemUser
 #TEST_PACKAGE=com.syrus.AMFICOM.administration
