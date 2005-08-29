@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.44 2005/08/29 14:29:16 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.45 2005/08/29 14:30:32 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -125,7 +125,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.44 $, $Date: 2005/08/29 14:29:16 $
+ * @version $Revision: 1.45 $, $Date: 2005/08/29 14:30:32 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -915,8 +915,7 @@ public class TypicalCondition implements StorableObjectCondition {
 							transferable.operation, new Short(transferable.entityCode),
 							transferable.key);
 				case TypicalSort._TYPE_ENUM:
-					ctor = Class.forName(className).getDeclaredConstructor(
-							Enum.class, OperationSort.class, Short.class, String.class);
+					ctor = Class.forName(className).getDeclaredConstructor(Enum.class, OperationSort.class, Short.class, String.class);
 					ctor.setAccessible(true);
 					this.delegate = (TypicalCondition) ctor.newInstance(EnumUtil.reflectFromInt((Class<? extends Enum>) Class.forName(transferable.otherValue),
 							Integer.parseInt(transferable.value)),
