@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.111 2005/08/29 09:20:49 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.112 2005/08/29 11:46:09 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.111 $, $Date: 2005/08/29 09:20:49 $
+ * @version $Revision: 1.112 $, $Date: 2005/08/29 11:46:09 $
  * @module
  */
 
@@ -343,10 +343,10 @@ public class CoreAnalysisManager
 		ReliabilitySimpleReflectogramEventImpl[] rse = createSimpleEvents(
 				tpa.y,
 				tpa.deltaX,
-				ap.getMinThreshold(),
-				ap.getMinSplice(),
-				ap.getMinConnector(),
-				ap.getMinEnd(),
+				ap.getEventTh(),
+				ap.getSpliceTh(),
+				ap.getConnectorTh(),
+				ap.getEndTh(),
 				ap.getNoiseFactor(),
 				nReflSize,
 				ap.getRsaCrit(),

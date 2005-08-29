@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersStorage.java,v 1.3 2005/08/29 09:57:11 saa Exp $
+ * $Id: AnalysisParametersStorage.java,v 1.4 2005/08/29 11:46:10 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,17 +18,22 @@ import java.io.IOException;
  * а {@link AnalysisParametersStorage} использовать тогда, когда нужно изменить
  * сразу несколько параметров.
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/08/29 09:57:11 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/29 11:46:10 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
 public class AnalysisParametersStorage
 implements DataStreamable, Cloneable
 {
-	private static final double DEFAULT_THRESHOLD_TO_SPLICE_RATIO = 0.4;
+	private static final double DEFAULT_EVENT_TO_SPLICE_RATIO = 0.4;
+	private static final double ABS_MIN_SPLICE_TH = 0.001;
+	private static final double ABS_MAX_END_TH = 30.0;
+
+	private static final double ABS_MIN_EVENT_TH = ABS_MIN_SPLICE_TH
+			* DEFAULT_EVENT_TO_SPLICE_RATIO * 0.9; // 0.9 - запас на ошибку округления
+
 	private static final double[] RECOMMENDED_NOISE_FACTORS = new double[] {
 		1.0, 1.3, 1.5, 2.0, 2.5 };
-	private static final double MIN_MIN_THRESHOLD = 0.001 * DEFAULT_THRESHOLD_TO_SPLICE_RATIO;
 
 	private double[] param; // основные параметры анализа
 
@@ -63,77 +68,80 @@ implements DataStreamable, Cloneable
 	 */
 	public boolean isCorrect() {
 		// проверяем основные параметры
-		if (getMinThreshold() < MIN_MIN_THRESHOLD)
+		if (getEventTh() < getMinEventTh() || getEventTh() > getMaxEventTh())
 			return false;
-		if (getMinSplice() < getMinThreshold())
+		if (getSpliceTh() < getMinSpliceTh() || getSpliceTh() > getMaxSpliceTh())
 			return false;
-		if (getMinConnector() < getMinSplice())
+		if (getConnectorTh() < getMinConnectorTh() | getConnectorTh() > getMaxConectorTh())
 			return false;
-		if (getMinEnd() < getMinConnector())
+		if (getEndTh() < getMinEndTh() || getEndTh() > getMaxEndTh())
 			return false;
 
 		// проверяем дополнительные параметры
-		if (this.tau2nrs < 0)
+		if (this.tau2nrs < getMinTau2nrs() || this.tau2nrs > getMaxTau2nrs())
 			return false;
-		if (this.nrsMin < 0)
-			return false;
-		if (this.tau2nrs == 0 && this.nrsMin == 0)
-			return false;
-		if (this.rsaCrit < 0)
-			return false;
-		if (this.nrs2rsaSmall <= 0)
-			return false;
-		if (this.nrs2rsaBig < this.nrs2rsaSmall)
-			return false;
-		if (this.l2rsaBig < 0)
+		if (this.nrsMin < getMinRsaCrit() || this.nrsMin > getMaxNrsMin())
 			return false;
 
-		if (this.scaleFactor < 1.0)
+		if (this.rsaCrit < getMinRsaCrit() || this.rsaCrit > getMaxRsaCrit())
 			return false;
-		if (this.scaleFactor > 10) // XXX
+		if (this.nrs2rsaSmall < getMinNrs2rsaSmall() || this.nrs2rsaSmall > getMaxNrs2rsaSmall())
+			return false;
+		if (this.nrs2rsaBig < getMinNrs2rsaBig() || this.nrs2rsaBig > getMaxNrs2rsaBig())
+			return false;
+		if (this.l2rsaBig < getMinL2rsaBig() || this.l2rsaBig > getMaxL2rsaBig())
+			return false;
+
+		if (this.scaleFactor < getMinScaleFactor() || this.scaleFactor > getMaxScaleFactor())
+			return false;
+
+		// дополнительные проверки
+		if (this.tau2nrs == 0 && this.nrsMin == 0)
+			return false;
+		if (this.nrs2rsaSmall <= 0)
 			return false;
 
 		return true;
 	}
 
-	public double getMinThreshold() {
+	public double getEventTh() {
 		return this.param[0];
 	}
-	public double getMinSplice() {
+	public double getSpliceTh() {
 		return this.param[1];
 	}
-	public double getMinConnector() {
+	public double getConnectorTh() {
 		return this.param[2];
 	}
-	public double getMinEnd() {
+	public double getEndTh() {
 		return this.param[3];
 	}
 	public double getNoiseFactor() {
 		return this.param[4];
 	}
 
-	public void setMinThreshold(double v) {
+	public void setEventTh(double v) {
 		this.param[0] = v;
 	}
 
-	public void setMinSplice(double v) {
+	public void setSpliceTh(double v) {
 		this.param[1] = v;
 	}
 
 	public void setSensitivity(double v) {
-		this.setMinSplice(v);
-		this.setMinThreshold(v * DEFAULT_THRESHOLD_TO_SPLICE_RATIO);
+		this.setSpliceTh(v);
+		this.setEventTh(v * DEFAULT_EVENT_TO_SPLICE_RATIO);
 	}
 
 	public double getSentitivity() {
-		return getMinSplice();
+		return getSpliceTh();
 	}
 
-	public void setMinConnector(double v) {
+	public void setConnectorTh(double v) {
 		this.param[2] = v;
 	}
 
-	public void setMinEnd(double v) {
+	public void setEndTh(double v) {
 		this.param[3] = v;
 	}
 
@@ -148,17 +156,17 @@ implements DataStreamable, Cloneable
 		return RECOMMENDED_NOISE_FACTORS.clone();
 	}
 
-	public AnalysisParametersStorage(double minThreshold,
-			double minSplice,
-			double minConnector,
-			double minEnd,
+	public AnalysisParametersStorage(double eventTh,
+			double spliceTh,
+			double connectorTh,
+			double endTh,
 			double noiseFactor)
 	{
 		this.param = new double[] {
-			minThreshold,
-			minSplice,
-			minConnector,
-			minEnd,
+			eventTh,
+			spliceTh,
+			connectorTh,
+			endTh,
 			noiseFactor
 		};
 	}
@@ -280,5 +288,111 @@ implements DataStreamable, Cloneable
 
 	public void setScaleFactor(double scaleFactor) {
 		this.scaleFactor = scaleFactor;
+	}
+
+	/**
+	 * методы getMin*, getMax* - возвращают допустимые пределы вариации
+	 * каждого параметра, считая, что остальные параметры зафиксированы.
+	 * используются:
+	 * <ul>
+	 * <li> внутри - как часть {@link #isCorrect()}
+	 * <li> извне - для возможности "попытаться установить допустимое значение,
+	 * ближайшее к заданному пользователем". <b>Внимание:</b>
+	 * Эти методы не гарантируют, что полученные через них min/max значения
+	 * будут давать согласованный (с точки зрения {@link #isCorrect()})
+	 * набор параметров. Поэтому после установки min/max значения надо будет
+	 * сделать дополнительную проверку isCorrect. Если проверка вернет
+	 * false, то надо считать, что такая возможность для данного набора
+	 * параметров на данный момент не поддерживается. Так получается из-за
+	 * сложной природы ограничений, которая приводит к тому, что
+	 * некоторые проверки плохо укладываются в концепцию min/max значений
+	 * (самый типичный пример - выколотая точка в двумерном пространстве).
+	 * </ul>
+	 * 
+	 * <p>Методы предназначены для отслеживания связей между параметрами
+	 * eventTh/spliceTh/connTh/endTh, для которых допустимые пределы вариации,
+	 * как правило, определены строго.</p>
+	 * 
+	 * <p>Для параметров, не предназначенных для непосредственного
+	 * ввода со стороны пользователя (например, noseFactor, для которого выбор
+	 * предполагается из списка), пределы могут быть вида min=0, max=MAX_VALUE.</p>
+	 */
+	public double getMinEventTh() {
+		return ABS_MIN_EVENT_TH;
+	}
+	public double getMaxEventTh() {
+		return getSpliceTh();
+	}
+	public double getMinSpliceTh() {
+		return getEventTh();
+	}
+	public double getMaxSpliceTh() {
+		return getConnectorTh();
+	}
+	public double getMinSensitivity() {
+		return ABS_MIN_SPLICE_TH;
+	}
+	public double getMaxSensitivity() {
+		return getConnectorTh();
+	}
+	public double getMinConnectorTh() {
+		return getSpliceTh();
+	}
+	public double getMaxConectorTh() {
+		return getEndTh();
+	}
+	public double getMinEndTh() {
+		return getConnectorTh();
+	}
+	public double getMaxEndTh() {
+		return ABS_MAX_END_TH;
+	}
+	public double getMinNoiseFactor() {
+		return 0.0; // фактически, это уже недопустимое значение, но мы считаем, что GUI будет выбирать только из рекомендованных значений
+	}
+	public double getMaxNoiseFactor() {
+		return Double.MAX_VALUE; // фактически, это недопустимое значение
+	}
+	public double getMinL2rsaBig() {
+		return 0.0;
+	}
+	public double getMaxL2rsaBig() {
+		return Double.MAX_VALUE;
+	}
+	public double getMinNrs2rsaBig() {
+		return getNrs2rsaSmall();
+	}
+	public double getMaxNrs2rsaBig() {
+		return Double.MAX_VALUE;
+	}
+	public double getMinNrs2rsaSmall() {
+		return 0.0;
+	}
+	public double getMaxNrs2rsaSmall() {
+		return getNrs2rsaBig();
+	}
+	public int getMinNrsMin() {
+		return 0;
+	}
+	public int getMaxNrsMin() {
+		return Integer.MAX_VALUE;
+	}
+	public double getMinRsaCrit() {
+		return 0.0;
+	}
+	public double getMaxRsaCrit() {
+		return Double.MAX_VALUE;
+	}
+	public double getMinScaleFactor() {
+		return 1.0;
+	}
+	public double getMaxScaleFactor() {
+		return 10.0; // XXX
+	}
+	public double getMinTau2nrs() {
+		return 0.0;
+	}
+	public double getMaxTau2nrs() {
+		return Double.MAX_VALUE;
 	}
 }

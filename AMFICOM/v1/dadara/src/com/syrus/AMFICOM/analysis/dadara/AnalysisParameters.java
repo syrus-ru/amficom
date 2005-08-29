@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.14 2005/08/29 09:39:31 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.15 2005/08/29 11:46:09 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.io.IOException;
  * Если нужно изменить сразу несколько аргументов - используйте методы
  * {@link #getStorageClone()} и {@link #setAllFrom(AnalysisParametersStorage)}
  * @author $Author: saa $
- * @version $Revision: 1.14 $, $Date: 2005/08/29 09:39:31 $
+ * @version $Revision: 1.15 $, $Date: 2005/08/29 11:46:09 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -36,17 +36,17 @@ implements DataStreamable, Cloneable
 		return AnalysisParametersStorage.getRecommendedNoiseFactors();
 	}
 
-	public AnalysisParameters(double minThreshold,
-			double minSplice,
-			double minConnector,
-			double minEnd,
+	public AnalysisParameters(double eventTh,
+			double spliceTh,
+			double connectorTh,
+			double endTh,
 			double noiseFactor)
 	throws InvalidAnalysisParametersException {
 		this.storage = new AnalysisParametersStorage(
-			minThreshold,
-			minSplice,
-			minConnector,
-			minEnd,
+			eventTh,
+			spliceTh,
+			connectorTh,
+			endTh,
 			noiseFactor);
 		checkStorage(this.storage);
 	}
@@ -148,20 +148,20 @@ implements DataStreamable, Cloneable
 		return storage.getL2rsaBig();
 	}
 
-	public double getMinConnector() {
-		return storage.getMinConnector();
+	public double getConnectorTh() {
+		return storage.getConnectorTh();
 	}
 
-	public double getMinEnd() {
-		return storage.getMinEnd();
+	public double getEndTh() {
+		return storage.getEndTh();
 	}
 
-	public double getMinSplice() {
-		return storage.getMinSplice();
+	public double getSpliceTh() {
+		return storage.getSpliceTh();
 	}
 
-	public double getMinThreshold() {
-		return storage.getMinThreshold();
+	public double getEventTh() {
+		return storage.getEventTh();
 	}
 
 	public double getNoiseFactor() {
@@ -208,31 +208,31 @@ implements DataStreamable, Cloneable
 		this.storage.setAllFrom(test);
 	}
 
-	public void setMinConnector(double v)
+	public void setConnectorTh(double v)
 	throws InvalidAnalysisParametersException {
 		AnalysisParametersStorage test = getTestStorage();
-		test.setMinConnector(v);
+		test.setConnectorTh(v);
 		setAllFrom(test);
 	}
 
-	public void setMinEnd(double v)
+	public void setEndTh(double v)
 	throws InvalidAnalysisParametersException {
 		AnalysisParametersStorage test = getTestStorage();
-		test.setMinEnd(v);
+		test.setEndTh(v);
 		setAllFrom(test);
 	}
 
-	public void setMinSplice(double v)
+	public void setSpliceTh(double v)
 	throws InvalidAnalysisParametersException {
 		AnalysisParametersStorage test = getTestStorage();
-		test.setMinSplice(v);
+		test.setSpliceTh(v);
 		setAllFrom(test);
 	}
 
-	public void setMinThreshold(double v)
+	public void setThreshold(double v)
 	throws InvalidAnalysisParametersException {
 		AnalysisParametersStorage test = getTestStorage();
-		test.setMinThreshold(v);
+		test.setEventTh(v);
 		setAllFrom(test);
 	}
 
