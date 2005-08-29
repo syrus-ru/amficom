@@ -35,14 +35,11 @@ RTUTransceiver::RTUTransceiver(const unsigned int timewait,
 	this->tmutex = tmutex;
 	this->rmutex = rmutex;
 
-	this->com_port_number = com_port_number;
-	this->last_used_com_port = NULL;
-
 	if (this->initialize_OTDR_cards()) {
 
 		print_available_parameters(this->otdr_cards[0]);
 
-		this->initialize_OTAUs();
+		this->otauController = new OTAUController(this->timewait, com_port_number);
 
 		this->state = RTU_STATE_INIT_COMPLETED;
 	}
@@ -58,15 +55,13 @@ RTUTransceiver::~RTUTransceiver() {
 			printf ("RTUTransceiver | stoping measurement on OTDR card %u ...\n", this->otdr_cards[i]);
 			QPOTDRAcqStop(this->otdr_cards[i]);
 		}
+		this->otauController->shutdown();
+		pthread_join(this->otauController->get_thread(), NULL);
 	}
 
 	if (this->state != RTU_STATE_INIT_FAILED) {
 		delete[] this->otdr_cards;
-
-		for (i = 0; i < this->com_port_number; i++)
-			CloseHandle(this->com_ports[i]);
-		delete[] this->otau_numbers;
-		delete[] this->com_ports;
+		delete this->otauController;
 	}
 }
 
@@ -128,7 +123,7 @@ void* RTUTransceiver::run(void* args) {
 //					delete previous_address;
 //				previous_address = local_address->clone();
 //			}
-			if (! rtuTransceiver->switch_OTAU(local_address->getData(), local_address->getLength())) {
+			if (!rtuTransceiver->otauController->start(local_address)) {
 				printf("RTUTransceiver | ERROR: Cannot switch OTAU. Measurement cancelled\n");
 				delete measurement_segment;
 				continue;
@@ -152,7 +147,7 @@ void* RTUTransceiver::run(void* args) {
 			memset(wave_form_header, 0, sizeof(QPOTDRWaveformHeader));
 			memset(wave_form_data, 0, sizeof (MAX_WFM_POINTS * sizeof(QPOTDRWaveformData)));
 
-			printf ("RTUTransceiver | Starting measurements at RTU\n");
+			printf ("RTUTransceiver | Starting measurements on RTU\n");
 			HANDLE* events = QPOTDRAcqStart(rtuTransceiver->otdr_cards[otdr_card_index], rtuTransceiver->filter_flags);
 			rtuTransceiver->state = RTU_STATE_ACUIRING_DATA;
 			int ret;
@@ -182,6 +177,8 @@ void* RTUTransceiver::run(void* args) {
 //			}
 
 			QPOTDRAcqStop(rtuTransceiver->otdr_cards[otdr_card_index]);
+			rtuTransceiver->otauController->shutdown();
+			pthread_join(rtuTransceiver->otauController->get_thread(), NULL);
 			rtuTransceiver->state = RTU_STATE_READY;
 
 			ByteArray* bmeasurement_id = measurement_segment->getMeasurementId()->clone();
@@ -276,333 +273,6 @@ int RTUTransceiver::initialize_OTDR_cards() {
 	i = 0;
 	for (list<WORD>::iterator it = present_cards.begin(); it != present_cards.end(); it++)
 		this->otdr_cards[i++] = *it;
-
-	return 1;
-}
-
-
-/**
-* Terminates access for all OTAUs on all serial ports notified,
-* and sets SIDs for them.
-*/
-void RTUTransceiver::initialize_OTAUs() {
-	printf ("RTUTransceiver | Initializing OTAUs...\n");
-	this->com_ports = new HANDLE[this->com_port_number];
-	this->otau_numbers = new unsigned int[this->com_port_number];
-
-	const int COM_PORT_ID_SIZE = 10;
-	char* com_port_id = new char[COM_PORT_ID_SIZE];
-	memset(com_port_id, 0, sizeof(char) * COM_PORT_ID_SIZE);
-	int pos = sprintf (com_port_id, "%s", "COM");
-	int tmp;
-	for (int i = 0; i < this->com_port_number; i++) {
-		tmp = pos + sprintf(com_port_id + pos, "%d:", i + 1);
-
-		printf ("RTUTransceiver | Creating handle for %s\n", com_port_id);
-		this->com_ports[i] = CreateFile(com_port_id,
-										GENERIC_READ | GENERIC_WRITE,
-										0,
-										NULL,
-										OPEN_EXISTING,
-										0,
-										NULL);
-		if (this->com_ports[i] == INVALID_HANDLE_VALUE) {
-			printf ("RTUTransceiver | ERROR: Can't create handle for port %s\n", com_port_id);
-			continue;
-		}
-
-		printf ("RTUTransceiver | Configuring port properties and timeouts for %s", com_port_id);
-		printf ("\n");
-
-		this->set_COM_port_properties(this->com_ports[i]);
-
-		unsigned int reply_length;
-		char* reply;
-
-		reply_length = COM_PORT_REPLY_LENGTH;
-		reply = new char[reply_length];
-		memset(reply, 0, reply_length * sizeof(char));
-
-		//Setting new SIDs to OTAUs
-		printf("RTUTransceiver | Sending INIT-SYS command to %s\n", com_port_id);
-		this->send_switch_command(this->com_ports[i], OTAU_COMMAND_INIT, strlen(OTAU_COMMAND_INIT), reply, reply_length);
-		if (reply_length != 0) {
-			//Getting OTAUs' headers
-			reply_length = COM_PORT_REPLY_LENGTH;
-			memset (reply, 0, reply_length * sizeof(char));
-			printf("RTUTransceiver | Sending RTRV-HDR command to %s\n", com_port_id);
-			this->send_switch_command(this->com_ports[i], OTAU_COMMAND_HDR, strlen(OTAU_COMMAND_HDR), reply, reply_length);
-
-			this->otau_numbers[i] = this->search_number_of_OTAUs(reply, reply_length);
-			printf ("RTUTransceiver | Found %u OTAUs at %s\n", this->otau_numbers[i], com_port_id);
-		}
-		else {
-			printf("RTUTransceiver | No OTAUs found at COM port %s\n", com_port_id);
-			this->otau_numbers[i] = 0;
-		}
-
-		delete[] reply;
-	}
-	delete[] com_port_id;
-}
-
-/**
-* Configure COM port and set read timeout for it.
-*/
-int RTUTransceiver::set_COM_port_properties (const HANDLE com_port_handle) {
-	DCB dcb;
-
-	dcb.DCBlength = sizeof(DCB); // size of DCB
-
-	// Get default COM port settings
-	GetCommState(com_port_handle, &dcb);
-
-	// Change the settings
-	dcb.BaudRate = CBR_9600;			// Current baud 
-	dcb.fBinary = TRUE;					// Binary mode; no EOF check 
-	dcb.fParity = FALSE;				// Enable parity checking ?
-	dcb.fOutxCtsFlow = FALSE;			// No CTS output flow control 
-	dcb.fOutxDsrFlow = FALSE;			// No DSR output flow control 
-	dcb.fDtrControl = DTR_CONTROL_ENABLE;// DTR flow control type 
-	dcb.fDsrSensitivity = TRUE;			// DSR sensitivity 
-	dcb.fTXContinueOnXoff = FALSE;		// XOFF continues Tx 
-	dcb.fOutX = FALSE;					// No XON/XOFF out flow control 
-	dcb.fInX = FALSE;					// No XON/XOFF in flow control 
-	dcb.fErrorChar = FALSE;				// Disable error replacement 
-	dcb.fNull = FALSE;					// Disable null stripping 
-	dcb.fRtsControl = RTS_CONTROL_ENABLE;// RTS flow control 
-	dcb.fAbortOnError = FALSE;			// Do not abort reads/writes on error
-	dcb.ByteSize = 8;					// Number of bits/byte, 4-8 
-	dcb.Parity = NOPARITY;				// 0-4=no,odd,even,mark,space 
-	dcb.StopBits = ONESTOPBIT;			// 0,1,2 = 1, 1.5, 2 
-
-	// Apply new settings
-	if (! SetCommState(com_port_handle, &dcb)) {
-		printf ("RTUTransceiver | Unable to configure the serial port\n");
-		return 0;
-	}
-	
-	COMMTIMEOUTS port_time_outs;
-	GetCommTimeouts(com_port_handle, &port_time_outs);
-	port_time_outs.ReadTotalTimeoutConstant = COM_PORT_READ_TIMEOUT;
-	if (! SetCommTimeouts(com_port_handle, &port_time_outs)) {
-		printf ("RTUTransceiver | Unable to set timeouts for the serial port\n");
-		return 0;
-	}
-
-	return 1;
-}
-
-/**
-* Sends command to OTAU by COM port and gets reply.
-* replySize is used to send buffer size to function
-* and to return the size of message received.
-*/
-void RTUTransceiver::send_switch_command(const HANDLE com_port_handle,
-										 const char* command,
-										 const unsigned int command_size,
-										 char*& reply,
-										 unsigned int& reply_size) {
-	printf("RTUTransceiver | Sending command to OTAU\n");
-	DWORD bytes_sent;
-	WriteFile(com_port_handle, command, command_size, &bytes_sent, NULL);
-	if (bytes_sent != command_size)	{
-		printf ("RTUTransceiver |ERROR: The number of bytes really sent to COM: %u not equal to command size: %u\n", bytes_sent, command_size);
-		return;
-	}
-
-	printf("RTUTransceiver | Getting reply from OTAU\n");
-	DWORD bytes_received;
-	if (! ReadFile(com_port_handle, reply, reply_size,  &bytes_received, NULL)) {
-		printf ("RTUTransceiver | Can't read switch response from COM port!\n");
-		return;
-	}
-
-	if (bytes_received == 0)
-		printf ("RTUTransceiver | Nothing received from COM port - mei you switch!\n");
-	else
-		if (bytes_received > reply_size)
-			printf ("RTUTransceiver | ERROR: Size of data, received from COM port, exceeds buffer size!\n");
-		else
-			printf ("RTUTransceiver | Received data from COM port:\n\n%s\n",reply);
-
-	reply_size = bytes_received;
-}
-
-/**
-* Searches the count of different OTAU IDs in the string.
-*/
-unsigned int RTUTransceiver::search_number_of_OTAUs(char* string, int str_size) {
-	const char* substring = "OTAU";
-	unsigned int ss_size = strlen(substring);
-
-	short* otau_ids_found = new short[MAX_POSSIBLE_OTAUS];
-	memset(otau_ids_found, 0, MAX_POSSIBLE_OTAUS * sizeof(short));
-
-	unsigned int i, j;
-	for (i = 0; i < str_size; i++) {
-		for (j = 0; j < ss_size; j++) {
-			//Comparing the strings by byte
-			if (string[i + j] != substring[j])
-				break;
-
-			if (j == ss_size - 1) {
-				//found the OTAU string
-				char id_chars[3];
-				memcpy(id_chars, string + (i + j + 1) * sizeof(char), 2);
-				id_chars[2] = '\0';
-
-				char* endptr;
-				short id = strtol(id_chars, &endptr, 0);
-				otau_ids_found[id] = 1;
-			}
-		}
-	}
-
-	unsigned int return_value = 0;
-	for (i = 0; i < MAX_POSSIBLE_OTAUS; i++)
-		if (otau_ids_found[i] == 1)
-			return_value ++;
-
-	delete[] otau_ids_found;
-
-	return return_value;
-}
-
-int RTUTransceiver::switch_OTAU(char* local_address, int la_length) {
-	printf("RTUTransceiver | Switching OTAU...\n");
-
-	//Switching fiber	
-	int com_port;
-	int otau_id;
-	int otau_port;
-
-	printf("RTUTransceiver | Getting new fiber address parameters...\n");
-	if (! this->parse_local_address(local_address, la_length, com_port, otau_id, otau_port))
-		return 0;
-
-	printf("COM port: %d, OTAU: %d, OTAUs on COM port: %d\n", com_port, otau_id, this->otau_numbers[com_port - 1]);
-	if ((com_port < 1) || (com_port > this->com_port_number)) {
-		printf ("RTUTransceiver | %d -- Incorrect value of COM port! Must be in [%u; %u]\n", com_port, 1, this->com_port_number);
-		return 0;
-	}
-	if (this->otau_numbers[com_port - 1] == 0) {
-		printf ("RTUTransceiver | No OTAUs on COM port %d\n", com_port);
-		return 0;
-	}
-	else {
-		if ((otau_id < 0) || (otau_id > this->otau_numbers[com_port - 1] - 1)) {
-			printf ("RTUTransceiver | %d -- Incorrect value of OTAU ID! Must be in [%u; %u] for COM%d\n", otau_id, 0, this->otau_numbers[com_port - 1] - 1, com_port);
-			return 0;
-		}
-	}
-
-	if (this->last_used_com_port != NULL) {
-		unsigned int reply_length = COM_PORT_REPLY_LENGTH;
-		char* reply = new char[reply_length];
-		memset(reply, 0, reply_length * sizeof(char));
-
-		//Trying to disconnect OTAU Test Access Path
-		this->send_switch_command(this->last_used_com_port, OTAU_COMMAND_DISCONNECT, strlen(OTAU_COMMAND_DISCONNECT), reply, reply_length);
-
-		delete[] reply;
-	}
-
-	char* mesgcomm = new char[OTAU_COMMAND_CONNECT_LENGTH];
-	memset(mesgcomm, 0, OTAU_COMMAND_CONNECT_LENGTH);
-
-	int j = sprintf(mesgcomm, "%s", OTAU_COMMAND_CONNECT1);
-	
-	if (otau_id < 10) {
-		j += sprintf(mesgcomm + j, "%s", "0");
-		j += sprintf(mesgcomm + j,"%d", otau_id);
-	}
-	else
-		if ((10 < otau_id) && (otau_id < 100)) {
-			j += sprintf (mesgcomm + j, "%d", otau_id);
-		}
-		else {
-			printf ("RTUTransceiver | OTAU SID should be less than 100! Cannot switch OTAU\n");
-			delete[] mesgcomm;
-			return 0;
-		}
-
-	j += sprintf (mesgcomm + j, "%s", ":");
-
-	if (otau_port < 100) {
-		j += sprintf (mesgcomm + j, "%d", otau_port);
-	}
-	else {
-		printf ("RTUTransceiver | OTAU port should be less than 100! Cannot switch OTAU\n");
-		delete[] mesgcomm;
-		return 0;
-	}
-
-	sprintf(mesgcomm + j, "%s", OTAU_COMMAND_CONNECT2);
-
-	unsigned int msg_length = strlen(mesgcomm);
-
-	HANDLE sp = this->com_ports[com_port - 1];
-
-	unsigned int reply_length = COM_PORT_REPLY_LENGTH;
-	char* reply = new char[reply_length];
-	memset(reply, 0, reply_length * sizeof(char));
-
-	printf("RTUTransceiver | Sending command to OTAU: %s\n", mesgcomm);
-	this->send_switch_command(sp, mesgcomm, msg_length, reply, reply_length);
-	this->last_used_com_port = sp;
-
-	delete[] reply;
-	delete[] mesgcomm;
-
-	return reply_length > 0;
-}
-
-int RTUTransceiver::parse_local_address(char* local_address,
-										unsigned int la_length,
-										int& com_port,
-										int& otau_id,
-										int& otau_port) {
-	int separ1_posit = -1;
-	int separ2_posit = -1;
-
-	for (unsigned int i = 0; i < la_length; i++) {
-		if ((local_address[i] == ':') || (local_address[i] == '-')) {
-			if (separ1_posit == -1)
-				separ1_posit = i;
-			else {
-				separ2_posit = i;
-				break;
-			}
-		}
-	}
-
-	if (separ2_posit == -1) {
-		printf("Wrong address format. Should be \"<Serial port ID>:<OTAU ID>:<OTAU port>\"\n");
-		return 0;
-	}
-
-	char* com_port_chars = new char[separ1_posit + 1];
-	char* otau_id_chars = new char[separ2_posit - separ1_posit];
-	char* otau_port_chars = new char[la_length - separ2_posit];
-
-	memcpy(com_port_chars, local_address, separ1_posit);
-	com_port_chars[separ1_posit] = '\0';
-
-	memcpy(otau_id_chars, local_address + separ1_posit + 1, separ2_posit - separ1_posit - 1);
-	otau_id_chars[separ2_posit - separ1_posit - 1] = '\0';
-
-	memcpy(otau_port_chars, local_address + separ2_posit + 1, la_length - separ2_posit - 1);
-	otau_port_chars[la_length - separ2_posit - 1] = '\0';
-
-	char* endptr;
-	com_port = strtol(com_port_chars, &endptr, 0);
-	otau_id = strtol(otau_id_chars, &endptr, 0);
-	otau_port = strtol(otau_port_chars, &endptr, 0);
-
-	delete[] com_port_chars;
-	delete[] otau_id_chars;
-	delete[] otau_port_chars;
 
 	return 1;
 }
