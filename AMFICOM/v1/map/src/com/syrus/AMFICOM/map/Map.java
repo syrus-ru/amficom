@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.79 2005/08/28 19:17:54 bass Exp $
+ * $Id: Map.java,v 1.80 2005/08/29 12:05:54 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,8 +69,8 @@ import com.syrus.AMFICOM.map.xml.XmlTopologicalNodeSeq;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/08/28 19:17:54 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.80 $, $Date: 2005/08/29 12:05:54 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -1027,6 +1027,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 			xmlCollectorsArray.add(collector.getXmlTransferable());
 		}
 		xmlCollectors.setCollectorArray(xmlCollectorsArray.toArray(new XmlCollector[xmlCollectorsArray.size()]));
+		
+		xmlMap.setImportType("amficom");
+
 		return xmlMap;
 	}
 

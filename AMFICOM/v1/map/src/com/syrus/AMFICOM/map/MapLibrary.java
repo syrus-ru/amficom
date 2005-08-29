@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.17 2005/08/28 19:17:54 bass Exp $
+ * $Id: MapLibrary.java,v 1.18 2005/08/29 12:05:54 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/28 19:17:54 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/08/29 12:05:54 $
+ * @author $Author: krupenn $
  * @module map
  */
 public class MapLibrary extends StorableObject implements Identifiable, Namable, Library, XmlBeansTransferable<XmlMapLibrary> {
@@ -347,6 +347,9 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 			xmlSiteNodeTypesArray.add(siteNodeType.getXmlTransferable());
 		}
 		xmlSitenodetypes.setSiteNodeTypeArray(xmlSiteNodeTypesArray.toArray(new XmlSiteNodeType[xmlSiteNodeTypesArray.size()]));
+
+		xmlMapLibrary.setImportType("amficom");
+
 		return xmlMapLibrary;
 	}
 
