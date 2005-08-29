@@ -8,8 +8,8 @@ public class MapInfoSpatialObject extends SpatialObject {
 	private DoublePoint centre = null;
 	
 	public MapInfoSpatialObject(final DoublePoint centre, final String featureLabel) {
+		super(featureLabel);
 		this.centre = centre;
-		this.label = featureLabel;
 	}
 
 	public DoublePoint getCenter() {
