@@ -1,5 +1,5 @@
 /**
- * $Id: SpatialObject.java,v 1.7 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: SpatialObject.java,v 1.8 2005/08/29 12:17:46 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,16 +15,28 @@ package com.syrus.AMFICOM.client.map;
  * Географический объект. Реализация принадлежит используемой системе ГИС.
  * текущее использование класса - в списке найденных по строковому шаблону
  * графических объектов.
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/11 12:43:29 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.8 $, $Date: 2005/08/29 12:17:46 $
  * @module mapviewclient
  * @see com.syrus.AMFICOM.client.map.operations.SpatialSearchPanel
  */
-public interface SpatialObject 
+public abstract class SpatialObject implements Comparable 
 {
+	protected String label = null;
+	
 	/**
 	 * Возвращает имя географического объекта.
 	 * @return имя объекта
 	 */
-	String getLabel();
+	public String getLabel() {
+		return this.label;
+	}
+	
+	public int compareTo(Object o) {
+		if (!(o instanceof SpatialObject))
+			throw new ClassCastException();
+		
+		SpatialObject spatialObject = (SpatialObject)o;
+		return (this.label.compareTo(spatialObject.label));
+	}
 }
