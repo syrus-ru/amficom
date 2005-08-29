@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.35 2005/08/26 09:40:23 max Exp $
+ * $Id: map.idl,v 1.36 2005/08/29 10:01:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,9 +32,9 @@ module map {
 	 			PIQUET,
 				ATS,
 				BUILDING,
-				UNBOUND,
 				CABLE_INLET,
-				TOWER
+				TOWER,
+				UNBOUND
 			};
 			
 			public SiteNodeTypeSort sort;
