@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.8 2005/08/21 15:24:40 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.9 2005/08/29 10:28:40 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,6 +24,9 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.measurement.AnalysisTypeDatabase;
+import com.syrus.AMFICOM.measurement.MeasurementTypeDatabase;
+import com.syrus.AMFICOM.measurement.ModelingTypeDatabase;
 import com.syrus.AMFICOM.mserver.corba.MServer;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
@@ -51,9 +54,7 @@ final class MCMSetup {
 
 		try {
 			/*Create locally hardcoded data*/
-			createDataTypes();
-			createMeasurementUnits();
-			createParameterTypes();
+			createDictionaries();
 
 			/*-Setup all base information about this MCM*/
 			bootstrap();
@@ -75,9 +76,6 @@ final class MCMSetup {
 	}
 
 	private static void bootstrap() throws ApplicationException {
-		/*-Establish connection with database*/
-		MeasurementControlModule.establishDatabaseConnection();
-
 		/*-Initialize database context*/
 		DatabaseContextSetup.initDatabaseContext();
 
@@ -122,20 +120,18 @@ final class MCMSetup {
 		catch (AMFICOMRemoteException are) {
 			throw new RetrieveObjectException(are.message);
 		}
-		if (idlStorableObjects.length < 1)
+		if (idlStorableObjects.length < 1) {
 			throw new IllegalDataException("Cannot find MCM '" + ID + "'");
+		}
 		return (IdlMCM) idlStorableObjects[0];
 	}
 
-	private static void createDataTypes() throws CreateObjectException {
-		DataTypeDatabase.insertDataTypes();
-	}
-
-	private static void createMeasurementUnits() throws CreateObjectException {
-		MeasurementUnitDatabase.insertMeasurementUnits();
-	}
-
-	private static void createParameterTypes() throws CreateObjectException {
-		ParameterTypeDatabase.insertParameterTypes();
+	private static void createDictionaries() throws CreateObjectException {
+		DataTypeDatabase.insertAll();
+		MeasurementUnitDatabase.insertAll();
+		ParameterTypeDatabase.insertAll();
+		MeasurementTypeDatabase.insertAll();
+		AnalysisTypeDatabase.insertAll();
+		ModelingTypeDatabase.insertAll();
 	}
 }
