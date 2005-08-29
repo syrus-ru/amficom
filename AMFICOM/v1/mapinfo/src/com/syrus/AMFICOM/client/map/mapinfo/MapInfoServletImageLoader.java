@@ -1,5 +1,5 @@
 /**
- * $Id: MapInfoServletImageLoader.java,v 1.7 2005/08/24 07:29:48 peskovsky Exp $
+ * $Id: MapInfoServletImageLoader.java,v 1.8 2005/08/29 12:13:34 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,10 +19,10 @@ import java.net.URI;
 import java.net.URISyntaxException;
 import java.net.URL;
 import java.net.URLConnection;
+import java.util.ArrayList;
 import java.util.Date;
 import java.util.Iterator;
-import java.util.Set;
-import java.util.TreeSet;
+import java.util.List;
 
 import com.syrus.AMFICOM.client.map.MapConnection;
 import com.syrus.AMFICOM.client.map.MapConnectionException;
@@ -223,15 +223,15 @@ public class MapInfoServletImageLoader implements MapImageLoader {
 		return this.connection;
 	}
 
-	public Set<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
+	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
 		// TODO Требуется реализация на сервере
-		final Set<SpatialObject> searchResultsList = new TreeSet<SpatialObject>();
+		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
 		return searchResultsList;
 	}
 
-	public Set<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapConnectionException, MapDataException {
+	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapConnectionException, MapDataException {
 		// TODO Требуется реализация на сервере
-		final Set<SpatialObject> searchResultsList = new TreeSet<SpatialObject>();
+		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
 		return searchResultsList;
 	}
 	

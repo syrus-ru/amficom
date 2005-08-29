@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoCorbaImageLoader.java,v 1.9 2005/08/26 16:05:03 krupenn Exp $
+ * $Id: MapInfoCorbaImageLoader.java,v 1.10 2005/08/29 12:13:34 peskovsky Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,6 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Level;
 
 import org.dom4j.Document;
@@ -54,8 +52,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/26 16:05:03 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.10 $, $Date: 2005/08/29 12:13:34 $
+ * @author $Author: peskovsky $
  * @module mapinfo
  */
 
@@ -316,15 +314,15 @@ public class MapInfoCorbaImageLoader implements MapImageLoader {
 		}
 	}
 
-	public Set<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
+	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
 		// TODO Требуется реализация на сервере
-		final Set<SpatialObject> searchResultsList = new TreeSet<SpatialObject>();
+		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
 		return searchResultsList;
 	}
 
-	public Set<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapConnectionException, MapDataException {
+	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapConnectionException, MapDataException {
 		// TODO Требуется реализация на сервере
-		final Set<SpatialObject> searchResultsList = new TreeSet<SpatialObject>();
+		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
 		return searchResultsList;
 	}
 }

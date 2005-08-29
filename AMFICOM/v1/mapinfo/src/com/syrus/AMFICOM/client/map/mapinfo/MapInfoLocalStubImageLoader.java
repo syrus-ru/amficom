@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.18 2005/08/26 16:05:03 krupenn Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.19 2005/08/29 12:13:34 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,9 @@ package com.syrus.AMFICOM.client.map.mapinfo;
 import java.awt.Image;
 import java.awt.geom.Rectangle2D.Double;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.Set;
-import java.util.TreeSet;
 import java.util.logging.Level;
 
 import com.mapinfo.dp.Feature;
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/08/26 16:05:03 $
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.19 $, $Date: 2005/08/29 12:13:34 $
  * @module mapinfo
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectionListener {
@@ -116,10 +116,10 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 		return this.connection;
 	}
 
-	public Set<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
+	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
 		String minimizedSearchText = searchText.toLowerCase();
 		
-		final Set<SpatialObject> searchResultsSet = new TreeSet<SpatialObject>();
+		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
 
 		final FeatureLayer currLayer = ((MapInfoSpatialLayer)layer).getFeatureLayer();
 
@@ -182,7 +182,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 						featureName);
 				long t28 = System.currentTimeMillis();				
 				sumCreatingObjects += (t28 - t27);
-				searchResultsSet.add(spatialObject);
+				searchResultsList.add(spatialObject);
 				t2end = System.currentTimeMillis();				
 			}
 			long t3 = System.currentTimeMillis();			
@@ -225,18 +225,18 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 //				throw new MapDataException("Error while searching at region", e);
 //			}
 //		}
-
-		return searchResultsSet;
+		Collections.sort(searchResultsList);
+		return searchResultsList;
 	}
 
-	public Set<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapConnectionException, MapDataException {
+	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, Double bounds) throws MapConnectionException, MapDataException {
 		final com.mapinfo.util.DoubleRect areaBounds = new com.mapinfo.util.DoubleRect(
 				bounds.getMinX(),
 				bounds.getMinY(),
 				bounds.getMaxX(),
 				bounds.getMaxY());
 		
-		final Set<SpatialObject> searchResultsSet = new TreeSet<SpatialObject>();
+		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
 
 		final FeatureLayer currLayer = ((MapInfoSpatialLayer)layer).getFeatureLayer();
 		try {
@@ -253,12 +253,13 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 				final MapInfoSpatialObject spatialObject = new MapInfoSpatialObject(new DoublePoint(featureCentre.x, featureCentre.y),
 						featureName);
 
-				searchResultsSet.add(spatialObject);
+				searchResultsList.add(spatialObject);
 			}
+			Collections.sort(searchResultsList);
 		} catch (Exception e) {
 			throw new MapDataException("Error while searching at region");
 		}
 		
-		return searchResultsSet;
+		return searchResultsList;
 	}
 }
