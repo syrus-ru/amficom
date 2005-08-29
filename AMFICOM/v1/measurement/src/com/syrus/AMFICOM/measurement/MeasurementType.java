@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.99 2005/08/29 15:57:30 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.100 2005/08/29 16:41:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/08/29 15:57:30 $
+ * @version $Revision: 1.100 $, $Date: 2005/08/29 16:41:13 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -62,6 +62,8 @@ public enum MeasurementType implements ActionType {
 		switch (code) {
 			case IdlMeasurementType._REFLECTOMETRY:
 				return REFLECTOMETRY;
+			case IdlMeasurementType._UNKNOWN_MEASUREMENTTYPE:
+				return UNKNOWN;
 			default:
 				Log.errorMessage("MeasurementType.fromInt | Illegal IDL code: " + code + ", returning UNKNOWN");
 				return UNKNOWN;

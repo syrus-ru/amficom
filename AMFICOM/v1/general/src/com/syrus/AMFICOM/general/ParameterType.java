@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.58 2005/08/29 15:56:57 arseniy Exp $
+ * $Id: ParameterType.java,v 1.59 2005/08/29 16:41:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/08/29 15:56:57 $
+ * @version $Revision: 1.59 $, $Date: 2005/08/29 16:41:06 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -106,6 +106,8 @@ public enum ParameterType implements TransferableObject, Codeable {
 			case IdlParameterType._PREDICTION_TIME_END:
 				return PREDICTION_TIME_END;
 
+			case IdlParameterType._UNKNOWN_PARAMETERTYPE:
+				return UNKNOWN;
 			default:
 				Log.errorMessage("ParameterType.fromInt | Illegal IDL code: " + code + ", returning UNKNOWN");
 				return UNKNOWN;

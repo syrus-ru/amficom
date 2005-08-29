@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.150 2005/08/26 08:08:53 bob Exp $
+ * $Id: Test.java,v 1.151 2005/08/29 16:41:13 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -47,8 +47,8 @@ import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.150 $, $Date: 2005/08/26 08:08:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.151 $, $Date: 2005/08/29 16:41:13 $
+ * @author $Author: arseniy $
  * @module measurement
  */
 
@@ -242,8 +242,9 @@ public final class Test extends StorableObject {
 		if (!this.measurementSetupIds.isEmpty()) {
 			final Identifier msId = this.measurementSetupIds.iterator().next();
 			this.mainMeasurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(msId, true);
-		} else
+		} else {
 			throw new IllegalDataException("Cannot find measurement setup for test '" + this.id + '\'');
+		}
 		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}

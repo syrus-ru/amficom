@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingType.java,v 1.55 2005/08/29 15:57:30 arseniy Exp $
+ * $Id: ModelingType.java,v 1.56 2005/08/29 16:41:13 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/08/29 15:57:30 $
+ * @version $Revision: 1.56 $, $Date: 2005/08/29 16:41:13 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -50,6 +50,8 @@ public enum ModelingType implements TransferableObject, ActionType {
 		switch (code) {
 			case IdlModelingType._DADARA_MODELING:
 				return DADARA_MODELING;
+			case IdlModelingType._UNKNOWN_MODELINGTYPE:
+				return UNKNOWN;
 			default:
 				Log.errorMessage("ModelingType.fromInt | Illegal IDL code: " + code + ", returning UNKNOWN");
 				return UNKNOWN;

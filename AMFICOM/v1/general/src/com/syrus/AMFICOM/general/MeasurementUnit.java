@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnit.java,v 1.4 2005/08/29 15:56:57 arseniy Exp $
+ * $Id: MeasurementUnit.java,v 1.5 2005/08/29 16:41:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/29 15:56:57 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/29 16:41:06 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -58,6 +58,8 @@ public enum MeasurementUnit implements Codeable {
 			case IdlMeasurementUnit._NANOSECOND:
 				return NANOSECOND;
 
+			case IdlMeasurementUnit._UNKNOWN_MEASUREMENTUNIT:
+				return UNKNOWN;
 			default:
 				Log.errorMessage("MeasurementUnit.fromInt | Illegal IDL code: " + code + ", returning RAW");
 				return UNKNOWN;
