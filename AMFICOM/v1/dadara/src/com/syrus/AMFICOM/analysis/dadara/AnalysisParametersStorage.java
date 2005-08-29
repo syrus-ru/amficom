@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersStorage.java,v 1.4 2005/08/29 11:46:10 saa Exp $
+ * $Id: AnalysisParametersStorage.java,v 1.5 2005/08/29 12:03:12 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.io.IOException;
  * а {@link AnalysisParametersStorage} использовать тогда, когда нужно изменить
  * сразу несколько параметров.
  * @author $Author: saa $
- * @version $Revision: 1.4 $, $Date: 2005/08/29 11:46:10 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/29 12:03:12 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -320,78 +320,179 @@ implements DataStreamable, Cloneable
 	public double getMinEventTh() {
 		return ABS_MIN_EVENT_TH;
 	}
+
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMaxEventTh() {
 		return getSpliceTh();
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMinSpliceTh() {
 		return getEventTh();
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMaxSpliceTh() {
 		return getConnectorTh();
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMinSensitivity() {
 		return ABS_MIN_SPLICE_TH;
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMaxSensitivity() {
 		return getConnectorTh();
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMinConnectorTh() {
 		return getSpliceTh();
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMaxConectorTh() {
 		return getEndTh();
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMinEndTh() {
 		return getConnectorTh();
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMaxEndTh() {
 		return ABS_MAX_END_TH;
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMinNoiseFactor() {
 		return 0.0; // фактически, это уже недопустимое значение, но мы считаем, что GUI будет выбирать только из рекомендованных значений
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMaxNoiseFactor() {
 		return Double.MAX_VALUE; // фактически, это недопустимое значение
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMinL2rsaBig() {
 		return 0.0;
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMaxL2rsaBig() {
 		return Double.MAX_VALUE;
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMinNrs2rsaBig() {
 		return getNrs2rsaSmall();
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMaxNrs2rsaBig() {
 		return Double.MAX_VALUE;
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMinNrs2rsaSmall() {
 		return 0.0;
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMaxNrs2rsaSmall() {
 		return getNrs2rsaBig();
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public int getMinNrsMin() {
 		return 0;
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public int getMaxNrsMin() {
 		return Integer.MAX_VALUE;
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMinRsaCrit() {
 		return 0.0;
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMaxRsaCrit() {
 		return Double.MAX_VALUE;
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMinScaleFactor() {
 		return 1.0;
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMaxScaleFactor() {
 		return 10.0; // XXX
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMinTau2nrs() {
 		return 0.0;
 	}
+	/**
+	 * See documentation for {@link #getMinEventTh()} for more information.
+	 * @see #getMinEventTh()
+	 */
 	public double getMaxTau2nrs() {
 		return Double.MAX_VALUE;
 	}
