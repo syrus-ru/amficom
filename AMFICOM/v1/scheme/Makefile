@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.34 2005/08/24 17:57:48 arseniy Exp $
+# $Id: Makefile,v 1.35 2005/08/29 08:59:53 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -40,7 +40,7 @@ $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
-.mach: .corba .xml $(CLASSDIR)
+.mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
