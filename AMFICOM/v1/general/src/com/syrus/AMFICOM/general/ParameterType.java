@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.57 2005/08/29 08:10:26 arseniy Exp $
+ * $Id: ParameterType.java,v 1.58 2005/08/29 15:56:57 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/08/29 08:10:26 $
+ * @version $Revision: 1.58 $, $Date: 2005/08/29 15:56:57 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -48,7 +48,7 @@ public enum ParameterType implements TransferableObject, Codeable {
 	PREDICTION_TIME_END("prediction_time_end", DataType.DATE, MeasurementUnit.SECOND),
 
 	// Other useful things
-	UNKNOWN("синус_в_военное_время", DataType.RAW, MeasurementUnit.ОЧКО);
+	UNKNOWN("синус_в_военное_время", DataType.RAW, MeasurementUnit.UNKNOWN);
 
 	private static final String KEY_ROOT = "ParameterType.Description.";
 
@@ -107,7 +107,7 @@ public enum ParameterType implements TransferableObject, Codeable {
 				return PREDICTION_TIME_END;
 
 			default:
-				Log.errorMessage("Illegal IDL parameter type: " + code);
+				Log.errorMessage("ParameterType.fromInt | Illegal IDL code: " + code + ", returning UNKNOWN");
 				return UNKNOWN;
 		}
 	}
@@ -138,7 +138,12 @@ public enum ParameterType implements TransferableObject, Codeable {
 
 	@SuppressWarnings("unused")
 	public IdlParameterType getTransferable(final ORB orb) {
-		return IdlParameterType.from_int(this.getCode());
+		try {
+			return IdlParameterType.from_int(this.getCode());
+		} catch (org.omg.CORBA.BAD_PARAM bp) {
+			Log.errorMessage("ParameterType.getTransferable | Illegal code: " + this.getCode() + ", returning UNKNOWN");
+			return IdlParameterType.UNKNOWN_PARAMETERTYPE;
+		}
 	}
 
 	public static IdlParameterType[] createTransferables(final EnumSet<ParameterType> parameterTypes, final ORB orb) {

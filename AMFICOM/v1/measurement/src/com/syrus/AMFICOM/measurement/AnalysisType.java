@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisType.java,v 1.95 2005/08/26 18:15:03 arseniy Exp $
+ * $Id: AnalysisType.java,v 1.96 2005/08/29 15:57:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlAnalysisType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/08/26 18:15:03 $
+ * @version $Revision: 1.96 $, $Date: 2005/08/29 15:57:30 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -66,8 +66,8 @@ public enum AnalysisType implements TransferableObject, ActionType {
 			case IdlAnalysisType._DADARA:
 				return DADARA;
 			default:
-				Log.errorMessage("Illegal IDL analysis type: " + code);
-			return UNKNOWN;
+				Log.errorMessage("AnalysisType.fromInt | Illegal IDL code: " + code + ", returning UNKNOWN");
+				return UNKNOWN;
 		}
 	}
 
@@ -109,7 +109,12 @@ public enum AnalysisType implements TransferableObject, ActionType {
 
 	@SuppressWarnings("unused")
 	public IdlAnalysisType getTransferable(final ORB orb) {
-		return IdlAnalysisType.from_int(this.getCode());
+		try {
+			return IdlAnalysisType.from_int(this.getCode());
+		} catch (org.omg.CORBA.BAD_PARAM bp) {
+			Log.errorMessage("AnalysisType.getTransferable | Illegal code: " + this.getCode() + ", returning UNKNOWN");
+			return IdlAnalysisType.UNKNOWN_ANALYSISTYPE;
+		}
 	}
 
 	@Override

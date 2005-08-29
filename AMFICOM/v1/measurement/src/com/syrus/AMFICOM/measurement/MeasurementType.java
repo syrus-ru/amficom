@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.98 2005/08/26 18:15:03 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.99 2005/08/29 15:57:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/08/26 18:15:03 $
+ * @version $Revision: 1.99 $, $Date: 2005/08/29 15:57:30 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -63,8 +63,8 @@ public enum MeasurementType implements ActionType {
 			case IdlMeasurementType._REFLECTOMETRY:
 				return REFLECTOMETRY;
 			default:
-				Log.errorMessage("Illegal IDL measurement type: " + code);
-			return UNKNOWN;
+				Log.errorMessage("MeasurementType.fromInt | Illegal IDL code: " + code + ", returning UNKNOWN");
+				return UNKNOWN;
 		}
 	}
 
@@ -94,7 +94,12 @@ public enum MeasurementType implements ActionType {
 
 	@SuppressWarnings("unused")
 	public IdlMeasurementType getTransferable(final ORB orb) {
-		return IdlMeasurementType.from_int(this.getCode());
+		try {
+			return IdlMeasurementType.from_int(this.getCode());
+		} catch (org.omg.CORBA.BAD_PARAM bp) {
+			Log.errorMessage("MeasurementType.getTransferable | Illegal code: " + this.getCode() + ", returning UNKNOWN");
+			return IdlMeasurementType.UNKNOWN_MEASUREMENTTYPE;
+		}
 	}
 
 	public static IdlMeasurementType[] createTransferables(final EnumSet<MeasurementType> measurementTypes, final ORB orb) {

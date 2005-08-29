@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnit.java,v 1.3 2005/08/28 13:48:40 arseniy Exp $
+ * $Id: MeasurementUnit.java,v 1.4 2005/08/29 15:56:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,10 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlMeasurementUnit;
 import com.syrus.util.Codeable;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/28 13:48:40 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/29 15:56:57 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -27,7 +28,7 @@ public enum MeasurementUnit implements Codeable {
 	SECOND("sec"),
 	NANOSECOND("nsec"),
 
-	ïþëï("ÏÞËÏ");
+	UNKNOWN("ÏÞËÏ");
 
 	private static final String KEY_ROOT = "MeasurementUnit.Name.";
 
@@ -58,7 +59,8 @@ public enum MeasurementUnit implements Codeable {
 				return NANOSECOND;
 
 			default:
-				return ïþëï;
+				Log.errorMessage("MeasurementUnit.fromInt | Illegal IDL code: " + code + ", returning RAW");
+				return UNKNOWN;
 		}
 	}
 
@@ -80,6 +82,11 @@ public enum MeasurementUnit implements Codeable {
 
 	@SuppressWarnings("unused")
 	public IdlMeasurementUnit getTransferable(final ORB orb) {
-		return IdlMeasurementUnit.from_int(this.getCode());
+		try {
+			return IdlMeasurementUnit.from_int(this.getCode());
+		} catch (org.omg.CORBA.BAD_PARAM bp) {
+			Log.errorMessage("MeasurementUnit.getTransferable | Illegal code: " + this.getCode() + ", returning UNKNOWN");
+			return IdlMeasurementUnit.UNKNOWN_MEASUREMENTUNIT;
+		}
 	}
 }
