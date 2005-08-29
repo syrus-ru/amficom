@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: Collector.xsd,v 1.6 2005/08/28 19:17:54 bass Exp $
+<!-- $Id: Collector.xsd,v 1.7 2005/08/29 17:05:03 bass Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/map/xml"
@@ -14,12 +14,12 @@
 
     <xsd:key name="collectorId">
       <xsd:selector xpath="map:collector"/>
-      <xsd:field xpath="@id"/>
+      <xsd:field xpath="id"/>
     </xsd:key>
 
     <xsd:keyref name="dummycplus" refer="map:physicalLinkId">
       <xsd:selector xpath="map:collector/map:physicalLinkIds"/>
-      <xsd:field xpath="@physicalLinkId"/>
+      <xsd:field xpath="physicalLinkId"/>
     </xsd:keyref>
 
   </xsd:element>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: CableLinkType.xsd,v 1.2 2005/08/28 11:33:27 bass Exp $
+<!-- $Id: CableLinkType.xsd,v 1.3 2005/08/29 17:05:54 bass Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/configuration/xml"
@@ -16,7 +16,7 @@
 
     <xsd:key name="cableLinkTypeId">
       <xsd:selector xpath="configuration:cableLinkType"/>
-      <xsd:field xpath="@id"/>
+      <xsd:field xpath="id"/>
     </xsd:key>
 
   </xsd:element>

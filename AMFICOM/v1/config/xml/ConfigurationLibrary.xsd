@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: ConfigurationLibrary.xsd,v 1.4 2005/08/28 11:33:27 bass Exp $
+<!-- $Id: ConfigurationLibrary.xsd,v 1.5 2005/08/29 17:05:54 bass Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/configuration/xml"
@@ -21,6 +21,6 @@
       <xsd:element name="portTypes" type="configuration:XmlPortTypeSeq" minOccurs="0" maxOccurs="1"/>
       <xsd:element name="equipmentTypes" type="configuration:XmlEquipmentTypeSeq" minOccurs="0" maxOccurs="1"/>
     </xsd:all>
-	<xsd:attribute name="importtype" type="xsd:string" use="required"/>
+	<xsd:attribute name="importType" type="xsd:string" use="required"/>
   </xsd:complexType>
 </xsd:schema>

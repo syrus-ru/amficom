@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: Map.xsd,v 1.8 2005/08/28 19:17:54 bass Exp $
+<!-- $Id: Map.xsd,v 1.9 2005/08/29 17:05:03 bass Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/map/xml"
@@ -20,7 +20,7 @@
 
     <xsd:unique name="mapId">
       <xsd:selector xpath="map:map"/>
-      <xsd:field xpath="@id"/>
+      <xsd:field xpath="id"/>
     </xsd:unique>
 
   </xsd:element>

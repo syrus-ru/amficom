@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: TopologicalNode.xsd,v 1.7 2005/08/28 19:17:54 bass Exp $
+<!-- $Id: TopologicalNode.xsd,v 1.8 2005/08/29 17:05:03 bass Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/map/xml"
@@ -14,12 +14,12 @@
 
     <xsd:key name="topologicalNodeId">
       <xsd:selector xpath="map:topologicalNodes/map:topologicalNode"/>
-      <xsd:field xpath="@id"/>
+      <xsd:field xpath="id"/>
     </xsd:key>
 
     <xsd:key name="abstractNodeId">
       <xsd:selector xpath="map:topologicalNodes/map:topologicalNode"/>
-      <xsd:field xpath="@id"/>
+      <xsd:field xpath="id"/>
     </xsd:key>
 
   </xsd:element>

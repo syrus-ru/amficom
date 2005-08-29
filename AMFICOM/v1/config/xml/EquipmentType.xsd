@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: EquipmentType.xsd,v 1.2 2005/08/28 11:33:27 bass Exp $
+<!-- $Id: EquipmentType.xsd,v 1.3 2005/08/29 17:05:54 bass Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/configuration/xml"
@@ -14,7 +14,7 @@
 
     <xsd:key name="equipmentTypeId">
       <xsd:selector xpath="configuration:equipmentType"/>
-      <xsd:field xpath="@id"/>
+      <xsd:field xpath="id"/>
     </xsd:key>
 
   </xsd:element>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: SiteNodeType.xsd,v 1.10 2005/08/29 10:02:52 krupenn Exp $
+<!-- $Id: SiteNodeType.xsd,v 1.11 2005/08/29 17:05:03 bass Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/map/xml"
@@ -14,7 +14,7 @@
 
     <xsd:key name="siteNodeTypeId">
       <xsd:selector xpath="map:siteNodeTypes/map:siteNodeType"/>
-      <xsd:field xpath="@id"/>
+      <xsd:field xpath="id"/>
     </xsd:key>
 
   </xsd:element>
