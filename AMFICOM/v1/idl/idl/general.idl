@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.108 2005/08/26 09:28:29 bob Exp $
+ * $Id: general.idl,v 1.109 2005/08/29 15:56:30 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,9 @@ module general {
 			NANOMETER,
 
 			SECOND,
-			NANOSECOND
+			NANOSECOND,
+			
+			UNKNOWN_MEASUREMENTUNIT
 		};
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
@@ -91,7 +93,9 @@ module general {
 
 			PREDICTION_TIME,
 			PREDICTION_TIME_START,
-			PREDICTION_TIME_END
+			PREDICTION_TIME_END,
+
+			UNKNOWN_PARAMETERTYPE
 		};
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/

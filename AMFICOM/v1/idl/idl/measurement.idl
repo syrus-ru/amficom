@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.78 2005/08/26 09:07:51 bob Exp $
+ * $Id: measurement.idl,v 1.79 2005/08/29 15:56:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,8 @@ module measurement {
 ////////////////////////// MeasurementType ///////////////////////////	
 
 		enum IdlMeasurementType {
-			REFLECTOMETRY
+			REFLECTOMETRY,
+			UNKNOWN_MEASUREMENTTYPE
 		};
 		typedef sequence <IdlMeasurementType> IdlMeasurementTypeSeq;
 
@@ -35,14 +36,16 @@ module measurement {
 ////////////////////////// AnalysisType ///////////////////////////
 
 		enum IdlAnalysisType {
-			DADARA
+			DADARA,
+			UNKNOWN_ANALYSISTYPE
 		};
 
 
 ////////////////////////// ModelingType ///////////////////////////
 
 		enum IdlModelingType {
-			DADARA_MODELING
+			DADARA_MODELING,
+			UNKNOWN_MODELINGTYPE
 		};
 
 
