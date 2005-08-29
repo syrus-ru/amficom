@@ -43,7 +43,6 @@ import javax.swing.event.ListSelectionListener;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -216,7 +215,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.analysisComboBox.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				WrapperedComboBox comboBox = (WrapperedComboBox) e.getSource();
+				JComboBox comboBox = (JComboBox) e.getSource();
 				AnalysisType analysisType = (AnalysisType) comboBox.getSelectedItem();
 				java.util.Set selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
 				if (selectedTestIds != null && !selectedTestIds.isEmpty()
