@@ -216,10 +216,6 @@ pthread_t MCMTransceiver::get_thread() const {
 	return this->thread;
 }
 
-unsigned int MCMTransceiver::get_timewait() const {
-	return this->timewait;
-}
-
 unsigned int MCMTransceiver::get_max_mcm_timeout() const {
 	return this->max_mcm_timeout;
 }

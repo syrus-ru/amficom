@@ -29,7 +29,6 @@ public:
 	void shutdown();
 
 	pthread_t get_thread() const;
-	unsigned int get_timewait() const;
 	unsigned int get_max_mcm_timeout() const;
 	
 
