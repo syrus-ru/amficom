@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.56 2005/08/28 13:48:40 arseniy Exp $
+ * $Id: ParameterType.java,v 1.57 2005/08/29 08:10:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/08/28 13:48:40 $
+ * @version $Revision: 1.57 $, $Date: 2005/08/29 08:10:26 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -48,7 +48,7 @@ public enum ParameterType implements TransferableObject, Codeable {
 	PREDICTION_TIME_END("prediction_time_end", DataType.DATE, MeasurementUnit.SECOND),
 
 	// Other useful things
-	óéîõó_÷_÷ïåîîïå_÷òåíñ("ÓÉÎÕÓ_×_×ÏÅÎÎÏÅ_×ÒÅÍÑ", DataType.RAW, MeasurementUnit.ïşëï);
+	UNKNOWN("ÓÉÎÕÓ_×_×ÏÅÎÎÏÅ_×ÒÅÍÑ", DataType.RAW, MeasurementUnit.ïşëï);
 
 	private static final String KEY_ROOT = "ParameterType.Description.";
 
@@ -108,7 +108,7 @@ public enum ParameterType implements TransferableObject, Codeable {
 
 			default:
 				Log.errorMessage("Illegal IDL parameter type: " + code);
-				return óéîõó_÷_÷ïåîîïå_÷òåíñ;
+				return UNKNOWN;
 		}
 	}
 
