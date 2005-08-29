@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.110 2005/08/25 16:53:05 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.111 2005/08/29 09:20:49 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.110 $, $Date: 2005/08/25 16:53:05 $
+ * @version $Revision: 1.111 $, $Date: 2005/08/29 09:20:49 $
  * @module
  */
 
@@ -275,15 +275,6 @@ public class CoreAnalysisManager
 	protected static ModelFunction fitTrace(double[] y, int traceLength, double[] noiseArray, SimpleReflectogramEvent[] sre)
 	{
 		return ModelFunction.createFitedAsBreakL(y, 0, traceLength, noiseArray, sre);
-	}
-
-	/**
-	 * Проверяет параметры для анализа.
-	 * @param ap проверяемые параметры
-	 * @return true, если набор корректен, false, если набор некорректен
-	 */
-	public static boolean checkAnalysisParameters(AnalysisParameters ap) {
-		return ap.isCorrect();
 	}
 
 	/**
