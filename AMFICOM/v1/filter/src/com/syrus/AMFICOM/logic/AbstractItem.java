@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.17 2005/08/24 14:13:06 max Exp $
+ * $Id: AbstractItem.java,v 1.18 2005/08/29 09:54:15 max Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import java.util.List;
 import java.util.logging.Level;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/24 14:13:06 $
+ * @version $Revision: 1.18 $, $Date: 2005/08/29 09:54:15 $
  * @author $Author: max $
  * @author Vladimir Dolzhenko
  * @module filter
@@ -187,7 +187,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 		for (int i = 0; i < cs.length; i++) {
 			cs[i] = '\t';
 		}
-		System.out.println(new String(cs) + this.getName());
+		//System.out.println(new String(cs) + this.getName());
 		if (this.children != null) {
 			for (Iterator it = this.children.iterator(); it.hasNext();) {
 				Item item = (Item) it.next();

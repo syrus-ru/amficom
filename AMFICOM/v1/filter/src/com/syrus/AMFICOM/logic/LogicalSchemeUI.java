@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.22 2005/08/09 19:41:15 arseniy Exp $
+ * $Id: LogicalSchemeUI.java,v 1.23 2005/08/29 09:54:15 max Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/08/09 19:41:15 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/08/29 09:54:15 $
+ * @author $Author: max $
  * @module filter
  */
 public class LogicalSchemeUI extends JComponent implements MouseListener, MouseMotionListener, SelectionListener, ItemListener {
@@ -334,7 +334,6 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			int w = 10;
 
 			final int componentWidth = this.getWidth();
-			System.out.println(componentWidth);
 			int componentHeight = this.getHeight();
 			{
 				for (final ViewItem viewItem : deepItems) {
@@ -347,13 +346,10 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 
 						if (count * w + width > componentWidth) {
 							w = (componentWidth - width) / count;
-							System.out.println(viewItem2.getName() + " recalc: " + w + ", width:" + width + ", count:" + count);
 						}
 					}
 				}
 			}
-
-			System.out.println(w);
 
 			w = (w > EDGE_THICK) ? w : EDGE_THICK;
 			this.rootServiceItem.print(0);

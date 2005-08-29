@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.15 2005/08/29 09:35:28 max Exp $
+ * $Id: ItemTreeModel.java,v 1.16 2005/08/29 09:54:15 max Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import javax.swing.tree.TreePath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/29 09:35:28 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/29 09:54:15 $
  * @author $Author: max $
  * @author Vladimir Dolzhenko
  * @module filter
@@ -442,7 +442,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	}
 
 	public void setParentPerformed(final Item item, final Item oldParent, final Item newParent) {
-		System.out.println(this.getClass().getName()+ ".setParentPerformed | item:" + item + ", oldParent:" + oldParent + ", newParent:" + newParent);
+		Log.debugMessage("ItemTreeModel.setParentPerformed | " + this.getClass().getName()+ ".setParentPerformed | item:" + item + ", oldParent:" + oldParent + ", newParent:" + newParent, Level.FINEST);
 		if (oldParent != null) {
 			removeNodeFromParent(oldParent, item);
 		}
