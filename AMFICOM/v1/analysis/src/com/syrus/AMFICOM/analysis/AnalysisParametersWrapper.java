@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersWrapper.java,v 1.6 2005/08/29 09:39:45 saa Exp $
+ * $Id: AnalysisParametersWrapper.java,v 1.7 2005/08/29 11:46:23 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/08/29 09:39:45 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/29 11:46:23 $
  * @module analysis
  */
 
@@ -93,9 +93,9 @@ public class AnalysisParametersWrapper implements Wrapper {
 			AnalysisParameters params = (AnalysisParameters) object;
 			
 			if (key.equals(KEY_MIN_CONNECTOR)) {
-				return new Double(params.getMinConnector());
+				return new Double(params.getConnectorTh());
 			} else if (key.equals(KEY_MIN_END)) {
-				return new Double(params.getMinEnd());
+				return new Double(params.getEndTh());
 			} else if (key.equals(KEY_SENSITIVITY)) {
 				return new Double(params.getSentitivity());
 			} else if (key.equals(KEY_NOISE_FACTOR)) {
@@ -124,9 +124,9 @@ public class AnalysisParametersWrapper implements Wrapper {
 			
 			try {
 				if (key.equals(KEY_MIN_CONNECTOR)) {
-					params.setMinConnector(Double.parseDouble((String)value));
+					params.setConnectorTh(Double.parseDouble((String)value));
 				} else if (key.equals(KEY_MIN_END)) {
-					params.setMinEnd(Double.parseDouble((String)value));
+					params.setEndTh(Double.parseDouble((String)value));
 				} else if (key.equals(KEY_SENSITIVITY)) {
 					params.setSensitivity(Double.parseDouble((String)value));
 				} else if (key.equals(KEY_NOISE_FACTOR)) {

@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.6 2005/08/29 09:39:45 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.7 2005/08/29 11:46:23 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -34,7 +34,7 @@ import com.syrus.util.HashCodeGenerator;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/08/29 09:39:45 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/29 11:46:23 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -203,10 +203,10 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 				0.1 };
 
 		AnalysisParametersStorage aps = ap.getStorageClone();
-		aps.setMinThreshold(p[0]);
-		aps.setMinSplice(p[1]);
-		aps.setMinConnector(p[2]);
-		aps.setMinEnd(p[3]);
+		aps.setEventTh(p[0]);
+		aps.setSpliceTh(p[1]);
+		aps.setConnectorTh(p[2]);
+		aps.setEndTh(p[3]);
 		aps.setNoiseFactor(p[4]);
 		aps.setTau2nrs(p[5]);
 		aps.setNrsMin((int) p[6]);
