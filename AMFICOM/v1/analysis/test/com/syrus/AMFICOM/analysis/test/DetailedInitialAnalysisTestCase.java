@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.5 2005/07/22 06:56:50 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.6 2005/08/29 09:39:45 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -22,6 +22,8 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
 import com.syrus.AMFICOM.analysis.ClientAnalysisManager;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.AnalysisParametersStorage;
+import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.ReliabilitySimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
@@ -32,7 +34,7 @@ import com.syrus.util.HashCodeGenerator;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/07/22 06:56:50 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/29 09:39:45 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -163,7 +165,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 	}
 
 	public final void testAnalysisDB()
-	throws IOException {
+	throws IOException, InvalidAnalysisParametersException {
 		AnalysisParameters ap = new AnalysisParameters(
 				A_PARAMS,
 				ClientAnalysisManager.getDefaultAPClone());
@@ -172,7 +174,7 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 	}
 
 	public final void xtestNotCrush1()
-	throws IOException {
+	throws IOException, InvalidAnalysisParametersException {
 		AnalysisParameters ap = ClientAnalysisManager.getDefaultAPClone();
 		double[] p = true
 			? new double[] {
@@ -200,17 +202,19 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 				10.0,
 				0.1 };
 
-		ap.setMinThreshold(p[0]);
-		ap.setMinSplice(p[1]);
-		ap.setMinConnector(p[2]);
-		ap.setMinEnd(p[3]);
-		ap.setNoiseFactor(p[4]);
-		ap.setTau2nrs(p[5]);
-		ap.setNrsMin((int) p[6]);
-		ap.setRsaCrit(p[7]);
-		ap.setNrs2rsaSmall(p[8]);
-		ap.setNrs2rsaBig(p[9]);
-		ap.setL2rsaBig(p[10]);
+		AnalysisParametersStorage aps = ap.getStorageClone();
+		aps.setMinThreshold(p[0]);
+		aps.setMinSplice(p[1]);
+		aps.setMinConnector(p[2]);
+		aps.setMinEnd(p[3]);
+		aps.setNoiseFactor(p[4]);
+		aps.setTau2nrs(p[5]);
+		aps.setNrsMin((int) p[6]);
+		aps.setRsaCrit(p[7]);
+		aps.setNrs2rsaSmall(p[8]);
+		aps.setNrs2rsaBig(p[9]);
+		aps.setL2rsaBig(p[10]);
+		ap.setAllFrom(aps);
 
 		double res = evaluateAnalysisDB(ap, false, null);
 		System.out.println("ref test result = " + res);

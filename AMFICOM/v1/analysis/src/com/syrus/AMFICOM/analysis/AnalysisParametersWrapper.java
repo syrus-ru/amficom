@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersWrapper.java,v 1.5 2005/08/18 14:07:10 saa Exp $
+ * $Id: AnalysisParametersWrapper.java,v 1.6 2005/08/29 09:39:45 saa Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,14 +10,16 @@ package com.syrus.AMFICOM.analysis;
 
 import java.util.*;
 
+import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/08/18 14:07:10 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/29 09:39:45 $
  * @module analysis
  */
 
@@ -134,6 +136,8 @@ public class AnalysisParametersWrapper implements Wrapper {
 			} catch (NumberFormatException e) {
 				//TODO make double editor
 				// ignore
+			} catch (InvalidAnalysisParametersException e) {
+				GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_INVALID_AP);
 			} 
 		}
 

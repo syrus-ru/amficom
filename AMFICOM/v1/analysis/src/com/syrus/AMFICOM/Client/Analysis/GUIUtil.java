@@ -1,5 +1,5 @@
 /*-
- * $Id: GUIUtil.java,v 1.13 2005/07/28 15:43:28 saa Exp $
+ * $Id: GUIUtil.java,v 1.14 2005/08/29 09:39:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.13 $, $Date: 2005/07/28 15:43:28 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/29 09:39:45 $
  * @module
  */
 public class GUIUtil
@@ -48,6 +48,8 @@ public class GUIUtil
 
 	public static final String MSG_ERROR_TRACE_ALREADY_LOADED = "errorTraceAlreadyLoaded";
 	public static final String MSG_WARNING_SOME_TRACES_ARE_ALREADY_LOADED = "warningSomeTracesAlreadyLoaded";
+
+	public static final String MSG_ERROR_INVALID_AP = "errorInvalidAP";
 
 	private GUIUtil () {
 		// non-instantiable

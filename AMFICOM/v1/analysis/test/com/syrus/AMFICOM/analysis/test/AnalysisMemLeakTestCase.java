@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: AnalysisMemLeakTestCase.java,v 1.2 2005/07/22 06:56:50 saa Exp $
+ * $Id: AnalysisMemLeakTestCase.java,v 1.3 2005/08/29 09:39:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import java.util.Collection;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
+import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
@@ -27,7 +28,8 @@ public class AnalysisMemLeakTestCase extends TestCase {
 		junit.swingui.TestRunner.run(AnalysisMemLeakTestCase.class);
 	}
 	public final void testAnalysisNotCrush()
-	throws IncompatibleTracesException, SignatureMismatchException, IOException {
+	throws IncompatibleTracesException, SignatureMismatchException, IOException,
+			InvalidAnalysisParametersException {
 		File file = new File("/traces/fail.sor"); // XXX
 		BellcoreStructure bs = FileOpenCommand.readTraceFromFile(file);
 		AnalysisParameters ap = new AnalysisParameters(

@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.2 2005/07/22 06:56:50 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.3 2005/08/29 09:39:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
+import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
@@ -47,8 +48,16 @@ public class CoreAnalysisManagerTestCase extends TestCase {
 		File file = new File(TEST_FNAME); // XXX
 		return FileOpenCommand.readTraceFromFile(file);
 	}
-	private static final AnalysisParameters defaultAP = new AnalysisParameters(
-		"0.001;0.01;0.5;3.0;1.3;");
+	private static final AnalysisParameters defaultAP;
+
+	static {
+		try {
+			defaultAP = new AnalysisParameters("0.001;0.01;0.5;3.0;1.3;");
+		} catch (InvalidAnalysisParametersException e) {
+			throw new InternalError("init defaultAP: InvalidAnalysisParametersException");
+		}
+	}
+
 	/*
 	 * Class under test for double getMedian(double[])
 	 */

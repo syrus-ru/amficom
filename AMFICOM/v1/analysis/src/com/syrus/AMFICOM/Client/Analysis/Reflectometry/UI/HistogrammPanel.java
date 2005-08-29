@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.Histogramm;
+import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEvents;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
@@ -194,8 +195,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 				Math.abs(currpos.y-(int)((maxY - level - top)*scaleY)) < MOUSE_COUPLING)
 		{
 			moveLevel = true;
-			level = coord2value(currpos.y);
-			levelUpdated();
+			updateLevel(coord2value(currpos.y));
 			setCursor(Cursor.getPredefinedCursor(Cursor.N_RESIZE_CURSOR));
 			parent.repaint();
 			return;
@@ -210,8 +210,7 @@ public class HistogrammPanel extends ScaledGraphPanel
 		{
 			upd_currpos(e);
 
-			level = coord2value(currpos.y);
-			levelUpdated();
+			updateLevel(coord2value(currpos.y));
 			parent.repaint();
 			return;
 		}
@@ -255,20 +254,24 @@ public class HistogrammPanel extends ScaledGraphPanel
 	}
 	private double getHeapThreshold() {
 		AnalysisParameters ap = Heap.getMinuitAnalysisParams();
-		return ap.getMinSplice();
-	}
-	private void setHeapThreshold(double vThresh) {
-		AnalysisParameters ap = Heap.getMinuitAnalysisParams();
-		ap.setMinSplice(vThresh); // FIXME: проверять, чтобы оно не оказывалось за пределами minThresh/minConn (это специфично для AnalysisParameters)
-		movedHere = true;
-		Heap.notifyAnalysisParametersUpdated(); // FIXME: implement other senders and subscribers
-		movedHere = false;
+		return ap.getSentitivity();
 	}
 
-	protected void levelUpdated() {
-		double vThresh = level2thresh(this.level);
+	private void updateLevel(double v) {
+		double vThresh = level2thresh(v);
 		if (vThresh > 0) {
-			setHeapThreshold(vThresh);
+			AnalysisParameters ap = Heap.getMinuitAnalysisParams();
+			try {
+				// try to change sensitivity
+				ap.setSensitivity(vThresh);
+				// success, apply changes
+				this.level = v;
+				movedHere = true;
+				Heap.notifyAnalysisParametersUpdated(); // FIXME: implement other senders and subscribers
+				movedHere = false;
+			} catch (InvalidAnalysisParametersException e) {
+				// just ignore
+			}
 		}
 	}
 
