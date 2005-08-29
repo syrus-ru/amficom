@@ -11,8 +11,10 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.Collection;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Date;
 import java.util.EnumSet;
 import java.util.HashMap;
@@ -297,11 +299,20 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 	private void refreshEditors() {
 		MeasurementType[] measurementTypes = MeasurementType.values();
+		Arrays.sort(measurementTypes, new Comparator<MeasurementType>() {
+			public int compare(	MeasurementType o1,
+								MeasurementType o2) {
+				return o1.getDescription().compareTo(o2.getDescription());
+			}
+		});
 		final Collection<IconPopulatableItem> measurementTypeItems = new ArrayList<IconPopulatableItem>(measurementTypes.length);
 
 		final MeasurementTypeChildrenFactory childrenFactory = new MeasurementTypeChildrenFactory(LoginManager.getDomainId());
 		
 		for(final MeasurementType measurementType1 : measurementTypes) {
+			if (measurementType1.getDescription().trim().length() == 0) {
+				continue;
+			}
 			IconPopulatableItem measurementTypeItem = new IconPopulatableItem();
 			measurementTypeItem.setChildrenFactory(childrenFactory);
 			measurementTypeItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
