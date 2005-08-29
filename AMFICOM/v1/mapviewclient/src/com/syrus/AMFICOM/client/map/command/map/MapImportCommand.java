@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.40 2005/08/28 19:17:53 bass Exp $
+ * $Id: MapImportCommand.java,v 1.41 2005/08/29 12:11:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,8 +58,8 @@ import com.syrus.util.Log;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @author $Author: bass $
- * @version $Revision: 1.40 $, $Date: 2005/08/28 19:17:53 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.41 $, $Date: 2005/08/29 12:11:48 $
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {
@@ -185,31 +185,36 @@ public class MapImportCommand extends ImportCommand {
 		NodeTypeController.getTopologicalNodeTypes();
 
 		String user_dir = System.getProperty("user.dir");
-		System.setProperty("user.dir",  xmlfile.getParent());
+		try {
+			System.setProperty("user.dir",  xmlfile.getParent());
 
-		XmlMapSeq xmlMaps = doc.getMaps();
-		XmlMap[] xmlMapsArray = xmlMaps.getMapArray();
-		for(int i = 0; i < xmlMapsArray.length; i++) {
-			XmlMap xmlMap = xmlMapsArray[i];
-			map = Map.createInstance(
-					userId,
-					domainId,
-					xmlMap.getImportType(),
-					xmlMap,
-					new ClonedIdsPool());
-			map.setName(map.getName()
-					+ "(imported "
-					+ MapPropertiesManager.getDateFormat()
-						.format(new Date(System.currentTimeMillis())) 
-					+ " from \'"
-					+ xmlfile.getName() + "\')");
-			
-			map.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
-			
-			// only one map imported
-			break;
+			XmlMapSeq xmlMaps = doc.getMaps();
+			XmlMap[] xmlMapsArray = xmlMaps.getMapArray();
+			for(int i = 0; i < xmlMapsArray.length; i++) {
+				XmlMap xmlMap = xmlMapsArray[i];
+				map = Map.createInstance(
+						userId,
+						domainId,
+						xmlMap.getImportType(),
+						xmlMap,
+						new ClonedIdsPool());
+				map.setName(map.getName()
+						+ "(imported "
+						+ MapPropertiesManager.getDateFormat()
+							.format(new Date(System.currentTimeMillis())) 
+						+ " from \'"
+						+ xmlfile.getName() + "\')");
+				
+				map.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
+				
+				// only one map imported
+				break;
+			}
+		} catch(CreateObjectException e) {
+			throw e;
+		} finally {
+			System.setProperty("user.dir",  user_dir);
 		}
-		System.setProperty("user.dir",  user_dir);
 		return map;
 	}
 
