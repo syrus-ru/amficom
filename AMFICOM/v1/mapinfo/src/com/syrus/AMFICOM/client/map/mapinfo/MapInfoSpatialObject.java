@@ -23,6 +23,7 @@ public class MapInfoSpatialObject extends SpatialObject {
 		return false;
 	}
 	
+	@Override
 	public int hashCode(){
 		final HashCodeGenerator generator = new HashCodeGenerator();
 		generator.addByteArray(this.label.getBytes());		

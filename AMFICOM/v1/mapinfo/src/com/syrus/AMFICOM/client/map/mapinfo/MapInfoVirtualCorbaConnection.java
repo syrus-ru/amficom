@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoVirtualCorbaConnection.java,v 1.3 2005/08/26 09:35:24 peskovsky Exp $
+ * $Id: MapInfoVirtualCorbaConnection.java,v 1.4 2005/08/29 16:10:58 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,6 +76,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 		return listToReturn;
 	}
 	
+	@Override
 	public boolean connect() throws MapConnectionException {
 		boolean flag = false;		
 		try {
