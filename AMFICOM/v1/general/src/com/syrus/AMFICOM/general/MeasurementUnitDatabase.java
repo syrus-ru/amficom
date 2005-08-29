@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnitDatabase.java,v 1.1 2005/08/19 14:04:06 arseniy Exp $
+ * $Id: MeasurementUnitDatabase.java,v 1.2 2005/08/29 09:57:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.SIZE_CODENAME_COL
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SIZE_NAME_COLUMN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_INSERT_INTO;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_VALUES;
+import static com.syrus.AMFICOM.general.TableNames.MEASUREMENT_UNIT;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,12 +26,11 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/19 14:04:06 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/29 09:57:11 $
  * @author $Author: arseniy $
  * @module general
  */
 public final class MeasurementUnitDatabase {
-	private static final String TABLE_DATATYPE = "MeasurementUnit";
 	private static final String COLUMN_CODE = "code";
 	private static final String COLUMN_CODENAME = "codename";
 	private static final String COLUMN_NAME = "name";
@@ -39,8 +39,8 @@ public final class MeasurementUnitDatabase {
 		//Empty
 	}
 
-	public static void insertMeasurementUnits() throws CreateObjectException {
-		final String sql = SQL_INSERT_INTO + TABLE_DATATYPE + OPEN_BRACKET
+	public static void insertAll() throws CreateObjectException {
+		final String sql = SQL_INSERT_INTO + MEASUREMENT_UNIT + OPEN_BRACKET
 				+ COLUMN_CODE + COMMA
 				+ COLUMN_CODENAME + COMMA
 				+ COLUMN_NAME

@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterTypeDatabase.java,v 1.36 2005/08/20 20:14:38 arseniy Exp $
+ * $Id: ParameterTypeDatabase.java,v 1.37 2005/08/29 09:57:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,14 +7,15 @@
  */
 package com.syrus.AMFICOM.general;
 
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_INSERT_INTO;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_VALUES;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.COMMA;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.QUESTION;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SIZE_CODENAME_COLUMN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SIZE_DESCRIPTION_COLUMN;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_INSERT_INTO;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_VALUES;
+import static com.syrus.AMFICOM.general.TableNames.PARAMETER_TYPE;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -25,12 +26,11 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/08/20 20:14:38 $
+ * @version $Revision: 1.37 $, $Date: 2005/08/29 09:57:11 $
  * @author $Author: arseniy $
  * @module general
  */
 public final class ParameterTypeDatabase {
-	private static final String TABLE_PARAMETERTYPE = "ParameterType";
 	private static final String COLUMN_CODE = "code";
 	private static final String COLUMN_CODENAME = "codename";
 	private static final String COLUMN_DATA_TYPE_CODE = "data_type_code";
@@ -41,8 +41,8 @@ public final class ParameterTypeDatabase {
 		//Empty
 	}
 
-	public static void insertParameterTypes() throws CreateObjectException {
-		final String sql = SQL_INSERT_INTO + TABLE_PARAMETERTYPE + OPEN_BRACKET
+	public static void insertAll() throws CreateObjectException {
+		final String sql = SQL_INSERT_INTO + PARAMETER_TYPE + OPEN_BRACKET
 		+ COLUMN_CODE + COMMA
 		+ COLUMN_CODENAME + COMMA
 		+ COLUMN_DATA_TYPE_CODE + COMMA
