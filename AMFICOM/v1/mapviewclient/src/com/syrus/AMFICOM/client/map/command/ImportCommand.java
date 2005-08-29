@@ -1,5 +1,5 @@
 /*
- * $Id: ImportCommand.java,v 1.6 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: ImportCommand.java,v 1.7 2005/08/29 16:22:37 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.io.IntelStreamReader;
 
 /**
  * 
- * @version $Revision: 1.6 $
+ * @version $Revision: 1.7 $
  * @author $Author: arseniy $
  * @module mapviewclient
  */
@@ -41,7 +41,7 @@ public abstract class ImportCommand extends AbstractCommand {
 
 	private IntelStreamReader isr;
 
-	private Map clonedIds = new HashMap();
+	private Map<String, Identifier> clonedIds = new HashMap<String, Identifier>();
 
 	protected class ImportObject {
 		public String type;
@@ -60,9 +60,10 @@ public abstract class ImportCommand extends AbstractCommand {
 
 	protected final Identifier getClonedId(short entityCode, String id)
 			throws IdentifierGenerationException {
-		Identifier clonedId = (Identifier )this.clonedIds.get(id);
-		if(clonedId == null)
+		Identifier clonedId = this.clonedIds.get(id);
+		if(clonedId == null) {
 			clonedId = cloneId(entityCode, id);
+		}
 		return clonedId;
 	}
 
@@ -100,7 +101,7 @@ public abstract class ImportCommand extends AbstractCommand {
 
 			if(s[0].indexOf("[") == 0) {
 				s[0] = s[0].substring(1, s[0].length());
-				List arg = new LinkedList();
+				List<String> arg = new LinkedList<String>();
 				while(true) {
 					String[] s2 = getString();
 					if(s2 == null)
