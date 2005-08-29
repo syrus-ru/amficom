@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.23 2005/08/29 09:54:15 max Exp $
+ * $Id: LogicalSchemeUI.java,v 1.24 2005/08/29 09:59:27 max Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/08/29 09:54:15 $
+ * @version $Revision: 1.24 $, $Date: 2005/08/29 09:59:27 $
  * @author $Author: max $
  * @module filter
  */
@@ -636,8 +636,8 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 				this.selectedItem = this.getItem(mouseX, mouseY);
 
 				if (this.selectedItem != null) {
-					System.out.println(this.selectedItem.getName() + "::" + this.selectedItem.getWidth() + "\t minY:"
-							+ this.selectedItem.getMinY() + ", maxY:" + this.selectedItem.getMaxY());
+					//System.out.println(this.selectedItem.getName() + "::" + this.selectedItem.getWidth() + "\t minY:"
+					//		+ this.selectedItem.getMinY() + ", maxY:" + this.selectedItem.getMaxY());
 					if (!e.isControlDown()) {
 						this.selectedItems.clear();
 					}
