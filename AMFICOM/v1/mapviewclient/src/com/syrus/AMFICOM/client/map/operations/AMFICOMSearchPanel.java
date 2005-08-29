@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.22 2005/08/19 15:43:32 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.23 2005/08/29 12:27:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.22 $, $Date: 2005/08/19 15:43:32 $
+ * @version $Revision: 1.23 $, $Date: 2005/08/29 12:27:24 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -287,8 +287,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 		public int compare(Object o1, Object o2) {
 			SiteNode site1 = (SiteNode )o1;
 			SiteNode site2 = (SiteNode )o2;
-			SiteNodeType type1 = (SiteNodeType )site1.getType();
-			SiteNodeType type2 = (SiteNodeType )site2.getType();
+			SiteNodeType type1 = site1.getType();
+			SiteNodeType type2 = site2.getType();
 			if(type1.equals(type2))
 				return site1.getName().compareTo(site2.getName());
 			return type1.getName().compareTo(type2.getName());
@@ -306,8 +306,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 		public int compare(Object o1, Object o2) {
 			PhysicalLink link1 = (PhysicalLink )o1;
 			PhysicalLink link2 = (PhysicalLink )o2;
-			PhysicalLinkType type1 = (PhysicalLinkType )link1.getType();
-			PhysicalLinkType type2 = (PhysicalLinkType )link2.getType();
+			PhysicalLinkType type1 = link1.getType();
+			PhysicalLinkType type2 = link2.getType();
 			if(type1.equals(type2))
 				return link1.getName().compareTo(link2.getName());
 			return type1.getName().compareTo(type2.getName());

@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.27 2005/08/11 13:55:41 arseniy Exp $
+ * $Id: PhysicalLinkController.java,v 1.28 2005/08/29 12:27:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 
 /**
  * Контроллер линейного элемента карты.
- * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/08/11 13:55:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.28 $, $Date: 2005/08/29 12:27:24 $
  * @module mapviewclient
  */
 public class PhysicalLinkController extends AbstractLinkController {
@@ -57,7 +57,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 		}
 
 		final PhysicalLink link = (PhysicalLink) mapElement;
-		final PhysicalLinkType linkType = (PhysicalLinkType) link.getType();
+		final PhysicalLinkType linkType = link.getType();
 
 		final String s1 = linkType.getName() + ": " + link.getName();
 		String s2 = "";
@@ -262,7 +262,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 		}
 
 		final LinkTypeController ltc = (LinkTypeController) LinkTypeController.getInstance();
-		return ltc.getLineSize((PhysicalLinkType) plink.getType());
+		return ltc.getLineSize(plink.getType());
 	}
 
 	/**
@@ -282,7 +282,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 		}
 
 		final LinkTypeController ltc = (LinkTypeController) LinkTypeController.getInstance();
-		return ltc.getStyle((PhysicalLinkType) plink.getType());
+		return ltc.getStyle(plink.getType());
 	}
 
 	/**
@@ -306,7 +306,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 			return color;
 		}
 		final LinkTypeController ltc = (LinkTypeController) LinkTypeController.getInstance();
-		return ltc.getColor((PhysicalLinkType) plink.getType());
+		return ltc.getColor(plink.getType());
 	}
 
 	/**
@@ -326,7 +326,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 		}
 
 		final LinkTypeController ltc = (LinkTypeController) LinkTypeController.getInstance();
-		return ltc.getAlarmedColor((PhysicalLinkType) plink.getType());
+		return ltc.getAlarmedColor(plink.getType());
 	}
 
 	/**
@@ -346,6 +346,6 @@ public class PhysicalLinkController extends AbstractLinkController {
 		}
 
 		final LinkTypeController ltc = (LinkTypeController) LinkTypeController.getInstance();
-		return ltc.getAlarmedLineSize((PhysicalLinkType) plink.getType());
+		return ltc.getAlarmedLineSize(plink.getType());
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.32 2005/08/24 10:21:45 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.33 2005/08/29 12:27:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,6 @@ import javax.swing.JPanel;
 import javax.swing.JToggleButton;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
@@ -40,7 +39,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.32 $, $Date: 2005/08/24 10:21:45 $
+ * @version $Revision: 1.33 $, $Date: 2005/08/29 12:27:24 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */

@@ -30,11 +30,10 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -279,10 +278,10 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 				PhysicalLink link = (PhysicalLink )iter.next();
 				
 				if(link.getStartNode() instanceof SiteNode
-						&& ((SiteNodeType )((SiteNode )link.getStartNode()).getType()).getSort().equals(SiteNodeTypeSort.PIQUET))
+						&& ((SiteNode )link.getStartNode()).getType().getSort().equals(SiteNodeTypeSort.PIQUET))
 					piquets.add(link.getStartNode());
 				if(link.getEndNode() instanceof SiteNode
-						&& ((SiteNodeType )((SiteNode )link.getEndNode()).getType()).getSort().equals(SiteNodeTypeSort.PIQUET))
+						&& ((SiteNode )link.getEndNode()).getType().getSort().equals(SiteNodeTypeSort.PIQUET))
 					piquets.add(link.getEndNode());
 			}
 

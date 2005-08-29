@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.49 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: MapViewController.java,v 1.50 2005/08/29 12:27:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,6 @@ import com.syrus.AMFICOM.map.Mark;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -62,7 +61,7 @@ import com.syrus.util.Log;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.49 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.50 $, $Date: 2005/08/29 12:27:24 $
  * @module mapviewclient
  */
 public final class MapViewController {
@@ -82,7 +81,7 @@ public final class MapViewController {
 	public static String getMapElementReadableType(MapElement mapElement) {
 		if(mapElement instanceof SiteNode) {
 			SiteNode site = (SiteNode )mapElement;
-			return ((SiteNodeType )site.getType()).getName();
+			return site.getType().getName();
 		}
 		return LangModelMap.getString(MapViewController.getMapElementType(mapElement));
 	}

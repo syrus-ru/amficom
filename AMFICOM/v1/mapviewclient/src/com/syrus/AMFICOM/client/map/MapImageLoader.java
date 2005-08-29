@@ -1,5 +1,5 @@
 /**
- * $Id: MapImageLoader.java,v 1.13 2005/08/29 11:29:40 krupenn Exp $
+ * $Id: MapImageLoader.java,v 1.14 2005/08/29 12:27:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,12 +10,11 @@ package com.syrus.AMFICOM.client.map;
 import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.util.List;
-import java.util.Set;
 
 import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/29 11:29:40 $
+ * @version $Revision: 1.14 $, $Date: 2005/08/29 12:27:24 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */

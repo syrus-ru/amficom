@@ -102,13 +102,13 @@ public final class SimpleMapElementController implements Wrapper
 			MapElement me = (MapElement )object;
 			if(key.equals(KEY_TYPE)) {
 				if(me instanceof SiteNode) {
-					SiteNodeType mnpe = (SiteNodeType )(((SiteNode)me).getType());
-					result = mnpe.getName();
+					SiteNodeType siteNodeType = (((SiteNode)me).getType());
+					result = siteNodeType.getName();
 				}
 				else
 				if(me instanceof PhysicalLink) {
-					PhysicalLinkType mlpe = (PhysicalLinkType )(((PhysicalLink)me).getType());
-					result = mlpe.getName();
+					PhysicalLinkType physicalLinkType = (((PhysicalLink)me).getType());
+					result = physicalLinkType.getName();
 				}
 			}
 		}
