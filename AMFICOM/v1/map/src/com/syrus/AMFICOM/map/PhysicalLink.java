@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.97 2005/08/28 19:17:54 bass Exp $
+ * $Id: PhysicalLink.java,v 1.98 2005/08/29 12:08:47 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,6 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
 import com.syrus.AMFICOM.map.xml.XmlPhysicalLink;
-import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkTypeSort;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
@@ -72,8 +71,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.97 $, $Date: 2005/08/28 19:17:54 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.98 $, $Date: 2005/08/29 12:08:47 $
  * @module map
  */
 public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XmlBeansTransferable<XmlPhysicalLink> {
@@ -893,7 +892,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		/*
 		 * XXX Should be identifier, why enum value?
 		 */
-		xmlPhysicalLink.setPhysicalLinkTypeId(XmlPhysicalLinkTypeSort.Enum.forInt(this.getType().getSort().value()));
+		xmlPhysicalLink.setPhysicalLinkTypeCodename(this.getType().getCodename());
 		
 		uid = xmlPhysicalLink.addNewStartNodeId();
 		uid.setStringValue(this.startNodeId.toString());
@@ -936,17 +935,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		final Identifier endNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE,
 				xmlPhysicalLink.getEndNodeId().getStringValue());
 
-		if (xmlPhysicalLink.getStartNodeId().getStringValue().equals("507133")) {
-			System.out.println("Start node 507133 id " + startNodeId1.toString());
-		}
-		if (xmlPhysicalLink.getEndNodeId().getStringValue().equals("507133")) {
-			System.out.println("End node 507133 id " + endNodeId1.toString());
-		}
-		
 		this.startNodeId = startNodeId1;
 		this.endNodeId = endNodeId1;
 
-		String typeCodeName1 = xmlPhysicalLink.getPhysicalLinkTypeId().toString();
+		String typeCodeName1 = xmlPhysicalLink.getPhysicalLinkTypeCodename();
 		final TypicalCondition condition = new TypicalCondition(typeCodeName1,
 				OperationSort.OPERATION_EQUALS,
 				PHYSICALLINK_TYPE_CODE,

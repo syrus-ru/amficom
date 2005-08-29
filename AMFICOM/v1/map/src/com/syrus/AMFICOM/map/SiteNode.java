@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.71 2005/08/28 19:17:54 bass Exp $
+ * $Id: SiteNode.java,v 1.72 2005/08/29 12:08:47 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,6 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
 import com.syrus.AMFICOM.map.xml.XmlSiteNode;
-import com.syrus.AMFICOM.map.xml.XmlSiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
@@ -57,8 +56,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.71 $, $Date: 2005/08/28 19:17:54 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.72 $, $Date: 2005/08/29 12:08:47 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
@@ -308,7 +307,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		uid.setStringValue(this.id.toString());
 		xmlSiteNode.setName(this.name);
 		xmlSiteNode.setDescription(this.description);
-		xmlSiteNode.setSiteNodeTypeId(XmlSiteNodeTypeSort.Enum.forInt(this.getType().getSort().value()));
+		xmlSiteNode.setSiteNodeTypeCodename(this.getType().getCodename());
 		xmlSiteNode.setX(this.location.getX());
 		xmlSiteNode.setY(this.location.getY());
 		xmlSiteNode.setCity(this.city);
@@ -334,9 +333,6 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 				"",
 				"",
 				new DoublePoint(0, 0));
-		if (xmlSiteNode.getId().getStringValue().equals("507133")) {
-			System.out.println("id for 507133 is " + this.id.toString());
-		}
 		this.selected = false;
 		this.fromXmlTransferable(xmlSiteNode, clonedIdsPool, importType);
 	}
@@ -349,7 +345,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		this.building = xmlSiteNode.getBuilding();
 		super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
 
-		String typeCodeName1 = xmlSiteNode.getSiteNodeTypeId().toString();
+		String typeCodeName1 = xmlSiteNode.getSiteNodeTypeCodename();
 		final TypicalCondition condition = new TypicalCondition(typeCodeName1,
 				OperationSort.OPERATION_EQUALS,
 				SITENODE_TYPE_CODE,
