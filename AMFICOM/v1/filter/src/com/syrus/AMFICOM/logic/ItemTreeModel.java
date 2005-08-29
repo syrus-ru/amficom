@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.14 2005/08/09 17:56:41 arseniy Exp $
+ * $Id: ItemTreeModel.java,v 1.15 2005/08/29 09:35:28 max Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,15 +15,18 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
 import javax.swing.tree.TreeModel;
 import javax.swing.tree.TreePath;
 
+import com.syrus.util.Log;
+
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/09 17:56:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/08/29 09:35:28 $
+ * @author $Author: max $
  * @author Vladimir Dolzhenko
  * @module filter
  */
@@ -104,7 +107,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 			sortList.list.addAll(parent.getChildren());
 			for (final Iterator<Item> it = sortList.list.iterator(); it.hasNext();) {
 				Item item = it.next();
-				System.out.println("getChildren | parent " + parent + ", child " + item);
+				Log.debugMessage("ItemTreeModel.getChildren | parent " + parent + ", child " + item, Level.FINEST);
 				if (item.isService()) {
 					it.remove();
 				}
@@ -119,7 +122,6 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 
 	public Object getChild(final Object parent, final int index) {
 		final Object object = this.getChildren((Item) parent).get(index);
-//		System.out.println("parent " + parent + ", child at " + index + " is " + object);
 		return object;
 	}
 
@@ -140,8 +142,9 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 		return !((Item) node).canHaveChildren();
 	}
 
+	//TODO: remove this method, if it's useless	
 	public void valueForPathChanged(final TreePath path, final Object newValue) {
-		System.out.println("*** valueForPathChanged : " + path + " --> " + newValue);
+		//System.out.println("*** valueForPathChanged : " + path + " --> " + newValue);
 	}
 
 	/**
@@ -157,11 +160,10 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 		for (int i = 0; i < childCount; i++) {
 			if (this.getChild(parent, i).equals(child)) {
 				newIndexs[0] = i;
-				System.out.println("found insert index");
 				break;
 			}
 		}
-		System.out.println("insert " + child.getName() + " to " + parent.getName() + " [ " + newIndexs[0] + " ] ");
+		Log.debugMessage("ItemTreeModel.InsertNodeInto | insert " + child.getName() + " to " + parent.getName() + " [ " + newIndexs[0] + " ] ", Level.FINEST);
 		nodesWereInserted(parent, objects, newIndexs);
 	}
 
@@ -176,7 +178,6 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 		for (int i = 0; i < childCount; i++) {
 			if (this.getChild(parent, i).equals(child)) {
 				childIndex[0] = i;
-				System.out.println("found remove index");
 				break;
 			}
 		}
@@ -185,7 +186,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 			sortList.sorted = false;
 		}
 		Object[] removedArray = new Object[] { child };
-		System.out.println("delete " + child.getName() + " from " + parent.getName() + " [ " + childIndex[0] + " ] ");
+		Log.debugMessage("ItemTreeModel.removeNodeFromParent | delete " + child.getName() + " from " + parent.getName() + " [ " + childIndex[0] + " ] ", Level.FINEST);
 		nodesWereRemoved(parent, childIndex, removedArray);
 	}
 
@@ -407,8 +408,8 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 		if (parent == null) {
 			parent = this.root;
 		}
-		// System.out.println("getItemNode | parent is '" + parent.getName() +
-		// "', item is '" + item.getName() + "'");
+		Log.debugMessage("ItemTreeModel.getItemNode | parent is '" + parent.getName()
+				+ "', item is '" + item.getName() + "'", Level.FINEST);
 		final List<Item> children = parent.getChildren();
 		Item node = null;
 		for (final Item item2 : children) {

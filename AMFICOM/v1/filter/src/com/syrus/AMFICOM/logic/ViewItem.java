@@ -1,5 +1,5 @@
 /*
- * $Id: ViewItem.java,v 1.15 2005/08/08 11:37:22 arseniy Exp $
+ * $Id: ViewItem.java,v 1.16 2005/08/29 09:35:28 max Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,10 +15,13 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.Map;
+import java.util.logging.Level;
+
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/08 11:37:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/08/29 09:35:28 $
+ * @author $Author: max $
  * @author Vladimir Dolzhenko
  * @module filter
  */
@@ -92,8 +95,8 @@ public class ViewItem extends AbstractItem implements Item {
 
 	private void addChild(Item childItem, boolean addToSource) {
 
-		System.out.println("ViewItem.addChild | this.name: " + this.sourceItem.getName() + "\n\t name: "
-				+ childItem.getName());
+		Log.debugMessage("ViewItem.addChild | this.name: " + this.sourceItem.getName() + "\n\t name: "
+				+ childItem.getName(), Level.FINEST);
 		if (this.children == null) this.children = new LinkedList<Item>();
 
 		ViewItem viewItem;
@@ -130,16 +133,16 @@ public class ViewItem extends AbstractItem implements Item {
 
 		if (this.children != null) {
 
-			System.out.println("ViewItem.removeChild | this.name: " + this.sourceItem.getName() + "\n\t name: "
-					+ childItem.getName());
+			Log.debugMessage("ViewItem.removeChild | this.name: " + this.sourceItem.getName() + "\n\t name: "
+					+ childItem.getName(), Level.FINEST);
 			this.children.remove(viewItem);
 		}
 	}
 
 	@Override
 	public void setParent(Item parent) {
-		System.out.println("ViewItem.setParent | this.name: " + this.sourceItem.getName() + " \n\t name: "
-				+ (parent == null ? "'null'" : parent.getName()));
+		Log.debugMessage("ViewItem.setParent | this.name: " + this.sourceItem.getName() + " \n\t name: "
+				+ (parent == null ? "'null'" : parent.getName()), Level.FINEST);
 		ViewItem viewItem;
 		if (parent instanceof ViewItem) {
 			viewItem = (ViewItem) parent;
@@ -190,10 +193,10 @@ public class ViewItem extends AbstractItem implements Item {
 
 	public int getHierarchicalWidth() {
 		int w = 0;
-		System.out.println(this.getName() + ", width: " + this.width);
+		Log.debugMessage("ViewItem.getHierarchicalWidth | " + this.getName() + ", width: " + this.width, Level.FINEST);
 		if (super.parent != null && !super.parent.isService()) {
 			ViewItem viewItem = (ViewItem) super.parent;
-			System.out.println("super.parent.getName()"+super.parent.getName());
+			Log.debugMessage("ViewItem.getHierarchicalWidth | " + super.parent.getName() + super.parent.getName(), Level.FINEST);
 			w = viewItem.getHierarchicalWidth();
 		}		
 		return w + this.width;
@@ -228,21 +231,15 @@ public class ViewItem extends AbstractItem implements Item {
 			this.minY = this.y;
 			this.maxY = this.y + this.height;
 		}
-		// }
-		// System.out.println(this.getName() + " minY: " + this.minY);
 		return this.minY;
 	}
 
 	public int getMaxY() {
-		// if (this.minY == this.maxY) {
 		this.getMinY();
-		// }
-		// System.out.println(this.getName() + " maxY: " + this.maxY);
 		return this.maxY;
 	}
 
 	public void separateChildrenY() {
-//		System.out.println("separateChildrenY>" + this.getName());
 		if (this.children != null && !this.children.isEmpty()) {
 			if (!this.sortedChildren) {
 				Collections.sort(this.children, ycomparator);
@@ -256,17 +253,8 @@ public class ViewItem extends AbstractItem implements Item {
 
 				if (firstItem) {
 					firstItem = false;
-					// System.out.println();
-					// System.out.println("name>" + this.getName());
-					// System.out.println("(this.children.size() - 1):" +
-					// (this.children.size() - 1));
-					// System.out.println("this.getChildrenHeight():" +
-					// this.getChildrenHeight());
 					viewItem.y = this.y + (this.height - this.getChildrenHeight() - (this.children.size() - 1) * edge)
 							/ 2;
-					// System.out.println(">" + (this.height -
-					// this.getChildrenHeight() - (this.children.size() - 1) *
-					// edge) / 2);
 				} else {
 					int vMinH2 = viewItem.getMinY();
 					viewItem.move(0, vMaxH - vMinH2 + edge);
