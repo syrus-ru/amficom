@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: SiteNodeType.xsd,v 1.9 2005/08/28 19:17:54 bass Exp $
+<!-- $Id: SiteNodeType.xsd,v 1.10 2005/08/29 10:02:52 krupenn Exp $
 -->
 <xsd:schema 
 	targetNamespace="http://syrus.com/AMFICOM/map/xml"
@@ -23,10 +23,10 @@
       <xsd:restriction base="xsd:string">
             <xsd:enumeration value="well"/>
             <xsd:enumeration value="piquet"/>
-            <xsd:enumeration value="cableinlet"/>
-            <xsd:enumeration value="building"/>
-            <xsd:enumeration value="tower"/>
             <xsd:enumeration value="ats"/>
+            <xsd:enumeration value="building"/>
+            <xsd:enumeration value="cableinlet"/>
+            <xsd:enumeration value="tower"/>
       </xsd:restriction>
   </xsd:simpleType>
 
