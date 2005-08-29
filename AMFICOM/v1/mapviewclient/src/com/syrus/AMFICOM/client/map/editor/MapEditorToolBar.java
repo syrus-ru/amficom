@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.19 2005/08/22 11:31:54 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.20 2005/08/29 12:12:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 /**
  * Панель инструментов модуля "Редактор топологических схем". 
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/08/22 11:31:54 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/29 12:12:13 $
  * @module mapviewclient
  */
 public class MapEditorToolBar extends AbstractMainToolBar {
@@ -104,7 +104,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 
 		Dimension buttonSize = new Dimension(BTN_SIZE, BTN_SIZE);
 
-		this.menuMapNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/new.gif").
+		this.menuMapNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/newmap.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapNew.setMaximumSize(buttonSize);
 		this.menuMapNew.setPreferredSize(buttonSize);
@@ -112,7 +112,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapNew.setName(MapEditorApplicationModel.ITEM_MAP_NEW);
 		this.menuMapNew.addActionListener(super.actionListener);
 
-		this.menuMapOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif").
+		this.menuMapOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openmap.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapOpen.setMaximumSize(buttonSize);
 		this.menuMapOpen.setPreferredSize(buttonSize);
@@ -120,7 +120,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapOpen.setName(MapEditorApplicationModel.ITEM_MAP_OPEN);
 		this.menuMapOpen.addActionListener(super.actionListener);
 
-		this.menuMapSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/save.gif").
+		this.menuMapSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/savemap.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapSave.setMaximumSize(buttonSize);
 		this.menuMapSave.setPreferredSize(buttonSize);
@@ -152,7 +152,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapAddExternal.setName(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL);
 		this.menuMapAddExternal.addActionListener(super.actionListener);
 
-		this.menuMapViewNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/newview.gif").
+		this.menuMapViewNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/newmapview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewNew.setMaximumSize(buttonSize);
 		this.menuMapViewNew.setPreferredSize(buttonSize);
@@ -160,7 +160,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapViewNew.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW);
 		this.menuMapViewNew.addActionListener(super.actionListener);
 
-		this.menuMapViewOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openview.gif").
+		this.menuMapViewOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openmapview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewOpen.setMaximumSize(buttonSize);
 		this.menuMapViewOpen.setPreferredSize(buttonSize);
@@ -168,7 +168,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapViewOpen.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN);
 		this.menuMapViewOpen.addActionListener(super.actionListener);
 
-		this.menuMapViewSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/saveview.gif").
+		this.menuMapViewSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/savemapview.gif").
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewSave.setMaximumSize(buttonSize);
 		this.menuMapViewSave.setPreferredSize(buttonSize);
