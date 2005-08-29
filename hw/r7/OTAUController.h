@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTAUController.h,v 1.2 2005/08/29 18:06:13 arseniy Exp $
+// $Id: OTAUController.h,v 1.3 2005/08/29 18:15:44 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.2 $, $Date: 2005/08/29 18:06:13 $
+// $Revision: 1.3 $, $Date: 2005/08/29 18:15:44 $
 // $Author: arseniy $
 //
 // OTAUController.h: interface for the OTAUController class.
@@ -62,14 +62,11 @@ private:
 	unsigned int search_number_of_OTAUs(const char* string, unsigned int str_size);
 	int parse_local_address(const char* local_address, unsigned int la_length);
 	int is_local_address_valid() const;
-//	void check_last_used_com_port();
-//	void disconnect_last_used_com_port();
 	int switch_OTAU();
 
 	unsigned short com_port_number;
 	HANDLE* com_ports;
 	unsigned int* otau_numbers;
-//	HANDLE last_used_com_port;
 
 	unsigned short com_port;
 	unsigned short otau_id;

@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTAUController.cpp,v 1.2 2005/08/29 18:07:10 arseniy Exp $
+// $Id: OTAUController.cpp,v 1.3 2005/08/29 18:15:44 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.2 $, $Date: 2005/08/29 18:07:10 $
+// $Revision: 1.3 $, $Date: 2005/08/29 18:15:44 $
 // $Author: arseniy $
 //
 // OTAUController.cpp: implementation of the OTAUController class.
@@ -26,14 +26,10 @@
 OTAUController::OTAUController(const unsigned int timewait, unsigned short com_port_number) {
 	this->timewait = timewait;
 	this->com_port_number = com_port_number;
-//	this->last_used_com_port = NULL;
 	this->initialize_OTAUs();
 }
 
 OTAUController::~OTAUController() {
-//	if (this->last_used_com_port != NULL) {
-//		this->disconnect_last_used_com_port();
-//	}
 	for (unsigned int i = 0; i < this->com_port_number; i++){
 		CloseHandle(this->com_ports[i]);
 	}
@@ -379,29 +375,6 @@ int OTAUController::is_local_address_valid() const {
 	}
 	return 1;
 }
-
-//void OTAUController::check_last_used_com_port() {
-//	HANDLE com_port_handle = this->com_ports[this->com_port - 1];
-//	if (this->last_used_com_port != NULL && this->last_used_com_port != com_port_handle) {
-//		this->disconnect_last_used_com_port();
-//	}
-//	this->last_used_com_port = com_port_handle;
-//}
-
-//void OTAUController::disconnect_last_used_com_port() {
-//	unsigned int reply_length = COM_PORT_REPLY_LENGTH;
-//	char* reply = new char[reply_length];
-//	memset(reply, 0, reply_length * sizeof(char));
-
-	//Try to disconnect OTAU Test Access Path
-//	this->send_switch_command(this->last_used_com_port,
-//		OTAU_COMMAND_DISCONNECT,
-//		strlen(OTAU_COMMAND_DISCONNECT),
-//		reply,
-//		reply_length);
-
-//	delete[] reply;
-//}
 
 int OTAUController::switch_OTAU() {
 	char* switch_command = new char[OTAU_COMMAND_CONNECT_LENGTH];
