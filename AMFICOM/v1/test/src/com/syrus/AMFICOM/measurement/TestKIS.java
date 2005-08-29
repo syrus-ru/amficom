@@ -1,5 +1,5 @@
 /*
- * $Id: TestKIS.java,v 1.1 2005/08/20 19:45:03 arseniy Exp $
+ * $Id: TestKIS.java,v 1.2 2005/08/29 11:32:55 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.measurement;
 
 import java.util.Iterator;
+import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -29,7 +30,7 @@ public final class TestKIS extends TestCase {
 
 	public static Test suite() {
 		final DatabaseCommonTest commonTest = new DatabaseCommonTest();
-		commonTest.addTestSuite(TestKIS.class);
+		commonTest.addTest( new TestKIS("testGetByCondition"));
 		return commonTest.createTestSetup();
 	}
 
@@ -55,5 +56,13 @@ public final class TestKIS extends TestCase {
 				equipment.getId(),
 				mcm.getId());
 		StorableObjectPool.flush(kis, DatabaseCommonTest.getSysUser().getId(), false);
+	}
+
+	public void testGetByCondition() throws ApplicationException {
+		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.KIS_CODE);
+		final Set<KIS> kiss = StorableObjectPool.getStorableObjectsByCondition(ec, true);
+		for (final KIS kis : kiss) {
+			System.out.println("KIS: '" + kis.getId() + "', '" + kis.getDescription() + "'");
+		}
 	}
 }
