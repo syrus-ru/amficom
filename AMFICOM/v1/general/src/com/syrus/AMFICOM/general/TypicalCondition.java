@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.42 2005/08/28 15:14:35 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.43 2005/08/29 14:25:06 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.TypicalSort;
+import com.syrus.util.EnumUtil;
 import com.syrus.util.Log;
 
 /**
@@ -124,8 +125,8 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.42 $, $Date: 2005/08/28 15:14:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2005/08/29 14:25:06 $
+ * @author $Author: bob $
  * @module general
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -853,6 +854,7 @@ public class TypicalCondition implements StorableObjectCondition {
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public TypicalCondition(final IdlTypicalCondition transferable) {
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(transferable.entityCode).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl";
 		Log.debugMessage(TYPICAL_CONDITION_INIT + "Try reflect class " + className, Level.INFO);
@@ -912,7 +914,20 @@ public class TypicalCondition implements StorableObjectCondition {
 					this.delegate = (TypicalCondition) ctor.newInstance(Boolean.valueOf(transferable.value),
 							transferable.operation, new Short(transferable.entityCode),
 							transferable.key);
+				case TypicalSort._TYPE_ENUM:
+					ctor = Class.forName(className).getDeclaredConstructor(
+							Enum.class, OperationSort.class, Short.class, String.class);
+					ctor.setAccessible(true);
+					this.delegate = 
+						(TypicalCondition) ctor.newInstance(
+							EnumUtil.reflectFromInt(
+								(Class<? extends Enum>) Class.forName(transferable.otherValue),
+								Integer.parseInt(transferable.value)),
+							transferable.operation, new Short(transferable.entityCode),
+							transferable.key);
+
 					break;
+					//XXX
 				default: {
 					if (this.delegate == null) {
 						this.delegate = createDummyCondition();
@@ -1078,8 +1093,12 @@ public class TypicalCondition implements StorableObjectCondition {
 				transferable.value = Long.toString(((Date) this.delegate.value).getTime());
 				transferable.otherValue = Long.toString(((Date) this.delegate.otherValue).getTime());
 				break;
+			case TypicalSort._TYPE_ENUM:
+				transferable.value = Integer.toString(EnumUtil.getCode((Enum) this.delegate.value));
+				transferable.otherValue = this.delegate.value.getClass().getName();
+				break;
 			default:
-				Log.errorMessage("TypicalCondition.parseCondition | unknown type code " + this.delegate.delegate.type);
+				Log.errorMessage("TypicalCondition.parseCondition | unknown type code " + this.delegate.type);
 				break;
 
 		}
