@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.15 2005/08/28 16:41:51 arseniy Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.16 2005/08/29 11:04:57 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/28 16:41:51 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/29 11:04:57 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -49,7 +49,7 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 				break;
 			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
 				if (this.condition.getKey().equals(MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE)) {
-					return MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
+					return MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID;
 				}
 				break;
 			default:
@@ -64,7 +64,7 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 	protected String getLinkedColumnName() throws IllegalObjectEntityException {
 		switch (super.condition.getEntityCode().shortValue()) {
 			case ObjectEntities.MEASUREMENTPORT_TYPE_CODE:
-				return MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_PORT_TYPE_ID;
+				return MeasurementPortTypeWrapper.LINK_COLUMN_MEASUREMENT_TYPE_CODE;
 			default:
 				throw new IllegalObjectEntityException("Entity '" + ObjectEntities.codeToString(this.condition.getEntityCode())
 						+ "' is not supported.", IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
