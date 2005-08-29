@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersStorage.java,v 1.5 2005/08/29 12:03:12 saa Exp $
+ * $Id: AnalysisParametersStorage.java,v 1.6 2005/08/29 14:54:35 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.io.IOException;
  * а {@link AnalysisParametersStorage} использовать тогда, когда нужно изменить
  * сразу несколько параметров.
  * @author $Author: saa $
- * @version $Revision: 1.5 $, $Date: 2005/08/29 12:03:12 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/29 14:54:35 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -120,6 +120,10 @@ implements DataStreamable, Cloneable
 		return this.param[4];
 	}
 
+	public double getSentitivity() {
+		return getSpliceTh();
+	}
+
 	public void setEventTh(double v) {
 		this.param[0] = v;
 	}
@@ -129,12 +133,8 @@ implements DataStreamable, Cloneable
 	}
 
 	public void setSensitivity(double v) {
-		this.setSpliceTh(v);
-		this.setEventTh(v * DEFAULT_EVENT_TO_SPLICE_RATIO);
-	}
-
-	public double getSentitivity() {
-		return getSpliceTh();
+		this.setSpliceTh(v, false);
+		this.setEventTh(v * DEFAULT_EVENT_TO_SPLICE_RATIO, false);
 	}
 
 	public void setConnectorTh(double v) {
@@ -147,6 +147,50 @@ implements DataStreamable, Cloneable
 
 	public void setNoiseFactor(double v) {
 		this.param[4] = v;
+	}
+
+	/**
+	 * @param v значение, которое желательно установить
+	 * @param nearest true, если желательно ограничить входное значение
+	 * диапазоном допустимых значений
+	 */
+	public void setEventTh(double v, boolean nearest) {
+		setEventTh(nearest ? limit(v, getMinEventTh(), getMaxEventTh()) : v);
+	}
+
+	/**
+	 * @see #setEventTh(double, boolean)
+	 */
+	public void setSpliceTh(double v, boolean nearest) {
+		setSpliceTh(nearest ? limit(v, getMinSpliceTh(), getMaxSpliceTh()) : v);
+	}
+
+	/**
+	 * @see #setEventTh(double, boolean)
+	 */
+	public void setSensitivity(double v, boolean nearest) {
+		setSensitivity(nearest ? limit(v, getMinSensitivity(), getMaxSensitivity()) : v);
+	}
+
+	/**
+	 * @see #setEventTh(double, boolean)
+	 */
+	public void setConnectorTh(double v, boolean nearest) {
+		setConnectorTh(nearest ? limit(v, getMinConnectorTh(), getMaxConectorTh()) : v);
+	}
+
+	/**
+	 * @see #setEventTh(double, boolean)
+	 */
+	public void setEndTh(double v, boolean nearest) {
+		setEndTh(nearest ? limit(v, getMinEndTh(), getMaxEndTh()) : v);
+	}
+
+	/**
+	 * @see #setEventTh(double, boolean)
+	 */
+	public void setNoiseFactor(double v, boolean nearest) {
+		setNoiseFactor(nearest ? limit(v, getMinNoiseFactor(), getMaxNoiseFactor()) : v);
 	}
 
 	/**
@@ -244,7 +288,7 @@ implements DataStreamable, Cloneable
 		dos.writeDouble(this.param[3]);
 		dos.writeDouble(this.param[4]);
 	}
-	
+
 	public double getL2rsaBig() {
 		return this.l2rsaBig;
 	}
@@ -495,5 +539,9 @@ implements DataStreamable, Cloneable
 	 */
 	public double getMaxTau2nrs() {
 		return Double.MAX_VALUE;
+	}
+
+	private static double limit(double v, double low, double high) {
+		return v < high ? v < low ? low : v : high; 
 	}
 }

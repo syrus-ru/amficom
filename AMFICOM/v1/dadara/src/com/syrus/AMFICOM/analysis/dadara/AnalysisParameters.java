@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.15 2005/08/29 11:46:09 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.16 2005/08/29 14:54:35 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import java.io.IOException;
  * Если нужно изменить сразу несколько аргументов - используйте методы
  * {@link #getStorageClone()} и {@link #setAllFrom(AnalysisParametersStorage)}
  * @author $Author: saa $
- * @version $Revision: 1.15 $, $Date: 2005/08/29 11:46:09 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/29 14:54:35 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -280,8 +280,21 @@ implements DataStreamable, Cloneable
 
 	public void setSensitivity(double v)
 	throws InvalidAnalysisParametersException {
+		setSensitivity(v, false);
+	}
+
+	/**
+	 * @param v новое значение параметра
+	 * @param nearest true, если желательно ограничить новое значение
+	 * допустимым диапазоном
+	 * @throws InvalidAnalysisParametersException если новое значение
+	 * параметра выходит за допустимые диапазоны, а ограничение допустимым
+	 * диапазоном либо не было запрошено, либо не удалось
+	 */
+	public void setSensitivity(double v, boolean nearest)
+	throws InvalidAnalysisParametersException {
 		AnalysisParametersStorage test = getTestStorage();
-		test.setSensitivity(v);
+		test.setSensitivity(v, nearest);
 		setAllFrom(test);
 	}
 
