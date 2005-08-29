@@ -1,5 +1,5 @@
 /**
- * $Id: MapConnection.java,v 1.15 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: MapConnection.java,v 1.16 2005/08/29 11:31:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,7 +16,7 @@ import java.util.logging.Level;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.16 $, $Date: 2005/08/29 11:31:31 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -80,7 +80,7 @@ public abstract class MapConnection {
 	 * @return true, если доступен поиск по слою;
 	 */
 	public boolean searchIsAvailableForLayer(SpatialLayer layer) throws MapDataException{
-		boolean returnValue = false;
+		boolean returnValue = true;
 		
 		Boolean tableValue = LAYER_SEARCHABILITIES.get(layer.getName());
 		if (tableValue != null)
