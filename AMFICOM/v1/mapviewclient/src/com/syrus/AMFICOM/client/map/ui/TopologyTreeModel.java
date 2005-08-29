@@ -1,5 +1,5 @@
 /**
- * $Id: TopologyTreeModel.java,v 1.7 2005/08/29 12:12:39 krupenn Exp $
+ * $Id: TopologyTreeModel.java,v 1.8 2005/08/29 12:16:44 peskovsky Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,14 +10,12 @@ package com.syrus.AMFICOM.client.map.ui;
 import java.awt.Image;
 import java.awt.Toolkit;
 import java.awt.geom.Rectangle2D;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
@@ -188,7 +186,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 
 				System.out.println("children of \'" + this.initialName + "\' are removed");
 
-				Collection<SpatialObject> objects;
+				List<SpatialObject> objects;
 				SpatialLayer spatialLayer = (SpatialLayer )this.node.getObject();
 				MapImageLoader mapImageLoader = TopologyTreeModel.this.netMapViewer.getRenderer().getLoader();
 
@@ -207,7 +205,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 							objects = mapImageLoader.findSpatialObjects(spatialLayer, bounds);
 						}
 						else {
-							objects = Collections.emptySet();
+							objects = Collections.emptyList();
 						}
 					}
 				} catch (Exception e) {
