@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.77 2005/08/28 19:17:54 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.78 2005/08/29 12:09:58 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/08/28 19:17:54 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.78 $, $Date: 2005/08/29 12:09:58 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -335,7 +335,7 @@ public final class PhysicalLinkType extends StorableObjectType
 		uid.setStringValue(this.id.toString());
 		xmlPhysicalLinkType.setName(this.name);
 		xmlPhysicalLinkType.setDescription(this.description);
-		xmlPhysicalLinkType.setSort(XmlPhysicalLinkTypeSort.Enum.forInt(this.sort.value()));
+		xmlPhysicalLinkType.setSort(XmlPhysicalLinkTypeSort.Enum.forInt(this.sort.value() + 1));
 		
 		xmlPhysicalLinkType.setDimensionX(BigInteger.valueOf(this.getBindingDimension().getWidth()));
 		xmlPhysicalLinkType.setDimensionY(BigInteger.valueOf(this.getBindingDimension().getHeight()));
@@ -364,8 +364,11 @@ public final class PhysicalLinkType extends StorableObjectType
 	public void fromXmlTransferable(final XmlPhysicalLinkType xmlPhysicalLinkType, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
 		this.name = xmlPhysicalLinkType.getName();
 		this.description = xmlPhysicalLinkType.getDescription();
+		this.codename = xmlPhysicalLinkType.getCodename();
 		this.bindingDimension = new IntDimension(xmlPhysicalLinkType.getDimensionX().intValue(),
 				xmlPhysicalLinkType.getDimensionY().intValue());
+		this.sort = PhysicalLinkTypeSort.from_int(xmlPhysicalLinkType.getSort().intValue() - 1);
+		this.topological = true;
 	}
 
 	public static PhysicalLinkType createInstance(

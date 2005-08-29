@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.73 2005/08/28 19:17:54 bass Exp $
+ * $Id: SiteNodeType.java,v 1.74 2005/08/29 12:09:58 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import static java.util.logging.Level.SEVERE;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.Date;
 import java.util.HashSet;
@@ -70,8 +71,8 @@ import com.syrus.util.Log;
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/08/28 19:17:54 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.74 $, $Date: 2005/08/29 12:09:58 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -81,9 +82,9 @@ public final class SiteNodeType extends StorableObjectType
 	public static final String DEFAULT_PIQUET = "defaultpiquet";
 	public static final String DEFAULT_ATS = "defaultats";
 	public static final String DEFAULT_BUILDING = "defaultbuilding";
-	public static final String DEFAULT_UNBOUND = "unbound";
 	public static final String DEFAULT_CABLE_INLET = "defaultcableinlet";
 	public static final String DEFAULT_TOWER = "defaulttower";
+	public static final String DEFAULT_UNBOUND = "unbound";
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -307,7 +308,7 @@ public final class SiteNodeType extends StorableObjectType
 		uid.setStringValue(this.id.toString());
 		xmlSiteNodeType.setName(this.name);
 		xmlSiteNodeType.setDescription(this.description);
-		xmlSiteNodeType.setSort(XmlSiteNodeTypeSort.Enum.forInt(this.sort.value()));
+		xmlSiteNodeType.setSort(XmlSiteNodeTypeSort.Enum.forInt(this.sort.value() + 1));
 		xmlSiteNodeType.setTopological(this.isTopological());
 		
 		String imageCodeName = "";
@@ -315,9 +316,20 @@ public final class SiteNodeType extends StorableObjectType
 			final AbstractImageResource ir = StorableObjectPool.getStorableObject(this.getImageId(), false);
 			if (ir instanceof FileImageResource) {
 				imageCodeName = ((FileImageResource) ir).getCodename();
+				String filename = ((FileImageResource) ir).getFileName();
+				// TODO write image to file
 			}
 			else if (ir instanceof BitmapImageResource) {
 				imageCodeName = ((BitmapImageResource) ir).getCodename();
+				try {
+					File file = new File(imageCodeName);
+					FileOutputStream out = new FileOutputStream(file);
+					byte[] data = ((BitmapImageResource) ir).getImage();
+					out.write(data);
+					out.close();
+				} catch (Exception e) {
+					e.printStackTrace();
+				}
 			}
 		} catch (ApplicationException e) {
 			e.printStackTrace();
@@ -348,7 +360,7 @@ public final class SiteNodeType extends StorableObjectType
 	public void fromXmlTransferable(final XmlSiteNodeType xmlSiteNodeType, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
 		this.name = xmlSiteNodeType.getName();
 		this.description = xmlSiteNodeType.getDescription();
-		this.sort = SiteNodeTypeSort.from_int(xmlSiteNodeType.getSort().intValue());
+		this.sort = SiteNodeTypeSort.from_int(xmlSiteNodeType.getSort().intValue() - 1);
 		this.topological = xmlSiteNodeType.getTopological();
 
 		final String imageCodeName = xmlSiteNodeType.getImage();
