@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersStorage.java,v 1.1 2005/08/29 09:39:31 saa Exp $
+ * $Id: AnalysisParametersStorage.java,v 1.2 2005/08/29 09:48:32 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.io.IOException;
  * а {@link AnalysisParametersStorage} использовать тогда, когда нужно изменить
  * сразу несколько параметров.
  * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/08/29 09:39:31 $
+ * @version $Revision: 1.2 $, $Date: 2005/08/29 09:48:32 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -27,7 +27,7 @@ implements DataStreamable, Cloneable
 {
 	private static final double DEFAULT_THRESHOLD_TO_SPLICE_RATIO = 0.4;
 	private static final double[] RECOMMENDED_NOISE_FACTORS = new double[] {
-		0.7, 1.0, 1.3, 1.5, 2.0, 2.5, 3.0 }; // XXX: remove 0.7 and 3.0
+		1.0, 1.3, 1.5, 2.0, 2.5 };
 
 	private double[] param; // основные параметры анализа
 
@@ -62,7 +62,7 @@ implements DataStreamable, Cloneable
 	 */
 	public boolean isCorrect() {
 		// проверяем основные параметры
-		final double MIN_MIN_THRESHOLD = 0.0001; // FIXME: debug: MIN_MIN_THRESHOLD should be >= 0.001
+		final double MIN_MIN_THRESHOLD = 0.001 * DEFAULT_THRESHOLD_TO_SPLICE_RATIO;
 		if (getMinThreshold() < MIN_MIN_THRESHOLD)
 			return false;
 		if (getMinSplice() < getMinThreshold())
