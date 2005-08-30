@@ -1,5 +1,5 @@
 /*
- * $Id: TestServer.java,v 1.7 2005/08/19 15:55:21 arseniy Exp $
+ * $Id: TestServer.java,v 1.8 2005/08/30 14:24:53 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/19 15:55:21 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/30 14:24:53 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -48,7 +48,7 @@ public final class TestServer extends TestCase {
 		final Server server = Server.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				domain.getId(),
 				"Первый сервер",
-				"Хороший сервер",
+				"Единственный сервер",
 				ApplicationProperties.getString(CORBACommonTest.KEY_SERVER_HOST_NAME, CORBACommonTest.SERVER_HOST_NAME));
 
 		StorableObjectPool.flush(server, DatabaseCommonTest.getSysUser().getId(), true);

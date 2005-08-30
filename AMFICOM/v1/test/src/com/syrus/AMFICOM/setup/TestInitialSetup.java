@@ -1,5 +1,5 @@
 /*
- * $Id: TestInitialSetup.java,v 1.10 2005/08/29 10:00:32 arseniy Exp $
+ * $Id: TestInitialSetup.java,v 1.11 2005/08/30 14:23:36 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.measurement.TestModelingType;
 import com.syrus.AMFICOM.measurement.TestMonitoredElement;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/29 10:00:32 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/30 14:23:36 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -51,10 +51,10 @@ public final class TestInitialSetup extends TestCase {
 	public static Test suite() {
 		final SQLCommonTest sqlCommonTest = new SQLCommonTest();
 
-		//-1. Create system administrator
+		//-1. Create system administrator.
 		sqlCommonTest.addTest(new TestCreateSysUser("testCreateSysUser"));
 
-		//-2.Create dictionaries
+		//-2.Create dictionaries.
 		sqlCommonTest.addTest(new TestDataType("testCreateAll"));
 		sqlCommonTest.addTest(new TestMeasurementUnit("testCreateAll"));
 		sqlCommonTest.addTest(new TestParameterType("testCreateAll"));
@@ -64,11 +64,11 @@ public final class TestInitialSetup extends TestCase {
 
 		final DatabaseCommonTest databaseCommonTest = new DatabaseCommonTest();
 
-		//-3. Create default domain and server
+		//-3. Create default domain and server.
 		databaseCommonTest.addTest(new TestDomain("testCreateInstance"));
 		databaseCommonTest.addTest(new TestServer("testCreateInstance"));
 
-		//-4. Create users for server processes and processes itself
+		//-4. Create users for server processes and processes themself.
 		databaseCommonTest.addTest(new TestSystemUser("testCreateInstance"));
 		databaseCommonTest.addTest(new TestServerProcess("testCreateInstance"));
 
@@ -76,6 +76,7 @@ public final class TestInitialSetup extends TestCase {
 		databaseCommonTest.addTest(new TestSystemUser("testCreateMCMUsers"));
 		databaseCommonTest.addTest(new TestMCM("testCreateInstance"));
 
+		//-6. Create configuration objects.
 		databaseCommonTest.addTest(new TestEquipmentType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestPortType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestTransmissionPathType("testCreateInstance"));
@@ -83,11 +84,13 @@ public final class TestInitialSetup extends TestCase {
 		databaseCommonTest.addTest(new TestPort("testCreateInstance"));
 		databaseCommonTest.addTest(new TestTransmissionPath("testCreateInstance"));
 
+		//-7. Create measurement objects.
 		databaseCommonTest.addTest(new TestMeasurementPortType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestKIS("testCreateInstance"));
 		databaseCommonTest.addTest(new TestMeasurementPort("testCreateInstance"));
 		databaseCommonTest.addTest(new TestMonitoredElement("testCreateInstance"));
 
+		//-8. Create equipment-specific characteristics. 
 		databaseCommonTest.addTest(new TestCharacteristicQP1640A("testCreate"));
 
 		//- Create test suite contains all operations
