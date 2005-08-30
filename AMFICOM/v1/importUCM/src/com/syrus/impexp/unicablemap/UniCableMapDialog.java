@@ -1,7 +1,9 @@
 package com.syrus.impexp.unicablemap;
 import java.awt.BorderLayout;
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Dimension;
+import java.awt.FlowLayout;
 import java.awt.Frame;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -10,19 +12,37 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.PrintWriter;
+import java.util.Arrays;
+import java.util.Collection;
 import java.util.ResourceBundle;
 
+import javax.swing.AbstractButton;
+import javax.swing.ButtonGroup;
+import javax.swing.ButtonModel;
+import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
+import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
+import javax.swing.JRadioButton;
+import javax.swing.JRadioButtonMenuItem;
+import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
+import javax.swing.ListCellRenderer;
+import javax.swing.SwingUtilities;
 
+import com.mapinfo.tab.f;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.client_.general.ui_.ChoosableFileFilter;
 import com.syrus.impexp.ImportExportException;
@@ -30,48 +50,66 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * 
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/08/29 13:04:00 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2005/08/30 12:42:37 $
  * @module mapviewclient_v1
  */
 public class UniCableMapDialog extends JFrame 
 {
-	private JTextArea logTextArea = new JTextArea();
-	private BorderLayout borderLayout1 = new BorderLayout();
+	private static final String ALL_OBJECTS = "all";
+
+	private static final String TEN_OBJECTS = "10";
+
+	private static final String ONE_OBJECT = "1";
+
+	UniCableMapDatabase ucmDatabase = null;
+
+	private JPanel connectionButtonsPanel = new JPanel();
 	private JButton connectButton = new JButton();
 	private JButton disconnectButton = new JButton();
 	
-	UniCableMapDatabase ucmDatabase = null;
-	private JPanel jPanel1 = new JPanel();
-	private JPanel jPanel2 = new JPanel();
-	private GridBagLayout gridBagLayout1 = new GridBagLayout();
-	private JLabel jLabel1 = new JLabel();
+	private JPanel mainPanel = new JPanel();
+
+	private JPanel connectionPanel = new JPanel();
+	private JLabel databaseLabel = new JLabel();
 	private JTextField databaseField = new JTextField();
 	private JButton browseGDBButton = new JButton();
-	private JLabel jLabel2 = new JLabel();
-	private JLabel jLabel3 = new JLabel();
+	private JLabel usernameLabel = new JLabel();
 	private JTextField usernameField = new JTextField();
+	private JLabel passwordLabel = new JLabel();
 	private JPasswordField passwordField = new JPasswordField();
-	private JLabel jLabel4 = new JLabel();
+	private JLabel hostLabel = new JLabel();
 	private JTextField hostField = new JTextField();
-	private JSeparator jSeparator1 = new JSeparator();
-	private JLabel jLabel5 = new JLabel();
+
+	private JPanel importPanel = new JPanel();
+	private JLabel exportFileLabel = new JLabel();
 	private JTextField exportFileField = new JTextField();
 	private JButton browseESFButton = new JButton();
-	private JButton importButton = new JButton();
 	private JLabel statusLabel = new JLabel();
+	private JButton importButton = new JButton();
 
+	private JPanel surveyPanel = new JPanel();
+	private JList surveyTypes = new JList();
+	private JScrollPane surveyTypesScrollPane;
+	private JPanel radioButtonsPanel = new JPanel();
+	private JRadioButton oneRadioButton = new JRadioButton();
+	private JRadioButton tenRadioButton = new JRadioButton();
+	private JRadioButton allRadioButton = new JRadioButton();
+	private ButtonGroup countButtonGroup = new ButtonGroup();
+	private JTextField surveyFileField = new JTextField();
+	private JButton surveyButton = new JButton();
+	
+	private JSeparator jSeparator1 = new JSeparator();
+	private JSeparator jSeparator2 = new JSeparator();
+	private JSeparator jSeparator3 = new JSeparator();
+
+	private JTextArea logTextArea = new JTextArea();
+	
 	public UniCableMapDialog()
 	{
 		this(null, "", false);
 	}
 
-	/**
-	 * 
-	 * @param parent
-	 * @param title
-	 * @param modal
-	 */
 	public UniCableMapDialog(Frame parent, String title, boolean modal)
 	{
 		super(title);
@@ -98,7 +136,7 @@ public class UniCableMapDialog extends JFrame
 		String input = ApplicationProperties.getString("base", "");
 		String output = ApplicationProperties.getString("output", "");
 		
-		Dimension size = new Dimension(600, 330);
+		Dimension size = new Dimension(600, 530);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 
 		this.setSize(size);
@@ -106,7 +144,7 @@ public class UniCableMapDialog extends JFrame
 			(screenSize.width - size.width) / 2,
 			(screenSize.height - size.height) / 2);
 
-		this.getContentPane().setLayout(this.borderLayout1);
+		this.getContentPane().setLayout(new BorderLayout());
 		this.addWindowListener(new java.awt.event.WindowAdapter()
 			{
 				public void windowClosing(WindowEvent e)
@@ -130,8 +168,7 @@ public class UniCableMapDialog extends JFrame
 					disconnectButton_actionPerformed(e);
 				}
 			});
-		this.jPanel2.setLayout(this.gridBagLayout1);
-		this.jLabel1.setText("База данных");
+		this.databaseLabel.setText("База данных");
 		this.databaseField.setText("jTextField1");
 		this.browseGDBButton.setText("Выбрать");
 		this.browseGDBButton.addActionListener(new ActionListener()
@@ -141,14 +178,16 @@ public class UniCableMapDialog extends JFrame
 					browseGDBButton_actionPerformed(e);
 				}
 			});
-		this.jLabel2.setText("Пользователь");
-		this.jLabel3.setText("Пароль");
+		this.usernameLabel.setText("Пользователь");
+		this.passwordLabel.setText("Пароль");
 		this.usernameField.setText("jTextField2");
 		this.passwordField.setText("jPasswordField1");
-		this.jLabel4.setText("Хост");
+		this.hostLabel.setText("Хост");
 		this.hostField.setText("jTextField3");
 		this.jSeparator1.setMinimumSize(new Dimension(1, 1));
-		this.jLabel5.setText("Выходной файл");
+		this.jSeparator2.setMinimumSize(new Dimension(1, 1));
+		this.jSeparator3.setMinimumSize(new Dimension(1, 1));
+		this.exportFileLabel.setText("Выходной файл");
 		this.exportFileField.setText("jTextField1");
 		this.browseESFButton.setText("Выбрать");
 		this.browseESFButton.addActionListener(new ActionListener()
@@ -166,32 +205,98 @@ public class UniCableMapDialog extends JFrame
 					importButton_actionPerformed(e);
 				}
 			});
+		this.importButton.setPreferredSize(this.browseESFButton.getPreferredSize());
 		this.statusLabel.setSize(new Dimension(0, 17));
 		this.statusLabel.setPreferredSize(new Dimension(0, 17));
 		this.statusLabel.setMinimumSize(new Dimension(0, 17));
 		this.statusLabel.setMaximumSize(new Dimension(0, 17));
 		this.statusLabel.setForeground(Color.BLUE);
 		this.statusLabel.setText("Ok");
-		this.getContentPane().add(this.logTextArea, BorderLayout.CENTER);
-		this.jPanel1.add(this.connectButton, null);
-		this.jPanel1.add(this.importButton, null);
-		this.jPanel1.add(this.disconnectButton, null);
-		this.getContentPane().add(this.jPanel1, BorderLayout.SOUTH);
-		this.jPanel2.add(this.jLabel1, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.jPanel2.add(this.databaseField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.jPanel2.add(this.browseGDBButton, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-		this.jPanel2.add(this.jLabel2, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.jPanel2.add(this.jLabel3, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.jPanel2.add(this.usernameField, ReusedGridBagConstraints.get(1, 2, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.jPanel2.add(this.passwordField, ReusedGridBagConstraints.get(1, 3, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.jPanel2.add(this.jLabel4, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.jPanel2.add(this.hostField, ReusedGridBagConstraints.get(1, 1, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.jPanel2.add(this.jSeparator1, ReusedGridBagConstraints.get(0, 4, 3, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
-		this.jPanel2.add(this.jLabel5, ReusedGridBagConstraints.get(0, 5, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.jPanel2.add(this.exportFileField, ReusedGridBagConstraints.get(1, 5, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.jPanel2.add(this.browseESFButton, ReusedGridBagConstraints.get(2, 5, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-		this.jPanel2.add(this.statusLabel, ReusedGridBagConstraints.get(0, 6, 3, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
-		this.getContentPane().add(this.jPanel2, BorderLayout.NORTH);
+
+		this.oneRadioButton.setText(UniCableMapDialog.ONE_OBJECT);
+		this.oneRadioButton.setActionCommand(UniCableMapDialog.ONE_OBJECT);
+		this.tenRadioButton.setText(UniCableMapDialog.TEN_OBJECTS);
+		this.tenRadioButton.setActionCommand(UniCableMapDialog.TEN_OBJECTS);
+		this.allRadioButton.setText(UniCableMapDialog.ALL_OBJECTS);
+		this.allRadioButton.setActionCommand(UniCableMapDialog.ALL_OBJECTS);
+		this.countButtonGroup.add(this.oneRadioButton);
+		this.countButtonGroup.add(this.tenRadioButton);
+		this.countButtonGroup.add(this.allRadioButton);
+		this.radioButtonsPanel.setLayout(new FlowLayout());
+		this.radioButtonsPanel.add(this.oneRadioButton);
+		this.radioButtonsPanel.add(this.tenRadioButton);
+		this.radioButtonsPanel.add(this.allRadioButton);
+		
+//		this.surveyTypes.setPreferredSize(new Dimension(100, 100));
+		this.surveyTypes.setCellRenderer(new DefaultListCellRenderer() {
+		
+			public Component getListCellRendererComponent(
+					JList list,
+					Object value,
+					int index,
+					boolean isSelected,
+					boolean cellHasFocus) {
+				if(value instanceof UniCableMapObject) {
+					UniCableMapObject ucmObject = (UniCableMapObject)value;
+					value = ucmObject.text;
+				}
+				return super.getListCellRendererComponent(list, value, index, isSelected, cellHasFocus);
+			}
+		
+		});
+		
+		this.surveyTypesScrollPane = new JScrollPane(this.surveyTypes);
+		this.surveyTypesScrollPane.setVerticalScrollBarPolicy(JScrollPane.VERTICAL_SCROLLBAR_ALWAYS);
+		this.surveyFileField.setText(".\\out.txt");
+
+		this.surveyButton.setText("Survey");
+		this.surveyButton.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					surveyButton_actionPerformed(e);
+				}
+			});
+
+		this.mainPanel.setLayout(new GridBagLayout());
+
+		this.connectionButtonsPanel.add(this.connectButton, null);
+		this.connectionButtonsPanel.add(this.disconnectButton, null);
+
+		this.connectionPanel.setLayout(new GridBagLayout());
+		this.connectionPanel.add(this.databaseLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		this.connectionPanel.add(this.databaseField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		this.connectionPanel.add(this.browseGDBButton, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		this.connectionPanel.add(this.hostLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		this.connectionPanel.add(this.hostField, ReusedGridBagConstraints.get(1, 1, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		this.connectionPanel.add(this.usernameLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		this.connectionPanel.add(this.usernameField, ReusedGridBagConstraints.get(1, 2, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		this.connectionPanel.add(this.passwordLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		this.connectionPanel.add(this.passwordField, ReusedGridBagConstraints.get(1, 3, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		this.connectionPanel.add(this.connectionButtonsPanel, ReusedGridBagConstraints.get(0, 4, 3, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+
+		this.importPanel.setLayout(new GridBagLayout());
+		this.importPanel.add(this.exportFileLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		this.importPanel.add(this.exportFileField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
+		this.importPanel.add(this.browseESFButton, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
+		this.importPanel.add(this.statusLabel, ReusedGridBagConstraints.get(1, 1, 2, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
+		this.importPanel.add(this.importButton, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
+
+		this.surveyPanel.setLayout(new GridBagLayout());
+		this.surveyPanel.add(this.surveyTypesScrollPane, ReusedGridBagConstraints.get(0, 0, 1, 2, 0.7, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 5, 0, 5), 0, 0));
+		this.surveyPanel.add(this.radioButtonsPanel, ReusedGridBagConstraints.get(1, 0, 1, 2, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		this.surveyPanel.add(this.surveyFileField, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.3, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
+		this.surveyPanel.add(this.surveyButton, ReusedGridBagConstraints.get(2, 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		
+		this.mainPanel.add(this.connectionPanel, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
+		this.mainPanel.add(this.jSeparator1, ReusedGridBagConstraints.get(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
+		this.mainPanel.add(this.importPanel, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
+		this.mainPanel.add(this.jSeparator2, ReusedGridBagConstraints.get(0, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
+		this.mainPanel.add(this.surveyPanel, ReusedGridBagConstraints.get(0, 4, 1, 1, 1.0, 0.7, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 5, 0, 5), 0, 0));
+//		this.mainPanel.add(this.jSeparator3, ReusedGridBagConstraints.get(0, 5, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
+//		this.mainPanel.add(this.logTextArea, ReusedGridBagConstraints.get(0, 6, 1, 1, 1.0, 0.3, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 0, 5, 0), 0, 0));
+		
+		this.getContentPane().add(this.mainPanel, BorderLayout.CENTER);
 
 		this.usernameField.setText("sysdba");
 		this.passwordField.setText("masterkey");
@@ -201,6 +306,7 @@ public class UniCableMapDialog extends JFrame
 
 		this.connectButton.setEnabled(true);
 		this.importButton.setEnabled(false);
+		this.surveyButton.setEnabled(false);
 		this.disconnectButton.setEnabled(false);
 	}
 
@@ -216,34 +322,72 @@ public class UniCableMapDialog extends JFrame
 			this.statusLabel.setText("Connected!");
 			this.connectButton.setEnabled(false);
 			this.importButton.setEnabled(true);
+			this.surveyButton.setEnabled(true);
 			this.disconnectButton.setEnabled(true);
+
+			Collection<UniCableMapObject> types = this.ucmDatabase.getObjects(this.ucmDatabase.getType(UniCableMapType.UCM_TYPE));
+			this.surveyTypes.setListData(types.toArray(new UniCableMapObject[] {}));
 		}
 		catch (ImportExportException ex)
 		{
 			this.statusLabel.setText(ex.getMessage());
 			this.connectButton.setEnabled(true);
 			this.importButton.setEnabled(false);
+			this.surveyButton.setEnabled(false);
 			this.disconnectButton.setEnabled(false);
 		}
 	}
 
 	void disconnectButton_actionPerformed(@SuppressWarnings("unused") ActionEvent e)
 	{
+		this.surveyTypes.removeAll();
 		this.ucmDatabase.close();
 		this.statusLabel.setText("Disconnected!");
 		this.connectButton.setEnabled(true);
 		this.importButton.setEnabled(false);
+		this.surveyButton.setEnabled(false);
 		this.disconnectButton.setEnabled(false);
 	}
 
 	void importButton_actionPerformed(ActionEvent e)
 	{
-//		UniCableMapExportCommand command = new UniCableMapExportCommand(
-//			this.ucmDatabase, 
-//			this.exportFileField.getText());
-		UCMSchemeExportCommand command = new UCMSchemeExportCommand(this.ucmDatabase);
+		UniCableMapExportCommand command = new UniCableMapExportCommand(
+			this.ucmDatabase, 
+			this.exportFileField.getText());
+//		UCMSchemeExportCommand command = new UCMSchemeExportCommand(this.ucmDatabase);
 		command.execute();
 		this.statusLabel.setText("OK!");
+	}
+
+	protected void surveyButton_actionPerformed(ActionEvent e) {
+		File f;
+		FileOutputStream fos = null;
+		PrintWriter pw;
+		try {
+			f = new File(this.surveyFileField.getText());
+			fos = new FileOutputStream(f);
+			pw = new PrintWriter(fos);
+		}
+		catch (FileNotFoundException ex) {
+			pw = new PrintWriter(System.out);
+		}
+		ButtonModel button = this.countButtonGroup.getSelection();
+		int count = 1;
+		if(button != null) {
+			String selection = button.getActionCommand();
+			count = selection.equals(ALL_OBJECTS) ? -1 :
+				selection.equals(TEN_OBJECTS) ? 10 : 1;
+		}
+		UniCableMapObject selectedObject = (UniCableMapObject )this.surveyTypes.getSelectedValue();
+		UCMParser.surveyObjects(pw, selectedObject.text, this.ucmDatabase, count);
+		this.statusLabel.setText("OK!");
+		pw.close();
+		try {
+			if(fos != null)
+				fos.close();
+		} catch(IOException e1) {
+			e1.printStackTrace();
+		}
 	}
 
 	void browseGDBButton_actionPerformed(ActionEvent e)

@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMExportCommand.java,v 1.1 2005/08/30 08:24:46 krupenn Exp $
+ * $Id: UCMParser.java,v 1.1 2005/08/30 12:42:37 krupenn Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,48 +8,29 @@
 
 package com.syrus.impexp.unicablemap;
 
-import java.io.File;
-import java.io.FileNotFoundException;
-import java.io.FileOutputStream;
-import java.io.IOException;
 import java.io.PrintWriter;
-import java.math.BigInteger;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.HashMap;
 import java.util.Iterator;
-import java.util.logging.Level;
 
 import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
-import com.syrus.AMFICOM.Client.General.Command.ExportCommand;
-import com.syrus.impexp.unicablemap.objects.Cable;
-import com.syrus.impexp.unicablemap.objects.CableThread;
-import com.syrus.impexp.unicablemap.objects.CableType;
-import com.syrus.impexp.unicablemap.objects.ChannelingItem;
-import com.syrus.impexp.unicablemap.objects.Element;
-import com.syrus.impexp.unicablemap.objects.MuffType;
-import com.syrus.impexp.unicablemap.objects.Port;
-import com.syrus.impexp.unicablemap.objects.ThreadType;
-import com.syrus.util.Log;
-
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/08/30 08:24:46 $
+ * @version $Revision: 1.1 $, $Date: 2005/08/30 12:42:37 $
  * @module importUCM
  */
 
-public abstract class UCMExportCommand extends ExportCommand {
-	UniCableMapDatabase ucmDatabase;
+public final class UCMParser {
 	
-	public UCMExportCommand(UniCableMapDatabase ucmDatabase) {
-		this.ucmDatabase = ucmDatabase;
+	private UCMParser() {
+		//empty
 	}
 	
-	void parseObject(PrintWriter out, UniCableMapObject ucmObject) {
+	static void parseObject(PrintWriter out, UniCableMapObject ucmObject) {
 		out.println("Œ·˙ÂÍÚ: " + ucmObject.text);
 		out.println("\t x0 = " + ucmObject.x0 + ";\n\t y0 = " + ucmObject.y0 + ";\n\t x1 = " + ucmObject.x1 + ";\n\t y1 = " + ucmObject.y1 + ";\n\t dx = " + ucmObject.dx + ";\n\t dy = " + ucmObject.dy);
 		out.println("\t msk = " + ucmObject.msk + ";\n\t ord = " + ucmObject.ord + ";\n\t state = " + ucmObject.state + ";\n\t un = " + ucmObject.un);
@@ -61,7 +42,7 @@ public abstract class UCMExportCommand extends ExportCommand {
 		}
 	}
 	
-	protected boolean validateXml(XmlObject xml) {
+	public static boolean validateXml(XmlObject xml) {
 		boolean isXmlValid = false;
 
 		// A collection instance to hold validation error messages.
@@ -90,20 +71,21 @@ public abstract class UCMExportCommand extends ExportCommand {
 		return isXmlValid;
 	}
 	
-	void surveyObjects(PrintWriter pw, String type) {
-		Collection objs = this.ucmDatabase.getObjects(
-				this.ucmDatabase.getType(type));
+	public static void surveyObjects(PrintWriter pw, String type, UniCableMapDatabase ucmDatabase, int count) {
+		Collection<UniCableMapObject> objs = ucmDatabase.getObjects(
+				ucmDatabase.getType(type));
+
+		if(count == -1) {
+			count = objs.size();
+		}
 		
 		int i = 0;
-		Iterator it2 = objs.iterator();
-		while (it2.hasNext()) {
-			if(i++ > 100)
+		for (UniCableMapObject ucmObject : objs) {
+			if(i++ > count)
 				break;
-		UniCableMapObject ucmObject = (UniCableMapObject)it2.next();
-		{
 			parseObject(pw, ucmObject);
 			try {
-				Collection children = this.ucmDatabase.getChildren(ucmObject);
+				Collection children = ucmDatabase.getChildren(ucmObject);
 				pw.println("Children:");
 				for (Iterator it = children.iterator(); it.hasNext();) {
 					// get link
@@ -113,7 +95,7 @@ public abstract class UCMExportCommand extends ExportCommand {
 					parseObject(pw, ucmChild.child);
 				}
 				
-				Collection parents = this.ucmDatabase.getParents(ucmObject);
+				Collection parents = ucmDatabase.getParents(ucmObject);
 				pw.println("Parents:");
 				for (Iterator it = parents.iterator(); it.hasNext();) {
 					// get link
@@ -125,7 +107,6 @@ public abstract class UCMExportCommand extends ExportCommand {
 			} catch (SQLException e1) {
 				e1.printStackTrace();
 			}
-		}
 		}
 		System.out.println(objs.size() + " done");
 		pw.flush();
