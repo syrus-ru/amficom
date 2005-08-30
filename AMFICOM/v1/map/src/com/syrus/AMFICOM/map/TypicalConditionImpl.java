@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.12 2005/08/03 14:54:52 max Exp $
+ * $Id: TypicalConditionImpl.java,v 1.13 2005/08/30 14:11:34 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/03 14:54:52 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/30 14:11:34 $
  * @author $Author: max $
  * @module map
  */
@@ -115,7 +115,14 @@ final class TypicalConditionImpl extends TypicalCondition {
 	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		Wrapper wrapper;
-		if (storableObject instanceof PhysicalLinkType) {
+		
+		if (storableObject instanceof PhysicalLink) {
+			wrapper = PhysicalLinkWrapper.getInstance();
+		} else if (storableObject instanceof SiteNode) {
+			wrapper = SiteNodeWrapper.getInstance();
+		} else if (storableObject instanceof Collector) {
+			wrapper = CollectorWrapper.getInstance();
+		} else if (storableObject instanceof PhysicalLinkType) {
 			wrapper = PhysicalLinkTypeWrapper.getInstance();
 		} else if (storableObject instanceof SiteNodeType) {
 			wrapper = SiteNodeTypeWrapper.getInstance();
