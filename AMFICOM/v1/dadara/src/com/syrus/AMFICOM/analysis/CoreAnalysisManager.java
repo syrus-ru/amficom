@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.112 2005/08/29 11:46:09 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.113 2005/08/30 14:07:26 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.112 $, $Date: 2005/08/29 11:46:09 $
+ * @version $Revision: 1.113 $, $Date: 2005/08/30 14:07:26 $
  * @module
  */
 
@@ -274,7 +274,7 @@ public class CoreAnalysisManager
 	 */
 	protected static ModelFunction fitTrace(double[] y, int traceLength, double[] noiseArray, SimpleReflectogramEvent[] sre)
 	{
-		return ModelFunction.createFitedAsBreakL(y, 0, traceLength, noiseArray, sre);
+		return ModelFunction.createFitedAsBreakL(y, 0, traceLength - 1, noiseArray, sre);
 	}
 
 	/**
