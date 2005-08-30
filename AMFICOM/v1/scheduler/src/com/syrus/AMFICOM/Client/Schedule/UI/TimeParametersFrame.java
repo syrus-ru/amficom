@@ -29,7 +29,6 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JRadioButton;
-import javax.swing.JSeparator;
 import javax.swing.JSpinner;
 import javax.swing.SpinnerDateModel;
 import javax.swing.SpinnerNumberModel;
@@ -126,15 +125,8 @@ public class TimeParametersFrame extends JInternalFrame {
 		public static final long DAY_LONG = 24L * HOUR_LONG;
 
 		PropertyChangeEvent	propertyChangeEvent;
-		
-		
-
-		public TimeParametersPanel() {
-			this.createGUI();
-		}
 
 		public TimeParametersPanel(ApplicationContext aContext) {
-			this();
 			this.aContext = aContext;
 			this.dispatcher = this.aContext.getDispatcher();
 			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_DATE_OPERATION, this);
@@ -143,6 +135,8 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS, this);
 			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_TEMPORAL_STAMPS, this);
 			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_START_GROUP_TIME, this);
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);
+			this.createGUI();
 		}
 
 		private void createGUI() {
@@ -586,157 +580,14 @@ public class TimeParametersFrame extends JInternalFrame {
 				this.endTimeSpinner.addChangeListener(changeListener);
 				this.endDateSpinner.addChangeListener(changeListener);
 			}
-
-//			JSeparator jsep2 = new JSeparator();
-//			gbc.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-//			gbc.gridy++;
-//			jsep2.setBorder(BorderFactory.createEtchedBorder());
-//			add(jsep2, gbc);
-//			gbc.insets = gbcInsetsDefault;
-
-//			final TimeStampUI demo = new TimeStampUI();
-
-//			this.timeStamps = new ObjList(TemporalPatternController.getInstance(), TemporalPatternController.KEY_NAME);
-//
-//			this.timeStamps.addMouseListener(new MouseAdapter() {
-//
-//				public void mouseClicked(MouseEvent e) {
-//					if (e.getClickCount() == 2) {
-//						final JList jlist = (JList) e.getSource();
-//						TemporalPattern temporalPattern = (TemporalPattern) jlist.getSelectedValue();
-//						if (temporalPattern.isChanged()) {
-//							// JFrame mainFrame = demo.getTimeLineEditor();
-//							TimeLine timeLine = (TimeLine) temporalPattern.getTimeLines().iterator().next();
-//							final String template = timeLine.getTemplate();
-//							JSplitPane pane = demo.getPane();
-//							demo.setTimeLine(timeLine);
-//							int result = JOptionPane.showConfirmDialog(jlist, pane, "Time Line",
-//								JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-//							if (result == JOptionPane.OK_OPTION) {
-//								temporalPattern.removeTemplate(template);
-//								String template2 = demo.getTemplate();
-//								temporalPattern.addTemplate(template2);
-//								DefaultListModel model = (DefaultListModel) jlist.getModel();
-//								model.removeAllElements();
-//								for (Iterator it = TimeParametersPanel.this.temporalPatterns.iterator(); it.hasNext();) {
-//									TemporalPattern pattern = (TemporalPattern) it.next();
-//									model.addElement(pattern);
-//								}
-//
-//							}
-//						}
-//					}
-//
-//				}
-//
-//			});
-
-//			final JScrollPane timeStampPane = new JScrollPane(this.timeStamps);
-//			timeStampPane.setBorder(BorderFactory.createEtchedBorder());
-//
-//			final JButton addTemporalPatternButton = new JButton(UIStorage.PLUS_ICON);
-//			addTemporalPatternButton.addActionListener(new ActionListener() {
-//
-//				public void actionPerformed(ActionEvent e) {
-//					JSplitPane pane = demo.getPane();
-//					int result = JOptionPane.showConfirmDialog(addTemporalPatternButton, pane, "Time Line",
-//						JOptionPane.OK_CANCEL_OPTION, JOptionPane.PLAIN_MESSAGE);
-//					if (result == JOptionPane.OK_OPTION) {
-//						// System.out.println("was:" + template);
-//						// timeStamp.removeTemplate(template);
-//						String template = demo.getTemplate();
-//						System.out.println("now:" + template);
-//						try {
-//							RISDSessionInfo sessionInterface = (RISDSessionInfo) TimeParametersPanel.this.aContext
-//									.getSessionInterface();
-//							TemporalPattern temporalPattern = TemporalPattern.createInstance(sessionInterface
-//									.getUserIdentifier(), template, new HashSet());
-//							temporalPattern.addTemplate(template);
-//							TimeParametersPanel.this.temporalPatterns.add(temporalPattern);
-//							MeasurementStorableObjectPool.putStorableObject(temporalPattern);
-//							// timeStamp.addTemplate(template2);
-//							ObjListModel model = (ObjListModel) TimeParametersPanel.this.timeStamps.getModel();
-//							model.removeAllElements();
-//							for (Iterator it = TimeParametersPanel.this.temporalPatterns.iterator(); it.hasNext();) {
-//								TemporalPattern timeLine2 = (TemporalPattern) it.next();
-//								model.addElement(timeLine2);
-//							}
-//
-//						} catch (CreateObjectException e1) {
-//							// TODO Auto-generated catch block
-//							e1.printStackTrace();
-//						} catch (IllegalObjectEntityException ioee) {
-//							ModuleMainFrame.showErrorMessage(TimeParametersPanel.this, ioee);
-//						}
-//
-//					}
-//
-//				}
-//
-//			});
-//
-//			addTemporalPatternButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-//
-//			final JButton removeTemporalPatternButton = new JButton(UIStorage.MINUS_ICON);
-//			removeTemporalPatternButton.setEnabled(false);
-//			removeTemporalPatternButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-//
-//			removeTemporalPatternButton.addActionListener(new ActionListener() {
-//
-//				public void actionPerformed(ActionEvent e) {
-//					TemporalPattern temporalPattern = (TemporalPattern) TimeParametersPanel.this.timeStamps
-//							.getSelectedValue();
-//					if (temporalPattern != null) {
-//						TimeParametersPanel.this.temporalPatterns.remove(temporalPattern);
-//						DefaultListModel model = (DefaultListModel) TimeParametersPanel.this.timeStamps.getModel();
-//						model.removeAllElements();
-//						for (Iterator it = TimeParametersPanel.this.temporalPatterns.iterator(); it.hasNext();) {
-//							TemporalPattern timeLine2 = (TemporalPattern) it.next();
-//							model.addElement(timeLine2);
-//						}
-//					}
-//				}
-//			});
-//
-//			this.timeStamps.addListSelectionListener(new ListSelectionListener() {
-//
-//				public void valueChanged(ListSelectionEvent e) {
-//					JList jlist = (JList) e.getSource();
-//					TemporalPattern temporalPattern = (TemporalPattern) jlist.getSelectedValue();
-//					removeTemporalPatternButton.setEnabled((temporalPattern == null) ? false : temporalPattern
-//							.isChanged());
-//				}
-//			});
-
 			
 			gbc.insets = gbcInsetsDefault;
-//			{
-//				Box box = new Box(BoxLayout.X_AXIS);
-//				box.add(addTemporalPatternButton);
-//				box.add(Box.createHorizontalGlue());
-//				box.add(removeTemporalPatternButton);
-//				gbc.gridy++;
-//				gbc.weighty = 1.0;
-//				add(timeStampPane, gbc);
-//				gbc.weighty = 0.0;
-//				gbc.gridy++;
-//				gbc.gridwidth = GridBagConstraints.REMAINDER;
-//				add(box, gbc);
-//			}
 
 			ButtonGroup group = new ButtonGroup();
 			group.add(this.oneRadioButton);
 			group.add(this.periodicalRadioButton);
 			group.add(this.continuosRadioButton);
 			group.add(this.groupRadioButton);
-
-
-//			JSeparator jsep3 = new JSeparator();
-//			gbc.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-//			jsep3.setBorder(BorderFactory.createEtchedBorder());
-//			gbc.gridy++;
-//			add(jsep3, gbc);
-//			gbc.insets = gbcInsetsDefault;
 
 			this.synchroRadioButton = new JRadioButton(LangModelSchedule.getString("Together"));
 			this.alternateRadioButton = new JRadioButton(LangModelSchedule.getString("InTurn"));
@@ -745,27 +596,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			ButtonGroup group3 = new ButtonGroup();
 			group3.add(this.synchroRadioButton);
 			group3.add(this.alternateRadioButton);
-			/**
-			 * @TODO when ok
-			 */
-			if (false) {
-				gbc.gridy++;
-				this.panel.add(this.synchroRadioButton, gbc);
-				gbc.gridy++;
-				this.panel.add(this.alternateRadioButton, gbc);
 
-				JSeparator jsep4 = new JSeparator();
-				gbc.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-				gbc.gridheight = GridBagConstraints.RELATIVE;
-				jsep4.setBorder(BorderFactory.createEtchedBorder());
-				gbc.gridy++;
-				this.panel.add(jsep4, gbc);
-				gbc.insets = gbcInsetsDefault;
-			} else {
-//				gbc.gridy++;
-//				gbc.gridheight = GridBagConstraints.RELATIVE;
-//				add(new JLabel(), gbc);
-			}
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
 			gbc.gridheight = GridBagConstraints.REMAINDER;
 			gbc.weighty = 1.0;
@@ -788,8 +619,6 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.oneRadioButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
-//						setEndDateEnable(false);
-//						setPeriodEnabled(false);
 						setOneDateEnable(true);
 					}
 				});
@@ -829,181 +658,10 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.endTimeButton.setToolTipText(LangModelSchedule.getString("Add time item"));
 			this.endTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			
-//			this.startTimeButton.addActionListener(new ActionListener() {
-//
-//				public void actionPerformed(ActionEvent e) {
-//					Date startDate = getStartDate();
-//
-//					long startTime = startDate.getTime();
-//
-////				 if (TimeParametersPanel.this.timeTableRadioButton.isSelected()) {
-////					
-////						if (TimeParametersPanel.this.temporalStamps == null) {
-////							try {
-////								IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern.createInstance(LoginManager.getUserId(), null, null);
-////								MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
-////								TimeParametersPanel.this.temporalStamps = new TestTemporalStamps(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, getStartDate(), getEndDate(), intervalsTemporalPattern);
-////							} catch (IllegalObjectEntityException e1) {
-////								ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
-////							} catch (CreateObjectException e1) {
-////								ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
-////							}
-////							
-////						} 
-////						
-////						IntervalsTemporalPattern temporalPattern = (IntervalsTemporalPattern) TimeParametersPanel.this.temporalStamps.getTemporalPattern();
-////						
-////												
-////						long ms = startTime - TimeParametersPanel.this.temporalStamps.getStartTime().getTime();
-////						Log.debugMessage(".actionPerformed | ms:" + ms, Log.FINEST);
-////
-////						if (ms < 0) {
-////							TimeParametersPanel.this.temporalStamps.setStartTime(startDate);
-////							try {
-////								temporalPattern.moveAllItems(-ms);
-////							} catch (IllegalDataException e1) {
-////								// never occur !!!
-////								assert false;
-////							}
-////							ms = 0;
-////						}
-////						
-////						if (startDate.compareTo(TimeParametersPanel.this.temporalStamps.getEndTime()) > 0) {
-////							TimeParametersPanel.this.temporalStamps.setEndTime(startDate);
-////						}
-////
-////						Long newMs = new Long(ms);
-////						try {
-////							temporalPattern.addIntervalItems(Collections.singletonMap(newMs, Identifier.VOID_IDENTIFIER), Collections.singletonMap(newMs, null));
-////						} catch (IllegalDataException e1) {
-////							ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
-////						}
-////						/* TODO */
-//////						 TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
-////						
-////					} else {
-//						
-//						TimeParametersPanel.this.schedulerModel.createTest();
-////					}
-//				}
-//			});
-
-			
 			this.pediodTimeButton = new JButton(">>");
 			this.pediodTimeButton.setToolTipText(LangModelSchedule.getString("Add periodical sequence"));
 			this.pediodTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-			
-//			this.pediodTimeButton.addActionListener(new ActionListener() {
-//
-//				public void actionPerformed(ActionEvent e) {
-////					if (TimeParametersPanel.this.timeTableRadioButton.isSelected()) {
-////						Date startDate = getStartDate();
-////						Date endDate = getEndDate();
-////
-////						long startTime = startDate.getTime();
-////						long endTime = endDate.getTime();
-////
-////						if (startTime >= endTime) {
-////							JOptionPane.showMessageDialog(TimeParametersPanel.this.panel, LangModelSchedule
-////									.getString("End time less than begin time"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
-////								JOptionPane.OK_OPTION);
-////							return;
-////						}
-////
-////						Identifier userIdentifier = LoginManager.getUserId();
-////
-////						if (TimeParametersPanel.this.temporalStamps == null) {
-////
-////							try {
-////								IntervalsTemporalPattern intervalsTemporalPattern = IntervalsTemporalPattern
-////										.createInstance(userIdentifier, null, null);
-////
-////								MeasurementStorableObjectPool.putStorableObject(intervalsTemporalPattern);
-////
-////								TimeParametersPanel.this.temporalStamps = new TestTemporalStamps(
-////																									TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL,
-////																									startDate, endDate,
-////																									intervalsTemporalPattern);
-////							} catch (IllegalObjectEntityException e1) {
-////								ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
-////							} catch (CreateObjectException e1) {
-////								ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
-////							}
-////
-////						}
-////
-////						long intervalLength = getIntervalLength();
-////
-////						IntervalsTemporalPattern temporalPattern = (IntervalsTemporalPattern) TimeParametersPanel.this.temporalStamps
-////								.getTemporalPattern();
-////
-////						try {
-////							PeriodicalTemporalPattern periodicTemporalPattern = null;
-////							TypicalCondition typicalCondition = new TypicalCondition(
-////																						intervalLength,
-////																						intervalLength,
-////																						OperationSort.OPERATION_EQUALS,
-////																						ObjectEntities.PERIODICALTEMPORALPATTERN_CODE,
-////																						PeriodicalTemporalPatternWrapper.COLUMN_PERIOD);
-////							try {
-////								java.util.Set set = MeasurementStorableObjectPool.getStorableObjectsByCondition(
-////									typicalCondition, true);
-////								if (!set.isEmpty()) {
-////									periodicTemporalPattern = (PeriodicalTemporalPattern) set.iterator().next();
-////								}
-////							} catch (ApplicationException e1) {
-////								ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
-////								return;
-////							}
-////
-////							if (periodicTemporalPattern == null) {
-////								periodicTemporalPattern = PeriodicalTemporalPattern.createInstance(userIdentifier,
-////									intervalLength);
-////								MeasurementStorableObjectPool.putStorableObject(periodicTemporalPattern);
-////							}
-////
-////							Log.debugMessage(".actionPerformed | temporalStamps.getStartTime(): "
-////									+ TimeParametersPanel.this.temporalStamps.getStartTime(), Log.FINEST);
-////							long ms = startTime - TimeParametersPanel.this.temporalStamps.getStartTime().getTime();
-////							Log.debugMessage(".actionPerformed | ms:" + ms, Log.FINEST);
-////
-////							if (ms < 0) {
-////								TimeParametersPanel.this.temporalStamps.setStartTime(startDate);
-////								temporalPattern.moveAllItems(-ms);
-////								ms = 0;
-////							}
-////
-////							if (endTime > TimeParametersPanel.this.temporalStamps.getEndTime().getTime()) {
-////								TimeParametersPanel.this.temporalStamps.setEndTime(endDate);
-////							}
-////
-////							Long newMs = new Long(ms);
-////							temporalPattern.addIntervalItems(Collections.singletonMap(newMs, periodicTemporalPattern
-////									.getId()), Collections.singletonMap(newMs, new Long(endTime - startTime)));
-////						} catch (IllegalObjectEntityException e1) {
-////							ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
-////						} catch (CreateObjectException e1) {
-////							ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
-////						} catch (IllegalDataException e1) {
-////							ModuleMainFrame.showErrorMessage(TimeParametersPanel.this.panel, e1);
-////						}
-////
-////						// while(startTime + times < endTime) {
-////						// temporalPattern.addIntervalItem(times,
-////						// Identifier.VOID_IDENTIFIER);
-////						// times += intervalLength;
-////						// }
-////
-////						/* TODO */
-//////						TimeParametersPanel.this.schedulerModel.refreshTestTemporalStamps();
-////
-////					} else {
-//						TimeParametersPanel.this.schedulerModel.createTest();
-//
-////					}
-//				}
-//			}
-//			);
+
 			
 			ActionListener actionListener = new ActionListener() {
 				
@@ -1080,6 +738,13 @@ public class TimeParametersFrame extends JInternalFrame {
 				Date date = (Date) newValue;
 				this.startDateSpinner.getModel().setValue(date);
 				this.startTimeSpinner.getModel().setValue(date);
+			} else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
+				final Test selectedTest = this.schedulerModel.getSelectedTest();
+				boolean enable = selectedTest == null;
+				this.startTimeButton.setEnabled(enable);
+				this.endTimeButton.setEnabled(enable);				
+				enable = enable || !selectedTest.getGroupTestId().isVoid();
+				this.pediodTimeButton.setEnabled(enable);				
 			}
 			this.propertyChangeEvent = null;
 		}
@@ -1117,6 +782,11 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.dayIntervalLabel.setVisible(enable);
 			this.interavalLabel.setVisible(enable);
 
+			final Test selectedTest = this.schedulerModel.getSelectedTest();
+			if (selectedTest != null && !selectedTest.getGroupTestId().isVoid()) {
+				this.pediodTimeButton.setEnabled(true);
+			}
+			
 			this.endingLabel.setVisible(false);
 			this.endTimeSpinner.setVisible(false);
 			this.endDateSpinner.setVisible(false);
@@ -1140,7 +810,9 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.periodDaySpinner.setVisible(enable);
 			this.dayIntervalLabel.setVisible(enable);
 			this.interavalLabel.setVisible(enable);
-
+			
+			final Test selectedTest = this.schedulerModel.getSelectedTest();
+			this.pediodTimeButton.setEnabled(selectedTest == null);
 		}
 		
 		Date getStartDate() {
