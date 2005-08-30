@@ -317,13 +317,18 @@ void InitialAnalysis::performAnalysis(double *TEMP, int scaleB, double scaleFact
 	} //for (scaleIndex ... 
 	if(accSpl.getLength() == 0){
 return;}
-	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
+
+	// ====== ТРЕТИЙ ЭТАП - ФИЛЬТРАЦИЯ ВСПЛЕСКОВ ======
+	// удаляем всплески после спадов при маскировании
+	removedMaskedSplashes(accSpl);
+
+	// ======= ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
 	findEventsBySplashes(TEMP, accSpl, scaleB); // по выделенным всплескам определить события (по сути - сгруппировать всплсески)
 	processEventsBeginsEnds(TEMP); // уточнить границы событий (может использовать accSpl через ссылки из EventParams)
 	// используем ArrList и его объекты
 	accSpl.disposeAll(); // очищаем массив ArrList
 
-	// ====== ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
+	// ====== ПЯТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
     processEndOfTrace();// если ни одного коннектора не будет найдено, то удалятся все события
     addLinearPartsBetweenEvents();
     excludeShortLinesBetweenConnectors(data, scaleB);
@@ -463,6 +468,51 @@ return;
 // -------------------------------------------------------------------------------------------------
 //
 // ======= ФУНКЦИИ ТРЕТЬЕГО ЭТАПА АНАЛИЗА - ОПРЕДЕЛЕНИЯ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
+//
+// -------------------------------------------------------------------------------------------------
+void InitialAnalysis::removedMaskedSplashes(ArrList &accSpl)
+{
+	int i;
+	for (i = 1; i < accSpl.getLength(); i++) {
+		if (((Splash*)accSpl[i - 1])->sign > 0)
+			continue; // пропускаем подъемы
+		double A0 = fabs(((Splash*)accSpl[i - 1])->f_extr);
+		double A1 = fabs(((Splash*)accSpl[i])->f_extr);
+		if (((Splash*)accSpl[i - 1])->end_conn < 0)
+			continue; // спад - не достиг коннекторного порога, игнорируем
+
+		double dist = ((Splash*)accSpl[i])->begin_thr - ((Splash*)accSpl[i - 1])->end_conn;
+
+		//fprintf(stderr, "i %d A0 %g A1 %g dist %g: ", i, A0, A1, dist);
+
+		// @todo вынести эти параметры анализа
+		const double A_MAX = 15; // амплитуда насыщения источника звона, дБ
+		const double ZVON_RATIO = 0.03; // начальная отн. амплитуда звона, разы; рекомендую 0.01 .. 0.03 .. 0.1
+		const double CRIT_DIST = 250.0; // затухание звона в e раз, метры
+
+		if (A0 > A_MAX) A0 = A_MAX;
+
+		double LH = pow(10.0, (A1 - A0) / 5.0);
+		double RH = ZVON_RATIO * exp(-dist * delta_x / CRIT_DIST);
+		if (LH < RH) {
+			// удаляем всплеск
+			//fprintf(stderr, " removed");
+			accSpl.slowRemove(i);
+			i--;
+		} else {
+			// (оставляем всплеск)
+			// корректируем достоверность всплеска
+			double rMax = (LH - RH) / RH;
+			((Splash*)accSpl[i])->lowerRFactors(rMax);
+			//fprintf(stderr, " rMax = %g", rMax);
+		}
+		//fprintf(stderr, "\n");
+	}
+}
+
+// -------------------------------------------------------------------------------------------------
+//
+// ======= ФУНКЦИИ ЧЕТВЕРТОГО ЭТАПА АНАЛИЗА - ОПРЕДЕЛЕНИЯ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
 //
 // -------------------------------------------------------------------------------------------------
 void InitialAnalysis::findEventsBySplashes(double *f_wletTEMP, ArrList& splashes, int dzMaxDist)
@@ -1018,7 +1068,7 @@ void InitialAnalysis::setUnrecognizedParamsBySplashes( EventParams& ep, Splash& 
 }
 // -------------------------------------------------------------------------------------------------
 //
-// ====== ФУНКЦИИ ЧЕТВЕРТОГО ЭТАПА АНАЛИЗА - ОБРАБОТКИ СОБЫТИЙ =======
+// ====== ФУНКЦИИ ПЯТОГО ЭТАПА АНАЛИЗА - ОБРАБОТКИ СОБЫТИЙ =======
 //
 //------------------------------------------------------------------------------------------------------------
 // удалить все события после последнего отражательного и переименовать отражательное в "конец волокна"
@@ -1301,3 +1351,11 @@ void InitialAnalysis::fillSplashRParameters(Splash &spl, double *f_wlet, int wle
     }
 }
 //------------------------------------------------------------------------------------------------------------
+void Splash::lowerRFactors(double rMax) {
+	if (r_acrit > rMax)
+		r_acrit = rMax;
+	if (r_weld > rMax)
+		r_weld = rMax;
+	if (r_conn > rMax)
+		r_conn = rMax;
+}

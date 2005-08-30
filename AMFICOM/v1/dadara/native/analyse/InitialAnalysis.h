@@ -121,7 +121,10 @@ private:
 	// ======= ВТОРОЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ ВСПЛЕСКОВ =======
 	void findAllWletSplashes(double* f_wlet, int wlet_width, ArrList& splashes);
 
-	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
+	// ======= ТРЕТИЙ ЭТАП АНАЛИЗА - ОБРАБОТКА ВСПЛЕСКОВ =======
+	void removedMaskedSplashes(ArrList &accSpl);
+
+	// ======= ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОПРЕДЕЛЕНИЕ СОБЫТИЙ ПО ВСПЛЕСКАМ =======
     void findEventsBySplashes(double* f_wletTEMP, ArrList&  splashes, int dzMaxDist);
 	int	 processDeadZone(ArrList& splashes, int dzMaxDist);
     int  findConnector(int i, ArrList& splashes, EventParams *&ep);// посмотреть, есть ли что-то похожее на коннектор , если начать с i-го всплеска, и если есть - обработать и создать (не добавляя), изменив значение i и вернув сдвиг; если ничего не нашли, то сдвиг равен 0
@@ -135,7 +138,7 @@ private:
 	void correctSpliceCoords(double *f_wletTMP, int scale0, EventParams* splice, int minBegin, int maxEnd);// ф-я ПОРТИТ вейвлет образ !  (так как использует тот же массив для хранения образа на другом масштабе)
 	void correctConnectorFront(EventParams* connector);
 
-	// ====== ЧЕТВЕРТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
+	// ====== ПЯТЫЙ ЭТАП АНАЛИЗА - ОБРАБОТКА СОБЫТИЙ =======
     void processEndOfTrace();  // удалить все события после последнего отражательного и переименовать отражательное в "конец волокна"
     void addLinearPartsBetweenEvents();
     void excludeShortLinesBetweenConnectors(double* data, int szc);
@@ -160,6 +163,8 @@ class Splash
 
 	double f_extr;		// экстремальное значение всплеска
     int sign;  // знак всплеска
+
+	void lowerRFactors(double rMax); // понизить достоверность R-факторов этого всплеска до rMax (при прохождении всплеском фильтра)
 
 	// инициализируем неопределёнными значениями, указав только масштаб обнаружения
     Splash(int scale1)
