@@ -164,9 +164,11 @@ public class HistogrammPanel extends ScaledGraphPanel
 				new Double(level2thresh(this.level)),
 				LangModelAnalyse.getString("dB"));
 		String str = sb.toString();
+		// учитываем, что на оси абсцисс есть подписи, с которыми не надо пересекаться
 		g.drawString(str,
 				jw - g.getFontMetrics().stringWidth(str) - 6,
-				(int)((maxY - level - top) * scaleY - 4));
+				Math.min((int)((maxY - level - top) * scaleY - 4),
+						getHeight() - getFontMetrics(getFont()).getHeight() - 3));
 	}
 
 //	// use this method to paint scale digits for krivulka in dB  
