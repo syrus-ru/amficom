@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.45 2005/08/29 14:30:32 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.46 2005/08/30 19:03:21 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -125,7 +125,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.45 $, $Date: 2005/08/29 14:30:32 $
+ * @version $Revision: 1.46 $, $Date: 2005/08/30 19:03:21 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -1418,7 +1418,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	@Override
 	public String toString() {
 		final StringBuffer buffer = new StringBuffer(TypicalCondition.class.getSimpleName());
-		buffer.append(", field:");
+		buffer.append(", field: ");
 		buffer.append(this.delegate.key);
 		switch (this.delegate.type) {
 			case TypicalSort._TYPE_NUMBER_INT:
