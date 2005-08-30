@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElementWrapper.java,v 1.10 2005/08/16 12:22:10 max Exp $
+ * $Id: PathElementWrapper.java,v 1.11 2005/08/30 08:00:18 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/16 12:22:10 $
- * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2005/08/30 08:00:18 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class PathElementWrapper extends StorableObjectWrapper<PathElement> {
@@ -103,11 +103,7 @@ public final class PathElementWrapper extends StorableObjectWrapper<PathElement>
 			return value;
 		}
 		if (pathElement != null) {
-			if (key.equals(COLUMN_NAME)) {
-				return pathElement.getName();
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				return pathElement.getDescription();
-			} else if (key.equals(COLUMN_KIND)) {
+			if (key.equals(COLUMN_KIND)) {
 				return pathElement.getKind().value();
 			} else if (key.equals(COLUMN_SEQUENTIAL_NUMBER)) {
 				return pathElement.getSequentialNumber();
@@ -133,15 +129,7 @@ public final class PathElementWrapper extends StorableObjectWrapper<PathElement>
 	@Override
 	public void setValue(final PathElement pathElement, final String key, final Object value) {
 		if (pathElement != null) {
-			if (key.equals(COLUMN_NAME)) {
-				pathElement.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				pathElement.setDescription((String) value);
-			} else if (key.equals(COLUMN_KIND)) {
-				// TODO: what do we need to do?
-			} else if (key.equals(COLUMN_SEQUENTIAL_NUMBER)) {
-				// TODO: what do we need to do?
-			} else if (key.equals(COLUMN_START_ABSTRACT_SCHEME_PORT_ID)) {
+			if (key.equals(COLUMN_START_ABSTRACT_SCHEME_PORT_ID)) {
 				pathElement.setStartAbstractSchemePortId((Identifier) value);
 			} else if (key.equals(COLUMN_END_ABSTRACT_SCHEME_PORT_ID)) {
 				pathElement.setEndAbstractSchemePortId((Identifier) value);
