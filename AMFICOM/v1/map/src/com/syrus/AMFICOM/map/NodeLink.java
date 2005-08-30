@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.74 2005/08/28 19:17:54 bass Exp $
+ * $Id: NodeLink.java,v 1.75 2005/08/30 13:20:44 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/08/28 19:17:54 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.75 $, $Date: 2005/08/30 13:20:44 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -209,7 +209,7 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 		boolean hasBuilding = false;
 		if(startLinkNode instanceof SiteNode) {
 			SiteNode startLinkSite = (SiteNode) startLinkNode;
-			SiteNodeTypeSort startLinkSiteTypeSort = ((SiteNodeType)startLinkSite.getType()).getSort();
+			SiteNodeTypeSort startLinkSiteTypeSort = startLinkSite.getType().getSort();
 			if(startLinkSiteTypeSort.equals(SiteNodeTypeSort.BUILDING)
 					|| startLinkSiteTypeSort.equals(SiteNodeTypeSort.ATS) ) {
 				hasBuilding = true;
@@ -222,7 +222,7 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 		AbstractNode endLinkNode = this.physicalLink.getEndNode();
 		if(endLinkNode instanceof SiteNode) {
 			SiteNode endLinkSite = (SiteNode) endLinkNode;
-			SiteNodeTypeSort endLinkSiteTypeSort = ((SiteNodeType)endLinkSite.getType()).getSort();
+			SiteNodeTypeSort endLinkSiteTypeSort = endLinkSite.getType().getSort();
 			if(endLinkSiteTypeSort.equals(SiteNodeTypeSort.BUILDING)
 					|| endLinkSiteTypeSort.equals(SiteNodeTypeSort.ATS) ) {
 				hasBuilding = true;

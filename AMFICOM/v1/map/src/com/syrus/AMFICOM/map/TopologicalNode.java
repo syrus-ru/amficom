@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.68 2005/08/28 19:17:54 bass Exp $
+ * $Id: TopologicalNode.java,v 1.69 2005/08/30 13:20:44 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
 
-import org.apache.xmlbeans.XmlObject;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -45,8 +44,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/08/28 19:17:54 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.69 $, $Date: 2005/08/30 13:20:44 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode implements XmlBeansTransferable<XmlTopologicalNode> {
