@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.16 2005/08/29 09:54:15 max Exp $
+ * $Id: ItemTreeModel.java,v 1.17 2005/08/30 13:56:44 arseniy Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,20 +25,18 @@ import javax.swing.tree.TreePath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/29 09:54:15 $
- * @author $Author: max $
+ * @version $Revision: 1.17 $, $Date: 2005/08/30 13:56:44 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module filter
  */
 public class ItemTreeModel implements TreeModel, ItemListener {
 
-	protected static class NameItemComparator implements Comparator {
+	protected static class NameItemComparator implements Comparator<Item> {
 
-		public int compare(Object o1, Object o2) {
-			Item item1 = (Item) o1;
-			Item item2 = (Item) o2;
-			String string1 = item1.getName();
-			String string2 = item2.getName();
+		public int compare(Item item1, Item item2) {
+			final String string1 = item1.getName();
+			final String string2 = item2.getName();
 			return (string1 == null ? "" : string1).compareTo((string2 == null ? "" : string2));
 		}
 	}
@@ -61,13 +59,15 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 
 	private static NameItemComparator nameItemComparator;
 
-	public ItemTreeModel(Item root) {
+	public ItemTreeModel(final Item root) {
 		this.root = root;
 		this.root.addChangeListener(this.getItemListener());
 	}
 
 	protected static NameItemComparator getNameItemComparator() {
-		if (nameItemComparator == null) nameItemComparator = new NameItemComparator();
+		if (nameItemComparator == null) {
+			nameItemComparator = new NameItemComparator();
+		}
 		return nameItemComparator;
 	}
 

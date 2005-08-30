@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.20 2005/08/25 10:52:46 max Exp $
+ * $Id: FilterController.java,v 1.21 2005/08/30 13:56:44 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/08/25 10:52:46 $
- * @author $Author: max $
+ * @version $Revision: 1.21 $, $Date: 2005/08/30 13:56:44 $
+ * @author $Author: arseniy $
  * @module filter_v1
  */
 public class FilterController implements ActionListener, PopupMenuListener, ListSelectionListener {
@@ -170,7 +170,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 				String[] linkedNames = new String[linkedObjects.size()];
 				for (int i = 0; i < linkedObjects.size(); i++) {
 					StorableObject linkedObject = linkedObjects.get(i);
-					StorableObjectWrapper wrapper;
+					StorableObjectWrapper<StorableObject> wrapper;
 					try {
 						wrapper = StorableObjectWrapper.getWrapper(key.getLinkedEntityCode());
 					} catch (IllegalDataException e) {
