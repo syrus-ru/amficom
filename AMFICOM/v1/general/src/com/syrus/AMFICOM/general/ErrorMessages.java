@@ -1,5 +1,5 @@
 /*-
- * $Id: ErrorMessages.java,v 1.22 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: ErrorMessages.java,v 1.23 2005/08/30 07:59:03 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,8 @@ package com.syrus.AMFICOM.general;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.22 $, $Date: 2005/08/08 11:27:25 $
+ * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/08/30 07:59:03 $
  * @module general
  */
 public interface ErrorMessages {
@@ -42,5 +42,6 @@ public interface ErrorMessages {
 	String ILLEGAL_GROUP_CODE = "Illegal group code";
 	String GROUP_POOL_NOT_REGISTERED = "Group pool not registered";
 	String ENTITY_POOL_NOT_REGISTERED = "Entity pool not registered";
-	String ËıÏÈ_ıÛÙÔÍ = "Ë’Ã… –’”‘œ -‘œ, ¡?";
+	String OPERATION_IS_OPTIONAL = "The operation is optional, and not implemented here";
+	String \u0425\u0423\u041b\u0418_\u041f\u0423\u0421\u0422\u041e\u0419 = "\u0425\u0443\u043b\u0438 \u043f\u0443\u0441\u0442\u043e\u0439-\u0442\u043e, \u0430?";
 }
