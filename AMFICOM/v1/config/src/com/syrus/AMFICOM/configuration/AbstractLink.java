@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.5 2005/08/08 14:23:52 arseniy Exp $
+ * $Id: AbstractLink.java,v 1.6 2005/08/30 14:59:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -121,7 +121,7 @@ public abstract class AbstractLink extends DomainMember implements Characterizab
 
 	/**
 	 * @throws ApplicationException 
-	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics()
+	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
 	 */
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
 		if (this.characterizableDelegate == null) {
