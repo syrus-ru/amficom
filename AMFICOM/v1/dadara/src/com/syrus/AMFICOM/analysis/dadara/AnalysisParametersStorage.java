@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersStorage.java,v 1.6 2005/08/29 14:54:35 saa Exp $
+ * $Id: AnalysisParametersStorage.java,v 1.7 2005/08/30 11:51:10 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import java.io.IOException;
  * а {@link AnalysisParametersStorage} использовать тогда, когда нужно изменить
  * сразу несколько параметров.
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/08/29 14:54:35 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/30 11:51:10 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */
@@ -46,7 +46,7 @@ implements DataStreamable, Cloneable
 	private double l2rsaBig = 0.1;
 
 	// еще дополнительный параметр
-	private double scaleFactor = 1.0;
+	private double scaleFactor = 1.65;
 
 	/**
 	 * ”станавливает все свои свойства так же, как и у другого экземпл€р€
