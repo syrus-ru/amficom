@@ -202,9 +202,9 @@ public class TimeParametersFrame extends JInternalFrame {
 																			if (selectedTestIds != null
 																					&& !selectedTestIds.isEmpty()) {
 																				int size = selectedTestIds.size();
-																				boolean b = !oneRadioButton
+																				boolean b = !TimeParametersPanel.this.oneRadioButton
 																						.isSelected()
-																						&& !groupRadioButton
+																						&& !TimeParametersPanel.this.groupRadioButton
 																								.isSelected();
 																				if (size == 1 || !b) {
 																					if (b) {
