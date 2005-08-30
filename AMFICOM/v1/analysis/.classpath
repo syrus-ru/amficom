@@ -1,22 +1,23 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <classpath>
 	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="src" path="test"/>
+	<classpathentry kind="src" path="testDB"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="src" path="/generalclient_v1"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/jfreechartK.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/jgraphpad.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/external/kunststoff.jar"/>
-	<classpathentry kind="src" path="/general_v1"/>
+	<classpathentry kind="src" path="/general"/>
 	<classpathentry kind="src" path="/util"/>
-	<classpathentry kind="src" path="/measurement_v1"/>
-	<classpathentry kind="src" path="/config_v1"/>
-	<classpathentry kind="src" path="/admin_v1"/>
+	<classpathentry kind="src" path="/measurement"/>
+	<classpathentry kind="src" path="/config"/>
+	<classpathentry kind="src" path="/admin"/>
 	<classpathentry kind="src" path="/dadara"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/mapclient.jar"/>
-	<classpathentry kind="src" path="/filter_v1"/>
-	<classpathentry kind="src" path="/idl_v1"/>
-	<classpathentry kind="src" path="/csbridge_v1"/>
-	<classpathentry kind="src" path="/scheme_v1"/>
-	<classpathentry kind="var" path="AMFICOM_HOME/lib/schemeclient.jar"/>
+	<classpathentry kind="src" path="/filter"/>
+	<classpathentry kind="src" path="/csbridge"/>
+	<classpathentry kind="src" path="/scheme"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/commonclient"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/filterclient"/>
+	<classpathentry kind="var" path="JUNIT_HOME/junit.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
