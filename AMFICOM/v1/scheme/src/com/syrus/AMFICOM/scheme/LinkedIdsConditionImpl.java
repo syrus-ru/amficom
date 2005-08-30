@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.35 2005/08/16 07:39:52 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.36 2005/08/30 12:11:52 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.scheme;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
@@ -46,7 +47,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.35 $, $Date: 2005/08/16 07:39:52 $
+ * @version $Revision: 1.36 $, $Date: 2005/08/30 12:11:52 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -275,6 +276,14 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 							}
 						}
 					}	
+					return false;
+				case MEASUREMENTPORT_CODE:
+					AbstractSchemePort endSchemePort2 = pathElement.getEndAbstractSchemePort();
+					if(endSchemePort2 != null) {
+						if(super.conditionTest(endSchemePort2.measurementPortId)) {
+							return true;
+						}
+					}
 					return false;
 				case SCHEMECABLELINK_CODE:
 					if(pathElement.getKind() != IdlKind.SCHEME_CABLE_LINK) {

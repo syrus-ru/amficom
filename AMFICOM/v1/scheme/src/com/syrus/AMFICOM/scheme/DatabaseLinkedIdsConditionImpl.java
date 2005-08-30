@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.31 2005/08/23 07:43:20 bob Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.32 2005/08/30 12:11:52 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.scheme;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
@@ -37,11 +38,12 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bob $
- * @version $Revision: 1.31 $, $Date: 2005/08/23 07:43:20 $
+ * @author $Author: max $
+ * @version $Revision: 1.32 $, $Date: 2005/08/30 12:11:52 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -303,20 +305,14 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
 					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
 					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
-					
 					return buffer.toString();
 				case SCHEMECABLELINK_CODE:
-					StringBuffer buffer2 = new StringBuffer();
-					buffer2.append(PathElementWrapper.COLUMN_SCHEME_CABLE_THREAD_ID);
-					buffer2.append(StorableObjectDatabase.SQL_IN);
-					buffer2.append(StorableObjectDatabase.OPEN_BRACKET);
-					buffer2.append(StorableObjectDatabase.SQL_SELECT);
-					buffer2.append(SchemeCableThreadWrapper.COLUMN_ID);
-					buffer2.append(StorableObjectDatabase.SQL_FROM);
-					buffer2.append(ObjectEntities.SCHEMECABLETHREAD);
-					buffer2.append(StorableObjectDatabase.SQL_WHERE);
-					super.getLinkedQuery(SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID, SchemeCableLinkWrapper.COLUMN_ID, ObjectEntities.SCHEMECABLELINK);
-					return buffer2.toString();
+					super.getLinkedQuery(PathElementWrapper.COLUMN_SCHEME_CABLE_THREAD_ID, SchemeCableLinkWrapper.COLUMN_ID, SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID,ObjectEntities.SCHEMECABLELINK);
+				case MEASUREMENTPORT_CODE:
+					StringBuffer buffer3 = new StringBuffer();
+					buffer3.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, StorableObjectWrapper.COLUMN_ID, SchemeCablePortWrapper.COLUMN_MEASUREMENT_PORT_ID, ObjectEntities.SCHEMECABLEPORT));
+					buffer3.append(StorableObjectDatabase.SQL_OR);
+					buffer3.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, StorableObjectWrapper.COLUMN_ID, SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID, ObjectEntities.SCHEMEPORT));
 				default:
 					throw super.newExceptionLinkedEntityIllegal();
 				}
