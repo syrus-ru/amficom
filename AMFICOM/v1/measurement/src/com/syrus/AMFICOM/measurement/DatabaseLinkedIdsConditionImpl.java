@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.35 2005/08/28 15:44:53 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.36 2005/08/30 09:51:25 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TableNames;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/08/28 15:44:53 $
+ * @version $Revision: 1.36 $, $Date: 2005/08/30 09:51:25 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -164,7 +164,12 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 						throw super.newExceptionLinkedEntityIllegal();
 				}
 			case MONITOREDELEMENT_CODE:
-				return super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
+				switch (super.condition.getLinkedEntityCode()) {
+					case MEASUREMENTPORT_CODE:
+						return super.getQuery(MonitoredElementWrapper.COLUMN_MEASUREMENT_PORT_ID);
+					case DOMAIN_CODE:
+						return super.getQuery(DomainMember.COLUMN_DOMAIN_ID);
+				}
 			default:
 				throw super.newExceptionEntityIllegal();
 		}
