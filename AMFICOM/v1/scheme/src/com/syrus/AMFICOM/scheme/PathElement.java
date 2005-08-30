@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.68 2005/08/26 08:20:01 bass Exp $
+ * $Id: PathElement.java,v 1.69 2005/08/30 08:01:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NO_COMMON_PARENT;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OPERATION_IS_OPTIONAL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
@@ -72,7 +73,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/08/26 08:20:01 $
+ * @version $Revision: 1.69 $, $Date: 2005/08/30 08:01:24 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -110,6 +111,10 @@ public final class PathElement extends StorableObject
 	 * Empty if type is other than {@link IdlKind#SCHEME_LINK}.
 	 */
 	Identifier schemeLinkId;
+
+	private transient String name;
+
+	private transient String description;
 
 	/**
 	 * @param id
@@ -495,7 +500,10 @@ public final class PathElement extends StorableObject
 	 * @see Describable#getDescription()
 	 */
 	public String getDescription() {
-		return getAbstractSchemeElement().getDescription();
+		if (this.description == null) {
+			this.description = this.getAbstractSchemeElement().getDescription();
+		}
+		return this.description;
 	}
 
 	Identifier getEndAbstractSchemePortId() {
@@ -508,7 +516,12 @@ public final class PathElement extends StorableObject
 				|| endAbstractSchemePortIdMajor == SCHEMEPORT_CODE
 				|| endAbstractSchemePortIdMajor == SCHEMECABLEPORT_CODE;
 		if (this.kind == SCHEME_ELEMENT) {
-			assert isLast() || !endAbstractSchemePortIdVoid : OBJECT_BADLY_INITIALIZED;
+			/*
+			 * The assertion is turned off since #isLast() behaves
+			 * incorrectly when working server side and not all
+			 * siblings are saved.
+			 */
+			assert true || isLast() || !endAbstractSchemePortIdVoid : OBJECT_BADLY_INITIALIZED;
 		} else {
 			assert endAbstractSchemePortIdVoid;
 		}
@@ -535,7 +548,10 @@ public final class PathElement extends StorableObject
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
-		return getAbstractSchemeElement().getName();
+		if (this.name == null) {
+			this.name = this.getAbstractSchemeElement().getName();
+		}
+		return this.name;
 	}
 
 	public Scheme getParentScheme() {
@@ -800,10 +816,13 @@ public final class PathElement extends StorableObject
 	}
 
 	/**
+	 * This is an optional operation, not implemented here.
+	 *
+	 * @throws UnsupportedOperationException
 	 * @see Describable#setDescription(String)
 	 */
 	public void setDescription(final String description) {
-		getAbstractSchemeElement().setDescription(description);
+		throw new UnsupportedOperationException(OPERATION_IS_OPTIONAL);
 	}
 
 	/**
@@ -854,10 +873,13 @@ public final class PathElement extends StorableObject
 	}
 
 	/**
+ 	 * This is an optional operation, not implemented here.
+ 	 * 
+	 * @throws UnsupportedOperationException
 	 * @see com.syrus.AMFICOM.general.Namable#setName(String)
 	 */
 	public void setName(final String name) {
-		getAbstractSchemeElement().setName(name);
+		throw new UnsupportedOperationException(OPERATION_IS_OPTIONAL);
 	}
 
 	public void setParentScheme(final Scheme parentScheme) {
