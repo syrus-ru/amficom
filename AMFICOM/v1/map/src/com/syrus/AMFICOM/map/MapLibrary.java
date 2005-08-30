@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.18 2005/08/29 12:05:54 krupenn Exp $
+ * $Id: MapLibrary.java,v 1.19 2005/08/30 16:03:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
+import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -63,8 +63,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/29 12:05:54 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2005/08/30 16:03:59 $
+ * @author $Author: bass $
  * @module map
  */
 public class MapLibrary extends StorableObject implements Identifiable, Namable, Library, XmlBeansTransferable<XmlMapLibrary> {
@@ -393,7 +393,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 
 		try {
 			String uid = xmlMapLibrary.getId().getStringValue();
-			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
 			MapLibrary mapLibrary = null;
 			if(existingIdentifier != null) {
 				mapLibrary = StorableObjectPool.getStorableObject(existingIdentifier, true);
@@ -402,12 +402,12 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 					mapLibrary.fromXmlTransferable(xmlMapLibrary, clonedIdsPool, importType);
 				}
 				else{
-					ImportUIDMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, uid);
 				}
 			}
 			if(mapLibrary == null) {
 				mapLibrary = new MapLibrary(creatorId, StorableObjectVersion.createInitial(), xmlMapLibrary, clonedIdsPool, importType);
-				ImportUIDMapDatabase.insert(importType, uid, mapLibrary.id);
+				ImportUidMapDatabase.insert(importType, uid, mapLibrary.id);
 			}
 			assert mapLibrary.isValid() : OBJECT_STATE_ILLEGAL;
 			mapLibrary.markAsChanged();

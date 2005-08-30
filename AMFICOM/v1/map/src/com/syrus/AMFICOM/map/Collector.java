@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.70 2005/08/28 19:17:54 bass Exp $
+ * $Id: Collector.java,v 1.71 2005/08/30 16:03:59 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
+import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/08/28 19:17:54 $
+ * @version $Revision: 1.71 $, $Date: 2005/08/30 16:03:59 $
  * @module map
  */
 public final class Collector extends StorableObject implements MapElement, XmlBeansTransferable<XmlCollector> {
@@ -400,7 +400,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 		try {
 			String uid = xmlCollector.getId().getStringValue();
-			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
 			Collector collector = null;
 			if(existingIdentifier != null) {
 				collector = StorableObjectPool.getStorableObject(existingIdentifier, true);
@@ -409,12 +409,12 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 					collector.fromXmlTransferable(xmlCollector, clonedIdsPool, importType);
 				}
 				else{
-					ImportUIDMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, uid);
 				}
 			}
 			if(collector == null) {
 				collector = new Collector(creatorId, StorableObjectVersion.createInitial(), xmlCollector, clonedIdsPool, importType);
-				ImportUIDMapDatabase.insert(importType, uid, collector.id);
+				ImportUidMapDatabase.insert(importType, uid, collector.id);
 			}
 			assert collector.isValid() : OBJECT_STATE_ILLEGAL;
 			collector.markAsChanged();

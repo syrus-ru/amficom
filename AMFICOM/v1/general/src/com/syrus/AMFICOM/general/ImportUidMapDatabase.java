@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUIDMapDatabase.java,v 1.5 2005/08/24 15:00:28 bass Exp $
+ * $Id: ImportUidMapDatabase.java,v 1.1 2005/08/30 16:03:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,19 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.APOSTROPHE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.COMMA;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.EQUALS;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_AND;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_DELETE_FROM;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FROM;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_INSERT_INTO;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_VALUES;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
 
 import java.sql.Connection;
 import java.sql.ResultSet;
@@ -18,39 +31,44 @@ import java.util.Set;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
+import com.syrus.util.Shitlet;
 import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $
+ * @author Andrey Kroupennikov
  * @author $Author: bass $
- * @author krupenn
- * @module map
+ * @version $Revision: 1.1 $
+ * @module general
  */
-
-public final class ImportUIDMapDatabase {
+@Shitlet
+public final class ImportUidMapDatabase {
 	private static final String TABLE_NAME_IMPORT_UID_MAP = "ImportUIDMap";
 	private static final String COLUMN_IMPORT_KIND = "import_kind";
 	private static final String COLUMN_FOREIGN_UID = "foreign_uid";
 	private static final String COLUMN_ID = "id";
 
+	private ImportUidMapDatabase() {
+		assert false;
+	}
+
 	private static StringBuffer getWhereClause(final String importType, final String uid) {
-		return new StringBuffer(COLUMN_IMPORT_KIND + StorableObjectDatabase.EQUALS
-				+ StorableObjectDatabase.APOSTROPHE + importType + StorableObjectDatabase.APOSTROPHE
-				+ StorableObjectDatabase.SQL_AND
-				+ COLUMN_FOREIGN_UID + StorableObjectDatabase.EQUALS
-				+ StorableObjectDatabase.APOSTROPHE + uid + StorableObjectDatabase.APOSTROPHE);
+		return new StringBuffer(COLUMN_IMPORT_KIND + EQUALS
+				+ APOSTROPHE + importType + APOSTROPHE
+				+ SQL_AND
+				+ COLUMN_FOREIGN_UID + EQUALS
+				+ APOSTROPHE + uid + APOSTROPHE);
 	}
 
 	private static StringBuffer retrieveQuery(final StringBuffer condition) {
-		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_SELECT
-				+ COLUMN_IMPORT_KIND + StorableObjectDatabase.COMMA
-				+ COLUMN_FOREIGN_UID + StorableObjectDatabase.COMMA
+		final StringBuffer sql = new StringBuffer(SQL_SELECT
+				+ COLUMN_IMPORT_KIND + COMMA
+				+ COLUMN_FOREIGN_UID + COMMA
 				+ COLUMN_ID
-				+ StorableObjectDatabase.SQL_FROM + TABLE_NAME_IMPORT_UID_MAP);
+				+ SQL_FROM + TABLE_NAME_IMPORT_UID_MAP);
 
 		if (condition != null && condition.length() != 0) {
-			sql.append(StorableObjectDatabase.SQL_WHERE);
+			sql.append(SQL_WHERE);
 			sql.append(condition);
 		}
 
@@ -58,15 +76,12 @@ public final class ImportUIDMapDatabase {
 	}
 
 	public static Identifier retrieve(final String import_type, final String uid) throws RetrieveObjectException {
-		final Set<Identifier> objects = retrieveByCondition(getWhereClause(import_type, uid));
-		if (!objects.isEmpty()) {
-			return objects.iterator().next();
-		}
-		return null;
+		final Set<Identifier> ids = retrieveByCondition(getWhereClause(import_type, uid));
+		return ids.isEmpty() ? null : ids.iterator().next();
 	}
 
 	private static Set<Identifier> retrieveByCondition(final StringBuffer condition) throws RetrieveObjectException {
-		final Set<Identifier> objects = new HashSet<Identifier>();
+		final Set<Identifier> ids = new HashSet<Identifier>();
 
 		final StringBuffer sql = retrieveQuery(condition);
 
@@ -76,111 +91,95 @@ public final class ImportUIDMapDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("ImportUIDMapDatabase.retrieveByCondition | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("ImportUidMapDatabase.retrieveByCondition | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
-				Identifier id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
-				objects.add(id);
+				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
+				ids.add(id);
 			}
-		}
-		catch (SQLException sqle) {
+		} catch (final SQLException sqle) {
 			final String mesg = "Cannot retrieve ImportUIDItem" + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				try {
 					if (resultSet != null) {
 						resultSet.close();
 					}
-				}
-				finally {
+				} finally {
 					try {
 						if (statement != null) {
 							statement.close();
 						}
-					}
-					finally {
+					} finally {
 						DatabaseConnection.releaseConnection(connection);
 					}
 				}
-			}
-			catch (SQLException sqle) {
+			} catch (final SQLException sqle) {
 				Log.errorException(sqle);
 			}
 		}
-
-		return objects;
+		return ids;
 	}
 
-	public static void insert(final String import_type, String uid, Identifier id) throws CreateObjectException {
-		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_INSERT_INTO + TABLE_NAME_IMPORT_UID_MAP
-				+ StorableObjectDatabase.OPEN_BRACKET
-				+ COLUMN_IMPORT_KIND + StorableObjectDatabase.COMMA
-				+ COLUMN_FOREIGN_UID + StorableObjectDatabase.COMMA
-				+ COLUMN_ID + StorableObjectDatabase.CLOSE_BRACKET 
-				+ StorableObjectDatabase.SQL_VALUES + StorableObjectDatabase.OPEN_BRACKET
-				+ StorableObjectDatabase.APOSTROPHE + DatabaseString.toQuerySubString(import_type) + StorableObjectDatabase.APOSTROPHE + StorableObjectDatabase.COMMA
-				+ StorableObjectDatabase.APOSTROPHE + DatabaseString.toQuerySubString(uid) + StorableObjectDatabase.APOSTROPHE + StorableObjectDatabase.COMMA
+	public static void insert(final String import_type, final String uid, final Identifier id) throws CreateObjectException {
+		final StringBuffer sql = new StringBuffer(SQL_INSERT_INTO + TABLE_NAME_IMPORT_UID_MAP
+				+ OPEN_BRACKET
+				+ COLUMN_IMPORT_KIND + COMMA
+				+ COLUMN_FOREIGN_UID + COMMA
+				+ COLUMN_ID + CLOSE_BRACKET 
+				+ SQL_VALUES + OPEN_BRACKET
+				+ APOSTROPHE + DatabaseString.toQuerySubString(import_type) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(uid) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(id)
-				+ StorableObjectDatabase.CLOSE_BRACKET);
+				+ CLOSE_BRACKET);
 
 		Statement statement = null;
 		Connection connection = null;
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("ImportUIDMapDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("ImportUidMapDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (final SQLException sqle) {
 			final String mesg = "Cannot insert ImportUIDItem" + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null) {
 					statement.close();
 				}
-				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (final SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
 	}
 
 	public static void delete(final String import_type, final String uid) {
-		final StringBuffer sql = new StringBuffer(StorableObjectDatabase.SQL_DELETE_FROM + TABLE_NAME_IMPORT_UID_MAP
-				+ StorableObjectDatabase.SQL_WHERE + getWhereClause(import_type, uid));
+		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + TABLE_NAME_IMPORT_UID_MAP
+				+ SQL_WHERE + getWhereClause(import_type, uid));
 
 		Statement statement = null;
 		Connection connection = null;
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("ImportUIDMapDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("ImportUidMapDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (final SQLException sqle) {
 			Log.errorException(sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null) {
 					statement.close();
 				}
-				statement = null;
-			}
-			catch (SQLException sqle1) {
+			} catch (final SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				DatabaseConnection.releaseConnection(connection);
 			}
 		}
@@ -194,7 +193,6 @@ public final class ImportUIDMapDatabase {
 	private static final String KEY_DB_SID = "DBSID";
 	private static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
 	private static final String KEY_DB_LOGIN_NAME = "DBLoginName";
-	private static final String KEY_SERVER_ID = "ServerID";
 
 	/*-********************************************************************
 	 * Default values.                                                    *
@@ -217,7 +215,7 @@ public final class ImportUIDMapDatabase {
 			}
 		});
 	}
-	
+
 	private static void establishDatabaseConnection() {
 		final String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
 		final String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
@@ -225,8 +223,7 @@ public final class ImportUIDMapDatabase {
 		final String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
-		}
-		catch (Exception e) {
+		} catch (final Exception e) {
 			Log.errorException(e);
 			System.exit(0);
 		}

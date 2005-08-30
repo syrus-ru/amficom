@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.69 2005/08/30 13:20:44 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.70 2005/08/30 16:03:59 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
+import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: krupenn $
- * @version $Revision: 1.69 $, $Date: 2005/08/30 13:20:44 $
+ * @author $Author: bass $
+ * @version $Revision: 1.70 $, $Date: 2005/08/30 16:03:59 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode implements XmlBeansTransferable<XmlTopologicalNode> {
@@ -357,7 +357,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 
 		try {
 			String uid = xmlTopologicalNode.getId().getStringValue();
-			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
 			TopologicalNode topologicalNode = null;
 			if(existingIdentifier != null) {
 				topologicalNode = StorableObjectPool.getStorableObject(existingIdentifier, true);
@@ -366,7 +366,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 					topologicalNode.fromXmlTransferable(xmlTopologicalNode, clonedIdsPool, importType);
 				}
 				else{
-					ImportUIDMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, uid);
 				}
 			}
 			if(topologicalNode == null) {
@@ -375,7 +375,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 						xmlTopologicalNode,
 						clonedIdsPool, 
 						importType);
-				ImportUIDMapDatabase.insert(importType, uid, topologicalNode.id);
+				ImportUidMapDatabase.insert(importType, uid, topologicalNode.id);
 			}
 			assert topologicalNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 			topologicalNode.markAsChanged();

@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.74 2005/08/29 12:09:58 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.75 2005/08/30 16:03:59 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
+import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: krupenn $
- * @version $Revision: 1.74 $, $Date: 2005/08/29 12:09:58 $
+ * @author $Author: bass $
+ * @version $Revision: 1.75 $, $Date: 2005/08/30 16:03:59 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -381,7 +381,7 @@ public final class SiteNodeType extends StorableObjectType
 
 		try {
 			String uid = xmlSiteNodeType.getId().getStringValue();
-			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
 			SiteNodeType siteNodeType = null;
 			if(existingIdentifier != null) {
 				siteNodeType = StorableObjectPool.getStorableObject(existingIdentifier, true);
@@ -390,7 +390,7 @@ public final class SiteNodeType extends StorableObjectType
 					siteNodeType.fromXmlTransferable(xmlSiteNodeType, clonedIdsPool, importType);
 				}
 				else{
-					ImportUIDMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, uid);
 				}
 			}
 			if(siteNodeType == null) {
@@ -401,7 +401,7 @@ public final class SiteNodeType extends StorableObjectType
 						xmlSiteNodeType,
 						clonedIdsPool, 
 						importType);
-				ImportUIDMapDatabase.insert(importType, uid, siteNodeType.id);
+				ImportUidMapDatabase.insert(importType, uid, siteNodeType.id);
 			}
 			assert siteNodeType.isValid() : OBJECT_STATE_ILLEGAL;
 			siteNodeType.markAsChanged();

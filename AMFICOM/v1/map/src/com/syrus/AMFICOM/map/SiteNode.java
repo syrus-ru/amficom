@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.72 2005/08/29 12:08:47 krupenn Exp $
+ * $Id: SiteNode.java,v 1.73 2005/08/30 16:03:59 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
+import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -56,8 +56,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: krupenn $
- * @version $Revision: 1.72 $, $Date: 2005/08/29 12:08:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.73 $, $Date: 2005/08/30 16:03:59 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
@@ -379,7 +379,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 
 		try {
 			String uid = xmlSiteNode.getId().getStringValue();
-			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
 			SiteNode siteNode = null;
 			if(existingIdentifier != null) {
 				clonedIdsPool.setExistingId(uid, existingIdentifier);
@@ -388,12 +388,12 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 					siteNode.fromXmlTransferable(xmlSiteNode, clonedIdsPool, importType);
 				}
 				else{
-					ImportUIDMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, uid);
 				}
 			}
 			if(siteNode == null) {
 				siteNode = new SiteNode(creatorId, StorableObjectVersion.createInitial(), xmlSiteNode, clonedIdsPool, importType);
-				ImportUIDMapDatabase.insert(importType, uid, siteNode.id);
+				ImportUidMapDatabase.insert(importType, uid, siteNode.id);
 			}
 			assert siteNode.isValid() : OBJECT_STATE_ILLEGAL;
 			siteNode.markAsChanged();

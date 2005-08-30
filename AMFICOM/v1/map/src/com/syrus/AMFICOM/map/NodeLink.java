@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.75 2005/08/30 13:20:44 krupenn Exp $
+ * $Id: NodeLink.java,v 1.76 2005/08/30 16:03:59 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
+import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.75 $, $Date: 2005/08/30 13:20:44 $
+ * @author $Author: bass $
+ * @version $Revision: 1.76 $, $Date: 2005/08/30 16:03:59 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -502,7 +502,7 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 
 		try {
 			String uid = xmlNodeLink.getId().getStringValue();
-			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
 			NodeLink nodeLink = null;
 			if(existingIdentifier != null) {
 				nodeLink = StorableObjectPool.getStorableObject(existingIdentifier, true);
@@ -511,12 +511,12 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 					nodeLink.fromXmlTransferable(xmlNodeLink, clonedIdsPool, importType);
 				}
 				else{
-					ImportUIDMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, uid);
 				}
 			}
 			if(nodeLink == null) {
 				nodeLink = new NodeLink(creatorId, StorableObjectVersion.createInitial(), xmlNodeLink, clonedIdsPool, importType);
-				ImportUIDMapDatabase.insert(importType, uid, nodeLink.id);
+				ImportUidMapDatabase.insert(importType, uid, nodeLink.id);
 			}
 			assert nodeLink.isValid() : OBJECT_STATE_ILLEGAL;
 			nodeLink.markAsChanged();

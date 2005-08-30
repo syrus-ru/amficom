@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.80 2005/08/29 12:05:54 krupenn Exp $
+ * $Id: Map.java,v 1.81 2005/08/30 16:03:59 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
+import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -69,8 +69,8 @@ import com.syrus.AMFICOM.map.xml.XmlTopologicalNodeSeq;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.80 $, $Date: 2005/08/29 12:05:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.81 $, $Date: 2005/08/30 16:03:59 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -1116,7 +1116,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 		try {
 			String uid = xmlMap.getId().getStringValue();
-			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
 			Map map = null;
 			if(existingIdentifier != null) {
 				map = StorableObjectPool.getStorableObject(existingIdentifier, true);
@@ -1125,12 +1125,12 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 					map.fromXmlTransferable(xmlMap, clonedIdsPool, importType);
 				}
 				else{
-					ImportUIDMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, uid);
 				}
 			}
 			if(map == null) {
 				map = new Map(creatorId, StorableObjectVersion.createInitial(), domainId, xmlMap, clonedIdsPool, importType);
-				ImportUIDMapDatabase.insert(importType, uid, map.id);
+				ImportUidMapDatabase.insert(importType, uid, map.id);
 			}
 			assert map.isValid() : OBJECT_STATE_ILLEGAL;
 			map.markAsChanged();

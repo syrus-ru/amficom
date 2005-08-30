@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.78 2005/08/29 12:09:58 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.79 2005/08/30 16:03:59 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
+import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -58,8 +58,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: krupenn $
- * @version $Revision: 1.78 $, $Date: 2005/08/29 12:09:58 $
+ * @author $Author: bass $
+ * @version $Revision: 1.79 $, $Date: 2005/08/30 16:03:59 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -379,7 +379,7 @@ public final class PhysicalLinkType extends StorableObjectType
 
 		try {
 			String uid = xmlPhysicalLinkType.getId().getStringValue();
-			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
 			PhysicalLinkType physicalLinkType = null;
 			if(existingIdentifier != null) {
 				physicalLinkType = StorableObjectPool.getStorableObject(existingIdentifier, true);
@@ -388,7 +388,7 @@ public final class PhysicalLinkType extends StorableObjectType
 					physicalLinkType.fromXmlTransferable(xmlPhysicalLinkType, clonedIdsPool, importType);
 				}
 				else{
-					ImportUIDMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, uid);
 				}
 			}
 			if(physicalLinkType == null) {
@@ -399,7 +399,7 @@ public final class PhysicalLinkType extends StorableObjectType
 						xmlPhysicalLinkType,
 						clonedIdsPool, 
 						importType);
-				ImportUIDMapDatabase.insert(importType, uid, physicalLinkType.id);
+				ImportUidMapDatabase.insert(importType, uid, physicalLinkType.id);
 			}
 			assert physicalLinkType.isValid() : OBJECT_STATE_ILLEGAL;
 			physicalLinkType.markAsChanged();

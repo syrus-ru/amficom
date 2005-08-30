@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.98 2005/08/29 12:08:47 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.99 2005/08/30 16:03:59 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUIDMapDatabase;
+import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.98 $, $Date: 2005/08/29 12:08:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.99 $, $Date: 2005/08/30 16:03:59 $
  * @module map
  */
 public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XmlBeansTransferable<XmlPhysicalLink> {
@@ -973,7 +973,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 		try {
 			String uid = xmlPhysicalLink.getId().getStringValue();
-			Identifier existingIdentifier = ImportUIDMapDatabase.retrieve(importType, uid);
+			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
 			PhysicalLink physicalLink = null;
 			if(existingIdentifier != null) {
 				physicalLink = StorableObjectPool.getStorableObject(existingIdentifier, true);
@@ -982,7 +982,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 					physicalLink.fromXmlTransferable(xmlPhysicalLink, clonedIdsPool, importType);
 				}
 				else{
-					ImportUIDMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, uid);
 				}
 			}
 			if(physicalLink == null) {
@@ -992,7 +992,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 						xmlPhysicalLink,
 						clonedIdsPool,
 						importType);
-				ImportUIDMapDatabase.insert(importType, uid, physicalLink.id);
+				ImportUidMapDatabase.insert(importType, uid, physicalLink.id);
 			}
 			assert physicalLink.isValid() : OBJECT_STATE_ILLEGAL;
 			physicalLink.markAsChanged();
