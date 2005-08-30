@@ -1,11 +1,9 @@
 package com.syrus.impexp.unicablemap;
 
-import com.syrus.impexp.ImportExportException;
-
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/05/25 16:06:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/08/30 13:45:51 $
  * @module mapviewclient_v1
  */
 public class UniCableMapImpExp 

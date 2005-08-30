@@ -17,16 +17,12 @@ import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
-import java.util.Arrays;
 import java.util.Collection;
-import java.util.ResourceBundle;
 
-import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
 import javax.swing.DefaultListCellRenderer;
 import javax.swing.JButton;
-import javax.swing.JDialog;
 import javax.swing.JFileChooser;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -34,15 +30,11 @@ import javax.swing.JList;
 import javax.swing.JPanel;
 import javax.swing.JPasswordField;
 import javax.swing.JRadioButton;
-import javax.swing.JRadioButtonMenuItem;
 import javax.swing.JScrollPane;
 import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
-import javax.swing.ListCellRenderer;
-import javax.swing.SwingUtilities;
 
-import com.mapinfo.tab.f;
 import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
 import com.syrus.AMFICOM.client_.general.ui_.ChoosableFileFilter;
 import com.syrus.impexp.ImportExportException;
@@ -51,7 +43,7 @@ import com.syrus.util.ApplicationProperties;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/08/30 12:42:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/08/30 13:45:50 $
  * @module mapviewclient_v1
  */
 public class UniCableMapDialog extends JFrame 
