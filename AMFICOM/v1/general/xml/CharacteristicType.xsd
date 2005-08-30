@@ -1,50 +1,57 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: CharacteristicType.xsd,v 1.3 2005/08/28 11:32:59 bass Exp $
--->
+<?xml version = "1.0" encoding = "UTF-8"?>
 <xsd:schema 
-	targetNamespace="http://syrus.com/AMFICOM/general/xml"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:general="http://syrus.com/AMFICOM/general/xml"
-	elementFormDefault="qualified">
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault = "qualified">
 
-  <xsd:simpleType name="XmlCharacteristicTypeSort">
-    <xsd:restriction base="xsd:string">
-      <xsd:enumeration value="visual"/>
-      <xsd:enumeration value="operational"/>
-      <xsd:enumeration value="interface"/>
-      <xsd:enumeration value="electrical"/>
-      <xsd:enumeration value="optical"/>
-    </xsd:restriction>
-  </xsd:simpleType>
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: CharacteristicType.xsd,v 1.4 2005/08/30 11:49:52 bass Exp $
 
-  <xsd:simpleType name="XmlDataType">
-    <xsd:restriction base="xsd:string">
-      <xsd:enumeration value="integer"/>
-      <xsd:enumeration value="double"/>
-      <xsd:enumeration value="string"/>
-      <xsd:enumeration value="date"/>
-      <xsd:enumeration value="long"/>
-      <xsd:enumeration value="raw"/>
-      <xsd:enumeration value="boolean"/>
-    </xsd:restriction>
-  </xsd:simpleType>
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
 
-  <xsd:complexType name="XmlCharacteristicType">
-    <xsd:all>
-      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="sort" type="general:XmlCharacteristicTypeSort" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="dataType" type="general:XmlDataType" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="editable" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="visible" type="xsd:boolean" minOccurs="1" maxOccurs="1"/>
-    </xsd:all>
-  </xsd:complexType>
+	<xsd:simpleType name = "XmlCharacteristicTypeSort">
+		<xsd:restriction base = "xsd:string">
+			<xsd:enumeration value = "visual"/>
+			<xsd:enumeration value = "operational"/>
+			<xsd:enumeration value = "interface"/>
+			<xsd:enumeration value = "electrical"/>
+			<xsd:enumeration value = "optical"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 
-  <xsd:complexType name="XmlCharacteristicTypeSeq">
-    <xsd:sequence>
-      <xsd:element name="characteristicType" type="general:XmlCharacteristicType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
+	<xsd:simpleType name = "XmlDataType">
+		<xsd:restriction base = "xsd:string">
+			<xsd:enumeration value = "integer"/>
+			<xsd:enumeration value = "double"/>
+			<xsd:enumeration value = "string"/>
+			<xsd:enumeration value = "date"/>
+			<xsd:enumeration value = "long"/>
+			<xsd:enumeration value = "raw"/>
+			<xsd:enumeration value = "boolean"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 
+	<xsd:complexType name = "XmlCharacteristicType">
+		<xsd:all>
+			<xsd:element name = "name" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
+			<xsd:element name = "codename" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
+			<xsd:element name = "description" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
+			<xsd:element name = "sort" type = "general:XmlCharacteristicTypeSort" minOccurs = "1" maxOccurs = "1"/>
+			<xsd:element name = "dataType" type = "general:XmlDataType" minOccurs = "1" maxOccurs = "1"/>
+			<xsd:element name = "editable" type = "xsd:boolean" minOccurs = "1" maxOccurs = "1"/>
+			<xsd:element name = "visible" type = "xsd:boolean" minOccurs = "1" maxOccurs = "1"/>
+		</xsd:all>
+	</xsd:complexType>
+
+	<xsd:complexType name = "XmlCharacteristicTypeSeq">
+		<xsd:sequence>
+			<xsd:element name = "characteristicType" type = "general:XmlCharacteristicType" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
 </xsd:schema>
