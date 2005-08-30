@@ -1,11 +1,14 @@
 /*
- * $Id: CableThread.java,v 1.39 2005/08/05 16:50:02 arseniy Exp $
+ * $Id: CableThread.java,v 1.40 2005/08/30 16:35:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_CODE;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -19,13 +22,11 @@ import com.syrus.AMFICOM.configuration.corba.IdlCableThreadHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -35,8 +36,8 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/08/05 16:50:02 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/08/30 16:35:09 $
+ * @author $Author: bass $
  * @module config
  */
 public final class CableThread extends DomainMember implements TypedObject {
@@ -51,7 +52,7 @@ public final class CableThread extends DomainMember implements TypedObject {
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.CABLETHREAD_CODE).retrieve(this);
+			DatabaseContext.getDatabase(CABLETHREAD_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -93,7 +94,7 @@ public final class CableThread extends DomainMember implements TypedObject {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final CableThread cableThread = new CableThread(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLETHREAD_CODE),
+			final CableThread cableThread = new CableThread(IdentifierPool.getGeneratedIdentifier(CABLETHREAD_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					domainId,
@@ -101,7 +102,7 @@ public final class CableThread extends DomainMember implements TypedObject {
 					description,
 					type);
 
-			assert cableThread.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert cableThread.isValid() : OBJECT_STATE_ILLEGAL;
 
 			cableThread.markAsChanged();
 
@@ -174,7 +175,7 @@ public final class CableThread extends DomainMember implements TypedObject {
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(1);
 		dependencies.add(this.type);

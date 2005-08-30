@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.19 2005/08/28 15:44:10 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.20 2005/08/30 16:35:09 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
@@ -21,12 +22,11 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.AbstractDatabaseLinkedIdsCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/28 15:44:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/08/30 16:35:09 $
+ * @author $Author: bass $
  * @module config
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -63,7 +63,7 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 						return super.getLinkedQuery(PortWrapper.COLUMN_EQUIPMENT_ID,
 								StorableObjectWrapper.COLUMN_ID,
 								DomainMember.COLUMN_DOMAIN_ID,
-								ObjectEntities.EQUIPMENT);
+								EQUIPMENT);
 					default:
 						throw super.newExceptionLinkedEntityIllegal();
 				}

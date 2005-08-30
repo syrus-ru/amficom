@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.71 2005/08/28 15:44:10 arseniy Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.72 2005/08/30 16:35:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +18,6 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -26,8 +27,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/08/28 15:44:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.72 $, $Date: 2005/08/30 16:35:09 $
+ * @author $Author: bass $
  * @module config
  */
 
@@ -37,7 +38,7 @@ public final class TransmissionPathDatabase extends StorableObjectDatabase<Trans
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.TRANSMISSIONPATH_CODE;
+		return TRANSMISSIONPATH_CODE;
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.83 2005/08/30 16:05:28 bass Exp $
+ * $Id: EquipmentType.java,v 1.84 2005/08/30 16:35:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -16,6 +20,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.corba.IdlEquipmentType;
 import com.syrus.AMFICOM.configuration.corba.IdlEquipmentTypeHelper;
+import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -23,7 +28,6 @@ import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -31,7 +35,6 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -39,12 +42,11 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/08/30 16:05:28 $
+ * @version $Revision: 1.84 $, $Date: 2005/08/30 16:35:09 $
  * @author $Author: bass $
  * @module config
  */
@@ -62,7 +64,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_TYPE_CODE).retrieve(this);
+			DatabaseContext.getDatabase(EQUIPMENT_TYPE_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -105,7 +107,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(ObjectEntities.PORT_TYPE_CODE, xmlEquipmentType.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(PORT_TYPE_CODE, xmlEquipmentType.getId().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -146,7 +148,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 						importType);
 				ImportUidMapDatabase.insert(importType, uid, portType.id);
 			}
-			assert portType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert portType.isValid() : OBJECT_STATE_ILLEGAL;
 			portType.markAsChanged();
 			return portType;
 		} catch (Exception e) {
@@ -173,7 +175,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final EquipmentType equipmentType = new EquipmentType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_TYPE_CODE),
+			final EquipmentType equipmentType = new EquipmentType(IdentifierPool.getGeneratedIdentifier(EQUIPMENT_TYPE_CODE),
 										creatorId,
 										StorableObjectVersion.createInitial(),
 										codename,
@@ -182,7 +184,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 										manufacturer,
 										manufacturerCode);
 
-			assert equipmentType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert equipmentType.isValid() : OBJECT_STATE_ILLEGAL;
 
 			equipmentType.markAsChanged();
 

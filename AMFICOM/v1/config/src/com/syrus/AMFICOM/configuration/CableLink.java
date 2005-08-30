@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.10 2005/08/05 16:50:02 arseniy Exp $
+ * $Id: CableLink.java,v 1.11 2005/08/30 16:35:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.NATURE_INVALID;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
 
 import java.util.Date;
 
@@ -17,12 +21,10 @@ import com.syrus.AMFICOM.configuration.corba.IdlCableLinkHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -31,8 +33,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.10 $, $Date: 2005/08/05 16:50:02 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/08/30 16:35:09 $
  * @module config
  */
 public final class CableLink extends AbstractLink {
@@ -42,7 +44,7 @@ public final class CableLink extends AbstractLink {
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.CABLELINK_CODE).retrieve(this);
+			DatabaseContext.getDatabase(CABLELINK_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -113,7 +115,7 @@ public final class CableLink extends AbstractLink {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final CableLink cableLink = new CableLink(IdentifierPool.getGeneratedIdentifier(ObjectEntities.CABLELINK_CODE),
+			final CableLink cableLink = new CableLink(IdentifierPool.getGeneratedIdentifier(CABLELINK_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					domainId,
@@ -126,7 +128,7 @@ public final class CableLink extends AbstractLink {
 					color,
 					mark);
 
-			assert cableLink.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert cableLink.isValid() : OBJECT_STATE_ILLEGAL;
 
 			cableLink.markAsChanged();
 
@@ -210,13 +212,13 @@ public final class CableLink extends AbstractLink {
 	@Override
 	public CableLinkType getType() {
 		final AbstractLinkType type1 = super.getType();
-		assert type1 == null || type1 instanceof CableLinkType : ErrorMessages.NATURE_INVALID;
+		assert type1 == null || type1 instanceof CableLinkType : NATURE_INVALID;
 		return (CableLinkType) type1;
 	}
 
 	@Override
 	public void setType(final AbstractLinkType type) {
-		assert type == null || type instanceof CableLinkType : ErrorMessages.NATURE_INVALID;
+		assert type == null || type instanceof CableLinkType : NATURE_INVALID;
 		this.setType((CableLinkType) type);
 	}
 

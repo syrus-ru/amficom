@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.71 2005/08/30 16:05:28 bass Exp $
+ * $Id: LinkType.java,v 1.72 2005/08/30 16:35:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -17,31 +20,29 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.configuration.corba.IdlLinkType;
 import com.syrus.AMFICOM.configuration.corba.IdlLinkTypeHelper;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
+import com.syrus.AMFICOM.configuration.xml.XmlLinkType;
+import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ImportUidMapDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.configuration.xml.XmlLinkType;
-import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/08/30 16:05:28 $
+ * @version $Revision: 1.72 $, $Date: 2005/08/30 16:35:08 $
  * @author $Author: bass $
  * @module config
  */
@@ -63,7 +64,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.LINK_TYPE_CODE).retrieve(this);
+			DatabaseContext.getDatabase(LINK_TYPE_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -109,7 +110,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(ObjectEntities.LINK_TYPE_CODE, xmlLinkType.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(LINK_TYPE_CODE, xmlLinkType.getId().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -150,7 +151,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 						importType);
 				ImportUidMapDatabase.insert(importType, uid, linkType.id);
 			}
-			assert linkType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert linkType.isValid() : OBJECT_STATE_ILLEGAL;
 			linkType.markAsChanged();
 			return linkType;
 		} catch (Exception e) {
@@ -182,7 +183,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final LinkType linkType = new LinkType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.LINK_TYPE_CODE),
+			final LinkType linkType = new LinkType(IdentifierPool.getGeneratedIdentifier(LINK_TYPE_CODE),
 						creatorId,
 						StorableObjectVersion.createInitial(),
 						codename,
@@ -193,7 +194,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 						manufacturerCode,
 						imageId);
 
-			assert linkType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert linkType.isValid() : OBJECT_STATE_ILLEGAL;
 
 			linkType.markAsChanged();
 
@@ -349,7 +350,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 

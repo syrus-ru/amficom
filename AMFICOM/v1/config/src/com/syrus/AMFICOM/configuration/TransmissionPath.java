@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.86 2005/08/28 15:44:10 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.87 2005/08/30 16:35:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -23,13 +26,11 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -38,8 +39,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.86 $, $Date: 2005/08/28 15:44:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.87 $, $Date: 2005/08/30 16:35:09 $
+ * @author $Author: bass $
  * @module config
  */
 
@@ -59,7 +60,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.TRANSMISSIONPATH_CODE).retrieve(this);
+			DatabaseContext.getDatabase(TRANSMISSIONPATH_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -113,7 +114,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final TransmissionPath transmissionPath = new TransmissionPath(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSMISSIONPATH_CODE),
+			final TransmissionPath transmissionPath = new TransmissionPath(IdentifierPool.getGeneratedIdentifier(TRANSMISSIONPATH_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					domainId,
@@ -123,7 +124,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 					startPortId,
 					finishPortId);
 
-			assert transmissionPath.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert transmissionPath.isValid() : OBJECT_STATE_ILLEGAL;
 
 			transmissionPath.markAsChanged();
 
@@ -214,7 +215,7 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.type);

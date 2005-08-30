@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.29 2005/08/28 15:44:10 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.30 2005/08/30 16:35:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,13 @@
  */
 
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -23,8 +30,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/08/28 15:44:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/08/30 16:35:08 $
+ * @author $Author: bass $
  * @module config
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -42,7 +49,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			final Domain dmDomain = (Domain) StorableObjectPool.getStorableObject(domainMember.getDomainId(), true);
 			for (final Iterator it = this.linkedIds.iterator(); it.hasNext() && !condition;) {
 				final Identifier id = (Identifier) it.next();
-				if (id.getMajor() == ObjectEntities.DOMAIN_CODE) {
+				if (id.getMajor() == DOMAIN_CODE) {
 					final Domain domain = (Domain) StorableObjectPool.getStorableObject(id, true);
 					if (dmDomain.isChild(domain)) {
 						condition = true;
@@ -59,10 +66,10 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		boolean condition = false;
 		switch (this.entityCode.shortValue()) {
-			case ObjectEntities.CABLETHREAD_TYPE_CODE:
+			case CABLETHREAD_TYPE_CODE:
 				CableThreadType cableThreadType = (CableThreadType) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.CABLELINK_TYPE_CODE:
+					case CABLELINK_TYPE_CODE:
 						condition = super.conditionTest(cableThreadType.getCableLinkType().getId());
 						break;
 					default:
@@ -71,10 +78,10 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
-			case ObjectEntities.EQUIPMENT_CODE:
+			case EQUIPMENT_CODE:
 				Equipment equipment = (Equipment) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.DOMAIN_CODE:
+					case DOMAIN_CODE:
 						condition = this.checkDomain(equipment);
 						break;
 					default:
@@ -83,16 +90,16 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
-			case ObjectEntities.TRANSMISSIONPATH_CODE:
+			case TRANSMISSIONPATH_CODE:
 				TransmissionPath transmissionPath = (TransmissionPath) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.PORT_CODE:
+					case PORT_CODE:
 						final boolean precondition1 = super.conditionTest(transmissionPath.getStartPortId());
 						final boolean precondition2 = super.conditionTest(transmissionPath.getFinishPortId());
 						assert !(precondition1 && precondition2);
 						condition = precondition1 ^ precondition2;
 						break;
-					case ObjectEntities.DOMAIN_CODE:
+					case DOMAIN_CODE:
 						condition = this.checkDomain(transmissionPath);
 						break;
 					default:
@@ -101,13 +108,13 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 								IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 				}
 				break;
-			case ObjectEntities.PORT_CODE:
+			case PORT_CODE:
 				Port port = (Port) storableObject;
 				switch (this.linkedEntityCode) {
-					case ObjectEntities.EQUIPMENT_CODE:
+					case EQUIPMENT_CODE:
 						condition = super.conditionTest(port.getEquipmentId());
 						break;
-					case ObjectEntities.DOMAIN_CODE:
+					case DOMAIN_CODE:
 						try {
 							Equipment equipment1 = (Equipment) StorableObjectPool.getStorableObject(port.getEquipmentId(), true);
 							condition = this.checkDomain(equipment1);
@@ -132,10 +139,10 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	@Override
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
-			case ObjectEntities.CABLETHREAD_TYPE_CODE:
-			case ObjectEntities.EQUIPMENT_CODE:
-			case ObjectEntities.TRANSMISSIONPATH_CODE:
-			case ObjectEntities.PORT_CODE:
+			case CABLETHREAD_TYPE_CODE:
+			case EQUIPMENT_CODE:
+			case TRANSMISSIONPATH_CODE:
+			case PORT_CODE:
 				this.entityCode = entityCode;
 				break;
 			default:

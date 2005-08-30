@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.87 2005/08/26 11:06:19 bass Exp $
+ * $Id: Port.java,v 1.88 2005/08/30 16:35:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -28,7 +29,6 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -44,7 +44,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/08/26 11:06:19 $
+ * @version $Revision: 1.88 $, $Date: 2005/08/30 16:35:09 $
  * @author $Author: bass $
  * @module config
  */
@@ -116,7 +116,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 						description,
 						equipmentId);
 
-			assert port.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert port.isValid() : OBJECT_STATE_ILLEGAL;
 
 			port.markAsChanged();
 
@@ -205,7 +205,7 @@ public final class Port extends StorableObject implements Characterizable, Typed
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.type);

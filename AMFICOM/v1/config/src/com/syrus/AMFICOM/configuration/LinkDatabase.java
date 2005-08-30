@@ -1,5 +1,5 @@
 /*
- * $Id: LinkDatabase.java,v 1.49 2005/07/27 15:58:51 bass Exp $
+ * $Id: LinkDatabase.java,v 1.50 2005/08/30 16:35:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -16,7 +18,6 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -26,7 +27,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/07/27 15:58:51 $
+ * @version $Revision: 1.50 $, $Date: 2005/08/30 16:35:09 $
  * @author $Author: bass $
  * @module config
  */
@@ -42,7 +43,7 @@ public final class LinkDatabase extends StorableObjectDatabase<Link> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.LINK_CODE;
+		return LINK_CODE;
 	}
 
 	@Override

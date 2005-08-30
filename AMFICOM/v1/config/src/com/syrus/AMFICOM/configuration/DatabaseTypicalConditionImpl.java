@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.18 2005/08/28 16:41:44 arseniy Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.19 2005/08/30 16:35:08 bass Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,6 +7,10 @@
 */
 
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 
 import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
@@ -16,8 +20,8 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/28 16:41:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.19 $, $Date: 2005/08/30 16:35:08 $
+ * @author $Author: bass $
  * @module config
  */
 class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -31,19 +35,19 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 	protected String getColumnName() throws IllegalObjectEntityException {
 		/* check key support */
 		switch (super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.PORT_TYPE_CODE:
+			case PORT_TYPE_CODE:
 				if (this.condition.getKey().equals(PortTypeWrapper.COLUMN_SORT)) {
 					return PortTypeWrapper.COLUMN_SORT;
 				} else if (this.condition.getKey().equals(PortTypeWrapper.COLUMN_KIND)) {
 					return PortTypeWrapper.COLUMN_KIND;
 				}
 				break;
-			case ObjectEntities.EQUIPMENT_TYPE_CODE:
+			case EQUIPMENT_TYPE_CODE:
 				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_CODENAME)) {
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				}
 				break;
-			case ObjectEntities.MONITOREDELEMENT_CODE:
+			case MONITOREDELEMENT_CODE:
 				if (this.condition.getKey().equals(StorableObjectWrapper.COLUMN_NAME)) {
 					return StorableObjectWrapper.COLUMN_NAME;
 				}

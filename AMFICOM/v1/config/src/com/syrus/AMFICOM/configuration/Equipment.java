@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.115 2005/08/30 15:06:54 arseniy Exp $
+ * $Id: Equipment.java,v 1.116 2005/08/30 16:35:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -25,14 +29,12 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -42,8 +44,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.115 $, $Date: 2005/08/30 15:06:54 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.116 $, $Date: 2005/08/30 16:35:09 $
+ * @author $Author: bass $
  * @module config
  */
 
@@ -71,7 +73,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.EQUIPMENT_CODE).retrieve(this);
+			DatabaseContext.getDatabase(EQUIPMENT_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -167,7 +169,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(ObjectEntities.EQUIPMENT_CODE),
+			final Equipment equipment = new Equipment(IdentifierPool.getGeneratedIdentifier(EQUIPMENT_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					domainId,
@@ -185,7 +187,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 					swVersion,
 					inventoryNumber);
 
-			assert equipment.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert equipment.isValid() : OBJECT_STATE_ILLEGAL;
 
 			equipment.markAsChanged();
 
@@ -310,7 +312,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies =  new HashSet<Identifiable>();
 		dependencies.add(this.type);
@@ -432,7 +434,7 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	 */
 	public Set getPorts() {
 		try {
-			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, ObjectEntities.PORT_CODE),
+			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, PORT_CODE),
 					true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, Level.SEVERE);

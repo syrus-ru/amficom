@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.60 2005/07/27 15:58:51 bass Exp $
+ * $Id: PortTypeDatabase.java,v 1.61 2005/08/30 16:35:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,13 +8,14 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -22,7 +23,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/07/27 15:58:51 $
+ * @version $Revision: 1.61 $, $Date: 2005/08/30 16:35:08 $
  * @author $Author: bass $
  * @module config
  */
@@ -32,7 +33,7 @@ public final class PortTypeDatabase extends StorableObjectDatabase<PortType> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.PORT_TYPE_CODE;
+		return PORT_TYPE_CODE;
 	}	
 
 	@Override

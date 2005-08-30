@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.80 2005/08/30 16:05:28 bass Exp $
+ * $Id: PortType.java,v 1.81 2005/08/30 16:35:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -18,6 +21,9 @@ import com.syrus.AMFICOM.configuration.corba.IdlPortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypeHelper;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
+import com.syrus.AMFICOM.configuration.xml.XmlPortType;
+import com.syrus.AMFICOM.configuration.xml.XmlPortTypeKind;
+import com.syrus.AMFICOM.configuration.xml.XmlPortTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -25,7 +31,6 @@ import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -33,7 +38,6 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -41,14 +45,11 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.configuration.xml.XmlPortType;
-import com.syrus.AMFICOM.configuration.xml.XmlPortTypeKind;
-import com.syrus.AMFICOM.configuration.xml.XmlPortTypeSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/08/30 16:05:28 $
+ * @version $Revision: 1.81 $, $Date: 2005/08/30 16:35:08 $
  * @author $Author: bass $
  * @module config
  */
@@ -66,7 +67,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.PORT_TYPE_CODE).retrieve(this);
+			DatabaseContext.getDatabase(PORT_TYPE_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -108,7 +109,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(ObjectEntities.PORT_TYPE_CODE, xmlPortType.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(PORT_TYPE_CODE, xmlPortType.getId().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -149,7 +150,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 						importType);
 				ImportUidMapDatabase.insert(importType, uid, portType.id);
 			}
-			assert portType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert portType.isValid() : OBJECT_STATE_ILLEGAL;
 			portType.markAsChanged();
 			return portType;
 		} catch (Exception e) {
@@ -179,7 +180,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final PortType portType = new PortType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.PORT_TYPE_CODE),
+			final PortType portType = new PortType(IdentifierPool.getGeneratedIdentifier(PORT_TYPE_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					codename,
@@ -188,7 +189,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 					sort.value(),
 					kind.value());
 
-			assert portType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert portType.isValid() : OBJECT_STATE_ILLEGAL;
 
 			portType.markAsChanged();
 
@@ -307,7 +308,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return Collections.emptySet();
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathType.java,v 1.67 2005/08/08 14:23:52 arseniy Exp $
+ * $Id: TransmissionPathType.java,v 1.68 2005/08/30 16:35:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.TRANSPATH_TYPE_CODE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -22,14 +25,12 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectType;
@@ -37,8 +38,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/08/08 14:23:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.68 $, $Date: 2005/08/30 16:35:09 $
+ * @author $Author: bass $
  * @module config
  */
 
@@ -54,7 +55,7 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.TRANSPATH_TYPE_CODE).retrieve(this);
+			DatabaseContext.getDatabase(TRANSPATH_TYPE_CODE).retrieve(this);
 		} catch (IllegalDataException ide) {
 			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
@@ -101,14 +102,14 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TRANSPATH_TYPE_CODE),
+			final TransmissionPathType transmissionPathType = new TransmissionPathType(IdentifierPool.getGeneratedIdentifier(TRANSPATH_TYPE_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					codename,
 					description,
 					name);
 
-			assert transmissionPathType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert transmissionPathType.isValid() : OBJECT_STATE_ILLEGAL;
 
 			transmissionPathType.markAsChanged();
 
@@ -167,7 +168,7 @@ public final class TransmissionPathType extends StorableObjectType implements Ch
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		return Collections.emptySet();
 	}

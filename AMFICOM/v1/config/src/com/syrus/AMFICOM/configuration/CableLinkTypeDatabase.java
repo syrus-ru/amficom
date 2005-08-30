@@ -1,11 +1,13 @@
 /*
- * $Id: CableLinkTypeDatabase.java,v 1.39 2005/07/27 15:58:51 bass Exp $
+ * $Id: CableLinkTypeDatabase.java,v 1.40 2005/08/30 16:35:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +16,6 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -23,7 +24,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/07/27 15:58:51 $
+ * @version $Revision: 1.40 $, $Date: 2005/08/30 16:35:09 $
  * @author $Author: bass $
  * @module config
  */
@@ -37,7 +38,7 @@ public final class CableLinkTypeDatabase extends StorableObjectDatabase<CableLin
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.CABLELINK_TYPE_CODE;
+		return CABLELINK_TYPE_CODE;
 	}
 
 	@Override
@@ -69,8 +70,8 @@ public final class CableLinkTypeDatabase extends StorableObjectDatabase<CableLin
 	}
 	
 	protected boolean checkEntity(final short conditionCode) {
-		Log.debugMessage("CableLinkTypeDatabase.checkEntity | conditionCode is " + conditionCode + ", self is " + ObjectEntities.CABLELINK_TYPE_CODE, Level.FINEST);
-		return ObjectEntities.CABLELINK_TYPE_CODE == conditionCode;		
+		Log.debugMessage("CableLinkTypeDatabase.checkEntity | conditionCode is " + conditionCode + ", self is " + CABLELINK_TYPE_CODE, Level.FINEST);
+		return CABLELINK_TYPE_CODE == conditionCode;		
 	}
 
 	@Override

@@ -1,11 +1,13 @@
 /*-
- * $Id: CableLinkDatabase.java,v 1.1 2005/07/29 08:52:43 max Exp $
+ * $Id: CableLinkDatabase.java,v 1.2 2005/08/30 16:35:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -15,7 +17,6 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -26,8 +27,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/07/29 08:52:43 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/08/30 16:35:09 $
  * @module config
  */
 
@@ -42,7 +43,7 @@ public class CableLinkDatabase extends StorableObjectDatabase<CableLink> {
 	
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.CABLELINK_CODE;		
+		return CABLELINK_CODE;		
 	}
 	
 	@Override
