@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.19 2005/08/26 09:38:41 bob Exp $
+ * $Id: TestController.java,v 1.20 2005/08/30 12:03:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,11 +29,10 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
-import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/26 09:38:41 $
+ * @version $Revision: 1.20 $, $Date: 2005/08/30 12:03:08 $
  * @author $Author: bob $
  * @module module
  */
@@ -55,7 +54,8 @@ public class TestController implements Wrapper<Test> {
 	private static Object lock = new Object();
 
 	private Map<Component, TestStatus> statusMap;
-	private Map<String, TestTemporalType> temporalTypeMap;
+
+	private Map<TestTemporalType, String> temporalTypeMap;
 
 	private class ComparableLabel extends JLabel implements Comparable {
 		
@@ -83,11 +83,11 @@ public class TestController implements Wrapper<Test> {
 		this.addStatusItem(TestStatus.TEST_STATUS_NEW, LangModelSchedule.getString("New"));
 		this.addStatusItem(TestStatus.TEST_STATUS_PROCESSING, LangModelSchedule.getString("Processing"));
 		this.addStatusItem(TestStatus.TEST_STATUS_SCHEDULED, LangModelSchedule.getString("Scheduled"));
-
-		this.temporalTypeMap = new HashMap<String, TestTemporalType>();
-		this.temporalTypeMap.put(LangModelSchedule.getString("Onetime"), TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME);
-		this.temporalTypeMap.put(LangModelSchedule.getString("Periodical"), TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL);
-		this.temporalTypeMap.put(LangModelSchedule.getString("Continual"), TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS);
+		
+		this.temporalTypeMap = new HashMap<TestTemporalType, String>();
+		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME, LangModelSchedule.getString("Onetime"));
+		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, LangModelSchedule.getString("Periodical"));
+		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS, LangModelSchedule.getString("Continual"));
 	}
 
 	private Component getStatusComponent(TestStatus testStatus, String name) {
@@ -146,7 +146,7 @@ public class TestController implements Wrapper<Test> {
 
 	public Class getPropertyClass(final String key) {
 		Class clazz = String.class;
-		if ((key.equals(KEY_TEMPORAL_TYPE)) || (key.equals(KEY_STATUS))) {
+		if ((key.equals(KEY_STATUS))) {
 			clazz = Map.class;
 		}
 		return clazz;
@@ -154,10 +154,7 @@ public class TestController implements Wrapper<Test> {
 
 	public Object getPropertyValue(final String key) {
 		Object value = null;
-		if (key.equals(KEY_TEMPORAL_TYPE)) {
-			value = this.temporalTypeMap;
-		}
-		else if (key.equals(KEY_STATUS)) {
+		if (key.equals(KEY_STATUS)) {
 			value = this.statusMap;
 		}
 		return value;
@@ -173,19 +170,14 @@ public class TestController implements Wrapper<Test> {
 		if (test != null) {
 			if (key.equals(KEY_TEMPORAL_TYPE)) {
 				if (test.getGroupTestId().isVoid()) {
-					value = test.getTemporalType(); //$NON-NLS-1$
+					value = this.temporalTypeMap.get(test.getTemporalType());
 				} else {
 					value = LangModelSchedule.getString("Sectional");
 				}
 			} else if (key.equals(KEY_TEMPORAL_TYPE_NAME)) {
 				if (test.getGroupTestId().isVoid()) {
 					final TestTemporalType temporalType = test.getTemporalType();
-					for (final String name : this.temporalTypeMap.keySet()) {
-						if ((this.temporalTypeMap.get(name)).equals(temporalType)) {
-							value = name;
-							break;
-						}
-					}
+					value = this.temporalTypeMap.get(test.getTemporalType());
 
 					if (temporalType.value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL) {
 						final Identifier temporalPatternId = test.getTemporalPatternId();
