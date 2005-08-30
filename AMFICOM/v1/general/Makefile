@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.64 2005/08/30 16:05:28 bass Exp $
+# $Id: Makefile,v 1.65 2005/08/30 17:35:03 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -22,7 +22,7 @@ LIBNAME_GENERALXML=generalxml.jar
 
 APPCLASSPATH := $(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xalan.jar
-
+XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/security/*.java)
@@ -38,7 +38,7 @@ $(LIBNAME): .mach
 
 .mach: .corba .xml $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(XMLBEANSCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 

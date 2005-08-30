@@ -17,7 +17,7 @@ LIBNAME_MAPXML=mapxml.jar
 
 APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar:$(LIBDIR)/filter.jar
 
-XMLCLASSPATH := $(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
+XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
 
 # If TROVE4J_HOME is defined, search in ${TROVE4J_HOME}/lib
 ifeq ($(TROVE4J_HOME),)

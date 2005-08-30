@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.35 2005/08/29 08:59:53 arseniy Exp $
+# $Id: Makefile,v 1.36 2005/08/30 17:37:48 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -30,7 +30,7 @@ SRCDIRS_TO_SCRUB = $(foreach dir,$(DIRS_TO_SCRUB),$(SRCDIR)/$(dir))
 
 APPCLASSPATH = $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/map.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
-XMLCLASSPATH := $(LIBNAME_SCHEMEXML):$(LIBDIR)/$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
+XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_SCHEMEXML):$(LIBDIR)/$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/scheme/*.java)
