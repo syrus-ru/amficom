@@ -61,7 +61,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/08/29 14:24:38 $
+ * @version $Revision: 1.71 $, $Date: 2005/08/30 12:01:24 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -172,11 +172,11 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	public synchronized ParameterSet getSet() {
 		ParameterSet parameterSet = null;
 		if (this.setId != null) {
-			System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " != null");
+//			System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " != null");
 			try {
 				parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(this.setId, true);
 				if (!parameterSet.isChanged()) {
-					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " !set.isChanged()");
+//					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " !set.isChanged()");
 					final Parameter[] parameters = parameterSet.getParameters();
 					for (int i = 0; i < parameters.length; i++) {
 						final ParameterType type = parameters[i].getType();
@@ -219,7 +219,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						}
 					}
 				} else {
-					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " set.isChanged()");
+//					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " set.isChanged()");
 					final Parameter[] parameters = parameterSet.getParameters();
 					for (int i = 0; i < parameters.length; i++) {
 						final ParameterType type = parameters[i].getType();
@@ -293,7 +293,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				this.setId = null;
 			}
 		} else  {
-			System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " == null");
+//			System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " == null");
 			try {
 
 				this.refreshTitles();
@@ -412,7 +412,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						LangModelSchedule.getString("Text.SetCreatedByScheduler"), params, Collections.singleton(this.meId)); //$NON-NLS-1$
 				this.setId = parameterSet.getId();
 
-				System.out.println("ReflectometryTestPanel.getSet() | newSet: " + this.setId);
+//				System.out.println("ReflectometryTestPanel.getSet() | newSet: " + this.setId);
 				// Log.debugMessage("ReflectometryTestPanel.getSet | ",
 				// Log.FINEST);
 			} catch (IllegalArgumentException e) {
