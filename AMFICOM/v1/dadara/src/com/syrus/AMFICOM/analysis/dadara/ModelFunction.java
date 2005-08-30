@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  *
  * <p>The modelling function type can change when fit() will be called.</p>
  *
- * @version $Revision: 1.30 $, $Date: 2005/08/02 19:36:33 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.31 $, $Date: 2005/08/30 14:05:10 $
+ * @author $Author: saa $
  * @author saa
  * @module dadara
  */
@@ -354,6 +354,18 @@ public class ModelFunction {
 			errorR, errorA, maxPoints);
 	}
 
+	/**
+	 * Фитирует участок заданный кривой кривой ломаной.
+	 * Может использовать "подсказку" о границах событий, чтобы
+	 * лучше расставить узлы создаваемой ломаной.
+	 * @param y фитируемая кривая
+	 * @param begin начальная точка (включительно) фитируемой кривой
+	 * @param end конечная точка (включительно) фитируемой кривой
+	 * @param noise точность фитировки (уровень шума) XXX: вроде как по 3 сигма 
+	 * @param re набор событий, подсказывающий, где стоит поставить узлы
+	 *  ломаной (используются точки начал событий), may be null
+	 * @return фитированная ломаная в виде {@link ModelFunction}
+	 */
 	public static ModelFunction createFitedAsBreakL(double[] y,
 			int begin, int end,
 			double[] noise,
