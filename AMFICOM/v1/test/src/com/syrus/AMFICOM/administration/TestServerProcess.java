@@ -1,5 +1,5 @@
 /*
- * $Id: TestServerProcess.java,v 1.12 2005/08/18 10:53:04 arseniy Exp $
+ * $Id: TestServerProcess.java,v 1.13 2005/08/30 14:29:38 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/18 10:53:04 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/30 14:29:38 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -43,7 +43,7 @@ public final class TestServerProcess extends TestCase {
 		return databaseCommonTest.createTestSetup();
 	}
 
-	public void testCreateInstance() throws ApplicationException {
+	public void testCreateAll() throws ApplicationException {
 		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.SERVER_CODE);
 		final Server server = (Server) StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator().next();
 		System.out.println("Server '" + server.getId() + "'");

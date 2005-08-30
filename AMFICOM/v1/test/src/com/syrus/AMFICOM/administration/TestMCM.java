@@ -1,5 +1,5 @@
 /*
- * $Id: TestMCM.java,v 1.7 2005/08/19 15:55:21 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
+ * $Id: TestMCM.java,v 1.8 2005/08/30 14:29:38 arseniy Exp $ Copyright © 2004 Syrus Systems. Научно-технический центр. Проект:
  * АМФИКОМ.
  */
 package com.syrus.AMFICOM.administration;
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/19 15:55:21 $
+ * @version $Revision: 1.8 $, $Date: 2005/08/30 14:29:38 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -44,7 +44,7 @@ public final class TestMCM extends TestCase {
 		final SystemUser mcmUser = (SystemUser) StorableObjectPool.getStorableObjectsByCondition(tc, true).iterator().next();
 		System.out.println("User '" + mcmUser.getId() + "'");
 
-		final String hostname = "mongol";
+		final String hostname = "sfv20z";
 		final MCM mcm = MCM.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				server.getDomainId(),
 				"МУИ",

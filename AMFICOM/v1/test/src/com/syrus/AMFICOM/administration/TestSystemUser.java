@@ -1,5 +1,5 @@
 /*
- * $Id: TestSystemUser.java,v 1.8 2005/08/21 16:12:06 arseniy Exp $
+ * $Id: TestSystemUser.java,v 1.9 2005/08/30 14:29:38 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/21 16:12:06 $
+ * @version $Revision: 1.9 $, $Date: 2005/08/30 14:29:38 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -50,7 +50,7 @@ public final class TestSystemUser extends TestCase {
 		return databaseCommonTest.createTestSetup();
 	}
 
-	public void testCreateInstance() throws ApplicationException {
+	public void testCreateServerProcessUsers() throws ApplicationException {
 //	1
 		final SystemUser loginUser = SystemUser.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				SystemUserWrapper.LOGINPROCESSOR_LOGIN,
