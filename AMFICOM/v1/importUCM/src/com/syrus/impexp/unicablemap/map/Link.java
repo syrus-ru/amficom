@@ -1,5 +1,5 @@
 /**
- * $Id: Link.java,v 1.1 2005/08/30 08:25:47 krupenn Exp $
+ * $Id: Link.java,v 1.2 2005/08/30 12:41:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,16 +21,16 @@ import com.syrus.impexp.unicablemap.UniCableMapParameter;
 
 public class Link {
 
-	private String street;
-	private String city;
-	private String building;
+	private String street = "";
+	private String city = "";
+	private String building = "";
 	private String name;
-	private String description;
+	private String description = "";
 	private String uid;
 	private String proto;
 	private String endNodeId;
 	private String startNodeId;
-	private double length;
+	private double length = 0.0D;
 	private Collection<NodeLink> nodeLinks;
 	
 	public void setStreet(String street) {

@@ -1,5 +1,5 @@
 /**
- * $Id: Site.java,v 1.1 2005/08/30 08:25:47 krupenn Exp $
+ * $Id: Site.java,v 1.2 2005/08/30 12:41:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,11 +23,11 @@ import com.syrus.impexp.unicablemap.UniCableMapType;
 
 public class Site {
 
-	private String street;
-	private String city;
-	private String building;
+	private String street = "";
+	private String city = "";
+	private String building = "";
 	private String name;
-	private String description;
+	private String description = "";
 	private String uid;
 	private String proto;
 	private double x;
@@ -123,6 +123,10 @@ public class Site {
 		xmlSiteNode.setStreet(this.street);
 		xmlSiteNode.setBuilding(this.building);
 
+		if(this.name == null) {
+			xmlSiteNode.setName(this.description);
+		}
+		
 		return xmlSiteNode;
 	}
 
@@ -133,6 +137,7 @@ public class Site {
 		Site site = new Site();
 
 		site.setDescription(ucmObject.text);
+		site.setBuilding("");
 		for(UniCableMapLink ucmLink : ucmDatabase.getParents(ucmObject)) {
 
 			if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_POSESSES_BELONGS))

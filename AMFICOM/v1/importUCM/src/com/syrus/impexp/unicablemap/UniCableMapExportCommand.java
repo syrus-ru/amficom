@@ -1,21 +1,17 @@
 package com.syrus.impexp.unicablemap;
-import static com.syrus.impexp.unicablemap.UniCableMapExportCommand.COLLECTOR_TYPE;
-import static com.syrus.impexp.unicablemap.UniCableMapExportCommand.LINK_TYPE;
-import static com.syrus.impexp.unicablemap.UniCableMapExportCommand.NODELINK_TYPE;
-import static com.syrus.impexp.unicablemap.UniCableMapExportCommand.SITE_TYPE;
 
 import java.io.File;
 import java.io.IOException;
 import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 
 import org.apache.xmlbeans.XmlOptions;
 
 import com.syrus.AMFICOM.Client.General.Command.Command;
+import com.syrus.AMFICOM.Client.General.Command.ExportCommand;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.xml.MapsDocument;
 import com.syrus.AMFICOM.map.xml.XmlCollector;
@@ -37,11 +33,13 @@ import com.syrus.impexp.unicablemap.map.Site;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/08/30 08:25:47 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/30 12:41:57 $
  * @module mapviewclient_v1
  */
-public class UniCableMapExportCommand extends UCMExportCommand 
+public class UniCableMapExportCommand extends ExportCommand 
 {
+	UniCableMapDatabase ucmDatabase;
+
 	public static final String MAP_TYPE = "map";
 	public static final String MARK_TYPE = "mapmarkelement";
 	public static final String SITE_TYPE = "mapsiteelement";
@@ -54,7 +52,7 @@ public class UniCableMapExportCommand extends UCMExportCommand
 
 	public UniCableMapExportCommand(UniCableMapDatabase ucmDatabase, String fileName)
 	{
-		super(ucmDatabase);
+		this.ucmDatabase = ucmDatabase;
 		this.fileName = fileName;
 	}
 
@@ -91,6 +89,7 @@ public class UniCableMapExportCommand extends UCMExportCommand
 		xmlOptions.setSavePrettyPrint();
 		java.util.Map prefixes = new HashMap();
 		prefixes.put("http://syrus.com/AMFICOM/map/xml", "map");
+		prefixes.put("http://syrus.com/AMFICOM/general/xml", "general");
 		xmlOptions.setSaveSuggestedPrefixes(prefixes);
 
 		MapsDocument doc = 
@@ -104,6 +103,7 @@ public class UniCableMapExportCommand extends UCMExportCommand
 		uid.setStringValue("1");
 		xmlMap.setName("UCM");
 		xmlMap.setDescription("");
+		xmlMap.setImportType("ucm");
 
 		XmlTopologicalNodeSeq xmlTopologicalNodes = xmlMap.addNewTopologicalNodes();
 		XmlSiteNodeSeq xmlSiteNodes = xmlMap.addNewSiteNodes();
@@ -116,26 +116,48 @@ public class UniCableMapExportCommand extends UCMExportCommand
 		Collection<NodeLink> importNodeLinks = new LinkedList<NodeLink>();
 		Collection<Collector> importCollectors = new LinkedList<Collector>();
 
+		System.out.print("Scanning wells... ");
+		long t1 = System.currentTimeMillis();
 		Collection<UniCableMapObject> ucmWells = this.ucmDatabase.getObjects(
 				this.ucmDatabase.getType(UniCableMapType.UCM_WELL));
+		System.out.print(ucmWells.size() + " objects... ");
 		createSites(importSites, ucmWells, "defaultwell");
+		long t2 = System.currentTimeMillis();
+		System.out.println(" Done in " + (t2 - t1) + " ms!");
 
+		System.out.print("Scanning piquets... ");
 		Collection<UniCableMapObject> ucmPiquets = this.ucmDatabase.getObjects(
 			this.ucmDatabase.getType(UniCableMapType.UCM_PIQUET));
+		System.out.print(ucmPiquets.size() + " objects... ");
 		createSites(importSites, ucmPiquets, "defaultpiquet");
+		long t3 = System.currentTimeMillis();
+		System.out.println(" Done in " + (t3 - t2) + " ms!");
 
+		System.out.print("Scanning cable inlets... ");
 		Collection<UniCableMapObject> ucmCableinlets = this.ucmDatabase.getObjects(
 			this.ucmDatabase.getType(UniCableMapType.UCM_CABLE_INLET));
+		System.out.print(ucmCableinlets.size() + " objects... ");
 		createSites(importSites, ucmCableinlets, "defaultcableinlet");
+		long t4 = System.currentTimeMillis();
+		System.out.println(" Done in " + (t4 - t3) + " ms!");
 
+		System.out.print("Scanning tunnels... ");
 		Collection<UniCableMapObject> ucmTunnels = this.ucmDatabase.getObjects(
 			this.ucmDatabase.getType(UniCableMapType.UCM_TUNNEL));
+		System.out.print(ucmTunnels.size() + " objects... ");
 		createLinks(importLinks, importNodeLinks, ucmTunnels, "defaulttunnel");
+		long t5 = System.currentTimeMillis();
+		System.out.println(" Done in " + (t5 - t4) + " ms!");
 
+		System.out.print("Scanning collectors... ");
 		Collection<UniCableMapObject> ucmCollectors = this.ucmDatabase.getObjects(
 			this.ucmDatabase.getType(UniCableMapType.UCM_COLLECTOR));
+		System.out.print(ucmCollectors.size() + " objects... ");
 		createCollectors(importCollectors, importLinks, importNodeLinks, ucmCollectors, "defaultcollector");
+		long t6 = System.currentTimeMillis();
+		System.out.println(" Done in " + (t6 - t5) + " ms!");
 
+		System.out.print("Filling XML document... ");
 		XmlSiteNode[] xmlSiteNodesArray = new XmlSiteNode[importSites.size()];
 		int sitesIndex = 0;
 		for(Site site : importSites) {
@@ -164,8 +186,15 @@ public class UniCableMapExportCommand extends UCMExportCommand
 		xmlNodeLinks.setNodeLinkArray(xmlNodeLinksArray);
 		xmlCollectors.setCollectorArray(xmlCollectorsArray);
 
-		boolean isXmlValid = validateXml(doc);
+		long t7 = System.currentTimeMillis();
+		System.out.println(" Done in " + (t7 - t6) + " ms!");
+		
+		System.out.print("Validating XML document... ");
+		boolean isXmlValid = UCMParser.validateXml(doc);
+		long t8 = System.currentTimeMillis();
+		System.out.println(" Done in " + (t8 - t7) + " ms!");
 		if(isXmlValid) {
+			System.out.print("Writing XML document... ");
 			File f = new File(fileName);
 
 			try {
@@ -173,19 +202,26 @@ public class UniCableMapExportCommand extends UCMExportCommand
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
-			System.out.println("\nXML Instance Document saved at : " + f.getPath());
+			long t9 = System.currentTimeMillis();
+			System.out.println("\nXML Instance Document saved at : " + f.getPath() + " in " + (t9 - t8) + " ms!");
 		}
 	}
 
 	private void createSites(Collection<Site> sites, Collection<UniCableMapObject> objects, String proto) throws SQLException {
+		int i = 0;
 		for(UniCableMapObject ucmObject : objects) {
+//			if(i++ > 10) 
+//				break;
 			Site site = Site.parseSite(this.ucmDatabase, ucmObject, proto);
 			sites.add(site);
 		}
 	}
 
 	private void createLinks(Collection<Link> links, Collection<NodeLink> nodeLinks, Collection<UniCableMapObject> objects, String proto) throws SQLException {
+		int i = 0;
 		for(UniCableMapObject ucmObject : objects) {
+//			if(i++ > 10) 
+//				break;
 			Link link = Link.parseLink(this.ucmDatabase, ucmObject, proto);
 			links.add(link);
 			NodeLink nodeLink = NodeLink.createNodeLink(link);
@@ -194,7 +230,10 @@ public class UniCableMapExportCommand extends UCMExportCommand
 	}
 
 	private void createCollectors(Collection<Collector> collectors, Collection<Link> links, Collection<NodeLink> nodeLinks, Collection<UniCableMapObject> objects, String linkProto) throws SQLException {
+		int i = 0;
 		for(UniCableMapObject ucmObject : objects) {
+//			if(i++ > 10) 
+//				break;
 			Collector collector = Collector.parseCollector(this.ucmDatabase, ucmObject, linkProto);
 			collectors.add(collector);
 			links.addAll(collector.getLinks());

@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLink.java,v 1.1 2005/08/30 08:25:47 krupenn Exp $
+ * $Id: NodeLink.java,v 1.2 2005/08/30 12:41:57 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.map.xml.XmlNodeLink;
 
 public class NodeLink {
 
-	private double length;
+	private double length = 0.0D;
 	private String uid;
 	private String physicalLinkId;
 	private String endNodeId;
@@ -62,7 +62,6 @@ public class NodeLink {
 		XmlNodeLink xmlNodeLink = XmlNodeLink.Factory.newInstance();
 
 		XmlIdentifier xmlId = xmlNodeLink.addNewId();
-		xmlId = xmlNodeLink.addNewId();
 		xmlId.setStringValue(this.uid);
 
 		xmlNodeLink.setLength(this.length);
