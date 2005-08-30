@@ -1,121 +1,120 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: CharacteristicTypeLibrary.xml,v 1.3 2005/08/15 15:06:29 max Exp $
+<?xml version = "1.0" encoding = "UTF-8"?>
+<!-- $Id: CharacteristicTypeLibrary.xml,v 1.4 2005/08/30 11:50:24 bass Exp $
 -->
 
-<gen:characteristictypes
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml">
+<general:characteristicTypes
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml">
 <!--
 	topological characteristic types
 -->
-	<gen:characteristictype>
-		<gen:name>Цвет</gen:name>
-		<gen:codename>color</gen:codename>
-		<gen:description/>
-		<gen:sort>visual</gen:sort>
-		<gen:datatype>string</gen:datatype>
-		<gen:editable>true</gen:editable>
-		<gen:visible>false</gen:visible>
-	</gen:characteristictype>
-	<gen:characteristictype>
-		<gen:name>Толщина линии</gen:name>
-		<gen:codename>thickness</gen:codename>
-		<gen:description/>
-		<gen:sort>visual</gen:sort>
-		<gen:datatype>string</gen:datatype>
-		<gen:editable>true</gen:editable>
-		<gen:visible>false</gen:visible>
-	</gen:characteristictype>
-	<gen:characteristictype>
-		<gen:name>Стиль линии</gen:name>
-		<gen:codename>style</gen:codename>
-		<gen:description/>
-		<gen:sort>visual</gen:sort>
-		<gen:datatype>string</gen:datatype>
-		<gen:editable>true</gen:editable>
-		<gen:visible>false</gen:visible>
-	</gen:characteristictype>
-	<gen:characteristictype>
-		<gen:name>Способ укладки кабеля</gen:name>
-		<gen:codename>channelingmeans</gen:codename>
-		<gen:description>Способ укладки кабеля в кабельной канализации</gen:description>
-		<gen:sort>operational</gen:sort>
-		<gen:datatype>string</gen:datatype>
-		<gen:editable>true</gen:editable>
-		<gen:visible>true</gen:visible>
-	</gen:characteristictype>
-	<gen:characteristictype>
-		<gen:name>Глубина заложения</gen:name>
-		<gen:codename>channelingdepth</gen:codename>
-		<gen:description>Глубина прокладки труб</gen:description>
-		<gen:sort>operational</gen:sort>
-		<gen:datatype>string</gen:datatype>
-		<gen:editable>true</gen:editable>
-		<gen:visible>true</gen:visible>
-	</gen:characteristictype>
-	<gen:characteristictype>
-		<gen:name>Диаметр трубы</gen:name>
-		<gen:codename>channelingdiameter</gen:codename>
-		<gen:description>Диаметр трубы</gen:description>
-		<gen:sort>operational</gen:sort>
-		<gen:datatype>string</gen:datatype>
-		<gen:editable>true</gen:editable>
-		<gen:visible>true</gen:visible>
-	</gen:characteristictype>
-	<gen:characteristictype>
-		<gen:name>Материал</gen:name>
-		<gen:codename>channelingmaterial</gen:codename>
-		<gen:description>Материал изготовления трубы/колодца</gen:description>
-		<gen:sort>operational</gen:sort>
-		<gen:datatype>string</gen:datatype>
-		<gen:editable>true</gen:editable>
-		<gen:visible>true</gen:visible>
-	</gen:characteristictype>
-	<gen:characteristictype>
-		<gen:name>Способ укладки трубы</gen:name>
-		<gen:codename>channelingmeans</gen:codename>
-		<gen:description>Способ укладки трубы кабельной канализации</gen:description>
-		<gen:sort>operational</gen:sort>
-		<gen:datatype>string</gen:datatype>
-		<gen:editable>true</gen:editable>
-		<gen:visible>true</gen:visible>
-	</gen:characteristictype>
-	<gen:characteristictype>
-		<gen:name>Обслуживание колодца</gen:name>
-		<gen:codename>channelingmaintenance</gen:codename>
-		<gen:description></gen:description>
-		<gen:sort>operational</gen:sort>
-		<gen:datatype>string</gen:datatype>
-		<gen:editable>true</gen:editable>
-		<gen:visible>true</gen:visible>
-	</gen:characteristictype>
-	<gen:characteristictype>
-		<gen:name>Общее состояние колодца</gen:name>
-		<gen:codename>channelingstatus</gen:codename>
-		<gen:description></gen:description>
-		<gen:sort>operational</gen:sort>
-		<gen:datatype>string</gen:datatype>
-		<gen:editable>true</gen:editable>
-		<gen:visible>true</gen:visible>
-	</gen:characteristictype>
+	<general:characteristicType>
+		<general:name>Цвет</general:name>
+		<general:codename>color</general:codename>
+		<general:description/>
+		<general:sort>visual</general:sort>
+		<general:datatype>string</general:datatype>
+		<general:editable>true</general:editable>
+		<general:visible>false</general:visible>
+	</general:characteristicType>
+	<general:characteristicType>
+		<general:name>Толщина линии</general:name>
+		<general:codename>thickness</general:codename>
+		<general:description/>
+		<general:sort>visual</general:sort>
+		<general:datatype>string</general:datatype>
+		<general:editable>true</general:editable>
+		<general:visible>false</general:visible>
+	</general:characteristicType>
+	<general:characteristicType>
+		<general:name>Стиль линии</general:name>
+		<general:codename>style</general:codename>
+		<general:description/>
+		<general:sort>visual</general:sort>
+		<general:datatype>string</general:datatype>
+		<general:editable>true</general:editable>
+		<general:visible>false</general:visible>
+	</general:characteristicType>
+	<general:characteristicType>
+		<general:name>Способ укладки кабеля</general:name>
+		<general:codename>channelingmeans</general:codename>
+		<general:description>Способ укладки кабеля в кабельной канализации</general:description>
+		<general:sort>operational</general:sort>
+		<general:datatype>string</general:datatype>
+		<general:editable>true</general:editable>
+		<general:visible>true</general:visible>
+	</general:characteristicType>
+	<general:characteristicType>
+		<general:name>Глубина заложения</general:name>
+		<general:codename>channelingdepth</general:codename>
+		<general:description>Глубина прокладки труб</general:description>
+		<general:sort>operational</general:sort>
+		<general:datatype>string</general:datatype>
+		<general:editable>true</general:editable>
+		<general:visible>true</general:visible>
+	</general:characteristicType>
+	<general:characteristicType>
+		<general:name>Диаметр трубы</general:name>
+		<general:codename>channelingdiameter</general:codename>
+		<general:description>Диаметр трубы</general:description>
+		<general:sort>operational</general:sort>
+		<general:datatype>string</general:datatype>
+		<general:editable>true</general:editable>
+		<general:visible>true</general:visible>
+	</general:characteristicType>
+	<general:characteristicType>
+		<general:name>Материал</general:name>
+		<general:codename>channelingmaterial</general:codename>
+		<general:description>Материал изготовления трубы/колодца</general:description>
+		<general:sort>operational</general:sort>
+		<general:datatype>string</general:datatype>
+		<general:editable>true</general:editable>
+		<general:visible>true</general:visible>
+	</general:characteristicType>
+	<general:characteristicType>
+		<general:name>Способ укладки трубы</general:name>
+		<general:codename>channelingmeans</general:codename>
+		<general:description>Способ укладки трубы кабельной канализации</general:description>
+		<general:sort>operational</general:sort>
+		<general:datatype>string</general:datatype>
+		<general:editable>true</general:editable>
+		<general:visible>true</general:visible>
+	</general:characteristicType>
+	<general:characteristicType>
+		<general:name>Обслуживание колодца</general:name>
+		<general:codename>channelingmaintenance</general:codename>
+		<general:description></general:description>
+		<general:sort>operational</general:sort>
+		<general:datatype>string</general:datatype>
+		<general:editable>true</general:editable>
+		<general:visible>true</general:visible>
+	</general:characteristicType>
+	<general:characteristicType>
+		<general:name>Общее состояние колодца</general:name>
+		<general:codename>channelingstatus</general:codename>
+		<general:description></general:description>
+		<general:sort>operational</general:sort>
+		<general:datatype>string</general:datatype>
+		<general:editable>true</general:editable>
+		<general:visible>true</general:visible>
+	</general:characteristicType>
 
-	<gen:characteristictype>
-		<gen:name>Емкость блока труб</gen:name>
-		<gen:codename>wellcapacity</gen:codename>
-		<gen:description>Максимальная емкость блока труб, вводимого в колодец</gen:description>
-		<gen:sort>operational</gen:sort>
-		<gen:datatype>integer</gen:datatype>
-		<gen:editable>true</gen:editable>
-		<gen:visible>true</gen:visible>
-	</gen:characteristictype>
-	<gen:characteristictype>
-		<gen:name>Число каналов в основания блока</gen:name>
-		<gen:codename>wellchannels</gen:codename>
-		<gen:description>Число каналов в основания блока</gen:description>
-		<gen:sort>operational</gen:sort>
-		<gen:datatype>integer</gen:datatype>
-		<gen:editable>true</gen:editable>
-		<gen:visible>true</gen:visible>
-	</gen:characteristictype>
+	<general:characteristicType>
+		<general:name>Ёмкость блока труб</general:name>
+		<general:codename>wellcapacity</general:codename>
+		<general:description>Максимальная емкость блока труб, вводимого в колодец</general:description>
+		<general:sort>operational</general:sort>
+		<general:datatype>integer</general:datatype>
+		<general:editable>true</general:editable>
+		<general:visible>true</general:visible>
+	</general:characteristicType>
+	<general:characteristicType>
+		<general:name>Число каналов в основания блока</general:name>
+		<general:codename>wellchannels</general:codename>
+		<general:description>Число каналов в основания блока</general:description>
+		<general:sort>operational</general:sort>
+		<general:datatype>integer</general:datatype>
+		<general:editable>true</general:editable>
+		<general:visible>true</general:visible>
+	</general:characteristicType>
 
-</gen:characteristictypes>
-
+</general:characteristicTypes>
