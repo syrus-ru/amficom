@@ -1,5 +1,5 @@
 /*-
- * $Id: configuration.idl,v 1.104 2005/08/25 12:20:11 bass Exp $
+ * $Id: configuration.idl,v 1.105 2005/08/30 15:06:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -189,8 +189,8 @@ module configuration {
 			public general::corba::WString128 supplier;
 			public general::corba::WString32 supplierCode;
 
-			public float longitude;
 			public float latitude;
+			public float longitude;
 
 			public general::corba::WString64 hwSerial;
 			public general::corba::WString64 hwVersion;
@@ -212,8 +212,8 @@ module configuration {
 					in general::corba::WString256 description,
 					in general::corba::WString128 supplier,
 					in general::corba::WString32 supplierCode,
-					in float longitude,
 					in float latitude,
+					in float longitude,
 					in general::corba::WString64 hwSerial,
 					in general::corba::WString64 hwVersion,
 					in general::corba::WString64 swSerial,

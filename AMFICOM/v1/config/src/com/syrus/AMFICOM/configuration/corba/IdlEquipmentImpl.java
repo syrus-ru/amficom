@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlEquipmentImpl.java,v 1.4 2005/07/27 15:59:22 bass Exp $
+ * $Id: IdlEquipmentImpl.java,v 1.5 2005/08/30 15:06:54 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/27 15:59:22 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/08/30 15:06:54 $
  * @module config
  */
 final class IdlEquipmentImpl extends IdlEquipment {
@@ -41,8 +41,8 @@ final class IdlEquipmentImpl extends IdlEquipment {
 			final String description,
 			final String supplier,
 			final String supplierCode,
-			final float longitude,
 			final float latitude,
+			final float longitude,
 			final String hwSerial, 
 			final String hwVersion, 
 			final String swSerial,
@@ -61,8 +61,8 @@ final class IdlEquipmentImpl extends IdlEquipment {
 		this.description = description;
 		this.supplier = supplier;
 		this.supplierCode = supplierCode;
-		this.longitude = longitude;
 		this.latitude = latitude;
+		this.longitude = longitude;
 		this.hwSerial = hwSerial;
 		this.hwVersion = hwVersion;
 		this.swSerial = swSerial;

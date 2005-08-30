@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.94 2005/08/08 12:02:14 bob Exp $
+ * $Id: EquipmentDatabase.java,v 1.95 2005/08/30 15:06:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/08/08 12:02:14 $
- * @author $Author: bob $
+ * @version $Revision: 1.95 $, $Date: 2005/08/30 15:06:54 $
+ * @author $Author: arseniy $
  * @module config
  */
 
@@ -176,8 +176,8 @@ public final class EquipmentDatabase extends StorableObjectDatabase<Equipment> {
 				DatabaseIdentifier.getIdentifier(resultSet, EquipmentWrapper.COLUMN_IMAGE_ID),
 				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_SUPPLIER)),
 				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_SUPPLIER_CODE)),
-				resultSet.getFloat(EquipmentWrapper.COLUMN_LONGITUDE),
 				resultSet.getFloat(EquipmentWrapper.COLUMN_LATITUDE),
+				resultSet.getFloat(EquipmentWrapper.COLUMN_LONGITUDE),
 				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_HW_SERIAL)),
 				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_HW_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(EquipmentWrapper.COLUMN_SW_SERIAL)),

@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.114 2005/08/08 14:23:52 arseniy Exp $
+ * $Id: Equipment.java,v 1.115 2005/08/30 15:06:54 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.114 $, $Date: 2005/08/08 14:23:52 $
+ * @version $Revision: 1.115 $, $Date: 2005/08/30 15:06:54 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -55,8 +55,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	private String name;
 	private String description;
 	private Identifier imageId;
-	private float longitude;
 	private float latitude;
+	private float longitude;
 	private String supplier;
 	private String supplierCode;
 	private String hwSerial;
@@ -95,8 +95,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 			final Identifier imageId,
 			final String supplier,
 			final String supplierCode,
-			final float longitude,
 			final float latitude,
+			final float longitude,
 			final String hwSerial,
 			final String hwVersion,
 			final String swSerial,
@@ -116,8 +116,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.imageId = imageId;
 		this.supplier = supplier;
 		this.supplierCode = supplierCode;
-		this.longitude = longitude;
 		this.latitude = latitude;
+		this.longitude = longitude;
 		this.hwSerial = hwSerial;
 		this.hwVersion = hwVersion;
 		this.swSerial = swSerial;
@@ -144,8 +144,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 			final Identifier imageId,
 			final String supplier,
 			final String supplierCode,
-			final float longitude,
 			final float latitude,
+			final float longitude,
 			final String hwSerial,
 			final String hwVersion,
 			final String swSerial,
@@ -177,8 +177,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 					imageId,
 					supplier,
 					supplierCode,
-					longitude,
 					latitude,
+					longitude,
 					hwSerial,
 					hwVersion,
 					swSerial,
@@ -207,8 +207,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.imageId = new Identifier(et.imageId);
 		this.supplier = et.supplier;
 		this.supplier = et.supplierCode;
-		this.longitude = et.longitude;
 		this.latitude = et.latitude;
+		this.longitude = et.longitude;
 		this.hwSerial = et.hwSerial;
 		this.hwVersion = et.hwVersion;
 		this.swSerial = et.swSerial;
@@ -235,8 +235,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 				this.description != null ? this.description : "",
 				this.supplier != null ? this.supplier : "",
 				this.supplierCode != null ? this.supplierCode : "",
-				this.longitude,
 				this.latitude,
+				this.longitude,
 				this.hwSerial != null ? this.hwSerial : "",
 				this.hwVersion != null ? this.hwVersion : "",
 				this.swSerial != null ? this.swSerial : "",
@@ -285,8 +285,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 			final Identifier imageId,
 			final String supplier,
 			final String supplierCode,
-			final float longitude,
 			final float latitude,
+			final float longitude,
 			final String hwSerial,
 			final String hwVersion,
 			final String swSerial,
@@ -299,8 +299,8 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 		this.imageId = imageId;
 		this.supplier = supplier;
 		this.supplierCode = supplierCode;
-		this.longitude = longitude;
 		this.latitude = latitude;
+		this.longitude = longitude;
 		this.hwSerial = hwSerial;
 		this.hwVersion = hwVersion;
 		this.swSerial = swSerial;
