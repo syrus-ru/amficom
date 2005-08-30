@@ -1,20 +1,42 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: Characteristic.xsd,v 1.10 2005/08/28 11:32:59 bass Exp $
--->
+<?xml version = "1.0" encoding = "UTF-8"?>
 <xsd:schema 
-	targetNamespace="http://syrus.com/AMFICOM/general/xml"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:general="http://syrus.com/AMFICOM/general/xml"
-	elementFormDefault="qualified">
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/general/xml"
+	elementFormDefault = "qualified">
 
-  <xsd:complexType name="XmlCharacteristic">
-    <xsd:attribute name="typecodename" type="xsd:string" use="required"/>
-    <xsd:attribute name="value" type="xsd:string" use="required"/>
-  </xsd:complexType>
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: Characteristic.xsd,v 1.11 2005/08/30 11:48:48 bass Exp $
 
-  <xsd:complexType name="XmlCharacteristicSeq">
-    <xsd:sequence>
-      <xsd:element name="characteristic" type="general:XmlCharacteristic" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
+
+	<xsd:include
+		schemaLocation = "StorableObject.xsd"/>
+
+	<xsd:element name = "characteristics" type = "general:XmlCharacteristicSeq">
+		<!--xsd:key name = "characteristicId">
+			<xsd:selector xpath = "general:characteristics/general:characteristic"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key-->
+	</xsd:element>
+
+	<xsd:complexType name = "XmlCharacteristic">
+		<!--xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObject"-->
+				<xsd:attribute name = "typecodename" type = "xsd:string" use = "required"/>
+				<xsd:attribute name = "value" type = "xsd:string" use = "required"/>
+			<!--/xsd:extension>
+		</xsd:complexContent-->
+	</xsd:complexType>
+
+	<xsd:complexType name = "XmlCharacteristicSeq">
+		<xsd:sequence>
+			<xsd:element name = "characteristic" type = "general:XmlCharacteristic" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
 </xsd:schema>
