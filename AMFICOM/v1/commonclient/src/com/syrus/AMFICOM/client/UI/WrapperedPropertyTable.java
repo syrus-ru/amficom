@@ -5,6 +5,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
@@ -21,14 +22,15 @@ import javax.swing.table.TableColumn;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/11 18:51:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/08/30 15:00:33 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public class WrapperedPropertyTable extends ATable {
 
 	private TableCellEditor		defaultTextFieldEditor;
 	protected TableCellEditor[][]	cellEditors;
+	private FocusListener	editingStopFocusListener;
 	
 	private static final long	serialVersionUID	= -437251205606073016L;
 
@@ -108,12 +110,7 @@ public class WrapperedPropertyTable extends ATable {
 					}
 				});
 				
-				comboBox.addFocusListener(new FocusAdapter() {
-					@Override
-					public void focusLost(FocusEvent e) {
-						WrapperedPropertyTable.this.editingStopped(null);
-					}
-				});
+				comboBox.addFocusListener(this.getEditingStopFocusListener());
 				
 				this.cellEditors[mRowIndex][1] = new DefaultCellEditor(comboBox);
 			} else {
@@ -133,60 +130,26 @@ public class WrapperedPropertyTable extends ATable {
 		this.setRowSelectionAllowed(true);		
 	}
 
+	private FocusListener getEditingStopFocusListener() {
+		if (this.editingStopFocusListener == null) {
+			this.editingStopFocusListener = new FocusAdapter() {
+				@Override
+				public void focusLost(FocusEvent e) {
+					WrapperedPropertyTable.this.editingStopped(null);
+				}
+			};
+		}
+		return this.editingStopFocusListener;
+	}
+	
+	@Override
 	public TableCellEditor getCellEditor(int row, int column) {
 		TableCellEditor tableCellEditor = this.cellEditors[row][column];
 		if (tableCellEditor == null) {
-			if (column == 1) {
-				WrapperedPropertyTableModel model = (WrapperedPropertyTableModel) getModel();
-				int mRowIndex = row;
-				Object obj = model.wrapper.getPropertyValue(model.keys[mRowIndex]);
-				if (obj instanceof Map) {
-					final Map map = (Map) obj;
-					AComboBox comboBox = new AComboBox();
-					List keys = new ArrayList(map.keySet());
-					Collections.sort(keys);
-					comboBox.setRenderer(LabelCheckBoxRenderer.getInstance());
-					for (Iterator it = keys.iterator(); it.hasNext();) {
-						comboBox.addItem(it.next());
-					}
-					keys.clear();
-					keys = null;
-					TableColumn sportColumn = getColumnModel().getColumn(1);
-					sportColumn.setCellEditor(new DefaultCellEditor(comboBox));
-
-					comboBox.addActionListener(new ActionListener() {
-
-						public void actionPerformed(ActionEvent e) {
-							AComboBox cb = (AComboBox) e.getSource();
-							if (cb.getItemCount() != map.keySet().size()) {
-								cb.removeAllItems();
-								List keys1 = new ArrayList(map.keySet());
-								Collections.sort(keys1);
-								for (Iterator it = keys1.iterator(); it.hasNext();) {
-									cb.addItem(it.next());
-								}
-								keys1.clear();
-								keys1 = null;
-							}
-
-						}
-					});
-					this.cellEditors[mRowIndex][column] = new DefaultCellEditor(comboBox);
-					tableCellEditor = this.cellEditors[mRowIndex][column];
-				} else {
-					Class clazz = model.wrapper.getPropertyClass(model.keys[mRowIndex]);
-					if (clazz.equals(Boolean.class)) {
-						JCheckBox checkBox = new JCheckBox();
-						this.cellEditors[mRowIndex][1] = new DefaultCellEditor(checkBox);
-						tableCellEditor = this.cellEditors[mRowIndex][column];
-					}
-				}
-
-			}
-		}
-		if (tableCellEditor == null) {
 			if (this.defaultTextFieldEditor == null) {
-				this.defaultTextFieldEditor = new DefaultCellEditor(new JTextField());
+				JTextField textField = new JTextField();
+				textField.addFocusListener(this.getEditingStopFocusListener());
+				this.defaultTextFieldEditor = new DefaultCellEditor(textField);
 			}
 			tableCellEditor = this.defaultTextFieldEditor;
 		}
