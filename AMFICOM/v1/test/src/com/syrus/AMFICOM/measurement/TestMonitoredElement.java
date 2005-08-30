@@ -1,5 +1,5 @@
 /*
- * $Id: TestMonitoredElement.java,v 1.2 2005/08/28 16:43:51 arseniy Exp $
+ * $Id: TestMonitoredElement.java,v 1.3 2005/08/30 19:58:39 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,8 +7,14 @@
  */
 package com.syrus.AMFICOM.measurement;
 
+import static com.syrus.AMFICOM.general.Identifier.SEPARATOR;
+import static com.syrus.AMFICOM.general.ObjectEntities.MONITOREDELEMENT;
+
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -18,12 +24,13 @@ import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.EquivalentCondition;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/28 16:43:51 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/30 19:58:39 $
  * @author $Author: arseniy $
  * @module config_v1
  */
@@ -39,28 +46,43 @@ public class TestMonitoredElement extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testCreateInstance() throws ApplicationException {
-		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MEASUREMENTPORT_CODE);
-		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
-		final MeasurementPort measurementPort = (MeasurementPort) it.next();
+	public void testCreateAll() throws ApplicationException {
 
-		ec.setEntityCode(ObjectEntities.DOMAIN_CODE);
-		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
+		final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
+		final Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final Domain domain = (Domain) it.next();
 
-		final String localAddress = "2:0:1";
+		ec.setEntityCode(ObjectEntities.MEASUREMENTPORT_CODE);
+		final Set<MeasurementPort> measurementPorts = StorableObjectPool.getStorableObjectsByCondition(ec, true);
+		final Map<Identifier, Identifier> portIdMeasurementPortIdMap = new HashMap<Identifier, Identifier>();
+		for (final MeasurementPort measurementPort : measurementPorts) {
+			portIdMeasurementPortIdMap.put(measurementPort.getPortId(), measurementPort.getId());
+		}
 
 		ec.setEntityCode(ObjectEntities.TRANSMISSIONPATH_CODE);
-		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
-		final TransmissionPath transmissionPath = (TransmissionPath) it.next();
+		final Set<TransmissionPath> transmissionPaths = StorableObjectPool.getStorableObjectsByCondition(ec, true);
+		for (final TransmissionPath transmissionPath : transmissionPaths) {
+			final Identifier startPortId = transmissionPath.getStartPortId();
+			final Identifier measurementPortId = portIdMeasurementPortIdMap.get(startPortId);
 
-		MonitoredElement.createInstance(DatabaseCommonTest.getSysUser().getId(),
-				domain.getId(),
-				"monitored element",
-				measurementPort.getId(),
-				MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
-				localAddress,
-				Collections.singleton(transmissionPath.getId()));
+			final String transmissionPathDescription = transmissionPath.getDescription();
+			final int p1 = transmissionPathDescription.indexOf(SEPARATOR);
+			final int p2 = transmissionPathDescription.indexOf(SEPARATOR, p1 + 1);
+			final int n = Integer.parseInt(transmissionPathDescription.substring(p1 + 1, p2));
+			final String monitoredElementName = MONITOREDELEMENT + SEPARATOR + n
+					+ SEPARATOR
+					+ transmissionPathDescription;
+			final String localAddress = "2:0:" + n;
+			MonitoredElement.createInstance(DatabaseCommonTest.getSysUser().getId(),
+					domain.getId(),
+					monitoredElementName,
+					measurementPortId,
+					MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH,
+					localAddress,
+					Collections.singleton(transmissionPath.getId()));
+		}
+
+		
 
 		StorableObjectPool.flush(ObjectEntities.MONITOREDELEMENT_CODE, DatabaseCommonTest.getSysUser().getId(), false);
 	}

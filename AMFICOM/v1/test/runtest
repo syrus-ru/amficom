@@ -2,12 +2,12 @@
 
 # This script can be used to run tests from console
 
-#TEST_CLASS=TestInitialSetup
-#TEST_PACKAGE=com.syrus.AMFICOM.setup
+TEST_CLASS=TestInitialSetup
+TEST_PACKAGE=com.syrus.AMFICOM.setup
 #TEST_CLASS=TestIdentifier
 #TEST_PACKAGE=com.syrus.AMFICOM.general
-TEST_CLASS=TestKIS
-TEST_PACKAGE=com.syrus.AMFICOM.measurement
+#TEST_CLASS=TestKIS
+#TEST_PACKAGE=com.syrus.AMFICOM.measurement
 #TEST_CLASS=TestSystemUser
 #TEST_PACKAGE=com.syrus.AMFICOM.administration
 
@@ -17,6 +17,7 @@ JDBCCLASSPATH=$ORACLE_HOME/jdbc/lib/ojdbc14.jar:$ORACLE_HOME/jdbc/lib/orai18n.ja
 LIBDIR=../lib
 EXTLIBDIR=../../extlib
 APPCLASSPATH=$LIBDIR/general.jar:$LIBDIR/administration.jar:$LIBDIR/configuration.jar:$LIBDIR/scheme.jar:$LIBDIR/resource.jar:$LIBDIR/filter.jar:$LIBDIR/measurement.jar:$LIBDIR/event.jar:$LIBDIR/csbridge.jar:$LIBDIR/leserver_interface.jar:$LIBDIR/mserver_interface.jar:$LIBDIR/cmserver_interface.jar:$LIBDIR/mcm_interface.jar:$LIBDIR/util.jar
+XMLCLASSPATH=$LIBDIR/configurationxml.jar
 EXTCLASSPATH=$EXTLIBDIR/trove.jar:$XMLBEANS_HOME/build/lib/xbean.jar:$XMLBEANS_HOME/build/lib/jsr173_api.jar
 
-java -ea -classpath ${APPCLASSPATH}:${EXTCLASSPATH}:${JDBCCLASSPATH}:${JUNITCLASSPATH}:./classes junit.textui.TestRunner ${TEST_PACKAGE}.${TEST_CLASS}
+java -ea -classpath ${APPCLASSPATH}:${XMLCLASSPATH}:${EXTCLASSPATH}:${JDBCCLASSPATH}:${JUNITCLASSPATH}:./classes junit.textui.TestRunner ${TEST_PACKAGE}.${TEST_CLASS}

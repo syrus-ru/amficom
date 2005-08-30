@@ -1,11 +1,14 @@
 /*
- * $Id: TestEquipment.java,v 1.3 2005/08/19 15:55:21 arseniy Exp $
+ * $Id: TestEquipment.java,v 1.4 2005/08/30 19:58:39 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.configuration;
+
+import static com.syrus.AMFICOM.general.Identifier.SEPARATOR;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT;
 
 import java.util.Iterator;
 
@@ -32,7 +35,7 @@ public final class TestEquipment extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testCreateInstance() throws ApplicationException {
+	public void testCreateAll() throws ApplicationException {
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
 		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final EquipmentType equipmentType = (EquipmentType) it.next();
@@ -41,22 +44,54 @@ public final class TestEquipment extends TestCase {
 		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final Domain domain = (Domain) it.next();
 
-		final Equipment equipment = Equipment.createInstance(DatabaseCommonTest.getSysUser().getId(),
+		Equipment.createInstance(DatabaseCommonTest.getSysUser().getId(),
 				domain.getId(),
 				equipmentType,
-				"Рефлектометр",
-				"Рефлектометр QP1640MR",
+				"Рефлектометр 1",
+				EQUIPMENT + SEPARATOR + "1",
 				Identifier.VOID_IDENTIFIER,
 				"Nettest",
 				"Nettest",
-				0,
-				90,
+				(float) 55.750,
+				(float) 37.583,
 				"1111",
 				"2222",
 				"3333",
 				"4444",
 				"5555");
 
-		StorableObjectPool.flush(equipment, DatabaseCommonTest.getSysUser().getId(), false);
+		Equipment.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				domain.getId(),
+				equipmentType,
+				"Рефлектометр 2",
+				EQUIPMENT + SEPARATOR + "2",
+				Identifier.VOID_IDENTIFIER,
+				"Nettest",
+				"Nettest",
+				(float) 39.900,
+				(float) 116.413,
+				"1111",
+				"2222",
+				"3333",
+				"4444",
+				"5555");
+
+		Equipment.createInstance(DatabaseCommonTest.getSysUser().getId(),
+				domain.getId(),
+				equipmentType,
+				"Рефлектометр 3",
+				EQUIPMENT + SEPARATOR + "3",
+				Identifier.VOID_IDENTIFIER,
+				"Nettest",
+				"Nettest",
+				(float) 28.667,
+				(float) 77.217,
+				"1111",
+				"2222",
+				"3333",
+				"4444",
+				"5555");
+
+		StorableObjectPool.flush(ObjectEntities.EQUIPMENT_CODE, DatabaseCommonTest.getSysUser().getId(), false);
 	}
 }

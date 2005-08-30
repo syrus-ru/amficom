@@ -1,5 +1,5 @@
 /*
- * $Id: TestPort.java,v 1.2 2005/08/19 15:55:21 arseniy Exp $
+ * $Id: TestPort.java,v 1.3 2005/08/30 19:58:39 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,7 +7,14 @@
  */
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.general.Identifier.SEPARATOR;
+import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT;
+
+import java.util.HashMap;
 import java.util.Iterator;
+import java.util.Map;
+import java.util.Set;
 
 import junit.framework.Test;
 import junit.framework.TestCase;
@@ -30,17 +37,41 @@ public final class TestPort extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testCreateInstance() throws ApplicationException {
+	public void testCreateAll() throws ApplicationException {
+		final Map<String, Integer> portNumberMap = new HashMap<String, Integer>();
+		portNumberMap.put(EQUIPMENT + SEPARATOR + "1", new Integer(8));
+		portNumberMap.put(EQUIPMENT + SEPARATOR + "2", new Integer(8));
+		portNumberMap.put(EQUIPMENT + SEPARATOR + "3", new Integer(4));
+
 		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE);
-		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
+		final Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final PortType portType = (PortType) it.next();
 
 		ec = new EquivalentCondition(ObjectEntities.EQUIPMENT_CODE);
-		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
-		final Equipment equipment = (Equipment) it.next();
+		final Set<Equipment> equipments = StorableObjectPool.getStorableObjectsByCondition(ec, true);
+		final Map<String, Equipment> equipmentsMap = new HashMap<String, Equipment>();
+		for (final Equipment equipment : equipments) {
+			equipmentsMap.put(equipment.getDescription(), equipment);
+		}
 
-		Port.createInstance(DatabaseCommonTest.getSysUser().getId(), portType, "port 1", equipment.getId());
-		Port.createInstance(DatabaseCommonTest.getSysUser().getId(), portType, "port 2", equipment.getId());
+		final String equipment1Description = EQUIPMENT + SEPARATOR + "1";
+		final Equipment equipment1 = equipmentsMap.get(equipment1Description);
+		if (equipment1 != null) {
+			Port.createInstance(DatabaseCommonTest.getSysUser().getId(), portType, "finish", equipment1.getId());
+		} else {
+			fail("Cannot find '" + equipment1Description + "'");
+		}
+
+		for (final Equipment equipment : equipments) {
+			final String equipmentDescription = equipment.getDescription();
+			final Integer portNumberInt = portNumberMap.get(equipmentDescription);
+			final int portNumber = (portNumberInt != null) ? portNumberInt.intValue() : 0;
+			for (int i = 1; i <= portNumber; i++) {
+				final String portDescription = PORT + SEPARATOR + i + SEPARATOR + equipmentDescription;
+				Port.createInstance(DatabaseCommonTest.getSysUser().getId(), portType, portDescription, equipment.getId());
+			}
+		}
+
 		StorableObjectPool.flush(ObjectEntities.PORT_CODE, DatabaseCommonTest.getSysUser().getId(), false);
 	}
 }

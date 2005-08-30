@@ -1,11 +1,13 @@
 /*
- * $Id: TestKIS.java,v 1.2 2005/08/29 11:32:55 arseniy Exp $
+ * $Id: TestKIS.java,v 1.3 2005/08/30 19:58:39 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.Identifier.SEPARATOR;
 
 import java.util.Iterator;
 import java.util.Set;
@@ -34,28 +36,36 @@ public final class TestKIS extends TestCase {
 		return commonTest.createTestSetup();
 	}
 
-	public void testCreateInstance() throws ApplicationException {
-		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.EQUIPMENT_CODE);
+	public void testCreateAll() throws ApplicationException {
+		EquivalentCondition ec = new EquivalentCondition(ObjectEntities.MCM_CODE);
 		Iterator it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
-		final Equipment equipment = (Equipment) it.next();
-
-		ec = new EquivalentCondition(ObjectEntities.MCM_CODE);
-		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final MCM mcm = (MCM) it.next();
 
 		ec = new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
 		it = StorableObjectPool.getStorableObjectsByCondition(ec, true).iterator();
 		final Domain domain = (Domain) it.next();
 
-		final KIS kis = KIS.createInstance(DatabaseCommonTest.getSysUser().getId(),
-				domain.getId(),
-				"Рефлектометр",
-				"Рефлектометр QP1640MR",
-				"rtu-1",
-				(short) 7501,
-				equipment.getId(),
-				mcm.getId());
-		StorableObjectPool.flush(kis, DatabaseCommonTest.getSysUser().getId(), false);
+		ec = new EquivalentCondition(ObjectEntities.EQUIPMENT_CODE);
+		final Set<Equipment> equipments = StorableObjectPool.getStorableObjectsByCondition(ec, true);
+		for (final Equipment equipment : equipments) {
+			final String equipmentDescription = equipment.getDescription();
+			final int p = equipmentDescription.indexOf(SEPARATOR);
+			final int n = Integer.parseInt(equipmentDescription.substring(p + 1));
+			final String kisDescription = ObjectEntities.KIS + SEPARATOR + n
+					+ SEPARATOR
+					+ equipmentDescription;
+			final String hostname = "rtu-" + n;
+			KIS.createInstance(DatabaseCommonTest.getSysUser().getId(),
+					domain.getId(),
+					"Рефлектометр " + n,
+					kisDescription,
+					hostname,
+					(short) 7501,
+					equipment.getId(),
+					mcm.getId());
+		}
+
+		StorableObjectPool.flush(ObjectEntities.KIS_CODE, DatabaseCommonTest.getSysUser().getId(), false);
 	}
 
 	public void testGetByCondition() throws ApplicationException {

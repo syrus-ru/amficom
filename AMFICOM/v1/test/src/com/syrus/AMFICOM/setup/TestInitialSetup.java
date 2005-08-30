@@ -1,5 +1,5 @@
 /*
- * $Id: TestInitialSetup.java,v 1.12 2005/08/30 14:29:38 arseniy Exp $
+ * $Id: TestInitialSetup.java,v 1.13 2005/08/30 19:58:39 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.measurement.TestModelingType;
 import com.syrus.AMFICOM.measurement.TestMonitoredElement;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/30 14:29:38 $
+ * @version $Revision: 1.13 $, $Date: 2005/08/30 19:58:39 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -80,15 +80,15 @@ public final class TestInitialSetup extends TestCase {
 		databaseCommonTest.addTest(new TestEquipmentType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestPortType("testCreateInstance"));
 		databaseCommonTest.addTest(new TestTransmissionPathType("testCreateInstance"));
-		databaseCommonTest.addTest(new TestEquipment("testCreateInstance"));
-		databaseCommonTest.addTest(new TestPort("testCreateInstance"));
-		databaseCommonTest.addTest(new TestTransmissionPath("testCreateInstance"));
+		databaseCommonTest.addTest(new TestEquipment("testCreateAll"));
+		databaseCommonTest.addTest(new TestPort("testCreateAll"));
+		databaseCommonTest.addTest(new TestTransmissionPath("testCreateAll"));
 
 		//-7. Create measurement objects.
 		databaseCommonTest.addTest(new TestMeasurementPortType("testCreateInstance"));
-		databaseCommonTest.addTest(new TestKIS("testCreateInstance"));
-		databaseCommonTest.addTest(new TestMeasurementPort("testCreateInstance"));
-		databaseCommonTest.addTest(new TestMonitoredElement("testCreateInstance"));
+		databaseCommonTest.addTest(new TestKIS("testCreateAll"));
+		databaseCommonTest.addTest(new TestMeasurementPort("testCreateAll"));
+		databaseCommonTest.addTest(new TestMonitoredElement("testCreateAll"));
 
 		//-8. Create equipment-specific characteristics. 
 		databaseCommonTest.addTest(new TestCharacteristicQP1640A("testCreate"));
