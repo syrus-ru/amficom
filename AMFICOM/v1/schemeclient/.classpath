@@ -17,6 +17,6 @@
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/jgraphpad"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/DEPRECATED-layout"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/xbean"/>
-	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/configxml"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.USER_LIBRARY/configurationxml"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
