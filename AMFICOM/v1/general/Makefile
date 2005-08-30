@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.63 2005/08/28 15:41:31 arseniy Exp $
+# $Id: Makefile,v 1.64 2005/08/30 16:05:28 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -75,6 +75,7 @@ xmlinstall: .xml $(LIBDIR)
 $(LIBNAME_GENERALXML):
 	$(SCOMP) $(SCOMPFLAGS) -out $@ \
 		$(XMLDIR)/Identifier.xsd \
+		$(XMLDIR)/StorableObject.xsd \
 		$(XMLDIR)/Characteristic.xsd \
 		$(XMLDIR)/CharacteristicType.xsd \
 		$(XMLDIR)/general.xsdconfig
@@ -100,7 +101,7 @@ cleanxml xmlclean:
 	if [ -f $(XMLSRCDIR)/com/syrus/AMFICOM/general/xml/.cvsignore ]; \
 	then \
 		cd $(XMLSRCDIR)/com/syrus/AMFICOM/general/xml && \
-		$(RM) -r `cat <$(XMLSRCDIR)/com/syrus/AMFICOM/general/xml/.cvsignore` \
+		$(RM) -r `cat .cvsignore` \
 	else \
 		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general/xml; \
 	fi

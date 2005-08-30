@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.55 2005/08/28 13:28:17 bass Exp $
+ * $Id: CableThreadType.java,v 1.56 2005/08/30 16:05:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.configuration.corba.IdlCableThreadType;
 import com.syrus.AMFICOM.configuration.corba.IdlCableThreadTypeHelper;
-import com.syrus.AMFICOM.configuration.xml.XmlCableThreadType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -28,6 +27,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -37,6 +37,9 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.configuration.xml.XmlCableThreadType;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.Shitlet;
 
 /**
  * <code>CableThreadType</code>, among other fields, contain references to
@@ -44,7 +47,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.55 $, $Date: 2005/08/28 13:28:17 $
+ * @version $Revision: 1.56 $, $Date: 2005/08/30 16:05:28 $
  * @author $Author: bass $
  * @module config
  */
@@ -103,6 +106,62 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		this.cableLinkType = cableLinkType;
 	}
 
+	@Shitlet
+	private CableThreadType(final Identifier creatorId,
+			final StorableObjectVersion version,
+			final XmlCableThreadType xmlCableThreadType,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType) throws CreateObjectException, ApplicationException {
+
+		super(clonedIdsPool.getClonedId(ObjectEntities.LINK_TYPE_CODE, xmlCableThreadType.getId().getStringValue()),
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				"",
+				"");
+		this.fromXmlTransferable(xmlCableThreadType, clonedIdsPool, importType);
+	}
+
+	@Shitlet
+	static CableThreadType createInstance(
+			final Identifier creatorId,
+			final String importType,
+			final XmlCableThreadType xmlCableThreadType,
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
+
+		try {
+			String uid = xmlCableThreadType.getId().getStringValue();
+			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			CableThreadType cableThreadType = null;
+			if(existingIdentifier != null) {
+				cableThreadType = StorableObjectPool.getStorableObject(existingIdentifier, true);
+				if(cableThreadType != null) {
+					cableThreadType.fromXmlTransferable(xmlCableThreadType, clonedIdsPool, importType);
+				}
+				else{
+					ImportUidMapDatabase.delete(importType, uid);
+				}
+			}
+			if(cableThreadType == null) {
+				cableThreadType = cableThreadType = new CableThreadType(
+						creatorId,
+						StorableObjectVersion.createInitial(),
+						xmlCableThreadType,
+						clonedIdsPool,
+						importType);
+				ImportUidMapDatabase.insert(importType, uid, cableThreadType.id);
+			}
+			assert cableThreadType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			cableThreadType.markAsChanged();
+			return cableThreadType;
+		} catch (Exception e) {
+			System.out.println(xmlCableThreadType);
+			throw new CreateObjectException("CableThreadType.createInstance |  ", e);
+		}
+	}
+
 	/**
 	 * create new instance for client
 	 * @throws CreateObjectException
@@ -152,17 +211,27 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	}
 
 	/**
-	 * @param xmlObject
+	 * @param xmlCableThreadType
 	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(org.apache.xmlbeans.XmlObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
 	 */
-	public void fromXmlTransferable(final XmlCableThreadType xmlObject,
+	@Shitlet
+	public void fromXmlTransferable(final XmlCableThreadType xmlCableThreadType,
 			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		this.name = xmlCableThreadType.getName();
+		this.codename = xmlCableThreadType.getCodename();
+		this.description = xmlCableThreadType.getDescription();
+		this.color = Integer.parseInt(xmlCableThreadType.getColor());
+
+		XmlIdentifier uid = xmlCableThreadType.addNewLinkTypeId();
+		uid.setStringValue(this.linkType.getId().toString());
+		
+		uid = xmlCableThreadType.addNewCableLinkTypeId();
+		uid.setStringValue(this.cableLinkType.getId().toString());
 	}
 
 	/**
@@ -189,6 +258,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	/**
 	 * @see XmlBeansTransferable#getXmlTransferable()
 	 */
+	@Shitlet
 	public XmlCableThreadType getXmlTransferable() {
 		throw new UnsupportedOperationException();
 	}

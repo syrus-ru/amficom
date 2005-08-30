@@ -63,7 +63,7 @@ xmlinstall: .xml $(LIBDIR)
 	install -m 0644 $(LIBNAME_CONFIGURATIONXML) $(LIBDIR)
 
 $(LIBNAME_CONFIGURATIONXML):
-	$(SCOMP) $(SCOMPFLAGS) -out $@ -cp $(XMLBEANSCLASSPATH):$(LIBDIR)/$(LIBNAME_GENERALXML) \
+	$(SCOMP) $(SCOMPFLAGS) -out $@ \
 		$(XMLDIR)/CableLinkType.xsd \
 		$(XMLDIR)/CableThreadType.xsd \
 		$(XMLDIR)/ConfigurationLibrary.xsd \
@@ -71,6 +71,8 @@ $(LIBNAME_CONFIGURATIONXML):
 		$(XMLDIR)/LinkType.xsd \
 		$(XMLDIR)/PortType.xsd \
 		$(XMLDIR)/configuration.xsdconfig
+	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/general
 
 .PHONY: clean
 clean: cleanmach cleancorba xmlclean
@@ -89,7 +91,13 @@ cleancorba: idlclean
 .PHONY: xmlclean cleanxml
 xmlclean cleanxml:
 	$(RM) $(LIBNAME_CONFIGURATIONXML)
-	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/configuration/xml
+	if [ -f $(XMLSRCDIR)/com/syrus/AMFICOM/configuration/xml/.cvsignore ]; \
+	then \
+		cd $(XMLSRCDIR)/com/syrus/AMFICOM/configuration/xml && \
+		$(RM) -r `cat .cvsignore` \
+	else \
+		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/configuration/xml; \
+	fi
 	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/configuration/xml
 	$(RM) .xml
 

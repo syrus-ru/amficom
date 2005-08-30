@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.79 2005/08/28 13:28:17 bass Exp $
+ * $Id: PortType.java,v 1.80 2005/08/30 16:05:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.configuration.corba.IdlPortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypeHelper;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
-import com.syrus.AMFICOM.configuration.xml.XmlPortType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -32,17 +31,24 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.configuration.xml.XmlPortType;
+import com.syrus.AMFICOM.configuration.xml.XmlPortTypeKind;
+import com.syrus.AMFICOM.configuration.xml.XmlPortTypeSort;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/08/28 13:28:17 $
+ * @version $Revision: 1.80 $, $Date: 2005/08/30 16:05:28 $
  * @author $Author: bass $
  * @module config
  */
@@ -95,6 +101,62 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		this.kind = kind;
 	}
 
+	@Shitlet
+	private PortType(final Identifier creatorId,
+			final StorableObjectVersion version,
+			final XmlPortType xmlPortType,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType) throws CreateObjectException, ApplicationException {
+
+		super(clonedIdsPool.getClonedId(ObjectEntities.PORT_TYPE_CODE, xmlPortType.getId().getStringValue()),
+				new Date(System.currentTimeMillis()),
+				new Date(System.currentTimeMillis()),
+				creatorId,
+				creatorId,
+				version,
+				"",
+				"");
+		this.fromXmlTransferable(xmlPortType, clonedIdsPool, importType);
+	}
+
+	@SuppressWarnings("unused")
+	@Shitlet
+	private static PortType createInstance(
+			final Identifier creatorId,
+			final String importType,
+			final XmlPortType xmlPortType,
+			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
+
+		try {
+			String uid = xmlPortType.getId().getStringValue();
+			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			PortType portType = null;
+			if(existingIdentifier != null) {
+				portType = StorableObjectPool.getStorableObject(existingIdentifier, true);
+				if(portType != null) {
+					portType.fromXmlTransferable(xmlPortType, clonedIdsPool, importType);
+				}
+				else{
+					ImportUidMapDatabase.delete(importType, uid);
+				}
+			}
+			if(portType == null) {
+				portType = portType = new PortType(
+						creatorId,
+						StorableObjectVersion.createInitial(),
+						xmlPortType,
+						clonedIdsPool,
+						importType);
+				ImportUidMapDatabase.insert(importType, uid, portType.id);
+			}
+			assert portType.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			portType.markAsChanged();
+			return portType;
+		} catch (Exception e) {
+			System.out.println(xmlPortType);
+			throw new CreateObjectException("PortType.createInstance |  ", e);
+		}
+	}
 
 	/**
 	 * create new instance for client
@@ -146,17 +208,22 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	}
 
 	/**
-	 * @param xmlObject
+	 * @param xmlPortType
 	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(org.apache.xmlbeans.XmlObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
 	 */
-	public void fromXmlTransferable(final XmlPortType xmlObject,
+	@Shitlet
+	public void fromXmlTransferable(final XmlPortType xmlPortType,
 			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		this.name = xmlPortType.getName();
+		this.codename = xmlPortType.getCodename();
+		this.description = xmlPortType.getDescription();
+		this.sort = xmlPortType.getSort().intValue();
+		this.kind = xmlPortType.getKind().intValue();
 	}
 
 	/**
@@ -182,8 +249,17 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	/**
 	 * @see XmlBeansTransferable#getXmlTransferable()
 	 */
+	@Shitlet
 	public XmlPortType getXmlTransferable() {
-		throw new UnsupportedOperationException();
+		final XmlPortType xmlPortType = XmlPortType.Factory.newInstance();
+		XmlIdentifier uid = xmlPortType.addNewId();
+		uid.setStringValue(this.id.toString());
+		xmlPortType.setName(this.name);
+		xmlPortType.setCodename(this.codename);
+		xmlPortType.setDescription(this.description);
+		xmlPortType.setSort(XmlPortTypeSort.Enum.forInt(this.sort));
+		xmlPortType.setKind(XmlPortTypeKind.Enum.forInt(this.kind));
+		return xmlPortType;
 	}
 
 	protected synchronized void setAttributes(final Date created,

@@ -1,58 +1,60 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: LinkType.xsd,v 1.4 2005/08/29 17:05:54 bass Exp $
--->
+<?xml version = "1.0" encoding = "UTF-8"?>
 <xsd:schema 
-	targetNamespace="http://syrus.com/AMFICOM/configuration/xml"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:configuration="http://syrus.com/AMFICOM/configuration/xml"
-	xmlns:general="http://syrus.com/AMFICOM/general/xml"
-	elementFormDefault="qualified">
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:configuration = "http://syrus.com/AMFICOM/configuration/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/configuration/xml"
+	elementFormDefault = "qualified">
 
-  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: LinkType.xsd,v 1.5 2005/08/30 16:05:28 bass Exp $
 
-  <xsd:element name="linkTypes" type="configuration:XmlLinkTypeSeq">
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
 
-    <xsd:key name="linkTypeId">
-      <xsd:selector xpath="configuration:linkType"/>
-      <xsd:field xpath="id"/>
-    </xsd:key>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/StorableObject.xsd"/>
 
-  </xsd:element>
+	<xsd:element name = "linkTypes" type = "configuration:XmlLinkTypeSeq">
+		<xsd:key name = "linkTypeId">
+			<xsd:selector xpath = "configuration:linkTypes/configuration:linkType"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
 
-  <xsd:simpleType name="XmlLinkTypeSort">
-      <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="optical"/>
-            <xsd:enumeration value="copper"/>
-            <xsd:enumeration value="air"/>
-            <xsd:enumeration value="powerline"/>
-      </xsd:restriction>
-  </xsd:simpleType>
+	<xsd:simpleType name = "XmlLinkTypeSort">
+		<xsd:restriction base = "xsd:string">
+			<xsd:enumeration value = "optical"/>
+			<xsd:enumeration value = "copper"/>
+			<xsd:enumeration value = "air"/>
+			<xsd:enumeration value = "powerline"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 
-  <xsd:simpleType name="XmlLinkTypeKind">
-      <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="simple"/>
-            <xsd:enumeration value="cable"/>
-      </xsd:restriction>
-  </xsd:simpleType>
+	<xsd:complexType name = "XmlLinkType">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObject">
+				<xsd:sequence>
+					<xsd:element name = "name" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
+					<xsd:element name = "codename" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
+					<xsd:element name = "sort" type = "configuration:XmlLinkTypeSort" minOccurs = "1" maxOccurs = "1"/>
+					<xsd:element name = "imageId" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
+					<xsd:element name = "description" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
+					<xsd:element name = "manufacturer" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
+					<xsd:element name = "manufacturerCode" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 
-  <xsd:complexType name="XmlLinkType">
-    <xsd:all>
-      <xsd:element name="id" type="general:XmlIdentifier" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="kind" type="configuration:XmlLinkTypeKind" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="sort" type="configuration:XmlLinkTypeSort" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="imageId" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="manufacturer" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="manufacturerCode" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-    </xsd:all>
-  </xsd:complexType>
-
-  <xsd:complexType name="XmlLinkTypeSeq">
-    <xsd:sequence>
-      <xsd:element name="linkType" type="configuration:XmlLinkType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
+	<xsd:complexType name = "XmlLinkTypeSeq">
+		<xsd:sequence>
+			<xsd:element name = "linkType" type = "configuration:XmlLinkType" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
 </xsd:schema>
