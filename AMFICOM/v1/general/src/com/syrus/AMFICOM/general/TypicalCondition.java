@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.46 2005/08/30 19:03:21 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.47 2005/08/30 19:26:59 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.APOSTROPHE;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
@@ -125,7 +127,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.46 $, $Date: 2005/08/30 19:03:21 $
+ * @version $Revision: 1.47 $, $Date: 2005/08/30 19:26:59 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -1560,7 +1562,7 @@ public class TypicalCondition implements StorableObjectCondition {
 				}
 				break;
 			case TypicalSort._TYPE_STRING:
-				String v = this.delegate.value.toString();
+				final String v = this.delegate.value.toString();
 				buffer.append(" [string] ");
 				switch (this.delegate.operation) {
 					case OperationSort._OPERATION_EQUALS:
@@ -1579,7 +1581,9 @@ public class TypicalCondition implements StorableObjectCondition {
 						Log.errorMessage("TypicalCondition.toString | unknown operation code " + this.delegate.operation);
 						break;
 				}
+				buffer.append(APOSTROPHE);
 				buffer.append(v);
+				buffer.append(APOSTROPHE);
 				break;
 			case TypicalSort._TYPE_DATE:
 				buffer.append(" [date] ");

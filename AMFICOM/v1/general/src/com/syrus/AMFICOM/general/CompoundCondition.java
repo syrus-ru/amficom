@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.36 2005/08/30 19:03:21 arseniy Exp $
+ * $Id: CompoundCondition.java,v 1.37 2005/08/30 19:26:59 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
 
 import java.util.Arrays;
 import java.util.Collections;
@@ -24,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.36 $, $Date: 2005/08/30 19:03:21 $
+ * @version $Revision: 1.37 $, $Date: 2005/08/30 19:26:59 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -210,7 +213,9 @@ public final class CompoundCondition implements StorableObjectCondition {
 			} else {
 				buffer.append(operationString);
 			}
+			buffer.append(OPEN_BRACKET);
 			buffer.append(condition.toString());
+			buffer.append(CLOSE_BRACKET);
 		}
 		return buffer.toString();
 	}
