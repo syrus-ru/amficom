@@ -281,8 +281,10 @@ public class TimeParametersFrame extends JInternalFrame {
 					public void stateChanged(ChangeEvent e) {
 						if (!this.waiting) {
 							if (!this.startedThread) {
-								this.thread.start();
-								this.startedThread = true;
+								synchronized (this.thread) {
+									this.thread.start();
+									this.startedThread = true;
+								}
 							}
 							this.waiting = TimeParametersPanel.this.propertyChangeEvent == null && TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
 								.getSelectedTest());
@@ -434,8 +436,10 @@ public class TimeParametersFrame extends JInternalFrame {
 							if (!this.waiting) {
 //								this.event = ;
 								if (!this.startedThread) {
-									this.thread.start();
-									this.startedThread = true;
+									synchronized (this.thread) {
+										this.thread.start();
+										this.startedThread = true;
+									}
 								}
 								this.waiting = TimeParametersPanel.this.propertyChangeEvent == null &&  TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
 									.getSelectedTest());

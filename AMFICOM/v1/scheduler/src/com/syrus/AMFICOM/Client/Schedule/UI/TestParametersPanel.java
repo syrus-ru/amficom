@@ -49,7 +49,6 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.Plugger;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -126,19 +125,19 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 	private void createGUI() {
 		this.tabbedPane = new JTabbedPane();
-
-		List<AnalysisType> analysisTypes = Arrays.asList(AnalysisType.values());
 		
+		AnalysisType[] analysisTypes = AnalysisType.values();
+
 		Comparator<AnalysisType> comparator = new Comparator<AnalysisType>() {
 			public int compare(	AnalysisType at1,
 			                   	AnalysisType at2) {
 				return at1.getDescription().compareTo(at2.getDescription());
 			}
 		};
+
+		Arrays.sort(analysisTypes, comparator);
 		
-		Collections.sort(analysisTypes, comparator);
-		
-		this.analysisComboBox = new JComboBox(analysisTypes.toArray());
+		this.analysisComboBox = new JComboBox(analysisTypes);
 		
 		
 		this.analysisComboBox.setRenderer(new DefaultListCellRenderer() {
@@ -330,9 +329,9 @@ public class TestParametersPanel implements PropertyChangeListener {
 							for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
 								Test test = (Test) iterator.next();
 								if (test.isChanged()) {
-									Log.debugMessage(
-										"TestParametersPanel$ListSelectionListener.valueChanged | set to test "
-												+ test.getId() + " > " + measurementSetup1.getId(), Level.FINEST);
+//									Log.debugMessage(
+//										"TestParametersPanel$ListSelectionListener.valueChanged | set to test "
+//												+ test.getId() + " > " + measurementSetup1.getId(), Level.FINEST);
 									test.setMeasurementSetupIds(measurementSetupIdSet);
 								}
 							}
@@ -486,7 +485,6 @@ public class TestParametersPanel implements PropertyChangeListener {
 		}
 
 		this.msList.addAll(measurementSetups);
-		// year! really equals links to the same object
 		for(MeasurementSetup measurementSetup : measurementSetups) {
 			if(measurementSetup.getCriteriaSet() != null ||
 					measurementSetup.getEtalon() != null ||
@@ -633,15 +631,9 @@ public class TestParametersPanel implements PropertyChangeListener {
 	synchronized void selectAnalysisType(	final JComboBox cb,
 	                                 	final AnalysisType analysisType,
 	                                 	final boolean changeStatus) {
-		if (changeStatus && !this.useAnalysisSetupsCheckBox.isSelected()) {
-			this.useAnalysisSetupsCheckBox.doClick();
-		}
-		
 		cb.setSelectedItem(analysisType);
-
-		Object selectedItem = cb.getSelectedItem();
-		
-		if (selectedItem != null
+		AnalysisType selectedItem = (AnalysisType) cb.getSelectedItem();		
+		if (changeStatus && selectedItem != AnalysisType.UNKNOWN
 				&& !this.useAnalysisSetupsCheckBox.isSelected()) {
 			this.useAnalysisSetupsCheckBox.doClick();
 		}

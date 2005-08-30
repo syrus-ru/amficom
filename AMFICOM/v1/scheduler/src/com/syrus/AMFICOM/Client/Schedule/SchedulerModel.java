@@ -484,7 +484,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.testIds.clear();
 		for (final Test test : tests) {
 			this.testIds.add(test.getId());
-			System.out.println("SchedulerModel.updateTests() | " + test.getId() + ", " + test.getVersion() + "v, " + test.getStartTime() + ", " + test.getStatus().value());
+//			System.out.println("SchedulerModel.updateTests() | " + test.getId() + ", " + test.getVersion() + "v, " + test.getStartTime() + ", " + test.getStatus().value());
 		}
 
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
