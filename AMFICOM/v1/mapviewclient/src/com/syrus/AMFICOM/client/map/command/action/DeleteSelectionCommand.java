@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.28 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.29 2005/08/31 13:11:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,7 +11,6 @@
 
 package com.syrus.AMFICOM.client.map.command.action;
 
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.logging.Level;
 
@@ -21,6 +20,7 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.VoidElement;
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
  * (CommandBundle), удаляющих отдельные элементы.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/31 13:11:31 $
  * @module mapviewclient
  */
 public class DeleteSelectionCommand extends MapActionCommandBundle {
@@ -46,68 +46,67 @@ public class DeleteSelectionCommand extends MapActionCommandBundle {
 
 		// Удаляем все выбранные элементы взависимости от разрешения на их
 		// удаление
-		Iterator e;
-
 		final LinkedList<AbstractNode> nodesToDelete = new LinkedList<AbstractNode>();
 		final LinkedList<NodeLink> nodeLinksToDelete = new LinkedList<NodeLink>();
 		final LinkedList<PhysicalLink> linksToDelete = new LinkedList<PhysicalLink>();
-		final LinkedList cablePathsToDelete = new LinkedList();
+		final LinkedList<CablePath> cablePathsToDelete = new LinkedList<CablePath>();
 
 		final int showMode = this.logicalNetLayer.getMapState().getShowMode();
 
-		for(Iterator it = this.logicalNetLayer.getSelectedElements().iterator(); it .hasNext();) {
-			MapElement me = (MapElement) it.next();
-			if(me instanceof AbstractNode) {
-				nodesToDelete.add((AbstractNode) me);
+		for(MapElement mapElement : this.logicalNetLayer.getSelectedElements()) {
+			if(mapElement instanceof AbstractNode) {
+				nodesToDelete.add((AbstractNode) mapElement);
 			}
-			else if(me instanceof NodeLink
+			else if(mapElement instanceof NodeLink
 					&& showMode == MapState.SHOW_NODE_LINK) {
-				NodeLink nodeLink = (NodeLink) me;
+				NodeLink nodeLink = (NodeLink) mapElement;
 				PhysicalLink link = nodeLink.getPhysicalLink();
 				if(!(link instanceof UnboundLink)) {
 					nodeLinksToDelete.add(nodeLink);
 				}
 			}
-			else if(me instanceof PhysicalLink
+			else if(mapElement instanceof PhysicalLink
 					&& showMode == MapState.SHOW_PHYSICAL_LINK) {
-				if(!(me instanceof UnboundLink)) {
-					linksToDelete.add((PhysicalLink) me);
+				if(!(mapElement instanceof UnboundLink)) {
+					linksToDelete.add((PhysicalLink) mapElement);
 				}
 			}
 		}
 		// создать список команд удаления фрагментов
-		e = linksToDelete.iterator();
-		while(e.hasNext()) {
-			DeletePhysicalLinkCommandBundle command = new DeletePhysicalLinkCommandBundle(
-					(PhysicalLink) e.next());
+		for(PhysicalLink physicalLink : linksToDelete) {
+			DeletePhysicalLinkCommandBundle command = 
+				new DeletePhysicalLinkCommandBundle(physicalLink);
 			command.setNetMapViewer(this.netMapViewer);
 			add(command);
 		}
 
 		// создать список команд удаления фрагментов
-		e = nodeLinksToDelete.iterator();
-		while(e.hasNext()) {
-			DeleteNodeLinkCommandBundle command = new DeleteNodeLinkCommandBundle(
-					(NodeLink) e.next());
+		for(NodeLink nodeLink : nodeLinksToDelete) {
+			DeleteNodeLinkCommandBundle command = 
+				new DeleteNodeLinkCommandBundle(nodeLink);
 			command.setNetMapViewer(this.netMapViewer);
 			add(command);
 		}
 
 		// создать список команд удаления узлов
-		e = nodesToDelete.iterator();
-		while(e.hasNext()) {
-			DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(
-					(AbstractNode) e.next());
+		for(AbstractNode node : nodesToDelete) {
+			DeleteNodeCommandBundle command = new DeleteNodeCommandBundle(node);
 			command.setNetMapViewer(this.netMapViewer);
 			add(command);
+			if(node instanceof SiteNode) {
+				SiteNode siteNode = (SiteNode) node;
+				for(SiteNode attachedSiteNode : siteNode.getAttachedSiteNodes()) {
+					DeleteNodeCommandBundle command2 = new DeleteNodeCommandBundle(attachedSiteNode);
+					command2.setNetMapViewer(this.netMapViewer);
+					add(command2);
+				}
+			}
 		}
 
 		// создать список команд удаления узлов
-		e = cablePathsToDelete.iterator();
-		while(e.hasNext()) {
-			// removeCablePath((MapCablePathElement )e.next());
-			UnPlaceSchemeCableLinkCommand command = new UnPlaceSchemeCableLinkCommand(
-					(CablePath) e.next());
+		for(CablePath cablePath : cablePathsToDelete) {
+			UnPlaceSchemeCableLinkCommand command = 
+				new UnPlaceSchemeCableLinkCommand(cablePath);
 			command.setNetMapViewer(this.netMapViewer);
 			command.execute();
 		}
