@@ -282,8 +282,8 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 	public void setGraphSize(Dimension d)
 	{
 		Dimension dim = getSize();
-		double kx = (d.getWidth() - 1) / (dim.getWidth() - 1);
-		double ky = (d.getHeight() - 1) / (dim.getHeight() - 1);
+		double kx = d.getWidth() / dim.getWidth();
+		double ky = d.getHeight() / dim.getHeight();
 		scaleX *= kx;
 		scaleY *= ky;
 		super.setSize(d);
