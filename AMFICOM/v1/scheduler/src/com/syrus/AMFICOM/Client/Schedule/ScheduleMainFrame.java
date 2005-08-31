@@ -4,6 +4,7 @@ package com.syrus.AMFICOM.Client.Schedule;
 import java.awt.Component;
 import java.awt.event.ComponentAdapter;
 import java.awt.event.ComponentEvent;
+import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 
@@ -119,9 +120,11 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 			@Override
 			public void componentShown(ComponentEvent e) {
 				desktopPane1.setPreferredSize(desktopPane1.getSize());
+				final ApplicationModel aModel = aContext.getApplicationModel();
+				aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
 			}
 		});
-		this.addWindowListener(new java.awt.event.WindowAdapter() {
+		this.addWindowListener(new WindowAdapter() {
 
 			@Override
 			public void windowClosing(WindowEvent e) {
