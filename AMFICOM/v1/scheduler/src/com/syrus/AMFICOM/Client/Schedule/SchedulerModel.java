@@ -513,15 +513,18 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		if (this.selectedTestIds == null) {
 			this.selectedTestIds = new HashSet<Identifier>();
 		}
-
-		if (selectedTest != null) {
-			if (this.selectedTestIds.isEmpty()) {
-				this.selectedFirstTestId = selectedTest.getId();
+		synchronized (this.selectedTestIds) {
+			if (selectedTest != null) {
+				if (this.selectedTestIds.isEmpty()) {
+					this.selectedFirstTestId = selectedTest.getId();
+				}
+				if (!this.selectedTestIds.contains(selectedTestId)) {
+					this.selectedTestIds.add(selectedTestId);
+					this.refreshTest();
+				}
+			} else {
+				Log.debugMessage("SchedulerModel.setSelectedTest | selectedTest is " + selectedTest, Level.FINEST);
 			}
-			this.selectedTestIds.add(selectedTestId);
-			this.refreshTest();
-		} else {
-			Log.debugMessage("SchedulerModel.setSelectedTest | selectedTest is " + selectedTest, Level.FINEST);
 		}
 	}
 

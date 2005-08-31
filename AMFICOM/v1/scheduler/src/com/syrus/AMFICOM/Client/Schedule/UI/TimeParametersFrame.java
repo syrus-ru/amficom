@@ -274,10 +274,12 @@ public class TimeParametersFrame extends JInternalFrame {
 
 					public void stateChanged(ChangeEvent e) {
 						if (!this.waiting) {
-							if (!this.startedThread) {
-								synchronized (this.thread) {
-									this.thread.start();
-									this.startedThread = true;
+							synchronized (this) {
+								if (!this.startedThread) {
+									synchronized (this) {
+										this.thread.start();
+										this.startedThread = true;
+									}
 								}
 							}
 							this.waiting = TimeParametersPanel.this.propertyChangeEvent == null && TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel

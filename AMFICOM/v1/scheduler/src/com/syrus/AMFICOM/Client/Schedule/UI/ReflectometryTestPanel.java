@@ -61,7 +61,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/08/30 12:01:24 $
+ * @version $Revision: 1.72 $, $Date: 2005/08/31 07:53:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -524,6 +524,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	@Override
 	public void setMonitoredElement(final MonitoredElement me) {
+//		System.out.println("ReflectometryTestPanel.setMonitoredElement()");
 		this.skip = true;
 		this.meId = me.getId();
 		final Identifier measurementPortId1 = me.getMeasurementPortId();
@@ -832,16 +833,18 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	}
 
 	public void setSet(ParameterSet set) {
+//		System.out.println("ReflectometryTestPanel.setSet() | 1 " + (set != null ? set.getId() : null));
 		if (this.skip) {
 			return;
 		}		
 		
-//		System.out.println("ReflectometryTestPanel.setSet() | " + (set != null ? set.getId() : null));
 		
 		if (this.setId != null && set != null && this.setId.equals(set.getId())) {
 			this.skip = false;
 			return;
 		}
+
+//		System.out.println("ReflectometryTestPanel.setSet() | " + (set != null ? set.getId() : null));
 		
 		this.skip = true;
 		if (this.unchangedObjects == null) {

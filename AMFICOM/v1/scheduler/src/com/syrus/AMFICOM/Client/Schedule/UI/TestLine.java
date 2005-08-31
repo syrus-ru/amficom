@@ -183,11 +183,17 @@ public class TestLine extends TimeLine {
 						true);
 					this.selectedTestIds.add(test.getId());
 
+//					try {
+//						throw new Exception("TestLine");
+//					} catch (Exception e1) {
+//						// TODO Auto-generated catch block
+//						e1.printStackTrace();
+//					}
+					
 					CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
 						public void run() {
 							try {
-
 								TestLine.this.skip = true;
 								TestLine.this.schedulerModel.addSelectedTest(test);
 								TestLine.this.skip = false;
@@ -369,11 +375,11 @@ public class TestLine extends TimeLine {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-				this.mouseClicked(e);
-			}
-			
-			@Override
-			public void mouseClicked(MouseEvent e) {
+//				this.mouseClicked(e);
+//			}
+//			
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
 				// Log.debugMessage("TimeStampsEditor.mouseClicked | ",
 				// Log.FINEST);
 				int x = e.getX();

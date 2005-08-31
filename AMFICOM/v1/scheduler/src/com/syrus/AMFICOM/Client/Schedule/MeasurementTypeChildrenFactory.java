@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.10 2005/08/26 10:36:31 bob Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.11 2005/08/31 07:53:00 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/26 10:36:31 $
+ * @version $Revision: 1.11 $, $Date: 2005/08/31 07:53:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -56,6 +56,12 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 	}
 	
 	public void populate(Item item) {
+		try {
+			throw new Exception();
+		} catch (Exception e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		}
 			LinkedIdsCondition domainCondition = new LinkedIdsCondition(this.domainId,
 				ObjectEntities.KIS_CODE);
 			Set<Identifier> measurementPortTypeIds = new LinkedHashSet<Identifier>();
