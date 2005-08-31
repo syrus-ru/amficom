@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.18 2005/08/31 09:24:05 bob Exp $
+ * $Id: ItemTreeModel.java,v 1.19 2005/08/31 09:24:23 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
-import java.util.logging.Level;
 
 import javax.swing.event.TreeModelEvent;
 import javax.swing.event.TreeModelListener;
@@ -25,7 +24,7 @@ import javax.swing.tree.TreePath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/31 09:24:05 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/31 09:24:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter
