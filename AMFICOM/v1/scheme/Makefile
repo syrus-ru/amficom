@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.36 2005/08/30 17:37:48 arseniy Exp $
+# $Id: Makefile,v 1.37 2005/08/31 06:04:44 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -40,7 +40,7 @@ $(LIBNAME): .mach
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
 
-.mach: .corba $(CLASSDIR)
+.mach: .corba .xml $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
@@ -75,18 +75,15 @@ xmlinstall: .xml $(LIBDIR)
 	install -m 0644 $(LIBNAME_SCHEMEXML) $(LIBDIR)
 
 $(LIBNAME_SCHEMEXML): 
-	$(SCOMP) $(SCOMPFLAGS) -out $@ -cp $(XMLBEANSCLASSPATH):$(LIBDIR)/$(LIBNAME_GENERALXML) \
+	$(SCOMP) $(SCOMPFLAGS) -out $@ \
 		$(XMLDIR)/CableChannelingItem.xsd \
-		$(XMLDIR)/SchemeCableLink.xsd \
-		$(XMLDIR)/SchemeCableThread.xsd \
-		$(XMLDIR)/SchemeDevice.xsd \
-		$(XMLDIR)/SchemeElement.xsd \
-		$(XMLDIR)/SchemeLink.xsd \
-		$(XMLDIR)/SchemePort.xsd \
-		$(XMLDIR)/SchemeProtoElement.xsd \
-		$(XMLDIR)/SchemeProtoGroup.xsd \
-		$(XMLDIR)/Scheme.xsd
-
+		$(XMLDIR)/scheme.xsdconfig
+	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/general
+	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/configuration
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/configuration
+	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/map
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/map
 
 .PHONY: clean
 clean: cleanmach cleancorba cleanxml
@@ -105,10 +102,14 @@ cleancorba: idlclean
 .PHONY: cleanxml xmlclean
 cleanxml xmlclean:
 	$(RM) $(LIBNAME_SCHEMEXML)
-	$(RM) -r $(XMLSRCDIR)/com/syrus/amficom
-	$(RM) -r $(XMLCLASSDIR)/com/syrus/amficom
+	if [ -f $(XMLSRCDIR)/com/syrus/AMFICOM/scheme/xml/.cvsignore ]; \
+	then \
+		cd $(XMLSRCDIR)/com/syrus/AMFICOM/scheme/xml && $(RM) -r `cat .cvsignore`; \
+	else \
+		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/scheme/xml; \
+	fi
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/scheme/xml
 	$(RM) .xml
-
 
 #### Install ####
 .PHONY: install
