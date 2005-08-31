@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.71 2005/08/30 16:03:59 bass Exp $
+ * $Id: Collector.java,v 1.72 2005/08/31 13:08:04 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: bass $
- * @version $Revision: 1.71 $, $Date: 2005/08/30 16:03:59 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.72 $, $Date: 2005/08/31 13:08:04 $
  * @module map
  */
 public final class Collector extends StorableObject implements MapElement, XmlBeansTransferable<XmlCollector> {
@@ -350,7 +350,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 	public XmlCollector getXmlTransferable() {
 		final XmlCollector xmlCollector = XmlCollector.Factory.newInstance();
 		final XmlIdentifier uid = xmlCollector.addNewId();
-		uid.setStringValue(this.id.toString());
+		uid.setStringValue(this.id.getIdentifierString());
 		xmlCollector.setName(this.name);
 		xmlCollector.setDescription(this.description);
 		
@@ -358,7 +358,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 		
 		for (final PhysicalLink link : this.getPhysicalLinks()) {
 			final XmlIdentifier xmlPhysicalLinkUId = xmlPhysicalLinkUIds.addNewId();
-			xmlPhysicalLinkUId.setStringValue(link.getId().toString());
+			xmlPhysicalLinkUId.setStringValue(link.getId().getIdentifierString());
 		}
 		return xmlCollector;
 	}

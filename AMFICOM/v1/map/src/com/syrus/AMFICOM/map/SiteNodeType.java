@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.75 2005/08/30 16:03:59 bass Exp $
+ * $Id: SiteNodeType.java,v 1.76 2005/08/31 13:08:04 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,12 @@ import com.syrus.util.Log;
  * {@link #codename}, соответствующим какому-либо значению {@link #DEFAULT_WELL},
  * {@link #DEFAULT_PIQUET}, {@link #DEFAULT_ATS}, {@link #DEFAULT_BUILDING}, {@link #DEFAULT_UNBOUND},
  * {@link #DEFAULT_CABLE_INLET}, {@link #DEFAULT_TOWER}
- * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/08/30 16:03:59 $
+ * 
+ * Узлы специального типа CABLE_INLET должны быть привязаны к какому-либо
+ * узлу BUILDING или ATS и самостоятельно не живут
+ *  
+ * @author $Author: krupenn $
+ * @version $Revision: 1.76 $, $Date: 2005/08/31 13:08:04 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -305,7 +309,7 @@ public final class SiteNodeType extends StorableObjectType
 	public XmlSiteNodeType getXmlTransferable() {
 		final XmlSiteNodeType xmlSiteNodeType = XmlSiteNodeType.Factory.newInstance();
 		final XmlIdentifier uid = xmlSiteNodeType.addNewId();
-		uid.setStringValue(this.id.toString());
+		uid.setStringValue(this.id.getIdentifierString());
 		xmlSiteNodeType.setName(this.name);
 		xmlSiteNodeType.setDescription(this.description);
 		xmlSiteNodeType.setSort(XmlSiteNodeTypeSort.Enum.forInt(this.sort.value() + 1));

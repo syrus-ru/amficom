@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.99 2005/08/30 16:03:59 bass Exp $
+ * $Id: PhysicalLink.java,v 1.100 2005/08/31 13:08:04 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.99 $, $Date: 2005/08/30 16:03:59 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.100 $, $Date: 2005/08/31 13:08:04 $
  * @module map
  */
 public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XmlBeansTransferable<XmlPhysicalLink> {
@@ -886,7 +886,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	public XmlPhysicalLink getXmlTransferable() {
 		final XmlPhysicalLink xmlPhysicalLink = XmlPhysicalLink.Factory.newInstance();
 		XmlIdentifier uid = xmlPhysicalLink.addNewId();
-		uid.setStringValue(this.id.toString());
+		uid.setStringValue(this.id.getIdentifierString());
 		xmlPhysicalLink.setName(this.name);
 		xmlPhysicalLink.setDescription(this.description);
 		/*
@@ -895,10 +895,10 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		xmlPhysicalLink.setPhysicalLinkTypeCodename(this.getType().getCodename());
 		
 		uid = xmlPhysicalLink.addNewStartNodeId();
-		uid.setStringValue(this.startNodeId.toString());
+		uid.setStringValue(this.startNodeId.getIdentifierString());
 		
 		uid = xmlPhysicalLink.addNewEndNodeId();
-		uid.setStringValue(this.endNodeId.toString());
+		uid.setStringValue(this.endNodeId.getIdentifierString());
 		
 		xmlPhysicalLink.setCity(this.city);
 		xmlPhysicalLink.setStreet(this.street);

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.79 2005/08/30 16:03:59 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.80 2005/08/31 13:08:04 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,8 +58,12 @@ import com.syrus.util.Log;
  * типов линий, которые определ€ютс€ полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/08/30 16:03:59 $
+ * 
+ * Ћинии специального типа PhysicalLinkTypeSort.INDOOR соедин€ют “ќЋ№ ќ
+ * узлы BUILDING, ATS с узлами CABLE_INLET и имеют длину 0
+ * 
+ * @author $Author: krupenn $
+ * @version $Revision: 1.80 $, $Date: 2005/08/31 13:08:04 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -332,7 +336,7 @@ public final class PhysicalLinkType extends StorableObjectType
 	public XmlPhysicalLinkType getXmlTransferable() {
 		final XmlPhysicalLinkType xmlPhysicalLinkType = XmlPhysicalLinkType.Factory.newInstance();
 		final XmlIdentifier uid = xmlPhysicalLinkType.addNewId();
-		uid.setStringValue(this.id.toString());
+		uid.setStringValue(this.id.getIdentifierString());
 		xmlPhysicalLinkType.setName(this.name);
 		xmlPhysicalLinkType.setDescription(this.description);
 		xmlPhysicalLinkType.setSort(XmlPhysicalLinkTypeSort.Enum.forInt(this.sort.value() + 1));
