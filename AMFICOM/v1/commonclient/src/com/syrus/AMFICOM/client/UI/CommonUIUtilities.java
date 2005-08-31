@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/25 17:23:48 $
+ * @version $Revision: 1.7 $, $Date: 2005/08/31 07:53:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -145,7 +145,7 @@ public final class CommonUIUtilities {
 
 			// XXX very ugly workaround,
 			// we should not use the pair setVisible/dispose from concurrent threads
-			boolean	flag;
+			volatile boolean	flag;
 
 			@Override
 			public void run() {
@@ -190,8 +190,8 @@ public final class CommonUIUtilities {
 				} catch (InterruptedException ie) {
 					ie.printStackTrace();
 				}
-				jDialog.dispose();
 				this.flag = false;
+				jDialog.dispose();				
 			}
 		}
 		
