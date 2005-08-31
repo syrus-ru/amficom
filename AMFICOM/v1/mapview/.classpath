@@ -11,5 +11,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/scheme"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/mapxml.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

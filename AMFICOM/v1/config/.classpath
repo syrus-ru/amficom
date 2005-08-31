@@ -8,5 +8,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/general"/>
 	<classpathentry kind="lib" path="configurationxml.jar"/>
 	<classpathentry kind="var" path="EXTLIB/xbean.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
