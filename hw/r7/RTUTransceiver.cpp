@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTUTransceiver.cpp,v 1.20 2005/08/31 15:27:34 arseniy Exp $
+// $Id: RTUTransceiver.cpp,v 1.21 2005/08/31 15:31:42 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.20 $, $Date: 2005/08/31 15:27:34 $
+// $Revision: 1.21 $, $Date: 2005/08/31 15:31:42 $
 // $Author: arseniy $
 //
 // RTUTransceiver.cpp: implementation of the RTUTransceiver class.
@@ -357,8 +357,9 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 			flag_live_fiber_detect = *(int*)(bvalue->getData());
 			delete bvalue;
 		}
-		else
+		else {
 			printf("RTUTransceiver | Unknown name of parameter: %s\n", par_name);
+		}
 	}
 
 	int wave_index = get_wave_index(wvlen, this->otdr_cards[otdr_card_index]);
@@ -403,10 +404,12 @@ int RTUTransceiver::set_measurement_parameters(Parameter** parameters, unsigned 
 	this->averages = (DWORD)scans;
 
 	this->filter_flags = 0;
-	if (flag_gain_splice_on)
+	if (flag_gain_splice_on) {
 		this->filter_flags |= GAIN_SPLICE_ON;
-	if (flag_live_fiber_detect)
+	}
+	if (flag_live_fiber_detect) {
 		this->filter_flags |= LIVE_FIBER_DETECT;
+	}
 
 	int set_params_ret = QPOTDRAcqSetParams(this->otdr_cards[otdr_card_index],
 								(WORD)(this->averages / this->plugin_data->dwFastScanCount),
@@ -640,8 +643,9 @@ void RTUTransceiver::fill_bellcore_structure(BellcoreStructure*& bs, QPOTDRWavef
 	sf[0] = 1000;
 	unsigned short** dsf = new unsigned short*[tsf];
 	dsf[0] = new unsigned short[np];
-	for (i = 0; i < np; i++)
+	for (i = 0; i < np; i++) {
 		dsf[0][i] = 65535 - wave_form_data[i + offset];
+	}
 	bs->add_field_data_pts(tndp,
 				tsf,
 				tps,
