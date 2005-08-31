@@ -12,11 +12,11 @@ $(call checkenve,SCOMP)
 $(call checkenve,SCOMPFLAGS)
 
 
-LIBNAME_GENERALXML=generalxml.jar
-LIBNAME_MAPXML=mapxml.jar
+LIBNAME_GENERALXML = generalxml.jar
+LIBNAME_CONFIGURATIONXML = $(MODULE_NAME)xml.jar
+LIBNAME_MAPXML = mapxml.jar
 
 APPCLASSPATH = $(LIBDIR)/configuration.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar:$(LIBDIR)/filter.jar
-
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
 
 # If TROVE4J_HOME is defined, search in ${TROVE4J_HOME}/lib
@@ -70,7 +70,7 @@ xmlinstall: .xml $(LIBDIR)
 	install -m 0644 $(LIBNAME_MAPXML) $(LIBDIR)
 
 $(LIBNAME_MAPXML): 
-	$(SCOMP) $(SCOMPFLAGS) -out $@ -cp $(XMLBEANSCLASSPATH):$(LIBDIR)/$(LIBNAME_GENERALXML) \
+	$(SCOMP) $(SCOMPFLAGS) -out $@ \
 		$(XMLDIR)/Map.xsd \
 		$(XMLDIR)/Collector.xsd \
 		$(XMLDIR)/NodeLink.xsd \
@@ -81,6 +81,10 @@ $(LIBNAME_MAPXML):
 		$(XMLDIR)/TopologicalNode.xsd \
 		$(XMLDIR)/MapLibrary.xsd \
 		$(XMLDIR)/map.xsdconfig
+	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/general
+	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/configuration
+	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/configuration
 
 .PHONY: clean
 clean: cleanmach cleancorba cleanxml
@@ -103,7 +107,12 @@ cleancorba: idlclean
 .PHONY: cleanxml xmlclean
 cleanxml xmlclean:
 	$(RM) $(LIBNAME_MAPXML)
-	$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/map/xml
+	if [ -f $(XMLSRCDIR)/com/syrus/AMFICOM/map/xml/.cvsignore ]; \
+	then \
+		cd $(XMLSRCDIR)/com/syrus/AMFICOM/map/xml && $(RM) -r `cat .cvsignore`; \
+	else \
+		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/map/xml; \
+	fi
 	$(RM) -r $(XMLCLASSDIR)/com/syrus/AMFICOM/map/xml
 	$(RM) .xml
 

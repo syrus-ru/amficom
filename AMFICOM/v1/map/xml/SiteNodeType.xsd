@@ -1,52 +1,62 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: SiteNodeType.xsd,v 1.11 2005/08/29 17:05:03 bass Exp $
--->
+<?xml version = "1.0" encoding = "UTF-8"?>
 <xsd:schema 
-	targetNamespace="http://syrus.com/AMFICOM/map/xml"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:map="http://syrus.com/AMFICOM/map/xml"
-	xmlns:general="http://syrus.com/AMFICOM/general/xml"
-	elementFormDefault="qualified">
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:map = "http://syrus.com/AMFICOM/map/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/map/xml"
+	elementFormDefault = "qualified">
 
-  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: SiteNodeType.xsd,v 1.12 2005/08/31 05:40:27 bass Exp $
 
-  <xsd:element name="siteNodeTypes" type="map:XmlSiteNodeTypeSeq">
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
 
-    <xsd:key name="siteNodeTypeId">
-      <xsd:selector xpath="map:siteNodeTypes/map:siteNodeType"/>
-      <xsd:field xpath="id"/>
-    </xsd:key>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/Characteristic.xsd"/>
 
-  </xsd:element>
+	<xsd:element name = "siteNodeTypes" type = "map:XmlSiteNodeTypeSeq">
+		<xsd:key name = "siteNodeTypeId">
+			<xsd:selector xpath = "map:siteNodeTypes/map:siteNodeType"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
 
-  <xsd:simpleType name="XmlSiteNodeTypeSort">
-      <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="well"/>
-            <xsd:enumeration value="piquet"/>
-            <xsd:enumeration value="ats"/>
-            <xsd:enumeration value="building"/>
-            <xsd:enumeration value="cableinlet"/>
-            <xsd:enumeration value="tower"/>
-      </xsd:restriction>
-  </xsd:simpleType>
+	<xsd:simpleType name = "XmlSiteNodeTypeSort">
+		<xsd:restriction base = "xsd:string">
+			<xsd:enumeration value = "well"/>
+			<xsd:enumeration value = "piquet"/>
+			<xsd:enumeration value = "ats"/>
+			<xsd:enumeration value = "building"/>
+			<xsd:enumeration value = "cableinlet"/>
+			<xsd:enumeration value = "tower"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 
-  <xsd:complexType name="XmlSiteNodeType">
-    <xsd:all>
-      <xsd:element name="id" type="general:XmlIdentifier" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="sort" type="map:XmlSiteNodeTypeSort" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="topological" type="xsd:boolean" minOccurs="1" maxOccurs="1" fixed="true"/>
-      <xsd:element name="image" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="characteristics" type="general:XmlCharacteristicSeq" minOccurs="0" maxOccurs="1"/>
-    </xsd:all>
-  </xsd:complexType>
+	<xsd:complexType name = "XmlSiteNodeType">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObject">
+				<xsd:sequence>
+					<xsd:element name = "name" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
+					<xsd:element name = "codename" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
+					<xsd:element name = "description" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
+					<xsd:element name = "sort" type = "map:XmlSiteNodeTypeSort" minOccurs = "1" maxOccurs = "1"/>
+					<xsd:element name = "topological" type = "xsd:boolean" minOccurs = "1" maxOccurs = "1" fixed = "true"/>
+					<xsd:element name = "image" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
+					<xsd:element ref = "general:characteristics" minOccurs = "0" maxOccurs = "1"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 
-  <xsd:complexType name="XmlSiteNodeTypeSeq">
-    <xsd:sequence>
-      <xsd:element name="siteNodeType" type="map:XmlSiteNodeType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
+	<xsd:complexType name = "XmlSiteNodeTypeSeq">
+		<xsd:sequence>
+			<xsd:element name = "siteNodeType" type = "map:XmlSiteNodeType" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
 </xsd:schema>

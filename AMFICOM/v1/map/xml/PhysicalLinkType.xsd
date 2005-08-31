@@ -1,51 +1,65 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: PhysicalLinkType.xsd,v 1.9 2005/08/29 17:05:03 bass Exp $
--->
+<?xml version = "1.0" encoding = "UTF-8"?>
 <xsd:schema 
-	targetNamespace="http://syrus.com/AMFICOM/map/xml"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:map="http://syrus.com/AMFICOM/map/xml"
-	xmlns:general="http://syrus.com/AMFICOM/general/xml"
-	elementFormDefault="qualified">
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:map = "http://syrus.com/AMFICOM/map/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/map/xml"
+	elementFormDefault = "qualified">
 
-  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: PhysicalLinkType.xsd,v 1.10 2005/08/31 05:40:27 bass Exp $
 
-  <xsd:element name="physicalLinkTypes" type="map:XmlPhysicalLinkTypeSeq">
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
 
-    <xsd:key name="physicalLinkTypeId">
-      <xsd:selector xpath="map:physicalLinkType"/>
-      <xsd:field xpath="id"/>
-    </xsd:key>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/Characteristic.xsd"/>
+	<xsd:include
+		schemaLocation = "SiteNode.xsd"/>
+	<xsd:include
+		schemaLocation = "TopologicalNode.xsd"/>
 
-  </xsd:element>
+	<xsd:element name = "physicalLinkTypes" type = "map:XmlPhysicalLinkTypeSeq">
+		<xsd:key name = "physicalLinkTypeId">
+		<xsd:selector xpath = "map:physicalLinkType"/>
+		<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
 
-  <xsd:simpleType name="XmlPhysicalLinkTypeSort">
-      <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="tunnel"/>
-            <xsd:enumeration value="collector"/>
-            <xsd:enumeration value="indoor"/>
-            <xsd:enumeration value="submarine"/>
-            <xsd:enumeration value="overhead"/>
-      </xsd:restriction>
-  </xsd:simpleType>
+	<xsd:simpleType name = "XmlPhysicalLinkTypeSort">
+		<xsd:restriction base = "xsd:string">
+			<xsd:enumeration value = "tunnel"/>
+			<xsd:enumeration value = "collector"/>
+			<xsd:enumeration value = "indoor"/>
+			<xsd:enumeration value = "submarine"/>
+			<xsd:enumeration value = "overhead"/>
+		</xsd:restriction>
+	</xsd:simpleType>
 
-  <xsd:complexType name="XmlPhysicalLinkType">
-    <xsd:all>
-      <xsd:element name="id" type="general:XmlIdentifier" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="codename" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="sort" type="map:XmlPhysicalLinkTypeSort" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="dimensionX" type="xsd:integer" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="dimensionY" type="xsd:integer" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="characteristics" type="general:XmlCharacteristicSeq" minOccurs="0" maxOccurs="1"/>
-    </xsd:all>
-  </xsd:complexType>
+	<xsd:complexType name = "XmlPhysicalLinkType">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObject">
+				<xsd:sequence>
+					<xsd:element name = "name" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
+					<xsd:element name = "codename" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
+					<xsd:element name = "description" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
+					<xsd:element name = "sort" type = "map:XmlPhysicalLinkTypeSort" minOccurs = "1" maxOccurs = "1"/>
+					<xsd:element name = "dimensionX" type = "xsd:integer" minOccurs = "0" maxOccurs = "1"/>
+					<xsd:element name = "dimensionY" type = "xsd:integer" minOccurs = "0" maxOccurs = "1"/>
+					<xsd:element ref = "general:characteristics" minOccurs = "0" maxOccurs = "1"/>
+				</xsd:sequence>
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 
-  <xsd:complexType name="XmlPhysicalLinkTypeSeq">
-    <xsd:sequence>
-      <xsd:element name="physicalLinkType" type="map:XmlPhysicalLinkType" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
+	<xsd:complexType name = "XmlPhysicalLinkTypeSeq">
+		<xsd:sequence>
+			<xsd:element name = "physicalLinkType" type = "map:XmlPhysicalLinkType" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
 </xsd:schema>
