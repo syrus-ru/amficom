@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUidMapDatabase.java,v 1.1 2005/08/30 16:03:59 bass Exp $
+ * $Id: ImportUidMapDatabase.java,v 1.2 2005/08/31 13:24:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import java.sql.Statement;
 import java.util.HashSet;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
@@ -38,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrey Kroupennikov
  * @author $Author: bass $
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @module general
  */
 @Shitlet
@@ -52,12 +53,12 @@ public final class ImportUidMapDatabase {
 		assert false;
 	}
 
-	private static StringBuffer getWhereClause(final String importType, final String uid) {
+	private static StringBuffer getWhereClause(final String importType, final XmlIdentifier id) {
 		return new StringBuffer(COLUMN_IMPORT_KIND + EQUALS
 				+ APOSTROPHE + importType + APOSTROPHE
 				+ SQL_AND
 				+ COLUMN_FOREIGN_UID + EQUALS
-				+ APOSTROPHE + uid + APOSTROPHE);
+				+ APOSTROPHE + id.getStringValue() + APOSTROPHE);
 	}
 
 	private static StringBuffer retrieveQuery(final StringBuffer condition) {
@@ -75,8 +76,8 @@ public final class ImportUidMapDatabase {
 		return sql;
 	}
 
-	public static Identifier retrieve(final String import_type, final String uid) throws RetrieveObjectException {
-		final Set<Identifier> ids = retrieveByCondition(getWhereClause(import_type, uid));
+	static Identifier retrieve(final String importType, final XmlIdentifier id) throws RetrieveObjectException {
+		final Set<Identifier> ids = retrieveByCondition(getWhereClause(importType, id));
 		return ids.isEmpty() ? null : ids.iterator().next();
 	}
 
@@ -122,15 +123,15 @@ public final class ImportUidMapDatabase {
 		return ids;
 	}
 
-	public static void insert(final String import_type, final String uid, final Identifier id) throws CreateObjectException {
+	public static void insert(final String importType, final XmlIdentifier xmlId, final Identifier id) throws CreateObjectException {
 		final StringBuffer sql = new StringBuffer(SQL_INSERT_INTO + TABLE_NAME_IMPORT_UID_MAP
 				+ OPEN_BRACKET
 				+ COLUMN_IMPORT_KIND + COMMA
 				+ COLUMN_FOREIGN_UID + COMMA
 				+ COLUMN_ID + CLOSE_BRACKET 
 				+ SQL_VALUES + OPEN_BRACKET
-				+ APOSTROPHE + DatabaseString.toQuerySubString(import_type) + APOSTROPHE + COMMA
-				+ APOSTROPHE + DatabaseString.toQuerySubString(uid) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(importType) + APOSTROPHE + COMMA
+				+ APOSTROPHE + DatabaseString.toQuerySubString(xmlId.getStringValue()) + APOSTROPHE + COMMA
 				+ DatabaseIdentifier.toSQLString(id)
 				+ CLOSE_BRACKET);
 
@@ -143,8 +144,7 @@ public final class ImportUidMapDatabase {
 			statement.executeUpdate(sql.toString());
 			connection.commit();
 		} catch (final SQLException sqle) {
-			final String mesg = "Cannot insert ImportUIDItem" + sqle.getMessage();
-			throw new CreateObjectException(mesg, sqle);
+			throw new CreateObjectException(("Cannot insert ImportUIDItem" + sqle.getMessage()), sqle);
 		} finally {
 			try {
 				if (statement != null) {
@@ -158,9 +158,9 @@ public final class ImportUidMapDatabase {
 		}
 	}
 
-	public static void delete(final String import_type, final String uid) {
+	public static void delete(final String importType, final XmlIdentifier id) {
 		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + TABLE_NAME_IMPORT_UID_MAP
-				+ SQL_WHERE + getWhereClause(import_type, uid));
+				+ SQL_WHERE + getWhereClause(importType, id));
 
 		Statement statement = null;
 		Connection connection = null;

@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.57 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: Identifier.java,v 1.58 2005/08/31 13:24:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,8 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.Shitlet;
 
 /**
  * <code>Identifier</code>s, alike {@link String}s, are immutable. Hence, when
@@ -26,8 +28,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.57 $, $Date: 2005/08/08 11:27:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.58 $, $Date: 2005/08/31 13:24:21 $
+ * @author $Author: bass $
  * @module general
  */
 public final class Identifier implements Comparable<Identifier>, TransferableObject, Serializable, Identifiable {
@@ -120,6 +122,12 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 
 	public IdlIdentifier getTransferable() {
 		return new IdlIdentifier(this.getIdentifierCode());
+	}
+
+	public XmlIdentifier getXmlTransferable() {
+		final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
+		xmlId.setStringValue(this.getIdentifierString());
+		return xmlId;
 	}
 
 	@Override
@@ -295,6 +303,13 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 			ids.add(new Identifier(transferables[i]));
 		}
 		return ids;
+	}
+
+	@Shitlet
+	public static Identifier fromXmlTransferable(final XmlIdentifier xmlId,
+			final String importType)
+	throws RetrieveObjectException {
+		return ImportUidMapDatabase.retrieve(importType, xmlId);
 	}
 
 	/**
