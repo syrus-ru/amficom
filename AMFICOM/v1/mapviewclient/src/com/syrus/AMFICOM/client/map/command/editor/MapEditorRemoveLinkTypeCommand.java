@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveLinkTypeCommand.java,v 1.3 2005/08/19 12:52:23 krupenn Exp $
+ * $Id: MapEditorRemoveLinkTypeCommand.java,v 1.4 2005/08/31 13:12:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,8 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 
@@ -46,6 +48,11 @@ public class MapEditorRemoveLinkTypeCommand extends AbstractCommand {
 
 //		physicalLinkType.getMapLibrary().removeChild(physicalLinkType);
 		StorableObjectPool.delete(physicalLinkType.getId());
+		try {
+			StorableObjectPool.flush(physicalLinkType, LoginManager.getUserId(), true);
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+		}
 		setResult(Command.RESULT_OK);
 	}
 }
