@@ -55,7 +55,6 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		super(aContext, LangModelSchedule.getString("Scheduling_AMFICOM"), new ScheduleMainMenuBar(aContext
 				.getApplicationModel()), new AbstractMainToolBar() {});
 
-		final ApplicationContext aContext1 = this.aContext;
 		final Dispatcher dispatcher1 = this.dispatcher;
 		
 		final JDesktopPane desktopPane1 = this.desktopPane;
@@ -94,7 +93,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 				propsFrame.setSize(w / 5, propsFrame.getHeight());
 				
 				timeFrame.pack();
-				timeFrame.setSize(w / 5, timeFrame.getHeight());
+				timeFrame.setSize(w / 5, 3 * timeFrame.getHeight() / 2);
 //				saveFrame.pack();
 //				saveFrame.setSize(w / 5, saveFrame.getHeight());
 				tableFrame.setSize(w - propsFrame.getWidth() - treeFrame.getWidth(), 2 * h / 5);
@@ -123,6 +122,8 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 				final ApplicationModel aModel = aContext.getApplicationModel();
 				aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
 			}
+			
+			
 		});
 		this.addWindowListener(new WindowAdapter() {
 
@@ -132,7 +133,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 					ScheduleMainFrame.this);
 				Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE,
 					ScheduleMainFrame.this);
-				aContext1.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT)
+				aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT)
 						.execute();
 			}
 		});
