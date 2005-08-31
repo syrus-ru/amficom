@@ -1,4 +1,4 @@
--- $Id: schemecablethread.sql,v 1.4 2005/06/15 11:28:47 bass Exp $
+-- $Id: schemecablethread.sql,v 1.5 2005/08/31 17:48:30 bass Exp $
 
 CREATE TABLE SchemeCableThread (
 	id NUMBER(19) NOT NULL,
@@ -12,7 +12,7 @@ CREATE TABLE SchemeCableThread (
 	name VARCHAR2(32 CHAR) NOT NULL,
 	description VARCHAR2(256 CHAR),
 --
-	cable_thread_type_id NOT NULL,
+	link_type_id NOT NULL,
 	link_id,
 --
 	source_scheme_port_id,
@@ -26,8 +26,8 @@ CREATE TABLE SchemeCableThread (
 	CONSTRAINT schmcblthrd_modifier_fk FOREIGN KEY(modifier_id)
 		REFERENCES SystemUser(id) ON DELETE CASCADE,
 --
-	CONSTRAINT schmcblthrd_cbl_thrd_tp_fk FOREIGN KEY(cable_thread_type_id)
-		REFERENCES CableThreadType(id) ON DELETE CASCADE,
+	CONSTRAINT schmcblthrd_lnk_tp_fk FOREIGN KEY(link_type_id)
+		REFERENCES LinkType(id) ON DELETE CASCADE,
 	CONSTRAINT schmcblthrd_lnk_fk FOREIGN KEY(link_id)
 		REFERENCES Link(id) ON DELETE CASCADE,
 --
@@ -39,6 +39,6 @@ CREATE TABLE SchemeCableThread (
 		REFERENCES SchemeCableLink(id) ON DELETE CASCADE
 );
 
-COMMENT ON TABLE SchemeCableThread IS '$Id: schemecablethread.sql,v 1.4 2005/06/15 11:28:47 bass Exp $';
+COMMENT ON TABLE SchemeCableThread IS '$Id: schemecablethread.sql,v 1.5 2005/08/31 17:48:30 bass Exp $';
 
 CREATE SEQUENCE SchemeCableThread_Seq ORDER;
