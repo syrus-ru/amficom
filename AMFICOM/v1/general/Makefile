@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.67 2005/08/31 10:11:27 bob Exp $
+# $Id: Makefile,v 1.68 2005/08/31 10:30:01 bob Exp $
 #
 # vim:set ft=make:
 #
@@ -25,6 +25,7 @@ EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xalan.jar
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
+	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/logic/*.java) \
 	$(wildcard $(SRCDIR)/com/syrus/AMFICOM/security/*.java)
 
 
