@@ -7,7 +7,7 @@ import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.report.ReportTemplate;
 
 /*
- * $Id: ReportTemplateFactory.java,v 1.1 2005/08/31 10:04:26 peskovsky Exp $
+ * $Id: ReportTemplateFactory.java,v 1.2 2005/08/31 10:07:26 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
