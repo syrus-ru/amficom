@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.28 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.29 2005/08/31 13:10:52 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.29 $, $Date: 2005/08/31 13:10:52 $
  * @module mapviewclient
  */
 public class CreateSiteCommandAtomic extends MapActionCommand {
@@ -82,9 +82,10 @@ public class CreateSiteCommandAtomic extends MapActionCommand {
 			if(!getLogicalNetLayer().getContext().getApplicationModel()
 					.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))
 				return;
-			if(this.coordinatePoint == null)
+			if(this.coordinatePoint == null) {
 				this.coordinatePoint = this.logicalNetLayer.getConverter()
 						.convertScreenToMap(this.point);
+			}
 			this.map = this.logicalNetLayer.getMapView().getMap();
 			// создать новый узел
 			try {
