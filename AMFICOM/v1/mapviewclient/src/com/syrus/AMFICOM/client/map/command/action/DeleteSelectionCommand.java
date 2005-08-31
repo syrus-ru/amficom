@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.29 2005/08/31 13:11:31 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.30 2005/08/31 14:36:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.VoidElement;
@@ -31,7 +32,7 @@ import com.syrus.util.Log;
  * (CommandBundle), удаляющих отдельные элементы.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/08/31 13:11:31 $
+ * @version $Revision: 1.30 $, $Date: 2005/08/31 14:36:26 $
  * @module mapviewclient
  */
 public class DeleteSelectionCommand extends MapActionCommandBundle {
@@ -72,20 +73,29 @@ public class DeleteSelectionCommand extends MapActionCommandBundle {
 				}
 			}
 		}
+
 		// создать список команд удаления фрагментов
 		for(PhysicalLink physicalLink : linksToDelete) {
-			DeletePhysicalLinkCommandBundle command = 
-				new DeletePhysicalLinkCommandBundle(physicalLink);
-			command.setNetMapViewer(this.netMapViewer);
-			add(command);
+			//cannot delete INDOOR - it should be deletea automatically
+			//when corresponding cableinlet is deleted
+			if(physicalLink.getType().getSort().value() != PhysicalLinkTypeSort._INDOOR) {
+				DeletePhysicalLinkCommandBundle command = 
+					new DeletePhysicalLinkCommandBundle(physicalLink);
+				command.setNetMapViewer(this.netMapViewer);
+				add(command);
+			}
 		}
 
 		// создать список команд удаления фрагментов
 		for(NodeLink nodeLink : nodeLinksToDelete) {
-			DeleteNodeLinkCommandBundle command = 
-				new DeleteNodeLinkCommandBundle(nodeLink);
-			command.setNetMapViewer(this.netMapViewer);
-			add(command);
+			//cannot delete INDOOR - it should be deletea automatically
+			//when corresponding cableinlet is deleted
+			if(nodeLink.getPhysicalLink().getType().getSort().value() != PhysicalLinkTypeSort._INDOOR) {
+				DeleteNodeLinkCommandBundle command = 
+					new DeleteNodeLinkCommandBundle(nodeLink);
+				command.setNetMapViewer(this.netMapViewer);
+				add(command);
+			}
 		}
 
 		// создать список команд удаления узлов
