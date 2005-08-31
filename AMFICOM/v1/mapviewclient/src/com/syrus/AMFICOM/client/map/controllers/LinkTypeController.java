@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.50 2005/08/26 10:42:47 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.51 2005/08/31 13:13:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.50 $, $Date: 2005/08/26 10:42:47 $
+ * @version $Revision: 1.51 $, $Date: 2005/08/31 13:13:05 $
  * @module mapviewclient
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -571,6 +571,10 @@ public final class LinkTypeController extends AbstractLinkController {
 
 			StorableObjectPool.flush(type, userId, true);
 		}
+		else {
+			type.setSort(sort);
+			type.setTopological(topological);
+		}
 		return type;
 	}
 
@@ -623,5 +627,22 @@ public final class LinkTypeController extends AbstractLinkController {
 	 */
 	public static PhysicalLinkType getUnboundPhysicalLinkType() throws ApplicationException {
 		return LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_UNBOUND, false);
+	}
+
+	public static PhysicalLinkType getIndoorLinkType() {
+		try {
+			final StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.PHYSICALLINK_TYPE_CODE);
+			final Set<PhysicalLinkType> list = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, false);
+
+			for (Iterator it = list.iterator(); it.hasNext();) {
+				final PhysicalLinkType type = (PhysicalLinkType) it.next();
+				if (type.getSort().value() == PhysicalLinkTypeSort._INDOOR) {
+					return type;
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 }
