@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTUTransceiver.cpp,v 1.18 2005/08/29 18:07:10 arseniy Exp $
+// $Id: RTUTransceiver.cpp,v 1.19 2005/08/31 15:20:59 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.18 $, $Date: 2005/08/29 18:07:10 $
+// $Revision: 1.19 $, $Date: 2005/08/31 15:20:59 $
 // $Author: arseniy $
 //
 // RTUTransceiver.cpp: implementation of the RTUTransceiver class.
@@ -269,8 +269,9 @@ int RTUTransceiver::initialize_OTDR_cards() {
 				printf("RTUTransceiver | Init OTDR card %u - succes\n", cards[i]);
 				present_cards.push_back(cards[i]);
 			}
-			else
+			else {
 				printf("RTUTransceiver | Init OTDR card %u - failure; returned: %d\n", cards[i], init_ret);
+			}
 		}
 	}
 
@@ -279,13 +280,14 @@ int RTUTransceiver::initialize_OTDR_cards() {
 	this->otdr_cards_number = present_cards.size();
 	if (this->otdr_cards_number == 0) {
 		printf("RTUTransceiver | ERROR: None OTDR cards found\n");
-			return 0;
+		return 0;
 	}
-	printf("RTUTransceiver | Found %u OTDR cards\n", this->otdr_cards_number);
+	printf("RTUTransceiver | Found %u OTDR card(s)\n", this->otdr_cards_number);
 	this->otdr_cards = new WORD[this->otdr_cards_number];
 	i = 0;
-	for (list<WORD>::iterator it = present_cards.begin(); it != present_cards.end(); it++)
+	for (list<WORD>::iterator it = present_cards.begin(); it != present_cards.end(); it++) {
 		this->otdr_cards[i++] = *it;
+	}
 
 	return 1;
 }
