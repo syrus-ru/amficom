@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkElementStrategy.java,v 1.24 2005/08/19 15:43:32 krupenn Exp $
+ * $Id: MapNodeLinkElementStrategy.java,v 1.25 2005/08/31 13:18:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,12 +19,13 @@ import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalNodeCommandBundle;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.AMFICOM.mapview.Selection;
 
 /**
  * Стратегия управления фрагментом линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/08/19 15:43:32 $
+ * @version $Revision: 1.25 $, $Date: 2005/08/31 13:18:45 $
  * @module mapviewclient
  */
 public final class MapNodeLinkElementStrategy extends AbstractMapStrategy 
@@ -94,12 +95,14 @@ public final class MapNodeLinkElementStrategy extends AbstractMapStrategy
 				super.logicalNetLayer.setCurrentMapElement(sel);
 			}
 		}//MapState.SELECT_ACTION_MODE
-		else if (actionMode == MapState.ALT_LINK_ACTION_MODE)
-		{
-			this.command = new CreatePhysicalNodeCommandBundle(this.nodeLink, point);
-			this.command.setNetMapViewer(super.netMapViewer);
-			super.logicalNetLayer.getCommandList().add(this.command);
-			super.logicalNetLayer.getCommandList().execute();
+		else if (actionMode == MapState.ALT_LINK_ACTION_MODE) {
+			// prohibit creation of topological nodes for indoor cabling 
+			if(this.nodeLink.getPhysicalLink().getType().getSort().value() != PhysicalLinkTypeSort._INDOOR) {
+				this.command = new CreatePhysicalNodeCommandBundle(this.nodeLink, point);
+				this.command.setNetMapViewer(super.netMapViewer);
+				super.logicalNetLayer.getCommandList().add(this.command);
+				super.logicalNetLayer.getCommandList().execute();
+			}
 		}//MapState.ALT_LINK_ACTION_MODE
 		else if (actionMode != MapState.MOVE_ACTION_MODE)
 		{
