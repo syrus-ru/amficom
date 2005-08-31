@@ -223,7 +223,7 @@ ActionListener, PropertyChangeListener {
 
 		});
 
-		setStartDate(new Date(System.currentTimeMillis()));
+		this.setStartDate(new Date(System.currentTimeMillis()));
 		this.updateRealScale();
 		this.setBackground(UIManager.getColor(ResourceKeys.COLOR_GRAPHICS_BACKGROUND));
 	}
@@ -290,34 +290,10 @@ ActionListener, PropertyChangeListener {
 			this.scaleEnd = this.cal.getTime();
 			// scroll calendar to start point
 			this.cal.setTime(this.startDate);
-			
-//			this.updateTestLinesTimeRegion();
 		}
 		
 	}
 
-	// protected void paintComponent(Graphics g) {
-	// // for paint testlines
-	// // super.paint(g);
-	// // super.paintComponent(g);
-	// // g.clearRect(0,0, this.getWidth(), this.getHeight());
-	// super.paintComponent(g);
-	//		
-	// this.cal.setTimeInMillis(0);
-	// this.cal.add(STEPS[this.actualScale].scale, STEPS[this.actualScale].one);
-	// long diff = this.cal.getTimeInMillis();
-	// double delta = (getWidth() - 2 * PlanPanel.MARGIN)
-	// / ((double) (this.scaleEnd.getTime() - this.scaleStart.getTime()) /
-	// (double) diff);
-	// double subDelta = delta / STEPS[this.actualScale].subscales;
-	//
-	// paintScales(g, diff, delta, subDelta);
-	// paintScaleDigits(g, diff, delta, subDelta);
-	//
-	//		
-	// // this.paintChildren(g);
-	//
-	// }
 
 	public void actionPerformed(ActionEvent e) {
 		this.revalidate();
@@ -472,9 +448,7 @@ ActionListener, PropertyChangeListener {
 			
 			g.fillRect(x, 0, w, this.getHeight());
 			g.setColor(color);
-
 		}
-
 	}
 
 	void updateTestLinesTimeRegion() {
