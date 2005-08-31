@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalConditionImpl.java,v 1.17 2005/08/28 16:42:11 arseniy Exp $
+ * $Id: DatabaseTypicalConditionImpl.java,v 1.18 2005/08/31 05:50:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,11 @@
 
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
+
 import com.syrus.AMFICOM.general.AbstractDatabaseTypicalCondition;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -15,8 +20,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/28 16:42:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/08/31 05:50:36 $
+ * @author $Author: bass $
  * @module map
  */
 final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
@@ -32,7 +37,7 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 		/* check key support */
 		String key = this.condition.getKey();
 		switch (super.condition.getEntityCode().shortValue()) {
-			case ObjectEntities.PHYSICALLINK_CODE:
+			case PHYSICALLINK_CODE:
 				if (key.equals(StorableObjectWrapper.COLUMN_CODENAME)) {
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				}
@@ -43,7 +48,7 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 					return PhysicalLinkWrapper.COLUMN_STREET;
 				}
 				break;
-			case ObjectEntities.SITENODE_TYPE_CODE:
+			case SITENODE_TYPE_CODE:
 				if (key.equals(StorableObjectWrapper.COLUMN_CODENAME)) {
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				}
@@ -54,12 +59,12 @@ final class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalConditio
 					return SiteNodeWrapper.COLUMN_STREET;
 				}
 				break;
-			case ObjectEntities.PHYSICALLINK_TYPE_CODE:
+			case PHYSICALLINK_TYPE_CODE:
 				if (key.equals(StorableObjectWrapper.COLUMN_CODENAME)) {
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				}
 				break;
-			case ObjectEntities.MAPLIBRARY_CODE:
+			case MAPLIBRARY_CODE:
 				if (key.equals(StorableObjectWrapper.COLUMN_CODENAME)) {
 					return StorableObjectWrapper.COLUMN_CODENAME;
 				}

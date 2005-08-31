@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibraryDatabase.java,v 1.7 2005/08/08 08:51:49 max Exp $
+ * $Id: MapLibraryDatabase.java,v 1.8 2005/08/31 05:50:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,13 +7,14 @@
  */
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -23,8 +24,8 @@ import com.syrus.util.database.DatabaseString;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.7 $, $Date: 2005/08/08 08:51:49 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/08/31 05:50:36 $
  * @module map
  */
 
@@ -35,7 +36,7 @@ public class MapLibraryDatabase extends StorableObjectDatabase<MapLibrary> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.MAPLIBRARY_CODE;
+		return MAPLIBRARY_CODE;
 	}
 	
 	@Override

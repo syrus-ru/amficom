@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.15 2005/08/26 10:36:23 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.16 2005/08/31 05:50:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,26 @@
 
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
+
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.15 $
- * @author $Author: max $
+ * @version $Revision: 1.16 $
+ * @author $Author: bass $
  * @module map
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -33,42 +42,42 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		switch (this.entityCode.shortValue()) {
-			case ObjectEntities.NODELINK_CODE:
+			case NODELINK_CODE:
 				final NodeLink nodeLink = (NodeLink) storableObject;
 				switch (this.linkedEntityCode) {
-				case ObjectEntities.PHYSICALLINK_CODE:
+				case PHYSICALLINK_CODE:
 					return super.conditionTest(nodeLink.getPhysicalLink().getId());
-				case ObjectEntities.TOPOLOGICALNODE_CODE:
+				case TOPOLOGICALNODE_CODE:
 					// fall through.
 					// finding a node link by endpoint is the same for
 					// topological node and site node
-				case ObjectEntities.SITENODE_CODE:
+				case SITENODE_CODE:
 					boolean condition1 = super.conditionTest(nodeLink.getStartNode().getId());
 					boolean condition2 = super.conditionTest(nodeLink.getEndNode().getId());
 					return condition1 | condition2;
 				default:
 					throw newExceptionLinkedEntityIllegal();
 				}
-			case ObjectEntities.MAP_CODE:
+			case MAP_CODE:
 				final Map map = (Map) storableObject;
 				switch (this.linkedEntityCode) {
-				case ObjectEntities.DOMAIN_CODE:
+				case DOMAIN_CODE:
 					return super.conditionTest(map.getDomainId());
 				default:
 					throw newExceptionLinkedEntityIllegal();
 				}
-			case ObjectEntities.SITENODE_TYPE_CODE:
+			case SITENODE_TYPE_CODE:
 				final SiteNodeType siteNodeType = (SiteNodeType) storableObject;
 				switch (this.linkedEntityCode) {
-				case ObjectEntities.MAPLIBRARY_CODE:
+				case MAPLIBRARY_CODE:
 					return super.conditionTest(siteNodeType.getMapLibrary().getId());
 				default:
 					throw newExceptionLinkedEntityIllegal();
 				}
-			case ObjectEntities.PHYSICALLINK_TYPE_CODE:
+			case PHYSICALLINK_TYPE_CODE:
 				final PhysicalLinkType physicalLinkType = (PhysicalLinkType) storableObject;
 				switch (this.linkedEntityCode) {
-				case ObjectEntities.MAPLIBRARY_CODE:
+				case MAPLIBRARY_CODE:
 					return super.conditionTest(physicalLinkType.getMapLibrary().getId());
 				default:
 					throw newExceptionLinkedEntityIllegal();
@@ -81,7 +90,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	@Override
 	public void setEntityCode(final Short entityCode) throws IllegalObjectEntityException {
 		switch (entityCode.shortValue()) {
-			case ObjectEntities.MAP_CODE:
+			case MAP_CODE:
 				this.entityCode = entityCode;
 				break;
 			default:

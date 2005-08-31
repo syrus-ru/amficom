@@ -1,11 +1,13 @@
 /*
- * $Id: MarkDatabase.java,v 1.31 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: MarkDatabase.java,v 1.32 2005/08/31 05:50:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.map;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.MARK_CODE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +16,6 @@ import java.sql.SQLException;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -25,8 +26,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/08/08 11:35:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/08/31 05:50:36 $
+ * @author $Author: bass $
  * @module map
  */
 public final class MarkDatabase extends StorableObjectDatabase<Mark> {
@@ -40,7 +41,7 @@ public final class MarkDatabase extends StorableObjectDatabase<Mark> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.MARK_CODE;
+		return MARK_CODE;
 	}	
 	
 	@Override

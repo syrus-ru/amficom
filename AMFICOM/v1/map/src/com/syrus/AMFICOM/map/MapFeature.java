@@ -1,5 +1,5 @@
 /*-
- * $Id: MapFeature.java,v 1.5 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: MapFeature.java,v 1.6 2005/08/31 05:50:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,14 +7,15 @@
  */
 package com.syrus.AMFICOM.map;
 
-import com.syrus.AMFICOM.general.ErrorMessages;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+
 import com.syrus.AMFICOM.map.corba.IdlMapFeature;
 
 /**
  * 
  * @author Maxim Selivanov
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:35:11 $
+ * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/08/31 05:50:36 $
  * @module map
  */
 
@@ -26,7 +27,7 @@ public class MapFeature {
 	private String name;
 	
 	public MapFeature (final double centerX, final double centerY, final String name) {
-		assert name != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert name != null : NON_NULL_EXPECTED;
 		this.centerX = centerX;
 		this.centerY = centerY;
 		this.name = name;

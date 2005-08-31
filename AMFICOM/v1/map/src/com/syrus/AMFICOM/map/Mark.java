@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.60 2005/08/12 14:24:16 arseniy Exp $
+ * $Id: Mark.java,v 1.61 2005/08/31 05:50:36 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,9 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.MARK_CODE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -19,13 +22,11 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -41,8 +42,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * в связи с чем методы класса {@link AbstractNode}, работающие с линиями и
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
- * @author $Author: arseniy $
- * @version $Revision: 1.60 $, $Date: 2005/08/12 14:24:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.61 $, $Date: 2005/08/31 05:50:36 $
  * @module map
  */
 public final class Mark extends AbstractNode {
@@ -68,7 +69,7 @@ public final class Mark extends AbstractNode {
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.MARK_CODE).retrieve(this);
+			DatabaseContext.getDatabase(MARK_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -147,7 +148,7 @@ public final class Mark extends AbstractNode {
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final Mark mark = new Mark(IdentifierPool.getGeneratedIdentifier(ObjectEntities.MARK_CODE),
+			final Mark mark = new Mark(IdentifierPool.getGeneratedIdentifier(MARK_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					name,
@@ -160,7 +161,7 @@ public final class Mark extends AbstractNode {
 					street,
 					building);
 
-			assert mark.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert mark.isValid() : OBJECT_STATE_ILLEGAL;
 
 			mark.markAsChanged();
 
@@ -172,7 +173,7 @@ public final class Mark extends AbstractNode {
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return Collections.singleton((Identifiable) this.physicalLink);
 	}
 

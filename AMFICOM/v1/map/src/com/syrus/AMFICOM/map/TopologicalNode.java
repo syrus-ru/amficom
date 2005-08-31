@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.70 2005/08/30 16:03:59 bass Exp $
+ * $Id: TopologicalNode.java,v 1.71 2005/08/31 05:50:36 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,10 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -18,7 +22,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -26,7 +29,6 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -45,7 +47,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/08/30 16:03:59 $
+ * @version $Revision: 1.71 $, $Date: 2005/08/31 05:50:36 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode implements XmlBeansTransferable<XmlTopologicalNode> {
@@ -72,7 +74,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 		super(id);
 
 		try {
-			DatabaseContext.getDatabase(ObjectEntities.TOPOLOGICALNODE_CODE).retrieve(this);
+			DatabaseContext.getDatabase(TOPOLOGICALNODE_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
@@ -140,7 +142,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 			throw new IllegalArgumentException("Argument is 'null'");
 
 		try {
-			final TopologicalNode topologicalNode = new TopologicalNode(IdentifierPool.getGeneratedIdentifier(ObjectEntities.TOPOLOGICALNODE_CODE),
+			final TopologicalNode topologicalNode = new TopologicalNode(IdentifierPool.getGeneratedIdentifier(TOPOLOGICALNODE_CODE),
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					name,
@@ -150,7 +152,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 					location.getY(),
 					false);
 
-			assert topologicalNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert topologicalNode.isValid() : OBJECT_STATE_ILLEGAL;
 
 			topologicalNode.markAsChanged();
 
@@ -177,7 +179,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return Collections.emptySet();
 	}
 
@@ -229,7 +231,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 
 	private PhysicalLink findPhysicalLink() {
 		try {
-			final StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODELINK_CODE);
+			final StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), NODELINK_CODE);
 
 			// NOTE: This call never results in using loader, so it doesn't matter
 			// what to pass as 3-d argument
@@ -331,7 +333,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(ObjectEntities.TOPOLOGICALNODE_CODE, xmlTopologicalNode.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(TOPOLOGICALNODE_CODE, xmlTopologicalNode.getId().getStringValue()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -377,7 +379,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 						importType);
 				ImportUidMapDatabase.insert(importType, uid, topologicalNode.id);
 			}
-			assert topologicalNode.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+			assert topologicalNode.isValid() : OBJECT_STATE_ILLEGAL;
 			topologicalNode.markAsChanged();
 			return topologicalNode;
 		} catch (Exception e) {

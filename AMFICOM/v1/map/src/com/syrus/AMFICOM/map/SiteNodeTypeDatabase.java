@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeTypeDatabase.java,v 1.34 2005/08/08 12:12:28 max Exp $
+ * $Id: SiteNodeTypeDatabase.java,v 1.35 2005/08/31 05:50:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,13 +7,14 @@
  */
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -23,8 +24,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/08/08 12:12:28 $
- * @author $Author: max $
+ * @version $Revision: 1.35 $, $Date: 2005/08/31 05:50:36 $
+ * @author $Author: bass $
  * @module map
  */
 public final class SiteNodeTypeDatabase extends StorableObjectDatabase<SiteNodeType> {
@@ -34,7 +35,7 @@ public final class SiteNodeTypeDatabase extends StorableObjectDatabase<SiteNodeT
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.SITENODE_TYPE_CODE;
+		return SITENODE_TYPE_CODE;
 	}	
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeDatabase.java,v 1.36 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: TopologicalNodeDatabase.java,v 1.37 2005/08/31 05:50:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,13 +7,14 @@
  */
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
+
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -21,8 +22,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/08/08 11:35:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.37 $, $Date: 2005/08/31 05:50:36 $
+ * @author $Author: bass $
  * @module map
  */
 public final class TopologicalNodeDatabase extends StorableObjectDatabase<TopologicalNode> {
@@ -32,7 +33,7 @@ public final class TopologicalNodeDatabase extends StorableObjectDatabase<Topolo
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.TOPOLOGICALNODE_CODE;
+		return TOPOLOGICALNODE_CODE;
 	}	
 
 	@Override

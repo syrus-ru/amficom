@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalImageQuery.java,v 1.14 2005/08/12 14:24:17 arseniy Exp $
+ * $Id: TopologicalImageQuery.java,v 1.15 2005/08/31 05:50:36 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,18 @@
 
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+
 import java.awt.Image;
 
-import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalImageQuery;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * Класс-запрос для обращения к серверу топографических данных через пул
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/12 14:24:17 $
+ * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/08/31 05:50:36 $
  * @module mapinfo_v1
  */
 public final class TopologicalImageQuery implements Comparable<TopologicalImageQuery> {
@@ -140,7 +141,7 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 		this.layerVisibilities = layerVisibilities;
 		this.labelVisibilities = labelVisibilities;
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 	}
 
@@ -153,7 +154,7 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 		this.layerVisibilities = tit.layerVisibilities;
 		this.labelVisibilities = tit.labelVisibilities;
 
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 	}
 
@@ -170,7 +171,7 @@ public final class TopologicalImageQuery implements Comparable<TopologicalImageQ
 	 * </p>
 	 */
 	public IdlTopologicalImageQuery getTransferable() {
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 		return new IdlTopologicalImageQuery(this.mapImageWidth,
 				this.mapImageHeight,
 				this.topoCenterX,

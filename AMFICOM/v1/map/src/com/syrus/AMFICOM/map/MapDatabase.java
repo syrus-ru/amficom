@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.43 2005/08/09 16:25:17 max Exp $
+ * $Id: MapDatabase.java,v 1.44 2005/08/31 05:50:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -24,7 +26,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -40,8 +41,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/08/09 16:25:17 $
- * @author $Author: max $
+ * @version $Revision: 1.44 $, $Date: 2005/08/31 05:50:36 $
+ * @author $Author: bass $
  * @module map
  */
 public final class MapDatabase extends StorableObjectDatabase<Map> {
@@ -279,7 +280,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.MAP_CODE;
+		return MAP_CODE;
 	}	
 
 	@Override

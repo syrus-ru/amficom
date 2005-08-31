@@ -1,11 +1,13 @@
 /*
- * $Id: PhysicalLinkDatabase.java,v 1.34 2005/08/09 16:24:18 max Exp $
+ * $Id: PhysicalLinkDatabase.java,v 1.35 2005/08/31 05:50:36 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
 package com.syrus.AMFICOM.map;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -14,7 +16,6 @@ import java.sql.SQLException;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -24,8 +25,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/08/09 16:24:18 $
- * @author $Author: max $
+ * @version $Revision: 1.35 $, $Date: 2005/08/31 05:50:36 $
+ * @author $Author: bass $
  * @module map
  */
 public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalLink> {
@@ -38,7 +39,7 @@ public final class PhysicalLinkDatabase extends StorableObjectDatabase<PhysicalL
 	
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.PHYSICALLINK_CODE;
+		return PHYSICALLINK_CODE;
 	}	
 	
 	@Override

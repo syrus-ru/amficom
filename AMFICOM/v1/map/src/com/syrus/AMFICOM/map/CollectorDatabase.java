@@ -1,5 +1,5 @@
 /*-
- * $Id: CollectorDatabase.java,v 1.42 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: CollectorDatabase.java,v 1.43 2005/08/31 05:50:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.map;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -23,7 +25,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -38,8 +39,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/08/08 11:35:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.43 $, $Date: 2005/08/31 05:50:36 $
+ * @author $Author: bass $
  * @module map
  */
 public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
@@ -77,7 +78,7 @@ public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
 
 	@Override
 	protected short getEntityCode() {		
-		return ObjectEntities.COLLECTOR_CODE;
+		return COLLECTOR_CODE;
 	}
 
 	@Override
