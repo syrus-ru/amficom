@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTUTransceiver.cpp,v 1.19 2005/08/31 15:20:59 arseniy Exp $
+// $Id: RTUTransceiver.cpp,v 1.20 2005/08/31 15:27:34 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.19 $, $Date: 2005/08/31 15:20:59 $
+// $Revision: 1.20 $, $Date: 2005/08/31 15:27:34 $
 // $Author: arseniy $
 //
 // RTUTransceiver.cpp: implementation of the RTUTransceiver class.
@@ -56,8 +56,9 @@ RTUTransceiver::RTUTransceiver(const unsigned int timewait,
 
 		this->state = RTU_STATE_INIT_COMPLETED;
 	}
-	else
+	else {
 		this->state = RTU_STATE_INIT_FAILED;
+	}
 }
 
 RTUTransceiver::~RTUTransceiver() {
