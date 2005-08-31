@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.2 2005/08/12 10:21:47 peskovsky Exp $
+ * $Id: ReportTemplate.java,v 1.3 2005/08/31 10:32:55 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * отчёт </p>
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2005/08/12 10:21:47 $
+ * @version $Revision: 1.3 $, $Date: 2005/08/31 10:32:55 $
  * @module generalclient_v1
  */
 public class ReportTemplate implements Serializable
@@ -68,30 +68,30 @@ public class ReportTemplate implements Serializable
 	
 	//Это хранимое поле
 	/**
-	 * Тип шаблона (принадлежность шаблона к модулю)
+	 * Принадлежность шаблона к модулю
 	 */
-	private String templateType = "";
+	private String destinationModule = DestinationModules.UNKNOWN_MODULE;
 
 	//Это хранимое поле	
 	/**
 	 * Список всех элементов шаблона
 	 */
-	private List<DataRenderingElement> dataRenderers = new ArrayList<DataRenderingElement>();
-	//Это хранимое поле	
-	/**
-	 * Список фильтров использующихся в шаблоне
-	 */
-	private List objectResourceFilters = new ArrayList();
+	private List<DataStorableElement> dataStorableElements = new ArrayList<DataStorableElement>();
+//	//Это хранимое поле	
+//	/**
+//	 * Список фильтров использующихся в шаблоне
+//	 */
+//	private List objectResourceFilters = new ArrayList();
 	//Это хранимое поле	
 	/**
 	 * Список надписей из шаблона
 	 */
-	private List<AttachedTextRenderingElement> labels = new ArrayList<AttachedTextRenderingElement>();
+	private List<AttachedTextStorableElement> textStorableElements = new ArrayList<AttachedTextStorableElement>();
 	//Это хранимое поле	
 	/**
 	 * Список картинок из шаблона
 	 */
-	private List<ImageRenderingElement> images = new ArrayList<ImageRenderingElement>();
+	private List<ImageStorableElement> imageStorableElements = new ArrayList<ImageStorableElement>();
 
 	public boolean isModified()
 	{
@@ -104,26 +104,26 @@ public class ReportTemplate implements Serializable
 		out.writeObject(this.id);
 		out.writeObject(this.name);
 		out.writeObject(this.description);
-		out.writeObject(this.templateType);
+		out.writeObject(this.destinationModule);
 		out.writeObject(this.size);
 		out.writeInt(this.marginSize);		
 
 		// Перекачиваем элементы отображения данных
-		out.writeInt(this.dataRenderers.size());
-		for (DataRenderingElement curRO : this.dataRenderers)
+		out.writeInt(this.dataStorableElements.size());
+		for (DataStorableElement curRO : this.dataStorableElements)
 		{
 			//TODO просто проверить.
 			out.writeObject(curRO);
 		}
 
 		// Перекачиваем элементы отображения надписей
-		out.writeInt(this.labels.size());
-		for (AttachedTextRenderingElement curLabel : this.labels)
+		out.writeInt(this.textStorableElements.size());
+		for (AttachedTextStorableElement curLabel : this.textStorableElements)
 			curLabel.writeObject(out);
 
 		// Перекачиваем элементы отображения изображений
-		out.writeInt(this.images.size());
-		for (ImageRenderingElement curImage : this.images)
+		out.writeInt(this.imageStorableElements.size());
+		for (ImageStorableElement curImage : this.imageStorableElements)
 			out.writeObject(curImage);
 
 //		// Перекачиваем фильтры
@@ -145,39 +145,39 @@ public class ReportTemplate implements Serializable
 		this.id = (Identifier) in.readObject();
 		this.name = (String)in.readObject();
 		this.description = (String)in.readObject();
-		this.templateType = (String)in.readObject();
+		this.destinationModule = (String)in.readObject();
 		this.size = (Dimension)in.readObject();
 		this.marginSize = in.readInt();
 
 		// Перекачиваем объекты
-		this.dataRenderers.clear();
+		this.dataStorableElements.clear();
 
 		int orCount = in.readInt();
 		for (int i = 0; i < orCount; i++)
 		{
-			DataRenderingElement curRO = (DataRenderingElement)in.readObject();
-			this.dataRenderers.add(curRO);
+			DataStorableElement curRO = (DataStorableElement)in.readObject();
+			this.dataStorableElements.add(curRO);
 		}
 
 		// Перекачиваем надписи
-		this.labels.clear();
+		this.textStorableElements.clear();
 
 		int labelCount = in.readInt();
 		for (int i = 0; i < labelCount; i++)
 		{
-			AttachedTextRenderingElement curLabel = new AttachedTextRenderingElement();
+			AttachedTextStorableElement curLabel = new AttachedTextStorableElement();
 			curLabel.readObject(in,this);
-			this.labels.add(curLabel);
+			this.textStorableElements.add(curLabel);
 		}
 
 		// Перекачиваем картинки
-		this.images.clear();
+		this.imageStorableElements.clear();
 
 		int imagesCount = in.readInt();
 		for (int i = 0; i < imagesCount; i++)
 		{
-			ImageRenderingElement curImage = (ImageRenderingElement)in.readObject();
-			this.images.add(curImage);
+			ImageStorableElement curImage = (ImageStorableElement)in.readObject();
+			this.imageStorableElements.add(curImage);
 		}
 
 //		// Перекачиваем фильтры
@@ -207,28 +207,28 @@ public class ReportTemplate implements Serializable
 	 * @param rteName искомое имя
 	 * @return элемент шаблона, отображающий искомый отчёт
 	 */
-	public DataRenderingElement findROforName (String rteName)
+	public DataStorableElement findStorableElementForName (String rteName)
 	{
-		for (DataRenderingElement curRO : this.dataRenderers)
-			if (curRO.getReportName().equals(rteName))
-				return curRO;
+		for (DataStorableElement storableElement : this.dataStorableElements)
+			if (storableElement.getReportName().equals(rteName))
+				return storableElement;
 
 		return null;
 	}
 
 	/**
-	 * @param dre Объект отображения данных
+	 * @param dataStorableElement Объект отображения данных
 	 * @return Список надписей, привязанных к данному объекту отображения
 	 */
-	public List<AttachedTextRenderingElement> getAttachedLabels (DataRenderingElement dre)
+	public List<AttachedTextStorableElement> getAttachedTextStorableElements (DataStorableElement dataStorableElement)
 	{
-		List<AttachedTextRenderingElement> result =
-			new ArrayList<AttachedTextRenderingElement>();
+		List<AttachedTextStorableElement> result =
+			new ArrayList<AttachedTextStorableElement>();
 		
-		for (AttachedTextRenderingElement label : this.labels)
-			if (	label.getVertAttacher().equals(dre)
-				||	label.getHorizAttacher().equals(dre))
-				result.add(label);
+		for (AttachedTextStorableElement storableElement : this.textStorableElements)
+			if (	storableElement.getVerticalAttacher().equals(dataStorableElement)
+				||	storableElement.getHorizontalAttacher().equals(dataStorableElement))
+				result.add(storableElement);
 
 		return result;
 	}
@@ -238,33 +238,33 @@ public class ReportTemplate implements Serializable
 	 * вписывается схематичное изображение элемента шаблона и
 	 * привязанные к нему надписи.
 	 */
-	public Rectangle getElementClasterBounds(DataRenderingElement rteRElem)
+	public Rectangle getElementClasterBounds(DataStorableElement dataStorableElement)
 	{
-		if (rteRElem == null)
+		if (dataStorableElement == null)
 			throw new AssertionError("The claster bounds can't be calculated for the null element!");
 		
-		int x1 = rteRElem.getLocation().x;
-		int x2 = x1 + rteRElem.getSize().width;		
-		int y1 = rteRElem.getLocation().y;
-		int y2 = y1 + rteRElem.getSize().height;
+		int x1 = dataStorableElement.getLocation().x;
+		int x2 = x1 + dataStorableElement.getWidth();		
+		int y1 = dataStorableElement.getLocation().y;
+		int y2 = y1 + dataStorableElement.getHeight();
 
-		if (this.labels == null)
+		if (this.textStorableElements == null)
 			return new Rectangle(x1,y1,x2 - x1,y2 - y1);
 		
-		for (AttachedTextRenderingElement curLabel : this.labels)
+		for (AttachedTextStorableElement textStorableElement : this.textStorableElements)
 		{
-			DataRenderingElement vertAttacher = curLabel.getVertAttacher();
-			DataRenderingElement horizAttacher = curLabel.getHorizAttacher();			
+			DataStorableElement vertAttacher = textStorableElement.getVerticalAttacher();
+			DataStorableElement horizAttacher = textStorableElement.getHorizontalAttacher();			
 			if (!		(	(vertAttacher != null)
-						&&	vertAttacher.equals(rteRElem)
+						&&	vertAttacher.equals(dataStorableElement)
 					||	(horizAttacher != null)
-						&&	horizAttacher.equals(rteRElem)))
+						&&	horizAttacher.equals(dataStorableElement)))
 				continue;
 
-			int labelX = curLabel.getLocation().x;
-			int labelY = curLabel.getLocation().y;
-			int labelWidth = curLabel.getSize().width;
-			int labelHeight = curLabel.getSize().height;
+			int labelX = textStorableElement.getLocation().x;
+			int labelY = textStorableElement.getLocation().y;
+			int labelWidth = textStorableElement.getWidth();
+			int labelHeight = textStorableElement.getHeight();
 			
 			if (labelX < x1)
 				x1 = labelX;
@@ -289,17 +289,17 @@ public class ReportTemplate implements Serializable
 	 * @param y координата точки по y
 	 * @return true если точка, принадлежит кластеру
 	 */
-	public boolean clasterContainsPoint (DataRenderingElement rteRElem,int x, int y)
+	public boolean clasterContainsPoint (DataStorableElement dataStorableElement,int x, int y)
 	{
-		Rectangle bounds = this.getElementClasterBounds(rteRElem);
+		Rectangle bounds = this.getElementClasterBounds(dataStorableElement);
 		return bounds.contains(x,y);
 	}
 	
-	public DataRenderingElement getDataRElement(Identifier dreId)
+	public DataStorableElement getDataRElement(Identifier dreId)
 	{
-		for (DataRenderingElement ro : this.dataRenderers)
-			if (ro.getId().equals (dreId))
-				return ro;
+		for (DataStorableElement dataStorableElement : this.dataStorableElements)
+			if (dataStorableElement.getId().equals (dreId))
+				return dataStorableElement;
 		
 		return null;
 	}
@@ -320,46 +320,39 @@ public class ReportTemplate implements Serializable
 		this.modifiedTime = modifiedTime;
 	}
 
-	public List<DataRenderingElement> getDataRenderers() {
-		return this.dataRenderers;
+	public List<DataStorableElement> getDataStorableElements() {
+		return this.dataStorableElements;
 	}
 
 	public Identifier getId() {
 		return this.id;
 	}
 
-	public List<ImageRenderingElement> getImages() {
-		return this.images;
+	public List<ImageStorableElement> getImageStorableElements() {
+		return this.imageStorableElements;
 	}
 
-	public List<AttachedTextRenderingElement> getLabels() {
-		return this.labels;
+	public List<AttachedTextStorableElement> getTextStorableElements() {
+		return this.textStorableElements;
 	}
 
 	public String getName() {
 		return this.name;
 	}
 
-	public List getObjectResourceFilters() {
-		return this.objectResourceFilters;
-	}
+//	public List getObjectResourceFilters() {
+//		return this.objectResourceFilters;
+//	}
 
 	public Dimension getSize() {
 		return this.size;
 	}
 
-	public String getTemplateType() {
-		return this.templateType;
+	public String getDestinationModule() {
+		return this.destinationModule;
 	}
 	
-	public ReportTemplate(
-			String templateType,
-			Dimension size)
-	{
-		//TODO Здесь должен получаться идентификатор для шаблона отчёта. 
-		this.id = new Identifier("");
-		this.templateType = templateType;
-		this.size = size;
+	public ReportTemplate() {
 	}
 
 	public void setName(String name) {
@@ -372,5 +365,21 @@ public class ReportTemplate implements Serializable
 
 	public void setMarginSize(int marginSize) {
 		this.marginSize = marginSize;
+	}
+	
+	public boolean doObjectsIntersect(){
+		return false;
+	}
+
+	public void setDestinationModule(String destinationModule) {
+		this.destinationModule = destinationModule;
+	}
+
+	public void setSize(Dimension size) {
+		this.size = size;
+	}
+
+	public void setId(Identifier id) {
+		this.id = id;
 	}
 }

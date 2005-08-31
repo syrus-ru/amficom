@@ -4,9 +4,8 @@ import java.util.List;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
-import com.syrus.AMFICOM.report.DataRenderingElement;
+import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.util.Log;
 
@@ -29,7 +28,7 @@ abstract public class APOReportModel extends ReportModel
 
   public void installData (ReportTemplate template, Map data)
   {
-		for (DataRenderingElement renderingElement : template.getDataRenderers())
+		for (DataStorableElement renderingElement : template.getDataStorableElements())
 		{
 			String renderersRTEName = renderingElement.getReportName();
 			Set keysSet = data.keySet();

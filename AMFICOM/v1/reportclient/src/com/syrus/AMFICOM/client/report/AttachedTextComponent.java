@@ -1,5 +1,5 @@
 /*
- * $Id: AttachedTextComponent.java,v 1.1 2005/08/12 10:23:10 peskovsky Exp $
+ * $Id: AttachedTextComponent.java,v 1.2 2005/08/31 10:32:55 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,39 +18,38 @@ import java.beans.PropertyChangeListener;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 
-import com.syrus.AMFICOM.report.AttachedTextRenderingElement;
-import com.syrus.AMFICOM.report.DataRenderingElement;
-import com.syrus.AMFICOM.report.RenderingElement;
-import com.syrus.AMFICOM.report.TextAttachingType;
+import com.syrus.AMFICOM.report.AttachedTextStorableElement;
+import com.syrus.AMFICOM.report.DataStorableElement;
+import com.syrus.AMFICOM.report.StorableElement;
 
-public class AttachedTextComponent extends JTextPane implements ReportComponent{
+public class AttachedTextComponent extends JTextPane implements RenderingComponent{
 	private static final long serialVersionUID = 8382110834808763027L;
 
-	private static final int MINIMUM_COMPONENT_WIDTH = 60;
+	protected final AttachedTextStorableElement textRenderingElement;
 	
-	protected final AttachedTextRenderingElement textRenderingElement;
-
+	private static final int MINIMUM_COMPONENT_WIDTH = 60;
 	/**
 	 * Точка клика мыши на надписи
 	 */
 	private Point mousePressedLocation = new Point();
-	/**
-	 * Местоположение элемента в момент клика надписи
-	 */
-	private Point elementLocation = new Point();
 	
-	public AttachedTextComponent(AttachedTextRenderingElement atre)
+	private ATComponentMouseMotionListener mouseMotionListener = null;
+	
+	public AttachedTextComponent(AttachedTextStorableElement atre)
 	{
 		this.textRenderingElement = atre;
 		this.setListeners();
 	}
 
-	public RenderingElement getElement() {
+	public StorableElement getElement() {
 		return this.textRenderingElement;
 	}
 	
 	private void setListeners()
 	{
+		if (this.mouseMotionListener != null)
+			this.removeMouseMotionListener(this.mouseMotionListener);
+		
 		this.addKeyListener(new KeyAdapter()
 		{
 			public void keyPressed(KeyEvent e)
@@ -74,41 +73,42 @@ public class AttachedTextComponent extends JTextPane implements ReportComponent{
 			}
 		});
 
-		this.addMouseMotionListener(new java.awt.event.MouseMotionAdapter()
-		{
-			public void mouseDragged(MouseEvent e)
-			{
-				AttachedTextComponent.this.textPaneMouseDragged(e);
-			}
-		});
+//		this.addMouseMotionListener(new ATComponentMouseMotionListener());
 		
 		this.addPropertyChangeListener(new PropertyChangeListener(){
 
 			public void propertyChange(PropertyChangeEvent evt) {
+				//Если передвигается компонент отображения данных, к которому
+				//привязан данный компонент отображения текста - передигаем последний
+				//на соответсвующее расстояние
 				DataRenderingComponent component =
 					(DataRenderingComponent)evt.getSource();
 				
-				DataRenderingElement drElement =
-					(DataRenderingElement)component.getElement();
+				DataStorableElement drElement =
+					(DataStorableElement)component.getElement();
 				
-				AttachedTextRenderingElement textElement = AttachedTextComponent.this.textRenderingElement;
-				if (	drElement.equals(textElement.getHorizAttacher())
-					||	drElement.equals(textElement.getVertAttacher()))
-				{}
+				AttachedTextStorableElement textElement = AttachedTextComponent.this.textRenderingElement;
+				if (	drElement.equals(textElement.getHorizontalAttacher())
+					||	drElement.equals(textElement.getVerticalAttacher()))
+				{
+					textElement.suiteAttachingDistances();
+				}
 			}});
 	}
 
 	void textPaneKeyPressed(KeyEvent e)
 	{
+		//Проверка на минимальную ширину компонента отображения текста
 		this.checkComponentWidth();
 		this.getElement().setModified(System.currentTimeMillis());
 		this.repaint();
-  }
+	}
 
 	void textPaneMouseReleased(MouseEvent e)
 	{
 		if (SwingUtilities.isRightMouseButton(e))
 		{
+			//Вызов контекстного меню
 			TextComponentMenu menu = new TextComponentMenu(this);
 			menu.setLocation(e.getX(),e.getY());
 			menu.setVisible(true);
@@ -118,7 +118,6 @@ public class AttachedTextComponent extends JTextPane implements ReportComponent{
 	void textPaneMousePressed(MouseEvent e)
 	{
 		this.mousePressedLocation.setLocation(e.getPoint());
-		this.elementLocation.setLocation(this.getLocation());		
 
 		this.checkComponentWidth();
 		
@@ -134,20 +133,6 @@ public class AttachedTextComponent extends JTextPane implements ReportComponent{
 
 	void textPaneMouseDragged(MouseEvent e)
 	{
-		// В режиме просмотра нельзя двигать привязанные надписи
-		if (	ReportProcessingMode.getMode().equals(ReportProcessingMode.ProcessingMode.REPORT_PREVIEW)
-			&&	(	!this.textRenderingElement.getHorizontalAttachType().equals(TextAttachingType.toFieldsLeft)
-				||	!this.textRenderingElement.getVerticalAttachType().equals(TextAttachingType.toFieldsTop)))
-			return;
-
-		int newX = this.elementLocation.x + e.getX() - this.mousePressedLocation.x;
-		int newY = this.elementLocation.y + e.getX() - this.mousePressedLocation.y;
-		
-		this.elementLocation.setLocation(newX,newY);
-		this.setLocation(newX,newY);
-
-		this.textRenderingElement.setModified(System.currentTimeMillis());
-		this.repaint();
 	}
 	
 	/**
@@ -161,5 +146,29 @@ public class AttachedTextComponent extends JTextPane implements ReportComponent{
 					AttachedTextComponent.MINIMUM_COMPONENT_WIDTH,
 					this.getHeight());
 		
+	}
+
+	public Point getMousePressedLocation() {
+		return this.mousePressedLocation;
+	}
+
+	public void setMousePressedLocation(Point mousePressedLocation) {
+		this.mousePressedLocation = mousePressedLocation;
+	}
+
+	public void setX(int x) {
+		this.setLocation(x,this.getY());
+	}
+
+	public void setY(int y) {
+		this.setLocation(this.getX(),y);
+	}
+
+	public void setWidth(int width) {
+		this.setSize(width,this.getHeight());
+	}
+
+	public void setHeight(int height) {
+		this.setSize(this.getWidth(),height);
 	}
 }

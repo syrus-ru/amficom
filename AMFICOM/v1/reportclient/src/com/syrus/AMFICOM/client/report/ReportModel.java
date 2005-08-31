@@ -1,8 +1,9 @@
 package com.syrus.AMFICOM.client.report;
 
+import java.util.Collection;
 import java.util.Map;
 
-import com.syrus.AMFICOM.report.RenderingElement;
+import com.syrus.AMFICOM.report.StorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate;
 
 /**
@@ -19,7 +20,24 @@ public abstract class ReportModel
 {
 	public static char REPORT_NAME_DIVIDER = ':';
 	
+	private static String TABLE_REPORT_PATH = "images/table_report";
+	private static String SCHEME_REPORT_PATH = "images/scheme";
+	private static String GRAPH_REPORT_PATH = "images/graph_report";	
+	
 	public static enum ReportType {SCHEMA,GRAPH,TABLE}
+	
+	public static String getIconForReportType(ReportType type){
+		if (type.equals(ReportType.TABLE))
+			return TABLE_REPORT_PATH;
+
+		if (type.equals(ReportType.SCHEMA))
+			return SCHEME_REPORT_PATH;
+
+		if (type.equals(ReportType.GRAPH))
+			return GRAPH_REPORT_PATH;
+
+		throw new AssertionError ("Unknown type of report");
+	}
 
 	/**
 	 *
@@ -29,8 +47,8 @@ public abstract class ReportModel
 	 * @throws CreateReportException в случае, если нет данных для
 	 * заполнения отчёта или данные заданы в неправильном формате
 */
-	abstract public ReportComponent createReport(
-		RenderingElement element,
+	abstract public RenderingComponent createReport(
+		StorableElement element,
 		boolean fromAnotherModule) throws CreateReportException;
 
 	/**
@@ -41,36 +59,30 @@ public abstract class ReportModel
 	/**
 	 * @param element Элемент шаблона
 	 * @return Возвращает локализованное название элемента шаблона
-	 * @throws CreateReportException в случае, если данные
-	 * заданы в неправильном формате
 	 */
-	abstract public String getReportElementName(RenderingElement element);
+	abstract public String getReportElementName(StorableElement element);
 
 	/**
 	 * @param element Элемент шаблона
 	 * @return Возвращает локализованное название модели отчётов +
 	 * локализованное название элемента шаблона
-	 * @throws CreateReportException в случае, если данные
-	 * заданы в неправильном формате
 	 */
-	abstract public String getReportElementFullName(RenderingElement element);
+	abstract public String getReportElementFullName(StorableElement element);
 
 	/**
 	 * @param element Элемент шаблона
 	 * @return Возвращает локализованное название модели отчётов +
 	 * локализованное название элемента шаблона +
 	 * информация о том, по каким данным будет построен отчёт
-	 * @throws CreateReportException в случае, если данные
-	 * заданы в неправильном формате
 	 */
-	abstract public String getReportElementDetailName(RenderingElement element);
+	abstract public String getReportElementDetailName(StorableElement element);
 	
 	/**
 	 *
-	 * @param element Элемент шаблона
+	 * @param reportName Название элемента шаблона
 	 * @return возвращает тип элемента отчёта для элемента шаблона
 	 */
-	abstract public ReportType getReportKind(RenderingElement element);
+	abstract public ReportType getReportKind(String reportName);
 
 	/**
 	 * Заполняет шаблон, отчёты которого описываются
@@ -78,7 +90,17 @@ public abstract class ReportModel
 	 * @param rt Шаблон
 	 * @param data Информация для заполнения
 	 */
-	abstract public void installDataIntoReport(ReportTemplate rt,Map data);
+	abstract public void installDataIntoReport(ReportTemplate rt,Map<String,Object> data);
+	
+	/**
+	 * Возвращает список элементов ОТЧЁТА, доступных для данного модуля
+	 */
+	abstract public Collection<String> getReportElementNames();
+
+	/**
+	 * Возвращает список элементов ШАБЛОНА ОТЧЁТА, доступных для данного модуля
+	 */
+	abstract public Collection<String> getTemplateElementNames();
 
 	public ReportModel()
 	{

@@ -11,7 +11,7 @@ import com.syrus.AMFICOM.general.Identifier;
  * @version 1.0
  */
 
-public abstract class DataRenderingElement extends RenderingElement
+public abstract class DataStorableElement extends StorableElement
 {
 	/**
 	 * Название отображаемого отчёта.
@@ -64,7 +64,7 @@ public abstract class DataRenderingElement extends RenderingElement
 		this.reportObjectData = data;
 	}
 	
-	public DataRenderingElement(String reportName, String modelClassName)
+	public DataStorableElement(String reportName, String modelClassName)
 	{
 		this.reportName = reportName;
 		this.modelClassName = modelClassName;

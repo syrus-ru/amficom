@@ -4,7 +4,7 @@ import java.util.*;
 
 public class LangModelReport {
 
-	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.Client.General.Lang.report";
+	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.client.report.report";
 
 	private static final ResourceBundle	RESOURCE_BUNDLE		= ResourceBundle
 																	.getBundle(BUNDLE_NAME);

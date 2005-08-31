@@ -1,10 +1,11 @@
 package com.syrus.AMFICOM.report;
 
-import java.awt.Rectangle;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.io.Serializable;
 
+import com.syrus.AMFICOM.resource.IntDimension;
+import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.io.ImageToByte;
 
 /**
@@ -16,7 +17,7 @@ import com.syrus.io.ImageToByte;
  * @version 1.0
  */
 
-public final class ImageRenderingElement extends RenderingElement
+public final class ImageStorableElement extends StorableElement
 	implements Serializable {
 
 	private static final long serialVersionUID = 336147260496995306L;
@@ -30,14 +31,18 @@ public final class ImageRenderingElement extends RenderingElement
 	}
 	
 	private void writeObject(java.io.ObjectOutputStream out) throws IOException {
-		out.writeObject(this.getBounds());
+		out.writeObject(this.getSize());
+		out.writeObject(this.getLocation());		
+
 		byte[] imageBytes = ImageToByte.toByteArray(this.image);
 		out.writeInt(imageBytes.length);
 		out.write(imageBytes);
 	}
 
 	private void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
-		this.setBounds((Rectangle)in.readObject());
+		this.setSize((IntDimension)in.readObject());
+		this.setLocation((IntPoint)in.readObject());
+
 		int imageBytesCount = in.readInt();
 		byte[] imageBytes = new byte[imageBytesCount];
 		in.readFully(imageBytes);
