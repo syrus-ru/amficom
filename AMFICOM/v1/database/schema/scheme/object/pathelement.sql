@@ -1,4 +1,4 @@
--- $Id: pathelement.sql,v 1.8 2005/08/11 11:35:20 arseniy Exp $
+-- $Id: pathelement.sql,v 1.9 2005/08/31 17:33:57 bass Exp $
 
 CREATE TABLE PathElement (
 	id NUMBER(19) NOT NULL,
@@ -31,37 +31,26 @@ CREATE TABLE PathElement (
 	CONSTRAINT pathelement_prnt_schm_path_fk FOREIGN KEY(parent_scheme_path_id)
 		REFERENCES SchemePath(id) ON DELETE CASCADE,
 --
-	-- TODO: check for kind value, too.
-	CONSTRAINT pathelement_kind_chk CHECK (
-		(kind = 0
-			AND scheme_cable_thread_id IS NULL
-			AND scheme_link_id IS NULL)
-		OR (kind = 1
-			AND start_abstract_scheme_port_id IS NULL
-			AND end_abstract_scheme_port_id IS NULL
-			AND scheme_cable_thread_id IS NOT NULL
-			AND scheme_link_id IS NULL)
-		OR (kind = 2
-			AND start_abstract_scheme_port_id IS NULL
-			AND end_abstract_scheme_port_id IS NULL
-			AND scheme_cable_thread_id IS NULL
-			AND scheme_link_id IS NOT NULL)
-	)
---	CONSTRAINT pathelement_kind_chk CHECK
---		((start_abstract_scheme_port_id IS NOT NULL 
+	CONSTRAINT pathelement_kind_chk CHECK
+		((kind = 0
+-- Constraint partialy turned off since the first and last path elements
+-- can have empty ports.
+--		AND start_abstract_scheme_port_id IS NOT NULL 
 --		AND end_abstract_scheme_port_id IS NOT NULL
---		AND scheme_cable_thread_id IS NULL 
---		AND scheme_link_id IS NULL)
---		OR (start_abstract_scheme_port_id IS NULL
---		AND end_abstract_scheme_port_id IS NULL
---		AND scheme_cable_thread_id IS NOT NULL
---		AND scheme_link_id IS NULL)
---		OR (start_abstract_scheme_port_id IS NULL
---		AND end_abstract_scheme_port_id IS NULL
---		AND scheme_cable_thread_id IS NULL
---		AND scheme_link_id IS NOT NULL))
+		AND scheme_cable_thread_id IS NULL
+		AND scheme_link_id IS NULL)
+		OR (kind = 1
+		AND start_abstract_scheme_port_id IS NULL
+		AND end_abstract_scheme_port_id IS NULL
+		AND scheme_cable_thread_id IS NOT NULL
+		AND scheme_link_id IS NULL)
+		OR (kind = 2
+		AND start_abstract_scheme_port_id IS NULL
+		AND end_abstract_scheme_port_id IS NULL
+		AND scheme_cable_thread_id IS NULL
+		AND scheme_link_id IS NOT NULL))
 );
 
-COMMENT ON TABLE PathElement IS '$Id: pathelement.sql,v 1.8 2005/08/11 11:35:20 arseniy Exp $';
+COMMENT ON TABLE PathElement IS '$Id: pathelement.sql,v 1.9 2005/08/31 17:33:57 bass Exp $';
 
 CREATE SEQUENCE PathElement_Seq ORDER;
