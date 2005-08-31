@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.76 2005/08/30 16:03:59 bass Exp $
+ * $Id: NodeLink.java,v 1.77 2005/08/31 13:08:49 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlNodeLink;
 import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.map.xml.XmlNodeLink;
 import com.syrus.AMFICOM.resource.DoublePoint;
@@ -50,8 +51,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/08/30 16:03:59 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.77 $, $Date: 2005/08/31 13:08:49 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -204,35 +205,41 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 	 * @return топологическая длина фрагмента, и 0, если проводка по зданию
 	 */
 	public double getLength() {
-		AbstractNode startLinkNode = this.physicalLink.getStartNode();
-		boolean hasCableInlet = false;
-		boolean hasBuilding = false;
-		if(startLinkNode instanceof SiteNode) {
-			SiteNode startLinkSite = (SiteNode) startLinkNode;
-			SiteNodeTypeSort startLinkSiteTypeSort = startLinkSite.getType().getSort();
-			if(startLinkSiteTypeSort.equals(SiteNodeTypeSort.BUILDING)
-					|| startLinkSiteTypeSort.equals(SiteNodeTypeSort.ATS) ) {
-				hasBuilding = true;
-			}
-			if(startLinkSiteTypeSort.equals(SiteNodeTypeSort.CABLE_INLET) ) {
-				hasCableInlet = true;
-			}
-		}
+//		SiteNode cableInlet = null;
+//		SiteNode boundSite = null;
+//		AbstractNode startLinkNode = this.physicalLink.getStartNode();
+//		if(startLinkNode instanceof SiteNode) {
+//			SiteNode startLinkSite = (SiteNode) startLinkNode;
+//			SiteNodeTypeSort startLinkSiteTypeSort = startLinkSite.getType().getSort();
+//			if(startLinkSiteTypeSort.equals(SiteNodeTypeSort.BUILDING)
+//					|| startLinkSiteTypeSort.equals(SiteNodeTypeSort.ATS) ) {
+//				boundSite = startLinkSite;
+//			}
+//			if(startLinkSiteTypeSort.equals(SiteNodeTypeSort.CABLE_INLET) ) {
+//				cableInlet = startLinkSite;
+//			}
+//		}
+//
+//		AbstractNode endLinkNode = this.physicalLink.getEndNode();
+//		if(endLinkNode instanceof SiteNode) {
+//			SiteNode endLinkSite = (SiteNode) endLinkNode;
+//			SiteNodeTypeSort endLinkSiteTypeSort = endLinkSite.getType().getSort();
+//			if(endLinkSiteTypeSort.equals(SiteNodeTypeSort.BUILDING)
+//					|| endLinkSiteTypeSort.equals(SiteNodeTypeSort.ATS) ) {
+//				boundSite = endLinkSite;
+//			}
+//			if(endLinkSiteTypeSort.equals(SiteNodeTypeSort.CABLE_INLET) ) {
+//				cableInlet = endLinkSite;
+//			}
+//		}
+//		if(boundSite != null
+//				&& cableInlet != null
+//				&& cableInlet.getAttachedSiteNode() == boundSite) {
+//			return 0D;
+//		}
 
-		AbstractNode endLinkNode = this.physicalLink.getEndNode();
-		if(endLinkNode instanceof SiteNode) {
-			SiteNode endLinkSite = (SiteNode) endLinkNode;
-			SiteNodeTypeSort endLinkSiteTypeSort = endLinkSite.getType().getSort();
-			if(endLinkSiteTypeSort.equals(SiteNodeTypeSort.BUILDING)
-					|| endLinkSiteTypeSort.equals(SiteNodeTypeSort.ATS) ) {
-				hasBuilding = true;
-			}
-			if(endLinkSiteTypeSort.equals(SiteNodeTypeSort.CABLE_INLET) ) {
-				hasCableInlet = true;
-			}
-		}
-		if(hasCableInlet && hasBuilding) {
-			return 0D;
+		if(this.physicalLink.getType().getSort().value() == PhysicalLinkTypeSort._INDOOR) {
+			return 0.0D;
 		}
 		return this.length;
 	}
@@ -447,18 +454,18 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 	public XmlNodeLink getXmlTransferable() {
 		final XmlNodeLink xmlNodeLink = XmlNodeLink.Factory.newInstance();
 		XmlIdentifier uid = xmlNodeLink.addNewId();
-		uid.setStringValue(this.id.toString());
+		uid.setStringValue(this.id.getIdentifierString());
 		
 		xmlNodeLink.setLength(this.length);
 		
 		uid = xmlNodeLink.addNewPhysicalLinkId();
-		uid.setStringValue(this.physicalLink.getId().toString());
+		uid.setStringValue(this.physicalLink.getId().getIdentifierString());
 		
 		uid = xmlNodeLink.addNewStartNodeId();
-		uid.setStringValue(this.startNode.getId().toString());
+		uid.setStringValue(this.startNode.getId().getIdentifierString());
 		
 		uid = xmlNodeLink.addNewEndNodeId();
-		uid.setStringValue(this.endNode.getId().toString());
+		uid.setStringValue(this.endNode.getId().getIdentifierString());
 		return xmlNodeLink;
 	}
 
