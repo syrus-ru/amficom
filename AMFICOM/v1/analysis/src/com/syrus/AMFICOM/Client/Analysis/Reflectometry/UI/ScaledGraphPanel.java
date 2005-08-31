@@ -2,6 +2,7 @@ package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BasicStroke;
 import java.awt.Cursor;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
@@ -269,5 +270,22 @@ public class ScaledGraphPanel extends SimpleGraphPanel
 		if (d < 2000.) return 2000.;
 		if (d < 5000.) return 5000.;
 		return 10000.;
+	}
+
+	/**
+	 * Предполагается, что метод будет вызываться при генерации отчетов.
+	 * При "обычной" же работе с окнами модуля анализа изменение размера
+	 * производится через прямой доступ к полям scale[XY]
+	 * из содержащих этот график *LayeredPanel или *Frame
+	 * @param d новые размеры окна графика
+	 */
+	public void setGraphSize(Dimension d)
+	{
+		Dimension dim = getSize();
+		double kx = (d.getWidth() - 1) / (dim.getWidth() - 1);
+		double ky = (d.getHeight() - 1) / (dim.getHeight() - 1);
+		scaleX *= kx;
+		scaleY *= ky;
+		super.setSize(d);
 	}
 }
