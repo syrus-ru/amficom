@@ -172,7 +172,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	void insertSite() {
-		SiteNodeType proto = super.selectNodeProto();
+		SiteNodeType proto = super.selectSiteNodeType();
 		if(proto != null) {
 			for(Iterator it = new LinkedList(this.selection.getElements()).iterator(); it.hasNext();) {
 				TopologicalNode node = (TopologicalNode )it.next();
@@ -183,7 +183,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	void generateCabling() {
-		SiteNodeType proto = super.selectNodeProto();
+		SiteNodeType proto = super.selectSiteNodeType();
 
 		if(proto != null) {
 			List elementsToBind = new LinkedList(this.selection.getElements());

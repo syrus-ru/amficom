@@ -62,7 +62,7 @@ public final class NodePopupMenu extends MapPopupMenu {
 	}
 
 	void placeSite() {
-		SiteNodeType proto = super.selectNodeProto();
+		SiteNodeType proto = super.selectSiteNodeType();
 		if(proto != null) {
 			super.insertSiteInPlaceOfANode(this.node, proto);
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);

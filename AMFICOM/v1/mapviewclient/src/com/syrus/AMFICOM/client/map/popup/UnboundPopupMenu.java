@@ -85,7 +85,7 @@ public class UnboundPopupMenu extends MapPopupMenu {
 	}
 
 	void generateSite() {
-		SiteNodeType proto = super.selectNodeProto();
+		SiteNodeType proto = super.selectSiteNodeType();
 		if(proto != null) {
 			super.convertUnboundNodeToSite(this.unbound, proto);
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);

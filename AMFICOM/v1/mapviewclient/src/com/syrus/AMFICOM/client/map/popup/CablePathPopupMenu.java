@@ -126,7 +126,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 
 	void generateCabling()
 	{
-		SiteNodeType proto = super.selectNodeProto();
+		SiteNodeType proto = super.selectSiteNodeType();
 		if(proto != null)
 		{
 			super.generatePathCabling(this.path, proto);
