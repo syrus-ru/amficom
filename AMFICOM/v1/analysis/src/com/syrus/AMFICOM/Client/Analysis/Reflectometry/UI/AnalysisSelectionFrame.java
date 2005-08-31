@@ -14,7 +14,6 @@ import javax.swing.JScrollPane;
 import javax.swing.JToolBar;
 import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
-import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.table.TableModel;
@@ -48,15 +47,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 
 	public AnalysisSelectionFrame(ApplicationContext aContext)
 	{
-		super();
-
-		try
-		{
-			jbInit();
-		} catch (Exception e)
-		{
-			e.printStackTrace();
-		}
+		this.createUI();
 		this.aContext = aContext;
 
 		init_module();
@@ -88,8 +79,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 	{
 	}
 
-	private void jbInit() throws Exception
-	{
+	private void createUI() {
 		setFrameIcon((Icon )UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 		this.setResizable(true);
@@ -166,14 +156,12 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 		this.mainPanel = new JPanel(new BorderLayout());
 		this.setContentPane(mainPanel);
 
-		JToolBar jToolBar1 = new JToolBar();
-		jToolBar1.setFloatable(false);
-		jToolBar1.add(analysisDefaultsButton);
-		jToolBar1.add(analysisInitialButton);
-		JToolBar.Separator s = new JToolBar.Separator();
-		s.setOrientation(jToolBar1.getOrientation() == SwingConstants.VERTICAL ? SwingConstants.HORIZONTAL : SwingConstants.VERTICAL);
-		jToolBar1.add(s);
-		jToolBar1.add(analysisStartButton);
+		final JToolBar jToolBar = new JToolBar();
+		jToolBar.setFloatable(false);
+		jToolBar.add(analysisDefaultsButton);
+		jToolBar.add(analysisInitialButton);
+		jToolBar.addSeparator();
+		jToolBar.add(analysisStartButton);
 
 		table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		table.getColumnModel().getColumn(0).setPreferredWidth(300);
@@ -186,7 +174,7 @@ public class AnalysisSelectionFrame extends JInternalFrame implements
 		//mainPanel.setLayout();
 		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
 		mainPanel.add(scrollPane, BorderLayout.CENTER);
-		mainPanel.add(jToolBar1, BorderLayout.NORTH);
+		mainPanel.add(jToolBar, BorderLayout.NORTH);
 
 		this.updColorModel();
 	}
