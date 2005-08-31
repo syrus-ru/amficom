@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.36 2005/08/30 12:11:52 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.37 2005/08/31 07:30:44 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.36 $, $Date: 2005/08/30 12:11:52 $
+ * @version $Revision: 1.37 $, $Date: 2005/08/31 07:30:44 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -278,6 +278,9 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					}	
 					return false;
 				case MEASUREMENTPORT_CODE:
+					if(pathElement.getKind() != IdlKind.SCHEME_ELEMENT) {
+						return false;
+					}
 					AbstractSchemePort endSchemePort2 = pathElement.getEndAbstractSchemePort();
 					if(endSchemePort2 != null) {
 						if(super.conditionTest(endSchemePort2.measurementPortId)) {
