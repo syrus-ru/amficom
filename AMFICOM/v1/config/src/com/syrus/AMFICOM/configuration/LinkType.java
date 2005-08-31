@@ -1,5 +1,5 @@
 /*
- * $Id: LinkType.java,v 1.72 2005/08/30 16:35:08 bass Exp $
+ * $Id: LinkType.java,v 1.73 2005/08/31 13:25:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/08/30 16:35:08 $
+ * @version $Revision: 1.73 $, $Date: 2005/08/31 13:25:08 $
  * @author $Author: bass $
  * @module config
  */
@@ -110,7 +110,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(LINK_TYPE_CODE, xmlLinkType.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(LINK_TYPE_CODE, xmlLinkType.getId()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -130,8 +130,8 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		try {
-			String uid = xmlLinkType.getId().getStringValue();
-			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			final XmlIdentifier xmlId = xmlLinkType.getId();
+			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			LinkType linkType = null;
 			if(existingIdentifier != null) {
 				linkType = StorableObjectPool.getStorableObject(existingIdentifier, true);
@@ -139,7 +139,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 					linkType.fromXmlTransferable(xmlLinkType, clonedIdsPool, importType);
 				}
 				else{
-					ImportUidMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, xmlId);
 				}
 			}
 			if(linkType == null) {
@@ -149,7 +149,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 						xmlLinkType,
 						clonedIdsPool,
 						importType);
-				ImportUidMapDatabase.insert(importType, uid, linkType.id);
+				ImportUidMapDatabase.insert(importType, xmlId, linkType.id);
 			}
 			assert linkType.isValid() : OBJECT_STATE_ILLEGAL;
 			linkType.markAsChanged();
@@ -264,8 +264,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 	@Shitlet
 	public XmlLinkType getXmlTransferable() {
 		final XmlLinkType xmlLinkType = XmlLinkType.Factory.newInstance();
-		XmlIdentifier uid = xmlLinkType.addNewId();
-		uid.setStringValue(this.id.toString());
+		xmlLinkType.setId(this.id.getXmlTransferable());
 		xmlLinkType.setName(this.name);
 		xmlLinkType.setCodename(this.codename);
 		xmlLinkType.setDescription(this.description);

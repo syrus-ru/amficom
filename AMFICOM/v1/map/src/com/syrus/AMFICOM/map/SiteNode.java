@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.74 2005/08/31 13:07:04 krupenn Exp $
+ * $Id: SiteNode.java,v 1.75 2005/08/31 13:25:08 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,9 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 
-import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
-import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
@@ -31,7 +29,6 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ImportUidMapDatabase;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -60,8 +57,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: krupenn $
- * @version $Revision: 1.74 $, $Date: 2005/08/31 13:07:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.75 $, $Date: 2005/08/31 13:25:08 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
@@ -317,8 +314,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 
 	public XmlSiteNode getXmlTransferable() {
 		final XmlSiteNode xmlSiteNode = XmlSiteNode.Factory.newInstance();
-		final XmlIdentifier uid = xmlSiteNode.addNewId();
-		uid.setStringValue(this.id.getIdentifierString());
+		xmlSiteNode.setId(this.id.getXmlTransferable());
 		xmlSiteNode.setName(this.name);
 		xmlSiteNode.setDescription(this.description);
 		xmlSiteNode.setSiteNodeTypeCodename(this.getType().getCodename());
@@ -338,7 +334,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 			throws CreateObjectException,
 				ApplicationException {
 
-		super(clonedIdsPool.getClonedId(SITENODE_CODE, xmlSiteNode.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(SITENODE_CODE, xmlSiteNode.getId()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -392,22 +388,22 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 			throws CreateObjectException {
 
 		try {
-			String uid = xmlSiteNode.getId().getStringValue();
-			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			final XmlIdentifier xmlId = xmlSiteNode.getId();
+			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			SiteNode siteNode = null;
 			if(existingIdentifier != null) {
-				clonedIdsPool.setExistingId(uid, existingIdentifier);
+				clonedIdsPool.setExistingId(xmlId, existingIdentifier);
 				siteNode = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(siteNode != null) {
 					siteNode.fromXmlTransferable(xmlSiteNode, clonedIdsPool, importType);
 				}
 				else{
-					ImportUidMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, xmlId);
 				}
 			}
 			if(siteNode == null) {
 				siteNode = new SiteNode(creatorId, StorableObjectVersion.createInitial(), xmlSiteNode, clonedIdsPool, importType);
-				ImportUidMapDatabase.insert(importType, uid, siteNode.id);
+				ImportUidMapDatabase.insert(importType, xmlId, siteNode.id);
 			}
 			assert siteNode.isValid() : OBJECT_STATE_ILLEGAL;
 			siteNode.markAsChanged();
@@ -421,7 +417,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		Set<SiteNode> attachedSiteNodes = new HashSet<SiteNode>();
 
 		// TODO implementation through LinkedIdsCondition
-		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.SITENODE_CODE);
+		EquivalentCondition condition = new EquivalentCondition(SITENODE_CODE);
 		
 		try {
 			for(SiteNode siteNode : StorableObjectPool.<SiteNode>getStorableObjectsByCondition(condition, false)) {

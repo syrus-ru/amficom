@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.76 2005/08/31 13:08:04 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.77 2005/08/31 13:25:08 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,8 +75,8 @@ import com.syrus.util.Log;
  * ”злы специального типа CABLE_INLET должны быть прив€заны к какому-либо
  * узлу BUILDING или ATS и самосто€тельно не живут
  *  
- * @author $Author: krupenn $
- * @version $Revision: 1.76 $, $Date: 2005/08/31 13:08:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.77 $, $Date: 2005/08/31 13:25:08 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -308,8 +308,7 @@ public final class SiteNodeType extends StorableObjectType
 
 	public XmlSiteNodeType getXmlTransferable() {
 		final XmlSiteNodeType xmlSiteNodeType = XmlSiteNodeType.Factory.newInstance();
-		final XmlIdentifier uid = xmlSiteNodeType.addNewId();
-		uid.setStringValue(this.id.getIdentifierString());
+		xmlSiteNodeType.setId(this.id.getXmlTransferable());
 		xmlSiteNodeType.setName(this.name);
 		xmlSiteNodeType.setDescription(this.description);
 		xmlSiteNodeType.setSort(XmlSiteNodeTypeSort.Enum.forInt(this.sort.value() + 1));
@@ -350,7 +349,7 @@ public final class SiteNodeType extends StorableObjectType
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(SITENODE_TYPE_CODE, xmlSiteNodeType.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(SITENODE_TYPE_CODE, xmlSiteNodeType.getId()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -384,17 +383,17 @@ public final class SiteNodeType extends StorableObjectType
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		try {
-			String uid = xmlSiteNodeType.getId().getStringValue();
-			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			final XmlIdentifier xmlId = xmlSiteNodeType.getId();
+			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			SiteNodeType siteNodeType = null;
 			if(existingIdentifier != null) {
 				siteNodeType = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(siteNodeType != null) {
-					clonedIdsPool.setExistingId(uid, existingIdentifier);
+					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
 					siteNodeType.fromXmlTransferable(xmlSiteNodeType, clonedIdsPool, importType);
 				}
 				else{
-					ImportUidMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, xmlId);
 				}
 			}
 			if(siteNodeType == null) {
@@ -405,7 +404,7 @@ public final class SiteNodeType extends StorableObjectType
 						xmlSiteNodeType,
 						clonedIdsPool, 
 						importType);
-				ImportUidMapDatabase.insert(importType, uid, siteNodeType.id);
+				ImportUidMapDatabase.insert(importType, xmlId, siteNodeType.id);
 			}
 			assert siteNodeType.isValid() : OBJECT_STATE_ILLEGAL;
 			siteNodeType.markAsChanged();

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.80 2005/08/31 13:08:04 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.81 2005/08/31 13:25:08 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,12 +58,8 @@ import com.syrus.util.Log;
  * типов линий, которые определ€ютс€ полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * 
- * Ћинии специального типа PhysicalLinkTypeSort.INDOOR соедин€ют “ќЋ№ ќ
- * узлы BUILDING, ATS с узлами CABLE_INLET и имеют длину 0
- * 
- * @author $Author: krupenn $
- * @version $Revision: 1.80 $, $Date: 2005/08/31 13:08:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.81 $, $Date: 2005/08/31 13:25:08 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -335,8 +331,7 @@ public final class PhysicalLinkType extends StorableObjectType
 
 	public XmlPhysicalLinkType getXmlTransferable() {
 		final XmlPhysicalLinkType xmlPhysicalLinkType = XmlPhysicalLinkType.Factory.newInstance();
-		final XmlIdentifier uid = xmlPhysicalLinkType.addNewId();
-		uid.setStringValue(this.id.getIdentifierString());
+		xmlPhysicalLinkType.setId(this.id.getXmlTransferable());
 		xmlPhysicalLinkType.setName(this.name);
 		xmlPhysicalLinkType.setDescription(this.description);
 		xmlPhysicalLinkType.setSort(XmlPhysicalLinkTypeSort.Enum.forInt(this.sort.value() + 1));
@@ -354,7 +349,7 @@ public final class PhysicalLinkType extends StorableObjectType
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(PHYSICALLINK_TYPE_CODE, xmlPhysicalLinkType.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(PHYSICALLINK_TYPE_CODE, xmlPhysicalLinkType.getId()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -382,17 +377,17 @@ public final class PhysicalLinkType extends StorableObjectType
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		try {
-			String uid = xmlPhysicalLinkType.getId().getStringValue();
-			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			final XmlIdentifier xmlId = xmlPhysicalLinkType.getId();
+			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			PhysicalLinkType physicalLinkType = null;
 			if(existingIdentifier != null) {
 				physicalLinkType = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(physicalLinkType != null) {
-					clonedIdsPool.setExistingId(uid, existingIdentifier);
+					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
 					physicalLinkType.fromXmlTransferable(xmlPhysicalLinkType, clonedIdsPool, importType);
 				}
 				else{
-					ImportUidMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, xmlId);
 				}
 			}
 			if(physicalLinkType == null) {
@@ -403,7 +398,7 @@ public final class PhysicalLinkType extends StorableObjectType
 						xmlPhysicalLinkType,
 						clonedIdsPool, 
 						importType);
-				ImportUidMapDatabase.insert(importType, uid, physicalLinkType.id);
+				ImportUidMapDatabase.insert(importType, xmlId, physicalLinkType.id);
 			}
 			assert physicalLinkType.isValid() : OBJECT_STATE_ILLEGAL;
 			physicalLinkType.markAsChanged();

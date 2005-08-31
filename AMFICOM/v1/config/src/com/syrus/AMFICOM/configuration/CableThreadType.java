@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.57 2005/08/30 16:35:09 bass Exp $
+ * $Id: CableThreadType.java,v 1.58 2005/08/31 13:25:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.*;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.*;
 
 import java.util.Collections;
 import java.util.Date;
@@ -49,7 +49,7 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.57 $, $Date: 2005/08/30 16:35:09 $
+ * @version $Revision: 1.58 $, $Date: 2005/08/31 13:25:08 $
  * @author $Author: bass $
  * @module config
  */
@@ -115,7 +115,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(LINK_TYPE_CODE, xmlCableThreadType.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(LINK_TYPE_CODE, xmlCableThreadType.getId()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -134,8 +134,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		try {
-			String uid = xmlCableThreadType.getId().getStringValue();
-			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			final XmlIdentifier xmlId = xmlCableThreadType.getId();
+			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			CableThreadType cableThreadType = null;
 			if(existingIdentifier != null) {
 				cableThreadType = StorableObjectPool.getStorableObject(existingIdentifier, true);
@@ -143,7 +143,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 					cableThreadType.fromXmlTransferable(xmlCableThreadType, clonedIdsPool, importType);
 				}
 				else{
-					ImportUidMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, xmlId);
 				}
 			}
 			if(cableThreadType == null) {
@@ -153,7 +153,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 						xmlCableThreadType,
 						clonedIdsPool,
 						importType);
-				ImportUidMapDatabase.insert(importType, uid, cableThreadType.id);
+				ImportUidMapDatabase.insert(importType, xmlId, cableThreadType.id);
 			}
 			assert cableThreadType.isValid() : OBJECT_STATE_ILLEGAL;
 			cableThreadType.markAsChanged();
@@ -203,13 +203,15 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	}
 
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-		final IdlCableThreadType cttt = (IdlCableThreadType) transferable;
-		super.fromTransferable(cttt, cttt.codename, cttt.description);
-		this.name = cttt.name;
-		this.color = cttt.color;
-		this.linkType = (LinkType) StorableObjectPool.getStorableObject(new Identifier(cttt.linkTypeId), true);
-		this.cableLinkType = (CableLinkType) StorableObjectPool.getStorableObject(new Identifier(cttt.cableLinkTypeId), true);
+	protected synchronized void fromTransferable(
+			final IdlStorableObject transferable)
+	throws ApplicationException {
+		final IdlCableThreadType idlCableThreadType = (IdlCableThreadType) transferable;
+		super.fromTransferable(idlCableThreadType, idlCableThreadType.codename, idlCableThreadType.description);
+		this.name = idlCableThreadType.name;
+		this.color = idlCableThreadType.color;
+		this.setLinkTypeId(new Identifier(idlCableThreadType.linkTypeId));
+		this.setCableLinkTypeId(new Identifier(idlCableThreadType.cableLinkTypeId));
 	}
 
 	/**
@@ -228,12 +230,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		this.codename = xmlCableThreadType.getCodename();
 		this.description = xmlCableThreadType.getDescription();
 		this.color = Integer.parseInt(xmlCableThreadType.getColor());
-
-		XmlIdentifier uid = xmlCableThreadType.addNewLinkTypeId();
-		uid.setStringValue(this.linkType.getId().toString());
-		
-		uid = xmlCableThreadType.addNewCableLinkTypeId();
-		uid.setStringValue(this.cableLinkType.getId().toString());
+		this.setLinkTypeId(Identifier.fromXmlTransferable(xmlCableThreadType.getLinkTypeId(), importType));
+		this.setCableLinkTypeId(Identifier.fromXmlTransferable(xmlCableThreadType.getCableLinkTypeId(), importType));
 	}
 
 	/**
@@ -316,10 +314,40 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		super.markAsChanged();
 	}
 
+	/**
+	 * @param linkTypeId
+	 * @throws ApplicationException
+	 */
+	private void setLinkTypeId(final Identifier linkTypeId)
+	throws ApplicationException {
+		assert linkTypeId != null : NON_NULL_EXPECTED;
+		assert !linkTypeId.isVoid() : NON_VOID_EXPECTED;
+		assert linkTypeId.getMajor() == LINK_TYPE_CODE;
+		if (this.linkType.getId().equals(linkTypeId)) {
+			return;
+		}
+		this.setLinkType(StorableObjectPool.<LinkType>getStorableObject(linkTypeId, true));
+	}
+
 	public void setLinkType(final LinkType linkType) {
 		assert linkType != null;
 		this.linkType = linkType;
 		super.markAsChanged();
+	}
+
+	/**
+	 * @param cableLinkTypeId
+	 * @throws ApplicationException
+	 */
+	private void setCableLinkTypeId(final Identifier cableLinkTypeId)
+	throws ApplicationException {
+		assert cableLinkTypeId != null : NON_NULL_EXPECTED;
+		assert !cableLinkTypeId.isVoid() : NON_VOID_EXPECTED;
+		assert cableLinkTypeId.getMajor() == CABLELINK_TYPE_CODE;
+		if (this.cableLinkType.getId().equals(cableLinkTypeId)) {
+			return;
+		}
+		this.setCableLinkType(StorableObjectPool.<CableLinkType>getStorableObject(cableLinkTypeId, true));
 	}
 
 	public void setCableLinkType(final CableLinkType cableLinkType) {

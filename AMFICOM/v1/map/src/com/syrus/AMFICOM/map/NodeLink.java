@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.77 2005/08/31 13:08:49 krupenn Exp $
+ * $Id: NodeLink.java,v 1.78 2005/08/31 13:25:08 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,8 +51,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.77 $, $Date: 2005/08/31 13:08:49 $
+ * @author $Author: bass $
+ * @version $Revision: 1.78 $, $Date: 2005/08/31 13:25:08 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -453,19 +453,12 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 
 	public XmlNodeLink getXmlTransferable() {
 		final XmlNodeLink xmlNodeLink = XmlNodeLink.Factory.newInstance();
-		XmlIdentifier uid = xmlNodeLink.addNewId();
-		uid.setStringValue(this.id.getIdentifierString());
-		
+		xmlNodeLink.setId(this.id.getXmlTransferable());
 		xmlNodeLink.setLength(this.length);
+		xmlNodeLink.setPhysicalLinkId(this.physicalLink.getId().getXmlTransferable());
+		xmlNodeLink.setStartNodeId(this.startNode.getId().getXmlTransferable());
+		xmlNodeLink.setEndNodeId(this.endNode.getId().getXmlTransferable());
 		
-		uid = xmlNodeLink.addNewPhysicalLinkId();
-		uid.setStringValue(this.physicalLink.getId().getIdentifierString());
-		
-		uid = xmlNodeLink.addNewStartNodeId();
-		uid.setStringValue(this.startNode.getId().getIdentifierString());
-		
-		uid = xmlNodeLink.addNewEndNodeId();
-		uid.setStringValue(this.endNode.getId().getIdentifierString());
 		return xmlNodeLink;
 	}
 
@@ -475,7 +468,7 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 			final ClonedIdsPool clonedIdsPool, 
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(NODELINK_CODE, xmlNodeLink.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(NODELINK_CODE, xmlNodeLink.getId()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -488,12 +481,9 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 	public void fromXmlTransferable(final XmlNodeLink xmlNodeLink, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
 		this.length = xmlNodeLink.getLength();
 
-		final Identifier physicalLinkId1 = clonedIdsPool.getClonedId(PHYSICALLINK_CODE,
-				xmlNodeLink.getPhysicalLinkId().getStringValue());
-		final Identifier startNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE,
-				xmlNodeLink.getStartNodeId().getStringValue());
-		final Identifier endNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE,
-				xmlNodeLink.getEndNodeId().getStringValue());
+		final Identifier physicalLinkId1 = clonedIdsPool.getClonedId(PHYSICALLINK_CODE, xmlNodeLink.getPhysicalLinkId());
+		final Identifier startNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE, xmlNodeLink.getStartNodeId());
+		final Identifier endNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE, xmlNodeLink.getEndNodeId());
 
 		this.physicalLink = StorableObjectPool.getStorableObject(physicalLinkId1, false);
 		this.startNode = StorableObjectPool.getStorableObject(startNodeId1, true);
@@ -508,22 +498,22 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		try {
-			String uid = xmlNodeLink.getId().getStringValue();
-			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			final XmlIdentifier xmlId = xmlNodeLink.getId();
+			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			NodeLink nodeLink = null;
 			if(existingIdentifier != null) {
 				nodeLink = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(nodeLink != null) {
-					clonedIdsPool.setExistingId(uid, existingIdentifier);
+					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
 					nodeLink.fromXmlTransferable(xmlNodeLink, clonedIdsPool, importType);
 				}
 				else{
-					ImportUidMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, xmlId);
 				}
 			}
 			if(nodeLink == null) {
 				nodeLink = new NodeLink(creatorId, StorableObjectVersion.createInitial(), xmlNodeLink, clonedIdsPool, importType);
-				ImportUidMapDatabase.insert(importType, uid, nodeLink.id);
+				ImportUidMapDatabase.insert(importType, xmlId, nodeLink.id);
 			}
 			assert nodeLink.isValid() : OBJECT_STATE_ILLEGAL;
 			nodeLink.markAsChanged();

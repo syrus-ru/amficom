@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkType.java,v 1.66 2005/08/30 16:35:09 bass Exp $
+ * $Id: CableLinkType.java,v 1.67 2005/08/31 13:25:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/08/30 16:35:09 $
+ * @version $Revision: 1.67 $, $Date: 2005/08/31 13:25:08 $
  * @author $Author: bass $
  * @module config
  */
@@ -113,7 +113,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(LINK_TYPE_CODE, xmlCableLinkType.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(LINK_TYPE_CODE, xmlCableLinkType.getId()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -133,8 +133,8 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		try {
-			String uid = xmlCableLinkType.getId().getStringValue();
-			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			final XmlIdentifier xmlId = xmlCableLinkType.getId();
+			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			CableLinkType cableLinkType = null;
 			if(existingIdentifier != null) {
 				cableLinkType = StorableObjectPool.getStorableObject(existingIdentifier, true);
@@ -142,7 +142,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 					cableLinkType.fromXmlTransferable(xmlCableLinkType, clonedIdsPool, importType);
 				}
 				else{
-					ImportUidMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, xmlId);
 				}
 			}
 			if(cableLinkType == null) {
@@ -152,7 +152,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 						xmlCableLinkType,
 						clonedIdsPool,
 						importType);
-				ImportUidMapDatabase.insert(importType, uid, cableLinkType.id);
+				ImportUidMapDatabase.insert(importType, xmlId, cableLinkType.id);
 			}
 			assert cableLinkType.isValid() : OBJECT_STATE_ILLEGAL;
 			cableLinkType.markAsChanged();
@@ -272,8 +272,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 	@Shitlet
 	public XmlCableLinkType getXmlTransferable() {
 		final XmlCableLinkType xmlCableLinkType = XmlCableLinkType.Factory.newInstance();
-		XmlIdentifier uid = xmlCableLinkType.addNewId();
-		uid.setStringValue(this.id.toString());
+		xmlCableLinkType.setId(this.id.getXmlTransferable());
 		xmlCableLinkType.setName(this.name);
 		xmlCableLinkType.setCodename(this.codename);
 		xmlCableLinkType.setDescription(this.description);

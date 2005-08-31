@@ -1,5 +1,5 @@
 /*-
- * $Id: MapElement.java,v 1.20 2005/08/24 15:00:28 bass Exp $
+ * $Id: MapElement.java,v 1.21 2005/08/31 13:25:08 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.map;
 
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
@@ -20,16 +19,10 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *
  *
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/08/24 15:00:28 $
+ * @version $Revision: 1.21 $, $Date: 2005/08/31 13:25:08 $
  * @module map
  */
 public interface MapElement extends Characterizable, Namable {
-	/**
-	 * Поучить идентификатор элемента.
-	 * @return Идентификатор элемента карты.
-	 */
-	Identifier getId();
-
 	/**
 	 * Получить флаг выделения элемента.
 	 * @return флаг выделения элемента

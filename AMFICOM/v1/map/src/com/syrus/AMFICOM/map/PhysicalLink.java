@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.100 2005/08/31 13:08:04 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.101 2005/08/31 13:25:07 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.100 $, $Date: 2005/08/31 13:08:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.101 $, $Date: 2005/08/31 13:25:07 $
  * @module map
  */
 public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XmlBeansTransferable<XmlPhysicalLink> {
@@ -885,21 +885,12 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	public XmlPhysicalLink getXmlTransferable() {
 		final XmlPhysicalLink xmlPhysicalLink = XmlPhysicalLink.Factory.newInstance();
-		XmlIdentifier uid = xmlPhysicalLink.addNewId();
-		uid.setStringValue(this.id.getIdentifierString());
+		xmlPhysicalLink.setId(this.id.getXmlTransferable());
 		xmlPhysicalLink.setName(this.name);
 		xmlPhysicalLink.setDescription(this.description);
-		/*
-		 * XXX Should be identifier, why enum value?
-		 */
 		xmlPhysicalLink.setPhysicalLinkTypeCodename(this.getType().getCodename());
-		
-		uid = xmlPhysicalLink.addNewStartNodeId();
-		uid.setStringValue(this.startNodeId.getIdentifierString());
-		
-		uid = xmlPhysicalLink.addNewEndNodeId();
-		uid.setStringValue(this.endNodeId.getIdentifierString());
-		
+		xmlPhysicalLink.setStartNodeId(this.startNodeId.getXmlTransferable());
+		xmlPhysicalLink.setEndNodeId(this.endNodeId.getXmlTransferable());
 		xmlPhysicalLink.setCity(this.city);
 		xmlPhysicalLink.setStreet(this.street);
 		xmlPhysicalLink.setBuilding(this.building);
@@ -912,7 +903,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(PHYSICALLINK_CODE, xmlPhysicalLink.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(PHYSICALLINK_CODE, xmlPhysicalLink.getId()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -930,10 +921,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.street = xmlPhysicalLink.getStreet();
 		this.building = xmlPhysicalLink.getBuilding();
 
-		final Identifier startNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE,
-				xmlPhysicalLink.getStartNodeId().getStringValue());
-		final Identifier endNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE,
-				xmlPhysicalLink.getEndNodeId().getStringValue());
+		final Identifier startNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE, xmlPhysicalLink.getStartNodeId());
+		final Identifier endNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE, xmlPhysicalLink.getEndNodeId());
 
 		this.startNodeId = startNodeId1;
 		this.endNodeId = endNodeId1;
@@ -972,17 +961,17 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		try {
-			String uid = xmlPhysicalLink.getId().getStringValue();
-			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			final XmlIdentifier xmlId = xmlPhysicalLink.getId();
+			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			PhysicalLink physicalLink = null;
 			if(existingIdentifier != null) {
 				physicalLink = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(physicalLink != null) {
-					clonedIdsPool.setExistingId(uid, existingIdentifier);
+					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
 					physicalLink.fromXmlTransferable(xmlPhysicalLink, clonedIdsPool, importType);
 				}
 				else{
-					ImportUidMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, xmlId);
 				}
 			}
 			if(physicalLink == null) {
@@ -992,7 +981,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 						xmlPhysicalLink,
 						clonedIdsPool,
 						importType);
-				ImportUidMapDatabase.insert(importType, uid, physicalLink.id);
+				ImportUidMapDatabase.insert(importType, xmlId, physicalLink.id);
 			}
 			assert physicalLink.isValid() : OBJECT_STATE_ILLEGAL;
 			physicalLink.markAsChanged();

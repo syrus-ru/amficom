@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.82 2005/08/31 13:08:04 krupenn Exp $
+ * $Id: Map.java,v 1.83 2005/08/31 13:25:08 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,8 +69,8 @@ import com.syrus.AMFICOM.map.xml.XmlTopologicalNodeSeq;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.82 $, $Date: 2005/08/31 13:08:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.83 $, $Date: 2005/08/31 13:25:08 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -987,8 +987,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 	public XmlMap getXmlTransferable() {
 		final XmlMap xmlMap = XmlMap.Factory.newInstance();
-		final XmlIdentifier uid = xmlMap.addNewId();
-		uid.setStringValue(this.id.getIdentifierString());
+		xmlMap.setId(this.id.getXmlTransferable());
 		xmlMap.setName(this.name);
 		xmlMap.setDescription(this.description);
 		
@@ -1040,7 +1039,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(MAP_CODE, xmlMap.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(MAP_CODE, xmlMap.getId()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -1115,22 +1114,22 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		try {
-			String uid = xmlMap.getId().getStringValue();
-			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			final XmlIdentifier xmlId = xmlMap.getId();
+			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			Map map = null;
 			if(existingIdentifier != null) {
 				map = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(map != null) {
-					clonedIdsPool.setExistingId(uid, existingIdentifier);
+					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
 					map.fromXmlTransferable(xmlMap, clonedIdsPool, importType);
 				}
 				else{
-					ImportUidMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, xmlId);
 				}
 			}
 			if(map == null) {
 				map = new Map(creatorId, StorableObjectVersion.createInitial(), domainId, xmlMap, clonedIdsPool, importType);
-				ImportUidMapDatabase.insert(importType, uid, map.id);
+				ImportUidMapDatabase.insert(importType, xmlId, map.id);
 			}
 			assert map.isValid() : OBJECT_STATE_ILLEGAL;
 			map.markAsChanged();

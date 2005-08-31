@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.72 2005/08/31 13:08:04 krupenn Exp $
+ * $Id: Collector.java,v 1.73 2005/08/31 13:25:08 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.72 $, $Date: 2005/08/31 13:08:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.73 $, $Date: 2005/08/31 13:25:08 $
  * @module map
  */
 public final class Collector extends StorableObject implements MapElement, XmlBeansTransferable<XmlCollector> {
@@ -349,17 +349,20 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 
 	public XmlCollector getXmlTransferable() {
 		final XmlCollector xmlCollector = XmlCollector.Factory.newInstance();
-		final XmlIdentifier uid = xmlCollector.addNewId();
-		uid.setStringValue(this.id.getIdentifierString());
+		xmlCollector.setId(this.id.getXmlTransferable());
 		xmlCollector.setName(this.name);
-		xmlCollector.setDescription(this.description);
+		xmlCollector.setDescription(this.description);		
 		
-		final XmlIdentifierSeq xmlPhysicalLinkUIds = xmlCollector.addNewPhysicalLinkIds();
-		
-		for (final PhysicalLink link : this.getPhysicalLinks()) {
-			final XmlIdentifier xmlPhysicalLinkUId = xmlPhysicalLinkUIds.addNewId();
-			xmlPhysicalLinkUId.setStringValue(link.getId().getIdentifierString());
+		final Set<PhysicalLink> physicalLinks1 = this.getPhysicalLinks();
+		final XmlIdentifierSeq xmlPhysicalLinkIdSeq = XmlIdentifierSeq.Factory.newInstance();
+		final XmlIdentifier xmlPhysicalLinkIds[] = new XmlIdentifier[physicalLinks1.size()];
+		int i = 0;
+		for (final PhysicalLink physicalLink : physicalLinks1) {
+			xmlPhysicalLinkIds[i++] = physicalLink.getId().getXmlTransferable();
 		}
+		xmlPhysicalLinkIdSeq.setIdArray(xmlPhysicalLinkIds);
+		xmlCollector.setPhysicalLinkIds(xmlPhysicalLinkIdSeq);
+
 		return xmlCollector;
 	}
 
@@ -369,7 +372,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(COLLECTOR_CODE, xmlCollector.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(COLLECTOR_CODE, xmlCollector.getId()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -386,8 +389,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 		this.description = xmlCollector.getDescription();
 
 		for (final XmlIdentifier xmlId : xmlCollector.getPhysicalLinkIds().getIdArray()) {
-			final Identifier physicalLinkId = clonedIdsPool.getClonedId(PHYSICALLINK_CODE,
-					xmlId.getStringValue());
+			final Identifier physicalLinkId = clonedIdsPool.getClonedId(PHYSICALLINK_CODE, xmlId);
 			final PhysicalLink physicalLink = StorableObjectPool.getStorableObject(physicalLinkId, false);
 			this.addPhysicalLink(physicalLink);
 		}
@@ -399,22 +401,22 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 			final XmlCollector xmlCollector, 
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 		try {
-			String uid = xmlCollector.getId().getStringValue();
-			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			final XmlIdentifier xmlId = xmlCollector.getId();
+			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			Collector collector = null;
 			if(existingIdentifier != null) {
 				collector = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(collector != null) {
-					clonedIdsPool.setExistingId(uid, existingIdentifier);
+					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
 					collector.fromXmlTransferable(xmlCollector, clonedIdsPool, importType);
 				}
 				else{
-					ImportUidMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, xmlId);
 				}
 			}
 			if(collector == null) {
 				collector = new Collector(creatorId, StorableObjectVersion.createInitial(), xmlCollector, clonedIdsPool, importType);
-				ImportUidMapDatabase.insert(importType, uid, collector.id);
+				ImportUidMapDatabase.insert(importType, xmlId, collector.id);
 			}
 			assert collector.isValid() : OBJECT_STATE_ILLEGAL;
 			collector.markAsChanged();

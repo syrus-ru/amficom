@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.84 2005/08/30 16:35:09 bass Exp $
+ * $Id: EquipmentType.java,v 1.85 2005/08/31 13:25:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/08/30 16:35:09 $
+ * @version $Revision: 1.85 $, $Date: 2005/08/31 13:25:08 $
  * @author $Author: bass $
  * @module config
  */
@@ -107,7 +107,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(PORT_TYPE_CODE, xmlEquipmentType.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(PORT_TYPE_CODE, xmlEquipmentType.getId()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -127,8 +127,8 @@ public final class EquipmentType extends StorableObjectType implements Character
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		try {
-			String uid = xmlEquipmentType.getId().getStringValue();
-			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			final XmlIdentifier xmlId = xmlEquipmentType.getId();
+			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			EquipmentType portType = null;
 			if(existingIdentifier != null) {
 				portType = StorableObjectPool.getStorableObject(existingIdentifier, true);
@@ -136,7 +136,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 					portType.fromXmlTransferable(xmlEquipmentType, clonedIdsPool, importType);
 				}
 				else{
-					ImportUidMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, xmlId);
 				}
 			}
 			if(portType == null) {
@@ -146,7 +146,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 						xmlEquipmentType,
 						clonedIdsPool,
 						importType);
-				ImportUidMapDatabase.insert(importType, uid, portType.id);
+				ImportUidMapDatabase.insert(importType, xmlId, portType.id);
 			}
 			assert portType.isValid() : OBJECT_STATE_ILLEGAL;
 			portType.markAsChanged();
@@ -249,8 +249,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 	@Shitlet
 	public XmlEquipmentType getXmlTransferable() {
 		final XmlEquipmentType xmlEquipmentType = XmlEquipmentType.Factory.newInstance();
-		XmlIdentifier uid = xmlEquipmentType.addNewId();
-		uid.setStringValue(this.id.toString());
+		xmlEquipmentType.setId(this.id.getXmlTransferable());
 		xmlEquipmentType.setName(this.name);
 		xmlEquipmentType.setCodename(this.codename);
 		xmlEquipmentType.setDescription(this.description);

@@ -1,5 +1,5 @@
 /*
- * $Id: PortType.java,v 1.81 2005/08/30 16:35:08 bass Exp $
+ * $Id: PortType.java,v 1.82 2005/08/31 13:25:08 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/08/30 16:35:08 $
+ * @version $Revision: 1.82 $, $Date: 2005/08/31 13:25:08 $
  * @author $Author: bass $
  * @module config
  */
@@ -109,7 +109,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 			final ClonedIdsPool clonedIdsPool,
 			final String importType) throws CreateObjectException, ApplicationException {
 
-		super(clonedIdsPool.getClonedId(PORT_TYPE_CODE, xmlPortType.getId().getStringValue()),
+		super(clonedIdsPool.getClonedId(PORT_TYPE_CODE, xmlPortType.getId()),
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
 				creatorId,
@@ -129,8 +129,8 @@ public final class PortType extends StorableObjectType implements Characterizabl
 			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
 
 		try {
-			String uid = xmlPortType.getId().getStringValue();
-			Identifier existingIdentifier = ImportUidMapDatabase.retrieve(importType, uid);
+			final XmlIdentifier xmlId = xmlPortType.getId();
+			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			PortType portType = null;
 			if(existingIdentifier != null) {
 				portType = StorableObjectPool.getStorableObject(existingIdentifier, true);
@@ -138,7 +138,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 					portType.fromXmlTransferable(xmlPortType, clonedIdsPool, importType);
 				}
 				else{
-					ImportUidMapDatabase.delete(importType, uid);
+					ImportUidMapDatabase.delete(importType, xmlId);
 				}
 			}
 			if(portType == null) {
@@ -148,7 +148,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 						xmlPortType,
 						clonedIdsPool,
 						importType);
-				ImportUidMapDatabase.insert(importType, uid, portType.id);
+				ImportUidMapDatabase.insert(importType, xmlId, portType.id);
 			}
 			assert portType.isValid() : OBJECT_STATE_ILLEGAL;
 			portType.markAsChanged();
@@ -253,8 +253,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	@Shitlet
 	public XmlPortType getXmlTransferable() {
 		final XmlPortType xmlPortType = XmlPortType.Factory.newInstance();
-		XmlIdentifier uid = xmlPortType.addNewId();
-		uid.setStringValue(this.id.toString());
+		xmlPortType.setId(this.id.getXmlTransferable());
 		xmlPortType.setName(this.name);
 		xmlPortType.setCodename(this.codename);
 		xmlPortType.setDescription(this.description);
