@@ -605,8 +605,8 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.panel.add(Box.createVerticalGlue(), gbc);
 			
 			this.synchroRadioButton.doClick();
-			this.oneRadioButton.doClick();
 			this.periodicalRadioButton.doClick();		
+			this.oneRadioButton.doClick();
 			
 		}
 		
@@ -1027,15 +1027,6 @@ public class TimeParametersFrame extends JInternalFrame {
 		setClosable(true);
 		setIconifiable(true);
 		this.timeParametersPanel = new TimeParametersPanel(aContext);
-		
-		// TODO may be more right impl of fullsize ?
-		this.addComponentListener(new ComponentAdapter() {
-			@Override
-			public void componentShown(ComponentEvent e) {
-				TimeParametersFrame.this.timeParametersPanel.oneRadioButton.doClick();
-				TimeParametersFrame.this.removeComponentListener(this);
-			}
-		});
 		this.getContentPane().add(this.timeParametersPanel.panel, BorderLayout.CENTER);
 	}
 	
