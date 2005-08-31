@@ -216,13 +216,13 @@ public class AnalysisPanel extends MapMarkersPanel
 				//repaint marker label
 				int width = g.getFontMetrics().stringWidth(moving_marker.name) + 5;
 				int height = g.getFontMetrics().getHeight() + 2;
-				parent.repaint(x, 10, x2 - x + width, height);
+				parent.repaint(x + 2, 10, x2 - x + width, height);
 
 				//repaint new marker place
 				int n_x = index2coord(moving_marker.pos - 1) - 1;
 				int n_x2 = index2coord(moving_marker.pos + 1) + 1;
-				parent.repaint(x, 0, n_x2 - n_x, parent.getHeight());
-				parent.repaint(x, 10, n_x2 - n_x + width, height);
+				parent.repaint(n_x, 0, n_x2 - n_x, parent.getHeight());
+				parent.repaint(n_x + 2, 10, n_x2 - n_x + width, height);
 
 				if (moving_marker.equals(markerA))
 				{
