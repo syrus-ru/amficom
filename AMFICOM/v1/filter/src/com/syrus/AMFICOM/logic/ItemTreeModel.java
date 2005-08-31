@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.17 2005/08/30 13:56:44 arseniy Exp $
+ * $Id: ItemTreeModel.java,v 1.18 2005/08/31 09:24:05 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import javax.swing.tree.TreePath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/30 13:56:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/08/31 09:24:05 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter
  */
@@ -107,7 +107,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 			sortList.list.addAll(parent.getChildren());
 			for (final Iterator<Item> it = sortList.list.iterator(); it.hasNext();) {
 				Item item = it.next();
-				Log.debugMessage("ItemTreeModel.getChildren | parent " + parent + ", child " + item, Level.FINEST);
+				Log.debugMessage("ItemTreeModel.getChildren | parent " + parent + ", child " + item, Log.DEBUGLEVEL10);
 				if (item.isService()) {
 					it.remove();
 				}
@@ -163,7 +163,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 				break;
 			}
 		}
-		Log.debugMessage("ItemTreeModel.InsertNodeInto | insert " + child.getName() + " to " + parent.getName() + " [ " + newIndexs[0] + " ] ", Level.FINEST);
+		Log.debugMessage("ItemTreeModel.InsertNodeInto | insert " + child.getName() + " to " + parent.getName() + " [ " + newIndexs[0] + " ] ", Log.DEBUGLEVEL10);
 		nodesWereInserted(parent, objects, newIndexs);
 	}
 
@@ -186,7 +186,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 			sortList.sorted = false;
 		}
 		Object[] removedArray = new Object[] { child };
-		Log.debugMessage("ItemTreeModel.removeNodeFromParent | delete " + child.getName() + " from " + parent.getName() + " [ " + childIndex[0] + " ] ", Level.FINEST);
+		Log.debugMessage("ItemTreeModel.removeNodeFromParent | delete " + child.getName() + " from " + parent.getName() + " [ " + childIndex[0] + " ] ", Log.DEBUGLEVEL10);
 		nodesWereRemoved(parent, childIndex, removedArray);
 	}
 
@@ -409,7 +409,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 			parent = this.root;
 		}
 		Log.debugMessage("ItemTreeModel.getItemNode | parent is '" + parent.getName()
-				+ "', item is '" + item.getName() + "'", Level.FINEST);
+				+ "', item is '" + item.getName() + "'", Log.DEBUGLEVEL10);
 		final List<Item> children = parent.getChildren();
 		Item node = null;
 		for (final Item item2 : children) {
@@ -442,7 +442,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	}
 
 	public void setParentPerformed(final Item item, final Item oldParent, final Item newParent) {
-		Log.debugMessage("ItemTreeModel.setParentPerformed | " + this.getClass().getName()+ ".setParentPerformed | item:" + item + ", oldParent:" + oldParent + ", newParent:" + newParent, Level.FINEST);
+		Log.debugMessage("ItemTreeModel.setParentPerformed | " + this.getClass().getName()+ ".setParentPerformed | item:" + item + ", oldParent:" + oldParent + ", newParent:" + newParent, Log.DEBUGLEVEL10);
 		if (oldParent != null) {
 			removeNodeFromParent(oldParent, item);
 		}
