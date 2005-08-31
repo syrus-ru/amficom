@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryController.java,v 1.8 2005/08/12 14:52:33 arseniy Exp $
+ * $Id: MapLibraryController.java,v 1.9 2005/08/31 13:13:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
  * контроллер типа сетевого узла.
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/12 14:52:33 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.9 $, $Date: 2005/08/31 13:13:42 $
  * @module mapviewclient
  */
 public class MapLibraryController {
@@ -114,7 +114,7 @@ public class MapLibraryController {
 		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.WELL, SiteNodeType.DEFAULT_WELL, true);
 		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.CABLE_INLET is created
-		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.CABLE_INLET, SiteNodeType.DEFAULT_CABLE_INLET, true);
+		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.CABLE_INLET, SiteNodeType.DEFAULT_CABLE_INLET, false);
 		siteNodeType.setMapLibrary(defaultLibrary);
 		// make sure SiteNodeType.UNBOUND is created
 		siteNodeType = NodeTypeController.getSiteNodeType(defaultLibrary, creatorId, SiteNodeTypeSort.UNBOUND, SiteNodeType.DEFAULT_UNBOUND, false);
@@ -131,7 +131,7 @@ public class MapLibraryController {
 		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.COLLECTOR, PhysicalLinkType.DEFAULT_COLLECTOR, true);
 		physicalLinkType.setMapLibrary(defaultLibrary); 
 		// make sure PhysicalLinkType.INDOOR is created
-		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.INDOOR, PhysicalLinkType.DEFAULT_INDOOR, true);
+		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.INDOOR, PhysicalLinkType.DEFAULT_INDOOR, false);
 		physicalLinkType.setMapLibrary(defaultLibrary); 
 		// make sure PhysicalLinkType.SUBMARINE is created
 		physicalLinkType = LinkTypeController.getPhysicalLinkType(defaultLibrary, creatorId, PhysicalLinkTypeSort.SUBMARINE, PhysicalLinkType.DEFAULT_SUBMARINE, true);
