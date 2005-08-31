@@ -375,13 +375,6 @@ public class TestLine extends TimeLine {
 
 			@Override
 			public void mousePressed(MouseEvent e) {
-//				this.mouseClicked(e);
-//			}
-//			
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-				// Log.debugMessage("TimeStampsEditor.mouseClicked | ",
-				// Log.FINEST);
 				int x = e.getX();
 				int y = e.getY();
 
