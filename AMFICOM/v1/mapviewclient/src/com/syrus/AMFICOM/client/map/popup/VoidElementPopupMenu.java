@@ -6,7 +6,6 @@ import java.awt.event.ActionListener;
 import javax.swing.JMenuItem;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
-import com.syrus.AMFICOM.client.map.command.action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
@@ -70,14 +69,10 @@ public class VoidElementPopupMenu extends MapPopupMenu {
 	}
 
 	void addSite() {
-		SiteNodeType proto = super.selectNodeProto();
+		SiteNodeType siteNodeType = super.selectSiteNodeType();
 
-		if(proto != null) {
-			CreateSiteCommandAtomic command = 
-				new CreateSiteCommandAtomic(proto, this.point);
-			command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
-			this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
-			this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+		if(siteNodeType != null) {
+			super.createSiteNode(siteNodeType, this.point);
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
 		}
 	}
