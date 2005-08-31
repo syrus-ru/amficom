@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeModel.java,v 1.2 2005/08/31 10:07:26 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeModel.java,v 1.3 2005/08/31 10:29:03 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
