@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.18 2005/08/29 09:54:15 max Exp $
+ * $Id: AbstractItem.java,v 1.19 2005/08/31 09:18:06 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,6 @@
 
 package com.syrus.AMFICOM.logic;
 
-import com.syrus.util.Log;
-
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.ArrayList;
@@ -17,11 +15,12 @@ import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
+
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/29 09:54:15 $
- * @author $Author: max $
+ * @version $Revision: 1.19 $, $Date: 2005/08/31 09:18:06 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter
  */
@@ -80,7 +79,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 
 	public void addChild(Item childItem) {
 		Log.debugMessage("AbstractItem.addChild | this.name: " + this.toString() + " \n\t name: "
-				+ childItem.toString(), Level.FINEST);
+				+ childItem.toString(), Log.DEBUGLEVEL10);
 
 		if (!this.canHaveChildren())
 			throw new UnsupportedOperationException("Item " + this.getName() + " can not have children.");
@@ -114,7 +113,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 
 	public void setParent(Item parent) {
 		Log.debugMessage("AbstractItem.setParent | name:" + this.toString() + "\n\tparent:"
-				+ (parent == null ? "'null'" : parent.toString()), Level.FINEST);
+				+ (parent == null ? "'null'" : parent.toString()), Log.DEBUGLEVEL10);
 
 		Item oldParent = this.parent;
 		/* yeah, really compare reference */
@@ -150,7 +149,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 			Log.debugMessage(this.toString() + " listener[" + i + "(" + itemListener.getClass().getName() + ")"
 					+ "].setParentPerformed | item:" + item.toString() + ", oldParent:"
 					+ (oldParent == null ? "'null'" : oldParent.toString()) + ", newParent:"
-					+ (newParent == null ? "'null'" : newParent.toString()), Level.FINEST);
+					+ (newParent == null ? "'null'" : newParent.toString()), Log.DEBUGLEVEL10);
 		}
 		/* yeah, really compare reference */
 		// if (thisParent == this)
