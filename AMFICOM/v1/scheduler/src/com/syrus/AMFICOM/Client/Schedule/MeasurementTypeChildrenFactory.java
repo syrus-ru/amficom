@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.11 2005/08/31 07:53:00 bob Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.12 2005/08/31 09:26:01 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/31 07:53:00 $
+ * @version $Revision: 1.12 $, $Date: 2005/08/31 09:26:01 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -56,99 +56,88 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 	}
 	
 	public void populate(Item item) {
+		LinkedIdsCondition domainCondition = new LinkedIdsCondition(this.domainId,
+			ObjectEntities.KIS_CODE);
+		Set<Identifier> measurementPortTypeIds = new LinkedHashSet<Identifier>();
+		Map<KIS, EnumSet<MeasurementType>> kisMeasurementTypes = new HashMap<KIS, EnumSet<MeasurementType>>();
+		Map<KIS, Set<MeasurementPort>> kisMeasurementPorts = new HashMap<KIS, Set<MeasurementPort>>();
+		LinkedIdsCondition measurementPortCondition = null;
 		try {
-			throw new Exception();
-		} catch (Exception e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
-		}
-			LinkedIdsCondition domainCondition = new LinkedIdsCondition(this.domainId,
-				ObjectEntities.KIS_CODE);
-			Set<Identifier> measurementPortTypeIds = new LinkedHashSet<Identifier>();
-			Map<KIS, EnumSet<MeasurementType>> kisMeasurementTypes = new HashMap<KIS, EnumSet<MeasurementType>>();
-			Map<KIS, Set<MeasurementPort>> kisMeasurementPorts = new HashMap<KIS, Set<MeasurementPort>>();
-			LinkedIdsCondition measurementPortCondition = null;
-			try {
-				Collection kiss = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true, true);
-				
-				domainCondition.setEntityCode(ObjectEntities.MONITOREDELEMENT_CODE);
-				Collection monitoredElements = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true, true);
-				
-				for (Iterator kisIterator = kiss.iterator(); kisIterator.hasNext();) {
-					KIS kis = (KIS) kisIterator.next();
-					if (measurementPortCondition == null)
-						measurementPortCondition = new LinkedIdsCondition(kis.getId(),
-																			ObjectEntities.MEASUREMENTPORT_CODE);
-					else
-						measurementPortCondition.setLinkedId(kis.getId());
+			Collection kiss = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true, true);
+			
+			domainCondition.setEntityCode(ObjectEntities.MONITOREDELEMENT_CODE);
+			Collection monitoredElements = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true, true);
+			
+			for (Iterator kisIterator = kiss.iterator(); kisIterator.hasNext();) {
+				KIS kis = (KIS) kisIterator.next();
+				if (measurementPortCondition == null)
+					measurementPortCondition = new LinkedIdsCondition(kis.getId(),
+																		ObjectEntities.MEASUREMENTPORT_CODE);
+				else
+					measurementPortCondition.setLinkedId(kis.getId());
 
-					Set<MeasurementPort> measurementPorts = StorableObjectPool.getStorableObjectsByCondition(
-						measurementPortCondition, true, true);
-					kisMeasurementPorts.put(kis, measurementPorts);
-					
-					EnumSet<MeasurementType> measurementTypes = EnumSet.noneOf(MeasurementType.class);
-					
-					for (Iterator it = measurementPorts.iterator(); it.hasNext();) {
-						MeasurementPort measurementPort = (MeasurementPort) it.next();
-
-						MeasurementPortType measurementPortType = (MeasurementPortType) measurementPort.getType();
-						measurementPortTypeIds.add(measurementPortType.getId());
-						measurementTypes.addAll(measurementPortType.getMeasurementTypes());
-					}
-
-					kisMeasurementTypes.put(kis, measurementTypes);
-				}	
+				Set<MeasurementPort> measurementPorts = StorableObjectPool.getStorableObjectsByCondition(
+					measurementPortCondition, true, true);
+				kisMeasurementPorts.put(kis, measurementPorts);
 				
-				for (Iterator iterator = kisMeasurementTypes.keySet().iterator(); iterator.hasNext();) {
-					KIS kis = (KIS) iterator.next();
-					EnumSet<MeasurementType> measurementTypesFormeasurementPortType = kisMeasurementTypes.get(kis);
+				EnumSet<MeasurementType> measurementTypes = EnumSet.noneOf(MeasurementType.class);
+				
+				for (Iterator it = measurementPorts.iterator(); it.hasNext();) {
+					MeasurementPort measurementPort = (MeasurementPort) it.next();
+
+					MeasurementPortType measurementPortType = (MeasurementPortType) measurementPort.getType();
+					measurementPortTypeIds.add(measurementPortType.getId());
+					measurementTypes.addAll(measurementPortType.getMeasurementTypes());
+				}
+
+				kisMeasurementTypes.put(kis, measurementTypes);
+			}	
+			
+			for (Iterator iterator = kisMeasurementTypes.keySet().iterator(); iterator.hasNext();) {
+				KIS kis = (KIS) iterator.next();
+				EnumSet<MeasurementType> measurementTypesFormeasurementPortType = kisMeasurementTypes.get(kis);
 //					Log.debugMessage("MeasurementTypeChildrenFactory.populate | " + ((Identifiable)item.getObject()).getId(), Log.FINEST);
 //					for (Iterator iter = measurementTypesFormeasurementPortType.iterator(); iter.hasNext();) {
 //						Log.debugMessage("MeasurementTypeChildrenFactory.populate | storableObject " + iter.next(), Log.FINEST);
 //					}
-					if (measurementTypesFormeasurementPortType.contains(item.getObject())) {
-						IconPopulatableItem kisItem = new IconPopulatableItem();
-						kisItem.setName(kis.getName());
-						kisItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_TESTING));
-						kisItem.setObject(kis.getId());
-						item.addChild(kisItem);
-						Set<MeasurementPort> measurementPort = kisMeasurementPorts.get(kis);
-						for (Iterator measurementPortIterator = measurementPort.iterator(); measurementPortIterator
+				if (measurementTypesFormeasurementPortType.contains(item.getObject())) {
+					IconPopulatableItem kisItem = new IconPopulatableItem();
+					kisItem.setName(kis.getName());
+					kisItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_TESTING));
+					kisItem.setObject(kis.getId());
+					item.addChild(kisItem);
+					Set<MeasurementPort> measurementPort = kisMeasurementPorts.get(kis);
+					for (Iterator measurementPortIterator = measurementPort.iterator(); measurementPortIterator
+							.hasNext();) {
+						MeasurementPort measurementPort2 = (MeasurementPort) measurementPortIterator.next();
+						IconPopulatableItem measurementPortItem = new IconPopulatableItem();
+						measurementPortItem.setName(measurementPort2.getName());
+						measurementPortItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_PORT));
+						measurementPortItem.setObject(measurementPort2.getId());
+						kisItem.addChild(measurementPortItem);
+						for (Iterator monitoredElementIterator = monitoredElements.iterator(); monitoredElementIterator
 								.hasNext();) {
-							MeasurementPort measurementPort2 = (MeasurementPort) measurementPortIterator.next();
-							IconPopulatableItem measurementPortItem = new IconPopulatableItem();
-							measurementPortItem.setName(measurementPort2.getName());
-							measurementPortItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_PORT));
-							measurementPortItem.setObject(measurementPort2.getId());
-							kisItem.addChild(measurementPortItem);
-							for (Iterator monitoredElementIterator = monitoredElements.iterator(); monitoredElementIterator
-									.hasNext();) {
-								MonitoredElement monitoredElement = (MonitoredElement) monitoredElementIterator.next();
-								if (monitoredElement.getMeasurementPortId().equals(measurementPort2.getId())) {
-									IconPopulatableItem monitoredElementItem = new IconPopulatableItem();
-									monitoredElementItem.setName(monitoredElement.getName());
-									monitoredElementItem.setObject(monitoredElement.getId());
-									monitoredElementItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_PATHMODE));
-									monitoredElementItem.setCanHaveChildren(false);
-									measurementPortItem.addChild(monitoredElementItem);
-								}
+							MonitoredElement monitoredElement = (MonitoredElement) monitoredElementIterator.next();
+							if (monitoredElement.getMeasurementPortId().equals(measurementPort2.getId())) {
+								IconPopulatableItem monitoredElementItem = new IconPopulatableItem();
+								monitoredElementItem.setName(monitoredElement.getName());
+								monitoredElementItem.setObject(monitoredElement.getId());
+								monitoredElementItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_PATHMODE));
+								monitoredElementItem.setCanHaveChildren(false);
+								measurementPortItem.addChild(monitoredElementItem);
 							}
 						}
 					}
 				}
-			} catch (ApplicationException e) {
-				Log.debugException(e, Level.WARNING);
 			}
-		
+		} catch (ApplicationException e) {
+			Log.debugException(e, Level.WARNING);
+		}		
 	}
-
-
-
 	
 	public void setDomainId(Identifier domainId) {
 		this.domainId = domainId;
-	}
-	
+	}	
 
 }
 

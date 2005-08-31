@@ -191,7 +191,6 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 			item.setParent(null);
 		}
 		for (final Item item : elements) {
-			System.err.println("ElementsTreeFrame.setElements() | " + item);
 			if (item instanceof IconPopulatableItem) {
 				IconPopulatableItem iconPopulatableItem = (IconPopulatableItem)item;
 				iconPopulatableItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_FOLDER));
