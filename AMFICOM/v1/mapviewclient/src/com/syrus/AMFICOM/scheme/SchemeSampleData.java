@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.28 2005/08/25 11:26:47 krupenn Exp $
+ * $Id: SchemeSampleData.java,v 1.29 2005/08/31 17:23:37 bass Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,8 +23,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: krupenn $
- * @version $Revision: 1.28 $
+ * @author $Author: bass $
+ * @version $Revision: 1.29 $
  * @module mapviewclient
  */
 public final class SchemeSampleData {
@@ -123,35 +123,36 @@ public final class SchemeSampleData {
 		scheme1clink0.setPhysicalLength(1000.0D);
 		scheme1clink0.setSourceAbstractSchemePort(scheme1dev00cport00);
 		scheme1clink0.setTargetAbstractSchemePort(scheme1dev10cport10);
-		SchemeCableThread scheme1clink0th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, scheme1clink0);
+		final LinkType linkType = ctt.getLinkType();
+		SchemeCableThread scheme1clink0th = SchemeCableThread.createInstance(userId, "1", "", linkType, null, null, null, scheme1clink0);
 
 		scheme1clink1 = SchemeCableLink.createInstance(userId, "Кабелёк2", scheme1);
 		scheme1clink1.setOpticalLength(1000.0D);
 		scheme1clink1.setPhysicalLength(1000.0D);
 		scheme1clink1.setSourceAbstractSchemePort(scheme1dev10cport11);
 		scheme1clink1.setTargetAbstractSchemePort(scheme1dev20cport20);
-		SchemeCableThread scheme1clink1th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, scheme1clink1);
+		SchemeCableThread scheme1clink1th = SchemeCableThread.createInstance(userId, "1", "", linkType, null, null, null, scheme1clink1);
 
 		scheme1clink2 = SchemeCableLink.createInstance(userId, "Кабелёк3", scheme1);
 		scheme1clink2.setOpticalLength(1000.0D);
 		scheme1clink2.setPhysicalLength(1000.0D);
 		scheme1clink2.setSourceAbstractSchemePort(scheme1dev20cport21);
 		scheme1clink2.setTargetAbstractSchemePort(scheme1dev30cport30);
-		SchemeCableThread scheme1clink2th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, scheme1clink2);
+		SchemeCableThread scheme1clink2th = SchemeCableThread.createInstance(userId, "1", "", linkType, null, null, null, scheme1clink2);
 
 		scheme1clink3 = SchemeCableLink.createInstance(userId, "Кабелёк4", scheme1);
 		scheme1clink3.setOpticalLength(1000.0D);
 		scheme1clink3.setPhysicalLength(1000.0D);
 		scheme1clink3.setSourceAbstractSchemePort(scheme1dev30cport31);
 		scheme1clink3.setTargetAbstractSchemePort(scheme1dev40cport40);
-		SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, scheme1clink3);
+		SchemeCableThread.createInstance(userId, "1", "", linkType, null, null, null, scheme1clink3);
 
 		scheme1clink4 = SchemeCableLink.createInstance(userId, "Кабелёк5", scheme1);
 		scheme1clink4.setOpticalLength(1000.0D);
 		scheme1clink4.setPhysicalLength(1000.0D);
 		scheme1clink4.setSourceAbstractSchemePort(scheme1dev40cport41);
 		scheme1clink4.setTargetAbstractSchemePort(scheme1dev20cport22);
-		SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, scheme1clink4);
+		SchemeCableThread.createInstance(userId, "1", "", linkType, null, null, null, scheme1clink4);
 
 		SchemeMonitoringSolution solution = SchemeMonitoringSolution.createInstance(userId, "Сольюшн", scheme1);
 		scheme1path0 = SchemePath.createInstance(userId, "Путяра измерений", solution);

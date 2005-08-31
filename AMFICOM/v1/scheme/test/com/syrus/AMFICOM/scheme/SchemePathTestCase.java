@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.18 2005/08/28 18:43:57 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.19 2005/08/31 17:23:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,6 @@ import junit.framework.Test;
 import junit.framework.TestCase;
 import junit.framework.TestSuite;
 
-import com.syrus.AMFICOM.configuration.CableLinkType;
-import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -55,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/08/28 18:43:57 $
+ * @version $Revision: 1.19 $, $Date: 2005/08/31 17:23:36 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -166,8 +164,6 @@ public final class SchemePathTestCase extends TestCase {
 		final Identifier imageId = new Identifier("ImageResource_0");
 
 		final LinkType linkType = LinkType.createInstance(userId, "codename", "description", "name", LinkTypeSort.LINKTYPESORT_AIR, "manufacturer", "manufactirer code", imageId);
-		final CableLinkType cableLinkType = CableLinkType.createInstance(userId, "codename", "description", "name", LinkTypeSort.LINKTYPESORT_COPPER, "manufactirer", "manufactirer code", imageId);
-		final CableThreadType cableThreadType = CableThreadType.createInstance(userId, "codename", "description", "name", 0, linkType, cableLinkType);
 
 		final String schemeName = "a scheme";
 		final Scheme scheme = Scheme.createInstance(userId, schemeName, IdlKind.BAY, domainId);
@@ -182,7 +178,7 @@ public final class SchemePathTestCase extends TestCase {
 
 		final SchemeLink schemeLink = SchemeLink.createInstance(userId, "a scheme link", scheme);
 		final SchemeCableLink schemeCableLink = SchemeCableLink.createInstance(userId, "a scheme cable link", scheme); 
-		final SchemeCableThread schemeCableThread = SchemeCableThread.createInstance(userId, "a scheme cable thread", cableThreadType, schemeCableLink);
+		final SchemeCableThread schemeCableThread = SchemeCableThread.createInstance(userId, "a scheme cable thread", linkType, schemeCableLink);
 		final SchemeElement schemeElement = SchemeElement.createInstance(userId, "a scheme element", scheme);
 		final SchemeDevice schemeDevice = SchemeDevice.createInstance(userId, "a scheme device", schemeElement);
 		final SchemePort startSchemePort = SchemePort.createInstance(userId, "starting scheme port", IdlDirectionType._IN, schemeDevice);
@@ -632,8 +628,6 @@ public final class SchemePathTestCase extends TestCase {
 		final Identifier imageId = new Identifier("ImageResource_0");
 
 		final LinkType linkType0 = LinkType.createInstance(userId, "codename", "description", "linkType0", LinkTypeSort.LINKTYPESORT_OPTICAL, "manufacturer", "manufactirer code", imageId);
-		final CableLinkType cableLinkType0 = CableLinkType.createInstance(userId, "codename", "description", "cableLinkType0", LinkTypeSort.LINKTYPESORT_POWERLINE, "manufactirer", "manufactirer code", imageId);
-		final CableThreadType cableThreadType0 = CableThreadType.createInstance(userId, "codename", "description", "cableThreadType0", 0, linkType0, cableLinkType0);
 
 		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
 		final SchemeElement schemeElement0 = SchemeElement.createInstance(userId, "schemeElement0", scheme0);
@@ -641,7 +635,7 @@ public final class SchemePathTestCase extends TestCase {
 		final SchemePort schemePort0 = SchemePort.createInstance(userId, "schemePort0", IdlDirectionType._IN, schemeDevice0);
 		final SchemeLink schemeLink0 = SchemeLink.createInstance(userId, "schemeLink0", schemeElement0);
 		final SchemeCableLink schemeCableLink0 = SchemeCableLink.createInstance(userId, "schemeCableLink0", scheme0);
-		final SchemeCableThread schemeCableThread0 = SchemeCableThread.createInstance(userId, "schemeCableThread0", cableThreadType0, schemeCableLink0);
+		final SchemeCableThread schemeCableThread0 = SchemeCableThread.createInstance(userId, "schemeCableThread0", linkType0, schemeCableLink0);
 
 		scheme0.clone();
 		schemeElement0.clone();

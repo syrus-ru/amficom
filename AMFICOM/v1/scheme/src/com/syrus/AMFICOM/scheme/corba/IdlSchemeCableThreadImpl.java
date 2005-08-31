@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSchemeCableThreadImpl.java,v 1.4 2005/07/24 17:08:16 bass Exp $
+ * $Id: IdlSchemeCableThreadImpl.java,v 1.5 2005/08/31 17:23:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/24 17:08:16 $
+ * @version $Revision: 1.5 $, $Date: 2005/08/31 17:23:36 $
  * @module scheme
  */
 final class IdlSchemeCableThreadImpl extends IdlSchemeCableThread {
@@ -37,7 +37,7 @@ final class IdlSchemeCableThreadImpl extends IdlSchemeCableThread {
 			final long version,
 			final String name,
 			final String description,
-			final IdlIdentifier cableThreadTypeId,
+			final IdlIdentifier linkTypeId,
 			final IdlIdentifier linkId,
 			final IdlIdentifier sourceSchemePortId,
 			final IdlIdentifier targetSchemePortId,
@@ -50,7 +50,7 @@ final class IdlSchemeCableThreadImpl extends IdlSchemeCableThread {
 		this.version = version;
 		this.name = name;
 		this.description = description;
-		this.cableThreadTypeId = cableThreadTypeId;
+		this.linkTypeId = linkTypeId;
 		this.linkId = linkId;
 		this.sourceSchemePortId = sourceSchemePortId;
 		this.targetSchemePortId = targetSchemePortId;

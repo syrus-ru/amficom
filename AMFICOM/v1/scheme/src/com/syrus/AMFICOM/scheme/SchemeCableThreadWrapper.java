@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadWrapper.java,v 1.8 2005/08/15 15:15:13 max Exp $
+ * $Id: SchemeCableThreadWrapper.java,v 1.9 2005/08/31 17:23:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/15 15:15:13 $
- * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2005/08/31 17:23:36 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class SchemeCableThreadWrapper extends StorableObjectWrapper<SchemeCableThread> {
-	public static final String COLUMN_CABLE_THREAD_TYPE_ID = "cable_thread_type_id";
+	public static final String COLUMN_LINK_TYPE_ID = "link_type_id";
 	public static final String COLUMN_LINK_ID = "link_id";
 	public static final String COLUMN_PARENT_SCHEME_CABLE_LINK_ID = "parent_scheme_cable_link_id";
 	public static final String COLUMN_SOURCE_SCHEME_PORT_ID = "source_scheme_port_id";
@@ -34,7 +34,7 @@ public final class SchemeCableThreadWrapper extends StorableObjectWrapper<Scheme
 		this.keys = Collections.unmodifiableList(Arrays.asList(new String[] {
 				COLUMN_NAME,
 				COLUMN_DESCRIPTION,
-				COLUMN_CABLE_THREAD_TYPE_ID,
+				COLUMN_LINK_TYPE_ID,
 				COLUMN_LINK_ID,
 				COLUMN_PARENT_SCHEME_CABLE_LINK_ID,
 				COLUMN_SOURCE_SCHEME_PORT_ID,
@@ -58,7 +58,7 @@ public final class SchemeCableThreadWrapper extends StorableObjectWrapper<Scheme
 		if (key.equals(COLUMN_NAME)
 				|| key.equals(COLUMN_DESCRIPTION)) {
 			return String.class;
-		} else if (key.equals(COLUMN_CABLE_THREAD_TYPE_ID)
+		} else if (key.equals(COLUMN_LINK_TYPE_ID)
 				|| key.equals(COLUMN_LINK_ID)
 				|| key.equals(COLUMN_PARENT_SCHEME_CABLE_LINK_ID)
 				|| key.equals(COLUMN_SOURCE_SCHEME_PORT_ID)
@@ -88,8 +88,8 @@ public final class SchemeCableThreadWrapper extends StorableObjectWrapper<Scheme
 				return schemeCableThread.getName();
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				return schemeCableThread.getDescription();
-			} else if (key.equals(COLUMN_CABLE_THREAD_TYPE_ID)) {
-				return schemeCableThread.getCableThreadTypeId();
+			} else if (key.equals(COLUMN_LINK_TYPE_ID)) {
+				return schemeCableThread.getLinkTypeId();
 			} else if (key.equals(COLUMN_LINK_ID)) {
 				return schemeCableThread.getLinkId();
 			} else if (key.equals(COLUMN_PARENT_SCHEME_CABLE_LINK_ID)) {
@@ -114,8 +114,8 @@ public final class SchemeCableThreadWrapper extends StorableObjectWrapper<Scheme
 				schemeCableThread.setName((String) value);
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				schemeCableThread.setDescription((String) value);
-			} else if (key.equals(COLUMN_CABLE_THREAD_TYPE_ID)) {
-				schemeCableThread.setCableThreadTypeId((Identifier) value);
+			} else if (key.equals(COLUMN_LINK_TYPE_ID)) {
+				schemeCableThread.setLinkTypeId((Identifier) value);
 			} else if (key.equals(COLUMN_LINK_ID)) {
 				schemeCableThread.setLinkId((Identifier) value);
 			} else if (key.equals(COLUMN_PARENT_SCHEME_CABLE_LINK_ID)) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.67 2005/08/19 16:11:14 arseniy Exp $
+ * $Id: SchemeCableThread.java,v 1.68 2005/08/31 17:23:36 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
@@ -33,8 +33,8 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.Link;
+import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -61,8 +61,8 @@ import com.syrus.util.Log;
 /**
  * #14 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.67 $, $Date: 2005/08/19 16:11:14 $
+ * @author $Author: bass $
+ * @version $Revision: 1.68 $, $Date: 2005/08/31 17:23:36 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -73,8 +73,11 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	private String description;
 
-	private Identifier cableThreadTypeId;
+	private Identifier linkTypeId;
 
+	/**
+	 * Commutation.
+	 */
 	private Identifier linkId;
 
 	Identifier sourceSchemePortId;
@@ -108,7 +111,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @param version
 	 * @param name
 	 * @param description
-	 * @param cableThreadType
+	 * @param linkType
 	 * @param link
 	 * @param sourceSchemePort
 	 * @param targetSchemePort
@@ -122,7 +125,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 			final StorableObjectVersion version,
 			final String name,
 			final String description,
-			final CableThreadType cableThreadType,
+			final LinkType linkType,
 			final Link link,
 			final SchemePort sourceSchemePort,
 			final SchemePort targetSchemePort,
@@ -130,7 +133,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
-		this.cableThreadTypeId = Identifier.possiblyVoid(cableThreadType);
+		this.linkTypeId = Identifier.possiblyVoid(linkType);
 		this.linkId = Identifier.possiblyVoid(link);
 		this.sourceSchemePortId = Identifier.possiblyVoid(sourceSchemePort);
 		this.targetSchemePortId = Identifier.possiblyVoid(targetSchemePort);
@@ -147,16 +150,16 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	/**
 	 * A shorthand for
-	 * {@link #createInstance(Identifier, String, String, CableThreadType, Link, SchemePort, SchemePort, SchemeCableLink)}.
+	 * {@link #createInstance(Identifier, String, String, LinkType, Link, SchemePort, SchemePort, SchemeCableLink)}.
 	 *
 	 * @param creatorId
 	 * @param name
-	 * @param cableThreadType
+	 * @param linkType
 	 * @param parentSchemeCableLink
 	 * @throws CreateObjectException
 	 */
-	public static SchemeCableThread createInstance(final Identifier creatorId, final String name, final CableThreadType cableThreadType, final SchemeCableLink parentSchemeCableLink) throws CreateObjectException {
-		return createInstance(creatorId, name, "", cableThreadType,
+	public static SchemeCableThread createInstance(final Identifier creatorId, final String name, final LinkType linkType, final SchemeCableLink parentSchemeCableLink) throws CreateObjectException {
+		return createInstance(creatorId, name, "", linkType,
 				null, null, null, parentSchemeCableLink);
 	}
 
@@ -164,7 +167,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @param creatorId
 	 * @param name
 	 * @param description
-	 * @param cableThreadType
+	 * @param linkType
 	 * @param link
 	 * @param sourceSchemePort
 	 * @param targetSchemePort
@@ -174,7 +177,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	public static SchemeCableThread createInstance(final Identifier creatorId,
 			final String name,
 			final String description,
-			final CableThreadType cableThreadType,
+			final LinkType linkType,
 			final Link link,
 			final SchemePort sourceSchemePort,
 			final SchemePort targetSchemePort,
@@ -182,7 +185,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
-		assert cableThreadType != null : NON_NULL_EXPECTED;
+		assert linkType != null : NON_NULL_EXPECTED;
 		assert parentSchemeCableLink != null : NON_NULL_EXPECTED;
 
 		try {
@@ -195,7 +198,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 					StorableObjectVersion.createInitial(),
 					name,
 					description,
-					cableThreadType,
+					linkType,
 					link,
 					sourceSchemePort,
 					targetSchemePort,
@@ -256,18 +259,18 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		}
 	}
 
-	Identifier getCableThreadTypeId() {
-		assert this.cableThreadTypeId != null && !this.cableThreadTypeId.isVoid(): OBJECT_BADLY_INITIALIZED;
-		assert this.cableThreadTypeId.getMajor() == CABLETHREAD_TYPE_CODE;
-		return this.cableThreadTypeId;
+	Identifier getLinkTypeId() {
+		assert this.linkTypeId != null && !this.linkTypeId.isVoid(): OBJECT_BADLY_INITIALIZED;
+		assert this.linkTypeId.getMajor() == LINK_TYPE_CODE;
+		return this.linkTypeId;
 	}
 	
 	/**
-	 * A wrapper around {@link #getCableThreadTypeId()}.
+	 * A wrapper around {@link #getLinkTypeId()}.
 	 */
-	public CableThreadType getCableThreadType() {
+	public LinkType getLinkType() {
 		try {
-			return StorableObjectPool.getStorableObject(this.getCableThreadTypeId(), true);
+			return StorableObjectPool.getStorableObject(this.getLinkTypeId(), true);
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return null;
@@ -289,12 +292,12 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 */
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.cableThreadTypeId != null && this.linkId != null
+		assert this.linkTypeId != null && this.linkId != null
 				&& this.sourceSchemePortId != null
 				&& this.targetSchemePortId != null
 				&& this.parentSchemeCableLinkId != null: OBJECT_NOT_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.add(this.cableThreadTypeId);
+		dependencies.add(this.linkTypeId);
 		dependencies.add(this.linkId);
 		dependencies.add(this.sourceSchemePortId);
 		dependencies.add(this.targetSchemePortId);
@@ -456,7 +459,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 				this.version.longValue(),
 				this.name,
 				this.description,
-				this.cableThreadTypeId.getTransferable(),
+				this.linkTypeId.getTransferable(),
 				this.linkId.getTransferable(),
 				this.sourceSchemePortId.getTransferable(),
 				this.targetSchemePortId.getTransferable(),
@@ -471,7 +474,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @param version
 	 * @param name
 	 * @param description
-	 * @param cableThreadTypeId
+	 * @param linkTypeId
 	 * @param linkId
 	 * @param sourceSchemePortId
 	 * @param targetSchemePortId
@@ -484,7 +487,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 			final StorableObjectVersion version,
 			final String name,
 			final String description,
-			final Identifier cableThreadTypeId,
+			final Identifier linkTypeId,
 			final Identifier linkId,
 			final Identifier parentSchemeCableLinkId,
 			final Identifier sourceSchemePortId,
@@ -493,7 +496,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 		assert name != null && name.length() != 0 : NON_EMPTY_EXPECTED;
 		assert description != null : NON_NULL_EXPECTED;
-		assert cableThreadTypeId != null && !cableThreadTypeId.isVoid() : NON_VOID_EXPECTED;
+		assert linkTypeId != null && !linkTypeId.isVoid() : NON_VOID_EXPECTED;
 		assert linkId != null;
 		assert sourceSchemePortId != null : NON_NULL_EXPECTED;
 		assert targetSchemePortId != null : NON_NULL_EXPECTED;
@@ -502,7 +505,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 		this.name = name;
 		this.description = description;
-		this.cableThreadTypeId = cableThreadTypeId;
+		this.linkTypeId = linkTypeId;
 		this.linkId = linkId;
 		this.sourceSchemePortId = sourceSchemePortId;
 		this.targetSchemePortId = targetSchemePortId;
@@ -510,16 +513,16 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @param cableThreadType
+	 * @param linkType
 	 */
-	public void setCableThreadType(final CableThreadType cableThreadType) {
-		assert this.cableThreadTypeId != null && !this.cableThreadTypeId.isVoid(): OBJECT_BADLY_INITIALIZED;
-		assert cableThreadType != null: NON_NULL_EXPECTED;
+	public void setLinkType(final LinkType linkType) {
+		assert this.linkTypeId != null && !this.linkTypeId.isVoid(): OBJECT_BADLY_INITIALIZED;
+		assert linkType != null: NON_NULL_EXPECTED;
 
-		final Identifier newCableThreadTypeId = cableThreadType.getId();
-		if (this.cableThreadTypeId.equals(newCableThreadTypeId))
+		final Identifier newCableThreadTypeId = linkType.getId();
+		if (this.linkTypeId.equals(newCableThreadTypeId))
 			return;
-		this.cableThreadTypeId = newCableThreadTypeId;
+		this.linkTypeId = newCableThreadTypeId;
 		super.markAsChanged();
 	}
 
@@ -638,18 +641,18 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		}
 		this.name = schemeCableThread.name;
 		this.description = schemeCableThread.description;
-		this.cableThreadTypeId = new Identifier(schemeCableThread.cableThreadTypeId);
+		this.linkTypeId = new Identifier(schemeCableThread.linkTypeId);
 		this.linkId = new Identifier(schemeCableThread.linkId);
 		this.sourceSchemePortId = new Identifier(schemeCableThread.sourceSchemePortId);
 		this.targetSchemePortId = new Identifier(schemeCableThread.targetSchemePortId);
 		this.parentSchemeCableLinkId = new Identifier(schemeCableThread.parentSchemeCableLinkId);
 	}
 
-	void setCableThreadTypeId(Identifier cableThreadTypeId) {
+	void setLinkTypeId(Identifier linkTypeId) {
 		//TODO: inroduce additional sanity checks
-		assert cableThreadTypeId != null : NON_NULL_EXPECTED;
-		assert cableThreadTypeId.isVoid() || cableThreadTypeId.getMajor() == CABLETHREAD_TYPE_CODE;
-		this.cableThreadTypeId = cableThreadTypeId;
+		assert linkTypeId != null : NON_NULL_EXPECTED;
+		assert linkTypeId.isVoid() || linkTypeId.getMajor() == LINK_TYPE_CODE;
+		this.linkTypeId = linkTypeId;
 		super.markAsChanged();
 	}
 

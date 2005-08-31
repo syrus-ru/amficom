@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThreadDatabase.java,v 1.16 2005/07/28 17:42:35 bass Exp $
+ * $Id: SchemeCableThreadDatabase.java,v 1.17 2005/08/31 17:23:36 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIED;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_MODIFIER_ID;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_VERSION;
-import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_CABLE_THREAD_TYPE_ID;
+import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_LINK_TYPE_ID;
 import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_LINK_ID;
 import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID;
 import static com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper.COLUMN_SOURCE_SCHEME_PORT_ID;
@@ -39,7 +39,7 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.16 $, $Date: 2005/07/28 17:42:35 $
+ * @version $Revision: 1.17 $, $Date: 2005/08/31 17:23:36 $
  * @module scheme
  */
 public final class SchemeCableThreadDatabase extends StorableObjectDatabase<SchemeCableThread> {
@@ -52,7 +52,7 @@ public final class SchemeCableThreadDatabase extends StorableObjectDatabase<Sche
 		if (columns == null) {
 			columns = COLUMN_NAME + COMMA
 					+ COLUMN_DESCRIPTION + COMMA
-					+ COLUMN_CABLE_THREAD_TYPE_ID + COMMA
+					+ COLUMN_LINK_TYPE_ID + COMMA
 					+ COLUMN_LINK_ID + COMMA
 					+ COLUMN_PARENT_SCHEME_CABLE_LINK_ID + COMMA
 					+ COLUMN_SOURCE_SCHEME_PORT_ID + COMMA
@@ -90,7 +90,7 @@ public final class SchemeCableThreadDatabase extends StorableObjectDatabase<Sche
 			throws IllegalDataException {
 		return APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ DatabaseIdentifier.toSQLString(storableObject.getCableThreadTypeId()) + COMMA
+				+ DatabaseIdentifier.toSQLString(storableObject.getLinkTypeId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getLinkId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getParentSchemeCableLinkId()) + COMMA
 				+ DatabaseIdentifier.toSQLString(storableObject.getSourceSchemePortId()) + COMMA
@@ -112,7 +112,7 @@ public final class SchemeCableThreadDatabase extends StorableObjectDatabase<Sche
 			SQLException {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getCableThreadTypeId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getLinkTypeId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getLinkId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentSchemeCableLinkId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getSourceSchemePortId());
@@ -153,7 +153,7 @@ public final class SchemeCableThreadDatabase extends StorableObjectDatabase<Sche
 				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
-				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CABLE_THREAD_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_LINK_TYPE_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_LINK_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_PARENT_SCHEME_CABLE_LINK_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_SOURCE_SCHEME_PORT_ID),

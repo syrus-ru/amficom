@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.36 2005/08/24 11:31:20 bass Exp $
+ * $Id: scheme.idl,v 1.37 2005/08/31 17:23:37 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -450,7 +450,7 @@ module scheme {
 			public general::corba::WString32 name;
 			public general::corba::WString256 description;
 
-			public general::corba::IdlIdentifier cableThreadTypeId;
+			public general::corba::IdlIdentifier linkTypeId;
 			public general::corba::IdlIdentifier linkId;
 			public general::corba::IdlIdentifier sourceSchemePortId;
 			public general::corba::IdlIdentifier targetSchemePortId;
@@ -464,7 +464,7 @@ module scheme {
 					in long long version,
 					in general::corba::WString32 name,
 					in general::corba::WString256 description,
-					in general::corba::IdlIdentifier cableThreadTypeId,
+					in general::corba::IdlIdentifier linkTypeId,
 					in general::corba::IdlIdentifier linkId,
 					in general::corba::IdlIdentifier sourceSchemePortId,
 					in general::corba::IdlIdentifier targetSchemePortId,
