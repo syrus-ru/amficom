@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.44 2005/08/26 10:42:47 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.45 2005/08/31 13:14:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.44 $, $Date: 2005/08/26 10:42:47 $
+ * @version $Revision: 1.45 $, $Date: 2005/08/31 13:14:15 $
  * @module mapviewclient
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -226,6 +226,9 @@ public class NodeTypeController extends AbstractNodeController {
 
 			StorableObjectPool.flush(type, userId, true);
 		}
+		else {//TODO this is temporal
+			type.setSort(sort);
+		}
 		return type;
 	}
 
@@ -283,6 +286,25 @@ public class NodeTypeController extends AbstractNodeController {
 				creatorId,
 				DEFAULT_IMAGE_CODENAME, 
 				DEFAULT_IMAGE_FILENAME);
+	}
+
+	public static Collection<SiteNodeType> getCableInletTypes() {
+		Set<SiteNodeType> objects = Collections.emptySet();
+		final StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITENODE_TYPE_CODE);
+
+		try {
+			objects = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, false);
+
+			for (final Iterator<SiteNodeType> it = objects.iterator(); it.hasNext();) {
+				final SiteNodeType type = it.next();
+				if (type.getSort().value() != SiteNodeTypeSort._CABLE_INLET) {
+					it.remove();
+				}
+			}
+		} catch (Exception e) {
+			e.printStackTrace();
+		}
+		return objects;
 	}
 
 }
