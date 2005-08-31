@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.29 2005/08/31 17:23:37 bass Exp $
+ * $Id: SchemeSampleData.java,v 1.30 2005/08/31 17:45:31 bass Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
  * @author $Author: bass $
- * @version $Revision: 1.29 $
+ * @version $Revision: 1.30 $
  * @module mapviewclient
  */
 public final class SchemeSampleData {
@@ -224,7 +224,7 @@ public final class SchemeSampleData {
 		scheme2clink0.setPhysicalLength(1000.0D);
 		scheme2clink0.setSourceAbstractSchemePort(scheme2dev10cport10);
 		scheme2clink0.setTargetAbstractSchemePort(scheme2dev00cport00);
-		SchemeCableThread scheme2clink0th = SchemeCableThread.createInstance(userId, "1", "", ctt, null, null, null, scheme2clink0);
+		SchemeCableThread scheme2clink0th = SchemeCableThread.createInstance(userId, "1", "", ctt.getLinkType(), null, null, null, scheme2clink0);
 
 		SchemeMonitoringSolution solution = SchemeMonitoringSolution.createInstance(userId, "Сольюшн", scheme2);
 		scheme2path0 = SchemePath.createInstance(userId, "Путяра измерений", solution);
