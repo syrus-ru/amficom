@@ -93,8 +93,7 @@ xmlclean cleanxml:
 	$(RM) $(LIBNAME_CONFIGURATIONXML)
 	if [ -f $(XMLSRCDIR)/com/syrus/AMFICOM/configuration/xml/.cvsignore ]; \
 	then \
-		cd $(XMLSRCDIR)/com/syrus/AMFICOM/configuration/xml && \
-		$(RM) -r `cat .cvsignore` \
+		cd $(XMLSRCDIR)/com/syrus/AMFICOM/configuration/xml && $(RM) -r `cat .cvsignore`; \
 	else \
 		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/configuration/xml; \
 	fi

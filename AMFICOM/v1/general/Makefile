@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.65 2005/08/30 17:35:03 arseniy Exp $
+# $Id: Makefile,v 1.66 2005/08/31 05:34:52 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -100,8 +100,7 @@ cleanxml xmlclean:
 	$(RM) $(LIBNAME_GENERALXML)
 	if [ -f $(XMLSRCDIR)/com/syrus/AMFICOM/general/xml/.cvsignore ]; \
 	then \
-		cd $(XMLSRCDIR)/com/syrus/AMFICOM/general/xml && \
-		$(RM) -r `cat .cvsignore` \
+		cd $(XMLSRCDIR)/com/syrus/AMFICOM/general/xml && $(RM) -r `cat .cvsignore`; \
 	else \
 		$(RM) -r $(XMLSRCDIR)/com/syrus/AMFICOM/general/xml; \
 	fi
