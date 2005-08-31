@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.73 2005/08/30 16:03:59 bass Exp $
+ * $Id: SiteNode.java,v 1.74 2005/08/31 13:07:04 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,11 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 
+import java.util.Collection;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
@@ -22,12 +24,14 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ImportUidMapDatabase;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -56,8 +60,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/08/30 16:03:59 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.74 $, $Date: 2005/08/31 13:07:04 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
@@ -72,6 +76,8 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 	private String city;
 	private String street;
 	private String building;
+	
+	transient private SiteNode attachmentSiteNode = null;
 
 	SiteNode(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -250,6 +256,14 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		super.markAsChanged();
 	}
 
+	public SiteNode getAttachmentSiteNode() {
+		return this.attachmentSiteNode;
+	}
+
+	public void setAttachmentSiteNode(SiteNode attachedSiteNode) {
+		this.attachmentSiteNode = attachedSiteNode;
+	}
+
 	synchronized void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
@@ -304,7 +318,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 	public XmlSiteNode getXmlTransferable() {
 		final XmlSiteNode xmlSiteNode = XmlSiteNode.Factory.newInstance();
 		final XmlIdentifier uid = xmlSiteNode.addNewId();
-		uid.setStringValue(this.id.toString());
+		uid.setStringValue(this.id.getIdentifierString());
 		xmlSiteNode.setName(this.name);
 		xmlSiteNode.setDescription(this.description);
 		xmlSiteNode.setSiteNodeTypeCodename(this.getType().getCodename());
@@ -401,5 +415,24 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		} catch (Exception e) {
 			throw new CreateObjectException("SiteNode.createInstance |  ", e);
 		}
+	}
+
+	public Set<SiteNode> getAttachedSiteNodes() {
+		Set<SiteNode> attachedSiteNodes = new HashSet<SiteNode>();
+
+		// TODO implementation through LinkedIdsCondition
+		EquivalentCondition condition = new EquivalentCondition(ObjectEntities.SITENODE_CODE);
+		
+		try {
+			for(SiteNode siteNode : StorableObjectPool.<SiteNode>getStorableObjectsByCondition(condition, false)) {
+				if(this == siteNode.getAttachmentSiteNode()) {
+					attachedSiteNodes.add(siteNode);
+				}
+			}
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+		}
+		
+		return attachedSiteNodes;
 	}
 }
