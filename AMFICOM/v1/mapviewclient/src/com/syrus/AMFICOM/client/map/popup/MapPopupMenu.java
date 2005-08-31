@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.52 2005/08/19 15:43:32 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.53 2005/08/31 13:15:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,9 +22,15 @@ import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
 import com.syrus.AMFICOM.client.UI.dialogs.WrapperedComboChooserDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
+import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.CreateCollectorCommandAtomic;
+import com.syrus.AMFICOM.client.map.command.action.CreateNodeLinkCommandAtomic;
+import com.syrus.AMFICOM.client.map.command.action.CreatePhysicalLinkCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.CreateSiteCommandAtomic;
 import com.syrus.AMFICOM.client.map.command.action.DeleteSelectionCommand;
 import com.syrus.AMFICOM.client.map.command.action.GenerateCablePathCablingCommandBundle;
@@ -48,14 +54,16 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.52 $, $Date: 2005/08/19 15:43:32 $
+ * @version $Revision: 1.53 $, $Date: 2005/08/31 13:15:14 $
  * @module mapviewclient
  */
 public abstract class MapPopupMenu extends JPopupMenu {
@@ -102,9 +110,24 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		return (Collector )WrapperedComboChooserDialog.showChooserDialog(list);
 	}
 	
-	protected SiteNodeType selectNodeProto() {
+	protected SiteNodeType selectSiteNodeType() {
 		Object toSelect = null;
 		Collection list = NodeTypeController.getTopologicalNodeTypes();
+		Iterator listIt = list.iterator();
+		if (listIt.hasNext())
+			toSelect = listIt.next();
+
+		return (SiteNodeType )WrapperedComboChooserDialog.showNameChooserDialog(list, toSelect);
+	}
+
+	protected SiteNodeType selectAttachedSiteNodeType() {
+		Object toSelect = null;
+		Collection<SiteNodeType> list = NodeTypeController.getCableInletTypes();
+		for(SiteNodeType type : new LinkedList<SiteNodeType>(list)) {
+			if(type.getSort().value() != SiteNodeTypeSort._CABLE_INLET) {
+				list.remove(type);
+			}
+		}
 		Iterator listIt = list.iterator();
 		if (listIt.hasNext())
 			toSelect = listIt.next();
@@ -151,9 +174,10 @@ public abstract class MapPopupMenu extends JPopupMenu {
 				"Коллектор1");
 		if(inputValue != null) {
 			CreateCollectorCommandAtomic command = new CreateCollectorCommandAtomic(inputValue);
-			command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
-			this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
-			this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+			LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+			command.setLogicalNetLayer(logicalNetLayer);
+			logicalNetLayer.getCommandList().add(command);
+			logicalNetLayer.getCommandList().execute();
 			
 			return command.getCollector();
 		}
@@ -163,16 +187,17 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	
 	protected void addLinksToCollector(Collector collector, Set links) throws ApplicationException {
 		for(Iterator it = links.iterator(); it.hasNext();) {
-			PhysicalLink mple = (PhysicalLink )it.next();
+			PhysicalLink link = (PhysicalLink )it.next();
 
-			addLinkToCollector(collector, mple);
+			addLinkToCollector(collector, link);
 		}
 	}
 
 	protected void addLinkToCollector(Collector collector, PhysicalLink mple) throws ApplicationException {
 		PhysicalLinkType collectorType = LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_COLLECTOR);
 
-		Collector prevCollector = this.netMapViewer.getLogicalNetLayer().getMapView().getMap().getCollector(mple);
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		Collector prevCollector = logicalNetLayer.getMapView().getMap().getCollector(mple);
 		if(prevCollector != null)
 			prevCollector.removePhysicalLink(mple);
 	
@@ -182,9 +207,9 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		mple.setType(collectorType);
 
 		MapElementStateChangeCommand command2 = new MapElementStateChangeCommand(mple, state, mple.getState());
-		command2.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
-		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command2);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+		command2.setLogicalNetLayer(logicalNetLayer);
+		logicalNetLayer.getCommandList().add(command2);
+		logicalNetLayer.getCommandList().execute();
 	}
 
 	protected void removeLinksFromCollector(Collector collector, Set links) throws ApplicationException {
@@ -205,9 +230,10 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		mple.setType(LinkTypeController.getPhysicalLinkType(PhysicalLinkType.DEFAULT_TUNNEL));
 
 		MapElementStateChangeCommand command = new MapElementStateChangeCommand(mple, state, mple.getState());
-		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
-		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		command.setLogicalNetLayer(logicalNetLayer);
+		logicalNetLayer.getCommandList().add(command);
+		logicalNetLayer.getCommandList().execute();
 		
 		if(collector.getPhysicalLinks().size() == 0)
 			removeCollector(collector);
@@ -215,25 +241,28 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	
 	protected void removeCollector(Collector collector) {
 		RemoveCollectorCommandAtomic command = new RemoveCollectorCommandAtomic(collector);
-		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
-		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		command.setLogicalNetLayer(logicalNetLayer);
+		logicalNetLayer.getCommandList().add(command);
+		logicalNetLayer.getCommandList().execute();
 	}
 
 	protected void removeMapElement(MapElement me) {
-		this.netMapViewer.getLogicalNetLayer().deselectAll();
-		this.netMapViewer.getLogicalNetLayer().getMapView().getMap().setSelected(me, true);
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		logicalNetLayer.deselectAll();
+		logicalNetLayer.getMapView().getMap().setSelected(me, true);
 		DeleteSelectionCommand command = new DeleteSelectionCommand();
 		command.setNetMapViewer(this.netMapViewer);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+		logicalNetLayer.getCommandList().add(command);
+		logicalNetLayer.getCommandList().execute();
 	}
 
 	protected void insertSiteInPlaceOfANode(TopologicalNode node, SiteNodeType proto) {
 		InsertSiteCommandBundle command = new InsertSiteCommandBundle(node, proto);
 		command.setNetMapViewer(this.netMapViewer);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		logicalNetLayer.getCommandList().add(command);
+		logicalNetLayer.getCommandList().execute();
 	}
 
 	protected void convertUnboundNodeToSite(UnboundNode unbound, SiteNodeType proto) {
@@ -241,31 +270,89 @@ public abstract class MapPopupMenu extends JPopupMenu {
 			return;
 
 		CreateSiteCommandAtomic command = new CreateSiteCommandAtomic(proto, unbound.getLocation());
-		command.setLogicalNetLayer(this.netMapViewer.getLogicalNetLayer());
-		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		command.setLogicalNetLayer(logicalNetLayer);
+		logicalNetLayer.getCommandList().add(command);
+		logicalNetLayer.getCommandList().execute();
 		
 		SiteNode site = command.getSite();
 
 		BindUnboundNodeToSiteCommandBundle command2 = new BindUnboundNodeToSiteCommandBundle(unbound, site);
 		command2.setNetMapViewer(this.netMapViewer);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command2);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+		logicalNetLayer.getCommandList().add(command2);
+		logicalNetLayer.getCommandList().execute();
 	}
 
 	protected void generatePathCabling(CablePath path, SiteNodeType proto) {
 		GenerateCablePathCablingCommandBundle command = 
 				new GenerateCablePathCablingCommandBundle(path, proto);
 		command.setNetMapViewer(this.netMapViewer);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		logicalNetLayer.getCommandList().add(command);
+		logicalNetLayer.getCommandList().execute();
 	}
 
 	protected void convertUnboundLinkToPhysicalLink(UnboundLink unbound) {
 		GenerateUnboundLinkCablingCommandBundle command = 
 				new GenerateUnboundLinkCablingCommandBundle(unbound);
 		command.setNetMapViewer(this.netMapViewer);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
-		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		logicalNetLayer.getCommandList().add(command);
+		logicalNetLayer.getCommandList().execute();
+	}
+
+	protected void createAttachedSiteNode(SiteNode siteNode, SiteNodeType attachedSiteNodeType) throws MapConnectionException, MapDataException {
+		MapCoordinatesConverter converter = this.netMapViewer.getLogicalNetLayer().getConverter();
+		Point point = converter.convertMapToScreen(siteNode.getLocation());
+		if(point.x > 30) {
+			point.x -= 20;
+		}
+		else {
+			point.x += 20;
+		}
+		SiteNode attachedSiteNode = this.createSiteNode(attachedSiteNodeType, point);
+		PhysicalLink physicalLink = this.createPhysicalLink(siteNode, attachedSiteNode);
+		physicalLink.setType(LinkTypeController.getIndoorLinkType());
+		this.createNodeLink(physicalLink, siteNode, attachedSiteNode);
+	}
+
+	protected SiteNode createSiteNode(SiteNodeType siteNodeType, DoublePoint doublePoint) {
+		CreateSiteCommandAtomic command = 
+			new CreateSiteCommandAtomic(siteNodeType, doublePoint);
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		command.setLogicalNetLayer(logicalNetLayer);
+		logicalNetLayer.getCommandList().add(command);
+		logicalNetLayer.getCommandList().execute();
+		return command.getSite();
+	}
+
+	protected SiteNode createSiteNode(SiteNodeType siteNodeType, Point point) {
+		CreateSiteCommandAtomic command = 
+			new CreateSiteCommandAtomic(siteNodeType, point);
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		command.setLogicalNetLayer(logicalNetLayer);
+		logicalNetLayer.getCommandList().add(command);
+		logicalNetLayer.getCommandList().execute();
+		return command.getSite();
+	}
+
+	protected void createNodeLink(
+			PhysicalLink physicalLink,
+			AbstractNode startNode,
+			AbstractNode endNode) {
+		CreateNodeLinkCommandAtomic command = new CreateNodeLinkCommandAtomic(physicalLink, startNode, endNode);
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		command.setLogicalNetLayer(logicalNetLayer);
+		logicalNetLayer.getCommandList().add(command);
+		logicalNetLayer.getCommandList().execute();
+	}
+
+	protected PhysicalLink createPhysicalLink( AbstractNode startNode, AbstractNode endNode) {
+		CreatePhysicalLinkCommandAtomic command = new CreatePhysicalLinkCommandAtomic(startNode, endNode);
+		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+		command.setLogicalNetLayer(logicalNetLayer);
+		logicalNetLayer.getCommandList().add(command);
+		logicalNetLayer.getCommandList().execute();
+		return command.getLink();
 	}
 }
