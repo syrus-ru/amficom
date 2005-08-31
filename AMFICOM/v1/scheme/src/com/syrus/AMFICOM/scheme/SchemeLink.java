@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.63 2005/08/13 11:17:27 max Exp $
+ * $Id: SchemeLink.java,v 1.64 2005/08/31 20:17:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -56,20 +57,23 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeLink;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeLinkHelper;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeLink;
 import com.syrus.util.Log;
 
 /**
  * #12 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.63 $, $Date: 2005/08/13 11:17:27 $
+ * @author $Author: bass $
+ * @version $Revision: 1.64 $, $Date: 2005/08/31 20:17:24 $
  * @module scheme
  */
-public final class SchemeLink extends AbstractSchemeLink {
+public final class SchemeLink extends AbstractSchemeLink
+		implements XmlBeansTransferable<XmlSchemeLink> {
 	private static final long serialVersionUID = 3834587703751947064L;
 
 	private Identifier siteNodeId;
@@ -746,6 +750,13 @@ public final class SchemeLink extends AbstractSchemeLink {
 				this.getParentSchemeProtoElementId().getTransferable());
 	}
 
+	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlSchemeLink getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
 	void setAttributes(final Date created,
 			final Date modified,
 			final Identifier creatorId,
@@ -1040,6 +1051,20 @@ public final class SchemeLink extends AbstractSchemeLink {
 		this.parentSchemeProtoElementId = new Identifier(schemeLink.parentSchemeProtoElementId);
 
 		this.parentSet = true;
+	}
+
+	/**
+	 * @param xmlSchemeLink
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(final XmlSchemeLink xmlSchemeLink,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 
 	/*-********************************************************************

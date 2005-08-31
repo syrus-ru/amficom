@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.53 2005/08/20 19:49:52 arseniy Exp $
+ * $Id: SchemeCablePort.java,v 1.54 2005/08/31 20:17:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
@@ -37,21 +38,24 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCablePort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCablePortHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeCablePort;
 import com.syrus.util.Log;
 
 /**
  * #11 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.53 $, $Date: 2005/08/20 19:49:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.54 $, $Date: 2005/08/31 20:17:24 $
  * @module scheme
  */
-public final class SchemeCablePort extends AbstractSchemePort {
+public final class SchemeCablePort extends AbstractSchemePort
+		implements XmlBeansTransferable<XmlSchemeCablePort> {
 	private static final long serialVersionUID = 4050767078690534455L;
 
 	/**
@@ -245,6 +249,13 @@ public final class SchemeCablePort extends AbstractSchemePort {
 	}
 
 	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlSchemeCablePort getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @param port
 	 * @see AbstractSchemePort#setPort(Port)
 	 */
@@ -270,5 +281,20 @@ public final class SchemeCablePort extends AbstractSchemePort {
 				schemeCablePort.cablePortId,
 				schemeCablePort.measurementPortId,
 				schemeCablePort.parentSchemeDeviceId);
+	}
+
+	/**
+	 * @param xmlSchemeCablePort
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(
+			final XmlSchemeCablePort xmlSchemeCablePort,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 }

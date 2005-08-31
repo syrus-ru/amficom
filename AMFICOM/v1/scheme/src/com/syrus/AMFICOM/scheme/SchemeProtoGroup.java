@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.57 2005/08/05 16:50:34 arseniy Exp $
+ * $Id: SchemeProtoGroup.java,v 1.58 2005/08/31 20:17:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -46,6 +47,7 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
@@ -54,19 +56,21 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoGroupHelper;
 import com.syrus.AMFICOM.scheme.logic.Library;
 import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
 import com.syrus.util.Log;
 
 /**
  * #01 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.57 $, $Date: 2005/08/05 16:50:34 $
+ * @author $Author: bass $
+ * @version $Revision: 1.58 $, $Date: 2005/08/31 20:17:24 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
 public final class SchemeProtoGroup extends StorableObject
 		implements Describable, SchemeSymbolContainer, Library,
-		ReverseDependencyContainer {
+		ReverseDependencyContainer,
+		XmlBeansTransferable<XmlSchemeProtoGroup> {
 	private static final long serialVersionUID = 3256721788422862901L;
 
 	private String name;
@@ -441,6 +445,13 @@ public final class SchemeProtoGroup extends StorableObject
 	}
 
 	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlSchemeProtoGroup getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @see Item#isService()
 	 */
 	public boolean isService() {
@@ -680,5 +691,20 @@ public final class SchemeProtoGroup extends StorableObject
 		this.description = schemeProtoGroup.description;
 		this.symbolId = new Identifier(schemeProtoGroup.symbolId);
 		this.parentSchemeProtoGroupId = new Identifier(schemeProtoGroup.parentSchemeProtoGroupId);
+	}
+
+	/**
+	 * @param xmlSchemeProtoGroup
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(
+			final XmlSchemeProtoGroup xmlSchemeProtoGroup,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.69 2005/08/30 08:01:24 bass Exp $
+ * $Id: PathElement.java,v 1.70 2005/08/31 20:17:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import java.util.TreeSet;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -57,12 +58,14 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElement;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlData;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlSchemeElementData;
+import com.syrus.AMFICOM.scheme.xml.XmlPathElement;
 import com.syrus.util.Log;
 
 /**
@@ -73,14 +76,15 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/08/30 08:01:24 $
+ * @version $Revision: 1.70 $, $Date: 2005/08/31 20:17:25 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
  */
 public final class PathElement extends StorableObject
 		implements Describable, Comparable<PathElement>,
-		PathMember<SchemePath, PathElement>, ReverseDependencyContainer {
+		PathMember<SchemePath, PathElement>, ReverseDependencyContainer,
+		XmlBeansTransferable<XmlPathElement>{
 	private static final long serialVersionUID = 3905799768986038576L;
 
 	Identifier parentSchemePathId;
@@ -749,6 +753,13 @@ public final class PathElement extends StorableObject
 	}
 
 	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlPathElement getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @param created
 	 * @param modified
 	 * @param creatorId
@@ -1123,6 +1134,20 @@ public final class PathElement extends StorableObject
 					assert false;
 			}
 		}
+	}
+
+	/**
+	 * @param xmlPathElement
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(final XmlPathElement xmlPathElement,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 
 	/**

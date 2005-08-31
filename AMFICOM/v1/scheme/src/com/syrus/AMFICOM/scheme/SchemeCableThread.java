@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.68 2005/08/31 17:23:36 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.69 2005/08/31 20:17:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,6 +40,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -53,20 +54,24 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThread;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThreadHelper;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThread;
 import com.syrus.util.Log;
 
 /**
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/08/31 17:23:36 $
+ * @version $Revision: 1.69 $, $Date: 2005/08/31 20:17:24 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
-		implements Describable, Characterizable, ReverseDependencyContainer {
+		implements Describable, Characterizable,
+		ReverseDependencyContainer,
+		XmlBeansTransferable<XmlSchemeCableThread> {
 	private static final long serialVersionUID = 4050204133015171124L;
 
 	private String name;
@@ -467,6 +472,13 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlSchemeCableThread getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @param created
 	 * @param modified
 	 * @param creatorId
@@ -646,6 +658,21 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		this.sourceSchemePortId = new Identifier(schemeCableThread.sourceSchemePortId);
 		this.targetSchemePortId = new Identifier(schemeCableThread.targetSchemePortId);
 		this.parentSchemeCableLinkId = new Identifier(schemeCableThread.parentSchemeCableLinkId);
+	}
+
+	/**
+	 * @param xmlSchemeCableThread
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(
+			final XmlSchemeCableThread xmlSchemeCableThread,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 
 	void setLinkTypeId(Identifier linkTypeId) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.76 2005/08/28 15:45:58 arseniy Exp $
+ * $Id: SchemePath.java,v 1.77 2005/08/31 20:17:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -59,24 +60,26 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePath;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePathHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemePath;
 import com.syrus.util.Log;
 
 /**
  * #16 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.76 $, $Date: 2005/08/28 15:45:58 $
+ * @author $Author: bass $
+ * @version $Revision: 1.77 $, $Date: 2005/08/31 20:17:24 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
 		implements Describable, Characterizable, PathOwner<PathElement>,
-		ReverseDependencyContainer {
+		ReverseDependencyContainer, XmlBeansTransferable<XmlSchemePath> {
 	private static final long serialVersionUID = 3257567312831132469L;
 
 	private String name;
@@ -319,6 +322,13 @@ public final class SchemePath extends StorableObject
 				this.parentSchemeMonitoringSolutionId.getTransferable());
 	}
 
+	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlSchemePath getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
 	Identifier getTransmissionPathId() {
 		assert this.transmissionPathId != null: OBJECT_NOT_INITIALIZED;
 		assert this.transmissionPathId.isVoid() || this.transmissionPathId.getMajor() == TRANSMISSIONPATH_CODE;
@@ -487,6 +497,20 @@ public final class SchemePath extends StorableObject
 			this.transmissionPathId = new Identifier(schemePath.transmissionPathId);
 			this.parentSchemeMonitoringSolutionId = new Identifier(schemePath.parentSchemeMonitoringSolutionId);
 		}
+	}
+
+	/**
+	 * @param xmlSchemePath
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(final XmlSchemePath xmlSchemePath,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 
 	/**

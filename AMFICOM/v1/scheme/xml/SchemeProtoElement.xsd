@@ -1,47 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: SchemeProtoElement.xsd,v 1.2 2005/08/24 07:45:17 stas Exp $
--->
-<xsd:schema 
-	targetNamespace="http://syrus.com/AMFICOM/scheme/xml"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:scheme="http://syrus.com/AMFICOM/scheme/xml"
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
-	elementFormDefault="qualified">
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xsd:schema
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:map = "http://syrus.com/AMFICOM/map/xml"
+	xmlns:scheme = "http://syrus.com/AMFICOM/scheme/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/scheme/xml"
+	elementFormDefault = "qualified">
 
-  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: SchemeProtoElement.xsd,v 1.3 2005/08/31 20:17:24 bass Exp $
 
-  <xsd:include schemaLocation="SchemeDevice.xsd"/>
-  <xsd:include schemaLocation="SchemeLink.xsd"/>
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
 
-  <xsd:element name="schemeprotoelements" type="scheme:SchemeProtoElements">
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/StorableObject.xsd"/>
 
-    <xsd:key name="schemeprotoelementuid">
-      <xsd:selector xpath="scheme:schemeprotoelement"/>
-      <xsd:field xpath="@uid"/>
-    </xsd:key>
+	<xsd:element name = "schemeProtoElements" type = "scheme:XmlSchemeProtoElementSeq">
+		<xsd:key name = "schemeProtoElementId">
+			<xsd:selector xpath = "scheme:schemeProtoElements/scheme:schemeProtoElement"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
 
-  </xsd:element>
+	<xsd:complexType name = "XmlSchemeProtoElement">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObject">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 
-  <xsd:complexType name="SchemeProtoElements">
-    <xsd:sequence>
-      <xsd:element name="schemeprotoelement" type="scheme:SchemeProtoElement" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <xsd:complexType name="SchemeProtoElement">
-    <xsd:all>
-      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="label" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="equipmenttype" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="symbol" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="ugocell" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="schemecell" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="schemelinks" type="scheme:SchemeLinks" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="schemedevices" type="scheme:SchemeDevices" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="schemeprotoelements" type="scheme:SchemeProtoElements" minOccurs="0" maxOccurs="1"/>
-    </xsd:all>
-  </xsd:complexType>
-
+	<xsd:complexType name = "XmlSchemeProtoElementSeq">
+		<xsd:sequence>
+			<xsd:element name = "schemeProtoElement" type = "scheme:XmlSchemeProtoElement" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
 </xsd:schema>

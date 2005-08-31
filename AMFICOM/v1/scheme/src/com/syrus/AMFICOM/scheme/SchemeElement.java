@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.82 2005/08/20 19:49:52 arseniy Exp $
+ * $Id: SchemeElement.java,v 1.83 2005/08/31 20:17:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -58,6 +59,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.measurement.KIS;
@@ -66,17 +68,19 @@ import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElement;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeElement;
 import com.syrus.util.Log;
 
 /**
  * #04 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.82 $, $Date: 2005/08/20 19:49:52 $
+ * @author $Author: bass $
+ * @version $Revision: 1.83 $, $Date: 2005/08/31 20:17:24 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
-		implements SchemeCellContainer {
+		implements SchemeCellContainer,
+		XmlBeansTransferable<XmlSchemeElement> {
 	private static final long serialVersionUID = 3618977875802797368L;
 
 	private SchemeElementKind kind;
@@ -966,6 +970,13 @@ public final class SchemeElement extends AbstractSchemeElement
 				this.getParentSchemeElementId().getTransferable());
 	}
 
+	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlSchemeElement getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
 	Identifier getUgoCellId() {
 		assert this.ugoCellId != null: OBJECT_NOT_INITIALIZED;
 		assert this.ugoCellId.isVoid() || this.ugoCellId.getMajor() == IMAGERESOURCE_CODE;
@@ -1416,6 +1427,21 @@ public final class SchemeElement extends AbstractSchemeElement
 		this.parentSchemeElementId = new Identifier(schemeElement.parentSchemeElementId);
 
 		this.equipmentTypeSet = true;
+	}
+
+	/**
+	 * @param xmlSchemeElement
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(
+			final XmlSchemeElement xmlSchemeElement,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 
 	/*-********************************************************************

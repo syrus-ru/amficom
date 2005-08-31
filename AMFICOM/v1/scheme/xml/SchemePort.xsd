@@ -1,53 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: SchemePort.xsd,v 1.1 2005/08/17 07:39:11 max Exp $
--->
-<xsd:schema 
-	targetNamespace="http://syrus.com/AMFICOM/scheme/xml"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:scheme="http://syrus.com/AMFICOM/scheme/xml"
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
-	elementFormDefault="qualified">
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xsd:schema
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:map = "http://syrus.com/AMFICOM/map/xml"
+	xmlns:scheme = "http://syrus.com/AMFICOM/scheme/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/scheme/xml"
+	elementFormDefault = "qualified">
 
-  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: SchemePort.xsd,v 1.2 2005/08/31 20:17:24 bass Exp $
 
-  <xsd:element name="schemeports" type="scheme:SchemePorts">
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
 
-    <xsd:key name="schemeportuid">
-      <xsd:selector xpath="scheme:schemeport"/>
-      <xsd:field xpath="@uid"/>
-    </xsd:key>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/StorableObject.xsd"/>
 
-  </xsd:element>
+	<xsd:element name = "schemePorts" type = "scheme:XmlSchemePortSeq">
+		<xsd:key name = "schemePortId">
+			<xsd:selector xpath = "scheme:schemePorts/scheme:schemePort"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
 
-  <xsd:complexType name="SchemePorts">
-    <xsd:sequence>
-      <xsd:element name="schemeport" type="scheme:SchemePort" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
+	<xsd:complexType name = "XmlSchemePort">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObject">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 
-  <xsd:complexType name="SchemePort">
-    <xsd:all>
-      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="porttype" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="kind" type="scheme:PortTypeKind" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="directiontype" type="scheme:DirectionType" minOccurs="1" maxOccurs="1"/>
-    </xsd:all>
-  </xsd:complexType>
-
-  <xsd:simpleType name="DirectionType">
-      <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="in"/>
-            <xsd:enumeration value="out"/>
-      </xsd:restriction>
-  </xsd:simpleType>
-
-  <xsd:simpleType name="PortTypeKind">
-      <xsd:restriction base="xsd:string">
-            <xsd:enumeration value="simple"/>
-            <xsd:enumeration value="cable"/>
-      </xsd:restriction>
-  </xsd:simpleType>
-
+	<xsd:complexType name = "XmlSchemePortSeq">
+		<xsd:sequence>
+			<xsd:element name = "schemePort" type = "scheme:XmlSchemePort" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
 </xsd:schema>

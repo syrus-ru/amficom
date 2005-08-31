@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.77 2005/08/25 07:09:36 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.78 2005/08/31 20:17:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -63,6 +64,7 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
@@ -72,19 +74,21 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoElement;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoElementHelper;
 import com.syrus.AMFICOM.scheme.logic.Library;
 import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/08/25 07:09:36 $
+ * @version $Revision: 1.78 $, $Date: 2005/08/31 20:17:24 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		implements Describable, SchemeCellContainer, Characterizable,
-		LibraryEntry, ReverseDependencyContainer {
+		LibraryEntry, ReverseDependencyContainer,
+		XmlBeansTransferable<XmlSchemeProtoElement> {
 	private static final long serialVersionUID = 3689348806202569782L;
 
 	private String name;
@@ -866,6 +870,13 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				this.parentSchemeProtoElementId.getTransferable());
 	}
 
+	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlSchemeProtoElement getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
 	Identifier getUgoCellId() {
 		assert this.ugoCellId != null: OBJECT_NOT_INITIALIZED;
 		assert this.ugoCellId.isVoid() || this.ugoCellId.getMajor() == IMAGERESOURCE_CODE;
@@ -1359,6 +1370,21 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		this.parentSchemeProtoElementId = new Identifier(schemeProtoElement.parentSchemeProtoElementId);
 
 		this.parentSet = true;
+	}
+
+	/**
+	 * @param xmlSchemeProtoElement
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(
+			final XmlSchemeProtoElement xmlSchemeProtoElement,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 
 	/*-********************************************************************

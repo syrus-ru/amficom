@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.63 2005/08/25 11:33:19 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.64 2005/08/31 20:17:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -49,21 +50,24 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolution;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeMonitoringSolutionHelper;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeMonitoringSolution;
 import com.syrus.util.Log;
 
 /**
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2005/08/25 11:33:19 $
+ * @version $Revision: 1.64 $, $Date: 2005/08/31 20:17:24 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
 		extends StorableObject
-		implements Describable, ReverseDependencyContainer {
+		implements Describable, ReverseDependencyContainer,
+		XmlBeansTransferable<XmlSchemeMonitoringSolution> {
 	private static final long serialVersionUID = 3906364939487949361L;
 
 	private String name;
@@ -395,6 +399,13 @@ public final class SchemeMonitoringSolution
 				this.parentSchemeOptimizeInfoId.getTransferable());
 	}
 
+	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlSchemeMonitoringSolution getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
 	public void removeSchemePath(final SchemePath schemePath) {
 		assert schemePath != null: NON_NULL_EXPECTED;
 		assert schemePath.getParentSchemeMonitoringSolutionId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
@@ -628,5 +639,20 @@ public final class SchemeMonitoringSolution
 		this.active = schemeMonitoringSolution.active;
 		this.parentSchemeId = new Identifier(schemeMonitoringSolution.parentSchemeId);
 		this.parentSchemeOptimizeInfoId = new Identifier(schemeMonitoringSolution.parentSchemeOptimizeInfoId);
+	}
+
+	/**
+	 * @param xmlSchemeMonitoringSolution
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(
+			final XmlSchemeMonitoringSolution xmlSchemeMonitoringSolution,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 }

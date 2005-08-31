@@ -1,49 +1,43 @@
-<?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: SchemeCableThread.xsd,v 1.2 2005/08/25 10:26:53 stas Exp $
--->
-<xsd:schema 
-	targetNamespace="http://syrus.com/AMFICOM/scheme/xml"
-	xmlns:xsd="http://www.w3.org/2001/XMLSchema"
-	xmlns:scheme="http://syrus.com/AMFICOM/scheme/xml"
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
-	elementFormDefault="qualified">
+<?xml version = "1.0" encoding = "UTF-8"?>
+<xsd:schema
+	xmlns:xsd = "http://www.w3.org/2001/XMLSchema"
+	xmlns:general = "http://syrus.com/AMFICOM/general/xml"
+	xmlns:map = "http://syrus.com/AMFICOM/map/xml"
+	xmlns:scheme = "http://syrus.com/AMFICOM/scheme/xml"
+	targetNamespace = "http://syrus.com/AMFICOM/scheme/xml"
+	elementFormDefault = "qualified">
 
-  <xsd:import namespace="http://syrus.com/AMFICOM/general/xml"/>
+	<xsd:annotation>
+		<xsd:documentation xml:lang = "en">
+			$Id: SchemeCableThread.xsd,v 1.3 2005/08/31 20:17:24 bass Exp $
 
-  <xsd:element name="schemecablethreads" type="scheme:SchemeCableThreads">
+			Copyright © 2004-2005 Syrus Systems.
+			Dept. of Science &amp; Technology.
+			Project: AMFICOM.
+		</xsd:documentation>
+	</xsd:annotation>
 
-    <xsd:key name="schemecablethreaduid">
-      <xsd:selector xpath="scheme:schemecablethread"/>
-      <xsd:field xpath="@uid"/>
-    </xsd:key>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/StorableObject.xsd"/>
 
-    <xsd:keyref name="dummysctspu" refer="scheme:schemeportuid">
-      <xsd:selector xpath="scheme:schemecablethread"/>
-      <xsd:field xpath="@sourceportuid"/>
-    </xsd:keyref>
+	<xsd:element name = "schemeCableThreads" type = "scheme:XmlSchemeCableThreadSeq">
+		<xsd:key name = "schemeCableThreadId">
+			<xsd:selector xpath = "scheme:schemeCableThreads/scheme:schemeCableThread"/>
+			<xsd:field xpath = "id"/>
+		</xsd:key>
+	</xsd:element>
 
-    <xsd:keyref name="dummyscttpu" refer="scheme:schemeportuid">
-      <xsd:selector xpath="scheme:schemecablethread"/>
-      <xsd:field xpath="@targetportuid"/>
-    </xsd:keyref>
+	<xsd:complexType name = "XmlSchemeCableThread">
+		<xsd:complexContent>
+			<xsd:extension base = "general:XmlStorableObject">
+			</xsd:extension>
+		</xsd:complexContent>
+	</xsd:complexType>
 
-  </xsd:element>
-
-  <xsd:complexType name="SchemeCableThreads">
-    <xsd:sequence>
-      <xsd:element name="schemecablethread" type="scheme:SchemeCableThread" minOccurs="0" maxOccurs="unbounded"/>
-    </xsd:sequence>
-  </xsd:complexType>
-
-  <xsd:complexType name="SchemeCableThread">
-    <xsd:all>
-      <xsd:element name="uid" type="gen:UID" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="name" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="description" type="xsd:string" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="threadtype" type="xsd:string" minOccurs="1" maxOccurs="1"/>
-      <xsd:element name="sourceportuid" type="gen:UID" minOccurs="0" maxOccurs="1"/>
-      <xsd:element name="targetportuid" type="gen:UID" minOccurs="0" maxOccurs="1"/>
-    </xsd:all>
-  </xsd:complexType>
-
+	<xsd:complexType name = "XmlSchemeCableThreadSeq">
+		<xsd:sequence>
+			<xsd:element name = "schemeCableThread" type = "scheme:XmlSchemeCableThread" minOccurs = "0" maxOccurs = "unbounded"/>
+		</xsd:sequence>
+	</xsd:complexType>
 </xsd:schema>

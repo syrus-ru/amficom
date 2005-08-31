@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.16 2005/08/05 16:50:34 arseniy Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.17 2005/08/31 20:17:24 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -39,21 +40,24 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtu;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoRtuHelper;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfoRtu;
 import com.syrus.util.Log;
 
 /**
  * #07 in hierarchy.
  *
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/08/05 16:50:34 $
+ * @author $Author: bass $
+ * @version $Revision: 1.17 $, $Date: 2005/08/31 20:17:24 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu extends StorableObject
-		implements Namable, ReverseDependencyContainer {
+		implements Namable, ReverseDependencyContainer,
+		XmlBeansTransferable<XmlSchemeOptimizeInfoRtu> {
 	private static final long serialVersionUID = 6687067380421014690L;
 
 	private String name;
@@ -220,6 +224,13 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 	}
 
 	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlSchemeOptimizeInfoRtu getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * @see Namable#setName(String)
 	 */
 	public void setName(final String name) {
@@ -301,6 +312,21 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 		this.priceUsd = schemeOptimizeInfoRtu.priceUsd;
 		this.rangeDb = schemeOptimizeInfoRtu.rangeDb;
 		this.parentSchemeOptimizeInfoId = new Identifier(schemeOptimizeInfoRtu.parentSchemeOptimizeInfoId);
+	}
+
+	/**
+	 * @param xmlSchemeOptimizeInfoRtu
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(
+			final XmlSchemeOptimizeInfoRtu xmlSchemeOptimizeInfoRtu,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 
 	/**

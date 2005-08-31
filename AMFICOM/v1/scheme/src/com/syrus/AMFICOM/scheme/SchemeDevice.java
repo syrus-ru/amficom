@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.70 2005/08/16 12:13:13 max Exp $
+ * $Id: SchemeDevice.java,v 1.71 2005/08/31 20:17:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -55,20 +56,24 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeDevice;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeDeviceHelper;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeDevice;
 import com.syrus.util.Log;
 
 /**
  * #09 in hierarchy.
  *
- * @author $Author: max $
- * @version $Revision: 1.70 $, $Date: 2005/08/16 12:13:13 $
+ * @author $Author: bass $
+ * @version $Revision: 1.71 $, $Date: 2005/08/31 20:17:24 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
-		implements Describable, Characterizable, ReverseDependencyContainer {
+		implements Describable, Characterizable,
+		ReverseDependencyContainer,
+		XmlBeansTransferable<XmlSchemeDevice> {
 	private static final long serialVersionUID = 3762529027398644793L;
 
 	private String name;
@@ -542,6 +547,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlSchemeDevice getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * The <code>SchemeCablePort</code> must belong to this
 	 * <code>SchemeDevice</code>, or crap will meet the fan.
 	 *
@@ -750,6 +762,20 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		this.parentSchemeElementId = new Identifier(schemeDevice.parentSchemeElementId);
 
 		this.parentSet = true;
+	}
+
+	/**
+	 * @param xmlSchemeDevice
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(final XmlSchemeDevice xmlSchemeDevice,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 
 	/*-********************************************************************

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.71 2005/08/31 17:23:36 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.72 2005/08/31 20:17:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -60,21 +61,25 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLinkHelper;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableLink;
 import com.syrus.util.Log;
 
 /**
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.71 $, $Date: 2005/08/31 17:23:36 $
+ * @version $Revision: 1.72 $, $Date: 2005/08/31 20:17:24 $
  * @module scheme
  */
-public final class SchemeCableLink extends AbstractSchemeLink implements PathOwner<CableChannelingItem> {
+public final class SchemeCableLink extends AbstractSchemeLink
+		implements PathOwner<CableChannelingItem>,
+		XmlBeansTransferable<XmlSchemeCableLink> {
 	private static final long serialVersionUID = 3760847878314274867L;
 
 	/**
@@ -428,6 +433,13 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 	}
 
 	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlSchemeCableLink getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * Removes the <code>CableChannelingItem</code> from this
 	 * <code>SchemeCableLink</code>, changing its
 	 * <code>sequentialNumber</code> to <code>-1</code> and removing all
@@ -631,6 +643,21 @@ public final class SchemeCableLink extends AbstractSchemeLink implements PathOwn
 				schemeCableLink.sourceSchemeCablePortId,
 				schemeCableLink.targetSchemeCablePortId,
 				schemeCableLink.parentSchemeId);
+	}
+
+	/**
+	 * @param xmlSchemeCableLink
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(
+			final XmlSchemeCableLink xmlSchemeCableLink,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 
 	/**

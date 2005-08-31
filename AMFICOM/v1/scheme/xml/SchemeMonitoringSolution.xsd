@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeElement.xsd,v 1.3 2005/08/31 20:17:24 bass Exp $
+			$Id: SchemeMonitoringSolution.xsd,v 1.1 2005/08/31 20:17:24 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -21,23 +21,23 @@
 		namespace = "http://syrus.com/AMFICOM/general/xml"
 		schemaLocation = "../../general/xml/StorableObject.xsd"/>
 
-	<xsd:element name = "schemeElements" type = "scheme:XmlSchemeElementSeq">
-		<xsd:key name = "schemeElementId">
-			<xsd:selector xpath = "scheme:schemeElements/scheme:schemeElement"/>
+	<xsd:element name = "schemeMonitoringSolutions" type = "scheme:XmlSchemeMonitoringSolutionSeq">
+		<xsd:key name = "schemeMonitoringSolutionId">
+			<xsd:selector xpath = "scheme:schemeMonitoringSolutions/scheme:schemeMonitoringSolution"/>
 			<xsd:field xpath = "id"/>
 		</xsd:key>
 	</xsd:element>
 
-	<xsd:complexType name = "XmlSchemeElement">
+	<xsd:complexType name = "XmlSchemeMonitoringSolution">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlSchemeElementSeq">
+	<xsd:complexType name = "XmlSchemeMonitoringSolutionSeq">
 		<xsd:sequence>
-			<xsd:element name = "schemeElement" type = "scheme:XmlSchemeElement" minOccurs = "0" maxOccurs = "unbounded"/>
+			<xsd:element name = "schemeMonitoringSolution" type = "scheme:XmlSchemeMonitoringSolution" minOccurs = "0" maxOccurs = "unbounded"/>
 		</xsd:sequence>
 	</xsd:complexType>
 </xsd:schema>

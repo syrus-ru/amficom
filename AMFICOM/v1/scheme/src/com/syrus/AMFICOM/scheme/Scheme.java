@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.71 2005/08/05 16:50:34 arseniy Exp $
+ * $Id: Scheme.java,v 1.72 2005/08/31 20:17:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.AbstractCloneableDomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -52,6 +53,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
@@ -61,18 +63,20 @@ import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlScheme;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
+import com.syrus.AMFICOM.scheme.xml.XmlScheme;
 import com.syrus.util.Log;
 
 /**
  * #03 in hierarchy.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.71 $, $Date: 2005/08/05 16:50:34 $
+ * @author $Author: bass $
+ * @version $Revision: 1.72 $, $Date: 2005/08/31 20:17:24 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
 public final class Scheme extends AbstractCloneableDomainMember
-		implements Describable, SchemeCellContainer, ReverseDependencyContainer {
+		implements Describable, SchemeCellContainer,
+		ReverseDependencyContainer, XmlBeansTransferable<XmlScheme> {
 	private static final long serialVersionUID = 3257289136389173298L;
 
 	private static final int DEFAULT_WIDTH = 840;
@@ -729,6 +733,13 @@ public final class Scheme extends AbstractCloneableDomainMember
 				this.parentSchemeElementId.getTransferable());
 	}
 
+	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlScheme getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
 	Identifier getUgoCellId() {
 		assert this.ugoCellId != null: OBJECT_NOT_INITIALIZED;
 		assert this.ugoCellId.isVoid() || this.ugoCellId.getMajor() == IMAGERESOURCE_CODE;
@@ -1173,6 +1184,20 @@ public final class Scheme extends AbstractCloneableDomainMember
 		this.ugoCellId = new Identifier(scheme.ugoCellId);
 		this.schemeCellId = new Identifier(scheme.schemeCellId);
 		this.parentSchemeElementId = new Identifier(scheme.parentSchemeElementId);
+	}
+
+	/**
+	 * @param xmlScheme
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(final XmlScheme xmlScheme,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 
 	/*-********************************************************************

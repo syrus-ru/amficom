@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.58 2005/08/24 13:23:34 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.59 2005/08/31 20:17:24 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -47,20 +48,23 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfo;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeOptimizeInfoHelper;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfo;
 import com.syrus.util.Log;
 
 /**
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/08/24 13:23:34 $
+ * @version $Revision: 1.59 $, $Date: 2005/08/31 20:17:24 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
-		implements Describable, ReverseDependencyContainer {
+		implements Describable, ReverseDependencyContainer,
+		XmlBeansTransferable<XmlSchemeOptimizeInfo> {
 	private static final long serialVersionUID = 3761127137155232822L;
 
 	private String name;
@@ -459,6 +463,13 @@ public final class SchemeOptimizeInfo extends StorableObject
 				this.parentSchemeId.getTransferable());
 	}
 
+	/**
+	 * @see XmlBeansTransferable#getXmlTransferable()
+	 */
+	public XmlSchemeOptimizeInfo getXmlTransferable() {
+		throw new UnsupportedOperationException();
+	}
+
 	public double getWaveLength() {
 		return this.waveLength;
 	}
@@ -764,5 +775,20 @@ public final class SchemeOptimizeInfo extends StorableObject
 		this.nodesCutProb = schemeOptimizeInfo.nodesCutProb;
 		this.survivorRate = schemeOptimizeInfo.survivorRate;
 		this.parentSchemeId = new Identifier(schemeOptimizeInfo.parentSchemeId);
+	}
+
+	/**
+	 * @param xmlSchemeOptimizeInfo
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 */
+	public void fromXmlTransferable(
+			final XmlSchemeOptimizeInfo xmlSchemeOptimizeInfo,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 }
