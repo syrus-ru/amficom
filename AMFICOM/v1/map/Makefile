@@ -118,8 +118,8 @@ cleanxml xmlclean:
 
 #### Install ####
 .PHONY: install
-install: $(LIBNAME) $(LIBDIR)
-	install -m 0644 $^
+install: xmlinstall $(LIBNAME) $(LIBDIR)
+	install -m 0644 $(LIBNAME) $(LIBDIR)
 
 #### Archive ####
 .PHONY: arch
