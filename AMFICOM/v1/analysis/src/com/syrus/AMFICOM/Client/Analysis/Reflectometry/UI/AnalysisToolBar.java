@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisToolBar.java,v 1.4 2005/07/29 13:14:40 saa Exp $
+ * $Id: AnalysisToolBar.java,v 1.5 2005/08/31 11:26:22 stas Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
 
+import javax.swing.AbstractButton;
 import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
@@ -51,9 +52,9 @@ class AnalysisToolBar extends TraceEventsToolBar
 		return buttons;
 	}
 
-	protected Map createGraphButtons()
+	protected Map<String, AbstractButton> createGraphButtons()
 	{
-		Map buttons2 = super.createGraphButtons();
+		Map<String, AbstractButton> buttons2 = super.createGraphButtons();
 
 		buttons2.put(
 				loss,

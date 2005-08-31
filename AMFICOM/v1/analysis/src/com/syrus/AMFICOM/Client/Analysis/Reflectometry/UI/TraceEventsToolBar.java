@@ -1,5 +1,5 @@
 /*-
-* $Id: TraceEventsToolBar.java,v 1.10 2005/08/08 11:59:52 arseniy Exp $
+* $Id: TraceEventsToolBar.java,v 1.11 2005/08/31 11:26:22 stas Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Map;
 
+import javax.swing.AbstractButton;
 import javax.swing.JToggleButton;
 import javax.swing.UIManager;
 
@@ -20,8 +21,8 @@ import com.syrus.AMFICOM.Client.General.Model.AnalysisResourceKeys;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/08 11:59:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/08/31 11:26:22 $
+ * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module analysis
  */
@@ -52,9 +53,9 @@ public class TraceEventsToolBar extends ScalableToolBar
 		return buttons;
 	}
 
-	protected Map createGraphButtons()
+	protected Map<String, AbstractButton> createGraphButtons()
 	{
-		Map buttons1 = super.createGraphButtons();
+		Map<String, AbstractButton> buttons1 = super.createGraphButtons();
 
 		buttons1.put(
 				trace,

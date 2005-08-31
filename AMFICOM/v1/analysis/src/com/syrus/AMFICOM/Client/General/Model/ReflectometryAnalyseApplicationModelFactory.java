@@ -20,7 +20,8 @@ public class ReflectometryAnalyseApplicationModelFactory
 		aModel.setVisible("menuSessionOptions", false);
 
 		aModel.setVisible("menuTraceCloseEtalon", false);
-
+		aModel.setVisible("menuTraceSavePES", false);
+				
 		aModel.setEnabled("menuFileSave", false);
 		aModel.setEnabled("menuFileSaveAs", false);
 		aModel.setEnabled("menuFileSaveAsText", false);

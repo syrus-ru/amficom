@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.9 2005/08/25 11:48:09 max Exp $
+ * $Id: ResultChildrenFactory.java,v 1.10 2005/08/31 11:26:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.9 $, $Date: 2005/08/25 11:48:09 $
+ * @author $Author: stas $
+ * @version $Revision: 1.10 $, $Date: 2005/08/31 11:26:22 $
  * @module analysis
  */
 
@@ -144,8 +144,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 										
 					List<Item> toRemove = CommonUIUtilities.getItemsToRemove(meSet, items);
 					List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(meSet, objects);
-					for (Iterator it = toRemove.iterator(); it.hasNext();) {
-						Item child = (Item)it.next();
+					for (Item child : toRemove) {
 						child.setParent(null);
 					}
 
@@ -212,12 +211,10 @@ public class ResultChildrenFactory implements ChildrenFactory {
 				}*/
 				
 				List<Item> children = new LinkedList<Item>(item.getChildren());
-				for (Iterator it = children.iterator(); it.hasNext();) {
-					Item child = (Item)it.next();
+				for (Item child : children) {
 					child.setParent(null);
 				}
-			
-				
+
 				Date startDate;
 				Date endDate;
 								
@@ -293,8 +290,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 
 					List<Item> toRemove = CommonUIUtilities.getItemsToRemove(meSetups, items);
 					List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(meSetups, objects);
-					for (Iterator it = toRemove.iterator(); it.hasNext();) {
-						Item child = (Item)it.next();
+					for (Item child : toRemove) {
 						child.setParent(null);
 					}
 
@@ -350,8 +346,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 									
 				List<Item> toRemove = CommonUIUtilities.getItemsToRemove(testSet, items);
 				List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(testSet, objects);
-				for (Iterator it = toRemove.iterator(); it.hasNext();) {
-					Item child = (Item)it.next();
+				for (Item child : toRemove) {
 					child.setParent(null);
 				}
 
@@ -390,8 +385,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					
 					List<Item> toRemove = CommonUIUtilities.getItemsToRemove(resultSet, items);
 					List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(resultSet, objects);
-					for (Iterator it = toRemove.iterator(); it.hasNext();) {
-						Item child = (Item)it.next();
+					for (Item child : toRemove) {
 						child.setParent(null);
 					}
 					

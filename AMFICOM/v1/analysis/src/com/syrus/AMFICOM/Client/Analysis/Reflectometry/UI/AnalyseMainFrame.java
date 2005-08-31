@@ -323,6 +323,8 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setCommand("menuTraceReferenceSet", new TraceOpenReferenceCommand(this.aContext));
 		aModel.setCommand("menuTraceReferenceMakeCurrent", new TraceMakeCurrentCommand(this.aContext));
 		aModel.setCommand("menuOptionsColor", new OptionsSetColorsCommand(this.aContext));
+		
+		aModel.setCommand("menuTraceSavePES", new SavePathElementsCommand(this.aContext));
 
 		aModel.setCommand("menuMakeCurrentTracePrimary", new MakeCurrentTracePrimaryCommand());
 
@@ -388,6 +390,8 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setVisible("menuSaveThresholds", false);
 		aModel.setVisible("menuWindowThresholdsSelection", false);
 		aModel.setVisible("menuWindowThresholds", false);
+		
+		aModel.setVisible("menuTraceSavePES", true);
 	}
 
 	public void setDomainSelected() {
@@ -526,6 +530,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setEnabled("menuTraceReference", false);
 		aModel.setEnabled("menuTraceCurrent", false);
 		aModel.setEnabled("menuAnalyseUpload", false);
+		aModel.setEnabled("menuTraceSavePES", false);
 
 		aModel.setEnabled("menuCreateTestSetup", false);
 		aModel.setEnabled("menuSaveTestSetup", false);
@@ -578,6 +583,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 			aModel.setEnabled("menuTraceCurrent", true);
 			aModel.setEnabled("menuTraceAddCompare", true);
 			aModel.setEnabled("menuAnalyseUpload", true);
+			aModel.setEnabled("menuTraceSavePES", true);
 
 			aModel.setEnabled("menuCreateTestSetup", true);
 			aModel.setEnabled("menuSaveTestSetup", true);

@@ -45,6 +45,7 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		add("menuTraceCloseEtalon");
 		add("menuTraceClose");
 		add("menuTraceReferenceClose");
+		add("menuTraceSavePES");
 
 		add("menuCreateTestSetup");
 		add("menuSaveTestSetup");
@@ -149,6 +150,9 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		"images/modeled.gif")));
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_TRACE, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
 		"images/original_trace.gif")));
+		
+		UIManager.put(AnalysisResourceKeys.ICON_SHOW_PATH_ELEMENTS, new ImageIcon(Toolkit.getDefaultToolkit().getImage(
+		"images/jdirectory.gif")));
 
 		UIManager.put(AnalysisResourceKeys.ICON_ANALYSIS_GAIN, new ImageIcon(Toolkit.getDefaultToolkit()
 				.getImage("images/gain.gif")));

@@ -1,5 +1,5 @@
 /*-
-* $Id: ToolBarPanel.java,v 1.5 2005/08/08 11:59:52 arseniy Exp $
+* $Id: ToolBarPanel.java,v 1.6 2005/08/31 11:26:22 stas Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import javax.swing.JToolBar;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:59:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/08/31 11:26:22 $
+ * @author $Author: stas $
  * @module analysis
  */
 public class ToolBarPanel extends JToolBar
@@ -33,7 +33,7 @@ public class ToolBarPanel extends JToolBar
 
 	protected static final String SEPARATOR = "separator";
 
-	protected Map actions = new HashMap();
+	protected Map<String, AbstractButton> actions = new HashMap<String, AbstractButton>();
 
 	private static String[] buttons = new String[]
 	{
@@ -51,7 +51,7 @@ public class ToolBarPanel extends JToolBar
 		return buttons;
 	}
 
-	protected Map createGraphButtons()
+	protected Map<String, AbstractButton> createGraphButtons()
 	{
 		return actions;
 	}
