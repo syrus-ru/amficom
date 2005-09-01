@@ -8,12 +8,11 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.UI.TestSetupLoadDialog;
 //import com.syrus.AMFICOM.Client.Analysis.UI.TestSetupLoadDialog;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.client.model.*;
-import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.io.DataFormatException;
 
 public class LoadTestSetupCommand extends AbstractCommand
 {

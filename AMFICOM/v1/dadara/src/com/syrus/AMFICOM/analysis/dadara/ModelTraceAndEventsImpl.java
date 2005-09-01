@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelTraceAndEventsImpl.java,v 1.21 2005/08/02 19:36:33 arseniy Exp $
+ * $Id: ModelTraceAndEventsImpl.java,v 1.22 2005/09/01 12:07:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,10 +20,11 @@ import com.syrus.AMFICOM.analysis.dadara.events.EndOfTraceDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.LinearDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.NotIdentifiedDetailedEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.SpliceDetailedEvent;
+import com.syrus.io.SignatureMismatchException;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/08/02 19:36:33 $
+ * @author $Author: saa $
+ * @version $Revision: 1.22 $, $Date: 2005/09/01 12:07:45 $
  * @module
  */
 public class ModelTraceAndEventsImpl

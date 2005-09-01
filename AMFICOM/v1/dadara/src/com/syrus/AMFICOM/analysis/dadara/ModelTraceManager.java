@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.93 2005/08/02 19:36:33 arseniy Exp $
+ * $Id: ModelTraceManager.java,v 1.94 2005/09/01 12:07:45 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,8 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.io.DataFormatException;
+import com.syrus.io.SignatureMismatchException;
 
 /**
  * Объект этого класса заведует хранением
@@ -21,8 +23,8 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  * порогов к событиями (пока нет) и модельной кривой (есть),
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.93 $, $Date: 2005/08/02 19:36:33 $
+ * @author $Author: saa $
+ * @version $Revision: 1.94 $, $Date: 2005/09/01 12:07:45 $
  * @module
  */
 public class ModelTraceManager

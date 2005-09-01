@@ -1,5 +1,5 @@
 /*-
- * $Id: DataStreamableUtil.java,v 1.6 2005/07/22 06:39:51 saa Exp $
+ * $Id: DataStreamableUtil.java,v 1.7 2005/09/01 12:07:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import com.syrus.io.DataFormatException;
+
 /**
  * @author $Author: saa $
- * @version $Revision: 1.6 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/01 12:07:45 $
  * @module
  */
 public class DataStreamableUtil

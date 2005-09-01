@@ -1,5 +1,5 @@
 /*-
- * $Id: Etalon.java,v 1.4 2005/08/02 19:36:33 arseniy Exp $
+ * $Id: Etalon.java,v 1.5 2005/09/01 12:07:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.io.IOException;
 
 import com.syrus.AMFICOM.analysis.dadara.DataStreamable;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
-import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
+import com.syrus.io.SignatureMismatchException;
 
 /**
  * "Эталон" для сравнения, т.е. все, с чем надо сравнивать.
@@ -24,8 +24,8 @@ import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
  * <li> ModelTraceManager mtm - Эталонной а/к и событий;
  * <li> EventAnchorer anc - Идентификаторов для привязки к схеме, может быть null
  * </ol>
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/02 19:36:33 $
+ * @author $Author: saa $
+ * @version $Revision: 1.5 $, $Date: 2005/09/01 12:07:45 $
  * @module
  */
 public class Etalon implements DataStreamable {

@@ -1,5 +1,5 @@
 /*-
- * $Id: EventAnchorer.java,v 1.3 2005/07/22 06:39:50 saa Exp $
+ * $Id: EventAnchorer.java,v 1.4 2005/09/01 12:07:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.syrus.AMFICOM.analysis.dadara.DataStreamable;
-import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
+import com.syrus.io.SignatureMismatchException;
 
 public class EventAnchorer implements DataStreamable {
 	// DIS reader singleton object

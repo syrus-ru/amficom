@@ -11,12 +11,12 @@ import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Trace;
 import com.syrus.AMFICOM.Client.Analysis.UI.TraceLoadDialog;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
-import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.io.DataFormatException;
 
 public class AddTraceFromDatabaseCommand extends AbstractCommand
 {

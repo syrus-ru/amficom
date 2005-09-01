@@ -1,5 +1,5 @@
 /*-
- * $Id: Trace.java,v 1.8 2005/07/28 12:19:06 saa Exp $
+ * $Id: Trace.java,v 1.9 2005/09/01 12:08:33 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
-import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceAndEventsImpl;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.io.DataFormatException;
 
 /**
  * Представляет загруженную рефлектограмму.
@@ -36,7 +36,7 @@ import com.syrus.io.BellcoreStructure;
  *   </ul>
  * <li> Result (null, если это локальный файл) - по нему можно определить шаблон, с которым была снята р/г
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/07/28 12:19:06 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/01 12:08:33 $
  * @module
  */
 public class Trace {

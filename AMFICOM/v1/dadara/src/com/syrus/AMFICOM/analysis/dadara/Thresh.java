@@ -1,5 +1,5 @@
 /*
- * $Id: Thresh.java,v 1.19 2005/07/22 06:39:51 saa Exp $
+ * $Id: Thresh.java,v 1.20 2005/09/01 12:07:45 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,9 +11,11 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import com.syrus.io.SignatureMismatchException;
+
 /**
  * @author $Author: saa $
- * @version $Revision: 1.19 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/01 12:07:45 $
  * @module
  */
 

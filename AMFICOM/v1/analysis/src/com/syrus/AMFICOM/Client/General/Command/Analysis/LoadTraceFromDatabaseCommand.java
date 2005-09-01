@@ -12,7 +12,6 @@ import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
 import com.syrus.AMFICOM.Client.Analysis.Trace;
 import com.syrus.AMFICOM.Client.Analysis.UI.TraceLoadDialog;
-import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -22,6 +21,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.io.DataFormatException;
 
 public class LoadTraceFromDatabaseCommand extends AbstractCommand
 {

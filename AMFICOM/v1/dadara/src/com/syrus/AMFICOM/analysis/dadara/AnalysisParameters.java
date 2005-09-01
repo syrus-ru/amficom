@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParameters.java,v 1.16 2005/08/29 14:54:35 saa Exp $
+ * $Id: AnalysisParameters.java,v 1.17 2005/09/01 12:07:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,14 @@ import java.io.DataInputStream;
 import java.io.DataOutputStream;
 import java.io.IOException;
 
+import com.syrus.io.SignatureMismatchException;
+
 /**
  * Ќабор параметров анализа с контролем допустимости (согласованности) набора.
  * ≈сли нужно изменить сразу несколько аргументов - используйте методы
  * {@link #getStorageClone()} и {@link #setAllFrom(AnalysisParametersStorage)}
  * @author $Author: saa $
- * @version $Revision: 1.16 $, $Date: 2005/08/29 14:54:35 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/01 12:07:45 $
  * @todo add extended parameters save to DOS / restore from DIS
  * @module
  */

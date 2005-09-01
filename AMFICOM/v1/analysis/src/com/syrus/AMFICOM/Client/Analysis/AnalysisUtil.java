@@ -8,7 +8,6 @@ import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
-import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
@@ -31,6 +30,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
+import com.syrus.io.DataFormatException;
 import com.syrus.util.EasyDateFormatter;
 
 /**

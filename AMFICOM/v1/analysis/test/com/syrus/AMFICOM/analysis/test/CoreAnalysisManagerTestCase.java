@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: CoreAnalysisManagerTestCase.java,v 1.3 2005/08/29 09:39:45 saa Exp $
+ * $Id: CoreAnalysisManagerTestCase.java,v 1.4 2005/09/01 12:08:33 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,10 +32,10 @@ import com.syrus.AMFICOM.analysis.dadara.ModelTraceComparer;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMath;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
-import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.io.BellcoreCreator;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.io.SignatureMismatchException;
 
 public class CoreAnalysisManagerTestCase extends TestCase {
 	public static void main(String[] args) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisResult.java,v 1.2 2005/06/27 08:39:27 saa Exp $
+ * $Id: AnalysisResult.java,v 1.3 2005/09/01 12:07:45 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.syrus.AMFICOM.analysis.EventAnchorer;
+import com.syrus.io.SignatureMismatchException;
 
 /**
  * Аггрегатор результатов анализа и сравнения:
@@ -34,7 +35,7 @@ import com.syrus.AMFICOM.analysis.EventAnchorer;
  * поля результатов сравнения модифицируемы и изначально null.
  * @author $Author: saa $
  * @author saa
- * @version $Revision: 1.2 $, $Date: 2005/06/27 08:39:27 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/01 12:07:45 $
  * @module dadara
  */
 public class AnalysisResult implements DataStreamable {

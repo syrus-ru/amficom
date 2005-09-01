@@ -7,6 +7,8 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.syrus.AMFICOM.analysis.SOAnchor;
+import com.syrus.io.DataFormatException;
+import com.syrus.io.SignatureMismatchException;
 
 /**
  * Структура для описания несоответствия рефлектограммы эталону.
@@ -59,7 +61,7 @@ import com.syrus.AMFICOM.analysis.SOAnchor;
  * </ol>
  * 
  * @author $Author: saa $
- * @version $Revision: 1.3 $, $Date: 2005/07/22 06:39:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/01 12:07:45 $
  * @module dadara
  */
 public class ReflectogramMismatch {

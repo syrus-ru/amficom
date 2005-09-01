@@ -6,6 +6,7 @@ import java.io.DataOutputStream;
 import java.io.IOException;
 
 import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
+import com.syrus.io.SignatureMismatchException;
 
 /**
  * <p>Represents r/g modelling functions with native implementation.</p>
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
  *
  * <p>The modelling function type can change when fit() will be called.</p>
  *
- * @version $Revision: 1.31 $, $Date: 2005/08/30 14:05:10 $
+ * @version $Revision: 1.32 $, $Date: 2005/09/01 12:07:45 $
  * @author $Author: saa $
  * @author saa
  * @module dadara

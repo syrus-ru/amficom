@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: AnalysisMemLeakTestCase.java,v 1.3 2005/08/29 09:39:45 saa Exp $
+ * $Id: AnalysisMemLeakTestCase.java,v 1.4 2005/09/01 12:08:33 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.AMFICOM.analysis.dadara.IncompatibleTracesException;
 import com.syrus.AMFICOM.analysis.dadara.ModelTraceManager;
-import com.syrus.AMFICOM.analysis.dadara.SignatureMismatchException;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.io.SignatureMismatchException;
 
 import junit.framework.TestCase;
 
