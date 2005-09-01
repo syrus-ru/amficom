@@ -16,26 +16,24 @@ public final class CreateReportException extends Exception {
 	private static final long serialVersionUID = 4681271057954532209L;
 
 	public static final String reportModelIsAbsent = "reportModelIsAbsent";
+	public static final String noDataToInstall = "noDataToInstall";	
 
-	private String reportName = "";
+	private String templateElementName = "";
 	private String reason = "";
 
-	public CreateReportException(String reportName, String reason) {
-		this.reportName = reportName;
+	public CreateReportException(String templateElementName, String reason) {
+		this.templateElementName = templateElementName;
 		this.reason = reason;
 	}
 
 	public String getMessage() {
-		if (this.reason.equals(CreateReportException.reportModelIsAbsent))
-			return LangModelReport.getString("report.report")
-				+ " "
-				+ this.reportName
-				+ " "
-				+ LangModelReport.getString("report.Exception.cantCreateReport")
-				+ " ("
-				+ this.reason
-				+ " ).";
-
-		return "";
+		return LangModelReport.getString("report.reportTemplateElement")
+			+ " "
+			+ this.templateElementName
+			+ " "
+			+ LangModelReport.getString("report.Exception.cantImplement")
+			+ " ("
+			+ this.reason
+			+ " ).";
 	}
 }

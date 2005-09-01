@@ -25,15 +25,6 @@ public abstract class DataStorableElement extends StorableElement
 	protected String modelClassName = null;
 	
 	/**
-	 * Если отчёт строится по какому-либо объекту, то в данном поле хранится
-	 * идентификатор данной сущности. Если же отчёт строится по всем объектам
-	 * данного типа, то они берутся из пула и к ним применяется фильтр.
-	 * Также в этом поле может храниться ссылка на окно, откуда должна быть
-	 * отображена информация.
-	 */
-	private Object reportObjectData = null;
-	
-	/**
 	 * Несмотря на то, что объекты этого класса сохраняются только в рамках
 	 * шаблона отчёта, им нужны идентификаторы, поскольку на них ссылаются
 	 * привязанные надписи
@@ -52,18 +43,6 @@ public abstract class DataStorableElement extends StorableElement
 		return this.modelClassName;
 	}
 
-	public Object getReportObjectData() {
-		return this.reportObjectData;
-	}
-
-	/**
-	 * Задаёт для элемента отображения данные необходимые для отображения
-	 * @param data
-	 */
-	public void setReportObjectData(Object data) {
-		this.reportObjectData = data;
-	}
-	
 	public DataStorableElement(String reportName, String modelClassName)
 	{
 		this.reportName = reportName;

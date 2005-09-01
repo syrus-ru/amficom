@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeModel.java,v 1.3 2005/08/31 10:29:03 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeModel.java,v 1.4 2005/09/01 14:21:40 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,15 @@ import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
+import com.syrus.AMFICOM.client.analysis.report.AnalysisReportModel;
+import com.syrus.AMFICOM.client.analysis.report.EvaluationReportModel;
+import com.syrus.AMFICOM.client.analysis.report.SurveyReportModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.modelling.ModellingReportModel;
+import com.syrus.AMFICOM.client.prediction.PredictionReportModel;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.ReportModel;
+import com.syrus.AMFICOM.client.report.ReportModelPool;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 
@@ -92,26 +98,50 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 	}
 	
 	private void createTemplateElementsModels(Item node, Collection contents) {
-//		try {
-//			TypicalCondition condition = new TypicalCondition(String.valueOf(type.value()), 
-//					OperationSort.OPERATION_EQUALS, ObjectEntities.SCHEME_CODE,
-//					SchemeWrapper.COLUMN_KIND);
-//			Set<StorableObject> schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-//			
-//			Collection toAdd = CommonUIUtilities.getObjectsToAdd(schemes, contents);
-//			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(schemes, node.getChildren());
-//
-//			for (Item child : toRemove) {
-//				child.setParent(null);
-//			}			
-//			for (Iterator it = toAdd.iterator(); it.hasNext();) {
-//				Scheme sc = (Scheme) it.next();
-//				node.addChild(new PopulatableIconedNode(this, sc));
-//			}
-//		} 
-//		catch (ApplicationException ex1) {
-//			ex1.printStackTrace();
-//		}
+		//Модель для модуля "Анализ"
+		ReportModel analysisReportModel =
+			ReportModelPool.getModel(AnalysisReportModel.class.getName());
+		node.addChild(new PopulatableIconedNode(
+				this,
+				analysisReportModel,
+				analysisReportModel.getName(),
+				UIManager.getIcon(ICON_CATALOG)));
+
+		//Модель для модуля "Измерения"
+		ReportModel evaluationReportModel =
+			ReportModelPool.getModel(EvaluationReportModel.class.getName());
+		node.addChild(new PopulatableIconedNode(
+				this,
+				evaluationReportModel,
+				evaluationReportModel.getName(),
+				UIManager.getIcon(ICON_CATALOG)));
+
+		//Модель для модуля "Исследование"
+		ReportModel surveyReportModel =
+			ReportModelPool.getModel(SurveyReportModel.class.getName());
+		node.addChild(new PopulatableIconedNode(
+				this,
+				surveyReportModel,
+				surveyReportModel.getName(),
+				UIManager.getIcon(ICON_CATALOG)));
+
+		//Модель для модуля "Моделирование"
+		ReportModel modellingReportModel =
+			ReportModelPool.getModel(ModellingReportModel.class.getName());
+		node.addChild(new PopulatableIconedNode(
+				this,
+				modellingReportModel,
+				modellingReportModel.getName(),
+				UIManager.getIcon(ICON_CATALOG)));
+
+		//Модель для модуля "Прогнозирование"
+		ReportModel predictionReportModel =
+			ReportModelPool.getModel(PredictionReportModel.class.getName());
+		node.addChild(new PopulatableIconedNode(
+				this,
+				predictionReportModel,
+				predictionReportModel.getName(),
+				UIManager.getIcon(ICON_CATALOG)));
 	}
 
 	private void createReportElementsModels(Item node, Collection contents) {
@@ -143,11 +173,11 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 		ReportModel reportModel = (ReportModel) node.getObject();
 		
 		Collection<String> itemsToAdd = null;
-		String grandParentItem = (String)node.getParent().getParent().getObject();
+		String parentItem = (String)node.getParent().getObject();
 		
-		if (grandParentItem.equals(TEMPLATE_ELEMENTS_ROOT))
+		if (parentItem.equals(TEMPLATE_ELEMENTS_ROOT))
 			itemsToAdd = reportModel.getTemplateElementNames();
-		else if (grandParentItem.equals(REPORT_ELEMENTS_ROOT))
+		else if (parentItem.equals(REPORT_ELEMENTS_ROOT))
 			itemsToAdd = reportModel.getReportElementNames();
 				
 		if (itemsToAdd == null)

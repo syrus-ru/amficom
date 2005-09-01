@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.3 2005/08/31 10:29:03 peskovsky Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.4 2005/09/01 14:21:40 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
-import java.util.ArrayList;
+import java.beans.PropertyChangeListener;
 import java.util.logging.Level;
 
 import javax.swing.JInternalFrame;
@@ -21,9 +21,6 @@ import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
-import com.syrus.AMFICOM.client.UI.AdditionalPropertiesFrame;
-import com.syrus.AMFICOM.client.UI.CharacteristicPropertiesFrame;
-import com.syrus.AMFICOM.client.UI.GeneralPropertiesFrame;
 import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
@@ -35,17 +32,25 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.report.LangModelReport;
-import com.syrus.AMFICOM.client.reportbuilder.command.ReportTemplateNewCommand;
+import com.syrus.AMFICOM.client.reportbuilder.command.template.ReportTemplateNewCommand;
+import com.syrus.AMFICOM.client.reportbuilder.command.templatescheme.ReportSendEventCommand;
+import com.syrus.AMFICOM.client.reportbuilder.event.ReportEvent;
+import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTemplateRenderer;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
-public class ReportBuilderMainFrame extends AbstractMainFrame {
+public class ReportBuilderMainFrame extends AbstractMainFrame implements PropertyChangeListener {
 	private static final long serialVersionUID = 8315696633544939499L;
 
 	public static final String TREE_FRAME = "report.Tree.availableElements";
 	public static final String TEMPLATE_SCHEME_FRAME = "report.UI.templateScheme";	
 
 	UIDefaults frames;
+	/**
+	 * Тулбар, висящий на рендерере шаблона. Хранится как поле главного окна,
+	 * поскольку рендереры могут менять, а тулбар - неизменен.
+	 */
+	protected TemplateRendererInnerToolbar innerToolbar = null;
 	
 	public ReportBuilderMainFrame(final ApplicationContext aContext) {
 		super(
@@ -53,6 +58,10 @@ public class ReportBuilderMainFrame extends AbstractMainFrame {
 			LangModelReport.getString("report.UI.mainWindowTitle"), 
 			new ReportBuilderMenuBar(aContext.getApplicationModel()), 
 			new ReportBuilderToolBar());
+		
+		ApplicationModel aModel = aContext.getApplicationModel();
+		this.innerToolbar = new TemplateRendererInnerToolbar();
+		this.innerToolbar.setApplicationModel(aModel);
 	}
 	
 	protected void initFrames() {
@@ -71,6 +80,8 @@ public class ReportBuilderMainFrame extends AbstractMainFrame {
 				
 				templateSchemeFrame.getContentPane().setLayout(new BorderLayout());
 				templateSchemeFrame.getContentPane().add(new ReportTemplateRenderer(), BorderLayout.CENTER);
+				
+				templateSchemeFrame.getContentPane().add(ReportBuilderMainFrame.this.innerToolbar, BorderLayout.NORTH);				
 
 				ReportBuilderMainFrame.this.desktopPane.add(templateSchemeFrame);
 				return templateSchemeFrame;
@@ -137,7 +148,25 @@ public class ReportBuilderMainFrame extends AbstractMainFrame {
 	public ReportBuilderMainFrame() {
 		this(new ApplicationContext());
 	}
-
+	
+	@Override
+	public void setModel(ApplicationModel aModel) {
+		super.setModel(aModel);
+		if (this.innerToolbar != null)
+			this.innerToolbar.setApplicationModel(aModel);
+	}
+	
+	@Override
+	public void setContext(ApplicationContext aContext) {
+		if (this.aContext != null) {
+			this.aContext.getDispatcher().removePropertyChangeListener(ReportEvent.TYPE, this);
+		}
+		if (aContext != null) {
+			super.setContext(aContext);
+			this.aContext.getDispatcher().addPropertyChangeListener(ReportEvent.TYPE, this);
+		}
+	}
+	
 		
 	@Override
 	public void initModule() {
@@ -147,14 +176,57 @@ public class ReportBuilderMainFrame extends AbstractMainFrame {
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
-		aModel.setCommand("menuReportTemplateNew", new ReportTemplateNewCommand(this.aContext));
-//		aModel.setCommand("menuReportTemplateLoad", new ReportTemplateOpenCommand(this.aContext));
+		aModel.setCommand(
+				ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW,
+				new ReportTemplateNewCommand(this.aContext));
+//		aModel.setCommand(
+//			ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD,
+//			new ReportTemplateOpenCommand(this.aContext));
 //		aModel.setCommand("menuReportTemplateSave", new ReportTemplateSaveCommand(this.aContext));
 //		aModel.setCommand("menuReportTemplateSaveAs", new ReportTemplateSaveAsCommand(this.aContext));
 
-		aModel.setCommand("menuWindowTree", this.getLazyCommand(TREE_FRAME));
-		aModel.setCommand("menuWindowTemplateScheme", this.getLazyCommand(TEMPLATE_SCHEME_FRAME));
+		aModel.setCommand(
+				ReportBuilderApplicationModel.MENU_WINDOW_TREE,
+				this.getLazyCommand(TREE_FRAME));
+		aModel.setCommand(
+				ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME,
+				this.getLazyCommand(TEMPLATE_SCHEME_FRAME));
 
+		
+		aModel.setCommand(
+				ReportBuilderApplicationModel.MENU_INSERT_LABEL
+					+ ReportBuilderApplicationModel.START,
+				new ReportSendEventCommand(this.aContext,ReportEvent.LABEL_CREATION_STARTED));
+
+		aModel.setCommand(
+				ReportBuilderApplicationModel.MENU_INSERT_LABEL
+					+ ReportBuilderApplicationModel.CANCEL,
+				new ReportSendEventCommand(this.aContext,ReportEvent.LABEL_CREATION_CANCELED));
+
+		aModel.setCommand(
+				ReportBuilderApplicationModel.MENU_INSERT_IMAGE
+					+ ReportBuilderApplicationModel.START,
+				new ReportSendEventCommand(this.aContext,ReportEvent.IMAGE_CREATION_STARTED));
+
+		aModel.setCommand(
+				ReportBuilderApplicationModel.MENU_INSERT_IMAGE
+					+ ReportBuilderApplicationModel.CANCEL,
+				new ReportSendEventCommand(this.aContext,ReportEvent.IMAGE_CREATION_CANCELED));
+		
+
+		aModel.setCommand(
+				ReportBuilderApplicationModel.MENU_DELETE_OBJECT,
+				new ReportTemplateNewCommand(this.aContext));
+		aModel.setCommand(
+				ReportBuilderApplicationModel.MENU_CHANGE_VIEW,
+				new ReportTemplateNewCommand(this.aContext));
+		aModel.setCommand(
+				ReportBuilderApplicationModel.MENU_SAVE_REPORT,
+				new ReportTemplateNewCommand(this.aContext));
+		aModel.setCommand(
+				ReportBuilderApplicationModel.MENU_PRINT_REPORT,
+				new ReportTemplateNewCommand(this.aContext));
+		
 		setDefaultModel(aModel);
 		aModel.fireModelChanged("");
 	}
@@ -185,45 +257,82 @@ public class ReportBuilderMainFrame extends AbstractMainFrame {
 	@Override
 	public void setSessionOpened() {
 		super.setSessionOpened();
-
-		ApplicationModel aModel = this.aContext.getApplicationModel();
 		
-		aModel.setEnabled("menuReportTemplateNew", true);
-		aModel.setEnabled("menuReportTemplateSave", true);
-		aModel.setEnabled("menuReportTemplateLoad", true);
-		aModel.setEnabled("menuReportTemplateExport", true);
-		aModel.setEnabled("menuReportTemplateImport", true);
-
-		aModel.setEnabled("menuWindowTree", true);
-		aModel.setEnabled("menuWindowTemplateScheme", true);
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+		this.setApplicationModelForTemplateSchemeStandart(aModel);
 		aModel.fireModelChanged("");
 	}
 
 	@Override
 	public void setSessionClosed() {
 		super.setSessionClosed();
+		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-
-		aModel.setEnabled("menuReportTemplateNew", false);
-		aModel.setEnabled("menuReportTemplateSave", false);
-		aModel.setEnabled("menuReportTemplateLoad", false);
-		aModel.setEnabled("menuReportTemplateExport", false);
-		aModel.setEnabled("menuReportTemplateImport", false);
-
-		aModel.setEnabled("menuWindowTree", false);
-		aModel.setEnabled("menuWindowTemplateScheme", false);
-
+		aModel.setAllItemsEnabled(false);
 		aModel.fireModelChanged("");
 		
 		setFramesVisible(false);
 	}
 
+	private void setApplicationModelForTemplateSchemeStandart(ApplicationModel aModel){
+		//////Вообще-то эти пять строк из super
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, false);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_OPTIONS, true);
+		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, true);
+		//////////
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW, true);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE, true);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD, true);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_EXPORT, true);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_IMPORT, true);
+
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_IMAGE, true);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_LABEL, true);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_DELETE_OBJECT, false);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_CHANGE_VIEW, true);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_SAVE_REPORT, false);		
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_PRINT_REPORT, false);
+		
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE, true);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, true);
+	}
+	
+	@Override
+	public void propertyChange(PropertyChangeEvent pce) {
+		super.propertyChange(pce);
+		if (!(pce instanceof ReportEvent))
+			return;
+		
+		String eventType = ((ReportEvent)pce).getEventType();
+		if (eventType.equals(ReportEvent.LABEL_CREATION_STARTED)) {
+			ApplicationModel aModel = this.aContext.getApplicationModel();
+			aModel.setAllItemsEnabled(false);
+			aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_LABEL, true);
+			aModel.fireModelChanged("");
+		}
+		else if (eventType.equals(ReportEvent.IMAGE_CREATION_STARTED)) {
+			ApplicationModel aModel = this.aContext.getApplicationModel();
+			aModel.setAllItemsEnabled(false);
+			aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_IMAGE, true);
+			aModel.fireModelChanged("");
+		}
+
+		else if (	eventType.equals(ReportEvent.LABEL_CREATION_CANCELED)
+				||	eventType.equals(ReportEvent.IMAGE_CREATION_CANCELED)) {
+			ApplicationModel aModel = this.aContext.getApplicationModel();
+			this.setApplicationModelForTemplateSchemeStandart(aModel);
+			aModel.fireModelChanged("");
+		}
+	}
+	
 	@Override
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
 			this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, ReportBuilderMainFrame.this);
 			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, ReportBuilderMainFrame.this);
-			ReportBuilderMainFrame.this.aContext.getApplicationModel().getCommand("menuExit").execute();
+			ReportBuilderMainFrame.this.aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
 		}
 		super.processWindowEvent(e);
 	}

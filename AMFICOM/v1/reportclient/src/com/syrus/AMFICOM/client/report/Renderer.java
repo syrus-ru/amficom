@@ -1,11 +1,13 @@
 /*
- * $Id: Renderer.java,v 1.1 2005/08/31 10:32:55 peskovsky Exp $
+ * $Id: Renderer.java,v 1.2 2005/09/01 14:21:22 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.client.report;
+
+import java.util.Map;
 
 import javax.swing.JPanel;
 
@@ -20,8 +22,9 @@ public abstract class Renderer extends JPanel{
 	 * Строит набор визульных компонент для элементов отображения и располагает их
 	 * на "листе"
 	 * @param template
-	 * @param fromAnotherModule
 	 */
-	public abstract void buildFromTemplate(ReportTemplate template,boolean fromAnotherModule)
+	public abstract void buildFromTemplate(
+			ReportTemplate template,
+			Map<String, Object> data)
 		throws CreateReportException;
 }

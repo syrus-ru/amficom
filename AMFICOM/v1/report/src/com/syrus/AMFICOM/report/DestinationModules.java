@@ -1,5 +1,5 @@
 /*
- * $Id: DestinationModules.java,v 1.1 2005/08/31 10:32:55 peskovsky Exp $
+ * $Id: DestinationModules.java,v 1.2 2005/09/01 14:21:02 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,18 +9,15 @@ package com.syrus.AMFICOM.report;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/08/31 10:32:55 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/01 14:21:02 $
  * @module commonreport_v1
  */
 public class DestinationModules {
+	//Эти три модуля - разные варианты анализа
 	/**
 	 * <p>Шаблон по оценке</p>
 	 */
 	public static final String EVALUATION = "report.ReportTemplateType.evaluation";
-	/**
-	 * <p>Шаблон по прогнозу</p>
-	 */
-	public static final String PREDICTION = "report.ReportTemplateType.prediction";
 	/**
 	 * <p>Шаблон по анализу</p>
 	 */
@@ -29,6 +26,11 @@ public class DestinationModules {
 	 * <p>Шаблон по исследованию</p>
 	 */
 	public static final String SURVEY = "report.ReportTemplateType.survey";
+
+	/**
+	 * <p>Шаблон по прогнозу</p>
+	 */
+	public static final String PREDICTION = "report.ReportTemplateType.prediction";
 	/**
 	 * <p>Шаблон по моделированию</p>
 	 */

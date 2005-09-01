@@ -1,5 +1,5 @@
 /*
- * $Id: TableDataStorableElement.java,v 1.1 2005/08/31 10:32:55 peskovsky Exp $
+ * $Id: TableDataStorableElement.java,v 1.2 2005/09/01 14:21:02 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
 /**
  * Класс для отображения данных в табличном виде
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/08/31 10:32:55 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/01 14:21:02 $
  * @module report_v1
  */
 public final class TableDataStorableElement extends DataStorableElement implements Serializable {
@@ -27,6 +27,12 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 	private static int DEFAULT_COLUMN_WIDTH = 100;
 	
 	private int[] columnWidths = null;
+	
+	/**
+	 * Число вертикальных разбиений таблицы (применяется для длинных и узких
+	 * таблиц)
+	 */
+	private int verticalDivisionsCount = 1;
 	
 	public TableDataStorableElement (
 			String reportName,
@@ -99,5 +105,13 @@ public final class TableDataStorableElement extends DataStorableElement implemen
 
 	public void setColumnWidth(int columnIndex, int columnWidth) {
 		this.columnWidths[columnIndex] = columnWidth;
+	}
+
+	public int getVerticalDivisionsCount() {
+		return this.verticalDivisionsCount;
+	}
+
+	public void setVerticalDivisionsCount(int verticalDivisionsCount) {
+		this.verticalDivisionsCount = verticalDivisionsCount;
 	}
 }

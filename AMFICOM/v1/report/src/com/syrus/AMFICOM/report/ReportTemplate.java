@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.3 2005/08/31 10:32:55 peskovsky Exp $
+ * $Id: ReportTemplate.java,v 1.4 2005/09/01 14:21:02 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.report;
 
-import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.Serializable;
@@ -16,6 +15,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
  * <p>Класс шаблона отчёта - включает в себя списки элементов, надписей и
@@ -26,15 +26,15 @@ import com.syrus.AMFICOM.general.Identifier;
  * отчёт </p>
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2005/08/31 10:32:55 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/01 14:21:02 $
  * @module generalclient_v1
  */
 public class ReportTemplate implements Serializable
 {
 	private static final long serialVersionUID = 6270406142449624592L;
 	
-	public static final Dimension A4 = new Dimension(827,1170);
-	public static final Dimension A3 = new Dimension(1170,1655);
+	public static final IntDimension A4 = new IntDimension(827,1170);
+	public static final IntDimension A3 = new IntDimension(1170,1655);
 	
 	public static final int STANDART_MARGIN_SIZE = 60;
 
@@ -58,7 +58,7 @@ public class ReportTemplate implements Serializable
 	/**
 	 * Размер шаблона (его ширина)
 	 */
-	private Dimension size = A4;
+	private IntDimension size = A4;
 
 	//Это хранимое поле
 	/**
@@ -146,7 +146,7 @@ public class ReportTemplate implements Serializable
 		this.name = (String)in.readObject();
 		this.description = (String)in.readObject();
 		this.destinationModule = (String)in.readObject();
-		this.size = (Dimension)in.readObject();
+		this.size = (IntDimension)in.readObject();
 		this.marginSize = in.readInt();
 
 		// Перекачиваем объекты
@@ -344,7 +344,7 @@ public class ReportTemplate implements Serializable
 //		return this.objectResourceFilters;
 //	}
 
-	public Dimension getSize() {
+	public IntDimension getSize() {
 		return this.size;
 	}
 
@@ -375,7 +375,7 @@ public class ReportTemplate implements Serializable
 		this.destinationModule = destinationModule;
 	}
 
-	public void setSize(Dimension size) {
+	public void setSize(IntDimension size) {
 		this.size = size;
 	}
 

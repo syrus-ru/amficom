@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderToolBar.java,v 1.3 2005/08/31 10:29:03 peskovsky Exp $
+ * $Id: ReportBuilderToolBar.java,v 1.4 2005/09/01 14:21:40 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,10 +7,6 @@
  */
 package com.syrus.AMFICOM.client.reportbuilder;
 
-import java.awt.Image;
-import java.awt.Toolkit;
-
-import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.UIManager;
 
@@ -30,43 +26,38 @@ public class ReportBuilderToolBar extends AbstractMainToolBar {
 	private void initItems() {
 
 		final JButton newTemplateButton = new JButton();
-		newTemplateButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				"images/new.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		newTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_NEW_TEMPLATE));
 		newTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));		
 		newTemplateButton.setToolTipText(LangModelReport.getString("report.UI.Toolbar.createNewTemplate"));
-		newTemplateButton.setName("menuReportTemplateNew");
+		newTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW);
 		newTemplateButton.addActionListener(super.actionListener);
 
 		final JButton saveTemplateButton = new JButton();
-		saveTemplateButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				"images/save.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		saveTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_SAVE_TEMPLATE));
 		saveTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		saveTemplateButton.setToolTipText(LangModelReport.getString("report.UI.Toolbar.saveTemplate"));
-		saveTemplateButton.setName("menuReportTemplateSave");
+		saveTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE);
 		saveTemplateButton.addActionListener(super.actionListener);
 
 		final JButton loadTemplateButton = new JButton();
-		loadTemplateButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				"images/openfile.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		loadTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_LOAD_TEMPLATE));
 		loadTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		loadTemplateButton.setToolTipText(LangModelReport.getString("report.UI.Toolbar.loadTemplate"));
-		loadTemplateButton.setName("menuReportTemplateLoad");
+		loadTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD);
 		loadTemplateButton.addActionListener(super.actionListener);
 
 		final JButton importTemplateButton = new JButton();
-		importTemplateButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				"images/load_template.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		importTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_IMPORT_TEMPLATES));
 		importTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		importTemplateButton.setToolTipText(LangModelReport.getString("report.UI.Toolbar.importTemplates"));
-		importTemplateButton.setName("menuReportTemplateImport");
+		importTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_IMPORT);
 		importTemplateButton.addActionListener(super.actionListener);
 
 		final JButton exportTemplateButton = new JButton();
-		exportTemplateButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage(
-				"images/save_template.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		exportTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_EXPORT_TEMPLATES));
 		exportTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		exportTemplateButton.setToolTipText(LangModelReport.getString("report.UI.Toolbar.exportTemplates"));
-		exportTemplateButton.setName("menuReportTemplateExport");
+		exportTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_EXPORT);
 		exportTemplateButton.addActionListener(super.actionListener);
 		
 		addSeparator();
@@ -86,16 +77,16 @@ public class ReportBuilderToolBar extends AbstractMainToolBar {
 			public void modelChanged(String e[]) {
 				ApplicationModel aModel = ReportBuilderToolBar.this.getApplicationModel();
 				
-				newTemplateButton.setVisible(aModel.isVisible("menuReportTemplateNew"));
-				newTemplateButton.setEnabled(aModel.isEnabled("menuReportTemplateNew"));
-				saveTemplateButton.setVisible(aModel.isVisible("menuReportTemplateSave"));
-				saveTemplateButton.setEnabled(aModel.isEnabled("menuReportTemplateSave"));
-				loadTemplateButton.setVisible(aModel.isVisible("menuReportTemplateLoad"));
-				loadTemplateButton.setEnabled(aModel.isEnabled("menuReportTemplateLoad"));
-				exportTemplateButton.setVisible(aModel.isVisible("menuReportTemplateExport"));
-				exportTemplateButton.setEnabled(aModel.isEnabled("menuReportTemplateExport"));
-				importTemplateButton.setVisible(aModel.isVisible("menuReportTemplateImport"));
-				importTemplateButton.setEnabled(aModel.isEnabled("menuReportTemplateImport"));
+				newTemplateButton.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW));
+				newTemplateButton.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW));
+				saveTemplateButton.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE));
+				saveTemplateButton.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE));
+				loadTemplateButton.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD));
+				loadTemplateButton.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD));
+				exportTemplateButton.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_EXPORT));
+				exportTemplateButton.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_EXPORT));
+				importTemplateButton.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_IMPORT));
+				importTemplateButton.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_IMPORT));
 				
 			}
 		});

@@ -1,5 +1,5 @@
 /*
- * $Id: DRComponentMouseMotionListener.java,v 1.2 2005/08/31 10:32:54 peskovsky Exp $
+ * $Id: DRComponentMouseMotionListener.java,v 1.3 2005/09/01 14:21:22 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,12 @@ import java.beans.PropertyChangeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.report.StorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate;
+import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
  * MouseMotionListener for DataRenderingComponent
  * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2005/08/31 10:32:54 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/01 14:21:22 $
  * @module reportclient_v1
  */
 public class DRComponentMouseMotionListener implements MouseMotionListener{
@@ -51,8 +52,9 @@ public class DRComponentMouseMotionListener implements MouseMotionListener{
 		this.templateBounds = new Rectangle();
 		int templateMarginSize = template.getMarginSize();
 		this.templateBounds.setLocation(
-				new Point(templateMarginSize,templateMarginSize));		
-		this.templateBounds.setSize(template.getSize());
+				new Point(templateMarginSize,templateMarginSize));
+		IntDimension size = template.getSize();
+		this.templateBounds.setSize(size.getWidth(),size.getHeight());
 	}
 	
 	public void mouseMoved(MouseEvent e) {
