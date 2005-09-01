@@ -27,6 +27,9 @@ import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
+import com.syrus.AMFICOM.reflectometry.ReflectometryAnalysisCriteria;
+import com.syrus.AMFICOM.reflectometry.ReflectometryEtalon;
+import com.syrus.AMFICOM.reflectometry.ReflectometryMeasurementSetup;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
 import com.syrus.io.BellcoreWriter;
@@ -136,28 +139,31 @@ public class AnalysisUtil
 	}
 
 	/**
-	 * Method for loading CriteriaSet for certain TestSetup to Pool.
-	 * If there is no CriteriaSet attached to TestSetup new CriteriaSet
-	 * created by call method createDefaultCriteriaSet(ms);
+	 * Загружает критерии анализа заданного шаблона.
+	 * Если в шаблоне нет критериев анализа, ничего не делает.
 	 *
-	 * @param ms MeasurementSetup
-	 * @throws DataFormatException 
+	 * @param ms MeasurementSetup шаблон
+	 * @throws DataFormatException неверный формат данных
+	 * хранящихся в шаблоне критериев анализа
 	 */
 
 	public static void loadCriteriaSet(Identifier userId, MeasurementSetup ms)
 	throws DataFormatException
 	{
-		/*
-		 * <ul>
-		 * <li>{@link com.syrus.AMFICOM.Client.Resource.Result.CriteriaSet CriteriaSet}
-		 * <li>{@link #load_CriteriaSet(MeasurementSetup) load_CriteriaSet()}
-		 * <li>{@link #load_CriteriaSet load_CriteriaSet()}
-		 * </ul>
-		 */
-
-		ParameterSet criteriaSet = ms.getCriteriaSet();
-		if (criteriaSet != null) {
-			setParamsFromCriteriaSet(criteriaSet);
+		ReflectometryAnalysisCriteria ac =
+				new ReflectometryMeasurementSetup(ms).getAnalysisCriteria();
+		if (ac != null) {
+			AnalysisParameters analysisParams = (AnalysisParameters)
+					DataStreamableUtil.readDataStreamableFromBA(
+							ac.getDadaraCriteria(),
+							AnalysisParameters.getReader());
+			if (analysisParams == null) {
+				throw new DataFormatException(
+						"No" + ParameterType.DADARA_CRITERIA.getCodename());
+			}
+			Heap.setMinuitAnalysisParams(analysisParams);
+			Heap.setMinuitInitialParamsFromCurrentAP();
+			Heap.notifyAnalysisParametersUpdated();
 		}
 //      else
 //      {
@@ -169,9 +175,9 @@ public class AnalysisUtil
 	/**
 	 * Убеждается, что в данном ms есть один и только один me,
 	 * и возвращает этот me. Предназначен для использования
-	 * @param ms
-	 * #return если у данного ms один me, то me данного ms. Eсли у данного ms
-	 * нет me либо есть более одного me, то null.
+	 * при генерации имени эталона
+	 * @return me данного ms, если у данного ms один me;
+	 *  null, если у данного ms нет me либо есть более одного me
 	 * @throws ApplicationException ошибки getStorableObject()
 	 */
 	public static MonitoredElement getMEbyMS(MeasurementSetup ms)
@@ -214,31 +220,20 @@ public class AnalysisUtil
 	public static void loadEtalon(MeasurementSetup ms)
 	throws DataFormatException, ApplicationException
 	{
-		ParameterSet etalonSet = ms.getEtalon();
-		//ParameterSet metas = ms.getParameterSet();
+		ReflectometryMeasurementSetup rms = new ReflectometryMeasurementSetup(ms);
+
+		ReflectometryEtalon re = rms.getEtalon();
 
 		BellcoreStructure etalonBS = null;
 		Etalon etalonObj = null;
 
-		Parameter[] params = etalonSet.getParameters();
-		for (int i = 0; i < params.length; i++)
-		{
-			ParameterType type = params[i].getType();
-			if (type.equals(ParameterType.DADARA_ETALON))
-			{
-				etalonObj = (Etalon) DataStreamableUtil.
-					readDataStreamableFromBA(params[i].getValue(),
-							Etalon.getDSReader());
-			}
-			else if (type.equals(ParameterType.REFLECTOGRAMMA_ETALON))
-			{
-				etalonBS = new BellcoreReader().getData(params[i].getValue());
-//				etalonBS.title = "etalon (" + (ms.getDescription().equals("")
-//							? ms.getId().getIdentifierString()
-//							: ms.getDescription())
-//						+ ")"; // FIXME: generate etalon name some other way
-			}
+		if (re != null) {
+			etalonObj = (Etalon) DataStreamableUtil.readDataStreamableFromBA(
+					re.getDadaraEtalon(),
+					Etalon.getDSReader());
+			etalonBS = new BellcoreReader().getData(re.getReflectogramma());
 		}
+
 		if (etalonObj == null || etalonBS == null) {
 			System.err.println("Malformed etalon: "
 					+ (etalonObj == null ? "no etalonObj" : "")
@@ -303,29 +298,6 @@ public class AnalysisUtil
 				params,
 				meIds);
 		return etalon;
-	}
-
-	public static void setParamsFromCriteriaSet(ParameterSet criteriaSet)
-	throws DataFormatException
-	{
-		AnalysisParameters analysisParams = null;
-		Parameter[] params = criteriaSet.getParameters();
-		for (int i = 0; i < params.length; i++)
-		{
-			ParameterType p = params[i].getType();
-			if (p.equals(ParameterType.DADARA_CRITERIA))
-				analysisParams = (AnalysisParameters)
-					DataStreamableUtil.readDataStreamableFromBA(
-							params[i].getValue(),
-							AnalysisParameters.getReader());
-		}
-		if (analysisParams == null) {
-			throw new DataFormatException(
-					"No" + ParameterType.DADARA_CRITERIA.getCodename());
-		}
-		Heap.setMinuitAnalysisParams(analysisParams);
-		Heap.setMinuitInitialParamsFromCurrentAP();
-		Heap.notifyAnalysisParametersUpdated();
 	}
 
 	/**
