@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTUTransceiver.h,v 1.8 2005/08/29 18:06:13 arseniy Exp $
+// $Id: RTUTransceiver.h,v 1.9 2005/09/01 15:43:08 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.8 $, $Date: 2005/08/29 18:06:13 $
+// $Revision: 1.9 $, $Date: 2005/09/01 15:43:08 $
 // $Author: arseniy $
 //
 // RTUTransceiver.h: interface for the RTUTransceiver class.
@@ -84,7 +84,7 @@ private:
 	void print_measurement_parameters() const;
 	void retrieve_plugin_data(unsigned int otdr_card_index);
 	void fill_bellcore_structure(BellcoreStructure*& bs, QPOTDRWaveformHeader* wave_form_header,QPOTDRWaveformData*  wave_form_data) const;
-	
+
 
 	MeasurementQueueT* measurement_queue;
 	ResultQueueT* result_queue;
