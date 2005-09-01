@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceManager.java,v 1.94 2005/09/01 12:07:45 saa Exp $
+ * $Id: ModelTraceManager.java,v 1.95 2005/09/01 17:26:26 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.io.SignatureMismatchException;
  * генерацией пороговых кривых и сохранением/восстановлением порогов.
  *
  * @author $Author: saa $
- * @version $Revision: 1.94 $, $Date: 2005/09/01 12:07:45 $
+ * @version $Revision: 1.95 $, $Date: 2005/09/01 17:26:26 $
  * @module
  */
 public class ModelTraceManager
@@ -555,13 +555,13 @@ implements DataStreamable, Cloneable
 		for (int i = 0; i < this.tDY.length; i++)
 			this.tDY[i].changeAllBy(-dyMargin);
 		CoreAnalysisManager.extendThreshToCoverCurve(
-			this.mtae.getModelTrace().getYArray(), yTop,
-			this.tDX, this.tDY, Thresh.SOFT_UP, Thresh.HARD_UP,
-			dyFactor);
+				this.mtae.getModelTrace().getYArray(), yTop,
+				this.tDX, this.tDY, Thresh.SOFT_UP, Thresh.HARD_UP,
+				dyFactor);
 		CoreAnalysisManager.extendThreshToCoverCurve(
 				this.mtae.getModelTrace().getYArray(), yBottom,
 				this.tDX, this.tDY, Thresh.SOFT_DOWN, Thresh.HARD_DOWN,
-			dyFactor);
+				dyFactor);
 		for (int i = 0; i < this.tDY.length; i++)
 			this.tDY[i].changeAllBy(dyMargin);
 	}

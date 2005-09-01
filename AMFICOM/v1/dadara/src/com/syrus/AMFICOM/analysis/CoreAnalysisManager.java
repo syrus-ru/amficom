@@ -1,5 +1,5 @@
 /*
- * $Id: CoreAnalysisManager.java,v 1.113 2005/08/30 14:07:26 saa Exp $
+ * $Id: CoreAnalysisManager.java,v 1.114 2005/09/01 17:26:26 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.analysis;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.113 $, $Date: 2005/08/30 14:07:26 $
+ * @version $Revision: 1.114 $, $Date: 2005/09/01 17:26:26 $
  * @module
  */
 
@@ -597,7 +597,7 @@ public class CoreAnalysisManager
 	throws IncompatibleTracesException, IllegalArgumentException {
 		TracesAverages av = findTracesAverages(bsColl, true, true, ap);
 		// extend to max dev of _mf_
-		mtm.updateThreshToContain(av.maxYMF, av.minYMF, MTM_DY_MARGIN, MTM_DY_FACTOR_MF_BASED); 
+		mtm.updateThreshToContain(av.maxYMF, av.minYMF, MTM_DY_MARGIN, MTM_DY_FACTOR_MF_BASED);
 	}
 
 	/**
