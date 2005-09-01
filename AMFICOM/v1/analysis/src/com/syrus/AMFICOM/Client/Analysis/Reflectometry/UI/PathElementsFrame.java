@@ -41,19 +41,19 @@ public class PathElementsFrame extends AnalysisFrame {
 		try {
 			MonitoredElement me = StorableObjectPool.getStorableObject(new Identifier(bs.monitoredElementId), true);
 
-			Set<SchemePath> paths = StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.SCHEMEPATH_CODE), true); 
-			if (!paths.isEmpty()) {
-				path = paths.iterator().next();
-			}
-//			if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
-//				LinkedIdsCondition condition = new LinkedIdsCondition(me.getMeasurementPortId(), ObjectEntities.PATHELEMENT_CODE);
-//				Set<PathElement> pathElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-//				
-//				if (!pathElements.isEmpty()) {
-//					PathElement pe = pathElements.iterator().next();
-//					path = pe.getParentPathOwner();
-//				}
+//			Set<SchemePath> paths = StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.SCHEMEPATH_CODE), true); 
+//			if (!paths.isEmpty()) {
+//				path = paths.iterator().next();
 //			}
+			if (me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
+				LinkedIdsCondition condition = new LinkedIdsCondition(me.getMeasurementPortId(), ObjectEntities.PATHELEMENT_CODE);
+				Set<PathElement> pathElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				
+				if (!pathElements.isEmpty()) {
+					PathElement pe = pathElements.iterator().next();
+					path = pe.getParentPathOwner();
+				}
+			}
 			setTitle(me.getName());
 		} catch (ApplicationException ex) {
 			Log.errorException(ex);

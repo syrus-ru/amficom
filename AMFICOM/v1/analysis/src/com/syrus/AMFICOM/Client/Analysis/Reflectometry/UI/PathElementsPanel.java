@@ -111,7 +111,6 @@ public final class PathElementsPanel extends AnalysisPanel
 				if (nextNode == null) {
 					nextNode = this.path.getNextPathElement(this.activePathElement);
 				}
-				
 				if (lastNode != null) {
 					this.path.changeOpticalLength(lastNode, this.activePathElement, d);
 				}
