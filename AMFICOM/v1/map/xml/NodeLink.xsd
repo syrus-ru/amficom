@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: NodeLink.xsd,v 1.8 2005/08/31 05:40:27 bass Exp $
+			$Id: NodeLink.xsd,v 1.9 2005/09/01 10:47:11 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -45,10 +45,10 @@
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>
-					<xsd:element name = "length" type = "xsd:double" minOccurs = "1" maxOccurs = "1"/>
-					<xsd:element name = "physicalLinkId" type = "general:XmlIdentifier" minOccurs = "1" maxOccurs = "1"/>
-					<xsd:element name = "startNodeId" type = "general:XmlIdentifier" minOccurs = "1" maxOccurs = "1"/>
-					<xsd:element name = "endNodeId" type = "general:XmlIdentifier" minOccurs = "1" maxOccurs = "1"/>
+					<xsd:element name = "length" type = "xsd:double"/>
+					<xsd:element name = "physicalLinkId" type = "general:XmlIdentifier"/>
+					<xsd:element name = "startNodeId" type = "general:XmlIdentifier"/>
+					<xsd:element name = "endNodeId" type = "general:XmlIdentifier"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>

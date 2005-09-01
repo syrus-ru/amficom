@@ -7,7 +7,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: StorableObject.xsd,v 1.2 2005/08/29 16:26:49 bass Exp $
+			$Id: StorableObject.xsd,v 1.3 2005/09/01 10:47:12 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -21,7 +21,7 @@
 	<xsd:complexType name = "XmlStorableObject" abstract = "true">
 		<xsd:sequence>
 			<xsd:element name = "id" type = "general:XmlIdentifier"
-				minOccurs = "1" maxOccurs = "1"/>
+				/>
 		</xsd:sequence>
 	</xsd:complexType>
 </xsd:schema>

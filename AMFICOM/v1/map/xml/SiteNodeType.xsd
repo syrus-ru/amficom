@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SiteNodeType.xsd,v 1.12 2005/08/31 05:40:27 bass Exp $
+			$Id: SiteNodeType.xsd,v 1.13 2005/09/01 10:47:11 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -42,13 +42,13 @@
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>
-					<xsd:element name = "name" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
-					<xsd:element name = "codename" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
-					<xsd:element name = "description" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
-					<xsd:element name = "sort" type = "map:XmlSiteNodeTypeSort" minOccurs = "1" maxOccurs = "1"/>
-					<xsd:element name = "topological" type = "xsd:boolean" minOccurs = "1" maxOccurs = "1" fixed = "true"/>
-					<xsd:element name = "image" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
-					<xsd:element ref = "general:characteristics" minOccurs = "0" maxOccurs = "1"/>
+					<xsd:element name = "name" type = "xsd:string"/>
+					<xsd:element name = "codename" type = "xsd:string"/>
+					<xsd:element name = "description" type = "xsd:string" minOccurs = "0"/>
+					<xsd:element name = "sort" type = "map:XmlSiteNodeTypeSort"/>
+					<xsd:element name = "topological" type = "xsd:boolean" fixed = "true"/>
+					<xsd:element name = "image" type = "xsd:string" minOccurs = "0"/>
+					<xsd:element ref = "general:characteristics" minOccurs = "0"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>

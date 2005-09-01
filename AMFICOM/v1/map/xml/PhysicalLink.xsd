@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: PhysicalLink.xsd,v 1.10 2005/08/31 05:40:27 bass Exp $
+			$Id: PhysicalLink.xsd,v 1.11 2005/09/01 10:47:11 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -45,15 +45,15 @@
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>
-					<xsd:element name = "name" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
-					<xsd:element name = "description" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
-					<xsd:element name = "physicalLinkTypeCodename" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
-					<xsd:element name = "startNodeId" type = "general:XmlIdentifier" minOccurs = "1" maxOccurs = "1"/>
-					<xsd:element name = "endNodeId" type = "general:XmlIdentifier" minOccurs = "1" maxOccurs = "1"/>
-					<xsd:element name = "city" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
-					<xsd:element name = "street" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
-					<xsd:element name = "building" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
-					<xsd:element ref = "general:characteristics" minOccurs = "0" maxOccurs = "1"/>
+					<xsd:element name = "name" type = "xsd:string"/>
+					<xsd:element name = "description" type = "xsd:string" minOccurs = "0"/>
+					<xsd:element name = "physicalLinkTypeCodename" type = "xsd:string"/>
+					<xsd:element name = "startNodeId" type = "general:XmlIdentifier"/>
+					<xsd:element name = "endNodeId" type = "general:XmlIdentifier"/>
+					<xsd:element name = "city" type = "xsd:string" minOccurs = "0"/>
+					<xsd:element name = "street" type = "xsd:string" minOccurs = "0"/>
+					<xsd:element name = "building" type = "xsd:string" minOccurs = "0"/>
+					<xsd:element ref = "general:characteristics" minOccurs = "0"/>
 				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>

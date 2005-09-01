@@ -7,7 +7,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: CharacteristicType.xsd,v 1.4 2005/08/30 11:49:52 bass Exp $
+			$Id: CharacteristicType.xsd,v 1.5 2005/09/01 10:47:12 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -39,13 +39,13 @@
 
 	<xsd:complexType name = "XmlCharacteristicType">
 		<xsd:all>
-			<xsd:element name = "name" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
-			<xsd:element name = "codename" type = "xsd:string" minOccurs = "1" maxOccurs = "1"/>
-			<xsd:element name = "description" type = "xsd:string" minOccurs = "0" maxOccurs = "1"/>
-			<xsd:element name = "sort" type = "general:XmlCharacteristicTypeSort" minOccurs = "1" maxOccurs = "1"/>
-			<xsd:element name = "dataType" type = "general:XmlDataType" minOccurs = "1" maxOccurs = "1"/>
-			<xsd:element name = "editable" type = "xsd:boolean" minOccurs = "1" maxOccurs = "1"/>
-			<xsd:element name = "visible" type = "xsd:boolean" minOccurs = "1" maxOccurs = "1"/>
+			<xsd:element name = "name" type = "xsd:string"/>
+			<xsd:element name = "codename" type = "xsd:string"/>
+			<xsd:element name = "description" type = "xsd:string" minOccurs = "0"/>
+			<xsd:element name = "sort" type = "general:XmlCharacteristicTypeSort"/>
+			<xsd:element name = "dataType" type = "general:XmlDataType"/>
+			<xsd:element name = "editable" type = "xsd:boolean"/>
+			<xsd:element name = "visible" type = "xsd:boolean"/>
 		</xsd:all>
 	</xsd:complexType>
 
