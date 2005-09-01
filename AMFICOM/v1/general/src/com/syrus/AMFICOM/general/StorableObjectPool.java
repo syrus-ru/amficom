@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.164 2005/09/01 13:37:04 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.165 2005/09/01 16:50:43 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.164 $, $Date: 2005/09/01 13:37:04 $
+ * @version $Revision: 1.165 $, $Date: 2005/09/01 16:50:43 $
  * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -499,8 +499,9 @@ public final class StorableObjectPool {
 		final Identifier id = storableObject.getId();
 		final short entityCode = id.getMajor();
 		final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
-		if (entityDeletedIds != null && entityDeletedIds.contains(id))
+		if (entityDeletedIds != null && entityDeletedIds.contains(id)) {
 			return;
+		}
 
 		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool != null) {
@@ -525,8 +526,9 @@ public final class StorableObjectPool {
 		if (objectPool != null) {
 			for (final Iterator<StorableObject> it = objectPool.iterator(); it.hasNext();) {
 				final StorableObject storableObject = it.next();
-				if (storableObject.isChanged())
+				if (storableObject.isChanged()) {
 					it.remove();
+				}
 			}
 		}
 		else {

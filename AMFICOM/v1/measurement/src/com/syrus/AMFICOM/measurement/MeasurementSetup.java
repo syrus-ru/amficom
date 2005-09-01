@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.91 2005/08/26 09:10:26 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.92 2005/09/01 16:54:35 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/08/26 09:10:26 $
+ * @version $Revision: 1.92 $, $Date: 2005/09/01 16:54:35 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -74,7 +74,7 @@ public final class MeasurementSetup extends StorableObject {
 		} catch (IllegalDataException e) {
 			throw new RetrieveObjectException(e.getMessage(), e);
 		}
-		
+
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
@@ -122,7 +122,7 @@ public final class MeasurementSetup extends StorableObject {
 		this.measurementTypes = EnumSet.noneOf(MeasurementType.class);
 		this.setMeasurementTypes0(measurementTypes);
 	}
-	
+
 	/**
 	 * create new instance for client
 	 * @param creatorId
@@ -443,7 +443,7 @@ public final class MeasurementSetup extends StorableObject {
 		this.thresholdSet = thresholdSet;
 		super.markAsChanged();
 	}
-	
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
