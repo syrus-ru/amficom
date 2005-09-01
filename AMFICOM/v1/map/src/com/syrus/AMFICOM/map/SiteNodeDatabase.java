@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeDatabase.java,v 1.35 2005/08/31 05:50:36 bass Exp $
+ * $Id: SiteNodeDatabase.java,v 1.36 2005/09/01 14:02:18 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/08/31 05:50:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.36 $, $Date: 2005/09/01 14:02:18 $
+ * @author $Author: max $
  * @module map
  */
 public final class SiteNodeDatabase extends StorableObjectDatabase<SiteNode> {
@@ -51,7 +51,8 @@ public final class SiteNodeDatabase extends StorableObjectDatabase<SiteNode> {
 				+ SiteNodeWrapper.COLUMN_SITE_NODE_TYPE_ID + COMMA
 				+ SiteNodeWrapper.COLUMN_CITY + COMMA
 				+ SiteNodeWrapper.COLUMN_STREET + COMMA
-				+ SiteNodeWrapper.COLUMN_BUILDING;
+				+ SiteNodeWrapper.COLUMN_BUILDING + COMMA
+				+ SiteNodeWrapper.COLUMN_ATTACHMENT_SITE_NODE_ID;
 		}
 		return columns;
 	}	
@@ -60,6 +61,7 @@ public final class SiteNodeDatabase extends StorableObjectDatabase<SiteNode> {
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues = QUESTION + COMMA
+				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -85,6 +87,7 @@ public final class SiteNodeDatabase extends StorableObjectDatabase<SiteNode> {
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getCity(), MarkDatabase.SIZE_CITY_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getStreet(), MarkDatabase.SIZE_STREET_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getAttachmentSiteNodeId());
 		return startParameterNumber;
 	}
 
@@ -98,7 +101,8 @@ public final class SiteNodeDatabase extends StorableObjectDatabase<SiteNode> {
 			+ DatabaseIdentifier.toSQLString(storableObject.getType().getId()) + COMMA
 			+ DatabaseString.toQuerySubString(storableObject.getCity(), MarkDatabase.SIZE_CITY_COLUMN) + COMMA
 			+ DatabaseString.toQuerySubString(storableObject.getStreet(), MarkDatabase.SIZE_STREET_COLUMN) + COMMA
-			+ DatabaseString.toQuerySubString(storableObject.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN);
+			+ DatabaseString.toQuerySubString(storableObject.getBuilding(), MarkDatabase.SIZE_BUILDING_COLUMN) + COMMA
+			+ DatabaseIdentifier.toSQLString(storableObject.getAttachmentSiteNodeId());
 		return values;
 	}
 
@@ -145,7 +149,8 @@ public final class SiteNodeDatabase extends StorableObjectDatabase<SiteNode> {
 				type,
 				DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_CITY)),
 				DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_STREET)),
-				DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_BUILDING)));
+				DatabaseString.fromQuerySubString(resultSet.getString(SiteNodeWrapper.COLUMN_BUILDING)),
+				DatabaseIdentifier.getIdentifier(resultSet, SiteNodeWrapper.COLUMN_ATTACHMENT_SITE_NODE_ID));
 		return siteNode;
 	}
 
