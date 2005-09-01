@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.68 2005/08/31 10:30:01 bob Exp $
+# $Id: Makefile,v 1.69 2005/09/01 07:43:11 max Exp $
 #
 # vim:set ft=make:
 #
@@ -21,7 +21,7 @@ $(call checkenve,SCOMPFLAGS)
 LIBNAME_GENERALXML=generalxml.jar
 
 APPCLASSPATH := $(LIBDIR)/util.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xalan.jar
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xalan.jar:$(EXTLIBDIR)/xbean.jar
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_GENERALXML)
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/general/*.java) \
@@ -57,7 +57,7 @@ corba: .corba
 .corba: $(CLASSDIR) .idl
 	$(JAVAC) \
 		$(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(XMLCLASSPATH):$(CLASSDIR) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/general/corba/*.java \
 		$(SRCDIR)/com/syrus/AMFICOM/security/corba/*.java
