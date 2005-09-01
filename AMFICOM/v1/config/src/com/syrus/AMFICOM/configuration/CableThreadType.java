@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.58 2005/08/31 13:25:08 bass Exp $
+ * $Id: CableThreadType.java,v 1.59 2005/09/01 10:33:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,7 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.58 $, $Date: 2005/08/31 13:25:08 $
+ * @version $Revision: 1.59 $, $Date: 2005/09/01 10:33:12 $
  * @author $Author: bass $
  * @module config
  */
@@ -323,7 +323,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		assert linkTypeId != null : NON_NULL_EXPECTED;
 		assert !linkTypeId.isVoid() : NON_VOID_EXPECTED;
 		assert linkTypeId.getMajor() == LINK_TYPE_CODE;
-		if (this.linkType.getId().equals(linkTypeId)) {
+		if (Identifier.possiblyVoid(this.linkType).equals(linkTypeId)) {
 			return;
 		}
 		this.setLinkType(StorableObjectPool.<LinkType>getStorableObject(linkTypeId, true));
@@ -344,7 +344,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		assert cableLinkTypeId != null : NON_NULL_EXPECTED;
 		assert !cableLinkTypeId.isVoid() : NON_VOID_EXPECTED;
 		assert cableLinkTypeId.getMajor() == CABLELINK_TYPE_CODE;
-		if (this.cableLinkType.getId().equals(cableLinkTypeId)) {
+		if (Identifier.possiblyVoid(this.cableLinkType).equals(cableLinkTypeId)) {
 			return;
 		}
 		this.setCableLinkType(StorableObjectPool.<CableLinkType>getStorableObject(cableLinkTypeId, true));
