@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.75 2005/08/31 13:25:08 bass Exp $
+ * $Id: SiteNode.java,v 1.76 2005/09/01 14:00:33 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,13 +22,13 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ImportUidMapDatabase;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -44,6 +44,7 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
 import com.syrus.AMFICOM.map.xml.XmlSiteNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.util.Log;
 
 /**
  * Сетевой узел на топологической схеме. Характеризуется типом
@@ -57,8 +58,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/08/31 13:25:08 $
+ * @author $Author: max $
+ * @version $Revision: 1.76 $, $Date: 2005/09/01 14:00:33 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
@@ -74,7 +75,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 	private String street;
 	private String building;
 	
-	transient private SiteNode attachmentSiteNode = null;
+	private Identifier attachmentSiteNodeId = Identifier.VOID_IDENTIFIER;
 
 	SiteNode(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -95,6 +96,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		this.city = snt.city;
 		this.street = snt.street;
 		this.building = snt.building;
+		this.attachmentSiteNodeId = new Identifier(snt.attachmentSiteNodeId);
 
 		try {
 			this.type = StorableObjectPool.getStorableObject(new Identifier(snt.siteNodeTypeId), true);
@@ -129,7 +131,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		this.city = city;
 		this.street = street;
 		this.building = building;
-
+		
 		this.selected = false;
 	}
 
@@ -213,7 +215,8 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 				this.type.getId().getTransferable(),
 				this.city,
 				this.street,
-				this.building);
+				this.building,
+				this.attachmentSiteNodeId.getTransferable());
 	}
 
 	public SiteNodeType getType() {
@@ -253,13 +256,30 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		super.markAsChanged();
 	}
 
-	public SiteNode getAttachmentSiteNode() {
-		return this.attachmentSiteNode;
+	Identifier getAttachmentSiteNodeId() {
+		return this.attachmentSiteNodeId;
 	}
 
-	public void setAttachmentSiteNode(SiteNode attachedSiteNode) {
-		this.attachmentSiteNode = attachedSiteNode;
+	void setAttachmentSiteNodeId(Identifier attachedSiteNodeId) {
+		this.attachmentSiteNodeId = attachedSiteNodeId;
+		super.markAsChanged();
 	}
+	
+	public void setAttachmentSiteNode(SiteNode attachmentSiteNode) {
+		this.attachmentSiteNodeId = attachmentSiteNode.getId();
+		super.markAsChanged();
+	}
+	
+	public SiteNode getAttachmentSiteNode() {
+		try {
+			return StorableObjectPool.<SiteNode>getStorableObject(this.getAttachmentSiteNodeId(), true);
+		} catch(ApplicationException e) {
+			Log.errorException(e);
+			return null;
+		}
+	}
+	
+	
 
 	synchronized void setAttributes(final Date created,
 			final Date modified,
@@ -274,7 +294,8 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 			final SiteNodeType type,
 			final String city,
 			final String street,
-			final String building) {
+			final String building,
+			final Identifier attachedSiteNodeId) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
@@ -284,6 +305,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		this.city = city;
 		this.street = street;
 		this.building = building;
+		this.attachmentSiteNodeId = attachedSiteNodeId;
 	}
 
 	/**
@@ -414,21 +436,12 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 	}
 
 	public Set<SiteNode> getAttachedSiteNodes() {
-		Set<SiteNode> attachedSiteNodes = new HashSet<SiteNode>();
-
-		// TODO implementation through LinkedIdsCondition
-		EquivalentCondition condition = new EquivalentCondition(SITENODE_CODE);
-		
+		LinkedIdsCondition condition = new LinkedIdsCondition(this.getAttachmentSiteNodeId(), this.getId().getMajor());
 		try {
-			for(SiteNode siteNode : StorableObjectPool.<SiteNode>getStorableObjectsByCondition(condition, false)) {
-				if(this == siteNode.getAttachmentSiteNode()) {
-					attachedSiteNodes.add(siteNode);
-				}
-			}
+			return StorableObjectPool.<SiteNode>getStorableObjectsByCondition(condition, false);
 		} catch(ApplicationException e) {
-			e.printStackTrace();
+			Log.errorException(e);
+			return null;
 		}
-		
-		return attachedSiteNodes;
 	}
 }
