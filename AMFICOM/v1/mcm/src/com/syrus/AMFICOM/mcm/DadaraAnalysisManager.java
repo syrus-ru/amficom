@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.65 2005/08/19 15:54:32 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.66 2005/09/01 12:14:37 saa Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/08/19 15:54:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.66 $, $Date: 2005/09/01 12:14:37 $
+ * @author $Author: saa $
  * @module mcm
  */
 
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.analysis.CoreAnalysisManager;
 import com.syrus.AMFICOM.analysis.Etalon;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisParameters;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
-import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.general.CreateObjectException;
@@ -34,6 +33,7 @@ import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.io.BellcoreReader;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 final class DadaraAnalysisManager implements AnalysisManager {
