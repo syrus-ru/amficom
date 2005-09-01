@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicTypeCodenames.java,v 1.9 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: CharacteristicTypeCodenames.java,v 1.10 2005/09/01 12:21:58 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:27:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/09/01 12:21:58 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -51,6 +51,10 @@ public final class CharacteristicTypeCodenames {
 	public static final String USER_EMAIL = USER_PREFIX + "email";
 	public static final String USER_PHONE = USER_PREFIX + "phone";
 	public static final String USER_CELLULAR = USER_PREFIX + "cellular";
+	
+	public static final String COMMON_COLOUR = "common_colour";
+	
+	public static final String LINK_ACTIVITY = "link_activity";
 	
 	private CharacteristicTypeCodenames() {
 		//singleton
