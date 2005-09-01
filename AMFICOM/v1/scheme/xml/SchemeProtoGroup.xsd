@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeProtoGroup.xsd,v 1.3 2005/08/31 20:17:24 bass Exp $
+			$Id: SchemeProtoGroup.xsd,v 1.4 2005/09/01 11:10:35 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -19,7 +19,12 @@
 
 	<xsd:import
 		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/general.xsd"/>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
 		schemaLocation = "../../general/xml/StorableObject.xsd"/>
+	<xsd:include
+		schemaLocation = "SchemeProtoElement.xsd"/>
 
 	<xsd:element name = "schemeProtoGroups" type = "scheme:XmlSchemeProtoGroupSeq">
 		<xsd:key name = "schemeProtoGroupId">
@@ -31,6 +36,35 @@
 	<xsd:complexType name = "XmlSchemeProtoGroup">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
+				<xsd:sequence>
+					<xsd:element ref = "general:name"/>
+					<xsd:element ref = "general:description" minOccurs = "0"/>
+					<xsd:choice minOccurs = "0">
+						<xsd:element name = "symbolId" type = "general:XmlIdentifier"/>
+						<xsd:element name = "symbolCodename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "32"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name = "symbolFilename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "256"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:choice>
+					<xsd:element name = "parentSchemeProtoGroupId" type = "general:XmlIdentifier"
+						minOccurs = "0"/>
+					<xsd:element ref = "scheme:schemeProtoGroups"
+						minOccurs = "0"/>
+					<xsd:element ref = "scheme:schemeProtoElements"
+						minOccurs = "0"/>
+				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
