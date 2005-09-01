@@ -1,5 +1,5 @@
 /*-
- * $Id: map.idl,v 1.36 2005/08/29 10:01:47 bass Exp $
+ * $Id: map.idl,v 1.37 2005/09/01 13:49:35 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -128,6 +128,8 @@ module map {
 			public wstring city;
 			public wstring street;
 			public wstring building;
+			
+			public general::corba::IdlIdentifier attachmentSiteNodeId;
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -143,7 +145,8 @@ module map {
 					in general::corba::IdlIdentifier siteNodeTypeId,
 					in wstring city,
 					in wstring street,
-					in wstring building);
+					in wstring building,
+					in general::corba::IdlIdentifier attachmentSiteNodeId);
 		};
 
 		valuetype IdlTopologicalNode : IdlAbstractNode {
