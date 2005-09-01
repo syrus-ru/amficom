@@ -1,5 +1,5 @@
 /*
- * $Id: SiteNodeWrapper.java,v 1.13 2005/08/12 10:05:08 arseniy Exp $
+ * $Id: SiteNodeWrapper.java,v 1.14 2005/09/01 14:11:55 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/12 10:05:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/09/01 14:11:55 $
+ * @author $Author: max $
  * @module map
  */
 public class SiteNodeWrapper extends StorableObjectWrapper<SiteNode> {
@@ -38,6 +38,8 @@ public class SiteNodeWrapper extends StorableObjectWrapper<SiteNode> {
 	public static final String COLUMN_STREET = "street";
 	// building VARCHAR2(128),
 	public static final String COLUMN_BUILDING = "building";
+	
+	public static final String COLUMN_ATTACHMENT_SITE_NODE_ID	= "attachment_site_node_id";
 
 	private static SiteNodeWrapper instance;
 
@@ -53,7 +55,8 @@ public class SiteNodeWrapper extends StorableObjectWrapper<SiteNode> {
 				COLUMN_SITE_NODE_TYPE_ID,
 				COLUMN_CITY,
 				COLUMN_STREET,
-				COLUMN_BUILDING };
+				COLUMN_BUILDING,
+				COLUMN_ATTACHMENT_SITE_NODE_ID};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
@@ -118,6 +121,9 @@ public class SiteNodeWrapper extends StorableObjectWrapper<SiteNode> {
 			else if (key.equals(COLUMN_BUILDING)) {
 				return siteNode.getBuilding();
 			}
+			else if (key.equals(COLUMN_ATTACHMENT_SITE_NODE_ID)) {
+				return siteNode.getAttachmentSiteNodeId();
+			}
 		}
 		return null;
 	}
@@ -151,6 +157,8 @@ public class SiteNodeWrapper extends StorableObjectWrapper<SiteNode> {
 				siteNode.setStreet((String) value);
 			} else if (key.equals(COLUMN_BUILDING)) {
 				siteNode.setBuilding((String) value);
+			} else if (key.equals(COLUMN_ATTACHMENT_SITE_NODE_ID)) {
+				siteNode.setAttachmentSiteNodeId((Identifier) value);
 			}
 		}
 	}
