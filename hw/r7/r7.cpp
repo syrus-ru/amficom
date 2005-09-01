@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: r7.cpp,v 1.2 2005/08/29 18:08:53 arseniy Exp $
+// $Id: r7.cpp,v 1.3 2005/09/01 15:33:59 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.2 $, $Date: 2005/08/29 18:08:53 $
+// $Revision: 1.3 $, $Date: 2005/09/01 15:33:59 $
 // $Author: arseniy $
 //
 // r7.cpp: main function of application.
@@ -30,7 +30,7 @@ int main(const int argc, const char* argv[]) {
 	unsigned short com_port_number;
 
 	if (argc != 6) {
-		printf("Usage:\nr7 <id> <timewait> <max_mcm_timeout> <port> <com_port_number>\n");
+		printf("Usage:\nargv[0] <id> <timewait> <max_mcm_timeout> <port> <com_port_number>\n");
 		return 1;
 	}
 
