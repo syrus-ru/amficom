@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.38 2005/08/31 20:17:25 bass Exp $
+# $Id: Makefile,v 1.39 2005/09/01 13:17:51 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -57,7 +57,7 @@ corba: .corba
 
 .corba: $(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/scheme/corba/*.java
 	touch $@
