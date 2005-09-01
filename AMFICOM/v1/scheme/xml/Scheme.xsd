@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: Scheme.xsd,v 1.2 2005/08/31 20:17:24 bass Exp $
+			$Id: Scheme.xsd,v 1.3 2005/09/01 12:51:16 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -19,7 +19,20 @@
 
 	<xsd:import
 		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/general.xsd"/>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
 		schemaLocation = "../../general/xml/StorableObject.xsd"/>
+	<xsd:include
+		schemaLocation = "SchemeCableLink.xsd"/>
+	<xsd:include
+		schemaLocation = "SchemeElement.xsd"/>
+	<xsd:include
+		schemaLocation = "SchemeLink.xsd"/>
+	<xsd:include
+		schemaLocation = "SchemeOptimizeInfo.xsd"/>
+	<xsd:include
+		schemaLocation = "SchemeMonitoringSolution.xsd"/>
 
 	<xsd:element name = "schemes" type = "scheme:XmlSchemeSeq">
 		<xsd:key name = "schemeId">
@@ -31,6 +44,117 @@
 	<xsd:complexType name = "XmlScheme">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
+				<xsd:sequence>
+					<xsd:element ref = "general:name"/>
+					<xsd:element ref = "general:description"
+						minOccurs = "0"/>
+					<xsd:element name = "label"
+						minOccurs = "0"/>
+					<xsd:element name = "width" default = "840">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:int">
+								<xsd:minInclusive value = "0"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "height" default = "1190">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:int">
+								<xsd:minInclusive value = "0"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "domainId" type = "general:XmlIdentifier"
+						minOccurs = "0"/>
+					<xsd:element name = "mapId" type = "general:XmlIdentifier"
+						minOccurs = "0"/>
+					<xsd:choice
+						minOccurs = "0">
+						<xsd:element name = "symbolId"/>
+						<xsd:element name = "symbolCodename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "32"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name = "symbolFilename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "256"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:choice>
+					<xsd:choice
+						minOccurs = "0">
+						<xsd:element name = "ugoCellId"/>
+						<xsd:element name = "ugoCellCodename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "32"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name = "ugoCellFilename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "256"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:choice>
+					<xsd:choice
+						minOccurs = "0">
+						<xsd:element name = "schemeCellId"/>
+						<xsd:element name = "schemeCellCodename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "32"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name = "schemeCellFilename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "256"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:choice>
+					<xsd:element name = "kind">
+						<xsd:simpleType>
+							<xsd:restriction base = "xsd:string">
+								<xsd:enumeration value = "building"/>
+								<xsd:enumeration value = "cable_subnetwork"/>
+								<xsd:enumeration value = "network"/>
+								<xsd:enumeration value = "floor"/>
+								<xsd:enumeration value = "room"/>
+								<xsd:enumeration value = "rack"/>
+								<xsd:enumeration value = "bay"/>
+								<xsd:enumeration value = "cardcage"/>
+							</xsd:restriction>
+						</xsd:simpleType>
+					</xsd:element>
+					<xsd:element name = "parentSchemeElementId" type = "general:XmlIdentifier"
+						minOccurs = "0"/>
+					<xsd:element ref = "scheme:schemeCableLinks"
+						minOccurs = "0"/>
+					<xsd:element ref = "scheme:schemeElements"
+						minOccurs = "0"/>
+					<xsd:element ref = "scheme:schemeLinks"
+						minOccurs = "0"/>
+					<xsd:element ref = "scheme:schemeOptimizeInfos"
+						minOccurs = "0"/>
+					<xsd:element ref = "scheme:schemeMonitoringSolutions"
+						minOccurs = "0"/>
+				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
