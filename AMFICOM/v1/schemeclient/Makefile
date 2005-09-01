@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.12 2005/08/29 16:58:00 bass Exp $
+# $Id: Makefile,v 1.13 2005/09/01 17:15:33 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -14,7 +14,7 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 
 APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/map.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/filterclient.jar
-XMLCLASSPATH := $(LIBDIR)/configurationxml.jar
+XMLCLASSPATH := $(LIBDIR)/configurationxml.jar:$(LIBDIR)/schemexml.jar
 EXTCLASSPATH := $(EXTLIBDIR)/jgraphpad.jar
 
 SOURCES := $(shell find $(SRCDIR) -name '*.java')
