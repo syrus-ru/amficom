@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.20 2005/07/10 13:41:29 bass Exp $
+# $Id: Makefile,v 1.21 2005/09/01 13:26:50 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -13,10 +13,15 @@ IDL_SOURCES = $(IDLDIR)/mapview.idl
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
+$(call checkenve,XMLBEANSCLASSPATH)
 
+LIBNAME_GENERALXML=generalxml.jar
+LIBNAME_MAPXML=mapxml.jar
+LIBNAME_SCHEMEXML=schemexml.jar
 
-APPCLASSPATH := $(LIBDIR)/resource.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/generalxml.jar:$(LIBDIR)/mapxml.jar:$(LIBDIR)/map.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/util.jar
-EXTCLASSPATH := $(EXTLIBDIR)/trove.jar:$(EXTLIBDIR)/xbean.jar
+APPCLASSPATH := $(LIBDIR)/resource.jar:$(LIBDIR)/scheme.jar:$(LIBDIR)/map.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/util.jar
+XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_SCHEMEXML):$(LIBDIR)/$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
+EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
 
 SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/mapview/*.java)
@@ -28,7 +33,7 @@ $(LIBNAME): .mach
 
 .mach: .corba $(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
 
@@ -43,7 +48,7 @@ corba: .corba
 
 .corba: $(CLASSDIR) .idl
 	$(JAVAC) $(JAVACFLAGS) $(JAVAC_WARNOFF_FLAG) \
-		-classpath $(APPCLASSPATH):$(EXTCLASSPATH) \
+		-classpath $(APPCLASSPATH):$(EXTCLASSPATH):$(XMLCLASSPATH):$(XMLBEANSCLASSPATH) \
 		-sourcepath $(SRCDIR) \
 		$(SRCDIR)/com/syrus/AMFICOM/mapview/corba/*.java
 	touch $@
