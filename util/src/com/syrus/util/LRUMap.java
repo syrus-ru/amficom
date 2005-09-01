@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.38 2005/08/18 09:12:33 arseniy Exp $
+ * $Id: LRUMap.java,v 1.39 2005/09/01 16:45:03 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/08/18 09:12:33 $
+ * @version $Revision: 1.39 $, $Date: 2005/09/01 16:45:03 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -85,10 +85,12 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 		this.remove(key);
 		final IEntry<K, V> newEntry = new Entry(key, value);
 		V ret = null;
-		if (this.array[this.array.length - 1] != null)
+		if (this.array[this.array.length - 1] != null) {
 			ret = this.array[this.array.length - 1].getValue();
-		for (int i = this.array.length - 1; i > 0; i--)
+		}
+		for (int i = this.array.length - 1; i > 0; i--) {
 			this.array[i] = this.array[i - 1];
+		}
 		this.array[0] = newEntry;
 		return ret;
 	}
