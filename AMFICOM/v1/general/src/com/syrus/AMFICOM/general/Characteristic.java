@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.56 2005/08/29 10:17:30 max Exp $
+ * $Id: Characteristic.java,v 1.57 2005/09/01 14:46:07 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/08/29 10:17:30 $
- * @author $Author: max $
+ * @version $Revision: 1.57 $, $Date: 2005/09/01 14:46:07 $
+ * @author $Author: bob $
  * @module general
  */
 public final class Characteristic extends AbstractCloneableStorableObject
@@ -228,7 +228,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		super.markAsChanged();
 	}
 
-	public StorableObjectType getType() {
+	public CharacteristicType getType() {
 		return this.type;
 	}
 	
