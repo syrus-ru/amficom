@@ -1,5 +1,5 @@
 /*-
- * $Id: NonRootGraphTreeModel.java,v 1.3 2005/08/17 15:59:40 bob Exp $
+ * $Id: NonRootGraphTreeModel.java,v 1.4 2005/09/01 14:33:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.manager.AbstractBean;
 import com.syrus.AMFICOM.manager.MPort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/01 14:33:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -43,17 +43,14 @@ public class NonRootGraphTreeModel implements TreeModel {
 
 	Set<String>						availableCodenames;
 
-	boolean							direct;
-
 	protected GraphModel			model;
 
 	protected TreeNode				generalRoot;
 
 	protected TreeNode				root;
 
-	public NonRootGraphTreeModel(final GraphModel model, boolean direct) {
+	public NonRootGraphTreeModel(final GraphModel model) {
 		this.model = model;
-		this.direct = direct;
 
 		this.generalRoot = new DefaultMutableTreeNode("'/'");
 		this.firstLevel = new ArrayList<MPort>();
@@ -103,7 +100,7 @@ public class NonRootGraphTreeModel implements TreeModel {
 					
 //					System.out.println(".refreshFirstLevel() | port:" + port);
 					
-					List<Port> sources = this.direct ? port.getSources() : port.getTargets(); 
+					List<Port> sources = port.getTargets(); 
 					for (Port port2 : sources) {
 						
 //						System.out.println(".refreshFirstLevel() | source:" + port2 + ", " + rootPort);
@@ -157,7 +154,7 @@ public class NonRootGraphTreeModel implements TreeModel {
 			node = this.firstLevel.get(index).getParent();
 		} else {
 			MPort port = (MPort) ((TreeNode)parent).getChildAt(0);
-			List<Port> targets = this.direct ? port.getTargets() : port.getSources();
+			List<Port> targets = port.getSources();
 			int count = 0;
 			for(Port port2: targets) {
 				MPort mport2 = (MPort)port2;
@@ -199,7 +196,7 @@ public class NonRootGraphTreeModel implements TreeModel {
 			count = this.firstLevel.size();
 		} else {
 			MPort port = (MPort) ((TreeNode)parent).getChildAt(0);
-			List<Port> targets = this.direct ? port.getTargets() : port.getSources();
+			List<Port> targets = port.getSources();
 			for(Port port2: targets) {
 				MPort mport2 = (MPort)port2;
 				AbstractBean bean = mport2.getBean();
@@ -242,7 +239,7 @@ public class NonRootGraphTreeModel implements TreeModel {
 			index = this.firstLevel.indexOf(node);
 		} else {
 			MPort port = (MPort) (this.model.isPort(parent) ? parent : ((TreeNode)parent).getChildAt(0));
-			List<Port> targets = this.direct ? port.getTargets() : port.getSources();
+			List<Port> targets = port.getSources();
 			for(Port port2: targets) {
 				MPort mport2 = (MPort)port2;
 				AbstractBean bean = mport2.getBean();
@@ -346,7 +343,7 @@ public class NonRootGraphTreeModel implements TreeModel {
 				retNodes = new TreeNode[depth];
 			} else {
 				MPort port = this.model.isPort(aNode) ? (MPort) aNode : (MPort) aNode.getChildAt(0);
-				List<Port> sources = this.direct ? port.getSources() : port.getTargets();
+				List<Port> sources = port.getTargets();
 
 				if (!sources.isEmpty()) {
 					retNodes = this.getPathToRoot(((MPort) sources.get(0)).getParent(), depth);
@@ -364,15 +361,6 @@ public class NonRootGraphTreeModel implements TreeModel {
 
 		return retNodes;
 	}
-	
-	public final boolean isDirect() {
-		return this.direct;
-	}
-	
-	public final void setDirect(boolean direct) {
-		this.direct = direct;
-	}
-
 	
 	/**
 	 * @param availableCodenames The availableCodename to set.

@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.26 2005/08/24 16:02:52 bob Exp $
+ * $Id: JGraphText.java,v 1.27 2005/09/01 14:33:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -107,7 +107,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/08/24 16:02:52 $
+ * @version $Revision: 1.27 $, $Date: 2005/09/01 14:33:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -149,8 +149,6 @@ public class JGraphText implements GraphSelectionListener {
 
 	public JLabel				currentPerspectiveLabel;
 
-	private boolean				direct				= false;
-
 	Perspective			perspective;
 	
 	private Identifier			xTypeId;
@@ -173,7 +171,7 @@ public class JGraphText implements GraphSelectionListener {
 		this.factoryMap = new HashMap<String, AbstractBeanFactory>();
 		
 		// Construct Model and Graph
-		GraphModel model = new ManagerGraphModel(this.direct);
+		GraphModel model = new ManagerGraphModel();
 		
 		this.graph = new JGraph(model,
 			new GraphLayoutCache(model,
@@ -704,9 +702,8 @@ public class JGraphText implements GraphSelectionListener {
 							DefaultGraphCell edgeCell = (DefaultGraphCell) model.getRootAt(j);
 							if (model.isEdge(edgeCell)) {
 								Edge edge = (Edge) edgeCell;
-								Object target =  (this.direct ? edge.getTarget() : edge.getSource());
-								Object source =  (this.direct ? edge.getSource() : edge.getTarget());
-								
+								Object target = edge.getSource();
+								Object source = edge.getTarget();								
 								if (target == port && source == parentPort) {
 									connectionEdge = edge;
 									break;
@@ -722,8 +719,7 @@ public class JGraphText implements GraphSelectionListener {
 							}
 						} else {
 							// otherwise create edge
-							this.createEdge(this.direct ? parentCell : cell, 
-									this.direct ?  cell : parentCell);
+							this.createEdge(cell, parentCell);
 						}
 					}
 					
@@ -757,8 +753,8 @@ public class JGraphText implements GraphSelectionListener {
 					DefaultGraphCell edgeCell = (DefaultGraphCell) model.getRootAt(j);
 					if (model.isEdge(edgeCell)) {
 						Edge edge = (Edge) edgeCell;
-						Object target =  (this.direct ? edge.getTarget() : edge.getSource());
-						Object source =  (this.direct ? edge.getSource() : edge.getTarget());
+						Object target = edge.getSource();
+						Object source = edge.getTarget();
 						
 						if (target == port && source == parentPort) {
 							connectionEdge = edge;
@@ -774,8 +770,7 @@ public class JGraphText implements GraphSelectionListener {
 					}
 				} else {
 					// otherwise create edge
-					this.createEdge(this.direct ? parentCell : itemCell, 
-							this.direct ?  itemCell : parentCell);
+					this.createEdge(itemCell, parentCell);
 				}
 			}
 		}
@@ -850,7 +845,7 @@ public class JGraphText implements GraphSelectionListener {
 		if (startPort == port) {
 			return;
 		}
-		final List<Port> targets = (this.direct ? startPort.getTargets() : startPort.getSources());
+		final List<Port> targets = startPort.getSources();
 		
 		for(Port targetPort: targets) {			
 				this.hideTillCell((MPort) targetPort, port);
@@ -866,9 +861,8 @@ public class JGraphText implements GraphSelectionListener {
 			Object rootAt = model.getRootAt(i);
 			if (!model.isEdge(rootAt) && !model.isPort(rootAt)) {
 				MPort port = (MPort) ((TreeNode)rootAt).getChildAt(0);
-				List<Port> sources = this.direct ? port.getSources() : port.getTargets();
+				List<Port> sources = port.getTargets();
 				if (sources.isEmpty()) {
-//					System.out.println("JGraphText.showOnlyDescendants() | empty sources have " + rootAt + '[' + rootAt.getClass().getName() + ']');
 					this.hideTillCell(port, selectedPort);
 				}
 			}
@@ -1226,11 +1220,10 @@ public class JGraphText implements GraphSelectionListener {
 		cache.insert(cell);	
 
  		if (parentCell != null) {
- 			DefaultEdge edge = this.createEdge(this.treeModel.isDirect() ? parentCell : cell, 
- 					this.treeModel.isDirect() ?  cell : parentCell);
+ 			DefaultEdge edge = this.createEdge(cell, parentCell);
  			if (object instanceof AbstractBean) {
 				AbstractBean bean = (AbstractBean)object;
-				bean.updateEdgeAttributes(edge, (MPort) (this.treeModel.isDirect() ?  cell : parentCell).getChildAt(0));
+				bean.updateEdgeAttributes(edge, (MPort) parentCell.getChildAt(0));
 			}
  		}
  		return cell;
@@ -1296,7 +1289,7 @@ public class JGraphText implements GraphSelectionListener {
 
 	
 	private void createTreeModel() {		
-		this.treeModel = new NonRootGraphTreeModel(this.graph.getModel(), this.direct);
+		this.treeModel = new NonRootGraphTreeModel(this.graph.getModel());
 		this.tree = new JTree(this.treeModel);
 		
 		this.tree.setRootVisible(false);
@@ -1365,12 +1358,6 @@ public class JGraphText implements GraphSelectionListener {
 		return this.graph;
 	}
 
-	
-	public final boolean isDirect() {
-		return this.direct;
-	}
-
-	
 	public final void setPerspective(final Perspective perspective) {
 		assert perspective != null;		
 		this.perspective = perspective;
