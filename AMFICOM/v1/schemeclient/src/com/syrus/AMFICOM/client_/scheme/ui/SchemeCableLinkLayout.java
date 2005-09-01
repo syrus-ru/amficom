@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.8 2005/08/26 09:58:30 stas Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.9 2005/09/01 13:39:19 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import com.jgraph.graph.GraphConstants;
 import com.jgraph.pad.EllipseCell;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -36,17 +37,25 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.ThreadCell;
-import com.syrus.AMFICOM.configuration.CableThreadType;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.NumberedComparator;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/08/26 09:58:30 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/01 13:39:19 $
  * @module schemeclient
  */
 
@@ -62,6 +71,8 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 	private UgoTabbedPane panel;
 //	private Map mapping = new HashMap();
 	protected JScrollPane scrollPane;
+	
+	CharacteristicType colorType = null;
 
 	public SchemeCableLinkLayout() {
 		this.internalContext.setDispatcher(new Dispatcher());
@@ -71,6 +82,16 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		this.panel.getGraph().setGraphEditable(false);
 		this.panel.getGraph().setAntiAliased(true);
 		this.scrollPane = new JScrollPane(this.panel.getGraph());
+		
+		try {
+			TypicalCondition condition = new TypicalCondition(CharacteristicTypeCodenames.COLOR, OperationSort.OPERATION_EQUALS, ObjectEntities.CHARACTERISTIC_TYPE_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			if (!characteristicTypes.isEmpty()) {
+				this.colorType = characteristicTypes.iterator().next();
+			}
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+		}
 	}
 
 	public void setObject(Object or) {
@@ -79,13 +100,13 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		GraphActions.clearGraph(this.panel.getGraph());
 
 		if (this.link != null) {
+			List<SchemeCableThread> scts = getSortedCableThreads();
 		// TODO разобраться с числом модулей
 			int nModules = 8;
-			if (this.link.getAbstractLinkType().getCodename().equals("okst8")
-					|| this.link.getAbstractLinkType().getCodename().equals("okst16"))
+			if (scts.size() == 6 || scts.size() == 12 || scts.size() == 18 || scts.size() == 24 || scts.size() == 30) {
 				nModules = 6;
-
-			List<SchemeCableThread> scts = getSortedCableThreads();
+			}
+			
 			int tmp = (int) (2 * FIBER_RADIUS * Math.sqrt(Math.round((double) 
 					scts.size() / (double) nModules + 0.499)));
 			this.radius = 20;
@@ -141,8 +162,18 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 						+ (int) (this.radius / 2 * (Math.sin(j * inner_angle))) - FIBER_RADIUS;
 				Rectangle bounds = new Rectangle(x, y, 2 * FIBER_RADIUS,
 						2 * FIBER_RADIUS);
-				Color c = new Color(sct.getCableThreadType().getColor());
-				addThreadCell(this.panel.getGraph(), sct, bounds,	c);
+				
+				Color color = Color.WHITE;
+				try {
+					Characteristic ch = CommonUIUtilities.getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COLOR);
+					if (ch != null) {
+						color = new Color(Integer.valueOf(ch.getValue()));
+					}
+				} catch (ApplicationException e) {
+					Log.errorException(e);
+				}
+				
+				addThreadCell(this.panel.getGraph(), sct, bounds,	color);
 			}
 		}
 	}
@@ -182,9 +213,20 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 				Object obj = ev.getSelectedObject();
 				if (obj instanceof ThreadCell) {
 					ThreadCell cell = (ThreadCell)obj;
-					Color newColor = new Color(cell.getSchemeCableThread().getCableThreadType().getColor());
+					SchemeCableThread sct = cell.getSchemeCableThread();
+					
+					Color color = Color.WHITE;
+					try {
+						Characteristic ch = CommonUIUtilities.getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COLOR);
+						if (ch != null) {
+							color = new Color(Integer.valueOf(ch.getValue()));
+						}
+					} catch (ApplicationException e) {
+						Log.errorException(e);
+					}
+					
 					this.panel.getGraph().setSelectionCell(cell);
-					GraphActions.setObjectBackColor(this.panel.getGraph(), cell, newColor);
+					GraphActions.setObjectBackColor(this.panel.getGraph(), cell, color);
 				} else if (obj instanceof EllipseCell) {
 					this.panel.getGraph().clearSelection();
 				}

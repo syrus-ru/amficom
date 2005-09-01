@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.10 2005/08/26 09:58:30 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.11 2005/09/01 13:39:18 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.resource.NumberedComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/26 09:58:30 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/01 13:39:18 $
  * @module schemeclient
  */
 
@@ -75,13 +75,13 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		GraphActions.clearGraph(this.panel.getGraph());
 
 		if (this.type != null) {
-		// TODO разобраться с числом модулей
-			int nModules = 6;
-			if (this.type.getCodename().equals("okst8")
-					|| this.type.getCodename().equals("okst16"))
-				nModules = 6;
-
 			List ctts = getSortedThreadTypes();
+		// TODO разобраться с числом модулей
+			int nModules = 8;
+			if (ctts.size() == 6 || ctts.size() == 12 || ctts.size() == 18 || ctts.size() == 24 || ctts.size() == 30) {
+				nModules = 6;
+			}
+			
 			int tmp = (int) (2 * FIBER_RADIUS * Math.sqrt(Math.round((double) 
 					ctts.size() / (double) nModules + 0.499)));
 			this.radius = 20;
@@ -189,7 +189,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 
 	private void addThreadCell(SchemeGraph graph, CableThreadType threadType,
 			Rectangle bounds, Color color) {
-		String name = threadType.getName();
+		String name = threadType.getCodename();
 
 //		try {
 //			int num = ResourceUtil.parseNumber(SchemeUtils.parseThreadName(threadType.getName()));

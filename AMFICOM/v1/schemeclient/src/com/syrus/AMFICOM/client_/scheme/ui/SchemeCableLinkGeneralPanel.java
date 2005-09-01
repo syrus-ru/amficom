@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.16 2005/08/19 16:27:28 stas Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.17 2005/09/01 13:39:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,11 +53,12 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/08/19 16:27:28 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/01 13:39:18 $
  * @module schemeclient
  */
 

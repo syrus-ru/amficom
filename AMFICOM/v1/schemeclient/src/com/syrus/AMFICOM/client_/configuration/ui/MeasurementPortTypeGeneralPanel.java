@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeGeneralPanel.java,v 1.24 2005/08/26 09:58:30 stas Exp $
+ * $Id: MeasurementPortTypeGeneralPanel.java,v 1.25 2005/09/01 13:39:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/08/26 09:58:30 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/01 13:39:18 $
  * @module schemeclient
  */
 
@@ -311,7 +311,9 @@ public class MeasurementPortTypeGeneralPanel extends DefaultStorableObjectEditor
 		Item root1 = new IconedNode(SchemeResourceKeys.ROOT, LangModelScheme.getString(SchemeResourceKeys.ROOT));
 		
 		for (MeasurementType t : MeasurementType.values()) {
-				root1.addChild(new CheckableNode(t, t.getCodename(), false));
+			if (!t.equals(MeasurementType.UNKNOWN)) {
+				root1.addChild(new CheckableNode(t, t.getDescription(), false));
+			}
 		}
 		return root1;
 	}

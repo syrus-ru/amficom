@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.9 2005/08/26 09:58:30 stas Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.10 2005/09/01 13:39:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/26 09:58:30 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/01 13:39:18 $
  * @module schemeclient
  */
 
@@ -295,7 +295,9 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 	private void createMeasurementTypes(Item node, Collection contents) {
 		if (contents.isEmpty()) {
 			for (MeasurementType type : MeasurementType.values()) {
-				node.addChild(new PopulatableIconedNode(this, type, type.getDescription(), false));
+				if (!type.equals(MeasurementType.UNKNOWN)) {
+					node.addChild(new PopulatableIconedNode(this, type, type.getDescription(), false));
+				}
 			}
 		}
 	}

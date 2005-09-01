@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.2 2005/08/19 15:41:35 stas Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.3 2005/09/01 13:39:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -61,7 +61,7 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 	JList lsPesList = new JList();
 	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taDescriptionArea = new JTextArea(2,10);
-	
+	private transient int cashedSize = 0;
 	protected SchemePathGeneralPanel() {
 		super();
 		try {
@@ -262,34 +262,43 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 	}
 	
 	public void setObject(Object or) {
+		boolean updateOnly = false;
+		if (or.equals(this.schemePath)) {
+			updateOnly = true;
+		}
 		this.schemePath = (SchemePath)or;
 		this.cmbSolutionCombo.removeAllItems();
 		
 		if (this.schemePath != null) {
-			SchemeMonitoringSolution solution = this.schemePath.getParentSchemeMonitoringSolution();
-			Scheme scheme = solution.getParentScheme(); 
-			this.cmbSolutionCombo.addElements(scheme.getSchemeMonitoringSolutions());
-			this.cmbSolutionCombo.setSelectedItem(solution);
+			if (!updateOnly) {
+				SchemeMonitoringSolution solution = this.schemePath.getParentSchemeMonitoringSolution();
+				Scheme scheme = solution.getParentScheme(); 
+				this.cmbSolutionCombo.addElements(scheme.getSchemeMonitoringSolutions());
+				this.cmbSolutionCombo.setSelectedItem(solution);
+			}
 			
 			this.tfNameText.setText(this.schemePath.getName());
 			this.taDescriptionArea.setText(this.schemePath.getDescription());
 			
-			final SortedSet<PathElement> pathElements = this.schemePath.getPathMembers();
-			if (!pathElements.isEmpty()) {
-				PathElement startElement = pathElements.first();
-				this.tfStartText.setText(startElement.getName());
-				PathElement endElement = pathElements.last();
-				this.tfEndText.setText(endElement.getName());
-			} else {
-				this.tfStartText.setText(SchemeResourceKeys.EMPTY);
-				this.tfEndText.setText(SchemeResourceKeys.EMPTY);	
+			if (!updateOnly || this.lsPesList.getModel().getSize() != this.cashedSize) {
+				final SortedSet<PathElement> pathElements = this.schemePath.getPathMembers();
+				this.cashedSize = pathElements.size();
+				if (!pathElements.isEmpty()) {
+					PathElement startElement = pathElements.first();
+					this.tfStartText.setText(startElement.getName());
+					PathElement endElement = pathElements.last();
+					this.tfEndText.setText(endElement.getName());
+				} else {
+					this.tfStartText.setText(SchemeResourceKeys.EMPTY);
+					this.tfEndText.setText(SchemeResourceKeys.EMPTY);	
+				}
+				
+				Vector<String> peNames = new Vector<String>(); 
+				for (PathElement pe : pathElements) {
+					peNames.add(pe.getName());
+				}
+				this.lsPesList.setListData(peNames);
 			}
-
-			Vector<String> peNames = new Vector<String>(); 
-			for (PathElement pe : pathElements) {
-				peNames.add(pe.getName());
-			}
-			this.lsPesList.setListData(peNames);
 		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);

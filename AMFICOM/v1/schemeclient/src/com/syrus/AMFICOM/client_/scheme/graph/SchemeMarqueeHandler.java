@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.23 2005/08/19 15:41:34 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.24 2005/09/01 13:39:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/01 13:39:18 $
  * @module schemeclient
  */
 
@@ -237,7 +237,9 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				SchemePath path = pe != null ? pe.getParentPathOwner() : 
 					((SchemeTabbedPane)this.pane).getCurrentPanel().getSchemeResource().getSchemePath();
 
-				SortedSet<PathElement> pathElements = path != null ? path.getPathMembers() : null;
+				Notifier.notify(graph, graph.aContext, path);
+				
+				/*SortedSet<PathElement> pathElements = path != null ? path.getPathMembers() : null;
 				
 				SortedSet<Identifier> ids = null;
 				
@@ -248,19 +250,20 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 					}
 				}
 
-				for (ElementsPanel panel : ((SchemeTabbedPane)this.pane).getAllPanels()) {
-					panel.getSchemeResource().setSchemePath(path);
-					panel.getSchemeResource().setCashedPathMemberIds(ids);
-				}
-				
 				// select path objects
 				if (pathElements != null) {
 					Object[] pathObjects = SchemeActions.getPathObjects(ids, graph);
 					graph.setSelectionCells(pathObjects);
-					if (path != null) {
+					if (path != null && ((SchemeTabbedPane)this.pane).getCurrentPanel().getSchemeResource() == null) {
 						Notifier.notify(graph, graph.aContext, path);
 					}
 				}
+				
+				for (ElementsPanel panel : ((SchemeTabbedPane)this.pane).getAllPanels()) {
+					panel.getSchemeResource().setSchemePath(path);
+					panel.getSchemeResource().setCashedPathMemberIds(ids);
+				}*/
+				
 				event.consume();
 			}
 		}

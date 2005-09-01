@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.1 2005/08/19 15:43:44 stas Exp $
+ * $Id: PopupFactory.java,v 1.2 2005/09/01 13:39:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.LangModelScheme;
+import com.syrus.AMFICOM.scheme.PathElement;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
@@ -54,6 +55,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 public class PopupFactory {
@@ -94,7 +96,7 @@ public class PopupFactory {
 		JPopupMenu pop = new JPopupMenu();
 		
 		pop.add(createMuffMenuItem(aContext, graph, cell));
-//		pop.add(createCableSchemeMenuItem(aContext, graph, cell));
+		pop.add(createCableSchemeMenuItem(aContext, graph, cell));
 		pop.addSeparator();
 		pop.add(createCancelMenuItem());
 		return pop;
@@ -120,6 +122,7 @@ public class PopupFactory {
 		JPopupMenu pop = new JPopupMenu();
 		
 		if (pmIds.contains(id)) { // already added to path
+			pop.add(createPathRemoveMenuItem(cell));
 			if (res.getCashedPathStart() != null && res.getCashedPathEnd() != null) {
 				pop.addSeparator();
 				pop.add(createPathExploreMenuItem(res));
@@ -155,25 +158,31 @@ public class PopupFactory {
 				}
 				
 				try {
-					SchemeElement se = (SchemeElement)StorableObjectPool.getStorableObject(id, true);
-					if (se.getKind().value() == SchemeElementKind._SCHEMED) {
-						pop.add(createOpenSchemeMenuItem(aContext, se));
-						pop.add(createPathAddMenuItem(res, id));
-						pop.addSeparator();
-						pop.add(createCancelMenuItem());
-					} else {
-						JMenuItem item = createOpenSchemeElementMenuItem(aContext, se);
-						if (item != null) {
-							pop.add(item);
+					if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
+						SchemeElement se = (SchemeElement)StorableObjectPool.getStorableObject(id, true);
+						if (se.getKind().value() == SchemeElementKind._SCHEMED) {
+							pop.add(createOpenSchemeMenuItem(aContext, se));
 							pop.add(createPathAddMenuItem(res, id));
 							pop.addSeparator();
 							pop.add(createCancelMenuItem());
 						} else {
-							pop.add(createPathAddMenuItem(res, id));
-							pop.add(createPathEndMenuItem(res, id));
-							pop.addSeparator();
-							pop.add(createCancelMenuItem());							
+							JMenuItem item = createOpenSchemeElementMenuItem(aContext, se);
+							if (item != null) {
+								pop.add(item);
+								pop.add(createPathAddMenuItem(res, id));
+								pop.addSeparator();
+								pop.add(createCancelMenuItem());
+							} else {
+								pop.add(createPathAddMenuItem(res, id));
+								pop.add(createPathEndMenuItem(res, id));
+								pop.addSeparator();
+								pop.add(createCancelMenuItem());
+							}
 						}
+					} else {
+						pop.add(createPathAddMenuItem(res, id));
+						pop.addSeparator();
+						pop.add(createCancelMenuItem());
 					}
 				} catch (ApplicationException e) {
 					Log.errorException(e);
@@ -256,7 +265,22 @@ public class PopupFactory {
 	private static JMenuItem createCableSchemeMenuItem(final ApplicationContext aContext, final SchemeGraph graph, final DefaultCableLink cell) {
 		JMenuItem menuItem = new JMenuItem(new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
+				final SchemeCableLink cableLink = cell.getSchemeCableLink();
+				final Scheme parentScheme = cableLink.getParentScheme();
 				
+				try {
+					Scheme internalScheme = Scheme.createInstance(LoginManager.getUserId(), cableLink.getName(), IdlKind.CABLE_SUBNETWORK, LoginManager.getDomainId());
+					
+					
+					SchemeElement schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), internalScheme, parentScheme);
+
+					DefaultCableLink[] newCells = SchemeActions.splitCableLink(graph, cell);
+					if (newCells != null) {
+						
+					}
+				} catch (ApplicationException e1) {
+					Log.errorException(e1);
+				}
 			}
 		});
 		
@@ -325,6 +349,19 @@ public class PopupFactory {
 			}
 		});
 		menuItem.setText(LangModelScheme.getString("Menu.path.set_start")); //$NON-NLS-1$
+		return menuItem;
+	}
+	
+	private static JMenuItem createPathRemoveMenuItem(final Object object) {
+		JMenuItem menuItem = new JMenuItem(new AbstractAction() {
+			public void actionPerformed(ActionEvent e) {
+				PathElement pe = SchemeActions.getSelectedPathElement(object);
+				if (pe != null) { 
+					pe.setParentPathOwner(null, true);
+				}
+			}
+		});
+		menuItem.setText(LangModelScheme.getString("Menu.path.remove")); //$NON-NLS-1$
 		return menuItem;
 	}
 	

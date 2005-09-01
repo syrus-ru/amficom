@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.22 2005/08/26 09:58:30 stas Exp $
+ * $Id: SchemeActions.java,v 1.23 2005/09/01 13:39:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,6 +50,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.configuration.CableThreadType;
+import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -85,7 +86,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/08/26 09:58:30 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/01 13:39:18 $
  * @module schemeclient
  */
 
@@ -743,13 +744,19 @@ public class SchemeActions {
 //			if (res != JOptionPane.YES_OPTION) {
 //				return false;
 //			}
-			if (is_source) {
-				pe.setParentPathOwner(null, true);
-			} else {
-				SchemePath path = pe.getParentPathOwner();
-				PathElement nextPE = path.getNextPathElement(pe);
-				if (nextPE != null) {
-					nextPE.setParentPathOwner(null, true);
+
+			// switching between ports in optical switch is not lead to path change
+			SchemePath path = pe.getParentPathOwner();
+			PathElement lastPE = path.getPreviousPathElement(pe);
+			SchemeElement lastSE = lastPE.getSchemeElement();
+			if (!lastSE.getEquipmentType().getCodename().equals(EquipmentTypeCodename.SWITCH.toString())) {
+				if (is_source) {
+					pe.setParentPathOwner(null, true);
+				} else {
+					PathElement nextPE = path.getNextPathElement(pe);
+					if (nextPE != null) {
+						nextPE.setParentPathOwner(null, true);
+					}
 				}
 			}
 		}

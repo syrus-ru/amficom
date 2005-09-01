@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.15 2005/08/19 15:41:34 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.16 2005/09/01 13:39:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Rectangle;
@@ -51,7 +52,7 @@ import com.syrus.AMFICOM.logic.LogicalTreeUI;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/01 13:39:18 $
  * @module schemeclient
  */
 
@@ -328,9 +329,9 @@ public class SchemeGraphUI extends GPGraphUI {
 		}
 	}
 
-	@Override
+//	@Override
 	protected void paintBackground(Graphics g) {
-		super.paintBackground(g);
+//		super.paintBackground(g);
 
 		if (this.graph instanceof SchemeGraph) {
 			int w = this.graph.getPreferredSize().width;
@@ -351,6 +352,10 @@ public class SchemeGraphUI extends GPGraphUI {
 					g.drawLine(x0, y0, xe, y0);
 					g.drawLine(xe, y0, xe, ye);
 					g.drawLine(x0, ye, xe, ye);
+					
+//					Rectangle pageBounds = this.graph.getBounds();
+//					if (this.graph.isGridVisible())
+//						paintGrid(gs, g, this.graph.getPreferredSize());
 				}
 			}
 		}
@@ -396,12 +401,11 @@ public class SchemeGraphUI extends GPGraphUI {
 		}
 	}
 
-	@Override
-	protected void paintGrid(int gs, Graphics g, Rectangle r) {
+	protected void paintGrid(int gs, Graphics g, Dimension r) {
 		
 		if (gs > 0) {
-			int w = this.graph.getPreferredSize().width;
-			int h = this.graph.getPreferredSize().height;
+			int w = r.width;
+			int h = r.height;
 
 			gs = (int) (gs * this.graph.getScale());
 			Rectangle r1 = this.graph.getVisibleRect();

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.21 2005/08/20 19:58:10 arseniy Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.22 2005/09/01 13:39:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,11 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
+import javax.swing.ButtonGroup;
 import javax.swing.JButton;
 import javax.swing.JCheckBox;
 import javax.swing.JColorChooser;
@@ -22,6 +24,7 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import javax.swing.JRadioButton;
 import javax.swing.JScrollPane;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
@@ -50,9 +53,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
 import com.syrus.AMFICOM.measurement.MeasurementPortTypeWrapper;
+import com.syrus.AMFICOM.measurement.MeasurementPortWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeElement;
@@ -60,8 +65,8 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/08/20 19:58:10 $
+ * @author $Author: stas $
+ * @version $Revision: 1.22 $, $Date: 2005/09/01 13:39:19 $
  * @module schemeclient
  */
 
@@ -86,9 +91,14 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 	JComboBox cmbColorCombo = new ColorChooserComboBox();
 	JCheckBox cbMpBox = new JCheckBox(LangModelScheme.getString(SchemeResourceKeys.MEASUREMENT_PORT));
 	JLabel lbMpTypeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
-	WrapperedComboBox cmbMpTypeCombo = new WrapperedComboBox(MeasurementPortTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 	JLabel lbDescrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taDescrArea = new JTextArea(2,10);
+	JPanel pnMpPanel = new JPanel();
+	JRadioButton rbNewMPBut = new JRadioButton(LangModelScheme.getString(SchemeResourceKeys.NEW_MEASUREMENT_PORT));
+	JRadioButton rbExistMPBut = new JRadioButton(LangModelScheme.getString(SchemeResourceKeys.EXISTING_MEASUREMENT_PORT));
+	WrapperedComboBox cmbExistMPCombo = new WrapperedComboBox(MeasurementPortWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
+	WrapperedComboBox cmbMpTypeCombo = new WrapperedComboBox(MeasurementPortTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
+	JTextField tfNewMPText = new JTextField();
 	
 	protected SchemePortGeneralPanel(SchemePort schemePort) {
 		this();
@@ -137,6 +147,7 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbPanel0.setConstraints( scpDescrArea, gbcPanel0 );
 		pnPanel0.add( scpDescrArea );
 
+		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
 		GridBagLayout gbGeneralPanel = new GridBagLayout();
 		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
 		pnGeneralPanel.setLayout( gbGeneralPanel );
@@ -255,52 +266,114 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPortPanel.anchor = GridBagConstraints.NORTH;
 		gbPortPanel.setConstraints( cmbColorCombo, gbcPortPanel );
 		pnPortPanel.add( cmbColorCombo );
-
-		gbcPortPanel.gridx = 0;
-		gbcPortPanel.gridy = 2;
-		gbcPortPanel.gridwidth = 9;
-		gbcPortPanel.gridheight = 1;
-		gbcPortPanel.fill = GridBagConstraints.BOTH;
-		gbcPortPanel.weightx = 0;
-		gbcPortPanel.weighty = 0;
-		gbcPortPanel.anchor = GridBagConstraints.NORTH;
-		gbPortPanel.setConstraints( cbMpBox, gbcPortPanel );
-		pnPortPanel.add( cbMpBox );
-
-		gbcPortPanel.gridx = 0;
-		gbcPortPanel.gridy = 3;
-		gbcPortPanel.gridwidth = 2;
-		gbcPortPanel.gridheight = 1;
-		gbcPortPanel.fill = GridBagConstraints.BOTH;
-		gbcPortPanel.weightx = 0;
-		gbcPortPanel.weighty = 0;
-		gbcPortPanel.anchor = GridBagConstraints.NORTH;
-		gbPortPanel.setConstraints( lbMpTypeLabel, gbcPortPanel );
-		pnPortPanel.add( lbMpTypeLabel );
-
-		gbcPortPanel.gridx = 2;
-		gbcPortPanel.gridy = 3;
-		gbcPortPanel.gridwidth = 8;
-		gbcPortPanel.gridheight = 1;
-		gbcPortPanel.fill = GridBagConstraints.BOTH;
-		gbcPortPanel.weightx = 1;
-		gbcPortPanel.weighty = 0;
-		gbcPortPanel.anchor = GridBagConstraints.NORTH;
-		gbPortPanel.setConstraints( cmbMpTypeCombo, gbcPortPanel );
-		pnPortPanel.add( cmbMpTypeCombo );
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 3;
 		gbcGeneralPanel.gridwidth = 10;
-		gbcGeneralPanel.gridheight = 5;
+		gbcGeneralPanel.gridheight = 2;
 		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbGeneralPanel.setConstraints( pnPortPanel, gbcGeneralPanel );
 		pnGeneralPanel.add( pnPortPanel );
+
+		pnMpPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
+		ButtonGroup rbgMpPanel = new ButtonGroup();
+		GridBagLayout gbMpPanel = new GridBagLayout();
+		GridBagConstraints gbcMpPanel = new GridBagConstraints();
+		pnMpPanel.setLayout( gbMpPanel );
+
+		rbgMpPanel.add( rbExistMPBut );
+		gbcMpPanel.gridx = 0;
+		gbcMpPanel.gridy = 0;
+		gbcMpPanel.gridwidth = 2;
+		gbcMpPanel.gridheight = 1;
+		gbcMpPanel.fill = GridBagConstraints.BOTH;
+		gbcMpPanel.weightx = 0;
+		gbcMpPanel.weighty = 0;
+		gbcMpPanel.anchor = GridBagConstraints.NORTH;
+		gbMpPanel.setConstraints( rbExistMPBut, gbcMpPanel );
+		pnMpPanel.add( rbExistMPBut );
+		
+		rbgMpPanel.add( rbNewMPBut );
+		gbcMpPanel.gridx = 0;
+		gbcMpPanel.gridy = 1;
+		gbcMpPanel.gridwidth = 2;
+		gbcMpPanel.gridheight = 1;
+		gbcMpPanel.fill = GridBagConstraints.BOTH;
+		gbcMpPanel.weightx = 0;
+		gbcMpPanel.weighty = 0;
+		gbcMpPanel.anchor = GridBagConstraints.NORTH;
+		gbMpPanel.setConstraints( rbNewMPBut, gbcMpPanel );
+		pnMpPanel.add( rbNewMPBut );
+
+		gbcMpPanel.gridx = 2;
+		gbcMpPanel.gridy = 0;
+		gbcMpPanel.gridwidth = 8;
+		gbcMpPanel.gridheight = 1;
+		gbcMpPanel.fill = GridBagConstraints.BOTH;
+		gbcMpPanel.weightx = 1;
+		gbcMpPanel.weighty = 0;
+		gbcMpPanel.anchor = GridBagConstraints.NORTH;
+		gbMpPanel.setConstraints( cmbExistMPCombo, gbcMpPanel );
+		pnMpPanel.add( cmbExistMPCombo );
+
+		gbcMpPanel.gridx = 2;
+		gbcMpPanel.gridy = 1;
+		gbcMpPanel.gridwidth = 8;
+		gbcMpPanel.gridheight = 1;
+		gbcMpPanel.fill = GridBagConstraints.BOTH;
+		gbcMpPanel.weightx = 1;
+		gbcMpPanel.weighty = 0;
+		gbcMpPanel.anchor = GridBagConstraints.NORTH;
+		gbMpPanel.setConstraints( tfNewMPText, gbcMpPanel );
+		pnMpPanel.add( tfNewMPText );
+
+		gbcMpPanel.gridx = 0;
+		gbcMpPanel.gridy = 2;
+		gbcMpPanel.gridwidth = 2;
+		gbcMpPanel.gridheight = 1;
+		gbcMpPanel.fill = GridBagConstraints.BOTH;
+		gbcMpPanel.weightx = 0;
+		gbcMpPanel.weighty = 0;
+		gbcMpPanel.anchor = GridBagConstraints.NORTH;
+		gbMpPanel.setConstraints( lbMpTypeLabel, gbcMpPanel );
+		pnMpPanel.add( lbMpTypeLabel );
+
+		gbcMpPanel.gridx = 2;
+		gbcMpPanel.gridy = 2;
+		gbcMpPanel.gridwidth = 8;
+		gbcMpPanel.gridheight = 1;
+		gbcMpPanel.fill = GridBagConstraints.BOTH;
+		gbcMpPanel.weightx = 1;
+		gbcMpPanel.weighty = 0;
+		gbcMpPanel.anchor = GridBagConstraints.NORTH;
+		gbMpPanel.setConstraints( cmbMpTypeCombo, gbcMpPanel );
+		pnMpPanel.add( cmbMpTypeCombo );
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 6;
+		gbcGeneralPanel.gridwidth = 10;
+		gbcGeneralPanel.gridheight = 2;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( pnMpPanel, gbcGeneralPanel );
+		pnGeneralPanel.add( pnMpPanel );
+
+		gbcGeneralPanel.gridx = 0;
+		gbcGeneralPanel.gridy = 5;
+		gbcGeneralPanel.gridwidth = 9;
+		gbcGeneralPanel.gridheight = 1;
+		gbcGeneralPanel.fill = GridBagConstraints.BOTH;
+		gbcGeneralPanel.weightx = 1;
+		gbcGeneralPanel.weighty = 0;
+		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
+		gbGeneralPanel.setConstraints( cbMpBox, gbcGeneralPanel );
+		pnGeneralPanel.add( cbMpBox );
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
-		gbcPanel0.gridwidth = 11;
+		gbcPanel0.gridwidth = 10;
 		gbcPanel0.gridheight = 8;
 		gbcPanel0.fill = GridBagConstraints.BOTH;
 		gbcPanel0.weightx = 1;
@@ -309,11 +382,21 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
 		pnPanel0.add( pnGeneralPanel );
 		
+		rbExistMPBut.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				radioButton_stateChanged();
+			}
+		});
+		
+		rbNewMPBut.addChangeListener(new ChangeListener() {
+			public void stateChanged(ChangeEvent e) {
+				radioButton_stateChanged();
+			}
+		});
+		
 		cbMpBox.addChangeListener(new ChangeListener() {
 			public void stateChanged(ChangeEvent e) {
-				boolean b = cbMpBox.isSelected();
-				lbMpTypeLabel.setEnabled(b);
-				cmbMpTypeCombo.setEnabled(b);
+				mpBox_stateChanged();
 			}
 		});
 		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
@@ -350,8 +433,19 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 	
 	void setMPTypeEnabled(boolean b) {
 		this.cbMpBox.setVisible(b);
-		this.lbMpTypeLabel.setVisible(b);
-		this.cmbMpTypeCombo.setVisible(b);
+		if (!b) {
+			this.pnMpPanel.setVisible(false);
+		}
+	}
+	
+	void mpBox_stateChanged() {
+		this.pnMpPanel.setVisible(this.cbMpBox.isSelected());
+	}
+	
+	void radioButton_stateChanged() {
+		boolean b = this.rbExistMPBut.isSelected();
+		this.cmbExistMPCombo.setEnabled(b);
+		this.tfNewMPText.setEnabled(!b);
 	}
 	
 	public JComponent getGUI() {
@@ -364,12 +458,30 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 		Port port = null;
 		this.cmbTypeCombo.removeAllItems();
 		this.cmbMpTypeCombo.removeAllItems();
+		this.cmbExistMPCombo.removeAllItems();
+		this.rbExistMPBut.setEnabled(false);
+		this.rbNewMPBut.doClick();
 		
 		if (this.schemePort != null) {
 			try {
 				this.parent = this.schemePort.getParentSchemeDevice().getParentSchemeElement();
 				port = this.schemePort.getPort();
 				mPort = this.schemePort.getMeasurementPort();
+				KIS kis = this.parent.getKis();
+				
+				if (kis != null) {
+					Set<MeasurementPort> mPorts = kis.getMeasurementPorts(false);
+					if (!mPorts.isEmpty()) {
+						this.rbExistMPBut.setEnabled(true);
+						this.rbExistMPBut.doClick();
+						this.cmbExistMPCombo.addElements(mPorts);
+						
+						MeasurementPort mp = this.schemePort.getMeasurementPort();
+						if (mp != null) {
+							this.cmbExistMPCombo.setSelectedItem(mp);
+						}
+					}
+				}
 			} catch (IllegalStateException e1) {
 				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
 				this.parent = null;
@@ -430,13 +542,17 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 //				port.setColor(((Color) colorCombo.getSelectedItem()).getRGB());
 			}
 
-			MeasurementPort mp = this.schemePort.getMeasurementPort();
 			if (this.cbMpBox.isSelected()) {
-				if (mp == null) {
+				if (this.rbExistMPBut.isSelected()) {
+					this.schemePort.setMeasurementPort((MeasurementPort)this.cmbExistMPCombo.getSelectedItem());
+				} else {
 					if (this.parent != null && this.parent.getKis() != null) {
 						try {
 							MeasurementPortType mpType = (MeasurementPortType) this.cmbMpTypeCombo.getSelectedItem();
-							mp = SchemeObjectsFactory.createMeasurementPort(mpType, this.schemePort);
+							MeasurementPort mp = SchemeObjectsFactory.createMeasurementPort(mpType, this.schemePort);
+							mp.setName(this.tfNewMPText.getText());
+							mp.setDescription(this.schemePort.getDescription());
+							mp.setType((MeasurementPortType)this.cmbMpTypeCombo.getSelectedItem());
 							this.schemePort.setMeasurementPort(mp);
 						} catch (CreateObjectException e) {
 							Log.errorException(e);
@@ -444,15 +560,10 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 					} else {
 						Log.debugMessage("Parent KIS not created. Cannot create MeasurementPort", Level.FINEST); //$NON-NLS-1$
 					}
-				} else if (mp != null) {
-					mp.setName(this.schemePort.getName());
-					mp.setDescription(this.schemePort.getDescription());
-					mp.setType((MeasurementPortType)this.cmbMpTypeCombo.getSelectedItem());
 				}
-			} else if (mp != null) {
+			} else {
 				this.schemePort.setMeasurementPort(null);
-				StorableObjectPool.delete(mp.getId());
-			} 
+			}
 			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePort.getId(), SchemeEvent.UPDATE_OBJECT));
 		}
 	}

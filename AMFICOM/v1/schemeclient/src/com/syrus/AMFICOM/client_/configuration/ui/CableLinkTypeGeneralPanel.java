@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.12 2005/08/28 08:28:08 stas Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.13 2005/09/01 13:39:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,7 @@ import java.util.List;
 import java.util.ListIterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
 import javax.swing.JButton;
@@ -76,7 +77,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/28 08:28:08 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/01 13:39:18 $
  * @module schemeclient
  */
 
@@ -100,7 +101,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 	JPanel pnGeneralPanel = new JPanel();
 	
 	JLabel lbTNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.THREAD));
-	WrapperedComboBox cmbTNameCombo = new WrapperedComboBox(CableThreadTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_CODENAME, StorableObjectWrapper.COLUMN_ID);
+	WrapperedComboBox cmbTNameCombo = new WrapperedComboBox(CableThreadTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
 	JLabel lbTMarkLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MARK));
 	JTextField tfTMarkText = new JTextField();
 	JLabel lbTTypeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
@@ -435,8 +436,6 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 //		pnPanel0.setBackground(Color.WHITE);
 		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
-		cmbTTypeCombo.addElements(new LinkedList<StorableObject>(StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE), true)));
-		
 		cmbTNameCombo.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
 				CableThreadType ctt = (CableThreadType)e.getItem();
@@ -522,6 +521,13 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 	public void setObject(Object or) {
 		this.linkType = (CableLinkType) or;
 		
+		this.cmbTTypeCombo.removeAllItems();
+		try {
+			this.cmbTTypeCombo.addElements(new LinkedList<StorableObject>(StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE), true)));
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+		}
+		
 		if (this.linkType != null) {
 			this.tfNameText.setText(this.linkType.getName());
 			this.taDescriptionArea.setText(this.linkType.getDescription());
@@ -541,7 +547,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		this.currentCash = null;
 		for (Iterator it = this.sortedTheradTypes.iterator(); it.hasNext();) {
 			CableThreadType ctt = (CableThreadType) it.next();
-			this.cashedFields.put(ctt, new ThreadTypeFields(ctt.getName(), ctt.getDescription(), ctt.getLinkType(), ctt.getColor()));
+			this.cashedFields.put(ctt, new ThreadTypeFields(ctt.getCodename(), ctt.getDescription(), ctt.getLinkType(), ctt.getColor()));
 		}
 		
 		this.cmbTNameCombo.removeAllItems();
@@ -589,7 +595,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		for (Iterator it = this.cashedFields.keySet().iterator(); it.hasNext();) {
 			CableThreadType ctt = (CableThreadType)it.next();
 			ThreadTypeFields fields = this.cashedFields.get(ctt);
-			ctt.setName(fields.mark);
+//			ctt.setCodename(fields.mark);
 			ctt.setDescription(fields.description);
 			ctt.setColor(fields.color);
 			ctt.setLinkType(fields.type);
@@ -629,8 +635,9 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 				for (ListIterator it = this.sortedTheradTypes.listIterator(oldSize); it.hasPrevious() && i > newSize; i--) {
 					CableThreadType ctt = (CableThreadType)it.previous();
 					removed.add(ctt.getId());
-					this.sortedTheradTypes.remove(ctt);
+//					it.remove();
 				}
+				Log.debugMessage("Will be removed " + removed.size() + " CableThreadTypes", Level.FINEST);
 				StorableObjectPool.delete(removed);
 			}
 		} catch (ApplicationException e1) {

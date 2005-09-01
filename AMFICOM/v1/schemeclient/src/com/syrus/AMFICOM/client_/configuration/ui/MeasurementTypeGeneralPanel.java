@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementTypeGeneralPanel.java,v 1.24 2005/08/26 09:58:30 stas Exp $
+ * $Id: MeasurementTypeGeneralPanel.java,v 1.25 2005/09/01 13:39:18 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/08/26 09:58:30 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/01 13:39:18 $
  * @module schemeclient
  */
 
@@ -70,7 +70,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 	JPanel pnGeneralPanel = new JPanel();
 	List allInPTypeNodes;
 	List allOutPTypeNodes;
-	List allMPTypeNodes;
+//	List allMPTypeNodes;
 	
 	protected MeasurementTypeGeneralPanel() {
 		super();
@@ -104,7 +104,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 				
 		this.allInPTypeNodes = getParameterTypeNodes(SchemeResourceKeys.INPUT);
 		this.allOutPTypeNodes = getParameterTypeNodes(SchemeResourceKeys.OUTPUT);
-		this.allMPTypeNodes = getMeasurementPortTypeNodes();
+//		this.allMPTypeNodes = getMeasurementPortTypeNodes();
 
 		GridBagLayout gbPanel0 = new GridBagLayout();
 		GridBagConstraints gbcPanel0 = new GridBagConstraints();
@@ -229,7 +229,7 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
 		this.commitButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent ñ) {
 				commitChanges();
 			}
 		});
@@ -251,17 +251,15 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		
 			Set<ParameterType> inPTypes = this.type.getInParameterTypes();
 			Set<ParameterType> outPTypes = this.type.getOutParameterTypes();
-			
-//				Collection inPTypes = StorableObjectPool.getStorableObjects(inPTypeIds, true);
-//				Collection outPTypes = StorableObjectPool.getStorableObjects(outPTypeIds, true);
-				for (Iterator it = this.allInPTypeNodes.iterator(); it.hasNext();) {
-					CheckableNode node = (CheckableNode)it.next();
-					node.setChecked(inPTypes.contains(node.getObject()));
-				}
-				for (Iterator it = this.allOutPTypeNodes.iterator(); it.hasNext();) {
-					CheckableNode node = (CheckableNode)it.next();
-					node.setChecked(outPTypes.contains(node.getObject()));
-				}
+
+			for (Iterator it = this.allInPTypeNodes.iterator(); it.hasNext();) {
+				CheckableNode node = (CheckableNode)it.next();
+				node.setChecked(inPTypes.contains(node.getObject()));
+			}
+			for (Iterator it = this.allOutPTypeNodes.iterator(); it.hasNext();) {
+				CheckableNode node = (CheckableNode)it.next();
+				node.setChecked(outPTypes.contains(node.getObject()));
+			}
 			this.trParametersTree.updateUI();
 				
 //			Set mPTypeIds = this.type.getMeasurementPortTypeIds();
@@ -286,10 +284,10 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 				node.setChecked(false);
 			}
 			this.trParametersTree.updateUI();
-			for (Iterator it = this.allMPTypeNodes.iterator(); it.hasNext();) {
-				CheckableNode node = (CheckableNode)it.next();
-				node.setChecked(false);
-			}
+//			for (Iterator it = this.allMPTypeNodes.iterator(); it.hasNext();) {
+//				CheckableNode node = (CheckableNode)it.next();
+//				node.setChecked(false);
+//			}
 //			this.trPortTypesTree.updateUI();
 		}
 	}
@@ -380,8 +378,10 @@ public class MeasurementTypeGeneralPanel extends DefaultStorableObjectEditor {
 		root.addChild(output);
 		
 		for (ParameterType parameterType : ParameterType.values()) {
-			input.addChild(new CheckableNode(parameterType.getCodename(), parameterType.getDescription(), false));
-			output.addChild(new CheckableNode(parameterType.getCodename(), parameterType.getDescription(), false));
+			if (!parameterType.equals(ParameterType.UNKNOWN)) {
+				input.addChild(new CheckableNode(parameterType, parameterType.getDescription(), false));
+				output.addChild(new CheckableNode(parameterType, parameterType.getDescription(), false));
+			}
 		}
 		return root;
 	}

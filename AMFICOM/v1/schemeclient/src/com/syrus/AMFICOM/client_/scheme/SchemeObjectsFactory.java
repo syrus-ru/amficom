@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.30 2005/08/26 10:10:10 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.31 2005/09/01 13:39:18 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkType
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DataType;
@@ -71,7 +72,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.30 $, $Date: 2005/08/26 10:10:10 $
+ * @version $Revision: 1.31 $, $Date: 2005/09/01 13:39:18 $
  * @module schemeclient
  */
 
@@ -137,6 +138,18 @@ public class SchemeObjectsFactory {
 		Identifier userId = LoginManager.getUserId();
 		Identifier domainId = LoginManager.getDomainId();
 		Equipment eq = Equipment.createInstance(userId, domainId, schemeElement.getEquipmentType(), schemeElement.getName(), schemeElement.getDescription(), schemeElement.getSymbol() == null ? Identifier.VOID_IDENTIFIER : schemeElement.getSymbol().getId(), EMPTY, EMPTY, 0, 0, EMPTY, EMPTY, EMPTY, EMPTY, EMPTY);
+
+		try {
+			for (Characteristic c : schemeElement.getEquipmentType().getCharacteristics(true)) {
+				Characteristic cloned = c.clone();
+				cloned.setCharacterizableId(eq.getId());
+			}
+		} catch (ApplicationException e) {
+			throw new CreateObjectException(e); 
+		} catch (CloneNotSupportedException e) {
+			throw new CreateObjectException(e);
+		}
+		
 		schemeElement.setEquipment(eq);
 		
 		Identifier equipmentId = eq.getId();
@@ -166,6 +179,18 @@ public class SchemeObjectsFactory {
 		Identifier userId = LoginManager.getUserId();
 		Identifier domainId = LoginManager.getDomainId();
 		Link link = Link.createInstance(userId, domainId, schemeLink.getName(), schemeLink.getDescription(), schemeLink.getAbstractLinkType(), EMPTY, EMPTY, EMPTY, 0, EMPTY);
+		
+		try {
+			for (Characteristic c : schemeLink.getAbstractLinkType().getCharacteristics(true)) {
+				Characteristic cloned = c.clone();
+				cloned.setCharacterizableId(link.getId());
+			}
+		} catch (ApplicationException e) {
+			throw new CreateObjectException(e); 
+		} catch (CloneNotSupportedException e) {
+			throw new CreateObjectException(e);
+		}
+		
 		schemeLink.setAbstractLink(link);
 		return link;
 	}
@@ -174,13 +199,37 @@ public class SchemeObjectsFactory {
 		Identifier userId = LoginManager.getUserId();
 		Identifier domainId = LoginManager.getDomainId();
 		CableLink cableLink = CableLink.createInstance(userId, domainId, schemeLink.getName(), schemeLink.getDescription(), schemeLink.getAbstractLinkType(), EMPTY, EMPTY, EMPTY, 0, EMPTY);
+		
+		try {
+			for (Characteristic c : schemeLink.getAbstractLinkType().getCharacteristics(true)) {
+				Characteristic cloned = c.clone();
+				cloned.setCharacterizableId(cableLink.getId());
+			}
+		} catch (ApplicationException e) {
+			throw new CreateObjectException(e); 
+		} catch (CloneNotSupportedException e) {
+			throw new CreateObjectException(e);
+		}
+		
 		schemeLink.setAbstractLink(cableLink);
 		return cableLink;
 	}
 
-	private static Port createPort(AbstractSchemePort sp, Identifier equipmentId) throws CreateObjectException {
+	public static Port createPort(AbstractSchemePort sp, Identifier equipmentId) throws CreateObjectException {
 		Identifier userId = LoginManager.getUserId();
 		Port port = Port.createInstance(userId, sp.getPortType(), sp.getName(), equipmentId);
+		
+		try {
+			for (Characteristic c : sp.getPortType().getCharacteristics(true)) {
+				Characteristic cloned = c.clone();
+				cloned.setCharacterizableId(port.getId());
+			}
+		} catch (ApplicationException e) {
+			throw new CreateObjectException(e); 
+		} catch (CloneNotSupportedException e) {
+			throw new CreateObjectException(e);
+		}
+		
 		sp.setPort(port);
 		return port;
 	}
