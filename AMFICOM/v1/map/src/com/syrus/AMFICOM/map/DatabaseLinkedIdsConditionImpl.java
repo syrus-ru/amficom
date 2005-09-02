@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.8 2005/09/02 13:47:09 krupenn Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.9 2005/09/02 13:53:54 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
@@ -28,7 +27,7 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 /**
  * @author Maxim Selivanov
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/09/02 13:47:09 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/02 13:53:54 $
  * @module map
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -77,8 +76,6 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 				}
 			case SITENODE_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-				case UPDIKE_CODE:
-					return false;
 				case SITENODE_CODE:
 					return super.getQuery(SiteNodeWrapper.COLUMN_ATTACHMENT_SITE_NODE_ID);
 				default:
