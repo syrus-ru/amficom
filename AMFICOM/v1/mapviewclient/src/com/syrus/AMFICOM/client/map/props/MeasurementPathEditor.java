@@ -30,8 +30,6 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 
 	private JLabel nameLabel = new JLabel();
 	private JTextField nameTextField = new JTextField();
-	private JLabel pathLabel = new JLabel();
-	private WrapperedComboBox pathComboBox = null;
 
 	private JLabel topologicalLengthLabel = new JLabel();
 	private JTextField topologicalLengthTextField = new JTextField();
@@ -63,10 +61,6 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 		SimpleMapElementController controller = SimpleMapElementController
 				.getInstance();
 
-		this.pathComboBox = new WrapperedComboBox(
-				controller,
-				SimpleMapElementController.KEY_NAME,
-				SimpleMapElementController.KEY_NAME);
 		this.startComboBox = new WrapperedComboBox(
 				controller,
 				SimpleMapElementController.KEY_NAME,
@@ -80,15 +74,12 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.pathLabel.setText(LangModelMap.getString("path"));
 		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength"));
 		this.physicalLengthLabel.setText(LangModelMap.getString("PhysicalLength"));
 		this.opticalLengthLabel.setText(LangModelMap.getString("OpticalLength"));
 		this.startLabel.setText(LangModelMap.getString("StartNode"));
 		this.endLabel.setText(LangModelMap.getString("EndNode"));
 		this.descLabel.setText(LangModelMap.getString("Description"));
-
-		this.pathComboBox.setEditable(false);
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -140,32 +131,6 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.jPanel.add(this.commitButton, constraints);
-
-		constraints.gridx =  0;
-		constraints.gridy = 1;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.weightx = 0.0;
-		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = new Insets(0, 0, 0, 0);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.jPanel.add(this.pathLabel, constraints);
-
-		constraints.gridx =  1;
-		constraints.gridy = 1;
-		constraints.gridwidth = 2;
-		constraints.gridheight = 1;
-		constraints.weightx = 1.0;
-		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.CENTER;
-		constraints.fill = GridBagConstraints.HORIZONTAL;
-		constraints.insets = new Insets(0, 0, 0, 0);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.jPanel.add(this.pathComboBox, constraints);
 
 		constraints.gridx = 0;
 		constraints.gridy = 2;
@@ -324,7 +289,6 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 		this.jPanel.add(this.descTextArea, constraints);
 
 		this.nameTextField.setEnabled(false);
-		this.pathComboBox.setEditable(false);
 		this.startComboBox.setEnabled(false);
 		this.endComboBox.setEnabled(false);
 		this.topologicalLengthTextField.setEnabled(false);
@@ -341,14 +305,12 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 	public void setObject(Object object) {
 		this.measurementPath = (MeasurementPath )object;
 
-		this.pathComboBox.removeAllItems();
 		this.startComboBox.removeAllItems();
 		this.endComboBox.removeAllItems();
 
 		if(this.measurementPath == null) {
 			this.nameTextField.setEnabled(false);
 			this.nameTextField.setText("");
-			this.pathComboBox.setEnabled(false);
 			this.descTextArea.setEnabled(false);
 			this.descTextArea.setText("");
 
@@ -359,9 +321,6 @@ public class MeasurementPathEditor extends DefaultStorableObjectEditor {
 		else {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.measurementPath.getName());
-			this.pathComboBox.setEnabled(true);
-			this.pathComboBox.addItem(this.measurementPath.getSchemePath());
-			this.pathComboBox.setSelectedItem(this.measurementPath.getSchemePath());
 			this.topologicalLengthTextField.setText(String.valueOf(this.measurementPath.getLengthLt()));
 			this.physicalLengthTextField.setText(String.valueOf(this.measurementPath.getLengthLf()));
 			this.opticalLengthTextField.setText(String.valueOf(this.measurementPath.getLengthLo()));
