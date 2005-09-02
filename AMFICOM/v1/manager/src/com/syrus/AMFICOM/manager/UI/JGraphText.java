@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.27 2005/09/01 14:33:06 bob Exp $
+ * $Id: JGraphText.java,v 1.28 2005/09/02 13:26:37 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -107,7 +107,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/09/01 14:33:06 $
+ * @version $Revision: 1.28 $, $Date: 2005/09/02 13:26:37 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -162,6 +162,8 @@ public class JGraphText implements GraphSelectionListener {
 	
 	private Map<String, AbstractBean> beanMap;
 	private Map<String, AbstractBeanFactory> factoryMap;
+
+	private ManagerGraphModel	model;
 	
 	public JGraphText(final ApplicationContext aContext) {
 		this.context = aContext;
@@ -171,10 +173,10 @@ public class JGraphText implements GraphSelectionListener {
 		this.factoryMap = new HashMap<String, AbstractBeanFactory>();
 		
 		// Construct Model and Graph
-		GraphModel model = new ManagerGraphModel();
+		this.model = new ManagerGraphModel();
 		
-		this.graph = new JGraph(model,
-			new GraphLayoutCache(model,
+		this.graph = new JGraph(this.model,
+			new GraphLayoutCache(this.model,
 					new DefaultCellViewFactory(),
 					true));
 		
@@ -419,12 +421,16 @@ public class JGraphText implements GraphSelectionListener {
 						CompoundConditionSort.AND,
 						new LinkedIdsCondition(
 							LoginManager.getUserId(),
-							ObjectEntities.LAYOUT_ITEM_CODE) {
-							@Override
-							public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
-								return storableObjects.isEmpty();
-							}
-						});
+							ObjectEntities.LAYOUT_ITEM_CODE)
+//			XXX uncommented when using javac				
+//							{
+//						
+//							@Override
+//							public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
+//								return storableObjects.isEmpty();
+//							}
+//						}
+			);
 				
 				compoundCondition.addCondition(new TypicalCondition(
 					codename, 
@@ -1127,13 +1133,8 @@ public class JGraphText implements GraphSelectionListener {
 		MPort sourcePort = (MPort) source.getChildAt(0);
 		MPort targetPort = (MPort) target.getChildAt(0);
 		if (sourcePort != targetPort) {
-			Object sourceObject = sourcePort.getUserObject();
-			Object targetObject = targetPort.getUserObject();
-			boolean canConnect = true;
-			if (sourceObject instanceof AbstractBean && targetObject instanceof AbstractBean) {
-				AbstractBean sourceBean = (AbstractBean) sourceObject;
-				AbstractBean targetBean = (AbstractBean) targetObject;
-				canConnect = sourceBean.isTargetValid(targetBean);
+			final boolean canConnect =
+				this.model.isConnectionPermitted(sourcePort, targetPort);
 			if (canConnect) {
 				DefaultEdge edge = new DefaultEdge();
 				edge.setSource(sourcePort);
@@ -1162,6 +1163,9 @@ public class JGraphText implements GraphSelectionListener {
 									return storableObjects.isEmpty();
 								}
 							});
+					
+					AbstractBean targetBean = targetPort.getBean();
+					AbstractBean sourceBean = sourcePort.getBean();
 					
 					TypicalCondition condition = new TypicalCondition(
 						sourceBean.getCodeName(), 
@@ -1196,7 +1200,6 @@ public class JGraphText implements GraphSelectionListener {
 				}
 				
 				return edge;
-			}
 			}
 		}
 
