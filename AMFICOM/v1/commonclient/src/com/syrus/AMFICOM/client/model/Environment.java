@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.11 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: Environment.java,v 1.12 2005/09/02 14:21:25 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.client.model;
 import java.awt.Window;
 import java.io.IOException;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.logging.ConsoleHandler;
 import java.util.logging.FileHandler;
 import java.util.logging.Formatter;
@@ -26,19 +27,20 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.io.IniFile;
+import com.syrus.util.Log;
 
 /**
  * Класс Environment используется для хранения общей для приложения информации.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/02 13:03:22 $
+ * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/09/02 14:21:25 $
  * @module commonclient
  */
 public final class Environment {
 
 	private static Dispatcher	theDispatcher				= new Dispatcher();
 
-	private static ArrayList	windows						= new ArrayList();
+	private static List<Window>	windows						= new ArrayList<Window>();
 
 	private static IniFile		iniFile;
 	private static String		iniFileName					= "Application.properties";
@@ -186,7 +188,7 @@ public final class Environment {
 		}
 	}
 
-	public static void log(String text) {
+	public static void log(final String text) {
 		log(Level.CONFIG, text);
 	}
 
@@ -235,13 +237,13 @@ public final class Environment {
 		return theDispatcher;
 	}
 
-	public static void addWindow(Window window) {
-		System.out.println("new window " + window.getName());
+	public static void addWindow(final Window window) {
+		Log.debugMessage("Environment.addWindow | name: " + window.getName(), Log.DEBUGLEVEL10);
 		windows.add(window);
 	}
 
-	public static void disposeWindow(Window window) {
-		System.out.println("close window " + window.getName());
+	public static void disposeWindow(final Window window) {
+		Log.debugMessage("Environment.disposeWindow | name: " + window.getName(), Log.DEBUGLEVEL10);
 		windows.remove(window);
 		window.dispose();
 		checkForExit();
@@ -249,7 +251,7 @@ public final class Environment {
 	
 	public static void checkForExit() {
 		if (windows.isEmpty()) {
-			System.out.println("exit process");
+			Log.debugMessage("Environment.checkForExit | ", Log.DEBUGLEVEL10);
 			saveProperties();
 			System.exit(0);
 		}
@@ -258,8 +260,9 @@ public final class Environment {
 	private static void saveProperties() {
 		try {
 			domainId = LoginManager.getDomainId();
-			if (domainId != null)
+			if (domainId != null) {
 				iniFile.setValue(FIELD_DOMAIN, domainId);
+			}
 			iniFile.saveKeys();
 		} catch (Exception ex) {
 			ex.printStackTrace();
