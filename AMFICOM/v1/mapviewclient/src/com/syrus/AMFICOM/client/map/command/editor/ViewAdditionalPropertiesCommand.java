@@ -1,5 +1,5 @@
 /**
- * $Id: ViewAdditionalPropertiesCommand.java,v 1.6 2005/08/17 14:14:18 arseniy Exp $
+ * $Id: ViewAdditionalPropertiesCommand.java,v 1.7 2005/09/02 09:31:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * Команда отображает окно свойств элемента карты 
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/17 14:14:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2005/09/02 09:31:37 $
  * @module mapviewclient
  */
 public class ViewAdditionalPropertiesCommand extends AbstractCommand {
@@ -55,8 +55,8 @@ public class ViewAdditionalPropertiesCommand extends AbstractCommand {
 			this.desktop.add(this.frame);
 
 			Dimension dim = this.desktop.getSize();
-			this.frame.setLocation(dim.width * 4 / 5, dim.height / 4);
-			this.frame.setSize(dim.width / 5, dim.height / 4);
+			this.frame.setLocation(dim.width * 4 / 5, dim.height * 2 / 5);
+			this.frame.setSize(dim.width / 5, dim.height * 2 / 5);
 		}
 
 		this.frame.setVisible(true);

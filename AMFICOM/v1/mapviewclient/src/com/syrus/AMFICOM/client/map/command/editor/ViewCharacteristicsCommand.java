@@ -1,5 +1,5 @@
 /**
- * $Id: ViewCharacteristicsCommand.java,v 1.7 2005/08/17 14:14:18 arseniy Exp $
+ * $Id: ViewCharacteristicsCommand.java,v 1.8 2005/09/02 09:31:37 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  */
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/17 14:14:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.8 $, $Date: 2005/09/02 09:31:37 $
  * @module mapviewclient
  */
 public class ViewCharacteristicsCommand extends AbstractCommand {
@@ -52,7 +52,7 @@ public class ViewCharacteristicsCommand extends AbstractCommand {
 			this.desktop.add(this.frame);
 
 			Dimension dim = this.desktop.getSize();
-			this.frame.setLocation(dim.width * 4 / 5, dim.height / 2);
+			this.frame.setLocation(dim.width * 4 / 5, dim.height * 4 / 5);
 			this.frame.setSize(dim.width / 5, dim.height / 2);
 		}
 
