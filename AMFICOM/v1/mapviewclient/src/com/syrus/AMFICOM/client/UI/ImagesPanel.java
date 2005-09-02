@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanel.java,v 1.7 2005/08/03 15:28:32 krupenn Exp $
+ * $Id: ImagesPanel.java,v 1.8 2005/09/02 16:45:30 krupenn Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @module commonclient_v1
  */
 public class ImagesPanel extends JPanel
@@ -154,9 +154,9 @@ public class ImagesPanel extends JPanel
 						data);
 
 				try {
-					StorableObjectPool.putStorableObject(bitmapImageResource);
-				} catch(IllegalObjectEntityException ioee) {
-					ioee.printStackTrace();
+					StorableObjectPool.flush(bitmapImageResource, LoginManager.getUserId(), true);
+				} catch(ApplicationException e) {
+					e.printStackTrace();
 				}
 
 				this.imagesPanel.add(new ImagesPanelLabel(
