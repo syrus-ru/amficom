@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.33 2005/08/29 12:27:24 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.34 2005/09/02 09:46:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,12 +21,14 @@ import java.awt.event.ActionListener;
 
 import javax.swing.AbstractButton;
 import javax.swing.BorderFactory;
+import javax.swing.Box;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JToggleButton;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
@@ -36,10 +38,11 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.33 $, $Date: 2005/08/29 12:27:24 $
+ * @version $Revision: 1.34 $, $Date: 2005/09/02 09:46:33 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -576,6 +579,19 @@ public final class MapToolBar extends JPanel
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		innerPanel.add(this.shotButton, constraints);
+
+		constraints.gridx = 20;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0;
+		constraints.weighty = 0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		innerPanel.add(Box.createHorizontalGlue(), constraints);
 		
 		this.setLayout(new BorderLayout());
 		this.add(innerPanel,BorderLayout.WEST);
