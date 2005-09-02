@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.6 2005/08/08 11:35:11 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.7 2005/09/02 13:24:38 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/08 11:35:11 $
+ * @author $Author: max $
+ * @version $Revision: 1.7 $, $Date: 2005/09/02 13:24:38 $
  * @module map
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -71,6 +72,14 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 				switch (super.condition.getLinkedEntityCode()) {
 				case MAPLIBRARY_CODE:
 					return super.getQuery(PhysicalLinkTypeWrapper.COLUMN_MAP_LIBRARY_ID);
+				default:
+					throw newExceptionLinkedEntityIllegal();
+				}
+			case SITENODE_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+				case SITENODE_CODE:
+				case UPDIKE_CODE:
+					return super.getQuery(SiteNodeWrapper.COLUMN_ATTACHMENT_SITE_NODE_ID);
 				default:
 					throw newExceptionLinkedEntityIllegal();
 				}
