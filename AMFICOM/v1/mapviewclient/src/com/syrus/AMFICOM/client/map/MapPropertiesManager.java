@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.43 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.44 2005/09/02 16:46:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.43 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.44 $, $Date: 2005/09/02 16:46:14 $
  * @module mapviewclient
  */
 public final class MapPropertiesManager 
@@ -883,7 +883,7 @@ public final class MapPropertiesManager
 				}
 				else
 				{
-					img = new ImageIcon(ir.getImage()).getImage();
+					img = Toolkit.getDefaultToolkit().createImage(ir.getImage());
 				}
 				originalImages.put(imageId, img);
 				MapPropertiesManager.loadImage(img);
