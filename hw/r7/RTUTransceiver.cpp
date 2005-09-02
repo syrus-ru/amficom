@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTUTransceiver.cpp,v 1.21 2005/08/31 15:31:42 arseniy Exp $
+// $Id: RTUTransceiver.cpp,v 1.22 2005/09/02 14:05:29 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.21 $, $Date: 2005/08/31 15:31:42 $
+// $Revision: 1.22 $, $Date: 2005/09/02 14:05:29 $
 // $Author: arseniy $
 //
 // RTUTransceiver.cpp: implementation of the RTUTransceiver class.
@@ -267,7 +267,7 @@ int RTUTransceiver::initialize_OTDR_cards() {
 		if (cards[i] != 0xFFFF) {
 			init_ret = QPOTDRInitialize(cards[i]);
 			if (init_ret == 0) {
-				printf("RTUTransceiver | Init OTDR card %u - succes\n", cards[i]);
+				printf("RTUTransceiver | Init OTDR card %u - success\n", cards[i]);
 				present_cards.push_back(cards[i]);
 			}
 			else {
