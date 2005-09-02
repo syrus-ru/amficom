@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.50 2005/08/29 12:27:24 krupenn Exp $
+ * $Id: MapViewController.java,v 1.51 2005/09/02 09:37:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.50 $, $Date: 2005/08/29 12:27:24 $
+ * @version $Revision: 1.51 $, $Date: 2005/09/02 09:37:29 $
  * @module mapviewclient
  */
 public final class MapViewController {
@@ -275,14 +275,20 @@ public final class MapViewController {
 	 */
 	public MeasurementPath getMeasurementPathByMonitoredElementId(Identifier meId)
 			throws ApplicationException {
+		if(meId == null)
+			return null;
 		MeasurementPath path = null;
 		MonitoredElement me = StorableObjectPool.getStorableObject(meId, true);
+		if(me == null)
+			return null;
 		if(me.getSort().equals(MonitoredElementSort.MONITOREDELEMENT_SORT_TRANSMISSION_PATH)) {
-			Identifier tpId = me.getMonitoredDomainMemberIds().iterator().next();
+			Set<Identifier> monitoredDomainMemberIds = me.getMonitoredDomainMemberIds();
+			if(monitoredDomainMemberIds.size() == 0)
+				return null;
+			Identifier tpId = monitoredDomainMemberIds.iterator().next();
 			TransmissionPath tp = StorableObjectPool.getStorableObject(tpId, true);
 			if(tp != null) {
-				for(Iterator it = this.mapView.getMeasurementPaths().iterator(); it.hasNext();) {
-					MeasurementPath mp = (MeasurementPath)it.next();
+				for(MeasurementPath mp : this.mapView.getMeasurementPaths()) {
 					if(mp.getSchemePath().getTransmissionPath().equals(tp)) {
 						path = mp;
 						break;
@@ -292,6 +298,15 @@ public final class MapViewController {
 		}
 
 		return path;
+	}
+
+	public MeasurementPath getMeasurementPathBySchemePathId(Identifier schemePathId) {
+		for(MeasurementPath mp : this.mapView.getMeasurementPaths()) {
+			if(mp.getSchemePath().getId().equals(schemePathId)) {
+				return mp;
+			}
+		}
+		return null;
 	}
 
 	/**
