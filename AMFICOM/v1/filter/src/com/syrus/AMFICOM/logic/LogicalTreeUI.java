@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.22 2005/08/09 21:10:10 arseniy Exp $
+ * $Id: LogicalTreeUI.java,v 1.23 2005/09/02 13:13:20 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.logic;
 
 import java.awt.Component;
+import java.awt.Cursor;
 import java.awt.Font;
 import java.awt.FontMetrics;
 import java.awt.Graphics2D;
@@ -61,8 +62,8 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/08/09 21:10:10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/09/02 13:13:20 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter
  */
@@ -343,7 +344,7 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 	// private DefaultMutableTreeNode root;
 	private Item		rootItem;
 
-	private JTree		tree;
+	JTree		tree;
 
 	SelectionListener[]	selectionListeners	= new SelectionListener[0];
 
@@ -572,7 +573,10 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 					if (lastPathComponent instanceof Populatable) {
 						final Populatable populatableItem = (Populatable) lastPathComponent;
 						if (!populatableItem.isPopulated()) {
+							final Cursor previousCursor = LogicalTreeUI.this.tree.getCursor();  
+							LogicalTreeUI.this.tree.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 							populatableItem.populate();
+							LogicalTreeUI.this.tree.setCursor(previousCursor);
 						}
 					}
 				}
