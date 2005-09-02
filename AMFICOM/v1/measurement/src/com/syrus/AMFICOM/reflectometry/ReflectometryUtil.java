@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryUtil.java,v 1.1 2005/09/02 13:49:18 saa Exp $
+ * $Id: ReflectometryUtil.java,v 1.2 2005/09/02 14:04:28 bob Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,11 +9,16 @@
 package com.syrus.AMFICOM.reflectometry;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/09/02 13:49:18 $
+ * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/09/02 14:04:28 $
  * @module
  */
-public class ReflectometryUtil {
+public final class ReflectometryUtil {
+	
+	private ReflectometryUtil() {
+		assert false;
+	}
+	
 	private static final double UPPER_AGENT_TIME = 30.0;
 
 	/**
@@ -31,15 +36,18 @@ public class ReflectometryUtil {
 		double lfd = rmp.hasLiveFiberDetection() ? 1 : 0;
 		double kav = rmp.getNumberOfAverages() / 1024.0;
 
+		double estimatedTime;
 		if (! upper) {
 			// экспериментальная формула
-			return 4.49 + lfd * .32 + kav * .248
+			estimatedTime = 4.49 + lfd * .32 + kav * .248
 				+ kav / Math.min(dX, 4) * (.495 + 0.0705 * len);
 		} else {
 			// с запасом для оценки сверху
-			return 5.1 + lfd * .32 + kav * .25
+			estimatedTime = 5.1 + lfd * .32 + kav * .25
 				+ kav / Math.min(dX, 4) * (.495 + 0.071 * len);
 		}
+
+		return estimatedTime;
 	}
 
 	/**
