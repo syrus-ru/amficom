@@ -1,5 +1,5 @@
 /*
- * $Id: PopulatableIconedNode.java,v 1.5 2005/08/24 07:47:46 max Exp $
+ * $Id: PopulatableIconedNode.java,v 1.6 2005/09/02 14:22:30 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,14 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Populatable;
+import com.syrus.util.Shitlet;
 
 /**
- * @author $Author: max $
- * @version $Revision: 1.5 $, $Date: 2005/08/24 07:47:46 $
+ * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/09/02 14:22:30 $
  * @module commonclient
  */
-
+@Shitlet
 public class PopulatableIconedNode extends IconedNode implements Populatable, Visualizable {
 	private ChildrenFactory childrenFactory;
 	private boolean populated = false;
@@ -69,13 +70,19 @@ public class PopulatableIconedNode extends IconedNode implements Populatable, Vi
 		}
 	}
 	
+	@Shitlet
+	public void repopulate() {
+		this.populate();		
+	}
+	
 	public VisualManager getVisualManager() {
-		if (this.childrenFactory instanceof VisualManagerFactory)
+		if (this.childrenFactory instanceof VisualManagerFactory) {
 			return ((VisualManagerFactory)this.childrenFactory).getVisualManager(this);
+		}
 		return null;
 	}
 
-	public void setChildrenFactory(ChildrenFactory childrenFactory) {
+	public void setChildrenFactory(final ChildrenFactory childrenFactory) {
 		this.childrenFactory = childrenFactory;
 	}
 	
