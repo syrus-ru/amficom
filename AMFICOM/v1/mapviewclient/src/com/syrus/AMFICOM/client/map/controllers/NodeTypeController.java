@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.45 2005/08/31 13:14:15 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.46 2005/09/02 16:49:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.45 $, $Date: 2005/08/31 13:14:15 $
+ * @version $Revision: 1.46 $, $Date: 2005/09/02 16:49:12 $
  * @module mapviewclient
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -150,18 +150,17 @@ public class NodeTypeController extends AbstractNodeController {
 	 */
 	public static Identifier getImageId(final Identifier userId, final String codename, final String filename)
 			throws ApplicationException {
-		StorableObjectCondition condition = new TypicalCondition(String.valueOf(ImageResourceSort._FILE),
+		StorableObjectCondition condition = new TypicalCondition(
+				codename,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.IMAGERESOURCE_CODE,
-				ImageResourceWrapper.COLUMN_SORT);
-		final Set<AbstractBitmapImageResource> bitMaps = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+				StorableObjectWrapper.COLUMN_CODENAME);
+		final Set<AbstractBitmapImageResource> imageResources = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-		for (final Iterator<AbstractBitmapImageResource> it = bitMaps.iterator(); it.hasNext();) {
-			final FileImageResource ir = (FileImageResource) it.next();
-			if (ir.getCodename().equals(codename)) {
-				return ir.getId();
-			}
+		if(imageResources.size() != 0) {
+			return imageResources.iterator().next().getId();
 		}
+
 		final FileImageResource ir = FileImageResource.createInstance(userId, codename, filename);
 		StorableObjectPool.flush(ir, userId, true);
 		return ir.getId();
