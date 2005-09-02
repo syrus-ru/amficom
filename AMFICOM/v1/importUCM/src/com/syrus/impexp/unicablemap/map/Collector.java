@@ -1,5 +1,5 @@
 /**
- * $Id: Collector.java,v 1.1 2005/08/30 08:25:47 krupenn Exp $
+ * $Id: Collector.java,v 1.2 2005/09/02 09:08:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,8 +26,8 @@ public class Collector {
 	private String uid;
 	private String name;
 	private String description;
-	private Collection<Link> links;
-	private Collection<NodeLink> nodeLinks;
+	private Collection<Link> links = new LinkedList<Link>();
+	private Collection<NodeLink> nodeLinks = new LinkedList<NodeLink>();
 
 	private void setId(String uid) {
 		this.uid = uid;
@@ -83,8 +83,6 @@ public class Collector {
 		
 		collector.setId(String.valueOf(ucmObject.un));
 		collector.setDescription(ucmObject.text);
-		collector.links = new LinkedList<Link>();
-		collector.nodeLinks = new LinkedList<NodeLink>(); 
 
 		for(UniCableMapLink ucmLink : ucmDatabase.getParents(ucmObject)) {
 			// nothing

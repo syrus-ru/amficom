@@ -1,5 +1,5 @@
 /**
- * $Id: Site.java,v 1.2 2005/08/30 12:41:57 krupenn Exp $
+ * $Id: Site.java,v 1.3 2005/09/02 09:08:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,6 +32,7 @@ public class Site {
 	private String proto;
 	private double x;
 	private double y;
+	private Site buildingPlan = null;
 
 	public void setStreet(String street) {
 		this.street = street;
@@ -150,6 +151,10 @@ public class Site {
 								site.setCity(ucmLink1.parent.text);
 					}
 				}
+			if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE))
+				if(ucmLink.parent.typ.text.equals(UniCableMapType.UCM_BUILDING_PLAN)) {
+					site.setBuildingPlan(Site.parseSite(ucmDatabase, ucmLink.parent, "building"));
+				}
 		}
 
 		for(UniCableMapLink ucmLink : ucmDatabase.getChildren(ucmObject)) {
@@ -173,6 +178,10 @@ public class Site {
 		site.setSiteNodeTypeCodename(proto);
 
 		return site;
+	}
+
+	private void setBuildingPlan(Site buildingPlan) {
+		this.buildingPlan = buildingPlan;
 	}
 
 	static double xy[] = new double[2];
@@ -200,6 +209,10 @@ public class Site {
 		projection.inverse(xy, 0, longlat, 0, 1);
 
 		return longlat;
+	}
+
+	public Site getBuildingPlan() {
+		return this.buildingPlan;
 	}
 
 }

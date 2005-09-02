@@ -33,7 +33,7 @@ import com.syrus.impexp.unicablemap.map.Site;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/08/30 12:41:57 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/02 09:08:50 $
  * @module mapviewclient_v1
  */
 public class UniCableMapExportCommand extends ExportCommand 
@@ -87,10 +87,12 @@ public class UniCableMapExportCommand extends ExportCommand
 	private void saveXML(String fileName) throws SQLException {
 		XmlOptions xmlOptions = new XmlOptions();
 		xmlOptions.setSavePrettyPrint();
+		xmlOptions.setSavePrettyPrintIndent(2);
 		java.util.Map prefixes = new HashMap();
 		prefixes.put("http://syrus.com/AMFICOM/map/xml", "map");
 		prefixes.put("http://syrus.com/AMFICOM/general/xml", "general");
 		xmlOptions.setSaveSuggestedPrefixes(prefixes);
+		xmlOptions.setSaveAggressiveNamespaces();
 
 		MapsDocument doc = 
 			MapsDocument.Factory.newInstance(xmlOptions);
@@ -137,7 +139,7 @@ public class UniCableMapExportCommand extends ExportCommand
 		Collection<UniCableMapObject> ucmCableinlets = this.ucmDatabase.getObjects(
 			this.ucmDatabase.getType(UniCableMapType.UCM_CABLE_INLET));
 		System.out.print(ucmCableinlets.size() + " objects... ");
-		createSites(importSites, ucmCableinlets, "defaultcableinlet");
+		createCableInlets(importSites, importLinks, importNodeLinks, ucmCableinlets, "defaultcableinlet");
 		long t4 = System.currentTimeMillis();
 		System.out.println(" Done in " + (t4 - t3) + " ms!");
 
@@ -207,10 +209,45 @@ public class UniCableMapExportCommand extends ExportCommand
 		}
 	}
 
+	private void createCableInlets(Collection<Site> sites, Collection<Link> links, Collection<NodeLink> nodeLinks, Collection<UniCableMapObject> objects, String proto) throws SQLException {
+		int i = 0;
+		for(UniCableMapObject ucmObject : objects) {
+//			if(i++ > 1) 
+//				break;
+			Site cableInlet = Site.parseSite(this.ucmDatabase, ucmObject, proto);
+			sites.add(cableInlet);
+
+			Site building = cableInlet.getBuildingPlan();
+			if(building != null) {
+				building.setBuilding(cableInlet.getBuilding());
+				building.setCity(cableInlet.getCity());
+				building.setId("site" + building.getId());
+				building.setSiteNodeTypeCodename("building");
+				building.setStreet(cableInlet.getStreet());
+				sites.add(building);
+	
+				Link link = new Link();
+				link.setBuilding(cableInlet.getBuilding());
+				link.setCity(cableInlet.getCity());
+				link.setDescription("");
+				link.setId(building.getId() + "indoor" + cableInlet.getId());
+				link.setStartNodeId(building.getId());
+				link.setEndNodeId(cableInlet.getId());
+				link.setPhysicalLinkTypeCodename("indoor");
+				link.setLength(0.0D);
+				link.setName("");
+				links.add(link);
+
+				NodeLink nodeLink = NodeLink.createNodeLink(link);
+				nodeLinks.add(nodeLink);
+			}
+		}
+	}
+
 	private void createSites(Collection<Site> sites, Collection<UniCableMapObject> objects, String proto) throws SQLException {
 		int i = 0;
 		for(UniCableMapObject ucmObject : objects) {
-//			if(i++ > 10) 
+//			if(i++ > 1) 
 //				break;
 			Site site = Site.parseSite(this.ucmDatabase, ucmObject, proto);
 			sites.add(site);
@@ -220,7 +257,7 @@ public class UniCableMapExportCommand extends ExportCommand
 	private void createLinks(Collection<Link> links, Collection<NodeLink> nodeLinks, Collection<UniCableMapObject> objects, String proto) throws SQLException {
 		int i = 0;
 		for(UniCableMapObject ucmObject : objects) {
-//			if(i++ > 10) 
+//			if(i++ > 1) 
 //				break;
 			Link link = Link.parseLink(this.ucmDatabase, ucmObject, proto);
 			links.add(link);
@@ -232,7 +269,7 @@ public class UniCableMapExportCommand extends ExportCommand
 	private void createCollectors(Collection<Collector> collectors, Collection<Link> links, Collection<NodeLink> nodeLinks, Collection<UniCableMapObject> objects, String linkProto) throws SQLException {
 		int i = 0;
 		for(UniCableMapObject ucmObject : objects) {
-//			if(i++ > 10) 
+//			if(i++ > 1) 
 //				break;
 			Collector collector = Collector.parseCollector(this.ucmDatabase, ucmObject, linkProto);
 			collectors.add(collector);

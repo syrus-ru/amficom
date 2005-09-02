@@ -1,5 +1,5 @@
 /**
- * $Id: Link.java,v 1.2 2005/08/30 12:41:57 krupenn Exp $
+ * $Id: Link.java,v 1.3 2005/09/02 09:08:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ public class Link {
 	private String endNodeId;
 	private String startNodeId;
 	private double length = 0.0D;
-	private Collection<NodeLink> nodeLinks;
+	private Collection<NodeLink> nodeLinks = new LinkedList<NodeLink>();;
 	
 	public void setStreet(String street) {
 		this.street = street;
@@ -57,7 +57,7 @@ public class Link {
 		this.uid = uid;
 	}
 
-	private void setPhysicalLinkTypeCodename(String proto) {
+	public void setPhysicalLinkTypeCodename(String proto) {
 		this.proto = proto;
 	}
 
@@ -65,15 +65,15 @@ public class Link {
 		return this.proto;
 	}
 
-	private void setLength(double length) {
+	public void setLength(double length) {
 		this.length = length;
 	}
 
-	private void setEndNodeId(String endNodeId) {
+	public void setEndNodeId(String endNodeId) {
 		this.endNodeId = endNodeId;
 	}
 
-	private void setStartNodeId(String startNodeId) {
+	public void setStartNodeId(String startNodeId) {
 		this.startNodeId = startNodeId;
 	}
 
@@ -194,7 +194,6 @@ public class Link {
 			}
 		}
 
-		link.nodeLinks = new LinkedList<NodeLink>();
 		link.setId(String.valueOf(ucmObject.un));
 		link.setDescription("");
 		link.setPhysicalLinkTypeCodename(proto);
