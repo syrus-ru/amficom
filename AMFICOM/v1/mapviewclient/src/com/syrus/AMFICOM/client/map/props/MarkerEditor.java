@@ -15,8 +15,9 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
-import com.syrus.AMFICOM.client.map.controllers.MapViewController;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.controllers.MarkerController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
@@ -48,6 +49,8 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 
 	private LogicalNetLayer logicalNetLayer;
 
+	private NetMapViewer netMapViewer;
+
 	public MarkerEditor() {
 		try {
 			jbInit();
@@ -55,6 +58,11 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
+		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 	}
 
 	private void jbInit() {
@@ -69,7 +77,7 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 		this.typeLabel.setText(LangModelMap.getString("Type"));
 		this.distanceLabel.setText(LangModelMap.getString("Distance"));
-		this.pathLabel.setText(LangModelMap.getString("PhysicalLink"));
+		this.pathLabel.setText(LangModelMap.getString("measurementpath"));
 		this.longLabel.setText(LangModelMap.getString("Longitude"));
 		this.latLabel.setText(LangModelMap.getString("Latitude"));
 
@@ -265,10 +273,15 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.marker.getName());
 
-			this.typeTextField.setEnabled(true);
-			this.typeTextField.setText(LangModelGeneral.getString("node" + MapViewController.getMapElementType(this.marker)));
+//			this.typeTextField.setEnabled(true);
+//			this.typeTextField.setText(LangModelGeneral.getString("node" + MapViewController.getMapElementType(this.marker)));
 			this.distanceTextField.setEnabled(true);
-			this.distanceTextField.setText(MapPropertiesManager.getDistanceFormat().format(markerController.getFromStartLengthLf(this.marker)));
+			try {
+				this.distanceTextField.setText(MapPropertiesManager.getDistanceFormat().format(markerController.getFromStartLengthLf(this.marker)));
+			} catch(MapException e) {
+				e.printStackTrace();
+				return;
+			}
 
 			this.pathComboBox.addItem(this.marker.getMeasurementPath());
 			this.pathComboBox.setSelectedItem(this.marker.getMeasurementPath());
@@ -294,9 +307,5 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 		} catch(Exception ex) {
 			ex.printStackTrace();
 		}
-	}
-
-	public void setLogicalNetLayer(LogicalNetLayer logicalNetLayer) {
-		this.logicalNetLayer = logicalNetLayer;
 	}
 }
