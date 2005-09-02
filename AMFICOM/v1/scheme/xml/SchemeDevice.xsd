@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeDevice.xsd,v 1.4 2005/09/02 13:22:59 bass Exp $
+			$Id: SchemeDevice.xsd,v 1.5 2005/09/02 13:42:44 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -19,7 +19,17 @@
 
 	<xsd:import
 		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/general.xsd"/>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
 		schemaLocation = "../../general/xml/StorableObject.xsd"/>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/Characteristic.xsd"/>
+	<xsd:include
+		schemaLocation = "SchemePort.xsd"/>
+	<xsd:include
+		schemaLocation = "SchemeCablePort.xsd"/>
 
 	<xsd:element name = "schemeDevices" type = "scheme:XmlSchemeDeviceSeq">
 		<xsd:key name = "schemeDeviceId">
@@ -31,6 +41,21 @@
 	<xsd:complexType name = "XmlSchemeDevice" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
+				<xsd:sequence>
+					<xsd:element ref = "general:name"/>
+					<xsd:element ref = "general:description"
+						minOccurs = "0"/>
+					<xsd:choice>
+						<xsd:element name = "parentSchemeProtoElementId" type = "general:XmlIdentifier"/>
+						<xsd:element name = "parentSchemeElementId" type = "general:XmlIdentifier"/>
+					</xsd:choice>
+					<xsd:element ref = "general:characteristics"
+						minOccurs = "0"/>
+					<xsd:element ref = "scheme:schemePorts"
+						minOccurs = "0"/>
+					<xsd:element ref = "scheme:schemeCablePorts"
+						minOccurs = "0"/>
+				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
