@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.8 2005/08/25 16:02:57 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.9 2005/09/02 12:46:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,13 +11,18 @@
 
 package com.syrus.AMFICOM.client.model;
 
+import java.awt.Toolkit;
+
+import javax.swing.ImageIcon;
+import javax.swing.UIManager;
+
 
 /**
  * содержит список функциональных элементов, доступных пользователю 
  * 
  * 
  * 
- * @version $Revision: 1.8 $, $Date: 2005/08/25 16:02:57 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/02 12:46:24 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -75,6 +80,8 @@ public class MapEditorApplicationModel extends ApplicationModel
 
 	public MapEditorApplicationModel()
 	{
+		UIManager.put("images/main/map_mini.gif", Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif"));
+
 		add(ITEM_VIEW_PROPERTIES);
 		add(ITEM_EDIT_PROPERTIES);
 
