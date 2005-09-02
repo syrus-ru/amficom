@@ -1,5 +1,5 @@
 /*-
- * $Id: PopulatableItem.java,v 1.7 2005/08/31 09:17:51 bob Exp $
+ * $Id: PopulatableItem.java,v 1.8 2005/09/02 14:20:36 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.List;
 /**
  * Populatable item with default properties
  *
- * @version $Revision: 1.7 $, $Date: 2005/08/31 09:17:51 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/02 14:20:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter
@@ -67,10 +67,15 @@ public class PopulatableItem extends AbstractItem implements Populatable {
 		}
 
 	}
+	
+	public void repopulate() {
+		this.removeAllChildren();
+		this.populate();		
+	}
 
 	public boolean isPopulated() {
 		return this.populated;
-	}
+	}	
 	
 	public void removeAllChildren() {
 		if (this.children != null && !this.children.isEmpty()) {
@@ -78,35 +83,35 @@ public class PopulatableItem extends AbstractItem implements Populatable {
 			for (final Item item : list) {
 				item.setParent(null);
 			}
-			this.populated = false;
 		}
+		this.populated = false;
 	}
 
-	public void setCanHaveChildren(boolean canHaveChildren) {
+	public void setCanHaveChildren(final boolean canHaveChildren) {
 		this.canHaveChildren = canHaveChildren;
 	}
 
-	public void setCanHaveParent(boolean canHaveParent) {
+	public void setCanHaveParent(final boolean canHaveParent) {
 		this.canHaveParent = canHaveParent;
 	}
 
-	public void setChildrenFactory(ChildrenFactory childrenFactory) {
+	public void setChildrenFactory(final ChildrenFactory childrenFactory) {
 		this.childrenFactory = childrenFactory;
 	}
 
-	public void setMaxChildrenCount(int maxChildrenCount) {
+	public void setMaxChildrenCount(final int maxChildrenCount) {
 		this.maxChildrenCount = maxChildrenCount;
 	}
 
-	public void setName(String name) {
+	public void setName(final String name) {
 		this.name = name;
 	}
 
-	public void setObject(Object object) {
+	public void setObject(final Object object) {
 		this.object = object;
 	}
 
-	public void setService(boolean service) {
+	public void setService(final boolean service) {
 		this.service = service;
 	}
 
