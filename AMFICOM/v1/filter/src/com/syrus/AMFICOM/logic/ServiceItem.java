@@ -1,83 +1,62 @@
-/*
+/*-
+ * $Id: ServiceItem.java,v 1.10 2005/09/02 14:20:49 bob Exp $
  *
- * Created on 19.03.2005 14:51:04
- *
+ * Copyright ¿ 2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.logic;
 
 
-public class ServiceItem extends AbstractItem implements Populatable {
+/**
+ * Service item
+ *
+ * @version $Revision: 1.10 $, $Date: 2005/09/02 14:20:49 $
+ * @author $Author: bob $
+ * @author Vladimir Dolzhenko
+ * @module filter
+ */
+public class ServiceItem extends PopulatableItem {
 
 	private static int	serviceCount	= 0;
-	private String		name;
-	private Object		object;
-	
-	private ChildrenFactory childrenFactory;
-	private boolean populated = false;
 
 	public ServiceItem() {
-		this.name = "service" + (serviceCount++);
+		this("service" + serviceCount);
 	}
 	
-	public ServiceItem(String name) {
+	public ServiceItem(final String name) {
 		this.name = name;
 		serviceCount++;
+		this.setMaxChildrenCount(Integer.MAX_VALUE);
+		this.setCanHaveParent(true);
+		this.setCanHaveChildren(true);
+		this.setService(true);
 	}
 
-	public int getMaxChildrenCount() {
-		return Integer.MAX_VALUE;
-	}
-
-	public boolean canHaveParent() {
-		return true;
-	}
-	
-	public boolean canHaveChildren() {
-		return true;
-	}
-
-	public String getName() {
-		return this.name;
-	}
-
-	public Object getObject() {
-		return this.object;
-	}
-
-	public void setObject(Object object) {
-		this.object = object;
-	}
 
 	public void removeChild(Item childItem) {
 		if (this.children != null) {
 			this.children.remove(childItem);
 		}
-
 	}	
 
-	public boolean isService() {
-		return true;
+	@Override
+	public void setCanHaveChildren(boolean canHaveChildren) {
+		throw new UnsupportedOperationException("ServiceItem.setCanHaveChildren() is unsupported");
+	}
+	
+	@Override
+	public void setCanHaveParent(boolean canHaveParent) {
+		throw new UnsupportedOperationException("ServiceItem.setCanHaveParent() is unsupported");
+	}
+	
+	@Override
+	public void setMaxChildrenCount(int maxChildrenCount) {
+		throw new UnsupportedOperationException("ServiceItem.setMaxChildrenCount() is unsupported");
 	}
 
-	
-	
-	/**
-	 * @param childrenFactory The childrenFactory to set.
-	 */
-	public void setChildrenFactory(ChildrenFactory childrenFactory) {
-		this.childrenFactory = childrenFactory;
-	}
-	
-	public void populate() {
-		if (!this.populated) {
-			if (this.childrenFactory != null) {
-				this.childrenFactory.populate(this);
-			}
-			this.populated = true;
-		}
-	}
-	
-	public boolean isPopulated() {
-		return this.populated;
+	@Override
+	public void setService(boolean service) {
+		throw new UnsupportedOperationException("ServiceItem.setService() is unsupported");
 	}
 }
