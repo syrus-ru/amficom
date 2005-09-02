@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkerCommandAtomic.java,v 1.30 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: CreateMarkerCommandAtomic.java,v 1.31 2005/09/02 09:30:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
  * Команда создания метки на линии
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.31 $, $Date: 2005/09/02 09:30:55 $
  * @module mapviewclient
  */
 public class CreateMarkerCommandAtomic extends MapActionCommand {
@@ -85,12 +85,12 @@ public class CreateMarkerCommandAtomic extends MapActionCommand {
 			this.path.sortPathElements();
 			List nodeLinks = this.path.getSortedNodeLinks();
 			for(Iterator it = nodeLinks.iterator(); it.hasNext();) {
-				NodeLink mnle = (NodeLink)it.next();
+				NodeLink nodeLink = (NodeLink)it.next();
 
-				NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(mnle);
+				NodeLinkController nlc = (NodeLinkController )getLogicalNetLayer().getMapViewController().getController(nodeLink);
 				MeasurementPathController mpc = (MeasurementPathController )getLogicalNetLayer().getMapViewController().getController(this.path);
 
-				if(nlc.isMouseOnElement(mnle, this.point)) {
+				if(nlc.isMouseOnElement(nodeLink, this.point)) {
 					DoublePoint dpoint = converter.convertScreenToMap(this.point);
 
 					try {
@@ -98,10 +98,10 @@ public class CreateMarkerCommandAtomic extends MapActionCommand {
 								LoginManager.getUserId(),
 								this.mapView, 
 								node,
-								mnle.getOtherNode(node),
-								mnle,
+								nodeLink.getOtherNode(node),
+								nodeLink,
 								this.path,
-								mpc.getMonitoredElement(this.path).getId(),
+								mpc.getMonitoredElementId(this.path),
 								dpoint);
 
 						this.mapView.addMarker(this.marker);
@@ -118,9 +118,9 @@ public class CreateMarkerCommandAtomic extends MapActionCommand {
 
 					break;
 				}
-				nlc.updateLengthLt(mnle);
+				nlc.updateLengthLt(nodeLink);
 
-				node = mnle.getOtherNode(node);
+				node = nodeLink.getOtherNode(node);
 			}
 			this.logicalNetLayer.setCurrentMapElement(this.marker);
 			setResult(Command.RESULT_OK);
