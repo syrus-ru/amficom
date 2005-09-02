@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeSampleData.java,v 1.30 2005/08/31 17:45:31 bass Exp $
+ * $Id: SchemeSampleData.java,v 1.31 2005/09/02 09:25:26 krupenn Exp $
  *
  * Copyright ї 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,13 +23,13 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 /**
  * this class is used to create two sample instances
  * of Scheme whithout graphical components
- * @author $Author: bass $
- * @version $Revision: 1.30 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.31 $
  * @module mapviewclient
  */
 public final class SchemeSampleData {
 
-	private static boolean loaded = false;
+	public static boolean loaded = false;
 
 	public static Scheme scheme1;
 	public static SchemeElement scheme1element0;
@@ -123,36 +123,35 @@ public final class SchemeSampleData {
 		scheme1clink0.setPhysicalLength(1000.0D);
 		scheme1clink0.setSourceAbstractSchemePort(scheme1dev00cport00);
 		scheme1clink0.setTargetAbstractSchemePort(scheme1dev10cport10);
-		final LinkType linkType = ctt.getLinkType();
-		SchemeCableThread scheme1clink0th = SchemeCableThread.createInstance(userId, "1", "", linkType, null, null, null, scheme1clink0);
+		SchemeCableThread scheme1clink0th = SchemeCableThread.createInstance(userId, "1", lt, scheme1clink0);
 
 		scheme1clink1 = SchemeCableLink.createInstance(userId, "Кабелёк2", scheme1);
 		scheme1clink1.setOpticalLength(1000.0D);
 		scheme1clink1.setPhysicalLength(1000.0D);
 		scheme1clink1.setSourceAbstractSchemePort(scheme1dev10cport11);
 		scheme1clink1.setTargetAbstractSchemePort(scheme1dev20cport20);
-		SchemeCableThread scheme1clink1th = SchemeCableThread.createInstance(userId, "1", "", linkType, null, null, null, scheme1clink1);
+		SchemeCableThread scheme1clink1th = SchemeCableThread.createInstance(userId, "1", lt, scheme1clink1);
 
 		scheme1clink2 = SchemeCableLink.createInstance(userId, "Кабелёк3", scheme1);
 		scheme1clink2.setOpticalLength(1000.0D);
 		scheme1clink2.setPhysicalLength(1000.0D);
 		scheme1clink2.setSourceAbstractSchemePort(scheme1dev20cport21);
 		scheme1clink2.setTargetAbstractSchemePort(scheme1dev30cport30);
-		SchemeCableThread scheme1clink2th = SchemeCableThread.createInstance(userId, "1", "", linkType, null, null, null, scheme1clink2);
+		SchemeCableThread scheme1clink2th = SchemeCableThread.createInstance(userId, "1", lt, scheme1clink2);
 
 		scheme1clink3 = SchemeCableLink.createInstance(userId, "Кабелёк4", scheme1);
 		scheme1clink3.setOpticalLength(1000.0D);
 		scheme1clink3.setPhysicalLength(1000.0D);
 		scheme1clink3.setSourceAbstractSchemePort(scheme1dev30cport31);
 		scheme1clink3.setTargetAbstractSchemePort(scheme1dev40cport40);
-		SchemeCableThread.createInstance(userId, "1", "", linkType, null, null, null, scheme1clink3);
+		SchemeCableThread.createInstance(userId, "1", lt, scheme1clink3);
 
 		scheme1clink4 = SchemeCableLink.createInstance(userId, "Кабелёк5", scheme1);
 		scheme1clink4.setOpticalLength(1000.0D);
 		scheme1clink4.setPhysicalLength(1000.0D);
 		scheme1clink4.setSourceAbstractSchemePort(scheme1dev40cport41);
 		scheme1clink4.setTargetAbstractSchemePort(scheme1dev20cport22);
-		SchemeCableThread.createInstance(userId, "1", "", linkType, null, null, null, scheme1clink4);
+		SchemeCableThread.createInstance(userId, "1", lt, scheme1clink4);
 
 		SchemeMonitoringSolution solution = SchemeMonitoringSolution.createInstance(userId, "Сольюшн", scheme1);
 		scheme1path0 = SchemePath.createInstance(userId, "Путяра измерений", solution);
@@ -224,7 +223,7 @@ public final class SchemeSampleData {
 		scheme2clink0.setPhysicalLength(1000.0D);
 		scheme2clink0.setSourceAbstractSchemePort(scheme2dev10cport10);
 		scheme2clink0.setTargetAbstractSchemePort(scheme2dev00cport00);
-		SchemeCableThread scheme2clink0th = SchemeCableThread.createInstance(userId, "1", "", ctt.getLinkType(), null, null, null, scheme2clink0);
+		SchemeCableThread scheme2clink0th = SchemeCableThread.createInstance(userId, "1", lt, scheme2clink0);
 
 		SchemeMonitoringSolution solution = SchemeMonitoringSolution.createInstance(userId, "Сольюшн", scheme2);
 		scheme2path0 = SchemePath.createInstance(userId, "Путяра измерений", solution);
