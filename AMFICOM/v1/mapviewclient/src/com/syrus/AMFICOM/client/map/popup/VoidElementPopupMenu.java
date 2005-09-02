@@ -55,9 +55,9 @@ public class VoidElementPopupMenu extends MapPopupMenu {
 			}
 		});
 		this.add(this.addSiteMenuItem);
-		this.addSeparator();
-		this.add(this.mapPropertiesMenuItem);
-		this.add(this.mapViewPropertiesMenuItem);
+//		this.addSeparator();
+//		this.add(this.mapPropertiesMenuItem);
+//		this.add(this.mapViewPropertiesMenuItem);
 	}
 
 	void showMapProperties() {
