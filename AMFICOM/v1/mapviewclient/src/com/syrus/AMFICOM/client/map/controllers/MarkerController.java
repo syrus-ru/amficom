@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.34 2005/09/02 09:39:20 krupenn Exp $
+ * $Id: MarkerController.java,v 1.35 2005/09/02 16:48:21 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Контроллер маркера.
  * @author $Author: krupenn $
- * @version $Revision: 1.34 $, $Date: 2005/09/02 09:39:20 $
+ * @version $Revision: 1.35 $, $Date: 2005/09/02 16:48:21 $
  * @module mapviewclient
  */
 public class MarkerController extends AbstractNodeController {
@@ -214,80 +214,6 @@ public class MarkerController extends AbstractNodeController {
 
 		return dist * kd;
 	}
-
-	//Передвинуть в точку на заданной расстоянии от нсчала
-//	public void moveToFromStartLt(MapMarker marker, double distance)
-//	{
-/*
-		LogicalNetLayer lnl = this.logicalNetLayer;
-		if ( lnl.mapMainFrame
-				.aContext.getApplicationModel().isEnabled(
-					MapApplicationModel.ACTION_USE_MARKER))
-		{
-			double pathl = transmissionPath.getSizeInDoubleLt();
-			if ( distance > pathl)
-				distance = pathl;
-
-			Vector nl = transmissionPath.sortNodeLinks();
-			Vector pl = transmissionPath.sortPhysicalLinks();
-			Vector n = transmissionPath.sortNodes();
-		
-			double path_length = 0;
-
-			boolean point_reached = false;
-			MapNodeLinkElement mnle;
-			
-			for(Enumeration plen = pl.elements(); plen.hasMoreElements() && !point_reached;)
-			{
-				MapPhysicalLinkElement mple = (MapPhysicalLinkElement )plen.nextElement();
-
-				if ( path_length + mple.getSizeInDoubleLt() > distance)
-				{
-					Vector nl2 = mple.sortNodeLinks();
-					point_reached = true;
-					boolean direct_order = (nl.indexOf(nl2.get(0)) <= nl.indexOf(nodeLink));
-					int size = nl2.size();
-					for(int i = 0; i < size; i++)
-					{
-						if(direct_order)
-							mnle = (MapNodeLinkElement )nl2.get(i);
-						else
-							mnle = (MapNodeLinkElement )nl2.get(size - i - 1);
-							
-						if ( path_length + mnle.getSizeInDoubleLt() > distance)
-						{
-							nodeLink = mnle;
-							nodeLinkIndex = nl.indexOf(mnle);
-							if ( n.indexOf(mnle.startNode) < n.indexOf(mnle.endNode))
-							{
-								startNode = mnle.startNode;
-								endNode = mnle.endNode;
-							}
-							else
-							{
-								startNode = mnle.endNode;
-								endNode = mnle.startNode;
-							}
-
-							double nl_distance = distance - path_length;
-
-							adjustPosition(nl_distance, false);
-							return;
-						}// if ( ... > distance
-						else
-						{
-							path_length += mnle.getSizeInDoubleLt();
-						}
-					}// for(int i
-				}// if ( ... > distance
-				else
-				{
-					path_length += mple.getSizeInDoubleLt();
-				}
-			}// for(Enumeration plen
-		}// if ( lnl.mapMainFrame
-*/
-//	}
 
 	/**
 	 * Возвращает физическое расстояние от маркера до начала измерительного пути.
@@ -483,62 +409,6 @@ public class MarkerController extends AbstractNodeController {
 		marker.setLocation(converter.convertScreenToMap(new Point((int) Math.round(startNodeX + cosB * screenDistance),
 				(int) Math.round(startNodeY + sinB * screenDistance))));
 	}
-
-	/**
-	 * Получить топологическое расстояние от начала измерительного пути до
-	 * маркера.
-	 * 
-	 * @param marker
-	 *        маркер
-	 * @return топологическое расстояние
-	 */
-	/*
-	public double getFromStartLengthLt(final Marker marker) {
-		double pathLength = 0;
-
-		Vector nl = transmissionPath.sortNodeLinks();
-		Vector pl = transmissionPath.sortPhysicalLinks();
-		Vector n = transmissionPath.sortNodes();
-		
-		MapNodeLinkElement mnle;
-		boolean point_reached = false;
-		for(Enumeration plen = pl.elements(); plen.hasMoreElements() && !point_reached;)
-		{
-			MapPhysicalLinkElement mple = (MapPhysicalLinkElement )plen.nextElement();
-			if(nodeLink.PhysicalLinkID.equals(mple.getId()))
-			{
-				Vector nl2 = mple.sortNodeLinks();
-				point_reached = true;
-				boolean direct_order = (nl.indexOf(nl2.get(0)) <= nl.indexOf(nodeLink));
-				int size = nl2.size();
-				for(int i = 0; i < size; i++)
-				{
-					if(direct_order)
-						mnle = (MapNodeLinkElement )nl2.get(i);
-					else
-						mnle = (MapNodeLinkElement )nl2.get(size - i - 1);
-							
-					if ( mnle == nodeLink)
-					{
-						if ( n.indexOf(startNode) < n.indexOf(endNode))
-							return path_length + getSizeInDoubleLt();
-						else
-							return path_length + nodeLink.getSizeInDoubleLt() - getSizeInDoubleLt();
-					}
-					else
-					{
-						path_length += mnle.getSizeInDoubleLt();
-					}
-				}// for(int i
-			}// if(nodeLink.PhysicalLinkID
-			else
-			{
-				path_length += mple.getSizeInDoubleLt();
-			}
-		}// for(Enumeration plen
-		return 0;
-	}
-*/
 
 	/**
 	 * Получить физическое расстояние от начала измерительного пути до маркера.

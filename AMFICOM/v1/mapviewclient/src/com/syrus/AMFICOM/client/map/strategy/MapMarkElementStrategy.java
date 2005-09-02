@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkElementStrategy.java,v 1.31 2005/08/17 14:14:20 arseniy Exp $
+ * $Id: MapMarkElementStrategy.java,v 1.32 2005/09/02 16:50:06 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.mapview.Selection;
 
 /**
  * —тратеги€ управлени€ метки на физической линии.
- * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2005/08/17 14:14:20 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.32 $, $Date: 2005/09/02 16:50:06 $
  * @module mapviewclient
  */
 public final class MapMarkElementStrategy extends AbstractMapStrategy 
@@ -104,7 +104,6 @@ public final class MapMarkElementStrategy extends AbstractMapStrategy
 			super.logicalNetLayer.deselectAll();
 		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
 		super.logicalNetLayer.getMapView().getMap().setSelected(this.mark, true);
-//		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 	}
 
 	/**
