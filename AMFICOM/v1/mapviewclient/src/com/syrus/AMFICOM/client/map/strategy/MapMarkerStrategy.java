@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.30 2005/08/17 14:14:20 arseniy Exp $
+ * $Id: MapMarkerStrategy.java,v 1.31 2005/09/02 16:50:57 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,14 +23,15 @@ import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.Marker;
 import com.syrus.AMFICOM.mapview.Selection;
 
 /**
  * —тратеги€ управлени€ маркером.
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/08/17 14:14:20 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.31 $, $Date: 2005/09/02 16:50:57 $
  * @module mapviewclient
  */
 public final class MapMarkerStrategy extends AbstractMapStrategy 
@@ -92,7 +93,6 @@ public final class MapMarkerStrategy extends AbstractMapStrategy
 			super.logicalNetLayer.deselectAll();
 		}// ! MapState.SELECT_ACTION_MODE && ! MapState.MOVE_ACTION_MODE
 		super.logicalNetLayer.getMapView().getMap().setSelected(this.marker, true);
-//		this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 	}
 
 	/**
@@ -106,6 +106,11 @@ public final class MapMarkerStrategy extends AbstractMapStrategy
 
 		MapCoordinatesConverter converter = super.logicalNetLayer.getConverter();
 
+		System.out.println("At distance " + this.marker.getPhysicalDistance() 
+				+ " " + this.marker.getNodeLink().getId()
+				+ " " + this.marker.getStartNode().getId()
+				+ " " + this.marker.getEndNode().getId()
+				+ " " + this.marker.getCablePath().getId());
 		//ѕроверка того что маркер можно перемещать и его перемещение
 		if (super.logicalNetLayer.getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER))
 		{
@@ -125,6 +130,14 @@ public final class MapMarkerStrategy extends AbstractMapStrategy
 					lengthFromStartNode = motionDescriptor.nodeLinkLength;
 				else
 				{
+					if(this.marker.getCablePath().getStartNode().equals(endNode)
+							|| this.marker.getCablePath().getEndNode().equals(endNode)) {
+						CablePath nextCablePath = this.marker.nextCablePath();
+						if(nextCablePath != null) {
+							this.marker.setCablePath(nextCablePath);
+						}
+					}
+
 					startNode = endNode;
 					endNode = nodeLink.getOtherNode(startNode);
 					this.marker.setNodeLink(nodeLink);
@@ -148,6 +161,14 @@ public final class MapMarkerStrategy extends AbstractMapStrategy
 					lengthFromStartNode = 0;
 				else
 				{
+					if(this.marker.getCablePath().getStartNode().equals(startNode)
+							|| this.marker.getCablePath().getEndNode().equals(startNode)) {
+						CablePath previousCablePath = this.marker.previousCablePath();
+						if(previousCablePath != null) {
+							this.marker.setCablePath(previousCablePath);
+						}
+					}
+
 					endNode = startNode;
 					startNode = nodeLink.getOtherNode(endNode);
 					this.marker.setNodeLink(nodeLink);
