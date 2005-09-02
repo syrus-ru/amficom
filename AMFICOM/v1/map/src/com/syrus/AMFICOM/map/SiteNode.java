@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.78 2005/09/02 12:45:04 krupenn Exp $
+ * $Id: SiteNode.java,v 1.79 2005/09/02 13:47:36 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: krupenn $
- * @version $Revision: 1.78 $, $Date: 2005/09/02 12:45:04 $
+ * @version $Revision: 1.79 $, $Date: 2005/09/02 13:47:36 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
@@ -437,7 +437,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 	}
 
 	public Set<SiteNode> getAttachedSiteNodes() {
-		LinkedIdsCondition condition = new LinkedIdsCondition(this.getAttachmentSiteNodeId(), this.getId().getMajor());
+		LinkedIdsCondition condition = new LinkedIdsCondition(this.getAttachmentSiteNodeId(), SITENODE_CODE);
 		try {
 			return StorableObjectPool.<SiteNode>getStorableObjectsByCondition(condition, false);
 		} catch(ApplicationException e) {
