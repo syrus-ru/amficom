@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.77 2005/09/02 07:52:04 max Exp $
+ * $Id: SiteNode.java,v 1.78 2005/09/02 12:45:04 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 
+import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -58,8 +59,8 @@ import com.syrus.util.Log;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: max $
- * @version $Revision: 1.77 $, $Date: 2005/09/02 07:52:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.78 $, $Date: 2005/09/02 12:45:04 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
@@ -441,7 +442,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 			return StorableObjectPool.<SiteNode>getStorableObjectsByCondition(condition, false);
 		} catch(ApplicationException e) {
 			Log.errorException(e);
-			return null;
+			return Collections.emptySet();
 		}
 	}
 }
