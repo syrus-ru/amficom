@@ -1,26 +1,26 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: Towers.xml,v 1.4 2005/09/02 08:10:48 krupenn Exp $
+<!-- $Id: Towers.xml,v 1.5 2005/09/02 10:25:51 krupenn Exp $
 -->
-<map:library
-	xmlns:gen="http://syrus.com/AMFICOM/general/xml"
+<map:mapLibrary
+	xmlns:general="http://syrus.com/AMFICOM/general/xml"
 	xmlns:map="http://syrus.com/AMFICOM/map/xml"
-	importtype="amficom">
-	<map:uid>towers</map:uid>
+	importType="amficom">
+	<general:id>towers</general:id>
     <map:name>Опоры воздушных линий связи</map:name>
     <map:codename>towers</map:codename>
     <map:description/>
-	<map:physicallinktypes/>
-	<map:sitenodetypes>
-		<map:sitenodetype>
-			<map:uid>po2075</map:uid>
-			<map:sort>tower</map:sort>
-			<map:image>images/tower.gif</map:image>
+	<map:physicalLinkTypes/>
+	<map:siteNodeTypes>
+		<map:siteNodeType>
+			<general:id>po2075</general:id>
 			<map:name>ПО-2,0-7,5</map:name>
 			<map:codename>towerPO_20_75</map:codename>
 			<map:description>Опора предназначена для воздушных электрических линий связи и линий электросвязи</map:description>
+			<map:sort>tower</map:sort>
 			<map:topological>true</map:topological>
+			<map:image>images/tower.gif</map:image>
 			<map:characteristics>
 			</map:characteristics>
-		</map:sitenodetype>
-	</map:sitenodetypes>
-</map:library>
+		</map:siteNodeType>
+	</map:siteNodeTypes>
+</map:mapLibrary>
