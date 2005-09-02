@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeElement.xsd,v 1.5 2005/09/02 15:41:02 bass Exp $
+			$Id: SchemeElement.xsd,v 1.6 2005/09/02 16:28:54 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -17,15 +17,8 @@
 		</xsd:documentation>
 	</xsd:annotation>
 
-	<xsd:import
-		namespace = "http://syrus.com/AMFICOM/general/xml"
-		schemaLocation = "../../general/xml/general.xsd"/>
-	<xsd:import
-		namespace = "http://syrus.com/AMFICOM/general/xml"
-		schemaLocation = "../../general/xml/StorableObject.xsd"/>
-	<xsd:import
-		namespace = "http://syrus.com/AMFICOM/general/xml"
-		schemaLocation = "../../general/xml/Characteristic.xsd"/>
+	<xsd:include
+		schemaLocation = "AbstractSchemeElement.xsd"/>
 	<xsd:include
 		schemaLocation = "SchemeDevice.xsd"/>
 	<xsd:include
@@ -42,11 +35,8 @@
 
 	<xsd:complexType name = "XmlSchemeElement" final = "#all">
 		<xsd:complexContent>
-			<xsd:extension base = "general:XmlStorableObject">
+			<xsd:extension base = "scheme:XmlAbstractSchemeElement">
 				<xsd:sequence>
-					<xsd:element ref = "general:name"/>
-					<xsd:element ref = "general:description"
-						minOccurs = "0"/>
 					<xsd:element ref = "general:label"
 						minOccurs = "0"/>
 					<xsd:element name = "kind">
@@ -129,8 +119,6 @@
 						<xsd:element name = "parentSchemeId" type = "general:XmlIdentifier"/>
 						<xsd:element name = "parentSchemeElementId" type = "general:XmlIdentifier"/>
 					</xsd:choice>
-					<xsd:element ref = "general:characteristics"
-						minOccurs = "0"/>
 					<xsd:element ref = "scheme:schemeDevices"
 						minOccurs = "0"/>
 					<xsd:element ref = "scheme:schemeElements"

@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeCableLink.xsd,v 1.5 2005/09/02 13:22:59 bass Exp $
+			$Id: SchemeCableLink.xsd,v 1.6 2005/09/02 16:28:54 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -17,15 +17,8 @@
 		</xsd:documentation>
 	</xsd:annotation>
 
-	<xsd:import
-		namespace = "http://syrus.com/AMFICOM/general/xml"
-		schemaLocation = "../../general/xml/general.xsd"/>
-	<xsd:import
-		namespace = "http://syrus.com/AMFICOM/general/xml"
-		schemaLocation = "../../general/xml/StorableObject.xsd"/>
-	<xsd:import
-		namespace = "http://syrus.com/AMFICOM/general/xml"
-		schemaLocation = "../../general/xml/Characteristic.xsd"/>
+	<xsd:include
+		schemaLocation = "AbstractSchemeLink.xsd"/>
 	<xsd:include
 		schemaLocation = "SchemeCableThread.xsd"/>
 	<xsd:include
@@ -40,25 +33,8 @@
 
 	<xsd:complexType name = "XmlSchemeCableLink" final = "#all">
 		<xsd:complexContent>
-			<xsd:extension base = "general:XmlStorableObject">
+			<xsd:extension base = "scheme:XmlAbstractSchemeLink">
 				<xsd:sequence>
-					<xsd:element ref = "general:name"/>
-					<xsd:element ref = "general:description"
-						minOccurs = "0"/>
-					<xsd:element name = "physicalLength">
-						<xsd:simpleType>
-							<xsd:restriction base = "xsd:double">
-								<xsd:minInclusive value = "0"/>
-							</xsd:restriction>
-						</xsd:simpleType>
-					</xsd:element>
-					<xsd:element name = "opticalLength">
-						<xsd:simpleType>
-							<xsd:restriction base = "xsd:double">
-								<xsd:minInclusive value = "0"/>
-							</xsd:restriction>
-						</xsd:simpleType>
-					</xsd:element>
 					<xsd:choice>
 						<xsd:element name = "cableLinkTypeId" type = "general:XmlIdentifier"/>
 						<xsd:element name = "cableLinkId" type = "general:XmlIdentifier"/>
@@ -68,8 +44,6 @@
 					<xsd:element name = "targetSchemeCablePortId" type = "general:XmlIdentifier"
 						minOccurs = "0"/>
 					<xsd:element name = "parentSchemeId" type = "general:XmlIdentifier"/>
-					<xsd:element ref = "general:characteristics"
-						minOccurs = "0"/>
 					<xsd:element ref = "scheme:schemeCableThreads"
 						minOccurs = "0"/>
 					<xsd:element ref = "scheme:cableChannelingItems"

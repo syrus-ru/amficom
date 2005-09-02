@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeLink.xsd,v 1.3 2005/09/02 13:22:59 bass Exp $
+			$Id: SchemeLink.xsd,v 1.4 2005/09/02 16:28:54 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -17,9 +17,8 @@
 		</xsd:documentation>
 	</xsd:annotation>
 
-	<xsd:import
-		namespace = "http://syrus.com/AMFICOM/general/xml"
-		schemaLocation = "../../general/xml/StorableObject.xsd"/>
+	<xsd:include
+		schemaLocation = "AbstractSchemeLink.xsd"/>
 
 	<xsd:element name = "schemeLinks" type = "scheme:XmlSchemeLinkSeq">
 		<xsd:key name = "schemeLinkId">
@@ -30,7 +29,24 @@
 
 	<xsd:complexType name = "XmlSchemeLink" final = "#all">
 		<xsd:complexContent>
-			<xsd:extension base = "general:XmlStorableObject">
+			<xsd:extension base = "scheme:XmlAbstractSchemeLink">
+				<xsd:sequence>
+					<xsd:choice>
+						<xsd:element name = "linkTypeId" type = "general:XmlIdentifier"/>
+						<xsd:element name = "linkId" type = "general:XmlIdentifier"/>
+					</xsd:choice>
+					<xsd:element name = "sourceSchemePortId" type = "general:XmlIdentifier"
+						minOccurs = "0"/>
+					<xsd:element name = "targetSchemePortId" type = "general:XmlIdentifier"
+						minOccurs = "0"/>
+					<xsd:element name = "siteNodeId" type = "general:XmlIdentifier"
+						minOccurs = "0"/>
+					<xsd:choice>
+						<xsd:element name = "parentSchemeId" type = "general:XmlIdentifier"/>
+						<xsd:element name = "parentSchemeElementId" type = "general:XmlIdentifier"/>
+						<xsd:element name = "parentSchemeProtoElementId" type = "general:XmlIdentifier"/>
+					</xsd:choice>
+				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
