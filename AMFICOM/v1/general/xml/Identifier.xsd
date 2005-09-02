@@ -7,7 +7,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: Identifier.xsd,v 1.3 2005/08/30 11:49:52 bass Exp $
+			$Id: Identifier.xsd,v 1.4 2005/09/02 13:23:00 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -15,7 +15,7 @@
 		</xsd:documentation>
 	</xsd:annotation>
 
-	<xsd:complexType name = "XmlIdentifier">
+	<xsd:complexType name = "XmlIdentifier" final = "#all">
 		<xsd:simpleContent>
 			<xsd:extension base = "xsd:string">
 				<xsd:attribute name = "generated" type = "xsd:boolean" use = "prohibited"/>
@@ -23,7 +23,7 @@
 		</xsd:simpleContent>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlIdentifierSeq">
+	<xsd:complexType name = "XmlIdentifierSeq" final = "#all">
 		<xsd:sequence>
 			<xsd:element name = "id" type = "general:XmlIdentifier"
 				minOccurs = "0" maxOccurs = "unbounded"/>

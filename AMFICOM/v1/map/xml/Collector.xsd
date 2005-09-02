@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: Collector.xsd,v 1.9 2005/09/01 10:47:11 bass Exp $
+			$Id: Collector.xsd,v 1.10 2005/09/02 13:22:58 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -31,7 +31,7 @@
 		</xsd:keyref>
 	</xsd:element>
 
-	<xsd:complexType name = "XmlCollector">
+	<xsd:complexType name = "XmlCollector" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>
@@ -43,7 +43,7 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlCollectorSeq">
+	<xsd:complexType name = "XmlCollectorSeq" final = "#all">
 		<xsd:sequence>
 			<xsd:element name = "collector" type = "map:XmlCollector" minOccurs = "0" maxOccurs = "unbounded"/>
 		</xsd:sequence>

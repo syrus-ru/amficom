@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: MapLibrary.xsd,v 1.10 2005/09/01 10:47:11 bass Exp $
+			$Id: MapLibrary.xsd,v 1.11 2005/09/02 13:22:58 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -23,7 +23,7 @@
 
 	<xsd:element name = "mapLibrary" type = "map:XmlMapLibrary"/>
 
-	<xsd:complexType name = "XmlMapLibrary">
+	<xsd:complexType name = "XmlMapLibrary" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>

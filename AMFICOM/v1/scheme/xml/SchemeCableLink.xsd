@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeCableLink.xsd,v 1.4 2005/09/02 07:07:45 bass Exp $
+			$Id: SchemeCableLink.xsd,v 1.5 2005/09/02 13:22:59 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -38,7 +38,7 @@
 		</xsd:key>
 	</xsd:element>
 
-	<xsd:complexType name = "XmlSchemeCableLink">
+	<xsd:complexType name = "XmlSchemeCableLink" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>
@@ -79,7 +79,7 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlSchemeCableLinkSeq">
+	<xsd:complexType name = "XmlSchemeCableLinkSeq" final = "#all">
 		<xsd:sequence>
 			<xsd:element name = "schemeCableLink" type = "scheme:XmlSchemeCableLink" minOccurs = "0" maxOccurs = "unbounded"/>
 		</xsd:sequence>

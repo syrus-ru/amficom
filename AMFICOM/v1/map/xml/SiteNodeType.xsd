@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SiteNodeType.xsd,v 1.14 2005/09/02 10:25:38 krupenn Exp $
+			$Id: SiteNodeType.xsd,v 1.15 2005/09/02 13:22:58 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -38,7 +38,7 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 
-	<xsd:complexType name = "XmlSiteNodeType">
+	<xsd:complexType name = "XmlSiteNodeType" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>
@@ -54,7 +54,7 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlSiteNodeTypeSeq">
+	<xsd:complexType name = "XmlSiteNodeTypeSeq" final = "#all">
 		<xsd:sequence>
 			<xsd:element name = "siteNodeType" type = "map:XmlSiteNodeType" minOccurs = "0" maxOccurs = "unbounded"/>
 		</xsd:sequence>

@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: PortType.xsd,v 1.5 2005/09/01 10:47:11 bass Exp $
+			$Id: PortType.xsd,v 1.6 2005/09/02 13:22:58 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -42,7 +42,7 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 
-	<xsd:complexType name = "XmlPortType">
+	<xsd:complexType name = "XmlPortType" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>
@@ -56,7 +56,7 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlPortTypeSeq">
+	<xsd:complexType name = "XmlPortTypeSeq" final = "#all">
 		<xsd:sequence>
 			<xsd:element name = "portType" type = "configuration:XmlPortType" minOccurs = "0" maxOccurs = "unbounded"/>
 		</xsd:sequence>

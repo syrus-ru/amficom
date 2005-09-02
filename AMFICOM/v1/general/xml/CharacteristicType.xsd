@@ -7,7 +7,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: CharacteristicType.xsd,v 1.5 2005/09/01 10:47:12 bass Exp $
+			$Id: CharacteristicType.xsd,v 1.6 2005/09/02 13:23:00 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -37,7 +37,7 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 
-	<xsd:complexType name = "XmlCharacteristicType">
+	<xsd:complexType name = "XmlCharacteristicType" final = "#all">
 		<xsd:all>
 			<xsd:element name = "name" type = "xsd:string"/>
 			<xsd:element name = "codename" type = "xsd:string"/>
@@ -49,7 +49,7 @@
 		</xsd:all>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlCharacteristicTypeSeq">
+	<xsd:complexType name = "XmlCharacteristicTypeSeq" final = "#all">
 		<xsd:sequence>
 			<xsd:element name = "characteristicType" type = "general:XmlCharacteristicType" minOccurs = "0" maxOccurs = "unbounded"/>
 		</xsd:sequence>

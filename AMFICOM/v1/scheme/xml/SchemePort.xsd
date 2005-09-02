@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemePort.xsd,v 1.3 2005/09/02 09:34:44 bass Exp $
+			$Id: SchemePort.xsd,v 1.4 2005/09/02 13:22:59 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -27,7 +27,7 @@
 		</xsd:key>
 	</xsd:element>
 
-	<xsd:complexType name = "XmlSchemePort">
+	<xsd:complexType name = "XmlSchemePort" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "scheme:XmlAbstractSchemePort">
 				<xsd:choice>
@@ -38,7 +38,7 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlSchemePortSeq">
+	<xsd:complexType name = "XmlSchemePortSeq" final = "#all">
 		<xsd:sequence>
 			<xsd:element name = "schemePort" type = "scheme:XmlSchemePort" minOccurs = "0" maxOccurs = "unbounded"/>
 		</xsd:sequence>

@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: Map.xsd,v 1.11 2005/09/01 10:47:11 bass Exp $
+			$Id: Map.xsd,v 1.12 2005/09/02 13:22:58 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -28,7 +28,7 @@
 		</xsd:unique>
 	</xsd:element>
 
-	<xsd:complexType name = "XmlMap">
+	<xsd:complexType name = "XmlMap" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>
@@ -46,13 +46,13 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlMapSeq">
+	<xsd:complexType name = "XmlMapSeq" final = "#all">
 		<xsd:sequence>
 			<xsd:element name = "map" type = "map:XmlMap" maxOccurs = "unbounded"/>
 		</xsd:sequence>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlMapLibraryEntrySeq">
+	<xsd:complexType name = "XmlMapLibraryEntrySeq" final = "#all">
 		<xsd:sequence>
 			<xsd:element name = "mapLibraryEntry" type = "xsd:string" maxOccurs = "unbounded"/>
 		</xsd:sequence>

@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: LinkType.xsd,v 1.6 2005/09/01 10:47:11 bass Exp $
+			$Id: LinkType.xsd,v 1.7 2005/09/02 13:22:58 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -36,7 +36,7 @@
 		</xsd:restriction>
 	</xsd:simpleType>
 
-	<xsd:complexType name = "XmlLinkType">
+	<xsd:complexType name = "XmlLinkType" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>
@@ -52,7 +52,7 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlLinkTypeSeq">
+	<xsd:complexType name = "XmlLinkTypeSeq" final = "#all">
 		<xsd:sequence>
 			<xsd:element name = "linkType" type = "configuration:XmlLinkType" minOccurs = "0" maxOccurs = "unbounded"/>
 		</xsd:sequence>

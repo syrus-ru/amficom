@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: NodeLink.xsd,v 1.9 2005/09/01 10:47:11 bass Exp $
+			$Id: NodeLink.xsd,v 1.10 2005/09/02 13:22:58 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -41,7 +41,7 @@
 		</xsd:keyref>
 	</xsd:element>
 
-	<xsd:complexType name = "XmlNodeLink">
+	<xsd:complexType name = "XmlNodeLink" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>
@@ -54,7 +54,7 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlNodeLinkSeq">
+	<xsd:complexType name = "XmlNodeLinkSeq" final = "#all">
 		<xsd:sequence>
 			<xsd:element name = "nodeLink" type = "map:XmlNodeLink" minOccurs = "0" maxOccurs = "unbounded"/>
 		</xsd:sequence>

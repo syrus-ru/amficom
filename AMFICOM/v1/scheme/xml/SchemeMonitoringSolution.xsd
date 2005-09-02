@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeMonitoringSolution.xsd,v 1.1 2005/08/31 20:17:24 bass Exp $
+			$Id: SchemeMonitoringSolution.xsd,v 1.2 2005/09/02 13:22:59 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -28,14 +28,14 @@
 		</xsd:key>
 	</xsd:element>
 
-	<xsd:complexType name = "XmlSchemeMonitoringSolution">
+	<xsd:complexType name = "XmlSchemeMonitoringSolution" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlSchemeMonitoringSolutionSeq">
+	<xsd:complexType name = "XmlSchemeMonitoringSolutionSeq" final = "#all">
 		<xsd:sequence>
 			<xsd:element name = "schemeMonitoringSolution" type = "scheme:XmlSchemeMonitoringSolution" minOccurs = "0" maxOccurs = "unbounded"/>
 		</xsd:sequence>

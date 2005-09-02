@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: TopologicalNode.xsd,v 1.10 2005/09/01 10:47:11 bass Exp $
+			$Id: TopologicalNode.xsd,v 1.11 2005/09/02 13:22:58 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -32,7 +32,7 @@
 		</xsd:key>
 	</xsd:element>
 
-	<xsd:complexType name = "XmlTopologicalNode">
+	<xsd:complexType name = "XmlTopologicalNode" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>
@@ -44,7 +44,7 @@
 		</xsd:complexContent>
 	</xsd:complexType>
 
-	<xsd:complexType name = "XmlTopologicalNodeSeq">
+	<xsd:complexType name = "XmlTopologicalNodeSeq" final = "#all">
 		<xsd:sequence>
 			<xsd:element name = "topologicalNode" type = "map:XmlTopologicalNode" minOccurs = "0" maxOccurs = "unbounded"/>
 		</xsd:sequence>
