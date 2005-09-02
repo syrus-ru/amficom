@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: MapLibrary.xml,v 1.10 2005/09/02 10:25:51 krupenn Exp $
+<!-- $Id: MapLibrary.xml,v 1.11 2005/09/02 12:42:53 krupenn Exp $
 -->
 <map:mapLibrary
 	xmlns:general="http://syrus.com/AMFICOM/general/xml"
@@ -18,10 +18,10 @@
 			<map:sort>collector</map:sort>
 			<map:dimension_x>2</map:dimension_x>
 			<map:dimension_y>6</map:dimension_y>
-			<map:characteristics>
-				<map:characteristic typecodename="color" value="-12566464"/>
-				<map:characteristic typecodename="thickness" value="4"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="color" value="-12566464"/>
+				<general:characteristic typecodename="thickness" value="4"/>
+			</general:characteristics>
 		</map:physicalLinkType>
 		<map:physicalLinkType>
 			<general:id>deflink2</general:id>
@@ -31,10 +31,10 @@
 			<map:sort>tunnel</map:sort>
 			<map:dimension_x>3</map:dimension_x>
 			<map:dimension_y>4</map:dimension_y>
-			<map:characteristics>
-				<map:characteristic typecodename="color" value="-16777216"/>
-				<map:characteristic typecodename="thickness" value="2"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="color" value="-16777216"/>
+				<general:characteristic typecodename="thickness" value="2"/>
+			</general:characteristics>
 		</map:physicalLinkType>
 		<map:physicalLinkType>
 			<general:id>deflink3</general:id>
@@ -44,11 +44,11 @@
 			<map:sort>indoor</map:sort>
 			<map:dimension_x>1</map:dimension_x>
 			<map:dimension_y>1</map:dimension_y>
-			<map:characteristics>
-				<map:characteristic typecodename="color" value="-16777216"/>
-				<map:characteristic typecodename="thickness" value="1"/>
-				<map:characteristic typecodename="style" value="dotted"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="color" value="-16777216"/>
+				<general:characteristic typecodename="thickness" value="1"/>
+				<general:characteristic typecodename="style" value="dotted"/>
+			</general:characteristics>
 		</map:physicalLinkType>
 		<map:physicalLinkType>
 			<general:id>deflink4</general:id>
@@ -58,11 +58,11 @@
 			<map:sort>submarine</map:sort>
 			<map:dimension_x>3</map:dimension_x>
 			<map:dimension_y>4</map:dimension_y>
-			<map:characteristics>
-				<map:characteristic typecodename="color" value="-16777216"/>
-				<map:characteristic typecodename="thickness" value="2"/>
-				<map:characteristic typecodename="style" value="dashed"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="color" value="-16777216"/>
+				<general:characteristic typecodename="thickness" value="2"/>
+				<general:characteristic typecodename="style" value="dashed"/>
+			</general:characteristics>
 		</map:physicalLinkType>
 		<map:physicalLinkType>
 			<general:id>deflink5</general:id>
@@ -72,11 +72,11 @@
 			<map:sort>overhead</map:sort>
 			<map:dimension_x>6</map:dimension_x>
 			<map:dimension_y>1</map:dimension_y>
-			<map:characteristics>
-				<map:characteristic typecodename="color" value="-16777216"/>
-				<map:characteristic typecodename="thickness" value="2"/>
-				<map:characteristic typecodename="style" value="dashdot"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="color" value="-16777216"/>
+				<general:characteristic typecodename="thickness" value="2"/>
+				<general:characteristic typecodename="style" value="dashdot"/>
+			</general:characteristics>
 		</map:physicalLinkType>
 	</map:physicalLinkTypes>
 	<map:siteNodeTypes>

@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<!-- $Id: Wells.xml,v 1.5 2005/09/02 10:25:51 krupenn Exp $ -->
+<!-- $Id: Wells.xml,v 1.6 2005/09/02 12:42:54 krupenn Exp $ -->
 <map:mapLibrary
 	xmlns:general="http://syrus.com/AMFICOM/general/xml"
 	xmlns:map="http://syrus.com/AMFICOM/map/xml"
@@ -18,10 +18,10 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kks1.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="1"/>
-				<map:characteristic typecodename="wellchannels" value="1"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="1"/>
+				<general:characteristic typecodename="wellchannels" value="1"/>
+			</general:characteristics>
 		</map:siteNodeType>
 		<map:siteNodeType>
 			<general:id>kks2</general:id>
@@ -31,10 +31,10 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kks2.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="2"/>
-				<map:characteristic typecodename="wellchannels" value="2"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="2"/>
+				<general:characteristic typecodename="wellchannels" value="2"/>
+			</general:characteristics>
 		</map:siteNodeType>
 		<map:siteNodeType>
 			<general:id>kks3</general:id>
@@ -44,10 +44,10 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kks3.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="6"/>
-				<map:characteristic typecodename="wellchannels" value="2"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="6"/>
+				<general:characteristic typecodename="wellchannels" value="2"/>
+			</general:characteristics>
 		</map:siteNodeType>
 		<map:siteNodeType>
 			<general:id>kks4</general:id>
@@ -57,10 +57,10 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kks4.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="12"/>
-				<map:characteristic typecodename="wellchannels" value="234"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="12"/>
+				<general:characteristic typecodename="wellchannels" value="234"/>
+			</general:characteristics>
 		</map:siteNodeType>
 		<map:siteNodeType>
 			<general:id>kks5</general:id>
@@ -70,10 +70,10 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kks5.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="24"/>
-				<map:characteristic typecodename="wellchannels" value="46"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="24"/>
+				<general:characteristic typecodename="wellchannels" value="46"/>
+			</general:characteristics>
 		</map:siteNodeType>
 
 		<map:siteNodeType>
@@ -84,8 +84,8 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kks5m.gif</map:image>
-			<map:characteristics>
-			</map:characteristics>
+			<general:characteristics>
+			</general:characteristics>
 		</map:siteNodeType>
 
 		<map:siteNodeType>
@@ -96,9 +96,9 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kksr3.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="6+6+6"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="6+6+6"/>
+			</general:characteristics>
 		</map:siteNodeType>
 		<map:siteNodeType>
 			<general:id>kksr4</general:id>
@@ -108,9 +108,9 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kksr4.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="12+12+12"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="12+12+12"/>
+			</general:characteristics>
 		</map:siteNodeType>
 		<map:siteNodeType>
 			<general:id>kksr5</general:id>
@@ -120,9 +120,9 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kksr5.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="24+24+24"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="24+24+24"/>
+			</general:characteristics>
 		</map:siteNodeType>
 
 		<map:siteNodeType>
@@ -133,9 +133,9 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kkss1.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="36"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="36"/>
+			</general:characteristics>
 		</map:siteNodeType>
 		<map:siteNodeType>
 			<general:id>kkssu1</general:id>
@@ -145,9 +145,9 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kkssu1.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="36"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="36"/>
+			</general:characteristics>
 		</map:siteNodeType>
 		<map:siteNodeType>
 			<general:id>kkssr1</general:id>
@@ -157,9 +157,9 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kkssr1.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="36"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="36"/>
+			</general:characteristics>
 		</map:siteNodeType>
 
 		<map:siteNodeType>
@@ -170,9 +170,9 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kkss2.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="48"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="48"/>
+			</general:characteristics>
 		</map:siteNodeType>
 		<map:siteNodeType>
 			<general:id>kkssu2</general:id>
@@ -182,9 +182,9 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kkssu2.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="48"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="48"/>
+			</general:characteristics>
 		</map:siteNodeType>
 		<map:siteNodeType>
 			<general:id>kkssr2</general:id>
@@ -194,9 +194,9 @@
 			<map:sort>well</map:sort>
 			<map:topological>true</map:topological>
 			<map:image>images/kkssr2.gif</map:image>
-			<map:characteristics>
-				<map:characteristic typecodename="wellcapacity" value="48"/>
-			</map:characteristics>
+			<general:characteristics>
+				<general:characteristic typecodename="wellcapacity" value="48"/>
+			</general:characteristics>
 		</map:siteNodeType>
 
 	</map:siteNodeTypes>
