@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.77 2005/08/31 13:25:08 bass Exp $
+ * $Id: SiteNodeType.java,v 1.78 2005/09/02 09:20:06 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,8 +75,8 @@ import com.syrus.util.Log;
  * ”злы специального типа CABLE_INLET должны быть прив€заны к какому-либо
  * узлу BUILDING или ATS и самосто€тельно не живут
  *  
- * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/08/31 13:25:08 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.78 $, $Date: 2005/09/02 09:20:06 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -329,6 +329,7 @@ public final class SiteNodeType extends StorableObjectType
 					FileOutputStream out = new FileOutputStream(file);
 					byte[] data = ((BitmapImageResource) ir).getImage();
 					out.write(data);
+					out.flush();
 					out.close();
 				} catch (Exception e) {
 					e.printStackTrace();
