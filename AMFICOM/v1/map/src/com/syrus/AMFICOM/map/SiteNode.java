@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.79 2005/09/02 13:47:36 krupenn Exp $
+ * $Id: SiteNode.java,v 1.80 2005/09/02 13:58:42 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: krupenn $
- * @version $Revision: 1.79 $, $Date: 2005/09/02 13:47:36 $
+ * @version $Revision: 1.80 $, $Date: 2005/09/02 13:58:42 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
@@ -437,12 +437,15 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 	}
 
 	public Set<SiteNode> getAttachedSiteNodes() {
-		LinkedIdsCondition condition = new LinkedIdsCondition(this.getAttachmentSiteNodeId(), SITENODE_CODE);
-		try {
-			return StorableObjectPool.<SiteNode>getStorableObjectsByCondition(condition, false);
-		} catch(ApplicationException e) {
-			Log.errorException(e);
-			return Collections.emptySet();
+		Identifier aSiteNodeId = this.getAttachmentSiteNodeId();
+		if(aSiteNodeId != null && !aSiteNodeId.equals(Identifier.VOID_IDENTIFIER)) {
+			LinkedIdsCondition condition = new LinkedIdsCondition(aSiteNodeId, SITENODE_CODE);
+			try {
+				return StorableObjectPool.<SiteNode>getStorableObjectsByCondition(condition, false);
+			} catch(ApplicationException e) {
+				Log.errorException(e);
+			}
 		}
+		return Collections.emptySet();
 	}
 }
