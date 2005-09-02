@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.78 2005/09/02 09:20:06 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.79 2005/09/02 12:44:10 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: krupenn $
- * @version $Revision: 1.78 $, $Date: 2005/09/02 09:20:06 $
+ * @version $Revision: 1.79 $, $Date: 2005/09/02 12:44:10 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -480,7 +480,7 @@ public final class SiteNodeType extends StorableObjectType
 		// and create new bitmap image resource
 		try {
 			File file = new File(codename);
-			FileInputStream in = new FileInputStream(file);
+			FileInputStream in = new FileInputStream(file.getAbsolutePath());
 			byte[] data = new byte[(int) file.length()];
 			in.read(data);
 			in.close();
