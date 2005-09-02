@@ -59,7 +59,7 @@ public class MarkEditor extends DefaultStorableObjectEditor {
 		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.linkLabel.setText(LangModelMap.getString("PhysicalLink"));
+		this.linkLabel.setText(LangModelMap.getString("physicallink"));
 		this.longLabel.setText(LangModelMap.getString("Longitude"));
 		this.latLabel.setText(LangModelMap.getString("Latitude"));
 
