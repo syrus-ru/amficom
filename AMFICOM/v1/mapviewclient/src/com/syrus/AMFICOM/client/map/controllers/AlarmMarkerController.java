@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmMarkerController.java,v 1.15 2005/08/11 17:08:10 arseniy Exp $
+ * $Id: AlarmMarkerController.java,v 1.16 2005/09/02 09:33:50 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ import java.awt.Image;
 
 import javax.swing.ImageIcon;
 
+import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
@@ -24,8 +25,8 @@ import com.syrus.AMFICOM.mapview.AlarmMarker;
 
 /**
  * Контроллер маркера сигнала тревоги.
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/08/11 17:08:10 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2005/09/02 09:33:50 $
  * @module mapviewclient
  */
 public final class AlarmMarkerController extends MarkerController {
@@ -91,11 +92,17 @@ public final class AlarmMarkerController extends MarkerController {
 
 		final AlarmMarker marker = (AlarmMarker) mapElement;
 
-		final String s1 = LangModelMap.getString("Alarm") + " " + marker.getName()
-				+ " (" + LangModelMap.getString("Path_lowercase") + " " + marker.getMeasurementPath().getName() + ") "
-				+ LangModelMap.getString("Distance_lowercase") + " - " + super.getFromStartLengthLf(marker);
+		try {
+			double distance = super.getFromStartLengthLf(marker);
+			final String s1 = LangModelMap.getString("Alarm") + " " + marker.getName()
+					+ " (" + LangModelMap.getString("Path_lowercase") + " " + marker.getMeasurementPath().getName() + ") "
+					+ LangModelMap.getString("Distance_lowercase") + " - " + distance;
 
-		return s1;
+			return s1;
+		} catch(MapException e) {
+			e.printStackTrace();
+		}
+		return null;
 	}
 
 	/**
