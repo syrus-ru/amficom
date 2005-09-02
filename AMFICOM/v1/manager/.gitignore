@@ -17,3 +17,6 @@ build.xml
 .idl
 .#*
 images
+common.properties
+manager.properties
+Application.properties
