@@ -1,5 +1,5 @@
 /*
- * $Id: IconedTreeUI.java,v 1.6 2005/08/19 14:06:09 bob Exp $
+ * $Id: IconedTreeUI.java,v 1.7 2005/09/02 14:21:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.client.UI.tree;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
-import java.util.Iterator;
 import java.util.LinkedList;
 
 import javax.swing.JButton;
@@ -33,7 +32,7 @@ import com.syrus.AMFICOM.logic.Populatable;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.6 $, $Date: 2005/08/19 14:06:09 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/02 14:21:55 $
  * @module commonclient
  */
 
@@ -43,7 +42,7 @@ public class IconedTreeUI {
 	IconedTreeToolBar toolBar;
 	protected boolean linkObjects = false;
 	
-	public IconedTreeUI(Item rootItem) {
+	public IconedTreeUI(final Item rootItem) {
 		this.treeUI = new LogicalTreeUI(rootItem);
 		this.treeUI.setRenderer(IconedNode.class, IconedRenderer.getInstance());
 		this.treeUI.setRenderer(PopulatableIconedNode.class, IconedRenderer.getInstance());
@@ -73,55 +72,66 @@ public class IconedTreeUI {
 	}
 	
 	public JToolBar getToolBar() {
-		if (this.toolBar == null)
+		if (this.toolBar == null) {
 			this.toolBar = new IconedTreeToolBar();
+		}
 		return this.toolBar;
 	}
 	
 	public Item findNode(Item item, Object object, boolean usePopulate) {
-		if (item.getObject().equals(object))
+		if (item.getObject().equals(object)) {
 			return item;
-		if (usePopulate && item instanceof Populatable)
-			((Populatable)item).populate();
-		
-		for (Iterator it = item.getChildren().iterator(); it.hasNext();) {
-			Item child = (Item)it.next();
-			if (child.getObject().equals(object))
-				return child;
 		}
-		for (Iterator it = item.getChildren().iterator(); it.hasNext();) {
-			Item child = (Item)it.next();
-			Item found = findNode(child, object, usePopulate);
-			if (found != null)
+		if (usePopulate && item instanceof Populatable) {
+			((Populatable)item).populate();
+		}
+		
+		for (final Item child : item.getChildren()) {
+			if (child.getObject().equals(object)) {
+				return child;
+			}
+		}
+		for (final Item child : item.getChildren()) {
+			final Item found = findNode(child, object, usePopulate);
+			if (found != null) {
 				return found;
+			}
 		}
 		return null;
 	}
 	
-	public Collection findNodes(Item item, Collection objects, boolean usePopulate) {
-		Collection<Item> items = new LinkedList<Item>();
-		fillFoundNodes(item, objects, items, usePopulate);
+	public Collection findNodes(final Item item, 
+	                            final Collection objects, 
+	                            final boolean usePopulate) {
+		final Collection<Item> items = new LinkedList<Item>();
+		this.fillFoundNodes(item, objects, items, usePopulate);
 		return items;
 	}
 	
-	private void fillFoundNodes(Item item, Collection objects, Collection<Item> items, boolean usePopulate) {
-		if(objects.contains(item.getObject()))
+	private void fillFoundNodes(final Item item, 
+	                            final Collection objects, 
+	                            final Collection<Item> items, 
+	                            final boolean usePopulate) {
+		if(objects.contains(item.getObject())) {
 			items.add(item);
-		if (usePopulate && item instanceof Populatable)
+		}
+		if (usePopulate && item instanceof Populatable) {
 			((Populatable)item).populate();
-		for(Iterator iter = item.getChildren().iterator(); iter.hasNext();) {
-			Item childNode = (Item )iter.next();
-			fillFoundNodes(childNode, objects, items, usePopulate);
+		}
+		for(final Item childNode : item.getChildren()) {
+			this.fillFoundNodes(childNode, objects, items, usePopulate);
 		}
 	}
 	
 	public void updateRecursively(Item item) {
 		if (item instanceof Populatable) {
 			Populatable populatable = (Populatable)item;
-			if (populatable.isPopulated())
-				populatable.populate();
-			for (Iterator it = item.getChildren().iterator(); it.hasNext();)
-				updateRecursively((Item)it.next());
+			if (populatable.isPopulated()) {
+				populatable.repopulate();
+			}
+			for(final Item item2 : item.getChildren()) {
+				this.updateRecursively(item2);
+			}
 		}
 	}
 	
