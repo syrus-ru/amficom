@@ -1,5 +1,5 @@
 /*-
- * $Id: MapPropertiesEventHandler.java,v 1.4 2005/08/24 08:19:59 krupenn Exp $
+ * $Id: MapPropertiesEventHandler.java,v 1.5 2005/09/02 09:45:37 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/08/24 08:19:59 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/02 09:45:37 $
  * @module schemeclient
  */
 
@@ -94,10 +94,6 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 				}
 				long d2 = System.currentTimeMillis();
 				VisualManager vm = MapVisualManager.getVisualManager(mapElement);
-				if(vm instanceof MarkerEditor) {
-					MarkerEditor markerEditor = (MarkerEditor )vm;
-					markerEditor.setLogicalNetLayer(lnl);
-				}
 				long d3 = System.currentTimeMillis();
 				this.frame.setVisualManager(vm);
 				long d4 = System.currentTimeMillis();
@@ -148,6 +144,10 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 				else if(editor instanceof CablePathAddEditor) {
 					CablePathAddEditor cableEditor = (CablePathAddEditor )editor;
 					cableEditor.setNetMapViewer(netMapViewer);
+				}
+				else if(editor instanceof MarkerEditor) {
+					MarkerEditor markerEditor = (MarkerEditor )editor;
+					markerEditor.setNetMapViewer(netMapViewer);
 				}
 				if(selectedObject != null) {
 					if(previousEditor != null) {
