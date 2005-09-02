@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.33 2005/08/20 20:04:45 arseniy Exp $
+ * $Id: MeasurementPathController.java,v 1.34 2005/09/02 09:40:51 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,6 +14,7 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
+import java.util.Set;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -41,8 +42,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 
 /**
  * Контроллер топологическиго пути.
- * @author $Author: arseniy $
- * @version $Revision: 1.33 $, $Date: 2005/08/20 20:04:45 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.34 $, $Date: 2005/09/02 09:40:51 $
  * @module mapviewclient
  */
 public final class MeasurementPathController extends AbstractLinkController {
@@ -258,35 +259,12 @@ public final class MeasurementPathController extends AbstractLinkController {
 	 * не найден
 	 */
 	public Identifier getMonitoredElementId(final MeasurementPath path) {
-		final MonitoredElement me = this.getMonitoredElement(path);
-		if (me != null) {
-			return me.getId();
-		}
-		return null;
+		final TransmissionPath tp = path.getSchemePath().getTransmissionPath();
+		if(tp == null)
+			return null;
+		Set<Identifier> monitoredElementIds = tp.getMonitoredElementIds();
+		if(monitoredElementIds.size() == 0)
+			return null;
+		return monitoredElementIds.iterator().next();
 	}
-
-	/**
-	 * Получить исследуемый объект, которому соответствует
-	 * измерительный путь.
-	 * @param path путь
-	 * @return исследуемый объект или <code>null</code>, если исследуемый объект 
-	 * не найден
-	 */
-	public MonitoredElement getMonitoredElement(final MeasurementPath path) {
-		MonitoredElement me = null;
-		try {
-			final TransmissionPath tp = path.getSchemePath().getTransmissionPath();
-
-			me = StorableObjectPool.getStorableObject(tp.getMonitoredElementIds().iterator().next(), true);
-		} catch (CommunicationException e) {
-			e.printStackTrace();
-		} catch (DatabaseException e) {
-			e.printStackTrace();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
-		return me;
-	}
-
 }
