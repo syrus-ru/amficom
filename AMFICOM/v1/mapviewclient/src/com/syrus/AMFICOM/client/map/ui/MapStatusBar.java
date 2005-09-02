@@ -1,5 +1,5 @@
 /*
- * $Id: MapStatusBar.java,v 1.17 2005/08/17 14:14:20 arseniy Exp $
+ * $Id: MapStatusBar.java,v 1.18 2005/09/02 09:45:59 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/17 14:14:20 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/09/02 09:45:59 $
  * @module mapviewclient
  */
 public final class MapStatusBar extends JPanel {
@@ -149,7 +149,7 @@ public final class MapStatusBar extends JPanel {
 		constraints.weighty = 0;
 		constraints.anchor = GridBagConstraints.WEST;
 		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = new Insets(1, 0, 1, 0);
+		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
 		constraints.ipadx = 0;
 		constraints.ipady = 0;
 		this.add(this.longitudeLabel, constraints);
