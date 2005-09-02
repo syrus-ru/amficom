@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.119 2005/08/29 12:27:24 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.120 2005/09/02 09:27:39 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.119 $, $Date: 2005/08/29 12:27:24 $
+ * @version $Revision: 1.120 $, $Date: 2005/09/02 09:27:39 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer {
@@ -934,7 +934,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.119 $, $Date: 2005/08/29 12:27:24 $
+	 * @version $Revision: 1.120 $, $Date: 2005/09/02 09:27:39 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -997,14 +997,15 @@ public final class LogicalNetLayer {
 
 		final Map map = this.getMapView().getMap();
 
-		final Set<NodeLink> allNodeLinks = new HashSet<NodeLink>(this.mapView.getMap().getNodeLinks());
+		final Set<NodeLink> allNodeLinks = new HashSet<NodeLink>(this.mapView.getMap().getAllNodeLinks());
+		final Set<AbstractNode> allNodes = new HashSet<AbstractNode>(this.mapView.getMap().getNodes());
 		final long t2 = System.currentTimeMillis();
 
 		if (this.getMapState().getShowMode() == MapState.SHOW_MEASUREMENT_PATH) {
 			for (final MeasurementPath measurementPath : this.mapView.getMeasurementPaths()) {
 				final Set<AbstractNode> nodes = new HashSet<AbstractNode>();
 				final Set<NodeLink> nodeLinks = new HashSet<NodeLink>();
-				this.fillOptimizationSets(measurementPath, allNodeLinks, nodes, nodeLinks);
+				this.fillOptimizationSets(measurementPath, allNodes, allNodeLinks, nodes, nodeLinks);
 
 				final MeasurementPathController controller = (MeasurementPathController) this.getMapViewController().getController(measurementPath);
 				this.calculateVisualElements(nodes,
@@ -1022,7 +1023,7 @@ public final class LogicalNetLayer {
 			for (final CablePath cablePath : this.mapView.getCablePaths()) {
 				final Set<AbstractNode> nodes = new HashSet<AbstractNode>();
 				final Set<NodeLink> nodeLinks = new HashSet<NodeLink>();
-				this.fillOptimizationSets(cablePath, allNodeLinks, nodes, nodeLinks);
+				this.fillOptimizationSets(cablePath, allNodes, allNodeLinks, nodes, nodeLinks);
 
 				final CableController controller = (CableController) this.getMapViewController().getController(cablePath);
 				this.calculateVisualElements(nodes, nodeLinks, controller.getColor(cablePath), controller.getStroke(cablePath), false);
@@ -1045,6 +1046,11 @@ public final class LogicalNetLayer {
 					MapPropertiesManager.getStroke(),
 					true);
 		}
+		
+		this.visualElements.addAll(this.getMapView().getMarkers());
+//		for(AbstractNode node : allNodes) {
+//			this.visualElements.add(node);
+//		}
 		final long endTime = System.currentTimeMillis();
 		Log.debugMessage("LogicalNetLayer.calculateVisualLinks | "
 				+ "optimized map for " + (endTime - startTime) + "ms. Got " + this.visualElements.size() + " visual links.\n"
@@ -1060,6 +1066,7 @@ public final class LogicalNetLayer {
 	}
 
 	private void fillOptimizationSets(final CablePath cablePath,
+			final Set<AbstractNode> allNodes, 
 			final Set<NodeLink> allNodeLinks,
 			final Set<AbstractNode> nodes,
 			final Set<NodeLink> nodeLinks) {
@@ -1071,6 +1078,8 @@ public final class LogicalNetLayer {
 				nodes.add(nodeLink.getEndNode());
 				nodeLinks.add(nodeLink);
 				allNodeLinks.remove(nodeLink);
+				allNodes.remove(nodeLink.getStartNode());
+				allNodes.remove(nodeLink.getEndNode());
 			}
 		}
 		final long t2 = System.currentTimeMillis();
@@ -1078,6 +1087,7 @@ public final class LogicalNetLayer {
 	}
 
 	private void fillOptimizationSets(final MeasurementPath measurementPath,
+			final Set<AbstractNode> allNodes, 
 			final Set<NodeLink> allNodeLinks,
 			final Set<AbstractNode> nodes,
 			final Set<NodeLink> nodeLinks) {
@@ -1090,6 +1100,8 @@ public final class LogicalNetLayer {
 					nodes.add(nodeLink.getEndNode());
 					nodeLinks.add(nodeLink);
 					allNodeLinks.remove(nodeLink);
+					allNodes.remove(nodeLink.getStartNode());
+					allNodes.remove(nodeLink.getEndNode());
 				}
 			}
 		}
@@ -1104,8 +1116,6 @@ public final class LogicalNetLayer {
 			final boolean pullAttributesFromController) throws MapDataException, MapConnectionException {
 
 		this.searchLinksForNodes(nodeLinks);
-
-		final Map map = this.getMapView().getMap();
 
 		final long t1 = System.currentTimeMillis();
 		// Таблица, в которой содержится информация о том, обрабатывался ли
