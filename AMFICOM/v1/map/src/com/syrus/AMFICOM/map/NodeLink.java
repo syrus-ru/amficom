@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.78 2005/08/31 13:25:08 bass Exp $
+ * $Id: NodeLink.java,v 1.79 2005/09/02 09:19:46 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,6 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlNodeLink;
 import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
-import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.map.xml.XmlNodeLink;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
@@ -51,8 +50,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bass $
- * @version $Revision: 1.78 $, $Date: 2005/08/31 13:25:08 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.79 $, $Date: 2005/09/02 09:19:46 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
