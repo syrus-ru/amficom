@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.7 2005/09/02 13:24:38 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.8 2005/09/02 13:47:09 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.7 $, $Date: 2005/09/02 13:24:38 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.8 $, $Date: 2005/09/02 13:47:09 $
  * @module map
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -77,8 +77,9 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 				}
 			case SITENODE_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-				case SITENODE_CODE:
 				case UPDIKE_CODE:
+					return false;
+				case SITENODE_CODE:
 					return super.getQuery(SiteNodeWrapper.COLUMN_ATTACHMENT_SITE_NODE_ID);
 				default:
 					throw newExceptionLinkedEntityIllegal();

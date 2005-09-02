@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.17 2005/09/02 13:24:38 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.18 2005/09/02 13:47:09 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,12 +24,13 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 
 /**
- * @version $Revision: 1.17 $
- * @author $Author: max $
+ * @version $Revision: 1.18 $
+ * @author $Author: krupenn $
  * @module map
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -87,8 +88,9 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case SITENODE_CODE:
 				final SiteNode siteNode = (SiteNode) storableObject;
 				switch (this.linkedEntityCode) {
-				case SITENODE_CODE:
 				case UPDIKE_CODE:	
+					return false;
+				case SITENODE_CODE:
 					return super.conditionTest(siteNode.getAttachmentSiteNodeId());
 				default:
 					throw newExceptionLinkedEntityIllegal();
