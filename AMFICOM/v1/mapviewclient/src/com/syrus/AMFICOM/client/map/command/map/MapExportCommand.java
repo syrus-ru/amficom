@@ -1,5 +1,5 @@
 /*
- * $Id: MapExportCommand.java,v 1.23 2005/08/29 12:11:03 krupenn Exp $ Syrus
+ * $Id: MapExportCommand.java,v 1.24 2005/09/02 09:32:28 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
  * по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/08/29 12:11:03 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/02 09:32:28 $
  * @module mapviewclient
  */
 public class MapExportCommand extends ExportCommand {
@@ -91,10 +91,12 @@ public class MapExportCommand extends ExportCommand {
 
 		XmlOptions xmlOptions = new XmlOptions();
 		xmlOptions.setSavePrettyPrint();
+		xmlOptions.setSavePrettyPrintIndent(2);
 		java.util.Map prefixes = new HashMap();
 		prefixes.put("http://syrus.com/AMFICOM/map/xml", "map");
 		prefixes.put("http://syrus.com/AMFICOM/general/xml", "general");
 		xmlOptions.setSaveSuggestedPrefixes(prefixes);
+		xmlOptions.setSaveAggressiveNamespaces();
 
 		MapsDocument doc = 
 			MapsDocument.Factory.newInstance(xmlOptions);

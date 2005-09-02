@@ -1,5 +1,5 @@
 /*
- * $Id: MapLibraryExportCommand.java,v 1.6 2005/08/28 19:17:53 bass Exp $ Syrus
+ * $Id: MapLibraryExportCommand.java,v 1.7 2005/09/02 09:32:28 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -45,8 +45,8 @@ import com.syrus.util.Log;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/08/28 19:17:53 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2005/09/02 09:32:28 $
  * @module mapviewclient
  */
 public class MapLibraryExportCommand extends ExportCommand {
@@ -126,9 +126,12 @@ public class MapLibraryExportCommand extends ExportCommand {
 
 		XmlOptions xmlOptions = new XmlOptions();
 		xmlOptions.setSavePrettyPrint();
+		xmlOptions.setSavePrettyPrintIndent(2);
 		java.util.Map prefixes = new HashMap();
 		prefixes.put("http://syrus.com/AMFICOM/map/xml", "map");
+		prefixes.put("http://syrus.com/AMFICOM/general/xml", "general");
 		xmlOptions.setSaveSuggestedPrefixes(prefixes);
+		xmlOptions.setSaveAggressiveNamespaces();
 
 		MapLibraryDocument doc = 
 			MapLibraryDocument.Factory.newInstance(xmlOptions);
