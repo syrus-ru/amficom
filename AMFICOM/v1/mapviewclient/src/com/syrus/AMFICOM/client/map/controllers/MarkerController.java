@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.33 2005/08/25 16:01:41 krupenn Exp $
+ * $Id: MarkerController.java,v 1.34 2005/09/02 09:39:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -9,6 +9,7 @@
 
 package com.syrus.AMFICOM.client.map.controllers;
 
+import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.List;
@@ -41,7 +42,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Контроллер маркера.
  * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/08/25 16:01:41 $
+ * @version $Revision: 1.34 $, $Date: 2005/09/02 09:39:20 $
  * @module mapviewclient
  */
 public class MarkerController extends AbstractNodeController {
@@ -79,6 +80,18 @@ public class MarkerController extends AbstractNodeController {
 		}
 	}
 
+	@Override
+	public Identifier getImageId(final AbstractNode node) {
+		return imageId;
+	}
+
+	/**
+	 * {@inheritDoc}
+	 */
+	@Override
+	public Image getImage(final AbstractNode node) {
+		return MapPropertiesManager.getScaledImage(imageId);
+	}
 	/**
 	 * {@inheritDoc}
 	 */
@@ -146,7 +159,7 @@ public class MarkerController extends AbstractNodeController {
 		final NodeLink nodeLink = marker.getNodeLink();
 		final CablePath cablePath = marker.getCablePath();
 
-		final double kd = cablePath.getKd();
+//		final double kd = cablePath.getKd();
 		double dist = startToThis(marker);
 
 		final List<NodeLink> pNodeLinks = nodeLink.getPhysicalLink().getNodeLinks();
@@ -165,7 +178,7 @@ public class MarkerController extends AbstractNodeController {
 			}
 		}
 
-		return dist * kd;
+		return dist;
 	}
 
 	/**
@@ -280,8 +293,10 @@ public class MarkerController extends AbstractNodeController {
 	 * Возвращает физическое расстояние от маркера до начала измерительного пути.
 	 * @param marker маркер
 	 * @return расстояние
+	 * @throws MapDataException 
+	 * @throws MapConnectionException 
 	 */
-	public double getFromStartLengthLo(final Marker marker) {
+	public double getFromStartLengthLo(final Marker marker) throws MapConnectionException, MapDataException {
 		final SchemePath schemePath = marker.getMeasurementPath().getSchemePath();
 		if (schemePath == null) {
 			return this.getFromStartLengthLf(marker);
@@ -477,8 +492,8 @@ public class MarkerController extends AbstractNodeController {
 	 *        маркер
 	 * @return топологическое расстояние
 	 */
+	/*
 	public double getFromStartLengthLt(final Marker marker) {
-/*
 		double pathLength = 0;
 
 		Vector nl = transmissionPath.sortNodeLinks();
@@ -521,100 +536,48 @@ public class MarkerController extends AbstractNodeController {
 				path_length += mple.getSizeInDoubleLt();
 			}
 		}// for(Enumeration plen
-*/
 		return 0;
 	}
+*/
 
 	/**
 	 * Получить физическое расстояние от начала измерительного пути до маркера.
 	 * @param marker маркер
 	 * @return физическое расстояние
+	 * @throws MapDataException 
+	 * @throws MapConnectionException 
 	 */
-	public double getFromStartLengthLf(final Marker marker) {
-/*
-		if(schemePath == null)
-			return 0.0D;
+	public double getFromStartLengthLf(final Marker marker) throws MapConnectionException, MapDataException {
+		final MeasurementPath measurementPath = marker.getMeasurementPath();
 
-		Vector nl = transmissionPath.sortNodeLinks();
-		Vector pl = transmissionPath.sortPhysicalLinks();
-		Vector n = transmissionPath.sortNodes();
+		double physicalDistance = 0.0D;
 		
-		double path_length = 0;
-		MapNodeElement bufferNode = transmissionPath.startNode;
-
-		boolean point_reached = false;
-		MapNodeLinkElement mnle;
-
-		PathElement pes[] = new PathElement[schemePath.links.size()];
-		for(int i = 0; i < schemePath.links.size(); i++)
-		{
-			PathElement pe = (PathElement )schemePath.links.get(i);
-			pes[pe.n] = pe;
-		}
-		Vector pvec = new Vector();
-		for(int i = 0; i < pes.length; i++)
-		{
-			pvec.add(pes[i]);
-		}
-
-		Enumeration enum = pvec.elements();
-		PathElement pe = null;
-
-		for(Enumeration plen = pl.elements(); plen.hasMoreElements() && !point_reached;)
-		{
-			MapPhysicalLinkElement mple = (MapPhysicalLinkElement )plen.nextElement();
-
-			pe = (PathElement )enum.nextElement();
-			bufferNode.countPhysicalLength(schemePath, pe, enum);
-			path_length += bufferNode.getPhysicalLength();
-
-			if(bufferNode.equals(mple.startNode))
-				bufferNode = mple.endNode;
-			else
-				bufferNode = mple.startNode;
-
-			if(nodeLink.PhysicalLinkID.equals(mple.getId()))
-			{
-				Vector nl2 = mple.sortNodeLinks();
-				point_reached = true;
-				double temp_length = 0.0D; // Count topological length over cable until marker reached
-				boolean direct_order = (nl.indexOf(nl2.get(0)) <= nl.indexOf(nodeLink));
-				int size = nl2.size();
-				for(int i = 0; i < size; i++)
-				{
-					if(direct_order)
-						mnle = (MapNodeLinkElement )nl2.get(i);
-					else
-						mnle = (MapNodeLinkElement )nl2.get(size - i - 1);
-							
-					if ( mnle == nodeLink)
-					{
-						if ( n.indexOf(startNode) < n.indexOf(endNode))
-							temp_length += getSizeInDoubleLt();
-						else
-							temp_length += nodeLink.getSizeInDoubleLt() - getSizeInDoubleLt();
-						return path_length + mple.getKd() * temp_length;// Convert to physical length
+		for(CablePath cablePath : measurementPath.getSortedCablePaths()) {
+			if(marker.getCablePath().equals(cablePath)) {
+				double cumulativeTopologicalDistance = 0.0D;
+				for(NodeLink nodeLink : cablePath.getSortedNodeLinks()) {
+					if(marker.getNodeLink().equals(nodeLink)) {
+						cumulativeTopologicalDistance += getPhysicalDistanceFromLeft(marker);
+						break;
 					}
-					else
-					{
-						temp_length += mnle.getSizeInDoubleLt();
-					}
-				}// for(int i
-			}// if(nodeLink.PhysicalLinkID
-			else
-			{
-				path_length += mple.getSizeInDoubleLf();
+					cumulativeTopologicalDistance += nodeLink.getLengthLt();
+				}
+				double kd = cablePath.getKd();
+				physicalDistance += cumulativeTopologicalDistance * kd;
+				break;
 			}
-		}// for(Enumeration plen
-*/
-		return 0.0D;
+			physicalDistance += cablePath.getLengthLf();
+		}
+		return physicalDistance;
 	}
 
 	/**
 	 * Послать сообщения что маркер создан.
 	 * @param marker маркер
+	 * @throws MapDataException 
+	 * @throws MapConnectionException 
 	 */
-	public void notifyMarkerCreated(final Marker marker) {
+	public void notifyMarkerCreated(final Marker marker) throws MapConnectionException, MapDataException {
 		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MarkerEvent(this,
 				MarkerEvent.MARKER_CREATED_EVENT,
 				marker.getId(),
@@ -639,8 +602,10 @@ public class MarkerController extends AbstractNodeController {
 	/**
 	 * Послать сообщения что маркер перемещается.
 	 * @param marker маркер
+	 * @throws MapDataException 
+	 * @throws MapConnectionException 
 	 */
-	public void notifyMarkerMoved(final Marker marker) {
+	public void notifyMarkerMoved(final Marker marker) throws MapConnectionException, MapDataException {
 		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MarkerEvent(this,
 				MarkerEvent.MARKER_MOVED_EVENT,
 				marker.getId(),
