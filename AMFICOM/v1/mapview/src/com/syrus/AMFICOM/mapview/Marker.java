@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.35 2005/08/24 08:16:09 krupenn Exp $
+ * $Id: Marker.java,v 1.36 2005/09/02 16:41:21 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.mapview;
 
 import java.util.Date;
+import java.util.Iterator;
+import java.util.List;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -46,7 +48,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *
  *
  *
- * @version $Revision: 1.35 $, $Date: 2005/08/24 08:16:09 $
+ * @version $Revision: 1.36 $, $Date: 2005/09/02 16:41:21 $
  * @module mapview
  * @author $Author: krupenn $
  */
@@ -80,7 +82,7 @@ public class Marker extends AbstractNode {
 	/**
 	 * Текущий кабель, на котором находится маркер.
 	 */
-	protected CablePath cpath;
+	protected CablePath cablePath;
 	/**
 	 * Текущий фрагмент линии, на котором находится маркер.
 	 */
@@ -270,27 +272,71 @@ public class Marker extends AbstractNode {
 	}
 
 	public NodeLink previousNodeLink() {
-		NodeLink nLink;
-		final int index = this.measurementPath.getSortedNodeLinks().indexOf(this.nodeLink);
-		if (index == 0) {
-			nLink = null;
+		List<NodeLink> nodeLinks = this.measurementPath.getSortedNodeLinks();
+		NodeLink prevNodeLink = null;
+		for(final Iterator<NodeLink> iter = nodeLinks.iterator(); iter.hasNext();) {
+			final NodeLink bufNodeLink = iter.next();
+			if(bufNodeLink.equals(this.nodeLink))
+				return prevNodeLink;
+			prevNodeLink = bufNodeLink;
 		}
-		else {
-			nLink = (NodeLink) (this.measurementPath.getSortedNodeLinks().get(index - 1));
-		}
-		return nLink;
+		return null;
+//		NodeLink nLink;
+//		final int index = this.measurementPath.getSortedNodeLinks().indexOf(this.nodeLink);
+//		if (index == 0) {
+//			nLink = null;
+//		}
+//		else {
+//			nLink = (NodeLink) (this.measurementPath.getSortedNodeLinks().get(index - 1));
+//		}
+//		return nLink;
 	}
 
 	public NodeLink nextNodeLink() {
-		NodeLink nLink;
-		final int index = this.measurementPath.getSortedNodeLinks().indexOf(this.nodeLink);
-		if (index == this.measurementPath.getSortedNodeLinks().size() - 1) {
-			nLink = null;
+		List<NodeLink> nodeLinks = this.measurementPath.getSortedNodeLinks();
+		for(final Iterator<NodeLink> iter = nodeLinks.iterator(); iter.hasNext();) {
+			final NodeLink bufNodeLink = iter.next();
+			if(bufNodeLink.equals(this.nodeLink)) {
+				if(iter.hasNext())
+					return iter.next();
+				return null;
+			}
 		}
-		else {
-			nLink = (NodeLink) (this.measurementPath.getSortedNodeLinks().get(index + 1));
+		return null;
+//		NodeLink nLink;
+//		final int index = this.measurementPath.getSortedNodeLinks().indexOf(this.nodeLink);
+//		if (index == this.measurementPath.getSortedNodeLinks().size() - 1) {
+//			nLink = null;
+//		}
+//		else {
+//			nLink = (NodeLink) (this.measurementPath.getSortedNodeLinks().get(index + 1));
+//		}
+//		return nLink;
+	}
+
+	public CablePath previousCablePath() {
+		List<CablePath> cablePaths = this.measurementPath.getSortedCablePaths();
+		CablePath prevCablePath = null;
+		for(final Iterator<CablePath> iter = cablePaths.iterator(); iter.hasNext();) {
+			final CablePath bufCablePath = iter.next();
+			if(bufCablePath.equals(this.cablePath))
+				return prevCablePath;
+			prevCablePath = bufCablePath;
 		}
-		return nLink;
+		return null;
+	}
+
+	public CablePath nextCablePath() {
+		List<CablePath> cablePaths = this.measurementPath.getSortedCablePaths();
+		for(final Iterator<CablePath> iter = cablePaths.iterator(); iter.hasNext();) {
+			final CablePath bufCablePath = iter.next();
+			if(bufCablePath.equals(this.cablePath)) {
+				if(iter.hasNext())
+					return iter.next();
+				return null;
+			}
+		}
+		return null;
 	}
 
 //	public SiteNode getLeft() {
@@ -363,11 +409,11 @@ public class Marker extends AbstractNode {
 	}
 
 	public CablePath getCablePath() {
-		return this.cpath;
+		return this.cablePath;
 	}
 
 	public void setCablePath(final CablePath cpath) {
-		this.cpath = cpath;
+		this.cablePath = cpath;
 	}
 
 	public void setMonitoringElementId(final Identifier monitoringElementId) {
