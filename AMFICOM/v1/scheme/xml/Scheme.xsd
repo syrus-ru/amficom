@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: Scheme.xsd,v 1.4 2005/09/01 13:48:19 bass Exp $
+			$Id: Scheme.xsd,v 1.5 2005/09/02 07:07:22 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -70,7 +70,7 @@
 						minOccurs = "0"/>
 					<xsd:choice
 						minOccurs = "0">
-						<xsd:element name = "symbolId"/>
+						<xsd:element name = "symbolId" type = "general:XmlIdentifier"/>
 						<xsd:element name = "symbolCodename">
 							<xsd:simpleType>
 								<xsd:restriction base = "xsd:string">
@@ -90,7 +90,7 @@
 					</xsd:choice>
 					<xsd:choice
 						minOccurs = "0">
-						<xsd:element name = "ugoCellId"/>
+						<xsd:element name = "ugoCellId" type = "general:XmlIdentifier"/>
 						<xsd:element name = "ugoCellCodename">
 							<xsd:simpleType>
 								<xsd:restriction base = "xsd:string">
@@ -110,7 +110,7 @@
 					</xsd:choice>
 					<xsd:choice
 						minOccurs = "0">
-						<xsd:element name = "schemeCellId"/>
+						<xsd:element name = "schemeCellId" type = "general:XmlIdentifier"/>
 						<xsd:element name = "schemeCellCodename">
 							<xsd:simpleType>
 								<xsd:restriction base = "xsd:string">
