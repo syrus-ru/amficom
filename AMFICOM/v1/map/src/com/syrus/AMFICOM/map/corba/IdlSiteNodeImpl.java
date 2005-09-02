@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSiteNodeImpl.java,v 1.5 2005/09/01 14:12:06 max Exp $
+ * $Id: IdlSiteNodeImpl.java,v 1.6 2005/09/02 07:13:15 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.5 $, $Date: 2005/09/01 14:12:06 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/02 07:13:15 $
  * @module map
  */
 final class IdlSiteNodeImpl extends IdlSiteNode {
@@ -44,7 +44,7 @@ final class IdlSiteNodeImpl extends IdlSiteNode {
 			final String city,
 			final String street,
 			final String building,
-			IdlIdentifier attachmentSiteNodeId) {
+			final IdlIdentifier attachmentSiteNodeId) {
 		this.id = id;
 		this.created = created;
 		this.modified = modified;
