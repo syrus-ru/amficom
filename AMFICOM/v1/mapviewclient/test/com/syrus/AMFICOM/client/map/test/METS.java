@@ -1,5 +1,5 @@
 /**
- * $Id: METS.java,v 1.10 2005/08/10 09:25:44 krupenn Exp $
+ * $Id: METS.java,v 1.11 2005/09/02 09:22:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeSampleData;
  
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/10 09:25:44 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/02 09:22:29 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -173,13 +173,8 @@ public class METS {
 
 		SchemeSampleData.populate(METS.userId, METS.domainId);
 
-		Set schemes = StorableObjectPool.getStorableObjectsByCondition(
-				new LinkedIdsCondition(METS.domainId, ObjectEntities.SCHEME_CODE), false);
-		Iterator iterator = schemes.iterator();
-		Scheme scheme1 = (Scheme )iterator.next();
-		Scheme scheme2 = (Scheme )iterator.next();
-		mapView.addScheme(scheme1);
-		mapView.addScheme(scheme2);
+		mapView.addScheme(SchemeSampleData.scheme1);
+		mapView.addScheme(SchemeSampleData.scheme2);
 		
 		mapFrame.setVisible(true);
 
