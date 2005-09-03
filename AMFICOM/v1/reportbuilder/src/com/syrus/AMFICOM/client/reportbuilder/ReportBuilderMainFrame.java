@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.4 2005/09/01 14:21:40 peskovsky Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.5 2005/09/03 12:42:21 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,9 +32,13 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.report.LangModelReport;
+import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.reportbuilder.command.template.ReportTemplateNewCommand;
 import com.syrus.AMFICOM.client.reportbuilder.command.templatescheme.ReportSendEventCommand;
+import com.syrus.AMFICOM.client.reportbuilder.event.AttachLabelEvent;
+import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportEvent;
+import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTemplateRenderer;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
@@ -52,6 +56,8 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 	 */
 	protected TemplateRendererInnerToolbar innerToolbar = null;
 	
+	protected ReportTemplateRenderer reportTemplateRenderer = null;
+	
 	public ReportBuilderMainFrame(final ApplicationContext aContext) {
 		super(
 			aContext,
@@ -62,6 +68,10 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 		ApplicationModel aModel = aContext.getApplicationModel();
 		this.innerToolbar = new TemplateRendererInnerToolbar();
 		this.innerToolbar.setApplicationModel(aModel);
+		this.innerToolbar.setContext(this.aContext);		
+		
+		this.reportTemplateRenderer = new ReportTemplateRenderer();
+		this.reportTemplateRenderer.setContext(this.aContext);
 	}
 	
 	protected void initFrames() {
@@ -79,7 +89,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 				templateSchemeFrame.setTitle(LangModelReport.getString(TEMPLATE_SCHEME_FRAME));
 				
 				templateSchemeFrame.getContentPane().setLayout(new BorderLayout());
-				templateSchemeFrame.getContentPane().add(new ReportTemplateRenderer(), BorderLayout.CENTER);
+				templateSchemeFrame.getContentPane().add(ReportBuilderMainFrame.this.reportTemplateRenderer, BorderLayout.CENTER);
 				
 				templateSchemeFrame.getContentPane().add(ReportBuilderMainFrame.this.innerToolbar, BorderLayout.NORTH);				
 
@@ -165,6 +175,11 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 			super.setContext(aContext);
 			this.aContext.getDispatcher().addPropertyChangeListener(ReportEvent.TYPE, this);
 		}
+		
+		if (this.reportTemplateRenderer != null)
+			this.reportTemplateRenderer.setContext(this.aContext);
+		if (this.innerToolbar != null)
+			this.innerToolbar.setContext(this.aContext);
 	}
 	
 		
@@ -196,27 +211,27 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_INSERT_LABEL
 					+ ReportBuilderApplicationModel.START,
-				new ReportSendEventCommand(this.aContext,ReportEvent.LABEL_CREATION_STARTED));
+				new ReportSendEventCommand(this.aContext,ReportFlagEvent.LABEL_CREATION_STARTED));
 
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_INSERT_LABEL
 					+ ReportBuilderApplicationModel.CANCEL,
-				new ReportSendEventCommand(this.aContext,ReportEvent.LABEL_CREATION_CANCELED));
+				new ReportSendEventCommand(this.aContext,ReportFlagEvent.LABEL_CREATION_CANCELED));
 
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_INSERT_IMAGE
 					+ ReportBuilderApplicationModel.START,
-				new ReportSendEventCommand(this.aContext,ReportEvent.IMAGE_CREATION_STARTED));
+				new ReportSendEventCommand(this.aContext,ReportFlagEvent.IMAGE_CREATION_STARTED));
 
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_INSERT_IMAGE
 					+ ReportBuilderApplicationModel.CANCEL,
-				new ReportSendEventCommand(this.aContext,ReportEvent.IMAGE_CREATION_CANCELED));
+				new ReportSendEventCommand(this.aContext,ReportFlagEvent.IMAGE_CREATION_CANCELED));
 		
-
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_DELETE_OBJECT,
-				new ReportTemplateNewCommand(this.aContext));
+				new ReportSendEventCommand(this.aContext,ReportFlagEvent.DELETE_OBJECT));
+		
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_CHANGE_VIEW,
 				new ReportTemplateNewCommand(this.aContext));
@@ -301,28 +316,40 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 	
 	@Override
 	public void propertyChange(PropertyChangeEvent pce) {
+		ApplicationModel aModel = this.aContext.getApplicationModel();		
 		super.propertyChange(pce);
-		if (!(pce instanceof ReportEvent))
-			return;
-		
-		String eventType = ((ReportEvent)pce).getEventType();
-		if (eventType.equals(ReportEvent.LABEL_CREATION_STARTED)) {
-			ApplicationModel aModel = this.aContext.getApplicationModel();
-			aModel.setAllItemsEnabled(false);
-			aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_LABEL, true);
+		if (pce instanceof ReportFlagEvent) {
+			String eventType = ((ReportFlagEvent)pce).getEventType();
+			if (eventType.equals(ReportFlagEvent.LABEL_CREATION_STARTED)) {
+				aModel.setAllItemsEnabled(false);
+				aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_LABEL, true);
+				aModel.fireModelChanged("");
+			}
+			else if (eventType.equals(ReportFlagEvent.IMAGE_CREATION_STARTED)) {
+				aModel.setAllItemsEnabled(false);
+				aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_IMAGE, true);
+				aModel.fireModelChanged("");
+			}
+	
+			else if (	eventType.equals(ReportFlagEvent.LABEL_CREATION_CANCELED)
+					||	eventType.equals(ReportFlagEvent.IMAGE_CREATION_CANCELED)) {
+				this.setApplicationModelForTemplateSchemeStandart(aModel);
+				aModel.fireModelChanged("");
+			}
+			else if (eventType.equals(ReportFlagEvent.DELETE_OBJECT)) {
+				aModel.setEnabled(ReportBuilderApplicationModel.MENU_DELETE_OBJECT,false);
+				aModel.fireModelChanged("");
+			}
+		}
+		else if (pce instanceof ComponentSelectionChangeEvent) {
+			RenderingComponent component = 
+				((ComponentSelectionChangeEvent)pce).getRenderingComponent();
+			//Делаем кнопку удаления объектов активной, если выбран объект
+			aModel.setEnabled(ReportBuilderApplicationModel.MENU_DELETE_OBJECT, (component != null));
 			aModel.fireModelChanged("");
 		}
-		else if (eventType.equals(ReportEvent.IMAGE_CREATION_STARTED)) {
-			ApplicationModel aModel = this.aContext.getApplicationModel();
+		else if (pce instanceof AttachLabelEvent) {
 			aModel.setAllItemsEnabled(false);
-			aModel.setEnabled(ReportBuilderApplicationModel.MENU_INSERT_IMAGE, true);
-			aModel.fireModelChanged("");
-		}
-
-		else if (	eventType.equals(ReportEvent.LABEL_CREATION_CANCELED)
-				||	eventType.equals(ReportEvent.IMAGE_CREATION_CANCELED)) {
-			ApplicationModel aModel = this.aContext.getApplicationModel();
-			this.setApplicationModelForTemplateSchemeStandart(aModel);
 			aModel.fireModelChanged("");
 		}
 	}

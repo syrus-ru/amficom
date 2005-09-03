@@ -1,5 +1,5 @@
 /*
- * $Id: StorableElement.java,v 1.1 2005/08/31 10:32:55 peskovsky Exp $
+ * $Id: StorableElement.java,v 1.2 2005/09/03 12:42:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,8 @@ import com.syrus.AMFICOM.resource.IntPoint;
 
 public abstract class StorableElement{
 
-	IntPoint location;
-	IntDimension size;
+	IntPoint location = new IntPoint();
+	IntDimension size = new IntDimension();
 	/**
 	 * Время последнего изменения объекта
 	 */

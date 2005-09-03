@@ -20,6 +20,7 @@ import com.syrus.io.ImageToByte;
 public final class ImageStorableElement extends StorableElement
 	implements Serializable {
 
+	public static final IntDimension DEFAULT_IMAGE_SIZE = new IntDimension(200,200); 
 	private static final long serialVersionUID = 336147260496995306L;
 	private BufferedImage image = null;
 	

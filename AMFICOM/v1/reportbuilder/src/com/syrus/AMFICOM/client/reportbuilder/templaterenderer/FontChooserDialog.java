@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.client.report;
+package com.syrus.AMFICOM.client.reportbuilder.templaterenderer;
 
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -9,6 +9,7 @@ import javax.swing.border.BevelBorder;
 
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.report.LangModelReport;
 
 /**
  * <p>Title: </p>
@@ -57,12 +58,13 @@ public class FontChooserDialog extends JDialog
 			FontChooserDialog.dialog = new FontChooserDialog();
 		
 		return FontChooserDialog.dialog;
-	}	
+	}
+	
 	public static FontChooserDialog getInstance(Font font)
 	{
 		FontChooserDialog fontDialog = getInstance();
 		fontDialog.fontNameComboBox.setSelectedItem(font.getName());
-		fontDialog.fontNameComboBox.setSelectedItem(Integer.toString(font.getSize()));
+		fontDialog.fontSizeComboBox.setSelectedItem(Integer.toString(font.getSize()));
 		if (font.isBold())
 			fontDialog.boldCheckBox.setSelected(true);
 		if (font.isItalic())
@@ -99,10 +101,12 @@ public class FontChooserDialog extends JDialog
 		this.cancelButton.setPreferredSize(new Dimension(79, 24));
 		this.cancelButton.setText(LangModelReport.getString("label_cancel"));
 		this.cancelButton.addActionListener(new FontChooserDialog1_cancelButton_actionAdapter(this));
-		this.boldCheckBox.setFont(new java.awt.Font("Dialog", 1, 13));
+		Font boldFont = this.boldCheckBox.getFont().deriveFont(Font.BOLD);
+		this.boldCheckBox.setFont(boldFont);
 		this.boldCheckBox.setText(LangModelReport.getString("label_fontBold"));
 		this.boldCheckBox.addActionListener(new FontChooserDialog1_boldCheckBox_actionAdapter(this));
-		this.italicCheckBox.setFont(new java.awt.Font("Dialog", 2, 13));
+		Font italicFont = this.boldCheckBox.getFont().deriveFont(Font.ITALIC);		
+		this.italicCheckBox.setFont(italicFont);
 		this.italicCheckBox.setText(LangModelReport.getString("label_fontItalic"));
 		this.italicCheckBox.addActionListener(new FontChooserDialog1_italicCheckBox_actionAdapter(this));
 		this.fontNameComboBox.addActionListener(new FontChooserDialog1_fontNameComboBox_actionAdapter(this));

@@ -1,5 +1,5 @@
 /*
- * $Id: TemplateRendererInnerToolbar.java,v 1.1 2005/09/01 14:21:40 peskovsky Exp $
+ * $Id: TemplateRendererInnerToolbar.java,v 1.2 2005/09/03 12:42:21 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,36 +7,29 @@
  */
 package com.syrus.AMFICOM.client.reportbuilder;
 
-import java.awt.Dimension;
-import java.awt.Image;
-import java.awt.Toolkit;
-import java.awt.Insets;
-import java.awt.BorderLayout;
-
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.ListIterator;
 import java.util.logging.Level;
 
 import javax.swing.JToolBar;
 import javax.swing.JButton;
 import javax.swing.JToggleButton;
-import javax.swing.ImageIcon;
 import javax.swing.AbstractButton;
-import javax.swing.JScrollPane;
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.report.LangModelReport;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.reportbuilder.event.ReportEvent;
+import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
@@ -48,9 +41,10 @@ import com.syrus.util.Log;
  * @author Песковский Пётр
  * @version 1.0
  */
-public final class TemplateRendererInnerToolbar extends JToolBar {
+public final class TemplateRendererInnerToolbar extends JToolBar implements PropertyChangeListener{
 
 	protected ReportBuilderApplicationModel	applicationModel;
+	protected ApplicationContext aContext;
 
 	protected ActionListener	actionListener;
 
@@ -201,6 +195,29 @@ public final class TemplateRendererInnerToolbar extends JToolBar {
 
 	public List getApplicationModelListeners() {
 		return this.applicationModelListeners;
+	}
+
+	public void setContext(ApplicationContext aContext) {
+		if (this.aContext != null) {
+			this.aContext.getDispatcher().removePropertyChangeListener(ReportEvent.TYPE, this);
+		}
+		if (aContext != null) {
+			this.aContext = aContext;
+			this.aContext.getDispatcher().addPropertyChangeListener(ReportEvent.TYPE, this);
+		}
+	}
+	
+	public void propertyChange(PropertyChangeEvent pce) {
+		if (!(pce instanceof ReportFlagEvent))
+			return;
+		
+		String eventType = ((ReportFlagEvent)pce).getEventType();
+		if (eventType.equals(ReportFlagEvent.IMAGE_CREATION_CANCELED)) {
+			this.insertImageButton.setSelected(false);
+		}
+		else if (eventType.equals(ReportFlagEvent.LABEL_CREATION_CANCELED)) {
+			this.insertLabelButton.setSelected(false);
+		}
 	}
 }
 

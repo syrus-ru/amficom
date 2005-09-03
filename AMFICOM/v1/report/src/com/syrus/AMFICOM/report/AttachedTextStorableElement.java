@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.report;
 
+import java.awt.Dimension;
 import java.awt.Font;
 import java.io.IOException;
 
@@ -19,6 +20,7 @@ import com.syrus.AMFICOM.resource.IntPoint;
 public final class AttachedTextStorableElement extends StorableElement
 {
 	private static final long serialVersionUID = 276389622206172004L;
+	
 	private String text = "";
 	/**
 	 * Элемент шаблона, к которому осуществлена привязка по вертикали
@@ -48,6 +50,8 @@ public final class AttachedTextStorableElement extends StorableElement
 	 * Разница между y надписи и y объекта, к которому она привязана.
 	 */
 	private int distanceY = 0;
+
+	public static final IntDimension MINIMUM_COMPONENT_SIZE = new IntDimension(90,30);
 	
 	public AttachedTextStorableElement (IntPoint location)
 	{
@@ -55,6 +59,7 @@ public final class AttachedTextStorableElement extends StorableElement
 	}
 	
 	/**
+	 * @deprecated
 	 * Задаёт привязку по горизонтали
 	 * @param hAttacher объект, к которому осуществляется привязка
 	 * @param attachmentType тип привязки
@@ -79,6 +84,49 @@ public final class AttachedTextStorableElement extends StorableElement
 	}
 
 	/**
+	 * Задаёт привязку по горизонтали
+	 * @param attacher объект, к которому осуществляется привязка
+	 * @param attachmentType тип привязки
+	 */
+	public void setAttachment(
+			DataStorableElement attacher,
+			String attachmentType)
+	{
+		if (attachmentType == null)
+			throw new AssertionError("AttachedTextRenderingElement.setAttachment | attachmentType can't be null!");
+		
+		if (	attachmentType.equals(TextAttachingType.TO_FIELDS_LEFT)		
+			||	attachmentType.equals(TextAttachingType.TO_LEFT)
+			||	attachmentType.equals(TextAttachingType.TO_RIGHT)){
+			this.horizAttacher = attacher;
+			this.horizontalAttachType = attachmentType;
+			//Фиксируем расстояние до соответсвующего края объекта, к которому
+			//осуществлена привязка
+			if (attachmentType.equals(TextAttachingType.TO_FIELDS_LEFT))		
+				this.distanceX = this.getX();
+			else if (attachmentType.equals(TextAttachingType.TO_LEFT))
+				this.distanceX = this.getX() - attacher.getX();
+			else if (attachmentType.equals(TextAttachingType.TO_RIGHT))
+				this.distanceX = this.getX() - (attacher.getX() + attacher.getWidth());
+		}
+		else if (	attachmentType.equals(TextAttachingType.TO_FIELDS_TOP)		
+				||	attachmentType.equals(TextAttachingType.TO_TOP)
+				||	attachmentType.equals(TextAttachingType.TO_BOTTOM)){
+				this.vertAttacher = attacher;
+				this.verticalAttachType = attachmentType;
+				//Фиксируем расстояние до соответсвующего края объекта, к которому
+				//осуществлена привязка
+				if (attachmentType.equals(TextAttachingType.TO_FIELDS_TOP))		
+					this.distanceY = this.getY();
+				else if (attachmentType.equals(TextAttachingType.TO_TOP))
+					this.distanceY = this.getY() - attacher.getY();
+				else if (attachmentType.equals(TextAttachingType.TO_BOTTOM))
+					this.distanceY = this.getY() - (attacher.getY() + attacher.getHeight());
+			}
+	}
+	
+	/**
+	 * @deprecated
 	 * Задаёт привязку по вертикали
 	 * @param vAttacher объект, к которому осуществляется привязка
 	 * @param attachmentType тип привязки

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportEvent.java,v 1.4 2005/09/01 14:21:40 peskovsky Exp $
+ * $Id: ReportEvent.java,v 1.5 2005/09/03 12:42:20 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,22 +13,14 @@ import java.beans.PropertyChangeEvent;
  * Используется в редакторе шаблонов отчётов для передачи событий типа
  * извещение, где даже не важно откуда пришло событие.
  * @author $Author: peskovsky $
- * @version $Revision: 1.4 $, $Date: 2005/09/01 14:21:40 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/03 12:42:20 $
  * @module reportbuilder_v1
  */
-public class ReportEvent extends PropertyChangeEvent{
+public abstract class ReportEvent extends PropertyChangeEvent{
 	public static final String TYPE = ReportEvent.class.getName();
 	
-	public static final String LABEL_CREATION_STARTED = "labelCreationStarted";
-	public static final String LABEL_CREATION_CANCELED = "labelCreationCanceled";	
-	public static final String IMAGE_CREATION_STARTED = "imageCreationStarted";
-	public static final String IMAGE_CREATION_CANCELED = "imageCreationCanceled";	
-	
-	public ReportEvent(Object source, String eventType){
-		super(source,TYPE,eventType,null);
-	}
-	
-	public String getEventType(){
-		return (String)this.getOldValue();
+	public ReportEvent(Object source, String propertyName, Object oldValue, Object newValue) {
+		super(source, propertyName, oldValue, newValue);
+		// Empty
 	}
 }

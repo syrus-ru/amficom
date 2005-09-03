@@ -1,5 +1,5 @@
 /*
- * $Id: RenderingComponent.java,v 1.1 2005/08/31 10:32:55 peskovsky Exp $
+ * $Id: RenderingComponent.java,v 1.2 2005/09/03 12:42:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,9 @@ package com.syrus.AMFICOM.client.report;
 import com.syrus.AMFICOM.report.StorableElement;
 
 public interface RenderingComponent {
+	public static final String BOUNDS_PROPERTY = "boundsProperty";
+	public static final int EDGE_SIZE = 7;
+	public static final int DIAGONAL_EDGE_SIZE = 10;
 	public abstract StorableElement getElement();
 	
 	//На самом деле, методы getX()и getWidth() не нужны - они нигде не

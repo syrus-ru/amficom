@@ -1,5 +1,5 @@
 /*
- * $Id: TableReportDataRenderingComponent.java,v 1.2 2005/08/31 10:32:55 peskovsky Exp $
+ * $Id: TableReportDataRenderingComponent.java,v 1.3 2005/09/03 12:42:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ public final class TableReportDataRenderingComponent extends DataRenderingCompon
 	private void jbinit()
 	{
 		BorderLayout layout = new BorderLayout();
-		layout.setHgap(DataRenderingComponent.EDGE_SIZE);
-		layout.setVgap(DataRenderingComponent.EDGE_SIZE);		
+		layout.setHgap(RenderingComponent.EDGE_SIZE);
+		layout.setVgap(RenderingComponent.EDGE_SIZE);		
 		this.setLayout(layout);
 
 		this.add(this.table,BorderLayout.CENTER);

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportSendEventCommand.java,v 1.1 2005/09/01 14:21:39 peskovsky Exp $
+ * $Id: ReportSendEventCommand.java,v 1.2 2005/09/03 12:42:20 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.client.reportbuilder.command.templatescheme;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.reportbuilder.event.ReportEvent;
+import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 
 public class ReportSendEventCommand extends AbstractCommand {
 	ApplicationContext aContext;
@@ -27,7 +27,7 @@ public class ReportSendEventCommand extends AbstractCommand {
 			return;
 		}
 		
-		this.aContext.getDispatcher().firePropertyChange(new ReportEvent(this,this.eventType));
+		this.aContext.getDispatcher().firePropertyChange(new ReportFlagEvent(this,this.eventType));
 		this.result = RESULT_OK;
 	}
 }
