@@ -1,9 +1,9 @@
 # Simple Makefile to compile single test class
 
-TEST_CLASS = TestInitialSetup
-TEST_PACKAGE = com.syrus.AMFICOM.setup
-#TEST_CLASS=TestIdentifier
-#TEST_PACKAGE=com.syrus.AMFICOM.general
+#TEST_CLASS = TestInitialSetup
+#TEST_PACKAGE = com.syrus.AMFICOM.setup
+TEST_CLASS=TestIdentifier
+TEST_PACKAGE=com.syrus.AMFICOM.general
 #TEST_CLASS=TestKIS
 #TEST_PACKAGE=com.syrus.AMFICOM.measurement
 #TEST_CLASS=TestSystemUser
