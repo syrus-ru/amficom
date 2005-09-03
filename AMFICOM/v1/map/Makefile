@@ -31,8 +31,7 @@ SOURCES := $(wildcard $(SRCDIR)/com/syrus/AMFICOM/map/*.java)
 
 $(LIBNAME): .mach
 	$(JAR) -cf $@ \
-		-C $(CLASSDIR) com/syrus/AMFICOM/map \
-		-C $(CLASSDIR) com/syrus/AMFICOM/general
+		-C $(CLASSDIR) com/syrus/AMFICOM/map
 
 
 .mach: .corba .xml $(CLASSDIR)
