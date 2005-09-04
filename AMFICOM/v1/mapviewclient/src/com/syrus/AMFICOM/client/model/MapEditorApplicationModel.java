@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.9 2005/09/02 12:46:24 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.10 2005/09/04 13:51:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import javax.swing.UIManager;
  * 
  * 
  * 
- * @version $Revision: 1.9 $, $Date: 2005/09/02 12:46:24 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/04 13:51:43 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -129,6 +129,7 @@ public class MapEditorApplicationModel extends ApplicationModel
 
 		add(MapEditorApplicationModel.ITEM_VIEW);
 		add(MapEditorApplicationModel.ITEM_VIEW_GENERAL);
+		add(MapEditorApplicationModel.ITEM_VIEW_ADDITIONAL);
 		add(MapEditorApplicationModel.ITEM_VIEW_CHARACTERISTICS);
 		add(MapEditorApplicationModel.ITEM_VIEW_MAP_CHOOSER);
 		add(MapEditorApplicationModel.ITEM_VIEW_MAP_LAYERS);
