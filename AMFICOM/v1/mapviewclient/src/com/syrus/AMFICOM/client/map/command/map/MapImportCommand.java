@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.42 2005/09/04 17:17:20 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.43 2005/09/04 19:03:10 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
  * что активной карты нет, и карта центрируетс€ по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.42 $, $Date: 2005/09/04 17:17:20 $
+ * @version $Revision: 1.43 $, $Date: 2005/09/04 19:03:10 $
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {
@@ -150,6 +150,7 @@ public class MapImportCommand extends ImportCommand {
 					e.printStackTrace();
 					setResult(Command.RESULT_NO);
 				} catch(XmlException e) {
+					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ќеверный формат файла"));
 					e.printStackTrace();
 					setResult(Command.RESULT_NO);
 				} catch(IOException e) {
