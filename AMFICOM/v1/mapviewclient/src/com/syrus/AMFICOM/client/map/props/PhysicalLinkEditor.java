@@ -271,7 +271,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 
 		constraints.gridx = 2;
 		constraints.gridy = 3;
-		constraints.gridwidth = 2;
+		constraints.gridwidth = 3;
 		constraints.gridheight = 1;
 		constraints.weightx = 1.0;
 		constraints.weighty = 0.0;
