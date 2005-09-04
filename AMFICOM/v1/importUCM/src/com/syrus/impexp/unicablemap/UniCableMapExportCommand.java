@@ -33,7 +33,7 @@ import com.syrus.impexp.unicablemap.map.Site;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/09/02 09:08:50 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/04 19:01:40 $
  * @module mapviewclient_v1
  */
 public class UniCableMapExportCommand extends ExportCommand 
@@ -222,7 +222,7 @@ public class UniCableMapExportCommand extends ExportCommand
 				building.setBuilding(cableInlet.getBuilding());
 				building.setCity(cableInlet.getCity());
 				building.setId("site" + building.getId());
-				building.setSiteNodeTypeCodename("building");
+				building.setSiteNodeTypeCodename("defaultbuilding");
 				building.setStreet(cableInlet.getStreet());
 				sites.add(building);
 	
@@ -233,7 +233,7 @@ public class UniCableMapExportCommand extends ExportCommand
 				link.setId(building.getId() + "indoor" + cableInlet.getId());
 				link.setStartNodeId(building.getId());
 				link.setEndNodeId(cableInlet.getId());
-				link.setPhysicalLinkTypeCodename("indoor");
+				link.setPhysicalLinkTypeCodename("defaultindoor");
 				link.setLength(0.0D);
 				link.setName("");
 				links.add(link);
