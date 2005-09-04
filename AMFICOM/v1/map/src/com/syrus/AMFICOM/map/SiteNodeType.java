@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.80 2005/09/04 13:39:41 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.81 2005/09/04 17:05:45 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: krupenn $
- * @version $Revision: 1.80 $, $Date: 2005/09/04 13:39:41 $
+ * @version $Revision: 1.81 $, $Date: 2005/09/04 17:05:45 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -507,8 +507,9 @@ public final class SiteNodeType extends StorableObjectType
 
 	private static byte[] readData(String filename) throws IOException {
 		File file = new File(filename);
-		FileInputStream in = new FileInputStream(file.getAbsolutePath());
-		byte[] data = new byte[(int) file.length()];
+		File realFile = new File(file.getAbsolutePath());
+		byte[] data = new byte[(int) realFile.length()];
+		FileInputStream in = new FileInputStream(realFile);
 		in.read(data);
 		in.close();
 		return data;
