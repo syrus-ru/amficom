@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.46 2005/09/04 17:07:44 krupenn Exp $
+ * $Id: MapDatabase.java,v 1.47 2005/09/04 17:29:18 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/09/04 17:07:44 $
+ * @version $Revision: 1.47 $, $Date: 2005/09/04 17:29:18 $
  * @author $Author: krupenn $
  * @module map
  */
@@ -704,8 +704,8 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				final Set<Identifier> externalNodeIds = externalNodes.get(id);
 				if (id.equals(map.getId())) {
 					try {
-						final Set<SiteNode> loadedMaps = StorableObjectPool.getStorableObjects(externalNodeIds, true);
-						map.setExternalNodes0(loadedMaps);
+						final Set<SiteNode> loadedExternalNodes = StorableObjectPool.getStorableObjects(externalNodeIds, true);
+						map.setExternalNodes0(loadedExternalNodes);
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
@@ -720,8 +720,8 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 				final Set<Identifier> mapLibraryIds = mapLibraries.get(id);
 				if (id.equals(map.getId())) {
 					try {
-						final Set<SiteNode> loadedmapLibraries = StorableObjectPool.getStorableObjects(mapLibraryIds, true);
-						map.setExternalNodes0(loadedmapLibraries);
+						final Set<MapLibrary> loadedMapLibraries = StorableObjectPool.getStorableObjects(mapLibraryIds, true);
+						map.setMapLibraries0(loadedMapLibraries);
 					} catch (ApplicationException e) {
 						throw new RetrieveObjectException(e);
 					}
