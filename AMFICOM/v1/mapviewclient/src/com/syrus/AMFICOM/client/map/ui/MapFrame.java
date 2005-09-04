@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.71 2005/09/02 16:51:32 krupenn Exp $
+ * $Id: MapFrame.java,v 1.72 2005/09/04 13:48:55 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -130,6 +130,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
 		if(evt.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
 			MapEvent mapEvent = (MapEvent) evt;
 			if(mapEvent.getMapEventType().equals(MapEvent.MAP_FRAME_SHOWN)
+					&& false
 					&& this.notInitialized) {
 				CommonUIUtilities.invokeAsynchronously(new Runnable() {
 				
@@ -166,7 +167,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
 						System.out.println("OK!");
 					}
 				
-				}, "«аебись ты злоебучим проебом, пиздогробина залупаста€, охуевша€ до педерастического невъебени€ своим злоебучим троепиздием!");
+				}, "ўа наху€рю ху€риков...");
 			}
 		}
 		else if(evt.getPropertyName().equals(MarkerEvent.MARKER_EVENT_TYPE)) {
@@ -206,7 +207,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * 
  * 
  * 
- * @version $Revision: 1.71 $, $Date: 2005/09/02 16:51:32 $
+ * @version $Revision: 1.72 $, $Date: 2005/09/04 13:48:55 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
