@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.14 2005/08/26 09:58:30 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.15 2005/09/04 13:35:45 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,17 +23,20 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifiable;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/08/26 09:58:30 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/04 13:35:45 $
  * @module schemeclient
  */
 
@@ -78,13 +81,27 @@ public class SchemeTreeUI extends IconedTreeUI {
 							Scheme scheme = (Scheme)object;
 							if (scheme.getParentSchemeElement() == null) {
 								try {
+									// отцепляем линки
+									for (SchemeCableLink link : scheme.getSchemeCableLinks()) {
+										link.setSourceAbstractSchemePort(null);
+										link.setTargetAbstractSchemePort(null);
+									}
+									for (SchemeLink link : scheme.getSchemeLinks()) {
+										link.setSourceAbstractSchemePort(null);
+										link.setTargetAbstractSchemePort(null);
+									}
+									
 									Set<Identifiable> ids = scheme.getReverseDependencies();
 									StorableObjectPool.delete(ids);
-									StorableObjectPool.delete(scheme.getId());
 									TreePath parentPath = selectedPath.getParentPath();
 									SchemeTreeUI.this.treeUI.getTree().setSelectionPath(parentPath);
 									updateRecursively((Item)parentPath.getLastPathComponent());
-									StorableObjectPool.flush(scheme, LoginManager.getUserId(), true);
+									
+									Identifier userId = LoginManager.getUserId();
+									for (Identifiable id : ids) {
+										StorableObjectPool.flush(id, userId, false);
+									}
+									
 								} catch (ApplicationException e1) {
 									Log.errorException(e1);
 								}

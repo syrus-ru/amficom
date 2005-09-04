@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.20 2005/09/01 13:39:18 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.21 2005/09/04 13:35:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.20 $, $Date: 2005/09/01 13:39:18 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/04 13:35:45 $
  * @module schemeclient
  */
 
@@ -57,6 +57,7 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
+import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.util.Log;
 
 public class SchemeEditorMainFrame extends AbstractMainFrame {
@@ -93,7 +94,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		this.frames.put(GeneralPropertiesFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Level.FINEST);
-				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame("Title");
+				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame(LangModelScheme.getString("Title.properties"));
 				SchemeEditorMainFrame.this.desktopPane.add(generalFrame);
 				new SchemeEventHandler(generalFrame, SchemeEditorMainFrame.this.aContext);
 				return generalFrame;
@@ -103,7 +104,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		this.frames.put(CharacteristicPropertiesFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Level.FINEST);
-				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame("Title");
+				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame(LangModelScheme.getString("Title.characteristics"));
 				SchemeEditorMainFrame.this.desktopPane.add(characteristicFrame);
 				new SchemeEventHandler(characteristicFrame, SchemeEditorMainFrame.this.aContext);
 				return characteristicFrame;
@@ -113,7 +114,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		this.frames.put(AdditionalPropertiesFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Level.FINEST);
-				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame("Title");
+				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame(LangModelScheme.getString("Title.additional"));
 				SchemeEditorMainFrame.this.desktopPane.add(additionalFrame);
 				new SchemeEventHandler(additionalFrame, SchemeEditorMainFrame.this.aContext);
 				return additionalFrame;
@@ -387,7 +388,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuSchemeSave", true);
 		aModel.setEnabled("menuSchemeSaveAs", true);
 		aModel.setEnabled("menuPathNew", true);
-		aModel.setEnabled("menuReportCreate", true);
+//		aModel.setEnabled("menuReportCreate", true);
 		aModel.fireModelChanged("");
 	}
 

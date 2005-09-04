@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.2 2005/09/01 13:39:18 stas Exp $
+ * $Id: PopupFactory.java,v 1.3 2005/09/04 13:35:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -122,7 +122,7 @@ public class PopupFactory {
 		JPopupMenu pop = new JPopupMenu();
 		
 		if (pmIds.contains(id)) { // already added to path
-			pop.add(createPathRemoveMenuItem(cell));
+			pop.add(createPathRemoveMenuItem(cell, aContext));
 			if (res.getCashedPathStart() != null && res.getCashedPathEnd() != null) {
 				pop.addSeparator();
 				pop.add(createPathExploreMenuItem(res));
@@ -162,25 +162,25 @@ public class PopupFactory {
 						SchemeElement se = (SchemeElement)StorableObjectPool.getStorableObject(id, true);
 						if (se.getKind().value() == SchemeElementKind._SCHEMED) {
 							pop.add(createOpenSchemeMenuItem(aContext, se));
-							pop.add(createPathAddMenuItem(res, id));
+							pop.add(createPathAddMenuItem(aContext, res, id));
 							pop.addSeparator();
 							pop.add(createCancelMenuItem());
 						} else {
 							JMenuItem item = createOpenSchemeElementMenuItem(aContext, se);
 							if (item != null) {
 								pop.add(item);
-								pop.add(createPathAddMenuItem(res, id));
+								pop.add(createPathAddMenuItem(aContext, res, id));
 								pop.addSeparator();
 								pop.add(createCancelMenuItem());
 							} else {
-								pop.add(createPathAddMenuItem(res, id));
+								pop.add(createPathAddMenuItem(aContext, res, id));
 								pop.add(createPathEndMenuItem(res, id));
 								pop.addSeparator();
 								pop.add(createCancelMenuItem());
 							}
 						}
 					} else {
-						pop.add(createPathAddMenuItem(res, id));
+						pop.add(createPathAddMenuItem(aContext, res, id));
 						pop.addSeparator();
 						pop.add(createCancelMenuItem());
 					}
@@ -352,12 +352,14 @@ public class PopupFactory {
 		return menuItem;
 	}
 	
-	private static JMenuItem createPathRemoveMenuItem(final Object object) {
+	private static JMenuItem createPathRemoveMenuItem(final Object object, final ApplicationContext aContext) {
 		JMenuItem menuItem = new JMenuItem(new AbstractAction() {
 			public void actionPerformed(ActionEvent e) {
 				PathElement pe = SchemeActions.getSelectedPathElement(object);
 				if (pe != null) { 
+					SchemePath path = pe.getParentPathOwner();
 					pe.setParentPathOwner(null, true);
+					aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, path.getId(), SchemeEvent.UPDATE_OBJECT));
 				}
 			}
 		});
@@ -365,7 +367,7 @@ public class PopupFactory {
 		return menuItem;
 	}
 	
-	private static JMenuItem createPathAddMenuItem(final SchemeResource res, final Identifier id) {
+	private static JMenuItem createPathAddMenuItem(final ApplicationContext aContext, final SchemeResource res, final Identifier id) {
 		JMenuItem menuItem = new JMenuItem(new AbstractAction() {
 			private static final long serialVersionUID = -471712824699016078L;
 			public void actionPerformed(ActionEvent ev) {
@@ -398,6 +400,7 @@ public class PopupFactory {
 						Log.errorException(e);
 					}
 				}
+				aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, path.getId(), SchemeEvent.UPDATE_OBJECT));
 			}
 		});
 		menuItem.setText(LangModelScheme.getString("Menu.path.add")); //$NON-NLS-1$

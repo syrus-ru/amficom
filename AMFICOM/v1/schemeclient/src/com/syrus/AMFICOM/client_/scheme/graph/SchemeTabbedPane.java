@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.16 2005/08/19 15:41:34 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.17 2005/09/04 13:35:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/04 13:35:45 $
  * @module schemeclient
  */
 
@@ -316,8 +316,16 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 					Identifier id = see.getIdentifier();
 					if (id.getMajor() == ObjectEntities.SCHEME_CODE) {
 						Scheme scheme = (Scheme)see.getStorableObject();
-						SchemeGraph graph = getGraph();
-						graph.setActualSize(new Dimension(scheme.getWidth(), scheme.getHeight()));
+						
+						Object[] comp = this.tabs.getComponents();
+						for (int i = 0; i < comp.length; i++) {
+							ElementsPanel p = this.graphPanelsMap.get(comp[i]);
+							if (scheme.equals(p.getSchemeResource().getScheme())) {
+								p.getGraph().setActualSize(new Dimension(scheme.getWidth(), scheme.getHeight()));
+								this.tabs.setTitleAt(i, scheme.getName());
+								break;
+							}							
+						}
 					}
 				}
 			} catch (ApplicationException e) {

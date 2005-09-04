@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.1 2005/09/02 05:58:13 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.2 2005/09/04 13:35:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,33 +22,43 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.XmlComplementor;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.AMFICOM.general.xml.XmlStorableObject;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.xml.SchemesDocument;
+import com.syrus.AMFICOM.scheme.xml.XmlScheme;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeSeq;
 import com.syrus.util.Log;
 
 public class SchemeImportCommand extends AbstractCommand {
 
+	static SchemeComplementor complementor;
+	ClonedIdsPool pool = new ClonedIdsPool();
+	
 	public void execute() {
-/*		final String fileName = openFileForReading("");
+		if (complementor == null) {
+			complementor = new SchemeComplementor();
+			XmlComplementorRegistry.registerComplementor(ObjectEntities.SCHEME_CODE, complementor);
+		}
+		
+		String user_dir = System.getProperty("user.dir");
+		
+		final String fileName = openFileForReading(user_dir);
 		if(fileName == null)
 			return;
 
-		File file = new File(fileName);
-
-		String ext = file.getAbsolutePath().substring(
-				file.getAbsolutePath().lastIndexOf("."));
-
-		if(ext == null) {
-			ext = ".xml";
-		}
+		String ext = fileName.substring(fileName.lastIndexOf("."));
 		
-		final String extension = ext;
-
-		if(extension.equals(".xml")) {
+		if(ext.equals(".xml")) {
 			try {
 				Scheme scheme = loadXML(fileName);
-				System.out.println(scheme.getName());
+
 			} catch (CreateObjectException e) {
 				Log.errorException(e);
 			} catch (XmlException e) {
@@ -60,8 +70,7 @@ public class SchemeImportCommand extends AbstractCommand {
 		}
 	}
 	
-	protected Scheme loadXML(String fileName)
-	throws CreateObjectException, XmlException, IOException {
+	protected Scheme loadXML(String fileName) throws CreateObjectException, XmlException, IOException {
 		Scheme scheme = null;
 		
 		File xmlfile = new File(fileName);
@@ -70,31 +79,23 @@ public class SchemeImportCommand extends AbstractCommand {
 //		Parse the instance into the type generated from the schema.
 		
 		System.out.println("start parse scheme");
-		com.syrus.amficom.scheme.xml.SchemesDocument doc = 
-			com.syrus.amficom.scheme.xml.SchemesDocument.Factory.parse(xmlfile);
+		SchemesDocument doc = SchemesDocument.Factory.parse(xmlfile);
 		System.out.println("end parse scheme");
+		
 //		if(!validateXml(doc)) {
 //			throw new XmlException("Invalid XML");
 //		}
-		
-		Identifier userId = LoginManager.getUserId();
-		Identifier domainId = LoginManager.getDomainId();
 		
 //		make sure default types loaded
 		String user_dir = System.getProperty("user.dir");
 		System.setProperty("user.dir",  xmlfile.getParent());
 		
-		com.syrus.amficom.scheme.xml.Schemes xmlSchemes = doc.getSchemes();
-		com.syrus.amficom.scheme.xml.Scheme[] xmlSchemesArray = xmlSchemes.getSchemeArray();
+		XmlSchemeSeq xmlSchemes = doc.getSchemes();
+		XmlScheme[] xmlSchemesArray = xmlSchemes.getSchemeArray();
 		for(int i = 0; i < xmlSchemesArray.length; i++) {
-			com.syrus.amficom.scheme.xml.Scheme xmlScheme = xmlSchemesArray[i];
-			scheme = Scheme.createInstance(
-					userId,
-					domainId,
-					// XXX xmlScheme.getimporttype();
-					"ucm",
-					xmlScheme,
-					new ClonedIdsPool());
+			XmlScheme xmlScheme = xmlSchemesArray[i];
+			scheme = Scheme.createInstance(LoginManager.getUserId(), xmlScheme, this.pool, "ucm");
+			
 			scheme.setName(scheme.getName()
 					+ "(imported "
 //					+ MapPropertiesManager.getDateFormat()
@@ -103,8 +104,7 @@ public class SchemeImportCommand extends AbstractCommand {
 					+ xmlfile.getName() + "\')");
 			
 //			scheme.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
-			
-			// only one map imported
+
 			break;
 		}
 		System.setProperty("user.dir",  user_dir);
@@ -142,7 +142,16 @@ public class SchemeImportCommand extends AbstractCommand {
 		if(!(new File(fileName)).exists())
 			return null;
 
-		return fileName;*/
+		return fileName;
 	}
 }
 
+class SchemeComplementor implements XmlComplementor {
+	public void complementStorableObject(final XmlStorableObject storableObject, final String importType) throws CreateObjectException {
+		final XmlScheme scheme = (XmlScheme)storableObject;
+		final Identifier domainId = LoginManager.getDomainId();
+		final XmlIdentifier xmlDomainId = domainId.getXmlTransferable();
+		ImportUidMapDatabase.insert(importType, xmlDomainId, domainId);
+		scheme.setDomainId(xmlDomainId);
+	}
+}

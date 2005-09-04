@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.3 2005/09/01 13:39:19 stas Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.4 2005/09/04 13:35:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -267,10 +267,10 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 			updateOnly = true;
 		}
 		this.schemePath = (SchemePath)or;
-		this.cmbSolutionCombo.removeAllItems();
-		
+				
 		if (this.schemePath != null) {
 			if (!updateOnly) {
+				this.cmbSolutionCombo.removeAllItems();
 				SchemeMonitoringSolution solution = this.schemePath.getParentSchemeMonitoringSolution();
 				Scheme scheme = solution.getParentScheme(); 
 				this.cmbSolutionCombo.addElements(scheme.getSchemeMonitoringSolutions());

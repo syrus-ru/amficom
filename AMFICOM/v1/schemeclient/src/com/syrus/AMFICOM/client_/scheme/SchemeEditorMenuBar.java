@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMenuBar.java,v 1.7 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: SchemeEditorMenuBar.java,v 1.8 2005/09/04 13:35:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2005/09/04 13:35:45 $
  * @module schemeclient
  */
 
@@ -132,13 +132,13 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuPath.add(menuPathSave);
 		menuPath.add(menuPathDelete);
 		menuPath.add(menuPathCancel);
-		menuPath.addSeparator();
+//		menuPath.addSeparator();
 		menuPath.add(menuPathAddStart);
 		menuPath.add(menuPathAddEnd);
-		menuPath.addSeparator();
+//		menuPath.addSeparator();
 		menuPath.add(menuPathAddLink);
 		menuPath.add(menuPathRemoveLink);
-		menuPath.addSeparator();
+//		menuPath.addSeparator();
 		menuPath.add(menuPathAutoCreate);
 		
 		menuReport.setName("menuReport");

@@ -1,5 +1,5 @@
 /*-
- * $Id: UgoToolBar.java,v 1.8 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: UgoToolBar.java,v 1.9 2005/09/04 13:35:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,13 +27,13 @@ import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
 
-import oracle.jdeveloper.layout.VerticalFlowLayout;
+//import oracle.jdeveloper.layout.VerticalFlowLayout;
 
 import com.syrus.AMFICOM.client_.scheme.graph.actions.MarqeeAction;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/09/04 13:35:45 $
  * @module schemeclient
  */
 
@@ -44,8 +44,8 @@ public class UgoToolBar extends JToolBar {
 	protected UgoTabbedPane pane;
 	protected int position = 0;
 	protected Map<String, AbstractButton> commands = new HashMap<String, AbstractButton>();
-	private static LayoutManager vertical = new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, false, false);
-	private static LayoutManager horizontal = new FlowLayout(FlowLayout.LEFT, 0, 0);
+//	private static LayoutManager vertical = new VerticalFlowLayout(VerticalFlowLayout.TOP, 0, 0, false, false);
+//	private static LayoutManager horizontal = new FlowLayout(FlowLayout.LEFT, 0, 0);
 	private static String[] buttons = new String[] { Constants.MARQUEE,
 			Constants.SEPARATOR, Constants.RECTANGLE, Constants.ELLIPSE,
 			Constants.LINE, Constants.TEXT, Constants.HORIZONTAL_GLUE };
@@ -56,7 +56,7 @@ public class UgoToolBar extends JToolBar {
 		createToolBar();
 		setFloatable(false);
 	}
-	
+	/*
 	public void setOrientation(int o) {
 		super.setOrientation(o);
 		if (o == VERTICAL) {
@@ -65,7 +65,7 @@ public class UgoToolBar extends JToolBar {
 		else if (o == HORIZONTAL) {
 			setLayout(horizontal);
 		}
-	}
+	}*/
 	
 	protected void createToolBar() {
 		this.commands.putAll(createGraphButtons());

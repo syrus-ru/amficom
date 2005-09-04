@@ -27,6 +27,9 @@ public class PathNewCommand extends AbstractCommand {
 
 	public void execute() {
 		ElementsPanel panel = this.pane.getCurrentPanel();
+		if (panel == null) {
+			return;
+		}
 		Scheme scheme = panel.getSchemeResource().getScheme();
 		
 		if (scheme == null) {

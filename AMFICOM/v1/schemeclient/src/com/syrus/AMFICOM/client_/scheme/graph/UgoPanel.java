@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.13 2005/08/19 15:41:34 stas Exp $
+ * $Id: UgoPanel.java,v 1.14 2005/09/04 13:35:45 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/04 13:35:45 $
  * @module schemeclient
  */
 
@@ -177,6 +177,10 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 						cell = SchemeActions.findBlockPortCellById(this.graph, port.getId());
 						if (cell != null) {
 							GraphActions.setText(this.graph, cell, port.getName());
+						}
+					} else if (id.getMajor() == ObjectEntities.SCHEMEPATH_CODE) {
+						if (this instanceof ElementsPanel) {
+							((ElementsPanel)this).getSchemeResource().setCashedPathMemberIds(null);
 						}
 					}
 				} catch (ApplicationException e) {
