@@ -61,10 +61,9 @@ public final class SimpleMapElementController implements Wrapper
 		Object result = null;
 
 		if(object == null) {
-			result = null;
+			result = " ";
 		}
-		else
-		if(key.equals(KEY_NAME)) {
+		else if(key.equals(KEY_NAME)) {
 			Class clazz = object.getClass();
 			String methodName = "getName";
 			String name = "";
@@ -89,31 +88,29 @@ public final class SimpleMapElementController implements Wrapper
 					name = (String )(method.invoke(object, new Object[0]));
 					result = name;
 				} catch(InvocationTargetException iae) {
-					result = null;
+					result = " ";
 				} catch(IllegalAccessException iae) {
-					result = null;
+					result = " ";
 				} catch(NoSuchMethodException nsme) {
-					result = null;
+					result = " ";
 				}
 			}
 		}
-		else
-		if(object instanceof MapElement) {
+		else if(object instanceof MapElement) {
 			MapElement me = (MapElement )object;
 			if(key.equals(KEY_TYPE)) {
 				if(me instanceof SiteNode) {
 					SiteNodeType siteNodeType = (((SiteNode)me).getType());
 					result = siteNodeType.getName();
 				}
-				else
-				if(me instanceof PhysicalLink) {
+				else if(me instanceof PhysicalLink) {
 					PhysicalLinkType physicalLinkType = (((PhysicalLink)me).getType());
 					result = physicalLinkType.getName();
 				}
 			}
 		}
 		else {
-			result = null;
+			result = " ";
 		}
 		return result;
 	}
