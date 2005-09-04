@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlComplementorRegistry.java,v 1.3 2005/09/04 11:55:51 bass Exp $
+ * $Id: XmlComplementorRegistry.java,v 1.4 2005/09/04 12:18:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.xml.XmlStorableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.3 $, $Date: 2005/09/04 11:55:51 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/04 12:18:31 $
  * @module general
  */
 public final class XmlComplementorRegistry {
@@ -53,13 +53,15 @@ public final class XmlComplementorRegistry {
 	/**
 	 * @param storableObject
 	 * @param importType
+	 * @throws CreateObjectException
 	 * @throws RetrieveObjectException
 	 * @throws UpdateObjectException
 	 */
 	public static void complementStorableObject(
 			final XmlStorableObject storableObject,
 			final String importType)
-	throws RetrieveObjectException, UpdateObjectException {
+	throws CreateObjectException, RetrieveObjectException,
+			UpdateObjectException {
 		assert storableObject != null : NON_NULL_EXPECTED;
 		final Identifier id = Identifier.fromXmlTransferable(storableObject.getId(), importType);
 		assert id != null : NON_NULL_EXPECTED;
