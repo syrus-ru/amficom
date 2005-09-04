@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.79 2005/09/02 12:44:10 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.80 2005/09/04 13:39:41 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: krupenn $
- * @version $Revision: 1.79 $, $Date: 2005/09/02 12:44:10 $
+ * @version $Revision: 1.80 $, $Date: 2005/09/04 13:39:41 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -473,17 +473,23 @@ public final class SiteNodeType extends StorableObjectType
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
 		if(!bitMaps.isEmpty()) {
-			return bitMaps.iterator().next().getId();
+			AbstractBitmapImageResource imageResource = bitMaps.iterator().next();
+			if(imageResource instanceof BitmapImageResource
+					&& ((BitmapImageResource)imageResource).getImage().length == 0) {
+				try {
+					((BitmapImageResource)imageResource).setImage(readData(codename));
+					StorableObjectPool.flush(imageResource, userId, true);
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
+			}
+			return imageResource.getId();
 		}
 
 		// interprete codename as a file name
 		// and create new bitmap image resource
 		try {
-			File file = new File(codename);
-			FileInputStream in = new FileInputStream(file.getAbsolutePath());
-			byte[] data = new byte[(int) file.length()];
-			in.read(data);
-			in.close();
+			byte[] data = readData(codename);
 
 			BitmapImageResource bitmapImageResource = BitmapImageResource.createInstance(
 					userId,
@@ -497,7 +503,15 @@ public final class SiteNodeType extends StorableObjectType
 			e.printStackTrace();
 		}
 		return null;
+	}
 
+	private static byte[] readData(String filename) throws IOException {
+		File file = new File(filename);
+		FileInputStream in = new FileInputStream(file.getAbsolutePath());
+		byte[] data = new byte[(int) file.length()];
+		in.read(data);
+		in.close();
+		return data;
 	}
 
 }
