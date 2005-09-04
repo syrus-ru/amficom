@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolTippedPanel.java,v 1.11 2005/08/17 14:14:20 arseniy Exp $
+ * $Id: MapToolTippedPanel.java,v 1.12 2005/09/04 13:50:06 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.map.MapElement;
  * NetMapViewer (прозрачно передавать сообщения мыши родительскому объекту 
  * NetMapViewer). Объект класса MapToolTippedPanel прозрачен и не видим для
  * пользователя
- * @version $Revision: 1.11 $, $Date: 2005/08/17 14:14:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/09/04 13:50:06 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapToolTippedPanel extends JComponent {
@@ -83,17 +83,13 @@ public class MapToolTippedPanel extends JComponent {
 
 	@Override
 	public JToolTip createToolTip() {
-// System.out.println("create tooltip");
-//        JToolTip tip = new MapToolTip(parent.getLogicalNetLayer());
         JToolTip tip = new MapToolTip();
         tip.setComponent(this.component);
-//		System.out.println("tooltip created!");
         return tip;
     }
 
 	@Override
 	public String getToolTipText() 	{
-//		System.out.println("create tooltip");
 		LogicalNetLayer logicalNetLayer = this.parent.getLogicalNetLayer();
 		if(logicalNetLayer == null)
 			return "";
@@ -108,11 +104,9 @@ public class MapToolTippedPanel extends JComponent {
 			MapElement me = logicalNetLayer.getMapElementAtPoint(
 					logicalNetLayer.getCurrentPoint(),
 					this.parent.getVisibleBounds());
-//			System.out.println("tooltip created! " + me.getToolTipText());
 			return logicalNetLayer.getMapViewController().getController(me).getToolTipText(me);
 		} 
 		catch (Exception ex) {
-//			System.out.println("TOOLTIP: " + ex.getMessage());
 			return "";
 		} 
 	}
@@ -123,8 +117,8 @@ public class MapToolTippedPanel extends JComponent {
  * возникающих событий мыши родительскому объекту
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/08/17 14:14:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/09/04 13:50:06 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 class MapToolTippedPanelListener implements MouseListener, MouseMotionListener {
