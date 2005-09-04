@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainsPerspective.java,v 1.2 2005/08/23 15:02:15 bob Exp $
+* $Id: DomainsPerspective.java,v 1.3 2005/09/04 11:31:23 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,17 +16,17 @@ import com.syrus.AMFICOM.manager.Perspective;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/23 15:02:15 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/04 11:31:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class DomainsPerspective extends AbstractCommand {
 
-	private final JGraphText graphText;
+	private final ManagerMainFrame graphText;
 	private Perspective	perspective;
 	
-	public DomainsPerspective(final JGraphText graphText) {
+	public DomainsPerspective(final ManagerMainFrame graphText) {
 		this.graphText = graphText;
 	}
 	

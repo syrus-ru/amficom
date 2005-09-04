@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.13 2005/09/04 09:27:50 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.14 2005/09/04 11:31:23 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.manager.UI.JGraphText;
+import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/04 09:27:50 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/04 11:31:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -28,7 +28,7 @@ public class DomainBeanFactory extends TabledBeanFactory {
 	
 	private static DomainBeanFactory instance;
 	
-	private DomainBeanFactory(final JGraphText graphText) {
+	private DomainBeanFactory(final ManagerMainFrame graphText) {
 		super("Entity.Domain", 
 			"Entity.Domain", 
 			"com/syrus/AMFICOM/manager/resources/icons/domain.gif", 
@@ -36,7 +36,7 @@ public class DomainBeanFactory extends TabledBeanFactory {
 		super.graphText = graphText;
 	}
 	
-	public static final DomainBeanFactory getInstance(final JGraphText graphText) {
+	public static final DomainBeanFactory getInstance(final ManagerMainFrame graphText) {
 		if(instance == null) {
 			synchronized (DomainBeanFactory.class) {
 				if(instance == null) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.13 2005/08/24 14:05:47 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.14 2005/09/04 11:31:23 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,11 +23,11 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.manager.UI.JGraphText;
+import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.measurement.KIS;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/24 14:05:47 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/04 11:31:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -36,7 +36,7 @@ public class RTUBeanFactory extends TabledBeanFactory {
 	
 	private static RTUBeanFactory instance;
 	
-	private RTUBeanFactory(final JGraphText graphText) {
+	private RTUBeanFactory(final ManagerMainFrame graphText) {
 		super("Entity.RemoteTestUnit", 
 			"Entity.RemoteTestUnit.acronym", 
 			"com/syrus/AMFICOM/manager/resources/icons/rtu.gif", 
@@ -44,7 +44,7 @@ public class RTUBeanFactory extends TabledBeanFactory {
 		super.graphText = graphText;
 	}
 	
-	public static final RTUBeanFactory getInstance(final JGraphText graphText) {
+	public static final RTUBeanFactory getInstance(final ManagerMainFrame graphText) {
 		if(instance == null) {
 			synchronized (RTUBeanFactory.class) {
 				if(instance == null) {

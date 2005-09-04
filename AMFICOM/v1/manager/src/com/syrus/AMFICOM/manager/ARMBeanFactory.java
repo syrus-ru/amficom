@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.12 2005/08/24 14:05:47 bob Exp $
+ * $Id: ARMBeanFactory.java,v 1.13 2005/09/04 11:31:23 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.manager.UI.JGraphText;
+import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/24 14:05:47 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/04 11:31:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -36,7 +36,7 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 	
 	private Validator validator;
 	
-	private ARMBeanFactory(final JGraphText graphText) {
+	private ARMBeanFactory(final ManagerMainFrame graphText) {
 		super("Entity.AutomatedWorkplace", 
 			"Entity.AutomatedWorkplace.acronym", 
 			"com/syrus/AMFICOM/manager/resources/icons/arm.gif", 
@@ -44,7 +44,7 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 		super.graphText = graphText;
 	}
 	
-	public static final ARMBeanFactory getInstance(final JGraphText graphText) {
+	public static final ARMBeanFactory getInstance(final ManagerMainFrame graphText) {
 		if(instance == null) {
 			synchronized (ARMBeanFactory.class) {
 				if(instance == null) {

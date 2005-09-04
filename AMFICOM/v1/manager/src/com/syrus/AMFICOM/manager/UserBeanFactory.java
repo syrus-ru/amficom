@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.13 2005/08/24 14:05:47 bob Exp $
+* $Id: UserBeanFactory.java,v 1.14 2005/09/04 11:31:23 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,11 +38,11 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.manager.UI.JGraphText;
+import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/24 14:05:47 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/04 11:31:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -52,7 +52,7 @@ public class UserBeanFactory extends TabledBeanFactory {
 	private static UserBeanFactory instance;
 	
 	private List<String> names;
-	private UserBeanFactory(final JGraphText graphText) {
+	private UserBeanFactory(final ManagerMainFrame graphText) {
 		super("Entity.User", 
 			"Entity.User", 
 			"com/syrus/AMFICOM/manager/resources/icons/user.gif", 
@@ -71,7 +71,7 @@ public class UserBeanFactory extends TabledBeanFactory {
 		this.names.add(null);
 	}
 	
-	public static final UserBeanFactory getInstance(final JGraphText graphText) {
+	public static final UserBeanFactory getInstance(final ManagerMainFrame graphText) {
 		if (instance == null) {
 			synchronized (UserBeanFactory.class) {
 				if (instance == null) {

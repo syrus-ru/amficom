@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.15 2005/08/24 14:05:47 bob Exp $
+ * $Id: AbstractBean.java,v 1.16 2005/09/04 11:31:23 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,12 +27,12 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.manager.UI.JGraphText;
+import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/24 14:05:47 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/04 11:31:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -47,7 +47,7 @@ public abstract class AbstractBean {
 
 	protected JPanel		propertyPanel;
 
-	protected JGraphText	graphText;
+	protected ManagerMainFrame	graphText;
 	
 	protected AbstractBean() {
 		// nothing
@@ -113,7 +113,7 @@ public abstract class AbstractBean {
 		return this.getClass().getName() + " is " + this.codeName + '/' + this.getName() + '/';
 	}
 	
-	public final void setGraphText(final JGraphText graphText) {
+	public final void setGraphText(final ManagerMainFrame graphText) {
 		this.graphText = graphText;
 	}
 	

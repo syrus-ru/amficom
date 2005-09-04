@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.16 2005/09/01 14:33:06 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.17 2005/09/04 11:31:23 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,14 +19,14 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.manager.UI.JGraphText;
+import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/01 14:33:06 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/04 11:31:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -39,7 +39,7 @@ public class NetBeanFactory extends AbstractBeanFactory {
 	
 	private Validator validator;
 	
-	private NetBeanFactory(final JGraphText graphText) {
+	private NetBeanFactory(final ManagerMainFrame graphText) {
 		super("Entity.Net", 
 			"Entity.Net", 
 			"com/syrus/AMFICOM/manager/resources/icons/cloud.gif", 
@@ -47,7 +47,7 @@ public class NetBeanFactory extends AbstractBeanFactory {
 		super.graphText = graphText;
 	}
 	
-	public static final NetBeanFactory getInstance(final JGraphText graphText) {
+	public static final NetBeanFactory getInstance(final ManagerMainFrame graphText) {
 		if(instance == null) {
 			synchronized (NetBeanFactory.class) {
 				if(instance == null) {

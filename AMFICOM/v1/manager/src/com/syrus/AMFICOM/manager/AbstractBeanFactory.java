@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractBeanFactory.java,v 1.8 2005/08/24 14:05:47 bob Exp $
+* $Id: AbstractBeanFactory.java,v 1.9 2005/09/04 11:31:23 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,11 +15,11 @@ import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.manager.UI.JGraphText;
+import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/24 14:05:47 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/04 11:31:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -36,7 +36,7 @@ public abstract class AbstractBeanFactory {
 	
 	protected int count = 0;
 	
-	protected JGraphText graphText;
+	protected ManagerMainFrame graphText;
 	
 	protected AbstractBeanFactory(final String nameKey, 
 	                              final String shortNameKey,
@@ -78,11 +78,11 @@ public abstract class AbstractBeanFactory {
 		return LangModelManager.getString(this.shortNameKey);
 	}	
 	
-	public final JGraphText getGraphText() {
+	public final ManagerMainFrame getGraphText() {
 		return this.graphText;
 	}
 	
-	public final void setGraphText(JGraphText graphText) {
+	public final void setGraphText(ManagerMainFrame graphText) {
 		this.graphText = graphText;
 	}
 	

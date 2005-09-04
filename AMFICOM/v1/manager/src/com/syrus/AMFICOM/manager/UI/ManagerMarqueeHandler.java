@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerMarqueeHandler.java,v 1.3 2005/08/24 14:05:47 bob Exp $
+* $Id: ManagerMarqueeHandler.java,v 1.4 2005/09/04 11:31:23 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.manager.MPort;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/24 14:05:47 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/04 11:31:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -43,10 +43,10 @@ public class ManagerMarqueeHandler extends BasicMarqueeHandler {
 	// Holds the First and the Current Port
 	protected PortView port, firstPort;
 
-	private final JGraphText	graphText;
+	private final ManagerMainFrame	graphText;
 	
 	
-	public ManagerMarqueeHandler(final JGraphText graphText) {
+	public ManagerMarqueeHandler(final ManagerMainFrame graphText) {
 		this.graphText = graphText;
 	}
 
