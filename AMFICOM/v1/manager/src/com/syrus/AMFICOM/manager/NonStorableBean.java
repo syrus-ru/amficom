@@ -1,5 +1,5 @@
 /*-
-* $Id: NonStorableBean.java,v 1.2 2005/08/17 15:59:40 bob Exp $
+* $Id: NonStorableBean.java,v 1.3 2005/09/04 15:13:26 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,9 +8,11 @@
 
 package com.syrus.AMFICOM.manager;
 
+import com.syrus.AMFICOM.general.ApplicationException;
+
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/04 15:13:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -32,6 +34,12 @@ public class NonStorableBean extends AbstractBean {
 	@Override
 	public void applyTargetPort(MPort oldPort, MPort newPort) {
 		// nothing
+		
+	}
+	
+	@Override
+	public void dispose() throws ApplicationException {
+		// nothing ?
 		
 	}
 }

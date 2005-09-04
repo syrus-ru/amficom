@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.13 2005/09/04 11:31:23 bob Exp $
+ * $Id: ARMBeanFactory.java,v 1.14 2005/09/04 15:13:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/04 11:31:23 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/04 15:13:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -92,6 +92,43 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 	}	
 	
 	private class ARMBean extends NonStorableBean implements DomainNetworkItem {
+		
+		@Override
+		public void dispose() throws ApplicationException {
+			TypicalCondition typicalCondition = 
+				new TypicalCondition(this.getCodeName(), 
+					OperationSort.OPERATION_EQUALS, 
+					ObjectEntities.LAYOUT_ITEM_CODE, 
+					StorableObjectWrapper.COLUMN_NAME);
+
+			Set<LayoutItem> beanLayoutItems = StorableObjectPool.getStorableObjectsByCondition(
+				typicalCondition, 
+				true, 
+				true);
+			
+			LinkedIdsCondition linkedIdsCondition = 
+				new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
+					ObjectEntities.LAYOUT_ITEM_CODE);
+			
+			Set<LayoutItem> beanChildrenLayoutItems =  StorableObjectPool.getStorableObjectsByCondition(
+				linkedIdsCondition, 
+				true, 
+				true);
+			
+			for(LayoutItem layoutItem : beanChildrenLayoutItems) {
+				if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {					
+					Log.debugMessage("ARMBean.dispose | "
+						+ layoutItem.getId() + ", "
+						+ layoutItem.getName() 
+						+ ", layoutName:" 
+						+ layoutItem.getLayoutName(), 
+					Log.DEBUGLEVEL09);			
+					AbstractBean childBean = this.graphText.getCell(layoutItem);
+					childBean.dispose();
+					childBean.disposeLayoutItem();
+				}					
+			}
+		}
 		
 		public void setDomainId(Identifier oldDomainId,
 								Identifier newDomainId) {

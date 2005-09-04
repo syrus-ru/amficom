@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.13 2005/08/24 14:05:47 bob Exp $
+ * $Id: UserBean.java,v 1.14 2005/09/04 15:13:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/24 14:05:47 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/04 15:13:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -69,6 +69,17 @@ public class UserBean extends Bean implements  ARMItem {
 	public void applyTargetPort(MPort oldPort, MPort newPort) {
 		// TODO Auto-generated method stub
 		
+	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.manager.AbstractBean#dispose()
+	 */
+	@Override
+	public void dispose() throws ApplicationException {
+		Log.debugMessage("UserBean.dispose | " + Identifier.createIdentifiers(this.user.getCharacteristics(false)), Log.DEBUGLEVEL09);
+		Log.debugMessage("UserBean.dispose | " + this.id, Log.DEBUGLEVEL09);
+		StorableObjectPool.delete(this.user.getCharacteristics(false));
+		StorableObjectPool.delete(this.id);		
 	}
 	
 	@Override

@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: ManagerMainFrame.java,v 1.1 2005/09/04 11:27:51 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.2 2005/09/04 15:13:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -118,7 +118,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/09/04 11:27:51 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/04 15:13:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -637,14 +637,25 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 							MPort target = (MPort) connectionSet.getPort(edge, false);
 
 							AbstractBean bean = source.getUserObject();
+							bean.applyTargetPort(target, null);
 							try {
-								this.getLayoutItem(bean.getCodeName()).setParentId(Identifier.VOID_IDENTIFIER);
+								LayoutItem layoutItem = this.getLayoutItem(bean.getCodeName());
+								Log.debugMessage(".graphChanged | removedObject | layoutItem:" 
+										+ layoutItem.getName() 
+										+ ", layoutName:" 
+										+ layoutItem.getLayoutName(),
+									Log.DEBUGLEVEL09);
+								layoutItem.setParentId(Identifier.VOID_IDENTIFIER);
+								
+								bean.dispose();
+								bean.disposeLayoutItem();
+								
 							} catch (ApplicationException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
 							}
 							
-							bean.applyTargetPort(target, null);
+							
 						 } 
 					}
 				}

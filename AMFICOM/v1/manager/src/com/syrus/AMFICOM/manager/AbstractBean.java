@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractBean.java,v 1.16 2005/09/04 11:31:23 bob Exp $
+ * $Id: AbstractBean.java,v 1.17 2005/09/04 15:13:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/04 11:31:23 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/04 15:13:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -65,12 +65,44 @@ public abstract class AbstractBean {
 		return this.id;
 	}
 
-	public boolean isTargetValid(AbstractBean targetBean) {
+	public boolean isTargetValid(final AbstractBean targetBean) {
 		return this.validator.isValid(this, targetBean);
 	}
 	
-	public abstract void applyTargetPort(MPort oldPort, MPort newPort); 
+	public abstract void applyTargetPort(final MPort oldPort,
+	                                     final MPort newPort); 
 
+	public abstract void dispose() throws ApplicationException;
+	
+	public final void disposeLayoutItem() throws ApplicationException {
+		CompoundCondition compoundCondition = 
+			new CompoundCondition(new TypicalCondition(
+				this.getCodeName(), 
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.LAYOUT_ITEM_CODE,
+				StorableObjectWrapper.COLUMN_NAME),
+				CompoundConditionSort.AND,
+				new LinkedIdsCondition(
+					LoginManager.getUserId(),
+					ObjectEntities.LAYOUT_ITEM_CODE) {
+					@Override
+					public boolean isNeedMore(Set< ? extends StorableObject> storableObjects) {
+						return storableObjects.isEmpty();
+					}
+				});
+		
+		Set<LayoutItem> layoutItems = 
+			StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true);	
+		
+//		Log.debugMessage("AbstractBean.disposeLayoutItem | delete: " + layoutItems, Log.DEBUGLEVEL10);
+		
+		for(final LayoutItem layoutItem : layoutItems) {
+			StorableObjectPool.delete(layoutItem.getCharacteristics(false));
+		}
+		
+		StorableObjectPool.delete(layoutItems);
+	}
+	
 	public JPanel getPropertyPanel() {
 		return this.propertyPanel;
 	}
@@ -79,12 +111,12 @@ public abstract class AbstractBean {
 		return null;
 	}
 
-	public void updateEdgeAttributes(	DefaultEdge edge,
-										MPort port) {
+	public void updateEdgeAttributes(	final DefaultEdge edge,
+	                                 	final MPort port) {
 		// nothing yet
 	}
 
-	protected final void setPropertyPanel(JPanel propertyPanel) {
+	protected final void setPropertyPanel(final JPanel propertyPanel) {
 		this.propertyPanel = propertyPanel;
 	}
 
@@ -92,7 +124,7 @@ public abstract class AbstractBean {
 		this.id = id;
 	}
 
-	protected final void setValidator(Validator validator) {
+	protected final void setValidator(final Validator validator) {
 		this.validator = validator;
 	}
 	
@@ -100,13 +132,13 @@ public abstract class AbstractBean {
 		return this.codeName;
 	}
 	
-	public final void setCodeName(String codeName) {
+	public final void setCodeName(final String codeName) {
 		this.codeName = codeName;
 	}
 	
 	public abstract String getName();
 	
-	public abstract void setName(String name);
+	public abstract void setName(final String name);
 
 	@Override
 	public String toString() {

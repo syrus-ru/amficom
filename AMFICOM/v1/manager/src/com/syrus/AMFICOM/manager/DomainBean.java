@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.10 2005/09/01 14:33:06 bob Exp $
+ * $Id: DomainBean.java,v 1.11 2005/09/04 15:13:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/01 14:33:06 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/04 15:13:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -162,6 +162,11 @@ public class DomainBean extends Bean {
 		}		
 		System.out.println("DomainBean.applyTargetPort() | " + this.domain.getId() + ", set parent " + parentId); 
 		this.domain.setDomainId(parentId);
+	}	
+
+	@Override
+	public void dispose() throws ApplicationException {
+		Log.debugMessage("DomainBean.dispose | " + this.id, Log.DEBUGLEVEL09);
+		StorableObjectPool.delete(this.id);		
 	}
-	
 }

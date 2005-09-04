@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBean.java,v 1.8 2005/08/24 14:05:47 bob Exp $
+ * $Id: ServerBean.java,v 1.9 2005/09/04 15:13:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,9 +19,10 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/24 14:05:47 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/04 15:13:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -99,4 +100,9 @@ public class ServerBean extends Bean implements DomainNetworkItem {
 		this.server.setDomainId(newDomainId);
 	}
 
+	@Override
+	public void dispose() throws ApplicationException {
+		Log.debugMessage("ServerBean.dispose | " + this.id, Log.DEBUGLEVEL09);
+		StorableObjectPool.delete(this.id);
+	}
 }
