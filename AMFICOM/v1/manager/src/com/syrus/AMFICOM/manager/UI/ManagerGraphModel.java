@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModel.java,v 1.10 2005/09/02 13:27:13 bob Exp $
+* $Id: ManagerGraphModel.java,v 1.11 2005/09/04 09:27:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/02 13:27:13 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/04 09:27:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -36,20 +36,17 @@ public class ManagerGraphModel extends DefaultGraphModel {
 			Edge edge2 = (Edge) edge;
 			final MPort source = (MPort)edge2.getSource();
 			final MPort target = (MPort) edge2.getTarget();
-			result = this.isTargetValid(source, target);
 			Log.debugMessage("ManagerGraphModel.acceptsSource | port " + port 
 				+ "\n\t" + source + " -> " + target, Log.DEBUGLEVEL09);
-			if (result) {
-				if (port == source) {			
-					// Changing source 
-				} else {
-					//	Changing target
+			if (port == source) {			
+				// Changing source 
+			} else {
+				//	Changing target
+				result = this.isTargetValid(source, target);					
+				if (result) {
 					List<Port> targets = ((MPort)port).getTargets();
 					result = targets.size() == 0;
 				}
-				
-				// XXX check for looping
-				
 			}
 		}
 		
@@ -62,7 +59,13 @@ public class ManagerGraphModel extends DefaultGraphModel {
 	                                     final MPort target) {
 		boolean result = source != null && target != null;
 		if (result) {
-			result = this.isTargetValid(source, target);
+			if (source.getTargets().size() > 0) {
+				Log.debugMessage("ManagerGraphModel.isTargetValid | source already refer to target", Log.DEBUGLEVEL09);
+				result = false;
+			}
+			if (result) {
+				result = this.isTargetValid(source, target);
+			}
 		}
 		return result;
 	}
@@ -88,21 +91,16 @@ public class ManagerGraphModel extends DefaultGraphModel {
 	}
 	
 	private boolean isTargetValid(final MPort source,
-	                              final MPort target) {		
-		if (source.getTargets().size() > 0) {
-			Log.debugMessage("ManagerGraphModel.isTargetValid | source already refer to target", Log.DEBUGLEVEL09);
-			return false;
-		}		
-		Object sourceObject = source.getUserObject();
-		Object targetObject = target.getUserObject();
+	                              final MPort target) {	
+		
+		AbstractBean sourceBean = source.getBean();
+		AbstractBean targetBean = target.getBean();
 		Log.debugMessage("ManagerGraphModel.isTargetValid | " 
 				+ source 
 				+ " > " 
 				+ target, 
 			Log.DEBUGLEVEL09);
-		if (sourceObject instanceof AbstractBean && targetObject instanceof AbstractBean) {
-			AbstractBean sourceBean = (AbstractBean) sourceObject;
-			AbstractBean targetBean = (AbstractBean) targetObject;
+		if (sourceBean != null && targetBean != null) {
 			boolean result = sourceBean.isTargetValid(targetBean) && !this.isLooped(source, target);
 			Log.debugMessage("ManagerGraphModel.isTargetValid | " + result, 
 				Log.DEBUGLEVEL10);
