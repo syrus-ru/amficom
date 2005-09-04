@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.24 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.25 2005/09/04 13:41:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.controllers.TopologicalNodeController;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -27,7 +28,7 @@ import com.syrus.util.Log;
  * действие
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/04 13:41:34 $
  * @module mapviewclient
  */
 public class CreatePhysicalNodeCommandAtomic extends MapActionCommand {
@@ -63,6 +64,8 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand {
 		try {
 			this.node = TopologicalNode.createInstance(
 					LoginManager.getUserId(),
+					LangModelMap.getString("noname"),
+					"",
 					this.physicalLink,
 					this.point);
 
