@@ -1,7 +1,7 @@
 package com.syrus.AMFICOM.manager.UI;
 
 /*
- * $Id: JGraphText.java,v 1.28 2005/09/02 13:26:37 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.1 2005/09/04 11:27:51 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,6 +36,8 @@ import javax.swing.JButton;
 import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 import javax.swing.JLabel;
+import javax.swing.JMenu;
+import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
@@ -43,6 +45,7 @@ import javax.swing.JToolBar;
 import javax.swing.JTree;
 import javax.swing.SwingConstants;
 import javax.swing.TransferHandler;
+import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.event.TreeSelectionEvent;
 import javax.swing.event.TreeSelectionListener;
@@ -70,8 +73,16 @@ import org.jgraph.graph.GraphSelectionModel;
 import org.jgraph.graph.GraphUndoManager;
 import org.jgraph.graph.Port;
 
+import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
+import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -107,12 +118,12 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/09/02 13:26:37 $
+ * @version $Revision: 1.1 $, $Date: 2005/09/04 11:27:51 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
-public class JGraphText implements GraphSelectionListener {	
+public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectionListener {	
 	
 	JGraph						graph;
 
@@ -120,7 +131,7 @@ public class JGraphText implements GraphSelectionListener {
 
 	NonRootGraphTreeModel		treeModel;
 
-	private JPanel				propertyPanel;
+	JPanel				propertyPanel;
 
 	// Undo Manager
 	protected GraphUndoManager	undoManager;
@@ -129,7 +140,7 @@ public class JGraphText implements GraphSelectionListener {
 	protected Action			undo, redo, remove, group, ungroup, tofront, toback,
 			cut, copy, paste;
 
-	private GridBagConstraints	gbc2;
+	GridBagConstraints	gbc2;
 
 	public JButton				userButton;
 
@@ -151,32 +162,241 @@ public class JGraphText implements GraphSelectionListener {
 
 	Perspective			perspective;
 	
-	private Identifier			xTypeId;
-	private Identifier			yTypeId;
-	private Identifier			nonStorableObjectNameTypeId;
+	Identifier			xTypeId;
+	Identifier			yTypeId;
+	Identifier			nonStorableObjectNameTypeId;
 	
 	boolean						arranging;
-	final ApplicationContext	context;
-
-	private Dispatcher	dispatcher;
 	
 	private Map<String, AbstractBean> beanMap;
 	private Map<String, AbstractBeanFactory> factoryMap;
 
-	private ManagerGraphModel	model;
+	private ManagerGraphModel	graphModel;
 	
-	public JGraphText(final ApplicationContext aContext) {
-		this.context = aContext;
-		this.dispatcher = aContext.getDispatcher();
+	UIDefaults					frames;
+	
+	static final String TREE_FRAME = "Label.ElementsTree";
+	static final String GRAPH_FRAME = "Label.Graph";
+	static final String PROPERTIES_FRAME = "Label.Properties";
+	
+	public ManagerMainFrame(final ApplicationContext aContext) {
+		super(aContext, "Manager", new AbstractMainMenuBar(aContext.getApplicationModel()) {
+
+			private JMenu				menuView;
+			@Override
+			protected void addMenuItems() {
+
+				this.menuView = new JMenu(LangModelGeneral.getString(ApplicationModel.MENU_VIEW));
+				this.menuView.setName(ApplicationModel.MENU_VIEW);
+
+				final JMenuItem menuViewTreeItem = new JMenuItem(LangModelManager.getString(TREE_FRAME));
+				menuViewTreeItem.setName(TREE_FRAME);
+				menuViewTreeItem.addActionListener(this.actionAdapter);
+				this.menuView.add(menuViewTreeItem);
+
+				final JMenuItem menuViewGraphItem = new JMenuItem(LangModelManager.getString(GRAPH_FRAME));
+				menuViewGraphItem.setName(GRAPH_FRAME);
+				menuViewGraphItem.addActionListener(this.actionAdapter);
+				this.menuView.add(menuViewGraphItem);
+
+				final JMenuItem menuViewPropertiesItem = new JMenuItem(LangModelManager.getString(PROPERTIES_FRAME));
+				menuViewPropertiesItem.setName(PROPERTIES_FRAME);
+				menuViewPropertiesItem.addActionListener(this.actionAdapter);
+				this.menuView.add(menuViewPropertiesItem);
+
+				this.menuView.addSeparator();
+
+				final JMenuItem menuViewArrangeItem = new JMenuItem(LangModelGeneral.getString(ApplicationModel.MENU_VIEW_ARRANGE));
+				menuViewArrangeItem.setName(ApplicationModel.MENU_VIEW_ARRANGE);
+				menuViewArrangeItem.addActionListener(this.actionAdapter);
+				this.menuView.add(menuViewArrangeItem);
+
+				this.add(this.menuView);
+
+				this.addApplicationModelListener(new ApplicationModelListener() {
+
+					public void modelChanged(String elementName) {
+						this.modelChanged();
+					}
+
+					public void modelChanged(String[] elementNames) {
+						this.modelChanged();
+					}
+
+					private void modelChanged() {
+						menuViewTreeItem.setVisible(getApplicationModel().isVisible(TREE_FRAME));
+						menuViewTreeItem.setEnabled(getApplicationModel().isEnabled(TREE_FRAME));
+
+						menuViewGraphItem.setVisible(getApplicationModel().isVisible(GRAPH_FRAME));
+						menuViewGraphItem.setEnabled(getApplicationModel().isEnabled(GRAPH_FRAME));
+
+						menuViewPropertiesItem.setVisible(getApplicationModel().isVisible(PROPERTIES_FRAME));
+						menuViewPropertiesItem.setEnabled(getApplicationModel().isEnabled(PROPERTIES_FRAME));
+						
+						menuViewArrangeItem.setVisible(getApplicationModel().isVisible(
+							ApplicationModel.MENU_VIEW_ARRANGE));
+						menuViewArrangeItem.setEnabled(getApplicationModel().isEnabled(
+							ApplicationModel.MENU_VIEW_ARRANGE));
+
+					}
+
+				});
+			
+				
+			}
+		}, new AbstractMainToolBar() {});
+		
+		final JDesktopPane desktopPane1 = this.desktopPane;
+		
+		this.setWindowArranger(new WindowArranger(this) {
+
+			@Override
+			public void arrange() {
+				ManagerMainFrame f = (ManagerMainFrame) this.mainframe;
+
+				int w = desktopPane1.getSize().width;
+				int h = desktopPane1.getSize().height;
+
+				int width = w / 5;
+
+				JInternalFrame treeFrame = ((JInternalFrame) f.frames.get(TREE_FRAME));
+				JInternalFrame graphFrame = ((JInternalFrame) f.frames.get(GRAPH_FRAME));
+				JInternalFrame propertiesFrame = ((JInternalFrame) f.frames.get(PROPERTIES_FRAME));
+
+				normalize(treeFrame);
+				normalize(graphFrame);
+				normalize(propertiesFrame);
+				
+				treeFrame.setSize(width, h);
+				graphFrame.setSize(w - 2 * width, h);
+				propertiesFrame.setSize(width, h);
+				
+				
+				treeFrame.setLocation(0, 0);
+				graphFrame.setLocation(treeFrame.getWidth(), 0);
+				propertiesFrame.setLocation(graphFrame.getX() + graphFrame.getWidth(), 0);
+				
+				treeFrame.setVisible(true);
+				graphFrame.setVisible(true);
+				propertiesFrame.setVisible(true);
+				
+				// XXX bypass for local testing
+				ManagerMainFrame.this.domainsButton.doClick();
+			}
+		});
+
+		this.frames = new UIDefaults();		
+		
+		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				JScrollPane pane = new JScrollPane(ManagerMainFrame.this.tree);
+				JInternalFrame frame = new JInternalFrame(LangModelManager.getString(TREE_FRAME), true);
+				desktopPane1.add(frame);
+				frame.getContentPane().add(pane);
+				return frame;
+			}
+		});		
+		
+		this.frames.put(GRAPH_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table){
+			
+			// show graph frame
+			
+			JPanel panel = new JPanel(new GridBagLayout());
+			
+			GridBagConstraints gbc = new GridBagConstraints();
+			
+			gbc.fill = GridBagConstraints.BOTH;
+			gbc.weightx = 1.0;
+			gbc.weighty = 0.0;
+			gbc.gridwidth = GridBagConstraints.REMAINDER;
+
+			Box box = Box.createHorizontalBox();
+			
+			final JToolBar perspectiveBox = createPerspecives();
+			ManagerMainFrame.this.currentPerspectiveLabel = new JLabel();
+			
+			box.add(new JLabel(LangModelManager.getString("Label.Levels") + ':'));
+			box.add(perspectiveBox);
+			
+			
+			panel.add(box, gbc);
+			
+			gbc.weightx = 1.0;
+
+			panel.add(createToolBar(), gbc);
+			
+			gbc.weightx = 0.0;
+			gbc.weighty = 1.0;
+			gbc.gridwidth = GridBagConstraints.RELATIVE;
+			
+			gbc.gridheight = GridBagConstraints.RELATIVE;
+			
+			panel.add(createEntityToolBar(), gbc);
+			
+			JScrollPane pane = new JScrollPane(ManagerMainFrame.this.graph);
+			
+			gbc.gridwidth = GridBagConstraints.REMAINDER;
+			
+			panel.add(pane, gbc);
+			
+			gbc.gridheight = GridBagConstraints.REMAINDER;
+			gbc.weighty = 0.0;
+			panel.add(ManagerMainFrame.this.currentPerspectiveLabel, gbc);
+			
+			JInternalFrame frame = new JInternalFrame(LangModelManager.getString(GRAPH_FRAME), true);
+			desktopPane1.add(frame);
+			frame.getContentPane().add(panel);
+
+			frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));			
+			return frame;
+		}
+		});		
+		
+		this.frames.put(PROPERTIES_FRAME, new UIDefaults.LazyValue() {
+
+				public Object createValue(UIDefaults table){
+				
+	//			 show property frame
+				JInternalFrame frame = new JInternalFrame(LangModelManager.getString(PROPERTIES_FRAME), true);
+				desktopPane1.add(frame);
+				ManagerMainFrame.this.propertyPanel = new JPanel(new GridBagLayout());
+				ManagerMainFrame.this.gbc2 = new GridBagConstraints();
+				ManagerMainFrame.this.gbc2.fill = GridBagConstraints.BOTH;
+				ManagerMainFrame.this.gbc2.weightx = 1.0;
+				ManagerMainFrame.this.gbc2.weighty = 1.0;
+				ManagerMainFrame.this.gbc2.gridwidth = GridBagConstraints.REMAINDER;
+	
+				
+				frame.getContentPane().add(ManagerMainFrame.this.propertyPanel);			
+				return frame;
+	
+			}
+		});	
+	
+		super.windowArranger.arrange();
+		
+	}
+	
+
+	@Override
+	protected void initModule() {
+		super.initModule();
+		
+		final ApplicationModel applicationModel = this.aContext.getApplicationModel();
+		applicationModel.setCommand(ManagerModel.DOMAINS_COMMAND, new DomainsPerspective(this));
+		applicationModel.setCommand(ManagerModel.FLUSH_COMMAND, new FlushCommand());	
 		
 		this.beanMap = new HashMap<String, AbstractBean>();
 		this.factoryMap = new HashMap<String, AbstractBeanFactory>();
 		
 		// Construct Model and Graph
-		this.model = new ManagerGraphModel();
+		this.graphModel = new ManagerGraphModel();
 		
-		this.graph = new JGraph(this.model,
-			new GraphLayoutCache(this.model,
+		this.graph = new JGraph(this.graphModel,
+			new GraphLayoutCache(this.graphModel,
 					new DefaultCellViewFactory(),
 					true));
 		
@@ -208,19 +428,38 @@ public class JGraphText implements GraphSelectionListener {
 		// Register UndoManager with the Model
 		this.graph.getModel().addUndoableEditListener(this.undoManager);
 
-		this.createModelListener();
+		this.createModelListener();		
+	}
+	
+	@Override
+	protected void setDefaultModel(ApplicationModel aModel) {
+		super.setDefaultModel(aModel);		
+		aModel.setEnabled(ApplicationModel.MENU_VIEW, true);
+		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
+		aModel.setEnabled(TREE_FRAME, true);
+		aModel.setEnabled(GRAPH_FRAME, true);
+		aModel.setEnabled(PROPERTIES_FRAME, true);
+
+		
+		aModel.setVisible(ApplicationModel.MENU_VIEW, true);
+		aModel.setVisible(ApplicationModel.MENU_VIEW_ARRANGE, true);
+		aModel.setVisible(TREE_FRAME, true);
+		aModel.setVisible(GRAPH_FRAME, true);
+		aModel.setVisible(PROPERTIES_FRAME, true);
+		
+		aModel.fireModelChanged();
 	}
 	
 	private void createModelListener() {
 		this.graph.getModel().addGraphModelListener(
 			new GraphModelListener() {
 			public void graphChanged(GraphModelEvent e) {
-				if (JGraphText.this.arranging) {
+				if (ManagerMainFrame.this.arranging) {
 					return;
 				}
 				GraphModelChange change = e.getChange();
 				
-				GraphModel model = JGraphText.this.graph.getModel();
+				GraphModel model = ManagerMainFrame.this.graph.getModel();
 				
 				Object[] inserted = change.getInserted();
 				Object[] changed = change.getChanged();
@@ -229,9 +468,9 @@ public class JGraphText implements GraphSelectionListener {
 				if (inserted != null) {
 					for(Object insertedObject : inserted) {
 						if (model.isPort(insertedObject)) {
-							TreeNode[] pathToRoot = JGraphText.this.treeModel.getPathToRoot((TreeNode) insertedObject);
+							TreeNode[] pathToRoot = ManagerMainFrame.this.treeModel.getPathToRoot((TreeNode) insertedObject);
 							if (pathToRoot != null)
-								JGraphText.this.tree.scrollPathToVisible(new TreePath(pathToRoot));
+								ManagerMainFrame.this.tree.scrollPathToVisible(new TreePath(pathToRoot));
 						}
 					}
 				}
@@ -240,9 +479,9 @@ public class JGraphText implements GraphSelectionListener {
 					for(Object changedObject : changed) {
 						Log.debugMessage(".graphChanged() | changedObject " + changedObject + '[' + changedObject.getClass().getName() + ']', Log.DEBUGLEVEL10);
 						if (model.isPort(changedObject)) {
-							TreeNode[] pathToRoot = JGraphText.this.treeModel.getPathToRoot((TreeNode) changedObject);
+							TreeNode[] pathToRoot = ManagerMainFrame.this.treeModel.getPathToRoot((TreeNode) changedObject);
 							if (pathToRoot != null) {
-								JGraphText.this.tree.scrollPathToVisible(new TreePath(pathToRoot));
+								ManagerMainFrame.this.tree.scrollPathToVisible(new TreePath(pathToRoot));
 							}
 						} else  if (model.isEdge(changedObject)) {
 							Edge edge = (Edge) changedObject;
@@ -288,7 +527,7 @@ public class JGraphText implements GraphSelectionListener {
 							bean.applyTargetPort(target2, target);
 							
 							
-							if (!arranging) {								
+							if (!ManagerMainFrame.this.arranging) {								
 								String codeName = bean.getCodeName();
 								try {									
 									LayoutItem sourceItem = this.getLayoutItem(codeName);
@@ -299,7 +538,7 @@ public class JGraphText implements GraphSelectionListener {
 									sourceItem.setParentId(targetItemId);
 								} catch (ApplicationException e2) {
 									e2.printStackTrace();
-									JOptionPane.showMessageDialog(graph, 
+									JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, 
 										e2.getMessage(), 
 										LangModelManager.getString("Error"),
 										JOptionPane.ERROR_MESSAGE);
@@ -318,18 +557,18 @@ public class JGraphText implements GraphSelectionListener {
 							Rectangle2D rectangle2D = GraphConstants.getBounds(attributes);
 							String title = cell.getUserObject().toString();
 
-							if (!arranging) {								
+							if (!ManagerMainFrame.this.arranging) {								
 								String codeName = bean.getCodeName();
 								try {
 									LayoutItem item = this.getLayoutItem(codeName);
 									if (item == null) {
 										item = LayoutItem.createInstance(LoginManager.getUserId(),
 											Identifier.VOID_IDENTIFIER,
-											perspective.getPerspectiveName(),
+											ManagerMainFrame.this.perspective.getPerspectiveName(),
 											codeName);
 										
 										Characteristic.createInstance(LoginManager.getUserId(),
-											(CharacteristicType) StorableObjectPool.getStorableObject(xTypeId, true),
+											(CharacteristicType) StorableObjectPool.getStorableObject(ManagerMainFrame.this.xTypeId, true),
 											"x",
 											"x",
 											Integer.toString((int) rectangle2D.getX()),
@@ -338,7 +577,7 @@ public class JGraphText implements GraphSelectionListener {
 											true);
 										
 										Characteristic.createInstance(LoginManager.getUserId(),
-											(CharacteristicType) StorableObjectPool.getStorableObject(yTypeId, true),
+											(CharacteristicType) StorableObjectPool.getStorableObject(ManagerMainFrame.this.yTypeId, true),
 											"y",
 											"y",
 											Integer.toString((int) rectangle2D.getY()),
@@ -348,7 +587,7 @@ public class JGraphText implements GraphSelectionListener {
 										
 										if (bean.getId().isVoid()) {
 											Characteristic.createInstance(LoginManager.getUserId(),
-												(CharacteristicType) StorableObjectPool.getStorableObject(nonStorableObjectNameTypeId, true),
+												(CharacteristicType) StorableObjectPool.getStorableObject(ManagerMainFrame.this.nonStorableObjectNameTypeId, true),
 												"title",
 												"title",
 												title,
@@ -373,7 +612,7 @@ public class JGraphText implements GraphSelectionListener {
 									
 								} catch (ApplicationException e2) {
 									e2.printStackTrace();
-									JOptionPane.showMessageDialog(graph, 
+									JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, 
 										e2.getMessage(), 
 										LangModelManager.getString("Error"),
 										JOptionPane.ERROR_MESSAGE);
@@ -414,7 +653,7 @@ public class JGraphText implements GraphSelectionListener {
 			private LayoutItem getLayoutItem(final String codename) throws ApplicationException {
 				CompoundCondition compoundCondition = 
 					new CompoundCondition(new TypicalCondition(
-						JGraphText.this.perspective.getPerspectiveName(), 
+						ManagerMainFrame.this.perspective.getPerspectiveName(), 
 						OperationSort.OPERATION_EQUALS,
 						ObjectEntities.LAYOUT_ITEM_CODE,
 						LayoutItemWrapper.COLUMN_LAYOUT_NAME),
@@ -450,107 +689,7 @@ public class JGraphText implements GraphSelectionListener {
 		});
 	}
 	
-	public void openFrames(final JDesktopPane desktopPane) {
-		{
-			// show tree frame
-			JScrollPane pane = new JScrollPane(this.tree);
-			JInternalFrame frame = new JInternalFrame(LangModelManager.getString("Label.ElementsTree"), true);
-			desktopPane.add(frame);
-			frame.getContentPane().add(pane);
-			
-			frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
-			frame.setSize(200, 600);
-			frame.setLocation(0, 0);
-			
-			frame.setVisible(true);
-		}
-		
-		{
-			
-			// show graph frame
-			
-			JPanel panel = new JPanel(new GridBagLayout());
-			
-			GridBagConstraints gbc = new GridBagConstraints();
-			
-			gbc.fill = GridBagConstraints.BOTH;
-			gbc.weightx = 1.0;
-			gbc.weighty = 0.0;
-			gbc.gridwidth = GridBagConstraints.REMAINDER;
-
-			Box box = Box.createHorizontalBox();
-			
-			JToolBar perspectiveBox = this.createPerspecives();
-			this.currentPerspectiveLabel = new JLabel();
-			
-			box.add(new JLabel(LangModelManager.getString("Label.Levels") + ':'));
-			box.add(perspectiveBox);
-			
-			
-			panel.add(box, gbc);
-			
-			gbc.weightx = 1.0;
-
-			panel.add(this.createToolBar(), gbc);
-			
-			gbc.weightx = 0.0;
-			gbc.weighty = 1.0;
-			gbc.gridwidth = GridBagConstraints.RELATIVE;
-			
-			gbc.gridheight = GridBagConstraints.RELATIVE;
-			
-			panel.add(this.createEntityToolBar(), gbc);
-			
-			JScrollPane pane = new JScrollPane(this.graph);
-			
-			gbc.gridwidth = GridBagConstraints.REMAINDER;
-			
-			panel.add(pane, gbc);
-			
-			gbc.gridheight = GridBagConstraints.REMAINDER;
-			gbc.weighty = 0.0;
-			panel.add(this.currentPerspectiveLabel, gbc);
-			
-			JInternalFrame frame = new JInternalFrame(LangModelManager.getString("Label.Graph"), true);
-			desktopPane.add(frame);
-			frame.getContentPane().add(panel);
-
-			frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
-			frame.setSize(800, 800);
-			frame.setLocation(200, 0);
-
-			frame.setVisible(true);			
-			
-		}
-		
-		{
-			
-//			 show property frame
-			JInternalFrame frame = new JInternalFrame(LangModelManager.getString("Label.Properties"), true);
-			desktopPane.add(frame);
-			this.propertyPanel = new JPanel(new GridBagLayout());
-			this.gbc2 = new GridBagConstraints();
-			this.gbc2.fill = GridBagConstraints.BOTH;
-			this.gbc2.weightx = 1.0;
-			this.gbc2.weighty = 1.0;
-			this.gbc2.gridwidth = GridBagConstraints.REMAINDER;
-
-			
-			frame.getContentPane().add(this.propertyPanel);
-			
-			frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
-			frame.setSize(200, 200);
-			frame.setLocation(0, 600);
-			
-			frame.setVisible(true);
-			
-
-		}		
-		
-		this.domainsButton.doClick();
-	}	
-	
-	private JToolBar createPerspecives() {		
+JToolBar createPerspecives() {		
 		
 		JToolBar perspectives = new JToolBar();
 		
@@ -558,7 +697,11 @@ public class JGraphText implements GraphSelectionListener {
 		
 		this.domainsButton = perspectives.add(new AbstractAction(LangModelManager.getString("Action.Domains")) {
 			public void actionPerformed(ActionEvent e) {
-					JGraphText.this.context.getApplicationModel().getCommand(ManagerModel.DOMAINS_COMMAND).execute();
+				ApplicationContext context = ManagerMainFrame.this.getContext();
+				ApplicationModel applicationModel = context.getApplicationModel();
+				Command command = applicationModel.getCommand(ManagerModel.DOMAINS_COMMAND);
+				command.execute();
+//					ManagerMainFrame.this.getContext().getApplicationModel().getCommand(ManagerModel.DOMAINS_COMMAND).execute();
 			}
 		});	
 
@@ -568,7 +711,7 @@ public class JGraphText implements GraphSelectionListener {
 			.getImage("images/refresh.gif"))) {
 			
 			public void actionPerformed(ActionEvent e) {
-				JGraphText.this.context.getApplicationModel().getCommand(ManagerModel.FLUSH_COMMAND).execute();
+				ManagerMainFrame.this.getContext().getApplicationModel().getCommand(ManagerModel.FLUSH_COMMAND).execute();
 				}
 		});
 		
@@ -877,7 +1020,7 @@ public class JGraphText implements GraphSelectionListener {
 		this.treeModel.setRoot(cell);
 	}
 	
-	private JToolBar createToolBar() {
+	JToolBar createToolBar() {
 		JToolBar toolBar = new JToolBar(SwingConstants.HORIZONTAL);
 		toolBar.setFloatable(false);
 		
@@ -894,9 +1037,9 @@ public class JGraphText implements GraphSelectionListener {
 			
 			AbstractAction action = new AbstractAction("", connectonIcon) {
 				public void actionPerformed(ActionEvent e) {
-					graph.setPortsVisible(!JGraphText.this.graph.isPortsVisible());
-					this.putValue(SMALL_ICON, JGraphText.this.graph.isPortsVisible() ? connectonIcon : connectoffIcon);
-					this.putValue(SHORT_DESCRIPTION, LangModelManager.getString(JGraphText.this.graph.isPortsVisible() ?  "Action.connectionEnable" : "Action.connectionDisable"));
+					ManagerMainFrame.this.graph.setPortsVisible(!ManagerMainFrame.this.graph.isPortsVisible());
+					this.putValue(SMALL_ICON, ManagerMainFrame.this.graph.isPortsVisible() ? connectonIcon : connectoffIcon);
+					this.putValue(SHORT_DESCRIPTION, LangModelManager.getString(ManagerMainFrame.this.graph.isPortsVisible() ?  "Action.connectionEnable" : "Action.connectionDisable"));
 				}
 			};
 			action.actionPerformed(null);
@@ -986,7 +1129,7 @@ public class JGraphText implements GraphSelectionListener {
 				private static final long	serialVersionUID	= 1338961419658950016L;
 
 				public void actionPerformed(ActionEvent e) {
-					graph.setScale(1.0);
+					ManagerMainFrame.this.graph.setScale(1.0);
 				}
 			};
 			toolBar.add(zoom);
@@ -1001,7 +1144,7 @@ public class JGraphText implements GraphSelectionListener {
 			ImageIcon zoomInIcon = new ImageIcon(zoomInUrl);
 			AbstractAction zoomIn = new AbstractAction("", zoomInIcon) {
 				public void actionPerformed(ActionEvent e) {
-					graph.setScale(2 * graph.getScale());
+					ManagerMainFrame.this.graph.setScale(2.0 * ManagerMainFrame.this.graph.getScale());
 				}
 			};
 			toolBar.add(zoomIn);
@@ -1015,7 +1158,7 @@ public class JGraphText implements GraphSelectionListener {
 			ImageIcon zoomOutIcon = new ImageIcon(zoomOutUrl);
 			AbstractAction zoomOut = new AbstractAction("", zoomOutIcon) {
 				public void actionPerformed(ActionEvent e) {
-					graph.setScale(graph.getScale() / 2);
+					ManagerMainFrame.this.graph.setScale(ManagerMainFrame.this.graph.getScale() / 2.0);
 				}
 			};
 			toolBar.add(zoomOut);
@@ -1054,7 +1197,7 @@ public class JGraphText implements GraphSelectionListener {
 		this.redo.setEnabled(this.undoManager.canRedo(this.graph.getGraphLayoutCache()));
 	}
 	
-	private JToolBar createEntityToolBar() {
+	JToolBar createEntityToolBar() {
 		JToolBar toolBar = new JToolBar(SwingConstants.VERTICAL);
 		toolBar.setFloatable(false);
 		this.userButton = this.createAction(toolBar, UserBeanFactory.getInstance(this));
@@ -1080,14 +1223,14 @@ public class JGraphText implements GraphSelectionListener {
 			
 			public void actionPerformed(ActionEvent e) {
 				try {
-					AbstractBean bean = factory.createBean(JGraphText.this.perspective);
+					AbstractBean bean = factory.createBean(ManagerMainFrame.this.perspective);
 					if (this.entityIndices == null) {
 						this.entityIndices = new HashMap<String, Integer>();
 					}
 					Integer i = this.entityIndices.get(name);
 					int index = (i != null ? i : 0) + 1;
 					this.entityIndices.put(name, index);
-					JGraphText.this.createChild(null, 
+					ManagerMainFrame.this.createChild(null, 
 						factory.getShortName() + "-" + index, 
 						bean, 
 						20, 
@@ -1097,13 +1240,13 @@ public class JGraphText implements GraphSelectionListener {
 						factory.getImage());
 				} catch (CreateObjectException e1) {
 					e1.printStackTrace();
-					JOptionPane.showMessageDialog(JGraphText.this.graph, 
+					JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, 
 						e1.getMessage(), 
 						LangModelManager.getString("Error"),
 						JOptionPane.ERROR_MESSAGE);
 				} catch (IllegalObjectEntityException e1) {
 					e1.printStackTrace();
-					JOptionPane.showMessageDialog(JGraphText.this.graph, 
+					JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, 
 						e1.getMessage(), 
 						LangModelManager.getString("Error"),
 						JOptionPane.ERROR_MESSAGE);
@@ -1134,7 +1277,7 @@ public class JGraphText implements GraphSelectionListener {
 		MPort targetPort = (MPort) target.getChildAt(0);
 		if (sourcePort != targetPort) {
 			final boolean canConnect =
-				this.model.isConnectionPermitted(sourcePort, targetPort);
+				this.graphModel.isConnectionPermitted(sourcePort, targetPort);
 			if (canConnect) {
 				DefaultEdge edge = new DefaultEdge();
 				edge.setSource(sourcePort);
@@ -1302,7 +1445,7 @@ public class JGraphText implements GraphSelectionListener {
 		this.tree.getSelectionModel().addTreeSelectionListener(new TreeSelectionListener() {
 			public void valueChanged(TreeSelectionEvent e) {
 				final Object lastPathComponent = e.getPath().getLastPathComponent();
-				final GraphSelectionModel selectionModel = JGraphText.this.graph.getSelectionModel();
+				final GraphSelectionModel selectionModel = ManagerMainFrame.this.graph.getSelectionModel();
 				if (e.isAddedPath()) {
 					selectionModel.setSelectionCell(lastPathComponent);
 				} 
@@ -1347,7 +1490,7 @@ public class JGraphText implements GraphSelectionListener {
 						GraphConstants.setValue(attributeMap, evt.getNewValue());
 						Map viewMap = new Hashtable();
 						viewMap.put(cell, attributeMap);
-						graph.getModel().edit(viewMap, null, null, null);
+						ManagerMainFrame.this.graph.getModel().edit(viewMap, null, null, null);
 					}
 					
 				}
