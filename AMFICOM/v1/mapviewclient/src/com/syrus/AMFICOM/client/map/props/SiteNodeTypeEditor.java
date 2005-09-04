@@ -81,7 +81,7 @@ public final class SiteNodeTypeEditor
 		this.nameLabel.setText(LangModelMap.getString("Name"));
 //		this.nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		this.libraryLabel.setText(LangModelMap.getString("MapLibrary"));
+		this.libraryLabel.setText(LangModelMap.getString("InLibrary"));
 
 		this.descLabel.setText(LangModelMap.getString("Description"));
 //		this.descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
@@ -228,6 +228,9 @@ public final class SiteNodeTypeEditor
 		super.addToUndoableListener(this.nameTextField);
 		super.addToUndoableListener(this.libraryComboBox);
 		super.addToUndoableListener(this.descTextArea);
+
+		// TODO fix ImagePanelbefore enabling it
+		this.imageButton.setEnabled(false);
 	}
 
 	public Object getObject() {
