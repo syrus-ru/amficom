@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.30 2005/08/15 14:25:36 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.31 2005/09/04 13:42:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/08/15 14:25:36 $
+ * @version $Revision: 1.31 $, $Date: 2005/09/04 13:42:24 $
  * @module maviewclient_v1
  */
 public class MapActionCommandBundle extends CommandBundle
@@ -165,15 +165,17 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Удаляется кабельный путь
 	 */
-	protected void removeCablePath(CablePath mcpe)
+	protected void removeCablePath(CablePath cablePath)
 		throws Throwable
 	{
-		RemoveCablePathCommandAtomic cmd = new RemoveCablePathCommandAtomic(mcpe);
+		RemoveCablePathCommandAtomic cmd = new RemoveCablePathCommandAtomic(cablePath);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		if(cmd.getResult() != Command.RESULT_OK)
 			throw cmd.getException();
 		add(cmd);
+		this.logicalNetLayer.getMapViewController().scanPaths(
+				cablePath.getSchemeCableLink().getParentScheme());
 	}
 
 	/**
