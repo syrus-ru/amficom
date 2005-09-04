@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlComplementorRegistry.java,v 1.2 2005/09/04 11:07:21 bass Exp $
+ * $Id: XmlComplementorRegistry.java,v 1.3 2005/09/04 11:55:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.general.xml.XmlStorableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/09/04 11:07:21 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/04 11:55:51 $
  * @module general
  */
 public final class XmlComplementorRegistry {
@@ -69,7 +69,7 @@ public final class XmlComplementorRegistry {
 			throw new UpdateObjectException("XmlComplementorRegistry.complementStorableObject() | no complementor(s) found to complement the object");
 		}
 		for (final XmlComplementor complementor : complementors) {
-			complementor.complementStorableObject(storableObject);
+			complementor.complementStorableObject(storableObject, importType);
 		}
 	}
 }
