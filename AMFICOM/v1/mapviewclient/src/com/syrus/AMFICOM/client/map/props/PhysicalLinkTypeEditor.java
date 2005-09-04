@@ -79,7 +79,7 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		this.jPanel.setName(LangModelGeneral.getString("Properties"));
 
 		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.libraryLabel.setText(LangModelMap.getString("MapLibrary"));
+		this.libraryLabel.setText(LangModelMap.getString("InLibrary"));
 		this.descLabel.setText(LangModelMap.getString("Description"));
 		this.colorLabel.setText(LangModelMap.getString("Color"));
 		this.thicknessLabel.setText(LangModelMap.getString("Thickness"));
