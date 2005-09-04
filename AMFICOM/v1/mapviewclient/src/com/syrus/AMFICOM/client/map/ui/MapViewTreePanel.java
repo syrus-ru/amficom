@@ -9,7 +9,7 @@ import javax.swing.tree.TreeSelectionModel;
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
 import com.syrus.AMFICOM.logic.Item;
@@ -31,7 +31,7 @@ public final class MapViewTreePanel extends JPanel {
 
 		MapViewTreeModel model = MapViewTreeModel.getInstance();
 
-		Item root = new IconedNode("root", LangModelGeneral.getString("root"));
+		Item root = new IconedNode("root", LangModelMap.getString("root"));
 
 		IconedTreeUI iconedTreeUI = new IconedTreeUI(root);
 		TreeFilterUI flterTreeUI = new TreeFilterUI(iconedTreeUI, new FilterPanel());
