@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapViewNavigatorCommand.java,v 1.9 2005/09/02 09:31:37 krupenn Exp $
+ * $Id: ViewMapViewNavigatorCommand.java,v 1.10 2005/09/04 13:43:48 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,6 +15,7 @@ import java.awt.Toolkit;
 
 import javax.swing.ImageIcon;
 import javax.swing.JDesktopPane;
+import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
@@ -26,7 +27,7 @@ import com.syrus.AMFICOM.client.model.Command;
 /**
  * отобразить окно привязки схем к карте 
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/09/02 09:31:37 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/04 13:43:48 $
  * @module mapviewclient
  */
 public class ViewMapViewNavigatorCommand extends AbstractCommand {
@@ -58,6 +59,7 @@ public class ViewMapViewNavigatorCommand extends AbstractCommand {
 			this.treeFrame.setResizable(true);
 			this.treeFrame.setMaximizable(false);
 			this.treeFrame.setIconifiable(false);
+			this.treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			this.treeFrame.setFrameIcon(new ImageIcon(
 					Toolkit.getDefaultToolkit().getImage("images/general.gif")));
 			this.treeFrame.getContentPane().setLayout(new BorderLayout());
