@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.52 2005/08/22 11:31:54 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.53 2005/09/04 13:44:29 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
  * 
  * 
  * 
- * @version $Revision: 1.52 $, $Date: 2005/08/22 11:31:54 $
+ * @version $Revision: 1.53 $, $Date: 2005/09/04 13:44:29 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -344,6 +344,9 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE_AS, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_CLOSE, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_EXPORT, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_MAP, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP, true);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL, true);
 	
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS, true);
@@ -363,6 +366,8 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS, true);
 				
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT_CREATE, true);
+
 				aModel.fireModelChanged();
 				setTitle(LangModelMap.getString("MapView") + ": " + ((MapView )pce.getNewValue()).getName());
 			}
@@ -389,6 +394,9 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE_AS, false);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_CLOSE, false);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_EXPORT, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_MAP, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP, false);
 	
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE, false);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE_AS, false);
@@ -396,6 +404,20 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME, false);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME, false);
 	
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_LINK_TYPE, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_NEW_SITE_TYPE, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_OPEN, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE, false);
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_SAVE_AS, false);
+				
+				aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT_CREATE, false);
+
 				aModel.fireModelChanged();
 				setTitle(LangModelMap.getString("MapView"));
 			}
@@ -409,6 +431,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP, false);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY, false);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW, false);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT, false);
 
@@ -422,6 +445,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP, false);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW, false);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY, false);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW, false);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT, false);
 
@@ -450,6 +474,9 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_IMPORT, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_MAP, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP, true);
+		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL, true);
 
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_EXPORT, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_LIBRARY_IMPORT, true);
