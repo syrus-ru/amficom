@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.6 2005/08/23 15:02:15 bob Exp $
+* $Id: Manager.java,v 1.7 2005/09/04 11:28:17 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,11 +14,6 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
-import com.syrus.AMFICOM.client.model.AbstractMainFrame;
-import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
-import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
-import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
 import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
@@ -33,7 +28,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/23 15:02:15 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/04 11:28:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -49,7 +44,23 @@ public class Manager extends AbstractApplication {
 	@Override
 	protected void init() {
 		super.init();
-		super.aContext.setApplicationModel(new ManagerModel(super.aContext));				
+		super.aContext.setApplicationModel(new ManagerModel(super.aContext));
+		
+		try {
+			TypicalCondition tc = new TypicalCondition("sys", OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEMUSER_CODE, SystemUserWrapper.COLUMN_LOGIN);
+			Set<SystemUser> systemUserWithLoginSys = StorableObjectPool.getStorableObjectsByCondition(tc, true);
+
+			assert !systemUserWithLoginSys.isEmpty() : "There is no sys user";
+			
+			LoginManager.setUserId(systemUserWithLoginSys.iterator().next().getId());
+			
+//			createCharacteristicTypes();
+			
+		} catch (ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
 		super.startMainFrame(new ManagerMainFrame(super.aContext), 
 			Toolkit.getDefaultToolkit().getImage("images/main/administrate_mini.gif"));
 	}
@@ -58,52 +69,7 @@ public class Manager extends AbstractApplication {
 		new Manager();
 	}
 	
-	private class ManagerMainFrame extends AbstractMainFrame {
-		private JGraphText	text;
 
-		public ManagerMainFrame(final ApplicationContext aContext) {
-			super(aContext, "Manager", new AbstractMainMenuBar(aContext.getApplicationModel()) {
-
-				@Override
-				protected void addMenuItems() {
-					// TODO Auto-generated method stub
-					
-				}
-			}, new AbstractMainToolBar() {});
-			
-			
-			
-			try {
-				TypicalCondition tc = new TypicalCondition("sys", OperationSort.OPERATION_EQUALS, ObjectEntities.SYSTEMUSER_CODE, SystemUserWrapper.COLUMN_LOGIN);
-				Set<SystemUser> systemUserWithLoginSys = StorableObjectPool.getStorableObjectsByCondition(tc, true);
-
-				assert !systemUserWithLoginSys.isEmpty() : "There is no sys user";
-				
-				LoginManager.setUserId(systemUserWithLoginSys.iterator().next().getId());
-				
-//				createCharacteristicTypes();
-				
-				this.text.openFrames(this.desktopPane);
-
-			} catch (ApplicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-			}			
-		}
-		
-		@Override
-		protected void initModule() {
-			super.initModule();
-			
-			this.text = new JGraphText(this.aContext);
-			
-			ApplicationModel applicationModel = this.aContext.getApplicationModel();
-			
-			applicationModel.setCommand(ManagerModel.DOMAINS_COMMAND, new DomainsPerspective(this.text));
-			applicationModel.setCommand(ManagerModel.FLUSH_COMMAND, new FlushCommand());
-		}
-	}
-	
 	void createCharacteristicTypes() 
 	throws ApplicationException {
 		
