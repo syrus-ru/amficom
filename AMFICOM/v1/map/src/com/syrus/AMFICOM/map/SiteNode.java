@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.80 2005/09/02 13:58:42 krupenn Exp $
+ * $Id: SiteNode.java,v 1.81 2005/09/04 17:06:27 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: krupenn $
- * @version $Revision: 1.80 $, $Date: 2005/09/02 13:58:42 $
+ * @version $Revision: 1.81 $, $Date: 2005/09/04 17:06:27 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
@@ -415,9 +415,9 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			SiteNode siteNode = null;
 			if(existingIdentifier != null) {
-				clonedIdsPool.setExistingId(xmlId, existingIdentifier);
 				siteNode = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(siteNode != null) {
+					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
 					siteNode.fromXmlTransferable(xmlSiteNode, clonedIdsPool, importType);
 				}
 				else{
