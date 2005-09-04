@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.19 2005/09/02 13:54:24 krupenn Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.20 2005/09/04 09:20:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,20 +17,17 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.general.UpdateObjectException;
 
 /**
- * @version $Revision: 1.19 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.20 $
+ * @author $Author: bass $
  * @module map
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {

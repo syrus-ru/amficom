@@ -1,10 +1,11 @@
-/*
- * $Id: Filter.java,v 1.17 2005/08/25 11:47:11 max Exp $
+/*-
+ * $Id: Filter.java,v 1.18 2005/09/04 09:17:56 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.newFilter;
 
 import java.util.Collection;
@@ -12,14 +13,13 @@ import java.util.LinkedList;
 import java.util.List;
 
 import com.syrus.AMFICOM.general.ConditionWrapper;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/25 11:47:11 $
- * @author $Author: max $
- * @module misc
+ * @version $Revision: 1.18 $, $Date: 2005/09/04 09:17:56 $
+ * @author $Author: bass $
+ * @module filter
  */
 public class Filter {
 	
