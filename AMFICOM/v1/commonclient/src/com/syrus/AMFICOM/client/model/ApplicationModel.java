@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.7 2005/08/11 18:51:08 arseniy Exp $
+ * $Id: ApplicationModel.java,v 1.8 2005/09/04 11:29:09 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Ќаучно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.util.Log;
  * ћодель приложени€ описывает действи€, которые пользователь (оператор) может
  * производить с системой
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/11 18:51:08 $
+ * @author $Author: bob $
+ * @version $Revision: 1.8 $, $Date: 2005/09/04 11:29:09 $
  * @module commonclient
  */
 public class ApplicationModel {
@@ -39,25 +39,29 @@ public class ApplicationModel {
 
 	private static ApplicationModel	instance;
 
-	public static final String	MENU_SESSION					= "menuSession";
+	private static final String	MENU							= "Menu";
+	
+	public static final String	MENU_SESSION					= MENU + ".Session";
 
-	public static final String	MENU_SESSION_NEW				= "menuSessionNew";
+	public static final String	MENU_SESSION_NEW				= MENU_SESSION + ".New";
 
-	public static final String	MENU_SESSION_CLOSE				= "menuSessionClose";
+	public static final String	MENU_SESSION_CLOSE				= MENU_SESSION + ".Close";
 
-	public static final String	MENU_SESSION_OPTIONS			= "menuSessionOptions";
+	public static final String	MENU_SESSION_OPTIONS			= MENU_SESSION + ".Options";
 
-	public static final String	MENU_SESSION_CHANGE_PASSWORD	= "menuSessionChangePassword";
+	public static final String	MENU_SESSION_CHANGE_PASSWORD	= MENU_SESSION + ".ChangePassword";
 
-	public static final String	MENU_SESSION_DOMAIN				= "menuSessionDomain";
+	public static final String	MENU_SESSION_DOMAIN				= MENU_SESSION + ".Domain";
 
-	public static final String	MENU_VIEW_ARRANGE				= "menuViewArrange";
+	public static final String	MENU_VIEW						= MENU + ".View";
+	
+	public static final String	MENU_VIEW_ARRANGE				= MENU_VIEW + ".WindowArrange";
 
-	public static final String	MENU_EXIT						= "menuExit";
+	public static final String	MENU_EXIT						= MENU + ".Exit";
 
-	public static final String	MENU_HELP						= "menuHelp";
+	public static final String	MENU_HELP						= MENU + ".Help";
 
-	public static final String	MENU_HELP_ABOUT					= "menuHelpAbout";
+	public static final String	MENU_HELP_ABOUT					= MENU_HELP + ".About";
 
 	/**
 	 * To obtain a shared instance, use {@link #getInstance()}.
@@ -357,8 +361,8 @@ public class ApplicationModel {
 	 * и флаги видимости и доступности команды пользователю. конструктора без
 	 * параметров нет, так как элемент определ€етс€ идентификатором
 	 * 
-	 * @author $Author: arseniy $
-	 * @version $Revision: 1.7 $, $Date: 2005/08/11 18:51:08 $
+	 * @author $Author: bob $
+	 * @version $Revision: 1.8 $, $Date: 2005/09/04 11:29:09 $
 	 * @module commonclient
 	 */
 	class ApplicationEntry {
