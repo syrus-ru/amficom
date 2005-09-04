@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.44 2005/08/31 05:50:36 bass Exp $
+ * $Id: MapDatabase.java,v 1.45 2005/09/04 13:48:06 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/08/31 05:50:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.45 $, $Date: 2005/09/04 13:48:06 $
+ * @author $Author: max $
  * @module map
  */
 public final class MapDatabase extends StorableObjectDatabase<Map> {
@@ -251,7 +251,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 		}
 		
 		{
-			final java.util.Map<Identifier, Set<Identifier>> mapLibraries = this.retrieveLinkedObjects(maps, _MAP_EXTERNAL_NODE);
+			final java.util.Map<Identifier, Set<Identifier>> mapLibraries = this.retrieveLinkedObjects(maps, _MAP_MAP_LIBRARY);
 			for (final Identifier id : mapLibraries.keySet()) {
 				final Set<Identifier> mapLibraryIds = mapLibraries.get(id);
 				if (id.equals(storableObject.getId())) {
@@ -515,6 +515,22 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			linkedObjectIds.put(map, map.getMaps());
 		}
 		this.deleteLinkedObjectIds(linkedObjectIds, _MAP_MAP);
+		
+		linkedObjectIds.clear();
+		for (final Identifiable identifiable : ids) {
+			final Identifier mapId = identifiable.getId();
+			final Map map = mapIds.get(mapId);
+			linkedObjectIds.put(map, map.getExternalNodes());
+		}
+		this.deleteLinkedObjectIds(linkedObjectIds, _MAP_EXTERNAL_NODE);
+		
+		linkedObjectIds.clear();
+		for (final Identifiable identifiable : ids) {
+			final Identifier mapId = identifiable.getId();
+			final Map map = mapIds.get(mapId);
+			linkedObjectIds.put(map, map.getMapLibraries());
+		}
+		this.deleteLinkedObjectIds(linkedObjectIds, _MAP_MAP_LIBRARY);
 	}	
 
 	private void deleteLinkedObjectIds(final java.util.Map<Map, Set<? extends StorableObject>> linkedObjectIds,
