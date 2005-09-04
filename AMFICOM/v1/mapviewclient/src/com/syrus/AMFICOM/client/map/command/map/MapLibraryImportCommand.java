@@ -1,5 +1,5 @@
 /*
- * $Id: MapLibraryImportCommand.java,v 1.9 2005/09/02 16:47:55 krupenn Exp $
+ * $Id: MapLibraryImportCommand.java,v 1.10 2005/09/04 17:11:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,6 +39,8 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
+import com.syrus.AMFICOM.map.PhysicalLinkType;
+import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.xml.MapLibraryDocument;
 import com.syrus.AMFICOM.map.xml.XmlMapLibrary;
 import com.syrus.util.Log;
@@ -50,7 +52,7 @@ import com.syrus.util.Log;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/09/02 16:47:55 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/04 17:11:44 $
  * @module mapviewclient
  */
 public class MapLibraryImportCommand extends ImportCommand {
@@ -160,6 +162,14 @@ public class MapLibraryImportCommand extends ImportCommand {
 		mapLibrary = MapLibrary.createInstance(userId, xmlLibrary.getImportType(), xmlLibrary, new ClonedIdsPool());
 
 		StorableObjectPool.flush(mapLibrary, userId, true);
+
+		//TODO siteNodeTypes and physicalLinkTypes should be saved when mapLibrary is saved
+		for(SiteNodeType siteNodeType : mapLibrary.getSiteNodeTypes()) {
+			StorableObjectPool.flush(siteNodeType, userId, true);
+		}
+		for(PhysicalLinkType physicalLinkType : mapLibrary.getPhysicalLinkTypes()) {
+			StorableObjectPool.flush(physicalLinkType, userId, true);
+		}
 		
 		System.setProperty("user.dir",  user_dir);
 
