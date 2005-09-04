@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.79 2005/09/02 09:19:46 krupenn Exp $
+ * $Id: NodeLink.java,v 1.80 2005/09/04 17:06:56 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: krupenn $
- * @version $Revision: 1.79 $, $Date: 2005/09/02 09:19:46 $
+ * @version $Revision: 1.80 $, $Date: 2005/09/04 17:06:56 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -484,7 +484,7 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 		final Identifier startNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE, xmlNodeLink.getStartNodeId());
 		final Identifier endNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE, xmlNodeLink.getEndNodeId());
 
-		this.physicalLink = StorableObjectPool.getStorableObject(physicalLinkId1, false);
+		this.physicalLink = StorableObjectPool.getStorableObject(physicalLinkId1, true);
 		this.startNode = StorableObjectPool.getStorableObject(startNodeId1, true);
 		this.endNode = StorableObjectPool.getStorableObject(endNodeId1, true);
 		this.physicalLink.addNodeLink(this);
