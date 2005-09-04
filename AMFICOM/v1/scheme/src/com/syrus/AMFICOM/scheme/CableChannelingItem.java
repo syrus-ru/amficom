@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.55 2005/08/31 14:11:24 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.56 2005/09/04 11:56:06 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.55 $, $Date: 2005/08/31 14:11:24 $
+ * @version $Revision: 1.56 $, $Date: 2005/09/04 11:56:06 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -757,28 +757,28 @@ public final class CableChannelingItem
 	}
 
 	/**
-	 * @param xmlCableChannelingItem
+	 * @param cableChannelingItem
 	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
 	 */
 	public void fromXmlTransferable(
-			final XmlCableChannelingItem xmlCableChannelingItem,
+			final XmlCableChannelingItem cableChannelingItem,
 			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
-		this.startSpare = xmlCableChannelingItem.getStartSpare();
-		this.endSpare = xmlCableChannelingItem.getEndSpare();
-		this.rowX = xmlCableChannelingItem.getRowX();
-		this.placeY = xmlCableChannelingItem.getPlaceY();
-		this.sequentialNumber = xmlCableChannelingItem.getSequentialNumber();
-		this.physicalLinkId = xmlCableChannelingItem.isSetPhysicalLinkId()
-				? Identifier.fromXmlTransferable(xmlCableChannelingItem.getPhysicalLinkId(), importType)
+		this.startSpare = cableChannelingItem.getStartSpare();
+		this.endSpare = cableChannelingItem.getEndSpare();
+		this.rowX = cableChannelingItem.getRowX();
+		this.placeY = cableChannelingItem.getPlaceY();
+		this.sequentialNumber = cableChannelingItem.getSequentialNumber();
+		this.physicalLinkId = cableChannelingItem.isSetPhysicalLinkId()
+				? Identifier.fromXmlTransferable(cableChannelingItem.getPhysicalLinkId(), importType)
 				: VOID_IDENTIFIER;
-		this.startSiteNodeId = Identifier.fromXmlTransferable(xmlCableChannelingItem.getStartSiteNodeId(), importType);
-		this.endSiteNodeId = Identifier.fromXmlTransferable(xmlCableChannelingItem.getEndSiteNodeId(), importType);
-		this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(xmlCableChannelingItem.getParentSchemeCableLinkId(), importType);
+		this.startSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getStartSiteNodeId(), importType);
+		this.endSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getEndSiteNodeId(), importType);
+		this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(cableChannelingItem.getParentSchemeCableLinkId(), importType);
 	}
 
 	/**
