@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.72 2005/08/31 20:17:24 bass Exp $
+ * $Id: Scheme.java,v 1.73 2005/09/04 11:56:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
@@ -53,7 +54,9 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
@@ -64,13 +67,18 @@ import com.syrus.AMFICOM.scheme.corba.IdlScheme;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableLink;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeElement;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeLink;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeMonitoringSolution;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfo;
 import com.syrus.util.Log;
 
 /**
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.72 $, $Date: 2005/08/31 20:17:24 $
+ * @version $Revision: 1.73 $, $Date: 2005/09/04 11:56:29 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -185,6 +193,32 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
+	 * @param id
+	 * @param created
+	 * @param modified
+	 * @param creatorId
+	 * @param modifierId
+	 * @param version
+	 * @param transferable
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws ApplicationException
+	 */
+	private Scheme(final Identifier id,
+			final Date created,
+			final Date modified,
+			final Identifier creatorId,
+			final Identifier modifierId,
+			final StorableObjectVersion version,
+			final XmlScheme transferable,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws ApplicationException {
+		super(id, created, modified, creatorId, modifierId, version, VOID_IDENTIFIER);
+		this.fromXmlTransferable(transferable, clonedIdsPool, importType);
+	}
+
+	/**
 	 * @param transferable
 	 */
 	public Scheme(final IdlScheme transferable) {
@@ -271,6 +305,41 @@ public final class Scheme extends AbstractCloneableDomainMember
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException(
 					"Scheme.createInstance | cannot generate identifier ", ige);
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param xmlScheme
+	 * @param clonedIdsPool
+	 * @param importType
+	 * @throws CreateObjectException
+	 */
+	public static Scheme createInstance(final Identifier creatorId,
+			final XmlScheme xmlScheme,
+			final ClonedIdsPool clonedIdsPool,
+			final String importType)
+	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
+		try {
+			final Date created = new Date();
+			final Scheme scheme = new Scheme(IdentifierPool.getGeneratedIdentifier(SCHEME_CODE),
+					created,
+					created,
+					creatorId,
+					creatorId,
+					StorableObjectVersion.createInitial(),
+					xmlScheme,
+					clonedIdsPool,
+					importType);
+			scheme.markAsChanged();
+			return scheme;
+		} catch (final IdentifierGenerationException ige) {
+			throw new CreateObjectException(
+					"Scheme.createInstance | cannot generate identifier ", ige);
+		} catch (final ApplicationException ae) {
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -1187,17 +1256,74 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
-	 * @param xmlScheme
+	 * @param scheme
 	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
 	 */
-	public void fromXmlTransferable(final XmlScheme xmlScheme,
+	public void fromXmlTransferable(final XmlScheme scheme,
 			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		XmlComplementorRegistry.complementStorableObject(scheme, importType);
+
+		this.name = scheme.getName();
+		this.description = scheme.isSetDescription()
+				? scheme.getDescription()
+				: "";
+		this.label = scheme.isSetLabel()
+				? scheme.getLabel()
+				: "";
+		this.width = scheme.getWidth();
+		this.height = scheme.getHeight();
+		this.kind = IdlKind.from_int(scheme.getKind().intValue() - 1);
+		if (scheme.isSetDomainId()) {
+			super.setDomainId0(Identifier.fromXmlTransferable(scheme.getDomainId(), importType));
+		} else {
+			throw new UpdateObjectException("Scheme.fromXmlTransferable() | "
+					+ XML_BEAN_NOT_COMPLETE);
+		}
+		this.mapId = scheme.isSetMapId()
+				? Identifier.fromXmlTransferable(scheme.getMapId(), importType)
+				: VOID_IDENTIFIER;
+		this.symbolId = scheme.isSetSymbolId()
+				? Identifier.fromXmlTransferable(scheme.getSymbolId(), importType)
+				: VOID_IDENTIFIER;
+		this.ugoCellId = scheme.isSetUgoCellId()
+				? Identifier.fromXmlTransferable(scheme.getUgoCellId(), importType)
+				: VOID_IDENTIFIER;
+		this.schemeCellId = scheme.isSetSchemeCellId()
+				? Identifier.fromXmlTransferable(scheme.getSchemeCellId(), importType)
+				: VOID_IDENTIFIER;
+		this.parentSchemeElementId = scheme.isSetParentSchemeElementId()
+				? Identifier.fromXmlTransferable(scheme.getParentSchemeElementId(), importType)
+				: VOID_IDENTIFIER;
+		if (scheme.isSetSchemeElements()) {
+			for (@SuppressWarnings("unused") final XmlSchemeElement schemeElement : scheme.getSchemeElements().getSchemeElementArray()) {
+				// empty so far
+			}
+		}
+		if (scheme.isSetSchemeLinks()) {
+			for (@SuppressWarnings("unused") final XmlSchemeLink schemeLink : scheme.getSchemeLinks().getSchemeLinkArray()) {
+				// empty so far
+			}
+		}
+		if (scheme.isSetSchemeCableLinks()) {
+			for (@SuppressWarnings("unused") final XmlSchemeCableLink schemeCableLink : scheme.getSchemeCableLinks().getSchemeCableLinkArray()) {
+				// empty so far
+			}
+		}
+		if (scheme.isSetSchemeOptimizeInfos()) {
+			for (@SuppressWarnings("unused") final XmlSchemeOptimizeInfo schemeOptimizeInfo : scheme.getSchemeOptimizeInfos().getSchemeOptimizeInfoArray()) {
+				// empty so far
+			}
+		}
+		if (scheme.isSetSchemeMonitoringSolutions()) {
+			for (@SuppressWarnings("unused") final XmlSchemeMonitoringSolution schemeMonitoringSolution : scheme.getSchemeMonitoringSolutions().getSchemeMonitoringSolutionArray()) {
+				// empty so far
+			}
+		}
 	}
 
 	/*-********************************************************************
