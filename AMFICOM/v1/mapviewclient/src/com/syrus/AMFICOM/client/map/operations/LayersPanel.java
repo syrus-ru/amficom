@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.16 2005/08/12 10:52:39 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.17 2005/09/04 13:46:26 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
 /**
  * панель управления отображением слоев
  * 
- * @version $Revision: 1.16 $, $Date: 2005/08/12 10:52:39 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/04 13:46:26 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -75,18 +75,15 @@ public class LayersPanel extends JPanel {
 	 */
 	private ActionListener actionListener = new ActionListener() {
 		public void actionPerformed(ActionEvent e) {
-			LayerVisibilityCheckBox cb = (LayerVisibilityCheckBox) e
-					.getSource();
+			LayerVisibilityCheckBox cb = (LayerVisibilityCheckBox) e.getSource();
 			SpatialLayer sl = cb.getSpatialLayer();
 			sl.setVisible(cb.isSelected());
-			NetMapViewer netMapViewer = LayersPanel.this.mapFrame
-					.getMapViewer();
+			NetMapViewer netMapViewer = LayersPanel.this.mapFrame.getMapViewer();
 			try {
 				netMapViewer.getRenderer().refreshLayers();
-				if (sl
-						.isVisibleAtScale(netMapViewer.getMapContext()
-								.getScale()))
+				if (sl.isVisibleAtScale(netMapViewer.getMapContext().getScale())) {
 					netMapViewer.repaint(true);
+				}
 			} catch (MapException e1) {
 				LayersPanel.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
 				e1.printStackTrace();
@@ -103,8 +100,7 @@ public class LayersPanel extends JPanel {
 	}
 
 	private void jbInit() {
-		this.setToolTipText(LangModelMap
-				.getString("ConfigureTopologicalLayers"));
+		this.setToolTipText(LangModelMap.getString("ConfigureTopologicalLayers"));
 
 		this.setLayout(new BorderLayout());
 
@@ -169,7 +165,9 @@ public class LayersPanel extends JPanel {
 		this.titlePanel.add(jseparator, gridbagconstraints);
 
 		this.add(this.titlePanel, BorderLayout.NORTH);
-		this.add(new JScrollPane(this.layersPanel), BorderLayout.CENTER);
+		JScrollPane scrollPane = new JScrollPane(this.layersPanel);
+		scrollPane.setAutoscrolls(true);
+		this.add(scrollPane, BorderLayout.CENTER);
 	}
 
 	/**
