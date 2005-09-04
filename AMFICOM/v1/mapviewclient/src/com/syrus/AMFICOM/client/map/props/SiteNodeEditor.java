@@ -6,6 +6,7 @@ import java.awt.Insets;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.logging.Level;
 
 import javax.swing.JButton;
@@ -30,6 +31,7 @@ import com.syrus.AMFICOM.client.resource.MiscUtil;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
+import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
@@ -408,14 +410,21 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.site.getName());
 
-			long d = System.currentTimeMillis();
-			Collection types = NodeTypeController.getTopologicalNodeTypes(this.logicalNetLayer.getMapView().getMap());
-			long f = System.currentTimeMillis();
-			Log.debugMessage("SiteNodeEditor::NodeTypeController.getTopologicalNodeTypes() -------- " + (f - d) + " ms ---------", Level.FINE);
+			if(this.site.getType().getSort().value() == SiteNodeTypeSort._CABLE_INLET) {
+				this.typeComboBox.setEnabled(false);
+				this.typeComboBox.addElements(Collections.singleton(this.site.getType()));
+				this.typeComboBox.setSelectedItem(this.site.getType());
+			}
+			else {
+				long d = System.currentTimeMillis();
+				Collection types = NodeTypeController.getTopologicalNodeTypes(this.logicalNetLayer.getMapView().getMap());
+				long f = System.currentTimeMillis();
+				Log.debugMessage("SiteNodeEditor::NodeTypeController.getTopologicalNodeTypes() -------- " + (f - d) + " ms ---------", Level.FINE);
 
-			this.typeComboBox.setEnabled(true);
-			this.typeComboBox.addElements(types);
-			this.typeComboBox.setSelectedItem(this.site.getType());
+				this.typeComboBox.setEnabled(true);
+				this.typeComboBox.addElements(types);
+				this.typeComboBox.setSelectedItem(this.site.getType());
+			}
 
 			this.descTextArea.setEnabled(true);
 			this.descTextArea.setText(this.site.getDescription());
