@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerModel.java,v 1.2 2005/08/17 15:59:40 bob Exp $
+* $Id: ManagerModel.java,v 1.3 2005/09/04 11:28:38 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/17 15:59:40 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/04 11:28:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -26,7 +26,7 @@ public class ManagerModel extends ApplicationModel {
 	public static final String DOMAINS_COMMAND = "DomainsCommand";
 	public static final String FLUSH_COMMAND = "FlushCommand";
 	
-	public ManagerModel(ApplicationContext aContext) {
+	public ManagerModel(final ApplicationContext aContext) {
 		this.dispatcher = aContext.getDispatcher();
 
 		this.add(MENU_SESSION);
@@ -37,7 +37,11 @@ public class ManagerModel extends ApplicationModel {
 		this.add(MENU_SESSION_DOMAIN);
 		this.add(MENU_EXIT);
 
-		this.add(ApplicationModel.MENU_VIEW_ARRANGE);
+		this.add(MENU_VIEW);
+		this.add(ManagerMainFrame.GRAPH_FRAME);
+		this.add(ManagerMainFrame.TREE_FRAME);
+		this.add(ManagerMainFrame.PROPERTIES_FRAME);
+		this.add(MENU_VIEW_ARRANGE);
 
 		this.add(DOMAINS_COMMAND);
 		this.setEnabled(DOMAINS_COMMAND, true);
@@ -45,12 +49,17 @@ public class ManagerModel extends ApplicationModel {
 		this.add(FLUSH_COMMAND);
 		this.setEnabled(FLUSH_COMMAND, true);
 
-		
-		this.add(ApplicationModel.MENU_HELP);
-		this.add(ApplicationModel.MENU_HELP_ABOUT);
+		this.add(MENU_HELP);
+		this.add(MENU_HELP_ABOUT);
 
-		this.setVisible(ApplicationModel.MENU_HELP, true);
-		this.setVisible(ApplicationModel.MENU_HELP_ABOUT, true);
+		this.setVisible(MENU_HELP, true);
+		this.setVisible(MENU_HELP_ABOUT, true);
+		
+		this.setVisible(MENU_VIEW, true);
+		this.setVisible(MENU_VIEW_ARRANGE, true);
+		
+		this.setEnabled(MENU_VIEW, true);
+		this.setEnabled(MENU_VIEW_ARRANGE, true);
 
 	}
 }
