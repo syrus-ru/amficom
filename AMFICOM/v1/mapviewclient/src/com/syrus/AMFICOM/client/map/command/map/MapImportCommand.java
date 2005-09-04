@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.41 2005/08/29 12:11:48 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.42 2005/09/04 17:17:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,9 +31,7 @@ import com.syrus.AMFICOM.client.map.MapException;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.command.ImportCommand;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
-import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
-import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
@@ -59,7 +57,7 @@ import com.syrus.util.Log;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.41 $, $Date: 2005/08/29 12:11:48 $
+ * @version $Revision: 1.42 $, $Date: 2005/09/04 17:17:20 $
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {
@@ -181,8 +179,8 @@ public class MapImportCommand extends ImportCommand {
 		Identifier domainId = LoginManager.getDomainId();
 
 		// make sure default types loaded
-		LinkTypeController.getTopologicalLinkTypes();
-		NodeTypeController.getTopologicalNodeTypes();
+//		LinkTypeController.getTopologicalLinkTypes();
+//		NodeTypeController.getTopologicalNodeTypes();
 
 		String user_dir = System.getProperty("user.dir");
 		try {

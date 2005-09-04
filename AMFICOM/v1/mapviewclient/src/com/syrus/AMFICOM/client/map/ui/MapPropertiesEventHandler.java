@@ -1,5 +1,5 @@
 /*-
- * $Id: MapPropertiesEventHandler.java,v 1.5 2005/09/02 09:45:37 krupenn Exp $
+ * $Id: MapPropertiesEventHandler.java,v 1.6 2005/09/04 17:17:20 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.client.map.props.PhysicalLinkAddEditor;
 import com.syrus.AMFICOM.client.map.props.PhysicalLinkEditor;
 import com.syrus.AMFICOM.client.map.props.PhysicalLinkTypeEditor;
 import com.syrus.AMFICOM.client.map.props.SiteNodeAddEditor;
+import com.syrus.AMFICOM.client.map.props.SiteNodeEditor;
 import com.syrus.AMFICOM.client.map.props.SiteNodeTypeEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.map.Map;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/09/02 09:45:37 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/04 17:17:20 $
  * @module schemeclient
  */
 
@@ -125,6 +126,10 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 					PhysicalLinkEditor linkEditor = (PhysicalLinkEditor )editor;
 					linkEditor.setNetMapViewer(netMapViewer);
 				}
+				else if(editor instanceof PhysicalLinkAddEditor) {
+					PhysicalLinkAddEditor linkEditor = (PhysicalLinkAddEditor )editor;
+					linkEditor.setNetMapViewer(netMapViewer);
+				}
 				else if(editor instanceof PhysicalLinkTypeEditor) {
 					PhysicalLinkTypeEditor linkTypeEditor = (PhysicalLinkTypeEditor )editor;
 					linkTypeEditor.setNetMapViewer(netMapViewer);
@@ -133,13 +138,13 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 					SiteNodeTypeEditor nodeTypeEditor = (SiteNodeTypeEditor )editor;
 					nodeTypeEditor.setNetMapViewer(netMapViewer);
 				}
+				else if(editor instanceof SiteNodeEditor) {
+					SiteNodeEditor siteEditor = (SiteNodeEditor )editor;
+					siteEditor.setNetMapViewer(netMapViewer);
+				}
 				else if(editor instanceof SiteNodeAddEditor) {
 					SiteNodeAddEditor siteEditor = (SiteNodeAddEditor )editor;
 					siteEditor.setNetMapViewer(netMapViewer);
-				}
-				else if(editor instanceof PhysicalLinkAddEditor) {
-					PhysicalLinkAddEditor linkEditor = (PhysicalLinkAddEditor )editor;
-					linkEditor.setNetMapViewer(netMapViewer);
 				}
 				else if(editor instanceof CablePathAddEditor) {
 					CablePathAddEditor cableEditor = (CablePathAddEditor )editor;

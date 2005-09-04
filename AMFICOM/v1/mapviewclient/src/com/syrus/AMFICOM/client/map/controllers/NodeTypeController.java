@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.46 2005/09/02 16:49:12 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.47 2005/09/04 17:17:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,6 +16,7 @@ import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -33,6 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.SiteNodeType;
@@ -45,7 +47,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.46 $, $Date: 2005/09/02 16:49:12 $
+ * @version $Revision: 1.47 $, $Date: 2005/09/04 17:17:20 $
  * @module mapviewclient
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -236,9 +238,9 @@ public class NodeTypeController extends AbstractNodeController {
 	 * 
 	 * @return список типов сетевых узлов &lt;{@link SiteNodeType}&gt;
 	 */
-	public static Collection getTopologicalNodeTypes() {
-		Set<SiteNodeType> objects = Collections.emptySet();
-		final StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITENODE_TYPE_CODE);
+	public static Collection<SiteNodeType> getTopologicalNodeTypes(Map map) {
+//		Set<SiteNodeType> objects = Collections.emptySet();
+//		final StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITENODE_TYPE_CODE);
 
 		// todo getTopologicalNodeTypes should get only included libraries
 		// Set<Identifier> libIds = new HashSet<Identifier>();
@@ -250,20 +252,30 @@ public class NodeTypeController extends AbstractNodeController {
 		// StorableObjectCondition pTypeCondition = new LinkedIdsCondition(libIds,
 		// ObjectEntities.SITENODE_TYPE_CODE);
 
-		try {
-			objects = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, false);
+//		try {
+//			objects = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, false);
+//
+//			objects.remove(getUnboundNodeType());
+//
+//			for (final Iterator<SiteNodeType> it = objects.iterator(); it.hasNext();) {
+//				final SiteNodeType type = it.next();
+//				if (!type.isTopological()) {
+//					it.remove();
+//				}
+//			}
+//		} catch (Exception e) {
+//			e.printStackTrace();
+//		}
 
-			objects.remove(getUnboundNodeType());
-
-			for (final Iterator<SiteNodeType> it = objects.iterator(); it.hasNext();) {
-				final SiteNodeType mnpe = it.next();
-				if (!mnpe.isTopological()) {
-					it.remove();
+		Set<SiteNodeType> objects = new HashSet<SiteNodeType>();
+		for(MapLibrary library : map.getMapLibraries()) {
+			for(SiteNodeType siteNodeType : library.getSiteNodeTypes()) {
+				if(siteNodeType.isTopological()) {
+					objects.add(siteNodeType);
 				}
 			}
-		} catch (Exception e) {
-			e.printStackTrace();
 		}
+
 		return objects;
 	}
 

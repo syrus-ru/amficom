@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.53 2005/08/31 13:15:14 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.54 2005/09/04 17:17:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -63,7 +63,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.53 $, $Date: 2005/08/31 13:15:14 $
+ * @version $Revision: 1.54 $, $Date: 2005/09/04 17:17:20 $
  * @module mapviewclient
  */
 public abstract class MapPopupMenu extends JPopupMenu {
@@ -112,7 +112,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	
 	protected SiteNodeType selectSiteNodeType() {
 		Object toSelect = null;
-		Collection list = NodeTypeController.getTopologicalNodeTypes();
+		Collection list = NodeTypeController.getTopologicalNodeTypes(this.netMapViewer.getLogicalNetLayer().getMapView().getMap());
 		Iterator listIt = list.iterator();
 		if (listIt.hasNext())
 			toSelect = listIt.next();

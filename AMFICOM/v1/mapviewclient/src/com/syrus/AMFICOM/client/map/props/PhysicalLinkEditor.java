@@ -529,7 +529,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 			this.topologicalLengthTextField.setText(String.valueOf(this.link.getLengthLt()));
 
 			long d = System.currentTimeMillis();
-			Collection types = LinkTypeController.getTopologicalLinkTypes();
+			Collection types = LinkTypeController.getTopologicalLinkTypes(this.netMapViewer.getLogicalNetLayer().getMapView().getMap());
 			long f = System.currentTimeMillis();
 			Log.debugMessage("SiteNodeEditor::LinkTypeController.getTopologicalLinkTypes() -------- " + (f - d) + " ms ---------", Level.FINE);
 			

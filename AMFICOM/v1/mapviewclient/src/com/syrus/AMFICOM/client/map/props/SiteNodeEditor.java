@@ -19,7 +19,9 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
@@ -62,6 +64,9 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 
 	SiteNode site;
 
+	LogicalNetLayer logicalNetLayer;
+	private NetMapViewer netMapViewer;
+	
 	public SiteNodeEditor() {
 		try {
 			jbInit();
@@ -69,6 +74,11 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 			e.printStackTrace();
 		}
 
+	}
+
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
+		this.logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 	}
 
 	private void jbInit() {
@@ -399,7 +409,7 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 			this.nameTextField.setText(this.site.getName());
 
 			long d = System.currentTimeMillis();
-			Collection types = NodeTypeController.getTopologicalNodeTypes();
+			Collection types = NodeTypeController.getTopologicalNodeTypes(this.logicalNetLayer.getMapView().getMap());
 			long f = System.currentTimeMillis();
 			Log.debugMessage("SiteNodeEditor::NodeTypeController.getTopologicalNodeTypes() -------- " + (f - d) + " ms ---------", Level.FINE);
 

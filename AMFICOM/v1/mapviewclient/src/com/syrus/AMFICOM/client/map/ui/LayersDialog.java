@@ -1,5 +1,5 @@
 /**
- * $Id: LayersDialog.java,v 1.9 2005/08/17 14:14:20 arseniy Exp $
+ * $Id: LayersDialog.java,v 1.10 2005/09/04 17:17:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,6 +26,7 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.table.DefaultTableModel;
 
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
@@ -74,38 +75,32 @@ public class LayersDialog extends JDialog {
 
 	private LayerVisibility allCablesVisibility;
 
-	public LayersDialog()
-	{
-		try
-		{
+	private final NetMapViewer netMapViewer;
+
+	public LayersDialog(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
+		try {
 			jbInit();
-		}
-		catch(Exception e)
-		{
+		} catch(Exception e) {
 			e.printStackTrace();
 		}
 
 		init();
 	}
 
-	private void jbInit()
-	{
+	private void jbInit() {
 		this.setSize(new Dimension(550, 400));
 		this.getContentPane().setLayout(new BorderLayout());
 
 		this.okButton.setText("Применить");
-		this.okButton.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
+		this.okButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
 					ok();
 				}
 			});
 		this.cancelButton.setText("Отменить");
-		this.cancelButton.addActionListener(new ActionListener()
-			{
-				public void actionPerformed(ActionEvent e)
-				{
+		this.cancelButton.addActionListener(new ActionListener() {
+				public void actionPerformed(ActionEvent e) {
 					cancel();
 				}
 			});
@@ -329,7 +324,7 @@ public class LayersDialog extends JDialog {
 	private void init() {
 		this.siteTable.removeAll();
 		this.nodeTypeVisibility.clear();
-		Collection nodeTypes = NodeTypeController.getTopologicalNodeTypes();
+		Collection nodeTypes = NodeTypeController.getTopologicalNodeTypes(this.netMapViewer.getLogicalNetLayer().getMapView().getMap());
 		for(Iterator iter = nodeTypes.iterator(); iter.hasNext();) {
 			SiteNodeType type = (SiteNodeType )iter.next();
 			LayerVisibility visibility = new LayerVisibility(
@@ -348,7 +343,7 @@ public class LayersDialog extends JDialog {
 
 		this.linkTable.removeAll();
 		this.linkTypeVisibility.clear();
-		Collection linkTypes = LinkTypeController.getTopologicalLinkTypes();
+		Collection linkTypes = LinkTypeController.getTopologicalLinkTypes(this.netMapViewer.getLogicalNetLayer().getMapView().getMap());
 		for(Iterator iter = linkTypes.iterator(); iter.hasNext();) {
 			PhysicalLinkType type = (PhysicalLinkType )iter.next();
 			LayerVisibility visibility = new LayerVisibility(

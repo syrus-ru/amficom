@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.51 2005/08/31 13:13:05 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.52 2005/09/04 17:17:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,8 +14,8 @@ import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.logging.Level;
@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
@@ -47,7 +48,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.51 $, $Date: 2005/08/31 13:13:05 $
+ * @version $Revision: 1.52 $, $Date: 2005/09/04 17:17:20 $
  * @module mapviewclient
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -582,7 +583,7 @@ public final class LinkTypeController extends AbstractLinkController {
 	 * Получить список всех типов линий.
 	 * @return список типов линий &lt;{@link PhysicalLinkType}&gt;
 	 */
-	public static Collection<PhysicalLinkType> getTopologicalLinkTypes() {
+	public static Collection<PhysicalLinkType> getTopologicalLinkTypes(Map map) {
 		// todo getTopologicalLinkTypes should get only included libraries
 		// Set<Identifier> libIds = new HashSet<Identifier>();
 		// for(Iterator iter = map.getMapLibraries().iterator(); iter.hasNext();) {
@@ -592,23 +593,35 @@ public final class LinkTypeController extends AbstractLinkController {
 		//		
 		// StorableObjectCondition pTypeCondition = new LinkedIdsCondition(libIds,
 		// PHYSICALLINK_TYPE_CODE);
-		try {
-			final StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.PHYSICALLINK_TYPE_CODE);
-			final Set<PhysicalLinkType> list = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, false);
 
-			list.remove(getUnboundPhysicalLinkType());
+//		try {
+//			final StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.PHYSICALLINK_TYPE_CODE);
+//			final Set<PhysicalLinkType> list = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, false);
+//
+//			list.remove(getUnboundPhysicalLinkType());
+//
+//			for (Iterator it = list.iterator(); it.hasNext();) {
+//				final PhysicalLinkType type = (PhysicalLinkType) it.next();
+//				if (!type.isTopological()) {
+//					it.remove();
+//				}
+//			}
+//
+//			return list;
+//		} catch (Exception e) {
+//			return Collections.emptySet();
+//		}
 
-			for (Iterator it = list.iterator(); it.hasNext();) {
-				final PhysicalLinkType type = (PhysicalLinkType) it.next();
-				if (!type.isTopological()) {
-					it.remove();
+		Set<PhysicalLinkType> objects = new HashSet<PhysicalLinkType>();
+		for(MapLibrary library : map.getMapLibraries()) {
+			for(PhysicalLinkType physicalLinkType : library.getPhysicalLinkTypes()) {
+				if(physicalLinkType.isTopological()) {
+					objects.add(physicalLinkType);
 				}
 			}
-
-			return list;
-		} catch (Exception e) {
-			return Collections.emptySet();
 		}
+
+		return objects;
 	}
 
 	/**

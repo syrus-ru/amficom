@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.34 2005/09/02 09:46:33 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.35 2005/09/04 17:17:20 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.34 $, $Date: 2005/09/02 09:46:33 $
+ * @version $Revision: 1.35 $, $Date: 2005/09/04 17:17:20 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -274,7 +274,7 @@ public final class MapToolBar extends JPanel
 				public void actionPerformed(ActionEvent e)
 				{
 					Dimension screen = Toolkit.getDefaultToolkit().getScreenSize();
-					LayersDialog mod = new LayersDialog();
+					LayersDialog mod = new LayersDialog(MapToolBar.this.netMapViewer);
 					mod.setLocation(((int)screen.getWidth() - mod.getWidth()) / 2, (int)(screen.getHeight() - mod.getHeight()) / 2);
 					mod.setModal(true);
 					mod.setVisible(true);
