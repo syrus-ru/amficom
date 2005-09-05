@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.101 2005/08/31 13:25:07 bass Exp $
+ * $Id: PhysicalLink.java,v 1.102 2005/09/05 13:40:09 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -71,8 +72,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.101 $, $Date: 2005/08/31 13:25:07 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.102 $, $Date: 2005/09/05 13:40:09 $
  * @module map
  */
 public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XmlBeansTransferable<XmlPhysicalLink> {
@@ -439,9 +440,22 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	public List<NodeLink> getNodeLinks() {
-		if (this.nodeLinks == null || this.nodeLinks.isEmpty())
-			this.nodeLinks = findNodeLinks();
-		return Collections.unmodifiableList(this.nodeLinks);
+		List<NodeLink> returnedList;
+		String message = "";
+		if (this.nodeLinksSorted) {
+			returnedList = Collections.unmodifiableList(this.nodeLinks);
+			message += "Sorted list ";
+		}
+		else {
+			returnedList = findNodeLinks();
+			message += "Conditional list ";
+		}
+		message += "For physical link " + this.id.toString() + " getNodeLinks() returns " + returnedList.size() + " objects: ";
+		for(NodeLink nodeLink : returnedList) {
+			message += " " + nodeLink.getId().toString();
+		}
+		Log.debugMessage(message, Level.FINEST);
+		return returnedList;
 	}
 
 	private List<NodeLink> findNodeLinks() {
@@ -451,12 +465,13 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
 			final Set<NodeLink> nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
 			final List<NodeLink> nlinkslist = new ArrayList<NodeLink>(nlinks.size());
-			for (final NodeLink nodeLink : nlinks) {
-				nlinkslist.add(nodeLink);
+			for(NodeLink nodeLink : nlinks) {
+				if(!nodeLink.isRemoved()) {
+					nlinkslist.add(nodeLink);
+				}
 			}
 			return nlinkslist;
 		} catch(ApplicationException e) {
-			// TODO how to work it over?!
 			e.printStackTrace();
 		}
 		return new LinkedList<NodeLink>();
@@ -585,6 +600,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 */
 	public void removeNodeLink(final NodeLink nodeLink) {
 		this.nodeLinks.remove(nodeLink);
+		Log.debugMessage("For physical link " + this.id.toString() + " remove nodeLink = " + nodeLink.getId().toString(), Level.FINEST);
 		this.nodeLinksSorted = false;
 		// there is no need to modify object. NodeLink is transient.
 	}
@@ -593,12 +609,13 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * Добавить фрагмент в состав линии. Внимание! концевые точки линии не
 	 * обновляются.
 	 *
-	 * @param addNodeLink
+	 * @param nodeLink
 	 *          фрагмент линии
 	 */
-	public void addNodeLink(final NodeLink addNodeLink) {
-		if (!this.nodeLinks.contains(addNodeLink)) {
-			this.nodeLinks.add(addNodeLink);
+	public void addNodeLink(final NodeLink nodeLink) {
+		if (!this.nodeLinks.contains(nodeLink)) {
+			this.nodeLinks.add(nodeLink);
+			Log.debugMessage("For physical link " + this.id.toString() + " add nodeLink = " + nodeLink.getId().toString(), Level.FINEST);
 			this.nodeLinksSorted = false;
 			// there is no need to modify object. NodeLink is transient.
 		}
@@ -862,11 +879,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.setStartNode(mples.startNode);
 		this.setEndNode(mples.endNode);
 
-		this.nodeLinks = new ArrayList<NodeLink>(mples.nodeLinks.size());
-		for (final NodeLink mnle: mples.nodeLinks) {
-			mnle.setPhysicalLink(this);
-//			this.nodeLinks.add(mnle);
-		}
+		this.setNodeLinks(mples.nodeLinks);
 		try {
 			setType(StorableObjectPool.<PhysicalLinkType>getStorableObject(mples.mapProtoId, true));
 		} catch (ApplicationException e) {
