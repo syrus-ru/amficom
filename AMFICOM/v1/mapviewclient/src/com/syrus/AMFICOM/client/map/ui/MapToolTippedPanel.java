@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolTippedPanel.java,v 1.12 2005/09/04 13:50:06 krupenn Exp $
+ * $Id: MapToolTippedPanel.java,v 1.13 2005/09/05 13:51:28 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.MapElement;
  * NetMapViewer (прозрачно передавать сообщения мыши родительскому объекту 
  * NetMapViewer). Объект класса MapToolTippedPanel прозрачен и не видим для
  * пользователя
- * @version $Revision: 1.12 $, $Date: 2005/09/04 13:50:06 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/05 13:51:28 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -83,31 +83,33 @@ public class MapToolTippedPanel extends JComponent {
 
 	@Override
 	public JToolTip createToolTip() {
-        JToolTip tip = new MapToolTip();
-        tip.setComponent(this.component);
-        return tip;
+//        JToolTip tip = new MapToolTip();
+//        tip.setComponent(this.component);
+//        return tip;
+		return new JToolTip();
     }
 
 	@Override
 	public String getToolTipText() 	{
 		LogicalNetLayer logicalNetLayer = this.parent.getLogicalNetLayer();
 		if(logicalNetLayer == null)
-			return "";
+			return null;
 		MapState mapState = logicalNetLayer.getMapState();
 		if(mapState.getOperationMode() != MapState.NO_OPERATION)
-			return "";
+			return null;
 		if(mapState.getMouseMode() != MapState.MOUSE_NONE)
-			return "";
+			return null;
 		if(mapState.getActionMode() != MapState.NULL_ACTION_MODE)
-			return "";
+			return null;
 		try {
 			MapElement me = logicalNetLayer.getMapElementAtPoint(
 					logicalNetLayer.getCurrentPoint(),
 					this.parent.getVisibleBounds());
-			return logicalNetLayer.getMapViewController().getController(me).getToolTipText(me);
+			String toolTipText = logicalNetLayer.getMapViewController().getController(me).getToolTipText(me);
+			return "<html>" + toolTipText.replaceAll("\n", "<br>") + "</html>";
 		} 
 		catch (Exception ex) {
-			return "";
+			return null;
 		} 
 	}
 }
@@ -117,7 +119,7 @@ public class MapToolTippedPanel extends JComponent {
  * возникающих событий мыши родительскому объекту
  * 
  * 
- * @version $Revision: 1.12 $, $Date: 2005/09/04 13:50:06 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/05 13:51:28 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
