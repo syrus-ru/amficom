@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.151 2005/08/29 16:41:13 arseniy Exp $
+ * $Id: Test.java,v 1.152 2005/09/05 17:54:13 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.151 $, $Date: 2005/08/29 16:41:13 $
+ * @version $Revision: 1.152 $, $Date: 2005/09/05 17:54:13 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -532,6 +532,19 @@ public final class Test extends StorableObject {
 
 		dependencies.add(this.monitoredElement);
 		return dependencies;
+	}
+
+	public static IdlTest[] createTransferables(final Set<Test> tests, final ORB orb) {
+		assert tests != null : ErrorMessages.NON_NULL_EXPECTED;
+
+		final IdlTest[] transferables = new IdlTest[tests.size()];
+		int i = 0;
+		synchronized (tests) {
+			for (final Test test : tests) {
+				transferables[i++] = test.getTransferable(orb);
+			}
+		}
+		return transferables;
 	}
 
 	public final class TestTimeStamps implements TransferableObject {
