@@ -1,5 +1,5 @@
 /*
- * $Id: DestinationModules.java,v 1.2 2005/09/01 14:21:02 peskovsky Exp $
+ * $Id: DestinationModules.java,v 1.3 2005/09/05 07:56:04 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.report;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2005/09/01 14:21:02 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/05 07:56:04 $
  * @module commonreport_v1
  */
 public class DestinationModules {
@@ -17,44 +17,44 @@ public class DestinationModules {
 	/**
 	 * <p>Шаблон по оценке</p>
 	 */
-	public static final String EVALUATION = "report.ReportTemplateType.evaluation";
+	public static final String EVALUATION = "report.Modules.Evaluation.moduleName";
 	/**
 	 * <p>Шаблон по анализу</p>
 	 */
-	public static final String ANALYSIS = "report.ReportTemplateType.analysis";
+	public static final String ANALYSIS = "report.Modules.Analysis.moduleName";
 	/**
 	 * <p>Шаблон по исследованию</p>
 	 */
-	public static final String SURVEY = "report.ReportTemplateType.survey";
+	public static final String SURVEY = "report.Modules.Survey.moduleName";
 
 	/**
 	 * <p>Шаблон по прогнозу</p>
 	 */
-	public static final String PREDICTION = "report.ReportTemplateType.prediction";
+	public static final String PREDICTION = "report.Modules.Prediction.moduleName";
 	/**
 	 * <p>Шаблон по моделированию</p>
 	 */
-	public static final String MODELING = "report.ReportTemplateType.modeling";
+	public static final String MODELING = "report.Modules.Modeling.moduleName";
 	/**
 	 * <p>Шаблон по оптимизации</p>
 	 */
-	public static final String OPTIMIZATION = "report.ReportTemplateType.optimization";
+	public static final String OPTIMIZATION = "report.Modules.Optimization.moduleName";
 	/**
 	 * <p>Шаблон по схеме</p>
 	 */
-	public static final String SCHEME = "report.ReportTemplateType.scheme";
+	public static final String SCHEME = "report.Modules.SchemeEditor.moduleName";
 	/**
 	 * <p>Шаблон по топологии</p>
 	 */
-	public static final String MAP = "report.ReportTemplateType.map";
+	public static final String MAP = "report.Modules.Map.moduleName";
 	/**
 	 * <p>Шаблон по наблюдению</p>
 	 */
-	public static final String OBSERVE = "report.ReportTemplateType.observe";
+	public static final String OBSERVE = "report.Modules.Observation.moduleName";
 	/**
 	 * <p>Шаблон по планированию</p>
 	 */
-	public static final String SCHEDULER = "report.ReportTemplateType.scheduler";
+	public static final String SCHEDULER = "report.Modules.Scheduler.moduleName";
 
 	public static final String UNKNOWN_MODULE = "report.ReportTemplateType.unknownModule";	
 }
