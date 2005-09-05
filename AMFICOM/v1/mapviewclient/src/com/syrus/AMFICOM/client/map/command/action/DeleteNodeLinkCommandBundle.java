@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.33 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.34 2005/09/05 13:46:30 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
  * фрагментов линий, линий, узлов  (и путей).  оманда
  * состоит из последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.34 $, $Date: 2005/09/05 13:46:30 $
  * @module mapviewclient
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
@@ -201,7 +201,7 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 		
 		MapElementState pls = physicalLink.getState();
 
-		physicalLink.removeNodeLink( nodeLink1);
+		physicalLink.removeNodeLink(nodeLink1);
 
 		// обновить концевый узлы
 		if (physicalLink.getStartNode().equals(site))
