@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.9 2005/09/01 13:39:19 stas Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.10 2005/09/05 17:40:10 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/09/01 13:39:19 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/09/05 17:40:10 $
  * @module schemeclient
  */
 
@@ -84,7 +84,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		this.scrollPane = new JScrollPane(this.panel.getGraph());
 		
 		try {
-			TypicalCondition condition = new TypicalCondition(CharacteristicTypeCodenames.COLOR, OperationSort.OPERATION_EQUALS, ObjectEntities.CHARACTERISTIC_TYPE_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+			TypicalCondition condition = new TypicalCondition(CharacteristicTypeCodenames.COMMON_COLOUR, OperationSort.OPERATION_EQUALS, ObjectEntities.CHARACTERISTIC_TYPE_CODE, StorableObjectWrapper.COLUMN_CODENAME);
 			Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			if (!characteristicTypes.isEmpty()) {
 				this.colorType = characteristicTypes.iterator().next();
@@ -165,7 +165,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 				
 				Color color = Color.WHITE;
 				try {
-					Characteristic ch = CommonUIUtilities.getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COLOR);
+					Characteristic ch = CommonUIUtilities.getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COMMON_COLOUR);
 					if (ch != null) {
 						color = new Color(Integer.valueOf(ch.getValue()));
 					}
@@ -217,7 +217,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 					
 					Color color = Color.WHITE;
 					try {
-						Characteristic ch = CommonUIUtilities.getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COLOR);
+						Characteristic ch = CommonUIUtilities.getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COMMON_COLOUR);
 						if (ch != null) {
 							color = new Color(Integer.valueOf(ch.getValue()));
 						}
