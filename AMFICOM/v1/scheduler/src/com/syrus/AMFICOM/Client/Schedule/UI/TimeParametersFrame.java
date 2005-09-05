@@ -8,8 +8,6 @@ import java.awt.Insets;
 import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.ComponentAdapter;
-import java.awt.event.ComponentEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Calendar;
@@ -108,9 +106,8 @@ public class TimeParametersFrame extends JInternalFrame {
 		
 		JRadioButton		groupRadioButton;
 
-		private JRadioButton		synchroRadioButton;
-
-		private JRadioButton		alternateRadioButton;
+//		private JRadioButton		synchroRadioButton;
+//		private JRadioButton		alternateRadioButton;
 
 		Collection					temporalPatterns;
 
@@ -164,7 +161,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			gbc.gridy++;
 			this.panel.add(this.groupRadioButton, gbc);
 
-			JLabel beginLabel = new JLabel(LangModelSchedule.getString("Start") + ':');
+			JLabel beginLabel = new JLabel(LangModelSchedule.getString("Text.TimePanel.Start") + ':');
 			gbc.gridx = 1;
 			gbc.gridy++;			
 			this.panel.add(beginLabel, gbc);
@@ -298,7 +295,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			startDateButton.setDefaultCapable(false);
 
 			startDateButton.setFocusable(false);
-			startDateButton.setToolTipText(LangModelSchedule.getString("Calendar"));
+			startDateButton.setToolTipText(LangModelSchedule.getString("Text.TimePanel.Calendar"));
 			startDateButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -317,7 +314,7 @@ public class TimeParametersFrame extends JInternalFrame {
 				nowButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 				box.add(nowButton);
 				nowButton.setFocusable(false);
-				nowButton.setToolTipText(LangModelSchedule.getString("CurrentTime")); //$NON-NLS-1$
+				nowButton.setToolTipText(LangModelSchedule.getString("Text.TimePanel.CurrentTime")); //$NON-NLS-1$
 				nowButton.addActionListener(new ActionListener() {
 
 					public void actionPerformed(ActionEvent e) {
@@ -338,7 +335,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			{
 				gbc.gridx = 1;
 				gbc.gridy++;
-				this.interavalLabel = new JLabel(LangModelSchedule.getString("Interval") + ':');
+				this.interavalLabel = new JLabel(LangModelSchedule.getString("Text.TimePanel.Interval") + ':');
 				this.panel.add(this.interavalLabel, gbc);
 				gbc.weightx = 1.0;
 				gbc.gridx = 1;
@@ -355,7 +352,7 @@ public class TimeParametersFrame extends JInternalFrame {
 //					box.add(this.monthIntervalLabel);
 					
 					box.add(this.periodDaySpinner);
-					this.dayIntervalLabel = new JLabel(LangModelSchedule.getString("day_s"));
+					this.dayIntervalLabel = new JLabel(LangModelSchedule.getString("Text.TimePanel.DayOrDays"));
 					box.add(this.dayIntervalLabel);
 					box.add(Box.createHorizontalGlue());
 					box.add(this.periodTimeSpinner);
@@ -452,7 +449,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			
 			gbc.gridx = 1;
 			gbc.gridy++;
-			this.endingLabel = new JLabel(LangModelSchedule.getString("Finish") + ':');
+			this.endingLabel = new JLabel(LangModelSchedule.getString("Text.TimePanel.Finish") + ':');
 			this.panel.add(this.endingLabel, gbc);
 			gbc.weightx = 1.0;
 			gbc.gridx = 1;
@@ -471,7 +468,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.endDateButton.setDefaultCapable(false);
 
 			this.endDateButton.setFocusable(false);
-			this.endDateButton.setToolTipText(LangModelSchedule.getString("Calendar"));
+			this.endDateButton.setToolTipText(LangModelSchedule.getString("Text.TimePanel.Calendar"));
 			this.endDateButton.addActionListener(new ActionListener() {
 
 				public void actionPerformed(ActionEvent e) {
@@ -591,20 +588,20 @@ public class TimeParametersFrame extends JInternalFrame {
 			group.add(this.continuosRadioButton);
 			group.add(this.groupRadioButton);
 
-			this.synchroRadioButton = new JRadioButton(LangModelSchedule.getString("Together"));
-			this.alternateRadioButton = new JRadioButton(LangModelSchedule.getString("InTurn"));
-			this.synchroRadioButton.setEnabled(false);
-			this.alternateRadioButton.setEnabled(false);
-			ButtonGroup group3 = new ButtonGroup();
-			group3.add(this.synchroRadioButton);
-			group3.add(this.alternateRadioButton);
+//			this.synchroRadioButton = new JRadioButton(LangModelSchedule.getString("Together"));
+//			this.alternateRadioButton = new JRadioButton(LangModelSchedule.getString("InTurn"));
+//			this.synchroRadioButton.setEnabled(false);
+//			this.alternateRadioButton.setEnabled(false);
+//			ButtonGroup group3 = new ButtonGroup();
+//			group3.add(this.synchroRadioButton);
+//			group3.add(this.alternateRadioButton);
 
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
 			gbc.gridheight = GridBagConstraints.REMAINDER;
 			gbc.weighty = 1.0;
 			this.panel.add(Box.createVerticalGlue(), gbc);
 			
-			this.synchroRadioButton.doClick();
+//			this.synchroRadioButton.doClick();
 			this.periodicalRadioButton.doClick();		
 			this.oneRadioButton.doClick();
 			
@@ -612,10 +609,10 @@ public class TimeParametersFrame extends JInternalFrame {
 		
 		
 		private void createTemporalTypeButtons() {
-			this.oneRadioButton = new JRadioButton(LangModelSchedule.getString("Onetime"));
-			this.continuosRadioButton = new JRadioButton(LangModelSchedule.getString("Continual"));		
-			this.periodicalRadioButton = new JRadioButton(LangModelSchedule.getString("Periodical"));			
-			this.groupRadioButton = new JRadioButton(LangModelSchedule.getString("Sectional"));
+			this.oneRadioButton = new JRadioButton(LangModelSchedule.getString("Text.Test.TemporalType.Onetime"));
+			this.continuosRadioButton = new JRadioButton(LangModelSchedule.getString("Text.Test.TemporalType.Continual"));		
+			this.periodicalRadioButton = new JRadioButton(LangModelSchedule.getString("Text.Test.TemporalType.Periodical"));			
+			this.groupRadioButton = new JRadioButton(LangModelSchedule.getString("Text.Test.TemporalType.Sectional"));
 
 
 			this.oneRadioButton.addActionListener(new ActionListener() {
@@ -653,15 +650,15 @@ public class TimeParametersFrame extends JInternalFrame {
 			});
 			
 			this.startTimeButton = new JButton(">>");
-			this.startTimeButton.setToolTipText(LangModelSchedule.getString("Add time item"));
+			this.startTimeButton.setToolTipText(LangModelSchedule.getString("Text.TimePanel.AddTimeItem"));
 			this.startTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			
 			this.endTimeButton = new JButton(">>");
-			this.endTimeButton.setToolTipText(LangModelSchedule.getString("Add time item"));
+			this.endTimeButton.setToolTipText(LangModelSchedule.getString("Text.TimePanel.AddTimeItem"));
 			this.endTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 			
 			this.pediodTimeButton = new JButton(">>");
-			this.pediodTimeButton.setToolTipText(LangModelSchedule.getString("Add periodical sequence"));
+			this.pediodTimeButton.setToolTipText(LangModelSchedule.getString("Text.TimePanel.AddPeriodicalSequence"));
 			this.pediodTimeButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 
 			
@@ -773,12 +770,12 @@ public class TimeParametersFrame extends JInternalFrame {
 		}
 		
 		void setGroupEnabled(boolean enable) {
-			this.interavalLabel.setText(LangModelSchedule.getString("Interval") + ':');
+			this.interavalLabel.setText(LangModelSchedule.getString("Text.TimePanel.Interval") + ':');
 			// this.endTimeButton.setEnabled(false);
 			this.endTimeButton.setVisible(false);
 			this.startTimeButton.setVisible(enable);
 			this.pediodTimeButton.setVisible(enable);
-			this.pediodTimeButton.setToolTipText(LangModelSchedule.getString("Add time item"));
+			this.pediodTimeButton.setToolTipText(LangModelSchedule.getString("Text.TimePanel.AddTimeItem"));
 			this.periodTimeSpinner.setVisible(enable);
 			this.periodDaySpinner.setVisible(enable);
 			this.dayIntervalLabel.setVisible(enable);
@@ -806,8 +803,8 @@ public class TimeParametersFrame extends JInternalFrame {
 
 			
 			this.pediodTimeButton.setVisible(enable);
-			this.pediodTimeButton.setToolTipText(LangModelSchedule.getString("Add periodical sequence"));
-			this.interavalLabel.setText(LangModelSchedule.getString("Period") + ':');
+			this.pediodTimeButton.setToolTipText(LangModelSchedule.getString("Text.TimePanel.AddPeriodicalSequence"));
+			this.interavalLabel.setText(LangModelSchedule.getString("Text.TimePanel.Period") + ':');
 			this.periodTimeSpinner.setVisible(enable);
 			this.periodDaySpinner.setVisible(enable);
 			this.dayIntervalLabel.setVisible(enable);
@@ -891,7 +888,7 @@ public class TimeParametersFrame extends JInternalFrame {
 				
 				if (temporalPattern == null) {
 					JOptionPane.showMessageDialog(this.panel,
-						LangModelSchedule.getString("Have not choosen temporal pattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+						LangModelSchedule.getString("Error.HaveNotChoosenTemporalPattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 						JOptionPane.OK_OPTION);
 					this.schedulerModel.setBreakData();
 					return null;
@@ -922,7 +919,7 @@ public class TimeParametersFrame extends JInternalFrame {
 		
 			if (!temporalType.equals(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME) && end.getTime() < start.getTime()) {
 				JOptionPane.showMessageDialog(this.panel,
-					LangModelSchedule.getString("End time less than begin time"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+					LangModelSchedule.getString("Error.EndTimeLessThanBeginTime"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 					JOptionPane.OK_OPTION);
 				this.schedulerModel.setBreakData();
 				return null;
@@ -1021,7 +1018,7 @@ public class TimeParametersFrame extends JInternalFrame {
 	TimeParametersPanel	timeParametersPanel;
 
 	public TimeParametersFrame(ApplicationContext aContext) {
-		setTitle(LangModelSchedule.getString("TemporalType.Title")); //$NON-NLS-1$
+		setTitle(LangModelSchedule.getString("Text.TimePanel.Title")); //$NON-NLS-1$
 		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		setResizable(true);
 		setClosable(true);

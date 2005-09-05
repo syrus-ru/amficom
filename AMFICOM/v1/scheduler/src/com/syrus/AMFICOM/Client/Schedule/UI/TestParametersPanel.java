@@ -7,8 +7,6 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
@@ -29,12 +27,9 @@ import javax.swing.JComboBox;
 import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JList;
-import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
-import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
@@ -173,10 +168,10 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.switchPanel.setBorder(BorderFactory.createEtchedBorder());
 
 		
-		this.useSetupsCheckBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParemeter.UseSetup"));
+		this.useSetupsCheckBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParameter.UseSetup"));
 		this.patternPanel.add(this.useSetupsCheckBox, gbc);
 
-		this.useAnalysisSetupsCheckBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParemeter.WithAnalysisParameters"));
+		this.useAnalysisSetupsCheckBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParameter.WithAnalysisParameters"));
 		this.useAnalysisSetupsCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				JCheckBox checkBox = (JCheckBox) e.getSource();
@@ -209,10 +204,10 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.patternPanel.add(this.useAnalysisSetupsCheckBox, gbc);
 		
 
-		final JLabel analysisLabel = new JLabel(LangModelSchedule.getString("Analysis")); //$NON-NLS-1$
+		final JLabel analysisLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Analysis")); //$NON-NLS-1$
 		this.patternPanel.add(analysisLabel, gbc);
 		this.patternPanel.add(this.analysisComboBox, gbc);
-		this.patternPanel.add(new JLabel(LangModelSchedule.getString("Patterns")), gbc);
+		this.patternPanel.add(new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Patterns")), gbc);
 
 		this.analysisComboBox.addActionListener(new ActionListener() {
 
@@ -239,71 +234,71 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 		this.testSetups = new WrapperedList(MeasurementSetupWrapper.getInstance(),
 											StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_ID);
-		this.testSetups.addMouseListener(new MouseAdapter() {
-
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (SwingUtilities.isRightMouseButton(e)) {
-					final WrapperedList objList = (WrapperedList) e.getSource();
-					final MeasurementSetup measurementSetup1 = (MeasurementSetup) objList.getSelectedValue();
-					if (measurementSetup1 == null) {
-						return;
-					}
-					final JPopupMenu popup = new JPopupMenu();
-					
-					final JMenuItem msSummaryInfo = new JMenuItem(LangModelSchedule.getString("Measurement setup summary info"));					
-					msSummaryInfo.addActionListener(new ActionListener() {
-
-						public void actionPerformed(ActionEvent e1) {
-							MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
-							String info = (String) wrapper.getValue(measurementSetup1,
-								MeasurementSetupWrapper.SUMMARY_INFO);
-							JOptionPane.showConfirmDialog(objList, info, LangModelSchedule.getString("Measurement setup summary info"),
-								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
-
-						}
-					});
-					
-					popup.add(msSummaryInfo);
-
-					if (measurementSetup1.isChanged()) {
-						
-						final JMenuItem msRename = new JMenuItem(LangModelSchedule.getString("Rename Measurement setup"));					
-						msRename.addActionListener(new ActionListener() {
-	
-							public void actionPerformed(ActionEvent e1) {
-								MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
-								String info = (String) wrapper.getValue(measurementSetup1,
-									MeasurementSetupWrapper.SUMMARY_INFO);
-								Object object = JOptionPane.showInputDialog(objList, 
-									LangModelSchedule.getString("Rename Measurement setup") + '\n'
-									+ measurementSetup1.getDescription() + "\n\n"
-									+ LangModelSchedule.getString("Measurement setup summary info") + '\n'
-									+ info + "\n\n" + LangModelSchedule.getString("New Measurement setup name") + ':',
-									LangModelSchedule.getString("Rename Measurement setup"),
-									JOptionPane.PLAIN_MESSAGE,
-				                    null,
-				                    null,
-				                    measurementSetup1.getDescription());
-								
-								if (object != null) {
-									measurementSetup1.setDescription((String) object);
-									WrapperedListModel wrapperedListModel = (WrapperedListModel) TestParametersPanel.this.testSetups.getModel();
-									wrapperedListModel.sort();
-									
-									objList.setSelectedValue(measurementSetup1, true);
-								}
-	
-							}
-						});
-					popup.add(msRename);
-					}
-
-					popup.show(objList, e.getX(), e.getY());
-					
-				}
-			}
-		});
+//		this.testSetups.addMouseListener(new MouseAdapter() {
+//
+//			@Override
+//			public void mouseClicked(MouseEvent e) {
+//				if (SwingUtilities.isRightMouseButton(e)) {
+//					final WrapperedList objList = (WrapperedList) e.getSource();
+//					final MeasurementSetup measurementSetup1 = (MeasurementSetup) objList.getSelectedValue();
+//					if (measurementSetup1 == null) {
+//						return;
+//					}
+//					final JPopupMenu popup = new JPopupMenu();
+//					
+//					final JMenuItem msSummaryInfo = new JMenuItem(LangModelSchedule.getString("Measurement setup summary info"));					
+//					msSummaryInfo.addActionListener(new ActionListener() {
+//
+//						public void actionPerformed(ActionEvent e1) {
+//							MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
+//							String info = (String) wrapper.getValue(measurementSetup1,
+//								MeasurementSetupWrapper.SUMMARY_INFO);
+//							JOptionPane.showConfirmDialog(objList, info, LangModelSchedule.getString("Measurement setup summary info"),
+//								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
+//
+//						}
+//					});
+//					
+//					popup.add(msSummaryInfo);
+//
+//					if (measurementSetup1.isChanged()) {
+//						
+//						final JMenuItem msRename = new JMenuItem(LangModelSchedule.getString("Rename Measurement setup"));					
+//						msRename.addActionListener(new ActionListener() {
+//	
+//							public void actionPerformed(ActionEvent e1) {
+//								MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
+//								String info = (String) wrapper.getValue(measurementSetup1,
+//									MeasurementSetupWrapper.SUMMARY_INFO);
+//								Object object = JOptionPane.showInputDialog(objList, 
+//									LangModelSchedule.getString("Rename Measurement setup") + '\n'
+//									+ measurementSetup1.getDescription() + "\n\n"
+//									+ LangModelSchedule.getString("Measurement setup summary info") + '\n'
+//									+ info + "\n\n" + LangModelSchedule.getString("New Measurement setup name") + ':',
+//									LangModelSchedule.getString("Rename Measurement setup"),
+//									JOptionPane.PLAIN_MESSAGE,
+//				                    null,
+//				                    null,
+//				                    measurementSetup1.getDescription());
+//								
+//								if (object != null) {
+//									measurementSetup1.setDescription((String) object);
+//									WrapperedListModel wrapperedListModel = (WrapperedListModel) TestParametersPanel.this.testSetups.getModel();
+//									wrapperedListModel.sort();
+//									
+//									objList.setSelectedValue(measurementSetup1, true);
+//								}
+//	
+//							}
+//						});
+//					popup.add(msRename);
+//					}
+//
+//					popup.show(objList, e.getX(), e.getY());
+//					
+//				}
+//			}
+//		});
 
 		this.testSetups.setEnabled(false);
 		this.testSetups.addListSelectionListener(new ListSelectionListener() {
@@ -375,7 +370,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 			measurementSetup1 = (MeasurementSetup) this.testSetups.getSelectedValue();
 			if (measurementSetup1 == null) {
 				JOptionPane.showMessageDialog(this.patternPanel, LangModelSchedule
-						.getString("Have_not_choosen_measurement_pattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+						.getString("Error.HaveNotChoosenMeasurementPattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 					JOptionPane.OK_OPTION);
 				return null;
 			}

@@ -20,7 +20,7 @@ public class PlanFrame extends JInternalFrame {
 	private PlanPanel	mainPanel;
 
 	public PlanFrame(ApplicationContext aContext) {
-		setTitle(LangModelSchedule.getString("Tests time table")); //$NON-NLS-1$
+		setTitle(LangModelSchedule.getString("Text.Plan.Title")); //$NON-NLS-1$
 		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		setResizable(true);
 		setClosable(true);

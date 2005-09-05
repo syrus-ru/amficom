@@ -8,6 +8,7 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 public class ScheduleMainMenuBar extends AbstractMainMenuBar {
 
@@ -20,7 +21,7 @@ public class ScheduleMainMenuBar extends AbstractMainMenuBar {
 	public static final String	MENU_VIEW_PARAMETERS		= "menuViewParameters";
 	public static final String	MENU_VIEW_PROPERTIES		= "menuViewProperties";
 	public static final String	MENU_VIEW_TABLE				= "menuViewTable";
-	public static final String	MENU_VIEW_SAVE_PARAMETERS	= "menuViewSaveParameters";
+//	public static final String	MENU_VIEW_SAVE_PARAMETERS	= "menuViewSaveParameters";
 
 	public static final String	MENU_REPORT					= "label_report";
 	public static final String	MENU_TEMPLATE_REPORT		= "label_reportForTemplate";
@@ -46,47 +47,42 @@ public class ScheduleMainMenuBar extends AbstractMainMenuBar {
 
 	@Override
 	protected void addMenuItems() {
-		this.menuView = new JMenu(LangModelSchedule.getString("View"));
+		this.menuView = new JMenu(LangModelGeneral.getString(ApplicationModel.MENU_VIEW));
 		this.menuView.setName(MENU_VIEW);
 
-		final JMenuItem menuViewPlanItem = new JMenuItem(LangModelSchedule.getString("Plan.Title"));
+		final JMenuItem menuViewPlanItem = new JMenuItem(LangModelSchedule.getString("Text.Plan.Title"));
 		menuViewPlanItem.setName(MENU_VIEW_PLAN);
 		menuViewPlanItem.addActionListener(this.actionAdapter);
 		this.menuView.add(menuViewPlanItem);
 
-		final JMenuItem menuViewTimeItem = new JMenuItem(LangModelSchedule.getString("TemporalType.Title"));
+		final JMenuItem menuViewTimeItem = new JMenuItem(LangModelSchedule.getString("Text.TimePanel.Title"));
 		menuViewTimeItem.setName(MENU_VIEW_TIME);
 		menuViewTimeItem.addActionListener(this.actionAdapter);
 		this.menuView.add(menuViewTimeItem);
 
-		final JMenuItem menuViewTreeItem = new JMenuItem(LangModelSchedule.getString("Comonents_Tree"));
+		final JMenuItem menuViewTreeItem = new JMenuItem(LangModelSchedule.getString("Text.ElementsTree.Title"));
 		menuViewTreeItem.setName(MENU_VIEW_TREE);
 		menuViewTreeItem.addActionListener(this.actionAdapter);
 		this.menuView.add(menuViewTreeItem);
 
-		final JMenuItem menuViewParametersItem = new JMenuItem(LangModelSchedule.getString("Measurement_options"));
+		final JMenuItem menuViewParametersItem = new JMenuItem(LangModelSchedule.getString("Text.MeasurementParameter.Title"));
 		menuViewParametersItem.setName(MENU_VIEW_PARAMETERS);
 		menuViewParametersItem.addActionListener(this.actionAdapter);
 		this.menuView.add(menuViewParametersItem);
 
-		final JMenuItem menuViewPropertiesItem = new JMenuItem(LangModelSchedule.getString("TestOptions"));
+		final JMenuItem menuViewPropertiesItem = new JMenuItem(LangModelSchedule.getString("Text.TestOptions.Title"));
 		menuViewPropertiesItem.setName(MENU_VIEW_PROPERTIES);
 		menuViewPropertiesItem.addActionListener(this.actionAdapter);
 		this.menuView.add(menuViewPropertiesItem);
 
-		final JMenuItem menuViewTableItem = new JMenuItem(LangModelSchedule.getString("Tests_status_and_characters"));
+		final JMenuItem menuViewTableItem = new JMenuItem(LangModelSchedule.getString("Text.Table.Title"));
 		menuViewTableItem.setName(MENU_VIEW_TABLE);
 		menuViewTableItem.addActionListener(this.actionAdapter);
 		this.menuView.add(menuViewTableItem);
 
-		final JMenuItem menuViewSaveParametersItem = new JMenuItem(LangModelSchedule.getString("Saving_options"));
-		menuViewSaveParametersItem.setName(MENU_VIEW_SAVE_PARAMETERS);
-		menuViewSaveParametersItem.addActionListener(this.actionAdapter);
-		this.menuView.add(menuViewSaveParametersItem);
-
 		this.menuView.addSeparator();
 
-		final JMenuItem menuViewArrangeItem = new JMenuItem(LangModelSchedule.getString("Arrange"));
+		final JMenuItem menuViewArrangeItem = new JMenuItem(LangModelGeneral.getString(ApplicationModel.MENU_VIEW_ARRANGE));
 		menuViewArrangeItem.setName(ApplicationModel.MENU_VIEW_ARRANGE);
 		menuViewArrangeItem.addActionListener(this.actionAdapter);
 		this.menuView.add(menuViewArrangeItem);
@@ -128,10 +124,10 @@ public class ScheduleMainMenuBar extends AbstractMainMenuBar {
 
 				// menuTemplateReportItem.setVisible(ScheduleMainMenuBar.this.getApplicationModel().isVisible(MENU_TEMPLATE_REPORT));
 				// menuTemplateReportItem.setEnabled(ScheduleMainMenuBar.this.getApplicationModel().isEnabled(MENU_TEMPLATE_REPORT));
-				menuViewSaveParametersItem.setVisible(ScheduleMainMenuBar.this.getApplicationModel().isVisible(
-					MENU_VIEW_SAVE_PARAMETERS));
-				menuViewSaveParametersItem.setEnabled(ScheduleMainMenuBar.this.getApplicationModel().isEnabled(
-					MENU_VIEW_SAVE_PARAMETERS));
+//				menuViewSaveParametersItem.setVisible(ScheduleMainMenuBar.this.getApplicationModel().isVisible(
+//					MENU_VIEW_SAVE_PARAMETERS));
+//				menuViewSaveParametersItem.setEnabled(ScheduleMainMenuBar.this.getApplicationModel().isEnabled(
+//					MENU_VIEW_SAVE_PARAMETERS));
 
 				
 				

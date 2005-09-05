@@ -52,7 +52,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 	}
 
 	public ScheduleMainFrame(final ApplicationContext aContext) {
-		super(aContext, LangModelSchedule.getString("Scheduling_AMFICOM"), new ScheduleMainMenuBar(aContext
+		super(aContext, LangModelSchedule.getString("Text.Scheduler.Title"), new ScheduleMainMenuBar(aContext
 				.getApplicationModel()), new AbstractMainToolBar() {});
 
 		final Dispatcher dispatcher1 = this.dispatcher;
@@ -275,7 +275,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PLAN, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TREE, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, false);
-		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, false);
+//		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TIME, false);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TABLE, false);
@@ -304,7 +304,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW, enable);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PLAN, enable);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TREE, enable);
-		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, enable);
+//		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, enable);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, enable);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, enable);
 		aModel.setEnabled(ScheduleMainMenuBar.MENU_VIEW_TIME, enable);

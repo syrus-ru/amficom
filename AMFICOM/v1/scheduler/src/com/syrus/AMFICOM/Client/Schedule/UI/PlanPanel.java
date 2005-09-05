@@ -73,7 +73,12 @@ ActionListener, PropertyChangeListener {
 		}
 	}
 	public static final String[]	SCALES				= new String[] {
-			"10 min", "1 hour", "6 hours", "1 day", "1 week", "1 month"};							//$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
+			"Text.Plan.Toolbar.Scope.10Minutes", 
+			"Text.Plan.Toolbar.Scope.1Hour", 
+			"Text.Plan.Toolbar.Scope.6Hours", 
+			"Text.Plan.Toolbar.Scope.1Day", 
+			"Text.Plan.Toolbar.Scope.1Week", 
+			"Text.Plan.Toolbar.Scope.1Month"};
 
 	/**
 	 * SCALES in milliseconds

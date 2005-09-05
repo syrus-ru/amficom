@@ -55,7 +55,7 @@ public class TestRequestPanel extends JPanel implements PropertyChangeListener {
 
 		this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
 		JPanel panel = new JPanel(new GridLayout(0, 2));
-		JLabel titleLabel = new JLabel(LangModelSchedule.getString("Title") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		JLabel titleLabel = new JLabel(LangModelSchedule.getString("Text.Test.Field.Title") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(titleLabel);
 		panel.add(this.nameTextField);
 		this.nameTextField.setEditable(true);
@@ -72,15 +72,15 @@ public class TestRequestPanel extends JPanel implements PropertyChangeListener {
 				}
 			}
 		});
-		JLabel ownerLabel = new JLabel(LangModelSchedule.getString("Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		JLabel ownerLabel = new JLabel(LangModelSchedule.getString("Text.Test.Field.Owner") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(ownerLabel);
 		panel.add(this.ownerTextField);
 
-		JLabel typeLabel = new JLabel(LangModelSchedule.getString("Type") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		JLabel typeLabel = new JLabel(LangModelSchedule.getString("Text.Test.Field.MeasurementType") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(typeLabel);
 		panel.add(this.typeTextField);
 
-		JLabel objectLabel = new JLabel(LangModelSchedule.getString("Port") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
+		JLabel objectLabel = new JLabel(LangModelSchedule.getString("Text.Test.Field.Port") + ":"); //$NON-NLS-1$ //$NON-NLS-2$
 		panel.add(objectLabel);
 		panel.add(this.portTextField);
 		this.add(panel);

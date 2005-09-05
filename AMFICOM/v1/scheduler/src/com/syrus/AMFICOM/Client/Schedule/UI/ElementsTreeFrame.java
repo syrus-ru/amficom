@@ -41,9 +41,6 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 
 public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeListener {
 
-	/**
-	 * 
-	 */
 	private static final long serialVersionUID = 3761121639580186678L;
 
 	SchedulerModel schedulerModel;
@@ -56,7 +53,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	ApplicationContext aContext;
 
-	private ServiceItem rootItem = new ServiceItem("/");
+	private ServiceItem rootItem = new ServiceItem(LangModelSchedule.getString("Text.ElementsTree.MeasurementTypes"));
 
 	private Dispatcher dispatcher;
 
@@ -65,11 +62,11 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	public ElementsTreeFrame(final ApplicationContext aContext) {
 		this.aContext = aContext;
-		setTitle(LangModelSchedule.getString("Comonents_Tree")); //$NON-NLS-1$
-		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
-		setResizable(true);
-		setClosable(true);
-		setIconifiable(true);
+		this.setTitle(LangModelSchedule.getString("Text.ElementsTree.Title")); //$NON-NLS-1$
+		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		this.setResizable(true);
+		this.setClosable(true);
+		this.setIconifiable(true);
 	}
 
 	private Identifier getObject(final short entityCode) {
@@ -91,7 +88,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 			}
 		}
 		JOptionPane.showMessageDialog(this,
-				LangModelSchedule.getString("Have not choosen Measurement element"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+				LangModelSchedule.getString("Error.HaveNotChoosenMeasurementElement"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 				JOptionPane.OK_OPTION);
 		this.schedulerModel.setBreakData();
 		return null;
@@ -113,7 +110,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 			}
 		}
 		JOptionPane.showMessageDialog(this,
-				LangModelSchedule.getString("Have not choosen Measurement element"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+				LangModelSchedule.getString("Error.HaveNotChoosenMeasurementElement"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 				JOptionPane.OK_OPTION);
 		this.schedulerModel.setBreakData();
 		return MeasurementType.UNKNOWN;

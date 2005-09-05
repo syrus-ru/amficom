@@ -18,7 +18,7 @@ public class TestParametersFrame extends JInternalFrame {
 	private TestParametersPanel	panel;
 
 	public TestParametersFrame(ApplicationContext aContext) {
-		setTitle(LangModelSchedule.getString("Measurement_options")); //$NON-NLS-1$
+		setTitle(LangModelSchedule.getString("Text.MeasurementParameter.Title")); //$NON-NLS-1$
 		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		setResizable(true);
 		setClosable(true);

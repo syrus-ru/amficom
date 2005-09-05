@@ -61,7 +61,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/08/31 07:53:00 $
+ * @version $Revision: 1.73 $, $Date: 2005/09/05 14:14:34 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -409,7 +409,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 				parameterSet = ParameterSet.createInstance(LoginManager.getUserId(),
 						ParameterSetSort.SET_SORT_MEASUREMENT_PARAMETERS,
-						LangModelSchedule.getString("Text.SetCreatedByScheduler"), params, Collections.singleton(this.meId)); //$NON-NLS-1$
+						LangModelSchedule.getString("Text.MeasurementParameter.SetCreatedByScheduler"), params, Collections.singleton(this.meId)); //$NON-NLS-1$
 				this.setId = parameterSet.getId();
 
 //				System.out.println("ReflectometryTestPanel.getSet() | newSet: " + this.setId);
@@ -472,7 +472,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				+ this.getUnit(ParameterType.REF_AVERAGE_COUNT));
 //		this.pulseWidthCheckBox.setText(ParameterType.REF_PULSE_WIDTH_HIGH_RES.getDescription()
 //				+ this.getUnit(ParameterType.REF_PULSE_WIDTH_HIGH_RES));
-		this.pulseWidthLabel.setText(LangModelSchedule.getString("Text.PulseWidth") 
+		this.pulseWidthLabel.setText(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.PulseWidth") 
 			+ this.getUnit(ParameterType.REF_PULSE_WIDTH_HIGH_RES));
 //		this.pulseWidthHiResLabel.setText(ParameterType.REF_PULSE_WIDTH_HIGH_RES.getDescription()
 //				+ this.getUnit(ParameterType.REF_PULSE_WIDTH_HIGH_RES));
@@ -801,7 +801,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 												measurementSetup.getCriteriaSet(),
 												measurementSetup.getThresholdSet(),
 												measurementSetup.getEtalon(),
-												LangModelSchedule.getString("created by Scheduler") + " /" + sdf.format(new Date()) + "/",
+												LangModelSchedule.getString("Text.MeasurementParameter.MeasurementSetupCreatedByScheduler") + " /" + sdf.format(new Date()) + "/",
 												measurementSetup.getMeasurementDuration(),
 												measurementSetup.getMonitoredElementIds(),
 												measurementSetup.getMeasurementTypes());
@@ -928,7 +928,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 		this.waveLengthComboBox = new JComboBox();
 		this.maxDistanceComboBox = new JComboBox();
-		this.highResolutionCheckBox = new JCheckBox(LangModelSchedule.getString("Text.HighResolution"));
+		this.highResolutionCheckBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.HighResolution"));
 		this.pulseWidthHiResComboBox = new JComboBox();
 		this.pulseWidthHiResComboBox.setMaximumRowCount(15);
 		this.pulseWidthLowResComboBox = new JComboBox();
@@ -936,16 +936,16 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.resolutionComboBox = new JComboBox();
 		this.averageQuantityComboBox = new JComboBox();
 
-		this.refractLabel = new JLabel(LangModelSchedule.getString("Text.IndexOfRefraction")); //$NON-NLS-1$
-		this.waveLengthLabel = new JLabel(LangModelSchedule.getString("Text.WaveLength")); //$NON-NLS-1$
-		this.countOfAverageOutLabel = new JLabel(LangModelSchedule.getString("Text.AverageQuantity")); //$NON-NLS-1$
-		this.resolutionLabel = new JLabel(LangModelSchedule.getString("Text.Resolution")); //$NON-NLS-1$
-		this.maxDistanceLabel = new JLabel(LangModelSchedule.getString("Text.Distance")); //$NON-NLS-1$
-		this.pulseWidthLabel = new JLabel(LangModelSchedule.getString("Text.PulseWidth")); //$NON-NLS-1$
+		this.refractLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.IndexOfRefraction")); //$NON-NLS-1$
+		this.waveLengthLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.WaveLength")); //$NON-NLS-1$
+		this.countOfAverageOutLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.AverageQuantity")); //$NON-NLS-1$
+		this.resolutionLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.Resolution")); //$NON-NLS-1$
+		this.maxDistanceLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.Distance")); //$NON-NLS-1$
+		this.pulseWidthLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.PulseWidth")); //$NON-NLS-1$
 
-		this.gsOptionBox = new JCheckBox(LangModelSchedule.getString("Text.GainSplice"));
-		this.bcOptionBox = new JCheckBox(LangModelSchedule.getString("Text.BoxCar"));
-		this.lfdOptionBox = new JCheckBox(LangModelSchedule.getString("Text.LiveFiberDetect"));
+		this.gsOptionBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.GainSplice"));
+		this.bcOptionBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.BoxCar"));
+		this.lfdOptionBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.LiveFiberDetect"));
 
 		this.refractTextField.addActionListener(new ActionListener() {
 

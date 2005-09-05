@@ -18,7 +18,7 @@ public class TestRequestFrame extends JInternalFrame {
 
 	public TestRequestFrame(ApplicationContext aContext) {
 		//this.aContext = aContext;
-		setTitle(LangModelSchedule.getString("TestOptions")); //$NON-NLS-1$
+		setTitle(LangModelSchedule.getString("Text.TestOptions.Title")); //$NON-NLS-1$
 		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		setResizable(true);
 		setClosable(true);
