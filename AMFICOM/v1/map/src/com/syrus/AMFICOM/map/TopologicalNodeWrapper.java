@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalNodeWrapper.java,v 1.16 2005/08/12 10:05:08 arseniy Exp $
+ * $Id: TopologicalNodeWrapper.java,v 1.17 2005/09/05 13:41:20 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/12 10:05:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/09/05 13:41:20 $
+ * @author $Author: krupenn $
  * @module map
  */
 public class TopologicalNodeWrapper extends StorableObjectWrapper<TopologicalNode> {
@@ -124,9 +124,6 @@ public class TopologicalNodeWrapper extends StorableObjectWrapper<TopologicalNod
 			}
 			else if (key.equals(COLUMN_ACTIVE)) {
 				topologicalNode.setActive(((Boolean) value).booleanValue());
-			}
-			else if (key.equals(NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID)) {
-				topologicalNode.setPhysicalLink((PhysicalLink) value);
 			}
 		}
 	}
