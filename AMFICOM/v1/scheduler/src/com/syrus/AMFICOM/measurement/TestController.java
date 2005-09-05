@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.20 2005/08/30 12:03:08 bob Exp $
+ * $Id: TestController.java,v 1.21 2005/09/05 14:13:43 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/08/30 12:03:08 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/05 14:13:43 $
  * @author $Author: bob $
  * @module module
  */
@@ -73,32 +73,48 @@ public class TestController implements Wrapper<Test> {
 	private TestController() {
 
 		//		 empty private constructor
-		final String[] keysArray = new String[] { KEY_TEMPORAL_TYPE, KEY_MONITORED_ELEMENT, KEY_TEST_OBJECT,
-				KEY_MEASUREMENT_TYPE, KEY_START_TIME, KEY_STATUS};
+		final String[] keysArray = new String[] { KEY_TEMPORAL_TYPE, 
+				KEY_MONITORED_ELEMENT, 
+				KEY_TEST_OBJECT,
+				KEY_MEASUREMENT_TYPE, 
+				KEY_START_TIME, 
+				KEY_STATUS};
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 
 		this.statusMap = new HashMap<Component, TestStatus>();
-		this.addStatusItem(TestStatus.TEST_STATUS_ABORTED, LangModelSchedule.getString("Aborted"));
-		this.addStatusItem(TestStatus.TEST_STATUS_COMPLETED, LangModelSchedule.getString("Completed"));
-		this.addStatusItem(TestStatus.TEST_STATUS_NEW, LangModelSchedule.getString("New"));
-		this.addStatusItem(TestStatus.TEST_STATUS_PROCESSING, LangModelSchedule.getString("Processing"));
-		this.addStatusItem(TestStatus.TEST_STATUS_SCHEDULED, LangModelSchedule.getString("Scheduled"));
+		this.addStatusItem(TestStatus.TEST_STATUS_ABORTED, 
+			LangModelSchedule.getString("Text.Test.Status.Aborted"));
+		this.addStatusItem(TestStatus.TEST_STATUS_COMPLETED, 
+			LangModelSchedule.getString("Text.Test.Status.Completed"));
+		this.addStatusItem(TestStatus.TEST_STATUS_NEW, 
+			LangModelSchedule.getString("Text.Test.Status.New"));
+		this.addStatusItem(TestStatus.TEST_STATUS_PROCESSING, 
+			LangModelSchedule.getString("Text.Test.Status.Processing"));
+		this.addStatusItem(TestStatus.TEST_STATUS_SCHEDULED, 
+			LangModelSchedule.getString("Text.Test.Status.Scheduled"));
+		this.addStatusItem(TestStatus.TEST_STATUS_STOPPED, 
+			LangModelSchedule.getString("Text.Test.Status.Stopped"));
 		
 		this.temporalTypeMap = new HashMap<TestTemporalType, String>();
-		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME, LangModelSchedule.getString("Onetime"));
-		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, LangModelSchedule.getString("Periodical"));
-		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS, LangModelSchedule.getString("Continual"));
+		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME, 
+			LangModelSchedule.getString("Text.Test.TemporalType.Onetime"));
+		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL, 
+			LangModelSchedule.getString("Text.Test.TemporalType.Periodical"));
+		this.temporalTypeMap.put(TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS, 
+			LangModelSchedule.getString("Text.Test.TemporalType.Continual"));
 	}
 
-	private Component getStatusComponent(TestStatus testStatus, String name) {
-		ComparableLabel label = new ComparableLabel(name);
+	private Component getStatusComponent(final TestStatus testStatus, 
+	                                     final String name) {
+		final ComparableLabel label = new ComparableLabel(name);
 		label.setOpaque(true);
-		Color color = SchedulerModel.getColor(testStatus);
+		final Color color = SchedulerModel.getColor(testStatus);
 		label.setBackground(color.brighter());
 		return label;
 	}
 	
-	private void addStatusItem(TestStatus testStatus, String name) {
+	private void addStatusItem(final TestStatus testStatus, 
+	                           final String name) {
 		this.statusMap.put(this.getStatusComponent(testStatus, name), testStatus);
 	}
 	
@@ -127,19 +143,19 @@ public class TestController implements Wrapper<Test> {
 	public String getName(final String key) {
 		String name = null;
 		if (key.equals(KEY_TEMPORAL_TYPE))
-			name = LangModelSchedule.getString("TemporalType"); //$NON-NLS-1$
+			name = LangModelSchedule.getString("Text.Test.Field.TemporalType"); //$NON-NLS-1$
 		else if (key.equals(KEY_KIS))
-			name = LangModelSchedule.getString("RTU"); //$NON-NLS-1$
+			name = LangModelSchedule.getString("Text.Test.Field.RTU"); //$NON-NLS-1$
 		else if (key.equals(KEY_MONITORED_ELEMENT))
-			name = LangModelSchedule.getString("Port"); //$NON-NLS-1$
+			name = LangModelSchedule.getString("Text.Test.Field.Port"); //$NON-NLS-1$
 		else if (key.equals(KEY_TEST_OBJECT))
-			name = LangModelSchedule.getString("TestObject"); //$NON-NLS-1$
+			name = LangModelSchedule.getString("Text.Test.Field.TestingObject"); //$NON-NLS-1$
 		else if (key.equals(KEY_MEASUREMENT_TYPE))
-			name = LangModelSchedule.getString("Measurement_type"); //$NON-NLS-1$
+			name = LangModelSchedule.getString("Text.Test.Field.MeasurementType"); //$NON-NLS-1$
 		else if (key.equals(KEY_START_TIME))
-			name = LangModelSchedule.getString("TestStartTime"); //$NON-NLS-1$
+			name = LangModelSchedule.getString("Text.Test.Field.TimeOfTheFirstMeasurement"); //$NON-NLS-1$
 		else if (key.equals(KEY_STATUS))
-			name = LangModelSchedule.getString("Status"); //$NON-NLS-1$
+			name = LangModelSchedule.getString("Text.Test.Field.Status"); //$NON-NLS-1$
 
 		return name;
 	}
@@ -172,7 +188,7 @@ public class TestController implements Wrapper<Test> {
 				if (test.getGroupTestId().isVoid()) {
 					value = this.temporalTypeMap.get(test.getTemporalType());
 				} else {
-					value = LangModelSchedule.getString("Sectional");
+					value = LangModelSchedule.getString("Text.Test.TemporalType.Sectional");
 				}
 			} else if (key.equals(KEY_TEMPORAL_TYPE_NAME)) {
 				if (test.getGroupTestId().isVoid()) {
@@ -192,7 +208,7 @@ public class TestController implements Wrapper<Test> {
 						}
 					}
 				} else {
-					value = LangModelSchedule.getString("Sectional");
+					value = LangModelSchedule.getString("Text.Test.TemporalType.Sectional");
 				}				
 			}
 			else if (key.equals(KEY_KIS)) {

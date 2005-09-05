@@ -140,9 +140,13 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 	private boolean				groupTest							= false;
 
-	public static final Color	COLOR_ABORDED						= Color.RED;
+	public static final Color	COLOR_STOPPED						= Color.MAGENTA.darker();
 
-	public static final Color	COLOR_ABORDED_SELECTED				= Color.RED.darker();
+	public static final Color	COLOR_STOPPED_SELECTED				= Color.MAGENTA;
+	
+	public static final Color	COLOR_ABORDED						= Color.RED.darker();
+
+	public static final Color	COLOR_ABORDED_SELECTED				= Color.RED;
 
 	public static final Color	COLOR_ALARM							= Color.ORANGE.darker();
 
@@ -194,7 +198,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.add(ScheduleMainMenuBar.MENU_VIEW_PLAN);
 		this.add(ScheduleMainMenuBar.MENU_VIEW_TREE);
 		this.add(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS);
-		this.add(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS);
+//		this.add(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS);
 		this.add(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES);
 		this.add(ScheduleMainMenuBar.MENU_VIEW_TIME);
 		this.add(ScheduleMainMenuBar.MENU_VIEW_TABLE);
@@ -210,7 +214,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_PLAN, true);
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_TREE, true);
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, true);
-		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, true);
+//		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, true);
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, true);
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_TIME, true);
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_TABLE, true);
@@ -706,7 +710,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							null,
 							null,
 							null,
-							LangModelSchedule.getString("created by Scheduler") + " /" + sdf.format(new Date()) + "/",
+							LangModelSchedule.getString("Text.Scheduler.CreatedByScheduler") + " /" + sdf.format(new Date()) + "/",
 							1000 * 60 * 10,
 							Collections.singleton(this.monitoredElement.getId()),
 							EnumSet.of(this.measurementType));
@@ -756,7 +760,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 					} else {
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-								LangModelSchedule.getString("Cannot add test"),
+								LangModelSchedule.getString("Error.CannotAddTest"),
 								LangModelSchedule.getString("Error"),
 								JOptionPane.OK_OPTION);
 					}
@@ -784,7 +788,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							test.getNumberOfMeasurements());
 				} else {
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-							LangModelSchedule.getString("Cannot update test"),
+							LangModelSchedule.getString("Error.CannotUpdateTest"),
 							LangModelSchedule.getString("Error"),
 							JOptionPane.OK_OPTION);
 				}
@@ -841,7 +845,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 						correct = this.isValid(newStartDate, newEndDate, selectedTest.getMonitoredElement().getId());
 						if (!correct) {
 							JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-									LangModelSchedule.getString("Cannot move tests"),
+									LangModelSchedule.getString("Error.CannotMoveTests"),
 									LangModelSchedule.getString("Error"),
 									JOptionPane.OK_OPTION);
 							break;
@@ -920,7 +924,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 						this.selectedTestIds.add(test.getId());
 					} else {
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-								LangModelSchedule.getString("Cannot add tests"),
+								LangModelSchedule.getString("Error.CannotAddTest"),
 								LangModelSchedule.getString("Error"),
 								JOptionPane.OK_OPTION);
 					}
@@ -975,7 +979,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 						correct = this.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId());
 						if (!correct) {
 							JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-									LangModelSchedule.getString("Cannot add tests"),
+									LangModelSchedule.getString("Error.CannotAddTest"),
 									LangModelSchedule.getString("Error"),
 									JOptionPane.OK_OPTION);
 							break;
@@ -1061,7 +1065,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		return getColor(testStatus, false);
 	}
 
-	public static Color getColor(final TestStatus testStatus, final boolean selected) {
+	public static Color getColor(final TestStatus testStatus, 
+	                             final boolean selected) {
 		Color color;
 		switch (testStatus.value()) {
 			case TestStatus._TEST_STATUS_COMPLETED:
@@ -1073,6 +1078,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				break;
 			case TestStatus._TEST_STATUS_PROCESSING:
 				color = selected ? COLOR_PROCCESSING_SELECTED : COLOR_PROCCESSING;
+				break;
+			case TestStatus._TEST_STATUS_STOPPED:
+				color = selected ? COLOR_STOPPED_SELECTED : COLOR_STOPPED;
 				break;
 			case TestStatus._TEST_STATUS_ABORTED:
 				color = selected ? COLOR_ABORDED_SELECTED : COLOR_ABORDED;

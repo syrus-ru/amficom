@@ -223,27 +223,11 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 				@Override
 				public void mouseClicked(MouseEvent evt) {
 					final JTable table = ((JTable) evt.getSource());
-					// if (SwingUtilities.isLeftMouseButton(evt)) {
-					// int rowIndex = table.getSelectedRow();
-					// TestTableModel model = (TestTableModel) table.getModel();
-					// TestTableRow line = (TestTableRow)
-					// model.getRow(rowIndex);
-					// if (model != null) {
-					// //System.out.println("test:" + line.getTest());
-					// Test test = (Test) line.getObjectResource();
-					// //TableFrame.this.skipTestUpdate = true;
-					// TableFrame.this.dispatcher
-					// .notify(new TestUpdateEvent(this, test,
-					// TestUpdateEvent.TEST_SELECTED_EVENT));
-					// //System.out.println("send test:"+test.getId());
-					// //TableFrame.this.skipTestUpdate = false;
-					// }
-					// } else
 					if (SwingUtilities.isRightMouseButton(evt)) {
-						System.out.println("RightMouseButton");
 						final int[] rowIndices = table.getSelectedRows();
 						if ((rowIndices != null) && (rowIndices.length > 0)) {
 							final WrapperedTableModel model = (WrapperedTableModel) table.getModel();
+							
 							for (int i = 0; i < rowIndices.length; i++) {
 								Test test1 = (Test) model.getObject(rowIndices[i]);
 								int status = test1.getStatus().value();
@@ -252,55 +236,81 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 									return;
 								}
 							}
-							JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString("delete_tests")); //$NON-NLS-1$
+							
+							final JMenuItem deleteTestMenuItem = 
+								new JMenuItem(LangModelSchedule.getString(rowIndices.length == 1 ? "Text.Table.DeleteTest" : "Text.Table.DeleteTests")); 
 							deleteTestMenuItem.addActionListener(new ActionListener() {
 
-								public void actionPerformed(ActionEvent e) {
-
-									int temp = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-										LangModelSchedule.getString("Are_you_shure_delete_tests"), LangModelSchedule
-												.getString("Confirm_deleting"), JOptionPane.YES_NO_OPTION);
+								public void actionPerformed(final ActionEvent e) {
+									final int temp = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
+										LangModelSchedule.getString("Text.Table.DeleteTest.ConfirmMessage"), LangModelSchedule
+												.getString("Text.Table.DeleteTest.ConfirmTitle"), JOptionPane.YES_NO_OPTION);
 									if (temp == JOptionPane.YES_OPTION) {
-										if (TableFrame.this.rowToRemove == null)
+										if (TableFrame.this.rowToRemove == null) {
 											TableFrame.this.rowToRemove = new LinkedList<Test>();
-										else
+										} else {
 											TableFrame.this.rowToRemove.clear();
-										for (int i = 0; i < rowIndices.length; i++) {
-											Test test1 = (Test) model.getObject(rowIndices[i]);
-											TableFrame.this.rowToRemove.add(test1);
 										}
-										for (final Test test1 : TableFrame.this.rowToRemove) {
-											TableFrame.this.schedulerModel.removeTest(test1);
-											model.removeObject(test1);
+										for (int i = 0; i < rowIndices.length; i++) {
+											final Test test = (Test) model.getObject(rowIndices[i]);
+											TableFrame.this.rowToRemove.add(test);
+										}
+										for (final Test test : TableFrame.this.rowToRemove) {
+											TableFrame.this.schedulerModel.removeTest(test);
+											model.removeObject(test);
 										}
 										table.revalidate();
 										table.repaint();
 									}
 								}
 							});
-							JPopupMenu popup = new JPopupMenu();
+							
+							final JPopupMenu popup = new JPopupMenu();
 							popup.add(deleteTestMenuItem);
+
+							
+							boolean enableStopping = true;
+							for (int i = 0; i < rowIndices.length; i++) {
+								Test test1 = (Test) model.getObject(rowIndices[i]);
+								int status = test1.getStatus().value();
+								if (status != TestStatus._TEST_STATUS_PROCESSING) {
+									enableStopping = false;
+									break;
+								}
+							}
+							
+							if (enableStopping) {
+								final JMenuItem stopTestMenuItem = 
+									new JMenuItem(LangModelSchedule.getString("Text.Table.StopTesting")); 
+								stopTestMenuItem.addActionListener(new ActionListener() {
+	
+									public void actionPerformed(final ActionEvent e) {
+										final int temp = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
+											LangModelSchedule.getString("Text.Table.StopTesting.ConfirmMessage"), LangModelSchedule
+													.getString("Text.Table.StopTesting.ConfirmTitle"), JOptionPane.YES_NO_OPTION);
+										if (temp == JOptionPane.YES_OPTION) {
+											for (int i = 0; i < rowIndices.length; i++) {
+												final Test test = (Test) model.getObject(rowIndices[i]);
+												test.setStatus(TestStatus.TEST_STATUS_STOPPED);
+											}
+											TableFrame.this.dispatcher.firePropertyChange(new PropertyChangeEvent(TableFrame.this, SchedulerModel.COMMAND_REFRESH_TESTS, null, null));
+											table.revalidate();
+											table.repaint();
+										}
+									}
+								});
+								
+								popup.addSeparator();
+								popup.add(stopTestMenuItem);
+							}
 							popup.show(table, evt.getX(), evt.getY());
 						}
 					}
 
 				}
 			});
-			/**
-			 * TODO set custom renderer
-			 */
-			{
-				// //int vColIndex = 0;
-				// TestTableCellRenderer tableCellRenderer = new
-				// TestTableCellRenderer();
-				// for (int vColIndex = 0; vColIndex <
-				// tableModel.getColumnCount(); vColIndex++) {
-				// TableColumn col =
-				// this.listTable.getColumnModel().getColumn(vColIndex);
-				// col.setCellRenderer(tableCellRenderer);
-				// }
-			}
-			JTableHeader header = this.listTable.getTableHeader();
+
+			final JTableHeader header = this.listTable.getTableHeader();
 			
 			this.listTable.sortColumn(4);
 			
@@ -314,7 +324,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 	}
 
 	private void init() {
-		setTitle(LangModelSchedule.getString("Tests_status_and_characters")); //$NON-NLS-1$
+		setTitle(LangModelSchedule.getString("Text.Table.Title")); //$NON-NLS-1$
 		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		setResizable(true);
 		setClosable(true);
