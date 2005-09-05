@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.66 2005/08/08 11:43:53 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.67 2005/09/05 18:15:30 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteException;
+import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCode;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
@@ -56,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/08/08 11:43:53 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/05 18:15:30 $
  * @author $Author: arseniy $
  * @module mserver
  */
@@ -104,6 +105,11 @@ public class MeasurementServer extends SleepButWorkThread {
 	/**
 	 * Map of tests to transmit to MCMs	*/
 	private static Map<Identifier, Set<Test>> mcmTestQueueMap;
+
+	/**
+	 * Map of test ids to stop
+	 */
+	private static Map<Identifier, Set<Identifier>> mcmStopTestIdsMap;
 
 	/**
 	 * Condition to load tests. Must be re-created in case of changing set of available MCMs.
@@ -172,6 +178,9 @@ public class MeasurementServer extends SleepButWorkThread {
 				mcmTestQueueMap.put(mcmId, Collections.synchronizedSet(new HashSet<Test>()));
 			}
 
+			/*	Create map of test ids to stop*/
+			mcmStopTestIdsMap = Collections.synchronizedMap(new HashMap<Identifier, Set<Identifier>>());
+
 			/*	Create condition for load tests*/
 			createTestLoadCondition();
 
@@ -208,24 +217,29 @@ public class MeasurementServer extends SleepButWorkThread {
 		final String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			Log.errorException(e);
 			System.exit(0);
 		}
 	}
 
 	private static void createTestLoadCondition() {
-		LinkedIdsCondition lic = new LinkedIdsCondition(mcmTestQueueMap.keySet(), ObjectEntities.TEST_CODE);
-		TypicalCondition tc = new TypicalCondition(TestStatus._TEST_STATUS_NEW,
+		final LinkedIdsCondition lic = new LinkedIdsCondition(mcmTestQueueMap.keySet(), ObjectEntities.TEST_CODE);
+		final TypicalCondition tc1 = new TypicalCondition(TestStatus._TEST_STATUS_NEW,
+				0,
+				OperationSort.OPERATION_EQUALS,
+				ObjectEntities.TEST_CODE,
+				TestWrapper.COLUMN_STATUS);
+		final TypicalCondition tc2 = new TypicalCondition(TestStatus._TEST_STATUS_STOPPED,
 				0,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_STATUS);
 		try {
-			testLoadCondition = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
-		}
-		catch (CreateObjectException coe) {
+			testLoadCondition = new CompoundCondition(lic,
+					CompoundConditionSort.AND,
+					new CompoundCondition(tc1, CompoundConditionSort.OR, tc2));
+		} catch (CreateObjectException coe) {
 			//Never
 			Log.errorException(coe);
 		}
@@ -239,40 +253,47 @@ public class MeasurementServer extends SleepButWorkThread {
 			 * (not through direct CORBA operation).
 			 * Maybe in future change such behaviour*/
 			try {
-				fillMCMTestQueueMap();
-			}
-			catch (ApplicationException ae) {
+				fillMCMTestMaps();
+			} catch (ApplicationException ae) {
 				Log.errorException(ae);
 			}
 
 			synchronized (mcmTestQueueMap) {
 				for (final Identifier mcmId : mcmTestQueueMap.keySet()) {
 					final Set<Test> testQueue = mcmTestQueueMap.get(mcmId);
-					if (!testQueue.isEmpty()) {
+					final Set<Identifier> stopTestIds = mcmStopTestIdsMap.get(mcmId);
+					if (!testQueue.isEmpty() || stopTestIds != null) {
 						com.syrus.AMFICOM.mcm.corba.MCM mcmRef = null;
 						try {
 							mcmRef = servantManager.getVerifiedMCMReference(mcmId);
-						}
-						catch (ApplicationException ae) {
+						} catch (ApplicationException ae) {
 							Log.errorException(ae);
 							continue;
 						}
 
-						final IdlTest[] testsT = new IdlTest[testQueue.size()];
-						synchronized (testQueue) {
-							int i = 0;
-							for (final Test test : testQueue) {
-								testsT[i++] = test.getTransferable(servantManager.getCORBAServer().getOrb());
-							}
-						}
 						try {
-							Log.debugMessage(testsT.length + " tests to send to MCM '" + mcmId + "'", Log.DEBUGLEVEL08);
 							final IdlSessionKey sessionKey = LoginManager.getSessionKeyTransferable();
-							mcmRef.receiveTests(testsT, sessionKey);
-							testQueue.clear();
+
+							//- Send new tests to MCM, if any
+							if (!testQueue.isEmpty()) {
+								final IdlTest[] idlTests = Test.createTransferables(testQueue, servantManager.getCORBAServer().getOrb());
+								Log.debugMessage("Sending to MCM '" + mcmId + "' " + idlTests.length
+										+ " test(s): " + Identifier.createIdentifiers(testQueue), Log.DEBUGLEVEL08);
+								mcmRef.receiveTests(idlTests, sessionKey);
+								testQueue.clear();
+							}
+
+							//- Send ids of stopping tests to MCM, if any
+							if (stopTestIds != null) {
+								final IdlIdentifier[] stopTestIdlIds = Identifier.createTransferables(stopTestIds);
+								Log.debugMessage("Stopping on MCM '" + mcmId + "' " + stopTestIdlIds.length + " test(s): " + stopTestIds,
+										Log.DEBUGLEVEL08);
+								mcmRef.stopTests(stopTestIdlIds, sessionKey);
+								mcmStopTestIdsMap.remove(mcmId);
+							}
+
 							super.clearFalls();
-						}
-						catch (AMFICOMRemoteException are) {
+						} catch (AMFICOMRemoteException are) {
 							if (are.errorCode.value() == IdlErrorCode._ERROR_NOT_LOGGED_IN) {
 								try {
 									LoginManager.restoreLogin();
@@ -284,8 +305,7 @@ public class MeasurementServer extends SleepButWorkThread {
 							super.fallCode = FALL_CODE_RECEIVE_TESTS;
 							mcmIdsToAbortTests.add(mcmId);
 							super.sleepCauseOfFall();
-						}
-						catch (Throwable throwable) {
+						} catch (Throwable throwable) {
 							Log.errorException(throwable);
 						}
 
@@ -296,14 +316,13 @@ public class MeasurementServer extends SleepButWorkThread {
 			System.out.println(new Date(System.currentTimeMillis()));
 			try {
 				sleep(super.initialTimeToSleep);
-			}
-			catch (InterruptedException ie) {
+			} catch (InterruptedException ie) {
 				Log.errorException(ie);
 			}
 		}
 	}
 
-	private static void fillMCMTestQueueMap() throws ApplicationException {
+	private static void fillMCMTestMaps() throws ApplicationException {
 		final Set<Identifier> addedTestIds = new HashSet<Identifier>();
 		synchronized (mcmTestQueueMap) {
 			for (final Identifier mcmId : mcmTestQueueMap.keySet()) {
@@ -316,21 +335,43 @@ public class MeasurementServer extends SleepButWorkThread {
 
 		for (final Test test : tests) {
 			final Identifier mcmId = test.getMCMId();
+			final TestStatus status = test.getStatus();
 
-			final Set<Test> testQueue = mcmTestQueueMap.get(mcmId);
-			if (testQueue != null) {
-				if (!testQueue.contains(test)) {
-					Log.debugMessage("Adding test '" + test.getId() + "' for MCM '" + mcmId + "'", Log.DEBUGLEVEL04);
-					testQueue.add(test);
-				}
-				else {
-					Log.errorMessage("Test '" + test.getId() + "' already added to queue");
-				}
-			}
-			else {
-				Log.errorMessage("Test queue for mcm id '" + mcmId + "' not found");
+			switch (status.value()) {
+				case TestStatus._TEST_STATUS_NEW:
+					addToMCMTestQueueMap(test, mcmId);
+					break;
+				case TestStatus._TEST_STATUS_STOPPED:
+					addToMCMStopTestIdsMap(test, mcmId);
+					break;
+				default:
+					Log.errorMessage("MeasurementServer.fillMCMTestQueueMap | Illegal status: " + status.value()
+							+ " of test '" + test.getId() + "'");
 			}
 		}
+	}
+
+	private static void addToMCMTestQueueMap(final Test test, final Identifier mcmId) {
+		final Set<Test> testQueue = mcmTestQueueMap.get(mcmId);
+		if (testQueue != null) {
+			if (!testQueue.contains(test)) {
+				Log.debugMessage("Adding test '" + test.getId() + "' for MCM '" + mcmId + "'", Log.DEBUGLEVEL04);
+				testQueue.add(test);
+			} else {
+				Log.errorMessage("Test '" + test.getId() + "' already added to queue");
+			}
+		} else {
+			Log.errorMessage("Test queue for MCM '" + mcmId + "' not found");
+		}
+	}
+
+	private static void addToMCMStopTestIdsMap(final Test test, final Identifier mcmId) {
+		Set<Identifier> stopTestIds = mcmStopTestIdsMap.get(mcmId);
+		if (stopTestIds == null) {
+			stopTestIds = new HashSet<Identifier>();
+			mcmStopTestIdsMap.put(mcmId, stopTestIds);
+		}
+		stopTestIds.add(test.getId());
 	}
 
 	private static void updateTestsStatus(final Set<Test> testQueue, final TestStatus status) {
@@ -344,8 +385,7 @@ public class MeasurementServer extends SleepButWorkThread {
 
 		try {
 			StorableObjectPool.flush(ObjectEntities.TEST_CODE, LoginManager.getUserId(), true);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			Log.errorException(ae);
 		}
 		
@@ -380,8 +420,7 @@ public class MeasurementServer extends SleepButWorkThread {
 			mcmIdsToAbortTests.clear();
 
 			StorableObjectPool.truncate(ObjectEntities.TEST_CODE);
-		}
-		else {
+		} else {
 			Log.errorMessage("abortTests | Collection is NULL or empty");
 		}
 	}
