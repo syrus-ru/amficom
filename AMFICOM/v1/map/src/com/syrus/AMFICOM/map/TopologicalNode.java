@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.74 2005/09/05 13:41:20 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.75 2005/09/05 17:43:15 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,10 @@
 
 package com.syrus.AMFICOM.map;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -19,7 +20,6 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -27,7 +27,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -35,19 +34,19 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.util.Log;
 
 /**
  * Топологический узел нв топологической схеме. Топологический узел может
  * быть концевым для линии и для фрагмента линии. В физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: krupenn $
- * @version $Revision: 1.74 $, $Date: 2005/09/05 13:41:20 $
+ * @author $Author: bass $
+ * @version $Revision: 1.75 $, $Date: 2005/09/05 17:43:15 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode implements XmlBeansTransferable<XmlTopologicalNode> {
@@ -125,7 +124,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 					location.getY(),
 					false);
 
-			assert topologicalNode.isValid() : OBJECT_STATE_ILLEGAL;
+			assert topologicalNode.isValid() : OBJECT_BADLY_INITIALIZED;
 
 			topologicalNode.markAsChanged();
 
@@ -150,7 +149,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 		return Collections.emptySet();
 	}
 
@@ -274,72 +273,71 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 		this.setActive(mpnes.active);
 	}
 
-	public XmlTopologicalNode getXmlTransferable() {
+	public XmlTopologicalNode getXmlTransferable(final String importType) {
 		final XmlTopologicalNode xmlTopologicalNode = XmlTopologicalNode.Factory.newInstance();
-		xmlTopologicalNode.setId(this.id.getXmlTransferable());
+		xmlTopologicalNode.setId(this.id.getXmlTransferable(importType));
 		xmlTopologicalNode.setX(this.location.getX());
 		xmlTopologicalNode.setY(this.location.getY());
 		xmlTopologicalNode.setActive(this.active);
 		return xmlTopologicalNode;
 	}
 
-	TopologicalNode(final Identifier creatorId,
-			final StorableObjectVersion version,
-			final XmlTopologicalNode xmlTopologicalNode,
-			final ClonedIdsPool clonedIdsPool,
-			final String importType) throws CreateObjectException, ApplicationException {
-
-		super(clonedIdsPool.getClonedId(TOPOLOGICALNODE_CODE, xmlTopologicalNode.getId()),
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private TopologicalNode(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
 				creatorId,
 				creatorId,
-				version,
+				StorableObjectVersion.createInitial(),
 				"",
 				"",
 				new DoublePoint(0, 0));
 		this.selected = false;
-		this.fromXmlTransferable(xmlTopologicalNode, clonedIdsPool, importType);
 	}
 
-	public void fromXmlTransferable(final XmlTopologicalNode xmlTopologicalNode, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
+	public void fromXmlTransferable(
+			final XmlTopologicalNode xmlTopologicalNode,
+			final String importType)
+	throws ApplicationException {
 		this.active = xmlTopologicalNode.getActive();
 		super.location.setLocation(xmlTopologicalNode.getX(), xmlTopologicalNode.getY());
 	}
 
+	/**
+	 * @param creatorId
+	 * @param importType
+	 * @param xmlTopologicalNode
+	 * @throws CreateObjectException
+	 */
 	public static TopologicalNode createInstance(
 			final Identifier creatorId,
 			final String importType,
-			final XmlTopologicalNode xmlTopologicalNode,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
-
+			final XmlTopologicalNode xmlTopologicalNode)
+	throws CreateObjectException {
 		try {
-			final XmlIdentifier xmlId = xmlTopologicalNode.getId();
-			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
-			TopologicalNode topologicalNode = null;
-			if(existingIdentifier != null) {
-				topologicalNode = StorableObjectPool.getStorableObject(existingIdentifier, true);
-				if(topologicalNode != null) {
-					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
-					topologicalNode.fromXmlTransferable(xmlTopologicalNode, clonedIdsPool, importType);
-				}
-				else{
-					ImportUidMapDatabase.delete(importType, xmlId);
-				}
+			final Identifier id = Identifier.fromXmlTransferable(xmlTopologicalNode.getId(), TOPOLOGICALNODE_CODE, importType);
+			TopologicalNode topologicalNode = StorableObjectPool.getStorableObject(id, true);
+			if (topologicalNode == null) {
+				topologicalNode = new TopologicalNode(id, new Date(), creatorId);
 			}
-			if(topologicalNode == null) {
-				topologicalNode = new TopologicalNode(creatorId,
-						StorableObjectVersion.createInitial(),
-						xmlTopologicalNode,
-						clonedIdsPool, 
-						importType);
-				ImportUidMapDatabase.insert(importType, xmlId, topologicalNode.id);
-			}
-			assert topologicalNode.isValid() : OBJECT_STATE_ILLEGAL;
+			topologicalNode.fromXmlTransferable(xmlTopologicalNode, importType);
+			assert topologicalNode.isValid() : OBJECT_BADLY_INITIALIZED;
 			topologicalNode.markAsChanged();
 			return topologicalNode;
-		} catch (Exception e) {
-			throw new CreateObjectException("TopologicalNode.createInstance |  ", e);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.58 2005/08/31 13:24:21 bass Exp $
+ * $Id: Identifier.java,v 1.59 2005/09/05 17:43:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.util.Shitlet;
 
 /**
  * <code>Identifier</code>s, alike {@link String}s, are immutable. Hence, when
@@ -28,7 +27,7 @@ import com.syrus.util.Shitlet;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.58 $, $Date: 2005/08/31 13:24:21 $
+ * @version $Revision: 1.59 $, $Date: 2005/09/05 17:43:19 $
  * @author $Author: bass $
  * @module general
  */
@@ -41,6 +40,13 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	private static final long MINOR_MASK = ~MAJOR_MASK;
 
 	public static final Identifier VOID_IDENTIFIER = new Identifier(ObjectEntities.UPDIKE_CODE, 0);
+
+	/**
+	 * Used for conversion from XML identifiers to pure-Java ones.
+	 * <strong>Should not overlap with any value from
+	 * {@link ObjectEntities}!</strong>
+	 */
+	public static final short ABSTRACT_CODE = -1;
 
 	private short major;
 	private long minor;
@@ -124,10 +130,8 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		return new IdlIdentifier(this.getIdentifierCode());
 	}
 
-	public XmlIdentifier getXmlTransferable() {
-		final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
-		xmlId.setStringValue(this.getIdentifierString());
-		return xmlId;
+	public XmlIdentifier getXmlTransferable(@SuppressWarnings("unused") final String importType) {
+		throw new UnsupportedOperationException();
 	}
 
 	@Override
@@ -305,11 +309,34 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		return ids;
 	}
 
-	@Shitlet
+	/**
+	 * <p>If the pure-Java pair for this {@code xmlId} is not found in the
+	 * pool, a new one is generated and added to the pool. The
+	 * {@code entityCode} parameter must be specified in order for the
+	 * correct identifier to be generated if necessary.</p>
+	 * 
+	 * <p>To obtain the pair for an XML identifier that points to an
+	 * instance of abstract type (i. e. when one's unable to specify
+	 * {@code entityCode}) directly), assuming the appropriate mapping is
+	 * already present in the pool, use {@link #ABSTRACT_CODE}. However,
+	 * if the mapping is not present, an {@link ObjectNotFoundException}
+	 * will be thrown.</p>
+	 *
+	 * @param xmlId
+	 * @param entityCode
+	 * @param importType
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException if {@link #ABSTRACT_CODE} is used
+	 *         as an {@code entityCode} value, and the appropriate mapping
+	 *         is not found in the pool.
+	 * @see #ABSTRACT_CODE
+	 */
+	@SuppressWarnings("unused")
 	public static Identifier fromXmlTransferable(final XmlIdentifier xmlId,
+			final short entityCode,
 			final String importType)
-	throws RetrieveObjectException {
-		return ImportUidMapDatabase.retrieve(importType, xmlId);
+	throws RetrieveObjectException, ObjectNotFoundException {
+		throw new UnsupportedOperationException();
 	}
 
 	/**

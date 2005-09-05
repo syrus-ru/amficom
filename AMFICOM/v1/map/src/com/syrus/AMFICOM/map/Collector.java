@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.74 2005/09/05 13:26:09 max Exp $
+ * $Id: Collector.java,v 1.75 2005/09/05 17:43:15 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,10 @@
 
 package com.syrus.AMFICOM.map;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -22,7 +23,6 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -51,8 +50,8 @@ import com.syrus.util.Log;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: max $
- * @version $Revision: 1.74 $, $Date: 2005/09/05 13:26:09 $
+ * @author $Author: bass $
+ * @version $Revision: 1.75 $, $Date: 2005/09/05 17:43:15 $
  * @module map
  */
 public final class Collector extends StorableObject implements MapElement, XmlBeansTransferable<XmlCollector> {
@@ -127,7 +126,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 					name,
 					description);
 
-			assert collector.isValid() : OBJECT_STATE_ILLEGAL;
+			assert collector.isValid() : OBJECT_BADLY_INITIALIZED;
 
 			collector.markAsChanged();
 
@@ -151,7 +150,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.physicalLinkIds);
@@ -375,9 +374,9 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
-	public XmlCollector getXmlTransferable() {
+	public XmlCollector getXmlTransferable(final String importType) {
 		final XmlCollector xmlCollector = XmlCollector.Factory.newInstance();
-		xmlCollector.setId(this.id.getXmlTransferable());
+		xmlCollector.setId(this.id.getXmlTransferable(importType));
 		xmlCollector.setName(this.name);
 		xmlCollector.setDescription(this.description);		
 		
@@ -386,7 +385,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 		final XmlIdentifier xmlPhysicalLinkIds[] = new XmlIdentifier[physicalLinks1.size()];
 		int i = 0;
 		for (final PhysicalLink physicalLink : physicalLinks1) {
-			xmlPhysicalLinkIds[i++] = physicalLink.getId().getXmlTransferable();
+			xmlPhysicalLinkIds[i++] = physicalLink.getId().getXmlTransferable(importType);
 		}
 		xmlPhysicalLinkIdSeq.setIdArray(xmlPhysicalLinkIds);
 		xmlCollector.setPhysicalLinkIds(xmlPhysicalLinkIdSeq);
@@ -394,62 +393,60 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 		return xmlCollector;
 	}
 
-	Collector(final Identifier creatorId,
-			final StorableObjectVersion version,
-			final XmlCollector xmlCollector,
-			final ClonedIdsPool clonedIdsPool,
-			final String importType) throws CreateObjectException, ApplicationException {
-
-		super(clonedIdsPool.getClonedId(COLLECTOR_CODE, xmlCollector.getId()),
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private Collector(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
 				creatorId,
 				creatorId,
-				version);
-
+				StorableObjectVersion.createInitial());
 		this.physicalLinkIds = new HashSet<Identifier>();
-
-		this.fromXmlTransferable(xmlCollector, clonedIdsPool, importType);
 	}
 
-	public void fromXmlTransferable(final XmlCollector xmlCollector, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
+	public void fromXmlTransferable(final XmlCollector xmlCollector, final String importType) throws ApplicationException {
 		this.name = xmlCollector.getName();
 		this.description = xmlCollector.getDescription();
 
-		for (final XmlIdentifier xmlId : xmlCollector.getPhysicalLinkIds().getIdArray()) {
-			final Identifier physicalLinkId = clonedIdsPool.getClonedId(PHYSICALLINK_CODE, xmlId);
-			this.addPhysicalLinkId(physicalLinkId);
+		for (final XmlIdentifier physicalLinkId : xmlCollector.getPhysicalLinkIds().getIdArray()) {
+			this.addPhysicalLinkId(Identifier.fromXmlTransferable(physicalLinkId, PHYSICALLINK_CODE, importType));
 		}
 	}
 
+	/**
+	 * @param creatorId
+	 * @param importType
+	 * @param xmlCollector
+	 * @throws CreateObjectException
+	 */
 	public static Collector createInstance(
 			final Identifier creatorId, 
 			final String importType,
-			final XmlCollector xmlCollector, 
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
+			final XmlCollector xmlCollector)
+	throws CreateObjectException {
 		try {
-			final XmlIdentifier xmlId = xmlCollector.getId();
-			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
-			Collector collector = null;
-			if(existingIdentifier != null) {
-				collector = StorableObjectPool.getStorableObject(existingIdentifier, true);
-				if(collector != null) {
-					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
-					collector.fromXmlTransferable(xmlCollector, clonedIdsPool, importType);
-				}
-				else{
-					ImportUidMapDatabase.delete(importType, xmlId);
-				}
+			final Identifier id = Identifier.fromXmlTransferable(xmlCollector.getId(), COLLECTOR_CODE, importType);
+			Collector collector = StorableObjectPool.getStorableObject(id, true);
+			if (collector == null) {
+				collector = new Collector(id, new Date(), creatorId);
 			}
-			if(collector == null) {
-				collector = new Collector(creatorId, StorableObjectVersion.createInitial(), xmlCollector, clonedIdsPool, importType);
-				ImportUidMapDatabase.insert(importType, xmlId, collector.id);
-			}
-			assert collector.isValid() : OBJECT_STATE_ILLEGAL;
+			collector.fromXmlTransferable(xmlCollector, importType);
+			assert collector.isValid() : OBJECT_BADLY_INITIALIZED;
 			collector.markAsChanged();
 			return collector;
-		} catch (Exception e) {
-			throw new CreateObjectException("Collector.createInstance |  ", e);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 }

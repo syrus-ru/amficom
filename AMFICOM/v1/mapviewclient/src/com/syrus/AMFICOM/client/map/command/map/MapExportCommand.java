@@ -1,15 +1,17 @@
 /*
- * $Id: MapExportCommand.java,v 1.24 2005/09/02 09:32:28 krupenn Exp $ Syrus
+ * $Id: MapExportCommand.java,v 1.25 2005/09/05 17:43:20 bass Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
 package com.syrus.AMFICOM.client.map.command.map;
 
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
-import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
 
@@ -35,8 +37,8 @@ import com.syrus.util.Log;
  * отображается информация о том, что активной карты нет, и карта центрируется
  * по умолчанию
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/09/02 09:32:28 $
+ * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/09/05 17:43:20 $
  * @module mapviewclient
  */
 public class MapExportCommand extends ExportCommand {
@@ -63,7 +65,7 @@ public class MapExportCommand extends ExportCommand {
 		if(this.mapFrame == null)
 			return;
 
-		Log.debugMessage("Exporting map", Level.INFO);
+		Log.debugMessage("Exporting map", INFO);
 
 		Map map = this.mapFrame.getMap();
 
@@ -103,7 +105,7 @@ public class MapExportCommand extends ExportCommand {
 
 		XmlMapSeq xmlMaps = doc.addNewMaps();
 
-		xmlMaps.setMapArray(new XmlMap[] {map.getXmlTransferable()});
+		xmlMaps.setMapArray(new XmlMap[] {map.getXmlTransferable("amficom")});
 		
 		// Validate the new XML
 		boolean isXmlValid = validateXml(doc);
@@ -116,7 +118,7 @@ public class MapExportCommand extends ExportCommand {
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
-			Log.debugMessage("\nXML Instance Document saved at : " + f.getPath(), Level.INFO);
+			Log.debugMessage("\nXML Instance Document saved at : " + f.getPath(), INFO);
 		}
 	}
 
@@ -131,11 +133,11 @@ public class MapExportCommand extends ExportCommand {
 				.setErrorListener(validationMessages));
 
 		if(!isXmlValid) {
-			Log.debugMessage("Invalid XML: ", Level.WARNING);
+			Log.debugMessage("Invalid XML: ", WARNING);
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
-				Log.debugMessage(error.getMessage(), Level.WARNING);
-				Log.debugMessage(error.getObjectLocation().toString(), Level.WARNING);
+				Log.debugMessage(error.getMessage(), WARNING);
+				Log.debugMessage(error.getObjectLocation().toString(), WARNING);
 			}
 		}
 		return isXmlValid;

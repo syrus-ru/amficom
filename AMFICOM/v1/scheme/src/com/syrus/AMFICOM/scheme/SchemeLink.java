@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.64 2005/08/31 20:17:24 bass Exp $
+ * $Id: SchemeLink.java,v 1.65 2005/09/05 17:43:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,6 @@ import com.syrus.AMFICOM.configuration.Link;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -69,7 +68,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/08/31 20:17:24 $
+ * @version $Revision: 1.65 $, $Date: 2005/09/05 17:43:16 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -751,9 +750,9 @@ public final class SchemeLink extends AbstractSchemeLink
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable()
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
 	 */
-	public XmlSchemeLink getXmlTransferable() {
+	public XmlSchemeLink getXmlTransferable(final String importType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -1055,13 +1054,11 @@ public final class SchemeLink extends AbstractSchemeLink
 
 	/**
 	 * @param xmlSchemeLink
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	public void fromXmlTransferable(final XmlSchemeLink xmlSchemeLink,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();

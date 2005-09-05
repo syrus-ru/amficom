@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.54 2005/08/31 20:17:24 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.55 2005/09/05 17:43:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.configuration.Port;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
@@ -51,7 +50,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.54 $, $Date: 2005/08/31 20:17:24 $
+ * @version $Revision: 1.55 $, $Date: 2005/09/05 17:43:16 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort
@@ -249,9 +248,9 @@ public final class SchemeCablePort extends AbstractSchemePort
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable()
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
 	 */
-	public XmlSchemeCablePort getXmlTransferable() {
+	public XmlSchemeCablePort getXmlTransferable(final String importType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -285,14 +284,12 @@ public final class SchemeCablePort extends AbstractSchemePort
 
 	/**
 	 * @param xmlSchemeCablePort
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	public void fromXmlTransferable(
 			final XmlSchemeCablePort xmlSchemeCablePort,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();

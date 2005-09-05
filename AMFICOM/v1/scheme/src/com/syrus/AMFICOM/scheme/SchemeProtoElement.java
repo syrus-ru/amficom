@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.78 2005/08/31 20:17:24 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.79 2005/09/05 17:43:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -81,7 +80,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.78 $, $Date: 2005/08/31 20:17:24 $
+ * @version $Revision: 1.79 $, $Date: 2005/09/05 17:43:16 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -871,9 +870,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable()
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
 	 */
-	public XmlSchemeProtoElement getXmlTransferable() {
+	public XmlSchemeProtoElement getXmlTransferable(final String importType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -1374,14 +1373,12 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 
 	/**
 	 * @param xmlSchemeProtoElement
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	public void fromXmlTransferable(
 			final XmlSchemeProtoElement xmlSchemeProtoElement,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();

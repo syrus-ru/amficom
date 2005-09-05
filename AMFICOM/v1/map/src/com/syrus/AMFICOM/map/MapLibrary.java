@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.20 2005/08/31 13:25:08 bass Exp $
+ * $Id: MapLibrary.java,v 1.21 2005/09/05 17:43:15 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,9 @@ package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.UNSUPPORTED_CHILD_TYPE;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
@@ -23,14 +24,12 @@ import java.util.Date;
 import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.apache.xmlbeans.XmlObject;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -38,7 +37,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -51,7 +49,6 @@ import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.map.corba.IdlMapLibrary;
 import com.syrus.AMFICOM.map.corba.IdlMapLibraryHelper;
@@ -64,7 +61,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/08/31 13:25:08 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/05 17:43:15 $
  * @author $Author: bass $
  * @module map
  */
@@ -136,7 +133,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 					description,
 					parentMapLibrary);
 
-			assert mapLibrary.isValid() : OBJECT_STATE_ILLEGAL;
+			assert mapLibrary.isValid() : OBJECT_BADLY_INITIALIZED;
 
 			mapLibrary.markAsChanged();
 
@@ -230,7 +227,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 		if (this.parentMapLibraryId != null && 
 				!this.parentMapLibraryId.isVoid()) {
 			final Set<Identifiable> dependencies = new HashSet<Identifiable>(1);
@@ -280,7 +277,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 					siteNodeTypeCondition,
 					true);
 		} catch(ApplicationException e) {
-			Log.debugException(e, Level.SEVERE);
+			Log.debugException(e, SEVERE);
 			return Collections.emptySet();
 		}
 	}
@@ -294,7 +291,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 					physicalLinkTypeCondition,
 					true);
 		} catch(ApplicationException e) {
-			Log.debugException(e, Level.SEVERE);
+			Log.debugException(e, SEVERE);
 			return Collections.emptySet();
 		}
 	}
@@ -329,7 +326,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 		}
 	}
 
-	public XmlMapLibrary getXmlTransferable() {
+	public XmlMapLibrary getXmlTransferable(final String importType) {
 		final XmlMapLibrary xmlMapLibrary = XmlMapLibrary.Factory.newInstance();
 		xmlMapLibrary.setCodename(this.codename);
 		xmlMapLibrary.setName(this.name);
@@ -338,14 +335,14 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 		final XmlPhysicalLinkTypeSeq xmlPhysicalLinkTypes = xmlMapLibrary.addNewPhysicalLinkTypes();
 		final Collection<XmlObject> xmlPhysicalLinkTypesArray = new LinkedList<XmlObject>();
 		for (final PhysicalLinkType physicalLinkType : this.getPhysicalLinkTypes()) {
-			xmlPhysicalLinkTypesArray.add(physicalLinkType.getXmlTransferable());
+			xmlPhysicalLinkTypesArray.add(physicalLinkType.getXmlTransferable(importType));
 		}
 		xmlPhysicalLinkTypes.setPhysicalLinkTypeArray(xmlPhysicalLinkTypesArray.toArray(new XmlPhysicalLinkType[xmlPhysicalLinkTypesArray.size()]));
 		
 		final XmlSiteNodeTypeSeq xmlSitenodetypes = xmlMapLibrary.addNewSiteNodeTypes();
 		final Collection<XmlObject> xmlSiteNodeTypesArray = new LinkedList<XmlObject>();
 		for (final SiteNodeType siteNodeType : this.getSiteNodeTypes()) {
-			xmlSiteNodeTypesArray.add(siteNodeType.getXmlTransferable());
+			xmlSiteNodeTypesArray.add(siteNodeType.getXmlTransferable(importType));
 		}
 		xmlSitenodetypes.setSiteNodeTypeArray(xmlSiteNodeTypesArray.toArray(new XmlSiteNodeType[xmlSiteNodeTypesArray.size()]));
 
@@ -354,67 +351,65 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 		return xmlMapLibrary;
 	}
 
-	MapLibrary(final Identifier creatorId,
-			final StorableObjectVersion version,
-			final XmlMapLibrary xmlMapLibrary,
-			final ClonedIdsPool clonedIdsPool,
-			final String importType) throws CreateObjectException, ApplicationException {
-
-		super(IdentifierPool.getGeneratedIdentifier(MAPLIBRARY_CODE),
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private MapLibrary(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
 				creatorId,
 				creatorId,
-				version);
-		this.fromXmlTransferable(xmlMapLibrary, clonedIdsPool, importType);
-		this.parentMapLibraryId = Identifier.VOID_IDENTIFIER;
-
+				StorableObjectVersion.createInitial());
+		this.parentMapLibraryId = VOID_IDENTIFIER;
 	}
 
-	public void fromXmlTransferable(final XmlMapLibrary xmlMapLibrary, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
+	public void fromXmlTransferable(final XmlMapLibrary xmlMapLibrary, final String importType) throws ApplicationException {
 		this.name = xmlMapLibrary.getName();
 		this.description = xmlMapLibrary.getDescription();
 		this.codename = xmlMapLibrary.getCodename();
 
 		for (final XmlPhysicalLinkType xmlPhysicalLinkType : xmlMapLibrary.getPhysicalLinkTypes().getPhysicalLinkTypeArray()) {
-			this.addChild(PhysicalLinkType.createInstance(this.creatorId, importType, xmlPhysicalLinkType, clonedIdsPool));
+			this.addChild(PhysicalLinkType.createInstance(this.creatorId, importType, xmlPhysicalLinkType));
 		}
 
 		for (final XmlSiteNodeType xmlSiteNodeType : xmlMapLibrary.getSiteNodeTypes().getSiteNodeTypeArray()) {
-			this.addChild(SiteNodeType.createInstance(this.creatorId, importType, xmlSiteNodeType, clonedIdsPool));
+			this.addChild(SiteNodeType.createInstance(this.creatorId, importType, xmlSiteNodeType));
 		}
 	}
 
+	/**
+	 * @param creatorId
+	 * @param importType
+	 * @param xmlMapLibrary
+	 * @throws CreateObjectException
+	 */
 	public static MapLibrary createInstance(
 			final Identifier creatorId, 
 			final String importType,
-			final XmlMapLibrary xmlMapLibrary, 
-			final ClonedIdsPool clonedIdsPool)
-			throws CreateObjectException {
-
+			final XmlMapLibrary xmlMapLibrary)
+	throws CreateObjectException {
 		try {
-			final XmlIdentifier xmlId = xmlMapLibrary.getId();
-			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
-			MapLibrary mapLibrary = null;
-			if(existingIdentifier != null) {
-				mapLibrary = StorableObjectPool.getStorableObject(existingIdentifier, true);
-				if(mapLibrary != null) {
-					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
-					mapLibrary.fromXmlTransferable(xmlMapLibrary, clonedIdsPool, importType);
-				}
-				else{
-					ImportUidMapDatabase.delete(importType, xmlId);
-				}
+			final Identifier id = Identifier.fromXmlTransferable(xmlMapLibrary.getId(), MAPLIBRARY_CODE, importType);
+			MapLibrary mapLibrary = StorableObjectPool.getStorableObject(id, true);
+			if (mapLibrary == null) {
+				mapLibrary = new MapLibrary(id, new Date(), creatorId);
 			}
-			if(mapLibrary == null) {
-				mapLibrary = new MapLibrary(creatorId, StorableObjectVersion.createInitial(), xmlMapLibrary, clonedIdsPool, importType);
-				ImportUidMapDatabase.insert(importType, xmlId, mapLibrary.id);
-			}
-			assert mapLibrary.isValid() : OBJECT_STATE_ILLEGAL;
+			mapLibrary.fromXmlTransferable(xmlMapLibrary, importType);
+			assert mapLibrary.isValid() : OBJECT_BADLY_INITIALIZED;
 			mapLibrary.markAsChanged();
 			return mapLibrary;
-		} catch (Exception e) {
-			throw new CreateObjectException("MapLibrary.createInstance |  ", e);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 

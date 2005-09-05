@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.72 2005/08/31 20:17:24 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.73 2005/09/05 17:43:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,9 +20,11 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -43,9 +45,11 @@ import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
+import com.syrus.AMFICOM.general.CharacteristicType;
+import com.syrus.AMFICOM.general.CharacteristicTypeCodenames;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DataType;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -63,18 +67,20 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLinkHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableLink;
 import com.syrus.util.Log;
+import com.syrus.util.Shitlet;
 
 /**
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.72 $, $Date: 2005/08/31 20:17:24 $
+ * @version $Revision: 1.73 $, $Date: 2005/09/05 17:43:16 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -433,9 +439,9 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable()
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
 	 */
-	public XmlSchemeCableLink getXmlTransferable() {
+	public XmlSchemeCableLink getXmlTransferable(final String importType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -647,14 +653,12 @@ public final class SchemeCableLink extends AbstractSchemeLink
 
 	/**
 	 * @param xmlSchemeCableLink
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	public void fromXmlTransferable(
 			final XmlSchemeCableLink xmlSchemeCableLink,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();
@@ -732,32 +736,50 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		assert pathMembers.size() == 1;
 		return pathMembers.iterator().next();
 	}
-	
+
 	/**
 	 * @param cableLinkType
 	 * @throws ApplicationException 
 	 */
-	public void setAbstractLinkTypeExt(final CableLinkType cableLinkType, Identifier creatorId) throws ApplicationException {
-		// TODO: make things a little bit smarter
+	@Shitlet
+	public void setAbstractLinkTypeExt(final CableLinkType cableLinkType,
+			final Identifier creatorId)
+	throws ApplicationException {
 		this.setAbstractLinkType(cableLinkType);
-		Set<CableThreadType> cableThreadTypes = cableLinkType.getCableThreadTypes(true);
-		try {
-		Set<SchemeCableThread> newCableThreadTypes = new HashSet<SchemeCableThread>(cableThreadTypes.size());
-			for (CableThreadType cableThreadType : cableThreadTypes) {
-			SchemeCableThread schemeCableThread = SchemeCableThread.createInstance(
-					creatorId,
-					cableThreadType.getName(),
-					cableThreadType.getLinkType(),
-					this);
+		final Set<CableThreadType> cableThreadTypes = cableLinkType.getCableThreadTypes(true);
+		final Set<SchemeCableThread> newCableThreadTypes = new HashSet<SchemeCableThread>(cableThreadTypes.size());
+
+		final StorableObjectCondition condition = new TypicalCondition(CharacteristicTypeCodenames.COMMON_COLOUR, OperationSort.OPERATION_EQUALS, CHARACTERISTIC_TYPE_CODE, COLUMN_CODENAME);
+		final Set<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+		final CharacteristicType characteristicType = characteristicTypes.isEmpty()
+				? CharacteristicType.createInstance(creatorId, CharacteristicTypeCodenames.COMMON_COLOUR, "", "color", DataType.INTEGER, CharacteristicTypeSort.CHARACTERISTICTYPESORT_VISUAL)
+				: characteristicTypes.iterator().next();
+
+		assert characteristicType != null : NON_NULL_EXPECTED;
+
+		final String name = characteristicType.getName();
+		final String description = characteristicType.getDescription();
+
+		for (final CableThreadType cableThreadType : cableThreadTypes) {
+			final SchemeCableThread schemeCableThread = SchemeCableThread.createInstance(
+				creatorId,
+				cableThreadType.getName(),
+				cableThreadType.getLinkType(),
+				this);
+			Characteristic.createInstance(creatorId,
+					characteristicType,
+					name,
+					description,
+					/*
+					 * Is it OK to treat color in
+					 * such a way?
+					 */
+					Integer.toString(cableThreadType.getColor()),
+					schemeCableThread,
+					true,
+					true);
 			newCableThreadTypes.add(schemeCableThread);
 		}
 		this.setSchemeCableThreads(newCableThreadTypes);
-		} catch (CreateObjectException e) {
-			Log.debugMessage("SchemeCableLink.setAbstractLinkTypeExt | CreateObjectException" + e.getMessage(), Log.DEBUGLEVEL04);
-			throw new ApplicationException(e);
-		} catch (ApplicationException e) {
-			Log.debugMessage("SchemeCableLink.setAbstractLinkTypeExt | ApplicationException" + e.getMessage(), Log.DEBUGLEVEL04);
-			throw new ApplicationException(e);
-		}
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.81 2005/08/31 13:25:08 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.82 2005/09/05 17:43:15 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
 
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -33,7 +32,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -44,7 +42,6 @@ import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
@@ -59,7 +56,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.81 $, $Date: 2005/08/31 13:25:08 $
+ * @version $Revision: 1.82 $, $Date: 2005/09/05 17:43:15 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -176,7 +173,7 @@ public final class PhysicalLinkType extends StorableObjectType
 					topological,
 					mapLibraryId);
 
-			assert physicalLinkType.isValid() : OBJECT_STATE_ILLEGAL;
+			assert physicalLinkType.isValid() : OBJECT_BADLY_INITIALIZED;
 
 			physicalLinkType.markAsChanged();
 
@@ -329,9 +326,9 @@ public final class PhysicalLinkType extends StorableObjectType
 		this.sort = sort;
 	}
 
-	public XmlPhysicalLinkType getXmlTransferable() {
+	public XmlPhysicalLinkType getXmlTransferable(final String importType) {
 		final XmlPhysicalLinkType xmlPhysicalLinkType = XmlPhysicalLinkType.Factory.newInstance();
-		xmlPhysicalLinkType.setId(this.id.getXmlTransferable());
+		xmlPhysicalLinkType.setId(this.id.getXmlTransferable(importType));
 		xmlPhysicalLinkType.setName(this.name);
 		xmlPhysicalLinkType.setDescription(this.description);
 		xmlPhysicalLinkType.setSort(XmlPhysicalLinkTypeSort.Enum.forInt(this.sort.value() + 1));
@@ -341,26 +338,34 @@ public final class PhysicalLinkType extends StorableObjectType
 		return xmlPhysicalLinkType;
 	}
 
-	PhysicalLinkType(final Identifier creatorId,
-			final StorableObjectVersion version,
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 * @param codename
+	 * @param description
+	 */
+	private PhysicalLinkType(final Identifier id,
+			final Date created,
+			final Identifier creatorId,
 			final String codename,
-			final String description,
-			final XmlPhysicalLinkType xmlPhysicalLinkType,
-			final ClonedIdsPool clonedIdsPool,
-			final String importType) throws CreateObjectException, ApplicationException {
-
-		super(clonedIdsPool.getClonedId(PHYSICALLINK_TYPE_CODE, xmlPhysicalLinkType.getId()),
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
+			final String description) {
+		super(id,
+				created,
+				created,
 				creatorId,
 				creatorId,
-				version,
+				StorableObjectVersion.createInitial(),
 				codename,
 				description);
-		this.fromXmlTransferable(xmlPhysicalLinkType, clonedIdsPool, importType);
 	}
 
-	public void fromXmlTransferable(final XmlPhysicalLinkType xmlPhysicalLinkType, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
+	public void fromXmlTransferable(
+			final XmlPhysicalLinkType xmlPhysicalLinkType,
+			final String importType)
+	throws ApplicationException {
 		this.name = xmlPhysicalLinkType.getName();
 		this.description = xmlPhysicalLinkType.getDescription();
 		this.codename = xmlPhysicalLinkType.getCodename();
@@ -370,42 +375,32 @@ public final class PhysicalLinkType extends StorableObjectType
 		this.topological = true;
 	}
 
+	/**
+	 * @param creatorId
+	 * @param importType
+	 * @param xmlPhysicalLinkType
+	 * @throws CreateObjectException
+	 */
 	public static PhysicalLinkType createInstance(
 			final Identifier creatorId,
 			final String importType,
-			final XmlPhysicalLinkType xmlPhysicalLinkType,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
-
+			final XmlPhysicalLinkType xmlPhysicalLinkType)
+	throws CreateObjectException {
 		try {
-			final XmlIdentifier xmlId = xmlPhysicalLinkType.getId();
-			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
-			PhysicalLinkType physicalLinkType = null;
-			if(existingIdentifier != null) {
-				physicalLinkType = StorableObjectPool.getStorableObject(existingIdentifier, true);
-				if(physicalLinkType != null) {
-					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
-					physicalLinkType.fromXmlTransferable(xmlPhysicalLinkType, clonedIdsPool, importType);
-				}
-				else{
-					ImportUidMapDatabase.delete(importType, xmlId);
-				}
+			final Identifier id = Identifier.fromXmlTransferable(xmlPhysicalLinkType.getId(), PHYSICALLINK_TYPE_CODE, importType);
+			PhysicalLinkType physicalLinkType = StorableObjectPool.getStorableObject(id, true);
+			if (physicalLinkType == null) {
+				physicalLinkType = new PhysicalLinkType(id, new Date(), creatorId, xmlPhysicalLinkType.getCodename(), xmlPhysicalLinkType.getDescription());
 			}
-			if(physicalLinkType == null) {
-				physicalLinkType = new PhysicalLinkType(creatorId,
-						StorableObjectVersion.createInitial(),
-						xmlPhysicalLinkType.getCodename(),
-						xmlPhysicalLinkType.getDescription(),
-						xmlPhysicalLinkType,
-						clonedIdsPool, 
-						importType);
-				ImportUidMapDatabase.insert(importType, xmlId, physicalLinkType.id);
-			}
-			assert physicalLinkType.isValid() : OBJECT_STATE_ILLEGAL;
+			physicalLinkType.fromXmlTransferable(xmlPhysicalLinkType, importType);
+			assert physicalLinkType.isValid() : OBJECT_BADLY_INITIALIZED;
 			physicalLinkType.markAsChanged();
 			return physicalLinkType;
-		} catch (Exception e) {
-			System.out.println(xmlPhysicalLinkType);
-			throw new CreateObjectException("PhysicalLinkType.createInstance |  ", e);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 	

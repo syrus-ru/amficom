@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.69 2005/08/31 20:17:24 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.70 2005/09/05 17:43:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -65,7 +64,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/08/31 20:17:24 $
+ * @version $Revision: 1.70 $, $Date: 2005/09/05 17:43:16 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -472,9 +471,9 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable()
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
 	 */
-	public XmlSchemeCableThread getXmlTransferable() {
+	public XmlSchemeCableThread getXmlTransferable(final String importType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -662,14 +661,12 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 
 	/**
 	 * @param xmlSchemeCableThread
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	public void fromXmlTransferable(
 			final XmlSchemeCableThread xmlSchemeCableThread,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();

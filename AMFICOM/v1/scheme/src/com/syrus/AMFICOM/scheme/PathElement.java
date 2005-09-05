@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.70 2005/08/31 20:17:25 bass Exp $
+ * $Id: PathElement.java,v 1.71 2005/09/05 17:43:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,6 @@ import java.util.TreeSet;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
@@ -76,7 +75,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/08/31 20:17:25 $
+ * @version $Revision: 1.71 $, $Date: 2005/09/05 17:43:16 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -753,9 +752,9 @@ public final class PathElement extends StorableObject
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable()
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
 	 */
-	public XmlPathElement getXmlTransferable() {
+	public XmlPathElement getXmlTransferable(final String importType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -1138,13 +1137,11 @@ public final class PathElement extends StorableObject
 
 	/**
 	 * @param xmlPathElement
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	public void fromXmlTransferable(final XmlPathElement xmlPathElement,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();

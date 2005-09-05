@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.2 2005/09/04 13:35:45 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.3 2005/09/05 17:43:19 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.Client.General.Command.Scheme;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 
 import java.io.File;
 import java.io.IOException;
@@ -19,15 +21,11 @@ import org.apache.xmlbeans.XmlException;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlComplementor;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.general.xml.XmlStorableObject;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -37,16 +35,19 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeSeq;
 import com.syrus.util.Log;
 
 public class SchemeImportCommand extends AbstractCommand {
+	static {
+		XmlComplementorRegistry.registerComplementor(SCHEME_CODE, new XmlComplementor() {
+			public void complementStorableObject(
+					final XmlStorableObject scheme,
+					final String importType)
+			throws CreateObjectException, UpdateObjectException {
+				((XmlScheme) scheme).setDomainId(LoginManager.getDomainId().getXmlTransferable(importType));
+			}
+		});
+	}
 
-	static SchemeComplementor complementor;
-	ClonedIdsPool pool = new ClonedIdsPool();
-	
+	@Override
 	public void execute() {
-		if (complementor == null) {
-			complementor = new SchemeComplementor();
-			XmlComplementorRegistry.registerComplementor(ObjectEntities.SCHEME_CODE, complementor);
-		}
-		
 		String user_dir = System.getProperty("user.dir");
 		
 		final String fileName = openFileForReading(user_dir);
@@ -54,11 +55,10 @@ public class SchemeImportCommand extends AbstractCommand {
 			return;
 
 		String ext = fileName.substring(fileName.lastIndexOf("."));
-		
+
 		if(ext.equals(".xml")) {
 			try {
-				Scheme scheme = loadXML(fileName);
-
+				@SuppressWarnings("unused") Scheme scheme = loadXML(fileName);
 			} catch (CreateObjectException e) {
 				Log.errorException(e);
 			} catch (XmlException e) {
@@ -94,7 +94,7 @@ public class SchemeImportCommand extends AbstractCommand {
 		XmlScheme[] xmlSchemesArray = xmlSchemes.getSchemeArray();
 		for(int i = 0; i < xmlSchemesArray.length; i++) {
 			XmlScheme xmlScheme = xmlSchemesArray[i];
-			scheme = Scheme.createInstance(LoginManager.getUserId(), xmlScheme, this.pool, "ucm");
+			scheme = Scheme.createInstance(LoginManager.getUserId(), xmlScheme, "ucm");
 			
 			scheme.setName(scheme.getName()
 					+ "(imported "
@@ -143,15 +143,5 @@ public class SchemeImportCommand extends AbstractCommand {
 			return null;
 
 		return fileName;
-	}
-}
-
-class SchemeComplementor implements XmlComplementor {
-	public void complementStorableObject(final XmlStorableObject storableObject, final String importType) throws CreateObjectException {
-		final XmlScheme scheme = (XmlScheme)storableObject;
-		final Identifier domainId = LoginManager.getDomainId();
-		final XmlIdentifier xmlDomainId = domainId.getXmlTransferable();
-		ImportUidMapDatabase.insert(importType, xmlDomainId, domainId);
-		scheme.setDomainId(xmlDomainId);
 	}
 }

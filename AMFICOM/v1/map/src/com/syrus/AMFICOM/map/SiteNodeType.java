@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.81 2005/09/04 17:05:45 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.82 2005/09/05 17:43:15 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -38,7 +37,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -53,14 +51,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypeHelper;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeType;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeTypeSort;
 import com.syrus.AMFICOM.resource.AbstractBitmapImageResource;
-import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.FileImageResource;
 import com.syrus.util.Log;
@@ -75,8 +71,8 @@ import com.syrus.util.Log;
  * ”злы специального типа CABLE_INLET должны быть прив€заны к какому-либо
  * узлу BUILDING или ATS и самосто€тельно не живут
  *  
- * @author $Author: krupenn $
- * @version $Revision: 1.81 $, $Date: 2005/09/04 17:05:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.82 $, $Date: 2005/09/05 17:43:15 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -178,7 +174,7 @@ public final class SiteNodeType extends StorableObjectType
 					topological,
 					mapLibraryId);
 
-			assert siteNodeType.isValid() : OBJECT_STATE_ILLEGAL;
+			assert siteNodeType.isValid() : OBJECT_BADLY_INITIALIZED;
 
 			siteNodeType.markAsChanged();
 
@@ -306,9 +302,9 @@ public final class SiteNodeType extends StorableObjectType
 		this.sort = sort;
 	}
 
-	public XmlSiteNodeType getXmlTransferable() {
+	public XmlSiteNodeType getXmlTransferable(final String importType) {
 		final XmlSiteNodeType xmlSiteNodeType = XmlSiteNodeType.Factory.newInstance();
-		xmlSiteNodeType.setId(this.id.getXmlTransferable());
+		xmlSiteNodeType.setId(this.id.getXmlTransferable(importType));
 		xmlSiteNodeType.setName(this.name);
 		xmlSiteNodeType.setDescription(this.description);
 		xmlSiteNodeType.setSort(XmlSiteNodeTypeSort.Enum.forInt(this.sort.value() + 1));
@@ -316,18 +312,18 @@ public final class SiteNodeType extends StorableObjectType
 		
 		String imageCodeName = "";
 		try {
-			final AbstractImageResource ir = StorableObjectPool.getStorableObject(this.getImageId(), false);
-			if (ir instanceof FileImageResource) {
-				imageCodeName = ((FileImageResource) ir).getCodename();
-				String filename = ((FileImageResource) ir).getFileName();
+			final AbstractBitmapImageResource abstractBitmapImageResource = StorableObjectPool.getStorableObject(this.getImageId(), false);
+			imageCodeName = abstractBitmapImageResource.getCodename();
+			if (abstractBitmapImageResource instanceof FileImageResource) {
+				final FileImageResource fileImageResource = (FileImageResource) abstractBitmapImageResource;
+				@SuppressWarnings("unused") String filename = fileImageResource.getFileName();
 				// TODO write image to file
-			}
-			else if (ir instanceof BitmapImageResource) {
-				imageCodeName = ((BitmapImageResource) ir).getCodename();
+			} else if (abstractBitmapImageResource instanceof BitmapImageResource) {
+				final BitmapImageResource bitmapImageResource = (BitmapImageResource) abstractBitmapImageResource;
 				try {
 					File file = new File(imageCodeName);
 					FileOutputStream out = new FileOutputStream(file);
-					byte[] data = ((BitmapImageResource) ir).getImage();
+					byte[] data = bitmapImageResource.getImage();
 					out.write(data);
 					out.flush();
 					out.close();
@@ -342,26 +338,33 @@ public final class SiteNodeType extends StorableObjectType
 		return xmlSiteNodeType;
 	}
 
-	SiteNodeType(final Identifier creatorId,
-			final StorableObjectVersion version,
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 * @param codename
+	 * @param description
+	 */
+	private SiteNodeType(final Identifier id,
+			final Date created,
+			final Identifier creatorId,
 			final String codename,
-			final String description,
-			final XmlSiteNodeType xmlSiteNodeType,
-			final ClonedIdsPool clonedIdsPool,
-			final String importType) throws CreateObjectException, ApplicationException {
-
-		super(clonedIdsPool.getClonedId(SITENODE_TYPE_CODE, xmlSiteNodeType.getId()),
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
+			final String description) {
+		super(id,
+				created,
+				created,
 				creatorId,
 				creatorId,
-				version,
+				StorableObjectVersion.createInitial(),
 				codename,
 				description);
-		this.fromXmlTransferable(xmlSiteNodeType, clonedIdsPool, importType);
 	}
 
-	public void fromXmlTransferable(final XmlSiteNodeType xmlSiteNodeType, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
+	public void fromXmlTransferable(final XmlSiteNodeType xmlSiteNodeType,
+			final String importType)
+	throws ApplicationException {
 		this.name = xmlSiteNodeType.getName();
 		this.description = xmlSiteNodeType.getDescription();
 		this.sort = SiteNodeTypeSort.from_int(xmlSiteNodeType.getSort().intValue() - 1);
@@ -377,44 +380,35 @@ public final class SiteNodeType extends StorableObjectType
 		this.imageId = loadedImageId;
 	}
 
+	/**
+	 * @param creatorId
+	 * @param importType
+	 * @param xmlSiteNodeType
+	 * @throws CreateObjectException
+	 */
 	public static SiteNodeType createInstance(
 			final Identifier creatorId,
 			final String importType,
-			final XmlSiteNodeType xmlSiteNodeType,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
-
+			final XmlSiteNodeType xmlSiteNodeType) 
+	throws CreateObjectException {
 		try {
-			final XmlIdentifier xmlId = xmlSiteNodeType.getId();
-			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
-			SiteNodeType siteNodeType = null;
-			if(existingIdentifier != null) {
-				siteNodeType = StorableObjectPool.getStorableObject(existingIdentifier, true);
-				if(siteNodeType != null) {
-					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
-					siteNodeType.fromXmlTransferable(xmlSiteNodeType, clonedIdsPool, importType);
-				}
-				else{
-					ImportUidMapDatabase.delete(importType, xmlId);
-				}
+			final Identifier id = Identifier.fromXmlTransferable(xmlSiteNodeType.getId(), SITENODE_TYPE_CODE, importType);
+			SiteNodeType siteNodeType = StorableObjectPool.getStorableObject(id, true);
+			if (siteNodeType == null) {
+				siteNodeType = new SiteNodeType(id, new Date(), creatorId, xmlSiteNodeType.getCodename(), xmlSiteNodeType.getDescription());
 			}
-			if(siteNodeType == null) {
-				siteNodeType = new SiteNodeType(creatorId,
-						StorableObjectVersion.createInitial(),
-						xmlSiteNodeType.getCodename(),
-						xmlSiteNodeType.getDescription(),
-						xmlSiteNodeType,
-						clonedIdsPool, 
-						importType);
-				ImportUidMapDatabase.insert(importType, xmlId, siteNodeType.id);
-			}
-			assert siteNodeType.isValid() : OBJECT_STATE_ILLEGAL;
+			siteNodeType.fromXmlTransferable(xmlSiteNodeType, importType);
+			assert siteNodeType.isValid() : OBJECT_BADLY_INITIALIZED;
 			siteNodeType.markAsChanged();
 			return siteNodeType;
-		} catch (Exception e) {
-			throw new CreateObjectException("SiteNodeType.createInstance |  ", e);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
-	
+
 	public Library getParent() {
 		return getMapLibrary();
 	}
@@ -514,5 +508,4 @@ public final class SiteNodeType extends StorableObjectType
 		in.close();
 		return data;
 	}
-
 }

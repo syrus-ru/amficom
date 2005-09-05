@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.73 2005/09/04 11:56:29 bass Exp $
+ * $Id: Scheme.java,v 1.74 2005/09/05 17:43:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,10 +11,12 @@ package com.syrus.AMFICOM.scheme;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
@@ -36,7 +38,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.AbstractCloneableDomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -78,7 +79,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/09/04 11:56:29 $
+ * @version $Revision: 1.74 $, $Date: 2005/09/05 17:43:16 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -193,29 +194,22 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
 	 * @param id
 	 * @param created
-	 * @param modified
 	 * @param creatorId
-	 * @param modifierId
-	 * @param version
-	 * @param transferable
-	 * @param clonedIdsPool
-	 * @param importType
-	 * @throws ApplicationException
 	 */
 	private Scheme(final Identifier id,
 			final Date created,
-			final Date modified,
-			final Identifier creatorId,
-			final Identifier modifierId,
-			final StorableObjectVersion version,
-			final XmlScheme transferable,
-			final ClonedIdsPool clonedIdsPool,
-			final String importType)
-	throws ApplicationException {
-		super(id, created, modified, creatorId, modifierId, version, VOID_IDENTIFIER);
-		this.fromXmlTransferable(transferable, clonedIdsPool, importType);
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
+				creatorId,
+				creatorId,
+				StorableObjectVersion.createInitial(),
+				VOID_IDENTIFIER);
 	}
 
 	/**
@@ -311,34 +305,30 @@ public final class Scheme extends AbstractCloneableDomainMember
 	/**
 	 * @param creatorId
 	 * @param xmlScheme
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws CreateObjectException
 	 */
 	public static Scheme createInstance(final Identifier creatorId,
 			final XmlScheme xmlScheme,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
+			final Identifier id = Identifier.fromXmlTransferable(xmlScheme.getId(), SCHEME_CODE, importType);
+			Scheme scheme = StorableObjectPool.getStorableObject(id, true);
 			final Date created = new Date();
-			final Scheme scheme = new Scheme(IdentifierPool.getGeneratedIdentifier(SCHEME_CODE),
-					created,
-					created,
-					creatorId,
-					creatorId,
-					StorableObjectVersion.createInitial(),
-					xmlScheme,
-					clonedIdsPool,
-					importType);
+			if (scheme == null) {
+				scheme = new Scheme(id, created, creatorId);
+			}
+			scheme.fromXmlTransferable(xmlScheme, importType);
+			assert scheme.isValid() : OBJECT_BADLY_INITIALIZED;
 			scheme.markAsChanged();
 			return scheme;
-		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"Scheme.createInstance | cannot generate identifier ", ige);
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -803,9 +793,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable()
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
 	 */
-	public XmlScheme getXmlTransferable() {
+	public XmlScheme getXmlTransferable(final String importType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -1257,16 +1247,14 @@ public final class Scheme extends AbstractCloneableDomainMember
 
 	/**
 	 * @param scheme
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	public void fromXmlTransferable(final XmlScheme scheme,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(scheme, importType);
+		XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType);
 
 		this.name = scheme.getName();
 		this.description = scheme.isSetDescription()
@@ -1279,25 +1267,25 @@ public final class Scheme extends AbstractCloneableDomainMember
 		this.height = scheme.getHeight();
 		this.kind = IdlKind.from_int(scheme.getKind().intValue() - 1);
 		if (scheme.isSetDomainId()) {
-			super.setDomainId0(Identifier.fromXmlTransferable(scheme.getDomainId(), importType));
+			super.setDomainId0(Identifier.fromXmlTransferable(scheme.getDomainId(), DOMAIN_CODE, importType));
 		} else {
 			throw new UpdateObjectException("Scheme.fromXmlTransferable() | "
 					+ XML_BEAN_NOT_COMPLETE);
 		}
 		this.mapId = scheme.isSetMapId()
-				? Identifier.fromXmlTransferable(scheme.getMapId(), importType)
+				? Identifier.fromXmlTransferable(scheme.getMapId(), MAP_CODE, importType)
 				: VOID_IDENTIFIER;
 		this.symbolId = scheme.isSetSymbolId()
-				? Identifier.fromXmlTransferable(scheme.getSymbolId(), importType)
+				? Identifier.fromXmlTransferable(scheme.getSymbolId(), IMAGERESOURCE_CODE, importType)
 				: VOID_IDENTIFIER;
 		this.ugoCellId = scheme.isSetUgoCellId()
-				? Identifier.fromXmlTransferable(scheme.getUgoCellId(), importType)
+				? Identifier.fromXmlTransferable(scheme.getUgoCellId(), IMAGERESOURCE_CODE, importType)
 				: VOID_IDENTIFIER;
 		this.schemeCellId = scheme.isSetSchemeCellId()
-				? Identifier.fromXmlTransferable(scheme.getSchemeCellId(), importType)
+				? Identifier.fromXmlTransferable(scheme.getSchemeCellId(), IMAGERESOURCE_CODE, importType)
 				: VOID_IDENTIFIER;
 		this.parentSchemeElementId = scheme.isSetParentSchemeElementId()
-				? Identifier.fromXmlTransferable(scheme.getParentSchemeElementId(), importType)
+				? Identifier.fromXmlTransferable(scheme.getParentSchemeElementId(), SCHEMEELEMENT_CODE, importType)
 				: VOID_IDENTIFIER;
 		if (scheme.isSetSchemeElements()) {
 			for (@SuppressWarnings("unused") final XmlSchemeElement schemeElement : scheme.getSchemeElements().getSchemeElementArray()) {
@@ -1359,7 +1347,11 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	public Set<SchemePath> getTopologicalPaths() {
-		final Set<SchemePath> schemePaths = new HashSet<SchemePath>(this.getCurrentSchemeMonitoringSolution().getSchemePaths());
+		final SchemeMonitoringSolution currentSchemeMonitoringSolution = this.getCurrentSchemeMonitoringSolution();
+		if (currentSchemeMonitoringSolution == null) {
+			return Collections.emptySet();
+		}
+		final Set<SchemePath> schemePaths = new HashSet<SchemePath>(currentSchemeMonitoringSolution.getSchemePaths());
 		for (final SchemeElement schemeElement : this.getSchemeElements()) {
 			for (final Scheme scheme : schemeElement.getSchemes()) {
 				if (scheme.getKind() == CABLE_SUBNETWORK) {

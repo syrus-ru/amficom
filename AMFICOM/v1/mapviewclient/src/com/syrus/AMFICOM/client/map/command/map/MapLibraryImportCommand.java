@@ -1,5 +1,5 @@
 /*
- * $Id: MapLibraryImportCommand.java,v 1.10 2005/09/04 17:11:44 krupenn Exp $
+ * $Id: MapLibraryImportCommand.java,v 1.11 2005/09/05 17:43:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,10 +10,12 @@
 
 package com.syrus.AMFICOM.client.map.command.map;
 
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
-import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
 
@@ -30,7 +32,6 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -51,8 +52,8 @@ import com.syrus.util.Log;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/09/04 17:11:44 $
+ * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/09/05 17:43:20 $
  * @module mapviewclient
  */
 public class MapLibraryImportCommand extends ImportCommand {
@@ -80,7 +81,7 @@ public class MapLibraryImportCommand extends ImportCommand {
 
 		try {
 			MapLibrary mapLibrary = null;
-			Log.debugMessage("Import map library", Level.INFO);
+			Log.debugMessage("Import map library", INFO);
 
 			String fileName = ImportCommand
 					.openFileForReading(MapPropertiesManager.getLastDirectory());
@@ -159,7 +160,7 @@ public class MapLibraryImportCommand extends ImportCommand {
 
 		XmlMapLibrary xmlLibrary = doc.getMapLibrary();
 		
-		mapLibrary = MapLibrary.createInstance(userId, xmlLibrary.getImportType(), xmlLibrary, new ClonedIdsPool());
+		mapLibrary = MapLibrary.createInstance(userId, xmlLibrary.getImportType(), xmlLibrary);
 
 		StorableObjectPool.flush(mapLibrary, userId, true);
 
@@ -187,11 +188,11 @@ public class MapLibraryImportCommand extends ImportCommand {
 				.setErrorListener(validationMessages));
 
 		if(!isXmlValid) {
-			Log.debugMessage("Invalid XML: ", Level.WARNING);
+			Log.debugMessage("Invalid XML: ", WARNING);
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
-				Log.debugMessage(error.getMessage(), Level.WARNING);
-				Log.debugMessage(error.getObjectLocation().toString(), Level.WARNING);
+				Log.debugMessage(error.getMessage(), WARNING);
+				Log.debugMessage(error.getObjectLocation().toString(), WARNING);
 			}
 		}
 		return isXmlValid;

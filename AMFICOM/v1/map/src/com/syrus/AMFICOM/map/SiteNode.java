@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.82 2005/09/05 10:37:28 max Exp $
+ * $Id: SiteNode.java,v 1.83 2005/09/05 17:43:15 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,10 @@
 
 package com.syrus.AMFICOM.map;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -20,7 +21,6 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -28,7 +28,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -40,7 +39,6 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
 import com.syrus.AMFICOM.map.xml.XmlSiteNode;
@@ -59,8 +57,8 @@ import com.syrus.util.Log;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: max $
- * @version $Revision: 1.82 $, $Date: 2005/09/05 10:37:28 $
+ * @author $Author: bass $
+ * @version $Revision: 1.83 $, $Date: 2005/09/05 17:43:15 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
@@ -169,7 +167,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 					street,
 					building);
 
-			assert siteNode.isValid() : OBJECT_STATE_ILLEGAL;
+			assert siteNode.isValid() : OBJECT_BADLY_INITIALIZED;
 
 			siteNode.markAsChanged();
 
@@ -187,7 +185,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.type);
@@ -335,9 +333,9 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		}
 	}
 
-	public XmlSiteNode getXmlTransferable() {
+	public XmlSiteNode getXmlTransferable(final String importType) {
 		final XmlSiteNode xmlSiteNode = XmlSiteNode.Factory.newInstance();
-		xmlSiteNode.setId(this.id.getXmlTransferable());
+		xmlSiteNode.setId(this.id.getXmlTransferable(importType));
 		xmlSiteNode.setName(this.name);
 		xmlSiteNode.setDescription(this.description);
 		xmlSiteNode.setSiteNodeTypeCodename(this.getType().getCodename());
@@ -349,28 +347,31 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		return xmlSiteNode;
 	}
 
-	SiteNode(final Identifier creatorId,
-			final StorableObjectVersion version,
-			final XmlSiteNode xmlSiteNode,
-			final ClonedIdsPool clonedIdsPool,
-			final String importType)
-			throws CreateObjectException,
-				ApplicationException {
-
-		super(clonedIdsPool.getClonedId(SITENODE_CODE, xmlSiteNode.getId()),
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private SiteNode(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
 				creatorId,
 				creatorId,
-				version,
+				StorableObjectVersion.createInitial(),
 				"",
 				"",
 				new DoublePoint(0, 0));
 		this.selected = false;
-		this.fromXmlTransferable(xmlSiteNode, clonedIdsPool, importType);
 	}
 
-	public void fromXmlTransferable(final XmlSiteNode xmlSiteNode, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
+	public void fromXmlTransferable(final XmlSiteNode xmlSiteNode,
+			final String importType)
+	throws ApplicationException {
 		this.name = xmlSiteNode.getName();
 		this.description = xmlSiteNode.getDescription();
 		this.city = xmlSiteNode.getCity();
@@ -403,36 +404,32 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		this.imageId = this.type.getImageId();
 	}
 
+	/**
+	 * @param creatorId
+	 * @param importType
+	 * @param xmlSiteNode
+	 * @throws CreateObjectException
+	 */
 	public static SiteNode createInstance(
 			final Identifier creatorId,
 			final String importType,
-			final XmlSiteNode xmlSiteNode, 
-			final ClonedIdsPool clonedIdsPool)
-			throws CreateObjectException {
-
+			final XmlSiteNode xmlSiteNode) 
+	throws CreateObjectException {
 		try {
-			final XmlIdentifier xmlId = xmlSiteNode.getId();
-			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
-			SiteNode siteNode = null;
-			if(existingIdentifier != null) {
-				clonedIdsPool.setExistingId(xmlId, existingIdentifier);
-				siteNode = StorableObjectPool.getStorableObject(existingIdentifier, true);
-				if(siteNode != null) {
-					siteNode.fromXmlTransferable(xmlSiteNode, clonedIdsPool, importType);
-				}
-				else{
-					ImportUidMapDatabase.delete(importType, xmlId);
-				}
+			final Identifier id = Identifier.fromXmlTransferable(xmlSiteNode.getId(), SITENODE_CODE, importType);
+			SiteNode siteNode = StorableObjectPool.getStorableObject(id, true);
+			if (siteNode == null) {
+				siteNode = new SiteNode(id, new Date(), creatorId);
 			}
-			if(siteNode == null) {
-				siteNode = new SiteNode(creatorId, StorableObjectVersion.createInitial(), xmlSiteNode, clonedIdsPool, importType);
-				ImportUidMapDatabase.insert(importType, xmlId, siteNode.id);
-			}
-			assert siteNode.isValid() : OBJECT_STATE_ILLEGAL;
+			siteNode.fromXmlTransferable(xmlSiteNode, importType);
+			assert siteNode.isValid() : OBJECT_BADLY_INITIALIZED;
 			siteNode.markAsChanged();
 			return siteNode;
-		} catch (Exception e) {
-			throw new CreateObjectException("SiteNode.createInstance |  ", e);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 

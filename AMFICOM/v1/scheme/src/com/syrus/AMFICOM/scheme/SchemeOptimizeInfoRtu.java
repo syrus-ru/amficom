@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.17 2005/08/31 20:17:24 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.18 2005/09/05 17:43:16 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,6 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -52,7 +51,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.17 $, $Date: 2005/08/31 20:17:24 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/05 17:43:16 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu extends StorableObject
@@ -224,9 +223,9 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable()
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
 	 */
-	public XmlSchemeOptimizeInfoRtu getXmlTransferable() {
+	public XmlSchemeOptimizeInfoRtu getXmlTransferable(final String importType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -316,14 +315,12 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 
 	/**
 	 * @param xmlSchemeOptimizeInfoRtu
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	public void fromXmlTransferable(
 			final XmlSchemeOptimizeInfoRtu xmlSchemeOptimizeInfoRtu,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();

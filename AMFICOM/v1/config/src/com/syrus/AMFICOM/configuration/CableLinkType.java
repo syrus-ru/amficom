@@ -1,16 +1,17 @@
 /*
- * $Id: CableLinkType.java,v 1.67 2005/08/31 13:25:08 bass Exp $
+ * $Id: CableLinkType.java,v 1.68 2005/09/05 17:43:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
  */
+
 package com.syrus.AMFICOM.configuration;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -28,7 +29,6 @@ import com.syrus.AMFICOM.configuration.xml.XmlCableThreadType;
 import com.syrus.AMFICOM.configuration.xml.XmlCableThreadTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -36,7 +36,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -44,12 +43,11 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/08/31 13:25:08 $
+ * @version $Revision: 1.68 $, $Date: 2005/09/05 17:43:15 $
  * @author $Author: bass $
  * @module config
  */
@@ -106,60 +104,52 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 		this.imageId = imageId;
 	}
 
-	@Shitlet
-	private CableLinkType(final Identifier creatorId,
-			final StorableObjectVersion version,
-			final XmlCableLinkType xmlCableLinkType,
-			final ClonedIdsPool clonedIdsPool,
-			final String importType) throws CreateObjectException, ApplicationException {
-
-		super(clonedIdsPool.getClonedId(LINK_TYPE_CODE, xmlCableLinkType.getId()),
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private CableLinkType(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
 				creatorId,
 				creatorId,
-				version,
+				StorableObjectVersion.createInitial(),
 				"",
 				"");
-		this.fromXmlTransferable(xmlCableLinkType, clonedIdsPool, importType);
 	}
 
-	@SuppressWarnings("unused")
-	@Shitlet
-	private static CableLinkType createInstance(
+	/**
+	 * @param creatorId
+	 * @param importType
+	 * @param xmlCableLinkType
+	 * @throws CreateObjectException
+	 */
+	public static CableLinkType createInstance(
 			final Identifier creatorId,
 			final String importType,
-			final XmlCableLinkType xmlCableLinkType,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
-
+			final XmlCableLinkType xmlCableLinkType)
+	throws CreateObjectException {
 		try {
-			final XmlIdentifier xmlId = xmlCableLinkType.getId();
-			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
-			CableLinkType cableLinkType = null;
-			if(existingIdentifier != null) {
-				cableLinkType = StorableObjectPool.getStorableObject(existingIdentifier, true);
-				if(cableLinkType != null) {
-					cableLinkType.fromXmlTransferable(xmlCableLinkType, clonedIdsPool, importType);
-				}
-				else{
-					ImportUidMapDatabase.delete(importType, xmlId);
-				}
+			final Identifier id = Identifier.fromXmlTransferable(xmlCableLinkType.getId(), CABLELINK_TYPE_CODE, importType);
+			CableLinkType cableLinkType = StorableObjectPool.getStorableObject(id, true);
+			if (cableLinkType == null) {
+				cableLinkType = new CableLinkType(id, new Date(), creatorId);
 			}
-			if(cableLinkType == null) {
-				cableLinkType = cableLinkType = new CableLinkType(
-						creatorId,
-						StorableObjectVersion.createInitial(),
-						xmlCableLinkType,
-						clonedIdsPool,
-						importType);
-				ImportUidMapDatabase.insert(importType, xmlId, cableLinkType.id);
-			}
-			assert cableLinkType.isValid() : OBJECT_STATE_ILLEGAL;
+			cableLinkType.fromXmlTransferable(xmlCableLinkType, importType);
+			assert cableLinkType.isValid() : OBJECT_BADLY_INITIALIZED;
 			cableLinkType.markAsChanged();
 			return cableLinkType;
-		} catch (Exception e) {
-			System.out.println(xmlCableLinkType);
-			throw new CreateObjectException("CableLinkType.createInstance |  ", e);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -196,7 +186,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 					manufacturerCode,
 					imageId);
 
-			assert cableLinkType.isValid() : OBJECT_STATE_ILLEGAL;
+			assert cableLinkType.isValid() : OBJECT_BADLY_INITIALIZED;
 
 			cableLinkType.markAsChanged();
 
@@ -219,14 +209,12 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 
 	/**
 	 * @param xmlCableLinkType
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
 	public void fromXmlTransferable(final XmlCableLinkType xmlCableLinkType,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
 		this.name = xmlCableLinkType.getName();
@@ -239,7 +227,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 
 		final List<XmlCableThreadType> xmlCableThreadTypeList = xmlCableLinkType.getCableThreadTypes().getCableThreadTypeList();
 		for (XmlCableThreadType xmlCableThreadType : xmlCableThreadTypeList) {
-			CableThreadType.createInstance(this.creatorId, importType, xmlCableThreadType, clonedIdsPool);
+			CableThreadType.createInstance(this.creatorId, importType, xmlCableThreadType);
 		}
 	}
 
@@ -267,12 +255,12 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable()
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
 	 */
 	@Shitlet
-	public XmlCableLinkType getXmlTransferable() {
+	public XmlCableLinkType getXmlTransferable(final String importType) {
 		final XmlCableLinkType xmlCableLinkType = XmlCableLinkType.Factory.newInstance();
-		xmlCableLinkType.setId(this.id.getXmlTransferable());
+		xmlCableLinkType.setId(this.id.getXmlTransferable(importType));
 		xmlCableLinkType.setName(this.name);
 		xmlCableLinkType.setCodename(this.codename);
 		xmlCableLinkType.setDescription(this.description);
@@ -283,7 +271,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 		
 		final List<XmlCableThreadType> xmlCableThreadTypeList = new LinkedList<XmlCableThreadType>();
 		for (final CableThreadType cableThreadType : this.getCableThreadTypes(true)) {
-			xmlCableThreadTypeList.add(cableThreadType.getXmlTransferable());
+			xmlCableThreadTypeList.add(cableThreadType.getXmlTransferable(importType));
 		}
 		final XmlCableThreadTypeSeq xmlCableThreadTypes = xmlCableLinkType.addNewCableThreadTypes();
 		xmlCableThreadTypes.setCableThreadTypeArray(xmlCableThreadTypeList.toArray(new XmlCableThreadType[xmlCableThreadTypeList.size()]));
@@ -383,7 +371,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 		return Collections.emptySet();
 	}
 

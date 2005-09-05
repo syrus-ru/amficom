@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.59 2005/09/01 10:33:12 bass Exp $
+ * $Id: CableThreadType.java,v 1.60 2005/09/05 17:43:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,13 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.*;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.*;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -23,7 +27,6 @@ import com.syrus.AMFICOM.configuration.corba.IdlCableThreadType;
 import com.syrus.AMFICOM.configuration.corba.IdlCableThreadTypeHelper;
 import com.syrus.AMFICOM.configuration.xml.XmlCableThreadType;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -31,7 +34,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -40,7 +42,7 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
@@ -49,7 +51,7 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.59 $, $Date: 2005/09/01 10:33:12 $
+ * @version $Revision: 1.60 $, $Date: 2005/09/05 17:43:15 $
  * @author $Author: bass $
  * @module config
  */
@@ -108,59 +110,52 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		this.cableLinkType = cableLinkType;
 	}
 
-	@Shitlet
-	private CableThreadType(final Identifier creatorId,
-			final StorableObjectVersion version,
-			final XmlCableThreadType xmlCableThreadType,
-			final ClonedIdsPool clonedIdsPool,
-			final String importType) throws CreateObjectException, ApplicationException {
-
-		super(clonedIdsPool.getClonedId(LINK_TYPE_CODE, xmlCableThreadType.getId()),
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private CableThreadType(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
 				creatorId,
 				creatorId,
-				version,
+				StorableObjectVersion.createInitial(),
 				"",
 				"");
-		this.fromXmlTransferable(xmlCableThreadType, clonedIdsPool, importType);
 	}
 
-	@Shitlet
-	static CableThreadType createInstance(
+	/**
+	 * @param creatorId
+	 * @param importType
+	 * @param xmlCableThreadType
+	 * @throws CreateObjectException
+	 */
+	public static CableThreadType createInstance(
 			final Identifier creatorId,
 			final String importType,
-			final XmlCableThreadType xmlCableThreadType,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
-
+			final XmlCableThreadType xmlCableThreadType)
+	throws CreateObjectException {
 		try {
-			final XmlIdentifier xmlId = xmlCableThreadType.getId();
-			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
-			CableThreadType cableThreadType = null;
-			if(existingIdentifier != null) {
-				cableThreadType = StorableObjectPool.getStorableObject(existingIdentifier, true);
-				if(cableThreadType != null) {
-					cableThreadType.fromXmlTransferable(xmlCableThreadType, clonedIdsPool, importType);
-				}
-				else{
-					ImportUidMapDatabase.delete(importType, xmlId);
-				}
+			final Identifier id = Identifier.fromXmlTransferable(xmlCableThreadType.getId(), CABLETHREAD_TYPE_CODE, importType);
+			CableThreadType cableThreadType = StorableObjectPool.getStorableObject(id, true);
+			if (cableThreadType == null) {
+				cableThreadType = new CableThreadType(id, new Date(), creatorId);
 			}
-			if(cableThreadType == null) {
-				cableThreadType = cableThreadType = new CableThreadType(
-						creatorId,
-						StorableObjectVersion.createInitial(),
-						xmlCableThreadType,
-						clonedIdsPool,
-						importType);
-				ImportUidMapDatabase.insert(importType, xmlId, cableThreadType.id);
-			}
-			assert cableThreadType.isValid() : OBJECT_STATE_ILLEGAL;
+			cableThreadType.fromXmlTransferable(xmlCableThreadType, importType);
+			assert cableThreadType.isValid() : OBJECT_BADLY_INITIALIZED;
 			cableThreadType.markAsChanged();
 			return cableThreadType;
-		} catch (Exception e) {
-			System.out.println(xmlCableThreadType);
-			throw new CreateObjectException("CableThreadType.createInstance |  ", e);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -192,7 +187,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 					linkType,
 					cableLinkType);
 
-			assert cableThreadType.isValid() : OBJECT_STATE_ILLEGAL;
+			assert cableThreadType.isValid() : OBJECT_BADLY_INITIALIZED;
 
 			cableThreadType.markAsChanged();
 
@@ -216,22 +211,20 @@ public final class CableThreadType extends StorableObjectType implements Namable
 
 	/**
 	 * @param xmlCableThreadType
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
 	public void fromXmlTransferable(final XmlCableThreadType xmlCableThreadType,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
 		this.name = xmlCableThreadType.getName();
 		this.codename = xmlCableThreadType.getCodename();
 		this.description = xmlCableThreadType.getDescription();
 		this.color = Integer.parseInt(xmlCableThreadType.getColor());
-		this.setLinkTypeId(Identifier.fromXmlTransferable(xmlCableThreadType.getLinkTypeId(), importType));
-		this.setCableLinkTypeId(Identifier.fromXmlTransferable(xmlCableThreadType.getCableLinkTypeId(), importType));
+		this.setLinkTypeId(Identifier.fromXmlTransferable(xmlCableThreadType.getLinkTypeId(), LINK_TYPE_CODE, importType));
+		this.setCableLinkTypeId(Identifier.fromXmlTransferable(xmlCableThreadType.getCableLinkTypeId(), CABLELINK_TYPE_CODE, importType));
 	}
 
 	/**
@@ -256,10 +249,10 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable()
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
 	 */
 	@Shitlet
-	public XmlCableThreadType getXmlTransferable() {
+	public XmlCableThreadType getXmlTransferable(final String importType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -358,7 +351,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
 		dependencies.add(this.linkType);

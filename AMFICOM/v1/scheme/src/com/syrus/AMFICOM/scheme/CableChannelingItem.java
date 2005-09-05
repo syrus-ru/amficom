@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.56 2005/09/04 11:56:06 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.57 2005/09/05 17:43:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRE
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NO_COMMON_PARENT;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
@@ -32,7 +33,6 @@ import java.util.TreeSet;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/09/04 11:56:06 $
+ * @version $Revision: 1.57 $, $Date: 2005/09/05 17:43:16 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -149,29 +149,21 @@ public final class CableChannelingItem
 	}
 
 	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
 	 * @param id
 	 * @param created
-	 * @param modified
 	 * @param creatorId
-	 * @param modifierId
-	 * @param version
-	 * @param transferable
-	 * @param clonedIdsPool
-	 * @param importType
-	 * @throws ApplicationException
 	 */
 	private CableChannelingItem(final Identifier id,
 			final Date created,
-			final Date modified,
-			final Identifier creatorId,
-			final Identifier modifierId,
-			final StorableObjectVersion version,
-			final XmlCableChannelingItem transferable,
-			final ClonedIdsPool clonedIdsPool,
-			final String importType)
-	throws ApplicationException {
-		super(id, created, modified, creatorId, modifierId, version);
-		this.fromXmlTransferable(transferable, clonedIdsPool, importType);
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
+				creatorId,
+				creatorId,
+				StorableObjectVersion.createInitial());
 	}
 
 	/**
@@ -257,35 +249,30 @@ public final class CableChannelingItem
 	/**
 	 * @param creatorId
 	 * @param xmlCableChannelingItem
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws CreateObjectException
 	 */
 	public static CableChannelingItem createInstance(
 			final Identifier creatorId,
 			final XmlCableChannelingItem xmlCableChannelingItem,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final Date created = new Date();
-			final CableChannelingItem cableChannelingItem = new CableChannelingItem(IdentifierPool.getGeneratedIdentifier(CABLECHANNELINGITEM_CODE),
-					created,
-					created,
-					creatorId,
-					creatorId,
-					StorableObjectVersion.createInitial(),
-					xmlCableChannelingItem,
-					clonedIdsPool,
-					importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlCableChannelingItem.getId(), CABLECHANNELINGITEM_CODE, importType);
+			CableChannelingItem cableChannelingItem = StorableObjectPool.getStorableObject(id, true);
+			if (cableChannelingItem == null) {
+				cableChannelingItem = new CableChannelingItem(id, new Date(), creatorId);
+			}
+			cableChannelingItem.fromXmlTransferable(xmlCableChannelingItem, importType);
+			assert cableChannelingItem.isValid() : OBJECT_BADLY_INITIALIZED;
 			cableChannelingItem.markAsChanged();
 			return cableChannelingItem;
-		} catch (final IdentifierGenerationException ige) {
-			throw new CreateObjectException(
-					"CableChanelingItem.createInstance | cannot generate identifier ", ige);
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -461,9 +448,9 @@ public final class CableChannelingItem
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable()
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
 	 */
-	public XmlCableChannelingItem getXmlTransferable() {
+	public XmlCableChannelingItem getXmlTransferable(final String importType) {
 		final XmlCableChannelingItem xmlCableChannelingItem = XmlCableChannelingItem.Factory.newInstance();
 		xmlCableChannelingItem.setStartSpare(this.startSpare);
 		xmlCableChannelingItem.setEndSpare(this.endSpare);
@@ -471,12 +458,12 @@ public final class CableChannelingItem
 		xmlCableChannelingItem.setPlaceY(this.placeY);
 		xmlCableChannelingItem.setSequentialNumber(this.sequentialNumber);
 		if (!this.physicalLinkId.isVoid()) {
-			xmlCableChannelingItem.setPhysicalLinkId(this.physicalLinkId.getXmlTransferable());
+			xmlCableChannelingItem.setPhysicalLinkId(this.physicalLinkId.getXmlTransferable(importType));
 		}
-		xmlCableChannelingItem.setStartSiteNodeId(this.startSiteNodeId.getXmlTransferable());
-		xmlCableChannelingItem.setEndSiteNodeId(this.endSiteNodeId.getXmlTransferable());
-		xmlCableChannelingItem.setParentSchemeCableLinkId(this.parentSchemeCableLinkId.getXmlTransferable());
-		throw new UnsupportedOperationException();
+		xmlCableChannelingItem.setStartSiteNodeId(this.startSiteNodeId.getXmlTransferable(importType));
+		xmlCableChannelingItem.setEndSiteNodeId(this.endSiteNodeId.getXmlTransferable(importType));
+		xmlCableChannelingItem.setParentSchemeCableLinkId(this.parentSchemeCableLinkId.getXmlTransferable(importType));
+		return xmlCableChannelingItem;
 	}
 
 	/**
@@ -758,14 +745,12 @@ public final class CableChannelingItem
 
 	/**
 	 * @param cableChannelingItem
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	public void fromXmlTransferable(
 			final XmlCableChannelingItem cableChannelingItem,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
 		this.startSpare = cableChannelingItem.getStartSpare();
@@ -774,11 +759,11 @@ public final class CableChannelingItem
 		this.placeY = cableChannelingItem.getPlaceY();
 		this.sequentialNumber = cableChannelingItem.getSequentialNumber();
 		this.physicalLinkId = cableChannelingItem.isSetPhysicalLinkId()
-				? Identifier.fromXmlTransferable(cableChannelingItem.getPhysicalLinkId(), importType)
+				? Identifier.fromXmlTransferable(cableChannelingItem.getPhysicalLinkId(), PHYSICALLINK_CODE, importType)
 				: VOID_IDENTIFIER;
-		this.startSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getStartSiteNodeId(), importType);
-		this.endSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getEndSiteNodeId(), importType);
-		this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(cableChannelingItem.getParentSchemeCableLinkId(), importType);
+		this.startSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getStartSiteNodeId(), SITENODE_CODE, importType);
+		this.endSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getEndSiteNodeId(), SITENODE_CODE, importType);
+		this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(cableChannelingItem.getParentSchemeCableLinkId(), SCHEMECABLELINK_CODE, importType);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.83 2005/08/31 13:25:08 bass Exp $
+ * $Id: Map.java,v 1.84 2005/09/05 17:43:15 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,9 +8,10 @@
 
 package com.syrus.AMFICOM.map;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.ArrayList;
 import java.util.Collection;
@@ -27,7 +28,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -35,7 +35,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -48,7 +47,6 @@ import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlMap;
 import com.syrus.AMFICOM.map.corba.IdlMapHelper;
 import com.syrus.AMFICOM.map.xml.XmlCollector;
@@ -63,6 +61,7 @@ import com.syrus.AMFICOM.map.xml.XmlSiteNode;
 import com.syrus.AMFICOM.map.xml.XmlSiteNodeSeq;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNode;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNodeSeq;
+import com.syrus.util.Log;
 
 /**
  * Топологическая схема, которая содержит в себе набор связанных друг с другом
@@ -70,7 +69,7 @@ import com.syrus.AMFICOM.map.xml.XmlTopologicalNodeSeq;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/08/31 13:25:08 $
+ * @version $Revision: 1.84 $, $Date: 2005/09/05 17:43:15 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -159,7 +158,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 					name,
 					description);
 
-			assert map.isValid() : OBJECT_STATE_ILLEGAL;
+			assert map.isValid() : OBJECT_BADLY_INITIALIZED;
 
 			map.markAsChanged();
 
@@ -213,7 +212,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.siteNodes);
@@ -985,9 +984,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		return returnLinks;
 	}
 
-	public XmlMap getXmlTransferable() {
+	public XmlMap getXmlTransferable(final String importType) {
 		final XmlMap xmlMap = XmlMap.Factory.newInstance();
-		xmlMap.setId(this.id.getXmlTransferable());
+		xmlMap.setId(this.id.getXmlTransferable(importType));
 		xmlMap.setName(this.name);
 		xmlMap.setDescription(this.description);
 		
@@ -999,31 +998,31 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 				
 		final Collection<XmlObject> xmlTopologicalNodesArray = new LinkedList<XmlObject>();
 		for (final TopologicalNode topologicalNode : this.getTopologicalNodes()) {
-			xmlTopologicalNodesArray.add(topologicalNode.getXmlTransferable());
+			xmlTopologicalNodesArray.add(topologicalNode.getXmlTransferable(importType));
 		}
 		xmlTopologicalNodes.setTopologicalNodeArray(xmlTopologicalNodesArray.toArray(new XmlTopologicalNode[xmlTopologicalNodesArray.size()]));
 		
 		final Collection<XmlObject> xmlSiteNodesArray = new LinkedList<XmlObject>();
 		for (final SiteNode siteNode : this.getSiteNodes()) {
-			xmlSiteNodesArray.add(siteNode.getXmlTransferable());
+			xmlSiteNodesArray.add(siteNode.getXmlTransferable(importType));
 		}
 		xmlSiteNodes.setSiteNodeArray(xmlSiteNodesArray.toArray(new XmlSiteNode[xmlSiteNodesArray.size()]));
 		
 		final Collection<XmlObject> xmlPhysicalLinksArray = new LinkedList<XmlObject>();
 		for (final PhysicalLink physicalLink : this.getPhysicalLinks()) {
-			xmlPhysicalLinksArray.add(physicalLink.getXmlTransferable());
+			xmlPhysicalLinksArray.add(physicalLink.getXmlTransferable(importType));
 		}
 		xmlPhysicalLinks.setPhysicalLinkArray(xmlPhysicalLinksArray.toArray(new XmlPhysicalLink[xmlPhysicalLinksArray.size()]));
 		
 		final Collection<XmlObject> xmlNodeLinksArray = new LinkedList<XmlObject>();
 		for (final NodeLink nodeLink : this.getNodeLinks()) {
-			xmlNodeLinksArray.add(nodeLink.getXmlTransferable());
+			xmlNodeLinksArray.add(nodeLink.getXmlTransferable(importType));
 		}
 		xmlNodeLinks.setNodeLinkArray(xmlNodeLinksArray.toArray(new XmlNodeLink[xmlNodeLinksArray.size()]));
 		
 		final Collection<XmlObject> xmlCollectorsArray = new LinkedList<XmlObject>();
 		for (final Collector collector : this.getCollectors()) {
-			xmlCollectorsArray.add(collector.getXmlTransferable());
+			xmlCollectorsArray.add(collector.getXmlTransferable(importType));
 		}
 		xmlCollectors.setCollectorArray(xmlCollectorsArray.toArray(new XmlCollector[xmlCollectorsArray.size()]));
 		
@@ -1032,24 +1031,30 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		return xmlMap;
 	}
 
-	Map(final Identifier creatorId,
-			final StorableObjectVersion version,
-			final Identifier domainId,
-			final XmlMap xmlMap,
-			final ClonedIdsPool clonedIdsPool,
-			final String importType) throws CreateObjectException, ApplicationException {
-
-		super(clonedIdsPool.getClonedId(MAP_CODE, xmlMap.getId()),
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 * @param domainId
+	 */
+	private Map(final Identifier id,
+			final Date created,
+			final Identifier creatorId,
+			final Identifier domainId) {
+		super(id,
+				created,
+				created,
 				creatorId,
 				creatorId,
-				version,
+				StorableObjectVersion.createInitial(),
 				domainId);
-		this.fromXmlTransferable(xmlMap, clonedIdsPool, importType);
 	}
 
-	public void fromXmlTransferable(final XmlMap xmlMap, final ClonedIdsPool clonedIdsPool, String importType) throws ApplicationException {
+	public void fromXmlTransferable(final XmlMap xmlMap,
+			final String importType)
+	throws ApplicationException {
 		this.name = xmlMap.getName();
 		this.description = xmlMap.getDescription();
 
@@ -1086,59 +1091,54 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		}
 
 		for (final XmlTopologicalNode xmlTopologicalNode : xmlMap.getTopologicalNodes().getTopologicalNodeArray()) {
-			this.addNode(TopologicalNode.createInstance(this.creatorId, importType, xmlTopologicalNode, clonedIdsPool));
+			this.addNode(TopologicalNode.createInstance(this.creatorId, importType, xmlTopologicalNode));
 		}
 
 		for (final XmlSiteNode xmlSiteNode : xmlMap.getSiteNodes().getSiteNodeArray()) {
-			this.addNode(SiteNode.createInstance(this.creatorId, importType, xmlSiteNode, clonedIdsPool));
+			this.addNode(SiteNode.createInstance(this.creatorId, importType, xmlSiteNode));
 		}
 
 		for (final XmlPhysicalLink xmlPhysicalLink : xmlMap.getPhysicalLinks().getPhysicalLinkArray()) {
-			this.addPhysicalLink(PhysicalLink.createInstance(this.creatorId, importType, xmlPhysicalLink, clonedIdsPool));
+			this.addPhysicalLink(PhysicalLink.createInstance(this.creatorId, importType, xmlPhysicalLink));
 		}
 
 		for (final XmlNodeLink xmlNodeLink : xmlMap.getNodeLinks().getNodeLinkArray()) {
-			this.addNodeLink(NodeLink.createInstance(this.creatorId, importType, xmlNodeLink, clonedIdsPool));
+			this.addNodeLink(NodeLink.createInstance(this.creatorId, importType, xmlNodeLink));
 		}
 
 		for (final XmlCollector xmlCollector : xmlMap.getCollectors().getCollectorArray()) {
-			this.addCollector(Collector.createInstance(this.creatorId, importType, xmlCollector, clonedIdsPool));
+			this.addCollector(Collector.createInstance(this.creatorId, importType, xmlCollector));
 		}
 	}
 
+	/**
+	 * @param creatorId
+	 * @param domainId
+	 * @param importType
+	 * @param xmlMap
+	 * @throws CreateObjectException
+	 */
 	public static Map createInstance(
 			final Identifier creatorId,
 			final Identifier domainId,
 			final String importType,
-			final XmlMap xmlMap,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
-
+			final XmlMap xmlMap)
+	throws CreateObjectException {
 		try {
-			final XmlIdentifier xmlId = xmlMap.getId();
-			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
-			Map map = null;
-			if(existingIdentifier != null) {
-				map = StorableObjectPool.getStorableObject(existingIdentifier, true);
-				if(map != null) {
-					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
-					map.fromXmlTransferable(xmlMap, clonedIdsPool, importType);
-				}
-				else{
-					ImportUidMapDatabase.delete(importType, xmlId);
-				}
+			final Identifier id = Identifier.fromXmlTransferable(xmlMap.getId(), MAP_CODE, importType);
+			Map map = StorableObjectPool.getStorableObject(id, true);
+			if (map == null) {
+				map = new Map(id, new Date(), creatorId, domainId);
 			}
-			if(map == null) {
-				map = new Map(creatorId, StorableObjectVersion.createInitial(), domainId, xmlMap, clonedIdsPool, importType);
-				ImportUidMapDatabase.insert(importType, xmlId, map.id);
-			}
-			assert map.isValid() : OBJECT_STATE_ILLEGAL;
+			map.fromXmlTransferable(xmlMap, importType);
+			assert map.isValid() : OBJECT_BADLY_INITIALIZED;
 			map.markAsChanged();
-
 			return map;
-		} catch (Exception e) {
-			throw new CreateObjectException("Map.createInstance |  ", e);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
-
 }
-

@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.43 2005/09/04 19:03:10 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.44 2005/09/05 17:43:20 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,11 +10,13 @@
 
 package com.syrus.AMFICOM.client.map.command.map;
 
+import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.WARNING;
+
 import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Date;
-import java.util.logging.Level;
 
 import javax.swing.JDesktopPane;
 
@@ -36,7 +38,6 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -56,8 +57,8 @@ import com.syrus.util.Log;
  * самого окна карты. При этом в азголовке окна отображается информация о том,
  * что активной карты нет, и карта центрируется по умолчанию
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.43 $, $Date: 2005/09/04 19:03:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/09/05 17:43:20 $
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {
@@ -83,7 +84,7 @@ public class MapImportCommand extends ImportCommand {
 		if(this.mapFrame == null)
 			return;
 
-		Log.debugMessage("Importing map", Level.INFO);
+		Log.debugMessage("Importing map", INFO);
 
 		final String fileName = ImportCommand
 				.openFileForReading(MapPropertiesManager.getLastDirectory());
@@ -195,8 +196,7 @@ public class MapImportCommand extends ImportCommand {
 						userId,
 						domainId,
 						xmlMap.getImportType(),
-						xmlMap,
-						new ClonedIdsPool());
+						xmlMap);
 				map.setName(map.getName()
 						+ "(imported "
 						+ MapPropertiesManager.getDateFormat()
@@ -228,11 +228,11 @@ public class MapImportCommand extends ImportCommand {
 				.setErrorListener(validationMessages));
 
 		if(!isXmlValid) {
-			Log.debugMessage("Invalid XML: ", Level.WARNING);
+			Log.debugMessage("Invalid XML: ", WARNING);
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
-				Log.debugMessage(error.getMessage(), Level.WARNING);
-				Log.debugMessage(error.getObjectLocation().toString(), Level.WARNING);
+				Log.debugMessage(error.getMessage(), WARNING);
+				Log.debugMessage(error.getObjectLocation().toString(), WARNING);
 			}
 		}
 		return isXmlValid;

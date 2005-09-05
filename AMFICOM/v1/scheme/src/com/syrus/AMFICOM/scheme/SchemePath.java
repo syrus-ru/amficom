@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.77 2005/08/31 20:17:24 bass Exp $
+ * $Id: SchemePath.java,v 1.78 2005/09/05 17:43:16 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.scheme;
 
+import static com.syrus.AMFICOM.configuration.EquipmentTypeCodename.MUFF;
 import static com.syrus.AMFICOM.general.ErrorMessages.CHILDREN_ALIEN;
 import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
@@ -41,7 +42,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
@@ -69,12 +69,13 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePathHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemePath;
 import com.syrus.util.Log;
+import com.syrus.util.Shitlet;
 
 /**
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/08/31 20:17:24 $
+ * @version $Revision: 1.78 $, $Date: 2005/09/05 17:43:16 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -323,9 +324,9 @@ public final class SchemePath extends StorableObject
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable()
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
 	 */
-	public XmlSchemePath getXmlTransferable() {
+	public XmlSchemePath getXmlTransferable(final String importType) {
 		throw new UnsupportedOperationException();
 	}
 
@@ -501,13 +502,11 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param xmlSchemePath
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	public void fromXmlTransferable(final XmlSchemePath xmlSchemePath,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();
@@ -579,11 +578,18 @@ public final class SchemePath extends StorableObject
 	/**
 	 * @param pathElement
 	 */
+	@Shitlet
 	public PathElement getNextNode(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
-		for (final PathElement pathElement1 : getPathMembers().tailSet(pathElement)) {
-			if (pathElement1.getKind().value() == IdlKind._SCHEME_ELEMENT && pathElement1.hasOpticalPort()) {
+		final Iterator<PathElement> pathElementIterator = this.getPathMembers().tailSet(pathElement).iterator();
+		assert pathElementIterator.hasNext();
+		pathElementIterator.next();
+		
+		while (pathElementIterator.hasNext()) {
+			final PathElement pathElement1 = pathElementIterator.next();
+			if (pathElement1.getKind().value() == IdlKind._SCHEME_ELEMENT
+					&& !pathElement1.getSchemeElement().getEquipmentType().getCodename().equals(MUFF.stringValue())) {
 				return pathElement1;
 			}
 		}
@@ -727,16 +733,14 @@ public final class SchemePath extends StorableObject
 	/**
 	 * @param pathElement
 	 */
+	@Shitlet
 	public PathElement getPreviousNode(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
-		if (pathElement.getKind().value() == IdlKind._SCHEME_ELEMENT && pathElement.hasOpticalPort()) {
-			return pathElement;
-		}
-
 		PathElement previousNode = null;
 		for (final PathElement pathElement1 : getPathMembers().headSet(pathElement)) {
-			if (pathElement1.getKind().value() == IdlKind._SCHEME_ELEMENT && pathElement1.hasOpticalPort()) {
+			if (pathElement1.getKind().value() == IdlKind._SCHEME_ELEMENT && 
+					!pathElement1.getSchemeElement().getEquipmentType().getCodename().equals(MUFF.stringValue())) {
 				previousNode = pathElement1;
 			}
 		}
@@ -797,25 +801,8 @@ public final class SchemePath extends StorableObject
 				&& (true || this.getPathMembers().headSet(pathElement).size() == pathElement.sequentialNumber);
 	}
 
-	/**
-	 * <code>startPathElement</code> and <code>endPathElement</code> may
-	 * be swapped, but must belong to this <code>SchemePath</code>.
-	 *
-	 * @param startPathElement
-	 * @param endPathElement
-	 * @param opticalLength
-	 */
-	private void setOpticalLength(final PathElement startPathElement, final PathElement endPathElement, final double opticalLength) {
-		final int greaterThan = endPathElement.compareTo(startPathElement);
-		assert greaterThan != 0;
-		if (greaterThan < 0) {
-			setOpticalLength(endPathElement, startPathElement, opticalLength);
-			return;
-		}
-		final SortedSet<PathElement> pathElements = getPathMembers();
-		assert assertContains(startPathElement): CHILDREN_ALIEN;
-		assert assertContains(endPathElement): CHILDREN_ALIEN;
-
+	@Shitlet
+	private double getOpticalLength(final SortedSet<PathElement> pathElements, final PathElement startPathElement, final PathElement endPathElement) {
 		double oldOpticalLength = 0;
 		for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
 			oldOpticalLength += SchemeUtils.getOpticalLength(pathElement);
@@ -824,20 +811,78 @@ public final class SchemePath extends StorableObject
 				break;
 			}
 		}
+		return oldOpticalLength;
+	}
+
+	@Shitlet
+	private void changeOpticalLength(final SortedSet<PathElement> pathElements, final PathElement startPathElement, final PathElement endPathElement, double coeff) {
+		if (Math.abs(coeff - 1) < .001) {
+			return;
+		}
+		for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
+			SchemeUtils.setOpticalLength(pathElement, SchemeUtils.getOpticalLength(pathElement) * coeff);
+			if (pathElement.getId().equals(endPathElement.getId())) {
+				break;
+			}
+		}
+	}
+
+	/**
+	 * <code>startPathElement</code> and <code>endPathElement</code> may
+	 * be swapped, but must belong to this <code>SchemePath</code>.
+	 *
+	 * @param startPathElement
+	 * @param endPathElement
+	 * @param opticalLength
+	 */
+	@Shitlet
+	private void setOpticalLength(final PathElement startPathElement, final PathElement endPathElement, final double opticalLength) {
+		final int greaterThan = endPathElement.compareTo(startPathElement);
+		assert greaterThan != 0;
+		if (greaterThan < 0) {
+			setOpticalLength(endPathElement, startPathElement, opticalLength);
+			return;
+		}
+		assert assertContains(startPathElement): CHILDREN_ALIEN;
+		assert assertContains(endPathElement): CHILDREN_ALIEN;
+		
+		final SortedSet<PathElement> pathElements = getPathMembers();
+		double oldOpticalLength = getOpticalLength(pathElements, startPathElement, endPathElement);
 		if (oldOpticalLength == 0) {
 			return;
 		}
 		
 		final double k = opticalLength / oldOpticalLength;
-		if (Math.abs(k - 1) < .001) {
+		changeOpticalLength(pathElements, startPathElement, endPathElement, k);
+	}
+
+	/**
+	 * <code>startPathElement</code> and <code>endPathElement</code> may
+	 * be swapped, but must belong to this <code>SchemePath</code>.
+	 *
+	 * @param startPathElement
+	 * @param endPathElement
+	 * @param increment
+	 */
+	@Shitlet
+	public void changeOpticalLength(final PathElement startPathElement, final PathElement endPathElement, final double increment) {
+		final int greaterThan = endPathElement.compareTo(startPathElement);
+		assert greaterThan != 0;
+		if (greaterThan < 0) {
+			changeOpticalLength(endPathElement, startPathElement, increment);
 			return;
 		}
-		for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
-			SchemeUtils.setOpticalLength(pathElement, SchemeUtils.getOpticalLength(pathElement) * k);
-//			if (pathElement == endPathElement) {}
-			if (pathElement.getId().equals(endPathElement.getId())) {
-				break;
-			}
+		assert assertContains(startPathElement): CHILDREN_ALIEN;
+		assert assertContains(endPathElement): CHILDREN_ALIEN;
+		
+		final SortedSet<PathElement> pathElements = getPathMembers();
+
+		double oldOpticalLength = getOpticalLength(pathElements, startPathElement, endPathElement);
+		if (oldOpticalLength == 0) {
+			return;
 		}
+
+		final double k = (oldOpticalLength + increment) / oldOpticalLength;
+		changeOpticalLength(pathElements, startPathElement, endPathElement, k);
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportUidMapDatabase.java,v 1.2 2005/08/31 13:24:21 bass Exp $
+ * $Id: ImportUidMapDatabase.java,v 1.3 2005/09/05 17:43:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,11 +39,13 @@ import com.syrus.util.database.DatabaseString;
 /**
  * @author Andrey Kroupennikov
  * @author $Author: bass $
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @module general
+ * @deprecated
  */
 @Shitlet
-public final class ImportUidMapDatabase {
+@Deprecated
+final class ImportUidMapDatabase {
 	private static final String TABLE_NAME_IMPORT_UID_MAP = "ImportUIDMap";
 	private static final String COLUMN_IMPORT_KIND = "import_kind";
 	private static final String COLUMN_FOREIGN_UID = "foreign_uid";

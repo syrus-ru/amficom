@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.102 2005/09/05 13:40:09 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.103 2005/09/05 17:43:15 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,12 @@ package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.ABSTRACT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.ArrayList;
@@ -25,14 +26,12 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -40,7 +39,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -56,7 +54,6 @@ import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLink;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkHelper;
 import com.syrus.AMFICOM.map.xml.XmlPhysicalLink;
@@ -72,8 +69,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.102 $, $Date: 2005/09/05 13:40:09 $
+ * @author $Author: bass $
+ * @version $Revision: 1.103 $, $Date: 2005/09/05 17:43:15 $
  * @module map
  */
 public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XmlBeansTransferable<XmlPhysicalLink> {
@@ -231,7 +228,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 					leftToRight,
 					topToBottom);
 
-			assert physicalLink.isValid() : OBJECT_STATE_ILLEGAL;
+			assert physicalLink.isValid() : OBJECT_BADLY_INITIALIZED;
 
 			physicalLink.markAsChanged();
 
@@ -271,7 +268,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	@Override
 	public Set<Identifiable> getDependencies() {
-		assert this.isValid() : OBJECT_STATE_ILLEGAL;
+		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(3);
 		dependencies.add(this.physicalLinkType);
 		dependencies.add(this.startNodeId);
@@ -454,7 +451,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		for(NodeLink nodeLink : returnedList) {
 			message += " " + nodeLink.getId().toString();
 		}
-		Log.debugMessage(message, Level.FINEST);
+		Log.debugMessage(message, FINEST);
 		return returnedList;
 	}
 
@@ -600,7 +597,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 */
 	public void removeNodeLink(final NodeLink nodeLink) {
 		this.nodeLinks.remove(nodeLink);
-		Log.debugMessage("For physical link " + this.id.toString() + " remove nodeLink = " + nodeLink.getId().toString(), Level.FINEST);
+		Log.debugMessage("For physical link " + this.id.toString() + " remove nodeLink = " + nodeLink.getId().toString(), FINEST);
 		this.nodeLinksSorted = false;
 		// there is no need to modify object. NodeLink is transient.
 	}
@@ -615,7 +612,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	public void addNodeLink(final NodeLink nodeLink) {
 		if (!this.nodeLinks.contains(nodeLink)) {
 			this.nodeLinks.add(nodeLink);
-			Log.debugMessage("For physical link " + this.id.toString() + " add nodeLink = " + nodeLink.getId().toString(), Level.FINEST);
+			Log.debugMessage("For physical link " + this.id.toString() + " add nodeLink = " + nodeLink.getId().toString(), FINEST);
 			this.nodeLinksSorted = false;
 			// there is no need to modify object. NodeLink is transient.
 		}
@@ -896,46 +893,51 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
-	public XmlPhysicalLink getXmlTransferable() {
+	public XmlPhysicalLink getXmlTransferable(final String importType) {
 		final XmlPhysicalLink xmlPhysicalLink = XmlPhysicalLink.Factory.newInstance();
-		xmlPhysicalLink.setId(this.id.getXmlTransferable());
+		xmlPhysicalLink.setId(this.id.getXmlTransferable(importType));
 		xmlPhysicalLink.setName(this.name);
 		xmlPhysicalLink.setDescription(this.description);
 		xmlPhysicalLink.setPhysicalLinkTypeCodename(this.getType().getCodename());
-		xmlPhysicalLink.setStartNodeId(this.startNodeId.getXmlTransferable());
-		xmlPhysicalLink.setEndNodeId(this.endNodeId.getXmlTransferable());
+		xmlPhysicalLink.setStartNodeId(this.startNodeId.getXmlTransferable(importType));
+		xmlPhysicalLink.setEndNodeId(this.endNodeId.getXmlTransferable(importType));
 		xmlPhysicalLink.setCity(this.city);
 		xmlPhysicalLink.setStreet(this.street);
 		xmlPhysicalLink.setBuilding(this.building);
 		return xmlPhysicalLink;
 	}
 
-	PhysicalLink(final Identifier creatorId,
-			final StorableObjectVersion version,
-			final XmlPhysicalLink xmlPhysicalLink,
-			final ClonedIdsPool clonedIdsPool,
-			final String importType) throws CreateObjectException, ApplicationException {
-
-		super(clonedIdsPool.getClonedId(PHYSICALLINK_CODE, xmlPhysicalLink.getId()),
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private PhysicalLink(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
 				creatorId,
 				creatorId,
-				version);
+				StorableObjectVersion.createInitial());
 		this.nodeLinks = new ArrayList<NodeLink>();
 		this.selected = false;
-		this.fromXmlTransferable(xmlPhysicalLink, clonedIdsPool, importType);
 	}
 
-	public void fromXmlTransferable(final XmlPhysicalLink xmlPhysicalLink, final ClonedIdsPool clonedIdsPool, final String importType) throws ApplicationException {
+	public void fromXmlTransferable(final XmlPhysicalLink xmlPhysicalLink,
+			final String importType)
+	throws ApplicationException {
 		this.name = xmlPhysicalLink.getName();
 		this.description = xmlPhysicalLink.getDescription();
 		this.city = xmlPhysicalLink.getCity();
 		this.street = xmlPhysicalLink.getStreet();
 		this.building = xmlPhysicalLink.getBuilding();
 
-		final Identifier startNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE, xmlPhysicalLink.getStartNodeId());
-		final Identifier endNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE, xmlPhysicalLink.getEndNodeId());
+		final Identifier startNodeId1 = Identifier.fromXmlTransferable(xmlPhysicalLink.getStartNodeId(), ABSTRACT_CODE, importType);
+		final Identifier endNodeId1 = Identifier.fromXmlTransferable(xmlPhysicalLink.getEndNodeId(), ABSTRACT_CODE, importType);
 
 		this.startNodeId = startNodeId1;
 		this.endNodeId = endNodeId1;
@@ -967,41 +969,32 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.binding = new PhysicalLinkBinding(this.physicalLinkType.getBindingDimension());
 	}
 
+	/**
+	 * @param creatorId
+	 * @param importType
+	 * @param xmlPhysicalLink
+	 * @throws CreateObjectException
+	 */
 	public static PhysicalLink createInstance(
 			final Identifier creatorId,
 			final String importType,
-			final XmlPhysicalLink xmlPhysicalLink,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
-
+			final XmlPhysicalLink xmlPhysicalLink)
+	throws CreateObjectException {
 		try {
-			final XmlIdentifier xmlId = xmlPhysicalLink.getId();
-			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
-			PhysicalLink physicalLink = null;
-			if(existingIdentifier != null) {
-				physicalLink = StorableObjectPool.getStorableObject(existingIdentifier, true);
-				if(physicalLink != null) {
-					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
-					physicalLink.fromXmlTransferable(xmlPhysicalLink, clonedIdsPool, importType);
-				}
-				else{
-					ImportUidMapDatabase.delete(importType, xmlId);
-				}
+			final Identifier id = Identifier.fromXmlTransferable(xmlPhysicalLink.getId(), PHYSICALLINK_CODE, importType);
+			PhysicalLink physicalLink = StorableObjectPool.getStorableObject(id, true);
+			if (physicalLink == null) {
+				physicalLink = new PhysicalLink(id, new Date(), creatorId);
 			}
-			if(physicalLink == null) {
-				physicalLink = new PhysicalLink(
-						creatorId,
-						StorableObjectVersion.createInitial(),
-						xmlPhysicalLink,
-						clonedIdsPool,
-						importType);
-				ImportUidMapDatabase.insert(importType, xmlId, physicalLink.id);
-			}
-			assert physicalLink.isValid() : OBJECT_STATE_ILLEGAL;
+			physicalLink.fromXmlTransferable(xmlPhysicalLink, importType);
+			assert physicalLink.isValid() : OBJECT_BADLY_INITIALIZED;
 			physicalLink.markAsChanged();
 			return physicalLink;
-		} catch (Exception e) {
-			System.out.println(xmlPhysicalLink);
-			throw new CreateObjectException("PhysicalLink.createInstance |  ", e);
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 }	

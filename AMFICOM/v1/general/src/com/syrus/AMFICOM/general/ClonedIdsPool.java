@@ -1,5 +1,5 @@
 /*-
- * $Id: ClonedIdsPool.java,v 1.7 2005/09/04 14:57:32 bass Exp $
+ * $Id: ClonedIdsPool.java,v 1.8 2005/09/05 17:43:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,12 +15,14 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/04 14:57:32 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/05 17:43:19 $
  * @author $Author: bass $
  * @module general
+ * @deprecated
  */
 @Shitlet
-public final class ClonedIdsPool {
+@Deprecated
+final class ClonedIdsPool {
 	private Map<String, Identifier> clonedIds = new HashMap<String, Identifier>();
 	
 	public Identifier getClonedId(final short entityCode,

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentType.java,v 1.85 2005/08/31 13:25:08 bass Exp $
+ * $Id: EquipmentType.java,v 1.86 2005/09/05 17:43:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,9 @@
 
 package com.syrus.AMFICOM.configuration;
 
-import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -25,7 +25,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
-import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -33,7 +32,6 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ImportUidMapDatabase;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
@@ -42,11 +40,11 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/08/31 13:25:08 $
+ * @version $Revision: 1.86 $, $Date: 2005/09/05 17:43:15 $
  * @author $Author: bass $
  * @module config
  */
@@ -99,61 +97,52 @@ public final class EquipmentType extends StorableObjectType implements Character
 		this.manufacturerCode = manufacturerCode;
 	}
 
-
-	@Shitlet
-	EquipmentType(final Identifier creatorId,
-			final StorableObjectVersion version,
-			final XmlEquipmentType xmlEquipmentType,
-			final ClonedIdsPool clonedIdsPool,
-			final String importType) throws CreateObjectException, ApplicationException {
-
-		super(clonedIdsPool.getClonedId(PORT_TYPE_CODE, xmlEquipmentType.getId()),
-				new Date(System.currentTimeMillis()),
-				new Date(System.currentTimeMillis()),
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private EquipmentType(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
 				creatorId,
 				creatorId,
-				version,
+				StorableObjectVersion.createInitial(),
 				"",
 				"");
-		this.fromXmlTransferable(xmlEquipmentType, clonedIdsPool, importType);
 	}
 
-	@SuppressWarnings("unused")
-	@Shitlet
-	private static EquipmentType createInstance(
+	/**
+	 * @param creatorId
+	 * @param importType
+	 * @param xmlEquipmentType
+	 * @throws CreateObjectException
+	 */
+	public static EquipmentType createInstance(
 			final Identifier creatorId,
 			final String importType,
-			final XmlEquipmentType xmlEquipmentType,
-			final ClonedIdsPool clonedIdsPool) throws CreateObjectException {
-
+			final XmlEquipmentType xmlEquipmentType)
+	throws CreateObjectException {
 		try {
-			final XmlIdentifier xmlId = xmlEquipmentType.getId();
-			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
-			EquipmentType portType = null;
-			if(existingIdentifier != null) {
-				portType = StorableObjectPool.getStorableObject(existingIdentifier, true);
-				if(portType != null) {
-					portType.fromXmlTransferable(xmlEquipmentType, clonedIdsPool, importType);
-				}
-				else{
-					ImportUidMapDatabase.delete(importType, xmlId);
-				}
+			final Identifier id = Identifier.fromXmlTransferable(xmlEquipmentType.getId(), EQUIPMENT_TYPE_CODE, importType);
+			EquipmentType equipmentType = StorableObjectPool.getStorableObject(id, true);
+			if (equipmentType == null) {
+				equipmentType = new EquipmentType(id, new Date(), creatorId);
 			}
-			if(portType == null) {
-				portType = portType = new EquipmentType(
-						creatorId,
-						StorableObjectVersion.createInitial(),
-						xmlEquipmentType,
-						clonedIdsPool,
-						importType);
-				ImportUidMapDatabase.insert(importType, xmlId, portType.id);
-			}
-			assert portType.isValid() : OBJECT_STATE_ILLEGAL;
-			portType.markAsChanged();
-			return portType;
-		} catch (Exception e) {
-			System.out.println(xmlEquipmentType);
-			throw new CreateObjectException("EquipmentType.createInstance |  ", e);
+			equipmentType.fromXmlTransferable(xmlEquipmentType, importType);
+			assert equipmentType.isValid() : OBJECT_BADLY_INITIALIZED;
+			equipmentType.markAsChanged();
+			return equipmentType;
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -184,7 +173,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 										manufacturer,
 										manufacturerCode);
 
-			assert equipmentType.isValid() : OBJECT_STATE_ILLEGAL;
+			assert equipmentType.isValid() : OBJECT_BADLY_INITIALIZED;
 
 			equipmentType.markAsChanged();
 
@@ -205,14 +194,12 @@ public final class EquipmentType extends StorableObjectType implements Character
 
 	/**
 	 * @param xmlEquipmentType
-	 * @param clonedIdsPool
 	 * @param importType
 	 * @throws ApplicationException
-	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, ClonedIdsPool, String)
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
 	public void fromXmlTransferable(final XmlEquipmentType xmlEquipmentType,
-			final ClonedIdsPool clonedIdsPool,
 			final String importType)
 	throws ApplicationException {
 		this.name = xmlEquipmentType.getName();
@@ -244,12 +231,12 @@ public final class EquipmentType extends StorableObjectType implements Character
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable()
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
 	 */
 	@Shitlet
-	public XmlEquipmentType getXmlTransferable() {
+	public XmlEquipmentType getXmlTransferable(final String importType) {
 		final XmlEquipmentType xmlEquipmentType = XmlEquipmentType.Factory.newInstance();
-		xmlEquipmentType.setId(this.id.getXmlTransferable());
+		xmlEquipmentType.setId(this.id.getXmlTransferable(importType));
 		xmlEquipmentType.setName(this.name);
 		xmlEquipmentType.setCodename(this.codename);
 		xmlEquipmentType.setDescription(this.description);
