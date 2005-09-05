@@ -1,5 +1,5 @@
 /*-
- * $Id: ServiceItem.java,v 1.10 2005/09/02 14:20:49 bob Exp $
+ * $Id: ServiceItem.java,v 1.11 2005/09/05 08:57:50 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ package com.syrus.AMFICOM.logic;
 /**
  * Service item
  *
- * @version $Revision: 1.10 $, $Date: 2005/09/02 14:20:49 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/05 08:57:50 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter
@@ -27,10 +27,10 @@ public class ServiceItem extends PopulatableItem {
 	public ServiceItem(final String name) {
 		this.name = name;
 		serviceCount++;
-		this.setMaxChildrenCount(Integer.MAX_VALUE);
-		this.setCanHaveParent(true);
-		this.setCanHaveChildren(true);
-		this.setService(true);
+		super.maxChildrenCount = Integer.MAX_VALUE;
+		super.canHaveChildren = true;
+		super.canHaveParent = true;
+		super.service = true;
 	}
 
 
