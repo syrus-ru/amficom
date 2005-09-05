@@ -1,5 +1,5 @@
 /*-
- * $Id: Selection.java,v 1.25 2005/08/24 15:00:29 bass Exp $
+ * $Id: Selection.java,v 1.26 2005/09/05 09:38:04 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Набор выбранных элементов.
  *
- * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/08/24 15:00:29 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/09/05 09:38:04 $
  * @module mapview
  */
 public final class Selection extends MapTypedElementsContainer implements MapElement {
@@ -55,6 +55,7 @@ public final class Selection extends MapTypedElementsContainer implements MapEle
 	/**
 	 * {@inheritDoc}
 	 */
+	@Override
 	public DoublePoint getLocation() {
 		return super.getLocation();
 	}

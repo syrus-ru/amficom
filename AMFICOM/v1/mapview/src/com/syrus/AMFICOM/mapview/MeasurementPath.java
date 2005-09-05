@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.43 2005/08/24 15:00:29 bass Exp $
+ * $Id: MeasurementPath.java,v 1.44 2005/09/05 09:38:04 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Элемент пути.
  *
- * @author $Author: bass $
- * @version $Revision: 1.43 $, $Date: 2005/08/24 15:00:29 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.44 $, $Date: 2005/09/05 09:38:04 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -387,7 +387,7 @@ public final class MeasurementPath implements MapElement {
 	 * Get {@link #sortedNodeLinks}.
 	 * @return this.sortedNodeLinks
 	 */
-	public List getSortedNodeLinks() {
+	public List<NodeLink> getSortedNodeLinks() {
 		return Collections.unmodifiableList(this.sortedNodeLinks);
 	}
 
@@ -396,7 +396,7 @@ public final class MeasurementPath implements MapElement {
 	 * 
 	 * @return this.sortedNodes
 	 */
-	public List getSortedNodes() {
+	public List<AbstractNode> getSortedNodes() {
 		return Collections.unmodifiableList(this.sortedNodes);
 	}
 
