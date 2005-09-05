@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeModel.java,v 1.4 2005/09/01 14:21:40 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeModel.java,v 1.5 2005/09/05 07:58:03 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.client.reportbuilder;
 
 import java.util.Collection;
 
+import javax.swing.Icon;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
@@ -24,6 +25,7 @@ import com.syrus.AMFICOM.client.prediction.PredictionReportModel;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.ReportModelPool;
+import com.syrus.AMFICOM.client.report.ReportModel.ReportType;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 
@@ -187,9 +189,22 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 			node.addChild(new PopulatableIconedNode(
 				this,
 				item,
-				LangModelReport.getString(item),
-				UIManager.getIcon(ReportModel.getIconForReportType(
-					reportModel.getReportKind(item)))));
+				reportModel.getReportElementName(item),
+				this.getIconForReportType(reportModel.getReportKind(item)),
+				false));
 		}
+	}
+	
+	private Icon getIconForReportType(ReportType type){
+		if (type.equals(ReportType.TABLE))
+			return UIManager.getIcon(ReportBuilderResourceKeys.TABLE_TEMPLATE_ELEMENT);
+
+		if (type.equals(ReportType.SCHEMA))
+			return UIManager.getIcon(ReportBuilderResourceKeys.SCHEME_TEMPLATE_ELEMENT);
+
+		if (type.equals(ReportType.GRAPH))
+			return UIManager.getIcon(ReportBuilderResourceKeys.GRAPH_TEMPLATE_ELEMENT);
+
+		throw new AssertionError ("Unknown type of report");
 	}
 }

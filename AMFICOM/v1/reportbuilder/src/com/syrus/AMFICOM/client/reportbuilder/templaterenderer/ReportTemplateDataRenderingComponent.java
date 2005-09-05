@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateDataRenderingComponent.java,v 1.1 2005/09/01 14:21:40 peskovsky Exp $
+ * $Id: ReportTemplateDataRenderingComponent.java,v 1.2 2005/09/05 07:58:03 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ public class ReportTemplateDataRenderingComponent extends
 		super(dre);
 		
 		ReportModel reportModel = ReportModelPool.getModel(dre.getModelClassName());
-		this.reportName = reportModel.getReportElementName(dre);
+		this.reportName = reportModel.getReportElementName(dre.getReportName());
 		this.modelName = reportModel.getName();		
 	}
 	

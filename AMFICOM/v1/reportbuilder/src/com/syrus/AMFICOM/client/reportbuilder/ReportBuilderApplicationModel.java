@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderApplicationModel.java,v 1.4 2005/09/01 14:21:40 peskovsky Exp $
+ * $Id: ReportBuilderApplicationModel.java,v 1.5 2005/09/05 07:58:03 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -113,5 +113,15 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 		UIManager.put(
 				ReportBuilderResourceKeys.ICON_EXPORT_TEMPLATES,
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/save_template.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		//Для отображаемых в дереве item'ов
+		UIManager.put(
+				ReportBuilderResourceKeys.TABLE_TEMPLATE_ELEMENT,
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/table_report.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		UIManager.put(
+				ReportBuilderResourceKeys.SCHEME_TEMPLATE_ELEMENT,
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/scheme.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		UIManager.put(
+				ReportBuilderResourceKeys.GRAPH_TEMPLATE_ELEMENT,
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/graph_report.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 	}
 }
