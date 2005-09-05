@@ -6,10 +6,6 @@ public class LangModelSchedule {
 
 	private static final String			BUNDLE_NAME			= "com.syrus.AMFICOM.Client.General.lang.scheduler";
 
-	private static final String			OLDBUNDLE_NAME		= "com.syrus.AMFICOM.Client.General.lang.oldschedulerkey";
-	private static final ResourceBundle	OLDRESOURCE_BUNDLE	= ResourceBundle
-																	.getBundle(OLDBUNDLE_NAME);
-
 	private static final ResourceBundle	RESOURCE_BUNDLE		= ResourceBundle
 																	.getBundle(BUNDLE_NAME);
 	
@@ -26,35 +22,13 @@ public class LangModelSchedule {
 			String key = null;
 			
 			try {
-				throw new Exception();
+				throw new Exception(_keyName);
 			} catch (Exception e1) {
 				// TODO Auto-generated catch block
 				e1.printStackTrace();
 			}
 			
 			string = "!" + _keyName + "!";
-			try {
-				key = OLDRESOURCE_BUNDLE.getString(_keyName);
-				key = key.replaceAll("\\s+", "");
-			} catch (MissingResourceException ex) {
-				// nothing
-			}
-			if (key == null) {
-				try {
-					key = OLDRESOURCE_BUNDLE.getString(_keyName + "Text");
-					key = key.replaceAll("\\s+", "");
-				} catch (MissingResourceException ex) {
-					// nothing
-				}
-			}
-			if (key == null) {
-				try {
-					key = OLDRESOURCE_BUNDLE.getString(_keyName + "ToolTip");
-					key = key.replaceAll("\\s+", "");
-				} catch (MissingResourceException ex) {
-					// nothing
-				}
-			}
 
 			try {
 				String s = "key '"
