@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.165 2005/09/01 16:50:43 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.166 2005/09/05 21:01:01 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.165 $, $Date: 2005/09/01 16:50:43 $
+ * @version $Revision: 1.166 $, $Date: 2005/09/05 21:01:01 $
  * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -468,10 +468,16 @@ public final class StorableObjectPool {
 						storableObjects.add(storableObject);
 						objectPool.put(id, storableObject);
 					} else {
-						Log.errorMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | " +
-								"object " + id + " have not found during search, but after loading yet in the pool");
+						if (!storableObject.isChanged()) {
+							refresh(Collections.singleton(storableObject.getId()));
+							storableObjects.add(storableObject);
+						} else {
+							Log.errorMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Local version of object '" + id
+									+ "' do not match condition, but remote version matches condition; it is changed -- not returning it");
+						}
 					}
 				}
+
 			}
 		}
 
