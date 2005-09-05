@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImpl.java,v 1.3 2005/09/05 17:53:31 arseniy Exp $
+ * $Id: MCMImpl.java,v 1.4 2005/09/05 20:58:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/05 17:53:31 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/05 20:58:56 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -70,12 +70,17 @@ final class MCMImpl extends ServerCore implements MCMOperations {
 		final int length = testIdsT.length;
 		assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
 
-		final IdlIdentifierHolder userId = new IdlIdentifierHolder();
-		final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-		super.validateAccess(sessionKeyT, userId, domainId);
+		try {
+			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+			super.validateAccess(sessionKeyT, userId, domainId);
 
-		final Set<Identifier> ids = Identifier.fromTransferables(testIdsT);
-		Log.debugMessage("Request to stop " + testIdsT.length + " test(s): " + ids, Log.DEBUGLEVEL07);
-		MeasurementControlModule.stopTests(ids);
-	}	
-}
+			final Set<Identifier> ids = Identifier.fromTransferables(testIdsT);
+			Log.debugMessage("Request to stop " + testIdsT.length + " test(s): " + ids, Log.DEBUGLEVEL07);
+			MeasurementControlModule.stopTests(ids);
+		} catch (AMFICOMRemoteException are) {
+			throw are;
+		} catch (Throwable throwable) {
+			Log.errorException(throwable);
+		}
+	}}
