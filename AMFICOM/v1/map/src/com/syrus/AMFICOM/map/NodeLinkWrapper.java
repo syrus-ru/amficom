@@ -1,5 +1,5 @@
 /*
- * $Id: NodeLinkWrapper.java,v 1.13 2005/08/12 10:05:08 arseniy Exp $
+ * $Id: NodeLinkWrapper.java,v 1.14 2005/09/05 10:36:59 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/12 10:05:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/09/05 10:36:59 $
+ * @author $Author: max $
  * @module map
  */
 public class NodeLinkWrapper extends StorableObjectWrapper<NodeLink> {
@@ -83,13 +84,13 @@ public class NodeLinkWrapper extends StorableObjectWrapper<NodeLink> {
 				return nodeLink.getName();
 			}
 			else if (key.equals(COLUMN_PHYSICAL_LINK_ID)) {
-				return nodeLink.getPhysicalLink();
+				return nodeLink.getPhysicalLinkId();
 			}
 			else if (key.equals(COLUMN_START_NODE_ID)) {
-				return nodeLink.getStartNode();
+				return nodeLink.getStartNodeId();
 			}
 			else if (key.equals(COLUMN_END_NODE_ID)) {
-				return nodeLink.getEndNode();
+				return nodeLink.getEndNodeId();
 			}
 			else if (key.equals(COLUMN_LENGTH)) {
 				return new Double(nodeLink.getLength());
@@ -113,13 +114,13 @@ public class NodeLinkWrapper extends StorableObjectWrapper<NodeLink> {
 				nodeLink.setName((String) value);
 			}
 			else if (key.equals(COLUMN_PHYSICAL_LINK_ID)) {
-				nodeLink.setPhysicalLink((PhysicalLink) value);
+				nodeLink.setPhysicalLinkId((Identifier) value);
 			}
 			else if (key.equals(COLUMN_START_NODE_ID)) {
-				nodeLink.setStartNode((AbstractNode) value);
+				nodeLink.setStartNodeId((Identifier) value);
 			}
 			else if (key.equals(COLUMN_END_NODE_ID)) {
-				nodeLink.setEndNode((AbstractNode) value);
+				nodeLink.setEndNodeId((Identifier) value);
 			}
 			else if (key.equals(COLUMN_LENGTH)) {
 				nodeLink.setLength(((Double) value).doubleValue());
