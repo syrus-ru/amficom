@@ -135,8 +135,14 @@ public class TunnelLayout implements PropertyChangeListener {
 		removeSelection();
 		this.activeCoordinates = this.binding.getBinding(or);
 
-		if(this.activeCoordinates != null)
-			this.ugoTabbedPane.getGraph().setSelectionCell(this.cells[this.activeCoordinates.x][this.activeCoordinates.y]);
+		if(this.activeCoordinates != null) {
+			EllipseCell cell = this.cells[this.activeCoordinates.x][this.activeCoordinates.y];
+			GraphActions.setObjectBackColor(
+					this.ugoTabbedPane.getGraph(),
+					cell,
+					Color.YELLOW);
+			this.ugoTabbedPane.getGraph().setSelectionCell(cell);
+		}
 	}
 	
 	public void setActiveCoordinates(IntPoint activeCoordinates) {
