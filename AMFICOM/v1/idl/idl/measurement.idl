@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.79 2005/08/29 15:56:30 arseniy Exp $
+ * $Id: measurement.idl,v 1.80 2005/09/05 08:45:48 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -264,7 +264,8 @@ module measurement {
 				TEST_STATUS_SCHEDULED,	//Передан на МУИ и сохранён в БД
 				TEST_STATUS_PROCESSING,	//Извлечён из очереди; первое измерение начинает выполняться
 				TEST_STATUS_COMPLETED,	//Последнее измерение завершено
-				TEST_STATUS_ABORTED	//Прерван
+				TEST_STATUS_ABORTED,	//Прерван
+				TEST_STATUS_STOPPED	//Остановлен по запросу
 			};
 
 			public IdlTestTimeStamps timeStamps;
