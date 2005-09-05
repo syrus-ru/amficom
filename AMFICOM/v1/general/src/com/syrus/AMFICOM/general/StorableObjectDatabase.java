@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.185 2005/08/28 16:40:20 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.186 2005/09/05 16:31:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.185 $, $Date: 2005/08/28 16:40:20 $
+ * @version $Revision: 1.186 $, $Date: 2005/09/05 16:31:32 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -242,10 +242,12 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.retrieveEntity | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
-			if (resultSet.next())
+			if (resultSet.next()) {
 				this.updateEntityFromResultSet(storableObject, resultSet);
-			else
+			}
+			else {
 				throw new ObjectNotFoundException("No such " + getEntityName() + ": " + strorableObjectIdStr);
+			}
 		} catch (SQLException sqle) {
 			final String mesg = this.getEntityName() + "Database.retrieveEntity | Cannot retrieve " + getEntityName()
 					+ " '" + strorableObjectIdStr + "' -- " + sqle.getMessage();
@@ -295,7 +297,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			Log.debugMessage(this.getEntityName() + "Database.retrieveByCondition | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql);
 			while (resultSet.next()) {
-				T storableObject = this.updateEntityFromResultSet(null, resultSet);
+				final T storableObject = this.updateEntityFromResultSet(null, resultSet);
 				storableObjects.add(storableObject);
 			}
 		} catch (SQLException sqle) {
