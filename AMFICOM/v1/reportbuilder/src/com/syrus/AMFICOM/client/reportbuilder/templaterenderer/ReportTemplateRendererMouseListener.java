@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRendererMouseListener.java,v 1.2 2005/09/03 12:42:20 peskovsky Exp $
+ * $Id: ReportTemplateRendererMouseListener.java,v 1.3 2005/09/05 12:22:51 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,8 +7,7 @@
  */
 package com.syrus.AMFICOM.client.reportbuilder.templaterenderer;
 
-import java.awt.Image;
-import java.awt.Toolkit;
+import java.awt.Dimension;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.image.BufferedImage;
@@ -16,10 +15,8 @@ import java.io.File;
 import java.io.IOException;
 
 import javax.imageio.ImageIO;
-import javax.swing.BorderFactory;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.border.BevelBorder;
 
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -95,14 +92,15 @@ public class ReportTemplateRendererMouseListener implements MouseListener {
 				JOptionPane.ERROR_MESSAGE);
 				
 			this.applicationContext.getDispatcher().firePropertyChange(
-				new ReportFlagEvent(this,ReportFlagEvent.IMAGE_CREATION_CANCELED));
+				new ReportFlagEvent(this,ReportFlagEvent.SPECIAL_MODE_CANCELED));
 				
 			return;
 		}
 					
 		ImageStorableElement element = new ImageStorableElement();
 		element.setLocation(x,y);
-		element.setSize(new IntDimension(ImageStorableElement.DEFAULT_IMAGE_SIZE));
+		Dimension defaultSize = ImageRenderingComponent.DEFAULT_IMAGE_SIZE;
+		element.setSize(new IntDimension(defaultSize.width,defaultSize.height));
 		element.setImage(elementImage);
 		 
 		//TODO Где создавать компонент?
@@ -117,13 +115,13 @@ public class ReportTemplateRendererMouseListener implements MouseListener {
 		this.applicationContext.getDispatcher().firePropertyChange(
 			new ReportFlagEvent(this,ReportFlagEvent.REPAINT_RENDERER));
 		this.applicationContext.getDispatcher().firePropertyChange(
-			new ReportFlagEvent(this,ReportFlagEvent.IMAGE_CREATION_CANCELED));			
+			new ReportFlagEvent(this,ReportFlagEvent.SPECIAL_MODE_CANCELED));			
 	}
 
 	private void createTextRenderingComponent(int x, int y){
 		AttachedTextStorableElement element = new AttachedTextStorableElement();
 		element.setLocation(x,y);
-		element.setSize(new IntDimension(AttachedTextStorableElement.MINIMUM_COMPONENT_SIZE));
+		element.setSize(new IntDimension(AttachedTextComponent.MINIMUM_COMPONENT_SIZE));
 		 
 		//TODO Где создавать компонент?
 		AttachedTextComponent component = new AttachedTextComponent(element);
@@ -136,16 +134,18 @@ public class ReportTemplateRendererMouseListener implements MouseListener {
 		component.addMouseListener(ATComponentMouseListener.getInstance());
 		component.addMouseMotionListener(ATComponentMouseMotionListener.getInstance());
 		component.addKeyListener(ATComponentKeyListener.getInstance());
-		this.applicationContext.getDispatcher().addPropertyChangeListener(
-				ReportEvent.TYPE,
+		component.setATPropertyChangeListener(
 				new ATComponentPropertyChangeListener(
 						component,
 						this.applicationContext));
+		this.applicationContext.getDispatcher().addPropertyChangeListener(
+				ReportEvent.TYPE,
+				component.getATPropertyChangeListener());
 		
 		this.applicationContext.getDispatcher().firePropertyChange(
 			new ReportFlagEvent(this,ReportFlagEvent.REPAINT_RENDERER));
 		this.applicationContext.getDispatcher().firePropertyChange(
-			new ReportFlagEvent(this,ReportFlagEvent.LABEL_CREATION_CANCELED));			
+			new ReportFlagEvent(this,ReportFlagEvent.SPECIAL_MODE_CANCELED));			
 	}
 	
 	private String getImageFileName() {

@@ -1,6 +1,5 @@
 package com.syrus.AMFICOM.report;
 
-import java.awt.Dimension;
 import java.awt.Font;
 import java.io.IOException;
 
@@ -51,40 +50,13 @@ public final class AttachedTextStorableElement extends StorableElement
 	 */
 	private int distanceY = 0;
 
-	public static final IntDimension MINIMUM_COMPONENT_SIZE = new IntDimension(90,30);
-	
 	public AttachedTextStorableElement (IntPoint location)
 	{
 		this.setLocation(location);
 	}
 	
 	/**
-	 * @deprecated
-	 * Задаёт привязку по горизонтали
-	 * @param hAttacher объект, к которому осуществляется привязка
-	 * @param attachmentType тип привязки
-	 */
-	public void setHorizontalAttachment(
-			DataStorableElement hAttacher,
-			String attachmentType)
-	{
-		if (attachmentType == null)
-			throw new AssertionError("AttachedTextRenderingElement.setHorizAttachment | attachmentType can't be null!");
-		
-		this.horizAttacher = hAttacher;
-		this.horizontalAttachType = attachmentType;
-		//Фиксируем расстояние до соответсвующего края объекта, к которому
-		//осуществлена привязка
-		if (this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT))		
-			this.distanceX = this.getX();
-		else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT))
-			this.distanceX = this.getX() - this.horizAttacher.getX();
-		else if (this.horizontalAttachType.equals(TextAttachingType.TO_RIGHT))
-			this.distanceX = this.getX() - (this.horizAttacher.getX() + this.horizAttacher.getWidth());
-	}
-
-	/**
-	 * Задаёт привязку по горизонтали
+	 * Задаёт привязку.
 	 * @param attacher объект, к которому осуществляется привязка
 	 * @param attachmentType тип привязки
 	 */
@@ -125,32 +97,6 @@ public final class AttachedTextStorableElement extends StorableElement
 			}
 	}
 	
-	/**
-	 * @deprecated
-	 * Задаёт привязку по вертикали
-	 * @param vAttacher объект, к которому осуществляется привязка
-	 * @param attachmentType тип привязки
-	 */
-	public void setVerticalAttachment(
-			DataStorableElement vAttacher,
-			String attachmentType)
-	{
-		if (attachmentType == null)
-			throw new AssertionError("AttachedTextRenderingElement.setVertAttachment | attachmentType can't be null!");
-		
-		this.vertAttacher = vAttacher;
-		this.verticalAttachType = attachmentType;
-		
-		//Фиксируем расстояние до соответсвующего края объекта, к которому
-		//осуществлена привязка
-		if (this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP))		
-			this.distanceY = this.getY();
-		else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP))
-			this.distanceY = this.getY() - this.vertAttacher.getY();
-		else if (this.verticalAttachType.equals(TextAttachingType.TO_BOTTOM))
-			this.distanceY = this.getY() - (this.vertAttacher.getY() + this.vertAttacher.getHeight());
-	}
-
 	public Font getFont() {
 		return this.font;
 	}
@@ -175,56 +121,6 @@ public final class AttachedTextStorableElement extends StorableElement
 		return this.verticalAttachType;
 	}
 
-//	/**
-//	 * @return Возвращает габариты строки, отображаемой надписью
-//	 */
-//	public Dimension getContentBounds()
-//	{
-//		String strToConsider = this.getText();
-//		if (strToConsider.equals(""))
-//			strToConsider = " ";
-//
-//		int stringCount = 0;
-//
-//		int maxStringLength = 0;
-//		int mSLstartIndex = 0;
-//
-//		int stringStart = 0;
-//		for (int i = 0; i < strToConsider.length(); i++)
-//			if ((strToConsider.charAt(i) == '\n') ||
-//				(i == strToConsider.length() - 1))
-//			{
-//				int curStringLength = i - stringStart;
-//				if (i == strToConsider.length() - 1)
-//					curStringLength++;
-//
-//				if (curStringLength > maxStringLength)
-//				{
-//					maxStringLength = curStringLength;
-//					mSLstartIndex = stringStart;
-//				}
-//				stringCount++;
-//				stringStart = i + 1;
-//			}
-//
-//		Dimension result = new Dimension();
-//
-//		result.height =
-//			(this.getFont().getStringBounds(
-//			strToConsider,
-//			new FontRenderContext(null, true, true))).
-//			getBounds().height * stringCount + 3;
-//
-//		result.width =
-//			(this.getFont().getStringBounds(
-//			strToConsider.substring(mSLstartIndex,
-//			mSLstartIndex + maxStringLength),
-//			new FontRenderContext(null, true, true))).
-//			getBounds().width + 3;
-//
-//		return result;
-//	}
-	
 	/**
 	 * Данный класс НЕ выполняет интерфейс Serializable, поскольку при чтении из потока
 	 * ему необходим список DataRenderingElement'ов для установки attacher'ов. Данные
@@ -311,12 +207,28 @@ public final class AttachedTextStorableElement extends StorableElement
 
 		this.setLocation(newX, newY);
 	}
-
-	public void setDistanceX(int distanceX) {
-		this.distanceX = distanceX;
-	}
-
-	public void setDistanceY(int distanceY) {
-		this.distanceY = distanceY;
+	
+	/**
+	 * Метод используется, чтобы изменить местоположение элемента с надписью
+	 * так, чтобы он находился на заданном при привязке расстоянии от
+	 * элемента отображения данных, к которому он привязан.
+	 */
+	public void refreshAttachingDistances()
+	{
+		if (this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT))
+			this.distanceX = this.getX();
+		else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT))
+			this.distanceX = this.getX() - this.horizAttacher.getX();			
+		else if (this.horizontalAttachType.equals(TextAttachingType.TO_RIGHT))
+			this.distanceX = this.getX() - this.horizAttacher.getX()
+				- this.horizAttacher.getWidth();			
+		
+		if (this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP))
+			this.distanceY = this.getY();			
+		else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP))
+			this.distanceY = this.getY() - this.vertAttacher.getY();
+		else if (this.verticalAttachType.equals(TextAttachingType.TO_BOTTOM))
+			this.distanceY = this.getY() - this.vertAttacher.getY()
+				- this.vertAttacher.getHeight();
 	}
 }

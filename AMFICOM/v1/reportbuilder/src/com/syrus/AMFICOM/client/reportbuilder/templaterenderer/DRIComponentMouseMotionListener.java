@@ -1,5 +1,5 @@
 /*
- * $Id: DRIComponentMouseMotionListener.java,v 1.1 2005/09/03 12:42:20 peskovsky Exp $
+ * $Id: DRIComponentMouseMotionListener.java,v 1.2 2005/09/05 12:22:51 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,12 +26,12 @@ import com.syrus.AMFICOM.resource.IntDimension;
 /**
  * MouseMotionListener for DataRenderingComponent и ImageRenderingComponent
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/09/03 12:42:20 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/05 12:22:51 $
  * @module reportclient_v1
  */
 public class DRIComponentMouseMotionListener implements MouseMotionListener{
 	/**
-	 * Величина поля шаблона - требуется, чтобы компоненты не вылезали
+	 * Габариты рабочегополя шаблона - требуется, чтобы компоненты не вылезали
 	 * на поля шаблона.
 	 */
 	private final Rectangle templateBounds;
@@ -55,6 +55,7 @@ public class DRIComponentMouseMotionListener implements MouseMotionListener{
 			ReportTemplate template,
 			ApplicationContext aContext){
 		this.applicationContext = aContext;
+		
 		this.templateBounds = new Rectangle();
 		int templateMarginSize = template.getMarginSize();
 		this.templateBounds.setLocation(
@@ -175,17 +176,18 @@ public class DRIComponentMouseMotionListener implements MouseMotionListener{
 		
 		component.setMousePressedLocation(mousePressedLocation);
 
-		if (	(this.templateBounds.x <= newLocation.x)
-			&&	(newLocation.x + newSize.width <= this.templateBounds.x + this.templateBounds.width)) {
-			component.setLocation(newLocation.x,component.getY());
-			component.setSize(newSize.width,component.getHeight());
-		}
+		if (newLocation.x < this.templateBounds.x)
+			newLocation.x = this.templateBounds.x;
+		else if (newLocation.x + newSize.width > this.templateBounds.x + this.templateBounds.width)
+			newLocation.x = this.templateBounds.x + this.templateBounds.width - newSize.width;
 
-		if (	(this.templateBounds.y <= newLocation.y)
-				&&	(newLocation.y + newSize.height <= this.templateBounds.y + this.templateBounds.height))	{
-			component.setLocation(component.getX(),newLocation.y);
-			component.setSize(component.getWidth(),newSize.height);
-		}
+		if (newLocation.y < this.templateBounds.y)
+			newLocation.y = this.templateBounds.y;
+		else if (newLocation.y + newSize.height > this.templateBounds.y + this.templateBounds.height)
+			newLocation.y = this.templateBounds.y + this.templateBounds.height - newSize.height;
+
+		component.setLocation(newLocation);
+		component.setSize(newSize);
 		
 		StorableElement element = component.getElement();
 		element.setLocation(component.getX(),component.getY());

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.2 2005/09/03 12:42:20 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.3 2005/09/05 12:22:51 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.client.reportbuilder.templaterenderer;
 
 import java.awt.Color;
 import java.awt.Graphics;
+import java.awt.dnd.DropTarget;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
@@ -37,6 +38,10 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	private ApplicationContext aContext; 
 //	public RenderingComponentsContainer componentsContainer;
 	private ReportTemplateRendererMouseListener mouseListener = null;
+	
+	private DropTarget dropTarget = null;	
+	private ReportTemplateRendererDropTargetListener dropTargetListener = null;	
+	
 	private ReportTemplate template = null;
 	private RenderingComponent selectedComponent = null;
 	
@@ -51,13 +56,17 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	public void setContext(ApplicationContext aContext){
 		if (this.aContext != null) {
 			this.aContext.getDispatcher().removePropertyChangeListener(ReportEvent.TYPE, this);
-			this.removeMouseListener(this.mouseListener);			
+			this.removeMouseListener(this.mouseListener);
+			this.dropTarget.removeDropTargetListener(this.dropTargetListener);
 		}
 		if (aContext != null) {
 			this.aContext = aContext;
 			this.aContext.getDispatcher().addPropertyChangeListener(ReportEvent.TYPE, this);
 			this.mouseListener = new ReportTemplateRendererMouseListener(this,this.aContext);
-			this.addMouseListener(this.mouseListener);			
+			this.addMouseListener(this.mouseListener);
+			
+			this.dropTargetListener = new ReportTemplateRendererDropTargetListener(this,this.aContext);
+			this.dropTarget = new DropTarget(this, this.dropTargetListener);
 		}
 	}
 	
@@ -72,10 +81,27 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				RendererMode.setMode(MODE.CREATE_LABEL);
 			else if (eventType.equals(ReportFlagEvent.IMAGE_CREATION_STARTED))
 				RendererMode.setMode(MODE.CREATE_IMAGE);
-			else if (	eventType.equals(ReportFlagEvent.LABEL_CREATION_CANCELED)
-					||	eventType.equals(ReportFlagEvent.IMAGE_CREATION_CANCELED))
+			else if (eventType.equals(ReportFlagEvent.SPECIAL_MODE_CANCELED))
 				RendererMode.setMode(MODE.NO_SPECIAL);
 			else if (eventType.equals(ReportFlagEvent.DELETE_OBJECT)) {
+				if (this.selectedComponent instanceof DataRenderingComponent) {
+					DataRenderingComponent drComponent =
+						(DataRenderingComponent) this.selectedComponent;
+					
+					drComponent.removeMouseListener(DRIComponentMouseListener.getInstance());
+					drComponent.removeMouseMotionListener(DRIComponentMouseMotionListener.getInstance());
+				}
+				else if (this.selectedComponent instanceof AttachedTextComponent) {
+					AttachedTextComponent atComponent =
+						(AttachedTextComponent) this.selectedComponent;
+					
+					atComponent.removeMouseListener(ATComponentMouseListener.getInstance());
+					atComponent.removeMouseMotionListener(ATComponentMouseMotionListener.getInstance());
+					atComponent.removeKeyListener(ATComponentKeyListener.getInstance());
+					this.aContext.getDispatcher().removePropertyChangeListener(
+							ReportEvent.TYPE,
+							atComponent.getATPropertyChangeListener());
+				}
 				this.remove((JComponent)this.selectedComponent);
 				this.selectedComponent = null;				
 				ReportTemplateRenderer.this.repaint();
@@ -90,7 +116,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			this.setTemplate(((NewReportTemplateEvent)evt).getReportTemplate());
 			DRIComponentMouseMotionListener.createInstance(this.template,this.aContext);
 			DRIComponentMouseListener.createInstance(this.aContext);			
-			ATComponentMouseMotionListener.createInstance(this.aContext);
+			ATComponentMouseMotionListener.createInstance(this.aContext,this.template);
 			ATComponentMouseListener.createInstance(this.aContext);
 			ATComponentKeyListener.createInstance(this.aContext);			
 		}
@@ -105,7 +131,11 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 					textElement.setAttachment(
 							dataElement,
 							this.labelAttachingType);
-					RendererMode.setMode(MODE.NO_SPECIAL);
+					
+					textElement.setModified(System.currentTimeMillis());
+					
+					this.aContext.getDispatcher().firePropertyChange(
+							new ReportFlagEvent(this,ReportFlagEvent.SPECIAL_MODE_CANCELED),true);			
 				}
 			}
 			else if (RendererMode.getMode().equals(MODE.NO_SPECIAL))

@@ -1,5 +1,5 @@
 /*
- * $Id: TemplateRendererInnerToolbar.java,v 1.2 2005/09/03 12:42:21 peskovsky Exp $
+ * $Id: TemplateRendererInnerToolbar.java,v 1.3 2005/09/05 12:22:51 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -212,11 +212,9 @@ public final class TemplateRendererInnerToolbar extends JToolBar implements Prop
 			return;
 		
 		String eventType = ((ReportFlagEvent)pce).getEventType();
-		if (eventType.equals(ReportFlagEvent.IMAGE_CREATION_CANCELED)) {
+		if (eventType.equals(ReportFlagEvent.SPECIAL_MODE_CANCELED)) {
 			this.insertImageButton.setSelected(false);
-		}
-		else if (eventType.equals(ReportFlagEvent.LABEL_CREATION_CANCELED)) {
-			this.insertLabelButton.setSelected(false);
+			this.insertLabelButton.setSelected(false);			
 		}
 	}
 }

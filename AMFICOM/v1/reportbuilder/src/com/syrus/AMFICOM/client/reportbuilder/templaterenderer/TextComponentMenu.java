@@ -1,5 +1,5 @@
 /*
- * $Id: TextComponentMenu.java,v 1.1 2005/09/03 12:42:20 peskovsky Exp $
+ * $Id: TextComponentMenu.java,v 1.2 2005/09/05 12:22:51 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.report.AttachedTextComponent;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.reportbuilder.event.AttachLabelEvent;
+import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.TextAttachingType;
 
@@ -45,6 +46,7 @@ public class TextComponentMenu extends JPopupMenu {
 					(AttachedTextStorableElement)component.getElement();
 				
 				FontChooserDialog fcDialog = FontChooserDialog.getInstance(element.getFont());
+				TextComponentMenu.this.setVisible(false);				
 				fcDialog.setVisible(true);
 				if (FontChooserDialog.selectedFont == null)
 					return;
@@ -107,7 +109,7 @@ public class TextComponentMenu extends JPopupMenu {
 							component,
 							newAttachmentType));
 				
-				element.setModified(System.currentTimeMillis());
+				TextComponentMenu.this.setVisible(false);				
 			}
 		});
 
@@ -164,7 +166,8 @@ public class TextComponentMenu extends JPopupMenu {
 							this,
 							component,
 							newAttachmentType));
-				element.setModified(System.currentTimeMillis());
+				
+				TextComponentMenu.this.setVisible(false);				
 			}
 		});
 
@@ -177,9 +180,11 @@ public class TextComponentMenu extends JPopupMenu {
 				AttachedTextStorableElement element =
 					(AttachedTextStorableElement)component.getElement();
 
-				element.setHorizontalAttachment(null, TextAttachingType.TO_FIELDS_LEFT);
-				element.setVerticalAttachment(null, TextAttachingType.TO_FIELDS_TOP);
+				element.setAttachment(null, TextAttachingType.TO_FIELDS_LEFT);
+				element.setAttachment(null, TextAttachingType.TO_FIELDS_TOP);
 				element.setModified(System.currentTimeMillis());
+				
+				TextComponentMenu.this.setVisible(false);
 			}
 		});
 		this.add(mi1);

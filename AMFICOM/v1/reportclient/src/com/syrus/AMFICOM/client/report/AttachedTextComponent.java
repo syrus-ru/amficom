@@ -1,5 +1,5 @@
 /*
- * $Id: AttachedTextComponent.java,v 1.4 2005/09/05 06:05:13 peskovsky Exp $
+ * $Id: AttachedTextComponent.java,v 1.5 2005/09/05 12:22:51 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,13 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.geom.Rectangle2D;
+import java.beans.PropertyChangeListener;
 
 import javax.swing.BorderFactory;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
 import javax.swing.border.Border;
 
-import com.syrus.AMFICOM.client.UI.MultiRowString;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.StorableElement;
 import com.syrus.AMFICOM.resource.IntDimension;
@@ -29,7 +29,8 @@ public class AttachedTextComponent extends JTextPane implements RenderingCompone
 	private static final long serialVersionUID = 8382110834808763027L;
 	
 	public static Border DEFAULT_BORDER = BorderFactory.createLineBorder(Color.BLACK,1);
-	public static Font DEFAULT_FONT = new Font("Times New Roman",Font.BOLD,20);	
+	public static Font DEFAULT_FONT = new Font("Times New Roman",Font.BOLD,20);
+	
 	protected final AttachedTextStorableElement textRenderingElement;
 	
 	/**
@@ -39,16 +40,21 @@ public class AttachedTextComponent extends JTextPane implements RenderingCompone
 	/**
 	 * А это "довесок" - потому что он хреново определяет ширину таких символов, как ";"
 	 */
-	private static final String SYMBOLS_FOR_ADDITONAL_WIDTH1 = "x";	
+	private static final String SYMBOLS_FOR_ADDITONAL_WIDTH1 = "X";
+
+	public static final IntDimension MINIMUM_COMPONENT_SIZE = new IntDimension(90, 30);	
 	/**
 	 * Точка клика мыши на надписи
 	 */
 	private Point mousePressedLocation = new Point();
+	
+	private PropertyChangeListener atPropertyChangeListener = null;
 
 	public AttachedTextComponent(AttachedTextStorableElement atre) {
 		this.textRenderingElement = atre;
 		//Выставляется шрифт по умолчанию
 		this.setFont(DEFAULT_FONT);
+		this.getCaret().setBlinkRate(500);
 	}
 
 	@Override
@@ -69,12 +75,12 @@ public class AttachedTextComponent extends JTextPane implements RenderingCompone
 	 * Чтобы надпись всегда можно было разглядеть на экране
 	 * ей выставляется минимальная величина.
 	 */
-	public void checkComponentWidth()
-	{
-		IntDimension minimumSize = AttachedTextStorableElement.MINIMUM_COMPONENT_SIZE;
+	public void checkComponentWidth() {
 		this.setSize(
-			this.getWidth() > minimumSize.getWidth() ? this.getWidth() : minimumSize.getWidth(),
-			this.getHeight() > minimumSize.getHeight() ? this.getHeight() : minimumSize.getHeight());
+			this.getWidth() > MINIMUM_COMPONENT_SIZE.getWidth()
+				? this.getWidth() : MINIMUM_COMPONENT_SIZE.getWidth(),
+			this.getHeight() > MINIMUM_COMPONENT_SIZE.getHeight()
+				? this.getHeight() : MINIMUM_COMPONENT_SIZE.getHeight());
 	}
 
 	/**
@@ -82,20 +88,6 @@ public class AttachedTextComponent extends JTextPane implements RenderingCompone
 	 * @return Dimension с габаритами
 	 */
 	public Dimension getTextSize() {
-//		String text = this.textRenderingElement.getText() + SYMBOLS_FOR_ADDITONAL_WIDTH1;
-//		FontMetrics fontMetrics = this.getGraphics().getFontMetrics();
-//
-//		MultiRowString multiRowString = new MultiRowString(text);
-//		int maxsize = SwingUtilities.computeStringWidth(fontMetrics, multiRowString.get(0));
-//		for(int i = 1; i < multiRowString.getRowCount(); i++)
-//			maxsize = Math.max(
-//					maxsize, 
-//					SwingUtilities.computeStringWidth(fontMetrics, multiRowString.get(i)));
-//		
-//		Dimension result = new Dimension(
-//				maxsize,
-//				fontMetrics.getHeight() * multiRowString.getRowCount());
-		
 		//Написан свой вариант расчёта размера текста, поскольку
 		//стандартный StringTokenizer глючит при работе с пустыми строками.
 		String text = this.textRenderingElement.getText();
@@ -174,5 +166,13 @@ public class AttachedTextComponent extends JTextPane implements RenderingCompone
 
 	public void setHeight(int height) {
 		this.setSize(this.getWidth(),height);
+	}
+	
+	public void setATPropertyChangeListener(PropertyChangeListener listener) {
+		this.atPropertyChangeListener = listener;
+	}
+	
+	public PropertyChangeListener getATPropertyChangeListener() {
+		return this.atPropertyChangeListener;
 	}
 }

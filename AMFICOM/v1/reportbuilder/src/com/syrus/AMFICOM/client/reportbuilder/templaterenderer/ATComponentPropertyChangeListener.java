@@ -1,5 +1,5 @@
 /*
- * $Id: ATComponentPropertyChangeListener.java,v 1.1 2005/09/03 12:42:20 peskovsky Exp $
+ * $Id: ATComponentPropertyChangeListener.java,v 1.2 2005/09/05 12:22:51 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEven
 import com.syrus.AMFICOM.client.reportbuilder.event.DRComponentMovedEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
-import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.StorableElement;
 
 public class ATComponentPropertyChangeListener implements PropertyChangeListener{
@@ -56,6 +55,7 @@ public class ATComponentPropertyChangeListener implements PropertyChangeListener
 		else if (evt instanceof ComponentSelectionChangeEvent) {
 			//TODO Вообще-то в этом событии надо хранить предыдущий выдленный элемент
 			//Или в ReportTemplateRenderer сделать соответствующие статические методы.
+			//А то лисенеры всех надписей на событие реагируют.
 			RenderingComponent component = 
 				((ComponentSelectionChangeEvent)evt).getRenderingComponent();
 			if (!this.textComponent.equals(component)){
@@ -66,6 +66,11 @@ public class ATComponentPropertyChangeListener implements PropertyChangeListener
 				this.textComponent.setSize(textSize.width,textSize.height);
 				//Проверяем, чтоб он был не меньше прдельного
 				this.textComponent.checkComponentWidth();
+				
+				//Убираем мигание каретки
+				this.textComponent.getCaret().setVisible(false);
+				this.textComponent.setEditable(false);
+				
 				//Выставляем размер хранимому элементу
 				StorableElement element = this.textComponent.getElement();
 				element.setSize(

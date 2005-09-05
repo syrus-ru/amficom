@@ -1,5 +1,5 @@
 /*
- * $Id: DRIComponentMouseListener.java,v 1.1 2005/09/03 12:42:20 peskovsky Exp $
+ * $Id: DRIComponentMouseListener.java,v 1.2 2005/09/05 12:22:51 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,9 +45,12 @@ public class DRIComponentMouseListener implements MouseListener{
 			(DataRenderingComponent) e.getSource();
 		component.setMousePressedLocation(e.getPoint());
 		
-		if (!RendererMode.getMode().equals(MODE.NO_SPECIAL))
+		if (!	(	RendererMode.getMode().equals(MODE.NO_SPECIAL)
+				||	RendererMode.getMode().equals(MODE.ATTACH_LABEL)))
 			return;
-		
+
+		//В процессе привязки надписи финальный этап (описывается в 
+		//ReportTemplateRenderer) инициируется по ComponentSelectionChangeEvent.
 		this.applicationContext.getDispatcher().firePropertyChange(
 				new ComponentSelectionChangeEvent(
 					this,

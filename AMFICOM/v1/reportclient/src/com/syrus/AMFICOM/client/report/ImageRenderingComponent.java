@@ -1,5 +1,5 @@
 /*
- * $Id: ImageRenderingComponent.java,v 1.4 2005/09/03 12:42:19 peskovsky Exp $
+ * $Id: ImageRenderingComponent.java,v 1.5 2005/09/05 12:22:51 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.client.report;
 
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
@@ -18,6 +19,8 @@ import com.syrus.AMFICOM.resource.IntDimension;
 public class ImageRenderingComponent extends DataRenderingComponent {
 
 	private static final long serialVersionUID = -7829464177961824335L;
+	public static final Dimension DEFAULT_IMAGE_SIZE = new Dimension(200, 200);
+	public static final Dimension MINIMUM_IMAGE_SIZE = new Dimension(15, 15);	
 	/**
 	 * Отображаемое изображение
 	 */
@@ -58,5 +61,17 @@ public class ImageRenderingComponent extends DataRenderingComponent {
 
 	public void setHeight(int height) {
 		this.setSize(this.getWidth(),height);
+	}
+	
+	@Override
+	public void setSize(Dimension newSize) {
+		this.setSize(newSize.width,newSize.height);
+	}
+	
+	@Override
+	public void setSize(int width, int height) {
+		super.setSize(
+			width > MINIMUM_IMAGE_SIZE.width ? width : MINIMUM_IMAGE_SIZE.width,
+			height > MINIMUM_IMAGE_SIZE.height ? height : MINIMUM_IMAGE_SIZE.height);
 	}
 }

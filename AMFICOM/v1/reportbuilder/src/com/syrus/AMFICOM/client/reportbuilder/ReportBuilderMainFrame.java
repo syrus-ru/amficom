@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.5 2005/09/03 12:42:21 peskovsky Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.6 2005/09/05 12:22:51 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -216,7 +216,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_INSERT_LABEL
 					+ ReportBuilderApplicationModel.CANCEL,
-				new ReportSendEventCommand(this.aContext,ReportFlagEvent.LABEL_CREATION_CANCELED));
+				new ReportSendEventCommand(this.aContext,ReportFlagEvent.SPECIAL_MODE_CANCELED));
 
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_INSERT_IMAGE
@@ -226,7 +226,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_INSERT_IMAGE
 					+ ReportBuilderApplicationModel.CANCEL,
-				new ReportSendEventCommand(this.aContext,ReportFlagEvent.IMAGE_CREATION_CANCELED));
+				new ReportSendEventCommand(this.aContext,ReportFlagEvent.SPECIAL_MODE_CANCELED));
 		
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_DELETE_OBJECT,
@@ -331,8 +331,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 				aModel.fireModelChanged("");
 			}
 	
-			else if (	eventType.equals(ReportFlagEvent.LABEL_CREATION_CANCELED)
-					||	eventType.equals(ReportFlagEvent.IMAGE_CREATION_CANCELED)) {
+			else if (eventType.equals(ReportFlagEvent.SPECIAL_MODE_CANCELED)) {
 				this.setApplicationModelForTemplateSchemeStandart(aModel);
 				aModel.fireModelChanged("");
 			}

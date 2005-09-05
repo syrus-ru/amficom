@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeModel.java,v 1.5 2005/09/05 07:58:03 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeModel.java,v 1.6 2005/09/05 12:22:51 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.ReportModelPool;
 import com.syrus.AMFICOM.client.report.ReportModel.ReportType;
+import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTreeItem;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 
@@ -188,7 +189,7 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 		for (String item : itemsToAdd) {
 			node.addChild(new PopulatableIconedNode(
 				this,
-				item,
+				new ReportTreeItem(reportModel.getClass().getName(),item),
 				reportModel.getReportElementName(item),
 				this.getIconForReportType(reportModel.getReportKind(item)),
 				false));

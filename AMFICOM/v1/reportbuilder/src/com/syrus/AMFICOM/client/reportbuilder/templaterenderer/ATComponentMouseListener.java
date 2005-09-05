@@ -1,5 +1,5 @@
 /*
- * $Id: ATComponentMouseListener.java,v 1.1 2005/09/03 12:42:20 peskovsky Exp $
+ * $Id: ATComponentMouseListener.java,v 1.2 2005/09/05 12:22:51 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,11 +50,6 @@ public class ATComponentMouseListener implements MouseListener{
 		AttachedTextComponent component = (AttachedTextComponent)e.getSource();		
 		component.setMousePressedLocation(e.getPoint());
 
-		AttachedTextComponent textPane = (AttachedTextComponent) e.getSource();
-		textPane.getCaret().setBlinkRate(500);
-		textPane.getCaret().setVisible(true);
-		textPane.setEditable(true);
-
 		this.applicationContext.getDispatcher().firePropertyChange(
 			new ComponentSelectionChangeEvent(
 				this,
@@ -64,7 +59,10 @@ public class ATComponentMouseListener implements MouseListener{
 
 	public void mouseReleased(MouseEvent e) {
 		AttachedTextComponent component = (AttachedTextComponent)e.getSource();
-		component.setCursor(Cursor.getDefaultCursor());		
+		component.setCursor(Cursor.getDefaultCursor());
+		component.getCaret().setVisible(true);
+		component.setEditable(true);
+
 		if (SwingUtilities.isRightMouseButton(e)){
 			//Вызов контекстного меню
 			TextComponentMenu menu = new TextComponentMenu(
