@@ -49,7 +49,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -101,8 +101,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	WrapperedComboBox endLinkComboBox = null;
 	WrapperedComboBox endNodeToComboBox = null;
 
-	AbstractNode startNode;
-	AbstractNode endNode;
+	SiteNode startNode;
+	SiteNode endNode;
 	
 	private CableChannelingItem startLastBound;
 	private int startAvailableLinksCount;
@@ -648,9 +648,9 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			return;
 		}
 
-		this.startNode = this.cablePath.getStartUnboundNode();
+		this.startNode = (SiteNode) this.cablePath.getStartUnboundNode();
 		
-		this.endNode = this.cablePath.getEndUnboundNode();
+		this.endNode = (SiteNode) this.cablePath.getEndUnboundNode();
 
 		this.startLastBound = this.cablePath.getStartLastBoundLink();
 		this.endLastBound = this.cablePath.getEndLastBoundLink();
@@ -876,21 +876,31 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	private void addLinkBinding(
 			PhysicalLink link,
 			CableChannelingItem unboundCableChannelingItem,
-			AbstractNode fromSite) throws ApplicationException {
+			SiteNode fromSite,
+			SiteNode toSite,
+			boolean insertBefore) throws ApplicationException {
 
 		CableChannelingItem newCableChannelingItem = 
 			CableController.generateCCI(
 					this.cablePath, 
 					link,
 					fromSite,
-					link.getOtherNode(fromSite));
-		newCableChannelingItem.insertSelfBefore(unboundCableChannelingItem);
+					toSite);
+
+		if(insertBefore) {
+			newCableChannelingItem.insertSelfBefore(unboundCableChannelingItem);
+		}
+		else {
+			newCableChannelingItem.insertSelfAfter(unboundCableChannelingItem);
+		}
+
 		this.cablePath.addLink(link, newCableChannelingItem);
 		link.getBinding().add(this.cablePath);
 
 		UnboundLink unbound = (UnboundLink)this.cablePath.getBinding().get(unboundCableChannelingItem); 
-		SiteNode otherNode = (SiteNode )link.getOtherNode(fromSite);
-		if(otherNode.equals(unbound.getOtherNode(fromSite))) {
+
+		if(unboundCableChannelingItem.getStartSiteNode().equals(fromSite)
+				&& unboundCableChannelingItem.getEndSiteNode().equals(toSite)) {
 			RemoveUnboundLinkCommandBundle command = new RemoveUnboundLinkCommandBundle(unbound);
 			command.setNetMapViewer(this.netMapViewer);
 			command.execute();
@@ -899,21 +909,44 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			this.cablePath.removeLink(unboundCableChannelingItem);
 		}
 		else {
-			if(unbound.getStartNode().equals(fromSite)) {
-				unbound.setStartNode(otherNode);
+			if(insertBefore) {
+				if(unbound.getStartNode().equals(fromSite)) {
+					unbound.setStartNode(toSite);
+				}
+				else {
+					unbound.setEndNode(toSite);
+				}
+	
+				for(Iterator it = unbound.getNodeLinksAt(fromSite).iterator(); it.hasNext();) {
+					NodeLink nl = (NodeLink)it.next();
+					if(nl.getStartNode().equals(fromSite)) {
+						nl.setStartNode(toSite);
+					}
+					else {
+						nl.setEndNode(toSite);
+					}
+				}
+				unboundCableChannelingItem.setStartSiteNode(toSite);
 			}
 			else {
-				unbound.setEndNode(otherNode);
+				if(unbound.getStartNode().equals(toSite)) {
+					unbound.setStartNode(fromSite);
+				}
+				else {
+					unbound.setEndNode(fromSite);
+				}
+	
+				for(Iterator it = unbound.getNodeLinksAt(toSite).iterator(); it.hasNext();) {
+					NodeLink nl = (NodeLink)it.next();
+					if(nl.getStartNode().equals(toSite)) {
+						nl.setStartNode(fromSite);
+					}
+					else {
+						nl.setEndNode(fromSite);
+					}
+				}
+				unboundCableChannelingItem.setEndSiteNode(fromSite);
 			}
-
-			for(Iterator it = unbound.getNodeLinksAt(fromSite).iterator(); it.hasNext();) {
-				NodeLink nl = (NodeLink)it.next();
-				if(nl.getStartNode().equals(fromSite))
-					nl.setStartNode(otherNode);
-				else
-					nl.setEndNode(otherNode);
-			}
-			unboundCableChannelingItem.setStartSiteNode(otherNode);
 		}
 	}
 
@@ -924,14 +957,24 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		if(selectedStartLink != null) {
 			CableChannelingItem unboundCableChannelingItem = this.cablePath.nextLink(this.startLastBound);
 			if(unboundCableChannelingItem != null)
-				addLinkBinding(selectedStartLink, unboundCableChannelingItem, this.startNode);
+				addLinkBinding(
+						selectedStartLink, 
+						unboundCableChannelingItem, 
+						this.startNode, 
+						(SiteNode) selectedStartLink.getOtherNode(this.startNode), 
+						true);
 		}
 
 		if(selectedEndLink != null) {
 			if(!selectedEndLink.equals(selectedStartLink)) {
 				CableChannelingItem unboundCableChannelingItem = this.cablePath.previousLink(this.endLastBound);
 				if(unboundCableChannelingItem != null)
-					addLinkBinding(selectedEndLink, unboundCableChannelingItem, this.endNode);
+					addLinkBinding(
+							selectedEndLink, 
+							unboundCableChannelingItem, 
+							(SiteNode) selectedEndLink.getOtherNode(this.endNode), 
+							this.endNode, 
+							false);
 			}
 		}
 		setBindingValues();
