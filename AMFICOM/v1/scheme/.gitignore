@@ -6,6 +6,9 @@ lib
 .corba
 .mach
 .idl
+.nbintdb
+nbproject
+build.xml
 *.swp
 *.tar
 *.gz
