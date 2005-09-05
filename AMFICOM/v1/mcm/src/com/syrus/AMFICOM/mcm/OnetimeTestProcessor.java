@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.30 2005/08/17 11:48:45 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.31 2005/09/05 17:40:02 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/08/17 11:48:45 $
+ * @version $Revision: 1.31 $, $Date: 2005/09/05 17:40:02 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -46,8 +46,7 @@ final class OnetimeTestProcessor extends TestProcessor {
 						super.newMeasurementCreation(this.startTime);
 						super.lastMeasurementAcquisition = true;
 						super.clearFalls();
-					}
-					catch (CreateObjectException coe) {
+					} catch (CreateObjectException coe) {
 						Log.errorException(coe);
 						if (coe.getCause() instanceof IllegalObjectEntityException)
 							super.fallCode = FALL_CODE_CREATE_IDENTIFIER;

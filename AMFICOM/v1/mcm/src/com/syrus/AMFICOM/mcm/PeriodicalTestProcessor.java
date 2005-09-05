@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.46 2005/08/25 14:25:23 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.47 2005/09/05 17:39:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/08/25 14:25:23 $
+ * @version $Revision: 1.47 $, $Date: 2005/09/05 17:39:04 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -47,8 +47,7 @@ final class PeriodicalTestProcessor extends TestProcessor {
 		this.endTime = test.getEndTime().getTime();
 		try {
 			this.temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			Log.errorMessage("Cannot load temporal pattern '" + test.getTemporalPatternId() + "' for test '" + test.getId() + "'");
 			this.abort();
 		}
@@ -62,26 +61,24 @@ final class PeriodicalTestProcessor extends TestProcessor {
 		if (!super.lastMeasurementAcquisition) {
 			if (!this.timeStampsList.isEmpty()) {
 				timeStamp = this.timeStampsList.remove(0);
-			}
-			else {
+			} else {
 				final long start = System.currentTimeMillis();
 				if (start <= this.endTime) {
 					final Set<Date> times = this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime));
 //--------
 					Log.debugMessage("PeriodicalTestProcessor.getCurrentTimeStamp | From " + (new Date(start))
 							+ " to " + (new Date(Math.min(start + FRAME, this.endTime))), Log.DEBUGLEVEL09);
-					for (Iterator it = times.iterator(); it.hasNext();)
+					for (Iterator it = times.iterator(); it.hasNext();) {
 						Log.debugMessage("time: " + it.next(), Log.DEBUGLEVEL09);
+					}
 //--------
 					if (!times.isEmpty()) {
 						this.timeStampsList.addAll(times);
 						timeStamp = this.timeStampsList.remove(0);
-					}
-					else {
+					} else {
 						super.lastMeasurementAcquisition = true;
 					}
-				}
-				else {
+				} else {
 					super.lastMeasurementAcquisition = true;
 				}
 			}
@@ -92,20 +89,18 @@ final class PeriodicalTestProcessor extends TestProcessor {
 	@Override
 	public void run() {
 		while (super.running) {
-			if (! super.lastMeasurementAcquisition) {
+			if (!super.lastMeasurementAcquisition) {
 				if (this.currentTimeStamp == null) {
 					this.currentTimeStamp = this.getCurrentTimeStamp();
 					Log.debugMessage("Next measurement at: " + this.currentTimeStamp, Log.DEBUGLEVEL07);
-				}
-				else {
+				} else {
 					if (this.currentTimeStamp.getTime() <= System.currentTimeMillis()) {
 
 						try {
 							super.newMeasurementCreation(this.currentTimeStamp);
 							this.currentTimeStamp = null;
 							super.clearFalls();
-						}
-						catch (CreateObjectException coe) {
+						} catch (CreateObjectException coe) {
 							Log.errorException(coe);
 							if (coe.getCause() instanceof IllegalObjectEntityException)
 								super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
@@ -133,8 +128,9 @@ final class PeriodicalTestProcessor extends TestProcessor {
 	@Override
 	protected void cleanup() {
 		super.cleanup();
-		if (this.timeStampsList != null)
+		if (this.timeStampsList != null) {
 			this.timeStampsList.clear();
+		}
 	}
 
 	@Override
