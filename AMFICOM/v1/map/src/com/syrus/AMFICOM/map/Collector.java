@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.73 2005/08/31 13:25:08 bass Exp $
+ * $Id: Collector.java,v 1.74 2005/09/05 13:26:09 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,13 +45,14 @@ import com.syrus.AMFICOM.map.corba.IdlCollector;
 import com.syrus.AMFICOM.map.corba.IdlCollectorHelper;
 import com.syrus.AMFICOM.map.xml.XmlCollector;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.util.Log;
 
 /**
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/08/31 13:25:08 $
+ * @author $Author: max $
+ * @version $Revision: 1.74 $, $Date: 2005/09/05 13:26:09 $
  * @module map
  */
 public final class Collector extends StorableObject implements MapElement, XmlBeansTransferable<XmlCollector> {
@@ -69,7 +70,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 	private String name;
 	private String description;
 
-	private Set<PhysicalLink> physicalLinks;
+	private Set<Identifier> physicalLinkIds;
 
 	private transient CharacterizableDelegate characterizableDelegate;
 
@@ -79,7 +80,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 
 	Collector(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-		this.physicalLinks = new HashSet<PhysicalLink>();
+		this.physicalLinkIds = new HashSet<Identifier>();
 
 		try {
 			DatabaseContext.getDatabase(COLLECTOR_CODE).retrieve(this);
@@ -110,7 +111,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 		this.name = name;
 		this.description = description;
 
-		this.physicalLinks = new HashSet<PhysicalLink>();
+		this.physicalLinkIds = new HashSet<Identifier>();
 	}
 
 	public static Collector createInstance(final Identifier creatorId, final Map map, final String name, final String description)
@@ -145,7 +146,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 		this.description = ct.description;
 
 		final Set<Identifier> ids = Identifier.fromTransferables(ct.physicalLinkIds);
-		this.physicalLinks = StorableObjectPool.getStorableObjects(ids, true);
+		this.physicalLinkIds = ids;
 	}
 
 	@Override
@@ -153,7 +154,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.addAll(this.physicalLinks);
+		dependencies.addAll(this.physicalLinkIds);
 		return dependencies;
 	}
 
@@ -163,7 +164,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 	 */
 	@Override
 	public IdlCollector getTransferable(final ORB orb) {
-		final IdlIdentifier[] physicalLinkIds = Identifier.createTransferables(this.physicalLinks);
+		final IdlIdentifier[] idlPhysicalLinkIds = Identifier.createTransferables(this.physicalLinkIds);
 		return IdlCollectorHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -173,7 +174,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 				this.version.longValue(),
 				this.name,
 				this.description,
-				physicalLinkIds);
+				idlPhysicalLinkIds);
 	}
 
 	public String getDescription() {
@@ -201,15 +202,37 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 		this.setName0(name);
 		super.markAsChanged();
 	}
+	
+	protected Set<Identifier> getPhysicalLinkIds() {
+		return Collections.unmodifiableSet(this.physicalLinkIds);
+	}
 
 	public Set<PhysicalLink> getPhysicalLinks() {
-		return Collections.unmodifiableSet(this.physicalLinks);
+		try {
+			return Collections.unmodifiableSet(StorableObjectPool.<PhysicalLink>getStorableObjects(this.physicalLinkIds, true));
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			return Collections.emptySet();
+		}
 	}
 
 	protected void setPhysicalLinks0(final Set<PhysicalLink> physicalLinks) {
-		this.physicalLinks.clear();
-		if (physicalLinks != null)
-			this.physicalLinks.addAll(physicalLinks);
+		this.physicalLinkIds.clear();
+		if (physicalLinks != null) {
+			for (PhysicalLink link : physicalLinks) {
+				this.physicalLinkIds.add(link.getId());
+			}
+		}
+	}
+	
+	protected void setPhysicalLinkIds(final Set<Identifier> physicalLinkIds) {
+		setPhysicalLinkIds0(physicalLinkIds);
+		super.markAsChanged();
+	}
+	
+	protected void setPhysicalLinkIds0(final Set<Identifier> physicalLinkIds) {
+		this.physicalLinkIds.clear();
+		this.physicalLinkIds.addAll(physicalLinkIds);
 	}
 
 	public void setPhysicalLinks(final Set<PhysicalLink> physicalLinks) {
@@ -234,16 +257,21 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 	 * @param link линия
 	 */
 	public void removePhysicalLink(final PhysicalLink link) {
-		this.physicalLinks.remove(link);
+		this.physicalLinkIds.remove(link.getId());
 		super.markAsChanged();
 	}
 
+	private void addPhysicalLinkId(final Identifier linkId) {
+		this.physicalLinkIds.add(linkId);
+		super.markAsChanged();
+	}
+	
 	/**
 	 * Добавить линию в состав коллектора. Внимание! концевые точки линии не обновляются.
 	 * @param link линия
 	 */
 	public void addPhysicalLink(final PhysicalLink link) {
-		this.physicalLinks.add(link);
+		this.physicalLinkIds.add(link.getId());
 		super.markAsChanged();
 	}
 
@@ -379,7 +407,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 				creatorId,
 				version);
 
-		this.physicalLinks = new HashSet<PhysicalLink>();
+		this.physicalLinkIds = new HashSet<Identifier>();
 
 		this.fromXmlTransferable(xmlCollector, clonedIdsPool, importType);
 	}
@@ -390,8 +418,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 
 		for (final XmlIdentifier xmlId : xmlCollector.getPhysicalLinkIds().getIdArray()) {
 			final Identifier physicalLinkId = clonedIdsPool.getClonedId(PHYSICALLINK_CODE, xmlId);
-			final PhysicalLink physicalLink = StorableObjectPool.getStorableObject(physicalLinkId, false);
-			this.addPhysicalLink(physicalLink);
+			this.addPhysicalLinkId(physicalLinkId);
 		}
 	}
 

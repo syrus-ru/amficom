@@ -1,5 +1,5 @@
 /*-
- * $Id: CollectorDatabase.java,v 1.43 2005/08/31 05:50:36 bass Exp $
+ * $Id: CollectorDatabase.java,v 1.44 2005/09/05 13:26:09 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -28,7 +27,6 @@ import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -39,8 +37,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/08/31 05:50:36 $
- * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/09/05 13:26:09 $
+ * @author $Author: max $
  * @module map
  */
 public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
@@ -67,12 +65,7 @@ public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
 		for (final Collector collector : collectors) {
 			final Identifier collectorId = collector.getId();
 			final Set<Identifier> physicalLinkIds = map.get(collectorId);
-			try {
-				final Set<PhysicalLink> physicalLinks = StorableObjectPool.getStorableObjects(physicalLinkIds, true);
-				collector.setPhysicalLinks0(physicalLinks);
-			} catch (ApplicationException ae) {
-				throw new RetrieveObjectException(ae);
-			}
+			collector.setPhysicalLinkIds0(physicalLinkIds);			
 		}
 	}
 

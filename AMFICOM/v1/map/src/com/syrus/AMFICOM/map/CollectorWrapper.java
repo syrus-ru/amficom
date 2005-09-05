@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorWrapper.java,v 1.13 2005/08/12 10:05:08 arseniy Exp $
+ * $Id: CollectorWrapper.java,v 1.14 2005/09/05 13:26:09 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/12 10:05:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/09/05 13:26:09 $
+ * @author $Author: max $
  * @module map
  */
 public class CollectorWrapper extends StorableObjectWrapper<Collector> {
@@ -84,7 +84,7 @@ public class CollectorWrapper extends StorableObjectWrapper<Collector> {
 				return collector.getDescription();
 			}
 			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID)) {
-				return collector.getPhysicalLinks();
+				return collector.getPhysicalLinkIds();
 			}
 
 		}
@@ -109,7 +109,7 @@ public class CollectorWrapper extends StorableObjectWrapper<Collector> {
 				collector.setDescription((String) value);
 			}
 			else if (key.equals(LINK_COLUMN_PHYSICAL_LINK_ID)) {
-				collector.setPhysicalLinks((Set) value);
+				collector.setPhysicalLinkIds((Set) value);
 			}
 		}
 	}
