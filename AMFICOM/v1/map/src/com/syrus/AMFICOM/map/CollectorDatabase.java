@@ -1,5 +1,5 @@
 /*-
- * $Id: CollectorDatabase.java,v 1.44 2005/09/05 13:26:09 max Exp $
+ * $Id: CollectorDatabase.java,v 1.45 2005/09/05 14:35:57 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/09/05 13:26:09 $
+ * @version $Revision: 1.45 $, $Date: 2005/09/05 14:35:57 $
  * @author $Author: max $
  * @module map
  */
@@ -65,7 +65,9 @@ public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
 		for (final Collector collector : collectors) {
 			final Identifier collectorId = collector.getId();
 			final Set<Identifier> physicalLinkIds = map.get(collectorId);
-			collector.setPhysicalLinkIds0(physicalLinkIds);			
+			if(physicalLinkIds != null) {
+				collector.setPhysicalLinkIds0(physicalLinkIds);
+			}
 		}
 	}
 
