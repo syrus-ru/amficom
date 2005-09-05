@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArrayDatabase.java,v 1.17 2005/07/16 21:40:20 arseniy Exp $
+ * $Id: ByteArrayDatabase.java,v 1.18 2005/09/05 16:32:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/07/16 21:40:20 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/05 16:32:42 $
  * @module util
  */
 public final class ByteArrayDatabase {
@@ -28,42 +28,56 @@ public final class ByteArrayDatabase {
 		assert false;
 	}
 
-	public static void saveAsBlob(final byte bar[], final Connection conn, final String table, final String column, final String where) throws SQLException {
-		boolean oldAutoCommit = conn.getAutoCommit();
-		if (oldAutoCommit)
+	public static void saveAsBlob(final byte bar[],
+			final Connection conn,
+			final String table,
+			final String column,
+			final String where) throws SQLException {
+		final boolean oldAutoCommit = conn.getAutoCommit();
+		if (oldAutoCommit) {
 			conn.setAutoCommit(false);
+		}
 
 		Statement statement = null;
 		ResultSet ors = null;
-		String s = "SELECT " + column + " FROM " + table + " WHERE " + where + " FOR UPDATE";
+		final String s = "SELECT " + column + " FROM " + table + " WHERE " + where + " FOR UPDATE";
 		try {
 			statement = conn.createStatement();
 			Log.debugMessage("Trying: " + s, Log.DEBUGLEVEL09);
 			ors = statement.executeQuery(s);
-			Blob blob = null;
-			if (ors.next())
-				blob = ors.getBlob(column);
-			else
+			if (ors.next()) {
+				final Blob blob = ors.getBlob(column);
+				final OutputStream os = blob.setBinaryStream(0L);
+				os.write(bar);
+				os.flush();
+				os.close();
+			}
+			else {
 				throw new SQLException("No record in " + table + " for '" + where + "'");
-			OutputStream os = null;
-			os = blob.setBinaryStream(0L);
-			os.write(bar);
-			os.flush();
-			os.close();
+			}
 		} catch (IOException ioe) {
 			throw new SQLException(ioe.getMessage());
 		} finally {
 			try {
-				if (statement != null)
-					statement.close();
-			} finally {
 				try {
-					if (ors != null)
+					if (ors != null) {
 						ors.close();
+						ors = null;
+					}
 				} finally {
-					if (oldAutoCommit)
-						conn.setAutoCommit(true);
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (oldAutoCommit) {
+							conn.setAutoCommit(true);
+						}
+					}
 				}
+			} catch (SQLException sqle) {
+				Log.errorException(sqle);
 			}
 		}
 	}
