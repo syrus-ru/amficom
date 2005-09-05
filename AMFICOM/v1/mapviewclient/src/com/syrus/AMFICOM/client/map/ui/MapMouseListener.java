@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.62 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.63 2005/09/05 13:50:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
+import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
 import com.syrus.AMFICOM.resource.DoublePoint;
@@ -55,7 +56,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.62 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.63 $, $Date: 2005/09/05 13:50:18 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -352,9 +353,10 @@ public final class MapMouseListener implements MouseListener
 			{
 				AbstractNode node = (AbstractNode)logicalNetLayer.getCurrentMapElement();
 				NodeLink nodelink = logicalNetLayer.getEditedNodeLink(point);
-				if(nodelink != null)
-					if(nodelink.getStartNode().equals(node)
+				if(nodelink != null
+					&& (nodelink.getStartNode().equals(node)
 						|| nodelink.getEndNode().equals(node))
+					&& nodelink.getPhysicalLink().getType().getSort().value() != PhysicalLinkTypeSort._INDOOR)
 				{
 					if(this.sizeEditBox != null)
 						if(this.sizeEditBox.isVisible())
