@@ -1,5 +1,5 @@
 /*
- * $Id: AttachedTextComponent.java,v 1.3 2005/09/03 12:42:19 peskovsky Exp $
+ * $Id: AttachedTextComponent.java,v 1.4 2005/09/05 06:05:13 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -82,19 +82,57 @@ public class AttachedTextComponent extends JTextPane implements RenderingCompone
 	 * @return Dimension с габаритами
 	 */
 	public Dimension getTextSize() {
-		String text = this.textRenderingElement.getText() + SYMBOLS_FOR_ADDITONAL_WIDTH1;
-		FontMetrics fontMetrics = this.getGraphics().getFontMetrics();
-
-		MultiRowString multiRowString = new MultiRowString(text);
-		int maxsize = SwingUtilities.computeStringWidth(fontMetrics, multiRowString.get(0));
-		for(int i = 1; i < multiRowString.getRowCount(); i++)
-			maxsize = Math.max(
-					maxsize, 
-					SwingUtilities.computeStringWidth(fontMetrics, multiRowString.get(i)));
+//		String text = this.textRenderingElement.getText() + SYMBOLS_FOR_ADDITONAL_WIDTH1;
+//		FontMetrics fontMetrics = this.getGraphics().getFontMetrics();
+//
+//		MultiRowString multiRowString = new MultiRowString(text);
+//		int maxsize = SwingUtilities.computeStringWidth(fontMetrics, multiRowString.get(0));
+//		for(int i = 1; i < multiRowString.getRowCount(); i++)
+//			maxsize = Math.max(
+//					maxsize, 
+//					SwingUtilities.computeStringWidth(fontMetrics, multiRowString.get(i)));
+//		
+//		Dimension result = new Dimension(
+//				maxsize,
+//				fontMetrics.getHeight() * multiRowString.getRowCount());
 		
+		//Написан свой вариант расчёта размера текста, поскольку
+		//стандартный StringTokenizer глючит при работе с пустыми строками.
+		String text = this.textRenderingElement.getText();
+		FontMetrics fontMetrics = this.getGraphics().getFontMetrics();
+		
+		int lineEndsFound = 0;
+		int maxLineSize = 0;
+		
+		int currentPosition = -1;
+		int lastPosition = -1;		
+
+		while (currentPosition < text.length()) {
+			currentPosition = text.indexOf('\n',lastPosition + 1);
+			
+			String subString = text.substring(
+					lastPosition > 0 ? lastPosition : 0,
+					currentPosition > -1 ? currentPosition : text.length());
+			subString += SYMBOLS_FOR_ADDITONAL_WIDTH1;
+			
+			int subStringSize = SwingUtilities.computeStringWidth(
+					fontMetrics,
+					subString);
+
+			if (subStringSize > maxLineSize)
+				maxLineSize = subStringSize;
+
+			if (currentPosition >= 0) {
+				lineEndsFound++;
+				lastPosition = currentPosition;
+			} else {
+				break;				
+			}
+		}
+	
 		Dimension result = new Dimension(
-				maxsize,
-				fontMetrics.getHeight() * multiRowString.getRowCount());
+				maxLineSize,
+				fontMetrics.getHeight() * (lineEndsFound + 1));
 		
 		return result;
 	}
