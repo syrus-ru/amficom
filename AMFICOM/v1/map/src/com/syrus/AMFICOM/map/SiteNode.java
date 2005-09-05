@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.81 2005/09/04 17:06:27 krupenn Exp $
+ * $Id: SiteNode.java,v 1.82 2005/09/05 10:37:28 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,8 +59,8 @@ import com.syrus.util.Log;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: krupenn $
- * @version $Revision: 1.81 $, $Date: 2005/09/04 17:06:27 $
+ * @author $Author: max $
+ * @version $Revision: 1.82 $, $Date: 2005/09/05 10:37:28 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
@@ -273,7 +273,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 	
 	public SiteNode getAttachmentSiteNode() {
 		try {
-			return StorableObjectPool.<SiteNode>getStorableObject(this.getAttachmentSiteNodeId(), true);
+			return StorableObjectPool.<SiteNode>getStorableObject(this.attachmentSiteNodeId, true);
 		} catch(ApplicationException e) {
 			Log.errorException(e);
 			return null;
@@ -415,9 +415,9 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 			Identifier existingIdentifier = Identifier.fromXmlTransferable(xmlId, importType);
 			SiteNode siteNode = null;
 			if(existingIdentifier != null) {
+				clonedIdsPool.setExistingId(xmlId, existingIdentifier);
 				siteNode = StorableObjectPool.getStorableObject(existingIdentifier, true);
 				if(siteNode != null) {
-					clonedIdsPool.setExistingId(xmlId, existingIdentifier);
 					siteNode.fromXmlTransferable(xmlSiteNode, clonedIdsPool, importType);
 				}
 				else{
