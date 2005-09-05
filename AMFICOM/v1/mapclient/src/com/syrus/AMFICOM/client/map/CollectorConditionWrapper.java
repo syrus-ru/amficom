@@ -1,5 +1,5 @@
 /**
- * $Id: CollectorConditionWrapper.java,v 1.2 2005/08/25 11:11:06 max Exp $
+ * $Id: CollectorConditionWrapper.java,v 1.3 2005/09/05 12:26:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client.map;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ConditionWrapper;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -19,7 +20,7 @@ public class CollectorConditionWrapper implements ConditionWrapper {
 	
 	private final static short entityCode = ObjectEntities.COLLECTOR_CODE;
 	
-	private final static String NAME = "Entity name";
+	private final static String NAME = LangModelMap.getString("Name");
 		
 	private static List<ConditionKey> keys = new ArrayList<ConditionKey>();
 	
