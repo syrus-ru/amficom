@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.67 2005/09/05 18:15:30 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.68 2005/09/05 20:59:44 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/09/05 18:15:30 $
+ * @version $Revision: 1.68 $, $Date: 2005/09/05 20:59:44 $
  * @author $Author: arseniy $
  * @module mserver
  */
@@ -109,7 +109,7 @@ public class MeasurementServer extends SleepButWorkThread {
 	/**
 	 * Map of test ids to stop
 	 */
-	private static Map<Identifier, Set<Identifier>> mcmStopTestIdsMap;
+	private static Map<Identifier, Set<Identifier>> mcmStoppingTestIdsMap;
 
 	/**
 	 * Condition to load tests. Must be re-created in case of changing set of available MCMs.
@@ -179,7 +179,7 @@ public class MeasurementServer extends SleepButWorkThread {
 			}
 
 			/*	Create map of test ids to stop*/
-			mcmStopTestIdsMap = Collections.synchronizedMap(new HashMap<Identifier, Set<Identifier>>());
+			mcmStoppingTestIdsMap = Collections.synchronizedMap(new HashMap<Identifier, Set<Identifier>>());
 
 			/*	Create condition for load tests*/
 			createTestLoadCondition();
@@ -230,7 +230,7 @@ public class MeasurementServer extends SleepButWorkThread {
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_STATUS);
-		final TypicalCondition tc2 = new TypicalCondition(TestStatus._TEST_STATUS_STOPPED,
+		final TypicalCondition tc2 = new TypicalCondition(TestStatus._TEST_STATUS_STOPPING,
 				0,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.TEST_CODE,
@@ -261,7 +261,7 @@ public class MeasurementServer extends SleepButWorkThread {
 			synchronized (mcmTestQueueMap) {
 				for (final Identifier mcmId : mcmTestQueueMap.keySet()) {
 					final Set<Test> testQueue = mcmTestQueueMap.get(mcmId);
-					final Set<Identifier> stopTestIds = mcmStopTestIdsMap.get(mcmId);
+					final Set<Identifier> stopTestIds = mcmStoppingTestIdsMap.get(mcmId);
 					if (!testQueue.isEmpty() || stopTestIds != null) {
 						com.syrus.AMFICOM.mcm.corba.MCM mcmRef = null;
 						try {
@@ -289,7 +289,7 @@ public class MeasurementServer extends SleepButWorkThread {
 								Log.debugMessage("Stopping on MCM '" + mcmId + "' " + stopTestIdlIds.length + " test(s): " + stopTestIds,
 										Log.DEBUGLEVEL08);
 								mcmRef.stopTests(stopTestIdlIds, sessionKey);
-								mcmStopTestIdsMap.remove(mcmId);
+								mcmStoppingTestIdsMap.remove(mcmId);
 							}
 
 							super.clearFalls();
@@ -331,6 +331,7 @@ public class MeasurementServer extends SleepButWorkThread {
 			}
 		}
 
+		StorableObjectPool.refresh(addedTestIds);
 		final Set<Test> tests = StorableObjectPool.getStorableObjectsButIdsByCondition(addedTestIds, testLoadCondition, true, true);
 
 		for (final Test test : tests) {
@@ -341,8 +342,8 @@ public class MeasurementServer extends SleepButWorkThread {
 				case TestStatus._TEST_STATUS_NEW:
 					addToMCMTestQueueMap(test, mcmId);
 					break;
-				case TestStatus._TEST_STATUS_STOPPED:
-					addToMCMStopTestIdsMap(test, mcmId);
+				case TestStatus._TEST_STATUS_STOPPING:
+					addToMCMStoppingTestIdsMap(test, mcmId);
 					break;
 				default:
 					Log.errorMessage("MeasurementServer.fillMCMTestQueueMap | Illegal status: " + status.value()
@@ -365,11 +366,11 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 	}
 
-	private static void addToMCMStopTestIdsMap(final Test test, final Identifier mcmId) {
-		Set<Identifier> stopTestIds = mcmStopTestIdsMap.get(mcmId);
+	private static void addToMCMStoppingTestIdsMap(final Test test, final Identifier mcmId) {
+		Set<Identifier> stopTestIds = mcmStoppingTestIdsMap.get(mcmId);
 		if (stopTestIds == null) {
 			stopTestIds = new HashSet<Identifier>();
-			mcmStopTestIdsMap.put(mcmId, stopTestIds);
+			mcmStoppingTestIdsMap.put(mcmId, stopTestIds);
 		}
 		stopTestIds.add(test.getId());
 	}
