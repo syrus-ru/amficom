@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.74 2005/09/05 17:43:16 bass Exp $
+ * $Id: Scheme.java,v 1.75 2005/09/05 19:49:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.75 $, $Date: 2005/09/05 19:49:35 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1288,27 +1288,27 @@ public final class Scheme extends AbstractCloneableDomainMember
 				? Identifier.fromXmlTransferable(scheme.getParentSchemeElementId(), SCHEMEELEMENT_CODE, importType)
 				: VOID_IDENTIFIER;
 		if (scheme.isSetSchemeElements()) {
-			for (@SuppressWarnings("unused") final XmlSchemeElement schemeElement : scheme.getSchemeElements().getSchemeElementArray()) {
+			for (final XmlSchemeElement schemeElement : scheme.getSchemeElements().getSchemeElementArray()) {
 				// empty so far
 			}
 		}
 		if (scheme.isSetSchemeLinks()) {
-			for (@SuppressWarnings("unused") final XmlSchemeLink schemeLink : scheme.getSchemeLinks().getSchemeLinkArray()) {
+			for (final XmlSchemeLink schemeLink : scheme.getSchemeLinks().getSchemeLinkArray()) {
 				// empty so far
 			}
 		}
 		if (scheme.isSetSchemeCableLinks()) {
-			for (@SuppressWarnings("unused") final XmlSchemeCableLink schemeCableLink : scheme.getSchemeCableLinks().getSchemeCableLinkArray()) {
+			for (final XmlSchemeCableLink schemeCableLink : scheme.getSchemeCableLinks().getSchemeCableLinkArray()) {
 				// empty so far
 			}
 		}
 		if (scheme.isSetSchemeOptimizeInfos()) {
-			for (@SuppressWarnings("unused") final XmlSchemeOptimizeInfo schemeOptimizeInfo : scheme.getSchemeOptimizeInfos().getSchemeOptimizeInfoArray()) {
+			for (final XmlSchemeOptimizeInfo schemeOptimizeInfo : scheme.getSchemeOptimizeInfos().getSchemeOptimizeInfoArray()) {
 				// empty so far
 			}
 		}
 		if (scheme.isSetSchemeMonitoringSolutions()) {
-			for (@SuppressWarnings("unused") final XmlSchemeMonitoringSolution schemeMonitoringSolution : scheme.getSchemeMonitoringSolutions().getSchemeMonitoringSolutionArray()) {
+			for (final XmlSchemeMonitoringSolution schemeMonitoringSolution : scheme.getSchemeMonitoringSolutions().getSchemeMonitoringSolutionArray()) {
 				// empty so far
 			}
 		}
