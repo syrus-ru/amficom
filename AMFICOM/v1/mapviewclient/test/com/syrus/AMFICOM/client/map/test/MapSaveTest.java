@@ -1,5 +1,5 @@
 /**
- * $Id: MapSaveTest.java,v 1.6 2005/08/24 10:19:49 krupenn Exp $
+ * $Id: MapSaveTest.java,v 1.7 2005/09/05 13:43:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -88,7 +88,7 @@ public class MapSaveTest extends TestCase {
 		map.addPhysicalLink(link);
 
 		DoublePoint location4 = new DoublePoint(20, 30);
-		TopologicalNode node = TopologicalNode.createInstance(domainId, link, location4);
+		TopologicalNode node = TopologicalNode.createInstance(domainId, location4);
 		
 		NodeLink nodeLink1 = NodeLink.createInstance(
 				userId,
