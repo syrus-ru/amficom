@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.81 2005/09/05 10:34:42 max Exp $
+ * $Id: NodeLink.java,v 1.82 2005/09/05 13:38:51 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.logging.Level;
 
 import org.omg.CORBA.ORB;
 
@@ -52,8 +53,8 @@ import com.syrus.util.Log;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: max $
- * @version $Revision: 1.81 $, $Date: 2005/09/05 10:34:42 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.82 $, $Date: 2005/09/05 13:38:51 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -108,6 +109,7 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 				version);
 		this.name = name;
 		this.physicalLinkId = physicalLinkId;
+		Log.debugMessage("create node link " + this.id.toString() + " with physicalLinkId = " + this.physicalLinkId.toString(), Level.FINEST);
 		this.startNodeId = startNodeId;
 		this.endNodeId = endNodeId;
 		this.length = length;
@@ -140,7 +142,6 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 					starNode.getId(),
 					endNode.getId(),
 					length);
-			physicalLink.addNodeLink(nodeLink);
 
 			assert nodeLink.isValid() : OBJECT_STATE_ILLEGAL;
 
@@ -287,6 +288,7 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 
 	public void setPhysicalLink(final PhysicalLink physicalLink) {
 		this.physicalLinkId = physicalLink.getId();
+		Log.debugMessage("For node link " + this.id.toString() + " set physicalLinkId = " + this.physicalLinkId.toString(), Level.FINEST);
 		super.markAsChanged();
 	}
 	
@@ -497,7 +499,6 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 		this.physicalLinkId = physicalLinkId1;
 		this.startNodeId = startNodeId1;
 		this.endNodeId = endNodeId1;
-		this.getPhysicalLink().addNodeLink(this);
 	}
 
 	public static NodeLink createInstance(
