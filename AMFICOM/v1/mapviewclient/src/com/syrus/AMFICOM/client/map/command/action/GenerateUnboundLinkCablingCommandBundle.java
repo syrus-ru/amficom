@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.29 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.30 2005/09/05 13:54:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
  * Команда генерации тоннеля по непривязанной линии.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.30 $, $Date: 2005/09/05 13:54:00 $
  * @module mapviewclient
  */
 public class GenerateUnboundLinkCablingCommandBundle extends
@@ -89,8 +89,10 @@ public class GenerateUnboundLinkCablingCommandBundle extends
 					this.unbound.getEndNode());
 			// перенести фрагменты линии в сгенерированный тоннель
 			for(Iterator it2 = new LinkedList(this.unbound.getNodeLinks()).iterator(); it2.hasNext();) {
-				NodeLink mnle = (NodeLink)it2.next();
-				mnle.setPhysicalLink(this.link);
+				NodeLink tmpNodeLink = (NodeLink)it2.next();
+				this.unbound.removeNodeLink(tmpNodeLink);
+				tmpNodeLink.setPhysicalLink(this.link);
+				this.link.addNodeLink(tmpNodeLink);
 			}
 
 			CableChannelingItem cableChannelingItem = this.cablePath.getFirstCCI(this.unbound);

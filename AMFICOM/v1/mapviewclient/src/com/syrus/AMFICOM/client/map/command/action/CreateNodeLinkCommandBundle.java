@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.29 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.30 2005/09/05 13:54:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.30 $, $Date: 2005/09/05 13:54:00 $
  * @module mapviewclient
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle {
@@ -167,8 +167,10 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle {
 	
 			// Перенос фрагментов линии из одной линии в другую
 			for(Iterator it = nodeLinksToMove.iterator(); it.hasNext();) {
-				NodeLink mnle = (NodeLink)it.next();
-				mnle.setPhysicalLink(this.physicalLink);
+				NodeLink tmpNodeLink = (NodeLink)it.next();
+				physicalLinkToRemove.removeNodeLink(tmpNodeLink);
+				tmpNodeLink.setPhysicalLink(this.physicalLink);
+				this.physicalLink.addNodeLink(tmpNodeLink);
 			}			
 		
 			// Коррекция начального и конечного узлов линии

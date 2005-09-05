@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.34 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.35 2005/09/05 13:54:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * сетевые узла и схемные элементы привязываются к ним.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.34 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.35 $, $Date: 2005/09/05 13:54:00 $
  * @module mapviewclient
  */
 public class GenerateCablePathCablingCommandBundle extends
@@ -116,8 +116,10 @@ public class GenerateCablePathCablingCommandBundle extends
 					// фрагменты переносятся в новый сгенерированный тоннель
 					for(Iterator it2 = new LinkedList(unbound.getNodeLinks()).iterator(); it2.hasNext();)
 					{
-						NodeLink mnle = (NodeLink)it2.next();
-						mnle.setPhysicalLink(link);
+						NodeLink tmpNodeLink = (NodeLink)it2.next();
+						unbound.removeNodeLink(tmpNodeLink);
+						tmpNodeLink.setPhysicalLink(link);
+						link.addNodeLink(tmpNodeLink);
 					}
 
 					CableChannelingItem cableChannelingItem = this.cablePath.getFirstCCI(unbound);

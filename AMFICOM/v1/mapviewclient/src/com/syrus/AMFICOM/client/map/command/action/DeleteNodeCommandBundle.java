@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.40 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.41 2005/09/05 13:54:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
  *  Команда удаления элемента наследника класса MapNodeElement. Команда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.40 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.41 $, $Date: 2005/09/05 13:54:00 $
  * @module mapviewclient
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -289,11 +289,11 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 				{
 					TopologicalNode mpne = (TopologicalNode)oppositeNode;
 
+					MapElementState pls = physicalLink.getState();
+
 					super.removeNode(topologicalNode);
 					super.removeNodeLink(nodeLink);
 					
-					MapElementState pls = physicalLink.getState();
-
 					physicalLink.removeNodeLink(nodeLink);
 
 					super.registerStateChange(physicalLink, pls, physicalLink.getState());

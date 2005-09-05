@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.31 2005/09/04 13:42:24 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.32 2005/09/05 13:54:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/09/04 13:42:24 $
+ * @version $Revision: 1.32 $, $Date: 2005/09/05 13:54:00 $
  * @module maviewclient_v1
  */
 public class MapActionCommandBundle extends CommandBundle
@@ -124,7 +124,9 @@ public class MapActionCommandBundle extends CommandBundle
 		if(cmd.getResult() != Command.RESULT_OK)
 			throw cmd.getException();
 		add(cmd);
-		return cmd.getNodeLink();
+		NodeLink nodeLink = cmd.getNodeLink();
+		physicalLink.addNodeLink(nodeLink);
+		return nodeLink;
 	}
 
 	/**
@@ -260,10 +262,10 @@ public class MapActionCommandBundle extends CommandBundle
 	/**
 	 * Удаляется фрагмент линии
 	 */
-	protected void removeNodeLink(NodeLink mple)
+	protected void removeNodeLink(NodeLink nodeLink)
 		throws Throwable
 	{
-		RemoveNodeLinkCommandAtomic cmd = new RemoveNodeLinkCommandAtomic(mple);
+		RemoveNodeLinkCommandAtomic cmd = new RemoveNodeLinkCommandAtomic(nodeLink);
 		cmd.setLogicalNetLayer(this.logicalNetLayer);
 		cmd.execute();
 		if(cmd.getResult() != Command.RESULT_OK)
@@ -326,11 +328,10 @@ public class MapActionCommandBundle extends CommandBundle
 			if(node instanceof TopologicalNode)
 				this.removeNode(node);
 		}
-		List sortedNodeLinks = new LinkedList();
+		List<NodeLink> sortedNodeLinks = new LinkedList<NodeLink>();
 		sortedNodeLinks.addAll(link.getNodeLinks());
-		for(Iterator it3 = sortedNodeLinks.iterator(); it3.hasNext();)
-		{
-			this.removeNodeLink((NodeLink)it3.next());
+		for(NodeLink nodeLink : sortedNodeLinks) {
+			this.removeNodeLink(nodeLink);
 		}
 		this.removePhysicalLink(link);
 	}
@@ -392,8 +393,10 @@ public class MapActionCommandBundle extends CommandBundle
 		{
 			if(registerStateChange)
 				state = startNodeLink.getState();
-			
+
+			link.removeNodeLink(startNodeLink);
 			startNodeLink.setPhysicalLink(newLink);
+			newLink.addNodeLink(startNodeLink);
 			
 			if(registerStateChange)
 				this.registerStateChange(
