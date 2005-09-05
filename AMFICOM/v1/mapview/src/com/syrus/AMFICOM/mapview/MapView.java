@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.54 2005/08/15 14:09:40 krupenn Exp $
+* $Id: MapView.java,v 1.55 2005/09/05 12:25:40 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -46,6 +46,7 @@ import com.syrus.AMFICOM.mapview.corba.IdlMapViewHelper;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
@@ -58,7 +59,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: krupenn $
- * @version $Revision: 1.54 $, $Date: 2005/08/15 14:09:40 $
+ * @version $Revision: 1.55 $, $Date: 2005/09/05 12:25:40 $
  * @module mapview
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -413,8 +414,14 @@ public final class MapView extends DomainMember implements Namable {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
 				if (SchemeUtils.getTopologicalCableLinks(scheme).contains(schemeCableLink)) {
-					final SchemeElement se = SchemeUtils.getTopologicalElement(scheme, SchemeUtils.getSchemeElementByDevice(scheme,
-							schemeCableLink.getSourceAbstractSchemePort().getParentSchemeDevice()));
+					SchemeCablePort sourceAbstractSchemePort = schemeCableLink.getSourceAbstractSchemePort();
+					if(sourceAbstractSchemePort == null) {
+						// SchemeCableLink has no start device
+						return null;
+					}
+					final SchemeElement se = SchemeUtils.getTopologicalElement(
+							scheme, 
+							sourceAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement());
 					return findElement(se);
 				}
 			}
@@ -437,8 +444,14 @@ public final class MapView extends DomainMember implements Namable {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
 				if (SchemeUtils.getTopologicalCableLinks(scheme).contains(schemeCableLink)) {
-					final SchemeElement se = SchemeUtils.getTopologicalElement(scheme, SchemeUtils.getSchemeElementByDevice(scheme,
-							schemeCableLink.getTargetAbstractSchemePort().getParentSchemeDevice()));
+					SchemeCablePort targetAbstractSchemePort = schemeCableLink.getTargetAbstractSchemePort();
+					if(targetAbstractSchemePort == null) {
+						// SchemeCableLink has no end device
+						return null;
+					}
+					final SchemeElement se = SchemeUtils.getTopologicalElement(
+							scheme, 
+							targetAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement());
 					return findElement(se);
 				}
 			}
