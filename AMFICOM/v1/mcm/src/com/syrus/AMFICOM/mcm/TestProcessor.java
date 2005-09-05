@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.65 2005/09/05 17:47:56 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.66 2005/09/05 17:48:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/09/05 17:47:56 $
+ * @version $Revision: 1.66 $, $Date: 2005/09/05 17:48:53 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -222,7 +222,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 				Log.debugMessage("Passed " + this.forgetFrame / 1000 + " sec from last measurement creation. Aborting test '"
 						+ this.test.getId() + "'", Log.DEBUGLEVEL03);
 				this.abort();
-			}
+		}
 	}
 
 	final void processMeasurementResult() {

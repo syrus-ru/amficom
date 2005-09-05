@@ -45,8 +45,7 @@ final class Transceiver extends SleepButWorkThread {
 		this.kis = kis;
 		try {
 			this.kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(kis);
-		}
-		catch (CommunicationException ce) {
+		} catch (CommunicationException ce) {
 			Log.errorException(ce);
 		}
 		this.scheduledMeasurements = Collections.synchronizedList(new ArrayList<Measurement>());
@@ -61,8 +60,7 @@ final class Transceiver extends SleepButWorkThread {
 			Log.debugMessage("Transceiver.addMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.scheduledMeasurements.add(measurement);
 			this.testProcessors.put(measurementId, testProcessor);
-		}
-		else {
+		} else {
 			Log.errorMessage("Transceiver.transmitMeasurementToKIS | Status: " + measurement.getStatus().value()
 					+ " of measurement '" + measurementId + "' not SCHEDULED -- cannot add to queue");
 		}
@@ -73,8 +71,7 @@ final class Transceiver extends SleepButWorkThread {
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING) {
 			Log.debugMessage("Transceiver.addAcquiringMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.testProcessors.put(measurementId, testProcessor);
-		}
-		else {
+		} else {
 			Log.errorMessage("Transceiver.addAcquiringMeasurement | Status: " + measurement.getStatus().value()
 					+ " of measurement '" + measurementId + "' not ACQUIRING -- cannot add to queue");
 		}
@@ -93,8 +90,7 @@ final class Transceiver extends SleepButWorkThread {
 						this.scheduledMeasurements.remove(measurement);
 
 						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
-					}
-					catch (ApplicationException ae) {
+					} catch (ApplicationException ae) {
 						Log.errorException(ae);
 					}
 				}
@@ -103,8 +99,7 @@ final class Transceiver extends SleepButWorkThread {
 
 		try {
 			StorableObjectPool.flush(ObjectEntities.MEASUREMENT_CODE, LoginManager.getUserId(), false);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			Log.errorException(ae);
 		}
 	}
@@ -116,7 +111,7 @@ final class Transceiver extends SleepButWorkThread {
 			if (this.kisConnection != null) {
 				if (this.kisConnection.isEstablished()) {
 
-					if (! this.scheduledMeasurements.isEmpty()) {
+					if (!this.scheduledMeasurements.isEmpty()) {
 						final Measurement measurement = this.scheduledMeasurements.get(0);
 						final Identifier measurementId = measurement.getId();
 						try {
@@ -127,15 +122,13 @@ final class Transceiver extends SleepButWorkThread {
 							measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRING);
 							StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
 							super.clearFalls();
-						}
-						catch (CommunicationException ce) {
+						} catch (CommunicationException ce) {
 							Log.errorException(ce);
 							this.kisConnection.drop();
 							super.fallCode = FALL_CODE_TRANSMIT_MEASUREMENT;
 							this.measurementToRemove = measurement;
 							super.sleepCauseOfFall();
-						}
-						catch (ApplicationException ae) {
+						} catch (ApplicationException ae) {
 							Log.errorException(ae);
 						}
 					}// if (! this.scheduledMeasurements.isEmpty())
@@ -144,22 +137,19 @@ final class Transceiver extends SleepButWorkThread {
 						try {
 							this.kisReport = this.kisConnection.receiveKISReport(super.initialTimeToSleep);
 							super.clearFalls();
-						}
-						catch (CommunicationException ce) {
+						} catch (CommunicationException ce) {
 							Log.errorException(ce);
 							this.kisConnection.drop();
 							super.fallCode = FALL_CODE_RECEIVE_KIS_REPORT;
 							super.sleepCauseOfFall();
 						}
-					}// if (this.kisReport == null)
-					else {
+					} else {// if (this.kisReport == null)
 						final Identifier measurementId = this.kisReport.getMeasurementId();
 						Log.debugMessage("Transceiver.run | Received report for measurement '" + measurementId + "'", Log.DEBUGLEVEL03);
 						Measurement measurement = null;
 						try {
 							measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
-						}
-						catch (ApplicationException ae) {
+						} catch (ApplicationException ae) {
 							Log.errorException(ae);
 						}
 						if (measurement != null) {
@@ -172,25 +162,21 @@ final class Transceiver extends SleepButWorkThread {
 									measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
 									StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
 									super.clearFalls();
-								}
-								catch (MeasurementException me) {
+								} catch (MeasurementException me) {
 									if (me.getCode() == MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE) {
 										Log.debugMessage("Transceiver.run | Cannot obtain identifier -- trying to wait", Log.DEBUGLEVEL05);
 										try {
 											MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-										}
-										catch (CommunicationException ce) {
+										} catch (CommunicationException ce) {
 											Log.errorException(ce);
 										}
 										super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
 										super.sleepCauseOfFall();
-									}
-									else {
+									} else {
 										Log.errorException(me);
 										this.throwAwayKISReport();
 									}
-								}
-								catch (ApplicationException ae) {
+								} catch (ApplicationException ae) {
 									Log.errorException(ae);
 								}
 
@@ -198,38 +184,32 @@ final class Transceiver extends SleepButWorkThread {
 									testProcessor.addMeasurementResult(result);
 									this.kisReport = null;
 								}
-							}// if (testProcessor != null)
-							else {
+							} else {// if (testProcessor != null)
 								Log.errorMessage("Transceiver.run | Cannot find test processor for measurement '" + measurementId + "'");
 								this.throwAwayKISReport();
 							}// else if (testProcessor != null)
-						}// if (measurement != null)
-						else {
+						} else {// if (measurement != null)
 							Log.errorMessage("Transceiver.run | Cannot find measurement for id '" + measurementId + "'");
 							this.throwAwayKISReport();
 						}// else if (measurement != null)
 					}// else if (this.kisReport == null)
 
-				}// if (this.kisConnection.isEstablished())
-				else {
+				} else {// if (this.kisConnection.isEstablished())
 					final long kisConnectionTimeout = ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_CONNECTION_TIMEOUT, MeasurementControlModule.KIS_CONNECTION_TIMEOUT) * 1000;
 					try {
 						this.kisConnection.establish(kisConnectionTimeout, true);
 						super.clearFalls();
-					}
-					catch (CommunicationException ce) {
+					} catch (CommunicationException ce) {
 						Log.errorException(ce);
 						super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
 						super.sleepCauseOfFall();
 					}
 				}// else if (this.kisConnection.isEstablished())
-			}// if (this.kisConnection != null)
-			else {
+			} else {// if (this.kisConnection != null)
 				try {
 					this.kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(this.kis);
 					super.clearFalls();
-				}
-				catch (CommunicationException ce) {
+				} catch (CommunicationException ce) {
 					Log.errorException(ce);
 					super.fallCode = FALL_CODE_ESTABLISH_CONNECTION;
 					super.sleepCauseOfFall();
@@ -269,8 +249,7 @@ final class Transceiver extends SleepButWorkThread {
 			this.testProcessors.remove(this.measurementToRemove.getId());
 
 			this.measurementToRemove = null;
-		}
-		else {
+		} else {
 			Log.errorMessage("Transceiver.removeMeasurement | Measurement to remove is null -- nothing to remove");
 		}
 	}
@@ -280,9 +259,9 @@ final class Transceiver extends SleepButWorkThread {
 			Log.debugMessage("Transceiver.throwAwayKISReport | Throwing away report of measurement '"
 					+ this.kisReport.getMeasurementId() + "' from KIS '" + this.kis.getId() + "'", Log.DEBUGLEVEL05);
 			this.kisReport = null;
-		}
-		else
+		} else {
 			Log.errorMessage("Transceiver.throwAwayKISReport | KIS report is null -- nothing to throw away");
+		}
 	}
 
 	protected void shutdown() {
