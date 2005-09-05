@@ -21,7 +21,8 @@ module corba {
 					in security::corba::IdlSessionKey sessionKey)
 					raises (general::corba::AMFICOMRemoteException);
 
-		void abortTests(in general::corba::IdlIdentifierSeq testIds)
+		void stopTests(in general::corba::IdlIdentifierSeq testIds,
+					in security::corba::IdlSessionKey sessionKey)
 					raises (general::corba::AMFICOMRemoteException);
 
 	};
