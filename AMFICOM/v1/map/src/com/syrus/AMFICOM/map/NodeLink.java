@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.82 2005/09/05 13:38:51 krupenn Exp $
+ * $Id: NodeLink.java,v 1.83 2005/09/05 16:43:37 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.util.Log;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.82 $, $Date: 2005/09/05 13:38:51 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.83 $, $Date: 2005/09/05 16:43:37 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -109,7 +109,6 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 				version);
 		this.name = name;
 		this.physicalLinkId = physicalLinkId;
-		Log.debugMessage("create node link " + this.id.toString() + " with physicalLinkId = " + this.physicalLinkId.toString(), Level.FINEST);
 		this.startNodeId = startNodeId;
 		this.endNodeId = endNodeId;
 		this.length = length;
