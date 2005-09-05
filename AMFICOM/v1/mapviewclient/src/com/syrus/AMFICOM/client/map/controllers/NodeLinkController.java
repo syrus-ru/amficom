@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.21 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: NodeLinkController.java,v 1.22 2005/09/05 13:44:58 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * Контроллер фрагмента линии.
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/08/12 14:49:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/09/05 13:44:58 $
  * @module mapviewclient
  */
 public final class NodeLinkController extends AbstractLinkController {
@@ -427,6 +427,10 @@ public final class NodeLinkController extends AbstractLinkController {
 		final AbstractNode oppositeNode = (nodeLink.getStartNode().equals(node)) ? nodeLink.getEndNode() : nodeLink.getStartNode();
 
 		final double prevDist = nodeLink.getLengthLt();
+		
+		if(prevDist == 0) {
+			return;
+		}
 
 		final double coef = dist / prevDist;
 
