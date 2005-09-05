@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.57 2005/08/30 09:51:25 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.58 2005/09/05 17:39:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/08/30 09:51:25 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.58 $, $Date: 2005/09/05 17:39:27 $
+ * @author $Author: bass $
  * @module measurement
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -74,14 +74,8 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	 *         <li>if {@link #entityCode} is {@link AnalysisType}for all
 	 *         analysesType for criteria ParameterTypes identifier in linkedIds;
 	 *         </li>
-	 *         <li>if {@link #entityCode} is {@link EvaluationType}for all
-	 *         analysesType for threshold ParameterTypes identifier in
-	 *         linkedIds;</li>
 	 *         <li>if {@link #entityCode} is {@link Analysis} for all
 	 *         analysis for parent action identifier in
-	 *         </li>
-   	 *         <li>if {@link #entityCode} is {@link Evaluation} for all
-	 *         evaluation for parent action identifier in
 	 *         </li>
 	 *         <li>if {@link #entityCode} is {@link Measurement}for all
 	 *         measurements for Test identifier in linkedIds;</li>

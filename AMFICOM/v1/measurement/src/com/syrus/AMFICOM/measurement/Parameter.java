@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.13 2005/08/19 16:22:05 arseniy Exp $
+ * $Id: Parameter.java,v 1.14 2005/09/05 17:39:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/19 16:22:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/09/05 17:39:27 $
+ * @author $Author: bass $
  * @module measurement
  */
 
@@ -214,7 +214,6 @@ public final class Parameter implements TransferableObject, Identifiable {
 	 * @deprecated Use @link getValueForType
 	 * @param parameters
 	 * @param keyCodename
-	 * @return
 	 * @throws ObjectNotFoundException
 	 */
 	@Deprecated
