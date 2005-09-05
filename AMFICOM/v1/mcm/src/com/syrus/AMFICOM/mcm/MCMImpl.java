@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImpl.java,v 1.2 2005/08/08 11:46:55 arseniy Exp $
+ * $Id: MCMImpl.java,v 1.3 2005/09/05 17:53:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/08 11:46:55 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/05 17:53:31 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -51,13 +51,12 @@ final class MCMImpl extends ServerCore implements MCMOperations {
 		final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
 		super.validateAccess(sessionKeyT, userId, domainId);
 
-		Log.debugMessage("Received " + testsT.length + " tests", Log.DEBUGLEVEL07);
+		Log.debugMessage("Received " + testsT.length + " test(s)", Log.DEBUGLEVEL07);
 		final List<Test> tests = new LinkedList<Test>();
 		for (int i = 0; i < testsT.length; i++) {
 			try {
 				tests.add(new Test(testsT[i]));
-			}
-			catch (CreateObjectException coe) {
+			} catch (CreateObjectException coe) {
 				Log.errorException(coe);
 				throw new AMFICOMRemoteException(IdlErrorCode.ERROR_SAVE, IdlCompletionStatus.COMPLETED_NO, coe.getMessage());
 			}
@@ -66,8 +65,17 @@ final class MCMImpl extends ServerCore implements MCMOperations {
 		MeasurementControlModule.addTests(tests);
 	}
 
-	public void abortTests(final IdlIdentifier[] testIdsT) throws AMFICOMRemoteException {
+	public void stopTests(final IdlIdentifier[] testIdsT, final IdlSessionKey sessionKeyT) throws AMFICOMRemoteException {
+		assert testIdsT != null && sessionKeyT != null : ErrorMessages.NON_NULL_EXPECTED;
+		final int length = testIdsT.length;
+		assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
+
+		final IdlIdentifierHolder userId = new IdlIdentifierHolder();
+		final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
+		super.validateAccess(sessionKeyT, userId, domainId);
+
 		final Set<Identifier> ids = Identifier.fromTransferables(testIdsT);
-		MeasurementControlModule.abortTests(ids);
+		Log.debugMessage("Request to stop " + testIdsT.length + " test(s): " + ids, Log.DEBUGLEVEL07);
+		MeasurementControlModule.stopTests(ids);
 	}	
 }

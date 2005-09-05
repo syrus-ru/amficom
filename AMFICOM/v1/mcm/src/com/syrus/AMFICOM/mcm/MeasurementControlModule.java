@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.119 2005/08/25 20:30:40 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.120 2005/09/05 17:52:50 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.119 $, $Date: 2005/08/25 20:30:40 $
+ * @version $Revision: 1.120 $, $Date: 2005/09/05 17:52:50 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -150,8 +150,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			if (args[0].equalsIgnoreCase(SETUP_OPTION)) {
 				MCMSetup.setup();
 				System.exit(0);
-			}
-			else {
+			} else {
 				Log.errorMessage("Illegal options -- " + args);
 				System.exit(0);
 			}
@@ -196,8 +195,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			final MCMSessionEnvironment sessionEnvironment = MCMSessionEnvironment.getInstance();
 			try {
 				sessionEnvironment.login(login, PASSWORD);
-			}
-			catch (final LoginException le) {
+			} catch (final LoginException le) {
 				Log.errorException(le);
 			}
 
@@ -217,8 +215,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			final CORBAServer corbaServer = sessionEnvironment.getMCMServantManager().getCORBAServer();
 			corbaServer.activateServant(new MCMPOATie(new MCMImpl(), corbaServer.getPoa()), mcmId.toString());
 			corbaServer.printNamingContext();
-		}
-		catch (final ApplicationException ae) {
+		} catch (final ApplicationException ae) {
 			Log.errorException(ae);
 			System.exit(0);
 		}
@@ -227,12 +224,11 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	static void establishDatabaseConnection() {
 		final String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
 		final String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
-		final long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT)*1000;
+		final long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT) * 1000;
 		final String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			Log.errorException(e);
 			System.exit(0);
 		}
@@ -256,8 +252,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				transceivers.put(kisId, transceiver);
 				Log.debugMessage("Started transceiver for KIS '" + kisId + "'", Log.DEBUGLEVEL07);
 			}
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			Log.errorException(ae);
 		}
 	}
@@ -276,9 +271,8 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				TestWrapper.COLUMN_STATUS);
 		try {
 			cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
-		}
-		catch (CreateObjectException coe) {
-			//Never
+		} catch (CreateObjectException coe) {
+			// Never
 			Log.errorException(coe);
 		}
 
@@ -289,8 +283,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			sortTestsByStartTime(tests);
 			testList.addAll(tests);
 			scheduledTestIds.addAll(Identifier.createIdentifiers(tests));
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			Log.errorException(ae);
 		}
 
@@ -301,9 +294,8 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				TestWrapper.COLUMN_STATUS);
 		try {
 			cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
-		}
-		catch (CreateObjectException coe) {
-			//Never
+		} catch (CreateObjectException coe) {
+			// Never
 			Log.errorException(coe);
 		}
 
@@ -313,8 +305,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			for (final Test test : tests) {
 				startTestProcessor(test);
 			}
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			Log.errorException(ae);
 		}
 	}
@@ -329,8 +320,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 					if (!testProcessors.containsKey(testId)) {
 						Log.debugMessage("Starting test processor for test '" + testId + "'", Log.DEBUGLEVEL07);
 						startTestProcessor(test);
-					}
-					else {
+					} else {
 						Log.errorMessage("Test processor for test '" + testId + "' already started");
 					}
 				}
@@ -338,8 +328,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 			try {
 				sleep(super.initialTimeToSleep);
-			}
-			catch (InterruptedException ie) {
+			} catch (InterruptedException ie) {
 				Log.errorException(ie);
 			}
 
@@ -364,7 +353,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
-	private static class TestStartTimeComparator<T> implements Comparator<Test> {
+	private static class TestStartTimeComparator implements Comparator<Test> {
 
 		public int compare(final Test test1, final Test test2) {
 			return test1.getStartTime().compareTo(test2.getStartTime());
@@ -375,11 +364,10 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		List<Test> testsL;
 		if (tests instanceof List) {
 			testsL = (List<Test>) tests;
-		}
-		else {
+		} else {
 			testsL = new LinkedList<Test>(tests);
 		}
-		Collections.sort(testsL, new TestStartTimeComparator<Test>());
+		Collections.sort(testsL, new TestStartTimeComparator());
 	}
 
 	protected static void addTests(final List<Test> newTests) {
@@ -407,8 +395,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 			try {
 				StorableObjectPool.flush(ObjectEntities.TEST_CODE, LoginManager.getUserId(), false);
-			}
-			catch (ApplicationException ae) {
+			} catch (ApplicationException ae) {
 				Log.errorException(ae);
 			}
 
@@ -421,57 +408,36 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			if (test.getTemporalType().value() == TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL) {
 				StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
 			}
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			Log.errorException(ae);
 		}
 	}
 
-	protected static void abortTests(final Set<Identifier> testIds) {
+	protected static void stopTests(final Set<Identifier> testIds) {
 		for (final Iterator<Identifier> it = testIds.iterator(); it.hasNext();) {
 			final Identifier id = it.next();
 			try {
 				final Test test = (Test) StorableObjectPool.getStorableObject(id, true);
 				if (test != null) {
-					abortTest(test);
-				}
-				else {
+					stopTest(test);
+				} else {
 					Log.errorMessage("MeasurementControlModule.abortTests | Test '" + id + "' not found");
 				}
-			}
-			catch (ApplicationException ae) {
+			} catch (ApplicationException ae) {
 				Log.errorException(ae);
 			}
 		}
 	}
 
-	private static void abortTest(final Test test) {
+	private static void stopTest(final Test test) {
 		final Identifier id = test.getId();
 		if (testList.contains(test)) {
-			Log.debugMessage("Test '" + id + "' found in testList -- removing and aborting ", Log.DEBUGLEVEL07);
+			Log.debugMessage("Test '" + id + "' found in testList -- removing and stopping ", Log.DEBUGLEVEL07);
 			testList.remove(test);
-			switch (test.getStatus().value()) {
-				case TestStatus._TEST_STATUS_NEW:
-				case TestStatus._TEST_STATUS_SCHEDULED:
-					StorableObjectPool.delete(id);
-					break;
-				default:
-					test.setStatus(TestStatus.TEST_STATUS_ABORTED);
-			}
-
-			try {
-				StorableObjectPool.flush(test.getId(), LoginManager.getUserId(), false);
-			}
-			catch (ApplicationException ae) {
-				Log.errorException(ae);
-			}
-		}
-		else {
-			if (testProcessors.containsKey(id)) {
-				Log.debugMessage("Test '" + id + "' has test processor -- shutting down", Log.DEBUGLEVEL07);
-				TestProcessor testProcessor = testProcessors.get(id);
-				testProcessor.abort();
-			}
+		} else if (testProcessors.containsKey(id)) {
+			Log.debugMessage("Test '" + id + "' has test processor -- shutting down", Log.DEBUGLEVEL07);
+			TestProcessor testProcessor = testProcessors.get(id);
+			testProcessor.stopTest();
 		}
 	}
 
