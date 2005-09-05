@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.80 2005/09/04 17:06:56 krupenn Exp $
+ * $Id: NodeLink.java,v 1.81 2005/09/05 10:34:42 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.ClonedIdsPool;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
@@ -44,14 +45,15 @@ import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.AMFICOM.map.xml.XmlNodeLink;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.util.Log;
 
 /**
  * Фрагмент линии на топологической схеме. Фрагмент представляет собой линейный
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: krupenn $
- * @version $Revision: 1.80 $, $Date: 2005/09/04 17:06:56 $
+ * @author $Author: max $
+ * @version $Revision: 1.81 $, $Date: 2005/09/05 10:34:42 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -62,9 +64,9 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 	private static final long serialVersionUID = 3257290240262617393L;
 
 	private String name;
-	private PhysicalLink physicalLink;
-	private AbstractNode startNode;
-	private AbstractNode endNode;
+	private Identifier physicalLinkId;
+	private Identifier startNodeId;
+	private Identifier endNodeId;
 	private double length;
 
 	private transient CharacterizableDelegate characterizableDelegate;
@@ -75,7 +77,6 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 
 	NodeLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
-
 		try {
 			DatabaseContext.getDatabase(NODELINK_CODE).retrieve(this);
 		} catch (IllegalDataException e) {
@@ -95,9 +96,9 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 			final Identifier creatorId,
 			final StorableObjectVersion version,
 			final String name,
-			final PhysicalLink physicalLink,
-			final AbstractNode startNode,
-			final AbstractNode endNode,
+			final Identifier physicalLinkId,
+			final Identifier startNodeId,
+			final Identifier endNodeId,
 			final double length) {
 		super(id,
 				new Date(System.currentTimeMillis()),
@@ -106,9 +107,9 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 				creatorId,
 				version);
 		this.name = name;
-		this.physicalLink = physicalLink;
-		this.startNode = startNode;
-		this.endNode = endNode;
+		this.physicalLinkId = physicalLinkId;
+		this.startNodeId = startNodeId;
+		this.endNodeId = endNodeId;
 		this.length = length;
 
 		this.selected = false;
@@ -135,9 +136,9 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 					creatorId,
 					StorableObjectVersion.createInitial(),
 					name,
-					physicalLink,
-					starNode,
-					endNode,
+					physicalLink.getId(),
+					starNode.getId(),
+					endNode.getId(),
 					length);
 			physicalLink.addNodeLink(nodeLink);
 
@@ -158,10 +159,9 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 
 		this.length = nlt.length;
 
-		this.physicalLink = StorableObjectPool.getStorableObject(new Identifier(nlt.physicalLinkId), true);
-
-		this.startNode = StorableObjectPool.getStorableObject(new Identifier(nlt.startNodeId), true);
-		this.endNode = StorableObjectPool.getStorableObject(new Identifier(nlt.endNodeId), true);
+		this.physicalLinkId = new Identifier(nlt.physicalLinkId);
+		this.startNodeId = new Identifier(nlt.startNodeId);
+		this.endNodeId = new Identifier(nlt.endNodeId);
 	}
 
 	/**
@@ -177,22 +177,33 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
 				this.version.longValue(),
-				this.physicalLink.getId().getTransferable(),
-				this.startNode.getId().getTransferable(),
-				this.endNode.getId().getTransferable(),
+				this.physicalLinkId.getTransferable(),
+				this.startNodeId.getTransferable(),
+				this.endNodeId.getTransferable(),
 				this.length);
 	}
 
+	Identifier getEndNodeId() {
+		return this.endNodeId;
+	}
+	
+	void setEndNodeId(Identifier endNodeId) {
+		this.endNodeId = endNodeId;
+		super.markAsChanged();
+	}
+
 	public AbstractNode getEndNode() {
-		return this.endNode;
+		try {
+			return StorableObjectPool.<AbstractNode>getStorableObject(this.endNodeId, true);
+		} catch(ApplicationException e) {
+			Log.errorException(e);
+			return null;
+		}
 	}
-
-	protected void setEndNode0(final AbstractNode endNode) {
-		this.endNode = endNode;
-	}
-
+	
 	public void setEndNode(final AbstractNode endNode) {
-		this.setEndNode0(endNode);
+		assert endNode != null : ErrorMessages.NON_NULL_EXPECTED;
+		this.endNodeId = endNode.getId();
 		super.markAsChanged();
 	}
 
@@ -237,18 +248,14 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 //			return 0D;
 //		}
 
-		if(this.physicalLink.getType().getSort().value() == PhysicalLinkTypeSort._INDOOR) {
+		if(getPhysicalLink().getType().getSort().value() == PhysicalLinkTypeSort._INDOOR) {
 			return 0.0D;
 		}
 		return this.length;
 	}
 
-	protected void setLength0(final double length) {
-		this.length = length;
-	}
-
 	public void setLength(final double length) {
-		this.setLength0(length);
+		this.length = length;
 		super.markAsChanged();
 	}
 
@@ -256,50 +263,53 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 		return this.name;
 	}
 
-	protected void setName0(final String name) {
-		this.name = name;
-	}
-
 	public void setName(final String name) {
-		this.setName0(name);
+		this.name = name;
 		super.markAsChanged();
 	}
 
-	public PhysicalLink getPhysicalLink() {
-		return this.physicalLink;
+	Identifier getPhysicalLinkId() {
+		return this.physicalLinkId;
 	}
-
-	protected void setPhysicalLink0(final PhysicalLink physicalLink) {
-		this.physicalLink = physicalLink;
-		if (getStartNode() instanceof TopologicalNode)
-			((TopologicalNode) getStartNode()).setPhysicalLink(physicalLink);
-		if (getEndNode() instanceof TopologicalNode)
-			((TopologicalNode) getEndNode()).setPhysicalLink(physicalLink);
+	
+	public PhysicalLink getPhysicalLink() {
+		try {
+			return StorableObjectPool.<PhysicalLink>getStorableObject(this.physicalLinkId, true);
+		} catch(ApplicationException e) {
+			Log.errorException(e);
+			return null;
+		}
+	}
+	
+	void setPhysicalLinkId(Identifier physicalLinkId) {
+		this.physicalLinkId = physicalLinkId;
 	}
 
 	public void setPhysicalLink(final PhysicalLink physicalLink) {
-		if(this.physicalLink != null) {
-			this.physicalLink.removeNodeLink(this);
-		}
-
-		this.setPhysicalLink0(physicalLink);
-
-		if(physicalLink != null) {
-			physicalLink.addNodeLink(this);
-		}
+		this.physicalLinkId = physicalLink.getId();
 		super.markAsChanged();
 	}
-
-	public AbstractNode getStartNode() {
-		return this.startNode;
+	
+	Identifier getStartNodeId() {
+		return this.startNodeId;
 	}
-
-	protected void setStartNode0(final AbstractNode startNode) {
-		this.startNode = startNode;
+	
+	void setStartNodeId(Identifier startNodeId) {
+		this.startNodeId = startNodeId;
+		markAsChanged();
+	}
+	
+	public AbstractNode getStartNode() {
+		try {
+			return StorableObjectPool.<AbstractNode>getStorableObject(this.startNodeId, true);
+		} catch(ApplicationException e) {
+			Log.errorException(e);
+			return null;
+		}
 	}
 
 	public void setStartNode(final AbstractNode startNode) {
-		this.setStartNode0(startNode);
+		this.startNodeId = startNode.getId();
 		super.markAsChanged();
 	}
 
@@ -308,14 +318,14 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
-			final PhysicalLink physicalLink,
-			final AbstractNode startNode,
-			final AbstractNode endNode,
+			final Identifier physicalLinkId,
+			final Identifier startNodeId,
+			final Identifier endNodeId,
 			final double length) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
-		this.physicalLink = physicalLink;
-		this.startNode = startNode;
-		this.endNode = endNode;
+		this.physicalLinkId = physicalLinkId;
+		this.startNodeId = startNodeId;
+		this.endNodeId = endNodeId;
 		this.length = length;
 	}
 
@@ -444,9 +454,9 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 		assert this.isValid() : OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
-		dependencies.add(this.physicalLink);
-		dependencies.add(this.startNode);
-		dependencies.add(this.endNode);
+		dependencies.add(this.physicalLinkId);
+		dependencies.add(this.startNodeId);
+		dependencies.add(this.endNodeId);
 		return dependencies;
 	}
 
@@ -454,9 +464,9 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 		final XmlNodeLink xmlNodeLink = XmlNodeLink.Factory.newInstance();
 		xmlNodeLink.setId(this.id.getXmlTransferable());
 		xmlNodeLink.setLength(this.length);
-		xmlNodeLink.setPhysicalLinkId(this.physicalLink.getId().getXmlTransferable());
-		xmlNodeLink.setStartNodeId(this.startNode.getId().getXmlTransferable());
-		xmlNodeLink.setEndNodeId(this.endNode.getId().getXmlTransferable());
+		xmlNodeLink.setPhysicalLinkId(this.physicalLinkId.getXmlTransferable());
+		xmlNodeLink.setStartNodeId(this.startNodeId.getXmlTransferable());
+		xmlNodeLink.setEndNodeId(this.endNodeId.getXmlTransferable());
 		
 		return xmlNodeLink;
 	}
@@ -484,10 +494,10 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 		final Identifier startNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE, xmlNodeLink.getStartNodeId());
 		final Identifier endNodeId1 = clonedIdsPool.getClonedId(SITENODE_CODE, xmlNodeLink.getEndNodeId());
 
-		this.physicalLink = StorableObjectPool.getStorableObject(physicalLinkId1, true);
-		this.startNode = StorableObjectPool.getStorableObject(startNodeId1, true);
-		this.endNode = StorableObjectPool.getStorableObject(endNodeId1, true);
-		this.physicalLink.addNodeLink(this);
+		this.physicalLinkId = physicalLinkId1;
+		this.startNodeId = startNodeId1;
+		this.endNodeId = endNodeId1;
+		this.getPhysicalLink().addNodeLink(this);
 	}
 
 	public static NodeLink createInstance(
