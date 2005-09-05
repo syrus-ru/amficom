@@ -1,5 +1,5 @@
 /*
- * $Id: TextComponentMenu.java,v 1.2 2005/09/05 12:22:51 peskovsky Exp $
+ * $Id: TextComponentMenu.java,v 1.3 2005/09/05 12:33:01 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.report.AttachedTextComponent;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.reportbuilder.event.AttachLabelEvent;
-import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.TextAttachingType;
 
@@ -37,9 +36,9 @@ public class TextComponentMenu extends JPopupMenu {
 		this.applicationContext = aContext;
 		
 		//Установка шрифта надписи
-		JMenuItem mi1 = new JMenuItem();
-		mi1.setText(LangModelReport.getString("report.FontChooserDialog.font"));
-		mi1.addActionListener(new java.awt.event.ActionListener() {
+		JMenuItem setFontMenuItem = new JMenuItem();
+		setFontMenuItem.setText(LangModelReport.getString("report.FontChooserDialog.font"));
+		setFontMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent el) {
 				AttachedTextComponent component = TextComponentMenu.this.compElement;
 				AttachedTextStorableElement element =
@@ -56,9 +55,9 @@ public class TextComponentMenu extends JPopupMenu {
 		});
 
 		//Установка вертикальной привязки		
-		JMenuItem mi2 = new JMenuItem();
-		mi2.setText(LangModelReport.getString("report.TextComponentMenu.vertAttach"));
-		mi2.addActionListener(new java.awt.event.ActionListener() {
+		JMenuItem setVertAttachMenuItem = new JMenuItem();
+		setVertAttachMenuItem.setText(LangModelReport.getString("report.TextComponentMenu.vertAttach"));
+		setVertAttachMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent el) {
 				AttachedTextComponent component = TextComponentMenu.this.compElement;
 				AttachedTextStorableElement element =
@@ -114,9 +113,9 @@ public class TextComponentMenu extends JPopupMenu {
 		});
 
 		//Установка горизонтальной привязки		
-		JMenuItem mi3 = new JMenuItem();
-		mi3.setText(LangModelReport.getString("report.TextComponentMenu.horizAttach"));
-		mi3.addActionListener(new java.awt.event.ActionListener() {
+		JMenuItem setHorizAttachMenuItem = new JMenuItem();
+		setHorizAttachMenuItem.setText(LangModelReport.getString("report.TextComponentMenu.horizAttach"));
+		setHorizAttachMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent el) {
 				AttachedTextComponent component = TextComponentMenu.this.compElement;
 				AttachedTextStorableElement element =
@@ -172,9 +171,9 @@ public class TextComponentMenu extends JPopupMenu {
 		});
 
 		//Отмена привязок		
-		JMenuItem mi4 = new JMenuItem();
-		mi4.setText(LangModelReport.getString("report.TextComponentMenu.removeAttach"));
-		mi4.addActionListener(new java.awt.event.ActionListener() {
+		JMenuItem deleteAttachMenuItem = new JMenuItem();
+		deleteAttachMenuItem.setText(LangModelReport.getString("report.TextComponentMenu.removeAttach"));
+		deleteAttachMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent el) {
 				AttachedTextComponent component = TextComponentMenu.this.compElement;
 				AttachedTextStorableElement element =
@@ -187,10 +186,10 @@ public class TextComponentMenu extends JPopupMenu {
 				TextComponentMenu.this.setVisible(false);
 			}
 		});
-		this.add(mi1);
-		this.add(mi2);
-		this.add(mi3);
-		this.add(mi4);
+		this.add(setFontMenuItem);
+		this.add(setVertAttachMenuItem);
+		this.add(setHorizAttachMenuItem);
+		this.add(deleteAttachMenuItem);
 
 	}
 }
