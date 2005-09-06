@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.38 2005/08/08 11:36:20 arseniy Exp $
+ * $Id: MapViewDatabase.java,v 1.39 2005/09/06 14:17:33 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,18 @@
  */
 
 package com.syrus.AMFICOM.mapview;
+
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.MAPVIEW_SCHEME;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.LINK_COLUMN_MAPVIEW_ID;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.LINK_COLUMN_SCHEME_ID;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_LONGITUDE;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_LATITUDE;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_SCALE;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_DEFAULTSCALE;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_MAP_ID;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_DOMAIN_ID;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,35 +53,11 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/08/08 11:36:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/09/06 14:17:33 $
+ * @author $Author: max $
  * @module mapview
  */
 public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
-	// domain_id VARCHAR2(32),
-	public static final String COLUMN_DOMAIN_ID = "domain_id";
-	// name VARCHAR2(128),
-	public static final String COLUMN_NAME = "name";
-	// description VARCHAR2(256),
-	public static final String COLUMN_DESCRIPTION = "description";
-	// longitude FLOAT,
-	public static final String COLUMN_LONGITUDE = "longitude";
-	// latitude FLOAT,
-	public static final String COLUMN_LATITUDE = "latitude";
-	// scale FLOAT,
-	public static final String COLUMN_SCALE = "scale";
-	// defaultScale FLOAT,
-	public static final String COLUMN_DEFAULTSCALE = "defaultScale";
-	// map_id VARCHAR2(32),
-	public static final String COLUMN_MAP_ID = "map_id";
-
-	// linked table ::
-	private static final String MAPVIEW_SCHEME = "MapViewScheme";
-	// mapview_id VARCHAR2(32),
-	private static final String LINK_COLUMN_MAPVIEW_ID = "mapview_id";
-	// scheme_id VARCHAR2(32),
-	private static final String LINK_COLUMN_SCHEME_ID = "scheme_id";
-
 	private static String columns;
 
 	private static String updateMultipleSQLValues;	
