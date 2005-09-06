@@ -1,4 +1,10 @@
-
+/*-
+ * $Id: PlanPanel.java,v 1.43 2005/09/06 07:48:37 bob Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.Color;
@@ -42,9 +48,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 
-public class PlanPanel extends JPanel implements 
-// TestsEditor, TestEditor, IntervalsEditor, 
-ActionListener, PropertyChangeListener {
+/**
+ * @version $Revision: 1.43 $, $Date: 2005/09/06 07:48:37 $
+ * @author $Author: bob $
+ * @module scheduler
+ */
+public class PlanPanel extends JPanel implements ActionListener, PropertyChangeListener {
 
 	private static final long	serialVersionUID	= 3258417243925984817L;
 
@@ -83,13 +92,21 @@ ActionListener, PropertyChangeListener {
 	/**
 	 * SCALES in milliseconds
 	 */
-	public static final long[]		SCALES_MS			= new long[] { 1000 * 60 * 10, 1000 * 60 * 60,
-			1000 * 60 * 60 * 6, 1000 * 60 * 60 * 24, 1000 * 60 * 60 * 24 * 7, 1000 * 60 * 60 * 31};
+	public static final long[]		SCALES_MS			= new long[] { 
+		1000L * 60L * 10L, 
+		1000L * 60L * 60L,
+		1000L * 60L * 60L * 6L, 
+		1000L * 60L * 60L * 24L, 
+		1000L * 60L * 60L * 24L * 7L, 
+		1000L * 60L * 60L * 31L};
 
-	protected static final Step[]	STEPS				= new Step[] { new Step(Calendar.MINUTE, 1, 10, 6, 1),
-			new Step(Calendar.MINUTE, 10, 60, 5, 5), new Step(Calendar.HOUR_OF_DAY, 1, 6, 6, 1),
-			new Step(Calendar.HOUR_OF_DAY, 4, 24, 4, 2), new Step(Calendar.DAY_OF_MONTH, 1, 7, 4, 1),
-			new Step(Calendar.DAY_OF_MONTH, 5, 30, 5, 1),};
+	protected static final Step[]	STEPS				= new Step[] { 
+		new Step(Calendar.MINUTE, 1, 10, 6, 1),
+		new Step(Calendar.MINUTE, 10, 60, 5, 5), 
+		new Step(Calendar.HOUR_OF_DAY, 1, 6, 6, 1),
+		new Step(Calendar.HOUR_OF_DAY, 4, 24, 4, 2), 
+		new Step(Calendar.DAY_OF_MONTH, 1, 7, 4, 1),
+		new Step(Calendar.DAY_OF_MONTH, 5, 30, 5, 1)};
 	protected int					actualScale			= 0;
 
 	protected Calendar				cal					= Calendar.getInstance();
