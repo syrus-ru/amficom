@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.85 2005/09/06 15:31:16 max Exp $
+ * $Id: Map.java,v 1.86 2005/09/06 17:52:56 arseniy Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: max $
- * @version $Revision: 1.85 $, $Date: 2005/09/06 15:31:16 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.86 $, $Date: 2005/09/06 17:52:56 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -137,7 +137,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		this.mapIds = new HashSet<Identifier>();
 		this.mapLibraryIds = new HashSet<Identifier>();
 		this.externalNodeIds = new HashSet<Identifier>();
-		
+
 		this.selectedElements = new HashSet<MapElement>();
 		this.allElements = new LinkedList<MapElement>();
 		this.nodeElements = new HashSet<AbstractNode>();
@@ -147,8 +147,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 			final Identifier domainId,
 			final String name,
 			final String description) throws CreateObjectException {
-		if (name == null || description == null || creatorId == null || domainId == null)
+		if (name == null || description == null || creatorId == null || domainId == null) {
 			throw new IllegalArgumentException("Argument is 'null'");
+		}
 
 		try {
 			final Map map = new Map(IdentifierPool.getGeneratedIdentifier(MAP_CODE),
@@ -185,7 +186,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		this.mapIds = Identifier.fromTransferables(mt.mapIds);
 		this.externalNodeIds = Identifier.fromTransferables(mt.externalNodeIds);
 		this.mapLibraryIds = Identifier.fromTransferables(mt.mapLibraryIds);
-		
+
 		this.allElements = new LinkedList<MapElement>();
 		this.nodeElements = new HashSet<AbstractNode>();
 		this.selectedElements = new HashSet<MapElement>();
@@ -293,7 +294,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 			}
 		}
 	}
-	
+
 	public Set<Mark> getMarks() {
 		try {
 			return Collections.unmodifiableSet(StorableObjectPool.<Mark>getStorableObjects(this.collectorIds, true));
@@ -493,8 +494,8 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 	public Set<Collector> getAllCollectors() {
 		final Set<Collector> returnElements = new HashSet<Collector>();
-		returnElements.addAll(getCollectors());
-		for (final Map innerMap : getMaps()) {
+		returnElements.addAll(this.getCollectors());
+		for (final Map innerMap : this.getMaps()) {
 			returnElements.addAll(innerMap.getAllCollectors());
 		}
 		return Collections.unmodifiableSet(returnElements);
@@ -502,8 +503,8 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 	public Set<Mark> getAllMarks() {
 		final Set<Mark> returnElements = new HashSet<Mark>();
-		returnElements.addAll(getMarks());
-		for (final Map innerMap : getMaps()) {
+		returnElements.addAll(this.getMarks());
+		for (final Map innerMap : this.getMaps()) {
 			returnElements.addAll(innerMap.getAllMarks());
 		}
 		return Collections.unmodifiableSet(returnElements);
@@ -511,8 +512,8 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 	public Set<NodeLink> getAllNodeLinks() {
 		final Set<NodeLink> returnElements = new HashSet<NodeLink>();
-		returnElements.addAll(getNodeLinks());
-		for (final Map innerMap : getMaps()) {
+		returnElements.addAll(this.getNodeLinks());
+		for (final Map innerMap : this.getMaps()) {
 			returnElements.addAll(innerMap.getAllNodeLinks());
 		}
 		return Collections.unmodifiableSet(returnElements);
@@ -520,8 +521,8 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 	public Set<PhysicalLink> getAllPhysicalLinks() {
 		final Set<PhysicalLink> returnElements = new HashSet<PhysicalLink>();
-		returnElements.addAll(getPhysicalLinks());
-		for (final Map innerMap : getMaps()) {
+		returnElements.addAll(this.getPhysicalLinks());
+		for (final Map innerMap : this.getMaps()) {
 			returnElements.addAll(innerMap.getAllPhysicalLinks());
 		}
 		return Collections.unmodifiableSet(returnElements);
@@ -529,8 +530,8 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 	public Set<SiteNode> getAllSiteNodes() {
 		final Set<SiteNode> returnElements = new HashSet<SiteNode>();
-		returnElements.addAll(getSiteNodes());
-		for (final Map innerMap : getMaps()) {
+		returnElements.addAll(this.getSiteNodes());
+		for (final Map innerMap : this.getMaps()) {
 			returnElements.addAll(innerMap.getAllSiteNodes());
 		}
 		return Collections.unmodifiableSet(returnElements);
@@ -538,8 +539,8 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 	public Set<TopologicalNode> getAllTopologicalNodes() {
 		final Set<TopologicalNode> returnElements = new HashSet<TopologicalNode>();
-		returnElements.addAll(getTopologicalNodes());
-		for (final Map innerMap : getMaps()) {
+		returnElements.addAll(this.getTopologicalNodes());
+		for (final Map innerMap : this.getMaps()) {
 			returnElements.addAll(innerMap.getAllTopologicalNodes());
 		}
 		return Collections.unmodifiableSet(returnElements);
@@ -589,10 +590,11 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		if (node instanceof SiteNode) {
 			this.siteNodeIds.remove(node.getId());
 			this.externalNodeIds.remove(node.getId());
-		} else if (node instanceof TopologicalNode)
+		} else if (node instanceof TopologicalNode) {
 			this.topologicalNodeIds.remove(node.getId());
-		else if (node instanceof Mark)
+		} else if (node instanceof Mark) {
 			this.markIds.remove(node.getId());
+		}
 		node.setRemoved(true);
 		super.markAsChanged();
 	}
@@ -606,8 +608,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 */
 	public SiteNode getSiteNode(final Identifier siteId) {
 		for (final SiteNode siteNode : this.getAllSiteNodes()) {
-			if (siteNode.getId().equals(siteId))
+			if (siteNode.getId().equals(siteId)) {
 				return siteNode;
+			}
 		}
 		return null;
 	}
@@ -621,8 +624,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 */
 	public TopologicalNode getTopologicalNode(final Identifier topologicalNodeId) {
 		for (final TopologicalNode topologicalNode : this.getAllTopologicalNodes()) {
-			if (topologicalNode.getId().equals(topologicalNodeId))
+			if (topologicalNode.getId().equals(topologicalNodeId)) {
 				return topologicalNode;
+			}
 		}
 		return null;
 	}
@@ -636,8 +640,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 */
 	public Mark getMark(final Identifier markId) {
 		for (final Mark mark : this.getAllMarks()) {
-			if (mark.getId().equals(markId))
+			if (mark.getId().equals(markId)) {
 				return mark;
+			}
 		}
 		return null;
 	}
@@ -651,10 +656,12 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 */
 	public AbstractNode getNode(final Identifier nodeId) {
 		AbstractNode node = this.getSiteNode(nodeId);
-		if (node == null)
+		if (node == null) {
 			node = this.getTopologicalNode(nodeId);
-		if (node == null)
+		}
+		if (node == null) {
 			node = this.getMark(nodeId);
+		}
 		return null;
 	}
 
@@ -723,8 +730,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 */
 	public Collector getCollector(final PhysicalLink physicalLink) {
 		for (final Collector collector : this.getAllCollectors()) {
-			if (collector.getPhysicalLinks().contains(physicalLink))
+			if (collector.getPhysicalLinks().contains(physicalLink)) {
 				return collector;
+			}
 		}
 		return null;
 	}
@@ -739,8 +747,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	public Set<PhysicalLink> getPhysicalLinksAt(final AbstractNode node) {
 		final HashSet<PhysicalLink> returnLinks = new HashSet<PhysicalLink>();
 		for (final PhysicalLink physicalLink : this.getAllPhysicalLinks()) {
-			if ((physicalLink.getEndNode().equals(node)) || (physicalLink.getStartNode().equals(node)))
+			if ((physicalLink.getEndNode().equals(node)) || (physicalLink.getStartNode().equals(node))) {
 				returnLinks.add(physicalLink);
+			}
 		}
 		return returnLinks;
 	}
@@ -769,9 +778,10 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		this.physicalLinkIds.remove(physicalLink.getId());
 		physicalLink.setRemoved(true);
 
-		final Collector coll = getCollector(physicalLink);
-		if (coll != null)
+		final Collector coll = this.getCollector(physicalLink);
+		if (coll != null) {
 			coll.removePhysicalLink(physicalLink);
+		}
 		super.markAsChanged();
 	}
 
@@ -784,8 +794,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 */
 	public PhysicalLink getPhysicalLink(final Identifier phisicalLinkId) {
 		for (final PhysicalLink physicalLink : this.getAllPhysicalLinks()) {
-			if (physicalLink.getId().equals(phisicalLinkId))
+			if (physicalLink.getId().equals(phisicalLinkId)) {
 				return physicalLink;
+			}
 		}
 		return null;
 	}
@@ -853,10 +864,11 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 
 	public List<NodeLink> getNodeLinks(final PhysicalLink link) {
 		final List<NodeLink> nlinks = new ArrayList<NodeLink>();
-		for (final Identifier id : this.nodeLinkIds) {
-			NodeLink nodeLink = getNodeLink(id);
-			if (nodeLink.getPhysicalLink().equals(link))
+		for (final Identifier nodeLinkId : this.nodeLinkIds) {
+			final NodeLink nodeLink = this.getNodeLink(nodeLinkId);
+			if (nodeLink.getPhysicalLink().equals(link)) {
 				nlinks.add(nodeLink);
+			}
 		}
 		return nlinks;
 	}
@@ -912,7 +924,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		this.allElements.addAll(this.getAllNodeLinks());
 		this.allElements.addAll(this.getAllPhysicalLinks());
 		this.allElements.addAll(this.getAllCollectors());
-		
+
 		return Collections.unmodifiableList(this.allElements);
 	}
 
@@ -1025,8 +1037,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	public Set<PhysicalLink> getPhysicalLinks(final AbstractNode node) {
 		final Set<PhysicalLink> returnLinks = new HashSet<PhysicalLink>();
 		for (final PhysicalLink physicalLink : this.getPhysicalLinks()) {
-			if ((physicalLink.getEndNode().equals(node)) || (physicalLink.getStartNode().equals(node)))
+			if ((physicalLink.getEndNode().equals(node)) || (physicalLink.getStartNode().equals(node))) {
 				returnLinks.add(physicalLink);
+			}
 		}
 
 		return returnLinks;
@@ -1037,43 +1050,43 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		xmlMap.setId(this.id.getXmlTransferable(importType));
 		xmlMap.setName(this.name);
 		xmlMap.setDescription(this.description);
-		
+
 		final XmlTopologicalNodeSeq xmlTopologicalNodes = xmlMap.addNewTopologicalNodes();
 		final XmlSiteNodeSeq xmlSiteNodes = xmlMap.addNewSiteNodes();
 		final XmlPhysicalLinkSeq xmlPhysicalLinks = xmlMap.addNewPhysicalLinks();
 		final XmlNodeLinkSeq xmlNodeLinks = xmlMap.addNewNodeLinks();
 		final XmlCollectorSeq xmlCollectors = xmlMap.addNewCollectors();
-				
+
 		final Collection<XmlObject> xmlTopologicalNodesArray = new LinkedList<XmlObject>();
 		for (final TopologicalNode topologicalNode : this.getTopologicalNodes()) {
 			xmlTopologicalNodesArray.add(topologicalNode.getXmlTransferable(importType));
 		}
 		xmlTopologicalNodes.setTopologicalNodeArray(xmlTopologicalNodesArray.toArray(new XmlTopologicalNode[xmlTopologicalNodesArray.size()]));
-		
+
 		final Collection<XmlObject> xmlSiteNodesArray = new LinkedList<XmlObject>();
 		for (final SiteNode siteNode : this.getSiteNodes()) {
 			xmlSiteNodesArray.add(siteNode.getXmlTransferable(importType));
 		}
 		xmlSiteNodes.setSiteNodeArray(xmlSiteNodesArray.toArray(new XmlSiteNode[xmlSiteNodesArray.size()]));
-		
+
 		final Collection<XmlObject> xmlPhysicalLinksArray = new LinkedList<XmlObject>();
 		for (final PhysicalLink physicalLink : this.getPhysicalLinks()) {
 			xmlPhysicalLinksArray.add(physicalLink.getXmlTransferable(importType));
 		}
 		xmlPhysicalLinks.setPhysicalLinkArray(xmlPhysicalLinksArray.toArray(new XmlPhysicalLink[xmlPhysicalLinksArray.size()]));
-		
+
 		final Collection<XmlObject> xmlNodeLinksArray = new LinkedList<XmlObject>();
 		for (final NodeLink nodeLink : this.getNodeLinks()) {
 			xmlNodeLinksArray.add(nodeLink.getXmlTransferable(importType));
 		}
 		xmlNodeLinks.setNodeLinkArray(xmlNodeLinksArray.toArray(new XmlNodeLink[xmlNodeLinksArray.size()]));
-		
+
 		final Collection<XmlObject> xmlCollectorsArray = new LinkedList<XmlObject>();
 		for (final Collector collector : this.getCollectors()) {
 			xmlCollectorsArray.add(collector.getXmlTransferable(importType));
 		}
 		xmlCollectors.setCollectorArray(xmlCollectorsArray.toArray(new XmlCollector[xmlCollectorsArray.size()]));
-		
+
 		xmlMap.setImportType("amficom");
 
 		return xmlMap;
@@ -1100,9 +1113,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 				domainId);
 	}
 
-	public void fromXmlTransferable(final XmlMap xmlMap,
-			final String importType)
-	throws ApplicationException {
+	public void fromXmlTransferable(final XmlMap xmlMap, final String importType) throws ApplicationException {
 		this.name = xmlMap.getName();
 		this.description = xmlMap.getDescription();
 
@@ -1116,23 +1127,21 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		this.mapIds = new HashSet<Identifier>();
 		this.externalNodeIds = new HashSet<Identifier>();
 		this.mapLibraryIds = new HashSet<Identifier>();
-		
+
 		this.selectedElements = new HashSet<MapElement>();
 		this.allElements = new LinkedList<MapElement>();
 		this.nodeElements = new HashSet<AbstractNode>();
-				
+
 		final XmlMapLibraryEntrySeq mapLibraryEntries = xmlMap.getMapLibraryEntries();
-		if(mapLibraryEntries != null) {
+		if (mapLibraryEntries != null) {
 			for (final String xmlMapLibraryEntry : mapLibraryEntries.getMapLibraryEntryArray()) {
-				StorableObjectCondition pTypeCondition = new TypicalCondition(
-						xmlMapLibraryEntry, 
+				final StorableObjectCondition pTypeCondition = new TypicalCondition(xmlMapLibraryEntry,
 						OperationSort.OPERATION_EQUALS,
 						MAPLIBRARY_CODE,
 						StorableObjectWrapper.COLUMN_CODENAME);
-	
-				Collection<MapLibrary> pTypes =
-					StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
-				if(pTypes.size() == 0) {
+
+				final Collection<MapLibrary> pTypes = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, true);
+				if (pTypes.size() == 0) {
 					throw new ApplicationException("Library " + xmlMapLibraryEntry + " does not exist. Cannot proceed with import");
 				}
 				this.addMapLibrary(pTypes.iterator().next());
@@ -1167,12 +1176,10 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 * @param xmlMap
 	 * @throws CreateObjectException
 	 */
-	public static Map createInstance(
-			final Identifier creatorId,
+	public static Map createInstance(final Identifier creatorId,
 			final Identifier domainId,
 			final String importType,
-			final XmlMap xmlMap)
-	throws CreateObjectException {
+			final XmlMap xmlMap) throws CreateObjectException {
 		try {
 			final Identifier id = Identifier.fromXmlTransferable(xmlMap.getId(), MAP_CODE, importType);
 			Map map = StorableObjectPool.getStorableObject(id, true);
