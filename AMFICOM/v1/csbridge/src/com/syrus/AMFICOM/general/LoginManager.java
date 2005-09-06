@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.19 2005/08/11 17:55:17 arseniy Exp $
+ * $Id: LoginManager.java,v 1.20 2005/09/06 19:35:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/11 17:55:17 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/06 19:35:39 $
  * @author $Author: arseniy $
  * @module csbridge
  */
@@ -94,7 +94,7 @@ public final class LoginManager {
 	/*
 	 * @todo Write meaningful processing of all possible error codes
 	 * */
-	public static Set getAvailableDomains() throws CommunicationException, LoginException {
+	public static Set<Domain> getAvailableDomains() throws CommunicationException, LoginException {
 		final LoginServer loginServer = loginServerConnectionManager.getLoginServerReference();
 		try {
 			final IdlDomain[] domainsT = loginServer.transmitAvailableDomains(sessionKey.getTransferable());
