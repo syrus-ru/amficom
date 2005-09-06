@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.3 2005/09/06 10:09:25 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.4 2005/09/06 16:16:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -117,7 +117,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/06 10:09:25 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/06 16:16:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -697,7 +697,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		});
 	}
 	
-JToolBar createPerspecives() {		
+	JToolBar createPerspecives() {		
 		
 		JToolBar perspectives = new JToolBar();
 		
@@ -728,7 +728,7 @@ JToolBar createPerspecives() {
 		return perspectives;
 	}
 	
-	private void arrange() throws ApplicationException {
+	private void arrangeLayoutItems() throws ApplicationException {
 		this.arranging = true;
 		TypicalCondition typicalCondition = new TypicalCondition(
 			this.perspective.getPerspectiveName(), 
@@ -1066,7 +1066,7 @@ JToolBar createPerspecives() {
 		};
 		this.undo.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Undo"));
 		this.undo.setEnabled(false);
-		toolBar.add(this.undo);
+//		toolBar.add(this.undo);
 
 		// Redo
 		URL redoUrl = getClass().getClassLoader().getResource(
@@ -1079,7 +1079,7 @@ JToolBar createPerspecives() {
 		};
 		this.redo.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Redo"));
 		this.redo.setEnabled(false);
-		toolBar.add(this.redo);
+//		toolBar.add(this.redo);
 
 		//
 		// Edit Block
@@ -1513,11 +1513,15 @@ JToolBar createPerspecives() {
 		return this.graph;
 	}
 
+	public Perspective getPerspective() {
+		return this.perspective;
+	}
+	
 	public final void setPerspective(final Perspective perspective) {
 		assert perspective != null;		
 		this.perspective = perspective;
 		try {
-			this.arrange();
+			this.arrangeLayoutItems();
 		} catch (ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
