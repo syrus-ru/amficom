@@ -1,5 +1,5 @@
 /*-
-* $Id: Launcher.java,v 1.1 2005/09/06 09:03:23 bob Exp $
+* $Id: Launcher.java,v 1.2 2005/09/06 09:20:29 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 
 /**
  * local implementation of Винтилйатар
- * @version $Revision: 1.1 $, $Date: 2005/09/06 09:03:23 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/06 09:20:29 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -82,11 +82,16 @@ public final class Launcher {
 			final String msg = "Launcher.launchApplicationClass | applicationClass " 
 				+ applicationClass.getName() 
 				+ ", caught a " + cause.getClass().getName() + " during invocation, exit";
-			System.err.println(msg);			
+			
+			System.err.println(msg);	
+			
 			Log.debugMessage(msg, Log.DEBUGLEVEL01);
+			Log.errorException(cause);
+			
 			final String text = "<html>" 
-				+ LangModelGeneral.getString("Error.GetUncatchedException") + "<br>"
+				+ LangModelGeneral.getString("Error.GetUncatchedException") + ":<br>"
 				+ cause.getClass().getSimpleName() + " : " + cause.getMessage() + "<br>"
+				+ "<br><br>" + LangModelGeneral.getString("Message.Information.ApplicationWillBeTerminated")
 				+ "</html>";
 			JOptionPane.showMessageDialog(null, text, LangModelGeneral.getString("Error"), JOptionPane.ERROR_MESSAGE);
 			System.exit(CANNOT_RUN_EXIT);
