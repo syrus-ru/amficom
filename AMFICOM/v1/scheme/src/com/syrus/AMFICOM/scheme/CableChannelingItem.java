@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.57 2005/09/05 17:43:16 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.58 2005/09/06 15:07:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -59,7 +60,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.58 $, $Date: 2005/09/06 15:07:23 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -753,6 +754,8 @@ public final class CableChannelingItem
 			final XmlCableChannelingItem cableChannelingItem,
 			final String importType)
 	throws ApplicationException {
+		XmlComplementorRegistry.complementStorableObject(cableChannelingItem, CABLECHANNELINGITEM_CODE, importType);
+
 		this.startSpare = cableChannelingItem.getStartSpare();
 		this.endSpare = cableChannelingItem.getEndSpare();
 		this.rowX = cableChannelingItem.getRowX();
