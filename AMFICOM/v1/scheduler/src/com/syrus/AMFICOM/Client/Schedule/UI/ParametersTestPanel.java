@@ -15,11 +15,13 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  */
 public abstract class ParametersTestPanel extends JPanel implements
 		ParametersTest {
-	protected ApplicationContext		aContext;
+	protected final ApplicationContext		aContext;
 	
-	public ParametersTestPanel(ApplicationContext aContext) {
+	public ParametersTestPanel(final ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 	
-	public abstract void setMonitoredElement(MonitoredElement me);
+	public abstract void setMonitoredElement(final MonitoredElement me);
+	
+	public abstract void setEnableEditing(final boolean enable);
 }

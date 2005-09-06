@@ -61,20 +61,21 @@ public class TestParametersPanel implements PropertyChangeListener {
 	ApplicationContext		aContext;
 	SchedulerModel			schedulerModel;
 
-	JComboBox		analysisComboBox;
+	
 
 	JPanel					switchPanel;
 	List<MeasurementSetup>	msList;
 	List<MeasurementSetup>	msListAnalysisOnly;
 
-	WrapperedList			testSetups;
-
-//	JTabbedPane				tabbedPane;
+	// UI components begin
+	private JCheckBox			useSetupsCheckBox;
+	private JLabel				analysisLabel;
+	private JCheckBox			useAnalysisSetupsCheckBox;
+	JComboBox					analysisComboBox;
+	private JLabel				patternsLabel;
+	WrapperedList				testSetups;
+	// UI components end
 	
-	private JCheckBox 		useAnalysisSetupsCheckBox;
-	
-	private JCheckBox 		useSetupsCheckBox;
-
 	private Dispatcher		dispatcher;
 
 	ParametersTestPanel		parametersTestPanel;
@@ -82,8 +83,10 @@ public class TestParametersPanel implements PropertyChangeListener {
 	Identifier		measurementSetupId;
 
 	private final UIDefaults panels = new UIDefaults();
+	
 	PropertyChangeEvent propertyChangeEvent;
-	private JPanel	patternPanel;
+	
+	private JPanel	patternPanel;	
 
 	public TestParametersPanel(final ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -119,10 +122,9 @@ public class TestParametersPanel implements PropertyChangeListener {
 		}
 	}
 
+	@SuppressWarnings("serial")
 	private void createGUI() {
-//		this.tabbedPane = new JTabbedPane();
-		
-		AnalysisType[] analysisTypes = AnalysisType.values();
+		final AnalysisType[] analysisTypes = AnalysisType.values();
 
 		Comparator<AnalysisType> comparator = new Comparator<AnalysisType>() {
 			public int compare(	AnalysisType at1,
@@ -152,13 +154,10 @@ public class TestParametersPanel implements PropertyChangeListener {
 			}
 		});
 		
-//		this.analysisComboBox.setEditable(true);
-		
-		
 		this.switchPanel = new JPanel(new CardLayout());
 
 		this.patternPanel = new JPanel(new GridBagLayout());
-		GridBagConstraints gbc = new GridBagConstraints();
+		final GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.0;
@@ -169,12 +168,22 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 		
 		this.useSetupsCheckBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParameter.UseSetup"));
+		this.useSetupsCheckBox.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
+				JCheckBox checkBox = (JCheckBox) e.getSource();
+				boolean useSetup = checkBox.isSelected();
+				if (TestParametersPanel.this.parametersTestPanel != null) {					 
+					TestParametersPanel.this.parametersTestPanel.setEnableEditing(!useSetup);
+				}
+				setEnableEditing(useSetup);
+			}
+		});		
 		this.patternPanel.add(this.useSetupsCheckBox, gbc);
 
 		this.useAnalysisSetupsCheckBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParameter.WithAnalysisParameters"));
 		this.useAnalysisSetupsCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
-				JCheckBox checkBox = (JCheckBox) e.getSource();
+				final JCheckBox checkBox = (JCheckBox) e.getSource();
 				WrapperedListModel wrapperedListModel = (WrapperedListModel) TestParametersPanel.this.testSetups.getModel();
 				Object selectedValue = TestParametersPanel.this.testSetups.getSelectedValue();
 				int selectedIndex = TestParametersPanel.this.testSetups.getSelectedIndex();
@@ -204,28 +213,28 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.patternPanel.add(this.useAnalysisSetupsCheckBox, gbc);
 		
 
-		final JLabel analysisLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Analysis")); //$NON-NLS-1$
-		this.patternPanel.add(analysisLabel, gbc);
+		this.analysisLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Analysis")); //$NON-NLS-1$
+		this.patternPanel.add(this.analysisLabel, gbc);
 		this.patternPanel.add(this.analysisComboBox, gbc);
-		this.patternPanel.add(new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Patterns")), gbc);
+		this.patternsLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Patterns"));
+		this.patternPanel.add(this.patternsLabel, gbc);
 
 		this.analysisComboBox.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				JComboBox comboBox = (JComboBox) e.getSource();
-				AnalysisType analysisType = (AnalysisType) comboBox.getSelectedItem();
-				java.util.Set selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
+				final JComboBox comboBox = (JComboBox) e.getSource();
+				final AnalysisType analysisType = (AnalysisType) comboBox.getSelectedItem();
+				final Set<Identifier> selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
 				if (selectedTestIds != null && !selectedTestIds.isEmpty()
 						&& TestParametersPanel.this.propertyChangeEvent == null) {
 					try {
-						java.util.Set storableObjects = StorableObjectPool.getStorableObjects(selectedTestIds, true);
-						for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
-							Test test = (Test) iterator.next();
+						final Set<Test> tests = StorableObjectPool.getStorableObjects(selectedTestIds, true);
+						for (final Test test : tests) {
 							if (test.isChanged()) {
 								test.setAnalysisType(analysisType != null ? analysisType : null);
 							}
 						}
-					} catch (ApplicationException e1) {
+					} catch (final ApplicationException e1) {
 						AbstractMainFrame.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
 					}
 				}
@@ -234,72 +243,6 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 		this.testSetups = new WrapperedList(MeasurementSetupWrapper.getInstance(),
 											StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_ID);
-//		this.testSetups.addMouseListener(new MouseAdapter() {
-//
-//			@Override
-//			public void mouseClicked(MouseEvent e) {
-//				if (SwingUtilities.isRightMouseButton(e)) {
-//					final WrapperedList objList = (WrapperedList) e.getSource();
-//					final MeasurementSetup measurementSetup1 = (MeasurementSetup) objList.getSelectedValue();
-//					if (measurementSetup1 == null) {
-//						return;
-//					}
-//					final JPopupMenu popup = new JPopupMenu();
-//					
-//					final JMenuItem msSummaryInfo = new JMenuItem(LangModelSchedule.getString("Measurement setup summary info"));					
-//					msSummaryInfo.addActionListener(new ActionListener() {
-//
-//						public void actionPerformed(ActionEvent e1) {
-//							MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
-//							String info = (String) wrapper.getValue(measurementSetup1,
-//								MeasurementSetupWrapper.SUMMARY_INFO);
-//							JOptionPane.showConfirmDialog(objList, info, LangModelSchedule.getString("Measurement setup summary info"),
-//								JOptionPane.DEFAULT_OPTION, JOptionPane.INFORMATION_MESSAGE);
-//
-//						}
-//					});
-//					
-//					popup.add(msSummaryInfo);
-//
-//					if (measurementSetup1.isChanged()) {
-//						
-//						final JMenuItem msRename = new JMenuItem(LangModelSchedule.getString("Rename Measurement setup"));					
-//						msRename.addActionListener(new ActionListener() {
-//	
-//							public void actionPerformed(ActionEvent e1) {
-//								MeasurementSetupWrapper wrapper = MeasurementSetupWrapper.getInstance();
-//								String info = (String) wrapper.getValue(measurementSetup1,
-//									MeasurementSetupWrapper.SUMMARY_INFO);
-//								Object object = JOptionPane.showInputDialog(objList, 
-//									LangModelSchedule.getString("Rename Measurement setup") + '\n'
-//									+ measurementSetup1.getDescription() + "\n\n"
-//									+ LangModelSchedule.getString("Measurement setup summary info") + '\n'
-//									+ info + "\n\n" + LangModelSchedule.getString("New Measurement setup name") + ':',
-//									LangModelSchedule.getString("Rename Measurement setup"),
-//									JOptionPane.PLAIN_MESSAGE,
-//				                    null,
-//				                    null,
-//				                    measurementSetup1.getDescription());
-//								
-//								if (object != null) {
-//									measurementSetup1.setDescription((String) object);
-//									WrapperedListModel wrapperedListModel = (WrapperedListModel) TestParametersPanel.this.testSetups.getModel();
-//									wrapperedListModel.sort();
-//									
-//									objList.setSelectedValue(measurementSetup1, true);
-//								}
-//	
-//							}
-//						});
-//					popup.add(msRename);
-//					}
-//
-//					popup.show(objList, e.getX(), e.getY());
-//					
-//				}
-//			}
-//		});
-
 		this.testSetups.setEnabled(false);
 		this.testSetups.addListSelectionListener(new ListSelectionListener() {
 
@@ -356,8 +299,21 @@ public class TestParametersPanel implements PropertyChangeListener {
 		gbc.weighty = 0.0;
 		this.patternPanel.add(this.switchPanel, gbc);
 		this.analysisComboBox.setEnabled(false);
+		this.useSetupsCheckBox.doClick();
 	}
 
+	void setEnableEditing(final boolean enable) {
+		this.testSetups.setEnabled(enable);
+		if (!enable) {
+			if (this.useAnalysisSetupsCheckBox.isSelected()) {
+				this.useAnalysisSetupsCheckBox.doClick();
+			}
+		}
+		this.useAnalysisSetupsCheckBox.setEnabled(enable);
+		this.patternsLabel.setEnabled(enable);
+		this.analysisLabel.setEnabled(enable);
+	}
+	
 	public AnalysisType getAnalysisType() {
 		return this.useAnalysisSetupsCheckBox.isSelected() ? 
 				(AnalysisType) this.analysisComboBox.getSelectedItem() : 
@@ -527,6 +483,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 	}
 
 
+	@SuppressWarnings("unchecked")
 	public void propertyChange(PropertyChangeEvent evt) {
 		this.propertyChangeEvent = evt;
 		// String commandName = ae.getActionCommand();
@@ -548,6 +505,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 					this.parametersTestPanel.setMonitoredElement(me);
 					this.switchPanel.add(this.parametersTestPanel, "");
 					this.patternPanel.revalidate();
+					this.parametersTestPanel.setEnableEditing(!this.useSetupsCheckBox.isSelected());
 				}
 			} catch (ApplicationException e) {
 				AbstractMainFrame.showErrorMessage(this.patternPanel, e);

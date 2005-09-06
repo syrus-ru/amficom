@@ -61,7 +61,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/09/05 14:14:34 $
+ * @version $Revision: 1.74 $, $Date: 2005/09/06 07:48:17 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -125,8 +125,16 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	Map<String, String> indexOfRefraction;
 	Map<String, String> averageCount;
 
+	
+	// UI items begin
+	private JLabel			refractLabel;
+	private JLabel			waveLengthLabel;
+	private JLabel			countOfAverageOutLabel;
+	private JLabel			resolutionLabel;
+	private JLabel			maxDistanceLabel;
+	private JLabel 			pulseWidthLabel;
+	
 	private JTextField		refractTextField;
-
 	private JComboBox		waveLengthComboBox;
 	JComboBox				maxDistanceComboBox;
 	JCheckBox				highResolutionCheckBox;
@@ -138,7 +146,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	private JCheckBox		gsOptionBox;
 	private JCheckBox		bcOptionBox;
 	private JCheckBox		lfdOptionBox;
-
+	//	UI items end
+	
 	SchedulerModel			schedulerModel;
 
 	boolean					skip;
@@ -146,12 +155,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	private Identifier		measurementPortId;
 	private Identifier		meId;
 
-	private JLabel			refractLabel;
-	private JLabel			waveLengthLabel;
-	private JLabel			countOfAverageOutLabel;
-	private JLabel			resolutionLabel;
-	private JLabel			maxDistanceLabel;
-	private JLabel 			pulseWidthLabel;
+
 	
 	Identifier				setId;
 
@@ -161,9 +165,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	private Map<ParameterType, String>				unchangedObjects;
 	private Dispatcher		dispatcher;
 
-	public ReflectometryTestPanel(ApplicationContext aContext) {
+	public ReflectometryTestPanel(final ApplicationContext aContext) {
 		super(aContext);
-		this.aContext = aContext;
 		this.dispatcher = aContext.getDispatcher();
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		this.createGUI();
@@ -171,258 +174,259 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	public synchronized ParameterSet getSet() {
 		ParameterSet parameterSet = null;
-		if (this.setId != null) {
-//			System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " != null");
-			try {
-				parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(this.setId, true);
-				if (!parameterSet.isChanged()) {
-//					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " !set.isChanged()");
-					final Parameter[] parameters = parameterSet.getParameters();
-					for (int i = 0; i < parameters.length; i++) {
-						final ParameterType type = parameters[i].getType();
-						ParameterType typeUnchanged = type;
-						Object value = null;
-
-						// = parameters[i].getStringValue();
-						if (type.equals(ParameterType.REF_WAVE_LENGTH)) {
-							value = this.waveLengthComboBox.getSelectedItem().toString();
-						} else if (type.equals(ParameterType.REF_TRACE_LENGTH)) {
-							value = this.maxDistanceComboBox.getSelectedItem();
-						} else if (type.equals(ParameterType.REF_RESOLUTION)) {
-							value = this.resolutionComboBox.getSelectedItem();
-						} else if (type.equals(ParameterType.REF_PULSE_WIDTH_HIGH_RES)) {
-							if (this.highResolutionCheckBox.isSelected()) {
-								value = this.pulseWidthHiResComboBox.getSelectedItem();
-							} else {
-								value = this.pulseWidthLowResComboBox.getSelectedItem();
-								typeUnchanged = ParameterType.REF_PULSE_WIDTH_LOW_RES;
+			synchronized (this) {
+			if (this.setId != null) {
+				try {
+					parameterSet = (ParameterSet) StorableObjectPool.getStorableObject(this.setId, true);
+					if (!parameterSet.isChanged()) {
+	//					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " !set.isChanged()");
+						final Parameter[] parameters = parameterSet.getParameters();
+						for (int i = 0; i < parameters.length; i++) {
+							final ParameterType type = parameters[i].getType();
+							ParameterType typeUnchanged = type;
+							Object value = null;
+	
+							// = parameters[i].getStringValue();
+							if (type.equals(ParameterType.REF_WAVE_LENGTH)) {
+								value = this.waveLengthComboBox.getSelectedItem().toString();
+							} else if (type.equals(ParameterType.REF_TRACE_LENGTH)) {
+								value = this.maxDistanceComboBox.getSelectedItem();
+							} else if (type.equals(ParameterType.REF_RESOLUTION)) {
+								value = this.resolutionComboBox.getSelectedItem();
+							} else if (type.equals(ParameterType.REF_PULSE_WIDTH_HIGH_RES)) {
+								if (this.highResolutionCheckBox.isSelected()) {
+									value = this.pulseWidthHiResComboBox.getSelectedItem();
+								} else {
+									value = this.pulseWidthLowResComboBox.getSelectedItem();
+									typeUnchanged = ParameterType.REF_PULSE_WIDTH_LOW_RES;
+								}
+							} else if (type.equals(ParameterType.REF_PULSE_WIDTH_LOW_RES)) {
+								if (!this.highResolutionCheckBox.isSelected()) {
+									value = this.pulseWidthLowResComboBox.getSelectedItem();
+								} else {
+									value = this.pulseWidthHiResComboBox.getSelectedItem();
+									typeUnchanged = ParameterType.REF_PULSE_WIDTH_HIGH_RES;
+								}
+							} else if (type.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
+								value = this.refractTextField.getText();
+							} else if (type.equals(ParameterType.REF_AVERAGE_COUNT)) {
+								value = this.averageQuantityComboBox.getSelectedItem();
+							} else if (type.equals(ParameterType.REF_FLAG_GAIN_SPLICE_ON)) {
+								value = Boolean.toString(this.gsOptionBox.isSelected());
+							} else if (type.equals(ParameterType.REF_FLAG_LIFE_FIBER_DETECT)) {
+								value = Boolean.toString(this.lfdOptionBox.isSelected());
 							}
-						} else if (type.equals(ParameterType.REF_PULSE_WIDTH_LOW_RES)) {
-							if (!this.highResolutionCheckBox.isSelected()) {
-								value = this.pulseWidthLowResComboBox.getSelectedItem();
-							} else {
-								value = this.pulseWidthHiResComboBox.getSelectedItem();
-								typeUnchanged = ParameterType.REF_PULSE_WIDTH_HIGH_RES;
+							if (value != null && !value.equals(this.unchangedObjects.get(typeUnchanged))) {
+								this.setId = null;
+								break;
 							}
-						} else if (type.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
-							value = this.refractTextField.getText();
-						} else if (type.equals(ParameterType.REF_AVERAGE_COUNT)) {
-							value = this.averageQuantityComboBox.getSelectedItem();
-						} else if (type.equals(ParameterType.REF_FLAG_GAIN_SPLICE_ON)) {
-							value = Boolean.toString(this.gsOptionBox.isSelected());
-						} else if (type.equals(ParameterType.REF_FLAG_LIFE_FIBER_DETECT)) {
-							value = Boolean.toString(this.lfdOptionBox.isSelected());
 						}
-						if (value != null && !value.equals(this.unchangedObjects.get(typeUnchanged))) {
-							this.setId = null;
-							break;
-						}
-					}
-				} else {
-//					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " set.isChanged()");
-					final Parameter[] parameters = parameterSet.getParameters();
-					for (int i = 0; i < parameters.length; i++) {
-						final ParameterType type = parameters[i].getType();
-						Object value = null;
-						// = parameters[i].getStringValue();
-						if (type.equals(ParameterType.REF_WAVE_LENGTH)) {
-							value = this.waveLengthComboBox.getSelectedItem().toString();
-						} else if (type.equals(ParameterType.REF_TRACE_LENGTH)) {
-							value = this.maxDistanceComboBox.getSelectedItem();
-						} else if (type.equals(ParameterType.REF_RESOLUTION)) {
-							value = this.resolutionComboBox.getSelectedItem();
-						} else if (type.equals(ParameterType.REF_PULSE_WIDTH_HIGH_RES)) {
-							if (this.highResolutionCheckBox.isSelected()) {
-								value = this.pulseWidthHiResComboBox.getSelectedItem();
-							} else {
-								this.unchangedObjects.remove(type);
-								value = this.pulseWidthLowResComboBox.getSelectedItem();
-								final ByteArray byteArray = this.getByteArray(value.toString(), ParameterType.REF_PULSE_WIDTH_LOW_RES);
+					} else {
+	//					System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " set.isChanged()");
+						final Parameter[] parameters = parameterSet.getParameters();
+						for (int i = 0; i < parameters.length; i++) {
+							final ParameterType type = parameters[i].getType();
+							Object value = null;
+							// = parameters[i].getStringValue();
+							if (type.equals(ParameterType.REF_WAVE_LENGTH)) {
+								value = this.waveLengthComboBox.getSelectedItem().toString();
+							} else if (type.equals(ParameterType.REF_TRACE_LENGTH)) {
+								value = this.maxDistanceComboBox.getSelectedItem();
+							} else if (type.equals(ParameterType.REF_RESOLUTION)) {
+								value = this.resolutionComboBox.getSelectedItem();
+							} else if (type.equals(ParameterType.REF_PULSE_WIDTH_HIGH_RES)) {
+								if (this.highResolutionCheckBox.isSelected()) {
+									value = this.pulseWidthHiResComboBox.getSelectedItem();
+								} else {
+									this.unchangedObjects.remove(type);
+									value = this.pulseWidthLowResComboBox.getSelectedItem();
+									final ByteArray byteArray = this.getByteArray(value.toString(), ParameterType.REF_PULSE_WIDTH_LOW_RES);
+									try {
+										final Parameter setParameter = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_LOW_RES,
+												byteArray.getBytes());
+										parameters[i] = setParameter;
+										continue;
+									} catch (CreateObjectException e) {
+										AbstractMainFrame.showErrorMessage(this, e);
+										break;
+									}
+								}
+							} else if (type.equals(ParameterType.REF_PULSE_WIDTH_LOW_RES)) {
+								if (!this.highResolutionCheckBox.isSelected()) {
+									value = this.pulseWidthLowResComboBox.getSelectedItem();
+								} else {
+									this.unchangedObjects.remove(type);
+									value = this.pulseWidthHiResComboBox.getSelectedItem();
+									final ByteArray byteArray = this.getByteArray(value.toString(), ParameterType.REF_PULSE_WIDTH_HIGH_RES);
+									try {
+										final Parameter setParameter = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_HIGH_RES,
+												byteArray.getBytes());
+										parameters[i] = setParameter;
+										continue;
+									} catch (CreateObjectException e) {
+										AbstractMainFrame.showErrorMessage(this, e);
+										break;
+									}
+								}
+							} else if (type.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
+								value = this.refractTextField.getText();
+							} else if (type.equals(ParameterType.REF_AVERAGE_COUNT)) {
+								value = this.averageQuantityComboBox.getSelectedItem();
+							} else if (type.equals(ParameterType.REF_FLAG_GAIN_SPLICE_ON)) {
+								value = Boolean.toString(this.gsOptionBox.isSelected());
+							} else if (type.equals(ParameterType.REF_FLAG_LIFE_FIBER_DETECT)) {
+								value = Boolean.toString(this.lfdOptionBox.isSelected());
+							}
+	
+							final String string = this.unchangedObjects.get(type);
+							if (value != null && (string == null || !string.equals(value))) {
+								final ByteArray byteArray = this.getByteArray(value.toString(), type);
 								try {
-									final Parameter setParameter = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_LOW_RES,
-											byteArray.getBytes());
-									parameters[i] = setParameter;
-									continue;
+									parameters[i] = Parameter.createInstance(type, byteArray.getBytes());
 								} catch (CreateObjectException e) {
 									AbstractMainFrame.showErrorMessage(this, e);
-									break;
 								}
 							}
-						} else if (type.equals(ParameterType.REF_PULSE_WIDTH_LOW_RES)) {
-							if (!this.highResolutionCheckBox.isSelected()) {
-								value = this.pulseWidthLowResComboBox.getSelectedItem();
-							} else {
-								this.unchangedObjects.remove(type);
-								value = this.pulseWidthHiResComboBox.getSelectedItem();
-								final ByteArray byteArray = this.getByteArray(value.toString(), ParameterType.REF_PULSE_WIDTH_HIGH_RES);
-								try {
-									final Parameter setParameter = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_HIGH_RES,
-											byteArray.getBytes());
-									parameters[i] = setParameter;
-									continue;
-								} catch (CreateObjectException e) {
-									AbstractMainFrame.showErrorMessage(this, e);
-									break;
-								}
-							}
-						} else if (type.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
-							value = this.refractTextField.getText();
-						} else if (type.equals(ParameterType.REF_AVERAGE_COUNT)) {
-							value = this.averageQuantityComboBox.getSelectedItem();
-						} else if (type.equals(ParameterType.REF_FLAG_GAIN_SPLICE_ON)) {
-							value = Boolean.toString(this.gsOptionBox.isSelected());
-						} else if (type.equals(ParameterType.REF_FLAG_LIFE_FIBER_DETECT)) {
-							value = Boolean.toString(this.lfdOptionBox.isSelected());
+						}				
+						parameterSet.setParameters(parameters);
+					
+					}
+				} catch (ApplicationException e) {
+					AbstractMainFrame.showErrorMessage(this, e);
+					this.setId = null;
+				}
+			} else  {
+	//			System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " == null");
+				try {
+	
+					this.refreshTitles();
+	
+					if (this.unchangedObjects == null) {
+						this.unchangedObjects = new HashMap<ParameterType, String>();
+					} else {
+						this.unchangedObjects.clear();
+					}
+	
+					final Parameter[] params = new Parameter[8];
+	
+					ByteArray byteArray;
+	
+					Object wave = this.waveLengthComboBox.getSelectedItem();
+					if (wave == null) {
+						throw new IllegalArgumentException(LangModelSchedule.getString("Error.WaveLengthIsNotSet")); //$NON-NLS-1$
+					}
+	
+					String waveStr = wave.toString();
+					if ((waveStr == null) || (waveStr.length() == 0)) {
+						throw new IllegalArgumentException(LangModelSchedule.getString("Error.WaveLengthIsNotSet")); //$NON-NLS-1$
+					}
+	
+					byteArray = this.getByteArray(waveStr, ParameterType.REF_WAVE_LENGTH);
+	
+					params[0] = Parameter.createInstance(ParameterType.REF_WAVE_LENGTH, byteArray.getBytes());
+	
+					Object distance = this.maxDistanceComboBox.getSelectedItem();
+					if (distance == null) {
+						throw new IllegalArgumentException(LangModelSchedule.getString("Error.DistanceIsNotSet")); //$NON-NLS-1$
+					}
+	
+					String distanceStr = distance.toString();
+					if ((distanceStr == null) || (distanceStr.length() == 0)) {
+						throw new IllegalArgumentException(LangModelSchedule.getString("Error.DistanceIsNotSet")); //$NON-NLS-1$
+					}
+					byteArray = this.getByteArray(distanceStr, ParameterType.REF_TRACE_LENGTH);
+	
+					params[1] = Parameter.createInstance(ParameterType.REF_TRACE_LENGTH, byteArray.getBytes());
+	
+					Object resolution = this.resolutionComboBox.getSelectedItem();
+					if (resolution == null) {
+						throw new IllegalArgumentException(LangModelSchedule.getString("Error.ResolutionIsNotSet")); //$NON-NLS-1$
+					}
+					final String resolutionStr = resolution.toString();
+					if ((resolutionStr == null) || (resolutionStr.length() == 0)) {
+						throw new IllegalArgumentException(LangModelSchedule.getString("Error.ResolutionIsNotSet")); //$NON-NLS-1$
+					}
+					byteArray = this.getByteArray(resolutionStr, ParameterType.REF_RESOLUTION);
+	
+					params[2] = Parameter.createInstance(ParameterType.REF_RESOLUTION, byteArray.getBytes());
+	
+					if (this.highResolutionCheckBox.isSelected()) {
+						final Object pulse = this.pulseWidthHiResComboBox.getSelectedItem();
+						if (pulse == null) {
+							throw new IllegalArgumentException(LangModelSchedule.getString("Error.PulseWidthIsNotSet")); //$NON-NLS-1$
 						}
-
-						final String string = this.unchangedObjects.get(type);
-						if (value != null && (string == null || !string.equals(value))) {
-							final ByteArray byteArray = this.getByteArray(value.toString(), type);
-							try {
-								parameters[i] = Parameter.createInstance(type, byteArray.getBytes());
-							} catch (CreateObjectException e) {
-								AbstractMainFrame.showErrorMessage(this, e);
-							}
+						final String pulseStr = pulse.toString();
+						if ((pulseStr == null) || (pulseStr.length() == 0)) {
+							throw new IllegalArgumentException(LangModelSchedule.getString("Error.PulseWidthIsNotSet")); //$NON-NLS-1$
 						}
-					}				
-					parameterSet.setParameters(parameters);
-				
+	
+						byteArray = this.getByteArray(pulseStr, ParameterType.REF_PULSE_WIDTH_HIGH_RES);
+	
+						params[3] = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_HIGH_RES, byteArray.getBytes());
+					} else {
+						final Object pulse = this.pulseWidthLowResComboBox.getSelectedItem();
+						if (pulse == null) {
+							throw new IllegalArgumentException(LangModelSchedule.getString("Error.PulseWidthIsNotSet")); //$NON-NLS-1$
+						}
+						final String pulseStr = pulse.toString();
+						if ((pulseStr == null) || (pulseStr.length() == 0)) {
+							throw new IllegalArgumentException(LangModelSchedule.getString("Error.PulseWidthIsNotSet")); //$NON-NLS-1$
+						}
+	
+						byteArray = this.getByteArray(pulseStr, ParameterType.REF_PULSE_WIDTH_LOW_RES);
+	
+						params[3] = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_LOW_RES, byteArray.getBytes());
+					}
+	
+					final String refract = this.refractTextField.getText();
+					if ((refract == null) || (refract.length() == 0)) {
+						throw new IllegalArgumentException(LangModelSchedule.getString("Error.IndexOfRefractionIsNotSet")); //$NON-NLS-1$
+					}
+					byteArray = this.getByteArray(refract, ParameterType.REF_INDEX_OF_REFRACTION);
+	
+					params[4] = Parameter.createInstance(ParameterType.REF_INDEX_OF_REFRACTION, byteArray.getBytes());
+	
+					final Object average = this.averageQuantityComboBox.getSelectedItem();
+					if (average == null) {
+						throw new IllegalArgumentException(LangModelSchedule.getString("Error.AverageQuantityIsNotSet")); //$NON-NLS-1$
+					}
+					final String averageStr = average.toString();
+					if ((averageStr == null) || (averageStr.length() == 0)) {
+						throw new IllegalArgumentException(LangModelSchedule.getString("Error.AverageQuantityIsNotSet")); //$NON-NLS-1$
+					}
+	
+					byteArray = this.getByteArray(averageStr, ParameterType.REF_AVERAGE_COUNT);
+	
+					params[5] = Parameter.createInstance(ParameterType.REF_AVERAGE_COUNT, byteArray.getBytes());
+	
+					if (this.meId == null) {
+						throw new IllegalArgumentException(LangModelSchedule.getString(LangModelSchedule.getString("Error.HaveNotChoosenMeasurementElement"))); //$NON-NLS-1$
+					}
+	
+					byteArray = this.getByteArray(Boolean.toString(this.gsOptionBox.isSelected()), ParameterType.REF_FLAG_GAIN_SPLICE_ON);
+					params[6] = Parameter.createInstance(ParameterType.REF_FLAG_GAIN_SPLICE_ON, byteArray.getBytes());
+					
+					byteArray = this.getByteArray(Boolean.toString(this.lfdOptionBox.isSelected()),
+							ParameterType.REF_FLAG_LIFE_FIBER_DETECT);
+					params[7] = Parameter.createInstance(ParameterType.REF_FLAG_LIFE_FIBER_DETECT, byteArray.getBytes());
+	
+					parameterSet = ParameterSet.createInstance(LoginManager.getUserId(),
+							ParameterSetSort.SET_SORT_MEASUREMENT_PARAMETERS,
+							LangModelSchedule.getString("Text.MeasurementParameter.SetCreatedByScheduler"), params, Collections.singleton(this.meId)); //$NON-NLS-1$
+					this.setId = parameterSet.getId();
+	
+	//				System.out.println("ReflectometryTestPanel.getSet() | newSet: " + this.setId);
+					// Log.debugMessage("ReflectometryTestPanel.getSet | ",
+					// Log.FINEST);
+				} catch (IllegalArgumentException e) {
+					// Log.errorException(e);
+					AbstractMainFrame.showErrorMessage(this, e);
+				} catch (ApplicationException ae) {
+					AbstractMainFrame.showErrorMessage(this, ae);
+					this.schedulerModel.setBreakData();
 				}
-			} catch (ApplicationException e) {
-				AbstractMainFrame.showErrorMessage(this, e);
-				this.setId = null;
+			} 
 			}
-		} else  {
-//			System.out.println("ReflectometryTestPanel.getSet() | " + this.setId + " == null");
-			try {
-
-				this.refreshTitles();
-
-				if (this.unchangedObjects == null) {
-					this.unchangedObjects = new HashMap<ParameterType, String>();
-				} else {
-					this.unchangedObjects.clear();
-				}
-
-				final Parameter[] params = new Parameter[8];
-
-				ByteArray byteArray;
-
-				Object wave = this.waveLengthComboBox.getSelectedItem();
-				if (wave == null) {
-					throw new IllegalArgumentException(LangModelSchedule.getString("Error.WaveLengthIsNotSet")); //$NON-NLS-1$
-				}
-
-				String waveStr = wave.toString();
-				if ((waveStr == null) || (waveStr.length() == 0)) {
-					throw new IllegalArgumentException(LangModelSchedule.getString("Error.WaveLengthIsNotSet")); //$NON-NLS-1$
-				}
-
-				byteArray = this.getByteArray(waveStr, ParameterType.REF_WAVE_LENGTH);
-
-				params[0] = Parameter.createInstance(ParameterType.REF_WAVE_LENGTH, byteArray.getBytes());
-
-				Object distance = this.maxDistanceComboBox.getSelectedItem();
-				if (distance == null) {
-					throw new IllegalArgumentException(LangModelSchedule.getString("Error.DistanceIsNotSet")); //$NON-NLS-1$
-				}
-
-				String distanceStr = distance.toString();
-				if ((distanceStr == null) || (distanceStr.length() == 0)) {
-					throw new IllegalArgumentException(LangModelSchedule.getString("Error.DistanceIsNotSet")); //$NON-NLS-1$
-				}
-				byteArray = this.getByteArray(distanceStr, ParameterType.REF_TRACE_LENGTH);
-
-				params[1] = Parameter.createInstance(ParameterType.REF_TRACE_LENGTH, byteArray.getBytes());
-
-				Object resolution = this.resolutionComboBox.getSelectedItem();
-				if (resolution == null) {
-					throw new IllegalArgumentException(LangModelSchedule.getString("Error.ResolutionIsNotSet")); //$NON-NLS-1$
-				}
-				final String resolutionStr = resolution.toString();
-				if ((resolutionStr == null) || (resolutionStr.length() == 0)) {
-					throw new IllegalArgumentException(LangModelSchedule.getString("Error.ResolutionIsNotSet")); //$NON-NLS-1$
-				}
-				byteArray = this.getByteArray(resolutionStr, ParameterType.REF_RESOLUTION);
-
-				params[2] = Parameter.createInstance(ParameterType.REF_RESOLUTION, byteArray.getBytes());
-
-				if (this.highResolutionCheckBox.isSelected()) {
-					final Object pulse = this.pulseWidthHiResComboBox.getSelectedItem();
-					if (pulse == null) {
-						throw new IllegalArgumentException(LangModelSchedule.getString("Error.PulseWidthIsNotSet")); //$NON-NLS-1$
-					}
-					final String pulseStr = pulse.toString();
-					if ((pulseStr == null) || (pulseStr.length() == 0)) {
-						throw new IllegalArgumentException(LangModelSchedule.getString("Error.PulseWidthIsNotSet")); //$NON-NLS-1$
-					}
-
-					byteArray = this.getByteArray(pulseStr, ParameterType.REF_PULSE_WIDTH_HIGH_RES);
-
-					params[3] = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_HIGH_RES, byteArray.getBytes());
-				} else {
-					final Object pulse = this.pulseWidthLowResComboBox.getSelectedItem();
-					if (pulse == null) {
-						throw new IllegalArgumentException(LangModelSchedule.getString("Error.PulseWidthIsNotSet")); //$NON-NLS-1$
-					}
-					final String pulseStr = pulse.toString();
-					if ((pulseStr == null) || (pulseStr.length() == 0)) {
-						throw new IllegalArgumentException(LangModelSchedule.getString("Error.PulseWidthIsNotSet")); //$NON-NLS-1$
-					}
-
-					byteArray = this.getByteArray(pulseStr, ParameterType.REF_PULSE_WIDTH_LOW_RES);
-
-					params[3] = Parameter.createInstance(ParameterType.REF_PULSE_WIDTH_LOW_RES, byteArray.getBytes());
-				}
-
-				final String refract = this.refractTextField.getText();
-				if ((refract == null) || (refract.length() == 0)) {
-					throw new IllegalArgumentException(LangModelSchedule.getString("Error.IndexOfRefractionIsNotSet")); //$NON-NLS-1$
-				}
-				byteArray = this.getByteArray(refract, ParameterType.REF_INDEX_OF_REFRACTION);
-
-				params[4] = Parameter.createInstance(ParameterType.REF_INDEX_OF_REFRACTION, byteArray.getBytes());
-
-				final Object average = this.averageQuantityComboBox.getSelectedItem();
-				if (average == null) {
-					throw new IllegalArgumentException(LangModelSchedule.getString("Error.AverageQuantityIsNotSet")); //$NON-NLS-1$
-				}
-				final String averageStr = average.toString();
-				if ((averageStr == null) || (averageStr.length() == 0)) {
-					throw new IllegalArgumentException(LangModelSchedule.getString("Error.AverageQuantityIsNotSet")); //$NON-NLS-1$
-				}
-
-				byteArray = this.getByteArray(averageStr, ParameterType.REF_AVERAGE_COUNT);
-
-				params[5] = Parameter.createInstance(ParameterType.REF_AVERAGE_COUNT, byteArray.getBytes());
-
-				if (this.meId == null) {
-					throw new IllegalArgumentException(LangModelSchedule.getString(LangModelSchedule.getString("Error.HaveNotChoosenMeasurementElement"))); //$NON-NLS-1$
-				}
-
-				byteArray = this.getByteArray(Boolean.toString(this.gsOptionBox.isSelected()), ParameterType.REF_FLAG_GAIN_SPLICE_ON);
-				params[6] = Parameter.createInstance(ParameterType.REF_FLAG_GAIN_SPLICE_ON, byteArray.getBytes());
-				
-				byteArray = this.getByteArray(Boolean.toString(this.lfdOptionBox.isSelected()),
-						ParameterType.REF_FLAG_LIFE_FIBER_DETECT);
-				params[7] = Parameter.createInstance(ParameterType.REF_FLAG_LIFE_FIBER_DETECT, byteArray.getBytes());
-
-				parameterSet = ParameterSet.createInstance(LoginManager.getUserId(),
-						ParameterSetSort.SET_SORT_MEASUREMENT_PARAMETERS,
-						LangModelSchedule.getString("Text.MeasurementParameter.SetCreatedByScheduler"), params, Collections.singleton(this.meId)); //$NON-NLS-1$
-				this.setId = parameterSet.getId();
-
-//				System.out.println("ReflectometryTestPanel.getSet() | newSet: " + this.setId);
-				// Log.debugMessage("ReflectometryTestPanel.getSet | ",
-				// Log.FINEST);
-			} catch (IllegalArgumentException e) {
-				// Log.errorException(e);
-				AbstractMainFrame.showErrorMessage(this, e);
-			} catch (ApplicationException ae) {
-				AbstractMainFrame.showErrorMessage(this, ae);
-				this.schedulerModel.setBreakData();
-			}
-		} 
 		return parameterSet;
 	}
 
@@ -520,6 +524,29 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		}
 		return byteArray;
 		
+	}
+	
+	@Override
+	public void setEnableEditing(final boolean enable) {
+		this.refractLabel.setEnabled(enable);
+		this.waveLengthLabel.setEnabled(enable);
+		this.countOfAverageOutLabel.setEnabled(enable);
+		this.resolutionLabel.setEnabled(enable);
+		this.maxDistanceLabel.setEnabled(enable);
+		this.pulseWidthLabel.setEnabled(enable);
+
+		this.refractTextField.setEnabled(enable);
+		this.waveLengthComboBox.setEnabled(enable);
+		this.maxDistanceComboBox.setEnabled(enable);
+		this.highResolutionCheckBox.setEnabled(enable);
+		this.pulseWidthHiResComboBox.setEnabled(enable);
+		this.pulseWidthLowResComboBox.setEnabled(enable);
+		this.resolutionComboBox.setEnabled(enable);
+		this.averageQuantityComboBox.setEnabled(enable);
+
+		this.gsOptionBox.setEnabled(enable);
+		this.bcOptionBox.setEnabled(enable);
+		this.lfdOptionBox.setEnabled(enable);
 	}
 
 	@Override
@@ -772,7 +799,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		final Set<Identifier> selectedTestIds = this.schedulerModel.getSelectedTestIds();
 		if (selectedTestIds != null && !selectedTestIds.isEmpty()) {
 			final ParameterSet parameterSet = this.getSet();
-			if (parameterSet.isChanged()) {
+			if (parameterSet != null && parameterSet.isChanged()) {
 				try {
 					final Set<Test> storableObjects = StorableObjectPool.getStorableObjects(selectedTestIds, true);
 					final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
@@ -985,41 +1012,43 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					if (selectedItem == null) {
 						return;
 					}
-					/* 1000 m is 1 km */
-					double maxDistance = 1000.0 * Double.parseDouble(selectedItem.toString());
-					String resolutionItem = (String) ReflectometryTestPanel.this.resolutionComboBox.getSelectedItem();
-					double resolutionOld = Double.parseDouble(resolutionItem);
-					boolean found = false;
-					boolean firstItem = true;
-					boolean firstItemGreater = false;
-					ReflectometryTestPanel.this.resolutionComboBox.removeAllItems();
-					for (Iterator it = ReflectometryTestPanel.this.resolutionList.iterator(); it.hasNext();) {
-						String res = (String) it.next();
-						double resolution = Double.parseDouble(res);
-						if (maxDistance / resolution < ReflectometryTestPanel.this.maxPoints) {
-							if (res.equals(resolutionItem)) {
-								found = true;
-							} else {
-								if (firstItem) {
-									if (resolutionOld < resolution) {
-										firstItemGreater = true;
+					synchronized (ReflectometryTestPanel.this) {
+						/* 1000 m is 1 km */
+						double maxDistance = 1000.0 * Double.parseDouble(selectedItem.toString());
+						String resolutionItem = (String) ReflectometryTestPanel.this.resolutionComboBox.getSelectedItem();
+						double resolutionOld = Double.parseDouble(resolutionItem);
+						boolean found = false;
+						boolean firstItem = true;
+						boolean firstItemGreater = false;
+						ReflectometryTestPanel.this.resolutionComboBox.removeAllItems();
+						for (Iterator it = ReflectometryTestPanel.this.resolutionList.iterator(); it.hasNext();) {
+							String res = (String) it.next();
+							double resolution = Double.parseDouble(res);
+							if (maxDistance / resolution < ReflectometryTestPanel.this.maxPoints) {
+								if (res.equals(resolutionItem)) {
+									found = true;
+								} else {
+									if (firstItem) {
+										if (resolutionOld < resolution) {
+											firstItemGreater = true;
+										}
 									}
 								}
+								
+								firstItem = false;
+								
+								ReflectometryTestPanel.this.resolutionComboBox.addItem(res);
 							}
-							
-							firstItem = false;
-							
-							ReflectometryTestPanel.this.resolutionComboBox.addItem(res);
 						}
-					}
-					
-					if (found) {
-						ReflectometryTestPanel.this.resolutionComboBox.setSelectedItem(resolutionItem);
-					} else {
-						if (firstItemGreater) {
-							ReflectometryTestPanel.this.resolutionComboBox.setSelectedIndex(0);
+						
+						if (found) {
+							ReflectometryTestPanel.this.resolutionComboBox.setSelectedItem(resolutionItem);
 						} else {
-							ReflectometryTestPanel.this.resolutionComboBox.setSelectedIndex(comboBox.getItemCount() - 1);
+							if (firstItemGreater) {
+								ReflectometryTestPanel.this.resolutionComboBox.setSelectedIndex(0);
+							} else {
+								ReflectometryTestPanel.this.resolutionComboBox.setSelectedIndex(comboBox.getItemCount() - 1);
+							}
 						}
 					}
 				}
