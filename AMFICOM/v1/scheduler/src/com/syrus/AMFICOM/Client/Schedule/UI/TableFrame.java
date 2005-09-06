@@ -1,8 +1,10 @@
-/*
- * SaveParametersFrame.java Created on 17.05.2004 18:23:26
- *  
+/*-
+ * $Id: TableFrame.java,v 1.30 2005/09/06 07:45:18 bob Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
-
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
 import java.awt.BorderLayout;
@@ -50,9 +52,13 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
+import com.syrus.util.Log;
 
 /**
+ * @version $Revision: 1.30 $, $Date: 2005/09/06 07:45:18 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
+ * @module scheduler
  */
 public class TableFrame extends JInternalFrame implements PropertyChangeListener {
 
@@ -119,14 +125,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 					}
 				}
 			}
-			// listTable.setRow
 		}
-		// ObjectResourceTableModel tableModel = (ObjectResourceTableModel)
-		// this.listTable.getModel();
-		// int rowIndex = tableModel.getIndexOfObject(this.test);
-		// if (rowIndex >= 0) {
-		// this.listTable.setRowSelectionInterval(rowIndex, rowIndex);
-		// } else {}
 	}
 
 	private void updateTests() {
@@ -135,9 +134,8 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 	}
 
 	public void propertyChange(PropertyChangeEvent evt) {
-
 		this.propertyChangeEvent = evt;
-		String propertyName = evt.getPropertyName();
+		final String propertyName = evt.getPropertyName();
 		if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
 			this.updateTests();
 		} else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
@@ -151,21 +149,17 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 		WrapperedTableModel model = (WrapperedTableModel) this.listTable.getModel();
 		model.clear();
 		try {
-			for (Iterator it = StorableObjectPool.getStorableObjects(this.schedulerModel.getTestIds(), true).iterator(); it.hasNext();) {
-				Test test1 = (Test) it.next();
-				Identifier groupTestId = test1.getGroupTestId();
-//				assert Log.debugMessage("TableFrame.setTests | test1 is " + test1.getId() + ", groupTestId is "
-//						+ groupTestId, Level.FINEST);
-				if (!groupTestId.isVoid() && !groupTestId.equals(test1.getId())) {
+			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.schedulerModel.getTestIds(), true);
+			for (final Test test : tests) {
+				Identifier groupTestId = test.getGroupTestId();
+				if (!groupTestId.isVoid() && !groupTestId.equals(test.getId())) {
 					continue;
 				}
-				if (model.getIndexOfObject(test1) < 0) {
-//					Log.debugMessage("TableFrame.setTests | added ", Level.FINEST);
-					model.addObject(test1);
-//					System.out.println("TableFrame.setTests() | " + test1.getStatus().value());
+				if (model.getIndexOfObject(test) < 0) {
+					model.addObject(test);
 				}
 			}
-		} catch (ApplicationException e) {
+		} catch (final ApplicationException e) {
 			AbstractMainFrame.showErrorMessage(this, e);
 		}
 		this.listTable.revalidate();
@@ -216,31 +210,53 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 			this.listTable.addMouseListener(new MouseAdapter() {
 
 				@Override
-				public void mousePressed(MouseEvent e) {
-					mouseClicked(e);
-				}
-
-				@Override
-				public void mouseClicked(MouseEvent evt) {
+				public void mouseClicked(final MouseEvent evt) {
 					final JTable table = ((JTable) evt.getSource());
 					if (SwingUtilities.isRightMouseButton(evt)) {
+						
 						final int[] rowIndices = table.getSelectedRows();
-						if ((rowIndices != null) && (rowIndices.length > 0)) {
-							final WrapperedTableModel model = (WrapperedTableModel) table.getModel();
-							
-							for (int i = 0; i < rowIndices.length; i++) {
-								Test test1 = (Test) model.getObject(rowIndices[i]);
-								int status = test1.getStatus().value();
-								if (status == TestStatus._TEST_STATUS_COMPLETED ||
-										status == TestStatus._TEST_STATUS_ABORTED) {
-									return;
-								}
+						if (rowIndices == null || rowIndices.length == 0) {
+							return;
+						}
+						
+						final WrapperedTableModel model = (WrapperedTableModel) table.getModel();
+						
+						for (final int index : rowIndices) {
+							final Test test = (Test) model.getObject(index);
+							final int status = test.getStatus().value();
+							if (status != TestStatus._TEST_STATUS_NEW &&
+								status != TestStatus._TEST_STATUS_PROCESSING &&
+								status != TestStatus._TEST_STATUS_SCHEDULED) {
+								return;
+							}
+						}
+						
+						final JPopupMenu popup = new JPopupMenu();
+						
+						boolean enableDeleting = true;
+						boolean enableStopping = true;
+						
+						for (int i = 0; i < rowIndices.length; i++) {
+							Test test1 = (Test) model.getObject(rowIndices[i]);
+							int status = test1.getStatus().value();
+							if (status != TestStatus._TEST_STATUS_NEW) {
+								enableDeleting = false;
+							}
+							if (status != TestStatus._TEST_STATUS_PROCESSING ||
+								status != TestStatus._TEST_STATUS_SCHEDULED) {
+								enableStopping = false;
 							}
 							
+							if (!enableDeleting && !enableStopping) {
+								break;
+							}
+						}
+						
+						if (enableDeleting) {
 							final JMenuItem deleteTestMenuItem = 
 								new JMenuItem(LangModelSchedule.getString(rowIndices.length == 1 ? "Text.Table.DeleteTest" : "Text.Table.DeleteTests")); 
 							deleteTestMenuItem.addActionListener(new ActionListener() {
-
+	
 								public void actionPerformed(final ActionEvent e) {
 									final int temp = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
 										LangModelSchedule.getString("Text.Table.DeleteTest.ConfirmMessage"), LangModelSchedule
@@ -264,47 +280,36 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 									}
 								}
 							});
-							
-							final JPopupMenu popup = new JPopupMenu();
 							popup.add(deleteTestMenuItem);
-
-							
-							boolean enableStopping = true;
-							for (int i = 0; i < rowIndices.length; i++) {
-								Test test1 = (Test) model.getObject(rowIndices[i]);
-								int status = test1.getStatus().value();
-								if (status != TestStatus._TEST_STATUS_PROCESSING) {
-									enableStopping = false;
-									break;
-								}
-							}
-							
-							if (enableStopping) {
-								final JMenuItem stopTestMenuItem = 
-									new JMenuItem(LangModelSchedule.getString("Text.Table.StopTesting")); 
-								stopTestMenuItem.addActionListener(new ActionListener() {
-	
-									public void actionPerformed(final ActionEvent e) {
-										final int temp = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-											LangModelSchedule.getString("Text.Table.StopTesting.ConfirmMessage"), LangModelSchedule
-													.getString("Text.Table.StopTesting.ConfirmTitle"), JOptionPane.YES_NO_OPTION);
-										if (temp == JOptionPane.YES_OPTION) {
-											for (int i = 0; i < rowIndices.length; i++) {
-												final Test test = (Test) model.getObject(rowIndices[i]);
-												test.setStatus(TestStatus.TEST_STATUS_STOPPED);
-											}
-											TableFrame.this.dispatcher.firePropertyChange(new PropertyChangeEvent(TableFrame.this, SchedulerModel.COMMAND_REFRESH_TESTS, null, null));
-											table.revalidate();
-											table.repaint();
-										}
-									}
-								});
-								
-								popup.addSeparator();
-								popup.add(stopTestMenuItem);
-							}
-							popup.show(table, evt.getX(), evt.getY());
 						}
+
+						if (enableStopping) {
+							final JMenuItem stopTestMenuItem = 
+								new JMenuItem(LangModelSchedule.getString("Text.Table.StopTesting")); 
+							stopTestMenuItem.addActionListener(new ActionListener() {
+
+								public void actionPerformed(final ActionEvent e) {
+									final int temp = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
+										LangModelSchedule.getString("Text.Table.StopTesting.ConfirmMessage"), LangModelSchedule
+												.getString("Text.Table.StopTesting.ConfirmTitle"), JOptionPane.YES_NO_OPTION);
+									if (temp == JOptionPane.YES_OPTION) {
+										for (int i = 0; i < rowIndices.length; i++) {
+											final Test test = (Test) model.getObject(rowIndices[i]);
+											test.setStatus(TestStatus.TEST_STATUS_STOPPING);
+										}
+										TableFrame.this.dispatcher.firePropertyChange(new PropertyChangeEvent(TableFrame.this, SchedulerModel.COMMAND_REFRESH_TESTS, null, null));
+										table.revalidate();
+										table.repaint();
+									}
+								}
+							});
+							
+							if (enableDeleting) {
+								popup.addSeparator();
+							}
+							popup.add(stopTestMenuItem);
+						}
+						popup.show(table, evt.getX(), evt.getY());
 					}
 
 				}
