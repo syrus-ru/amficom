@@ -15,14 +15,16 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 public class AnalyseApplicationModel extends ApplicationModel {
 
 	public AnalyseApplicationModel() {
-		add("menuSession");
-		add("menuSessionNew");
-		add("menuSessionClose");
-		add("menuSessionOptions");
-		add("menuSessionConnection");
-		add("menuSessionChangePassword");
-		add("menuSessionDomain");
-		add("menuExit");
+    add(ApplicationModel.MENU_SESSION);
+    add(ApplicationModel.MENU_SESSION_NEW);
+    add(ApplicationModel.MENU_SESSION_CLOSE);
+//  add(ApplicationModel.MENU_SESSION_CONNECTION);
+    add(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
+    add(ApplicationModel.MENU_SESSION_DOMAIN);
+    add(ApplicationModel.MENU_EXIT);
+
+    add(ApplicationModel.MENU_HELP);
+    add(ApplicationModel.MENU_HELP_ABOUT);
 
 		add("menuFileOpen");
 		add("menuFileOpenAs");
@@ -35,7 +37,6 @@ public class AnalyseApplicationModel extends ApplicationModel {
 		add("menuFileClose");
 		add("menuFileAddCompare");
 		add("menuFileRemoveCompare");
-		add("menuExit");
 
 		add("menuTrace");
 		add("menuTraceAddCompare");

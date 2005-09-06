@@ -116,7 +116,7 @@ public class AnalyseMainFrameSimplified extends AbstractMainFrame implements BsH
 					AnalyseMainFrameSimplified.this);
 				Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE,
 					AnalyseMainFrameSimplified.this);
-				AnalyseMainFrameSimplified.this.aContext.getApplicationModel().getCommand("menuExit").execute();
+				AnalyseMainFrameSimplified.this.aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
 
 			}
 		});

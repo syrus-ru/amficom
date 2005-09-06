@@ -73,7 +73,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 					AnalyseMainFrame.this);
 				Environment.getDispatcher()
 						.removePropertyChangeListener(ContextChangeEvent.TYPE, AnalyseMainFrame.this);
-				aContext.getApplicationModel().getCommand("menuExit").execute();
+				aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
 			}
 		});
 
