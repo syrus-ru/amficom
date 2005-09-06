@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.167 2005/09/06 12:20:22 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.168 2005/09/06 12:46:06 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.167 $, $Date: 2005/09/06 12:20:22 $
+ * @version $Revision: 1.168 $, $Date: 2005/09/06 12:46:06 $
  * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -843,7 +843,7 @@ public final class StorableObjectPool {
 		
 		for (int i = 0; i < length; i++) {
 			try {
-				final T storableObject = fromTransferable(transferables[i]);
+				final T storableObject = StorableObjectPool.<T>fromTransferable(transferables[i]);
 				storableObjects.add(storableObject);
 			} catch (final ApplicationException ae) {
 				if (continueOnError) {
@@ -870,7 +870,7 @@ public final class StorableObjectPool {
 	public static <T extends StorableObject> T fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		T storableObject = null;
 		try {
-			storableObject = getStorableObject(new Identifier(transferable.id), false);
+			storableObject = StorableObjectPool.<T>getStorableObject(new Identifier(transferable.id), false);
 		} catch (final ApplicationException ae) {
 			/*
 			 * Never.
