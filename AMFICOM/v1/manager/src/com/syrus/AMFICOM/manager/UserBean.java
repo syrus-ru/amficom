@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.15 2005/09/06 10:08:55 bob Exp $
+ * $Id: UserBean.java,v 1.16 2005/09/06 16:15:55 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,11 @@
 
 package com.syrus.AMFICOM.manager;
 
+import java.awt.BorderLayout;
+import java.awt.CardLayout;
 import java.awt.Color;
+import java.awt.GridBagConstraints;
+import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
@@ -18,8 +22,12 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
+import javax.swing.JScrollPane;
+import javax.swing.JTable;
 
 import org.jgraph.JGraph;
 import org.jgraph.graph.AttributeMap;
@@ -29,6 +37,7 @@ import org.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -46,34 +55,41 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/06 10:08:55 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/06 16:15:55 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public class UserBean extends Bean implements  ARMItem {
 
-	List<String>	names;
+	final List<String>	names;
 	
-	Map<String, String> propertyName;
+	final Map<String, String> propertyName;
+	
+	final Map<Identifier, JTable> domainPermissionTable;
+	
+	JPanel switchPanel;
 
 	private SystemUser	user;
+
+	private Identifier	domainId;
+	private PermissionAttributes	permissionAttributes;
+
 	
-	UserBean(List<String> names) {
+	UserBean(final List<String> names) {
 		this.names = names;
 		
 		this.propertyName = new HashMap<String, String>();
+		this.domainPermissionTable = new HashMap<Identifier, JTable>();	
+
 	}
 	
 	@Override
 	public void applyTargetPort(MPort oldPort, MPort newPort) {
 		// TODO Auto-generated method stub
 		
-	}
-	
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.manager.AbstractBean#dispose()
-	 */
+	}	
+
 	@Override
 	public void dispose() throws ApplicationException {
 		Log.debugMessage("UserBean.dispose | " 
@@ -407,7 +423,7 @@ public class UserBean extends Bean implements  ARMItem {
 	public void setDomainId(Identifier oldDomainId,
 							Identifier newDomainId) {
 		try {
-			Log.debugMessage("UserBean.setDomainId() | " + this.id + ", oldDomainId:" + oldDomainId + ", newDomainId:" + newDomainId, Log.DEBUGLEVEL10);
+			Log.debugMessage("UserBean.setDomainId() | " + this.id + ", oldDomainId:" + oldDomainId + ", newDomainId:" + newDomainId, Log.DEBUGLEVEL09);
 			
 			if (oldDomainId.isVoid()) {
 				PermissionAttributes attributes = 
@@ -446,4 +462,21 @@ public class UserBean extends Bean implements  ARMItem {
 			e.printStackTrace();
 		}
 	}
+	
+	protected PermissionAttributes getPermissionAttributes() throws ApplicationException {
+		final Perspective perspective = this.graphText.getPerspective();
+		if (perspective instanceof DomainPerpective) {
+			DomainPerpective domainPerpective = (DomainPerpective) perspective;
+			Identifier domainId1 = domainPerpective.getDomainId();
+			if (!domainId1.equals(this.domainId)) {
+				this.domainId = domainId1;
+				final Domain domain = 
+					(Domain) StorableObjectPool.getStorableObject(domainPerpective.getDomainId(), true);
+				this.permissionAttributes = domain.getPermissionAttributes(this.id);
+			}
+			return this.permissionAttributes;
+		}
+		return null;
+	}
+
 }
