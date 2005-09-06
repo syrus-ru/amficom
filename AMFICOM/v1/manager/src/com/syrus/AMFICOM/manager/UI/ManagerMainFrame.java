@@ -1,13 +1,12 @@
-package com.syrus.AMFICOM.manager.UI;
-
-/*
- * $Id: ManagerMainFrame.java,v 1.2 2005/09/04 15:13:26 bob Exp $
+/*-
+ * $Id: ManagerMainFrame.java,v 1.3 2005/09/06 10:09:25 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 
+package com.syrus.AMFICOM.manager.UI;
 
 import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_NAME;
 
@@ -118,7 +117,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/04 15:13:26 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/06 10:09:25 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -639,17 +638,15 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 							AbstractBean bean = source.getUserObject();
 							bean.applyTargetPort(target, null);
 							try {
-								LayoutItem layoutItem = this.getLayoutItem(bean.getCodeName());
+								final LayoutItem layoutItem = this.getLayoutItem(bean.getCodeName());
 								Log.debugMessage(".graphChanged | removedObject | layoutItem:" 
 										+ layoutItem.getName() 
 										+ ", layoutName:" 
 										+ layoutItem.getLayoutName(),
-									Log.DEBUGLEVEL09);
+									Log.DEBUGLEVEL10);
 								layoutItem.setParentId(Identifier.VOID_IDENTIFIER);
 								
-								bean.dispose();
-								bean.disposeLayoutItem();
-								
+								bean.dispose();																
 							} catch (ApplicationException e1) {
 								// TODO Auto-generated catch block
 								e1.printStackTrace();
@@ -1103,11 +1100,12 @@ JToolBar createPerspecives() {
 				"com/syrus/AMFICOM/manager/resources/icons/delete.gif");
 		ImageIcon removeIcon = new ImageIcon(removeUrl);
 		this.remove = new AbstractAction("", removeIcon) {
+			@SuppressWarnings("unchecked")
 			public void actionPerformed(ActionEvent e) {
-				if (!graph.isSelectionEmpty()) {
-					Object[] cells = graph.getSelectionCells();
-					GraphModel model = graph.getModel();
-					cells = graph.getDescendants(cells);
+				if (!ManagerMainFrame.this.graph.isSelectionEmpty()) {
+					Object[] cells = ManagerMainFrame.this.graph.getSelectionCells();
+					GraphModel model = ManagerMainFrame.this.graph.getModel();
+					cells = ManagerMainFrame.this.graph.getDescendants(cells);
 					List list = new ArrayList(3 * cells.length / 2);
 					for(Object cell: cells) {
 						if (model.isPort(cell)) {
