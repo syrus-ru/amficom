@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.11 2005/08/19 15:41:34 stas Exp $
+ * $Id: SchemeGraph.java,v 1.12 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import com.jgraph.pad.GPGraph;
 import com.jgraph.plaf.GraphUI;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceView;
@@ -45,7 +44,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
@@ -58,8 +57,7 @@ public class SchemeGraph extends GPGraph {
 	private boolean isGridVisibleAtActualSize = false;
 	private boolean isBorderVisible = false;
 	private boolean graphChanged = false;	
-	private boolean topLevelSchemeMode = false;
-	
+		
 	private boolean notifying = false;
 	boolean make_notifications = false;
 	/**
@@ -85,16 +83,6 @@ public class SchemeGraph extends GPGraph {
 		if (aContext != null) {
 			this.aContext = aContext;
 		}
-	}
-
-	public void setTopLevelSchemeMode(boolean b) {
-		this.topLevelSchemeMode = b;
-		if (b)
-			SchemeActions.generateTopLevelScheme(this);
-	}
-
-	public boolean isTopLevelSchemeMode() {
-		return this.topLevelSchemeMode;
 	}
 
 	public void setActualSize(Dimension d) {

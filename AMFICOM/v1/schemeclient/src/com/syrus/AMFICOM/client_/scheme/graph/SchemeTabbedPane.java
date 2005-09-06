@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.17 2005/09/04 13:35:45 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.18 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/09/04 13:35:45 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
@@ -182,31 +182,31 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		this.tabs.setTitleAt(this.tabs.getSelectedIndex(), title);
 	}
 
-	@Override
 	public boolean removePanel(UgoPanel p) {
-		if (super.removePanel(p)) {
-			Object[] comp = this.tabs.getComponents();
-			for (int i = 0; i < comp.length; i++) {
-				UgoPanel p1 = this.graphPanelsMap.get(comp[i]);
-				if (p1.equals(p)) {
-					this.tabs.removeTabAt(i);
-					return true;
-				}
+		if (!confirmUnsavedChanges(p)) {
+			return false;
+		}
+
+		Object[] comp = this.tabs.getComponents();
+		for (int i = 0; i < comp.length; i++) {
+			UgoPanel p1 = this.graphPanelsMap.get(comp[i]);
+			if (p1.equals(p)) {
+				this.tabs.removeTabAt(i);
+				return true;
 			}
 		}
 		return false;
 	}
-
+	
 	@Override
-	public boolean removeAllPanels() {
+	public boolean confirmUnsavedChanges() {
 		Object[] comp = this.tabs.getComponents();
 		// check for unsaved changes
 		for (int i = 0; i < comp.length; i++) {
 			UgoPanel p = this.graphPanelsMap.get(comp[i]);
-			if (p instanceof ElementsPanel) {
-				if (p.getGraph().isGraphChanged()) {
-					return super.removePanel(p);
-				}
+			if (super.hasUnsavedChanges(p)) {
+				String text = LangModelScheme.getString("Message.confirmation.object_changed");  //$NON-NLS-1$
+				return showConfirmDialog(text);
 			}
 		}
 		return true;
@@ -283,12 +283,23 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 						return;	
 					}
 
-					SchemeImageResource res = schemeElement.getUgoCell();
-					if (res == null)
-						res = schemeElement.getSchemeCell();
-					SchemeGraph graph = panel1.getGraph();
-					SchemeActions.openSchemeImageResource(graph, res, true, see.getInsertionPoint(), false);
-					setLinkMode();
+					SchemeResource res = panel1.getSchemeResource();
+					if ((res.getCellContainerType() == SchemeResource.SCHEME &&
+							res.getScheme().getId().equals(schemeElement.getParentScheme().getId())) ||
+							(res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT &&
+							res.getSchemeElement().getId().equals(schemeElement.getParentSchemeElement().getId()))) {
+						SchemeImageResource image = schemeElement.getUgoCell();
+						if (image == null)
+							image = schemeElement.getSchemeCell();
+						SchemeGraph graph = panel1.getGraph();
+						SchemeActions.openSchemeImageResource(graph, image, true, see.getInsertionPoint(), false);
+						setLinkMode();						
+					} else {
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+								LangModelScheme.getString("Message.error.insert_component_to other_parent"),  //$NON-NLS-1$
+								LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+								JOptionPane.ERROR_MESSAGE);
+					}
 				} else if (see.isType(SchemeEvent.INSERT_PROTOELEMENT)) {
 					SchemeProtoElement proto = (SchemeProtoElement)see.getStorableObject();
 					ElementsPanel panel1 = getCurrentPanel();
@@ -323,6 +334,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							if (scheme.equals(p.getSchemeResource().getScheme())) {
 								p.getGraph().setActualSize(new Dimension(scheme.getWidth(), scheme.getHeight()));
 								this.tabs.setTitleAt(i, scheme.getName());
+								setGraphChanged(p.getGraph(), true);
 								break;
 							}							
 						}
@@ -448,7 +460,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	
 	public void setGraphChanged(SchemeGraph graph, boolean b) {
 		for (int i = 0; i < this.tabs.getTabCount(); i++) {
-			UgoPanel p = this.graphPanelsMap.get(this.tabs.getComponentAt(this.tabs.getSelectedIndex()));
+			UgoPanel p = this.graphPanelsMap.get(this.tabs.getComponentAt(i));
 			if (graph.equals(p.getGraph())) {
 				graph.setGraphChanged(b);
 				if (b)
@@ -464,7 +476,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 	
 	@Override
 	public void setGraphChanged(boolean b) {
-		if (getGraph().isGraphChanged() == b)
+		if (getGraph().isGraphChanged() == b && b)
 			return;
 
 		super.setGraphChanged(b);

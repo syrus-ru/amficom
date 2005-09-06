@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeCharacteristicsPanel.java,v 1.11 2005/08/20 19:58:10 arseniy Exp $
+ * $Id: MeasurementPortTypeCharacteristicsPanel.java,v 1.12 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,16 +10,12 @@ package com.syrus.AMFICOM.client_.configuration.ui;
 
 import com.syrus.AMFICOM.client.UI.CharacteristicsPanel;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/20 19:58:10 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 

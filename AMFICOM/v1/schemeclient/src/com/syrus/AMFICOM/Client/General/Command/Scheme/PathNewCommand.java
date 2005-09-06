@@ -46,7 +46,7 @@ public class PathNewCommand extends AbstractCommand {
 			if(solutions.isEmpty()) {
 				solution = SchemeObjectsFactory.createSchemeMonitoringSolution(scheme);
 			} else {
-				solution = solutions.iterator().next();
+				solution = scheme.getCurrentSchemeMonitoringSolution();
 			}
 			SchemePath path = SchemeObjectsFactory.createSchemePath(solution);
 //		CharacteristicType type = MiscUtil.getCharacteristicType(

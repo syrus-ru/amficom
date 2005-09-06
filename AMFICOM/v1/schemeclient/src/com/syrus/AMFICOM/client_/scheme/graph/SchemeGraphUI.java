@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.16 2005/09/01 13:39:18 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.17 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,7 @@ import java.util.Map;
 import java.util.TooManyListenersException;
 
 import javax.swing.JPopupMenu;
+import javax.swing.SwingUtilities;
 import javax.swing.tree.DefaultMutableTreeNode;
 
 import com.jgraph.JGraph;
@@ -38,6 +39,7 @@ import com.jgraph.graph.GraphContext;
 import com.jgraph.graph.GraphLayoutCache;
 import com.jgraph.pad.GPGraphUI;
 import com.jgraph.plaf.basic.BasicGraphUI;
+import com.jgraph.plaf.basic.TransferHandler;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.PopupFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
@@ -52,7 +54,7 @@ import com.syrus.AMFICOM.logic.LogicalTreeUI;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/09/01 13:39:18 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
@@ -80,6 +82,11 @@ public class SchemeGraphUI extends GPGraphUI {
 		return new SchemeMouseHandler();
 	}
 
+	@Override
+	protected TransferHandler createTransferHandler() {
+		return new SchemeGraphTransferHandler();
+	}
+	
 	class SchemeGraphDropTargetListener extends BasicGraphUI.GraphDropTargetListener {
 		private static final long serialVersionUID = 6170350766676553728L;
 
@@ -148,7 +155,7 @@ public class SchemeGraphUI extends GPGraphUI {
 		@Override
 		public void mousePressed(MouseEvent e) {
 			this.handler = null;
-			if (!e.isConsumed())// && graph.isEnabled())
+			if (!e.isConsumed() && SwingUtilities.isLeftMouseButton(e))// && graph.isEnabled())
 			{
 				JGraph graph2 = SchemeGraphUI.this.graph;
 				graph2.requestFocus();

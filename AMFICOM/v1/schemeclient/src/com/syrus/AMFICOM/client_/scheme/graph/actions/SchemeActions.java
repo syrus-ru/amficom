@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.23 2005/09/01 13:39:18 stas Exp $
+ * $Id: SchemeActions.java,v 1.24 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,6 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
-import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
@@ -86,7 +85,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/09/01 13:39:18 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
@@ -161,13 +160,16 @@ public class SchemeActions {
 		graph.setSelectionCell(cell);
 		return cell;
 	}
-	
+
 	public static void generateTopLevelScheme(SchemeGraph graph)
 	{
 		Map<DeviceGroup, TopLevelElement> oldToNewMap = new HashMap<DeviceGroup, TopLevelElement>();
 		Map<DeviceGroup, TopLevelElement> map2 = new HashMap<DeviceGroup, TopLevelElement>();
 		Map<DeviceGroup, DeviceGroup> map3 = new HashMap<DeviceGroup, DeviceGroup>();
 		Object[] cells = graph.getRoots();
+		
+		boolean tmp = graph.isMakeNotifications();
+		graph.setMakeNotifications(false);
 
 		for (int i = 0; i < cells.length; i++)
 		{
@@ -261,6 +263,9 @@ public class SchemeActions {
 			}
 		}
 		graph.getModel().remove(graph.getDescendants(cells));
+		
+		graph.setGraphChanged(false);
+		graph.setMakeNotifications(tmp);
 	}
 
 	static boolean isSchemesGroup(DeviceGroup group) {
@@ -340,8 +345,12 @@ public class SchemeActions {
 	public static void insertSEbyS(SchemeGraph graph, SchemeElement schemeElement, Point p, boolean doClone) {
 		Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
 		SchemeImageResource res = schemeElement.getUgoCell();
-		if (res == null)
-			res = schemeElement.getSchemeCell();
+		res = schemeElement.getUgoCell();
+		if (res == null) {
+			Log.debugMessage("Can not insert scheme without ugo cell", Level.WARNING);
+			return;
+		}
+			
 		Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = openSchemeImageResource(graph, res, doClone, p, true);
 		SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
 		
@@ -571,6 +580,39 @@ public class SchemeActions {
 			}
 		}
 		return pathObjects.toArray();
+	}
+	
+	public static Set<SchemeElement> getSchemeElements(Object[] cells) {
+		Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
+		for (Object cell : cells) {
+			if (cell instanceof DeviceGroup) {
+				DeviceGroup group = (DeviceGroup)cell;
+				if (group.getElementId().getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
+					schemeElements.add(group.getSchemeElement());
+				}
+			}
+		}
+		return schemeElements;
+	}
+	
+	public static Set<SchemeCableLink> getSchemeCableLinks(Object[] cells) {
+		Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
+		for (Object cell : cells) {
+			if (cell instanceof DefaultCableLink) {
+				schemeCableLinks.add(((DefaultCableLink)cell).getSchemeCableLink());
+			}
+		}
+		return schemeCableLinks;
+	}
+	
+	public static Set<SchemeLink> getSchemeLinks(Object[] cells) {
+		Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
+		for (Object cell : cells) {
+			if (cell instanceof DefaultLink) {
+				schemeLinks.add(((DefaultLink)cell).getSchemeLink());
+			}
+		}
+		return schemeLinks;
 	}
 	
 	public static PathElement getSelectedPathElement(Object selected) {

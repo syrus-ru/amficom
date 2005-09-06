@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMarqueeHandler.java,v 1.24 2005/09/01 13:39:18 stas Exp $
+ * $Id: SchemeMarqueeHandler.java,v 1.25 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,6 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.Set;
-import java.util.SortedSet;
-import java.util.TreeSet;
 
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
@@ -50,6 +48,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
@@ -57,7 +56,6 @@ import com.syrus.AMFICOM.configuration.PortTypeWrapper;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.EquivalentCondition;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -76,7 +74,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/09/01 13:39:18 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
@@ -217,74 +215,78 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 	@Override
 	public void mousePressed(MouseEvent event) {
 		SchemeGraph graph = (SchemeGraph)event.getSource();
-		if (graph.isEditable()) {
-			if (this.p1.isSelected() || this.p2.isSelected()) {
-				createPort(graph, graph.snap(event.getPoint()));
-				this.devBounds = null;
-				this.settingPoint = null;
-				graph.repaint();
-				event.consume();
-			} else if (this.ce.isSelected() && this.firstPort != null)
-				this.start = graph.toScreen(this.firstPort.getLocation(null));
-		}
-
-		// select SchemePath
-		if (graph.getMode().equals(Constants.PATH_MODE)) {
-			Object cell = graph.getSelectionCell();
-			if (this.pane instanceof SchemeTabbedPane) {
-				
-				PathElement pe = SchemeActions.getSelectedPathElement(cell);
-				SchemePath path = pe != null ? pe.getParentPathOwner() : 
-					((SchemeTabbedPane)this.pane).getCurrentPanel().getSchemeResource().getSchemePath();
-
-				Notifier.notify(graph, graph.aContext, path);
-				
-				/*SortedSet<PathElement> pathElements = path != null ? path.getPathMembers() : null;
-				
-				SortedSet<Identifier> ids = null;
-				
-				if (pathElements != null) {
-					ids = new TreeSet<Identifier>();
-					for (PathElement pe1 : pathElements) {
-						ids.add(pe1.getAbstractSchemeElement().getId());
-					}
+		if (SwingUtilities.isLeftMouseButton(event)) {
+			if (graph.isEditable()) {
+				if (this.p1.isSelected() || this.p2.isSelected()) {
+					createPort(graph, graph.snap(event.getPoint()));
+					this.devBounds = null;
+					this.settingPoint = null;
+					graph.repaint();
+					event.consume();
+				} else if (this.ce.isSelected() && this.firstPort != null)
+					this.start = graph.toScreen(this.firstPort.getLocation(null));
+			}
+			
+			// select SchemePath
+			if (graph.getMode().equals(Constants.PATH_MODE)) {
+				Object cell = graph.getSelectionCell();
+				if (this.pane instanceof SchemeTabbedPane) {
+					
+					PathElement pe = SchemeActions.getSelectedPathElement(cell);
+					SchemePath path = pe != null ? pe.getParentPathOwner() : 
+						((SchemeTabbedPane)this.pane).getCurrentPanel().getSchemeResource().getSchemePath();
+					
+					Notifier.notify(graph, graph.aContext, path);
+					
+					/*SortedSet<PathElement> pathElements = path != null ? path.getPathMembers() : null;
+					 
+					 SortedSet<Identifier> ids = null;
+					 
+					 if (pathElements != null) {
+					 ids = new TreeSet<Identifier>();
+					 for (PathElement pe1 : pathElements) {
+					 ids.add(pe1.getAbstractSchemeElement().getId());
+					 }
+					 }
+					 
+					 // select path objects
+					  if (pathElements != null) {
+					  Object[] pathObjects = SchemeActions.getPathObjects(ids, graph);
+					  graph.setSelectionCells(pathObjects);
+					  if (path != null && ((SchemeTabbedPane)this.pane).getCurrentPanel().getSchemeResource() == null) {
+					  Notifier.notify(graph, graph.aContext, path);
+					  }
+					  }
+					  
+					  for (ElementsPanel panel : ((SchemeTabbedPane)this.pane).getAllPanels()) {
+					  panel.getSchemeResource().setSchemePath(path);
+					  panel.getSchemeResource().setCashedPathMemberIds(ids);
+					  }*/
+					
+					event.consume();
 				}
-
-				// select path objects
-				if (pathElements != null) {
-					Object[] pathObjects = SchemeActions.getPathObjects(ids, graph);
-					graph.setSelectionCells(pathObjects);
-					if (path != null && ((SchemeTabbedPane)this.pane).getCurrentPanel().getSchemeResource() == null) {
-						Notifier.notify(graph, graph.aContext, path);
-					}
-				}
-				
-				for (ElementsPanel panel : ((SchemeTabbedPane)this.pane).getAllPanels()) {
-					panel.getSchemeResource().setSchemePath(path);
-					panel.getSchemeResource().setCashedPathMemberIds(ids);
-				}*/
-				
+			}
+			
+			// from GPMarqueeHandler
+			if (!isPopupTrigger(event) && !event.isConsumed() && !this.s.isSelected()) {
+				this.start = graph.snap(event.getPoint());
+				this.firstPort = this.port;
+				if (this.e.isSelected() && this.firstPort != null)
+					this.start = graph.toScreen(this.firstPort.getLocation(null));
 				event.consume();
 			}
-		}
-
-		// from GPMarqueeHandler
-		if (!isPopupTrigger(event) && !event.isConsumed() && !this.s.isSelected()) {
-			this.start = graph.snap(event.getPoint());
-			this.firstPort = this.port;
-			if (this.e.isSelected() && this.firstPort != null)
-				this.start = graph.toScreen(this.firstPort.getLocation(null));
-			event.consume();
-		}
-		if (!isPopupTrigger(event))
-			super.mousePressed(event);
-		else {
-			boolean selected = false;
-			Object[] cells = graph.getSelectionCells();
-			for (int j = 0; j < cells.length && !selected; j++)
-				selected = graph.getCellBounds(cells[j]).contains(event.getPoint());
-			if (!selected)
-				graph.setSelectionCell(graph.getFirstCellForLocation(event.getX(), event.getY()));
+			if (!isPopupTrigger(event))
+				super.mousePressed(event);
+			else {
+				boolean selected = false;
+				Object[] cells = graph.getSelectionCells();
+				for (int j = 0; j < cells.length && !selected; j++)
+					selected = graph.getCellBounds(cells[j]).contains(event.getPoint());
+				if (!selected)
+					graph.setSelectionCell(graph.getFirstCellForLocation(event.getX(), event.getY()));
+				event.consume();
+			}
+		} else {
 			event.consume();
 		}
 	}
@@ -600,45 +602,70 @@ public class SchemeMarqueeHandler extends BasicMarqueeHandler {
 				event.consume();
 			}
 		} else { // right mouse button pressed
-			if (!graph.isSelectionEmpty()) {
-				Object cell = graph.getSelectionCell();
-				
-				if (graph.getMode().equals(Constants.LINK_MODE)) {
-					if (cell instanceof DefaultCableLink) {
-						JPopupMenu pop = PopupFactory.createCablePopup(this.pane.aContext, graph, (DefaultCableLink)cell);
+	
+				Object[] cells = graph.getSelectionCells();
+				if (cells.length != 1) {
+					if (this.pane instanceof SchemeTabbedPane) {
+						JPopupMenu pop = PopupFactory.createCopyPastePopup(this.pane.aContext, (SchemeTabbedPane)this.pane, event.getPoint());
 						if (pop.getSubElements().length != 0) {
 							pop.show(graph, event.getX(), event.getY());
 							event.consume();
 						}
-					} else {
-						DeviceGroup group = null;
-						if (cell instanceof DeviceGroup)
-							group = (DeviceGroup) cell;
-						else if (cell instanceof DeviceCell
-								&& ((DeviceCell) cell).getParent() instanceof DeviceGroup)
-							group = (DeviceGroup) ((DeviceCell) cell).getParent();
-						
-						if (group != null) {
-							JPopupMenu pop = PopupFactory.createElementPopup(this.pane.aContext, group);
+					}
+				} else {
+					if (this.pane instanceof SchemeTabbedPane) {
+					Object cell = cells[0];
+					
+					if (graph.getMode().equals(Constants.LINK_MODE)) {
+						if (cell instanceof DefaultCableLink) {
+							JPopupMenu pop = PopupFactory.createCablePopup(this.pane.aContext, (SchemeTabbedPane)this.pane, (DefaultCableLink)cell, event.getPoint());
 							if (pop.getSubElements().length != 0) {
 								pop.show(graph, event.getX(), event.getY());
 								event.consume();
 							}
+						} else if (cell instanceof DefaultLink) {
+							JPopupMenu pop = PopupFactory.createCopyPastePopup(this.pane.aContext, (SchemeTabbedPane)this.pane, event.getPoint());
+							if (pop.getSubElements().length != 0) {
+								pop.show(graph, event.getX(), event.getY());
+								event.consume();
+							}
+						} else if (cell instanceof TopLevelElement) {
+							JPopupMenu pop = PopupFactory.createTopElementPopup(this.pane.aContext, (TopLevelElement)cell);
+							if (pop.getSubElements().length != 0) {
+								pop.show(graph, event.getX(), event.getY());
+								event.consume();
+							}
+						} else {
+							DeviceGroup group = null;
+							if (cell instanceof DeviceGroup)
+								group = (DeviceGroup) cell;
+							else if (cell instanceof DeviceCell
+									&& ((DeviceCell) cell).getParent() instanceof DeviceGroup)
+								group = (DeviceGroup) ((DeviceCell) cell).getParent();
+							
+							if (group != null) {
+								JPopupMenu pop = PopupFactory.createElementPopup(this.pane.aContext, (SchemeTabbedPane)this.pane, group, event.getPoint());
+								if (pop.getSubElements().length != 0) {
+									pop.show(graph, event.getX(), event.getY());
+									event.consume();
+								}
+							}
 						}
-					}
-				} else { // PATH_MODE
-					SchemeTabbedPane pane1 = (SchemeTabbedPane)this.pane; 
-					SchemeResource res = pane1.getCurrentPanel().getSchemeResource();
-					if (res.getSchemePath() != null) {
-						JPopupMenu pop = PopupFactory.createPathPopup(pane1.getContext(), res, cell);
-						if (pop != null && pop.getComponentCount() != 0) {
-							pop.show(graph, event.getX(), event.getY());
+					} else { // PATH_MODE
+						SchemeTabbedPane pane1 = (SchemeTabbedPane)this.pane; 
+						SchemeResource res = pane1.getCurrentPanel().getSchemeResource();
+						if (res.getSchemePath() != null) {
+							JPopupMenu pop = PopupFactory.createPathPopup(pane1.getContext(), res, cell);
+							if (pop != null && pop.getComponentCount() != 0) {
+								pop.show(graph, event.getX(), event.getY());
+							}
+							notify = false;
 						}
-						notify = false;
+						event.consume();
 					}
-					event.consume();
+					}
 				}
-			}
+			
 		}
 		if (!this.s.isSelected())
 			this.s.doClick();

@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsPanel.java,v 1.11 2005/08/19 15:41:34 stas Exp $
+ * $Id: ElementsPanel.java,v 1.12 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.beans.PropertyChangeEvent;
 import com.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
@@ -24,12 +25,13 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
 public class ElementsPanel extends UgoPanel {
 	SchemeResource schemeResource;
+	private boolean topLevelSchemeMode = false;
 	
 	protected ElementsPanel(ApplicationContext aContext) {
 		super(aContext);
@@ -71,6 +73,25 @@ public class ElementsPanel extends UgoPanel {
 	
 	public SchemeResource getSchemeResource() {
 		return this.schemeResource;
+	}
+	
+	public boolean isTopLevelSchemeMode() {
+		return this.topLevelSchemeMode;
+	}
+	
+	public void setTopLevelSchemeMode(boolean b) {
+		if (this.topLevelSchemeMode == b) {
+			return;
+		}
+		this.topLevelSchemeMode = b;
+		if (b) {
+			SchemeActions.generateTopLevelScheme(this.graph);
+		} else {
+			if (this.schemeResource.getCellContainerType() == SchemeResource.SCHEME) {
+				GraphActions.clearGraph(this.graph);
+				SchemeActions.openSchemeImageResource(this.graph, this.schemeResource.getScheme().getSchemeCell(), false);
+			}
+		}
 	}
 
 	@Override

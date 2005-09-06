@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.11 2005/08/19 15:41:34 stas Exp $
+ * $Id: Notifier.java,v 1.12 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeCableLinkPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeCablePortPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeDevicePropertiesManager;
@@ -44,7 +45,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
@@ -179,7 +180,15 @@ public class Notifier {
 					selectedType = ObjectSelectedEvent.SCHEME_DEVICE;
 					manager = SchemeDevicePropertiesManager.getInstance(aContext);
 				}
-			}
+			} else if (object instanceof TopLevelElement) {
+				TopLevelElement top = (TopLevelElement)object;
+				if (top.getSchemeId() != null) {
+					selectedObject = top.getScheme();
+					selectedType = ObjectSelectedEvent.SCHEME;
+					manager = SchemePropertiesManager.getInstance(aContext);
+				}
+			}  
+			
 			if (selectedType == 0 || selectedObject == null) {
 				Log.debugMessage(Notifier.class.getSimpleName() + " | selected other object " + object.getClass().getSimpleName(), Level.FINEST); //$NON-NLS-1$
 				dispatcher.firePropertyChange(new ObjectSelectedEvent(graph, object, null, ObjectSelectedEvent.OTHER_OBJECT));

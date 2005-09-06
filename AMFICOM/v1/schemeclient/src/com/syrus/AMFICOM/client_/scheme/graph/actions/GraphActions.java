@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.12 2005/08/19 15:41:34 stas Exp $
+ * $Id: GraphActions.java,v 1.13 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.awt.Image;
 import java.awt.Point;
 import java.awt.Rectangle;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.Enumeration;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -33,7 +34,6 @@ import com.jgraph.graph.DefaultGraphModel;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.Edge;
 import com.jgraph.graph.GraphConstants;
-import com.jgraph.graph.GraphLayoutCache;
 import com.jgraph.graph.Port;
 import com.jgraph.pad.ImageCell;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
@@ -160,6 +160,16 @@ public class GraphActions {
 		graph.setMakeNotifications(b);
 	}
 	
+	public static void removeCells(SchemeGraph graph, Object[] cells) {
+		boolean b = graph.isMakeNotifications();
+		graph.setMakeNotifications(false);
+		graph.setSelectionCells(new Object[0]);
+		if (cells.length != 0) {
+			graph.getModel().remove(cells);
+		}
+		graph.setMakeNotifications(b);
+	}
+	
 	public static void move(SchemeGraph graph, Object[] cells, Point p, boolean isCenterPoint) {
 		Rectangle rect;
 		CellView[] cv = graph.getGraphLayoutCache().getMapping(cells);
@@ -245,6 +255,21 @@ public class GraphActions {
 			}
 			graph.getGraphLayoutCache().edit(nested, cs, null, null);
 		}		
+	}
+	
+	public static Rectangle getBounds(SchemeGraph graph, Collection<Object> cells) {
+		Rectangle r = null;
+		for (Object obj : cells) {
+			if (obj instanceof DeviceGroup) {
+				Rectangle r1 = getGroupBounds(graph, (DeviceGroup)obj);
+				if (r == null) {
+					r = r1;
+				} else {
+					r = r.union(r1);
+				}
+			}
+		}
+		return r;
 	}
 	
 	public static Rectangle getGroupBounds(SchemeGraph graph, DeviceGroup group) {

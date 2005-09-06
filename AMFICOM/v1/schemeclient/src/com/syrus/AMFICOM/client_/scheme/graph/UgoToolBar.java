@@ -1,5 +1,5 @@
 /*-
- * $Id: UgoToolBar.java,v 1.9 2005/09/04 13:35:45 stas Exp $
+ * $Id: UgoToolBar.java,v 1.10 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,8 +10,6 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.awt.Component;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
-import java.awt.LayoutManager;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.HashMap;
@@ -27,13 +25,11 @@ import javax.swing.Icon;
 import javax.swing.JComponent;
 import javax.swing.JToolBar;
 
-//import oracle.jdeveloper.layout.VerticalFlowLayout;
-
 import com.syrus.AMFICOM.client_.scheme.graph.actions.MarqeeAction;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/09/04 13:35:45 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 

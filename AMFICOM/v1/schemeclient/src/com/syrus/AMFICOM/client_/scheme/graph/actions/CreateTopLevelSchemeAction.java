@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.16 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.17 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.17 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
@@ -61,8 +61,12 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		super(Constants.CREATE_UGO);
 		this.sourcePane = sourcePane;
 	}
-
+	
 	public void actionPerformed(ActionEvent e) {
+		execute();
+	}
+
+	public void execute() {
 
 		SchemeGraph graph = this.sourcePane.getGraph();
 		long status = SchemeActions.getGraphState(graph);

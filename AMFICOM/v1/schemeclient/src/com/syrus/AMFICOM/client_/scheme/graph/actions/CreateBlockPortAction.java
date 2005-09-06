@@ -1,5 +1,5 @@
 /*
- * $Id: CreateBlockPortAction.java,v 1.10 2005/08/19 15:41:34 stas Exp $
+ * $Id: CreateBlockPortAction.java,v 1.11 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
@@ -59,15 +59,20 @@ public class CreateBlockPortAction extends AbstractAction {
 		if (cells.length != 1)
 			return;
 		Object cell = cells[0];
+		
+		create(graph, cell);
+	}
+	
+	public static void create(SchemeGraph graph, Object cell) {
 		if (!(cell instanceof PortCell || cell instanceof CablePortCell))
 			return;
-
+		
 		int grid = graph.getGridSize();
 //		DefaultPort vport = null;
 		Rectangle _bounds = graph.getCellBounds(cell);
 		Rectangle bounds = null;
 		AbstractSchemePort abstractSchemePort = null;
-
+		
 		// search for connected BlockPortEdges
 		for (Enumeration en = ((DefaultGraphCell)cell).children(); en.hasMoreElements();) {
 			DefaultPort p = (DefaultPort) en.nextElement();
@@ -83,16 +88,16 @@ public class CreateBlockPortAction extends AbstractAction {
 		if (cell instanceof PortCell) {
 			PortCell port = (PortCell) cell;
 			abstractSchemePort = port.getSchemePort();
-/*			for (Enumeration enumeration = port.children(); enumeration .hasMoreElements();) {
-				DefaultPort p = (DefaultPort) enumeration.nextElement();
-				if (p.getUserObject().equals("Center")) {
-					vport = p;
-					break;
-				}
-			}
-			if (vport == null)
-				return;*/
-
+			/*			for (Enumeration enumeration = port.children(); enumeration .hasMoreElements();) {
+			 DefaultPort p = (DefaultPort) enumeration.nextElement();
+			 if (p.getUserObject().equals("Center")) {
+			 vport = p;
+			 break;
+			 }
+			 }
+			 if (vport == null)
+			 return;*/
+			
 			
 			if (abstractSchemePort.getDirectionType().equals(IdlDirectionType._IN))
 				bounds = new Rectangle(new Point(_bounds.x - 6 * grid, _bounds.y - 2),
@@ -104,16 +109,16 @@ public class CreateBlockPortAction extends AbstractAction {
 		else {
 			CablePortCell port = (CablePortCell) cell;
 			abstractSchemePort = port.getSchemeCablePort();
-	/*		for (Enumeration enumeration = port.children(); enumeration.hasMoreElements();) {
-				DefaultPort p = (DefaultPort) enumeration.nextElement();
-				if (p.getUserObject().equals("Center")) {
-					vport = p;
-					break;
-				}
-			}
-			if (vport == null)
-				return;
-*/
+			/*		for (Enumeration enumeration = port.children(); enumeration.hasMoreElements();) {
+			 DefaultPort p = (DefaultPort) enumeration.nextElement();
+			 if (p.getUserObject().equals("Center")) {
+			 vport = p;
+			 break;
+			 }
+			 }
+			 if (vport == null)
+			 return;
+			 */
 			if (abstractSchemePort.getDirectionType().equals(IdlDirectionType._IN))
 				bounds = new Rectangle(new Point(_bounds.x - 6 * grid, _bounds.y - 2),
 						new Dimension(grid * 3, _bounds.height + 4));
@@ -121,7 +126,7 @@ public class CreateBlockPortAction extends AbstractAction {
 				bounds = new Rectangle(new Point(_bounds.x + _bounds.width + 3 * grid,
 						_bounds.y - 2), new Dimension(grid * 3, _bounds.height + 4));
 		}
-
+		
 		Map<Object, Map> viewMap = new HashMap<Object, Map>();
 		BlockPortCell blockport = BlockPortCell.createInstance(abstractSchemePort.getName(), bounds, viewMap, abstractSchemePort);
 		graph.getGraphLayoutCache().insert(new Object[] { blockport }, viewMap, null, null, null);
@@ -131,21 +136,21 @@ public class CreateBlockPortAction extends AbstractAction {
 		DefaultPort bpcPort = GraphActions.addPort(graph, "", blockport, p);
 		p = new Point((abstractSchemePort.getDirectionType().equals(IdlDirectionType._OUT)) ? u : 0, u / 2);		
 		DefaultPort dp = GraphActions.addPort(graph, "", (DefaultGraphCell)cell, p);
-
+		
 		Map edgemap = GraphConstants.createMap();
-
+		
 		List<Point> list = new ArrayList<Point>(2);
 		list.add(new Point(_bounds.x, _bounds.y));
 		list.add(new Point(bounds.x + bounds.width, _bounds.y));
-
+		
 		GraphConstants.setPoints(edgemap, list);
 		GraphConstants.setLineEnd(edgemap, GraphConstants.ARROW_NONE);
 		GraphConstants.setEndFill(edgemap, false);
 		GraphConstants.setDisconnectable(edgemap, false);
-
+		
 		viewMap = new HashMap<Object, Map>();
 		BlockPortEdge edge = new BlockPortEdge("");
-
+		
 		viewMap.put(edge, edgemap);
 		Object[] insert = new Object[] { edge };
 		ConnectionSet cs = new ConnectionSet();
@@ -156,7 +161,8 @@ public class CreateBlockPortAction extends AbstractAction {
 		 */
 //		cs.connect(edge, vport, true);
 		cs.connect(edge, dp, true);
-
+		
 		graph.getModel().insert(insert, viewMap, cs, null, null);
+		
 	}
 }

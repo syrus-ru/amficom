@@ -1,5 +1,5 @@
 /*
- * $Id: SetTopLevelModeAction.java,v 1.5 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: SetTopLevelModeAction.java,v 1.6 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,12 +14,14 @@ import javax.swing.AbstractAction;
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.UI.AComboBox;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
@@ -34,13 +36,23 @@ public class SetTopLevelModeAction extends AbstractAction {
 	}
 
 	public void actionPerformed(ActionEvent e) {
-		String topLevel = "Схематичное отображение";
-		String normalLevel = "Точное отображение";
-		AComboBox box = new AComboBox(new String[] { normalLevel, topLevel });
-		int res = JOptionPane.showConfirmDialog(this.pane.getGraph(), box, "Режим работы схемы:",
-				JOptionPane.OK_CANCEL_OPTION);
+		if (this.pane instanceof SchemeTabbedPane) {
+			
+			String topLevel = "Схематичное отображение";
+			String normalLevel = "Точное отображение";
+			AComboBox box = new AComboBox(new String[] { normalLevel, topLevel });
+			int res = JOptionPane.showConfirmDialog(Environment.getActiveWindow(), box, "Режим работы схемы:",
+					JOptionPane.OK_CANCEL_OPTION);
 
-		if (res == JOptionPane.OK_OPTION)
-			this.pane.getGraph().setTopLevelSchemeMode(box.getSelectedItem().equals(topLevel));
+			boolean isTop = box.getSelectedItem().equals(topLevel);
+			if (isTop && !((SchemeTabbedPane)this.pane).confirmUnsavedChanges(this.pane.getCurrentPanel())) {
+				return;
+			}
+			
+			if (res == JOptionPane.OK_OPTION) {
+				((SchemeTabbedPane)this.pane).getCurrentPanel().setTopLevelSchemeMode(isTop);
+				this.pane.setGraphChanged(false);
+			}
+		}
 	}
 }

@@ -11,9 +11,9 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsPanel;
+import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
-import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
@@ -38,9 +38,9 @@ public class SchemeSaveCommand extends AbstractCommand {
 	public static final int OK = 1;
 	public int ret_code = CANCEL;
 	
-	SchemeTabbedPane schemeTab;
+	ElementsTabbedPane schemeTab;
 
-	public SchemeSaveCommand(SchemeTabbedPane schemeTab) {
+	public SchemeSaveCommand(ElementsTabbedPane schemeTab) {
 		this.schemeTab = schemeTab;
 	}
 
@@ -51,6 +51,14 @@ public class SchemeSaveCommand extends AbstractCommand {
 
 	@Override
 	public void execute() {
+		if (this.schemeTab.getCurrentPanel().isTopLevelSchemeMode()) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					LangModelScheme.getString("Message.error.save_top_level"), //$NON-NLS-1$
+					LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+					JOptionPane.OK_OPTION);
+			return;
+		}
+		
 		SchemeGraph graph = this.schemeTab.getGraph();
 
 		long status = SchemeActions.getGraphState(graph);
@@ -123,7 +131,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 						// TODO refreshing view (ugo)
 						
 						
-						this.schemeTab.setGraphChanged(p.getGraph(), true);
+						this.schemeTab.setGraphChanged(true);
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 								se.getName() + LangModelScheme.getString("Message.information.element_saved_in_scheme") + s.getName(),  //$NON-NLS-1$
 								LangModelScheme.getString("Message.information"), //$NON-NLS-1$
@@ -137,15 +145,15 @@ public class SchemeSaveCommand extends AbstractCommand {
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME) // сохраняем схему
 		{
 			Scheme scheme = res.getScheme();
-			if (scheme.getUgoCell() == null) {
-				int ret = JOptionPane.showConfirmDialog(
-								Environment.getActiveWindow(),
-								LangModelScheme.getString("Message.confirmation.no_ugo"), //$NON-NLS-1$
-								LangModelScheme.getString("Message.confirmation"),  //$NON-NLS-1$
-								JOptionPane.YES_NO_OPTION);
-				if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
-					return;
-			}
+//			if (scheme.getUgoCell() == null) {
+//				int ret = JOptionPane.showConfirmDialog(
+//								Environment.getActiveWindow(),
+//								LangModelScheme.getString("Message.confirmation.no_ugo"), //$NON-NLS-1$
+//								LangModelScheme.getString("Message.confirmation"),  //$NON-NLS-1$
+//								JOptionPane.YES_NO_OPTION);
+//				if (ret == JOptionPane.NO_OPTION || ret == JOptionPane.CANCEL_OPTION)
+//					return;
+//			}
 			
 			// add internal objects - SL, SCL, SE
 			Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
@@ -183,10 +191,17 @@ public class SchemeSaveCommand extends AbstractCommand {
 				
 				this.schemeTab.setGraphChanged(false);
 				
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-						scheme.getName() + " " + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$ //$NON-NLS-2$
-						LangModelScheme.getString("Message.information"), //$NON-NLS-1$
-						JOptionPane.INFORMATION_MESSAGE);
+				if (scheme.getUgoCell() == null) {
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+							scheme.getName() + " " + LangModelScheme.getString("Message.information.no_ugo"),  //$NON-NLS-1$ //$NON-NLS-2$
+							LangModelScheme.getString("Message.information"), //$NON-NLS-1$
+							JOptionPane.INFORMATION_MESSAGE);					
+				} else {
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+							scheme.getName() + " " + LangModelScheme.getString("Message.information.scheme_saved"),  //$NON-NLS-1$ //$NON-NLS-2$
+							LangModelScheme.getString("Message.information"), //$NON-NLS-1$
+							JOptionPane.INFORMATION_MESSAGE);
+				}
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}

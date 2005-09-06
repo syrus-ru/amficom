@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.3 2005/09/04 13:35:45 stas Exp $
+ * $Id: PopupFactory.java,v 1.4 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
 
 import java.awt.Point;
+import java.awt.Toolkit;
+import java.awt.datatransfer.Clipboard;
 import java.awt.event.ActionEvent;
 import java.util.HashSet;
 import java.util.List;
@@ -21,18 +23,23 @@ import javax.swing.JMenu;
 import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 
+import com.jgraph.graph.DefaultGraphModel;
 import com.jgraph.graph.EdgeView;
 import com.jgraph.graph.PortView;
+import com.jgraph.plaf.basic.TransferHandler;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.PathBuilder;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.LangModelGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraphTransferHandler;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -72,34 +79,109 @@ public class PopupFactory {
 		return pop;
 	}
 	
-	public static JPopupMenu createElementPopup(final ApplicationContext aContext, DeviceGroup group) {
+	public static JPopupMenu createElementPopup(final ApplicationContext aContext, SchemeTabbedPane pane, DeviceGroup group, final Point p) {
 		JPopupMenu pop = new JPopupMenu();
 		if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
 			final SchemeElement se = group.getSchemeElement();
 			if (se.getKind().value() == SchemeElementKind._SCHEMED) {
-				pop.add(createOpenSchemeMenuItem(aContext, se));
+				pop.add(createOpenSchemeMenuItem(aContext, se.getScheme()));
+				pop.addSeparator();
+				pop.add(createCutMenuItem(pane));
+				pop.add(createPasteMenuItem(pane, p));
 				pop.addSeparator();
 				pop.add(createCancelMenuItem());
 			} else {
 				JMenuItem item = createOpenSchemeElementMenuItem(aContext, se);
 				if (item != null) {
 					pop.add(item);
-					pop.addSeparator();
-					pop.add(createCancelMenuItem());
 				}
+				pop.add(createCutMenuItem(pane));
+				pop.add(createPasteMenuItem(pane, p));
+				pop.addSeparator();
+				pop.add(createCancelMenuItem());
 			}
 		}
 		return pop;
 	}
 	
-	public static JPopupMenu createCablePopup(final ApplicationContext aContext, SchemeGraph graph, DefaultCableLink cell) {
+	public static JPopupMenu createTopElementPopup(final ApplicationContext aContext, TopLevelElement group) {
+		JPopupMenu pop = new JPopupMenu();
+		JMenuItem item = createOpenSchemeMenuItem(aContext, group.getScheme());
+		if (item != null) {
+			pop.add(item);
+			pop.addSeparator();
+			pop.add(createCancelMenuItem());
+		}
+		return pop;
+	}
+	
+	public static JPopupMenu createCablePopup(final ApplicationContext aContext, SchemeTabbedPane pane, DefaultCableLink cell, final Point p) {
 		JPopupMenu pop = new JPopupMenu();
 		
-		pop.add(createMuffMenuItem(aContext, graph, cell));
-		pop.add(createCableSchemeMenuItem(aContext, graph, cell));
+		JMenuItem i1 = createMuffMenuItem(aContext, pane.getGraph(), cell);
+		if (i1 != null) {
+			pop.add(i1);
+			pop.addSeparator();
+		}
+		pop.add(createCutMenuItem(pane));
+		pop.add(createPasteMenuItem(pane, p));
 		pop.addSeparator();
 		pop.add(createCancelMenuItem());
+//		pop.add(createCableSchemeMenuItem(aContext, graph, cell));
 		return pop;
+	}
+	
+	public static JPopupMenu createCopyPastePopup(final ApplicationContext aContext, final SchemeTabbedPane pane, final Point p) {
+		JPopupMenu pop = new JPopupMenu();
+		
+		pop.add(createCutMenuItem(pane));
+		pop.add(createPasteMenuItem(pane, p));
+		pop.addSeparator();
+		pop.add(createCancelMenuItem());
+
+		return pop;
+	}
+	
+	public static JMenuItem createCutMenuItem(final SchemeTabbedPane pane) {
+		JMenuItem menuItem = new JMenuItem(new AbstractAction() {
+			private static final long serialVersionUID = 4132259664875195748L;
+			public void actionPerformed(ActionEvent e) {
+				SchemeGraph graph = pane.getGraph();
+				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				graph.getTransferHandler().exportToClipboard(graph, clipboard, TransferHandler.MOVE);
+			}
+		});
+		SchemeGraph graph = pane.getGraph();
+		if (graph.getSelectionCells().length == 0) {
+			menuItem.setEnabled(false);
+		}
+		menuItem.setText(LangModelScheme.getString("Menu.scheme.cut")); //$NON-NLS-1$
+		return menuItem;
+	}
+	
+	public static JMenuItem createPasteMenuItem(final SchemeTabbedPane pane, final Point p) {
+		JMenuItem menuItem = new JMenuItem(new AbstractAction() {
+			private static final long serialVersionUID = 4132259664875195748L;
+			public void actionPerformed(ActionEvent e) {
+				SchemeGraph graph = pane.getGraph();
+				Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+				TransferHandler handler = graph.getTransferHandler();
+				if (handler.importData(graph, clipboard.getContents(graph))) {
+					if (handler instanceof SchemeGraphTransferHandler) {
+						SchemeGraphTransferHandler handler1 = (SchemeGraphTransferHandler)graph.getTransferHandler();
+						Object[] flat = DefaultGraphModel.getDescendants(graph.getModel(), handler1.getInsertedCells()).toArray();
+						GraphActions.move(graph, flat, p, false);
+					}
+				}
+			}
+		});
+		SchemeGraph graph = pane.getGraph();
+		Clipboard clipboard = Toolkit.getDefaultToolkit().getSystemClipboard();
+		if (!graph.getTransferHandler().canImport(graph, clipboard.getAvailableDataFlavors())) {
+			menuItem.setEnabled(false);
+		}
+		menuItem.setText(LangModelScheme.getString("Menu.scheme.paste")); //$NON-NLS-1$
+		return menuItem;
 	}
 		
 	public static JPopupMenu createPathPopup(final ApplicationContext aContext,
@@ -133,7 +215,7 @@ public class PopupFactory {
 					try {
 						SchemeElement se = (SchemeElement)StorableObjectPool.getStorableObject(id, true);
 						if (se.getKind().value() == SchemeElementKind._SCHEMED) {
-							pop.add(createOpenSchemeMenuItem(aContext, se));
+							pop.add(createOpenSchemeMenuItem(aContext, se.getScheme()));
 							pop.addSeparator();
 							pop.add(createCancelMenuItem());
 						} else {
@@ -161,7 +243,7 @@ public class PopupFactory {
 					if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
 						SchemeElement se = (SchemeElement)StorableObjectPool.getStorableObject(id, true);
 						if (se.getKind().value() == SchemeElementKind._SCHEMED) {
-							pop.add(createOpenSchemeMenuItem(aContext, se));
+							pop.add(createOpenSchemeMenuItem(aContext, se.getScheme()));
 							pop.add(createPathAddMenuItem(aContext, res, id));
 							pop.addSeparator();
 							pop.add(createCancelMenuItem());
@@ -207,6 +289,9 @@ public class PopupFactory {
 			for (EquipmentType eqt : eqTypes) {
 				eqtIds.add(eqt.getId());
 			}
+			if (eqtIds.isEmpty()) {
+				return null;
+			}
 			LinkedIdsCondition condition2 = new LinkedIdsCondition(eqtIds, ObjectEntities.SCHEMEPROTOELEMENT_CODE);
 			Set<SchemeProtoElement> protos = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			final SchemeCableLink cableLink = cell.getSchemeCableLink();
@@ -219,10 +304,11 @@ public class PopupFactory {
 					public void actionPerformed(ActionEvent e) {
 						try {
 							SchemeElement schemeElement = SchemeElement.createInstance(LoginManager.getUserId(), proto, parentScheme);
-
+							EdgeView view = (EdgeView)graph.getGraphLayoutCache().getMapping(cell, true);
+							
 							DefaultCableLink[] newCells = SchemeActions.splitCableLink(graph, cell);
 							if (newCells != null) {
-								EdgeView view = (EdgeView)graph.getGraphLayoutCache().getMapping(cell, true);
+								
 								Point p = getCenterPoint(graph, view);
 								SchemeActions.insertSEbyPE(graph, schemeElement, p, true);
 								Set<SchemeCablePort> cablePorts = schemeElement.getAllSchemeCablePorts();
@@ -430,13 +516,13 @@ public class PopupFactory {
 		return menuItem;
 	}
 	
-	private static JMenuItem createOpenSchemeMenuItem(final ApplicationContext aContext, final SchemeElement se) {
+	private static JMenuItem createOpenSchemeMenuItem(final ApplicationContext aContext, final Scheme sc) {
 		JMenuItem menu = new JMenuItem(new AbstractAction() {
 			private static final long serialVersionUID = 8641829415106895132L;
-			final Scheme sc = se.getScheme();
 			public void actionPerformed(ActionEvent ev) {
 				aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, sc.getId(), SchemeEvent.OPEN_SCHEME));
 				
+				SchemeElement se = sc.getParentSchemeElement();
 				if (se != null && se.isAlarmed())
 					aContext.getDispatcher().firePropertyChange(
 							new SchemeEvent(this, se.getId(), SchemeEvent.CREATE_ALARMED_LINK));

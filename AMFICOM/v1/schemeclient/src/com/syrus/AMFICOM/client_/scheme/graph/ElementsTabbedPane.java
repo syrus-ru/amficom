@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.14 2005/08/19 15:41:34 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.15 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
@@ -172,20 +172,30 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	}
 	
 	@Override
-	public boolean removePanel(UgoPanel p) {
+	public boolean hasUnsavedChanges(UgoPanel p) {
 		if (p instanceof ElementsPanel) {
-			if (p.getGraph().isGraphChanged()) {
-				String text = LangModelScheme.getString("Message.confirmation.object_changed");  //$NON-NLS-1$
-				return showConfirmDialog(text);
+			SchemeResource res = ((ElementsPanel)p).getSchemeResource();
+			boolean b = false;
+			if (res.getCellContainerType() == SchemeResource.SCHEME && res.getScheme().isChanged()) {
+				b = true;
+			} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT && res.getSchemeElement().isChanged()) {
+				b = true;
 			}
-			return true;
+			return b || p.getGraph().isGraphChanged();
 		}
-		return super.removePanel(p);
+		return super.hasUnsavedChanges(p);
 	}
 
-	@Override
-	public boolean removeAllPanels() {
-		return removePanel(this.panel);
+	public boolean confirmUnsavedChanges(UgoPanel p) {
+		if (hasUnsavedChanges(p)) {
+			String text = LangModelScheme.getString("Message.confirmation.object_changed");  //$NON-NLS-1$
+			return showConfirmDialog(text);
+		}
+		return true;
+	}
+	
+	public boolean confirmUnsavedChanges() {
+		return confirmUnsavedChanges(this.panel);
 	}
 	
 	/*
@@ -245,6 +255,14 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 			}
 			// CTRL + ...
 			if (e.getModifiers() == InputEvent.CTRL_MASK) {
+				/*if (e.getKeyCode() == KeyEvent.VK_C) {
+					Clipboard system = Toolkit.getDefaultToolkit().getSystemClipboard();
+					getTransferHandler().exportToClipboard(graph, system, TransferHandler.COPY);
+				} 
+				else if (e.getKeyCode() == KeyEvent.VK_V) {
+					Clipboard system = Toolkit.getDefaultToolkit().getSystemClipboard();
+					getTransferHandler().importData(graph, system.getContents(graph));
+				}*/
 				if (e.getKeyCode() == KeyEvent.VK_Z) {
 					if (p.undoManager.canUndo(graph.getGraphLayoutCache()))
 						new UndoAction(pane).actionPerformed(new ActionEvent(this, 0, ""));

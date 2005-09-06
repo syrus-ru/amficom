@@ -1,5 +1,5 @@
 /*
- * $Id: UgoTabbedPane.java,v 1.16 2005/08/19 15:41:34 stas Exp $
+ * $Id: UgoTabbedPane.java,v 1.17 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
@@ -105,14 +105,10 @@ public class UgoTabbedPane extends JPanel {
 		return null;
 	}
 
-	public boolean removePanel(UgoPanel p) {
-		return true;
+	public boolean hasUnsavedChanges(UgoPanel p) {
+		return false;
 	}
 
-	public boolean removeAllPanels() {
-		return removePanel(this.panel);
-	}
-	
 	public void setEditable(boolean b) {
 		this.editable = b;
 		for (UgoPanel p : getAllPanels()) {

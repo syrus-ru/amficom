@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePortGeneralPanel.java,v 1.22 2005/09/01 13:39:19 stas Exp $
+ * $Id: SchemePortGeneralPanel.java,v 1.23 2005/09/06 12:45:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/09/01 13:39:19 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/06 12:45:57 $
  * @module schemeclient
  */
 
@@ -467,7 +467,10 @@ public class SchemePortGeneralPanel extends DefaultStorableObjectEditor {
 				this.parent = this.schemePort.getParentSchemeDevice().getParentSchemeElement();
 				port = this.schemePort.getPort();
 				mPort = this.schemePort.getMeasurementPort();
-				KIS kis = this.parent.getKis();
+				KIS kis = null;
+				if (this.parent != null) {
+					kis = this.parent.getKis();
+				}
 				
 				if (kis != null) {
 					Set<MeasurementPort> mPorts = kis.getMeasurementPorts(false);
