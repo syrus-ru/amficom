@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphTreeModel.java,v 1.6 2005/07/25 05:58:53 bob Exp $
+* $Id: GraphTreeModel.java,v 1.7 2005/09/06 16:20:24 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import org.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/07/25 05:58:53 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/06 16:20:24 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -76,6 +76,7 @@ public class GraphTreeModel implements TreeModel {
 		}
 	}
 
+	@Override
 	public String toString() {
 		return this.model.toString();
 	}

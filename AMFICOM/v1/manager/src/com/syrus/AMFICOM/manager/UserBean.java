@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.16 2005/09/06 16:15:55 bob Exp $
+ * $Id: UserBean.java,v 1.17 2005/09/06 16:20:24 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,7 @@
 
 package com.syrus.AMFICOM.manager;
 
-import java.awt.BorderLayout;
-import java.awt.CardLayout;
 import java.awt.Color;
-import java.awt.GridBagConstraints;
-import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
 import java.util.HashMap;
@@ -22,11 +18,9 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.AbstractAction;
-import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
 
 import org.jgraph.JGraph;
@@ -37,7 +31,6 @@ import org.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.SystemUser;
-import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -55,7 +48,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/06 16:15:55 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/06 16:20:24 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.15 2005/09/06 16:15:34 bob Exp $
+* $Id: UserBeanFactory.java,v 1.16 2005/09/06 16:20:34 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/06 16:15:34 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/06 16:20:34 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -40,7 +40,6 @@ public class UserBeanFactory extends TabledBeanFactory {
 	
 	private List<String> names;
 
-	private JPanel	switchPanel;
 	private UserBeanFactory(final ManagerMainFrame graphText) {
 		super("Entity.User", 
 			"Entity.User", 
