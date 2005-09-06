@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupController.java,v 1.5 2005/05/19 14:32:22 bob Exp $
+ * $Id: MeasurementSetupController.java,v 1.6 2005/09/06 07:46:42 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,13 +15,13 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/05/19 14:32:22 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/06 07:46:42 $
  * @author $Author: bob $
  * @module module
  */
 public class MeasurementSetupController implements Wrapper {
 
-	public static final String		KEY_NAME		= "NAME";
+	public static final String		KEY_NAME		= "name";
 
 	private List					keys;
 
@@ -82,8 +82,9 @@ public class MeasurementSetupController implements Wrapper {
 		Object value = null;
 		if (object instanceof MeasurementSetup) {
 			MeasurementSetup measurementSetup = (MeasurementSetup) object;
-			if (key.equals(KEY_NAME))
+			if (key.equals(KEY_NAME)) {
 				value = measurementSetup.getDescription(); //$NON-NLS-1$			
+			}
 		}
 		return value;
 	}
