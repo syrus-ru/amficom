@@ -1,5 +1,5 @@
 /*-
-* $Id: ManagerGraphModel.java,v 1.11 2005/09/04 09:27:04 bob Exp $
+* $Id: ManagerGraphModel.java,v 1.12 2005/09/06 10:09:42 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/04 09:27:04 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/06 10:09:42 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -37,7 +37,7 @@ public class ManagerGraphModel extends DefaultGraphModel {
 			final MPort source = (MPort)edge2.getSource();
 			final MPort target = (MPort) edge2.getTarget();
 			Log.debugMessage("ManagerGraphModel.acceptsSource | port " + port 
-				+ "\n\t" + source + " -> " + target, Log.DEBUGLEVEL09);
+				+ "\n\t" + source + " -> " + target, Log.DEBUGLEVEL10);
 			if (port == source) {			
 				// Changing source 
 			} else {
@@ -51,7 +51,7 @@ public class ManagerGraphModel extends DefaultGraphModel {
 		}
 		
 		Log.debugMessage("ManagerGraphModel.acceptsSource() | > " 
-			+ result, Log.DEBUGLEVEL09);
+			+ result, Log.DEBUGLEVEL10);
 		return result;
 	}	
 	
@@ -60,7 +60,7 @@ public class ManagerGraphModel extends DefaultGraphModel {
 		boolean result = source != null && target != null;
 		if (result) {
 			if (source.getTargets().size() > 0) {
-				Log.debugMessage("ManagerGraphModel.isTargetValid | source already refer to target", Log.DEBUGLEVEL09);
+				Log.debugMessage("ManagerGraphModel.isTargetValid | source already refer to target", Log.DEBUGLEVEL10);
 				result = false;
 			}
 			if (result) {
@@ -99,7 +99,7 @@ public class ManagerGraphModel extends DefaultGraphModel {
 				+ source 
 				+ " > " 
 				+ target, 
-			Log.DEBUGLEVEL09);
+			Log.DEBUGLEVEL10);
 		if (sourceBean != null && targetBean != null) {
 			boolean result = sourceBean.isTargetValid(targetBean) && !this.isLooped(source, target);
 			Log.debugMessage("ManagerGraphModel.isTargetValid | " + result, 
