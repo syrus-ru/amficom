@@ -14,20 +14,16 @@ public class SchematicsApplicationModel extends ApplicationModel
 {
 	public SchematicsApplicationModel()
 	{
-		add("menuSession");
-		add("menuSessionNew");
-		add("menuSessionClose");
-		add("menuSessionOptions");
-		add("menuSessionConnection");
-		add("menuSessionChangePassword");
-		add("menuSessionDomain");
-		add("menuSessionSave");
-		add("menuSessionUndo");
-		add("menuExit");
+    add(ApplicationModel.MENU_SESSION);
+    add(ApplicationModel.MENU_SESSION_NEW);
+    add(ApplicationModel.MENU_SESSION_CLOSE);
+//  add(ApplicationModel.MENU_SESSION_CONNECTION);
+    add(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD);
+    add(ApplicationModel.MENU_SESSION_DOMAIN);
+    add(ApplicationModel.MENU_EXIT);
 
-		add("menuBar");
-		add("toolBar");
-		add("statusBar");
+    add(ApplicationModel.MENU_HELP);
+    add(ApplicationModel.MENU_HELP_ABOUT);
 
 		add("menuScheme");
 		add("menuSchemeNew");

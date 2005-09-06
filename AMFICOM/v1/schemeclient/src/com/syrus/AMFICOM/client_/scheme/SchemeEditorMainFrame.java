@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.21 2005/09/04 13:35:45 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.22 2005/09/06 11:20:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/09/04 13:35:45 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/06 11:20:40 $
  * @module schemeclient
  */
 
@@ -24,6 +24,7 @@ import java.util.ArrayList;
 import java.util.logging.Level;
 
 import javax.swing.JInternalFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -381,7 +382,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	@Override
 	public void setDomainSelected() {
 		super.setDomainSelected();
-		ApplicationModel aModel = this.aContext.getApplicationModel();
+		final ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.setEnabled("menuSchemeNew", true);
 		aModel.setEnabled("menuSchemeLoad", true);
@@ -390,6 +391,12 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuPathNew", true);
 //		aModel.setEnabled("menuReportCreate", true);
 		aModel.fireModelChanged("");
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				aModel.getCommand("menuSchemeNew").execute();
+			}
+		});
 	}
 
 	@Override
@@ -420,11 +427,12 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 	@Override
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			if (!this.schemeTab.removeAllPanels())
+			if (!this.schemeTab.confirmUnsavedChanges()) {
 				return;
+			}
 			this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, SchemeEditorMainFrame.this);
 			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, SchemeEditorMainFrame.this);
-			SchemeEditorMainFrame.this.aContext.getApplicationModel().getCommand("menuExit").execute();
+			SchemeEditorMainFrame.this.aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
 		}
 		super.processWindowEvent(e);
 	}

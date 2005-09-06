@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.14 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.15 2005/09/06 11:20:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import java.awt.event.WindowEvent;
 import java.util.logging.Level;
 
 import javax.swing.JInternalFrame;
+import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -42,11 +43,12 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
+import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:58:06 $
+ * @author $Author: stas $
+ * @version $Revision: 1.15 $, $Date: 2005/09/06 11:20:40 $
  * @module schemeclient
  */
 
@@ -89,7 +91,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		this.frames.put(GeneralPropertiesFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Level.FINEST);
-				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame("Title");
+				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame(LangModelScheme.getString("Title.properties"));
 				ElementsEditorMainFrame.this.desktopPane.add(generalFrame);
 				new SchemeEventHandler(generalFrame, ElementsEditorMainFrame.this.aContext);
 				return generalFrame;
@@ -99,7 +101,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		this.frames.put(CharacteristicPropertiesFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Level.FINEST);
-				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame("Title");
+				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame(LangModelScheme.getString("Title.characteristics"));
 				ElementsEditorMainFrame.this.desktopPane.add(characteristicFrame);
 				new SchemeEventHandler(characteristicFrame, ElementsEditorMainFrame.this.aContext);
 				return characteristicFrame;
@@ -109,7 +111,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		this.frames.put(AdditionalPropertiesFrame.NAME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Level.FINEST);
-				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame("Title");
+				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame(LangModelScheme.getString("Title.additional"));
 				ElementsEditorMainFrame.this.desktopPane.add(additionalFrame);
 				new SchemeEventHandler(additionalFrame, ElementsEditorMainFrame.this.aContext);
 				return additionalFrame;
@@ -259,7 +261,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 	public void setSessionOpened() {
 		super.setSessionOpened();
 		
-		ApplicationModel aModel = this.aContext.getApplicationModel();
+		final ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled("menuWindowTree", true);
 		aModel.setEnabled("menuWindowScheme", true);
 		aModel.setEnabled("menuWindowUgo", true);
@@ -270,6 +272,12 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled("menuComponentSave", true);
 		
 		aModel.fireModelChanged("");
+		
+		SwingUtilities.invokeLater(new Runnable() {
+			public void run() {
+				aModel.getCommand("menuComponentNew").execute();
+			}
+		});
 	}
 
 	@Override
@@ -290,11 +298,12 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 	@Override
 	protected void processWindowEvent(WindowEvent e) {
 		if (e.getID() == WindowEvent.WINDOW_CLOSING) {
-			if (!this.elementsTab.removeAllPanels())
+			if (!this.elementsTab.confirmUnsavedChanges()) {
 				return;
+			}
 			this.dispatcher.removePropertyChangeListener(ContextChangeEvent.TYPE, ElementsEditorMainFrame.this);
 			Environment.getDispatcher().removePropertyChangeListener(ContextChangeEvent.TYPE, ElementsEditorMainFrame.this);
-			ElementsEditorMainFrame.this.aContext.getApplicationModel().getCommand("menuExit").execute();
+			ElementsEditorMainFrame.this.aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
 		}
 		super.processWindowEvent(e);
 	}
