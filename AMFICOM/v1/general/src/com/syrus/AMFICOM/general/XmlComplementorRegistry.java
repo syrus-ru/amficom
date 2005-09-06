@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlComplementorRegistry.java,v 1.6 2005/09/06 15:05:23 bass Exp $
+ * $Id: XmlComplementorRegistry.java,v 1.7 2005/09/06 15:45:31 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.6 $, $Date: 2005/09/06 15:05:23 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/06 15:45:31 $
  * @module general
  */
 public final class XmlComplementorRegistry {
@@ -80,6 +80,7 @@ public final class XmlComplementorRegistry {
 					+ "; id = ``"
 					+ storableObject.getId().getStringValue()
 					+ "''", INFO);
+			return;
 		}
 		for (final XmlComplementor complementor : complementors) {
 			complementor.complementStorableObject(storableObject, importType);
