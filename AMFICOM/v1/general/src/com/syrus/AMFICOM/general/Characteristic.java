@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.57 2005/09/01 14:46:07 bob Exp $
+ * $Id: Characteristic.java,v 1.58 2005/09/06 15:05:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,10 +19,11 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristic;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 
 /**
- * @version $Revision: 1.57 $, $Date: 2005/09/01 14:46:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.58 $, $Date: 2005/09/06 15:05:48 $
+ * @author $Author: bass $
  * @module general
  */
 public final class Characteristic extends AbstractCloneableStorableObject
@@ -151,7 +152,25 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("Characteristic.createInstance | cannot generate identifier ", ige);
 		}
-	}	
+	}
+
+	/**
+	 * @param creatorId
+	 * @param xmlCharacteristic
+	 * @param importType
+	 * @throws CreateObjectException
+	 */
+	@SuppressWarnings("unused")
+	public static Characteristic createInstance(
+			final Identifier creatorId,
+			final XmlCharacteristic xmlCharacteristic,
+			final String importType)
+	throws CreateObjectException {
+		/*
+		 * Empty so far. Do not change to throw an exception.
+		 */  
+		return null;
+	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
