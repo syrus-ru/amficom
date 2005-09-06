@@ -1,7 +1,9 @@
-/*
- * SchedulerModel.java
- * Created on 11.06.2004 10:42:43
- * 
+/*-
+ * $Id: SchedulerModel.java,v 1.93 2005/09/06 07:45:46 bob Exp $
+ *
+ * Copyright ¿ 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.Client.Schedule;
@@ -69,7 +71,10 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
+ * @version $Revision: 1.93 $, $Date: 2005/09/06 07:45:46 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
+ * @module scheduler
  */
 public class SchedulerModel extends ApplicationModel implements PropertyChangeListener {
 
@@ -1079,6 +1084,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			case TestStatus._TEST_STATUS_PROCESSING:
 				color = selected ? COLOR_PROCCESSING_SELECTED : COLOR_PROCCESSING;
 				break;
+			case TestStatus._TEST_STATUS_STOPPING:
 			case TestStatus._TEST_STATUS_STOPPED:
 				color = selected ? COLOR_STOPPED_SELECTED : COLOR_STOPPED;
 				break;
