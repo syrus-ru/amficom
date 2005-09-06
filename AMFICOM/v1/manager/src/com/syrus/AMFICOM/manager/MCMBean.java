@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBean.java,v 1.7 2005/09/04 15:13:26 bob Exp $
+ * $Id: MCMBean.java,v 1.8 2005/09/06 10:08:55 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/04 15:13:26 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/06 10:08:55 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -137,7 +137,8 @@ public class MCMBean extends Bean implements DomainNetworkItem {
 	
 	@Override
 	public void dispose() throws ApplicationException {
-		Log.debugMessage("MCMBean.dispose | " + this.id, Log.DEBUGLEVEL09);
-		StorableObjectPool.delete(this.id);		
+		Log.debugMessage("MCMBean.dispose | " + this.id, Log.DEBUGLEVEL10);
+		StorableObjectPool.delete(this.id);
+		super.disposeLayoutItem();
 	}
 }

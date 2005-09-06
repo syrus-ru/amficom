@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.11 2005/09/04 15:13:26 bob Exp $
+ * $Id: DomainBean.java,v 1.12 2005/09/06 10:08:55 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/04 15:13:26 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/06 10:08:55 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -63,7 +63,7 @@ public class DomainBean extends Bean {
 					
 					for(Port port2 : ports) {
 						MPort port3 = (MPort) port2;
-						Log.debugMessage("DomainBean.getMenu | " + port3, Log.DEBUGLEVEL09);
+						Log.debugMessage("DomainBean.getMenu | " + port3, Log.DEBUGLEVEL10);
 						AbstractBean bean2 = port3.getBean();
 						
 						if (bean2 == null || !bean2.getCodeName().startsWith(NetBeanFactory.NET_CODENAME)) {
@@ -160,13 +160,18 @@ public class DomainBean extends Bean {
 		if (newPort != null) {
 			parentId = ((DomainBean) newPort.getUserObject()).getId();
 		}		
-		System.out.println("DomainBean.applyTargetPort() | " + this.domain.getId() + ", set parent " + parentId); 
+		Log.debugMessage("DomainBean.applyTargetPort() | " 
+				+ this.domain.getId() 
+				+ ", set parent " 
+				+ parentId,
+			Log.DEBUGLEVEL10); 
 		this.domain.setDomainId(parentId);
 	}	
 
 	@Override
 	public void dispose() throws ApplicationException {
-		Log.debugMessage("DomainBean.dispose | " + this.id, Log.DEBUGLEVEL09);
+		Log.debugMessage("DomainBean.dispose | " + this.id, Log.DEBUGLEVEL10);
 		StorableObjectPool.delete(this.id);		
+		super.disposeLayoutItem();
 	}
 }

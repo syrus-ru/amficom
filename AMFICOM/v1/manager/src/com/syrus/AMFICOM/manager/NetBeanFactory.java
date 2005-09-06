@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.18 2005/09/04 15:13:26 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.19 2005/09/06 10:08:55 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/04 15:13:26 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/06 10:08:55 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -121,6 +121,8 @@ public class NetBeanFactory extends AbstractBeanFactory {
 					}
 				}
 				
+				super.disposeLayoutItem();
+				
 				this.graphText.valueChanged(null);
 				
 			
@@ -191,7 +193,7 @@ public class NetBeanFactory extends AbstractBeanFactory {
 								+ "\n\tparentDomainId:" 
 								+ parentDomainId,
 								
-							Log.DEBUGLEVEL09);		
+							Log.DEBUGLEVEL10);		
 							layoutItem.setLayoutName(layoutName);
 							
 							AbstractBean cell = this.graphText.getCell(layoutItem);

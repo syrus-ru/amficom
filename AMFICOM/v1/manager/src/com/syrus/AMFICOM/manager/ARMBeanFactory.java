@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.14 2005/09/04 15:13:26 bob Exp $
+ * $Id: ARMBeanFactory.java,v 1.15 2005/09/06 10:08:55 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/04 15:13:26 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/06 10:08:55 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -77,10 +77,11 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 				
 				public boolean isValid(	AbstractBean sourceBean,
 										AbstractBean targetBean) {
-					System.out.println("ARMBeanFactory.Validator$1.isValid() | " 
-						+ sourceBean.getName() 
-						+ " -> " 
-						+ targetBean.getName());
+					Log.debugMessage("ARMBeanFactory.Validator$1.isValid() | " 
+							+ sourceBean.getName() 
+							+ " -> " 
+							+ targetBean.getName(), 
+						Log.DEBUGLEVEL10);
 					return sourceBean != null && 
 						targetBean != null && 
 						sourceBean.getCodeName().startsWith(ARM_CODENAME) &&
@@ -122,12 +123,14 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 						+ layoutItem.getName() 
 						+ ", layoutName:" 
 						+ layoutItem.getLayoutName(), 
-					Log.DEBUGLEVEL09);			
+					Log.DEBUGLEVEL10);			
 					AbstractBean childBean = this.graphText.getCell(layoutItem);
 					childBean.dispose();
 					childBean.disposeLayoutItem();
 				}					
 			}
+			
+			super.disposeLayoutItem();
 		}
 		
 		public void setDomainId(Identifier oldDomainId,
@@ -163,7 +166,7 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 							+ layoutItem.getName() 
 							+ ", layoutName:" 
 							+ layoutName, 
-						Log.DEBUGLEVEL09);						
+						Log.DEBUGLEVEL10);						
 						layoutItem.setLayoutName(layoutName);
 						DomainNetworkItem portBean = 
 							(DomainNetworkItem) this.graphText.getCell(layoutItem);

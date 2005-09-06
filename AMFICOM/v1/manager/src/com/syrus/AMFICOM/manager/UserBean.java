@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.14 2005/09/04 15:13:26 bob Exp $
+ * $Id: UserBean.java,v 1.15 2005/09/06 10:08:55 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/04 15:13:26 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/06 10:08:55 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -76,10 +76,13 @@ public class UserBean extends Bean implements  ARMItem {
 	 */
 	@Override
 	public void dispose() throws ApplicationException {
-		Log.debugMessage("UserBean.dispose | " + Identifier.createIdentifiers(this.user.getCharacteristics(false)), Log.DEBUGLEVEL09);
-		Log.debugMessage("UserBean.dispose | " + this.id, Log.DEBUGLEVEL09);
+		Log.debugMessage("UserBean.dispose | " 
+				+ Identifier.createIdentifiers(this.user.getCharacteristics(false)),
+			Log.DEBUGLEVEL10);
+		Log.debugMessage("UserBean.dispose | " + this.id, Log.DEBUGLEVEL10);
 		StorableObjectPool.delete(this.user.getCharacteristics(false));
 		StorableObjectPool.delete(this.id);		
+		super.disposeLayoutItem();
 	}
 	
 	@Override
