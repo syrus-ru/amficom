@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlComplementorRegistry.java,v 1.5 2005/09/05 17:43:19 bass Exp $
+ * $Id: XmlComplementorRegistry.java,v 1.6 2005/09/06 15:05:23 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static java.util.logging.Level.INFO;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -16,11 +17,12 @@ import java.util.List;
 import java.util.Map;
 
 import com.syrus.AMFICOM.general.xml.XmlStorableObject;
+import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.5 $, $Date: 2005/09/05 17:43:19 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/06 15:05:23 $
  * @module general
  */
 public final class XmlComplementorRegistry {
@@ -73,7 +75,11 @@ public final class XmlComplementorRegistry {
 		assert storableObject != null : NON_NULL_EXPECTED;
 		final List<XmlComplementor> complementors = REGISTRY.get(new Short(entityCode));
 		if (complementors == null || complementors.isEmpty()) {
-			throw new UpdateObjectException("XmlComplementorRegistry.complementStorableObject() | no complementor(s) found to complement the object");
+			Log.debugMessage("XmlComplementorRegistry.complementStorableObject() | no complementor(s) found to complement the object: "
+					+ storableObject.getClass().getName()
+					+ "; id = ``"
+					+ storableObject.getId().getStringValue()
+					+ "''", INFO);
 		}
 		for (final XmlComplementor complementor : complementors) {
 			complementor.complementStorableObject(storableObject, importType);
