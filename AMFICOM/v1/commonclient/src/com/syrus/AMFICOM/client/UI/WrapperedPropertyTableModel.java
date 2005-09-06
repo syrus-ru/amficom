@@ -10,8 +10,8 @@ import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/11 18:51:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/09/06 16:23:21 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public class WrapperedPropertyTableModel extends AbstractTableModel {
@@ -28,6 +28,8 @@ public class WrapperedPropertyTableModel extends AbstractTableModel {
 	protected Wrapper			wrapper;
 
 	protected String[]			keys;
+	
+	protected String[]			names;
 
 	private Object				object;
 
@@ -46,6 +48,10 @@ public class WrapperedPropertyTableModel extends AbstractTableModel {
 		this.wrapper = wrapper;
 		this.object = object;
 		this.keys = keys;
+		this.names = new String[keys.length];
+		for(int i = 0; i < keys.length; i++) {
+			this.names[i] = wrapper.getName(keys[i]);
+		}
 		this.ascendings = new boolean[this.keys.length];
 	}
 
@@ -95,8 +101,9 @@ public class WrapperedPropertyTableModel extends AbstractTableModel {
 	public Object getValueAt(	int rowIndex,
 								int columnIndex) {
 		// String key = this.wrapper.getKey(rowIndex);
-		if (columnIndex == 0)
-			return this.wrapper.getName(this.keys[rowIndex]);
+		if (columnIndex == 0) {
+			return this.names[rowIndex];
+		}
 		Object obj = this.wrapper.getValue(this.object, this.keys[rowIndex]);
 
 		if (this.wrapper.getPropertyValue(this.keys[rowIndex]) instanceof Map) {
