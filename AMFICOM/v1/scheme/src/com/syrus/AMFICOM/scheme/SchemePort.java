@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.57 2005/09/06 17:30:25 bass Exp $
+ * $Id: SchemePort.java,v 1.58 2005/09/06 19:49:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,11 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
@@ -38,7 +43,9 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePort;
@@ -51,7 +58,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/09/06 17:30:25 $
+ * @version $Revision: 1.58 $, $Date: 2005/09/06 19:49:50 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
@@ -116,6 +123,31 @@ public final class SchemePort extends AbstractSchemePort
 				parentSchemeDevice);
 
 		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_SIMPLE;
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private SchemePort(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
+				creatorId,
+				creatorId,
+				StorableObjectVersion.createInitial(),
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null);
 	}
 
 	/**
@@ -191,6 +223,36 @@ public final class SchemePort extends AbstractSchemePort
 			return schemePort;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemePort.createInstance | cannot generate identifier ", ige);
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param xmlSchemePort
+	 * @param importType
+	 * @throws CreateObjectException
+	 */
+	public static SchemePort createInstance(final Identifier creatorId,
+			final XmlSchemePort xmlSchemePort,
+			final String importType)
+	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
+		try {
+			final Identifier id = Identifier.fromXmlTransferable(xmlSchemePort.getId(), SCHEMEPORT_CODE, importType);
+			SchemePort schemePort = StorableObjectPool.getStorableObject(id, true);
+			if (schemePort == null) {
+				schemePort = new SchemePort(id, new Date(), creatorId);
+			}
+			schemePort.fromXmlTransferable(xmlSchemePort, importType);
+			assert schemePort.isValid() : OBJECT_BADLY_INITIALIZED;
+			schemePort.markAsChanged();
+			return schemePort;
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -295,14 +357,34 @@ public final class SchemePort extends AbstractSchemePort
 	}
 
 	/**
-	 * @param xmlSchemePort
+	 * @param schemePort
 	 * @param importType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public void fromXmlTransferable(final XmlSchemePort xmlSchemePort,
+	public void fromXmlTransferable(final XmlSchemePort schemePort,
 			final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		XmlComplementorRegistry.complementStorableObject(schemePort, SCHEMEPORT_CODE, importType);
+
+		super.fromXmlTransferable(schemePort, importType);
+
+		final boolean setPortTypeId = schemePort.isSetPortTypeId();
+		final boolean setPortId = schemePort.isSetPortId();
+		if (setPortTypeId) {
+			assert !setPortId : OBJECT_STATE_ILLEGAL;
+
+			super.portTypeId = Identifier.fromXmlTransferable(schemePort.getPortTypeId(), PORT_TYPE_CODE, importType);
+			super.portId = VOID_IDENTIFIER;
+		} else if (setPortId) {
+			assert !setPortTypeId : OBJECT_STATE_ILLEGAL;
+
+			super.portTypeId = VOID_IDENTIFIER;
+			super.portId = Identifier.fromXmlTransferable(schemePort.getPortId(), PORT_CODE, importType);
+		} else {
+			throw new UpdateObjectException(
+					"SchemePort.fromXmlTransferable() | "
+					+ XML_BEAN_NOT_COMPLETE);
+		}
 	}
 }

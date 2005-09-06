@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.58 2005/09/06 17:30:26 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.59 2005/09/06 19:49:50 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,14 +46,16 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
+import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemePort;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/09/06 17:30:26 $
+ * @version $Revision: 1.59 $, $Date: 2005/09/06 19:49:50 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -544,6 +546,32 @@ public abstract class AbstractSchemePort
 		this.portId = new Identifier(abstractPortId);
 		this.measurementPortId = new Identifier(abstractSchemePort.measurementPortId);
 		this.parentSchemeDeviceId = new Identifier(abstractSchemePort.parentSchemeDeviceId);
+
+		this.portTypeSet = true;
+	}
+
+	/**
+	 * @param abstractSchemePort
+	 * @param importType
+	 * @throws ApplicationException
+	 */
+	final void fromXmlTransferable(final XmlAbstractSchemePort abstractSchemePort,
+			final String importType)
+	throws ApplicationException {
+		this.name = abstractSchemePort.getName();
+		this.description = abstractSchemePort.isSetDescription()
+				? abstractSchemePort.getDescription()
+				: "";
+		this.directionType = IdlDirectionType.from_int(abstractSchemePort.getDirectionType().intValue() - 1);
+		this.measurementPortId = abstractSchemePort.isSetMeasurementPortId()
+				? Identifier.fromXmlTransferable(abstractSchemePort.getMeasurementPortId(), MEASUREMENTPORT_CODE, importType)
+				: VOID_IDENTIFIER;
+		this.parentSchemeDeviceId = Identifier.fromXmlTransferable(abstractSchemePort.getParentSchemeDeviceId(), SCHEMEDEVICE_CODE, importType);
+		if (abstractSchemePort.isSetCharacteristics()) {
+			for (final XmlCharacteristic characteristic : abstractSchemePort.getCharacteristics().getCharacteristicArray()) {
+				Characteristic.createInstance(super.creatorId, characteristic, importType);
+			}
+		}
 
 		this.portTypeSet = true;
 	}

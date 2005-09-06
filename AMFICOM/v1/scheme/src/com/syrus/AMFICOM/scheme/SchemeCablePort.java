@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.56 2005/09/06 17:30:26 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.57 2005/09/06 19:49:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,11 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -37,7 +42,9 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCablePort;
@@ -50,7 +57,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/09/06 17:30:26 $
+ * @version $Revision: 1.57 $, $Date: 2005/09/06 19:49:50 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort
@@ -115,6 +122,31 @@ public final class SchemeCablePort extends AbstractSchemePort
 				parentSchemeDevice);
 
 		assert port == null || port.getType().getKind().value() == PortTypeKind._PORT_KIND_CABLE;
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private SchemeCablePort(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
+				creatorId,
+				creatorId,
+				StorableObjectVersion.createInitial(),
+				null,
+				null,
+				null,
+				null,
+				null,
+				null,
+				null);
 	}
 
 	/**
@@ -190,6 +222,36 @@ public final class SchemeCablePort extends AbstractSchemePort
 			return schemeCablePort;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeCablePort.createInstance | cannot generate identifier ", ige);
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param xmlSchemeCablePort
+	 * @param importType
+	 * @throws CreateObjectException
+	 */
+	public static SchemeCablePort createInstance(final Identifier creatorId,
+			final XmlSchemeCablePort xmlSchemeCablePort,
+			final String importType)
+	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
+		try {
+			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeCablePort.getId(), SCHEMECABLEPORT_CODE, importType);
+			SchemeCablePort schemeCablePort = StorableObjectPool.getStorableObject(id, true);
+			if (schemeCablePort == null) {
+				schemeCablePort = new SchemeCablePort(id, new Date(), creatorId);
+			}
+			schemeCablePort.fromXmlTransferable(xmlSchemeCablePort, importType);
+			assert schemeCablePort.isValid() : OBJECT_BADLY_INITIALIZED;
+			schemeCablePort.markAsChanged();
+			return schemeCablePort;
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -281,15 +343,34 @@ public final class SchemeCablePort extends AbstractSchemePort
 	}
 
 	/**
-	 * @param xmlSchemeCablePort
+	 * @param schemeCablePort
 	 * @param importType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public void fromXmlTransferable(
-			final XmlSchemeCablePort xmlSchemeCablePort,
+	public void fromXmlTransferable(final XmlSchemeCablePort schemeCablePort,
 			final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		XmlComplementorRegistry.complementStorableObject(schemeCablePort, SCHEMECABLEPORT_CODE, importType);
+
+		super.fromXmlTransferable(schemeCablePort, importType);
+
+		final boolean setCablePortTypeId = schemeCablePort.isSetCablePortTypeId();
+		final boolean setCablePortId = schemeCablePort.isSetCablePortId();
+		if (setCablePortTypeId) {
+			assert !setCablePortId : OBJECT_STATE_ILLEGAL;
+
+			super.portTypeId = Identifier.fromXmlTransferable(schemeCablePort.getCablePortTypeId(), PORT_TYPE_CODE, importType);
+			super.portId = VOID_IDENTIFIER;
+		} else if (setCablePortId) {
+			assert !setCablePortTypeId : OBJECT_STATE_ILLEGAL;
+
+			super.portTypeId = VOID_IDENTIFIER;
+			super.portId = Identifier.fromXmlTransferable(schemeCablePort.getCablePortId(), PORT_CODE, importType);
+		} else {
+			throw new UpdateObjectException(
+					"SchemeCablePort.fromXmlTransferable() | "
+					+ XML_BEAN_NOT_COMPLETE);
+		}
 	}
 }
