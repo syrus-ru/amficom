@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.14 2005/09/04 11:31:23 bob Exp $
+* $Id: UserBeanFactory.java,v 1.15 2005/09/06 16:15:34 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,24 +8,11 @@
 
 package com.syrus.AMFICOM.manager;
 
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.FULL_NAME;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.LOGIN;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.NAME;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.USER_BUILDING;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.USER_CELLULAR;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.USER_CITY;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.USER_COMPANY;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.USER_DEPARTEMENT;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.USER_EMAIL;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.USER_NATURE;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.USER_PHONE;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.USER_POSITION;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.USER_ROOM_NO;
-import static com.syrus.AMFICOM.manager.UserBeanWrapper.USER_STREET;
-
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
@@ -42,7 +29,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/04 11:31:23 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/06 16:15:34 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -52,6 +39,8 @@ public class UserBeanFactory extends TabledBeanFactory {
 	private static UserBeanFactory instance;
 	
 	private List<String> names;
+
+	private JPanel	switchPanel;
 	private UserBeanFactory(final ManagerMainFrame graphText) {
 		super("Entity.User", 
 			"Entity.User", 
@@ -123,33 +112,23 @@ public class UserBeanFactory extends TabledBeanFactory {
 	
 	@Override
 	protected AbstractBean createBean(Identifier identifier) {
-		UserBean bean = new UserBean(this.names);
+		final UserBean bean = new UserBean(this.names);
 		bean.setGraphText(super.graphText);
 		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());		
 
 		bean.setId(identifier);	
 		
+		UserBeanWrapper userBeanWrapper = UserBeanWrapper.getInstance();
+		List<String> keys = UserBeanWrapper.getInstance().getKeys();
+		
 		bean.table = super.getTable(bean, 
-			UserBeanWrapper.getInstance(),
-			new String[] {NAME,
-				LOGIN,
-				FULL_NAME, 
-				USER_NATURE, 
-				USER_POSITION,
-				USER_DEPARTEMENT,
-				USER_COMPANY,
-				USER_ROOM_NO,
-				USER_CITY,
-				USER_STREET,
-				USER_BUILDING,
-				USER_EMAIL,
-				USER_PHONE,
-				USER_CELLULAR});
+			userBeanWrapper,
+			keys.toArray(new String[keys.size()]));
 		
 		bean.addPropertyChangeListener(this.listener);
-		
-		bean.setPropertyPanel(this.panel);
+
+		bean.setPropertyPanel(this.panel);		
 		
 		super.graphText.getDispatcher().firePropertyChange(
 			new PropertyChangeEvent(this, ObjectEntities.SYSTEMUSER, null, bean));
