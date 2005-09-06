@@ -140,13 +140,15 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 		return null;
 	}
 
-	public void setKIS(final KIS kis) {
+	public void setKIS(@SuppressWarnings("unused")
+	final KIS kis) {
 		// this.paramMap.put(ObjectEntities.KIS, kis);
 		this.treePanel.expandAll(true);
 		this.selectItems();
 	}
 
-	public void setMeasurementType(final MeasurementType measurementType) {
+	public void setMeasurementType(@SuppressWarnings("unused")
+	final MeasurementType measurementType) {
 		this.treePanel.expandAll(true);
 		this.selectItems();
 	}
@@ -198,6 +200,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	public void propertyChange(final PropertyChangeEvent evt) {
 		final String propertyName = evt.getPropertyName();
 		final Object newValue = evt.getNewValue();

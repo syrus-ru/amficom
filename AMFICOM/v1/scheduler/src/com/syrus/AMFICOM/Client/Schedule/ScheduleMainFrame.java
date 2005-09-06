@@ -51,9 +51,12 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		this(new ApplicationContext());
 	}
 
+	@SuppressWarnings("serial")
 	public ScheduleMainFrame(final ApplicationContext aContext) {
 		super(aContext, LangModelSchedule.getString("Text.Scheduler.Title"), new ScheduleMainMenuBar(aContext
-				.getApplicationModel()), new AbstractMainToolBar() {});
+				.getApplicationModel()), new AbstractMainToolBar() {
+			// nothing
+		});
 
 		final Dispatcher dispatcher1 = this.dispatcher;
 		

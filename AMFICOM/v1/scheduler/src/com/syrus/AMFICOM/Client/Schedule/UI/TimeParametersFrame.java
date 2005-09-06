@@ -182,6 +182,7 @@ public class TimeParametersFrame extends JInternalFrame {
 					
 					private Thread		thread			= new Thread() {
 
+															@SuppressWarnings("unqualified-field-access")
 															@Override
 															public void run() {
 																while (true) {
@@ -375,6 +376,7 @@ public class TimeParametersFrame extends JInternalFrame {
 						
 						private Thread		thread			= new Thread() {
 
+																@SuppressWarnings("unqualified-field-access")
 																@Override
 																public void run() {
 																	while (true) {
@@ -499,6 +501,7 @@ public class TimeParametersFrame extends JInternalFrame {
 					
 					private Thread		thread			= new Thread() {
 
+															@SuppressWarnings("unqualified-field-access")
 															@Override
 															public void run() {
 																while (true) {
