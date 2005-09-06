@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.59 2005/09/05 17:43:19 bass Exp $
+ * $Id: Identifier.java,v 1.60 2005/09/06 12:48:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 import java.io.Serializable;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.59 $, $Date: 2005/09/05 17:43:19 $
+ * @version $Revision: 1.60 $, $Date: 2005/09/06 12:48:27 $
  * @author $Author: bass $
  * @module general
  */
@@ -130,8 +131,21 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		return new IdlIdentifier(this.getIdentifierCode());
 	}
 
-	public XmlIdentifier getXmlTransferable(@SuppressWarnings("unused") final String importType) {
-		throw new UnsupportedOperationException();
+	public XmlIdentifier getXmlTransferable(final String importType) {
+		assert !this.isVoid() : NON_VOID_EXPECTED;
+
+		if (LocalXmlIdentifierPool.contains(this, importType)) {
+			return LocalXmlIdentifierPool.get(this, importType);
+		}
+
+		final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
+		xmlId.setStringValue(this.getIdentifierString());
+
+		assert !LocalXmlIdentifierPool.contains(xmlId, importType);
+
+		LocalXmlIdentifierPool.put(this, xmlId, importType);
+
+		return xmlId;
 	}
 
 	@Override
@@ -325,18 +339,37 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 * @param xmlId
 	 * @param entityCode
 	 * @param importType
-	 * @throws RetrieveObjectException
+	 * @throws IdentifierGenerationException
 	 * @throws ObjectNotFoundException if {@link #ABSTRACT_CODE} is used
 	 *         as an {@code entityCode} value, and the appropriate mapping
 	 *         is not found in the pool.
 	 * @see #ABSTRACT_CODE
 	 */
-	@SuppressWarnings("unused")
 	public static Identifier fromXmlTransferable(final XmlIdentifier xmlId,
 			final short entityCode,
 			final String importType)
-	throws RetrieveObjectException, ObjectNotFoundException {
-		throw new UnsupportedOperationException();
+	throws IdentifierGenerationException, ObjectNotFoundException {
+		final boolean entityCodeAbstract = entityCode == ABSTRACT_CODE;
+		if (LocalXmlIdentifierPool.contains(xmlId, importType)) {
+			final Identifier id = LocalXmlIdentifierPool.get(xmlId, importType);
+
+			assert !id.isVoid() : NON_VOID_EXPECTED;
+			assert entityCodeAbstract || entityCode == id.getMajor();
+
+			return id;
+		}
+
+		if (entityCodeAbstract) {
+			throw new ObjectNotFoundException("Unable to generate an identifier for an abstract type");
+		}
+
+		final Identifier id = IdentifierPool.getGeneratedIdentifier(entityCode);
+
+		assert !LocalXmlIdentifierPool.contains(id, importType);
+
+		LocalXmlIdentifierPool.put(id, xmlId, importType);
+
+		return id;
 	}
 
 	/**
