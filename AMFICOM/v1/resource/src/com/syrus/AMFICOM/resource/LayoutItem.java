@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.1 2005/08/22 12:10:45 bob Exp $
+* $Id: LayoutItem.java,v 1.2 2005/09/06 11:13:21 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,6 +11,8 @@ package com.syrus.AMFICOM.resource;
 import java.util.Collections;
 import java.util.Date;
 import java.util.Set;
+
+import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
@@ -31,9 +33,12 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.resource.corba.IdlLayoutItem;
+import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $
+ * @version $Revision: 1.2 $
  * @author $Author: bob $
  * @module resource
  */
@@ -67,16 +72,16 @@ public final class LayoutItem extends StorableObject implements Characterizable,
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-//	/**
-//	 * <p><b>Clients must never explicitly call this method.</b></p>
-//	 */
-//	public LayoutItem(final IdlLayoutItem ptt) throws CreateObjectException {
-//		try {
-//			this.fromTransferable(ptt);
-//		} catch (ApplicationException ae) {
-//			throw new CreateObjectException(ae);
-//		}
-//	}
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	public LayoutItem(final IdlLayoutItem ili) throws CreateObjectException {
+		try {
+			this.fromTransferable(ili);
+		} catch (ApplicationException ae) {
+			throw new CreateObjectException(ae);
+		}
+	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -130,13 +135,12 @@ public final class LayoutItem extends StorableObject implements Characterizable,
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
-	protected boolean isValid() {
-		
+	protected boolean isValid() {		
 		return super.isValid() &&
 			// parentId can be VOID_IDENTIFIER - just null pointer checking
 			this.parentId != null && 
 			this.layoutName != null && 
-			this.layoutName.length() > 0;
+			this.layoutName.trim().length() > 0;
 	}
 
 	/**
@@ -144,40 +148,39 @@ public final class LayoutItem extends StorableObject implements Characterizable,
 	 */
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
-//		XXX
-//		final IdlLayoutItem lt = (IdlLayoutItem) transferable;
-//		try {
-//			super.fromTransferable(lt);
-//		} catch (ApplicationException ae) {
-//			// Never
-//			Log.errorException(ae);
-//		}
-//		this.codename = lt.codename;
+		final IdlLayoutItem ili = (IdlLayoutItem) transferable;
+		try {
+			super.fromTransferable(ili);
+		} catch (ApplicationException ae) {
+			// Never
+			Log.errorException(ae);
+		}
+		
+		this.parentId = new Identifier(ili.parentId);
+		this.layoutName = ili.layoutName;
+		this.name = ili.name;
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 	
-//	/**
-//	 * <p><b>Clients must never explicitly call this method.</b></p>
-//	 */
-//	@Override
-//	public IdlLayoutItem getTransferable(final ORB orb) {
-//		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-//
-//		// XXX
-//		return IdlLayoutItemHelper.init(orb,
-//				this.id.getTransferable(),
-//				this.created.getTime(),
-//				this.modified.getTime(),
-//				this.creatorId.getTransferable(),
-//				this.modifierId.getTransferable(),
-//				this.version.longValue(),
-//				super.codename,
-//				super.description != null ? super.description : "",
-//				this.name,
-//				(IdlDataType) this.dataType.getTransferable(orb));
-//		return null;
-//	}
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	@Override
+	public IdlLayoutItem getTransferable(final ORB orb) {
+		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
+
+		return IdlLayoutItemHelper.init(orb,
+				this.id.getTransferable(),
+				this.created.getTime(),
+				this.modified.getTime(),
+				this.creatorId.getTransferable(),
+				this.modifierId.getTransferable(),
+				this.version.longValue(),
+				this.parentId.getTransferable(),
+				this.layoutName,
+				this.name);
+	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -249,15 +252,6 @@ public final class LayoutItem extends StorableObject implements Characterizable,
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	final void setLayoutName0(final String layoutName) {
-//		if ("Domain_1".equals(layoutName)) {
-//		try {
-//			throw new Exception("LayoutItem.setLayoutName0() | " + this.id + ", layoutName: " + layoutName + ", this.name:" + this.name);
-//		} catch (Exception e) {
-//			// TODO Auto-generated catch block
-//			e.printStackTrace();
-//		}
-//		}
-//		System.out.println("LayoutItem.setLayoutName0() | " + this.id + ", " + layoutName);
 		this.layoutName = layoutName;
 	}
 	
@@ -278,5 +272,14 @@ public final class LayoutItem extends StorableObject implements Characterizable,
 	public final void setParentId(final Identifier parentId) {
 		this.setParentId0(parentId);
 		super.markAsChanged();
+	}
+	
+	@Override
+	public String toString() {
+		return LayoutItem.class.getSimpleName() + " | \n\t" 
+			+ "id:" + this.id + "\n\t" 
+			+ "parentId:" + this.parentId + "\n\t"
+			+ "name:" + this.name + "\n\t"
+			+ "layoutName:" + this.layoutName;
 	}
 }
