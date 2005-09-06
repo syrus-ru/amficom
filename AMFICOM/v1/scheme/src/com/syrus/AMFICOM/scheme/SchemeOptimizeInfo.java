@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.60 2005/09/05 17:43:16 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.61 2005/09/06 17:30:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.60 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.61 $, $Date: 2005/09/06 17:30:25 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -749,31 +749,33 @@ public final class SchemeOptimizeInfo extends StorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
-		final IdlSchemeOptimizeInfo schemeOptimizeInfo = (IdlSchemeOptimizeInfo) transferable;
-		try {
-			super.fromTransferable(schemeOptimizeInfo);
-		} catch (final ApplicationException ae) {
-			/*
-			 * Never.
-			 */
-			assert false;
+	protected void fromTransferable(final IdlStorableObject transferable) {
+		synchronized (this) {
+			final IdlSchemeOptimizeInfo schemeOptimizeInfo = (IdlSchemeOptimizeInfo) transferable;
+			try {
+				super.fromTransferable(schemeOptimizeInfo);
+			} catch (final ApplicationException ae) {
+				/*
+				 * Never.
+				 */
+				assert false;
+			}
+			this.name = schemeOptimizeInfo.name;
+			this.description = schemeOptimizeInfo.description;
+			this.optimizationMode = schemeOptimizeInfo.optimizationMode;
+			this.iterations = schemeOptimizeInfo.iterations;
+			this.price = schemeOptimizeInfo.price;
+			this.waveLength = schemeOptimizeInfo.waveLength;
+			this.lenMargin = schemeOptimizeInfo.lenMargin;
+			this.mutationRate = schemeOptimizeInfo.mutationRate;
+			this.mutationDegree = schemeOptimizeInfo.mutationDegree;
+			this.rtuDeleteProb = schemeOptimizeInfo.rtuDeleteProb;
+			this.rtuCreateProb = schemeOptimizeInfo.rtuCreateProb;
+			this.nodesSpliceProb = schemeOptimizeInfo.nodesSpliceProb;
+			this.nodesCutProb = schemeOptimizeInfo.nodesCutProb;
+			this.survivorRate = schemeOptimizeInfo.survivorRate;
+			this.parentSchemeId = new Identifier(schemeOptimizeInfo.parentSchemeId);
 		}
-		this.name = schemeOptimizeInfo.name;
-		this.description = schemeOptimizeInfo.description;
-		this.optimizationMode = schemeOptimizeInfo.optimizationMode;
-		this.iterations = schemeOptimizeInfo.iterations;
-		this.price = schemeOptimizeInfo.price;
-		this.waveLength = schemeOptimizeInfo.waveLength;
-		this.lenMargin = schemeOptimizeInfo.lenMargin;
-		this.mutationRate = schemeOptimizeInfo.mutationRate;
-		this.mutationDegree = schemeOptimizeInfo.mutationDegree;
-		this.rtuDeleteProb = schemeOptimizeInfo.rtuDeleteProb;
-		this.rtuCreateProb = schemeOptimizeInfo.rtuCreateProb;
-		this.nodesSpliceProb = schemeOptimizeInfo.nodesSpliceProb;
-		this.nodesCutProb = schemeOptimizeInfo.nodesCutProb;
-		this.survivorRate = schemeOptimizeInfo.survivorRate;
-		this.parentSchemeId = new Identifier(schemeOptimizeInfo.parentSchemeId);
 	}
 
 	/**

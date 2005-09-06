@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.73 2005/09/05 17:43:16 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.74 2005/09/06 17:30:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.74 $, $Date: 2005/09/06 17:30:26 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -639,16 +639,16 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
-		final IdlSchemeCableLink schemeCableLink = (IdlSchemeCableLink) transferable;
-		super.fromTransferable(schemeCableLink, schemeCableLink.name,
-				schemeCableLink.description,
-				schemeCableLink.physicalLength,
-				schemeCableLink.opticalLength, schemeCableLink.cableLinkTypeId,
-				schemeCableLink.cableLinkId,
-				schemeCableLink.sourceSchemeCablePortId,
-				schemeCableLink.targetSchemeCablePortId,
-				schemeCableLink.parentSchemeId);
+	protected void fromTransferable(final IdlStorableObject transferable)
+	throws CreateObjectException {
+		synchronized (this) {
+			final IdlSchemeCableLink schemeCableLink = (IdlSchemeCableLink) transferable;
+			super.fromTransferable(schemeCableLink,
+					schemeCableLink.cableLinkTypeId,
+					schemeCableLink.cableLinkId,
+					schemeCableLink.sourceSchemeCablePortId,
+					schemeCableLink.targetSchemeCablePortId);
+		}
 	}
 
 	/**

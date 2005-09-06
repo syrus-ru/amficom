@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.58 2005/09/06 15:07:23 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.59 2005/09/06 17:30:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/09/06 15:07:23 $
+ * @version $Revision: 1.59 $, $Date: 2005/09/06 17:30:26 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -723,25 +723,27 @@ public final class CableChannelingItem
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
-		final IdlCableChannelingItem cableChannelingItem = (IdlCableChannelingItem) transferable;
-		try {
-			super.fromTransferable(cableChannelingItem);
-		} catch (final ApplicationException ae) {
-			/*
-			 * Never.
-			 */
-			assert false;
+	protected void fromTransferable(final IdlStorableObject transferable) {
+		synchronized (this) {
+			final IdlCableChannelingItem cableChannelingItem = (IdlCableChannelingItem) transferable;
+			try {
+				super.fromTransferable(cableChannelingItem);
+			} catch (final ApplicationException ae) {
+				/*
+				 * Never.
+				 */
+				assert false;
+			}
+			this.startSpare = cableChannelingItem.startSpare;
+			this.endSpare = cableChannelingItem.endSpare;
+			this.rowX = cableChannelingItem.rowX;
+			this.placeY = cableChannelingItem.placeY;
+			this.sequentialNumber = cableChannelingItem.sequentialNumber;
+			this.physicalLinkId = new Identifier(cableChannelingItem.physicalLinkId);
+			this.startSiteNodeId = new Identifier(cableChannelingItem.startSiteNodeId);
+			this.endSiteNodeId = new Identifier(cableChannelingItem.endSiteNodeId);
+			this.parentSchemeCableLinkId = new Identifier(cableChannelingItem.parentSchemeCableLinkId);
 		}
-		this.startSpare = cableChannelingItem.startSpare;
-		this.endSpare = cableChannelingItem.endSpare;
-		this.rowX = cableChannelingItem.rowX;
-		this.placeY = cableChannelingItem.placeY;
-		this.sequentialNumber = cableChannelingItem.sequentialNumber;
-		this.physicalLinkId = new Identifier(cableChannelingItem.physicalLinkId);
-		this.startSiteNodeId = new Identifier(cableChannelingItem.startSiteNodeId);
-		this.endSiteNodeId = new Identifier(cableChannelingItem.endSiteNodeId);
-		this.parentSchemeCableLinkId = new Identifier(cableChannelingItem.parentSchemeCableLinkId);
 	}
 
 	/**

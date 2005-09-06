@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.59 2005/09/05 17:43:16 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.60 2005/09/06 17:30:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.59 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.60 $, $Date: 2005/09/06 17:30:26 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -676,20 +676,22 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
-		final IdlSchemeProtoGroup schemeProtoGroup = (IdlSchemeProtoGroup) transferable;
-		try {
-			super.fromTransferable(schemeProtoGroup);
-		} catch (final ApplicationException ae) {
-			/*
-			 * Never.
-			 */
-			assert false;
+	protected void fromTransferable(final IdlStorableObject transferable) {
+		synchronized (this) {
+			final IdlSchemeProtoGroup schemeProtoGroup = (IdlSchemeProtoGroup) transferable;
+			try {
+				super.fromTransferable(schemeProtoGroup);
+			} catch (final ApplicationException ae) {
+				/*
+				 * Never.
+				 */
+				assert false;
+			}
+			this.name = schemeProtoGroup.name;
+			this.description = schemeProtoGroup.description;
+			this.symbolId = new Identifier(schemeProtoGroup.symbolId);
+			this.parentSchemeProtoGroupId = new Identifier(schemeProtoGroup.parentSchemeProtoGroupId);
 		}
-		this.name = schemeProtoGroup.name;
-		this.description = schemeProtoGroup.description;
-		this.symbolId = new Identifier(schemeProtoGroup.symbolId);
-		this.parentSchemeProtoGroupId = new Identifier(schemeProtoGroup.parentSchemeProtoGroupId);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.72 2005/09/05 17:43:16 bass Exp $
+ * $Id: SchemeDevice.java,v 1.73 2005/09/06 17:30:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.72 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.73 $, $Date: 2005/09/06 17:30:26 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -748,19 +748,24 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
-		final IdlSchemeDevice schemeDevice = (IdlSchemeDevice) transferable;
-		try {
-			super.fromTransferable(schemeDevice);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
+	protected void fromTransferable(final IdlStorableObject transferable)
+	throws CreateObjectException {
+		synchronized (this) {
+			final IdlSchemeDevice schemeDevice = (IdlSchemeDevice) transferable;
+			try {
+				super.fromTransferable(schemeDevice);
+			} catch (final CreateObjectException coe) {
+				throw coe;
+			} catch (final ApplicationException ae) {
+				throw new CreateObjectException(ae);
+			}
+			this.name = schemeDevice.name;
+			this.description = schemeDevice.description;
+			this.parentSchemeProtoElementId = new Identifier(schemeDevice.parentSchemeProtoElementId);
+			this.parentSchemeElementId = new Identifier(schemeDevice.parentSchemeElementId);
+	
+			this.parentSet = true;
 		}
-		this.name = schemeDevice.name;
-		this.description = schemeDevice.description;
-		this.parentSchemeProtoElementId = new Identifier(schemeDevice.parentSchemeProtoElementId);
-		this.parentSchemeElementId = new Identifier(schemeDevice.parentSchemeElementId);
-
-		this.parentSet = true;
 	}
 
 	/**

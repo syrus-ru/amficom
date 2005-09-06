@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.33 2005/08/13 11:10:44 max Exp $
+ * $Id: AbstractSchemeLink.java,v 1.34 2005/09/06 17:30:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,10 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 
@@ -35,7 +35,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemeLink;
 import com.syrus.util.Log;
 
 /**
@@ -43,8 +43,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeLink}instead.
  *
- * @author $Author: max $
- * @version $Revision: 1.33 $, $Date: 2005/08/13 11:10:44 $
+ * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/09/06 17:30:25 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -480,30 +480,23 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	}
 
 	/**
-	 * @param header
-	 * @param name
-	 * @param description
-	 * @param physicalLength1
-	 * @param opticalLength1
+	 * @param abstractSchemeLink
 	 * @param abstractLinkTypeId1
 	 * @param abstractLinkId1
 	 * @param sourceAbstractSchemePortId1
 	 * @param targetAbstractSchemePortId1
-	 * @param parentSchemeId1
 	 * @throws CreateObjectException
 	 */
-	void fromTransferable(final IdlStorableObject header,
-			final String name, final String description,
-			final double physicalLength1, final double opticalLength1,
+	final void fromTransferable(
+			final IdlAbstractSchemeLink abstractSchemeLink,
 			final IdlIdentifier abstractLinkTypeId1,
 			final IdlIdentifier abstractLinkId1,
 			final IdlIdentifier sourceAbstractSchemePortId1,
-			final IdlIdentifier targetAbstractSchemePortId1,
-			final IdlIdentifier parentSchemeId1)
-			throws CreateObjectException {
-		super.fromTransferable(header, name, description, parentSchemeId1);
-		this.physicalLength = physicalLength1;
-		this.opticalLength = opticalLength1;
+			final IdlIdentifier targetAbstractSchemePortId1)
+	throws CreateObjectException {
+		super.fromTransferable(abstractSchemeLink);
+		this.physicalLength = abstractSchemeLink.physicalLength;
+		this.opticalLength = abstractSchemeLink.opticalLength;
 		this.abstractLinkTypeId = new Identifier(abstractLinkTypeId1);
 		this.abstractLinkId = new Identifier(abstractLinkId1);
 		this.sourceAbstractSchemePortId = new Identifier(sourceAbstractSchemePortId1);

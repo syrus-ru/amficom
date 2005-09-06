@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.86 2005/09/06 15:36:56 bass Exp $
+ * $Id: SchemeElement.java,v 1.87 2005/09/06 17:30:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -81,7 +81,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.86 $, $Date: 2005/09/06 15:36:56 $
+ * @version $Revision: 1.87 $, $Date: 2005/09/06 17:30:25 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -341,10 +341,9 @@ public final class SchemeElement extends AbstractSchemeElement
 			return schemeElement;
 		} catch (final CloneNotSupportedException cnse) {
 			throw new CreateObjectException(cnse);
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final ApplicationException ae) {
-			if (ae instanceof CreateObjectException) {
-				throw (CreateObjectException) ae;
-			}
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -378,10 +377,9 @@ public final class SchemeElement extends AbstractSchemeElement
 
 			schemeElement.fillProperties(schemeProtoElement, creatorId);
 			return schemeElement;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final ApplicationException ae) {
-			if (ae instanceof CreateObjectException) {
-				throw (CreateObjectException) ae;
-			}
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -415,10 +413,9 @@ public final class SchemeElement extends AbstractSchemeElement
 
 			schemeElement.fillProperties(schemeProtoElement, creatorId);
 			return schemeElement;
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final ApplicationException ae) {
-			if (ae instanceof CreateObjectException) {
-				throw (CreateObjectException) ae;
-			}
 			throw new CreateObjectException(ae);
 		}
 	}
@@ -1467,23 +1464,24 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
-		final IdlSchemeElement schemeElement = (IdlSchemeElement) transferable;
-		super.fromTransferable(schemeElement, schemeElement.name,
-				schemeElement.description,
-				schemeElement.parentSchemeId);
-		this.label = schemeElement.label;
-		this.kind = schemeElement.kind;
-		this.equipmentTypeId = new Identifier(schemeElement.equipmentTypeId);
-		this.equipmentId = new Identifier(schemeElement.equipmentId);
-		this.kisId = new Identifier(schemeElement.kisId);
-		this.siteNodeId = new Identifier(schemeElement.siteNodeId);
-		this.symbolId = new Identifier(schemeElement.symbolId);
-		this.ugoCellId = new Identifier(schemeElement.ugoCellId);
-		this.schemeCellId = new Identifier(schemeElement.schemeCellId);
-		this.parentSchemeElementId = new Identifier(schemeElement.parentSchemeElementId);
-
-		this.equipmentTypeSet = true;
+	protected void fromTransferable(final IdlStorableObject transferable)
+	throws CreateObjectException {
+		synchronized (this) {
+			final IdlSchemeElement schemeElement = (IdlSchemeElement) transferable;
+			super.fromTransferable(schemeElement);
+			this.label = schemeElement.label;
+			this.kind = schemeElement.kind;
+			this.equipmentTypeId = new Identifier(schemeElement.equipmentTypeId);
+			this.equipmentId = new Identifier(schemeElement.equipmentId);
+			this.kisId = new Identifier(schemeElement.kisId);
+			this.siteNodeId = new Identifier(schemeElement.siteNodeId);
+			this.symbolId = new Identifier(schemeElement.symbolId);
+			this.ugoCellId = new Identifier(schemeElement.ugoCellId);
+			this.schemeCellId = new Identifier(schemeElement.schemeCellId);
+			this.parentSchemeElementId = new Identifier(schemeElement.parentSchemeElementId);
+	
+			this.equipmentTypeSet = true;
+		}
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.65 2005/09/05 17:43:16 bass Exp $
+ * $Id: SchemeLink.java,v 1.66 2005/09/06 17:30:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.65 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.66 $, $Date: 2005/09/06 17:30:26 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -1035,21 +1035,21 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
-		final IdlSchemeLink schemeLink = (IdlSchemeLink) transferable;
-		super.fromTransferable(schemeLink, schemeLink.name,
-				schemeLink.description,
-				schemeLink.physicalLength,
-				schemeLink.opticalLength, schemeLink.linkTypeId,
-				schemeLink.linkId,
-				schemeLink.sourceSchemePortId,
-				schemeLink.targetSchemePortId,
-				schemeLink.parentSchemeId);
-		this.siteNodeId = new Identifier(schemeLink.siteNodeId);
-		this.parentSchemeElementId = new Identifier(schemeLink.parentSchemeElementId);
-		this.parentSchemeProtoElementId = new Identifier(schemeLink.parentSchemeProtoElementId);
-
-		this.parentSet = true;
+	protected void fromTransferable(final IdlStorableObject transferable)
+	throws CreateObjectException {
+		synchronized (this) {
+			final IdlSchemeLink schemeLink = (IdlSchemeLink) transferable;
+			super.fromTransferable(schemeLink,
+					schemeLink.linkTypeId,
+					schemeLink.linkId,
+					schemeLink.sourceSchemePortId,
+					schemeLink.targetSchemePortId);
+			this.siteNodeId = new Identifier(schemeLink.siteNodeId);
+			this.parentSchemeElementId = new Identifier(schemeLink.parentSchemeElementId);
+			this.parentSchemeProtoElementId = new Identifier(schemeLink.parentSchemeProtoElementId);
+	
+			this.parentSet = true;
+		}
 	}
 
 	/**

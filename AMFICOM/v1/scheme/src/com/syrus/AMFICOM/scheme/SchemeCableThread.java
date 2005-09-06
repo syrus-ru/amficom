@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.70 2005/09/05 17:43:16 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.71 2005/09/06 17:30:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.71 $, $Date: 2005/09/06 17:30:26 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -643,20 +643,25 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
-		final IdlSchemeCableThread schemeCableThread = (IdlSchemeCableThread) transferable;
-		try {
-			super.fromTransferable(schemeCableThread);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
+	protected void fromTransferable(final IdlStorableObject transferable)
+	throws CreateObjectException {
+		synchronized (this) {
+			final IdlSchemeCableThread schemeCableThread = (IdlSchemeCableThread) transferable;
+			try {
+				super.fromTransferable(schemeCableThread);
+			} catch (final CreateObjectException coe) {
+				throw coe;
+			} catch (final ApplicationException ae) {
+				throw new CreateObjectException(ae);
+			}
+			this.name = schemeCableThread.name;
+			this.description = schemeCableThread.description;
+			this.linkTypeId = new Identifier(schemeCableThread.linkTypeId);
+			this.linkId = new Identifier(schemeCableThread.linkId);
+			this.sourceSchemePortId = new Identifier(schemeCableThread.sourceSchemePortId);
+			this.targetSchemePortId = new Identifier(schemeCableThread.targetSchemePortId);
+			this.parentSchemeCableLinkId = new Identifier(schemeCableThread.parentSchemeCableLinkId);
 		}
-		this.name = schemeCableThread.name;
-		this.description = schemeCableThread.description;
-		this.linkTypeId = new Identifier(schemeCableThread.linkTypeId);
-		this.linkId = new Identifier(schemeCableThread.linkId);
-		this.sourceSchemePortId = new Identifier(schemeCableThread.sourceSchemePortId);
-		this.targetSchemePortId = new Identifier(schemeCableThread.targetSchemePortId);
-		this.parentSchemeCableLinkId = new Identifier(schemeCableThread.parentSchemeCableLinkId);
 	}
 
 	/**

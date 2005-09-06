@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.78 2005/09/05 17:43:16 bass Exp $
+ * $Id: SchemePath.java,v 1.79 2005/09/06 17:30:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.78 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.79 $, $Date: 2005/09/06 17:30:25 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -485,11 +485,14 @@ public final class SchemePath extends StorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
+	protected void fromTransferable(final IdlStorableObject transferable)
+	throws CreateObjectException {
 		synchronized (this) {
 			final IdlSchemePath schemePath = (IdlSchemePath) transferable;
 			try {
 				super.fromTransferable(schemePath);
+			} catch (final CreateObjectException coe) {
+				throw coe;
 			} catch (final ApplicationException ae) {
 				throw new CreateObjectException(ae);
 			}

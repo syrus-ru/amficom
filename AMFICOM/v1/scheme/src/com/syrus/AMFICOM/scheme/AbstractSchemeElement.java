@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.48 2005/09/06 15:07:47 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.49 2005/09/06 17:30:26 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,9 +34,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemeElement;
 import com.syrus.util.Log;
 
@@ -46,7 +45,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/09/06 15:07:47 $
+ * @version $Revision: 1.49 $, $Date: 2005/09/06 17:30:26 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -212,25 +211,22 @@ public abstract class AbstractSchemeElement
 	}
 
 	/**
-	 * @param header
-	 * @param name1
-	 * @param description1
-	 * @param parentSchemeId1
+	 * @param abstractSchemeElement
 	 * @throws CreateObjectException
-	 * @todo Rewrite a la #fromXmlTransferable(...)
 	 */
-	final void fromTransferable(final IdlStorableObject header,
-			final String name1, final String description1,
-			final IdlIdentifier parentSchemeId1)
-			throws CreateObjectException {
+	final void fromTransferable(
+			final IdlAbstractSchemeElement abstractSchemeElement)
+	throws CreateObjectException {
 		try {
-			super.fromTransferable(header);
+			super.fromTransferable(abstractSchemeElement);
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-		this.name = name1;
-		this.description = description1;
-		this.parentSchemeId = new Identifier(parentSchemeId1);
+		this.name = abstractSchemeElement.name;
+		this.description = abstractSchemeElement.description;
+		this.parentSchemeId = new Identifier(abstractSchemeElement.parentSchemeId);
 	}
 
 	/**
@@ -240,7 +236,8 @@ public abstract class AbstractSchemeElement
 	 */
 	final void fromXmlTransferable(
 			final XmlAbstractSchemeElement abstractSchemeElement,
-			final String importType) throws CreateObjectException {
+			final String importType)
+	throws CreateObjectException {
 		this.name = abstractSchemeElement.getName();
 		this.description = abstractSchemeElement.isSetDescription()
 				? abstractSchemeElement.getDescription()

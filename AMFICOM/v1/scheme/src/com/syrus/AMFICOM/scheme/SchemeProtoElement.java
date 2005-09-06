@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.79 2005/09/05 17:43:16 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.80 2005/09/06 17:30:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.80 $, $Date: 2005/09/06 17:30:25 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -1351,24 +1351,29 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws CreateObjectException {
-		final IdlSchemeProtoElement schemeProtoElement = (IdlSchemeProtoElement) transferable;
-		try {
-			super.fromTransferable(schemeProtoElement);
-		} catch (final ApplicationException ae) {
-			throw new CreateObjectException(ae);
+	protected void fromTransferable(final IdlStorableObject transferable)
+	throws CreateObjectException {
+		synchronized (this) {
+			final IdlSchemeProtoElement schemeProtoElement = (IdlSchemeProtoElement) transferable;
+			try {
+				super.fromTransferable(schemeProtoElement);
+			} catch (final CreateObjectException coe) {
+				throw coe;
+			} catch (final ApplicationException ae) {
+				throw new CreateObjectException(ae);
+			}
+			this.name = schemeProtoElement.name;
+			this.description = schemeProtoElement.description;
+			this.label = schemeProtoElement.label;
+			this.equipmentTypeId = new Identifier(schemeProtoElement.equipmentTypeId);
+			this.symbolId = new Identifier(schemeProtoElement.symbolId);
+			this.ugoCellId = new Identifier(schemeProtoElement.ugoCellId);
+			this.schemeCellId = new Identifier(schemeProtoElement.schemeCellId);
+			this.parentSchemeProtoGroupId = new Identifier(schemeProtoElement.parentSchemeProtoGroupId);
+			this.parentSchemeProtoElementId = new Identifier(schemeProtoElement.parentSchemeProtoElementId);
+	
+			this.parentSet = true;
 		}
-		this.name = schemeProtoElement.name;
-		this.description = schemeProtoElement.description;
-		this.label = schemeProtoElement.label;
-		this.equipmentTypeId = new Identifier(schemeProtoElement.equipmentTypeId);
-		this.symbolId = new Identifier(schemeProtoElement.symbolId);
-		this.ugoCellId = new Identifier(schemeProtoElement.ugoCellId);
-		this.schemeCellId = new Identifier(schemeProtoElement.schemeCellId);
-		this.parentSchemeProtoGroupId = new Identifier(schemeProtoElement.parentSchemeProtoGroupId);
-		this.parentSchemeProtoElementId = new Identifier(schemeProtoElement.parentSchemeProtoElementId);
-
-		this.parentSet = true;
 	}
 
 	/**

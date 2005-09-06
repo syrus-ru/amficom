@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.76 2005/09/06 15:07:47 bass Exp $
+ * $Id: Scheme.java,v 1.77 2005/09/06 17:30:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/09/06 15:07:47 $
+ * @version $Revision: 1.77 $, $Date: 2005/09/06 17:30:25 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1228,20 +1228,22 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
-		final IdlScheme scheme = (IdlScheme) transferable;
-		super.fromTransferable(scheme, new Identifier(scheme.domainId));
-		this.name = scheme.name;
-		this.description = scheme.description;
-		this.label = scheme.label;
-		this.width = scheme.width;
-		this.height = scheme.height;
-		this.kind = scheme.kind;
-		this.mapId = new Identifier(scheme.mapId);
-		this.symbolId = new Identifier(scheme.symbolId);
-		this.ugoCellId = new Identifier(scheme.ugoCellId);
-		this.schemeCellId = new Identifier(scheme.schemeCellId);
-		this.parentSchemeElementId = new Identifier(scheme.parentSchemeElementId);
+	protected void fromTransferable(final IdlStorableObject transferable) {
+		synchronized (this) {
+			final IdlScheme scheme = (IdlScheme) transferable;
+			super.fromTransferable(scheme, new Identifier(scheme.domainId));
+			this.name = scheme.name;
+			this.description = scheme.description;
+			this.label = scheme.label;
+			this.width = scheme.width;
+			this.height = scheme.height;
+			this.kind = scheme.kind;
+			this.mapId = new Identifier(scheme.mapId);
+			this.symbolId = new Identifier(scheme.symbolId);
+			this.ugoCellId = new Identifier(scheme.ugoCellId);
+			this.schemeCellId = new Identifier(scheme.schemeCellId);
+			this.parentSchemeElementId = new Identifier(scheme.parentSchemeElementId);
+		}
 	}
 
 	/**

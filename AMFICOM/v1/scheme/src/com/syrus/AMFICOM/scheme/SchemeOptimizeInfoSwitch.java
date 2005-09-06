@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.18 2005/09/05 17:43:16 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.19 2005/09/06 17:30:26 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/06 17:30:26 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitch extends StorableObject
@@ -297,20 +297,22 @@ public final class SchemeOptimizeInfoSwitch extends StorableObject
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(com.syrus.AMFICOM.general.corba.IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
-		final IdlSchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch = (IdlSchemeOptimizeInfoSwitch) transferable;
-		try {
-			super.fromTransferable(schemeOptimizeInfoSwitch);
-		} catch (final ApplicationException ae) {
-			/*
-			 * Never.
-			 */
-			assert false;
+	protected void fromTransferable(final IdlStorableObject transferable) {
+		synchronized (this) {
+			final IdlSchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch = (IdlSchemeOptimizeInfoSwitch) transferable;
+			try {
+				super.fromTransferable(schemeOptimizeInfoSwitch);
+			} catch (final ApplicationException ae) {
+				/*
+				 * Never.
+				 */
+				assert false;
+			}
+			this.name = schemeOptimizeInfoSwitch.name;
+			this.priceUsd = schemeOptimizeInfoSwitch.priceUsd;
+			this.noOfPorts = schemeOptimizeInfoSwitch.noOfPorts;
+			this.parentSchemeOptimizeInfoId = new Identifier(schemeOptimizeInfoSwitch.parentSchemeOptimizeInfoId);
 		}
-		this.name = schemeOptimizeInfoSwitch.name;
-		this.priceUsd = schemeOptimizeInfoSwitch.priceUsd;
-		this.noOfPorts = schemeOptimizeInfoSwitch.noOfPorts;
-		this.parentSchemeOptimizeInfoId = new Identifier(schemeOptimizeInfoSwitch.parentSchemeOptimizeInfoId);
 	}
 
 	/**

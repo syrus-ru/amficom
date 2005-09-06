@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.65 2005/09/05 17:43:16 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.66 2005/09/06 17:30:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.65 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.66 $, $Date: 2005/09/06 17:30:26 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -622,22 +622,24 @@ public final class SchemeMonitoringSolution
 	 * @see com.syrus.AMFICOM.general.StorableObject#fromTransferable(IdlStorableObject)
 	 */
 	@Override
-	protected synchronized void fromTransferable(final IdlStorableObject transferable) {
-		final IdlSchemeMonitoringSolution schemeMonitoringSolution = (IdlSchemeMonitoringSolution) transferable;
-		try {
-			super.fromTransferable(schemeMonitoringSolution);
-		} catch (final ApplicationException ae) {
-			/*
-			 * Never.
-			 */
-			assert false;
+	protected void fromTransferable(final IdlStorableObject transferable) {
+		synchronized (this) {
+			final IdlSchemeMonitoringSolution schemeMonitoringSolution = (IdlSchemeMonitoringSolution) transferable;
+			try {
+				super.fromTransferable(schemeMonitoringSolution);
+			} catch (final ApplicationException ae) {
+				/*
+				 * Never.
+				 */
+				assert false;
+			}
+			this.name = schemeMonitoringSolution.name;
+			this.description = schemeMonitoringSolution.description;
+			this.price = schemeMonitoringSolution.priceUsd;
+			this.active = schemeMonitoringSolution.active;
+			this.parentSchemeId = new Identifier(schemeMonitoringSolution.parentSchemeId);
+			this.parentSchemeOptimizeInfoId = new Identifier(schemeMonitoringSolution.parentSchemeOptimizeInfoId);
 		}
-		this.name = schemeMonitoringSolution.name;
-		this.description = schemeMonitoringSolution.description;
-		this.price = schemeMonitoringSolution.priceUsd;
-		this.active = schemeMonitoringSolution.active;
-		this.parentSchemeId = new Identifier(schemeMonitoringSolution.parentSchemeId);
-		this.parentSchemeOptimizeInfoId = new Identifier(schemeMonitoringSolution.parentSchemeOptimizeInfoId);
 	}
 
 	/**

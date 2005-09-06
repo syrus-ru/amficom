@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.57 2005/08/26 10:41:28 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.58 2005/09/06 17:30:26 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,14 +46,14 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
-import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
+import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/08/26 10:41:28 $
+ * @version $Revision: 1.58 $, $Date: 2005/09/06 17:30:26 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -521,36 +521,29 @@ public abstract class AbstractSchemePort
 	}
 
 	/**
-	 * @param header
-	 * @param name1
-	 * @param description1
-	 * @param directionType1
-	 * @param portTypeId1
-	 * @param portId1
-	 * @param measurementPortId1
-	 * @param parentSchemeDeviceId1
+	 * @param abstractSchemePort
+	 * @param abstractPortTypeId
+	 * @param abstractPortId
 	 * @throws CreateObjectException
 	 */
-	void fromTransferable(final IdlStorableObject header,
-			final String name1, final String description1,
-			final IdlDirectionType directionType1,
-			final IdlIdentifier portTypeId1,
-			final IdlIdentifier portId1,
-			final IdlIdentifier measurementPortId1,
-			final IdlIdentifier parentSchemeDeviceId1)
-			throws CreateObjectException {
+	final void fromTransferable(final IdlAbstractSchemePort abstractSchemePort,
+			final IdlIdentifier abstractPortTypeId,
+			final IdlIdentifier abstractPortId)
+	throws CreateObjectException {
 		try {
-			super.fromTransferable(header);
+			super.fromTransferable(abstractSchemePort);
+		} catch (final CreateObjectException coe) {
+			throw coe;
 		} catch (final ApplicationException ae) {
 			throw new CreateObjectException(ae);
 		}
-		this.name = name1;
-		this.description = description1;
-		this.directionType = directionType1;
-		this.portTypeId = new Identifier(portTypeId1);
-		this.portId = new Identifier(portId1);
-		this.measurementPortId = new Identifier(measurementPortId1);
-		this.parentSchemeDeviceId = new Identifier(parentSchemeDeviceId1);
+		this.name = abstractSchemePort.name;
+		this.description = abstractSchemePort.description;
+		this.directionType = abstractSchemePort.directionType;
+		this.portTypeId = new Identifier(abstractPortTypeId);
+		this.portId = new Identifier(abstractPortId);
+		this.measurementPortId = new Identifier(abstractSchemePort.measurementPortId);
+		this.parentSchemeDeviceId = new Identifier(abstractSchemePort.parentSchemeDeviceId);
 
 		this.portTypeSet = true;
 	}
