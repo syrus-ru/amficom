@@ -1,5 +1,5 @@
 /*-
- * $Id: IconedNode.java,v 1.6 2005/08/19 12:45:55 bob Exp $
+ * $Id: IconedNode.java,v 1.7 2005/09/06 14:30:18 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.logic.AbstractItem;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.6 $, $Date: 2005/08/19 12:45:55 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/06 14:30:18 $
  * @module commonclient
  */
 
@@ -24,48 +24,49 @@ public class IconedNode extends AbstractItem implements Namable {
 	private String name;
 	private Icon icon;
 	private boolean allowsChildren = true;
-	private boolean nameSet = false;
+	protected boolean named = false;
 
 	public IconedNode() {
 		// default empty constructor
 	}
 	
-	public IconedNode(Namable object, boolean allowsChildren) {
+	public IconedNode(final Namable object, final boolean allowsChildren) {
 		this(object, object.getName(), null, allowsChildren);
 	}
 	
-	public IconedNode(Namable object, Icon icon) {
+	public IconedNode(final Namable object, final Icon icon) {
 		this(object, object.getName(), icon, true);
 	}
 	
-	public IconedNode(Namable object, Icon icon, boolean allowsChildren) {
-		this.object = object;
-		this.name = object.getName();
-		this.icon = icon;
-		this.allowsChildren = allowsChildren;
+	public IconedNode(final Namable object, final Icon icon, final boolean allowsChildren) {
+		this(object, object.getName(), icon, allowsChildren);
+		this.named = false;
 	}
 	
-	public IconedNode(Object object, String name, boolean allowsChildren) {
+	public IconedNode(final Object object, final String name, final  boolean allowsChildren) {
 		this(object, name, null, allowsChildren);
 	}
 	
-	public IconedNode(Object object, String name) {
+	public IconedNode(final Object object, final String name) {
 		this(object, name, null, true);
 	}
 	
-	public IconedNode(Object object, String name, Icon icon) {
+	public IconedNode(final Object object, final String name, final Icon icon) {
 		this(object, name, icon, true);
 	}
 	
-	public IconedNode(Object object, String name, Icon icon, boolean allowsChildren) {
+	public IconedNode(final Object object, 
+	                  final String name, 
+	                  final Icon icon, 
+	                  final boolean allowsChildren) {
 		this.object = object;
 		this.name = name;
 		this.icon = icon;
 		this.allowsChildren = allowsChildren;
-		this.nameSet = true;
+		this.named = true;
 	}
 	
-	public void setCanHaveChildren(boolean canHaveChildren) {
+	public void setCanHaveChildren(final boolean canHaveChildren) {
 		this.allowsChildren = canHaveChildren;
 	}
 	
@@ -83,20 +84,22 @@ public class IconedNode extends AbstractItem implements Namable {
 
 	public void setName(String name) {
 		this.name = name;
-		this.nameSet = true;
+		this.named = true;
 	}
 	
 	public String getName() {
-		if (!this.nameSet && this.object instanceof Namable)
+		if (!this.named && this.object instanceof Namable) {
 			return ((Namable)this.object).getName();
+		}
 		return this.name;
 	}
 	
+	@Override
 	public String toString() {
 		return getName();
 	}
 	
-	public void setObject(Object object) {
+	public void setObject(final Object object) {
 		this.object = object;
 	}
 
@@ -108,7 +111,7 @@ public class IconedNode extends AbstractItem implements Namable {
 		return false;
 	}
 	
-	public void setIcon(Icon icon) {
+	public void setIcon(final Icon icon) {
 		this.icon = icon;
 	}
 
