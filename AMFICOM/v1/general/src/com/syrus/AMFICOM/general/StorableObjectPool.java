@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.166 2005/09/05 21:01:01 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.167 2005/09/06 12:20:22 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.166 $, $Date: 2005/09/05 21:01:01 $
+ * @version $Revision: 1.167 $, $Date: 2005/09/06 12:20:22 $
  * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -43,8 +43,7 @@ import com.syrus.util.Log;
  * 5) проверить все вызовы flush, убедиться что объекты, помеченные на удаление, действительно удаляются.
  */
 public final class StorableObjectPool {
-	private static final int OBJECT_POOL_SIZE = 10;
-	private static final int MAX_OBJECT_POOL_SIZE = 1000;
+	private static final int MAX_OBJECT_POOL_SIZE = 20000;
 
 	/**
 	 * БАЙАН-symbol {@value}
@@ -199,7 +198,7 @@ public final class StorableObjectPool {
 
 	public static void addObjectPoolGroup(final short groupCode, final int size) {
 		assert ObjectGroupEntities.isGroupCodeValid(groupCode) : ErrorMessages.ILLEGAL_GROUP_CODE;
-		final int objectPoolSize = (size <= 0 || size > MAX_OBJECT_POOL_SIZE) ? OBJECT_POOL_SIZE : size;
+		final int objectPoolSize = (size <= 0 || size > MAX_OBJECT_POOL_SIZE) ? MAX_OBJECT_POOL_SIZE : size;
 		final short[] entityCodes = ObjectGroupEntities.getEntityCodes(groupCode);
 		for (int i = 0; i < entityCodes.length; i++) {
 			addObjectPool(entityCodes[i], objectPoolSize);
@@ -844,7 +843,7 @@ public final class StorableObjectPool {
 		
 		for (int i = 0; i < length; i++) {
 			try {
-				final T storableObject = StorableObjectPool.<T>fromTransferable(transferables[i]);
+				final T storableObject = fromTransferable(transferables[i]);
 				storableObjects.add(storableObject);
 			} catch (final ApplicationException ae) {
 				if (continueOnError) {
@@ -871,7 +870,7 @@ public final class StorableObjectPool {
 	public static <T extends StorableObject> T fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		T storableObject = null;
 		try {
-			storableObject = StorableObjectPool.<T>getStorableObject(new Identifier(transferable.id), false);
+			storableObject = getStorableObject(new Identifier(transferable.id), false);
 		} catch (final ApplicationException ae) {
 			/*
 			 * Never.
