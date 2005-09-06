@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.75 2005/09/05 19:49:35 bass Exp $
+ * $Id: Scheme.java,v 1.76 2005/09/06 15:07:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,7 +79,7 @@ import com.syrus.util.Log;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/09/05 19:49:35 $
+ * @version $Revision: 1.76 $, $Date: 2005/09/06 15:07:47 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -209,7 +209,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 				creatorId,
 				creatorId,
 				StorableObjectVersion.createInitial(),
-				VOID_IDENTIFIER);
+				null);
 	}
 
 	/**
@@ -317,9 +317,8 @@ public final class Scheme extends AbstractCloneableDomainMember
 		try {
 			final Identifier id = Identifier.fromXmlTransferable(xmlScheme.getId(), SCHEME_CODE, importType);
 			Scheme scheme = StorableObjectPool.getStorableObject(id, true);
-			final Date created = new Date();
 			if (scheme == null) {
-				scheme = new Scheme(id, created, creatorId);
+				scheme = new Scheme(id, new Date(), creatorId);
 			}
 			scheme.fromXmlTransferable(xmlScheme, importType);
 			assert scheme.isValid() : OBJECT_BADLY_INITIALIZED;
@@ -1289,7 +1288,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 				: VOID_IDENTIFIER;
 		if (scheme.isSetSchemeElements()) {
 			for (final XmlSchemeElement schemeElement : scheme.getSchemeElements().getSchemeElementArray()) {
-				// empty so far
+				SchemeElement.createInstance(super.creatorId, schemeElement, importType);
 			}
 		}
 		if (scheme.isSetSchemeLinks()) {

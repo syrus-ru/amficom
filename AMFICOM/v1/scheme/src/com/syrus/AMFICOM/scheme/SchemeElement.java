@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.84 2005/09/05 17:43:16 bass Exp $
+ * $Id: SchemeElement.java,v 1.85 2005/09/06 15:07:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,10 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
@@ -58,7 +60,9 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.measurement.KIS;
@@ -67,14 +71,17 @@ import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElement;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementHelper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.xml.XmlScheme;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeDevice;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeElement;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeLink;
 import com.syrus.util.Log;
 
 /**
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.85 $, $Date: 2005/09/06 15:07:47 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -181,6 +188,27 @@ public final class SchemeElement extends AbstractSchemeElement
 
 		assert parentScheme == null || parentSchemeElement == null : EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private SchemeElement(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
+				creatorId,
+				creatorId,
+				StorableObjectVersion.createInitial(),
+				null,
+				null,
+				null);
 	}
 
 	/**
@@ -518,6 +546,36 @@ public final class SchemeElement extends AbstractSchemeElement
 			return schemeElement;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeElement.createInstance | cannot generate identifier ", ige);
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param xmlSchemeElement
+	 * @param importType
+	 * @throws CreateObjectException
+	 */
+	public static SchemeElement createInstance(final Identifier creatorId,
+			final XmlSchemeElement xmlSchemeElement,
+			final String importType)
+	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
+		try {
+			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeElement.getId(), SCHEMEELEMENT_CODE, importType);
+			SchemeElement schemeElement = StorableObjectPool.getStorableObject(id, true);
+			if (schemeElement == null) {
+				schemeElement = new SchemeElement(id, new Date(), creatorId);
+			}
+			schemeElement.fromXmlTransferable(xmlSchemeElement, importType);
+			assert schemeElement.isValid() : OBJECT_BADLY_INITIALIZED;
+			schemeElement.markAsChanged();
+			return schemeElement;
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -1414,8 +1472,8 @@ public final class SchemeElement extends AbstractSchemeElement
 		super.fromTransferable(schemeElement, schemeElement.name,
 				schemeElement.description,
 				schemeElement.parentSchemeId);
-		this.kind = schemeElement.kind;
 		this.label = schemeElement.label;
+		this.kind = schemeElement.kind;
 		this.equipmentTypeId = new Identifier(schemeElement.equipmentTypeId);
 		this.equipmentId = new Identifier(schemeElement.equipmentId);
 		this.kisId = new Identifier(schemeElement.kisId);
@@ -1429,16 +1487,96 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	/**
-	 * @param xmlSchemeElement
+	 * @param schemeElement
 	 * @param importType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	public void fromXmlTransferable(
-			final XmlSchemeElement xmlSchemeElement,
+			final XmlSchemeElement schemeElement,
 			final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		XmlComplementorRegistry.complementStorableObject(schemeElement, SCHEMEELEMENT_CODE, importType);
+
+		super.fromXmlTransferable(schemeElement, importType);
+
+		this.label = schemeElement.isSetLabel()
+				? schemeElement.getLabel()
+				: "";
+		this.kind = SchemeElementKind.from_int(schemeElement.getKind().intValue() - 1);
+
+		final boolean setEquipmentTypeId = schemeElement.isSetEquipmentTypeId();
+		final boolean setEquipmentId = schemeElement.isSetEquipmentId();		
+		if (setEquipmentTypeId) {
+			assert !setEquipmentId : OBJECT_STATE_ILLEGAL;
+
+			this.equipmentTypeId = Identifier.fromXmlTransferable(schemeElement.getEquipmentTypeId(), EQUIPMENT_TYPE_CODE, importType);
+			this.equipmentId = VOID_IDENTIFIER;
+		} else if (setEquipmentId) {
+			assert !setEquipmentTypeId : OBJECT_STATE_ILLEGAL;
+
+			this.equipmentTypeId = VOID_IDENTIFIER;
+			this.equipmentId = Identifier.fromXmlTransferable(schemeElement.getEquipmentId(), EQUIPMENT_CODE, importType);
+		} else {
+			throw new UpdateObjectException(
+					"SchemeElement.fromXmlTransferable() | "
+					+ XML_BEAN_NOT_COMPLETE);
+		}
+
+		this.kisId = schemeElement.isSetKisId()
+				? Identifier.fromXmlTransferable(schemeElement.getKisId(), KIS_CODE, importType)
+				: VOID_IDENTIFIER;
+		this.siteNodeId = schemeElement.isSetSiteNodeId()
+				? Identifier.fromXmlTransferable(schemeElement.getSiteNodeId(), SITENODE_CODE, importType)
+				: VOID_IDENTIFIER;
+		this.symbolId = schemeElement.isSetSymbolId()
+				? Identifier.fromXmlTransferable(schemeElement.getSymbolId(), IMAGERESOURCE_CODE, importType)
+				: VOID_IDENTIFIER;
+		this.ugoCellId = schemeElement.isSetUgoCellId()
+				? Identifier.fromXmlTransferable(schemeElement.getUgoCellId(), IMAGERESOURCE_CODE, importType)
+				: VOID_IDENTIFIER;
+		this.schemeCellId = schemeElement.isSetSchemeCellId()
+				? Identifier.fromXmlTransferable(schemeElement.getSchemeCellId(), IMAGERESOURCE_CODE, importType)
+				: VOID_IDENTIFIER;
+		
+		final boolean setParentSchemeId = schemeElement.isSetParentSchemeId();
+		final boolean setParentSchemeElementId = schemeElement.isSetParentSchemeElementId();
+		if (setParentSchemeId) {
+			assert !setParentSchemeElementId : OBJECT_STATE_ILLEGAL;
+
+			this.parentSchemeId = Identifier.fromXmlTransferable(schemeElement.getParentSchemeId(), SCHEME_CODE, importType);
+			this.parentSchemeElementId = VOID_IDENTIFIER;
+		} else if (setParentSchemeElementId) {
+			assert !setParentSchemeId : OBJECT_STATE_ILLEGAL;
+
+			this.parentSchemeId = VOID_IDENTIFIER;
+			this.parentSchemeElementId = Identifier.fromXmlTransferable(schemeElement.getParentSchemeElementId(), SCHEMEELEMENT_CODE, importType);
+		} else {
+			throw new UpdateObjectException(
+					"SchemeElement.fromXmlTransferable() | "
+					+ XML_BEAN_NOT_COMPLETE);
+		}
+
+		if (schemeElement.isSetSchemes()) {
+			for (final XmlScheme scheme : schemeElement.getSchemes().getSchemeArray()) {
+				Scheme.createInstance(super.creatorId, scheme, importType);
+			}
+		}
+		if (schemeElement.isSetSchemeElements()) {
+			for (final XmlSchemeElement schemeElement2 : schemeElement.getSchemeElements().getSchemeElementArray()) {
+				SchemeElement.createInstance(super.creatorId, schemeElement2, importType);
+			}
+		}
+		if (schemeElement.isSetSchemeDevices()) {
+			for (final XmlSchemeDevice schemeDevice : schemeElement.getSchemeDevices().getSchemeDeviceArray()) {
+				// empty so far
+			}
+		}
+		if (schemeElement.isSetSchemeLinks()) {
+			for (final XmlSchemeLink xmlSchemeLink : schemeElement.getSchemeLinks().getSchemeLinkArray()) {
+				// empty so far
+			}
+		}
 	}
 
 	/*-********************************************************************

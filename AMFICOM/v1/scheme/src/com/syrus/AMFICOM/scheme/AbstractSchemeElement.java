@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.47 2005/08/16 12:12:46 max Exp $
+ * $Id: AbstractSchemeElement.java,v 1.48 2005/09/06 15:07:47 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,6 +36,8 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
+import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemeElement;
 import com.syrus.util.Log;
 
 /**
@@ -43,8 +45,8 @@ import com.syrus.util.Log;
  * generated from IDL files to compile cleanly. Use other implementations of
  * {@link AbstractSchemeElement}instead.
  *
- * @author $Author: max $
- * @version $Revision: 1.47 $, $Date: 2005/08/16 12:12:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.48 $, $Date: 2005/09/06 15:07:47 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -215,8 +217,9 @@ public abstract class AbstractSchemeElement
 	 * @param description1
 	 * @param parentSchemeId1
 	 * @throws CreateObjectException
+	 * @todo Rewrite a la #fromXmlTransferable(...)
 	 */
-	void fromTransferable(final IdlStorableObject header,
+	final void fromTransferable(final IdlStorableObject header,
 			final String name1, final String description1,
 			final IdlIdentifier parentSchemeId1)
 			throws CreateObjectException {
@@ -228,6 +231,25 @@ public abstract class AbstractSchemeElement
 		this.name = name1;
 		this.description = description1;
 		this.parentSchemeId = new Identifier(parentSchemeId1);
+	}
+
+	/**
+	 * @param abstractSchemeElement
+	 * @param importType
+	 * @throws CreateObjectException
+	 */
+	final void fromXmlTransferable(
+			final XmlAbstractSchemeElement abstractSchemeElement,
+			final String importType) throws CreateObjectException {
+		this.name = abstractSchemeElement.getName();
+		this.description = abstractSchemeElement.isSetDescription()
+				? abstractSchemeElement.getDescription()
+				: "";
+		if (abstractSchemeElement.isSetCharacteristics()) {
+			for (final XmlCharacteristic characteristic : abstractSchemeElement.getCharacteristics().getCharacteristicArray()) {
+				Characteristic.createInstance(super.creatorId, characteristic, importType);
+			}
+		}
 	}
 
 	final void setAttributes(final Date created,
