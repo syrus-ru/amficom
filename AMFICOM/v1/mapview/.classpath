@@ -13,5 +13,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/admin"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
 	<classpathentry kind="var" path="AMFICOM_HOME/lib/mapxml.jar"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/schemexml.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
