@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.21 2005/09/05 14:13:43 bob Exp $
+ * $Id: TestController.java,v 1.22 2005/09/06 07:46:18 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/05 14:13:43 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/06 07:46:18 $
  * @author $Author: bob $
  * @module module
  */
@@ -92,6 +92,8 @@ public class TestController implements Wrapper<Test> {
 			LangModelSchedule.getString("Text.Test.Status.Processing"));
 		this.addStatusItem(TestStatus.TEST_STATUS_SCHEDULED, 
 			LangModelSchedule.getString("Text.Test.Status.Scheduled"));
+		this.addStatusItem(TestStatus.TEST_STATUS_STOPPING, 
+			LangModelSchedule.getString("Text.Test.Status.Stopping"));
 		this.addStatusItem(TestStatus.TEST_STATUS_STOPPED, 
 			LangModelSchedule.getString("Text.Test.Status.Stopped"));
 		
