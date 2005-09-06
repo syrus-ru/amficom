@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.7 2005/09/04 11:28:17 bob Exp $
+* $Id: Manager.java,v 1.8 2005/09/06 10:10:04 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.administration.SystemUserWrapper;
+import com.syrus.AMFICOM.client.launcher.Launcher;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -28,7 +29,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/04 11:28:17 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/06 10:10:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -66,7 +67,7 @@ public class Manager extends AbstractApplication {
 	}
 
 	public static void main(String[] args) {
-		new Manager();
+		Launcher.launchApplicationClass(Manager.class);
 	}
 	
 
