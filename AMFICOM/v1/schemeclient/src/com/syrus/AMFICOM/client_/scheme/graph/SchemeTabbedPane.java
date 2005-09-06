@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.18 2005/09/06 12:45:57 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.19 2005/09/06 16:40:42 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,6 +50,9 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -59,7 +62,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.18 $, $Date: 2005/09/06 12:45:57 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/06 16:40:42 $
  * @module schemeclient
  */
 
@@ -289,14 +292,24 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							(res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT &&
 							res.getSchemeElement().getId().equals(schemeElement.getParentSchemeElement().getId()))) {
 						SchemeImageResource image = schemeElement.getUgoCell();
-						if (image == null)
+						if (image == null) {
 							image = schemeElement.getSchemeCell();
+						}
+						if (image == null) {
+							// search suitable ProtoElement
+							String codename = schemeElement.getEquipmentType().getCodename();
+							TypicalCondition condition = new TypicalCondition(codename, OperationSort.OPERATION_EQUALS, ObjectEntities.SCHEMEPROTOELEMENT_CODE, StorableObjectWrapper.COLUMN_CODENAME);
+							Set<SchemeProtoElement> protos = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+							
+							//TODO search suitable ProtoElement
+							
+						}
 						SchemeGraph graph = panel1.getGraph();
 						SchemeActions.openSchemeImageResource(graph, image, true, see.getInsertionPoint(), false);
 						setLinkMode();						
 					} else {
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
-								LangModelScheme.getString("Message.error.insert_component_to other_parent"),  //$NON-NLS-1$
+								LangModelScheme.getString("Message.error.insert_component_to_other_parent"),  //$NON-NLS-1$
 								LangModelScheme.getString("Message.error"), //$NON-NLS-1$
 								JOptionPane.ERROR_MESSAGE);
 					}

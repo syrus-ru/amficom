@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.10 2005/09/05 17:40:10 bass Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.11 2005/09/06 16:40:42 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import com.jgraph.graph.GraphConstants;
 import com.jgraph.pad.EllipseCell;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -54,8 +53,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/09/05 17:40:10 $
+ * @author $Author: stas $
+ * @version $Revision: 1.11 $, $Date: 2005/09/06 16:40:42 $
  * @module schemeclient
  */
 
@@ -165,9 +164,9 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 				
 				Color color = Color.WHITE;
 				try {
-					Characteristic ch = CommonUIUtilities.getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COMMON_COLOUR);
+					Characteristic ch = getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COMMON_COLOUR);
 					if (ch != null) {
-						color = new Color(Integer.valueOf(ch.getValue()));
+						color = new Color(Integer.parseInt(ch.getValue()));
 					}
 				} catch (ApplicationException e) {
 					Log.errorException(e);
@@ -178,6 +177,15 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		}
 	}
 
+	public static Characteristic getCharacteristic(final Collection<Characteristic> characteristics, final String codename) {
+		for (Characteristic characteristic : characteristics) {
+			if (characteristic.getType().getCodename().equals(codename)) {
+				return characteristic;
+			}
+		}
+		return null;
+	}
+	
 	private void createModules(int nModules) {
 		double angle = 2 * Math.PI / nModules;
 		int r1 = this.radius;
@@ -216,10 +224,23 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 					SchemeCableThread sct = cell.getSchemeCableThread();
 					
 					Color color = Color.WHITE;
+//					try {
+//						LinkedIdsCondition condition1 = new LinkedIdsCondition(sct.getId(), ObjectEntities.CHARACTERISTIC_CODE);
+//						TypicalCondition condition2 = new TypicalCondition(CharacteristicTypeCodenames.COMMON_COLOUR, OperationSort.OPERATION_EQUALS, ObjectEntities.CHARACTERISTIC_CODE, StorableObjectWrapper.COLUMN_TYPE_CODE);
+//						CompoundCondition condition = new CompoundCondition(condition1, CompoundConditionSort.AND, condition2);
+//						
+//						Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+//						if (!characteristics.isEmpty()) {
+//							Characteristic ch = characteristics.iterator().next();
+//							color = new Color(Integer.valueOf(ch.getValue()));
+//						}
+//					} catch (ApplicationException e) {
+//						Log.errorException(e);
+//					}
 					try {
-						Characteristic ch = CommonUIUtilities.getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COMMON_COLOUR);
+						Characteristic ch = getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COMMON_COLOUR);
 						if (ch != null) {
-							color = new Color(Integer.valueOf(ch.getValue()));
+							color = new Color(Integer.parseInt(ch.getValue()));
 						}
 					} catch (ApplicationException e) {
 						Log.errorException(e);
