@@ -1,17 +1,22 @@
 
 package com.syrus.AMFICOM.manager;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.swing.JOptionPane;
 
+import com.syrus.AMFICOM.administration.PermissionAttributes;
+import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodenames;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: UserBeanWrapper.java,v 1.5 2005/08/10 14:02:25 bob Exp $
+ * $Id: UserBeanWrapper.java,v 1.6 2005/09/06 16:16:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +24,7 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/10 14:02:25 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/06 16:16:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -44,6 +49,7 @@ public class UserBeanWrapper implements Wrapper {
 	private static UserBeanWrapper	instance;
 
 	private List<String>					keys;
+	private Map<String, PermissionCodenames> permissionCodenamesMap;
 
 	public String getKey(int index) {
 		return this.keys.get(index);
@@ -65,8 +71,16 @@ public class UserBeanWrapper implements Wrapper {
 				USER_EMAIL,
 				USER_PHONE,
 				USER_CELLULAR};
-
-		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
+		
+		this.permissionCodenamesMap = new HashMap<String, PermissionCodenames>();
+		PermissionCodenames[] codenames = PermissionAttributes.PermissionCodenames.values();
+		for(int i = 0; i < codenames.length; i++) {
+			this.permissionCodenamesMap.put(codenames[i].name(), codenames[i]);
+		}
+		
+		final List<String> selfUserKeys = new ArrayList<String>(Arrays.asList(keysArray));
+		selfUserKeys.addAll(this.permissionCodenamesMap.keySet());
+		this.keys = Collections.unmodifiableList(selfUserKeys);
 	}
 
 	public static UserBeanWrapper getInstance() {
@@ -113,10 +127,15 @@ public class UserBeanWrapper implements Wrapper {
 			return LangModelManager.getString("Entity.User.attributes.Cellular"); 
 		}
 		
+		final PermissionCodenames codename = this.permissionCodenamesMap.get(key);
+		if (codename != null) {
+			return codename.getDescription();
+		}
+		
 		return null;
 	}
 
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		if (key.equals(NAME) ||
 				key.equals(LOGIN) || 
 				key.equals(FULL_NAME) || 
@@ -133,6 +152,11 @@ public class UserBeanWrapper implements Wrapper {
 				key.equals(USER_CELLULAR)) { 
 			return String.class; 
 		}
+		
+		if (this.permissionCodenamesMap.containsKey(key)) {
+			return Boolean.class;
+		}
+		
 		return null;
 	}
 
@@ -141,8 +165,8 @@ public class UserBeanWrapper implements Wrapper {
 		return null;
 	}
 
-	public Object getValue(	Object object,
-							String key) {
+	public Object getValue(	final Object object,
+	                       	final String key) {
 		try {
 			if (object instanceof UserBean) {
 				UserBean userBean = (UserBean) object;
@@ -174,7 +198,14 @@ public class UserBeanWrapper implements Wrapper {
 					return userBean.getPhone(); 
 				} else if (key.equals(USER_CELLULAR)) { 
 					return userBean.getCellular(); 
+				} else {
+					final PermissionCodenames codename = this.permissionCodenamesMap.get(key);
+					if (codename != null) {
+						return userBean.getPermissionAttributes().isPermissionEnable(codename);
+					}
 				}
+				
+				
 			}
 		} catch (ApplicationException e) {
 			e.printStackTrace();
@@ -186,20 +217,20 @@ public class UserBeanWrapper implements Wrapper {
 		return null;
 	}
 
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		return !key.equals(USER_NATURE);
 	}
 
-	public void setPropertyValue(	String key,
-									Object objectKey,
-									Object objectValue) {
+	public void setPropertyValue(	final String key,
+	                             	final Object objectKey,
+	                             	final Object objectValue) {
 		// TODO Auto-generated method stub
 
 	}
 
-	public void setValue(	Object object,
-							String key,
-							Object value) {
+	public void setValue(	final Object object,
+	                     	final String key,
+	                     	final Object value) {
 		if (object instanceof UserBean) {
 			try {
 				UserBean userBean = (UserBean) object;
@@ -231,6 +262,12 @@ public class UserBeanWrapper implements Wrapper {
 					userBean.setPhone((String) value); 
 				} else if (key.equals(USER_CELLULAR)) { 
 					userBean.setCellular((String) value); 
+				} else {
+					final PermissionCodenames codename = this.permissionCodenamesMap.get(key);
+					if (codename != null) {
+						Boolean bValue = (Boolean) value;
+						userBean.getPermissionAttributes().setPermissionEnable(codename, bValue.booleanValue());
+					}
 				}
 				
 			} catch (ApplicationException e) {
