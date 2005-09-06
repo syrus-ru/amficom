@@ -1,5 +1,5 @@
 /*
- * $Id: PopulatableIconedNode.java,v 1.6 2005/09/02 14:22:30 bob Exp $
+ * $Id: PopulatableIconedNode.java,v 1.7 2005/09/06 14:31:15 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Shitlet;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.6 $, $Date: 2005/09/02 14:22:30 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/06 14:31:15 $
  * @module commonclient
  */
 @Shitlet
@@ -30,35 +30,55 @@ public class PopulatableIconedNode extends IconedNode implements Populatable, Vi
 		super();
 	}
 	
-	public PopulatableIconedNode(ChildrenFactory factory, Namable object) {
+	public PopulatableIconedNode(final ChildrenFactory factory, final Namable object) {
 		this(factory, object, true);
 	}
 	
-	public PopulatableIconedNode(ChildrenFactory factory, Namable object, boolean allowsChildren) {
+	public PopulatableIconedNode(final ChildrenFactory factory,
+	                             final Namable object, 
+	                             final boolean allowsChildren) {
 		this(factory, object, (Icon)null, allowsChildren);
 	}
 	
-	public PopulatableIconedNode(ChildrenFactory factory, Namable object, Icon icon) {
+	public PopulatableIconedNode(final ChildrenFactory factory, 
+	                             final Namable object, 
+	                             final Icon icon) {
 		this(factory, object, icon, true);
 	}
 	
-	public PopulatableIconedNode(ChildrenFactory factory, Namable object, Icon icon, boolean allowsChildren) {
+	public PopulatableIconedNode(final ChildrenFactory factory, 
+	                             final Namable object, 
+	                             final Icon icon, 
+	                             final boolean allowsChildren) {
 		this(factory, object, object.getName(), icon, allowsChildren);
+		super.named = false;
 	}
 
-	public PopulatableIconedNode(ChildrenFactory factory, Object object, String name) {
+	public PopulatableIconedNode(final ChildrenFactory factory, 
+	                             final Object object, 
+	                             final String name) {
 		this(factory, object, name, null, true);
 	}
 	
-	public PopulatableIconedNode(ChildrenFactory factory, Object object, String name, boolean allowsChildren) {
+	public PopulatableIconedNode(final ChildrenFactory factory,
+	                             final Object object, 
+	                             final String name, 
+	                             final boolean allowsChildren) {
 		this(factory, object, name, null, allowsChildren);
 	}
 	
-	public PopulatableIconedNode(ChildrenFactory factory, Object object, String name, Icon icon) {
+	public PopulatableIconedNode(final ChildrenFactory factory, 
+	                             final Object object, 
+	                             final String name, 
+	                             final Icon icon) {
 		this(factory, object, name, icon, true);
 	}
 	
-	public PopulatableIconedNode(ChildrenFactory factory, Object object, String name, Icon icon, boolean allowsChildren) {
+	public PopulatableIconedNode(final ChildrenFactory factory, 
+	                             final Object object, 
+	                             final String name, 
+	                             final Icon icon, 
+	                             final boolean allowsChildren) {
 		super(object, name, icon, allowsChildren);
 		this.childrenFactory = factory;
 	}
