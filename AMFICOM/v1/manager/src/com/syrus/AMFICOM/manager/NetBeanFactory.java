@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.19 2005/09/06 10:08:55 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.20 2005/09/06 16:15:09 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/06 10:08:55 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/06 16:15:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -230,7 +230,11 @@ public class NetBeanFactory extends AbstractBeanFactory {
 					
 					public boolean isValid(	AbstractBean sourceBean,
 											AbstractBean targetBean) {
-						System.out.println("NetBeanFactory.getValidator() | " + sourceBean + " > " + targetBean);
+						Log.debugMessage("NetBeanFactory.getValidator() | " 
+								+ sourceBean 
+								+ " > " 
+								+ targetBean,
+							Log.DEBUGLEVEL10);
 						return sourceBean != null && 
 							targetBean != null && 
 							sourceBean.getCodeName().startsWith(NET_CODENAME) &&
