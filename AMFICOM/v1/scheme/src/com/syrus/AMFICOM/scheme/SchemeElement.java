@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.85 2005/09/06 15:07:47 bass Exp $
+ * $Id: SchemeElement.java,v 1.86 2005/09/06 15:36:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -81,7 +81,7 @@ import com.syrus.util.Log;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.85 $, $Date: 2005/09/06 15:07:47 $
+ * @version $Revision: 1.86 $, $Date: 2005/09/06 15:36:56 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1577,6 +1577,8 @@ public final class SchemeElement extends AbstractSchemeElement
 				// empty so far
 			}
 		}
+
+		this.equipmentTypeSet = true;
 	}
 
 	/*-********************************************************************

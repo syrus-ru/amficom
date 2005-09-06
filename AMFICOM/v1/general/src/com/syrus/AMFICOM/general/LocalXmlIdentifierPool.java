@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.1 2005/09/06 12:48:27 bass Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.2 2005/09/06 15:38:43 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.HashCodeGenerator;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/09/06 12:48:27 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/06 15:38:43 $
  * @module general
  */
 final class LocalXmlIdentifierPool {
@@ -152,7 +152,7 @@ final class LocalXmlIdentifierPool {
 			return false;
 		}
 		final XmlIdentifier xmlId2 = FORWARD_MAP.get(new Key(id, importType));
-		if (!xmlId2.equals(xmlId)) {
+		if (!xmlId2.getStringValue().equals(xmlId.getStringValue())) {
 			throw new IllegalStateException(
 					"Both forward and reverse mappings are present, but they do not match: xmlId = XmlIdentifier(``"
 					+ xmlId.getStringValue()
@@ -169,7 +169,7 @@ final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.1 $, $Date: 2005/09/06 12:48:27 $
+	 * @version $Revision: 1.2 $, $Date: 2005/09/06 15:38:43 $
 	 * @module general
 	 */
 	private static class Key {
@@ -220,7 +220,7 @@ final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.1 $, $Date: 2005/09/06 12:48:27 $
+	 * @version $Revision: 1.2 $, $Date: 2005/09/06 15:38:43 $
 	 * @module general
 	 */
 	private static class XmlKey {
