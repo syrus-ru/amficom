@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.3 2005/08/12 06:28:54 bob Exp $
+* $Id: PermissionAttributes.java,v 1.4 2005/09/06 16:22:45 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/12 06:28:54 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/06 16:22:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module admin
@@ -43,7 +43,7 @@ public class PermissionAttributes extends StorableObject {
 
 	private static final long	serialVersionUID	= -7619737537568452039L;
 
-	public static enum PermissionCodenames{
+	public static enum PermissionCodenames {
 		ADMIN_ENTER,
 		
 		ADMIN_ADD_DOMAIN ,
@@ -83,7 +83,37 @@ public class PermissionAttributes extends StorableObject {
 		CONFIG_READ_SCHEMES,
 		CONFIG_READ_TOPOLOGY,
 		CONFIG_READ_CATALOG_TS,		
-		CONFIG_READ_CATALOG_SM,
+		CONFIG_READ_CATALOG_SM;
+		
+
+		private static final String KEY_ROOT = "PermissionAttributes.Description.";
+		
+		private String codename;
+		
+		
+		private PermissionCodenames() {
+			// generate codename as javaNamingStyle from name
+			final String name = this.name();
+			final StringBuffer buffer = new StringBuffer();
+			String[] strings = name.split("_");
+			for(int i = 0; i < strings.length; i++) {
+				if (i == 0) {
+					buffer.append(strings[i].toLowerCase());
+				} else {
+					buffer.append(strings[i].charAt(0));
+					buffer.append(strings[i].substring(1).toLowerCase());
+				}
+			}
+			this.codename = buffer.toString();
+		}
+		
+		public final String getDescription() {
+			return LangModelAdministation.getString(KEY_ROOT + this.codename);
+		}
+		
+		public final String getCodename() {
+			return this.codename;
+		}
 	}
 	
 	private Identifier userId;
@@ -250,8 +280,8 @@ public class PermissionAttributes extends StorableObject {
 		return dependencies;
 	}
 	
-	public final void setPermissionEnable(PermissionCodenames codename,
-	                                boolean enable) {
+	public final void setPermissionEnable(final PermissionCodenames codename,
+	                                      final boolean enable) {
 		long mask = 1 << codename.ordinal();
 		if (enable) {
 			this.permissionMask |= mask;
