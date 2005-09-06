@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementUnit.java,v 1.5 2005/08/29 16:41:06 arseniy Exp $
+ * $Id: MeasurementUnit.java,v 1.6 2005/09/06 05:57:28 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,8 +14,8 @@ import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/29 16:41:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/09/06 05:57:28 $
+ * @author $Author: bob $
  * @module general
  */
 public enum MeasurementUnit implements Codeable {
@@ -28,7 +28,7 @@ public enum MeasurementUnit implements Codeable {
 	SECOND("sec"),
 	NANOSECOND("nsec"),
 
-	UNKNOWN("очко");
+	UNKNOWN("unknown");
 
 	private static final String KEY_ROOT = "MeasurementUnit.Name.";
 
