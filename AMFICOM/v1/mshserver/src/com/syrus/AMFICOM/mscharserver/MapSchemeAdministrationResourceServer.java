@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.13 2005/08/08 11:45:43 arseniy Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.14 2005/09/07 14:28:37 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mscharserver.corba.MscharServerPOATie;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
@@ -30,7 +29,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/08 11:45:43 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/07 14:28:37 $
  * @author $Author: arseniy $
  * @module mscharserver
  */
@@ -170,7 +169,7 @@ public class MapSchemeAdministrationResourceServer {
 
 	protected static synchronized void shutdown() {
 		Log.debugMessage("MapSchemeAdministrationResourceServer.shutdown | serializing StorableObjectPool" , Level.INFO);
-		StorableObjectPool.serialize();
+		DatabaseConnection.closeConnection();
 	}
 
 	static class MscharServerLoginRestorer implements LoginRestorer {
