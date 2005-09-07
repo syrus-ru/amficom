@@ -22,6 +22,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.16 $
+ * @version $Revision: 1.17 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -267,7 +268,7 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.collector.getName());
 			
-			this.topologicalLengthTextField.setText(String.valueOf(this.collector.getLengthLt()));
+			this.topologicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.collector.getLengthLt()));
 
 			this.descTextArea.setEnabled(true);
 			this.descTextArea.setText(this.collector.getDescription());

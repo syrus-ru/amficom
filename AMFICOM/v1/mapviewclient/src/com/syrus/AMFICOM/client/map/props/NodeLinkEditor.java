@@ -12,6 +12,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
@@ -199,7 +200,7 @@ public class NodeLinkEditor extends DefaultStorableObjectEditor {
 			this.topologicalLengthTextField.setText("");
 		}
 		else {
-			this.topologicalLengthTextField.setText(String.valueOf(this.nodeLink.getLengthLt()));
+			this.topologicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.nodeLink.getLengthLt()));
 
 			this.linkComboBox.addItem(this.nodeLink.getPhysicalLink());
 			this.linkComboBox.setSelectedItem(this.nodeLink.getPhysicalLink());

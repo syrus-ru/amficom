@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.LineThicknessComboBox;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.controllers.LinkTypeController;
 import com.syrus.AMFICOM.client.map.controllers.PhysicalLinkController;
@@ -528,7 +529,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 			this.nameTextField.setEnabled(true);
 			this.nameTextField.setText(this.link.getName());
 			
-			this.topologicalLengthTextField.setText(String.valueOf(this.link.getLengthLt()));
+			this.topologicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.link.getLengthLt()));
 
 			if(this.link.getType().getSort().value() == PhysicalLinkTypeSort._INDOOR) {
 				this.typeComboBox.setEnabled(false);

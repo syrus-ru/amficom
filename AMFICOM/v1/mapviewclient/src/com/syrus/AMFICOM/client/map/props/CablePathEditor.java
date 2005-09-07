@@ -16,6 +16,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedComboBox;
+import com.syrus.AMFICOM.client.map.MapPropertiesManager;
 import com.syrus.AMFICOM.client.map.ui.SimpleMapElementController;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
@@ -23,8 +24,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.CablePath;
 
 /**
- * @version $Revision: 1.10 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class CablePathEditor extends DefaultStorableObjectEditor {
@@ -365,9 +366,9 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 			this.nameTextField.setText(this.cablePath.getName());
 			this.cableComboBox.addItem(this.cablePath.getSchemeCableLink());
 			this.cableComboBox.setSelectedItem(this.cablePath.getSchemeCableLink());
-			this.topologicalLengthTextField.setText(String.valueOf(this.cablePath.getLengthLt()));
-			this.physicalLengthTextField.setText(String.valueOf(this.cablePath.getLengthLf()));
-			this.opticalLengthTextField.setText(String.valueOf(this.cablePath.getLengthLo()));
+			this.topologicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.cablePath.getLengthLt()));
+			this.physicalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.cablePath.getLengthLf()));
+			this.opticalLengthTextField.setText(MapPropertiesManager.getDistanceFormat().format(this.cablePath.getLengthLo()));
 			this.descTextArea.setEnabled(true);
 			this.descTextArea.setText(this.cablePath.getDescription());
 			this.startComboBox.addItem(this.cablePath.getStartNode());
