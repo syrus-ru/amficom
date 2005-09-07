@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.37 2005/08/19 16:11:14 arseniy Exp $
+ * $Id: SchemeUtils.java,v 1.38 2005/09/07 10:37:39 bass Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,13 +17,14 @@ import java.util.Set;
 
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.util.Shitlet;
 
 /**
  * Functionality will be partially moved to appropriate model classes; partially
  * removed Œ¡»’ .
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.37 $, $Date: 2005/08/19 16:11:14 $
+ * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/09/07 10:37:39 $
  * @module scheme
  */
 public class SchemeUtils {
@@ -141,12 +142,13 @@ public class SchemeUtils {
 		return top;
 	}
 
+	@Shitlet
 	public static SchemeElement getTopologicalElement(final Scheme scheme, final SchemeElement schemeElement) {
 		if (schemeElement.getParentSchemeId().equals(scheme.getId())) {
 			return schemeElement;
 		}
 		for (final SchemeElement schemeElement1 : scheme.getSchemeElements()) {
-			if (schemeElement.getKind().value() == SchemeElementKind._SCHEMED) {
+			if (schemeElement1.getKind().value() == SchemeElementKind._SCHEMED) {
 				final Scheme scheme1 = schemeElement1.getScheme();
 				if (getAllChildElements(schemeElement1).contains(schemeElement)) {
 					return schemeElement1;
