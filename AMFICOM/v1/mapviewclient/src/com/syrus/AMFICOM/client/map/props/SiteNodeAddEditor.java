@@ -576,9 +576,14 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 	private boolean startsAt(
 			final SchemeCableLink schemeCableLink,
 			final SchemeElement schemeElement) {
-		final Set schemeCablePorts = schemeElement.getSchemeCablePortsRecursively();
-		return schemeCablePorts.contains(schemeCableLink.getSourceAbstractSchemePort())
-			|| schemeCablePorts.contains(schemeCableLink.getTargetAbstractSchemePort());
+		try {
+			final Set schemeCablePorts = schemeElement.getSchemeCablePortsRecursively();
+			return schemeCablePorts.contains(schemeCableLink.getSourceAbstractSchemePort())
+				|| schemeCablePorts.contains(schemeCableLink.getTargetAbstractSchemePort());
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+			return false;
+		}
 	}
 
 	public JComponent getGUI() {
