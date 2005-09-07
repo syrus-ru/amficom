@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPoolContext.java,v 1.16 2005/09/07 13:05:01 bob Exp $
+ * $Id: ClientPoolContext.java,v 1.17 2005/09/07 14:11:42 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,8 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/07 13:05:01 $
- * @author $Author: bob $
+ * @version $Revision: 1.17 $, $Date: 2005/09/07 14:11:42 $
+ * @author $Author: arseniy $
  * @module commonclient
  */
 class ClientPoolContext implements PoolContext {
@@ -47,7 +47,7 @@ class ClientPoolContext implements PoolContext {
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, configurationPoolSize);
 	}
 
-	public LRUSaver getLRUSaver() {
+	public LRUSaver<Identifier, StorableObject> getLRUSaver() {
 		return ClientLRUMapSaver.getInstance();
 	}
 }

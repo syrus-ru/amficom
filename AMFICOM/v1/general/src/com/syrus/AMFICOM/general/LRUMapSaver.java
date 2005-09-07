@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMapSaver.java,v 1.2 2005/09/07 13:12:48 bob Exp $
+ * $Id: LRUMapSaver.java,v 1.3 2005/09/07 14:08:35 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,24 +18,24 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/07 13:12:48 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/09/07 14:08:35 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
  */
-public class LRUMapSaver<V extends StorableObject> extends AbstractLRUMapSaver<V> {
+public class LRUMapSaver extends AbstractLRUMapSaver {
 
-	private static LRUMapSaver<StorableObject> instance;
+	private static LRUMapSaver instance;
 	
 	private LRUMapSaver() {
 		super("LRUMap.serialized");
 	}
 	
-	public static final LRUMapSaver<StorableObject> getInstance() {
+	public static final LRUMapSaver getInstance() {
 		if (instance == null) {
 			synchronized (LRUMapSaver.class) {
 				if (instance == null) {
-					instance = new LRUMapSaver<StorableObject>();
+					instance = new LRUMapSaver();
 				}
 			}
 		}
@@ -43,7 +43,7 @@ public class LRUMapSaver<V extends StorableObject> extends AbstractLRUMapSaver<V
 	}
 	
 	@Override
-	protected Set<V> loading(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+	protected Set<StorableObject> loading(final ObjectInputStream in) throws IOException, ClassNotFoundException {
 		try {
 			return StorableObjectPool.getStorableObjects((Set) in.readObject(), true);
 		} catch (final ApplicationException ae) {
@@ -53,10 +53,10 @@ public class LRUMapSaver<V extends StorableObject> extends AbstractLRUMapSaver<V
 	}
 	
 	@Override
-	protected Set<Object> saving(LRUMap<Identifier, V> lruMap) {
+	protected Set<Object> saving(LRUMap<Identifier, StorableObject> lruMap) {
 		final Set<Object> keys = new HashSet<Object>();
-		for (final Iterator it = lruMap.keyIterator(); it.hasNext();) {
-			final Object key = it.next();
+		for (final Iterator<Identifier> it = lruMap.keyIterator(); it.hasNext();) {
+			final Identifier key = it.next();
 			keys.add(key);
 		}
 		return keys;

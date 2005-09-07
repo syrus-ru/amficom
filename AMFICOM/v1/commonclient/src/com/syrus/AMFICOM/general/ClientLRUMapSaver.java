@@ -1,5 +1,5 @@
 /*-
-* $Id: ClientLRUMapSaver.java,v 1.2 2005/09/07 13:12:58 bob Exp $
+* $Id: ClientLRUMapSaver.java,v 1.3 2005/09/07 14:11:42 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,30 +13,32 @@ import java.io.ObjectInputStream;
 import java.util.HashSet;
 import java.util.Set;
 
+import org.omg.CORBA.ORB;
+
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/07 13:12:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/09/07 14:11:42 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
  */
-final class ClientLRUMapSaver<V extends StorableObject> extends AbstractLRUMapSaver<V> {
+final class ClientLRUMapSaver extends AbstractLRUMapSaver {
 
-	private static ClientLRUMapSaver<StorableObject> instance;
+	private static ClientLRUMapSaver instance;
 
 	private ClientLRUMapSaver() {
 		super("SOLRUMap.serialized");
 	}
 	
-	public static final ClientLRUMapSaver<StorableObject> getInstance() {
+	public static final ClientLRUMapSaver getInstance() {
 		if (instance == null) {
 			synchronized (ClientLRUMapSaver.class) {
 				if (instance == null) {
-					instance = new ClientLRUMapSaver<StorableObject>();
+					instance = new ClientLRUMapSaver();
 				}
 			}
 		}
@@ -44,20 +46,21 @@ final class ClientLRUMapSaver<V extends StorableObject> extends AbstractLRUMapSa
 	}
 
 	@Override
-	protected Set<V> loading(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+	protected Set<StorableObject> loading(final ObjectInputStream in) throws IOException, ClassNotFoundException {
 		try {
-			return StorableObjectPool.<V>fromTransferables((IdlStorableObject[]) in.readObject(), false);
+			return StorableObjectPool.fromTransferables((IdlStorableObject[]) in.readObject(), false);
 		} catch (final ApplicationException ae) {
 			Log.errorMessage("ClientLRUMapSaver.load | Error: " + ae.getMessage());
 		}
 		return null;
 	}
-	
+
 	@Override
-	protected Object saving(LRUMap<Identifier, V> lruMap) {
+	protected Object saving(final LRUMap<Identifier, StorableObject> lruMap) {
+		final ORB orb = ClientSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb();
 		final Set<Object> keys = new HashSet<Object>();
-		for(final V v : lruMap) {
-			keys.add(v.getTransferable(ClientSessionEnvironment.getInstance().getConnectionManager().getCORBAServer().getOrb()));
+		for(final StorableObject storableObject : lruMap) {
+			keys.add(storableObject.getTransferable(orb));
 		}
 		return keys.toArray(new IdlStorableObject[keys.size()]);
 	}

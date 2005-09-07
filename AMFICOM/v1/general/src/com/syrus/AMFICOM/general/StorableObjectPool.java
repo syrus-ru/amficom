@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.169 2005/09/07 13:02:31 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.170 2005/09/07 14:08:35 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.169 $, $Date: 2005/09/07 13:02:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.170 $, $Date: 2005/09/07 14:08:35 $
+ * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
  * (т. е. объектами, идентификаторы которых помещены в DELETED_IDS_MAP). Проверять так:
@@ -511,17 +511,15 @@ public final class StorableObjectPool {
 		final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 		if (objectPool != null) {
 			objectPool.put(id, storableObject);
-		}
-		else {
-			throw new IllegalObjectEntityException("StorableObjectPool.putStorableObject | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED
-					+ ": '" + ObjectEntities.codeToString(entityCode) + "'/"
-					+ entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
+		} else {
+			throw new IllegalObjectEntityException("StorableObjectPool.putStorableObject | " + ErrorMessages.ENTITY_POOL_NOT_REGISTERED + ": '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 	}
-	
-	public static void putAllStorableObject(final Set<? extends StorableObject> storableObjects) 
-	throws IllegalObjectEntityException{
-		for(final StorableObject storableObject : storableObjects) {
+
+	public static void putAllStorableObject(final Set<? extends StorableObject> storableObjects)
+			throws IllegalObjectEntityException {
+		for (final StorableObject storableObject : storableObjects) {
 			putStorableObject(storableObject);
 		}
 	}
@@ -1000,7 +998,7 @@ public final class StorableObjectPool {
 		for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 			entityCodeIterator.advance();
 			final short entityCode = entityCodeIterator.key();
-			Set<StorableObject> storableObjects = saver.load(ObjectEntities.codeToString(entityCode));
+			final Set<StorableObject> storableObjects = saver.load(ObjectEntities.codeToString(entityCode));
 			try {
 				putAllStorableObject(storableObjects);
 			} catch (IllegalObjectEntityException e) {
@@ -1015,7 +1013,7 @@ public final class StorableObjectPool {
 		for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 			entityCodeIterator.advance();
 			final short entityCode = entityCodeIterator.key();
-			LRUMap<Identifier, StorableObject> map = getLRUMap(entityCode);
+			final LRUMap<Identifier, StorableObject> map = getLRUMap(entityCode);
 			saver.save(map, ObjectEntities.codeToString(entityCode), true);
 		}
 	}
