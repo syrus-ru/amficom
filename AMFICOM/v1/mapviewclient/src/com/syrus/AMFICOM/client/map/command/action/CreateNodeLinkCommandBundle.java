@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.30 2005/09/05 13:54:00 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.31 2005/09/07 12:24:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.TopologicalNode;
+import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
@@ -37,7 +38,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/09/05 13:54:00 $
+ * @version $Revision: 1.31 $, $Date: 2005/09/07 12:24:59 $
  * @module mapviewclient
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle {
@@ -246,7 +247,12 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle {
 			else {
 				if (this.startNode instanceof SiteNode 
 					&& endNode instanceof SiteNode ) {
-					createSiteToSite(endNode);
+					if(endNode instanceof UnboundNode) {
+						createSiteToNewNode(mapEndPoint);
+					}
+					else {
+						createSiteToSite(endNode);
+					}
 				}
 				else if ( this.startNode instanceof SiteNode
 					&& endNode instanceof TopologicalNode ) {
