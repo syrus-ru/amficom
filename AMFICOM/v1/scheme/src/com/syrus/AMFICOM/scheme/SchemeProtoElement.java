@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.80 2005/09/06 17:30:25 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.81 2005/09/07 08:33:56 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,6 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -80,7 +79,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.80 $, $Date: 2005/09/06 17:30:25 $
+ * @version $Revision: 1.81 $, $Date: 2005/09/07 08:33:56 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -1420,16 +1419,17 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	/**
 	 * Returns <code>SchemeCablePort</code>s (as an unmodifiable set) for
 	 * this <code>schemeProtoElement</code>, recursively.
+	 *
+	 * @throws ApplicationException
 	 */
-	public Set<SchemeCablePort> getSchemeCablePortsRecursively() {
-		final Set<SchemeDevice> schemeDevices = getSchemeDevices();
-		final Iterator<SchemeDevice> schemeDeviceIterator = schemeDevices.iterator();
-		if (schemeDevices.size() == 1) {
-			return schemeDeviceIterator.next().getSchemeCablePorts();
-		}
+	public Set<SchemeCablePort> getSchemeCablePortsRecursively()
+	throws ApplicationException {
 		final Set<SchemeCablePort> schemeCablePorts = new HashSet<SchemeCablePort>();
-		while (schemeDeviceIterator.hasNext()) {
-			schemeCablePorts.addAll(schemeDeviceIterator.next().getSchemeCablePorts());
+		for (final SchemeDevice schemeDevice : this.getSchemeDevices0()) {
+			schemeCablePorts.addAll(schemeDevice.getSchemeCablePorts0());
+		}
+		for (final SchemeProtoElement schemeProtoElement : this.getSchemeProtoElements0()) {
+			schemeCablePorts.addAll(schemeProtoElement.getSchemeCablePortsRecursively());
 		}
 		return Collections.unmodifiableSet(schemeCablePorts);
 	}
@@ -1437,16 +1437,17 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	/**
 	 * Returns <code>SchemePort</code>s (as an unmodifiable set) for this
 	 * <code>SchemeProtoElement</code>, recursively.
+	 *
+	 * @throws ApplicationException
 	 */
-	public Set<SchemePort> getSchemePortsRecursively() {
-		final Set<SchemeDevice> schemeDevices = getSchemeDevices();
-		final Iterator<SchemeDevice> schemeDeviceIterator = schemeDevices.iterator();
-		if (schemeDevices.size() == 1) {
-			return schemeDeviceIterator.next().getSchemePorts();
-		}
+	public Set<SchemePort> getSchemePortsRecursively()
+	throws ApplicationException {
 		final Set<SchemePort> schemePorts = new HashSet<SchemePort>();
-		while (schemeDeviceIterator.hasNext()) {
-			schemePorts.addAll(schemeDeviceIterator.next().getSchemePorts());
+		for (final SchemeDevice schemeDevice : this.getSchemeDevices0()) {
+			schemePorts.addAll(schemeDevice.getSchemePorts0());
+		}
+		for (final SchemeProtoElement schemeProtoElement : this.getSchemeProtoElements0()) {
+			schemePorts.addAll(schemeProtoElement.getSchemePortsRecursively());
 		}
 		return Collections.unmodifiableSet(schemePorts);
 	}
