@@ -287,7 +287,7 @@ public final class SiteNodeTypeEditor
 
 			this.imagePanel.add(new JLabel(new ImageIcon(im)));
 			this.imagePanel.revalidate();
-			this.imageButton.setEnabled(true);
+//			this.imageButton.setEnabled(true);
 		}
 	}
 
