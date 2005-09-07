@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.36 2005/08/19 15:43:32 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.37 2005/09/07 12:29:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,6 +42,7 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.UnboundNode;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 
@@ -50,7 +51,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.36 $, $Date: 2005/08/19 15:43:32 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/07 12:29:14 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -95,21 +96,26 @@ public final class MapDropTargetListener implements DropTargetListener
 							if(or instanceof SiteNodeType) {
 								SiteNodeType snt = (SiteNodeType)or;
 								Identifier id = snt.getId();
-								SiteNodeType mpe = StorableObjectPool.getStorableObject(id, false);
+								SiteNodeType mpe = StorableObjectPool.getStorableObject(id, true);
 								mapElementDropped(mpe, point);
-							}
-							if(or instanceof SchemeElement) {
+							} if(or instanceof SchemeElement) {
 								SchemeElement se = (SchemeElement )or;
 								Identifier id = se.getId();
-								SchemeElement sereal = StorableObjectPool.getStorableObject(id, false);
+								SchemeElement sereal = StorableObjectPool.getStorableObject(id, true);
 								schemeElementDropped(sereal, point);
 							}
-							else
-							if(or instanceof SchemeCableLink) {
+							else if(or instanceof SchemeCableLink) {
 								SchemeCableLink scl = (SchemeCableLink )or;
 								Identifier id = scl.getId();
-								SchemeCableLink sclreal = StorableObjectPool.getStorableObject(id, false);
+								SchemeCableLink sclreal = StorableObjectPool.getStorableObject(id, true);
 								schemeCableLinkDropped(sclreal);
+							}
+							else if(or instanceof Scheme) {
+								Scheme sc = (Scheme )or;
+								Identifier id = sc.getId();
+								Scheme screal = StorableObjectPool.getStorableObject(id, true);
+								SchemeElement sereal = screal.getParentSchemeElement();
+								schemeElementDropped(sereal, point);
 							}
 						}
 					}
