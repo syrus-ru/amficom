@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMSessionEnvironment.java,v 1.6 2005/08/08 11:46:55 arseniy Exp $
+ * $Id: MCMSessionEnvironment.java,v 1.7 2005/09/07 14:31:58 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,15 +12,14 @@ import com.syrus.AMFICOM.general.BaseSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/08 11:46:55 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/07 14:31:58 $
  * @author $Author: arseniy $
  * @module mcm
  */
 final class MCMSessionEnvironment extends BaseSessionEnvironment {
 	private static MCMSessionEnvironment instance;
 
-	private MCMSessionEnvironment(final MCMServantManager mcmServantManager,
-			final MCMPoolContext mcmPoolContext) {
+	private MCMSessionEnvironment(final MCMServantManager mcmServantManager, final MCMPoolContext mcmPoolContext) {
 		super(mcmServantManager, mcmPoolContext, new MeasurementControlModule.MCMLoginRestorer());
 	}
 
