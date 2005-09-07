@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.30 2005/09/06 07:45:18 bob Exp $
+ * $Id: TableFrame.java,v 1.31 2005/09/07 02:56:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,6 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -52,26 +51,25 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/09/06 07:45:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.31 $, $Date: 2005/09/07 02:56:04 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
 public class TableFrame extends JInternalFrame implements PropertyChangeListener {
 
-	private static final long	serialVersionUID	= 3761405313630156343L;
-	Dispatcher					dispatcher;
-	SchedulerModel				schedulerModel;
-	WrapperedTable			listTable;
-	ApplicationContext			aContext;
-	private JPanel				panel;
-	List<Test>				rowToRemove;
-	PropertyChangeEvent	propertyChangeEvent;
+	private static final long serialVersionUID = 3761405313630156343L;
+	Dispatcher dispatcher;
+	SchedulerModel schedulerModel;
+	WrapperedTable<Test> listTable;
+	ApplicationContext aContext;
+	private JPanel panel;
+	List<Test> rowToRemove;
+	PropertyChangeEvent propertyChangeEvent;
 
-	public TableFrame(ApplicationContext aContext) {
+	public TableFrame(final ApplicationContext aContext) {
 		this.aContext = aContext;
 		if (aContext != null) {
 			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
@@ -83,10 +81,10 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 	}
 
 	private void updateTest() {
-		Set selectedTestIds = this.schedulerModel.getSelectedTestIds();
+		final Set<Identifier> selectedTestIds = this.schedulerModel.getSelectedTestIds();
 		if (selectedTestIds == null || selectedTestIds.isEmpty()) {
 
-			int[] selectedRows = this.listTable.getSelectedRows();
+			final int[] selectedRows = this.listTable.getSelectedRows();
 			if (selectedRows.length > 0) {
 				int maxRowIndex = Integer.MIN_VALUE;
 				int minRowIndex = Integer.MAX_VALUE;
@@ -102,12 +100,11 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 		} else {
 			// int[] selectedRows = new int[selectedTestIds.size()];
 			// int j = 0;
-			WrapperedTableModel tableModel = (WrapperedTableModel) this.listTable.getModel();
-			for (Iterator iterator = selectedTestIds.iterator(); iterator.hasNext();) {
-				Identifier identifier = (Identifier) iterator.next();
+			final WrapperedTableModel<Test> tableModel = this.listTable.getModel();
+			for (Identifier identifier : selectedTestIds) {
 				try {
-					Test test1 = (Test) StorableObjectPool.getStorableObject(identifier, true);
-					Identifier groupTestId = test1.getGroupTestId();
+					final Test test1 = (Test) StorableObjectPool.getStorableObject(identifier, true);
+					final Identifier groupTestId = test1.getGroupTestId();
 					if (!groupTestId.isVoid()) {
 						identifier = groupTestId;
 					}
@@ -115,7 +112,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 					AbstractMainFrame.showErrorMessage(this, e);
 				}
 				for (int i = 0; i < tableModel.getRowCount(); i++) {
-					Test test = (Test) tableModel.getObject(i);
+					final Test test = tableModel.getObject(i);
 					Identifier testId = test.getGroupTestId();
 					testId = !testId.isVoid() ? testId : test.getId();
 					if (testId.equals(identifier)) {
@@ -133,7 +130,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 		this.updateTest();
 	}
 
-	public void propertyChange(PropertyChangeEvent evt) {
+	public void propertyChange(final PropertyChangeEvent evt) {
 		this.propertyChangeEvent = evt;
 		final String propertyName = evt.getPropertyName();
 		if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
@@ -146,12 +143,12 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 
 	private void setTests() {
 		this.listTable.removeAll();
-		WrapperedTableModel model = (WrapperedTableModel) this.listTable.getModel();
+		final WrapperedTableModel<Test> model = this.listTable.getModel();
 		model.clear();
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.schedulerModel.getTestIds(), true);
 			for (final Test test : tests) {
-				Identifier groupTestId = test.getGroupTestId();
+				final Identifier groupTestId = test.getGroupTestId();
 				if (!groupTestId.isVoid() && !groupTestId.equals(test.getId())) {
 					continue;
 				}
@@ -170,31 +167,29 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 		if (this.panel == null) {
 			this.panel = new JPanel(new BorderLayout());
 
-			this.listTable = new WrapperedTable(TestController.getInstance(), new String[] {
+			this.listTable = new WrapperedTable<Test>(TestController.getInstance(), new String[] {
 					TestController.KEY_TEMPORAL_TYPE, TestController.KEY_MONITORED_ELEMENT,
 					TestController.KEY_TEST_OBJECT, TestController.KEY_MEASUREMENT_TYPE, TestController.KEY_START_TIME,
 					TestController.KEY_STATUS});
 			this.listTable.setDefaultTableCellRenderer();
-			ListSelectionModel rowSM = this.listTable.getSelectionModel();
+			final ListSelectionModel rowSM = this.listTable.getSelectionModel();
 			rowSM.addListSelectionListener(new ListSelectionListener() {
 
-				public void valueChanged(ListSelectionEvent e) {
-					if (e.getValueIsAdjusting())
+				public void valueChanged(final ListSelectionEvent e) {
+					if (e.getValueIsAdjusting()) {
 						return;
+					}
 
-					ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+					final ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 					if (!lsm.isSelectionEmpty() && TableFrame.this.propertyChangeEvent == null) {
 						final int selectedRow = lsm.getMinSelectionIndex();
 						CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
 							public void run() {
 								try {
-
-									
 									TableFrame.this.schedulerModel.unselectTests();
-									TableFrame.this.schedulerModel
-											.addSelectedTest((Test) ((WrapperedTableModel) TableFrame.this.listTable
-													.getModel()).getObject(selectedRow));
+									final WrapperedTableModel<Test> model = TableFrame.this.listTable.getModel();
+									TableFrame.this.schedulerModel.addSelectedTest(model.getObject(selectedRow));
 
 								} catch (ApplicationException ae) {
 									AbstractMainFrame.showErrorMessage(TableFrame.this, ae);
@@ -218,11 +213,11 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 						if (rowIndices == null || rowIndices.length == 0) {
 							return;
 						}
-						
-						final WrapperedTableModel model = (WrapperedTableModel) table.getModel();
-						
+
+						final WrapperedTableModel<Test> model = (WrapperedTableModel<Test>) table.getModel();
+
 						for (final int index : rowIndices) {
-							final Test test = (Test) model.getObject(index);
+							final Test test = model.getObject(index);
 							final int status = test.getStatus().value();
 							if (status != TestStatus._TEST_STATUS_NEW &&
 								status != TestStatus._TEST_STATUS_PROCESSING &&
@@ -230,15 +225,15 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 								return;
 							}
 						}
-						
+
 						final JPopupMenu popup = new JPopupMenu();
-						
+
 						boolean enableDeleting = true;
 						boolean enableStopping = true;
-						
+
 						for (int i = 0; i < rowIndices.length; i++) {
-							Test test1 = (Test) model.getObject(rowIndices[i]);
-							int status = test1.getStatus().value();
+							final Test test1 = model.getObject(rowIndices[i]);
+							final int status = test1.getStatus().value();
 							if (status != TestStatus._TEST_STATUS_NEW) {
 								enableDeleting = false;
 							}
@@ -246,21 +241,23 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 								status != TestStatus._TEST_STATUS_SCHEDULED) {
 								enableStopping = false;
 							}
-							
+
 							if (!enableDeleting && !enableStopping) {
 								break;
 							}
 						}
-						
+
 						if (enableDeleting) {
-							final JMenuItem deleteTestMenuItem = 
-								new JMenuItem(LangModelSchedule.getString(rowIndices.length == 1 ? "Text.Table.DeleteTest" : "Text.Table.DeleteTests")); 
+							final JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString(rowIndices.length == 1
+									? "Text.Table.DeleteTest"
+										: "Text.Table.DeleteTests"));
 							deleteTestMenuItem.addActionListener(new ActionListener() {
-	
+
 								public void actionPerformed(final ActionEvent e) {
 									final int temp = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-										LangModelSchedule.getString("Text.Table.DeleteTest.ConfirmMessage"), LangModelSchedule
-												.getString("Text.Table.DeleteTest.ConfirmTitle"), JOptionPane.YES_NO_OPTION);
+											LangModelSchedule.getString("Text.Table.DeleteTest.ConfirmMessage"),
+											LangModelSchedule.getString("Text.Table.DeleteTest.ConfirmTitle"),
+											JOptionPane.YES_NO_OPTION);
 									if (temp == JOptionPane.YES_OPTION) {
 										if (TableFrame.this.rowToRemove == null) {
 											TableFrame.this.rowToRemove = new LinkedList<Test>();
@@ -268,7 +265,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 											TableFrame.this.rowToRemove.clear();
 										}
 										for (int i = 0; i < rowIndices.length; i++) {
-											final Test test = (Test) model.getObject(rowIndices[i]);
+											final Test test = model.getObject(rowIndices[i]);
 											TableFrame.this.rowToRemove.add(test);
 										}
 										for (final Test test : TableFrame.this.rowToRemove) {
@@ -284,26 +281,29 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 						}
 
 						if (enableStopping) {
-							final JMenuItem stopTestMenuItem = 
-								new JMenuItem(LangModelSchedule.getString("Text.Table.StopTesting")); 
+							final JMenuItem stopTestMenuItem = new JMenuItem(LangModelSchedule.getString("Text.Table.StopTesting"));
 							stopTestMenuItem.addActionListener(new ActionListener() {
 
 								public void actionPerformed(final ActionEvent e) {
 									final int temp = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-										LangModelSchedule.getString("Text.Table.StopTesting.ConfirmMessage"), LangModelSchedule
-												.getString("Text.Table.StopTesting.ConfirmTitle"), JOptionPane.YES_NO_OPTION);
+											LangModelSchedule.getString("Text.Table.StopTesting.ConfirmMessage"),
+											LangModelSchedule.getString("Text.Table.StopTesting.ConfirmTitle"),
+											JOptionPane.YES_NO_OPTION);
 									if (temp == JOptionPane.YES_OPTION) {
 										for (int i = 0; i < rowIndices.length; i++) {
-											final Test test = (Test) model.getObject(rowIndices[i]);
+											final Test test = model.getObject(rowIndices[i]);
 											test.setStatus(TestStatus.TEST_STATUS_STOPPING);
 										}
-										TableFrame.this.dispatcher.firePropertyChange(new PropertyChangeEvent(TableFrame.this, SchedulerModel.COMMAND_REFRESH_TESTS, null, null));
+										TableFrame.this.dispatcher.firePropertyChange(new PropertyChangeEvent(TableFrame.this,
+												SchedulerModel.COMMAND_REFRESH_TESTS,
+												null,
+												null));
 										table.revalidate();
 										table.repaint();
 									}
 								}
 							});
-							
+
 							if (enableDeleting) {
 								popup.addSeparator();
 							}
@@ -316,12 +316,13 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 			});
 
 			final JTableHeader header = this.listTable.getTableHeader();
-			
+
 			this.listTable.sortColumn(4);
-			
+
 			this.panel.add(header, BorderLayout.NORTH);
-			this.panel.add(new JScrollPane(this.listTable, ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
-											ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
+			this.panel.add(new JScrollPane(this.listTable,
+					ScrollPaneConstants.VERTICAL_SCROLLBAR_AS_NEEDED,
+					ScrollPaneConstants.HORIZONTAL_SCROLLBAR_NEVER), BorderLayout.CENTER);
 
 		}
 		return this.panel;
@@ -329,13 +330,13 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 	}
 
 	private void init() {
-		setTitle(LangModelSchedule.getString("Text.Table.Title")); //$NON-NLS-1$
-		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
-		setResizable(true);
-		setClosable(true);
-		setIconifiable(true);
+		super.setTitle(LangModelSchedule.getString("Text.Table.Title")); //$NON-NLS-1$
+		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		super.setResizable(true);
+		super.setClosable(true);
+		super.setIconifiable(true);
 		this.panel = getPanel();
-		setContentPane(this.panel);
+		super.setContentPane(this.panel);
 	}
 
 }

@@ -200,7 +200,6 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 		}
 	}
 
-	@SuppressWarnings("unchecked")
 	public void propertyChange(final PropertyChangeEvent evt) {
 		final String propertyName = evt.getPropertyName();
 		final Object newValue = evt.getNewValue();

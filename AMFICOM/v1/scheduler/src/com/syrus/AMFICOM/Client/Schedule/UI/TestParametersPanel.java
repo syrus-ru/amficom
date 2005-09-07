@@ -68,12 +68,12 @@ public class TestParametersPanel implements PropertyChangeListener {
 	List<MeasurementSetup>	msListAnalysisOnly;
 
 	// UI components begin
-	private JCheckBox			useSetupsCheckBox;
-	private JLabel				analysisLabel;
-	private JCheckBox			useAnalysisSetupsCheckBox;
-	JComboBox					analysisComboBox;
-	private JLabel				patternsLabel;
-	WrapperedList				testSetups;
+	private JCheckBox useSetupsCheckBox;
+	private JLabel analysisLabel;
+	private JCheckBox useAnalysisSetupsCheckBox;
+	JComboBox analysisComboBox;
+	private JLabel patternsLabel;
+	WrapperedList<MeasurementSetup> testSetups;
 	// UI components end
 	
 	private Dispatcher		dispatcher;
@@ -122,38 +122,35 @@ public class TestParametersPanel implements PropertyChangeListener {
 		}
 	}
 
-	@SuppressWarnings("serial")
 	private void createGUI() {
 		final AnalysisType[] analysisTypes = AnalysisType.values();
 
 		Comparator<AnalysisType> comparator = new Comparator<AnalysisType>() {
-			public int compare(	AnalysisType at1,
-			                   	AnalysisType at2) {
+			public int compare(AnalysisType at1, AnalysisType at2) {
 				return at1.getDescription().compareTo(at2.getDescription());
 			}
 		};
 
 		Arrays.sort(analysisTypes, comparator);
-		
+
 		this.analysisComboBox = new JComboBox(analysisTypes);
-		
-		
+
 		this.analysisComboBox.setRenderer(new DefaultListCellRenderer() {
 			@Override
-			public Component getListCellRendererComponent(	JList list,
-															Object value,
-															int index,
-															boolean isSelected,
-															boolean cellHasFocus) {
-				AnalysisType analysisType = ((AnalysisType)value);
-				return super.getListCellRendererComponent(list, 
-					analysisType != null ? analysisType.getDescription() : null, 
-					index, 
-					isSelected,
-					cellHasFocus);
+			public Component getListCellRendererComponent(final JList list,
+					final Object value,
+					final int index,
+					final boolean isSelected,
+					final boolean cellHasFocus) {
+				final AnalysisType analysisType = ((AnalysisType) value);
+				return super.getListCellRendererComponent(list,
+						(analysisType != null) ? analysisType.getDescription() : null,
+						index,
+						isSelected,
+						cellHasFocus);
 			}
 		});
-		
+
 		this.switchPanel = new JPanel(new CardLayout());
 
 		this.patternPanel = new JPanel(new GridBagLayout());
@@ -166,42 +163,41 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.patternPanel.setBorder(BorderFactory.createEtchedBorder());
 		this.switchPanel.setBorder(BorderFactory.createEtchedBorder());
 
-		
 		this.useSetupsCheckBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParameter.UseSetup"));
 		this.useSetupsCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				JCheckBox checkBox = (JCheckBox) e.getSource();
 				boolean useSetup = checkBox.isSelected();
-				if (TestParametersPanel.this.parametersTestPanel != null) {					 
+				if (TestParametersPanel.this.parametersTestPanel != null) {
 					TestParametersPanel.this.parametersTestPanel.setEnableEditing(!useSetup);
 				}
-				setEnableEditing(useSetup);
+				TestParametersPanel.this.setEnableEditing(useSetup);
 			}
-		});		
+		});
 		this.patternPanel.add(this.useSetupsCheckBox, gbc);
 
 		this.useAnalysisSetupsCheckBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParameter.WithAnalysisParameters"));
 		this.useAnalysisSetupsCheckBox.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				final JCheckBox checkBox = (JCheckBox) e.getSource();
-				WrapperedListModel wrapperedListModel = (WrapperedListModel) TestParametersPanel.this.testSetups.getModel();
+				WrapperedListModel<MeasurementSetup> wrapperedListModel = TestParametersPanel.this.testSetups.getModel();
 				Object selectedValue = TestParametersPanel.this.testSetups.getSelectedValue();
 				int selectedIndex = TestParametersPanel.this.testSetups.getSelectedIndex();
-				TestParametersPanel.this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);					
+				TestParametersPanel.this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);
 
 				List<MeasurementSetup> list;
 				final boolean selected = checkBox.isSelected();
 				if (selected) {
-					list = TestParametersPanel.this.msListAnalysisOnly;						
+					list = TestParametersPanel.this.msListAnalysisOnly;
 				} else {
-					list = TestParametersPanel.this.msList;						
+					list = TestParametersPanel.this.msList;
 				}
-				
+
 				wrapperedListModel.setElements(list);
 				if (selectedValue != null) {
 					TestParametersPanel.this.testSetups.setSelectedValue(selectedValue, true);
 				}
-				
+
 				TestParametersPanel.this.analysisComboBox.setEnabled(selected);
 				if (!selected) {
 					TestParametersPanel.this.selectAnalysisType(TestParametersPanel.this.analysisComboBox, null, false);
@@ -209,9 +205,9 @@ public class TestParametersPanel implements PropertyChangeListener {
 			}
 		});
 
-//			this.patternPanel.add(new JLabel(LangModelSchedule.getString("Use setup") + ':'), gbc);
+// this.patternPanel.add(new JLabel(LangModelSchedule.getString("Use setup") +
+// ':'), gbc);
 		this.patternPanel.add(this.useAnalysisSetupsCheckBox, gbc);
-		
 
 		this.analysisLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Analysis")); //$NON-NLS-1$
 		this.patternPanel.add(this.analysisLabel, gbc);
@@ -221,12 +217,11 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 		this.analysisComboBox.addActionListener(new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				final JComboBox comboBox = (JComboBox) e.getSource();
 				final AnalysisType analysisType = (AnalysisType) comboBox.getSelectedItem();
 				final Set<Identifier> selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
-				if (selectedTestIds != null && !selectedTestIds.isEmpty()
-						&& TestParametersPanel.this.propertyChangeEvent == null) {
+				if (selectedTestIds != null && !selectedTestIds.isEmpty() && TestParametersPanel.this.propertyChangeEvent == null) {
 					try {
 						final Set<Test> tests = StorableObjectPool.getStorableObjects(selectedTestIds, true);
 						for (final Test test : tests) {
@@ -241,22 +236,23 @@ public class TestParametersPanel implements PropertyChangeListener {
 			}
 		});
 
-		this.testSetups = new WrapperedList(MeasurementSetupWrapper.getInstance(),
-											StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_ID);
+		this.testSetups = new WrapperedList<MeasurementSetup>(MeasurementSetupWrapper.getInstance(),
+				StorableObjectWrapper.COLUMN_DESCRIPTION,
+				StorableObjectWrapper.COLUMN_ID);
 		this.testSetups.setEnabled(false);
 		this.testSetups.addListSelectionListener(new ListSelectionListener() {
 
-			public void valueChanged(ListSelectionEvent e) {
-				
-				final MeasurementSetup measurementSetup = 
-					(MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
-				
+			public void valueChanged(final ListSelectionEvent e) {
+
+				final MeasurementSetup measurementSetup = (MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
+
 				if (TestParametersPanel.this.parametersTestPanel != null) {
 					new Thread() {
-							@Override
-							public void run() {
-							TestParametersPanel.this.parametersTestPanel
-									.setSet(measurementSetup != null ? measurementSetup.getParameterSet() : null);
+						@Override
+						public void run() {
+							TestParametersPanel.this.parametersTestPanel.setSet(measurementSetup != null
+									? measurementSetup.getParameterSet()
+										: null);
 						}
 					}.start();
 				}
@@ -265,22 +261,16 @@ public class TestParametersPanel implements PropertyChangeListener {
 					return;
 				}
 
-				
-				TestParametersPanel.this.measurementSetupId = 
-					measurementSetup != null ? 
-							measurementSetup.getId() : 
-							null;
-				
+				TestParametersPanel.this.measurementSetupId = measurementSetup != null ? measurementSetup.getId() : null;
+
 				if (measurementSetup != null) {
-					Set<Identifier>  selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
-					if (selectedTestIds != null && !selectedTestIds.isEmpty()
-							&& TestParametersPanel.this.propertyChangeEvent == null) {
+					final Set<Identifier> selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
+					if (selectedTestIds != null && !selectedTestIds.isEmpty() && TestParametersPanel.this.propertyChangeEvent == null) {
 						try {
-							Set<Identifier> measurementSetupIdSet = Collections.singleton(measurementSetup.getId());
-							Set<StorableObject> storableObjects = StorableObjectPool
-									.getStorableObjects(selectedTestIds, true);
+							final Set<Identifier> measurementSetupIdSet = Collections.singleton(measurementSetup.getId());
+							final Set<StorableObject> storableObjects = StorableObjectPool.getStorableObjects(selectedTestIds, true);
 							for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
-								Test test = (Test) iterator.next();
+								final Test test = (Test) iterator.next();
 								if (test.isChanged()) {
 									test.setMeasurementSetupIds(measurementSetupIdSet);
 								}
@@ -289,10 +279,10 @@ public class TestParametersPanel implements PropertyChangeListener {
 							AbstractMainFrame.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
 						}
 					}
-				} 
+				}
 			}
 		});
-		JScrollPane scroll = new JScrollPane(this.testSetups);
+		final JScrollPane scroll = new JScrollPane(this.testSetups);
 		gbc.weighty = 1.0;
 		this.patternPanel.add(scroll, gbc);
 
@@ -313,11 +303,11 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.patternsLabel.setEnabled(enable);
 		this.analysisLabel.setEnabled(enable);
 	}
-	
+
 	public AnalysisType getAnalysisType() {
-		return this.useAnalysisSetupsCheckBox.isSelected() ? 
-				(AnalysisType) this.analysisComboBox.getSelectedItem() : 
-				AnalysisType.UNKNOWN;
+		return this.useAnalysisSetupsCheckBox.isSelected()
+				? (AnalysisType) this.analysisComboBox.getSelectedItem()
+					: AnalysisType.UNKNOWN;
 	}
 
 	public MeasurementSetup getMeasurementSetup() {
@@ -325,9 +315,9 @@ public class TestParametersPanel implements PropertyChangeListener {
 		if (this.useSetupsCheckBox.isSelected()) {
 			measurementSetup1 = (MeasurementSetup) this.testSetups.getSelectedValue();
 			if (measurementSetup1 == null) {
-				JOptionPane.showMessageDialog(this.patternPanel, LangModelSchedule
-						.getString("Error.HaveNotChoosenMeasurementPattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
-					JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(this.patternPanel,
+						LangModelSchedule.getString("Error.HaveNotChoosenMeasurementPattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+						JOptionPane.OK_OPTION);
 				return null;
 			}
 		}
@@ -410,15 +400,16 @@ public class TestParametersPanel implements PropertyChangeListener {
 	}
 
 	public void setMeasurementSetups(Collection<MeasurementSetup> measurementSetups) {
-		
-//		Log.debugMessage("TestParametersPanel.setMeasurementSetups | ", Level.FINEST);
-		
+
+		// Log.debugMessage("TestParametersPanel.setMeasurementSetups | ",
+		// Level.FINEST);
+
 		if (this.msList == null) {
 			this.msList = new LinkedList<MeasurementSetup>();
 		} else {
 			this.msList.clear();
 		}
-		
+
 		if (this.msListAnalysisOnly == null) {
 			this.msListAnalysisOnly = new LinkedList<MeasurementSetup>();
 		} else {
@@ -426,19 +417,19 @@ public class TestParametersPanel implements PropertyChangeListener {
 		}
 
 		this.msList.addAll(measurementSetups);
-		for(MeasurementSetup measurementSetup : measurementSetups) {
-			if(measurementSetup.getCriteriaSet() != null ||
-					measurementSetup.getEtalon() != null ||
-					measurementSetup.getThresholdSet() != null) {
+		for (MeasurementSetup measurementSetup : measurementSetups) {
+			if (measurementSetup.getCriteriaSet() != null
+					|| measurementSetup.getEtalon() != null
+					|| measurementSetup.getThresholdSet() != null) {
 				this.msListAnalysisOnly.add(measurementSetup);
 			}
 		}
 
-		WrapperedListModel wrapperedListModel = (WrapperedListModel) this.testSetups.getModel();
+		final WrapperedListModel<MeasurementSetup> wrapperedListModel = this.testSetups.getModel();
 
 		int selectedIndex = this.testSetups.getSelectedIndex();
 		this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);
-		
+
 		if (this.useAnalysisSetupsCheckBox.isSelected()) {
 			wrapperedListModel.setElements(this.msListAnalysisOnly);
 		} else {
@@ -452,25 +443,25 @@ public class TestParametersPanel implements PropertyChangeListener {
 			try {
 				this.setMeasurementSetup((MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupId, true));
 			} catch (ApplicationException e) {
-				JOptionPane.showMessageDialog(this.patternPanel, LangModelSchedule
-					.getString("Error.Text.CannotGetObject"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
-				JOptionPane.OK_OPTION);
+				JOptionPane.showMessageDialog(this.patternPanel,
+						LangModelSchedule.getString("Error.Text.CannotGetObject"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+						JOptionPane.OK_OPTION);
 			}
 		}
-		
+
 		this.selectAnalysisType(this.analysisComboBox, (AnalysisType) this.analysisComboBox.getSelectedItem(), true);
 	}
 
-	public void setSet(ParameterSet set) {
+	public void setSet(final ParameterSet set) {
 		if (this.parametersTestPanel != null) {
 			 this.parametersTestPanel.setSet(set);
 		}
 	}
 
-	public void setAnalysisTypes(Collection analysisTypes) {
-		boolean enable = this.analysisComboBox.isEditable();
+	public void setAnalysisTypes(final Set<AnalysisType> analysisTypes) {
+		final boolean enable = this.analysisComboBox.isEditable();
 		this.analysisComboBox.setEditable(true);
-		WrapperedListModel model = (WrapperedListModel) TestParametersPanel.this.analysisComboBox.getModel();
+		WrapperedListModel<?> model = (WrapperedListModel) TestParametersPanel.this.analysisComboBox.getModel();
 		model.removeAllElements();
 		model.addElement(null);
 		for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
@@ -483,7 +474,6 @@ public class TestParametersPanel implements PropertyChangeListener {
 	}
 
 
-	@SuppressWarnings("unchecked")
 	public void propertyChange(PropertyChangeEvent evt) {
 		this.propertyChangeEvent = evt;
 		// String commandName = ae.getActionCommand();

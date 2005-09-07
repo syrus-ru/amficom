@@ -53,47 +53,44 @@ public class TestLine extends TimeLine {
 
 	private static final long	serialVersionUID	= 3978424736810416184L;
 
-	private class TestTimeLine implements Comparable {
+	private class TestTimeLine implements Comparable<TestTimeLine> {
+		protected long duration;
+		protected boolean haveMeasurement;
 
-		protected long			duration;
-		protected boolean		haveMeasurement;
+		protected long startTime;
+		protected Identifier testId;
 
-		protected long			startTime;
-		protected Identifier	testId;
-
-		public int compareTo(Object o) {
-			TestTimeLine testTimeLine = (TestTimeLine) o;
+		public int compareTo(final TestTimeLine testTimeLine) {
 			return (int) (this.startTime - testTimeLine.startTime);
 		}
 	}
 
-	static class TestTimeItem implements Comparable {
+	static class TestTimeItem implements Comparable<TestTimeItem> {
+		int x;
+		private int width;
 
-		int			x;
-		private int	width;
-
-		Color		color;
-
-		Color		selectedColor;
+		Color color;
+		Color selectedColor;
 
 		// Test test;
+		Object object;
 
-		Object		object;
-
-		public int compareTo(Object o) {
-			TestTimeItem item = (TestTimeItem) o;
+		public int compareTo(final TestTimeItem item) {
 			return (this.x - item.x);
 		}
 
 		@Override
-		public boolean equals(Object obj) {
-			boolean result = super.equals(obj);
-			if (result)
+		public boolean equals(final Object obj) {
+			final boolean result = super.equals(obj);
+			if (result) {
 				return result;
-			if (!(obj instanceof TestLine.TestTimeItem)) { return false; }
-			TestTimeItem testTimeItem = (TestTimeItem) obj;
-			boolean b1 = (testTimeItem.object == this.object && this.object == null);
-			boolean b2 = (testTimeItem.object != null && testTimeItem.object.equals(this.object));
+			}
+			if (!(obj instanceof TestLine.TestTimeItem)) {
+				return false;
+			}
+			final TestTimeItem testTimeItem = (TestTimeItem) obj;
+			final boolean b1 = (testTimeItem.object == this.object && this.object == null);
+			final boolean b2 = (testTimeItem.object != null && testTimeItem.object.equals(this.object));
 			return b1 || b2;
 		}
 
@@ -106,7 +103,7 @@ public class TestLine extends TimeLine {
 			return this.width;
 		}
 
-		public void setWidth(int width) {			
+		public void setWidth(final int width) {			
 			this.width = width;
 		}
 
