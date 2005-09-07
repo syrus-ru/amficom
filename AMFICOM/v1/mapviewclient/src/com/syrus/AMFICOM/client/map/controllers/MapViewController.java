@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.51 2005/09/02 09:37:29 krupenn Exp $
+ * $Id: MapViewController.java,v 1.52 2005/09/07 12:26:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -61,7 +61,7 @@ import com.syrus.util.Log;
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
  * @author $Author: krupenn $
- * @version $Revision: 1.51 $, $Date: 2005/09/02 09:37:29 $
+ * @version $Revision: 1.52 $, $Date: 2005/09/07 12:26:01 $
  * @module mapviewclient
  */
 public final class MapViewController {
@@ -247,6 +247,7 @@ public final class MapViewController {
 		this.mapView.setScale(this.logicalNetLayer.getMapContext().getScale());
 
 		this.mapView.revert();
+		this.scanSchemes();
 	}
 	
 	/**
