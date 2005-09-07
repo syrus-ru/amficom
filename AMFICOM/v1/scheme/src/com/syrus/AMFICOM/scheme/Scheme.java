@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.77 2005/09/06 17:30:25 bass Exp $
+ * $Id: Scheme.java,v 1.78 2005/09/07 18:31:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,12 +74,13 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeLink;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeMonitoringSolution;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeOptimizeInfo;
 import com.syrus.util.Log;
+import com.syrus.util.Shitlet;
 
 /**
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/09/06 17:30:25 $
+ * @version $Revision: 1.78 $, $Date: 2005/09/07 18:31:40 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -645,7 +646,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 		}
 	}
 
-	private Set<SchemeCableLink> getSchemeCableLinks0() throws ApplicationException {
+	Set<SchemeCableLink> getSchemeCableLinks0() throws ApplicationException {
 			return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMECABLELINK_CODE), true);
 	}
 
@@ -687,7 +688,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 		}
 	}
 
-	private Set<SchemeElement> getSchemeElements0() throws ApplicationException {
+	Set<SchemeElement> getSchemeElements0() throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true);
 	}
 
@@ -705,7 +706,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 		}
 	}
 
-	private Set<SchemeLink> getSchemeLinks0() throws ApplicationException {
+	Set<SchemeLink> getSchemeLinks0() throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true);
 	}
 
@@ -1334,6 +1335,32 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
+	 * @throws ApplicationException
+	 */
+	public Set<SchemeLink> getSchemeLinksRecursively()
+	throws ApplicationException {
+		final Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
+		schemeLinks.addAll(this.getSchemeLinks0());
+		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
+			schemeLinks.addAll(schemeElement.getSchemeLinksRecursively());
+		}
+		return Collections.unmodifiableSet(schemeLinks);
+	}
+
+	/**
+	 * @throws ApplicationException
+	 */
+	public Set<SchemeCableLink> getSchemeCableLinksRecursively()
+	throws ApplicationException {
+		final Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
+		schemeCableLinks.addAll(this.getSchemeCableLinks0());
+		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
+			schemeCableLinks.addAll(schemeElement.getSchemeCableLinksRecursively());
+		}
+		return Collections.unmodifiableSet(schemeCableLinks);
+	}
+
+	/**
 	 * To get the {@code Set} of {@code SchemePath}s for the current
 	 * {@code SchemeMonitoringSolution} only, use
 	 * {@link #getCurrentSchemeMonitoringSolution()}.{@link SchemeMonitoringSolution#getSchemePaths() getSchemePaths()}
@@ -1347,21 +1374,191 @@ public final class Scheme extends AbstractCloneableDomainMember
 		return Collections.unmodifiableSet(schemePaths);
 	}
 
-	public Set<SchemePath> getTopologicalPaths() {
-		final SchemeMonitoringSolution currentSchemeMonitoringSolution = this.getCurrentSchemeMonitoringSolution();
-		if (currentSchemeMonitoringSolution == null) {
-			return Collections.emptySet();
+	/*-********************************************************************
+	 * Shitlets                                                           *
+	 **********************************************************************/
+
+	/**
+	 * @throws ApplicationException
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	public Set<SchemeCableLink> getTopologicalSchemeCableLinksRecursively()
+	throws ApplicationException {
+		final Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
+		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
+			for (final Scheme scheme : schemeElement.getSchemes0()) {
+				if (scheme.kind == CABLE_SUBNETWORK) {
+					schemeCableLinks.addAll(scheme.getTopologicalSchemeCableLinksRecursively());
+				}
+			}
 		}
-		final Set<SchemePath> schemePaths = new HashSet<SchemePath>(currentSchemeMonitoringSolution.getSchemePaths());
-		for (final SchemeElement schemeElement : this.getSchemeElements()) {
-			for (final Scheme scheme : schemeElement.getSchemes()) {
-				if (scheme.getKind() == CABLE_SUBNETWORK) {
-					for (final SchemePath schemePath : scheme.getTopologicalPaths()) {
-						schemePaths.add(schemePath);
-					}
+		return Collections.unmodifiableSet(schemeCableLinks);
+	}
+
+	/**
+	 * @throws ApplicationException
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	public Set<SchemePath> getTopologicalSchemePathsRecursively()
+	throws ApplicationException {
+		final Set<SchemePath> schemePaths = new HashSet<SchemePath>();
+		final SchemeMonitoringSolution currentSchemeMonitoringSolution = this.getCurrentSchemeMonitoringSolution();
+		if (currentSchemeMonitoringSolution != null) {
+			schemePaths.addAll(currentSchemeMonitoringSolution.getSchemePaths0());
+		}
+		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
+			for (final Scheme scheme : schemeElement.getSchemes0()) {
+				if (scheme.kind == CABLE_SUBNETWORK) {
+					schemePaths.addAll(scheme.getTopologicalSchemePathsRecursively());
 				}
 			}
 		}
 		return Collections.unmodifiableSet(schemePaths);
+	}
+
+	/**
+	 * @throws ApplicationException
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	public Set<SchemeElement> getTopLevelSchemeElementsRecursively()
+	throws ApplicationException {
+		final Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
+		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
+			final Set<Scheme> schemes = schemeElement.getSchemes0();
+			if (schemes.isEmpty()) {
+				schemeElements.add(schemeElement);
+			} else {
+				for (final Scheme scheme : schemes) {
+					schemeElements.addAll(scheme.getTopLevelSchemeElementsRecursively());
+				}
+			}
+		}
+		return Collections.unmodifiableSet(schemeElements);
+	}
+
+	/**
+	 * @throws ApplicationException
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	public Set<SchemeElement> getTopologicalSchemeElementsRecursively()
+	throws ApplicationException {
+		final Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
+		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
+			final Set<Scheme> schemes = schemeElement.getSchemes0();
+			if (schemes.isEmpty()) {
+				schemeElements.add(schemeElement);
+			} else {
+				for (final Scheme scheme: schemes) {
+					if (scheme.getKind() == CABLE_SUBNETWORK) {
+						schemeElements.addAll(scheme.getTopologicalSchemeElementsRecursively());
+					} else {
+						schemeElements.add(schemeElement);
+					}
+				}
+			}
+		}
+		return Collections.unmodifiableSet(schemeElements);
+	}
+
+	/**
+	 * @param schemeElement
+	 * @throws ApplicationException
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	public SchemeElement getTopologicalSchemeElement(final SchemeElement schemeElement)
+	throws ApplicationException {
+		if (schemeElement.getParentSchemeId().equals(this)) {
+			return schemeElement;
+		}
+		for (final SchemeElement schemeElement1 : this.getSchemeElements0()) {
+			for (final Scheme scheme : schemeElement1.getSchemes0()) {
+				if (schemeElement1.getChildSchemeElementsRecursively().contains(schemeElement)) {
+					return schemeElement1;
+				}
+				final SchemeElement schemeElement2 = scheme.getTopologicalSchemeElement(schemeElement);
+				if (schemeElement2 != null) {
+					return scheme.getKind() == CABLE_SUBNETWORK ? schemeElement2 : schemeElement;
+				}
+			}
+		}
+		return null;
+	}
+
+	/**
+	 * @param schemeLinkId
+	 * @throws ApplicationException
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	public boolean containsSchemeLink(final Identifier schemeLinkId)
+	throws ApplicationException {
+		if (this.getSchemeLinks0().contains(schemeLinkId)) {
+			return true;
+		}
+		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
+			for (final Scheme scheme : schemeElement.getSchemes0()) {
+				if (schemeElement.containsSchemeLink(schemeLinkId)
+						|| scheme.containsSchemeLink(schemeLinkId)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param schemeCableLinkId
+	 * @throws ApplicationException
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	public boolean containsSchemeCableLink(final Identifier schemeCableLinkId)
+	throws ApplicationException {
+		if (this.getSchemeCableLinks0().contains(schemeCableLinkId)) {
+			return true;
+		}
+		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
+			for (final Scheme scheme : schemeElement.getSchemes0()) {
+				if (scheme.containsSchemeCableLink(schemeCableLinkId)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param schemeElement
+	 * @throws ApplicationException
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	public boolean containsSchemeElement(final SchemeElement schemeElement)
+	throws ApplicationException {
+		if (schemeElement.getParentSchemeId().equals(this)) {
+			return true;
+		}
+		for (final SchemeElement schemeElement1 : this.getSchemeElements0()) {
+			for (final Scheme scheme : schemeElement1.getSchemes0()) {
+				if ((schemeElement1.containsSchemeElement(schemeElement))
+						|| scheme.containsSchemeElement(schemeElement)) {
+					return true;
+				}
+			}
+		}
+		return false;
 	}
 }

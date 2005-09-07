@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.90 2005/09/07 12:09:50 bass Exp $
+ * $Id: SchemeElement.java,v 1.91 2005/09/07 18:31:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind.SCHEME_CONTAINER;
+import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -70,18 +72,19 @@ import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElement;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementHelper;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeDevice;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeElement;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeLink;
 import com.syrus.util.Log;
+import com.syrus.util.Shitlet;
 
 /**
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2005/09/07 12:09:50 $
+ * @version $Revision: 1.91 $, $Date: 2005/09/07 18:31:40 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -89,7 +92,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		XmlBeansTransferable<XmlSchemeElement> {
 	private static final long serialVersionUID = 3618977875802797368L;
 
-	private SchemeElementKind kind;
+	private IdlSchemeElementKind kind;
 	
 	private Identifier equipmentId;
 
@@ -159,7 +162,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
-			final SchemeElementKind kind,
+			final IdlSchemeElementKind kind,
 			final String name,
 			final String description,
 			final String label,
@@ -291,7 +294,7 @@ public final class SchemeElement extends AbstractSchemeElement
 						creatorId,
 						creatorId,
 						StorableObjectVersion.createInitial(),
-						SchemeElementKind.SCHEMED,
+						SCHEME_CONTAINER,
 						name,
 						childScheme.getDescription(),
 						childScheme.getLabel(),
@@ -461,7 +464,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					creatorId,
 					creatorId,
 					StorableObjectVersion.createInitial(),
-					SchemeElementKind.EQUIPMENTED,
+					SCHEME_ELEMENT_CONTAINER,
 					name,
 					description,
 					label,
@@ -524,7 +527,7 @@ public final class SchemeElement extends AbstractSchemeElement
 					creatorId,
 					creatorId,
 					StorableObjectVersion.createInitial(),
-					SchemeElementKind.EQUIPMENTED,					
+					SCHEME_ELEMENT_CONTAINER,					
 					name,
 					description,
 					label,
@@ -738,7 +741,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	Identifier getEquipmentId() {
-		if(!isSchemed()) {
+		if (this.kind == SCHEME_ELEMENT_CONTAINER) {
 			assert true || this.assertEquipmentTypeSetStrict() : OBJECT_BADLY_INITIALIZED;
 			if (!this.assertEquipmentTypeSetStrict()) {
 				throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
@@ -748,10 +751,6 @@ public final class SchemeElement extends AbstractSchemeElement
 		return this.equipmentId;
 	}
 	
-	private boolean isSchemed() {
-		return this.kind == SchemeElementKind.SCHEMED ? true : false;
-	}
-
 	/**
 	 * A wrapper around {@link #getEquipmentId()}.
 	 */
@@ -765,7 +764,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	Identifier getEquipmentTypeId() {
-		if(!isSchemed()) {
+		if (this.kind == SCHEME_ELEMENT_CONTAINER) {
 			assert true || this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
 			if (!this.assertEquipmentTypeSetStrict()) {
 				throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
@@ -906,7 +905,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		}
 	}
 
-	private Set<SchemeDevice> getSchemeDevices0() throws ApplicationException {
+	Set<SchemeDevice> getSchemeDevices0() throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEDEVICE_CODE), true);
 	}
 
@@ -922,8 +921,10 @@ public final class SchemeElement extends AbstractSchemeElement
 		}
 	}
 
-	private Set<SchemeElement> getSchemeElements0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true);
+	Set<SchemeElement> getSchemeElements0() throws ApplicationException {
+		return this.kind == SCHEME_ELEMENT_CONTAINER
+				? StorableObjectPool.<SchemeElement>getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true)
+				: Collections.<SchemeElement>emptySet();
 	}
 
 	/**
@@ -938,7 +939,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		}
 	}
 
-	private Set<SchemeLink> getSchemeLinks0() throws ApplicationException {
+	Set<SchemeLink> getSchemeLinks0() throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true);
 	}
 
@@ -954,8 +955,10 @@ public final class SchemeElement extends AbstractSchemeElement
 		}
 	}
 
-	private Set<Scheme> getSchemes0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEME_CODE), true);
+	Set<Scheme> getSchemes0() throws ApplicationException {
+		return this.kind == SCHEME_CONTAINER
+				? StorableObjectPool.<Scheme>getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEME_CODE), true)
+				: Collections.<Scheme>emptySet();
 	}
 
 	Identifier getSiteNodeId() {
@@ -1009,10 +1012,10 @@ public final class SchemeElement extends AbstractSchemeElement
 				this.creatorId.getTransferable(),
 				this.modifierId.getTransferable(),
 				this.version.longValue(),
-				this.kind,
 				super.getName(),
 				super.getDescription(),
 				this.label,
+				this.kind,
 				this.getEquipmentTypeId().getTransferable(),
 				this.getEquipmentId().getTransferable(),
 				this.getKisId().getTransferable(),
@@ -1132,7 +1135,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version,
-			final SchemeElementKind kind,
+			final IdlSchemeElementKind kind,
 			final String name,
 			final String description,
 			final String label,
@@ -1153,7 +1156,9 @@ public final class SchemeElement extends AbstractSchemeElement
 
 		assert equipmentTypeId != null : NON_NULL_EXPECTED;
 		assert equipmentId != null : NON_NULL_EXPECTED;
-		assert (kind.equals(SchemeElementKind.EQUIPMENTED) ? equipmentTypeId.isVoid() ^ equipmentId.isVoid(): !(equipmentTypeId.isVoid() ^ equipmentId.isVoid())) : OBJECT_BADLY_INITIALIZED;
+		assert kind == SCHEME_ELEMENT_CONTAINER
+				? (equipmentTypeId.isVoid() ^ equipmentId.isVoid())
+				: (equipmentTypeId.isVoid() && equipmentId.isVoid()) : OBJECT_BADLY_INITIALIZED;
 		
 		assert kisId != null : NON_NULL_EXPECTED;
 		assert siteNodeId != null : NON_NULL_EXPECTED;
@@ -1501,7 +1506,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		this.label = schemeElement.isSetLabel()
 				? schemeElement.getLabel()
 				: "";
-		this.kind = SchemeElementKind.from_int(schemeElement.getKind().intValue() - 1);
+		this.kind = IdlSchemeElementKind.from_int(schemeElement.getKind().intValue() - 1);
 
 		final boolean setEquipmentTypeId = schemeElement.isSetEquipmentTypeId();
 		final boolean setEquipmentId = schemeElement.isSetEquipmentId();		
@@ -1577,6 +1582,11 @@ public final class SchemeElement extends AbstractSchemeElement
 		}
 
 		this.equipmentTypeSet = true;
+	}
+
+	public IdlSchemeElementKind getKind() {
+		assert this.kind != null : NON_NULL_EXPECTED;
+		return this.kind;
 	}
 
 	/*-********************************************************************
@@ -1681,6 +1691,24 @@ public final class SchemeElement extends AbstractSchemeElement
 		}
 	}
 
+	/**
+	 * @throws ApplicationException
+	 */
+	public Set<SchemePort> getSchemePortsRecursively()
+	throws ApplicationException {
+		final Set<SchemePort> schemePorts = new HashSet<SchemePort>();
+		for (final SchemeDevice schemeDevice : this.getSchemeDevices0()) {
+			schemePorts.addAll(schemeDevice.getSchemePorts0());
+		}
+		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
+			schemePorts.addAll(schemeElement.getSchemePortsRecursively());
+		}
+		return Collections.unmodifiableSet(schemePorts);
+	}
+
+	/**
+	 * @throws ApplicationException
+	 */
 	public Set<SchemeCablePort> getSchemeCablePortsRecursively()
 	throws ApplicationException {
 		final Set<SchemeCablePort> schemeCablePorts = new HashSet<SchemeCablePort>();
@@ -1693,16 +1721,29 @@ public final class SchemeElement extends AbstractSchemeElement
 		return Collections.unmodifiableSet(schemeCablePorts);
 	}
 
-	public Set<SchemePort> getSchemePortsRecursively()
+	/**
+	 * @throws ApplicationException
+	 */
+	public Set<SchemeLink> getSchemeLinksRecursively()
 	throws ApplicationException {
-		final Set<SchemePort> schemePorts = new HashSet<SchemePort>();
-		for (final SchemeDevice schemeDevice : this.getSchemeDevices0()) {
-			schemePorts.addAll(schemeDevice.getSchemePorts0());
+		final Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
+		schemeLinks.addAll(this.getSchemeLinks0());
+		for (final Scheme scheme : this.getSchemes0()) {
+			schemeLinks.addAll(scheme.getSchemeLinksRecursively());
 		}
-		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
-			schemePorts.addAll(schemeElement.getSchemePortsRecursively());
+		return Collections.unmodifiableSet(schemeLinks);
+	}
+
+	/**
+	 * @throws ApplicationException
+	 */
+	public Set<SchemeCableLink> getSchemeCableLinksRecursively()
+	throws ApplicationException {
+		final Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
+		for (final Scheme scheme : this.getSchemes0()) {
+			schemeCableLinks.addAll(scheme.getSchemeCableLinksRecursively());
 		}
-		return Collections.unmodifiableSet(schemePorts);
+		return Collections.unmodifiableSet(schemeCableLinks);
 	}
 
 	public SchemePath getAlarmedPath() {
@@ -1761,10 +1802,110 @@ public final class SchemeElement extends AbstractSchemeElement
 		super.markAsChanged();
 	}
 
-	public SchemeElementKind getKind() {
-		assert this.kind != null : NON_NULL_EXPECTED;
-		return this.kind;
+	/*-********************************************************************
+	 * Shitlets                                                           *
+	 **********************************************************************/
+
+	/**
+	 * @throws ApplicationException
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	Set<SchemeElement> getChildSchemeElementsRecursively()
+	throws ApplicationException {
+		final Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
+		final Set<Scheme> schemes = this.getSchemes0();
+		if (schemes.isEmpty()) {
+			for (final SchemeElement schemeElement : this.getSchemeElements0()) {
+				schemeElements.addAll(schemeElement.getChildSchemeElementsRecursively());
+				schemeElements.add(schemeElement);
+			}
+		} else {
+			for (final Scheme scheme : schemes) {
+				schemeElements.addAll(scheme.getTopLevelSchemeElementsRecursively());
+			}
+		}
+		return schemeElements;
 	}
 
-	
+	/**
+	 * @param schemeLinkId
+	 * @throws ApplicationException
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	public boolean containsSchemeLink(final Identifier schemeLinkId)
+	throws ApplicationException {
+		if (this.getSchemeLinks0().contains(schemeLinkId)) {
+			return true;
+		}
+		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
+			if (schemeElement.getSchemes0().isEmpty()
+					&& schemeElement.containsSchemeLink(schemeLinkId)) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param schemeElement
+	 * @throws ApplicationException
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	public boolean containsSchemeElement(final SchemeElement schemeElement)
+	throws ApplicationException {
+		if (schemeElement.getParentSchemeElementId().equals(this)) {
+			return true;
+		}
+		final Set<Scheme> schemes = this.getSchemes0();
+		if (schemes.isEmpty()) {
+			for (final SchemeElement schemeElement1 : this.getSchemeElements0()) {
+				final Set<Scheme> schemes1 = schemeElement1.getSchemes0();
+				if (schemes1.isEmpty()) {
+					if (schemeElement1.containsSchemeElement(schemeElement)) {
+						return true;
+					}
+				} else {
+					for (final Scheme scheme : schemes1) {
+						if (scheme.containsSchemeElement(schemeElement)) {
+							return true;
+						}
+					}
+				}
+			}
+		} else {
+			for (final Scheme scheme : schemes) {
+				if (scheme.containsSchemeElement(schemeElement)) {
+					return true;
+				}
+			}
+		}
+		return false;
+	}
+
+	/**
+	 * @param abstractSchemePort
+	 * @throws ApplicationException
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
+	public boolean containsAbstractSchemePort(final AbstractSchemePort abstractSchemePort)
+	throws ApplicationException {
+		if (this.getSchemeDevices0().contains(abstractSchemePort.getParentSchemeDeviceId())) {
+			return true;
+		}
+		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
+			if (schemeElement.getSchemes0().isEmpty()
+					&& schemeElement.containsAbstractSchemePort(abstractSchemePort)) {
+				return true;
+			}
+		}
+		return false;
+	}
 }
