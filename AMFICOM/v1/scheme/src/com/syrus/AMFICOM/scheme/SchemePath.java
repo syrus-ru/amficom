@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.79 2005/09/06 17:30:25 bass Exp $
+ * $Id: SchemePath.java,v 1.80 2005/09/07 18:38:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/09/06 17:30:25 $
+ * @version $Revision: 1.80 $, $Date: 2005/09/07 18:38:10 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -616,7 +616,10 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param physicalDistance
+	 * @deprecated
 	 */
+	@Shitlet
+	@Deprecated
 	public double getOpticalDistance(final double physicalDistance) {
 		double opticalDistance = .0;
 		double d = .0;
@@ -636,7 +639,10 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param pathElement
+	 * @deprecated
 	 */
+	@Shitlet
+	@Deprecated
 	public double[] getOpticalDistanceFromStart(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
@@ -657,7 +663,10 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param opticalDistance
+	 * @deprecated
 	 */
+	@Shitlet
+	@Deprecated
 	public PathElement getPathElementByOpticalDistance(final double opticalDistance) {
 		final SortedSet<PathElement> pathElements = getPathMembers();
 		if (pathElements.isEmpty()) {
@@ -676,7 +685,10 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param physicalDistance
+	 * @deprecated
 	 */
+	@Shitlet
+	@Deprecated
 	public PathElement getPathElementByPhysicalDistance(final double physicalDistance) {
 		final SortedSet<PathElement> pathElements = getPathMembers();
 		if (pathElements.isEmpty()) {
@@ -695,7 +707,10 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param opticalDistance
+	 * @deprecated
 	 */
+	@Shitlet
+	@Deprecated
 	public double getPhysicalDistance(final double opticalDistance) {
 		double physicalDistance = .0;
 		double d = .0;
@@ -714,7 +729,10 @@ public final class SchemePath extends StorableObject
 
 	/**
 	 * @param pathElement
+	 * @deprecated
 	 */
+	@Shitlet
+	@Deprecated
 	public double[] getPhysicalDistanceFromStart(final PathElement pathElement) {
 		assert assertContains(pathElement): CHILDREN_ALIEN;
 
@@ -804,7 +822,14 @@ public final class SchemePath extends StorableObject
 				&& (true || this.getPathMembers().headSet(pathElement).size() == pathElement.sequentialNumber);
 	}
 
+	/**
+	 * @param pathElements
+	 * @param startPathElement
+	 * @param endPathElement
+	 * @deprecated
+	 */
 	@Shitlet
+	@Deprecated
 	private double getOpticalLength(final SortedSet<PathElement> pathElements, final PathElement startPathElement, final PathElement endPathElement) {
 		double oldOpticalLength = 0;
 		for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
@@ -817,7 +842,15 @@ public final class SchemePath extends StorableObject
 		return oldOpticalLength;
 	}
 
+	/**
+	 * @param pathElements
+	 * @param startPathElement
+	 * @param endPathElement
+	 * @param coeff
+	 * @deprecated
+	 */
 	@Shitlet
+	@Deprecated
 	private void changeOpticalLength(final SortedSet<PathElement> pathElements, final PathElement startPathElement, final PathElement endPathElement, double coeff) {
 		if (Math.abs(coeff - 1) < .001) {
 			return;
