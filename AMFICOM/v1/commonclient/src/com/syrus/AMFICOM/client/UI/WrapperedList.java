@@ -1,10 +1,10 @@
-/*
- * $Id: WrapperedList.java,v 1.6 2005/09/07 02:37:31 arseniy Exp $
- *
- * Copyright © 2004-2005 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ
- */
+/*-
+* $Id: WrapperedList.java,v 1.7 2005/09/07 13:07:11 bob Exp $
+*
+* Copyright ї 2005 Syrus Systems.
+* Dept. of Science & Technology.
+* Project: AMFICOM.
+*/
 
 package com.syrus.AMFICOM.client.UI;
 
@@ -13,12 +13,15 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JList;
+import javax.swing.ListModel;
 
+import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/09/07 02:37:31 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/07 13:07:11 $
+ * @author $Author: bob $
+ * @author Vladimir Dolzhenko
  * @module commonclient
  */
 public class WrapperedList<T> extends JList {
@@ -28,10 +31,10 @@ public class WrapperedList<T> extends JList {
 	private WrapperedListModel<T>	model;
 
 	public WrapperedList(final WrapperedListModel<T> model) {
+		super(model);
 		final LabelCheckBoxRenderer renderer = new LabelCheckBoxRenderer(model.wrapper, model.key);
 		this.setCellRenderer(renderer);
 		this.model = model;
-		this.setModel(model);		
 	}
 
 	public WrapperedList(final Wrapper<T> controller, final List<T> objects, final String key, final String compareKey) {

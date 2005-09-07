@@ -1,10 +1,10 @@
-/*
- * $Id: WrapperedComboBox.java,v 1.4 2005/09/07 02:37:31 arseniy Exp $
- *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ
- */
+/*-
+* $Id: WrapperedComboBox.java,v 1.5 2005/09/07 13:07:11 bob Exp $
+*
+* Copyright ї 2005 Syrus Systems.
+* Dept. of Science & Technology.
+* Project: AMFICOM.
+*/
 
 package com.syrus.AMFICOM.client.UI;
 
@@ -15,8 +15,9 @@ import java.util.List;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/09/07 02:37:31 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/07 13:07:11 $
+ * @author $Author: bob $
+ * @author Vladimir Dolzhenko
  * @module commonclient
  */
 public class WrapperedComboBox<T> extends AComboBox {
@@ -26,9 +27,9 @@ public class WrapperedComboBox<T> extends AComboBox {
 	private WrapperedListModel<T> model;
 
 	public WrapperedComboBox(final WrapperedListModel<T> model) {
+		super(model);
 		this.setRenderer(new LabelCheckBoxRenderer(model.wrapper, model.key));
 		this.model = model;
-		this.setModel(model);
 	}
 
 	public WrapperedComboBox(final Wrapper<T> wrapper, final List<T> objects, final String key, final String compareKey) {
