@@ -458,22 +458,6 @@ public class TestParametersPanel implements PropertyChangeListener {
 		}
 	}
 
-	public void setAnalysisTypes(final Set<AnalysisType> analysisTypes) {
-		final boolean enable = this.analysisComboBox.isEditable();
-		this.analysisComboBox.setEditable(true);
-		WrapperedListModel<?> model = (WrapperedListModel) TestParametersPanel.this.analysisComboBox.getModel();
-		model.removeAllElements();
-		model.addElement(null);
-		for (Iterator it = analysisTypes.iterator(); it.hasNext();) {
-			AnalysisType analysisType = (AnalysisType) it.next();
-			model.addElement(analysisType);
-		}
-		if (!enable) {
-			this.analysisComboBox.setEditable(enable);
-		}
-	}
-
-
 	public void propertyChange(PropertyChangeEvent evt) {
 		this.propertyChangeEvent = evt;
 		// String commandName = ae.getActionCommand();
