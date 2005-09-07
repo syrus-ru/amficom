@@ -72,11 +72,11 @@ public final class SimpleMapElementController implements Wrapper
 				name = (String )(method.invoke(object, new Object[0]));
 				result = name;
 			} catch(InvocationTargetException iae) {
-				result = null;
+				result = " ";
 			} catch(IllegalAccessException iae) {
-				result = null;
+				result = " ";
 			} catch(NoSuchMethodException nsme) {
-				result = null;
+				result = " ";
 			}
 
 			if(result == null) {
@@ -112,7 +112,7 @@ public final class SimpleMapElementController implements Wrapper
 		else {
 			result = " ";
 		}
-		return result;
+		return result + " ";
 	}
 
 	public boolean isEditable(final String key) {
