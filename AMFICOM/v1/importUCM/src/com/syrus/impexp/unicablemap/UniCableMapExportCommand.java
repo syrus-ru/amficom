@@ -33,7 +33,7 @@ import com.syrus.impexp.unicablemap.map.Site;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.7 $, $Date: 2005/09/04 19:01:40 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/07 12:23:17 $
  * @module mapviewclient_v1
  */
 public class UniCableMapExportCommand extends ExportCommand 
@@ -215,7 +215,6 @@ public class UniCableMapExportCommand extends ExportCommand
 //			if(i++ > 1) 
 //				break;
 			Site cableInlet = Site.parseSite(this.ucmDatabase, ucmObject, proto);
-			sites.add(cableInlet);
 
 			Site building = cableInlet.getBuildingPlan();
 			if(building != null) {
@@ -226,6 +225,8 @@ public class UniCableMapExportCommand extends ExportCommand
 				building.setStreet(cableInlet.getStreet());
 				sites.add(building);
 	
+				cableInlet.setAttachmentSiteNodeId(building.getId());
+				
 				Link link = new Link();
 				link.setBuilding(cableInlet.getBuilding());
 				link.setCity(cableInlet.getCity());
@@ -241,6 +242,9 @@ public class UniCableMapExportCommand extends ExportCommand
 				NodeLink nodeLink = NodeLink.createNodeLink(link);
 				nodeLinks.add(nodeLink);
 			}
+			// sates shold be written to xml after attachment building
+			// for correct export
+			sites.add(cableInlet);
 		}
 	}
 

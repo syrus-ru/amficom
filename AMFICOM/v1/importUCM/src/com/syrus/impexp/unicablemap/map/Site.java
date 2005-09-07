@@ -1,5 +1,5 @@
 /**
- * $Id: Site.java,v 1.3 2005/09/02 09:08:50 krupenn Exp $
+ * $Id: Site.java,v 1.4 2005/09/07 12:23:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,6 +33,7 @@ public class Site {
 	private double x;
 	private double y;
 	private Site buildingPlan = null;
+	private String attachmentSiteNodeId = null;
 
 	public void setStreet(String street) {
 		this.street = street;
@@ -110,6 +111,18 @@ public class Site {
 		return this.y;
 	}
 
+	public void setAttachmentSiteNodeId(String attachmentSiteNodeId) {
+		this.attachmentSiteNodeId = attachmentSiteNodeId;
+	}
+
+	private void setBuildingPlan(Site buildingPlan) {
+		this.buildingPlan = buildingPlan;
+	}
+
+	public Site getBuildingPlan() {
+		return this.buildingPlan;
+	}
+
 	public XmlSiteNode getXmlSiteNode() {
 		XmlSiteNode xmlSiteNode = XmlSiteNode.Factory.newInstance();
 
@@ -123,6 +136,11 @@ public class Site {
 		xmlSiteNode.setCity(this.city);
 		xmlSiteNode.setStreet(this.street);
 		xmlSiteNode.setBuilding(this.building);
+		
+		if(this.attachmentSiteNodeId != null) {
+			xmlId = xmlSiteNode.addNewAttachmentSiteNodeId();
+			xmlId.setStringValue(this.attachmentSiteNodeId);
+		}
 
 		if(this.name == null) {
 			xmlSiteNode.setName(this.description);
@@ -180,10 +198,6 @@ public class Site {
 		return site;
 	}
 
-	private void setBuildingPlan(Site buildingPlan) {
-		this.buildingPlan = buildingPlan;
-	}
-
 	static double xy[] = new double[2];
 	static double longlat[] = new double[2];
 
@@ -209,10 +223,6 @@ public class Site {
 		projection.inverse(xy, 0, longlat, 0, 1);
 
 		return longlat;
-	}
-
-	public Site getBuildingPlan() {
-		return this.buildingPlan;
 	}
 
 }
