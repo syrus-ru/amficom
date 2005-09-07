@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.170 2005/09/07 14:08:35 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.171 2005/09/07 16:37:42 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.170 $, $Date: 2005/09/07 14:08:35 $
+ * @version $Revision: 1.171 $, $Date: 2005/09/07 16:37:42 $
  * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
@@ -955,38 +955,43 @@ public final class StorableObjectPool {
 	 */
 	public static void refresh() throws ApplicationException {
 		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
-		for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
-			entityCodeIterator.advance();
-			final short entityCode = entityCodeIterator.key();
-			final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
+		synchronized (objectPoolMap) {
+			for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
+				entityCodeIterator.advance();
+				final short entityCode = entityCodeIterator.key();
+				final LRUMap<Identifier, StorableObject> objectPool = getLRUMap(entityCode);
 
-			final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
+				final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
 
-			storableObjects.clear();
-			for (final StorableObject storableObject : objectPool) {
-				if (!storableObject.isChanged() && (entityDeletedIds == null || !entityDeletedIds.contains(storableObject.getId()))) {
-					storableObjects.add(storableObject);
+				storableObjects.clear();
+				for (final StorableObject storableObject : objectPool) {
+					if (!storableObject.isChanged() && (entityDeletedIds == null || !entityDeletedIds.contains(storableObject.getId()))) {
+						storableObjects.add(storableObject);
+					}
 				}
-			}
-			if (storableObjects.isEmpty()) {
-				Log.debugMessage("StorableObjectPool.refresh | LRUMap for '" + ObjectEntities.codeToString(entityCode)
-						+ "' entity has no elements to refresh", Log.DEBUGLEVEL08);
-				continue;
-			}
+				if (storableObjects.isEmpty()) {
+					Log.debugMessage("StorableObjectPool.refresh | LRUMap for '"
+							+ ObjectEntities.codeToString(entityCode)
+							+ "' entity has no elements to refresh", Log.DEBUGLEVEL08);
+					continue;
+				}
 
-			Log.debugMessage("StorableObjectPool.refresh | Refreshing pool for entity: '"
-					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode, Log.DEBUGLEVEL08);
+				Log.debugMessage("StorableObjectPool.refresh | Refreshing pool for entity: '"
+						+ ObjectEntities.codeToString(entityCode)
+						+ "'/"
+						+ entityCode, Log.DEBUGLEVEL08);
 
-			final Set<Identifier> returnedStorableObjectsIds = objectLoader.getOldVersionIds(StorableObject.createVersionsMap(storableObjects));
-			if (returnedStorableObjectsIds.isEmpty()) {
-				continue;
-			}
+				final Set<Identifier> returnedStorableObjectsIds = objectLoader.getOldVersionIds(StorableObject.createVersionsMap(storableObjects));
+				if (returnedStorableObjectsIds.isEmpty()) {
+					continue;
+				}
 
-			final Set<StorableObject> loadedObjects = objectLoader.loadStorableObjects(returnedStorableObjectsIds);
-			for (final StorableObject storableObject : loadedObjects) {
-				objectPool.put(storableObject.getId(), storableObject);
-				Log.debugMessage("StorableObjectPool.refresh | " + storableObject.getId() + ", " + storableObject.getVersion(),
-					Log.DEBUGLEVEL08);
+				final Set<StorableObject> loadedObjects = objectLoader.loadStorableObjects(returnedStorableObjectsIds);
+				for (final StorableObject storableObject : loadedObjects) {
+					objectPool.put(storableObject.getId(), storableObject);
+					Log.debugMessage("StorableObjectPool.refresh | " + storableObject.getId() + ", " + storableObject.getVersion(),
+							Log.DEBUGLEVEL08);
+				}
 			}
 		}
 	}
@@ -995,26 +1000,37 @@ public final class StorableObjectPool {
 	/*	Serialization */
 
 	public static void deserialize(final LRUSaver<Identifier, StorableObject> saver) {
-		for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
-			entityCodeIterator.advance();
-			final short entityCode = entityCodeIterator.key();
-			final Set<StorableObject> storableObjects = saver.load(ObjectEntities.codeToString(entityCode));
-			try {
-				putAllStorableObject(storableObjects);
-			} catch (IllegalObjectEntityException e) {
-				Log.errorMessage("StorableObjectPool.deserialize | Cannot get entity '"
-					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
-				Log.errorException(e);
+		synchronized (objectPoolMap) {
+			for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
+				entityCodeIterator.advance();
+				final short entityCode = entityCodeIterator.key();
+				final Set<StorableObject> storableObjects = saver.load(ObjectEntities.codeToString(entityCode));
+				try {
+					putAllStorableObject(storableObjects);
+				} catch (IllegalObjectEntityException e) {
+					Log.errorMessage("StorableObjectPool.deserialize | Cannot get entity '"
+							+ ObjectEntities.codeToString(entityCode)
+							+ "'/"
+							+ entityCode);
+					Log.errorException(e);
+				}
+				try {
+					refresh(Identifier.createIdentifiers(storableObjects));
+				} catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
 			}
 		}
 	}
 
 	public static void serialize(final LRUSaver<Identifier, StorableObject> saver) {
-		for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
-			entityCodeIterator.advance();
-			final short entityCode = entityCodeIterator.key();
-			final LRUMap<Identifier, StorableObject> map = getLRUMap(entityCode);
-			saver.save(map, ObjectEntities.codeToString(entityCode), true);
+		synchronized (objectPoolMap) {
+			for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
+				entityCodeIterator.advance();
+				final short entityCode = entityCodeIterator.key();
+				final LRUMap<Identifier, StorableObject> map = getLRUMap(entityCode);
+				saver.save(map, ObjectEntities.codeToString(entityCode), true);
+			}
 		}
 	}
 
