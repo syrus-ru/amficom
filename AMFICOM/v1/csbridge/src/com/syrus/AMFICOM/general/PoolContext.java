@@ -1,5 +1,5 @@
 /*-
- * $Id: PoolContext.java,v 1.6 2005/08/08 11:38:11 arseniy Exp $
+ * $Id: PoolContext.java,v 1.7 2005/09/07 13:02:52 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,20 +8,16 @@
 
 package com.syrus.AMFICOM.general;
 
+import com.syrus.io.LRUSaver;
+
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/08 11:38:11 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/09/07 13:02:52 $
+ * @author $Author: bob $
  * @module csbridge
  */
-public abstract class PoolContext {
+public interface PoolContext {
 
-	public abstract void init();
+	void init();
 
-	public final void deserialize() {
-		StorableObjectPool.deserialize();
-	}
-
-	public final void serialize() {
-		StorableObjectPool.serialize();
-	}
+	LRUSaver<Identifier, StorableObject> getLRUSaver();
 }
