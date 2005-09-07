@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMapSaver.java,v 1.1 2005/09/07 13:02:05 bob Exp $
+ * $Id: LRUMapSaver.java,v 1.2 2005/09/07 13:12:48 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,24 +18,24 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/09/07 13:02:05 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/07 13:12:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general
  */
 public class LRUMapSaver<V extends StorableObject> extends AbstractLRUMapSaver<V> {
 
-	private static LRUMapSaver instance;
+	private static LRUMapSaver<StorableObject> instance;
 	
 	private LRUMapSaver() {
 		super("LRUMap.serialized");
 	}
 	
-	public static final LRUMapSaver getInstance() {
+	public static final LRUMapSaver<StorableObject> getInstance() {
 		if (instance == null) {
 			synchronized (LRUMapSaver.class) {
 				if (instance == null) {
-					instance = new LRUMapSaver();
+					instance = new LRUMapSaver<StorableObject>();
 				}
 			}
 		}

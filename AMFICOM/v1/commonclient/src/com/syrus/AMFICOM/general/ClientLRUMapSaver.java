@@ -1,5 +1,5 @@
 /*-
-* $Id: ClientLRUMapSaver.java,v 1.1 2005/09/07 13:04:25 bob Exp $
+* $Id: ClientLRUMapSaver.java,v 1.2 2005/09/07 13:12:58 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,24 +19,24 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/09/07 13:04:25 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/07 13:12:58 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general
  */
 final class ClientLRUMapSaver<V extends StorableObject> extends AbstractLRUMapSaver<V> {
 
-	private static ClientLRUMapSaver instance;
+	private static ClientLRUMapSaver<StorableObject> instance;
 
 	private ClientLRUMapSaver() {
 		super("SOLRUMap.serialized");
 	}
 	
-	public static final ClientLRUMapSaver getInstance() {
+	public static final ClientLRUMapSaver<StorableObject> getInstance() {
 		if (instance == null) {
 			synchronized (ClientLRUMapSaver.class) {
 				if (instance == null) {
-					instance = new ClientLRUMapSaver();
+					instance = new ClientLRUMapSaver<StorableObject>();
 				}
 			}
 		}
