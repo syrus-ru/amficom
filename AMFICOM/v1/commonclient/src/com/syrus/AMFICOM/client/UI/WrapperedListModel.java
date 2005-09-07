@@ -17,38 +17,38 @@ import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/11 18:51:08 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/07 02:37:31 $
  * @author $Author: arseniy $
  * @module commonclient
  */
-public class WrapperedListModel extends AbstractListModel implements MutableComboBoxModel, Serializable {
+public class WrapperedListModel<T> extends AbstractListModel implements MutableComboBoxModel, Serializable {
 
-	private static final long	serialVersionUID	= -1607982236171940302L;
+	private static final long serialVersionUID = -1607982236171940302L;
 
-	protected Object			selectedObject;
+	protected T selectedObject;
 
-	protected List				objects;
+	protected List<T> objects;
 
 	/**
 	 * Wrapper of Model (ObjectResource) will be used for sorting. see
 	 * {@link Wrapper}
 	 */
-	protected Wrapper			wrapper;
+	protected Wrapper<T> wrapper;
 
-	protected String			key;
-	
-	protected String			compareKey;
+	protected String key;
+
+	protected String compareKey;
 	
 	/**
 	 * @param wrapper
-	 *            see {@link #wrapper}
+	 *        see {@link #wrapper}
 	 */
-	public WrapperedListModel(Wrapper wrapper, String key, String compareKey) {
-		this(wrapper, new LinkedList(), key, compareKey);
+	public WrapperedListModel(final Wrapper<T> wrapper, final String key, final String compareKey) {
+		this(wrapper, new LinkedList<T>(), key, compareKey);
 
 	}
 	
-	public WrapperedListModel(Wrapper wrapper, List objects, String key, String compareKey) {
+	public WrapperedListModel(Wrapper<T> wrapper, List<T> objects, String key, String compareKey) {
 		this.wrapper = wrapper;
 		this.key = key;
 		this.objects = objects;
@@ -63,11 +63,10 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 	 * @param anObject
 	 *            The combo box value or null for no selection.
 	 */
-	public void setSelectedItem(Object anObject) {
-		if ((this.selectedObject != null && !this.selectedObject.equals(anObject)) || this.selectedObject == null
-				&& anObject != null) {
-			this.selectedObject = anObject;
-			fireContentsChanged(this, -1, -1);
+	public void setSelectedItem(final Object anObject) {
+		if ((this.selectedObject != null && !this.selectedObject.equals(anObject)) || this.selectedObject == null && anObject != null) {
+			this.selectedObject = (T) anObject;
+			super.fireContentsChanged(this, -1, -1);
 		}
 	}
 
@@ -82,7 +81,7 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 	}
 
 	// implements javax.swing.ListModel
-	public Object getElementAt(int index) {
+	public Object getElementAt(final int index) {
 		Object obj = null;
 		if (index >= 0 && index < this.objects.size()) {
 			obj = this.objects.get(index);
@@ -90,15 +89,15 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 		return obj;
 	}
 
-	public Object getFieldByObject(Object object) {
+	public Object getFieldByObject(final T object) {
 
 		Object obj = this.wrapper.getValue(object, this.key);
 
 		if (this.wrapper.getPropertyValue(this.key) instanceof Map) {
-			Map map = (Map) this.wrapper.getPropertyValue(this.key);
+			final Map map = (Map) this.wrapper.getPropertyValue(this.key);
 			Object keyObject = null;
-			for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-				Object keyObj = it.next();
+			for (final Iterator it = map.keySet().iterator(); it.hasNext();) {
+				final Object keyObj = it.next();
 				if (map.get(keyObj).equals(obj)) {
 					keyObject = keyObj;
 					break;
@@ -117,9 +116,8 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 		
 		Object object = null;
 		if (field != null) {
-			for (Iterator it = this.objects.iterator(); it.hasNext();) {
-				Object element = it.next();
-				if (field.equals(getFieldByObject(element))) {
+			for (final T element : this.objects) {
+				if (field.equals(this.getFieldByObject(element))) {
 					object = element;
 					break;
 				}
@@ -135,15 +133,14 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 	 * @return an int representing the index position, where 0 is the first
 	 *         position
 	 */
-	public int getIndexOf(Object anObject) {
+	public int getIndexOf(final T anObject) {
 		int index = -1;
 		if (this.objects != null) {
-			for (int i = 0; i < this.objects.size(); i++) {
-				Object element = this.objects.get(i);
-				Object anObjectValue = this.wrapper.getValue(anObject, this.compareKey);
-				Object elementValue = this.wrapper.getValue(element, this.compareKey);
+			for (final T element : this.objects) {
+				final Object anObjectValue = this.wrapper.getValue(anObject, this.compareKey);
+				final Object elementValue = this.wrapper.getValue(element, this.compareKey);
 				if (anObjectValue.equals(elementValue)) {
-					index = i;
+					index = this.objects.indexOf(element);
 					break;
 				}
 			}
@@ -152,8 +149,8 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 	}
 
 	// implements javax.swing.MutableComboBoxModel
-	public void addElement(Object anObject) {
-		this.objects.add(anObject);
+	public void addElement(final Object anObject) {
+		this.objects.add((T) anObject);
 		this.sort();
 		super.fireIntervalAdded(this, this.objects.size() - 1, this.objects.size() - 1);
 		if (this.objects.size() == 1 && this.selectedObject == null && anObject != null) {
@@ -161,23 +158,22 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 		}
 	}
 
-	public void addElements(final Collection objects) {
-		
-		assert objects != null : ErrorMessages.NON_NULL_EXPECTED;
-		
-		if (objects.size() == 0)
+	public void addElements(final Collection<T> addingObjects) {
+
+		assert addingObjects != null : ErrorMessages.NON_NULL_EXPECTED;
+
+		if (addingObjects.size() == 0) {
 			return;
-		this.objects.addAll(objects);
-		fireIntervalAdded(this, this.objects.size() - objects.size(), this.objects.size() - 1);
+		}
+		this.objects.addAll(addingObjects);
+		super.fireIntervalAdded(this, this.objects.size() - addingObjects.size(), this.objects.size() - 1);
 	}
-	
-	public final void setElements(final Collection objects) {
+
+	public final void setElements(final Collection<T> objects) {
 		this.objects.clear();
 		if (objects != null) {
 			this.objects.addAll(objects);
-			
 			this.sort();
-			
 			int size = this.objects.size();
 			super.fireContentsChanged(this, 0, size > 0 ? size - 1 : 0);
 		}
@@ -185,39 +181,38 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 
 	public void sort() {
 		if (this.objects != null) {
-			Collections.sort(this.objects, new WrapperComparator(this.wrapper, this.key, true));
-			super.fireContentsChanged(this, 0, objects.size());
+			Collections.sort(this.objects, new WrapperComparator<T>(this.wrapper, this.key, true));
+			super.fireContentsChanged(this, 0, this.objects.size());
 		}
-		
+
 	}
 
 	// implements javax.swing.MutableComboBoxModel
-	public void insertElementAt(final Object anObject,
-								int index) {
-		this.objects.add(index, anObject);
+	public void insertElementAt(final Object anObject, final int index) {
+		this.objects.add(index, (T) anObject);
 		super.fireIntervalAdded(this, index, index);
 	}
 
 	// implements javax.swing.MutableComboBoxModel
-	public void removeElementAt(int index) {
-		if (getElementAt(index) == this.selectedObject) {
+	public void removeElementAt(final int index) {
+		if (this.getElementAt(index) == this.selectedObject) {
 			if (index == 0) {
-				setSelectedItem(getSize() == 1 ? null : getElementAt(index + 1));
+				this.setSelectedItem(getSize() == 1 ? null : this.getElementAt(index + 1));
 			} else {
-				setSelectedItem(getElementAt(index - 1));
+				this.setSelectedItem(this.getElementAt(index - 1));
 			}
 		}
 
 		this.objects.remove(index);
 
-		fireIntervalRemoved(this, index, index);
+		super.fireIntervalRemoved(this, index, index);
 	}
 
 	// implements javax.swing.MutableComboBoxModel
 	public void removeElement(final Object anObject) {
 		int index = this.objects.indexOf(anObject);
 		if (index != -1) {
-			removeElementAt(index);
+			this.removeElementAt(index);
 		}
 	}
 
@@ -226,11 +221,11 @@ public class WrapperedListModel extends AbstractListModel implements MutableComb
 	 */
 	public void removeAllElements() {
 		if (this.objects != null && this.objects.size() > 0) {
-			int firstIndex = 0;
-			int lastIndex = this.objects.size() - 1;
+			final int firstIndex = 0;
+			final int lastIndex = this.objects.size() - 1;
 			this.objects.clear();
 			this.selectedObject = null;
-			fireIntervalRemoved(this, firstIndex, lastIndex);
+			super.fireIntervalRemoved(this, firstIndex, lastIndex);
 		} else {
 			this.selectedObject = null;
 		}

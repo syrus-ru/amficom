@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainToolBar.java,v 1.11 2005/08/15 08:56:10 bob Exp $
+ * $Id: AbstractMainToolBar.java,v 1.12 2005/09/07 02:37:31 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,36 +24,37 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/15 08:56:10 $
- * @author $Author: bob $
+ * @version $Revision: 1.12 $, $Date: 2005/09/07 02:37:31 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
 public abstract class AbstractMainToolBar extends JToolBar {
 
-	protected ApplicationModel	applicationModel;
+	protected ApplicationModel applicationModel;
 
-	protected ActionListener	actionListener;
+	protected ActionListener actionListener;
 
-	protected List				applicationModelListeners;
+	protected List<ApplicationModelListener> applicationModelListeners;
 
-	protected JButton			openSessionButton;
-	protected JButton			closeSessionButton;
-	protected JButton			sessionDomainButton;
+	protected JButton openSessionButton;
+	protected JButton closeSessionButton;
+	protected JButton sessionDomainButton;
 
 	public AbstractMainToolBar() {		
 		this.actionListener = new ActionListener() {
 
 			private boolean	executed	= false;
 
-			public void actionPerformed(ActionEvent e) {
-				ApplicationModel model = AbstractMainToolBar.this.getApplicationModel();
-				if (this.executed || model == null)
+			public void actionPerformed(final ActionEvent e) {
+				final ApplicationModel model = AbstractMainToolBar.this.getApplicationModel();
+				if (this.executed || model == null) {
 					return;
+				}
 				this.executed = true;
-				AbstractButton jb = (AbstractButton) e.getSource();
-				String s = jb.getName();
-				Command command = model.getCommand(s);
+				final AbstractButton jb = (AbstractButton) e.getSource();
+				final String s = jb.getName();
+				final Command command = model.getCommand(s);
 				Log.debugMessage("AbstractMainToolBar$ActionListener.actionPerformed | command " + (command != null ? '[' + command.getClass().getName() + ']' : "'null'"), Level.FINEST);
 				try {
 					command.execute();
@@ -64,29 +65,27 @@ public abstract class AbstractMainToolBar extends JToolBar {
 				}
 			}
 		};
-		
+
 		this.openSessionButton = new JButton();
 		this.openSessionButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_OPEN_SESSION));
 		this.openSessionButton.setToolTipText(LangModelGeneral.getString("Menu.Session.NewSession"));
 		this.openSessionButton.setName(ApplicationModel.MENU_SESSION_NEW);
 		this.openSessionButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));		
 		this.openSessionButton.addActionListener(this.actionListener);
-		
+
 		this.closeSessionButton = new JButton();
 		this.closeSessionButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_CLOSE_SESSION));
 		this.closeSessionButton.setToolTipText(LangModelGeneral.getString("Menu.Session.CloseSession"));
 		this.closeSessionButton.setName(ApplicationModel.MENU_SESSION_CLOSE);
 		this.closeSessionButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.closeSessionButton.addActionListener(this.actionListener);
-		
-		
+
 		this.sessionDomainButton = new JButton();
 		this.sessionDomainButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_DOMAIN_SELECTION));
 		this.sessionDomainButton.setToolTipText(LangModelGeneral.getString("Menu.Session.SelectDomain"));
 		this.sessionDomainButton.setName(ApplicationModel.MENU_SESSION_DOMAIN);
 		this.sessionDomainButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.sessionDomainButton.addActionListener(this.actionListener);
-
 
 		this.add(this.openSessionButton);
 		this.add(this.closeSessionButton);
@@ -95,31 +94,25 @@ public abstract class AbstractMainToolBar extends JToolBar {
 
 		this.addApplicationModelListener(new ApplicationModelListener() {
 
-			public void modelChanged(String e[]) {
+			public void modelChanged(final String e[]) {
 				this.modelChanged("");
 			}
 
-			public void modelChanged(String elementName) {
-				AbstractMainToolBar.this.openSessionButton.setVisible(AbstractMainToolBar.this.getApplicationModel()
-						.isVisible(ApplicationModel.MENU_SESSION_NEW));
-				AbstractMainToolBar.this.openSessionButton.setEnabled(AbstractMainToolBar.this.getApplicationModel()
-						.isEnabled(ApplicationModel.MENU_SESSION_NEW));
+			public void modelChanged(final String elementName) {
+				AbstractMainToolBar.this.openSessionButton.setVisible(AbstractMainToolBar.this.getApplicationModel().isVisible(ApplicationModel.MENU_SESSION_NEW));
+				AbstractMainToolBar.this.openSessionButton.setEnabled(AbstractMainToolBar.this.getApplicationModel().isEnabled(ApplicationModel.MENU_SESSION_NEW));
 
-				AbstractMainToolBar.this.closeSessionButton.setVisible(AbstractMainToolBar.this.getApplicationModel()
-						.isVisible(ApplicationModel.MENU_SESSION_CLOSE));
-				AbstractMainToolBar.this.closeSessionButton.setEnabled(AbstractMainToolBar.this.getApplicationModel()
-						.isEnabled(ApplicationModel.MENU_SESSION_CLOSE));
-				AbstractMainToolBar.this.sessionDomainButton.setVisible(AbstractMainToolBar.this.getApplicationModel()
-						.isVisible(ApplicationModel.MENU_SESSION_DOMAIN));
-				AbstractMainToolBar.this.sessionDomainButton.setEnabled(AbstractMainToolBar.this.getApplicationModel()
-						.isEnabled(ApplicationModel.MENU_SESSION_DOMAIN));
+				AbstractMainToolBar.this.closeSessionButton.setVisible(AbstractMainToolBar.this.getApplicationModel().isVisible(ApplicationModel.MENU_SESSION_CLOSE));
+				AbstractMainToolBar.this.closeSessionButton.setEnabled(AbstractMainToolBar.this.getApplicationModel().isEnabled(ApplicationModel.MENU_SESSION_CLOSE));
+				AbstractMainToolBar.this.sessionDomainButton.setVisible(AbstractMainToolBar.this.getApplicationModel().isVisible(ApplicationModel.MENU_SESSION_DOMAIN));
+				AbstractMainToolBar.this.sessionDomainButton.setEnabled(AbstractMainToolBar.this.getApplicationModel().isEnabled(ApplicationModel.MENU_SESSION_DOMAIN));
 
 			}
 		});
 
 	}
 
-	public void setApplicationModel(ApplicationModel applicationModel) {
+	public void setApplicationModel(final ApplicationModel applicationModel) {
 		this.applicationModel = applicationModel;
 	}
 
@@ -127,9 +120,9 @@ public abstract class AbstractMainToolBar extends JToolBar {
 		return this.applicationModel;
 	}
 
-	protected void addApplicationModelListener(ApplicationModelListener listener) {
+	protected void addApplicationModelListener(final ApplicationModelListener listener) {
 		if (this.applicationModelListeners == null) {
-			this.applicationModelListeners = new LinkedList();
+			this.applicationModelListeners = new LinkedList<ApplicationModelListener>();
 		}
 
 		if (!this.applicationModelListeners.contains(listener)) {
@@ -137,7 +130,7 @@ public abstract class AbstractMainToolBar extends JToolBar {
 		}
 	}
 
-	protected void removeApplicationModelListener(ApplicationModelListener listener) {
+	protected void removeApplicationModelListener(final ApplicationModelListener listener) {
 		if (this.applicationModelListeners != null) {
 			this.applicationModelListeners.remove(listener);
 		}

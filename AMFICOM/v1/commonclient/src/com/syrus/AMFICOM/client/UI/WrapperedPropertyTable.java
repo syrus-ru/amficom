@@ -22,11 +22,11 @@ import javax.swing.table.TableColumn;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/30 15:00:33 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/09/07 02:37:31 $
+ * @author $Author: arseniy $
  * @module commonclient
  */
-public class WrapperedPropertyTable extends ATable {
+public class WrapperedPropertyTable<T> extends ATable {
 
 	private TableCellEditor		defaultTextFieldEditor;
 	protected TableCellEditor[][]	cellEditors;
@@ -34,17 +34,22 @@ public class WrapperedPropertyTable extends ATable {
 	
 	private static final long	serialVersionUID	= -437251205606073016L;
 
-	public WrapperedPropertyTable(final Wrapper controller, final Object object, final String[] keys) {
-		this(new WrapperedPropertyTableModel(controller, object, keys));
+	public WrapperedPropertyTable(final Wrapper<T> controller, final T object, final String[] keys) {
+		this(new WrapperedPropertyTableModel<T>(controller, object, keys));
 	}
 
 	public WrapperedPropertyTable(final WrapperedPropertyTableModel dm) {
 		super(dm);
-		initialization();
+		this.initialization();
+	}
+
+	@Override
+	public WrapperedPropertyTableModel<T> getModel() {
+		return (WrapperedPropertyTableModel<T>) super.getModel();
 	}
 
 	public void setDefaultTableCellRenderer() {
-		WrapperedPropertyTableModel model = (WrapperedPropertyTableModel) getModel();
+		final WrapperedPropertyTableModel<T> model = this.getModel();
 
 		TableColumn col = this.getColumnModel().getColumn(0);
 		TableCellRenderer renderer = StubLabelCellRenderer.getInstance();
@@ -64,38 +69,38 @@ public class WrapperedPropertyTable extends ATable {
 	 * @param key
 	 *                see {@link com.syrus.util.Wrapper#getKeys()}
 	 */
-	public void setRenderer(TableCellRenderer renderer, String key) {
-		WrapperedPropertyTableModel model = (WrapperedPropertyTableModel) getModel();
+	public void setRenderer(final TableCellRenderer renderer, final String key) {
+		final WrapperedPropertyTableModel<T> model = this.getModel();
 		for (int mRowIndex = 0; mRowIndex < model.getRowCount(); mRowIndex++) {
 			if (model.keys[mRowIndex].equals(key)) {
-				TableColumn col = this.getColumnModel().getColumn(mRowIndex);
+				final TableColumn col = this.getColumnModel().getColumn(mRowIndex);
 				col.setCellRenderer(renderer);
 			}
 		}
 	}
 
 	public void updateModel() {
-		WrapperedPropertyTableModel model = (WrapperedPropertyTableModel) getModel();
+		final WrapperedPropertyTableModel<T> model = this.getModel();
 		for (int mRowIndex = 1; mRowIndex < model.getRowCount(); mRowIndex++) {
-			Object obj = model.wrapper.getPropertyValue(model.keys[mRowIndex]);
+			final Object obj = model.wrapper.getPropertyValue(model.keys[mRowIndex]);
 			if (obj instanceof Map) {
 				final Map map = (Map) obj;
-				AComboBox comboBox = new AComboBox();
+				final AComboBox comboBox = new AComboBox();
 				List keys = new ArrayList(map.keySet());
 				Collections.sort(keys);
 				comboBox.setRenderer(LabelCheckBoxRenderer.getInstance());
-				for (Iterator it = keys.iterator(); it.hasNext();) {
+				for (final Iterator it = keys.iterator(); it.hasNext();) {
 					comboBox.addItem(it.next());
 				}
 				keys.clear();
 				keys = null;
-				TableColumn sportColumn = getColumnModel().getColumn(1);
+				final TableColumn sportColumn = getColumnModel().getColumn(1);
 				sportColumn.setCellEditor(new DefaultCellEditor(comboBox));
 
 				comboBox.addActionListener(new ActionListener() {
 
-					public void actionPerformed(ActionEvent e) {
-						AComboBox cb = (AComboBox) e.getSource();
+					public void actionPerformed(final ActionEvent e) {
+						final AComboBox cb = (AComboBox) e.getSource();
 						if (cb.getItemCount() != map.keySet().size()) {
 							cb.removeAllItems();
 							List keys1 = new ArrayList(map.keySet());
@@ -114,7 +119,7 @@ public class WrapperedPropertyTable extends ATable {
 				
 				this.cellEditors[mRowIndex][1] = new DefaultCellEditor(comboBox);
 			} else {
-				Class clazz = model.wrapper.getPropertyClass(model.keys[mRowIndex]);
+				final Class clazz = model.wrapper.getPropertyClass(model.keys[mRowIndex]);
 				if (clazz.equals(Boolean.class)) {
 					JCheckBox checkBox = new JCheckBox();
 					this.cellEditors[mRowIndex][1] = new DefaultCellEditor(checkBox);
@@ -125,7 +130,7 @@ public class WrapperedPropertyTable extends ATable {
 
 	private void initialization() {
 		this.cellEditors = new TableCellEditor[this.getModel().getRowCount()][this.getModel().getColumnCount()];
-		updateModel();
+		this.updateModel();
 		this.setColumnSelectionAllowed(false);
 		this.setRowSelectionAllowed(true);		
 	}
@@ -134,7 +139,7 @@ public class WrapperedPropertyTable extends ATable {
 		if (this.editingStopFocusListener == null) {
 			this.editingStopFocusListener = new FocusAdapter() {
 				@Override
-				public void focusLost(FocusEvent e) {
+				public void focusLost(final FocusEvent e) {
 					WrapperedPropertyTable.this.editingStopped(null);
 				}
 			};
@@ -143,11 +148,11 @@ public class WrapperedPropertyTable extends ATable {
 	}
 	
 	@Override
-	public TableCellEditor getCellEditor(int row, int column) {
+	public TableCellEditor getCellEditor(final int row, final int column) {
 		TableCellEditor tableCellEditor = this.cellEditors[row][column];
 		if (tableCellEditor == null) {
 			if (this.defaultTextFieldEditor == null) {
-				JTextField textField = new JTextField();
+				final JTextField textField = new JTextField();
 				textField.addFocusListener(this.getEditingStopFocusListener());
 				this.defaultTextFieldEditor = new DefaultCellEditor(textField);
 			}

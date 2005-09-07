@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationModel.java,v 1.9 2005/09/05 17:39:51 bass Exp $
+ * $Id: ApplicationModel.java,v 1.10 2005/09/07 02:37:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.client.model;
 
 import java.util.Hashtable;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -21,8 +20,8 @@ import com.syrus.util.Log;
  * Модель приложения описывает действия, которые пользователь (оператор) может
  * производить с системой
  * 
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/09/05 17:39:51 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/09/07 02:37:31 $
  * @module commonclient
  */
 public class ApplicationModel {
@@ -30,38 +29,38 @@ public class ApplicationModel {
 	/**
 	 * список элементов модели
 	 */
-	private Map				appications			= new Hashtable();
+	private Map<String, ApplicationEntry> appications = new Hashtable<String, ApplicationEntry>();
 
 	/**
 	 * список объектов, получающих информацию об изменениях в модели
 	 */
-	private List					listenerList	= new LinkedList();
+	private List<ApplicationModelListener> listenerList = new LinkedList<ApplicationModelListener>();
 
-	private static ApplicationModel	instance;
+	private static ApplicationModel instance;
 
-	private static final String	MENU							= "Menu";
-	
-	public static final String	MENU_SESSION					= MENU + ".Session";
+	private static final String MENU = "Menu";
 
-	public static final String	MENU_SESSION_NEW				= MENU_SESSION + ".New";
+	public static final String MENU_SESSION = MENU + ".Session";
 
-	public static final String	MENU_SESSION_CLOSE				= MENU_SESSION + ".Close";
+	public static final String MENU_SESSION_NEW = MENU_SESSION + ".New";
 
-	public static final String	MENU_SESSION_OPTIONS			= MENU_SESSION + ".Options";
+	public static final String MENU_SESSION_CLOSE = MENU_SESSION + ".Close";
 
-	public static final String	MENU_SESSION_CHANGE_PASSWORD	= MENU_SESSION + ".ChangePassword";
+	public static final String MENU_SESSION_OPTIONS = MENU_SESSION + ".Options";
 
-	public static final String	MENU_SESSION_DOMAIN				= MENU_SESSION + ".Domain";
+	public static final String MENU_SESSION_CHANGE_PASSWORD = MENU_SESSION + ".ChangePassword";
 
-	public static final String	MENU_VIEW						= MENU + ".View";
-	
-	public static final String	MENU_VIEW_ARRANGE				= MENU_VIEW + ".WindowArrange";
+	public static final String MENU_SESSION_DOMAIN = MENU_SESSION + ".Domain";
 
-	public static final String	MENU_EXIT						= MENU + ".Exit";
+	public static final String MENU_VIEW = MENU + ".View";
 
-	public static final String	MENU_HELP						= MENU + ".Help";
+	public static final String MENU_VIEW_ARRANGE = MENU_VIEW + ".WindowArrange";
 
-	public static final String	MENU_HELP_ABOUT					= MENU_HELP + ".About";
+	public static final String MENU_EXIT = MENU + ".Exit";
+
+	public static final String MENU_HELP = MENU + ".Help";
+
+	public static final String MENU_HELP_ABOUT = MENU_HELP + ".About";
 
 	/**
 	 * To obtain a shared instance, use {@link #getInstance()}.
@@ -73,11 +72,13 @@ public class ApplicationModel {
 	}
 
 	public static ApplicationModel getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			synchronized (ApplicationModel.class) {
-				if (instance == null)
+				if (instance == null) {
 					instance = new ApplicationModel();
+				}
 			}
+		}
 		return instance;
 	}
 
@@ -95,16 +96,14 @@ public class ApplicationModel {
 			Log.debugMessage("ApplicationModel.add | name: " + name + " , command is null ", Level.WARNING);
 			this.add(name, VoidCommand.VOID_COMMAND, installed, visible, usable, accessible, selected);
 		} else {
-			this.appications.put(name,
-				new ApplicationEntry(name, command, installed, visible, usable, accessible, selected));
+			this.appications.put(name, new ApplicationEntry(name, command, installed, visible, usable, accessible, selected));
 		}
 	}
 
 	/**
 	 * добавить в модель элемент с установкой флагов по умолчанию
 	 */
-	public void add(final String name,
-					Command command) {
+	public void add(final String name, final Command command) {
 		if (command != null) {
 			this.appications.put(name, new ApplicationEntry(name, command));
 		}
@@ -127,9 +126,8 @@ public class ApplicationModel {
 	/**
 	 * установить флаг "выбран" для элемента в boolean
 	 */
-	public void setSelected(final String name,
-							final boolean selected) {
-		ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
+	public void setSelected(final String name, final boolean selected) {
+		final ApplicationEntry entry = this.appications.get(name);
 		if (entry != null) {
 			entry.selected = selected;
 		}
@@ -138,9 +136,8 @@ public class ApplicationModel {
 	/**
 	 * установить флаг "разрешенный" для элемента в boolean
 	 */
-	public void setEnabled(	final String name,
-							boolean enable) {
-		ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
+	public void setEnabled(final String name, boolean enable) {
+		final ApplicationEntry entry = this.appications.get(name);
 		if (entry != null) {
 			entry.accessible = enable;
 		}
@@ -149,9 +146,8 @@ public class ApplicationModel {
 	/**
 	 * установить флаг "видимый" для элемента в boolean
 	 */
-	public void setVisible(	final String name,
-							final boolean visible) {
-		ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
+	public void setVisible(final String name, final boolean visible) {
+		final ApplicationEntry entry = this.appications.get(name);
 		if (entry != null) {
 			entry.visible = visible;
 		}
@@ -160,9 +156,8 @@ public class ApplicationModel {
 	/**
 	 * установить флаг "установленный" для элемента в boolean
 	 */
-	public void setInstalled(	final String name,
-								final boolean installed) {
-		ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
+	public void setInstalled(final String name, final boolean installed) {
+		final ApplicationEntry entry = this.appications.get(name);
 		if (entry != null) {
 			entry.installed = installed;
 		}
@@ -171,9 +166,8 @@ public class ApplicationModel {
 	/**
 	 * установить флаг "доступный" для элемента в boolean
 	 */
-	public void setAccessible(	final String name,
-								final boolean accessible) {
-		ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
+	public void setAccessible(final String name, final boolean accessible) {
+		final ApplicationEntry entry = this.appications.get(name);
 		if (entry != null) {
 			entry.accessible = accessible;
 		}
@@ -182,9 +176,8 @@ public class ApplicationModel {
 	/**
 	 * установить флаг "установленный" для элемента в boolean
 	 */
-	public void setUsable(	final String name,
-							final boolean usable) {
-		ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
+	public void setUsable(final String name, final boolean usable) {
+		final ApplicationEntry entry = this.appications.get(name);
 		if (entry != null) {
 			entry.usable = usable;
 		}
@@ -194,7 +187,7 @@ public class ApplicationModel {
 	 * получить флаг "видимый"
 	 */
 	public boolean isVisible(final String name) {
-		ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
+		final ApplicationEntry entry = this.appications.get(name);
 		return ((entry != null) && entry.visible && entry.installed);
 	}
 
@@ -202,7 +195,7 @@ public class ApplicationModel {
 	 * получить флаг "доступный"
 	 */
 	public boolean isAccessible(final String name) {
-		ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
+		final ApplicationEntry entry = this.appications.get(name);
 		return ((entry != null) && entry.accessible);
 	}
 
@@ -210,7 +203,7 @@ public class ApplicationModel {
 	 * получить флаг "выбранный"
 	 */
 	public boolean isSelected(final String name) {
-		ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
+		final ApplicationEntry entry = this.appications.get(name);
 		return ((entry != null) && entry.selected);
 	}
 
@@ -218,7 +211,7 @@ public class ApplicationModel {
 	 * получить флаг "установленный"
 	 */
 	public boolean isUsable(final String name) {
-		ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
+		final ApplicationEntry entry = this.appications.get(name);
 		return ((entry != null) && entry.usable);
 	}
 
@@ -226,7 +219,7 @@ public class ApplicationModel {
 	 * получить флаг "разрешенный"
 	 */
 	public boolean isEnabled(final String name) {
-		ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
+		final ApplicationEntry entry = this.appications.get(name);
 		return ((entry != null) && entry.usable && entry.accessible);
 	}
 
@@ -234,16 +227,15 @@ public class ApplicationModel {
 	 * установить флаг "разрешенный" в boolean для всех элементов
 	 */
 	public void setAllItemsEnabled(final boolean enabled) {
-		setAllItemsAccessible(enabled);
+		this.setAllItemsAccessible(enabled);
 	}
 
 	/**
 	 * установить флаг "доступный" в boolean для всех элементов
 	 */
 	public void setAllItemsAccessible(final boolean accessible) {
-		for (Iterator iterator = this.appications.keySet().iterator(); iterator.hasNext();) {
-			String key = (String)iterator.next();
-			ApplicationEntry applicationEntry = (ApplicationEntry) this.appications.get(key);
+		for (final String key : this.appications.keySet()) {
+			final ApplicationEntry applicationEntry = this.appications.get(key);
 			applicationEntry.accessible = accessible;
 		}
 	}
@@ -252,9 +244,8 @@ public class ApplicationModel {
 	 * установить флаг "видимый" в boolean для всех элементов
 	 */
 	public void setAllItemsVisible(final boolean visible) {
-		for (Iterator iterator = this.appications.keySet().iterator(); iterator.hasNext();) {
-			String key = (String)iterator.next();
-			ApplicationEntry applicationEntry = (ApplicationEntry) this.appications.get(key);
+		for (final String key : this.appications.keySet()) {
+			final ApplicationEntry applicationEntry = this.appications.get(key);
 			applicationEntry.visible = visible;
 		}
 	}
@@ -263,9 +254,8 @@ public class ApplicationModel {
 	 * установить флаг "установленный" в boolean для всех элементов
 	 */
 	public void setAllItemsUsable(final boolean usable) {
-		for (Iterator iterator = this.appications.keySet().iterator(); iterator.hasNext();) {
-			String key = (String)iterator.next();
-			ApplicationEntry applicationEntry = (ApplicationEntry) this.appications.get(key);
+		for (final String key : this.appications.keySet()) {
+			final ApplicationEntry applicationEntry = this.appications.get(key);
 			applicationEntry.usable = usable;
 		}
 	}
@@ -274,9 +264,8 @@ public class ApplicationModel {
 	 * установить флаг "выбранный" в boolean для всех элементов
 	 */
 	public void setAllItemsSelected(final boolean selected) {
-		for (Iterator iterator = this.appications.keySet().iterator(); iterator.hasNext();) {
-			String key = (String)iterator.next();
-			ApplicationEntry applicationEntry = (ApplicationEntry) this.appications.get(key);
+		for (final String key : this.appications.keySet()) {
+			final ApplicationEntry applicationEntry = this.appications.get(key);
 			applicationEntry.selected = selected;
 		}
 	}
@@ -284,9 +273,8 @@ public class ApplicationModel {
 	/**
 	 * установить команду для элемента
 	 */
-	public void setCommand(	final String name,
-							final Command command) {
-		ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
+	public void setCommand(final String name, final Command command) {
+		final ApplicationEntry entry = this.appications.get(name);
 		if (entry != null) {
 			entry.command = command;
 		}
@@ -297,9 +285,10 @@ public class ApplicationModel {
 	 */
 	public Command getCommand(final String name) {
 		try {
-			ApplicationEntry entry = (ApplicationEntry) this.appications.get(name);
-			if (entry == null)
+			final ApplicationEntry entry = this.appications.get(name);
+			if (entry == null) {
 				throw new NoSuchMethodException("Command '" + name + "' not found in ApplicationModel");
+			}
 			return entry.command;
 		} catch (NoSuchMethodException e) {
 			Log.errorException(e);
@@ -310,14 +299,14 @@ public class ApplicationModel {
 	/**
 	 * добавить Слушателя - объект, получающий уведомление об изменениях модели
 	 */
-	public void addListener(ApplicationModelListener listener) {
+	public void addListener(final ApplicationModelListener listener) {
 		this.listenerList.add(listener);
 	}
 
 	/**
 	 * удалить Слушателя
 	 */
-	public void removeListener(ApplicationModelListener listener) {
+	public void removeListener(final ApplicationModelListener listener) {
 		this.listenerList.remove(listener);
 	}
 
@@ -326,7 +315,7 @@ public class ApplicationModel {
 	 * элементов модели
 	 */
 	public void fireModelChanged() {
-		fireModelChanged("");
+		this.fireModelChanged("");
 	}
 
 	/**
@@ -335,9 +324,8 @@ public class ApplicationModel {
 	 * @param elementName -
 	 *            имя элемента
 	 */
-	public void fireModelChanged(String elementName) {
-		for (Iterator iterator = this.listenerList.iterator(); iterator.hasNext();) {
-			ApplicationModelListener applicationModelListener = (ApplicationModelListener) iterator.next();
+	public void fireModelChanged(final String elementName) {
+		for (final ApplicationModelListener applicationModelListener : this.listenerList) {
 			applicationModelListener.modelChanged(elementName);
 		}
 	}
@@ -348,9 +336,8 @@ public class ApplicationModel {
 	 * @param elementNames -
 	 *            массив имен элементов
 	 */
-	public void fireModelChanged(String[] elementNames) {
-		for (Iterator iterator = this.listenerList.iterator(); iterator.hasNext();) {
-			ApplicationModelListener applicationModelListener = (ApplicationModelListener) iterator.next();
+	public void fireModelChanged(final String[] elementNames) {
+		for (final ApplicationModelListener applicationModelListener : this.listenerList) {
 			applicationModelListener.modelChanged(elementNames);
 		}
 	}
@@ -360,8 +347,8 @@ public class ApplicationModel {
 	 * и флаги видимости и доступности команды пользователю. конструктора без
 	 * параметров нет, так как элемент определяется идентификатором
 	 * 
-	 * @author $Author: bass $
-	 * @version $Revision: 1.9 $, $Date: 2005/09/05 17:39:51 $
+	 * @author $Author: arseniy $
+	 * @version $Revision: 1.10 $, $Date: 2005/09/07 02:37:31 $
 	 * @module commonclient
 	 */
 	class ApplicationEntry {
@@ -410,7 +397,7 @@ public class ApplicationModel {
 		 * @param name
 		 * @param command
 		 */
-		public ApplicationEntry(final String name, Command command) {
+		public ApplicationEntry(final String name, final Command command) {
 			this.name = name;
 			this.command = command;
 		}
@@ -436,7 +423,7 @@ public class ApplicationModel {
 		 * @param selected
 		 */
 		public ApplicationEntry(final String name,
-				Command command,
+				final Command command,
 				final boolean installed,
 				final boolean visible,
 				final boolean usable,

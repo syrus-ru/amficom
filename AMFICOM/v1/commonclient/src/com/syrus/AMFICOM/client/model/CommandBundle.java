@@ -1,5 +1,5 @@
 /**
- * $Id: CommandBundle.java,v 1.2 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: CommandBundle.java,v 1.3 2005/09/07 02:37:31 arseniy Exp $
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный
@@ -8,49 +8,48 @@
 
 package com.syrus.AMFICOM.client.model;
 
-import java.util.Iterator;
-import java.util.List;
 import java.util.ArrayList;
+import java.util.List;
 import java.util.ListIterator;
 
 /**
  * Название: команда, включающая в себя несколько команд
  * 
- * @version $Revision: 1.2 $
+ * @version $Revision: 1.3 $
  * @author $Author: arseniy $
  * @module commonclient
  */
 public class CommandBundle extends AbstractCommand {
 	/** список команд */
-	protected List commands = new ArrayList();
+	protected List<Command> commands = new ArrayList<Command>();
 
 	/**
 	 * добавить в список команду
 	 */
-	public void add(Command command) {
+	public void add(final Command command) {
 		this.commands.add(command);
 	}
 
 	/**
 	 * удалить команду из списка
 	 */
-	public void remove(Command command) {
+	public void remove(final Command command) {
 		this.commands.remove(command);
 	}
 
 	/**
 	 * удалить команду из списка
 	 */
-	public void remove(int index) {
+	public void remove(final int index) {
 		this.commands.remove(index);
 	}
 
 	/**
 	 * выполнить - все команды в списке
 	 */
+	@Override
 	public void execute() {
-		for(Iterator it = this.commands.iterator(); it.hasNext();) {
-			Command command = (Command)it.next();
+		for (final Command command : this.commands) {
 			command.execute();
 		}
 	}
@@ -58,10 +57,10 @@ public class CommandBundle extends AbstractCommand {
 	/**
 	 * обратно выполнить - все команды в списке в обратном порядке
 	 */
+	@Override
 	public void undo() {
-		for(ListIterator it = this.commands.listIterator(this.commands.size()); it
-				.hasPrevious();) {
-			Command command = (Command)it.previous();
+		for (final ListIterator<Command> it = this.commands.listIterator(this.commands.size()); it.hasPrevious();) {
+			final Command command = it.previous();
 			command.undo();
 		}
 	}
@@ -69,9 +68,10 @@ public class CommandBundle extends AbstractCommand {
 	/**
 	 * выполнить - команды в списке повторно
 	 */
+	@Override
 	public void redo() {
-		for(ListIterator it = this.commands.listIterator(); it.hasNext();) {
-			Command command = (Command)it.next();
+		for(final ListIterator<Command> it = this.commands.listIterator(); it.hasNext();) {
+			final Command command = it.next();
 			command.redo();
 		}
 	}
@@ -79,9 +79,10 @@ public class CommandBundle extends AbstractCommand {
 	/**
 	 * подтверждение выполнения - подтвердить для всех команд
 	 */
+	@Override
 	public void commitExecute() {
-		for(ListIterator it = this.commands.listIterator(); it.hasNext();) {
-			Command command = (Command)it.next();
+		for(final ListIterator<Command> it = this.commands.listIterator(); it.hasNext();) {
+			final Command command = it.next();
 			command.commitExecute();
 		}
 	}
@@ -89,10 +90,10 @@ public class CommandBundle extends AbstractCommand {
 	/**
 	 * подтверждение обратного выполнения - подтвердить для всех команд
 	 */
+	@Override
 	public void commitUndo() {
-		for(ListIterator it = this.commands.listIterator(this.commands.size()); it
-				.hasPrevious();) {
-			Command command = (Command)it.previous();
+		for (final ListIterator<Command> it = this.commands.listIterator(this.commands.size()); it.hasPrevious();) {
+			final Command command = it.previous();
 			command.commitUndo();
 		}
 	}
@@ -100,6 +101,7 @@ public class CommandBundle extends AbstractCommand {
 	/**
 	 * @inheritDoc
 	 */
+	@Override
 	public Object getSource() {
 		return null;
 	}
@@ -114,9 +116,9 @@ public class CommandBundle extends AbstractCommand {
 	/**
 	 * @inheritDoc
 	 */
-	public void setParameter(String field, Object value) {
-		for(Iterator iter = this.commands.iterator(); iter.hasNext();) {
-			Command command = (Command)iter.next();
+	@Override
+	public void setParameter(final String field, final Object value) {
+		for (final Command command : this.commands) {
 			command.setParameter(field, value);
 		}
 	}

@@ -14,7 +14,7 @@ import com.syrus.util.Wrapper;
 /**
  * Abstract class for JComboBox rendering at JTable
  * 
- * @version $Revision: 1.3 $, $Date: 2005/08/11 18:51:08 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/07 02:37:31 $
  * @author $Author: arseniy $
  * @module commonclient
  */
@@ -109,6 +109,7 @@ public abstract class AbstractComboBoxCellRenderer extends JComboBox implements 
 	 * @param c
 	 *                set the background color to this value
 	 */
+	@Override
 	public void setBackground(Color c) {
 		super.setBackground(c);
 		//unselectedBackground = c;
@@ -121,6 +122,7 @@ public abstract class AbstractComboBoxCellRenderer extends JComboBox implements 
 	 * @param c
 	 *                set the foreground color to this value
 	 */
+	@Override
 	public void setForeground(Color c) {
 		super.setForeground(c);
 		this.unselectedForeground = c;

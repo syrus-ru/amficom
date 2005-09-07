@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainMenuBar.java,v 1.8 2005/08/02 19:12:24 arseniy Exp $
+ * $Id: AbstractMainMenuBar.java,v 1.9 2005/09/07 02:37:31 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,31 +23,31 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/02 19:12:24 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/07 02:37:31 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
 public abstract class AbstractMainMenuBar extends JMenuBar {
 
-	protected List				applicationModelListeners;
-	protected ApplicationModel	applicationModel;
+	protected List<ApplicationModelListener> applicationModelListeners;
+	protected ApplicationModel applicationModel;
 
-	protected ActionListener	actionAdapter;
+	protected ActionListener actionAdapter;
 
 	public AbstractMainMenuBar(final ApplicationModel applicationModel) {
 		this.applicationModel = applicationModel;
 
 		this.actionAdapter = new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
-				if (applicationModel == null)
+			public void actionPerformed(final ActionEvent e) {
+				if (applicationModel == null) {
 					return;
-				AbstractButton jb = (AbstractButton) e.getSource();
-				String s = jb.getName();
-				Command command = applicationModel.getCommand(s);
-				Log.debugMessage(
-					"AbstractMainMenuBar$ActionListener.actionPerformed | " + command.getClass().getName(), Level.FINEST);
+				}
+				final AbstractButton jb = (AbstractButton) e.getSource();
+				final String s = jb.getName();
+				final Command command = applicationModel.getCommand(s);
+				Log.debugMessage("AbstractMainMenuBar$ActionListener.actionPerformed | " + command.getClass().getName(), Level.FINEST);
 				command.execute();
 			}
 		};
@@ -86,7 +86,7 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 		menuSessionDomain.setName(ApplicationModel.MENU_SESSION_DOMAIN);
 		menuSessionDomain.addActionListener(this.actionAdapter);
 
-		JMenuItem menuExit = new JMenuItem();
+		final JMenuItem menuExit = new JMenuItem();
 		menuExit.setText(LangModelGeneral.getString("Menu.Exit"));
 		menuExit.setName(ApplicationModel.MENU_EXIT);
 		menuExit.addActionListener(this.actionAdapter);
@@ -117,11 +117,11 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 
 		this.addApplicationModelListener(new ApplicationModelListener() {
 
-			public void modelChanged(String elementName) {
+			public void modelChanged(final String elementName) {
 				this.modelChanged();
 			}
 
-			public void modelChanged(String[] elementNames) {
+			public void modelChanged(final String[] elementNames) {
 				this.modelChanged();
 			}
 
@@ -134,10 +134,8 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 				menuSessionClose.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_CLOSE));
 				menuSessionOptions.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_SESSION_OPTIONS));
 				menuSessionOptions.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_OPTIONS));
-				menuSessionChangePassword.setVisible(AbstractMainMenuBar.this.applicationModel
-						.isVisible(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD));
-				menuSessionChangePassword.setEnabled(AbstractMainMenuBar.this.applicationModel
-						.isEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD));
+				menuSessionChangePassword.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD));
+				menuSessionChangePassword.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD));
 				menuSessionDomain.setVisible(AbstractMainMenuBar.this.applicationModel.isVisible(ApplicationModel.MENU_SESSION_DOMAIN));
 				menuSessionDomain.setEnabled(AbstractMainMenuBar.this.applicationModel.isEnabled(ApplicationModel.MENU_SESSION_DOMAIN));
 
@@ -149,30 +147,30 @@ public abstract class AbstractMainMenuBar extends JMenuBar {
 
 	protected abstract void addMenuItems();
 
-	protected void addApplicationModelListener(ApplicationModelListener listener) {
+	protected void addApplicationModelListener(final ApplicationModelListener listener) {
 		if (this.applicationModelListeners == null) {
-			this.applicationModelListeners = new LinkedList();
+			this.applicationModelListeners = new LinkedList<ApplicationModelListener>();
 		}
 
 		if (!this.applicationModelListeners.contains(listener)) {
 			this.applicationModelListeners.add(listener);
 		}
 	}
-	
-	protected void removeApplicationModelListener(ApplicationModelListener listener) {
+
+	protected void removeApplicationModelListener(final ApplicationModelListener listener) {
 		if (this.applicationModelListeners != null) {
 			this.applicationModelListeners.remove(listener);
 		}
 	}
-	
-	public void setApplicationModel(ApplicationModel applicationModel) {
+
+	public void setApplicationModel(final ApplicationModel applicationModel) {
 		this.applicationModel = applicationModel;
 	}
-	
+
 	public ApplicationModel getApplicationModel() {
 		return this.applicationModel;
 	}
-	
+
 	public List getApplicationModelListeners() {
 		return this.applicationModelListeners;
 	}

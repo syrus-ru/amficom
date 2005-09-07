@@ -23,36 +23,42 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/11 18:51:08 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/07 02:37:31 $
  * @author $Author: arseniy $
  * @module commonclient
  */
-public class WrapperedTable extends ATable {
+public class WrapperedTable<T> extends ATable {
 
 	private static final long	serialVersionUID	= -437251205606073016L;
 	boolean allowSorting = true;
 
-	public WrapperedTable(final Wrapper controller, final List objectResourceList, final String[] keys) {
-		this(new WrapperedTableModel(controller, objectResourceList, keys));
+	public WrapperedTable(final Wrapper<T> controller, final List<T> objectResourceList, final String[] keys) {
+		this(new WrapperedTableModel<T>(controller, objectResourceList, keys));
 	}
 	
-	public WrapperedTable(final Wrapper controller, final String[] keys) {
-		this(new WrapperedTableModel(controller, keys));
+	public WrapperedTable(final Wrapper<T> controller, final String[] keys) {
+		this(new WrapperedTableModel<T>(controller, keys));
 	}
 
-	public WrapperedTable(final WrapperedTableModel dm) {
+	public WrapperedTable(final WrapperedTableModel<T> dm) {
 		super(dm);
 		this.initialization();
 	}
 
+	@Override
+	public WrapperedTableModel<T> getModel() {
+		return (WrapperedTableModel<T>) super.getModel();
+	}
+
 	public void setDefaultTableCellRenderer() {
-		final WrapperedTableModel model = (WrapperedTableModel) getModel();
+		final WrapperedTableModel<T> model = this.getModel();
 		for (int mColIndex = 0; mColIndex < model.getColumnCount(); mColIndex++) {
 			TableCellRenderer renderer = StubLabelCellRenderer.getInstance();
-			TableColumn col = this.getColumnModel().getColumn(mColIndex);
-			Class clazz = model.wrapper.getPropertyClass(model.keys[mColIndex]);
-			if (clazz.equals(Boolean.class))
+			final TableColumn col = this.getColumnModel().getColumn(mColIndex);
+			final Class clazz = model.wrapper.getPropertyClass(model.keys[mColIndex]);
+			if (clazz.equals(Boolean.class)) {
 				renderer = null;
+			}
 			else if (clazz.equals(Color.class)) {
 				renderer = ColorCellRenderer.getInstance();
 			}
@@ -61,11 +67,11 @@ public class WrapperedTable extends ATable {
 		}
 	}
 	
-	public void setEditor(TableCellEditor editor, String key) {
-		WrapperedTableModel model = (WrapperedTableModel) getModel();
+	public void setEditor(final TableCellEditor editor, final String key) {
+		final WrapperedTableModel<T> model = this.getModel();
 		for (int mColIndex = 0; mColIndex < model.getColumnCount(); mColIndex++) {
 			if (model.keys[mColIndex].equals(key)) {
-				TableColumn col = this.getColumnModel().getColumn(mColIndex);
+				final TableColumn col = this.getColumnModel().getColumn(mColIndex);
 				col.setCellEditor(editor);
 			}
 		}
@@ -76,17 +82,17 @@ public class WrapperedTable extends ATable {
 	 * @param renderer
 	 * @param key see {@link Wrapper#getKeys()}
 	 */
-	public void setRenderer(TableCellRenderer renderer, String key) {
-		WrapperedTableModel model = (WrapperedTableModel) getModel();
+	public void setRenderer(final TableCellRenderer renderer, final String key) {
+		final WrapperedTableModel<T> model = this.getModel();
 		for (int mColIndex = 0; mColIndex < model.getColumnCount(); mColIndex++) {
 			if (model.keys[mColIndex].equals(key)) {
-				TableColumn col = this.getColumnModel().getColumn(mColIndex);
+				final TableColumn col = this.getColumnModel().getColumn(mColIndex);
 				col.setCellRenderer(renderer);
 			}
 		}
 	}
 	
-	public void setAllowSorting(boolean allowSorting) {
+	public void setAllowSorting(final boolean allowSorting) {
 		this.allowSorting = allowSorting;
 	}
 	
@@ -95,12 +101,12 @@ public class WrapperedTable extends ATable {
 	}
 
 	private void updateModel() {
-		WrapperedTableModel model = (WrapperedTableModel) getModel();
+		final WrapperedTableModel<T> model = this.getModel();
 		for (int mColIndex = 0; mColIndex < model.getColumnCount(); mColIndex++) {
-			Object obj = model.wrapper.getPropertyValue(model.keys[mColIndex]);
+			final Object obj = model.wrapper.getPropertyValue(model.keys[mColIndex]);
 			if (obj instanceof Map) {
-				final Map map = (Map) obj;
-				AComboBox comboBox = new AComboBox();
+				final Map<?, ?> map = (Map) obj;
+				final AComboBox comboBox = new AComboBox();
 				List keys = new ArrayList(map.keySet());
 				Collections.sort(keys);
 				comboBox.setRenderer(LabelCheckBoxRenderer.getInstance());
@@ -109,12 +115,12 @@ public class WrapperedTable extends ATable {
 				}
 				keys.clear();
 				keys = null;
-				TableColumn sportColumn = getColumnModel().getColumn(mColIndex);
+				final TableColumn sportColumn = getColumnModel().getColumn(mColIndex);
 				sportColumn.setCellEditor(new DefaultCellEditor(comboBox));
 				comboBox.addActionListener(new ActionListener() {
 
-					public void actionPerformed(ActionEvent e) {
-						AComboBox cb = (AComboBox) e.getSource();
+					public void actionPerformed(final ActionEvent e) {
+						final AComboBox cb = (AComboBox) e.getSource();
 						if (cb.getItemCount() != map.keySet().size()) {
 							cb.removeAllItems();
 							List keys1 = new ArrayList(map.keySet());
@@ -134,21 +140,22 @@ public class WrapperedTable extends ATable {
 	}
 	
 	public void sortColumn(int mColIndex) {
-		WrapperedTableModel model = (WrapperedTableModel) this.getModel();
+		WrapperedTableModel<T> model = this.getModel();
 		String s;
 		if (model.getSortOrder(mColIndex)) {
 			s = " ^ "; //$NON-NLS-1$
 		} else {
 			s = " v "; //$NON-NLS-1$
 		}
-		String columnName = model.getColumnName(mColIndex);
-		this.getColumnModel().getColumn(this.convertColumnIndexToView(mColIndex))
-				.setHeaderValue(s + (columnName == null ? "" : columnName) + s);
+		final String columnName = model.getColumnName(mColIndex);
+		this.getColumnModel().getColumn(this.convertColumnIndexToView(mColIndex)).setHeaderValue(s
+				+ (columnName == null ? "" : columnName)
+				+ s);
 
 		for (int i = 0; i < model.getColumnCount(); i++) {
-			if (i != mColIndex)
-				this.getColumnModel().getColumn(this.convertColumnIndexToView(i))
-						.setHeaderValue(model.getColumnName(i));
+			if (i != mColIndex) {
+				this.getColumnModel().getColumn(this.convertColumnIndexToView(i)).setHeaderValue(model.getColumnName(i));
+			}
 		}
 
 		// Force the header to resize and repaint itself
@@ -157,34 +164,37 @@ public class WrapperedTable extends ATable {
 	}
 	
 	private void initialization() {
-		updateModel();
+		this.updateModel();
 		this.setColumnSelectionAllowed(false);
 		this.setRowSelectionAllowed(true);
 
 		this.getTableHeader().addMouseListener(new MouseAdapter() {
 
+			@Override
 			public void mouseClicked(MouseEvent evt) {
 				if (!WrapperedTable.this.allowSorting) {
 					return;
 				}
 				
-				JTableHeader header = (JTableHeader) evt.getSource();
-				JTable table = header.getTable();
-				TableColumnModel colModel = table.getColumnModel();
+				final JTableHeader header = (JTableHeader) evt.getSource();
+				final JTable table = header.getTable();
+				final TableColumnModel colModel = table.getColumnModel();
 
 				// The index of the column whose header was
 				// clicked
-				int columnIndex = colModel.getColumnIndexAtX(evt.getX());
-				int mColIndex = table.convertColumnIndexToModel(columnIndex);
-				
-				sortColumn(mColIndex);
+				final int columnIndex = colModel.getColumnIndexAtX(evt.getX());
+				final int mColIndex = table.convertColumnIndexToModel(columnIndex);
+
+				WrapperedTable.this.sortColumn(mColIndex);
 
 				// Return if not clicked on any column header
-				if (columnIndex == -1) { return; }
+				if (columnIndex == -1) {
+					return;
+				}
 
 				// Determine if mouse was clicked between column
 				// heads
-				Rectangle headerRect = table.getTableHeader().getHeaderRect(columnIndex);
+				final Rectangle headerRect = table.getTableHeader().getHeaderRect(columnIndex);
 				if (columnIndex == 0) {
 					headerRect.width -= 3; // Hard-coded
 					// constant

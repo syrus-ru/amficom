@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractCommand.java,v 1.5 2005/08/17 14:28:06 arseniy Exp $
+ * $Id: AbstractCommand.java,v 1.6 2005/09/07 02:37:31 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.client.model;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/17 14:28:06 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/07 02:37:31 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -17,27 +17,24 @@ package com.syrus.AMFICOM.client.model;
 public abstract class AbstractCommand implements Command {
 
 	protected int result = RESULT_UNSPECIFIED;
-	
+
 	public void commitExecute() {
 		// nothing
-
 	}
 
 	public void commitUndo() {
 		// nothing
-
 	}
 
 	public void execute() {
 		// nothing
-
 	}
 
 	public int getResult() {
 		return this.result;
 	}
 
-	protected void setResult(int result) {
+	protected void setResult(final int result) {
 		this.result = result;
 	}
 
@@ -47,17 +44,14 @@ public abstract class AbstractCommand implements Command {
 
 	public void redo() {
 		// nothing
-
 	}
 
-	public void setParameter(String field, Object value) {
+	public void setParameter(final String field, final Object value) {
 		// nothing
-
 	}
 
 	public void undo() {
 		// nothing
-
 	}
 
 	@Override

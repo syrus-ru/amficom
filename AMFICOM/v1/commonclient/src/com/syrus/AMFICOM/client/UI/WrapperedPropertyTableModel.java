@@ -10,41 +10,41 @@ import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/06 16:23:21 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/09/07 02:37:31 $
+ * @author $Author: arseniy $
  * @module commonclient
  */
-public class WrapperedPropertyTableModel extends AbstractTableModel {
+public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 
-	private static final long	serialVersionUID	= 4007513055820570639L;
+	private static final long serialVersionUID = 4007513055820570639L;
 
-	public static final String	KEY_PROPERTY		= "Property";
-	public static final String	KEY_VALUE			= "Value";
+	public static final String KEY_PROPERTY = "Property";
+	public static final String KEY_VALUE = "Value";
 
 	/**
 	 * Wrapper of Model (ObjectResource) will be used for sorting. see
 	 * {@link Wrapper}
 	 */
-	protected Wrapper			wrapper;
+	protected Wrapper<T> wrapper;
 
-	protected String[]			keys;
-	
-	protected String[]			names;
+	protected String[] keys;
 
-	private Object				object;
+	protected String[] names;
+
+	private T object;
 
 	/**
 	 * saved direction of column sorting. Used when change direction to negative
 	 * to current. see {@link com.syrus.util.WrapperComparator#ascend}
 	 */
-	private boolean[]			ascendings;
+	private boolean[] ascendings;
 
 	/**
 	 * @param wrapper
 	 *            see {@link #wrapper}
 	 * @param object
 	 */
-	public WrapperedPropertyTableModel(final Wrapper wrapper, final Object object, final String[] keys) {
+	public WrapperedPropertyTableModel(final Wrapper<T> wrapper, final T object, final String[] keys) {
 		this.wrapper = wrapper;
 		this.object = object;
 		this.keys = keys;
@@ -58,7 +58,8 @@ public class WrapperedPropertyTableModel extends AbstractTableModel {
 	/**
 	 * override {@link AbstractTableModel#getColumnClass(int)}method
 	 */
-	public Class getColumnClass(int columnIndex) {
+	@Override
+	public Class<?> getColumnClass(final int columnIndex) {
 		Class clazz;
 		if (columnIndex == 0) {
 			clazz = String.class;
@@ -76,7 +77,8 @@ public class WrapperedPropertyTableModel extends AbstractTableModel {
 		return 2;
 	}
 
-	public String getColumnName(int columnIndex) {
+	@Override
+	public String getColumnName(final int columnIndex) {
 		String name;
 
 		if (columnIndex == 0) {
@@ -90,7 +92,7 @@ public class WrapperedPropertyTableModel extends AbstractTableModel {
 		return name;
 	}
 
-	public Object getObject() {
+	public T getObject() {
 		return this.object;
 	}
 
@@ -98,8 +100,7 @@ public class WrapperedPropertyTableModel extends AbstractTableModel {
 		return this.keys.length;
 	}
 
-	public Object getValueAt(	int rowIndex,
-								int columnIndex) {
+	public Object getValueAt(final int rowIndex, final int columnIndex) {
 		// String key = this.wrapper.getKey(rowIndex);
 		if (columnIndex == 0) {
 			return this.names[rowIndex];
@@ -107,10 +108,10 @@ public class WrapperedPropertyTableModel extends AbstractTableModel {
 		Object obj = this.wrapper.getValue(this.object, this.keys[rowIndex]);
 
 		if (this.wrapper.getPropertyValue(this.keys[rowIndex]) instanceof Map) {
-			Map map = (Map) this.wrapper.getPropertyValue(this.keys[rowIndex]);
+			final Map map = (Map) this.wrapper.getPropertyValue(this.keys[rowIndex]);
 			Object keyObject = null;
-			for (Iterator it = map.keySet().iterator(); it.hasNext();) {
-				Object keyObj = it.next();
+			for (final Iterator it = map.keySet().iterator(); it.hasNext();) {
+				final Object keyObj = it.next();
 				if (map.get(keyObj).equals(obj)) {
 					keyObject = keyObj;
 					break;
@@ -123,36 +124,37 @@ public class WrapperedPropertyTableModel extends AbstractTableModel {
 		return obj;
 	}
 
-	public boolean isCellEditable(	int rowIndex,
-									int columnIndex) {
-		if (columnIndex == 0)
+	@Override
+	public boolean isCellEditable(final int rowIndex, final int columnIndex) {
+		if (columnIndex == 0) {
 			return false;
+		}
 		// String key = this.wrapper.getKey(rowIndex);
 		return this.wrapper.isEditable(this.keys[rowIndex]);
 	}
 
-	public void setObject(Object object) {
+	public void setObject(final T object) {
 		this.object = object;
 		super.fireTableDataChanged();
 	}
-	
+
 	public void setKeys(final String[] keys) {
 		this.keys = keys;
 		this.ascendings = new boolean[this.keys.length];
 		super.fireTableDataChanged();
 	}
 
-	public void setValueAt(	Object obj,
-							int rowIndex,
-							int columnIndex) {
-		if (columnIndex == 0)
+	@Override
+	public void setValueAt(final Object obj, final int rowIndex, final int columnIndex) {
+		if (columnIndex == 0) {
 			return;
+		}
 		// String key = this.wrapper.getKey(rowIndex);
 
 		// ObjectResource or = (ObjectResource)
 		// this.orList.get(rowIndex);
 		if (this.wrapper.getPropertyValue(this.keys[rowIndex]) instanceof Map) {
-			Map map = (Map) this.wrapper.getPropertyValue(this.keys[rowIndex]);
+			final Map map = (Map) this.wrapper.getPropertyValue(this.keys[rowIndex]);
 			this.wrapper.setValue(this.object, this.keys[rowIndex], map.get(obj));
 		} else {
 			this.wrapper.setValue(this.object, this.keys[rowIndex], obj);

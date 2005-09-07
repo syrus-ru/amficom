@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicAddDialog.java,v 1.15 2005/08/19 14:06:09 bob Exp $
+ * $Id: CharacteristicAddDialog.java,v 1.16 2005/09/07 02:37:31 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
 import java.util.HashSet;
-import java.util.Iterator;
-import java.util.LinkedList;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -49,8 +47,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.15 $, $Date: 2005/08/19 14:06:09 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/09/07 02:37:31 $
  * @module commonclient
  */
 
@@ -60,38 +58,38 @@ public class CharacteristicAddDialog {
 
 	protected CharacteristicTypeSort sort;
 	private CharacteristicType selectedType;
-	
-	WrapperedComboBox characteristicTypeComboBox;
-	JRadioButton existingRadioButton;	
+
+	WrapperedComboBox<CharacteristicType> characteristicTypeComboBox;
+	JRadioButton existingRadioButton;
 	private JRadioButton newRadioButton;
-	
+
 	private ButtonGroup buttonGroup;
-	
+
 	private JPanel panel;
 	JTextField nameField;
 	JTextArea descriptionArea;
 	private JLabel name;
 	private JLabel description;
-	private final Frame	parent;
+	private final Frame parent;
 	private final String title;
 
 	public CharacteristicAddDialog(final Frame parent, final String title) {
 		this.parent = parent;
-		this.title = title;		
+		this.title = title;
 	}
 
 	private void createUIItems() {
 		this.existingRadioButton = new JRadioButton(LangModelGeneral.getString(ResourceKeys.I18N_EXISTING_CHARACTERISTICTYPE));
 		this.newRadioButton = new JRadioButton(LangModelGeneral.getString(ResourceKeys.I18N_NEW_CHARACTERISTICTYPE));
 		this.buttonGroup = new ButtonGroup();
-		
+
 		this.buttonGroup.add(this.existingRadioButton);
 		this.buttonGroup.add(this.newRadioButton);
 
-		ActionListener actionListener = new ActionListener() {
+		final ActionListener actionListener = new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
-				boolean b = CharacteristicAddDialog.this.existingRadioButton.isSelected();
+			public void actionPerformed(final ActionEvent e) {
+				final boolean b = CharacteristicAddDialog.this.existingRadioButton.isSelected();
 				CharacteristicAddDialog.this.characteristicTypeComboBox.setEnabled(b);
 				CharacteristicAddDialog.this.nameField.setEnabled(!b);
 				CharacteristicAddDialog.this.descriptionArea.setEnabled(!b);
@@ -100,29 +98,28 @@ public class CharacteristicAddDialog {
 		};
 		this.existingRadioButton.addActionListener(actionListener);
 		this.newRadioButton.addActionListener(actionListener);
-		
+
 		this.nameField = new JTextField();
 		this.descriptionArea = new JTextArea();
 		this.name = new JLabel(LangModelGeneral.getString(ResourceKeys.I18N_NAME));
 		this.description = new JLabel(LangModelGeneral.getString(ResourceKeys.I18N_DESCRIPTION));
-		
-		this.characteristicTypeComboBox = new WrapperedComboBox(CharacteristicTypeWrapper.getInstance(),
-			StorableObjectWrapper.COLUMN_NAME,
-			StorableObjectWrapper.COLUMN_ID);
 
+		this.characteristicTypeComboBox = new WrapperedComboBox<CharacteristicType>(CharacteristicTypeWrapper.getInstance(),
+				StorableObjectWrapper.COLUMN_NAME,
+				StorableObjectWrapper.COLUMN_ID);
 	}
-	
+
 	private JPanel getPanel() {
 		if (this.panel == null) {
 			this.createUIItems();
 
-			JScrollPane scrollPane = new JScrollPane();
+			final JScrollPane scrollPane = new JScrollPane();
 			scrollPane.getViewport().add(this.descriptionArea);
 			this.descriptionArea.setAutoscrolls(true);
 			scrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
 
 			this.panel = new JPanel(new GridBagLayout());
-			GridBagConstraints gbc = new GridBagConstraints();
+			final GridBagConstraints gbc = new GridBagConstraints();
 
 			gbc.fill = GridBagConstraints.BOTH;
 			gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -148,27 +145,34 @@ public class CharacteristicAddDialog {
 		return this.panel;
 	}
 
-	public int showDialog(CharacteristicTypeSort sort, Collection<Characteristic> characterisctics) {
-		this.sort = sort;
+	public int showDialog(final CharacteristicTypeSort ctSort, final Collection<Characteristic> characterisctics) {
+		this.sort = ctSort;
 
 		final String okButton = LangModelGeneral.getString(ResourceKeys.I18N_ADD);
 		final String cancelButton = LangModelGeneral.getString(ResourceKeys.I18N_CANCEL);
-		final JOptionPane optionPane = new JOptionPane(this.getPanel(), JOptionPane.PLAIN_MESSAGE,
-														JOptionPane.OK_CANCEL_OPTION, null, new Object[] { okButton,
-																cancelButton}, null);
+		final JOptionPane optionPane = new JOptionPane(this.getPanel(),
+				JOptionPane.PLAIN_MESSAGE,
+				JOptionPane.OK_CANCEL_OPTION,
+				null,
+				new Object[] { okButton, cancelButton },
+				null);
 
 		try {
-			TypicalCondition condition = new TypicalCondition(sort.value(), sort.value(), OperationSort.OPERATION_EQUALS,				
-					ObjectEntities.CHARACTERISTIC_TYPE_CODE, CharacteristicTypeWrapper.COLUMN_SORT);
-			Collection characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true, true);
-			
-			Collection<CharacteristicType> existingTypes = new HashSet<CharacteristicType>();
+			final TypicalCondition condition = new TypicalCondition(ctSort.value(),
+					ctSort.value(),
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.CHARACTERISTIC_TYPE_CODE,
+					CharacteristicTypeWrapper.COLUMN_SORT);
+			final Collection<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition,
+					true,
+					true);
+
+			final Collection<CharacteristicType> existingTypes = new HashSet<CharacteristicType>();
 			for (Characteristic characteristic : characterisctics) {
-				existingTypes.add((CharacteristicType)characteristic.getType());
+				existingTypes.add(characteristic.getType());
 			}
-			
-			for (Iterator it = characteristicTypes.iterator(); it.hasNext();) {
-				CharacteristicType characteristicType = (CharacteristicType) it.next();
+
+			for (final CharacteristicType characteristicType : characteristicTypes) {
 				if (!existingTypes.contains(characteristicType)) {
 					this.characteristicTypeComboBox.addItem(characteristicType);
 				}
@@ -176,24 +180,23 @@ public class CharacteristicAddDialog {
 		} catch (ApplicationException ex) {
 			ex.printStackTrace();
 		}
-		
+
 		if (this.characteristicTypeComboBox.getModel().getSize() == 0) {
 			this.existingRadioButton.setEnabled(false);
 			this.newRadioButton.doClick();
 		} else {
 			this.existingRadioButton.doClick();
 		}
-		
+
 		final JDialog dialog = optionPane.createDialog(this.parent, this.title);
-		
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+
+		final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		// TODO fix absolute size to relative , maybe using pack ?
-		Dimension frameSize = new Dimension(350, 250);
-		dialog.setLocation((screenSize.width - frameSize.width) / 2,
-			(screenSize.height - frameSize.height) / 2);
+		final Dimension frameSize = new Dimension(350, 250);
+		dialog.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
 		dialog.setSize(frameSize);
 		dialog.setTitle(LangModelGeneral.getString(ResourceKeys.I18N_CHARACTERISTIC));
-		
+
 		dialog.setModal(true);
 		dialog.setVisible(true);
 		dialog.dispose();
@@ -204,17 +207,20 @@ public class CharacteristicAddDialog {
 
 			if (this.existingRadioButton.isSelected()) {
 				if (this.characteristicTypeComboBox.getSelectedItem() != null) {
-					this.selectedType = (CharacteristicType) this.characteristicTypeComboBox
-							.getSelectedItem();
+					this.selectedType = (CharacteristicType) this.characteristicTypeComboBox.getSelectedItem();
 				}
 			} else {
-				String text = this.nameField.getText();
+				final String text = this.nameField.getText();
 				if (text != null && text.trim().length() > 0) {
 					try {
-						Identifier userId = LoginManager.getUserId();
+						final Identifier userId = LoginManager.getUserId();
 						// TODO maybe create separated fields for codename, name and description ?
-						this.selectedType = CharacteristicType.createInstance(userId, this.nameField.getText(),
-							this.nameField.getText(), this.nameField.getText(), DataType.STRING, this.sort);
+						this.selectedType = CharacteristicType.createInstance(userId,
+								this.nameField.getText(),
+								this.nameField.getText(),
+								this.nameField.getText(),
+								DataType.STRING,
+								this.sort);
 					} catch (CreateObjectException ex) {
 						ex.printStackTrace();
 					}
@@ -224,11 +230,9 @@ public class CharacteristicAddDialog {
 		} else {
 			this.result = JOptionPane.CANCEL_OPTION;
 		}
-		
+
 		return this.result;
 	}
-	
-	
 
 	public CharacteristicType getCharacteristicType() {
 		return this.selectedType;
