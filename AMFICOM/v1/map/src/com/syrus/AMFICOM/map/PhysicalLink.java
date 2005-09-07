@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.104 2005/09/07 09:40:44 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.105 2005/09/07 12:19:49 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: krupenn $
- * @version $Revision: 1.104 $, $Date: 2005/09/07 09:40:44 $
+ * @version $Revision: 1.105 $, $Date: 2005/09/07 12:19:49 $
  * @module map
  */
 public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XmlBeansTransferable<XmlPhysicalLink> {
@@ -444,7 +444,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	public List<NodeLink> getNodeLinks() {
 		if(this.nodeLinks.isEmpty()) {
-			this.nodeLinks = findNodeLinks();
+//			this.nodeLinks = findNodeLinks();
+			System.out.println("no nodelinks for link " + this.id + " between \'" + this.getStartNode().getName() + "\' and " + this.getEndNode().getName() + "\'");
 		}
 		return Collections.unmodifiableList(this.nodeLinks);
 
