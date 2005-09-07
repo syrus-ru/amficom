@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.60 2005/09/06 12:48:27 bass Exp $
+ * $Id: Identifier.java,v 1.61 2005/09/07 17:36:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.60 $, $Date: 2005/09/06 12:48:27 $
+ * @version $Revision: 1.61 $, $Date: 2005/09/07 17:36:00 $
  * @author $Author: bass $
  * @module general
  */
@@ -89,14 +89,18 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 			: this.major - thatMajor;
 	}
 
+	/**
+	 * @param obj
+	 * @see Object#equals(Object)
+	 */
 	@Override
 	public boolean equals(final Object obj) {
-		boolean ret = false;
-		if (obj instanceof Identifier) {
-			Identifier that = (Identifier) obj;
-			ret = ((that.major == this.major) && (that.minor == this.minor));
+		if (obj instanceof Identifiable) {
+			final Identifier that = ((Identifiable) obj).getId();
+			return ((that.major == this.major) && (that.minor == this.minor));
 		}
-		return ret;
+		throw new ClassCastException("Attempt to compare Identifier with "
+				+ (obj == null ? "null" : obj.getClass().getName()));
 	}
 
 	public long getIdentifierCode() {
