@@ -1,5 +1,5 @@
 /*
- * $Id: TextComponentMenu.java,v 1.3 2005/09/05 12:33:01 peskovsky Exp $
+ * $Id: TextComponentMenu.java,v 1.4 2005/09/07 08:43:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -93,11 +93,11 @@ public class TextComponentMenu extends JPopupMenu {
 						.getString(TextAttachingType.TO_FIELDS_TOP)))
 					newAttachmentType = TextAttachingType.TO_FIELDS_TOP;
 
-				if (newAttachmentType.equals(LangModelReport
+				else if (newAttachmentType.equals(LangModelReport
 						.getString(TextAttachingType.TO_TOP)))
 					newAttachmentType = TextAttachingType.TO_TOP;
 
-				if (newAttachmentType.equals(LangModelReport
+				else if (newAttachmentType.equals(LangModelReport
 						.getString(TextAttachingType.TO_BOTTOM)))
 					newAttachmentType = TextAttachingType.TO_BOTTOM;
 
@@ -128,6 +128,8 @@ public class TextComponentMenu extends JPopupMenu {
 				selectItems.add(LangModelReport
 						.getString(TextAttachingType.TO_LEFT));
 				selectItems.add(LangModelReport
+						.getString(TextAttachingType.TO_WIDTH_CENTER));
+				selectItems.add(LangModelReport
 						.getString(TextAttachingType.TO_RIGHT));
 	
 				//Значение горизонтальной привязки, установленное для этой надписи
@@ -151,11 +153,15 @@ public class TextComponentMenu extends JPopupMenu {
 						.getString(TextAttachingType.TO_FIELDS_LEFT)))
 					newAttachmentType = TextAttachingType.TO_FIELDS_LEFT;
 	
-				if (newAttachmentType.equals(LangModelReport
+				else if (newAttachmentType.equals(LangModelReport
 						.getString(TextAttachingType.TO_LEFT)))
 					newAttachmentType = TextAttachingType.TO_LEFT;
-	
-				if (newAttachmentType.equals(LangModelReport
+
+				else if (newAttachmentType.equals(LangModelReport
+						.getString(TextAttachingType.TO_WIDTH_CENTER)))
+					newAttachmentType = TextAttachingType.TO_WIDTH_CENTER;
+				
+				else if (newAttachmentType.equals(LangModelReport
 						.getString(TextAttachingType.TO_RIGHT)))
 					newAttachmentType = TextAttachingType.TO_RIGHT;
 	

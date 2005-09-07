@@ -1,5 +1,5 @@
 /*
- * $Id: DestinationModules.java,v 1.3 2005/09/05 07:56:04 peskovsky Exp $
+ * $Id: DestinationModules.java,v 1.4 2005/09/07 08:43:27 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.report;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2005/09/05 07:56:04 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/07 08:43:27 $
  * @module commonreport_v1
  */
 public class DestinationModules {
@@ -56,5 +56,16 @@ public class DestinationModules {
 	 */
 	public static final String SCHEDULER = "report.Modules.Scheduler.moduleName";
 
-	public static final String UNKNOWN_MODULE = "report.ReportTemplateType.unknownModule";	
+	public static final String UNKNOWN_MODULE = "report.ReportTemplateType.unknownModule";
+	
+	private static final String SHORT_SUBSTRING = "shortModuleName";
+	private static final String STRING_TO_REMOVE = "moduleName";	
+	
+	public static final String getShortName(String name) {
+		int stringToRemovePosition = name.indexOf(STRING_TO_REMOVE);
+		if (stringToRemovePosition < 0)
+			return null;
+		
+		return name.substring(0,stringToRemovePosition) + SHORT_SUBSTRING;
+	}
 }

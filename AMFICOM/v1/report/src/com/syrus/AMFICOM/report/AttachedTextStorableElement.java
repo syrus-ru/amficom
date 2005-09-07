@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.report;
 
 import java.awt.Font;
+import java.awt.Rectangle;
 import java.io.IOException;
 
 import com.syrus.AMFICOM.general.Identifier;
@@ -69,6 +70,7 @@ public final class AttachedTextStorableElement extends StorableElement
 		
 		if (	attachmentType.equals(TextAttachingType.TO_FIELDS_LEFT)		
 			||	attachmentType.equals(TextAttachingType.TO_LEFT)
+			||	attachmentType.equals(TextAttachingType.TO_WIDTH_CENTER)			
 			||	attachmentType.equals(TextAttachingType.TO_RIGHT)){
 			this.horizAttacher = attacher;
 			this.horizontalAttachType = attachmentType;
@@ -78,6 +80,8 @@ public final class AttachedTextStorableElement extends StorableElement
 				this.distanceX = this.getX();
 			else if (attachmentType.equals(TextAttachingType.TO_LEFT))
 				this.distanceX = this.getX() - attacher.getX();
+			else if (attachmentType.equals(TextAttachingType.TO_WIDTH_CENTER))
+				this.distanceX = this.getX() - (attacher.getX() + attacher.getWidth() / 2);
 			else if (attachmentType.equals(TextAttachingType.TO_RIGHT))
 				this.distanceX = this.getX() - (attacher.getX() + attacher.getWidth());
 		}
@@ -186,25 +190,113 @@ public final class AttachedTextStorableElement extends StorableElement
 	 * так, чтобы он находился на заданном при привязке расстоянии от
 	 * элемента отображения данных, к которому он привязан.
 	 */
-	public void suiteAttachingDistances()
-	{
+	//Если элемент выходит за границы шаблона - не двигаемся и возвращаем на
+	//исходную позицию Attacher
+	public void suiteAttachingDistances(Rectangle templateBounds) {
 		int newX = 0;
 		int newY = 0;
 
 		if (this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT))
 			newX = this.getX();
-		else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT))
+		else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT)) {
 			newX = this.horizAttacher.getX() + this.distanceX;
-		else if (this.horizontalAttachType.equals(TextAttachingType.TO_RIGHT))
+//			//Если выходит за границы шаблона - не двигаемся и возвращаем на
+//			//исходную позицию Attacher
+//			if (newX < templateBounds.x) {
+//				newX = templateBounds.x;
+//				this.horizAttacher.setLocation(
+//						newX - this.distanceX,
+//						this.horizAttacher.getY());
+//			}
+//			else if (newX + this.getWidth() > templateBounds.x + templateBounds.width) {
+//				newX = templateBounds.x + templateBounds.width - this.getWidth();
+//				this.horizAttacher.setLocation(
+//						newX - this.distanceX,
+//						this.horizAttacher.getY());
+//			}
+		}
+		else if (this.horizontalAttachType.equals(TextAttachingType.TO_WIDTH_CENTER)) {
+			newX = this.horizAttacher.getX() + this.horizAttacher.getWidth() / 2  + this.distanceX;
+//			//Если выходит за границы шаблона - не двигаемся и возвращаем на
+//			//исходную позицию Attacher
+//			if (newX < templateBounds.x) {
+//				newX = templateBounds.x;
+//				this.horizAttacher.setLocation(
+//						newX - this.horizAttacher.getWidth() / 2 - this.distanceX,
+//						this.horizAttacher.getY());
+//			}
+//			else if (newX + this.getWidth() > templateBounds.x + templateBounds.width) {
+//				newX = templateBounds.x + templateBounds.width - this.getWidth();
+//				this.horizAttacher.setLocation(
+//						newX - this.horizAttacher.getWidth() / 2 - this.distanceX,
+//						this.horizAttacher.getY());
+//			}
+		}
+		else if (this.horizontalAttachType.equals(TextAttachingType.TO_RIGHT)) {
 			newX = this.horizAttacher.getX() + this.horizAttacher.getWidth() + this.distanceX;
+//			//Если выходит за границы шаблона - не двигаемся и возвращаем на
+//			//исходную позицию Attacher
+//			if (newX < templateBounds.x) {
+//				newX = templateBounds.x;
+//				this.horizAttacher.setLocation(
+//						newX - this.horizAttacher.getWidth() - this.distanceX,
+//						this.horizAttacher.getY());
+//			}
+//			else if (newX + this.getWidth() > templateBounds.x + templateBounds.width) {
+//				newX = templateBounds.x + templateBounds.width - this.getWidth();
+//				this.horizAttacher.setLocation(
+//						newX - this.horizAttacher.getWidth() - this.distanceX,
+//						this.horizAttacher.getY());
+//			}
+		}
 		
 		if (this.verticalAttachType.equals(TextAttachingType.TO_FIELDS_TOP))
 			newY = this.getY();
-		else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP))
+		else if (this.verticalAttachType.equals(TextAttachingType.TO_TOP)) {
 			newY = this.vertAttacher.getY() + this.distanceY;
-		else if (this.verticalAttachType.equals(TextAttachingType.TO_BOTTOM))
+//			//Если выходит за границы шаблона - не двигаемся и возвращаем на
+//			//исходную позицию Attacher
+//			if (newY < templateBounds.y) {
+//				newY = templateBounds.y;
+//				this.vertAttacher.setLocation(
+//						this.vertAttacher.getX(),
+//						newY - this.distanceY);
+//			}
+//			else if (newY + this.getHeight() > templateBounds.y + templateBounds.height) {
+//				newY = templateBounds.y + templateBounds.height - this.getHeight();
+//				this.vertAttacher.setLocation(
+//						this.vertAttacher.getX(),
+//						newY - this.distanceY);
+//			}
+		}
+		else if (this.verticalAttachType.equals(TextAttachingType.TO_BOTTOM)) {
 			newY = this.vertAttacher.getY() + this.vertAttacher.getHeight() + this.distanceY;
+//			//Если выходит за границы шаблона - не двигаемся и возвращаем на
+//			//исходную позицию Attacher
+//			if (newY < templateBounds.y) {
+//				newY = templateBounds.y;
+//				this.vertAttacher.setLocation(
+//						this.vertAttacher.getX(),
+//						newY - this.vertAttacher.getHeight() - this.distanceY);
+//			}
+//			else if (newY + this.getHeight() > templateBounds.y + templateBounds.height) {
+//				newY = templateBounds.y + templateBounds.height - this.getHeight();
+//				this.vertAttacher.setLocation(
+//						this.vertAttacher.getX(),
+//						newY - this.vertAttacher.getHeight() - this.distanceY);
+//			}
+		}
+		
+		if (newX < templateBounds.x)
+			newX = templateBounds.x;
+		else if (newX + this.getWidth() > templateBounds.x + templateBounds.width)
+			newX = templateBounds.x + templateBounds.width - this.getWidth();
 
+		if (newY < templateBounds.y)
+			newY = templateBounds.y;
+		else if (newY + this.getHeight() > templateBounds.y + templateBounds.height)
+			newY = templateBounds.y + templateBounds.height - this.getHeight();
+		
 		this.setLocation(newX, newY);
 	}
 	
@@ -218,7 +310,10 @@ public final class AttachedTextStorableElement extends StorableElement
 		if (this.horizontalAttachType.equals(TextAttachingType.TO_FIELDS_LEFT))
 			this.distanceX = this.getX();
 		else if (this.horizontalAttachType.equals(TextAttachingType.TO_LEFT))
-			this.distanceX = this.getX() - this.horizAttacher.getX();			
+			this.distanceX = this.getX() - this.horizAttacher.getX();
+		else if (this.horizontalAttachType.equals(TextAttachingType.TO_WIDTH_CENTER))
+			this.distanceX = this.getX() - this.horizAttacher.getX()
+				- this.horizAttacher.getWidth() / 2;			
 		else if (this.horizontalAttachType.equals(TextAttachingType.TO_RIGHT))
 			this.distanceX = this.getX() - this.horizAttacher.getX()
 				- this.horizAttacher.getWidth();			

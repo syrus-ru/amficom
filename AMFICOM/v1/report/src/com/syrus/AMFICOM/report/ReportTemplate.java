@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.4 2005/09/01 14:21:02 peskovsky Exp $
+ * $Id: ReportTemplate.java,v 1.5 2005/09/07 08:43:27 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.report;
 
+import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.io.IOException;
 import java.io.Serializable;
@@ -26,15 +27,20 @@ import com.syrus.AMFICOM.resource.IntDimension;
  * отчёт </p>
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.4 $, $Date: 2005/09/01 14:21:02 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/07 08:43:27 $
  * @module generalclient_v1
  */
 public class ReportTemplate implements Serializable
 {
 	private static final long serialVersionUID = 6270406142449624592L;
 	
-	public static final IntDimension A4 = new IntDimension(827,1170);
-	public static final IntDimension A3 = new IntDimension(1170,1655);
+	public static final IntDimension A0 = new IntDimension (3360, 4760);
+	public static final IntDimension A1 = new IntDimension (3360, 2380);
+	public static final IntDimension A2 = new IntDimension (1680, 2380);
+	public static final IntDimension A3 = new IntDimension (1680, 1190);
+	public static final IntDimension A4 = new IntDimension (840, 1190);
+
+	public enum ORIENTATION {PORTRAIT,LANDSCAPE}
 	
 	public static final int STANDART_MARGIN_SIZE = 60;
 
@@ -59,7 +65,10 @@ public class ReportTemplate implements Serializable
 	 * Размер шаблона (его ширина)
 	 */
 	private IntDimension size = A4;
-
+	/**
+	 * Размер шаблона (его ширина)
+	 */
+	private ORIENTATION orientation = ORIENTATION.PORTRAIT;
 	//Это хранимое поле
 	/**
 	 * Размер шаблона (его ширина)
@@ -106,6 +115,7 @@ public class ReportTemplate implements Serializable
 		out.writeObject(this.description);
 		out.writeObject(this.destinationModule);
 		out.writeObject(this.size);
+		out.writeObject(this.orientation);		
 		out.writeInt(this.marginSize);		
 
 		// Перекачиваем элементы отображения данных
@@ -147,6 +157,7 @@ public class ReportTemplate implements Serializable
 		this.description = (String)in.readObject();
 		this.destinationModule = (String)in.readObject();
 		this.size = (IntDimension)in.readObject();
+		this.orientation = (ORIENTATION)in.readObject();		
 		this.marginSize = in.readInt();
 
 		// Перекачиваем объекты
@@ -381,5 +392,13 @@ public class ReportTemplate implements Serializable
 
 	public void setId(Identifier id) {
 		this.id = id;
+	}
+
+	public ORIENTATION getOrientation() {
+		return this.orientation;
+	}
+
+	public void setOrientation(ORIENTATION orientation) {
+		this.orientation = orientation;
 	}
 }

@@ -1,17 +1,8 @@
 package com.syrus.AMFICOM.client.report;
 
 import java.util.Collection;
-import java.util.Iterator;
-import java.util.Map;
-import java.util.Set;
-
-import javax.swing.UIManager;
-
-import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.report.StorableElement;
-import com.syrus.AMFICOM.report.ReportTemplate;
-import com.syrus.util.Log;
 
 /**
  * <p>Title: </p>
@@ -25,7 +16,7 @@ import com.syrus.util.Log;
 
 public abstract class ReportModel
 {
-	public static char REPORT_NAME_DIVIDER = ':';
+	public static String REPORT_NAME_DIVIDER = " : ";
 	
 	public static enum ReportType {SCHEMA,GRAPH,TABLE}
 	
@@ -41,10 +32,27 @@ public abstract class ReportModel
 		Object data) throws CreateReportException;
 
 	/**
-	 * @return возвращает локализованное название модели
+	 * Название модели (список значений лежит в DestinationModules)
 	 */
 	public abstract String getName();
+	
+	/**
+	 * @return возвращает локализованное полное название модели
+	 * (типа "Шаблоны по модулю "Анализ"")
+	 */
+	public String getLocalizedName() {
+		return LangModelReport.getString(this.getName());
+	}
 
+	/**
+	 * @return возвращает локализованное короткое название модели
+	 * (типа "Анализ")
+	 */
+	public String getLocalizedShortName() {
+		return LangModelReport.getString(
+				DestinationModules.getShortName(this.getName()));
+	}
+	
 	/**
 	 * @param reportName Название элемента шаблона
 	 * @return Возвращает локализованное название элемента шаблона или null,
@@ -54,11 +62,11 @@ public abstract class ReportModel
 
 	/**
 	 * @param reportName Название элемента шаблона
-	 * @return Возвращает локализованное название модели отчётов +
-	 * локализованное название элемента шаблона
+	 * @return Возвращает локализованное (короткое) название модели
+	 * отчётов + локализованное название элемента шаблона
 	 */
 	public String getReportElementFullName(String reportName) {
-		return this.getName()
+		return this.getLocalizedShortName()
 			+ ReportModel.REPORT_NAME_DIVIDER
 			+ LangModelReport.getString(reportName);
 	}

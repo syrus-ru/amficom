@@ -1,5 +1,5 @@
 /*
- * $Id: DRIComponentMouseMotionListener.java,v 1.2 2005/09/05 12:22:51 peskovsky Exp $
+ * $Id: DRIComponentMouseMotionListener.java,v 1.3 2005/09/07 08:43:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,13 +20,11 @@ import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.reportbuilder.event.DRComponentMovedEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.report.StorableElement;
-import com.syrus.AMFICOM.report.ReportTemplate;
-import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
  * MouseMotionListener for DataRenderingComponent и ImageRenderingComponent
  * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2005/09/05 12:22:51 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/07 08:43:25 $
  * @module reportclient_v1
  */
 public class DRIComponentMouseMotionListener implements MouseMotionListener{
@@ -40,9 +38,9 @@ public class DRIComponentMouseMotionListener implements MouseMotionListener{
 	private static DRIComponentMouseMotionListener instance = null;
 	
 	public static void createInstance(
-			ReportTemplate template,
-			ApplicationContext aContext){
-		instance = new DRIComponentMouseMotionListener(template,aContext);
+			ApplicationContext aContext,
+			Rectangle templateBounds) {
+		instance = new DRIComponentMouseMotionListener(aContext,templateBounds);
 	}
 
 	public static DRIComponentMouseMotionListener getInstance(){
@@ -52,18 +50,10 @@ public class DRIComponentMouseMotionListener implements MouseMotionListener{
 	}
 	
 	private DRIComponentMouseMotionListener(
-			ReportTemplate template,
-			ApplicationContext aContext){
+			ApplicationContext aContext,
+			Rectangle templateBounds) {
 		this.applicationContext = aContext;
-		
-		this.templateBounds = new Rectangle();
-		int templateMarginSize = template.getMarginSize();
-		this.templateBounds.setLocation(
-				new Point(templateMarginSize,templateMarginSize));
-		IntDimension size = template.getSize();
-		this.templateBounds.setSize(
-				size.getWidth() - 2 * templateMarginSize,
-				size.getHeight() - 2 * templateMarginSize);
+		this.templateBounds = templateBounds;
 	}
 	
 	public void mouseMoved(MouseEvent e) {
@@ -176,16 +166,24 @@ public class DRIComponentMouseMotionListener implements MouseMotionListener{
 		
 		component.setMousePressedLocation(mousePressedLocation);
 
-		if (newLocation.x < this.templateBounds.x)
+		if (newLocation.x < this.templateBounds.x) {
+			newSize.width = component.getWidth();
 			newLocation.x = this.templateBounds.x;
-		else if (newLocation.x + newSize.width > this.templateBounds.x + this.templateBounds.width)
+		}
+		else if (newLocation.x + newSize.width > this.templateBounds.x + this.templateBounds.width) {
+			newSize.width = component.getWidth();
 			newLocation.x = this.templateBounds.x + this.templateBounds.width - newSize.width;
+		}
 
-		if (newLocation.y < this.templateBounds.y)
+		if (newLocation.y < this.templateBounds.y) {
+			newSize.height = component.getHeight();
 			newLocation.y = this.templateBounds.y;
-		else if (newLocation.y + newSize.height > this.templateBounds.y + this.templateBounds.height)
+		}
+		else if (newLocation.y + newSize.height > this.templateBounds.y + this.templateBounds.height) {
+			newSize.height = component.getHeight();			
 			newLocation.y = this.templateBounds.y + this.templateBounds.height - newSize.height;
-
+		}
+		
 		component.setLocation(newLocation);
 		component.setSize(newSize);
 		
@@ -198,7 +196,10 @@ public class DRIComponentMouseMotionListener implements MouseMotionListener{
 		//ќтсылаем сообщение, чтобы те надписи, которые прив€заны к данному
 		//элементу отображени€ данных, передвинулись, сохран€€ интервал между
 		//ними.
-		this.applicationContext.getDispatcher().firePropertyChange(new DRComponentMovedEvent(this,component));		
+		this.applicationContext.getDispatcher().firePropertyChange(new DRComponentMovedEvent(this,component));
+		element.setLocation(component.getX(),component.getY());
+		element.setSize(component.getWidth(),component.getHeight());			
+		
 		this.applicationContext.getDispatcher().firePropertyChange(new ReportFlagEvent(this,ReportFlagEvent.REPAINT_RENDERER));
 	}
 }

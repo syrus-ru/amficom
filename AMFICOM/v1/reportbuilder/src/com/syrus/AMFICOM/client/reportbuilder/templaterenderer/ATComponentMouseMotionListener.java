@@ -1,5 +1,5 @@
 /*
- * $Id: ATComponentMouseMotionListener.java,v 1.2 2005/09/05 12:22:51 peskovsky Exp $
+ * $Id: ATComponentMouseMotionListener.java,v 1.3 2005/09/07 08:43:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,6 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.AttachedTextComponent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
-import com.syrus.AMFICOM.report.ReportTemplate;
-import com.syrus.AMFICOM.resource.IntDimension;
 
 public class ATComponentMouseMotionListener implements MouseMotionListener{
 	ApplicationContext applicationContext = null;
@@ -26,15 +24,15 @@ public class ATComponentMouseMotionListener implements MouseMotionListener{
 	private static ATComponentMouseMotionListener instance = null;
 	
 	/**
-	 * Габариты рабочегополя шаблона - требуется, чтобы компоненты не вылезали
+	 * Габариты рабочего поля шаблона - требуется, чтобы компоненты не вылезали
 	 * на поля шаблона.
 	 */
-	private final Rectangle templateBounds;
+	private Rectangle templateBounds;
 	
 	public static void createInstance(
 			ApplicationContext aContext,
-			ReportTemplate reportTemplate) {
-		instance = new ATComponentMouseMotionListener(aContext,reportTemplate);
+			Rectangle templateBounds) {
+		instance = new ATComponentMouseMotionListener(aContext,templateBounds);
 	}
 	
 	public static ATComponentMouseMotionListener getInstance(){
@@ -43,19 +41,15 @@ public class ATComponentMouseMotionListener implements MouseMotionListener{
 		return instance;
 	}
 	
-	private ATComponentMouseMotionListener (ApplicationContext aContext, ReportTemplate template){
+	private ATComponentMouseMotionListener (ApplicationContext aContext, Rectangle templateBounds) {
 		this.applicationContext = aContext;
-		
-		this.templateBounds = new Rectangle();
-		int templateMarginSize = template.getMarginSize();
-		this.templateBounds.setLocation(
-				new Point(templateMarginSize,templateMarginSize));
-		IntDimension size = template.getSize();
-		this.templateBounds.setSize(
-				size.getWidth() - 2 * templateMarginSize,
-				size.getHeight() - 2 * templateMarginSize);
+		this.templateBounds = templateBounds;
 	}
 
+//	public void setTemplateBounds(Rectangle templateBounds) {
+//		this.templateBounds = templateBounds;
+//	}
+	
 	public void mouseDragged(MouseEvent e) {
 		AttachedTextComponent component = (AttachedTextComponent)e.getSource();
 		int cursorType = component.getCursor().getType();
@@ -70,7 +64,6 @@ public class ATComponentMouseMotionListener implements MouseMotionListener{
 		Point mousePressedLocation = component.getMousePressedLocation();
 		int newX = component.getX() + e.getX() - mousePressedLocation.x;
 		int newY = component.getY() + e.getY() - mousePressedLocation.y;
-		
 		
 		if (newX < this.templateBounds.x)
 			newX = this.templateBounds.x;

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateDataRenderingComponent.java,v 1.3 2005/09/05 12:22:51 peskovsky Exp $
+ * $Id: ReportTemplateDataRenderingComponent.java,v 1.4 2005/09/07 08:43:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ public class ReportTemplateDataRenderingComponent extends
 		
 		ReportModel reportModel = ReportModelPool.getModel(dre.getModelClassName());
 		this.reportName = reportModel.getReportElementName(dre.getReportName());
-		this.modelName = reportModel.getName();
+		this.modelName = reportModel.getLocalizedShortName();
 	}
 	
 	public void paintComponent (Graphics g)	{
@@ -117,5 +117,16 @@ public class ReportTemplateDataRenderingComponent extends
 			? this.modelNameWidth : this.reportNameWidth) + 5;
 		
 		this.minimumSize.height = fontMetrics.getHeight() * 3 + 5;
+	}
+	
+	/**
+	 * Возвращает полное локализованное имя элемента шаблона. Используется
+	 * из ReportTemplateRendererDragDropListener, для создания надписи-
+	 * заголовка элемента. Такой метод уже реализован в ReportModel, но
+	 * здесь удобнее написать свой, поскольку имеются готовые локализванные
+	 * названия модели и элемента шаблона
+	 */
+	public String getReportFullName() {
+		return this.modelName + ReportModel.REPORT_NAME_DIVIDER + this.reportName;
 	}
 }

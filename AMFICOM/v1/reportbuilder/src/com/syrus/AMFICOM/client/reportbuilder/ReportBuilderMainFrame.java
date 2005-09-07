@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.6 2005/09/05 12:22:51 peskovsky Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.7 2005/09/07 08:43:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import java.beans.PropertyChangeListener;
 import java.util.logging.Level;
 
 import javax.swing.JInternalFrame;
+import javax.swing.JScrollPane;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -33,10 +34,12 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
-import com.syrus.AMFICOM.client.reportbuilder.command.template.ReportTemplateNewCommand;
+import com.syrus.AMFICOM.client.reportbuilder.command.template.NewTemplateCommand;
+import com.syrus.AMFICOM.client.reportbuilder.command.template.TemplateParametersCommand;
 import com.syrus.AMFICOM.client.reportbuilder.command.templatescheme.ReportSendEventCommand;
 import com.syrus.AMFICOM.client.reportbuilder.event.AttachLabelEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEvent;
+import com.syrus.AMFICOM.client.reportbuilder.event.NewReportTemplateEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTemplateRenderer;
@@ -77,10 +80,10 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 	protected void initFrames() {
 		this.frames = new UIDefaults();
 		
-		this.frames.put(TEMPLATE_SCHEME_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				JInternalFrame templateSchemeFrame = new JInternalFrame();
-				templateSchemeFrame.setName(TEMPLATE_SCHEME_FRAME);
+				templateSchemeFrame.setName(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME);
 				templateSchemeFrame.setIconifiable(true);
 				templateSchemeFrame.setClosable(true);
 				templateSchemeFrame.setResizable(true);
@@ -88,8 +91,12 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 				templateSchemeFrame.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
 				templateSchemeFrame.setTitle(LangModelReport.getString(TEMPLATE_SCHEME_FRAME));
 				
-				templateSchemeFrame.getContentPane().setLayout(new BorderLayout());
-				templateSchemeFrame.getContentPane().add(ReportBuilderMainFrame.this.reportTemplateRenderer, BorderLayout.CENTER);
+				JScrollPane rendererScrollPane = new JScrollPane();
+				rendererScrollPane.getViewport().add(ReportBuilderMainFrame.this.reportTemplateRenderer);
+				rendererScrollPane.setAutoscrolls(true);
+
+				templateSchemeFrame.getContentPane().setLayout(new BorderLayout());				
+				templateSchemeFrame.getContentPane().add(rendererScrollPane, BorderLayout.CENTER);
 				
 				templateSchemeFrame.getContentPane().add(ReportBuilderMainFrame.this.innerToolbar, BorderLayout.NORTH);				
 
@@ -98,11 +105,11 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 			}
 		});
 		
-		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
+		this.frames.put(ReportBuilderApplicationModel.MENU_WINDOW_TREE, new UIDefaults.LazyValue() {
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | TREE_FRAME", Level.FINEST);
 				JInternalFrame treeFrame = new JInternalFrame();
-				treeFrame.setName(TREE_FRAME);
+				treeFrame.setName(ReportBuilderApplicationModel.MENU_WINDOW_TREE);
 				treeFrame.setIconifiable(true);
 				treeFrame.setClosable(true);
 				treeFrame.setResizable(true);
@@ -135,9 +142,13 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 				JInternalFrame templateSchemeFrame = null;
 				
 				for (Component component : ReportBuilderMainFrame.this.desktopPane.getComponents()) {
-					if (component.getName().equals(TREE_FRAME))
+					String name = component.getName();
+					if (name == null)
+						continue;
+					
+					if (name.equals(ReportBuilderApplicationModel.MENU_WINDOW_TREE))
 						treeFrame = (JInternalFrame)component;
-					else if (component.getName().equals(TEMPLATE_SCHEME_FRAME))
+					else if (name.equals(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME))
 						templateSchemeFrame = (JInternalFrame)component;
 				}
 				
@@ -193,20 +204,24 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW,
-				new ReportTemplateNewCommand(this.aContext));
+				new NewTemplateCommand(this.aContext));
+		
+		aModel.setCommand(
+				ReportBuilderApplicationModel.MENU_TEMPLATE_PARAMETERS,
+				new TemplateParametersCommand(this.aContext,this));
+		
 //		aModel.setCommand(
 //			ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD,
-//			new ReportTemplateOpenCommand(this.aContext));
-//		aModel.setCommand("menuReportTemplateSave", new ReportTemplateSaveCommand(this.aContext));
-//		aModel.setCommand("menuReportTemplateSaveAs", new ReportTemplateSaveAsCommand(this.aContext));
+//			new OpenTemplateCommand(this.aContext));
+//		aModel.setCommand("menuReportTemplateSave", new SaveTemplateCommand(this.aContext));
+//		aModel.setCommand("menuReportTemplateSaveAs", new SaveAsTemplateCommand(this.aContext));
 
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_WINDOW_TREE,
-				this.getLazyCommand(TREE_FRAME));
+				this.getLazyCommand(ReportBuilderApplicationModel.MENU_WINDOW_TREE));
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME,
-				this.getLazyCommand(TEMPLATE_SCHEME_FRAME));
-
+				this.getLazyCommand(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME));
 		
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_INSERT_LABEL
@@ -234,13 +249,13 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 		
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_CHANGE_VIEW,
-				new ReportTemplateNewCommand(this.aContext));
+				new NewTemplateCommand(this.aContext));
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_SAVE_REPORT,
-				new ReportTemplateNewCommand(this.aContext));
+				new NewTemplateCommand(this.aContext));
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_PRINT_REPORT,
-				new ReportTemplateNewCommand(this.aContext));
+				new NewTemplateCommand(this.aContext));
 		
 		setDefaultModel(aModel);
 		aModel.fireModelChanged("");
@@ -309,9 +324,14 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 		aModel.setEnabled(ReportBuilderApplicationModel.MENU_CHANGE_VIEW, true);
 		aModel.setEnabled(ReportBuilderApplicationModel.MENU_SAVE_REPORT, false);		
 		aModel.setEnabled(ReportBuilderApplicationModel.MENU_PRINT_REPORT, false);
+
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE, true);		
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE_PARAMETERS, true);
 		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE, true);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, true);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW, false);		
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE, false);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, false);
+		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);		
 	}
 	
 	@Override
@@ -341,7 +361,10 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 			}
 		}
 		else if (pce instanceof ComponentSelectionChangeEvent) {
-			RenderingComponent component = 
+//			if (!RendererMode.getMode().equals(RendererMode.MODE.NO_SPECIAL))
+//				return;
+			
+			RenderingComponent component =
 				((ComponentSelectionChangeEvent)pce).getRenderingComponent();
 			//Делаем кнопку удаления объектов активной, если выбран объект
 			aModel.setEnabled(ReportBuilderApplicationModel.MENU_DELETE_OBJECT, (component != null));
@@ -349,6 +372,12 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 		}
 		else if (pce instanceof AttachLabelEvent) {
 			aModel.setAllItemsEnabled(false);
+			aModel.fireModelChanged("");
+		}
+		else if (pce instanceof NewReportTemplateEvent) {
+			aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW, true);		
+			aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE, true);
+			aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, true);
 			aModel.fireModelChanged("");
 		}
 	}
@@ -361,5 +390,9 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 			ReportBuilderMainFrame.this.aContext.getApplicationModel().getCommand(ApplicationModel.MENU_EXIT).execute();
 		}
 		super.processWindowEvent(e);
+	}
+
+	public ReportTemplateRenderer getTemplateRenderer() {
+		return this.reportTemplateRenderer;
 	}
 }

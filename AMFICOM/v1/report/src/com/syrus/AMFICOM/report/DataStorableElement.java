@@ -1,17 +1,23 @@
 package com.syrus.AMFICOM.report;
 
+import java.io.IOException;
+import java.io.Serializable;
+
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.resource.IntDimension;
+import com.syrus.AMFICOM.resource.IntPoint;
 
 /**
  * <p>Title: </p>
- * <p>Description: Элемент шаблона</p>
+ * <p>Description: Элемент шаблона - не табличный. Для хранения табличных
+ * элементов шаблона используется TableDataStorableElement</p>
  * <p>Copyright: Copyright (c) 2003</p>
  * <p>Company: Syrus Systems</p>
  * @author Песковский Пётр
  * @version 1.0
  */
 
-public abstract class DataStorableElement extends StorableElement
+public class DataStorableElement extends StorableElement implements Serializable 
 {
 	/**
 	 * Название отображаемого отчёта.
@@ -49,5 +55,24 @@ public abstract class DataStorableElement extends StorableElement
 		this.modelClassName = modelClassName;
 		//TODO Здесь должно быть получение ID
 		this.id = Identifier.VOID_IDENTIFIER;
+	}
+	
+	public void writeObject(java.io.ObjectOutputStream out) throws IOException {
+		out.writeObject(this.getSize());
+		out.writeObject(this.getLocation());		
+
+		out.writeObject(this.getId());		
+		out.writeObject(this.getReportName());		
+		out.writeObject(this.getModelClassName());
+	}
+
+	public void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
+		this.setSize((IntDimension)in.readObject());
+		this.setLocation((IntPoint)in.readObject());
+
+		this.id = (Identifier)in.readObject();
+		this.reportName = (String)in.readObject();
+		this.modelClassName = (String)in.readObject();
+
 	}
 }

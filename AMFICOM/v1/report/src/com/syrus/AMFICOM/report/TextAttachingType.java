@@ -1,5 +1,5 @@
 /*
- * $Id: TextAttachingType.java,v 1.2 2005/08/31 10:32:55 peskovsky Exp $
+ * $Id: TextAttachingType.java,v 1.3 2005/09/07 08:43:27 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.report;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2005/08/31 10:32:55 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/07 08:43:27 $
  * @module report_v1
  */
 public class TextAttachingType {
@@ -38,5 +38,8 @@ public class TextAttachingType {
 	 * Привязка по горизонтали к правому краю элемента шаблона
 	 */
 	public static final String TO_RIGHT = "report.TextAttachingType.toRight";
-
+	/**
+	 * Привязка по горизонтали по центру элемента шаблона
+	 */
+	public static final String TO_WIDTH_CENTER = "report.TextAttachingType.toWidthCenter";
 }

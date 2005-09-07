@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateNewCommand.java,v 1.2 2005/09/03 12:42:21 peskovsky Exp $
+ * $Id: NewTemplateCommand.java,v 1.1 2005/09/07 08:43:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,16 +10,17 @@ package com.syrus.AMFICOM.client.reportbuilder.command.template;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
+import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderApplicationModel;
 import com.syrus.AMFICOM.client.reportbuilder.ReportTemplateFactory;
 import com.syrus.AMFICOM.client.reportbuilder.event.NewReportTemplateEvent;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.util.Log;
 
-public class ReportTemplateNewCommand extends AbstractCommand {
+public class NewTemplateCommand extends AbstractCommand {
 	ApplicationContext aContext;
 
-	public ReportTemplateNewCommand(ApplicationContext aContext) {
+	public NewTemplateCommand(ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
@@ -29,8 +30,8 @@ public class ReportTemplateNewCommand extends AbstractCommand {
 			ReportTemplate reportTemplate = ReportTemplateFactory.createReportTemplate();
 			
 			ApplicationModel aModel = this.aContext.getApplicationModel(); 
-			aModel.getCommand("menuWindowTemplateScheme").execute();
-			aModel.getCommand("menuWindowTree").execute();
+			aModel.getCommand(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME).execute();
+			aModel.getCommand(ReportBuilderApplicationModel.MENU_WINDOW_TREE).execute();
 			
 			aModel.getCommand(ApplicationModel.MENU_VIEW_ARRANGE).execute();
 			

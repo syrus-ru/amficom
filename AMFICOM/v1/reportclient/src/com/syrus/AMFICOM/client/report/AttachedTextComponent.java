@@ -1,5 +1,5 @@
 /*
- * $Id: AttachedTextComponent.java,v 1.5 2005/09/05 12:22:51 peskovsky Exp $
+ * $Id: AttachedTextComponent.java,v 1.6 2005/09/07 08:43:27 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,6 @@ import javax.swing.border.Border;
 
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.StorableElement;
-import com.syrus.AMFICOM.resource.IntDimension;
 
 public class AttachedTextComponent extends JTextPane implements RenderingComponent{
 	private static final long serialVersionUID = 8382110834808763027L;
@@ -42,7 +41,7 @@ public class AttachedTextComponent extends JTextPane implements RenderingCompone
 	 */
 	private static final String SYMBOLS_FOR_ADDITONAL_WIDTH1 = "X";
 
-	public static final IntDimension MINIMUM_COMPONENT_SIZE = new IntDimension(90, 30);	
+	public static final Dimension MINIMUM_COMPONENT_SIZE = new Dimension(90, 30);	
 	/**
 	 * Точка клика мыши на надписи
 	 */
@@ -77,10 +76,10 @@ public class AttachedTextComponent extends JTextPane implements RenderingCompone
 	 */
 	public void checkComponentWidth() {
 		this.setSize(
-			this.getWidth() > MINIMUM_COMPONENT_SIZE.getWidth()
-				? this.getWidth() : MINIMUM_COMPONENT_SIZE.getWidth(),
-			this.getHeight() > MINIMUM_COMPONENT_SIZE.getHeight()
-				? this.getHeight() : MINIMUM_COMPONENT_SIZE.getHeight());
+			this.getWidth() > MINIMUM_COMPONENT_SIZE.width
+				? this.getWidth() : MINIMUM_COMPONENT_SIZE.width,
+			this.getHeight() > MINIMUM_COMPONENT_SIZE.height
+				? this.getHeight() : MINIMUM_COMPONENT_SIZE.height);
 	}
 
 	/**

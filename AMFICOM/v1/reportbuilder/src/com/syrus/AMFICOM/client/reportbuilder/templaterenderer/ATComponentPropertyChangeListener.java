@@ -1,5 +1,5 @@
 /*
- * $Id: ATComponentPropertyChangeListener.java,v 1.2 2005/09/05 12:22:51 peskovsky Exp $
+ * $Id: ATComponentPropertyChangeListener.java,v 1.3 2005/09/07 08:43:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,11 +8,13 @@
 package com.syrus.AMFICOM.client.reportbuilder.templaterenderer;
 
 import java.awt.Dimension;
+import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.AttachedTextComponent;
+import com.syrus.AMFICOM.client.report.DataRenderingComponent;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.DRComponentMovedEvent;
@@ -23,13 +25,20 @@ import com.syrus.AMFICOM.report.StorableElement;
 public class ATComponentPropertyChangeListener implements PropertyChangeListener{
 	AttachedTextComponent textComponent = null;
 	ApplicationContext applicationContext = null;
+	Rectangle templateBounds = null;
 	
 	public ATComponentPropertyChangeListener(
 			AttachedTextComponent component,
-			ApplicationContext aContext){
+			ApplicationContext aContext,
+			Rectangle templateBounds){
 		this.textComponent = component;
 		this.applicationContext = aContext;
+		this.templateBounds = templateBounds;
 	}
+	
+//	public void setTemplateBounds(Rectangle templateBounds) {
+//		this.templateBounds = templateBounds;
+//	}
 	
 	public void propertyChange(PropertyChangeEvent evt) {
 		if (evt instanceof DRComponentMovedEvent) {
@@ -38,14 +47,16 @@ public class ATComponentPropertyChangeListener implements PropertyChangeListener
 			//на соответсвующее расстояние
 			DRComponentMovedEvent event = (DRComponentMovedEvent)evt;
 			
-			StorableElement drElement = event.getDRComponentMoved().getElement();
+			DataRenderingComponent drComponent = event.getDRComponentMoved();
+			StorableElement drElement = drComponent.getElement();
 			
 			AttachedTextStorableElement textElement =
 				(AttachedTextStorableElement) this.textComponent.getElement();
 			if (	drElement.equals(textElement.getHorizontalAttacher())
 				||	drElement.equals(textElement.getVerticalAttacher())) {
-				textElement.suiteAttachingDistances();
+				textElement.suiteAttachingDistances(this.templateBounds);
 				this.textComponent.setLocation(textElement.getX(),textElement.getY());
+//				drComponent.setLocation(drElement.getX(),drElement.getY());				
 				//TODO Есть репейнт в лисенере движения объекта, к которому
 				//привязана надпись - возможно этот репейнт не нужен!
 				this.applicationContext.getDispatcher().firePropertyChange(
@@ -73,9 +84,6 @@ public class ATComponentPropertyChangeListener implements PropertyChangeListener
 				
 				//Выставляем размер хранимому элементу
 				StorableElement element = this.textComponent.getElement();
-				element.setSize(
-						this.textComponent.getWidth(),
-						this.textComponent.getHeight());
 				element.setModified(System.currentTimeMillis());
 			}
 		}

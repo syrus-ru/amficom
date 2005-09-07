@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderApplicationModel.java,v 1.5 2005/09/05 07:58:03 peskovsky Exp $
+ * $Id: ReportBuilderApplicationModel.java,v 1.6 2005/09/07 08:43:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,11 +18,15 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 public class ReportBuilderApplicationModel extends ApplicationModel
 {
 	public static final String	START							= "_start";
-	public static final String	CANCEL							= "_cancel";	
+	public static final String	CANCEL							= "_cancel";
+	
 	public static final String	MENU_WINDOW						= "menuWindow";
 	public static final String	MENU_WINDOW_TREE				= "menuWindowTree";
 	public static final String	MENU_WINDOW_TEMPLATE_SCHEME		= "menuWindowTemplateScheme";
 
+	public static final String	MENU_TEMPLATE					= "menuTemplate";
+	public static final String	MENU_TEMPLATE_PARAMETERS		= "menuTemplateParameters";
+	
 	public static final String	MENU_REPORT_TEMPLATE_NEW		= "menuReportTemplateNew";
 	public static final String	MENU_REPORT_TEMPLATE_SAVE		= "menuReportTemplateSave";
 	public static final String	MENU_REPORT_TEMPLATE_LOAD		= "menuReportTemplateLoad";
@@ -46,6 +50,9 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 		add(ApplicationModel.MENU_SESSION_DOMAIN);
 		add(ApplicationModel.MENU_EXIT);
 
+		add(MENU_TEMPLATE);
+		add(MENU_TEMPLATE_PARAMETERS);
+		
 		add(MENU_WINDOW);
 		add(MENU_WINDOW_TREE);
 		add(MENU_WINDOW_TEMPLATE_SCHEME);

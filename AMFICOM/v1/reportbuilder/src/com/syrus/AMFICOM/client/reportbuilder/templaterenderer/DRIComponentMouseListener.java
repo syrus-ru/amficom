@@ -1,5 +1,5 @@
 /*
- * $Id: DRIComponentMouseListener.java,v 1.2 2005/09/05 12:22:51 peskovsky Exp $
+ * $Id: DRIComponentMouseListener.java,v 1.3 2005/09/07 08:43:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.event.MouseListener;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.DataRenderingComponent;
+import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.MODE;
@@ -46,7 +47,8 @@ public class DRIComponentMouseListener implements MouseListener{
 		component.setMousePressedLocation(e.getPoint());
 		
 		if (!	(	RendererMode.getMode().equals(MODE.NO_SPECIAL)
-				||	RendererMode.getMode().equals(MODE.ATTACH_LABEL)))
+				||	(	RendererMode.getMode().equals(MODE.ATTACH_LABEL)
+					&&	!(component instanceof ImageRenderingComponent))))
 			return;
 
 		//В процессе привязки надписи финальный этап (описывается в 

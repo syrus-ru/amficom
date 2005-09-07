@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeModel.java,v 1.6 2005/09/05 12:22:51 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeModel.java,v 1.7 2005/09/07 08:43:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -107,7 +107,7 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 		node.addChild(new PopulatableIconedNode(
 				this,
 				analysisReportModel,
-				analysisReportModel.getName(),
+				analysisReportModel.getLocalizedName(),
 				UIManager.getIcon(ICON_CATALOG)));
 
 		//Модель для модуля "Измерения"
@@ -116,7 +116,7 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 		node.addChild(new PopulatableIconedNode(
 				this,
 				evaluationReportModel,
-				evaluationReportModel.getName(),
+				evaluationReportModel.getLocalizedName(),
 				UIManager.getIcon(ICON_CATALOG)));
 
 		//Модель для модуля "Исследование"
@@ -125,7 +125,7 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 		node.addChild(new PopulatableIconedNode(
 				this,
 				surveyReportModel,
-				surveyReportModel.getName(),
+				surveyReportModel.getLocalizedName(),
 				UIManager.getIcon(ICON_CATALOG)));
 
 		//Модель для модуля "Моделирование"
@@ -134,7 +134,7 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 		node.addChild(new PopulatableIconedNode(
 				this,
 				modellingReportModel,
-				modellingReportModel.getName(),
+				modellingReportModel.getLocalizedName(),
 				UIManager.getIcon(ICON_CATALOG)));
 
 		//Модель для модуля "Прогнозирование"
@@ -143,7 +143,7 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 		node.addChild(new PopulatableIconedNode(
 				this,
 				predictionReportModel,
-				predictionReportModel.getName(),
+				predictionReportModel.getLocalizedName(),
 				UIManager.getIcon(ICON_CATALOG)));
 	}
 

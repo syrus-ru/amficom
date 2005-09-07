@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateSaveAsCommand.java,v 1.1 2005/09/01 14:21:39 peskovsky Exp $
+ * $Id: SaveAsTemplateCommand.java,v 1.1 2005/09/07 08:43:25 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Map;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.report.DestinationModules;
 
-public class ReportTemplateSaveAsCommand {
+public class SaveAsTemplateCommand {
 	/**
 	 * Список всех модулей
 	 */
