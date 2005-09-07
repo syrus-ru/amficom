@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicTypeWrapper.java,v 1.18 2005/08/12 09:57:04 bob Exp $
+ * $Id: CharacteristicTypeWrapper.java,v 1.19 2005/09/07 02:58:50 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/12 09:57:04 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/09/07 02:58:50 $
+ * @author $Author: arseniy $
  * @module general
  */
 public class CharacteristicTypeWrapper extends StorableObjectWrapper<CharacteristicType> {
@@ -36,8 +36,9 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper<Characteris
 	}
 
 	public static CharacteristicTypeWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new CharacteristicTypeWrapper();
+		}
 		return instance;
 	}
 
@@ -81,8 +82,7 @@ public class CharacteristicTypeWrapper extends StorableObjectWrapper<Characteris
 	}
 
 	@Override
-	public Object getValue(final CharacteristicType characteristicType, 
-	                       final String key) {
+	public Object getValue(final CharacteristicType characteristicType, final String key) {
 		final Object value = super.getValue(characteristicType, key);
 		if (value == null && characteristicType != null) {
 			if (key.equals(COLUMN_CODENAME))
