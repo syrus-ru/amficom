@@ -1,3 +1,10 @@
+/*-
+* $Id: WrapperedTable.java,v 1.11 2005/09/07 13:06:33 bob Exp $
+*
+* Copyright ¿ 2005 Syrus Systems.
+* Dept. of Science & Technology.
+* Project: AMFICOM.
+*/
 package com.syrus.AMFICOM.client.UI;
 
 import java.awt.Color;
@@ -23,8 +30,9 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/07 02:37:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/09/07 13:06:33 $
+ * @author $Author: bob $
+ * @author Vladimir Dolzhenko
  * @module commonclient
  */
 public class WrapperedTable<T> extends ATable {
