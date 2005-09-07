@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.78 2005/09/07 18:31:40 bass Exp $
+ * $Id: Scheme.java,v 1.79 2005/09/07 19:16:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.78 $, $Date: 2005/09/07 18:31:40 $
+ * @version $Revision: 1.79 $, $Date: 2005/09/07 19:16:04 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1296,12 +1296,12 @@ public final class Scheme extends AbstractCloneableDomainMember
 		}
 		if (scheme.isSetSchemeLinks()) {
 			for (final XmlSchemeLink schemeLink : scheme.getSchemeLinks().getSchemeLinkArray()) {
-				// empty so far
+				SchemeLink.createInstance(super.creatorId, schemeLink, importType);
 			}
 		}
 		if (scheme.isSetSchemeCableLinks()) {
 			for (final XmlSchemeCableLink schemeCableLink : scheme.getSchemeCableLinks().getSchemeCableLinkArray()) {
-				// empty so far
+				SchemeCableLink.createInstance(super.creatorId, schemeCableLink, importType);
 			}
 		}
 		if (scheme.isSetSchemeOptimizeInfos()) {

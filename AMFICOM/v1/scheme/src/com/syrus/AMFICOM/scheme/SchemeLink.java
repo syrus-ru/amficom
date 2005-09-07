@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.67 2005/09/07 12:09:50 bass Exp $
+ * $Id: SchemeLink.java,v 1.68 2005/09/07 19:16:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.67 $, $Date: 2005/09/07 12:09:50 $
+ * @version $Revision: 1.68 $, $Date: 2005/09/07 19:16:04 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -162,6 +162,33 @@ public final class SchemeLink extends AbstractSchemeLink
 		assert ((parentScheme == null) ? 0 : 1) + ((parentSchemeElement == null) ? 0 : 1) + ((parentSchemeProtoElement == null) ? 0 : 1) <= 1 : EXACTLY_ONE_PARENT_REQUIRED;
 		this.parentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 		this.parentSchemeProtoElementId = Identifier.possiblyVoid(parentSchemeProtoElement);
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private SchemeLink(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created, 
+				created,
+				creatorId,
+				creatorId,
+				StorableObjectVersion.createInitial(),
+				null,
+				null,
+				0,
+				0,
+				null,
+				null,
+				null,
+				null,
+				null);
 	}
 
 	/**
@@ -468,6 +495,36 @@ public final class SchemeLink extends AbstractSchemeLink
 			return schemeLink;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeLink.createInstance | cannot generate identifier ", ige);
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param xmlSchemeLink
+	 * @param importType
+	 * @throws CreateObjectException
+	 */
+	public static SchemeLink createInstance(final Identifier creatorId,
+			final XmlSchemeLink xmlSchemeLink,
+			final String importType)
+	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
+		try {
+			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeLink.getId(), SCHEMELINK_CODE, importType);
+			SchemeLink schemeLink = StorableObjectPool.getStorableObject(id, true);
+			if (schemeLink == null) {
+				schemeLink = new SchemeLink(id, new Date(), creatorId);
+			}
+			schemeLink.fromXmlTransferable(xmlSchemeLink, importType);
+			assert schemeLink.isValid() : OBJECT_BADLY_INITIALIZED;
+			schemeLink.markAsChanged();
+			return schemeLink;
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.75 2005/09/07 12:09:50 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.76 2005/09/07 19:16:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/09/07 12:09:50 $
+ * @version $Revision: 1.76 $, $Date: 2005/09/07 19:16:04 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -141,6 +141,33 @@ public final class SchemeCableLink extends AbstractSchemeLink
 				sourceSchemeCablePort,
 				targetSchemeCablePort,
 				parentScheme);
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private SchemeCableLink(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
+				creatorId,
+				creatorId,
+				StorableObjectVersion.createInitial(),
+				null,
+				null,
+				0,
+				0,
+				null,
+				null,
+				null,
+				null,
+				null);
 	}
 
 	/**
@@ -217,6 +244,36 @@ public final class SchemeCableLink extends AbstractSchemeLink
 			return schemeCableLink;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeCableLink.createInstance | cannot generate identifier ", ige);
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param xmlSchemeCableLink
+	 * @param importType
+	 * @throws CreateObjectException
+	 */
+	public static SchemeCableLink createInstance(final Identifier creatorId,
+			final XmlSchemeCableLink xmlSchemeCableLink,
+			final String importType)
+	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
+		try {
+			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeCableLink.getId(), SCHEMECABLELINK_CODE, importType);
+			SchemeCableLink schemeCableLink = StorableObjectPool.getStorableObject(id, true);
+			if (schemeCableLink == null) {
+				schemeCableLink = new SchemeCableLink(id, new Date(), creatorId);
+			}
+			schemeCableLink.fromXmlTransferable(xmlSchemeCableLink, importType);
+			assert schemeCableLink.isValid() : OBJECT_BADLY_INITIALIZED;
+			schemeCableLink.markAsChanged();
+			return schemeCableLink;
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 
