@@ -1,5 +1,5 @@
 /*
- * $Id: AddPropFrame.java,v 1.14 2005/08/08 11:58:06 arseniy Exp $
+ * $Id: AddPropFrame.java,v 1.15 2005/09/07 03:02:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,6 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
-import java.util.Iterator;
 
 import javax.swing.BorderFactory;
 import javax.swing.ButtonGroup;
@@ -50,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:58:06 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/07 03:02:53 $
  * @module schemeclient
  */
 
@@ -60,8 +59,9 @@ public class AddPropFrame extends JDialog {
 	protected CharacteristicTypeSort sort;
 	
 	private CharacteristicType selectedType;
-	WrapperedComboBox characteristicTypeComboBox = new WrapperedComboBox(CharacteristicTypeWrapper
-			.getInstance(), StorableObjectWrapper.COLUMN_DESCRIPTION, StorableObjectWrapper.COLUMN_ID);
+	final WrapperedComboBox<CharacteristicType> characteristicTypeComboBox = new WrapperedComboBox<CharacteristicType>(CharacteristicTypeWrapper.getInstance(),
+			StorableObjectWrapper.COLUMN_DESCRIPTION,
+			StorableObjectWrapper.COLUMN_ID);
 	JRadioButton existingRadioButton = new JRadioButton(LangModelScheme.getString(SchemeResourceKeys.EXISTING_TYPE));
 	JRadioButton newRadioButton = new JRadioButton(LangModelScheme.getString(SchemeResourceKeys.NEW_TYPE));
 	ButtonGroup buttonGroup = new ButtonGroup();
@@ -74,81 +74,79 @@ public class AddPropFrame extends JDialog {
 	JButton okButton = new JButton(LangModelScheme.getString(SchemeResourceKeys.OK));
 	JButton cancelButton = new JButton(LangModelScheme.getString(SchemeResourceKeys.CANCEL));
 
-	public AddPropFrame(Frame parent, String title) {
+	public AddPropFrame(final Frame parent, final String title) {
 		super(parent, title);
 
 		try {
-			jbInit();
+			this.jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
 
-	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
 		this.buttonGroup.add(this.existingRadioButton);
 		this.buttonGroup.add(this.newRadioButton);
 		this.existingRadioButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				radioButtonStateChanged();
 			}
 		});
 		this.newRadioButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				radioButtonStateChanged();
 			}
 		});
 
-		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-		Dimension frameSize = new Dimension(350, 250);
+		final Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
+		final Dimension frameSize = new Dimension(350, 250);
 
-		setLocation((screenSize.width - frameSize.width) / 2,
-				(screenSize.height - frameSize.height) / 2);
-		setSize(frameSize);
-		setTitle(LangModelScheme.getString(SchemeResourceKeys.CHARACTERISTIC));
+		super.setLocation((screenSize.width - frameSize.width) / 2, (screenSize.height - frameSize.height) / 2);
+		super.setSize(frameSize);
+		super.setTitle(LangModelScheme.getString(SchemeResourceKeys.CHARACTERISTIC));
 
-		JScrollPane scrollPane = new JScrollPane();
+		final JScrollPane scrollPane = new JScrollPane();
 		scrollPane.getViewport().add(this.descrArea);
 		this.descrArea.setAutoscrolls(true);
 		scrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
 
-		GridBagLayout gridbag = new GridBagLayout();
-		GridBagConstraints c = new GridBagConstraints();
+		final GridBagLayout gridbag = new GridBagLayout();
+		final GridBagConstraints c = new GridBagConstraints();
 		this.panel.setLayout(gridbag);
 
 		c.fill = GridBagConstraints.BOTH;
 		c.gridwidth = GridBagConstraints.REMAINDER;
-		addToPanel(existingRadioButton, gridbag, c);
-		addToPanel(characteristicTypeComboBox, gridbag, c);
-		addToPanel(newRadioButton, gridbag, c);
+		this.addToPanel(this.existingRadioButton, gridbag, c);
+		this.addToPanel(this.characteristicTypeComboBox, gridbag, c);
+		this.addToPanel(this.newRadioButton, gridbag, c);
 		c.gridwidth = GridBagConstraints.RELATIVE;
-		addToPanel(name, gridbag, c);
+		this.addToPanel(this.name, gridbag, c);
 		c.weightx = 1.0;
 		c.gridwidth = GridBagConstraints.REMAINDER;
-		addToPanel(nameField, gridbag, c);
+		this.addToPanel(this.nameField, gridbag, c);
 		c.weightx = 0.0;
 		c.gridwidth = GridBagConstraints.RELATIVE;
-		addToPanel(descr, gridbag, c);
+		this.addToPanel(this.descr, gridbag, c);
 		c.weighty = 1.0;
 		c.weightx = 1.0;
 		c.gridwidth = GridBagConstraints.REMAINDER;
-		addToPanel(scrollPane, gridbag, c);
+		this.addToPanel(scrollPane, gridbag, c);
 		c.weighty = 0.0;
 		c.weightx = 0.0;
 		c.gridwidth = GridBagConstraints.REMAINDER;
-		addToPanel(buttonPanel, gridbag, c);
+		this.addToPanel(this.buttonPanel, gridbag, c);
 
-		buttonPanel.setLayout(new FlowLayout());
-		buttonPanel.add(okButton);
-		buttonPanel.add(cancelButton);
+		this.buttonPanel.setLayout(new FlowLayout());
+		this.buttonPanel.add(this.okButton);
+		this.buttonPanel.add(this.cancelButton);
 
-		okButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		this.okButton.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
 				okButton_actionPerformed(e);
 			}
 		});
-		cancelButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+		this.cancelButton.addActionListener(new ActionListener() {
+			public void actionPerformed(final ActionEvent e) {
 				cancelButton_actionPerformed(e);
 			}
 		});
@@ -156,28 +154,26 @@ public class AddPropFrame extends JDialog {
 		this.getContentPane().add(this.panel, BorderLayout.CENTER);
 	}
 
-	private void addToPanel(Component comp, GridBagLayout gridbag,
-			GridBagConstraints c) {
+	private void addToPanel(final Component comp, final GridBagLayout gridbag, final GridBagConstraints c) {
 		gridbag.setConstraints(comp, c);
 		this.panel.add(comp);
 	}
 
 	void radioButtonStateChanged() {
-		boolean b = this.existingRadioButton.isSelected();
+		final boolean b = this.existingRadioButton.isSelected();
 		this.characteristicTypeComboBox.setEnabled(b);
 		this.nameField.setEnabled(!b);
 		this.descrArea.setEnabled(!b);
 	}
 
-	void okButton_actionPerformed(ActionEvent e) {
+	void okButton_actionPerformed(final ActionEvent e) {
 		if (this.existingRadioButton.isSelected()) {
 			if (this.characteristicTypeComboBox.getSelectedItem() != null) {
-				this.selectedType = (CharacteristicType) this.characteristicTypeComboBox
-						.getSelectedItem();
-			} else
+				this.selectedType = (CharacteristicType) this.characteristicTypeComboBox.getSelectedItem();
+			} else {
 				return;
-		} 
-		else {
+			}
+		} else {
 			if (!this.nameField.getText().equals(SchemeResourceKeys.EMPTY)) {
 				try {
 					this.selectedType = SchemeObjectsFactory.createCharacteristicType(this.nameField.getText(), this.sort);
@@ -185,42 +181,42 @@ public class AddPropFrame extends JDialog {
 					Log.errorException(ex);
 					return;
 				}
-			} else
+			} else {
 				return;
+			}
 		}
 		this.res = JOptionPane.OK_OPTION;
-		dispose();
+		super.dispose();
 	}
 
-	void cancelButton_actionPerformed(ActionEvent e) {
-		dispose();
+	void cancelButton_actionPerformed(final ActionEvent e) {
+		super.dispose();
 	}
 
-	public int showDialog(CharacteristicTypeSort sort0, Collection chars) {
+	public int showDialog(final CharacteristicTypeSort sort0, final Collection<CharacteristicType> chars) {
 		this.sort = sort0;
 
 		try {
-			EquivalentCondition condition = new EquivalentCondition(
-					ObjectEntities.CHARACTERISTIC_TYPE_CODE);
-			Collection characteristicTypes = StorableObjectPool
-					.getStorableObjectsByCondition(condition, true);
-			for (Iterator it = characteristicTypes.iterator(); it.hasNext();) {
-				CharacteristicType ctype = (CharacteristicType) it.next();
-				if (ctype.getSort().equals(this.sort) && !chars.contains(ctype))
+			final EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CHARACTERISTIC_TYPE_CODE);
+			Collection<CharacteristicType> characteristicTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			for (final CharacteristicType ctype : characteristicTypes) {
+				if (ctype.getSort().equals(this.sort) && !chars.contains(ctype)) {
 					this.characteristicTypeComboBox.addItem(ctype);
+				}
 			}
 		} catch (ApplicationException ex) {
 			ex.printStackTrace();
 		}
-		
+
 		if (this.characteristicTypeComboBox.getModel().getSize() == 0) {
 			this.existingRadioButton.setEnabled(false);
 			this.newRadioButton.doClick();
-		} else
+		} else {
 			this.existingRadioButton.doClick();
-		
-		setModal(true);
-		setVisible(true);
+		}
+
+		super.setModal(true);
+		super.setVisible(true);
 		return this.res;
 	}
 

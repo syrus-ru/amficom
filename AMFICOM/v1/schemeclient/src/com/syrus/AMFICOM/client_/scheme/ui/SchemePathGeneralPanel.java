@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathGeneralPanel.java,v 1.4 2005/09/04 13:35:45 stas Exp $
+ * $Id: SchemePathGeneralPanel.java,v 1.5 2005/09/07 03:02:53 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,13 +45,15 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
 	protected SchemePath schemePath;
-	
+
 	JPanel pnPanel0 = new JPanel();
 	JPanel pnGeneralPanel = new JPanel();
 	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField tfNameText = new JTextField();
 	JLabel lbSolutionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.SCHEME_MONITORING_SOLUTION));
-	WrapperedComboBox cmbSolutionCombo = new WrapperedComboBox(SchemeMonitoringSolutionWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
+	WrapperedComboBox<SchemeMonitoringSolution> cmbSolutionCombo = new WrapperedComboBox<SchemeMonitoringSolution>(SchemeMonitoringSolutionWrapper.getInstance(),
+			StorableObjectWrapper.COLUMN_NAME,
+			StorableObjectWrapper.COLUMN_ID);
 	JButton btCommitBut = new JButton();
 	JLabel lbStartLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.START_ELEMENT));
 	JTextField tfStartText = new JTextField();
@@ -60,36 +62,36 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 	JLabel lbPesLabel = new JLabel("pes");
 	JList lsPesList = new JList();
 	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
-	JTextArea taDescriptionArea = new JTextArea(2,10);
+	JTextArea taDescriptionArea = new JTextArea(2, 10);
 	private transient int cashedSize = 0;
+
 	protected SchemePathGeneralPanel() {
 		super();
 		try {
-			jbInit();
+			this.jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void setContext(ApplicationContext aContext) {
+
+	public void setContext(final ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
-	protected SchemePathGeneralPanel(SchemePath schemePath) {
+	protected SchemePathGeneralPanel(final SchemePath schemePath) {
 		this();
-		setObject(schemePath);
+		this.setObject(schemePath);
 	}
 
-	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
-		GridBagLayout gbPanel0 = new GridBagLayout();
-		GridBagConstraints gbcPanel0 = new GridBagConstraints();
-		pnPanel0.setLayout( gbPanel0 );
+		final GridBagLayout gbPanel0 = new GridBagLayout();
+		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
+		this.pnPanel0.setLayout(gbPanel0);
 
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
-		GridBagLayout gbGeneralPanel = new GridBagLayout();
-		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
-		pnGeneralPanel.setLayout( gbGeneralPanel );
+		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(""));
+		final GridBagLayout gbGeneralPanel = new GridBagLayout();
+		final GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
+		this.pnGeneralPanel.setLayout(gbGeneralPanel);
 
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 0;
@@ -99,8 +101,8 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbNameLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbNameLabel );
+		gbGeneralPanel.setConstraints(this.lbNameLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbNameLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 0;
@@ -110,8 +112,8 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( tfNameText, gbcGeneralPanel );
-		pnGeneralPanel.add( tfNameText );
+		gbGeneralPanel.setConstraints(this.tfNameText, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfNameText);
 
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 1;
@@ -121,8 +123,8 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbSolutionLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbSolutionLabel );
+		gbGeneralPanel.setConstraints(this.lbSolutionLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbSolutionLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 1;
@@ -132,8 +134,8 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( cmbSolutionCombo, gbcGeneralPanel );
-		pnGeneralPanel.add( cmbSolutionCombo );
+		gbGeneralPanel.setConstraints(this.cmbSolutionCombo, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.cmbSolutionCombo);
 
 		gbcGeneralPanel.gridx = 9;
 		gbcGeneralPanel.gridy = 0;
@@ -143,9 +145,9 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( btCommitBut, gbcGeneralPanel );
-		pnGeneralPanel.add( btCommitBut );
-		
+		gbGeneralPanel.setConstraints(this.btCommitBut, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.btCommitBut);
+
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 2;
 		gbcGeneralPanel.gridwidth = 2;
@@ -154,8 +156,8 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbStartLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbStartLabel );
+		gbGeneralPanel.setConstraints(this.lbStartLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbStartLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 2;
@@ -165,8 +167,8 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( tfStartText, gbcGeneralPanel );
-		pnGeneralPanel.add( tfStartText );
+		gbGeneralPanel.setConstraints(this.tfStartText, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfStartText);
 
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 3;
@@ -176,8 +178,8 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbEndLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbEndLabel );
+		gbGeneralPanel.setConstraints(this.lbEndLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbEndLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 3;
@@ -187,9 +189,9 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( tfEndText, gbcGeneralPanel );
-		pnGeneralPanel.add( tfEndText );
-		
+		gbGeneralPanel.setConstraints(this.tfEndText, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfEndText);
+
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 4;
 		gbcGeneralPanel.gridwidth = 7;
@@ -198,8 +200,8 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbPesLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbPesLabel );
+		gbGeneralPanel.setConstraints(this.lbPesLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbPesLabel);
 
 		gbcGeneralPanel.gridx = 1;
 		gbcGeneralPanel.gridy = 5;
@@ -209,9 +211,9 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 1;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lsPesList, gbcGeneralPanel );
-		pnGeneralPanel.add( lsPesList );
-		
+		gbGeneralPanel.setConstraints(this.lsPesList, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lsPesList);
+
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
 		gbcPanel0.gridwidth = 10;
@@ -220,8 +222,8 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
-		pnPanel0.add( pnGeneralPanel );
+		gbPanel0.setConstraints(this.pnGeneralPanel, gbcPanel0);
+		this.pnPanel0.add(this.pnGeneralPanel);
 
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 10;
@@ -231,11 +233,11 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 0;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( lbDescriptionLabel, gbcPanel0 );
-		pnPanel0.add( lbDescriptionLabel );
+		gbPanel0.setConstraints(this.lbDescriptionLabel, gbcPanel0);
+		this.pnPanel0.add(this.lbDescriptionLabel);
 
-		taDescriptionArea = new JTextArea(2,10);
-		JScrollPane scpDescriptionArea = new JScrollPane( taDescriptionArea );
+		this.taDescriptionArea = new JTextArea(2, 10);
+		JScrollPane scpDescriptionArea = new JScrollPane(this.taDescriptionArea);
 		gbcPanel0.gridx = 1;
 		gbcPanel0.gridy = 11;
 		gbcPanel0.gridwidth = 9;
@@ -244,57 +246,57 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 1;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( scpDescriptionArea, gbcPanel0 );
-		pnPanel0.add( scpDescriptionArea );
-		
-		addToUndoableListener(tfNameText);
-		addToUndoableListener(cmbSolutionCombo);
-		
+		gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
+		this.pnPanel0.add(scpDescriptionArea);
+
+		super.addToUndoableListener(this.tfNameText);
+		super.addToUndoableListener(this.cmbSolutionCombo);
+
 		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.btCommitBut.setFocusPainted(false);
 		this.btCommitBut.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
 		this.btCommitBut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				commitChanges();
+			public void actionPerformed(final ActionEvent e) {
+				SchemePathGeneralPanel.this.commitChanges();
 			}
 		});
 	}
-	
-	public void setObject(Object or) {
+
+	public void setObject(final Object or) {
 		boolean updateOnly = false;
 		if (or.equals(this.schemePath)) {
 			updateOnly = true;
 		}
-		this.schemePath = (SchemePath)or;
-				
+		this.schemePath = (SchemePath) or;
+
 		if (this.schemePath != null) {
 			if (!updateOnly) {
 				this.cmbSolutionCombo.removeAllItems();
-				SchemeMonitoringSolution solution = this.schemePath.getParentSchemeMonitoringSolution();
-				Scheme scheme = solution.getParentScheme(); 
+				final SchemeMonitoringSolution solution = this.schemePath.getParentSchemeMonitoringSolution();
+				final Scheme scheme = solution.getParentScheme();
 				this.cmbSolutionCombo.addElements(scheme.getSchemeMonitoringSolutions());
 				this.cmbSolutionCombo.setSelectedItem(solution);
 			}
-			
+
 			this.tfNameText.setText(this.schemePath.getName());
 			this.taDescriptionArea.setText(this.schemePath.getDescription());
-			
+
 			if (!updateOnly || this.lsPesList.getModel().getSize() != this.cashedSize) {
 				final SortedSet<PathElement> pathElements = this.schemePath.getPathMembers();
 				this.cashedSize = pathElements.size();
 				if (!pathElements.isEmpty()) {
-					PathElement startElement = pathElements.first();
+					final PathElement startElement = pathElements.first();
 					this.tfStartText.setText(startElement.getName());
-					PathElement endElement = pathElements.last();
+					final PathElement endElement = pathElements.last();
 					this.tfEndText.setText(endElement.getName());
 				} else {
 					this.tfStartText.setText(SchemeResourceKeys.EMPTY);
-					this.tfEndText.setText(SchemeResourceKeys.EMPTY);	
+					this.tfEndText.setText(SchemeResourceKeys.EMPTY);
 				}
-				
-				Vector<String> peNames = new Vector<String>(); 
-				for (PathElement pe : pathElements) {
+
+				final Vector<String> peNames = new Vector<String>();
+				for (final PathElement pe : pathElements) {
 					peNames.add(pe.getName());
 				}
 				this.lsPesList.setListData(peNames);
@@ -315,12 +317,13 @@ public class SchemePathGeneralPanel extends DefaultStorableObjectEditor {
 		return this.schemePath;
 	}
 
+	@Override
 	public void commitChanges() {
 		super.commitChanges();
 		if (this.schemePath != null && MiscUtil.validName(this.tfNameText.getText())) {
 			this.schemePath.setName(this.tfNameText.getText());
 			this.schemePath.setDescription(this.taDescriptionArea.getText());
-			this.schemePath.setParentSchemeMonitoringSolution((SchemeMonitoringSolution)this.cmbSolutionCombo.getSelectedItem());
+			this.schemePath.setParentSchemeMonitoringSolution((SchemeMonitoringSolution) this.cmbSolutionCombo.getSelectedItem());
 
 			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePath.getId(), SchemeEvent.UPDATE_OBJECT));
 		}

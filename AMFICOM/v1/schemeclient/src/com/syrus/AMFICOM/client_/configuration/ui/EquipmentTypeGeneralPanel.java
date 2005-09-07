@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeGeneralPanel.java,v 1.12 2005/08/19 15:41:34 stas Exp $
+ * $Id: EquipmentTypeGeneralPanel.java,v 1.13 2005/09/07 03:02:53 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/08/19 15:41:34 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/09/07 03:02:53 $
  * @module schemeclient
  */
 
@@ -66,38 +66,37 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 	JLabel lbManufacturerCodeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MANUFACTURER_CODE));
 	JTextField tfManufacturerCodeText = new JTextField();
 	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
-	JTextArea taDescriptionArea = new JTextArea(2,10);
+	JTextArea taDescriptionArea = new JTextArea(2, 10);
 	JPanel pnGeneralPanel = new JPanel();
-	
+
 	protected EquipmentTypeGeneralPanel() {
 		super();
 		try {
-			jbInit();
+			this.jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void setContext(ApplicationContext aContext) {
+
+	public void setContext(final ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
-	protected EquipmentTypeGeneralPanel(EquipmentType equipmentType) {
+	protected EquipmentTypeGeneralPanel(final EquipmentType equipmentType) {
 		this();
-		setObject(equipmentType);
+		this.setObject(equipmentType);
 	}
 
-	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
-		GridBagLayout gbPanel0 = new GridBagLayout();
-		GridBagConstraints gbcPanel0 = new GridBagConstraints();
-		pnPanel0.setLayout(gbPanel0);
+		final GridBagLayout gbPanel0 = new GridBagLayout();
+		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
+		this.pnPanel0.setLayout(gbPanel0);
 
-		GridBagLayout gbGeneralPanel = new GridBagLayout();
-		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
-		pnGeneralPanel.setLayout(gbGeneralPanel);
+		final GridBagLayout gbGeneralPanel = new GridBagLayout();
+		final GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
+		this.pnGeneralPanel.setLayout(gbGeneralPanel);
 
-		lbNameLabel.setFocusable(false);
+		this.lbNameLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 2;
@@ -107,8 +106,8 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
-		gbGeneralPanel.setConstraints(lbNameLabel, gbcGeneralPanel);
-		pnGeneralPanel.add(lbNameLabel);
+		gbGeneralPanel.setConstraints(this.lbNameLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbNameLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 0;
@@ -119,9 +118,9 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(tfNameText, gbcGeneralPanel);
-		pnGeneralPanel.add(tfNameText);
-		
+		gbGeneralPanel.setConstraints(this.tfNameText, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfNameText);
+
 		gbcGeneralPanel.gridx = 5;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 1;
@@ -131,10 +130,10 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(commitButton, gbcGeneralPanel);
-		pnGeneralPanel.add(commitButton);
+		gbGeneralPanel.setConstraints(this.commitButton, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.commitButton);
 
-		lbCodenameLabel.setFocusable(false);
+		this.lbCodenameLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 1;
 		gbcGeneralPanel.gridwidth = 2;
@@ -144,8 +143,8 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
-		gbGeneralPanel.setConstraints(lbCodenameLabel, gbcGeneralPanel);
-		pnGeneralPanel.add(lbCodenameLabel);
+		gbGeneralPanel.setConstraints(this.lbCodenameLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbCodenameLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 1;
@@ -156,10 +155,10 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(tfCodenameCombo, gbcGeneralPanel);
-		pnGeneralPanel.add(tfCodenameCombo);
-		
-		lbManufacturerLabel.setFocusable(false);
+		gbGeneralPanel.setConstraints(this.tfCodenameCombo, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfCodenameCombo);
+
+		this.lbManufacturerLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 2;
 		gbcGeneralPanel.gridwidth = 2;
@@ -169,8 +168,8 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
-		gbGeneralPanel.setConstraints(lbManufacturerLabel, gbcGeneralPanel);
-		pnGeneralPanel.add(lbManufacturerLabel);
+		gbGeneralPanel.setConstraints(this.lbManufacturerLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbManufacturerLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 2;
@@ -181,10 +180,10 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(tfManufacturerText, gbcGeneralPanel);
-		pnGeneralPanel.add(tfManufacturerText);
+		gbGeneralPanel.setConstraints(this.tfManufacturerText, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfManufacturerText);
 
-		lbManufacturerCodeLabel.setFocusable(false);
+		this.lbManufacturerCodeLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 4;
 		gbcGeneralPanel.gridwidth = 2;
@@ -194,8 +193,8 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
-		gbGeneralPanel.setConstraints(lbManufacturerCodeLabel, gbcGeneralPanel);
-		pnGeneralPanel.add(lbManufacturerCodeLabel);
+		gbGeneralPanel.setConstraints(this.lbManufacturerCodeLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbManufacturerCodeLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 4;
@@ -206,9 +205,9 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(tfManufacturerCodeText, gbcGeneralPanel);
-		pnGeneralPanel.add(tfManufacturerCodeText);
-		
+		gbGeneralPanel.setConstraints(this.tfManufacturerCodeText, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfManufacturerCodeText);
+
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
 		gbcPanel0.gridwidth = 6;
@@ -217,10 +216,10 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints(pnGeneralPanel, gbcPanel0);
-		pnPanel0.add(pnGeneralPanel);
+		gbPanel0.setConstraints(this.pnGeneralPanel, gbcPanel0);
+		this.pnPanel0.add(this.pnGeneralPanel);
 
-		lbDescriptionLabel.setFocusable(false);
+		this.lbDescriptionLabel.setFocusable(false);
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 6;
 		gbcPanel0.gridwidth = 2;
@@ -230,10 +229,10 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets(0, 5, 0, 2);
-		gbPanel0.setConstraints(lbDescriptionLabel, gbcPanel0);
-		pnPanel0.add(lbDescriptionLabel);
+		gbPanel0.setConstraints(this.lbDescriptionLabel, gbcPanel0);
+		this.pnPanel0.add(this.lbDescriptionLabel);
 
-		JScrollPane scpDescriptionArea = new JScrollPane(taDescriptionArea);
+		final JScrollPane scpDescriptionArea = new JScrollPane(this.taDescriptionArea);
 		gbcPanel0.gridx = 1;
 		gbcPanel0.gridy = 7;
 		gbcPanel0.gridwidth = 5;
@@ -244,41 +243,41 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets(0, 2, 0, 2);
 		gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
-		pnPanel0.add(scpDescriptionArea);
+		this.pnPanel0.add(scpDescriptionArea);
 
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
+		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
 		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		for (int i = 0; i < EquipmentTypeCodenames.DEFAULT_CODENAMES.length; i++) {
-			tfCodenameCombo.addItem(EquipmentTypeCodenames.DEFAULT_CODENAMES[i].stringValue());			
+			this.tfCodenameCombo.addItem(EquipmentTypeCodenames.DEFAULT_CODENAMES[i].stringValue());
 		}
-		tfCodenameCombo.setRenderer(EquipmentTypeCodenames.getListCellRenderer());
-		
-		addToUndoableListener(tfNameText);
-		addToUndoableListener(tfCodenameCombo);
-		addToUndoableListener(tfManufacturerText);
-		addToUndoableListener(tfManufacturerCodeText);
-		addToUndoableListener(taDescriptionArea);
-		
+		this.tfCodenameCombo.setRenderer(EquipmentTypeCodenames.getListCellRenderer());
+
+		addToUndoableListener(this.tfNameText);
+		addToUndoableListener(this.tfCodenameCombo);
+		addToUndoableListener(this.tfManufacturerText);
+		addToUndoableListener(this.tfManufacturerCodeText);
+		addToUndoableListener(this.taDescriptionArea);
+
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
 		this.commitButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				commitChanges();
+			public void actionPerformed(final ActionEvent e) {
+				EquipmentTypeGeneralPanel.this.commitChanges();
 			}
 		});
 	}
-	
+
 	public JComponent getGUI() {
-		return this.pnPanel0; 
+		return this.pnPanel0;
 	}
 
 	public Object getObject() {
 		return this.eqt;
 	}
 
-	public void setObject(Object or) {
+	public void setObject(final Object or) {
 		this.eqt = (EquipmentType) or;
 
 		if (this.eqt != null) {
@@ -287,8 +286,7 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 			this.tfManufacturerText.setText(this.eqt.getManufacturer());
 			this.tfManufacturerCodeText.setText(this.eqt.getManufacturerCode());
 			this.tfCodenameCombo.setSelectedItem(this.eqt.getCodename());
-		} 
-		else {
+		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);
 			this.tfManufacturerText.setText(SchemeResourceKeys.EMPTY);
@@ -296,34 +294,38 @@ public class EquipmentTypeGeneralPanel extends DefaultStorableObjectEditor {
 		}
 	}
 
+	@Override
 	public void commitChanges() {
 		super.commitChanges();
 		if (MiscUtil.validName(this.tfNameText.getText())) {
 			if (this.eqt == null) {
 				try {
-					String name = this.tfNameText.getText();
+					final String name = this.tfNameText.getText();
 					EquipmentTypeCodename codeName = EquipmentTypeCodenames.DEFAULT_CODENAMES[this.tfCodenameCombo.getSelectedIndex()];
 					this.eqt = SchemeObjectsFactory.createEquipmentType(name, codeName);
-					apply();
+					this.apply();
 					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.eqt.getId(), SchemeEvent.CREATE_OBJECT));
-					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.eqt, EquipmentTypePropertiesManager.getInstance(this.aContext), ObjectSelectedEvent.EQUIPMENT_TYPE));
+					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this,
+							this.eqt,
+							EquipmentTypePropertiesManager.getInstance(this.aContext),
+							ObjectSelectedEvent.EQUIPMENT_TYPE));
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 					return;
 				}
 			} else {
-				apply();
+				this.apply();
 			}
 		}
 	}
-	
+
 	private void apply() {
 		this.eqt.setName(this.tfNameText.getText());
 		this.eqt.setDescription(this.taDescriptionArea.getText());
 		this.eqt.setManufacturer(this.tfManufacturerText.getText());
 		this.eqt.setManufacturerCode(this.tfManufacturerCodeText.getText());
 		this.eqt.setCodename(EquipmentTypeCodenames.DEFAULT_CODENAMES[this.tfCodenameCombo.getSelectedIndex()].stringValue());
-		
+
 		try {
 			StorableObjectPool.flush(this.eqt.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {

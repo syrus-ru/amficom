@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.17 2005/09/06 12:45:57 stas Exp $
+ * $Id: SchemeGraphUI.java,v 1.18 2005/09/07 03:02:53 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/09/06 12:45:57 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/09/07 03:02:53 $
  * @module schemeclient
  */
 
@@ -337,6 +337,7 @@ public class SchemeGraphUI extends GPGraphUI {
 	}
 
 //	@Override
+	@Override
 	protected void paintBackground(Graphics g) {
 //		super.paintBackground(g);
 

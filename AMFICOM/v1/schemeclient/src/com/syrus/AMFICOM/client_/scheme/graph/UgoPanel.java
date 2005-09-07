@@ -1,5 +1,5 @@
 /*
- * $Id: UgoPanel.java,v 1.14 2005/09/04 13:35:45 stas Exp $
+ * $Id: UgoPanel.java,v 1.15 2005/09/07 03:02:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/09/04 13:35:45 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/09/07 03:02:53 $
  * @module schemeclient
  */
 
@@ -56,6 +56,7 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 	protected GraphUndoManager undoManager = new GraphUndoManager() {
 		private static final long serialVersionUID = 4110744288424174429L;
 
+		@Override
 		public void undoableEditHappened(UndoableEditEvent e) {
 			super.undoableEditHappened(e);
 			if (!UgoPanel.this.graph.make_notifications) {
@@ -190,30 +191,31 @@ public class UgoPanel implements Printable, PropertyChangeListener {
 		}
 	}
 
-	public int print(Graphics g, PageFormat pf, int pi) {
-		if (pi > 0)
+	public int print(final Graphics g, final PageFormat pf, final int pi) {
+		if (pi > 0) {
 			return Printable.NO_SUCH_PAGE;
+		}
 
 		this.graph.printAll(g);
 		return Printable.PAGE_EXISTS;
 	}
 
 	public void setSelectionAttributes(Map map) {
-		Object[] cells = DefaultGraphModel.getDescendants(this.graph.getModel(),
-				this.graph.getSelectionCells()).toArray();
+		final Object[] cells = DefaultGraphModel.getDescendants(this.graph.getModel(), this.graph.getSelectionCells()).toArray();
 		map = GraphConstants.cloneMap(map);
 		map.remove(GraphConstants.BOUNDS);
 		map.remove(GraphConstants.POINTS);
 		if (cells != null && cells.length > 0 && !map.isEmpty()) {
-			CellView[] views = this.graph.getGraphLayoutCache().getMapping(cells);
-			Map viewMap = new HashMap();
-			for (int i = 0; i < views.length; i++)
+			final CellView[] views = this.graph.getGraphLayoutCache().getMapping(cells);
+			final Map<CellView, Map> viewMap = new HashMap<CellView, Map>();
+			for (int i = 0; i < views.length; i++) {
 				viewMap.put(views[i], GraphConstants.cloneMap(map));
+			}
 			this.graph.getGraphLayoutCache().edit(viewMap, null, null, null);
 		}
 	}
 
-	public void setGraphSize(Dimension d) {
+	public void setGraphSize(final Dimension d) {
 		this.graph.setActualSize(d);
 	}
 }

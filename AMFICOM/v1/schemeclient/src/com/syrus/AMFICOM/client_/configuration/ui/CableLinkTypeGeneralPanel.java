@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.13 2005/09/01 13:39:18 stas Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.14 2005/09/07 03:02:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
@@ -76,8 +75,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/09/01 13:39:18 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/09/07 03:02:53 $
  * @module schemeclient
  */
 
@@ -97,26 +96,30 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 	JLabel lbThreadNumLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.THREAD_NUMBER));
 	JSpinner tfThreadNumText = new JSpinner(new SpinnerNumberModel(0, 0, Integer.MAX_VALUE, 1));
 	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
-	JTextArea taDescriptionArea = new JTextArea(2,10);
+	JTextArea taDescriptionArea = new JTextArea(2, 10);
 	JPanel pnGeneralPanel = new JPanel();
-	
+
 	JLabel lbTNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.THREAD));
-	WrapperedComboBox cmbTNameCombo = new WrapperedComboBox(CableThreadTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
+	WrapperedComboBox<CableThreadType> cmbTNameCombo = new WrapperedComboBox<CableThreadType>(CableThreadTypeWrapper.getInstance(),
+			StorableObjectWrapper.COLUMN_NAME,
+			StorableObjectWrapper.COLUMN_ID);
 	JLabel lbTMarkLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.MARK));
 	JTextField tfTMarkText = new JTextField();
 	JLabel lbTTypeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
-	WrapperedComboBox cmbTTypeCombo = new WrapperedComboBox(LinkTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
+	WrapperedComboBox<LinkType> cmbTTypeCombo = new WrapperedComboBox<LinkType>(LinkTypeWrapper.getInstance(),
+			StorableObjectWrapper.COLUMN_NAME,
+			StorableObjectWrapper.COLUMN_ID);
 	JLabel lbTColorLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.COLOR));
 	JComboBox cmbTColorCombo = new ColorChooserComboBox();
 	JLabel lbTDescrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
 	JTextArea taTDescrArea = new JTextArea(2, 10);
-	JPanel pnThreadPanel = new JPanel();	
-	
+	JPanel pnThreadPanel = new JPanel();
+
 	Map<CableThreadType, ThreadTypeFields> cashedFields;
 	ThreadTypeFields currentCash;
-	
+
 	private class ThreadTypeFields {
-		private ThreadTypeFields(String mark, String description, LinkType type, int color) {
+		private ThreadTypeFields(final String mark, final String description, final LinkType type, final int color) {
 			this.mark = mark;
 			this.type = type;
 			this.color = color;
@@ -127,36 +130,35 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		LinkType type;
 		int color;
 	}
-	
+
 	protected CableLinkTypeGeneralPanel() {
 		super();
 		try {
-			jbInit();
+			this.jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void setContext(ApplicationContext aContext) {
+
+	public void setContext(final ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
-	protected CableLinkTypeGeneralPanel(CableLinkType linkType) {
+	protected CableLinkTypeGeneralPanel(final CableLinkType linkType) {
 		this();
-		setObject(linkType);
+		this.setObject(linkType);
 	}
 
-	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
-		GridBagLayout gbPanel0 = new GridBagLayout();
-		GridBagConstraints gbcPanel0 = new GridBagConstraints();
-		pnPanel0.setLayout(gbPanel0);
+		final GridBagLayout gbPanel0 = new GridBagLayout();
+		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
+		this.pnPanel0.setLayout(gbPanel0);
 
-		GridBagLayout gbGeneralPanel = new GridBagLayout();
-		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
-		pnGeneralPanel.setLayout(gbGeneralPanel);
+		final GridBagLayout gbGeneralPanel = new GridBagLayout();
+		final GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
+		this.pnGeneralPanel.setLayout(gbGeneralPanel);
 
-		lbNameLabel.setFocusable(false);
+		this.lbNameLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 2;
@@ -166,8 +168,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
-		gbGeneralPanel.setConstraints(lbNameLabel, gbcGeneralPanel);
-		pnGeneralPanel.add(lbNameLabel);
+		gbGeneralPanel.setConstraints(this.lbNameLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbNameLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 0;
@@ -178,8 +180,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(tfNameText, gbcGeneralPanel);
-		pnGeneralPanel.add(tfNameText);
+		gbGeneralPanel.setConstraints(this.tfNameText, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfNameText);
 		
 		gbcGeneralPanel.gridx = 5;
 		gbcGeneralPanel.gridy = 0;
@@ -190,10 +192,10 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(commitButton, gbcGeneralPanel);
-		pnGeneralPanel.add(commitButton);
+		gbGeneralPanel.setConstraints(this.commitButton, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.commitButton);
 
-		lbManufacturerLabel.setFocusable(false);
+		this.lbManufacturerLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 2;
 		gbcGeneralPanel.gridwidth = 2;
@@ -203,8 +205,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
-		gbGeneralPanel.setConstraints(lbManufacturerLabel, gbcGeneralPanel);
-		pnGeneralPanel.add(lbManufacturerLabel);
+		gbGeneralPanel.setConstraints(this.lbManufacturerLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbManufacturerLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 2;
@@ -215,10 +217,10 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(tfManufacturerText, gbcGeneralPanel);
-		pnGeneralPanel.add(tfManufacturerText);
+		gbGeneralPanel.setConstraints(this.tfManufacturerText, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfManufacturerText);
 
-		lbManufacturerCodeLabel.setFocusable(false);
+		this.lbManufacturerCodeLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 4;
 		gbcGeneralPanel.gridwidth = 2;
@@ -228,8 +230,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
-		gbGeneralPanel.setConstraints(lbManufacturerCodeLabel, gbcGeneralPanel);
-		pnGeneralPanel.add(lbManufacturerCodeLabel);
+		gbGeneralPanel.setConstraints(this.lbManufacturerCodeLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbManufacturerCodeLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 4;
@@ -240,8 +242,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets(0, 0, 0, 0);
-		gbGeneralPanel.setConstraints(tfManufacturerCodeText, gbcGeneralPanel);
-		pnGeneralPanel.add(tfManufacturerCodeText);
+		gbGeneralPanel.setConstraints(this.tfManufacturerCodeText, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfManufacturerCodeText);
 		
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 6;
@@ -251,8 +253,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbThreadNumLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbThreadNumLabel );
+		gbGeneralPanel.setConstraints( this.lbThreadNumLabel, gbcGeneralPanel );
+		this.pnGeneralPanel.add(this.lbThreadNumLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 6;
@@ -262,8 +264,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( tfThreadNumText, gbcGeneralPanel );
-		pnGeneralPanel.add( tfThreadNumText );
+		gbGeneralPanel.setConstraints(this.tfThreadNumText, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfThreadNumText);
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
 		gbcPanel0.gridwidth = 6;
@@ -272,10 +274,10 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
-		pnPanel0.add( pnGeneralPanel );
+		gbPanel0.setConstraints(this.pnGeneralPanel, gbcPanel0);
+		this.pnPanel0.add(this.pnGeneralPanel);
 
-		lbDescriptionLabel.setFocusable( false );
+		this.lbDescriptionLabel.setFocusable( false );
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 6;
 		gbcPanel0.gridwidth = 2;
@@ -284,11 +286,11 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 0;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets( 0,2,0,2 );
-		gbPanel0.setConstraints( lbDescriptionLabel, gbcPanel0 );
-		pnPanel0.add( lbDescriptionLabel );
+		gbcPanel0.insets = new Insets(0, 2, 0, 2);
+		gbPanel0.setConstraints(this.lbDescriptionLabel, gbcPanel0);
+		this.pnPanel0.add(this.lbDescriptionLabel);
 
-		JScrollPane scpDescriptionArea = new JScrollPane( taDescriptionArea );
+		final JScrollPane scpDescriptionArea = new JScrollPane(this.taDescriptionArea);
 		gbcPanel0.gridx = 1;
 		gbcPanel0.gridy = 7;
 		gbcPanel0.gridwidth = 5;
@@ -297,14 +299,14 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 1;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets( 0,2,0,2 );
-		gbPanel0.setConstraints( scpDescriptionArea, gbcPanel0 );
-		pnPanel0.add( scpDescriptionArea );
+		gbcPanel0.insets = new Insets(0, 2, 0, 2);
+		gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
+		this.pnPanel0.add(scpDescriptionArea);
 
-		pnThreadPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
-		GridBagLayout gbThreadPanel = new GridBagLayout();
-		GridBagConstraints gbcThreadPanel = new GridBagConstraints();
-		pnThreadPanel.setLayout( gbThreadPanel );
+		this.pnThreadPanel.setBorder(BorderFactory.createTitledBorder(""));
+		final GridBagLayout gbThreadPanel = new GridBagLayout();
+		final GridBagConstraints gbcThreadPanel = new GridBagConstraints();
+		this.pnThreadPanel.setLayout(gbThreadPanel);
 
 		gbcThreadPanel.gridx = 0;
 		gbcThreadPanel.gridy = 0;
@@ -313,10 +315,10 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcThreadPanel.fill = GridBagConstraints.BOTH;
 		gbcThreadPanel.weightx = 0;
 		gbcThreadPanel.weighty = 0;
-		gbcThreadPanel.insets = new Insets( 0,0,0,2 );
+		gbcThreadPanel.insets = new Insets(0, 0, 0, 2);
 		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints( lbTNameLabel, gbcThreadPanel );
-		pnThreadPanel.add( lbTNameLabel );
+		gbThreadPanel.setConstraints(this.lbTNameLabel, gbcThreadPanel);
+		this.pnThreadPanel.add(this.lbTNameLabel);
 		
 		gbcThreadPanel.gridx = 2;
 		gbcThreadPanel.gridy = 0;
@@ -326,8 +328,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcThreadPanel.weightx = 1;
 		gbcThreadPanel.weighty = 0;
 		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints( cmbTNameCombo, gbcThreadPanel );
-		pnThreadPanel.add( cmbTNameCombo );
+		gbThreadPanel.setConstraints(this.cmbTNameCombo, gbcThreadPanel);
+		this.pnThreadPanel.add(this.cmbTNameCombo);
 
 		gbcThreadPanel.gridx = 0;
 		gbcThreadPanel.gridy = 1;
@@ -337,8 +339,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcThreadPanel.weightx = 0;
 		gbcThreadPanel.weighty = 0;
 		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints( lbTTypeLabel, gbcThreadPanel );
-		pnThreadPanel.add( lbTTypeLabel );
+		gbThreadPanel.setConstraints(this.lbTTypeLabel, gbcThreadPanel);
+		this.pnThreadPanel.add(this.lbTTypeLabel);
 
 		gbcThreadPanel.gridx = 2;
 		gbcThreadPanel.gridy = 1;
@@ -348,8 +350,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcThreadPanel.weightx = 1;
 		gbcThreadPanel.weighty = 0;
 		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints( cmbTTypeCombo, gbcThreadPanel );
-		pnThreadPanel.add( cmbTTypeCombo );
+		gbThreadPanel.setConstraints(this.cmbTTypeCombo, gbcThreadPanel);
+		this.pnThreadPanel.add(this.cmbTTypeCombo);
 
 		gbcThreadPanel.gridx = 0;
 		gbcThreadPanel.gridy = 2;
@@ -359,8 +361,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcThreadPanel.weightx = 0;
 		gbcThreadPanel.weighty = 0;
 		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints( lbTColorLabel, gbcThreadPanel );
-		pnThreadPanel.add( lbTColorLabel );
+		gbThreadPanel.setConstraints(this.lbTColorLabel, gbcThreadPanel);
+		this.pnThreadPanel.add(this.lbTColorLabel);
 
 		gbcThreadPanel.gridx = 2;
 		gbcThreadPanel.gridy = 2;
@@ -370,8 +372,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcThreadPanel.weightx = 1;
 		gbcThreadPanel.weighty = 0;
 		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints( cmbTColorCombo, gbcThreadPanel );
-		pnThreadPanel.add( cmbTColorCombo );
+		gbThreadPanel.setConstraints(this.cmbTColorCombo, gbcThreadPanel);
+		this.pnThreadPanel.add(this.cmbTColorCombo);
 
 		gbcThreadPanel.gridx = 0;
 		gbcThreadPanel.gridy = 3;
@@ -381,8 +383,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcThreadPanel.weightx = 0;
 		gbcThreadPanel.weighty = 0;
 		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints( lbTMarkLabel, gbcThreadPanel );
-		pnThreadPanel.add( lbTMarkLabel );
+		gbThreadPanel.setConstraints(this.lbTMarkLabel, gbcThreadPanel);
+		this.pnThreadPanel.add(this.lbTMarkLabel);
 
 		gbcThreadPanel.gridx = 2;
 		gbcThreadPanel.gridy = 3;
@@ -392,8 +394,8 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcThreadPanel.weightx = 1;
 		gbcThreadPanel.weighty = 0;
 		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints( tfTMarkText, gbcThreadPanel );
-		pnThreadPanel.add( tfTMarkText );
+		gbThreadPanel.setConstraints(this.tfTMarkText, gbcThreadPanel);
+		this.pnThreadPanel.add(this.tfTMarkText);
 		
 		gbcThreadPanel.gridx = 0;
 		gbcThreadPanel.gridy = 4;
@@ -403,10 +405,10 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcThreadPanel.weightx = 0;
 		gbcThreadPanel.weighty = 0;
 		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints( lbTDescrLabel, gbcThreadPanel );
-		pnThreadPanel.add( lbTDescrLabel );
+		gbThreadPanel.setConstraints(this.lbTDescrLabel, gbcThreadPanel);
+		this.pnThreadPanel.add(this.lbTDescrLabel);
 
-		JScrollPane scpTDescrArea = new JScrollPane( taTDescrArea );
+		JScrollPane scpTDescrArea = new JScrollPane(this.taTDescrArea);
 		gbcThreadPanel.gridx = 1;
 		gbcThreadPanel.gridy = 5;
 		gbcThreadPanel.gridwidth = 5;
@@ -414,10 +416,10 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcThreadPanel.fill = GridBagConstraints.BOTH;
 		gbcThreadPanel.weightx = 1;
 		gbcThreadPanel.weighty = 0.5;
-		gbcThreadPanel.insets = new Insets( 0,0,0,0 );
+		gbcThreadPanel.insets = new Insets(0, 0, 0, 0);
 		gbcThreadPanel.anchor = GridBagConstraints.NORTH;
-		gbThreadPanel.setConstraints( scpTDescrArea, gbcThreadPanel );
-		pnThreadPanel.add( scpTDescrArea );
+		gbThreadPanel.setConstraints(scpTDescrArea, gbcThreadPanel);
+		this.pnThreadPanel.add(scpTDescrArea);
 
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 9;
@@ -426,93 +428,97 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.fill = GridBagConstraints.BOTH;
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 0.5;
-		gbcPanel0.insets = new Insets( 0,0,0,0 );
+		gbcPanel0.insets = new Insets(0, 0, 0, 0);
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( pnThreadPanel, gbcPanel0 );
-		pnPanel0.add( pnThreadPanel );
+		gbPanel0.setConstraints(this.pnThreadPanel, gbcPanel0);
+		this.pnPanel0.add(this.pnThreadPanel);
 
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
+		this.pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
 //		pnGeneralPanel.setBackground(Color.WHITE);
 //		pnPanel0.setBackground(Color.WHITE);
 		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
 		
-		cmbTNameCombo.addItemListener(new ItemListener() {
+		this.cmbTNameCombo.addItemListener(new ItemListener() {
 			public void itemStateChanged(ItemEvent e) {
-				CableThreadType ctt = (CableThreadType)e.getItem();
-				currentCash = cashedFields.get(ctt);
-				boolean b = currentCash != null; 
-				tfTMarkText.setEnabled(b);
-				cmbTColorCombo.setEnabled(b);
-				cmbTTypeCombo.setEnabled(b);
-				taTDescrArea.setEnabled(b);
+				final CableThreadType ctt = (CableThreadType)e.getItem();
+				CableLinkTypeGeneralPanel.this.currentCash = CableLinkTypeGeneralPanel.this.cashedFields.get(ctt);
+				final boolean b = (CableLinkTypeGeneralPanel.this.currentCash != null); 
+				CableLinkTypeGeneralPanel.this.tfTMarkText.setEnabled(b);
+				CableLinkTypeGeneralPanel.this.cmbTColorCombo.setEnabled(b);
+				CableLinkTypeGeneralPanel.this.cmbTTypeCombo.setEnabled(b);
+				CableLinkTypeGeneralPanel.this.taTDescrArea.setEnabled(b);
 
-				tfTMarkText.setText(b ? currentCash.mark : "");
-				taTDescrArea.setText(b ? currentCash.description : "");
-				if (b) { 
-					cmbTColorCombo.addItem(new Color(currentCash.color));
-					cmbTTypeCombo.setSelectedItem(currentCash.type);
+				CableLinkTypeGeneralPanel.this.tfTMarkText.setText(b ? CableLinkTypeGeneralPanel.this.currentCash.mark : "");
+				CableLinkTypeGeneralPanel.this.taTDescrArea.setText(b ? CableLinkTypeGeneralPanel.this.currentCash.description : "");
+				if (b) {
+					CableLinkTypeGeneralPanel.this.cmbTColorCombo.addItem(new Color(CableLinkTypeGeneralPanel.this.currentCash.color));
+					CableLinkTypeGeneralPanel.this.cmbTTypeCombo.setSelectedItem(CableLinkTypeGeneralPanel.this.currentCash.type);
 				}
 			}
 		});
 		
-		tfTMarkText.addKeyListener(new KeyAdapter() {
+		this.tfTMarkText.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(KeyEvent e) {
-				if (currentCash != null)
-					currentCash.mark = tfTMarkText.getText(); 
+			public void keyReleased(final KeyEvent e) {
+				if (CableLinkTypeGeneralPanel.this.currentCash != null) {
+					CableLinkTypeGeneralPanel.this.currentCash.mark = CableLinkTypeGeneralPanel.this.tfTMarkText.getText();
+				}
 			}
 		});
-		
-		cmbTColorCombo.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (currentCash != null && e.getItem() instanceof Color)
-					currentCash.color = ((Color)e.getItem()).getRGB();
+
+		this.cmbTColorCombo.addItemListener(new ItemListener() {
+			public void itemStateChanged(final ItemEvent e) {
+				if (CableLinkTypeGeneralPanel.this.currentCash != null && e.getItem() instanceof Color) {
+					CableLinkTypeGeneralPanel.this.currentCash.color = ((Color) e.getItem()).getRGB();
+				}
 			}
 		});
-		
-		cmbTTypeCombo.addItemListener(new ItemListener() {
-			public void itemStateChanged(ItemEvent e) {
-				if (currentCash != null)
-					currentCash.type = (LinkType)e.getItem();
+
+		this.cmbTTypeCombo.addItemListener(new ItemListener() {
+			public void itemStateChanged(final ItemEvent e) {
+				if (CableLinkTypeGeneralPanel.this.currentCash != null) {
+					CableLinkTypeGeneralPanel.this.currentCash.type = (LinkType) e.getItem();
+				}
 			}
 		});
-		
-		taTDescrArea.addKeyListener(new KeyAdapter() {
+
+		this.taTDescrArea.addKeyListener(new KeyAdapter() {
 			@Override
-			public void keyReleased(KeyEvent e) {
-				if (currentCash != null)
-					currentCash.description = taTDescrArea.getText(); 
+			public void keyReleased(final KeyEvent e) {
+				if (CableLinkTypeGeneralPanel.this.currentCash != null) {
+					CableLinkTypeGeneralPanel.this.currentCash.description = CableLinkTypeGeneralPanel.this.taTDescrArea.getText();
+				}
 			}
 		});
-		
-		addToUndoableListener(tfNameText);
-		addToUndoableListener(tfManufacturerText);
-		addToUndoableListener(tfManufacturerCodeText);
-		addToUndoableListener(taDescriptionArea);
-		
+
+		super.addToUndoableListener(this.tfNameText);
+		super.addToUndoableListener(this.tfManufacturerText);
+		super.addToUndoableListener(this.tfManufacturerCodeText);
+		super.addToUndoableListener(this.taDescriptionArea);
+
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
 		this.commitButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				commitChanges();
+			public void actionPerformed(final ActionEvent e) {
+				CableLinkTypeGeneralPanel.this.commitChanges();
 			}
 		});
 	}
-	
+
 	public JComponent getGUI() {
-		return this.pnPanel0; 
+		return this.pnPanel0;
 	}
 
 	public Object getObject() {
 		return this.linkType;
 	}
-	
-	//XXX check use of numbered comparator 
+
+	// XXX check use of numbered comparator
 	private List<CableThreadType> getSortedThreadTypes() {
-		Set<CableThreadType> cableThreadTypes = this.linkType.getCableThreadTypes(false);
-		List<CableThreadType> threads = new ArrayList<CableThreadType>(cableThreadTypes);
+		final Set<CableThreadType> cableThreadTypes = this.linkType.getCableThreadTypes(false);
+		final List<CableThreadType> threads = new ArrayList<CableThreadType>(cableThreadTypes);
 		Collections.sort(threads, new NumberedComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
 				StorableObjectWrapper.COLUMN_CODENAME));
 		return threads;
@@ -520,36 +526,37 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 
 	public void setObject(Object or) {
 		this.linkType = (CableLinkType) or;
-		
+
 		this.cmbTTypeCombo.removeAllItems();
 		try {
-			this.cmbTTypeCombo.addElements(new LinkedList<StorableObject>(StorableObjectPool.getStorableObjectsByCondition(new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE), true)));
+			final EquivalentCondition ec = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
+			final Set<LinkType> linkTypes = StorableObjectPool.getStorableObjectsByCondition(ec, true);
+			this.cmbTTypeCombo.addElements(new LinkedList<LinkType>(linkTypes));
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
-		
+
 		if (this.linkType != null) {
 			this.tfNameText.setText(this.linkType.getName());
 			this.taDescriptionArea.setText(this.linkType.getDescription());
 			this.tfManufacturerText.setText(this.linkType.getManufacturer());
 			this.tfManufacturerCodeText.setText(this.linkType.getManufacturerCode());
 			this.sortedTheradTypes = getSortedThreadTypes();
-		} 
-		else {
+		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);
 			this.tfManufacturerText.setText(SchemeResourceKeys.EMPTY);
 			this.tfManufacturerCodeText.setText(SchemeResourceKeys.EMPTY);
 			this.sortedTheradTypes = new LinkedList<CableThreadType>();
 		}
-		
+
 		this.cashedFields = new HashMap<CableThreadType, ThreadTypeFields>();
 		this.currentCash = null;
 		for (Iterator it = this.sortedTheradTypes.iterator(); it.hasNext();) {
 			CableThreadType ctt = (CableThreadType) it.next();
 			this.cashedFields.put(ctt, new ThreadTypeFields(ctt.getCodename(), ctt.getDescription(), ctt.getLinkType(), ctt.getColor()));
 		}
-		
+
 		this.cmbTNameCombo.removeAllItems();
 		if (!this.sortedTheradTypes.isEmpty()) {
 			this.cmbTNameCombo.addElements(this.sortedTheradTypes);
@@ -565,6 +572,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		this.taTDescrArea.setEnabled(false);
 	}
 
+	@Override
 	public void commitChanges() {
 		super.commitChanges();
 		
@@ -608,7 +616,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 			if (oldSize < newSize) { // create
 				LinkType tlType;
 				if (!this.sortedTheradTypes.isEmpty()) {
-					tlType = ((CableThreadType)this.sortedTheradTypes.iterator().next()).getLinkType(); 
+					tlType = this.sortedTheradTypes.iterator().next().getLinkType(); 
 				} else {
 					EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
 					Set linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);

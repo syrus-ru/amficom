@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePortGeneralPanel.java,v 1.16 2005/08/19 15:41:35 stas Exp $
+ * $Id: SchemeCablePortGeneralPanel.java,v 1.17 2005/09/07 03:02:53 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.BorderFactory;
@@ -50,8 +51,8 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/08/19 15:41:35 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/09/07 03:02:53 $
  * @module schemeclient
  */
 
@@ -59,7 +60,7 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
 	protected SchemeCablePort schemePort;
 	protected SchemeElement parent;
-	
+
 	JPanel pnPanel0 = new JPanel();
 	JPanel pnGeneralPanel = new JPanel();
 	JPanel pnPortPanel = new JPanel();
@@ -67,38 +68,39 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 	JTextField tfNameText = new JTextField();
 	JButton btCommitBut = new JButton();
 	JLabel lbTypeLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.TYPE));
-	WrapperedComboBox cmbTypeCombo = new WrapperedComboBox(PortTypeWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME, StorableObjectWrapper.COLUMN_ID);
+	WrapperedComboBox<PortType> cmbTypeCombo = new WrapperedComboBox<PortType>(PortTypeWrapper.getInstance(),
+			StorableObjectWrapper.COLUMN_NAME,
+			StorableObjectWrapper.COLUMN_ID);
 	JLabel lbPortLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.INSTANCE));
 	JLabel lbMarkLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.LABEL));
 	JTextField tfMarkText = new JTextField();
 	JLabel lbColorLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.COLOR));
 	JComboBox cmbColorCombo = new ColorChooserComboBox();
 	JLabel lbDescrLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
-	JTextArea taDescrArea = new JTextArea(2,10);
-	
-	protected SchemeCablePortGeneralPanel(SchemeCablePort schemePort) {
+	JTextArea taDescrArea = new JTextArea(2, 10);
+
+	protected SchemeCablePortGeneralPanel(final SchemeCablePort schemePort) {
 		this();
-		setObject(schemePort);
+		this.setObject(schemePort);
 	}
-	
+
 	protected SchemeCablePortGeneralPanel() {
 		super();
 		try {
-			jbInit();
+			this.jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void setContext(ApplicationContext aContext) {
+
+	public void setContext(final ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
 
-	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
-		GridBagLayout gbPanel0 = new GridBagLayout();
-		GridBagConstraints gbcPanel0 = new GridBagConstraints();
-		pnPanel0.setLayout( gbPanel0 );
+		final GridBagLayout gbPanel0 = new GridBagLayout();
+		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
+		this.pnPanel0.setLayout(gbPanel0);
 
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 8;
@@ -108,10 +110,10 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 0;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( lbDescrLabel, gbcPanel0 );
-		pnPanel0.add( lbDescrLabel );
+		gbPanel0.setConstraints(this.lbDescrLabel, gbcPanel0);
+		this.pnPanel0.add(this.lbDescrLabel);
 
-		JScrollPane scpDescrArea = new JScrollPane( taDescrArea );
+		final JScrollPane scpDescrArea = new JScrollPane(this.taDescrArea);
 		gbcPanel0.gridx = 1;
 		gbcPanel0.gridy = 9;
 		gbcPanel0.gridwidth = 9;
@@ -120,12 +122,12 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 1;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( scpDescrArea, gbcPanel0 );
-		pnPanel0.add( scpDescrArea );
+		gbPanel0.setConstraints(scpDescrArea, gbcPanel0);
+		this.pnPanel0.add(scpDescrArea);
 
-		GridBagLayout gbGeneralPanel = new GridBagLayout();
-		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
-		pnGeneralPanel.setLayout( gbGeneralPanel );
+		final GridBagLayout gbGeneralPanel = new GridBagLayout();
+		final GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
+		this.pnGeneralPanel.setLayout(gbGeneralPanel);
 
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 0;
@@ -135,8 +137,8 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbNameLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbNameLabel );
+		gbGeneralPanel.setConstraints(this.lbNameLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbNameLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 0;
@@ -146,8 +148,8 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( tfNameText, gbcGeneralPanel );
-		pnGeneralPanel.add( tfNameText );
+		gbGeneralPanel.setConstraints(this.tfNameText, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfNameText);
 
 		gbcGeneralPanel.gridx = 9;
 		gbcGeneralPanel.gridy = 0;
@@ -157,8 +159,8 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( btCommitBut, gbcGeneralPanel );
-		pnGeneralPanel.add( btCommitBut );
+		gbGeneralPanel.setConstraints(this.btCommitBut, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.btCommitBut);
 
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 1;
@@ -168,8 +170,8 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbTypeLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbTypeLabel );
+		gbGeneralPanel.setConstraints(this.lbTypeLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbTypeLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 1;
@@ -179,8 +181,8 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( cmbTypeCombo, gbcGeneralPanel );
-		pnGeneralPanel.add( cmbTypeCombo );
+		gbGeneralPanel.setConstraints(this.cmbTypeCombo, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.cmbTypeCombo);
 
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 2;
@@ -190,13 +192,13 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( lbPortLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbPortLabel );
+		gbGeneralPanel.setConstraints(this.lbPortLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbPortLabel);
 
-		pnPortPanel.setBorder( BorderFactory.createTitledBorder( "" ) );
-		GridBagLayout gbPortPanel = new GridBagLayout();
-		GridBagConstraints gbcPortPanel = new GridBagConstraints();
-		pnPortPanel.setLayout( gbPortPanel );
+		this.pnPortPanel.setBorder(BorderFactory.createTitledBorder(""));
+		final GridBagLayout gbPortPanel = new GridBagLayout();
+		final GridBagConstraints gbcPortPanel = new GridBagConstraints();
+		this.pnPortPanel.setLayout(gbPortPanel);
 
 		gbcPortPanel.gridx = 0;
 		gbcPortPanel.gridy = 0;
@@ -206,8 +208,8 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPortPanel.weightx = 0;
 		gbcPortPanel.weighty = 0;
 		gbcPortPanel.anchor = GridBagConstraints.NORTH;
-		gbPortPanel.setConstraints( lbMarkLabel, gbcPortPanel );
-		pnPortPanel.add( lbMarkLabel );
+		gbPortPanel.setConstraints(this.lbMarkLabel, gbcPortPanel);
+		this.pnPortPanel.add(this.lbMarkLabel);
 
 		gbcPortPanel.gridx = 2;
 		gbcPortPanel.gridy = 0;
@@ -217,8 +219,8 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPortPanel.weightx = 1;
 		gbcPortPanel.weighty = 0;
 		gbcPortPanel.anchor = GridBagConstraints.NORTH;
-		gbPortPanel.setConstraints( tfMarkText, gbcPortPanel );
-		pnPortPanel.add( tfMarkText );
+		gbPortPanel.setConstraints(this.tfMarkText, gbcPortPanel);
+		this.pnPortPanel.add(this.tfMarkText);
 
 		gbcPortPanel.gridx = 0;
 		gbcPortPanel.gridy = 1;
@@ -228,8 +230,8 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPortPanel.weightx = 0;
 		gbcPortPanel.weighty = 0;
 		gbcPortPanel.anchor = GridBagConstraints.NORTH;
-		gbPortPanel.setConstraints( lbColorLabel, gbcPortPanel );
-		pnPortPanel.add( lbColorLabel );
+		gbPortPanel.setConstraints(this.lbColorLabel, gbcPortPanel);
+		this.pnPortPanel.add(this.lbColorLabel);
 
 		gbcPortPanel.gridx = 2;
 		gbcPortPanel.gridy = 1;
@@ -239,8 +241,8 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPortPanel.weightx = 1;
 		gbcPortPanel.weighty = 0;
 		gbcPortPanel.anchor = GridBagConstraints.NORTH;
-		gbPortPanel.setConstraints( cmbColorCombo, gbcPortPanel );
-		pnPortPanel.add( cmbColorCombo );
+		gbPortPanel.setConstraints(this.cmbColorCombo, gbcPortPanel);
+		this.pnPortPanel.add(this.cmbColorCombo);
 
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 3;
@@ -250,8 +252,8 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbGeneralPanel.setConstraints( pnPortPanel, gbcGeneralPanel );
-		pnGeneralPanel.add( pnPortPanel );
+		gbGeneralPanel.setConstraints(this.pnPortPanel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.pnPortPanel);
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
 		gbcPanel0.gridwidth = 11;
@@ -260,47 +262,47 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
-		pnPanel0.add( pnGeneralPanel );
-		
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
-		taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-		
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder( SchemeResourceKeys.EMPTY ));
-		taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-		
-		addToUndoableListener(tfNameText);
-		addToUndoableListener(cmbTypeCombo);
-		addToUndoableListener(lbPortLabel);
-		addToUndoableListener(tfMarkText);
-		addToUndoableListener(cmbColorCombo);
-		addToUndoableListener(taDescrArea);
-		
+		gbPanel0.setConstraints(this.pnGeneralPanel, gbcPanel0);
+		this.pnPanel0.add(this.pnGeneralPanel);
+
+		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
+		this.taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
+
+		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
+		this.taDescrArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
+
+		super.addToUndoableListener(this.tfNameText);
+		super.addToUndoableListener(this.cmbTypeCombo);
+		super.addToUndoableListener(this.lbPortLabel);
+		super.addToUndoableListener(this.tfMarkText);
+		super.addToUndoableListener(this.cmbColorCombo);
+		super.addToUndoableListener(this.taDescrArea);
+
 		this.btCommitBut.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.btCommitBut.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.btCommitBut.setFocusPainted(false);
 		this.btCommitBut.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
 		this.btCommitBut.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				commitChanges();
+			public void actionPerformed(final ActionEvent e) {
+				SchemeCablePortGeneralPanel.this.commitChanges();
 			}
 		});
 	}
-	
-	void setPortEnabled(boolean b) {
+
+	void setPortEnabled(final boolean b) {
 		this.lbPortLabel.setVisible(b);
 		this.pnPortPanel.setVisible(b);
 	}
-		
+
 	public JComponent getGUI() {
 		return this.pnPanel0;
 	}
 
-	public void setObject(Object or) {
-		this.schemePort = (SchemeCablePort)or;
+	public void setObject(final Object or) {
+		this.schemePort = (SchemeCablePort) or;
 		Port port = null;
 		this.cmbTypeCombo.removeAllItems();
-		
+
 		if (this.schemePort != null) {
 			try {
 				this.parent = this.schemePort.getParentSchemeDevice().getParentSchemeElement();
@@ -309,27 +311,32 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 				Log.debugMessage(this.getClass().getName() + ": SchemeDevice has no parent SchemeElement yet", Level.FINEST); //$NON-NLS-1$
 				this.parent = null;
 			}
-			TypicalCondition condition1 = new TypicalCondition(PortTypeKind._PORT_KIND_CABLE, 0, OperationSort.OPERATION_EQUALS,ObjectEntities.PORT_TYPE_CODE, PortTypeWrapper.COLUMN_KIND);
+			final TypicalCondition condition1 = new TypicalCondition(PortTypeKind._PORT_KIND_CABLE,
+					0,
+					OperationSort.OPERATION_EQUALS,
+					ObjectEntities.PORT_TYPE_CODE,
+					PortTypeWrapper.COLUMN_KIND);
 			try {
-				this.cmbTypeCombo.addElements(StorableObjectPool.getStorableObjectsByCondition(condition1, true));
+				final Set<PortType> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+				this.cmbTypeCombo.addElements(portTypes);
 			} catch (ApplicationException e) {
 				Log.errorException(e);
 			}
-			
+
 			this.tfNameText.setText(this.schemePort.getName());
 			this.taDescrArea.setText(this.schemePort.getDescription());
 			this.cmbTypeCombo.setSelectedItem(this.schemePort.getPortType());
 		}
 		if (port != null) {
-			setPortEnabled(true);
+			this.setPortEnabled(true);
 			// TODO add mark and color fields to Port
-//			markText.setText(port.getMark());
-//			Color color = new Color(port.getColor());
-//			if (!isConatainsColor(color))
-//				colorCombo.addItem(color);
-//			colorCombo.setSelectedItem(color);
+			// markText.setText(port.getMark());
+			// Color color = new Color(port.getColor());
+			// if (!isConatainsColor(color))
+			// colorCombo.addItem(color);
+			// colorCombo.setSelectedItem(color);
 		} else {
-			setPortEnabled(false);
+			this.setPortEnabled(false);
 			this.tfMarkText.setText(SchemeResourceKeys.EMPTY);
 		}
 	}
@@ -338,19 +345,20 @@ public class SchemeCablePortGeneralPanel extends DefaultStorableObjectEditor {
 		return this.schemePort;
 	}
 
+	@Override
 	public void commitChanges() {
 		super.commitChanges();
 		if (this.schemePort != null && MiscUtil.validName(this.tfNameText.getText())) {
 			this.schemePort.setName(this.tfNameText.getText());
 			this.schemePort.setDescription(this.taDescrArea.getText());
-			this.schemePort.setPortType((PortType)this.cmbTypeCombo.getSelectedItem());
-			
-			Port port = this.schemePort.getPort();
+			this.schemePort.setPortType((PortType) this.cmbTypeCombo.getSelectedItem());
+
+			final Port port = this.schemePort.getPort();
 			if (port != null) {
 				port.setDescription(this.schemePort.getDescription());
-					// TODO add mark and color fields to Port
-//					port.setMark(markText.getText());
-//					port.setColor(((Color) colorCombo.getSelectedItem()).getRGB());
+				// TODO add mark and color fields to Port
+				// port.setMark(markText.getText());
+				// port.setColor(((Color) colorCombo.getSelectedItem()).getRGB());
 			}
 			this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.schemePort.getId(), SchemeEvent.UPDATE_OBJECT));
 		}

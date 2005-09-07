@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMenuBar.java,v 1.8 2005/09/04 13:35:45 stas Exp $
+ * $Id: SchemeEditorMenuBar.java,v 1.9 2005/09/07 03:02:53 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/09/04 13:35:45 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.9 $, $Date: 2005/09/07 03:02:53 $
  * @module schemeclient
  */
 
@@ -29,9 +29,10 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 	public SchemeEditorMenuBar(ApplicationModel aModel) {
 		super(aModel);
 	}
-	
+
+	@Override
 	protected void addMenuItems() {
-	
+
 		final JMenu menuScheme = new JMenu();
 		final JMenuItem menuSchemeNew = new JMenuItem();
 		final JMenuItem menuSchemeLoad = new JMenuItem();
@@ -39,7 +40,7 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		final JMenuItem menuSchemeSaveAs = new JMenuItem();
 		final JMenuItem menuSchemeImport = new JMenuItem();
 		final JMenuItem menuSchemeExport = new JMenuItem();
-		
+
 		final JMenu menuPath = new JMenu();
 		final JMenuItem menuPathNew = new JMenuItem();
 		final JMenuItem menuPathEdit = new JMenuItem();
@@ -51,10 +52,10 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		final JMenuItem menuPathAddLink = new JMenuItem();
 		final JMenuItem menuPathRemoveLink = new JMenuItem();
 		final JMenuItem menuPathAutoCreate = new JMenuItem();
-		
+
 		final JMenu menuReport = new JMenu();
 		final JMenuItem menuReportCreate = new JMenuItem();
-		
+
 		final JMenu menuWindow = new JMenu();
 		final JMenuItem menuWindowArrange = new JMenuItem();
 		final JMenuItem menuWindowTree = new JMenuItem();
@@ -62,7 +63,7 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		final JMenuItem menuWindowUgo = new JMenuItem();
 		final JMenuItem menuWindowProps = new JMenuItem();
 		final JMenuItem menuWindowList = new JMenuItem();
-		
+
 		menuScheme.setText(LangModelSchematics.getString("menuScheme"));
 		menuScheme.setName("menuScheme");
 		menuSchemeNew.setText(LangModelSchematics.getString("menuSchemeNew"));
@@ -83,7 +84,7 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuSchemeExport.setText(LangModelSchematics.getString("menuSchemeExport"));
 		menuSchemeExport.setName("menuSchemeExport");
 		menuSchemeExport.addActionListener(this.actionAdapter);
-		
+
 		menuScheme.add(menuSchemeNew);
 		menuScheme.add(menuSchemeLoad);
 		menuScheme.addSeparator();
@@ -92,7 +93,7 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuScheme.addSeparator();
 		menuScheme.add(menuSchemeExport);
 		menuScheme.add(menuSchemeImport);
-		
+
 		menuPath.setName("menuPath");
 		menuPath.setText(LangModelSchematics.getString("menuPath"));
 		menuPathNew.setName("menuPathNew");
@@ -108,12 +109,10 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuPathAddLink.setText(LangModelSchematics.getString("menuPathAddLink"));
 		menuPathAddLink.addActionListener(this.actionAdapter);
 		menuPathRemoveLink.setName("menuPathRemoveLink");
-		menuPathRemoveLink.setText(LangModelSchematics
-				.getString("menuPathRemoveLink"));
+		menuPathRemoveLink.setText(LangModelSchematics.getString("menuPathRemoveLink"));
 		menuPathRemoveLink.addActionListener(this.actionAdapter);
 		menuPathAutoCreate.setName("menuPathAutoCreate");
-		menuPathAutoCreate.setText(LangModelSchematics
-				.getString("menuPathAutoCreate"));
+		menuPathAutoCreate.setText(LangModelSchematics.getString("menuPathAutoCreate"));
 		menuPathAutoCreate.addActionListener(this.actionAdapter);
 		menuPathSave.setName("menuPathSave");
 		menuPathSave.setText(LangModelSchematics.getString("menuPathSave"));
@@ -132,26 +131,25 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuPath.add(menuPathSave);
 		menuPath.add(menuPathDelete);
 		menuPath.add(menuPathCancel);
-//		menuPath.addSeparator();
+		//		menuPath.addSeparator();
 		menuPath.add(menuPathAddStart);
 		menuPath.add(menuPathAddEnd);
-//		menuPath.addSeparator();
+		//		menuPath.addSeparator();
 		menuPath.add(menuPathAddLink);
 		menuPath.add(menuPathRemoveLink);
-//		menuPath.addSeparator();
+		//		menuPath.addSeparator();
 		menuPath.add(menuPathAutoCreate);
-		
+
 		menuReport.setName("menuReport");
 		menuReport.setText(LangModelSchematics.getString("menuReport"));
 		menuReportCreate.setName("menuReportCreate");
 		menuReportCreate.setText(LangModelSchematics.getString("menuReportCreate"));
 		menuReportCreate.addActionListener(this.actionAdapter);
 		menuReport.add(menuReportCreate);
-		
+
 		menuWindow.setText(LangModelSchematics.getString("menuWindow"));
 		menuWindow.setName("menuWindow");
-		menuWindowArrange.setText(LangModelGeneral
-				.getString("Menu.View.WindowArrange"));
+		menuWindowArrange.setText(LangModelGeneral.getString("Menu.View.WindowArrange"));
 		menuWindowArrange.setName(ApplicationModel.MENU_VIEW_ARRANGE);
 		menuWindowArrange.addActionListener(this.actionAdapter);
 		menuWindowTree.setText(LangModelSchematics.getString("menuWindowTree"));
@@ -169,7 +167,7 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuWindowList.setText(LangModelSchematics.getString("menuWindowList"));
 		menuWindowList.setName("menuWindowList");
 		menuWindowList.addActionListener(this.actionAdapter);
-		
+
 		menuWindow.add(menuWindowArrange);
 		menuWindow.addSeparator();
 		menuWindow.add(menuWindowTree);
@@ -177,21 +175,20 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuWindow.add(menuWindowUgo);
 		menuWindow.add(menuWindowProps);
 		menuWindow.add(menuWindowList);
-		
-		add(menuScheme);
-		add(menuPath);
-		add(menuReport);
-		add(menuWindow);
-		
-		
+
+		this.add(menuScheme);
+		this.add(menuPath);
+		this.add(menuReport);
+		this.add(menuWindow);
+
 		this.addApplicationModelListener(new ApplicationModelListener() {
 			public void modelChanged(String e) {
-				modelChanged(new String[] {e});
+				modelChanged(new String[] { e });
 			}
-			
-			public void modelChanged(String e[]) {
+
+			public void modelChanged(String[] e) {
 				ApplicationModel aModel = SchemeEditorMenuBar.this.getApplicationModel();
-				
+
 				menuScheme.setVisible(aModel.isVisible("menuScheme"));
 				menuScheme.setEnabled(aModel.isEnabled("menuScheme"));
 				menuSchemeNew.setVisible(aModel.isVisible("menuSchemeNew"));
@@ -206,7 +203,7 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 				menuSchemeImport.setEnabled(aModel.isEnabled("menuSchemeImport"));
 				menuSchemeExport.setVisible(aModel.isVisible("menuSchemeExport"));
 				menuSchemeExport.setEnabled(aModel.isEnabled("menuSchemeExport"));
-				
+
 				menuPath.setVisible(aModel.isVisible("menuPath"));
 				menuPath.setEnabled(aModel.isEnabled("menuPath"));
 				menuPathNew.setVisible(aModel.isVisible("menuPathNew"));
@@ -229,12 +226,12 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 				menuPathDelete.setEnabled(aModel.isEnabled("menuPathDelete"));
 				menuPathEdit.setVisible(aModel.isVisible("menuPathEdit"));
 				menuPathEdit.setEnabled(aModel.isEnabled("menuPathEdit"));
-				
+
 				menuReport.setVisible(aModel.isVisible("menuReport"));
 				menuReport.setEnabled(aModel.isEnabled("menuReport"));
 				menuReportCreate.setVisible(aModel.isVisible("menuReportCreate"));
 				menuReportCreate.setEnabled(aModel.isEnabled("menuReportCreate"));
-				
+
 				menuWindow.setVisible(aModel.isVisible("menuWindow"));
 				menuWindow.setEnabled(aModel.isEnabled("menuWindow"));
 				menuWindowArrange.setVisible(aModel.isVisible(ApplicationModel.MENU_VIEW_ARRANGE));

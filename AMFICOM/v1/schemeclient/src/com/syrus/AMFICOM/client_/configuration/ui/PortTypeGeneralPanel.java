@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeGeneralPanel.java,v 1.15 2005/08/19 15:41:34 stas Exp $
+ * $Id: PortTypeGeneralPanel.java,v 1.16 2005/09/07 03:02:53 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,20 +46,18 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/08/19 15:41:34 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/09/07 03:02:53 $
  * @module schemeclient
  */
 
 public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 	ApplicationContext aContext;
 	protected PortType portType;
-	protected String[] sorts = new String[] {
-			LangModelScheme.getString(SchemeResourceKeys.PORTTYPESORT_OPTICAL),
+	protected String[] sorts = new String[] { LangModelScheme.getString(SchemeResourceKeys.PORTTYPESORT_OPTICAL),
 			LangModelScheme.getString(SchemeResourceKeys.PORTTYPESORT_THERMAL),
-			LangModelScheme.getString(SchemeResourceKeys.PORTTYPESORT_ELECTICAL),
-	};  
-	
+			LangModelScheme.getString(SchemeResourceKeys.PORTTYPESORT_ELECTICAL), };
+
 	JPanel pnPanel0 = new JPanel();
 	JLabel lbNameLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.NAME));
 	JTextField tfNameText = new JTextField();
@@ -67,40 +65,39 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 	JLabel lbSortLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.CODENAME));
 	JComboBox cmbSortCombo = new AComboBox(this.sorts);
 	JLabel lbDescriptionLabel = new JLabel(LangModelScheme.getString(SchemeResourceKeys.DESCRIPTION));
-	JTextArea taDescriptionArea = new JTextArea(2,10);
+	JTextArea taDescriptionArea = new JTextArea(2, 10);
 	JPanel pnGeneralPanel = new JPanel();
-	
+
 	PortTypeKind kind;
-	
+
 	protected PortTypeGeneralPanel() {
 		super();
 		try {
-			jbInit();
+			this.jbInit();
 		} catch (Exception e) {
 			e.printStackTrace();
 		}
 	}
-	
-	public void setContext(ApplicationContext aContext) {
+
+	public void setContext(final ApplicationContext aContext) {
 		this.aContext = aContext;
 	}
-	
-	public void setPortKind(PortTypeKind kind) {
+
+	public void setPortKind(final PortTypeKind kind) {
 		this.kind = kind;
 	}
 
-	protected PortTypeGeneralPanel(PortType portType) {
+	protected PortTypeGeneralPanel(final PortType portType) {
 		this();
-		setObject(portType);
+		this.setObject(portType);
 	}
 
-	@SuppressWarnings("unqualified-field-access")
 	private void jbInit() throws Exception {
-		GridBagLayout gbPanel0 = new GridBagLayout();
-		GridBagConstraints gbcPanel0 = new GridBagConstraints();
-		pnPanel0.setLayout( gbPanel0 );
+		final GridBagLayout gbPanel0 = new GridBagLayout();
+		final GridBagConstraints gbcPanel0 = new GridBagConstraints();
+		this.pnPanel0.setLayout(gbPanel0);
 
-		lbDescriptionLabel.setFocusable( false );
+		this.lbDescriptionLabel.setFocusable(false);
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 2;
 		gbcPanel0.gridwidth = 2;
@@ -109,11 +106,11 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 0;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets( 0,5,0,2 );
-		gbPanel0.setConstraints( lbDescriptionLabel, gbcPanel0 );
-		pnPanel0.add( lbDescriptionLabel );
+		gbcPanel0.insets = new Insets(0, 5, 0, 2);
+		gbPanel0.setConstraints(this.lbDescriptionLabel, gbcPanel0);
+		this.pnPanel0.add(this.lbDescriptionLabel);
 
-		JScrollPane scpDescriptionArea = new JScrollPane( taDescriptionArea );
+		final JScrollPane scpDescriptionArea = new JScrollPane(this.taDescriptionArea);
 		gbcPanel0.gridx = 1;
 		gbcPanel0.gridy = 3;
 		gbcPanel0.gridwidth = 3;
@@ -123,14 +120,14 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weighty = 1;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
 		gbcPanel0.insets = new Insets(0, 2, 0, 2);
-		gbPanel0.setConstraints( scpDescriptionArea, gbcPanel0 );
-		pnPanel0.add( scpDescriptionArea );
+		gbPanel0.setConstraints(scpDescriptionArea, gbcPanel0);
+		this.pnPanel0.add(scpDescriptionArea);
 
-		GridBagLayout gbGeneralPanel = new GridBagLayout();
-		GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
-		pnGeneralPanel.setLayout( gbGeneralPanel );
+		final GridBagLayout gbGeneralPanel = new GridBagLayout();
+		final GridBagConstraints gbcGeneralPanel = new GridBagConstraints();
+		this.pnGeneralPanel.setLayout(gbGeneralPanel);
 
-		lbNameLabel.setFocusable( false );
+		this.lbNameLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 2;
@@ -139,9 +136,9 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcGeneralPanel.insets = new Insets( 0,0,0,2 );
-		gbGeneralPanel.setConstraints( lbNameLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbNameLabel );
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
+		gbGeneralPanel.setConstraints(this.lbNameLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbNameLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 0;
@@ -151,10 +148,10 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcGeneralPanel.insets = new Insets( 0,0,0,0 );
-		gbGeneralPanel.setConstraints( tfNameText, gbcGeneralPanel );
-		pnGeneralPanel.add( tfNameText );
-		
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 0);
+		gbGeneralPanel.setConstraints(this.tfNameText, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.tfNameText);
+
 		gbcGeneralPanel.gridx = 3;
 		gbcGeneralPanel.gridy = 0;
 		gbcGeneralPanel.gridwidth = 1;
@@ -163,11 +160,11 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcGeneralPanel.insets = new Insets( 0,0,0,0 );
-		gbGeneralPanel.setConstraints( commitButton, gbcGeneralPanel );
-		pnGeneralPanel.add( commitButton );
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 0);
+		gbGeneralPanel.setConstraints(this.commitButton, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.commitButton);
 
-		lbSortLabel.setFocusable( false );
+		this.lbSortLabel.setFocusable(false);
 		gbcGeneralPanel.gridx = 0;
 		gbcGeneralPanel.gridy = 1;
 		gbcGeneralPanel.gridwidth = 2;
@@ -176,9 +173,9 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 0;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcGeneralPanel.insets = new Insets( 0,0,0,2 );
-		gbGeneralPanel.setConstraints( lbSortLabel, gbcGeneralPanel );
-		pnGeneralPanel.add( lbSortLabel );
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 2);
+		gbGeneralPanel.setConstraints(this.lbSortLabel, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.lbSortLabel);
 
 		gbcGeneralPanel.gridx = 2;
 		gbcGeneralPanel.gridy = 1;
@@ -188,9 +185,10 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcGeneralPanel.weightx = 1;
 		gbcGeneralPanel.weighty = 0;
 		gbcGeneralPanel.anchor = GridBagConstraints.NORTH;
-		gbcGeneralPanel.insets = new Insets( 0,0,0,0 );
-		gbGeneralPanel.setConstraints( cmbSortCombo, gbcGeneralPanel );
-		pnGeneralPanel.add( cmbSortCombo );
+		gbcGeneralPanel.insets = new Insets(0, 0, 0, 0);
+		gbGeneralPanel.setConstraints(this.cmbSortCombo, gbcGeneralPanel);
+		this.pnGeneralPanel.add(this.cmbSortCombo);
+
 		gbcPanel0.gridx = 0;
 		gbcPanel0.gridy = 0;
 		gbcPanel0.gridwidth = 4;
@@ -199,91 +197,95 @@ public class PortTypeGeneralPanel extends DefaultStorableObjectEditor {
 		gbcPanel0.weightx = 1;
 		gbcPanel0.weighty = 0;
 		gbcPanel0.anchor = GridBagConstraints.NORTH;
-		gbcPanel0.insets = new Insets( 0,0,0,0 );
-		gbPanel0.setConstraints( pnGeneralPanel, gbcPanel0 );
-		pnPanel0.add( pnGeneralPanel );
+		gbcPanel0.insets = new Insets(0, 0, 0, 0);
+		gbPanel0.setConstraints(this.pnGeneralPanel, gbcPanel0);
+		this.pnPanel0.add(this.pnGeneralPanel);
 
-		pnGeneralPanel.setBorder( BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
-//		pnGeneralPanel.setBackground(Color.WHITE);
-//		pnPanel0.setBackground(Color.WHITE);
+		this.pnGeneralPanel.setBorder(BorderFactory.createTitledBorder(SchemeResourceKeys.EMPTY));
+		// pnGeneralPanel.setBackground(Color.WHITE);
+		// pnPanel0.setBackground(Color.WHITE);
 		scpDescriptionArea.setPreferredSize(SchemeResourceKeys.DIMENSION_TEXTAREA);
-		
-		addToUndoableListener(tfNameText);
-		addToUndoableListener(cmbSortCombo);
-		addToUndoableListener(taDescriptionArea);
-		
+
+		super.addToUndoableListener(this.tfNameText);
+		super.addToUndoableListener(this.cmbSortCombo);
+		super.addToUndoableListener(this.taDescriptionArea);
+
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
 		this.commitButton.setFocusPainted(false);
 		this.commitButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_COMMIT));
 		this.commitButton.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
-				commitChanges();
+			public void actionPerformed(final ActionEvent e) {
+				PortTypeGeneralPanel.this.commitChanges();
 			}
 		});
 	}
-	
+
 	public JComponent getGUI() {
-		return this.pnPanel0; 
+		return this.pnPanel0;
 	}
 
 	public Object getObject() {
 		return this.portType;
 	}
 
-	public void setObject(Object or) {
+	public void setObject(final Object or) {
 		this.portType = (PortType) or;
 
 		if (this.portType != null) {
 			this.tfNameText.setText(this.portType.getName());
 			this.taDescriptionArea.setText(this.portType.getDescription());
 			switch (this.portType.getSort().value()) {
-			case PortTypeSort._PORTTYPESORT_OPTICAL:
-				this.cmbSortCombo.setSelectedItem(this.sorts[0]);
-				break;
-			case PortTypeSort._PORTTYPESORT_THERMAL:
-				this.cmbSortCombo.setSelectedItem(this.sorts[1]);
-				break;
-			case PortTypeSort._PORTTYPESORT_ELECTRICAL:
-				this.cmbSortCombo.setSelectedItem(this.sorts[2]);
+				case PortTypeSort._PORTTYPESORT_OPTICAL:
+					this.cmbSortCombo.setSelectedItem(this.sorts[0]);
+					break;
+				case PortTypeSort._PORTTYPESORT_THERMAL:
+					this.cmbSortCombo.setSelectedItem(this.sorts[1]);
+					break;
+				case PortTypeSort._PORTTYPESORT_ELECTRICAL:
+					this.cmbSortCombo.setSelectedItem(this.sorts[2]);
 			}
-		} 
-		else {
+		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);
 		}
 	}
 
+	@Override
 	public void commitChanges() {
 		super.commitChanges();
 		if (MiscUtil.validName(this.tfNameText.getText())) {
 			if (this.portType == null) {
 				try {
 					this.portType = SchemeObjectsFactory.createPortType(this.tfNameText.getText(), this.kind);
-					apply();
+					this.apply();
 					this.aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, this.portType.getId(), SchemeEvent.CREATE_OBJECT));
-					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this, this.portType, PortTypePropertiesManager.getInstance(this.aContext, this.kind), ObjectSelectedEvent.PORT_TYPE));
+					this.aContext.getDispatcher().firePropertyChange(new ObjectSelectedEvent(this,
+							this.portType,
+							PortTypePropertiesManager.getInstance(this.aContext, this.kind),
+							ObjectSelectedEvent.PORT_TYPE));
 				} catch (CreateObjectException e) {
 					Log.errorException(e);
 					return;
 				}
 			} else {
-				apply();
+				this.apply();
 			}
 		}
 	}
-	
+
 	private void apply() {
 		this.portType.setName(this.tfNameText.getText());
 		this.portType.setDescription(this.taDescriptionArea.getText());
 
-		if (this.cmbSortCombo.getSelectedItem().equals(this.sorts[0]))
+		if (this.cmbSortCombo.getSelectedItem().equals(this.sorts[0])) {
 			this.portType.setSort(PortTypeSort.PORTTYPESORT_OPTICAL);
-		else if (this.cmbSortCombo.getSelectedItem().equals(this.sorts[1]))
+		} else if (this.cmbSortCombo.getSelectedItem().equals(this.sorts[1])) {
 			this.portType.setSort(PortTypeSort.PORTTYPESORT_THERMAL);
-		else if (this.cmbSortCombo.getSelectedItem().equals(this.sorts[2]))
+		} else if (this.cmbSortCombo.getSelectedItem().equals(this.sorts[2])) {
 			this.portType.setSort(PortTypeSort.PORTTYPESORT_ELECTRICAL);
-		
+		}
+
 		try {
 			StorableObjectPool.flush(this.portType.getId(), LoginManager.getUserId(), true);
 		} catch (ApplicationException e) {
