@@ -1,26 +1,37 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
 import java.awt.BorderLayout;
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
+import java.beans.PropertyChangeListener;
 
-import javax.swing.*;
+import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.JInternalFrame;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JViewport;
+import javax.swing.ListSelectionModel;
+import javax.swing.UIManager;
+import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.*;
+import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.analysis.*;
+import com.syrus.AMFICOM.analysis.MarkerResource;
+import com.syrus.AMFICOM.analysis.MarkerResourceWrapper;
 import com.syrus.AMFICOM.analysis.dadara.MathRef;
-import com.syrus.AMFICOM.client.UI.*;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
+import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
-public class MarkersInfoFrame extends JInternalFrame
-implements PropertyChangeListener, BsHashChangeListener
-{
-	//Don't change sequence
-	private static String[] DEFAULT_KEYS = new String[] {
-			MarkerResourceWrapper.KEY_A_POSITION, // 0
+public class MarkersInfoFrame extends JInternalFrame implements PropertyChangeListener, BsHashChangeListener {
+	private static final long serialVersionUID = 1645657805656146998L;
+
+	// Don't change sequence
+	private static String[] DEFAULT_KEYS = new String[] { MarkerResourceWrapper.KEY_A_POSITION, // 0
 			MarkerResourceWrapper.KEY_A_LOSS, // 1 (changes to KEY_A_REFLECTANCE)
 			MarkerResourceWrapper.KEY_A_ATTENUATION, // 2
 			MarkerResourceWrapper.KEY_A_CUMULATIVE_LOSS, // 3
@@ -32,9 +43,9 @@ implements PropertyChangeListener, BsHashChangeListener
 			MarkerResourceWrapper.KEY_AB_ORL // 9
 	};
 	MarkerResource res;
-	
-	private WrapperedPropertyTableModel tModel;
-	private WrapperedPropertyTable jTable;
+
+	private WrapperedPropertyTableModel<MarkerResource> tModel;
+	private WrapperedPropertyTable<MarkerResource> jTable;
 
 	BorderLayout borderLayout = new BorderLayout();
 	JPanel mainPanel = new JPanel();
@@ -42,142 +53,129 @@ implements PropertyChangeListener, BsHashChangeListener
 	JViewport viewport = new JViewport();
 	double sigma;
 
-	public MarkersInfoFrame()
-	{
+	public MarkersInfoFrame() {
 		this(new Dispatcher());
 	}
 
-	public MarkersInfoFrame(Dispatcher dispatcher)
-	{
+	public MarkersInfoFrame(final Dispatcher dispatcher) {
 		super();
 
-		try
-		{
-			jbInit();
-		} catch (Exception e)
-		{
+		try {
+			this.jbInit();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
-		init_module(dispatcher);
+		this.initModule(dispatcher);
 	}
 
-	void init_module(Dispatcher dispatcher)
-	{
-		//dispatcher.register(this, RefChangeEvent.typ);
+	void initModule(final Dispatcher dispatcher) {
+		// dispatcher.register(this, RefChangeEvent.typ);
 		dispatcher.addPropertyChangeListener(RefUpdateEvent.typ, this);
 		Heap.addBsHashListener(this);
 	}
 
-	public void propertyChange(PropertyChangeEvent ae)
-	{
-		if(ae.getPropertyName().equals(RefUpdateEvent.typ))
-		{
-			RefUpdateEvent rue = (RefUpdateEvent)ae;
-
-			if (rue.markerMoved())
-			{
-				updTableModel ((MarkersInfo)rue.getNewValue());
+	public void propertyChange(final PropertyChangeEvent ae) {
+		if (ae.getPropertyName().equals(RefUpdateEvent.typ)) {
+			final RefUpdateEvent rue = (RefUpdateEvent) ae;
+			if (rue.markerMoved()) {
+				updTableModel((MarkersInfo) rue.getNewValue());
 			}
 		}
 	}
 
-	private void jbInit() throws Exception
-	{
-		//setFocusCycleRoot(false);
-		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+	private void jbInit() throws Exception {
+		// setFocusCycleRoot(false);
+		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		res = new MarkerResource();
-		tModel = new WrapperedPropertyTableModel(MarkerResourceWrapper.getInstance(),
-				res, DEFAULT_KEYS);
+		this.res = new MarkerResource();
+		this.tModel = new WrapperedPropertyTableModel<MarkerResource>(MarkerResourceWrapper.getInstance(), this.res, DEFAULT_KEYS);
 
-		jTable = new WrapperedPropertyTable(tModel);
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(120);
-		jTable.getColumnModel().getColumn(1).setPreferredWidth(80);
+		this.jTable = new WrapperedPropertyTable<MarkerResource>(this.tModel);
+		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(120);
+		this.jTable.getColumnModel().getColumn(1).setPreferredWidth(80);
 
-		this.getContentPane().add(mainPanel);
+		this.getContentPane().add(this.mainPanel);
 
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		//this.setMaximizable(true);
+		// this.setMaximizable(true);
 		this.setTitle(LangModelAnalyse.getString("markerInfoTitle"));
 
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		scrollPane.setViewport(viewport);
-		scrollPane.setAutoscrolls(true);
+		this.mainPanel.setLayout(new BorderLayout());
+		this.mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.scrollPane.setViewport(this.viewport);
+		this.scrollPane.setAutoscrolls(true);
 
-		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
-		scrollPane.getViewport().add(jTable);
+		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
+		this.scrollPane.getViewport().add(this.jTable);
 	}
 
-	void updTableModel(MarkersInfo mInfo)
-	{
-		String mt = " " + LangModelAnalyse.getString("mt");
-		String dB = " " + LangModelAnalyse.getString("dB");
-		String dbkm = " " + LangModelAnalyse.getString("dB/km");
-		
+	void updTableModel(final MarkersInfo mInfo) {
+		final String mt = " " + LangModelAnalyse.getString("mt");
+		final String dB = " " + LangModelAnalyse.getString("dB");
+		final String dbkm = " " + LangModelAnalyse.getString("dB/km");
+
 		// setting keys
-		if (mInfo.a_type == MarkersInfo.REFLECTIVE)
+		if (mInfo.a_type == MarkersInfo.REFLECTIVE) {
 			DEFAULT_KEYS[1] = MarkerResourceWrapper.KEY_A_REFLECTION;
-		else if (mInfo.a_type == MarkersInfo.NONREFLECTIVE)
+		} else if (mInfo.a_type == MarkersInfo.NONREFLECTIVE) {
 			DEFAULT_KEYS[1] = MarkerResourceWrapper.KEY_A_LOSS;
+		}
 
-		if (mInfo.a_pos < mInfo.b_pos)
+		if (mInfo.a_pos < mInfo.b_pos) {
 			DEFAULT_KEYS[5] = MarkerResourceWrapper.KEY_BA_DISTANCE;
-		else
+		} else {
 			DEFAULT_KEYS[5] = MarkerResourceWrapper.KEY_AB_DISTANCE;
-		
+		}
+
 		// setting values
-		res.setAPosition(Math.round(mInfo.a_pos_m) + mt);
+		this.res.setAPosition(Math.round(mInfo.a_pos_m) + mt);
 		if (mInfo.a_type == MarkersInfo.NOANALYSIS) {
-			res.setALoss(MarkerResource.DASH);
-			res.setAReflectance(MarkerResource.DASH);
-			res.setAAttenuation(MarkerResource.DASH);
-			res.setACumulativeLoss(MarkerResource.DASH);
-		} else
-		{
+			this.res.setALoss(MarkerResource.DASH);
+			this.res.setAReflectance(MarkerResource.DASH);
+			this.res.setAAttenuation(MarkerResource.DASH);
+			this.res.setACumulativeLoss(MarkerResource.DASH);
+		} else {
 			if (mInfo.a_type == MarkersInfo.NONREFLECTIVE) {// потери в А
-				res.setALoss(MathRef.round_4(mInfo.a_loss) + dB);
+				this.res.setALoss(MathRef.round_4(mInfo.a_loss) + dB);
 			} else if (mInfo.a_type == MarkersInfo.REFLECTIVE) {// отражение в А
-				if (mInfo.a_reflectance > 0)
-					res.setAReflectance(MathRef.round_4(MathRef.calcReflectance(sigma, mInfo.a_reflectance)) + dB);
-				else
-					res.setAReflectance(MarkerResource.DASH);
+				if (mInfo.a_reflectance > 0) {
+					this.res.setAReflectance(MathRef.round_4(MathRef.calcReflectance(this.sigma, mInfo.a_reflectance)) + dB);
+				} else {
+					this.res.setAReflectance(MarkerResource.DASH);
+				}
 			}
-			res.setAAttenuation(MathRef.round_4(mInfo.a_attfactor) + dbkm);
-			res.setACumulativeLoss(MathRef.round_4(mInfo.a_cumulative_loss) + dB);
+			this.res.setAAttenuation(MathRef.round_4(mInfo.a_attfactor) + dbkm);
+			this.res.setACumulativeLoss(MathRef.round_4(mInfo.a_cumulative_loss) + dB);
 		}
-		res.setBPosition(Math.round(mInfo.b_pos_m) + mt);
-		res.setAbDistance(Math.round(mInfo.a_b_distance_m) + mt);
-		res.setAbLoss(MathRef.round_4(mInfo.a_b_loss) + dB);
-		res.setAbAttenuation(MathRef.round_4(mInfo.a_b_attenuation) + dbkm);
-		res.setLsaAttenuation(MathRef.round_4(mInfo.lsa_attenuation) + dbkm);
-		if (mInfo.a_b_orl > 0)
-			res.setAbOrl(MathRef.round_4(mInfo.a_b_orl) + dB);
-		else
-			res.setAbOrl(MarkerResource.DASH);
-		jTable.updateUI();
+		this.res.setBPosition(Math.round(mInfo.b_pos_m) + mt);
+		this.res.setAbDistance(Math.round(mInfo.a_b_distance_m) + mt);
+		this.res.setAbLoss(MathRef.round_4(mInfo.a_b_loss) + dB);
+		this.res.setAbAttenuation(MathRef.round_4(mInfo.a_b_attenuation) + dbkm);
+		this.res.setLsaAttenuation(MathRef.round_4(mInfo.lsa_attenuation) + dbkm);
+		if (mInfo.a_b_orl > 0) {
+			this.res.setAbOrl(MathRef.round_4(mInfo.a_b_orl) + dB);
+		} else {
+			this.res.setAbOrl(MarkerResource.DASH);
+		}
+		this.jTable.updateUI();
 	}
 
-	public void bsHashAdded(String key)
-	{
-		if (key.equals(Heap.PRIMARY_TRACE_KEY))
-		{
-			BellcoreStructure bs = Heap.getBSPrimaryTrace();
-			sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
-			setVisible(true);
+	public void bsHashAdded(final String key) {
+		if (key.equals(Heap.PRIMARY_TRACE_KEY)) {
+			final BellcoreStructure bs = Heap.getBSPrimaryTrace();
+			this.sigma = MathRef.calcSigma(bs.getWavelength(), bs.getPulsewidth());
+			this.setVisible(true);
 		}
 	}
 
-	public void bsHashRemoved(String key)
-	{
+	public void bsHashRemoved(final String key) {
 	}
 
-	public void bsHashRemovedAll()
-	{
-		setVisible(false);
+	public void bsHashRemovedAll() {
+		this.setVisible(false);
 	}
 }

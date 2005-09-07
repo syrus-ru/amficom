@@ -15,12 +15,12 @@ public class Evaluation extends AbstractApplication {
 	public Evaluation() {
 		super(Analyse.APPLICATION_NAME);
 	}
-	
+
+	@Override
 	protected void init() {
 		super.init();
 		super.aContext.setApplicationModel(new ReflectometryAnalyseApplicationModelFactory().create());
-		super.startMainFrame(new ThresholdsMainFrame(this.aContext), 
-				(Image) UIManager.get(AnalysisResourceKeys.ICON_EVALUATE_MINI));
+		super.startMainFrame(new ThresholdsMainFrame(this.aContext), (Image) UIManager.get(AnalysisResourceKeys.ICON_EVALUATE_MINI));
 	}
 
 	public static void main(String[] args) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStats.java,v 1.8 2005/08/08 11:59:53 arseniy Exp $
+ * $Id: OverallStats.java,v 1.9 2005/09/07 02:56:49 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,12 +22,11 @@ import com.syrus.io.BellcoreStructure;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/08 11:59:53 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/07 02:56:49 $
  * @module analysis
  */
 
 public class OverallStats {
-	
 	private String totalLength;
 	private String totalLoss;
 	private String totalAttenuation;
@@ -36,7 +35,7 @@ public class OverallStats {
 	private String totalNoiseDD;
 	private String totalNoiseDDRMS;
 	private String totalEvents;
-	
+
 	private String etalonLength;
 	private String maxDeviation;
 	private String meanDeviation;
@@ -44,7 +43,7 @@ public class OverallStats {
 
 	private String mismatch;
 
-	private List						propertyChangeListeners;
+	private List<PropertyChangeListener> propertyChangeListeners;
 	
 	public void initGeneralStatistics(TraceEvent ev, BellcoreStructure bs) {
 		double range_km = ev.last_point * bs.getResolution() / 1000.0;
@@ -188,7 +187,7 @@ public class OverallStats {
 		if (this.dLoss == null || !this.dLoss.equals(loss)) {
 			String oldValue = this.dLoss;
 			this.dLoss = loss;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, OverallStatsWrapper.KEY_D_LOSS, oldValue, dLoss));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, OverallStatsWrapper.KEY_D_LOSS, oldValue, this.dLoss));
 		}
 	}
 	
@@ -251,7 +250,7 @@ public class OverallStats {
 	
 	public synchronized void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
 		if (this.propertyChangeListeners == null) {
-			this.propertyChangeListeners = new LinkedList();
+			this.propertyChangeListeners = new LinkedList<PropertyChangeListener>();
 		}
 		if (!this.propertyChangeListeners.contains(propertyChangeListener)) {
 			this.propertyChangeListeners.add(propertyChangeListener);

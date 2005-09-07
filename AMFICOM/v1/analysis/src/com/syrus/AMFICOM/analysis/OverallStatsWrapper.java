@@ -1,5 +1,5 @@
 /*-
- * $Id: OverallStatsWrapper.java,v 1.5 2005/08/08 11:59:53 arseniy Exp $
+ * $Id: OverallStatsWrapper.java,v 1.6 2005/09/07 02:56:49 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,12 +17,11 @@ import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:59:53 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/07 02:56:49 $
  * @module analysis
  */
 
-public class OverallStatsWrapper implements Wrapper {
-	
+public class OverallStatsWrapper implements Wrapper<OverallStats> {
 	public static final String KEY_LENGTH = "totalLength";
 	public static final String KEY_LOSS = "totalLoss";
 	public static final String KEY_ATTENUATION = "totalAttenuation";
@@ -37,32 +36,42 @@ public class OverallStatsWrapper implements Wrapper {
 	public static final String KEY_MEAN_DEVIATION = "meanDeviation";
 	public static final String KEY_D_LOSS = "dLoss";
 	public static final String KEY_MISMATCH = "mismatch";
-	
-	private static OverallStatsWrapper	instance;
 
-	private List						keys;
+	private static OverallStatsWrapper instance;
 
-	public String getKey(int index) {
-		return (String) this.keys.get(index);
+	private List<String> keys;
+
+	public String getKey(final int index) {
+		return this.keys.get(index);
 	}
 
 	private OverallStatsWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { KEY_LENGTH, KEY_LOSS, KEY_ATTENUATION,
-				KEY_RETURN_LOSS, KEY_NOISE_LEVEL, KEY_NOISE_DD, KEY_NOISE_DDRMS,
-				KEY_EVENTS, KEY_ETALON_LENGTH, KEY_MAX_DEVIATION, KEY_MEAN_DEVIATION,
-				KEY_D_LOSS, KEY_MISMATCH };
+		final String[] keysArray = new String[] { KEY_LENGTH,
+				KEY_LOSS,
+				KEY_ATTENUATION,
+				KEY_RETURN_LOSS,
+				KEY_NOISE_LEVEL,
+				KEY_NOISE_DD,
+				KEY_NOISE_DDRMS,
+				KEY_EVENTS,
+				KEY_ETALON_LENGTH,
+				KEY_MAX_DEVIATION,
+				KEY_MEAN_DEVIATION,
+				KEY_D_LOSS,
+				KEY_MISMATCH };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static OverallStatsWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new OverallStatsWrapper();
+		}
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -73,87 +82,74 @@ public class OverallStatsWrapper implements Wrapper {
 		return key;
 	}
 
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		if (this.keys.contains(key)) {
 			return String.class; 
 		}
 		return null;
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Object getValue(	Object object, String key) {
-		
-		if (object instanceof OverallStats) {
-			OverallStats stats = (OverallStats) object;
-			
-			if (key.equals(KEY_LENGTH)) {
-				return stats.getTotalLength();
-			} else if (key.equals(KEY_LOSS)) {
-				return stats.getTotalLoss();
-			} else if (key.equals(KEY_ATTENUATION)) {
-				return stats.getTotalAttenuation();
-			} else if (key.equals(KEY_RETURN_LOSS)) {
-				return stats.getTotalReturnLoss();
-			} else if (key.equals(KEY_NOISE_LEVEL)) {
-				return stats.getTotalNoiseLevel();
-			} else if (key.equals(KEY_NOISE_DD)) {
-				return stats.getTotalNoiseDD();
-			} else if (key.equals(KEY_NOISE_DDRMS)) {
-				return stats.getTotalNoiseDDRMS();
-			}	else if (key.equals(KEY_EVENTS)) {
-				return stats.getTotalEvents();
-			} else if (key.equals(KEY_ETALON_LENGTH)) {
-				return stats.getEtalonLength();
-			} else if (key.equals(KEY_MAX_DEVIATION)) {
-				return stats.getMaxDeviation();
-			} else if (key.equals(KEY_MEAN_DEVIATION)) {
-				return stats.getMeanDeviation();
-			} else if (key.equals(KEY_D_LOSS)) {
-				return stats.getDLoss();
-			} else if (key.equals(KEY_MEAN_DEVIATION)) {
-				return stats.getMeanDeviation();
-			} else if (key.equals(KEY_MISMATCH)) {
-				return stats.getMismatch();
-			}
+	public Object getValue(final OverallStats stats, final String key) {
+		if (key.equals(KEY_LENGTH)) {
+			return stats.getTotalLength();
+		} else if (key.equals(KEY_LOSS)) {
+			return stats.getTotalLoss();
+		} else if (key.equals(KEY_ATTENUATION)) {
+			return stats.getTotalAttenuation();
+		} else if (key.equals(KEY_RETURN_LOSS)) {
+			return stats.getTotalReturnLoss();
+		} else if (key.equals(KEY_NOISE_LEVEL)) {
+			return stats.getTotalNoiseLevel();
+		} else if (key.equals(KEY_NOISE_DD)) {
+			return stats.getTotalNoiseDD();
+		} else if (key.equals(KEY_NOISE_DDRMS)) {
+			return stats.getTotalNoiseDDRMS();
+		} else if (key.equals(KEY_EVENTS)) {
+			return stats.getTotalEvents();
+		} else if (key.equals(KEY_ETALON_LENGTH)) {
+			return stats.getEtalonLength();
+		} else if (key.equals(KEY_MAX_DEVIATION)) {
+			return stats.getMaxDeviation();
+		} else if (key.equals(KEY_MEAN_DEVIATION)) {
+			return stats.getMeanDeviation();
+		} else if (key.equals(KEY_D_LOSS)) {
+			return stats.getDLoss();
+		} else if (key.equals(KEY_MEAN_DEVIATION)) {
+			return stats.getMeanDeviation();
+		} else if (key.equals(KEY_MISMATCH)) {
+			return stats.getMismatch();
 		}
 		return null;
 	}
-	public boolean isEditable(String key) {
+
+	public boolean isEditable(final String key) {
 		return false;
 	}
 
-	public void setPropertyValue(	String key,
-									Object objectKey,
-									Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		// TODO Auto-generated method stub
-
 	}
 
-	public void setValue(	Object object,
-							String key,
-							Object value) {
-		if (object instanceof OverallStats) {
-			OverallStats stats = (OverallStats) object;
-			
-			if (key.equals(KEY_LENGTH)) {
-				stats.setTotalLength((String)value);
-			} else if (key.equals(KEY_LOSS)) {
-				stats.setTotalLoss((String)value);
-			} else if (key.equals(KEY_ATTENUATION)) {
-				stats.setTotalAttenuation((String)value);
-			} else if (key.equals(KEY_RETURN_LOSS)) {
-				stats.setTotalReturnLoss((String)value);
-			} else if (key.equals(KEY_NOISE_LEVEL)) {
-				stats.setTotalNoiseLevel((String)value);
-			} else if (key.equals(KEY_NOISE_DD)) {
-				stats.setTotalNoiseDD((String)value);
-			} else if (key.equals(KEY_EVENTS)) {
-				stats.setTotalEvents((String)value);
-			}  
+	public void setValue(final OverallStats stats, final String key, final Object value) {
+		if (key.equals(KEY_LENGTH)) {
+			stats.setTotalLength((String) value);
+		} else if (key.equals(KEY_LOSS)) {
+			stats.setTotalLoss((String) value);
+		} else if (key.equals(KEY_ATTENUATION)) {
+			stats.setTotalAttenuation((String) value);
+		} else if (key.equals(KEY_RETURN_LOSS)) {
+			stats.setTotalReturnLoss((String) value);
+		} else if (key.equals(KEY_NOISE_LEVEL)) {
+			stats.setTotalNoiseLevel((String) value);
+		} else if (key.equals(KEY_NOISE_DD)) {
+			stats.setTotalNoiseDD((String) value);
+		} else if (key.equals(KEY_EVENTS)) {
+			stats.setTotalEvents((String) value);
 		}
 	}
 }

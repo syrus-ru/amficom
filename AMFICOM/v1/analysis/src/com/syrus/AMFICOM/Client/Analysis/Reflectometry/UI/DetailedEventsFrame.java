@@ -32,19 +32,19 @@ import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-public class DetailedEventsFrame extends JInternalFrame
-implements EtalonMTMListener,
-		CurrentEventChangeListener, PrimaryRefAnalysisListener
-{
+public class DetailedEventsFrame extends JInternalFrame implements EtalonMTMListener, CurrentEventChangeListener,
+		PrimaryRefAnalysisListener {
+	private static final long serialVersionUID = 2729642346362069321L;
+
 	private ModelTrace alignedDataMT;
 
-	private WrapperedPropertyTableModel tModel;
-	private WrapperedPropertyTableModel ctModel;
+	private WrapperedPropertyTableModel<DetailedEventResource> tModel;
+	private WrapperedPropertyTableModel<DetailedEventResource> ctModel;
 	private DetailedEventResource res;
-	
-	private WrapperedPropertyTable mainTable;
-	private WrapperedPropertyTable comparativeTable;
-	
+
+	private WrapperedPropertyTable<DetailedEventResource> mainTable;
+	private WrapperedPropertyTable<DetailedEventResource> comparativeTable;
+
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
 	private JViewport viewport = new JViewport();
@@ -54,68 +54,64 @@ implements EtalonMTMListener,
 	private JViewport viewportComp = new JViewport();
 	private JTabbedPane tabbedPane = new JTabbedPane();
 
-	private static final String[] emptyKeys = new String[] { };
+	private static final String[] emptyKeys = new String[] {};
 
-	private static final String[] linearKeys = new String[] {
-			DetailedEventWrapper.KEY_EXTENSION,
-			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL,
+	private static final String[] linearKeys = new String[] { DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_START_LEVEL,
+			DetailedEventWrapper.KEY_END_LEVEL,
 			DetailedEventWrapper.KEY_MAXDEVIATION,
 			DetailedEventWrapper.KEY_MEAN_DEVIATION };
 
-	private static final String[] dzKeys = new String[] {
-			DetailedEventWrapper.KEY_EXTENSION,
-			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL,
-			DetailedEventWrapper.KEY_EDZ, DetailedEventWrapper.KEY_ADZ };
+	private static final String[] dzKeys = new String[] { DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_START_LEVEL,
+			DetailedEventWrapper.KEY_END_LEVEL,
+			DetailedEventWrapper.KEY_EDZ,
+			DetailedEventWrapper.KEY_ADZ };
 
-	private static final String[] spliceKeys = new String[] {
-			DetailedEventWrapper.KEY_EXTENSION,
-			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL};
+	private static final String[] spliceKeys = new String[] { DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_START_LEVEL,
+			DetailedEventWrapper.KEY_END_LEVEL };
 
-	private static final String[] notidKeys = new String[] {
-			DetailedEventWrapper.KEY_EXTENSION,
-			DetailedEventWrapper.KEY_MAX_LEVEL, DetailedEventWrapper.KEY_MIN_LEVEL,
+	private static final String[] notidKeys = new String[] { DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_MAX_LEVEL,
+			DetailedEventWrapper.KEY_MIN_LEVEL,
 			DetailedEventWrapper.KEY_MAXDEVIATION };
-	
-	private static final String[] reflectionKeys = new String[] {
-			DetailedEventWrapper.KEY_EXTENSION,
-			DetailedEventWrapper.KEY_START_LEVEL, DetailedEventWrapper.KEY_END_LEVEL,
+
+	private static final String[] reflectionKeys = new String[] { DetailedEventWrapper.KEY_EXTENSION,
+			DetailedEventWrapper.KEY_START_LEVEL,
+			DetailedEventWrapper.KEY_END_LEVEL,
 			DetailedEventWrapper.KEY_REFLECTION_LEVEL };
-	
-	private static final String[] endKeys = new String[] {
-			DetailedEventWrapper.KEY_EXTENSION,
+
+	private static final String[] endKeys = new String[] { DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_START_LEVEL,
 			DetailedEventWrapper.KEY_REFLECTION_LEVEL };
-	
-	private static final String[] compareKeys = new String[] {
-			DetailedEventWrapper.KEY_TYPE, DetailedEventWrapper.KEY_ETALON_TYPE,
+
+	private static final String[] compareKeys = new String[] { DetailedEventWrapper.KEY_TYPE,
+			DetailedEventWrapper.KEY_ETALON_TYPE,
 			DetailedEventWrapper.KEY_ETALON_MAX_DEVIATION,
 			DetailedEventWrapper.KEY_ETALON_MEAN_DEVIATION,
 			DetailedEventWrapper.KEY_LOSS_DIFFERENCE,
 			DetailedEventWrapper.KEY_LOCATION_DIFFERENCE,
 			DetailedEventWrapper.KEY_LENGTH_DIFFERENCE };
-	
-	public DetailedEventsFrame()
-	{
+
+	public DetailedEventsFrame() {
 		this.init();
 		this.initModule();
 	}
 
-	private void initModule()
-	{
+	private void initModule() {
 		Heap.addEtalonMTMListener(this);
 		Heap.addCurrentEventChangeListener(this);
 		Heap.addPrimaryRefAnalysisListener(this);
 	}
 
-	private void makeAlignedDataMT()
-	{
+	private void makeAlignedDataMT() {
 		// XXX: is alignment really required? Should it be performed here?
 		if (Heap.getMTMEtalon() == null || Heap.getMTAEPrimary() == null) {
-			alignedDataMT = null;
+			this.alignedDataMT = null;
 		} else {
-			alignedDataMT = ReflectogramMath.createAlignedArrayModelTrace(
-			Heap.getMTAEPrimary().getModelTrace(),
-			Heap.getMTMEtalon().getMTAE().getModelTrace());
+			this.alignedDataMT = ReflectogramMath.createAlignedArrayModelTrace(Heap.getMTAEPrimary().getModelTrace(),
+					Heap.getMTMEtalon().getMTAE().getModelTrace());
 		}
 	}
 
@@ -123,197 +119,181 @@ implements EtalonMTMListener,
 		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
-		res = new DetailedEventResource();
-		tModel = new WrapperedPropertyTableModel(DetailedEventWrapper.getInstance(), res, emptyKeys);
-		
-		this.mainTable = new WrapperedPropertyTable(tModel);
+		this.res = new DetailedEventResource();
+		this.tModel = new WrapperedPropertyTableModel<DetailedEventResource>(DetailedEventWrapper.getInstance(), this.res, emptyKeys);
 
-		this.getContentPane().add(tabbedPane, BorderLayout.CENTER);
+		this.mainTable = new WrapperedPropertyTable<DetailedEventResource>(this.tModel);
+
+		this.getContentPane().add(this.tabbedPane, BorderLayout.CENTER);
 
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		//this.setMaximizable(true);
+		// this.setMaximizable(true);
 		this.setTitle(LangModelAnalyse.getString("eventDetailedTableTitle"));
 
-		tabbedPane.add(LangModelAnalyse.getString("Title.mains"), mainPanel);
+		this.tabbedPane.add(LangModelAnalyse.getString("Title.mains"), this.mainPanel);
 
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		scrollPane.setViewport(viewport);
-		scrollPane.setAutoscrolls(true);
+		this.mainPanel.setLayout(new BorderLayout());
+		this.mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.scrollPane.setViewport(this.viewport);
+		this.scrollPane.setAutoscrolls(true);
 
-		mainTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		mainTable.getColumnModel().getColumn(0).setPreferredWidth(130);
-		mainTable.getColumnModel().getColumn(1).setPreferredWidth(100);
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
-		scrollPane.getViewport().add(mainTable);
-		tabbedPane.setEnabledAt(0, true);
+		this.mainTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		this.mainTable.getColumnModel().getColumn(0).setPreferredWidth(130);
+		this.mainTable.getColumnModel().getColumn(1).setPreferredWidth(100);
+		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
+		this.scrollPane.getViewport().add(this.mainTable);
+		this.tabbedPane.setEnabledAt(0, true);
 
-		tabbedPane.add(LangModelAnalyse.getString("Title.comparatives"), mainPanelComp);
+		this.tabbedPane.add(LangModelAnalyse.getString("Title.comparatives"), this.mainPanelComp);
 
-		this.ctModel = new WrapperedPropertyTableModel(DetailedEventWrapper.getInstance(), res, compareKeys);
-		this.comparativeTable = new WrapperedPropertyTable(this.ctModel);
+		this.ctModel = new WrapperedPropertyTableModel<DetailedEventResource>(DetailedEventWrapper.getInstance(), this.res, compareKeys);
+		this.comparativeTable = new WrapperedPropertyTable<DetailedEventResource>(this.ctModel);
 		this.comparativeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.comparativeTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 		this.comparativeTable.getColumnModel().getColumn(1).setPreferredWidth(100);
 
-		mainPanelComp.setBorder(BorderFactory.createLoweredBevelBorder());
-		scrollPaneComp.setViewport(viewportComp);
-		scrollPaneComp.setAutoscrolls(true);
-		comparativeTable.setDefaultRenderer(Object.class, new CompareTableRenderer());
+		this.mainPanelComp.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.scrollPaneComp.setViewport(this.viewportComp);
+		this.scrollPaneComp.setAutoscrolls(true);
+		this.comparativeTable.setDefaultRenderer(Object.class, new CompareTableRenderer());
 
-		mainPanelComp.add(scrollPaneComp, BorderLayout.CENTER);
-		scrollPaneComp.getViewport().add(comparativeTable);
-		tabbedPane.setSelectedIndex(0);
-		tabbedPane.setEnabledAt(1, false);
-
+		this.mainPanelComp.add(this.scrollPaneComp, BorderLayout.CENTER);
+		this.scrollPaneComp.getViewport().add(this.comparativeTable);
+		this.tabbedPane.setSelectedIndex(0);
+		this.tabbedPane.setEnabledAt(1, false);
 	}
 
-	private void setData()
-	{
-		int nEvent = Heap.getCurrentEvent1();
-		int nEtalon = Heap.getCurrentEtalonEvent1();
-		if(Heap.getMTMEtalon() == null || Heap.getMTAEPrimary() == null || alignedDataMT == null)
-		{
-			tabbedPane.setSelectedIndex(0);
-			tabbedPane.setEnabledAt(1, false);
+	private void setData() {
+		final int nEvent = Heap.getCurrentEvent1();
+		final int nEtalon = Heap.getCurrentEtalonEvent1();
+		if (Heap.getMTMEtalon() == null || Heap.getMTAEPrimary() == null || this.alignedDataMT == null) {
+			this.tabbedPane.setSelectedIndex(0);
+			this.tabbedPane.setEnabledAt(1, false);
 			return;
 		}
-		double deltaX = Heap.getMTAEPrimary().getDeltaX();
+		final double deltaX = Heap.getMTAEPrimary().getDeltaX();
 
-//		ComplexReflectogramEvent dataEvent =
-//			Heap.getMTAEPrimary().getComplexEvents()[nEvent];
-//		ComplexReflectogramEvent etalonEvent = nEtalon != -1
-//				? Heap.getMTMEtalon().getMTAE().getComplexEvents()[nEtalon]
-//				: null;
-		DetailedEvent dataEvent = nEvent != -1
-				? Heap.getMTAEPrimary().getDetailedEvent(nEvent)
-				: null;
-		DetailedEvent etalonEvent = nEtalon != -1
-				? Heap.getMTMEtalon().getMTAE().getDetailedEvent(nEtalon)
-				: null;
+		// ComplexReflectogramEvent dataEvent = Heap.getMTAEPrimary().getComplexEvents()[nEvent];
+		// ComplexReflectogramEvent etalonEvent = nEtalon != -1
+		// ? Heap.getMTMEtalon().getMTAE().getComplexEvents()[nEtalon]
+		// : null;
+		final DetailedEvent dataEvent = (nEvent != -1) ? Heap.getMTAEPrimary().getDetailedEvent(nEvent) : null;
+		final DetailedEvent etalonEvent = (nEtalon != -1) ? Heap.getMTMEtalon().getMTAE().getDetailedEvent(nEtalon) : null;
 
-		int dataType = dataEvent != null
-				? dataEvent.getEventType()
-				: SimpleReflectogramEvent.RESERVED; // 'no event'
-		int etalonType = etalonEvent != null
-				? etalonEvent.getEventType()
-				: SimpleReflectogramEvent.RESERVED; // 'no event'
+		final int dataType = (dataEvent != null) ? dataEvent.getEventType() : SimpleReflectogramEvent.RESERVED; // 'no event'
+		final int etalonType = (etalonEvent != null) ? etalonEvent.getEventType() : SimpleReflectogramEvent.RESERVED; // 'no event'
 
-		((CompareTableRenderer)comparativeTable.getDefaultRenderer(Object.class))
-			.setSameType(dataType == etalonType && dataType != SimpleReflectogramEvent.RESERVED);
+		((CompareTableRenderer) this.comparativeTable.getDefaultRenderer(Object.class)).setSameType(dataType == etalonType
+				&& dataType != SimpleReflectogramEvent.RESERVED);
 
 		// сравнение по модельной кривой
-		ModelTrace etalonMT = Heap.getMTMEtalon().getMTAE().getModelTrace();
-		res.initComparative(dataEvent, etalonEvent, etalonMT, deltaX);
-		comparativeTable.updateUI();
+		final ModelTrace etalonMT = Heap.getMTMEtalon().getMTAE().getModelTrace();
+		this.res.initComparative(dataEvent, etalonEvent, etalonMT, deltaX);
+		this.comparativeTable.updateUI();
 	}
-	
-	private void updateTableModel()
-	{
+
+	private void updateTableModel() {
 		int num = Heap.getCurrentEvent1();
 		if (num >= 0) {
-			DetailedEvent ev = Heap.getMTAEPrimary().getDetailedEvent(num);
-			int eventType = ev.getEventType();
-			double resMt =  Heap.getBSPrimaryTrace().getResolution();
-			double resKm = resMt / 1000.0;
-			res.initAdditional(ev, resKm);
-			switch (eventType)
-			{
+			final DetailedEvent ev = Heap.getMTAEPrimary().getDetailedEvent(num);
+			final int eventType = ev.getEventType();
+			final double resMt = Heap.getBSPrimaryTrace().getResolution();
+			final double resKm = resMt / 1000.0;
+			this.res.initAdditional(ev, resKm);
+			switch (eventType) {
 				case SimpleReflectogramEvent.LINEAR:
-					tModel.setKeys(linearKeys);
+					this.tModel.setKeys(linearKeys);
 					break;
 				case SimpleReflectogramEvent.DEADZONE:
-					tModel.setKeys(dzKeys);
+					this.tModel.setKeys(dzKeys);
 					break;
 				case SimpleReflectogramEvent.NOTIDENTIFIED:
-					tModel.setKeys(notidKeys);
+					this.tModel.setKeys(notidKeys);
 					break;
 				case SimpleReflectogramEvent.CONNECTOR:
-					tModel.setKeys(reflectionKeys);
+					this.tModel.setKeys(reflectionKeys);
 					break;
 				case SimpleReflectogramEvent.LOSS:
 				case SimpleReflectogramEvent.GAIN:
-					tModel.setKeys(spliceKeys);
+					this.tModel.setKeys(spliceKeys);
 					break;
 				case SimpleReflectogramEvent.ENDOFTRACE:
-					tModel.setKeys(endKeys);
+					this.tModel.setKeys(endKeys);
 					break;
 			}
-			mainTable.updateUI();
+			this.mainTable.updateUI();
 		} else {
-			tModel.setKeys(emptyKeys);
-			mainTable.updateUI();
+			this.tModel.setKeys(emptyKeys);
+			this.mainTable.updateUI();
 		}
 		this.setData();
 	}
 
-	public void etalonMTMCUpdated()
-	{
-		makeAlignedDataMT();
+	public void etalonMTMCUpdated() {
+		this.makeAlignedDataMT();
 		this.clearCTModelValues();
-		if(Heap.getRefAnalysisPrimary() != null) {
-			tabbedPane.setEnabledAt(1, true);
+		if (Heap.getRefAnalysisPrimary() != null) {
+			this.tabbedPane.setEnabledAt(1, true);
 		}
 		this.updateTableModel();
 	}
 
-	public void etalonMTMRemoved()
-	{
-		alignedDataMT = null;
+	public void etalonMTMRemoved() {
+		this.alignedDataMT = null;
 		this.clearCTModelValues();
-		tabbedPane.setSelectedIndex(0);
-		tabbedPane.setEnabledAt(1, false);
+		this.tabbedPane.setSelectedIndex(0);
+		this.tabbedPane.setEnabledAt(1, false);
 		this.mainTable.repaint();
 		this.mainTable.revalidate();
 	}
 
-	public void currentEventChanged()
-	{
+	public void currentEventChanged() {
 		this.updateTableModel();
 	}
 
 	public void primaryRefAnalysisCUpdated() {
-		makeAlignedDataMT();
-		if (Heap.getMTMEtalon() != null)
-			tabbedPane.setEnabledAt(1, true);
+		this.makeAlignedDataMT();
+		if (Heap.getMTMEtalon() != null) {
+			this.tabbedPane.setEnabledAt(1, true);
+		}
 		this.updateTableModel();
-		setVisible(true);
+		this.setVisible(true);
 	}
 
 	public void primaryRefAnalysisRemoved() {
-		alignedDataMT = null;
+		this.alignedDataMT = null;
 		this.clearCTModelValues();
-		tabbedPane.setSelectedIndex(0);
-		tabbedPane.setEnabledAt(1, false);
-		setVisible(false);
+		this.tabbedPane.setSelectedIndex(0);
+		this.tabbedPane.setEnabledAt(1, false);
+		this.setVisible(false);
 	}
-	
+
 	private void clearCTModelValues() {
-		for(int i=0;i<this.ctModel.getRowCount();i++) {
+		for (int i = 0; i < this.ctModel.getRowCount(); i++) {
 			this.ctModel.setValueAt("--", i, 1);
 		}
 	}
-	
+
 	private class CompareTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer {
 
-		private boolean	sameType	= true;
+		private boolean sameType = true;
 
 		public void setSameType(boolean key) {
-			sameType = key;
+			this.sameType = key;
 		}
 
 		@Override
-		public Component getTableCellRendererComponent(	JTable table,
-				Object value,
-				boolean isSelected1,
-				boolean hasFocus,
-				int row,
-				int column) {
-			Component component = super.getTableCellRendererComponent(table, value, isSelected1, hasFocus, row, column);
+		public Component getTableCellRendererComponent(final JTable table,
+				final Object value,
+				final boolean isSelected1,
+				final boolean hasFocus,
+				final int row,
+				final int column) {
+			final Component component = super.getTableCellRendererComponent(table, value, isSelected1, hasFocus, row, column);
 
-			component.setForeground(sameType || row > 1 ? Color.BLACK : Color.RED);
+			component.setForeground(this.sameType || row > 1 ? Color.BLACK : Color.RED);
 
 			return component;
 		}

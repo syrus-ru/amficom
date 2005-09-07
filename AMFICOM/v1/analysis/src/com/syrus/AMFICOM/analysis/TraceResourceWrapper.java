@@ -1,5 +1,5 @@
 /*-
- * $Id: TraceResourceWrapper.java,v 1.5 2005/08/08 11:59:53 arseniy Exp $
+ * $Id: TraceResourceWrapper.java,v 1.6 2005/09/07 02:56:49 arseniy Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,120 +9,109 @@
 package com.syrus.AMFICOM.analysis;
 
 import java.awt.Color;
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.List;
 
 import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:59:53 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/07 02:56:49 $
  * @module analysis
  */
 
-public class TraceResourceWrapper implements Wrapper {
-	public static final String			KEY_TITLE	= "title";
-	public static final String			KEY_COLOR	= "color";
-	public static final String			KEY_IS_SHOWN	= "is_shown";
+public class TraceResourceWrapper implements Wrapper<TraceResource> {
+	public static final String KEY_TITLE = "title";
+	public static final String KEY_COLOR = "color";
+	public static final String KEY_IS_SHOWN = "is_shown";
 
-	private static TraceResourceWrapper	instance;
+	private static TraceResourceWrapper instance;
 
-	private List						keys;
+	private List<String> keys;
 
-	public String getKey(int index) {
-		return (String) this.keys.get(index);
+	public String getKey(final int index) {
+		return this.keys.get(index);
 	}
 
 	private TraceResourceWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { KEY_IS_SHOWN, KEY_TITLE, KEY_COLOR };
+		final String[] keysArray = new String[] { KEY_IS_SHOWN, KEY_TITLE, KEY_COLOR };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static TraceResourceWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new TraceResourceWrapper();
+		}
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
 	public String getName(final String key) {
 		if (key.equals(KEY_IS_SHOWN)) {
-			//return LangModelAnalyse.getString("is_shown");
+			// return LangModelAnalyse.getString("is_shown");
 			return "";
-		} else if (key.equals(KEY_TITLE)) { 
-			//return LangModelAnalyse.getString("trace");
+		} else if (key.equals(KEY_TITLE)) {
+			// return LangModelAnalyse.getString("trace");
 			return "";
-		} else if (key.equals(KEY_COLOR)) { 
-			//return LangModelAnalyse.getString("color");
+		} else if (key.equals(KEY_COLOR)) {
+			// return LangModelAnalyse.getString("color");
 			return "";
 		}
 		return key;
 	}
 
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		if (key.equals(KEY_IS_SHOWN)) {
 			return Boolean.class;
-		} else if (key.equals(KEY_TITLE)) { 
-			return String.class; 
-		} else if (key.equals(KEY_COLOR)) { 
-			return Color.class; 
+		} else if (key.equals(KEY_TITLE)) {
+			return String.class;
+		} else if (key.equals(KEY_COLOR)) {
+			return Color.class;
 		}
 		return null;
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		// TODO Auto-generated method stub
 		return null;
 	}
 
-	public Object getValue(	Object object, String key) {
-		
-		if (object instanceof TraceResource) {
-			TraceResource traceResource = (TraceResource) object;
-			if (key.equals(KEY_IS_SHOWN)) {
-				return new Boolean(traceResource.isShown());
-			} 
-			else if (key.equals(KEY_TITLE)) { 
-				return traceResource.isAlarm()
-					? traceResource.getTitle() + " <mismatch>" // @todo: помечать несоответствие не словом mismatch, а цветом
-					: traceResource.getTitle();
-			} else if (key.equals(KEY_COLOR)) { 
-				return traceResource.getColor(); 
-			}
+	public Object getValue(final TraceResource traceResource, final String key) {
+		if (key.equals(KEY_IS_SHOWN)) {
+			return new Boolean(traceResource.isShown());
+		} else if (key.equals(KEY_TITLE)) {
+			// @todo: помечать несоответствие не словом mismatch, а цветом
+			return traceResource.isAlarm() ? traceResource.getTitle() + " <mismatch>" : traceResource.getTitle();
+		} else if (key.equals(KEY_COLOR)) {
+			return traceResource.getColor();
 		}
 		return null;
 	}
 
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		if (key.equals(KEY_IS_SHOWN)) {
 			return true;
 		}
 		return false;
 	}
 
-	public void setPropertyValue(	String key,
-									Object objectKey,
-									Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		// TODO Auto-generated method stub
-
 	}
 
-	public void setValue(	Object object,
-							String key,
-							Object value) {
-		if (object instanceof TraceResource) {
-			TraceResource traceResource = (TraceResource) object;
-			if (key.equals(KEY_IS_SHOWN)) {
-				traceResource.setShown(((Boolean)value).booleanValue());
-			} else if (key.equals(KEY_TITLE)) {
-				traceResource.setTitle((String) value);				
-			} else if (key.equals(KEY_COLOR)) {
-				traceResource.setColor((Color) value);				
-			}
+	public void setValue(final TraceResource traceResource, final String key, final Object value) {
+		if (key.equals(KEY_IS_SHOWN)) {
+			traceResource.setShown(((Boolean) value).booleanValue());
+		} else if (key.equals(KEY_TITLE)) {
+			traceResource.setTitle((String) value);
+		} else if (key.equals(KEY_COLOR)) {
+			traceResource.setColor((Color) value);
 		}
 	}
 }

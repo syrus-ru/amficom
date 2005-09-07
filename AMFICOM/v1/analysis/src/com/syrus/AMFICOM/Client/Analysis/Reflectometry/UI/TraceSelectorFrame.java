@@ -35,37 +35,33 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
-public class TraceSelectorFrame extends JInternalFrame
-implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
-		PropertyChangeListener, RefMismatchListener
-{
+public class TraceSelectorFrame extends JInternalFrame implements BsHashChangeListener, EtalonMTMListener,
+		CurrentTraceChangeListener, PropertyChangeListener, RefMismatchListener {
+	private static final long serialVersionUID = -2281313783873630551L;
+
 	Dispatcher dispatcher;
 	protected static List<String> traces = new LinkedList<String>();
 	private WrapperedTable jTable;
-	private WrapperedTableModel tModel;
+	private WrapperedTableModel<TraceResource> tModel;
 
 	private JPanel mainPanel = new JPanel();
 	private JScrollPane scrollPane = new JScrollPane();
 	private JViewport viewport = new JViewport();
 	protected boolean here = false;
 
-	public TraceSelectorFrame(Dispatcher dispatcher)
-	{
+	public TraceSelectorFrame(final Dispatcher dispatcher) {
 		super();
-		
-		try
-		{
-			jbInit();
-		} catch (Exception e)
-		{
+
+		try {
+			this.jbInit();
+		} catch (Exception e) {
 			e.printStackTrace();
 		}
 
 		init_module(dispatcher);
 	}
 
-	private void init_module(Dispatcher dispatcher1)
-	{
+	private void init_module(final Dispatcher dispatcher1) {
 		this.dispatcher = dispatcher1;
 		Heap.addBsHashListener(this);
 		Heap.addEtalonMTMListener(this);
@@ -73,157 +69,152 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 		Heap.addRefMismatchListener(this);
 	}
 
-	private void jbInit() throws Exception
-	{
+	private void jbInit() throws Exception {
 		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-		
-//		tModel = new GeneralTableModel();
 
-		tModel = new WrapperedTableModel(TraceResourceWrapper.getInstance(), new String[] {
-			TraceResourceWrapper.KEY_IS_SHOWN,
-			TraceResourceWrapper.KEY_TITLE,
-			TraceResourceWrapper.KEY_COLOR
-		});
-		tModel.setColumnEditable(0, true);
-		jTable = new WrapperedTable(tModel);
-		jTable.setAllowSorting(false);
-				
-		jTable.getColumnModel().getColumn(0).setPreferredWidth(20);
-		jTable.getColumnModel().getColumn(1).setPreferredWidth(250);
+		// tModel = new GeneralTableModel();
 
-		setContentPane(mainPanel);
-//		this.setSize(new Dimension(200, 213));
+		this.tModel = new WrapperedTableModel<TraceResource>(TraceResourceWrapper.getInstance(),
+				new String[] { TraceResourceWrapper.KEY_IS_SHOWN, TraceResourceWrapper.KEY_TITLE, TraceResourceWrapper.KEY_COLOR });
+		this.tModel.setColumnEditable(0, true);
+		this.jTable = new WrapperedTable<TraceResource>(this.tModel);
+		this.jTable.setAllowSorting(false);
+
+		this.jTable.getColumnModel().getColumn(0).setPreferredWidth(20);
+		this.jTable.getColumnModel().getColumn(1).setPreferredWidth(250);
+
+		super.setContentPane(this.mainPanel);
+		// this.setSize(new Dimension(200, 213));
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setIconifiable(true);
-		//this.setMaximizable(true);
+		// this.setMaximizable(true);
 		this.setTitle(LangModelAnalyse.getString("selectorTitle"));
 
-		mainPanel.setLayout(new BorderLayout());
-		mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		scrollPane.setViewport(viewport);
-		scrollPane.setAutoscrolls(true);
+		this.mainPanel.setLayout(new BorderLayout());
+		this.mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.scrollPane.setViewport(this.viewport);
+		this.scrollPane.setAutoscrolls(true);
 
-		jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		ListSelectionModel rowSM = jTable.getSelectionModel();
-		jTable.getColumnModel().setSelectionModel(rowSM);
-		rowSM.addListSelectionListener(new ListSelectionListener()
-		{
+		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		final ListSelectionModel rowSM = this.jTable.getSelectionModel();
+		this.jTable.getColumnModel().setSelectionModel(rowSM);
+		rowSM.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
-			//Ignore extra messages.
-			if (e.getValueIsAdjusting())
-				return;
+				// Ignore extra messages.
+				if (e.getValueIsAdjusting()) {
+					return;
+				}
 
-			ListSelectionModel lsm = (ListSelectionModel)e.getSource();
-			if (lsm.isSelectionEmpty())
-			{
-						//no rows are selected
-			} else
-			{
-				if (here)
-					here = false;
-				else
-				{
-					int selectedRow = lsm.getMinSelectionIndex();
-					//selectedRow is selected
-					Heap.setCurrentTrace(traces.get(selectedRow));
+				final ListSelectionModel lsm = (ListSelectionModel) e.getSource();
+				if (lsm.isSelectionEmpty()) {
+					// no rows are selected
+				} else {
+					if (TraceSelectorFrame.this.here) {
+						TraceSelectorFrame.this.here = false;
+					} else {
+						final int selectedRow = lsm.getMinSelectionIndex();
+						// selectedRow is selected
+						Heap.setCurrentTrace(traces.get(selectedRow));
+					}
 				}
 			}
-		}
 		});
 
-//		jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
-//		jTable.setMinimumSize(new Dimension(200, 213));
-		mainPanel.add(scrollPane, BorderLayout.CENTER);
-		scrollPane.getViewport().add(jTable);
+		// jTable.setPreferredScrollableViewportSize(new Dimension(200, 213));
+		// jTable.setMinimumSize(new Dimension(200, 213));
+		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
+		this.scrollPane.getViewport().add(this.jTable);
 	}
 
-	private void traceAdded(String key) {
-		String id = key;
-		if (traces.contains(id))
+	private void traceAdded(final String key) {
+		final String id = key;
+		if (traces.contains(id)) {
 			return;
+		}
 
 		Log.debugMessage("TraceSelectorFrame.traceAdded | id is '" + id + '\'', Level.FINEST);
 
-		TraceResource tr = new TraceResource(id);
+		final TraceResource tr = new TraceResource(id);
 		tr.addPropertyChangeListener(this);
 		tr.setColor(GUIUtil.getColor(id));
 		tr.setShown(true);
 
-		if (Heap.ETALON_TRACE_KEY.equals(key))
+		if (Heap.ETALON_TRACE_KEY.equals(key)) {
 			tr.setTitle(Heap.getEtalonName());
 			//tr.setTitle(LangModelAnalyse.getString("etalon"));
-		else
+		}
+		else {
 			tr.setTitle(Heap.getAnyBSTraceByKey(key).title);
+		}
 
 		if (Heap.PRIMARY_TRACE_KEY.equals(key)) {
-			tModel.addObject(0, tr);
+			this.tModel.addObject(0, tr);
 			traces.add(0, id);
 		} else if (Heap.ETALON_TRACE_KEY.equals(key)) {
-			int index = traces.isEmpty() ? 0 : 1;
-			tModel.addObject(index, tr);
+			final int index = traces.isEmpty() ? 0 : 1;
+			this.tModel.addObject(index, tr);
 			traces.add(index, id);
 		} else {
-			tModel.addObject(tr);
+			this.tModel.addObject(tr);
 			traces.add(id);
 		}
-		setVisible(true);
+		super.setVisible(true);
 	}
 
-	private void traceRemoved(String key) {
+	private void traceRemoved(final String key) {
 		int index = traces.indexOf(key);
-		if (index != -1)
-		{
-			TraceResource tr = (TraceResource)tModel.getObject(index);
+		if (index != -1) {
+			final TraceResource tr = (TraceResource) this.tModel.getObject(index);
 			tr.removePropertyChangeListener(this);
-			tModel.removeObject(tr);
+			this.tModel.removeObject(tr);
 			traces.remove(key);
 		}
 	}
 
-	public void bsHashAdded(String key) {
-		traceAdded(key);
+	public void bsHashAdded(final String key) {
+		this.traceAdded(key);
 	}
 
-	public void bsHashRemoved(String key) {
-		traceRemoved(key);
+	public void bsHashRemoved(final String key) {
+		this.traceRemoved(key);
 	}
 
 	public void bsHashRemovedAll() {
-		List<TraceResource> values = tModel.getValues();
+		final List<TraceResource> values = this.tModel.getValues();
 		// NB: необходимо преобразовать к массиву, т.к. список, возвращенный
 		// getValues(), может изменяться во время удаления объектов,
 		// что приведет к ConcurrentModificationException
-		TraceResource[] va = values.toArray(new TraceResource[values.size()]);
-		for (TraceResource tr: va) {
+		final TraceResource[] va = values.toArray(new TraceResource[values.size()]);
+		for (final TraceResource tr: va) {
 			tr.removePropertyChangeListener(this);
-			tModel.removeObject(tr);
+			this.tModel.removeObject(tr);
 		}
 		traces.clear();
-		setVisible(false);
+		super.setVisible(false);
 	}
 
 	public void etalonMTMCUpdated() {
-		traceAdded(Heap.ETALON_TRACE_KEY);
+		this.traceAdded(Heap.ETALON_TRACE_KEY);
 	}
 
 	public void etalonMTMRemoved() {
-		traceRemoved(Heap.ETALON_TRACE_KEY);
+		this.traceRemoved(Heap.ETALON_TRACE_KEY);
 	}
 
-	public void currentTraceChanged(String id)
-	{
-		here = true;
+	public void currentTraceChanged(final String id) {
+		this.here = true;
 		int selected = traces.indexOf(id);
-		if (selected != -1)
-			jTable.setRowSelectionInterval(selected, selected);
-		here = false;
+		if (selected != -1) {
+			this.jTable.setRowSelectionInterval(selected, selected);
+		}
+		this.here = false;
 	}
-	
-	public void propertyChange(PropertyChangeEvent evt) {
+
+	public void propertyChange(final PropertyChangeEvent evt) {
 		if (evt.getPropertyName().equals(TraceResourceWrapper.KEY_IS_SHOWN)) {
-			TraceResource tr = (TraceResource)evt.getSource();
+			final TraceResource tr = (TraceResource) evt.getSource();
 			this.dispatcher.firePropertyChange(new RefUpdateEvent(this, tr, RefUpdateEvent.TRACE_CHANGED_EVENT));
 		}
 	}
@@ -231,17 +222,16 @@ implements BsHashChangeListener, EtalonMTMListener, CurrentTraceChangeListener,
 	private void updMismatchmark() {
 		int index = traces.indexOf(Heap.PRIMARY_TRACE_KEY);
 		if (index >= 0) {
-			((TraceResource)tModel.getObject(index)).setAlarm(
-					Heap.getRefMismatch() != null);
+			((TraceResource) this.tModel.getObject(index)).setAlarm(Heap.getRefMismatch() != null);
 		}
-		jTable.repaint(); // XXX: is this correct way of refreshing?
+		this.jTable.repaint(); // XXX: is this correct way of refreshing?
 	}
 
 	public void refMismatchCUpdated() {
-		updMismatchmark();
+		this.updMismatchmark();
 	}
 
 	public void refMismatchRemoved() {
-		updMismatchmark();
+		this.updMismatchmark();
 	}
 }

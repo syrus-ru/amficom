@@ -1,5 +1,5 @@
 /*-
- * $Id: PrimaryParameters.java,v 1.3 2005/08/08 11:59:53 arseniy Exp $
+ * $Id: PrimaryParameters.java,v 1.4 2005/09/07 02:56:49 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,11 @@ import com.syrus.io.BellcoreStructure;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/08 11:59:53 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/07 02:56:49 $
  * @module analysis
  */
 
 public class PrimaryParameters {
-
 	private String moduleId;
 	private String wavelength;
 	private String pulsewidth;
@@ -35,8 +34,8 @@ public class PrimaryParameters {
 	private String date;
 	private String time;
 	private String backscatter;
-	
-	private List						propertyChangeListeners;
+
+	private List<PropertyChangeListener> propertyChangeListeners;
 
 	public void init(BellcoreStructure bs) {
 		setAverages(Integer.toString(bs.getAverages()));
@@ -64,7 +63,7 @@ public class PrimaryParameters {
 		if (this.moduleId == null || !this.moduleId.equals(moduleId)) {
 			String oldValue = this.moduleId;
 			this.moduleId = moduleId;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParameretrsWrapper.KEY_MODULE_ID, oldValue, moduleId));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParametersWrapper.KEY_MODULE_ID, oldValue, moduleId));
 		}
 	}
 
@@ -76,7 +75,7 @@ public class PrimaryParameters {
 		if (this.averages == null || !this.averages.equals(averages)) {
 			String oldValue = this.averages;
 			this.averages = averages;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParameretrsWrapper.KEY_AVERAGES, oldValue, averages));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParametersWrapper.KEY_AVERAGES, oldValue, averages));
 		}
 	}
 	
@@ -88,7 +87,7 @@ public class PrimaryParameters {
 		if (this.backscatter == null || !this.backscatter.equals(backscatter)) {
 			String oldValue = this.backscatter;
 			this.backscatter = backscatter;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParameretrsWrapper.KEY_BACKSCATTER, oldValue, backscatter));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParametersWrapper.KEY_BACKSCATTER, oldValue, backscatter));
 		}
 	}
 	
@@ -100,7 +99,7 @@ public class PrimaryParameters {
 		if (this.date == null || !this.date.equals(date)) {
 			String oldValue = this.date;
 			this.date = date;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParameretrsWrapper.KEY_DATE, oldValue, date));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParametersWrapper.KEY_DATE, oldValue, date));
 		}
 	}
 	
@@ -112,7 +111,7 @@ public class PrimaryParameters {
 		if (this.groupindex == null || !this.groupindex.equals(groupindex)) {
 			String oldValue = this.groupindex;
 			this.groupindex = groupindex;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParameretrsWrapper.KEY_GROUPINDEX, oldValue, groupindex));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParametersWrapper.KEY_GROUPINDEX, oldValue, groupindex));
 		}
 	}
 	
@@ -124,7 +123,7 @@ public class PrimaryParameters {
 		if (this.pulsewidth == null || !this.pulsewidth.equals(pulsewidth)) {
 			String oldValue = this.pulsewidth;
 			this.pulsewidth = pulsewidth;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParameretrsWrapper.KEY_PULSEWIDTH, oldValue, pulsewidth));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParametersWrapper.KEY_PULSEWIDTH, oldValue, pulsewidth));
 		}
 	}
 	
@@ -136,7 +135,7 @@ public class PrimaryParameters {
 		if (this.range == null || !this.range.equals(range)) {
 			String oldValue = this.range;
 			this.range = range;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParameretrsWrapper.KEY_RANGE, oldValue, range));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParametersWrapper.KEY_RANGE, oldValue, range));
 		}
 	}
 	
@@ -148,7 +147,7 @@ public class PrimaryParameters {
 		if (this.resolution == null || !this.resolution.equals(resolution)) {
 			String oldValue = this.resolution;
 			this.resolution = resolution;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParameretrsWrapper.KEY_RESOLUTION, oldValue, resolution));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParametersWrapper.KEY_RESOLUTION, oldValue, resolution));
 		}
 	}
 	
@@ -160,7 +159,7 @@ public class PrimaryParameters {
 		if (this.time == null || !this.time.equals(time)) {
 			String oldValue = this.time;
 			this.time = time;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParameretrsWrapper.KEY_TIME, oldValue, time));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParametersWrapper.KEY_TIME, oldValue, time));
 		}
 	}
 	
@@ -172,7 +171,7 @@ public class PrimaryParameters {
 		if (this.wavelength == null || !this.wavelength.equals(wavelength)) {
 			String oldValue = this.wavelength;
 			this.wavelength = wavelength;
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParameretrsWrapper.KEY_WAVELENGTH, oldValue, wavelength));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, PrimaryParametersWrapper.KEY_WAVELENGTH, oldValue, wavelength));
 		}
 	}
 	
@@ -187,7 +186,7 @@ public class PrimaryParameters {
 
 	public synchronized void addPropertyChangeListener(PropertyChangeListener propertyChangeListener) {
 		if (this.propertyChangeListeners == null) {
-			this.propertyChangeListeners = new LinkedList();
+			this.propertyChangeListeners = new LinkedList<PropertyChangeListener>();
 		}
 		if (!this.propertyChangeListeners.contains(propertyChangeListener)) {
 			this.propertyChangeListeners.add(propertyChangeListener);

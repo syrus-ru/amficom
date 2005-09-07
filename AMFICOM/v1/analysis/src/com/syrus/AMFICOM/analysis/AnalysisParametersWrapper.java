@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisParametersWrapper.java,v 1.7 2005/08/29 11:46:23 saa Exp $
+ * $Id: AnalysisParametersWrapper.java,v 1.8 2005/09/07 02:56:49 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,11 @@
 
 package com.syrus.AMFICOM.analysis;
 
-import java.util.*;
+import java.util.Arrays;
+import java.util.Collections;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 
 import com.syrus.AMFICOM.Client.Analysis.GUIUtil;
 import com.syrus.AMFICOM.Client.Analysis.Heap;
@@ -18,51 +22,51 @@ import com.syrus.AMFICOM.analysis.dadara.InvalidAnalysisParametersException;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/08/29 11:46:23 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/09/07 02:56:49 $
  * @module analysis
  */
 
-public class AnalysisParametersWrapper implements Wrapper {
-	
-//	public static final String KEY_MIN_THRESHOLD = "analysisMinEvent";
-//	public static final String KEY_MIN_SPLICE = "analysisMinWeld";
+public class AnalysisParametersWrapper implements Wrapper<AnalysisParameters> {
+
+	// public static final String KEY_MIN_THRESHOLD = "analysisMinEvent";
+	// public static final String KEY_MIN_SPLICE = "analysisMinWeld";
 	public static final String KEY_SENSITIVITY = "analysisSensitivity";
 	public static final String KEY_MIN_CONNECTOR = "analysisMinConnector";
 	public static final String KEY_MIN_END = "analysisMinEnd";
 	public static final String KEY_NOISE_FACTOR = "analysisNoiseFactor";
 
-	private static AnalysisParametersWrapper	instance;
-	private static Map noiseFactors = new HashMap();
+	private static AnalysisParametersWrapper instance;
+	private static Map<Double, Double> noiseFactors = new HashMap<Double, Double>();
 	static {
-		double[] nf = AnalysisParameters.getRecommendedNoiseFactors();
+		final double[] nf = AnalysisParameters.getRecommendedNoiseFactors();
 		for (int i = 0; i < nf.length; i++) {
-			Double d = new Double(nf[i]);
+			final Double d = new Double(nf[i]);
 			noiseFactors.put(d, d);
 		}
 	}
 
-	private List						keys;
+	private List<String> keys;
 
-	public String getKey(int index) {
-		return (String) this.keys.get(index);
+	public String getKey(final int index) {
+		return this.keys.get(index);
 	}
 
 	private AnalysisParametersWrapper() {
 		// empty private constructor
-		String[] keysArray = new String[] { KEY_MIN_CONNECTOR, KEY_MIN_END,
-				KEY_SENSITIVITY, KEY_NOISE_FACTOR };
+		final String[] keysArray = new String[] { KEY_MIN_CONNECTOR, KEY_MIN_END, KEY_SENSITIVITY, KEY_NOISE_FACTOR };
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
 	public static AnalysisParametersWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new AnalysisParametersWrapper();
+		}
 		return instance;
 	}
 
-	public List getKeys() {
+	public List<String> getKeys() {
 		return this.keys;
 	}
 
@@ -73,73 +77,58 @@ public class AnalysisParametersWrapper implements Wrapper {
 		return key;
 	}
 
-	public Class getPropertyClass(String key) {
+	public Class getPropertyClass(final String key) {
 		if (this.keys.contains(key)) {
-			return Double.class; 
+			return Double.class;
 		}
 		return null;
 	}
 
-	public Object getPropertyValue(String key) {
+	public Object getPropertyValue(final String key) {
 		if (key.equals(KEY_NOISE_FACTOR)) {
 			return noiseFactors;
 		}
 		return null;
 	}
 
-	public Object getValue(	Object object, String key) {
-		
-		if (object instanceof AnalysisParameters) {
-			AnalysisParameters params = (AnalysisParameters) object;
-			
-			if (key.equals(KEY_MIN_CONNECTOR)) {
-				return new Double(params.getConnectorTh());
-			} else if (key.equals(KEY_MIN_END)) {
-				return new Double(params.getEndTh());
-			} else if (key.equals(KEY_SENSITIVITY)) {
-				return new Double(params.getSentitivity());
-			} else if (key.equals(KEY_NOISE_FACTOR)) {
-				return new Double(params.getNoiseFactor());
-			} 
+	public Object getValue(AnalysisParameters params, String key) {
+		if (key.equals(KEY_MIN_CONNECTOR)) {
+			return new Double(params.getConnectorTh());
+		} else if (key.equals(KEY_MIN_END)) {
+			return new Double(params.getEndTh());
+		} else if (key.equals(KEY_SENSITIVITY)) {
+			return new Double(params.getSentitivity());
+		} else if (key.equals(KEY_NOISE_FACTOR)) {
+			return new Double(params.getNoiseFactor());
 		}
 		return null;
 	}
 	
-	public boolean isEditable(String key) {
+	public boolean isEditable(final String key) {
 		return true;
 	}
 
-	public void setPropertyValue(	String key,
-									Object objectKey,
-									Object objectValue) {
+	public void setPropertyValue(final String key, final Object objectKey, final Object objectValue) {
 		// TODO Auto-generated method stub
-
 	}
 
-	public void setValue(	Object object,
-							String key,
-							Object value) {
-		if (object instanceof AnalysisParameters) {
-			AnalysisParameters params = (AnalysisParameters) object;
-			
-			try {
-				if (key.equals(KEY_MIN_CONNECTOR)) {
-					params.setConnectorTh(Double.parseDouble((String)value));
-				} else if (key.equals(KEY_MIN_END)) {
-					params.setEndTh(Double.parseDouble((String)value));
-				} else if (key.equals(KEY_SENSITIVITY)) {
-					params.setSensitivity(Double.parseDouble((String)value));
-				} else if (key.equals(KEY_NOISE_FACTOR)) {
-					params.setNoiseFactor(((Double)value).doubleValue());
-				}
-				Heap.notifyAnalysisParametersUpdated();
-			} catch (NumberFormatException e) {
-				//TODO make double editor
-				// ignore
-			} catch (InvalidAnalysisParametersException e) {
-				GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_INVALID_AP);
-			} 
+	public void setValue(final AnalysisParameters params, final String key, final Object value) {
+		try {
+			if (key.equals(KEY_MIN_CONNECTOR)) {
+				params.setConnectorTh(Double.parseDouble((String) value));
+			} else if (key.equals(KEY_MIN_END)) {
+				params.setEndTh(Double.parseDouble((String) value));
+			} else if (key.equals(KEY_SENSITIVITY)) {
+				params.setSensitivity(Double.parseDouble((String) value));
+			} else if (key.equals(KEY_NOISE_FACTOR)) {
+				params.setNoiseFactor(((Double) value).doubleValue());
+			}
+			Heap.notifyAnalysisParametersUpdated();
+		} catch (NumberFormatException e) {
+			//TODO make double editor
+			// ignore
+		} catch (InvalidAnalysisParametersException e) {
+			GUIUtil.showErrorMessage(GUIUtil.MSG_ERROR_INVALID_AP);
 		}
-
 	}
 }
