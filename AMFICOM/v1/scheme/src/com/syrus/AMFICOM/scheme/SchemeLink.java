@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.66 2005/09/06 17:30:26 bass Exp $
+ * $Id: SchemeLink.java,v 1.67 2005/09/07 12:09:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/09/06 17:30:26 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/07 12:09:50 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -169,7 +169,7 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @throws CreateObjectException
 	 */
 	public SchemeLink(final IdlSchemeLink transferable) throws CreateObjectException {
-		fromTransferable(transferable);
+		this.fromTransferable((IdlStorableObject) transferable);
 	}
 
 	/**
