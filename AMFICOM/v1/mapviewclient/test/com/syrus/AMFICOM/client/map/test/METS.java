@@ -1,5 +1,5 @@
 /**
- * $Id: METS.java,v 1.11 2005/09/02 09:22:29 krupenn Exp $
+ * $Id: METS.java,v 1.12 2005/09/07 12:32:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,7 +12,6 @@ import java.awt.Dimension;
 import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Iterator;
-import java.util.Set;
 import java.util.SortedSet;
 
 import javax.swing.JFrame;
@@ -31,10 +30,7 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.OpenSessionCommand;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
@@ -51,7 +47,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeSampleData;
  
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/02 09:22:29 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/07 12:32:16 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
