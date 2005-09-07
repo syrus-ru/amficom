@@ -8,7 +8,10 @@ lib
 *.jpx
 *.tar
 *.gz
+*.jar
 *.swp
 Makefile.inc
 *.pl
 files
+*.txt
+.mach

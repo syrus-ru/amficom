@@ -1,5 +1,5 @@
 /**
- * $Id: OfxImageLoader.java,v 1.6 2005/08/29 11:33:49 krupenn Exp $
+ * $Id: OfxImageLoader.java,v 1.7 2005/09/07 15:53:36 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,10 +13,8 @@ package com.syrus.AMFICOM.client.map.objectfx;
 import java.awt.Image;
 import java.awt.geom.Rectangle2D;
 import java.util.Enumeration;
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import com.ofx.geometry.SxRectangle;
 import com.ofx.query.SxQueryResultInterface;
@@ -36,8 +34,8 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
  * 
  * 
  * 
- * @version $Revision: 1.6 $, $Date: 2005/08/29 11:33:49 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.7 $, $Date: 2005/09/07 15:53:36 $
+ * @author $Author: arseniy $
  * @module spatialfx_v1
  */
 public class OfxImageLoader implements MapImageLoader {
@@ -80,7 +78,7 @@ public class OfxImageLoader implements MapImageLoader {
 	 * @param searchText
 	 * @param found
 	 */
-	private void findInLayer(String layerName, String searchText, List found) {
+	private void findInLayer(String layerName, String searchText, List<SpatialObject> found) {
 		String sampleLowCase;
 		SxQueryResultInterface objects = this.mapConnection.getSxMapViewer().getQuery().getObjects(layerName);
 		for(Enumeration en = objects.elements(); en.hasMoreElements();) {
@@ -93,7 +91,7 @@ public class OfxImageLoader implements MapImageLoader {
 		}
 	}
 
-	private void findInLayer(String layerName, SxRectangle bounds, List found) {
+	private void findInLayer(String layerName, SxRectangle bounds, List<SpatialObject> found) {
 		SxQueryResultInterface objects = this.mapConnection.getSxMapViewer().getQuery().getObjects(layerName);
 		for(Enumeration en = objects.elements(); en.hasMoreElements();) {
 			SxSpatialObject obj = (SxSpatialObject)en.nextElement();

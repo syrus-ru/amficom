@@ -1,5 +1,5 @@
 /**
- * $Id: OfxConnection.java,v 1.13 2005/07/12 10:22:19 krupenn Exp $
+ * $Id: OfxConnection.java,v 1.14 2005/09/07 15:53:36 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
 
 /**
  * Реализация соединения с хранилищем данных в формате SpatialFX.
- * @version $Revision: 1.13 $, $Date: 2005/07/12 10:22:19 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/09/07 15:53:36 $
+ * @author $Author: arseniy $
  * @module spatialfx_v1
  */
 public class OfxConnection extends MapConnection
@@ -68,6 +68,7 @@ public class OfxConnection extends MapConnection
 		Log.debugMessage(getClass().getName() + "::" + "OfxConnection()" + " | " + "constructor call", Level.FINER);
 	}
 	
+	@Override
 	public void setPath(String path)
 	{
 		Log.debugMessage(getClass().getName() + "::" + "setPath(" + path + ")" + " | " + "method call", Level.FINER);
@@ -75,6 +76,7 @@ public class OfxConnection extends MapConnection
 		this.dataBasePath = path;
 	}
 	
+	@Override
 	public void setView(String name)
 	{
 		Log.debugMessage(getClass().getName() + "::" + "setView(" + name + ")" + " | " + "method call", Level.FINER);
@@ -82,26 +84,31 @@ public class OfxConnection extends MapConnection
 		this.dataBaseView = name;
 	}
 
+	@Override
 	public void setURL(String url)
 	{
 		this.dataBaseURL = url;
 	}
 
+	@Override
 	public String getPath()
 	{
 		return OFX_DATABASE_PREFIX + this.dataBasePath;
 	}
 	
+	@Override
 	public String getView()
 	{
 		return this.dataBaseView;
 	}
 
+	@Override
 	public String getURL()
 	{
 		return this.dataBaseURL;
 	}
 
+	@Override
 	public boolean connect() throws MapConnectionException
 	{
 		if(this.dataBaseURL == null
@@ -215,6 +222,7 @@ public class OfxConnection extends MapConnection
 		return true;
 	}
 	
+	@Override
 	public boolean release() throws MapConnectionException
 	{
 		Log.debugMessage(getClass().getName() + "::" + "release()" + " | " + "method call", Level.FINER);
@@ -237,51 +245,50 @@ public class OfxConnection extends MapConnection
 	/* (non-Javadoc)
 	 * @see com.syrus.AMFICOM.Client.Map.MapConnection#getAvailableViews()
 	 */
-	public List getAvailableViews() throws MapDataException {
-		try 
-		{
-		return this.jMapViewer.getAvailableMaps();
-		} 
-		catch (Exception ex) 
-		{
+	@Override
+	public List<String> getAvailableViews() throws MapDataException {
+		try {
+			return this.jMapViewer.getAvailableMaps();
+		} catch (Exception ex) {
 			throw new MapDataException(ex);
-		} 
+		}
 	}
 
-	public List getLayers() throws MapDataException {
-		List returnList = new LinkedList();
+	@Override
+	public List<SpatialLayer> getLayers() throws MapDataException {
+		List<SpatialLayer> returnList = new LinkedList<SpatialLayer>();
 
 		int sortOrder = 301;// as used in Ofx.JMapLegend
 		
-		SxMapViewer sxMapViewer = this.getJMapViewer().getSxMapViewer();
+		SxMapViewer sxMapViewer1 = this.getJMapViewer().getSxMapViewer();
 		
-		Vector foregroundClasses = sxMapViewer.getForegroundClasses(sortOrder);
+		Vector foregroundClasses = sxMapViewer1.getForegroundClasses(sortOrder);
 		for(Iterator it = foregroundClasses.iterator(); it.hasNext();)
 		{
 			String s = (String )it.next();
-			SpatialLayer sl = new OfxSpatialLayer(sxMapViewer, s);
+			SpatialLayer sl = new OfxSpatialLayer(sxMapViewer1, s);
 			returnList.add(sl);
-			Vector vector2 = sxMapViewer.classBinNames(s);
+			Vector vector2 = sxMapViewer1.classBinNames(s);
 			for(Iterator it2 = vector2.iterator(); it2.hasNext();)
 			{
 				String s2 = (String )it2.next();
-				SpatialLayer sl2 = new OfxSpatialLayer(sxMapViewer, s2);
+				SpatialLayer sl2 = new OfxSpatialLayer(sxMapViewer1, s2);
 				returnList.add(sl2);
 			}
 		}
 
 		{
-		Vector backgroundClasses = sxMapViewer.getBackgroundClasses();
+		Vector backgroundClasses = sxMapViewer1.getBackgroundClasses();
 		for(Iterator it = backgroundClasses.iterator(); it.hasNext();)
 		{
 			String s = (String )it.next();
-			SpatialLayer sl = new OfxSpatialLayer(sxMapViewer, s);
+			SpatialLayer sl = new OfxSpatialLayer(sxMapViewer1, s);
 			returnList.add(sl);
-			Vector vector2 = sxMapViewer.classBinNames(s);
+			Vector vector2 = sxMapViewer1.classBinNames(s);
 			for(Iterator it2 = vector2.iterator(); it2.hasNext();)
 			{
 				String s2 = (String )it2.next();
-				SpatialLayer sl2 = new OfxSpatialLayer(sxMapViewer, s2);
+				SpatialLayer sl2 = new OfxSpatialLayer(sxMapViewer1, s2);
 				returnList.add(sl2);
 			}
 		}
@@ -295,14 +302,17 @@ public class OfxConnection extends MapConnection
 		return this.jMapViewer;
 	}
 
+	@Override
 	public MapImageLoader createImageLoader() {
 		return new OfxImageLoader(this);
 	}
 
+	@Override
 	public MapCoordinatesConverter createCoordinatesConverter() {
 		return new OfxCoordinatesConverter(this);
 	}
 
+	@Override
 	public MapContext createMapContext() {
 		return new OfxContext(this);
 	}

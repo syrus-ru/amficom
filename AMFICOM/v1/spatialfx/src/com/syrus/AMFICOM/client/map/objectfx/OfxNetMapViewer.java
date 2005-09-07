@@ -1,5 +1,5 @@
 /**
- * $Id: OfxNetMapViewer.java,v 1.10 2005/08/23 14:36:57 krupenn Exp $
+ * $Id: OfxNetMapViewer.java,v 1.11 2005/09/07 15:53:36 arseniy Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.client.map.SpatialObject;
 
 /**
  * 
- * @version $Revision: 1.10 $, $Date: 2005/08/23 14:36:57 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.11 $, $Date: 2005/09/07 15:53:36 $
+ * @author $Author: arseniy $
  * @module spatialfx_v1
  */
 public class OfxNetMapViewer extends NetMapViewer
@@ -65,6 +65,7 @@ public class OfxNetMapViewer extends NetMapViewer
 		this.visualComponent.add(jMapViewer);
 	}
 	
+	@Override
 	public void init() throws MapDataException {
 		super.init();
 		try
@@ -90,6 +91,7 @@ public class OfxNetMapViewer extends NetMapViewer
 		}
 	}
 
+	@Override
 	public void dispose()
 	{
 		JMapViewer jMapViewer = this.mapConnection.getJMapViewer();
@@ -99,6 +101,7 @@ public class OfxNetMapViewer extends NetMapViewer
 		super.dispose();
 	}
 		
+	@Override
 	public JComponent getVisualComponent()
 	{
 		return this.visualComponent;
@@ -107,6 +110,7 @@ public class OfxNetMapViewer extends NetMapViewer
 	/**
 	 * Перерисовать содержимое компонента с картой
 	 */
+	@Override
 	public void repaint(boolean fullRepaint)
 	{
 		this.mapConnection.getSpatialLayer().postDirtyEvent();
@@ -114,6 +118,7 @@ public class OfxNetMapViewer extends NetMapViewer
 		this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(new MapEvent(this, MapEvent.MAP_REPAINTED));
 	}
 	
+	@Override
 	public Rectangle2D.Double getVisibleBounds()
 	{
 		SxRectangle sxRect = this.mapConnection.getSxMapViewer().getMapCanvas().getGroundRect();
@@ -129,16 +134,19 @@ public class OfxNetMapViewer extends NetMapViewer
 	/**
 	 * Устанавить курсор мыши на компоненте отображения карты
 	 */
+	@Override
 	public void setCursor(Cursor cursor)
 	{
 		this.mapConnection.getSxMapViewer().getMapCanvas().setCursor(cursor);
 	}
 
+	@Override
 	public Cursor getCursor()
 	{
 		return this.mapConnection.getSxMapViewer().getMapCanvas().getCursor();
 	}
 
+	@Override
 	public void handDragged(MouseEvent me)
 	{
 		java.awt.Point point = new Point(
@@ -148,14 +156,17 @@ public class OfxNetMapViewer extends NetMapViewer
 		this.mapConnection.getSxMapViewer().getMapCanvas().repaint();
 	}
 	
+	@Override
 	public void handMoved(MouseEvent me) throws MapConnectionException, MapDataException {
 		// nothing
 	}
 
+	@Override
 	public void mouseMoved(MouseEvent me) throws MapConnectionException, MapDataException {
 		// nothing
 	}
 
+	@Override
 	public void centerSpatialObject(SpatialObject so)
 	{
 		try 
