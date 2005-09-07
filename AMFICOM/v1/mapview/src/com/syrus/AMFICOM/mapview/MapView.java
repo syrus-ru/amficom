@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.55 2005/09/05 12:25:40 krupenn Exp $
+* $Id: MapView.java,v 1.56 2005/09/07 12:21:42 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -59,7 +59,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: krupenn $
- * @version $Revision: 1.55 $, $Date: 2005/09/05 12:25:40 $
+ * @version $Revision: 1.56 $, $Date: 2005/09/07 12:21:42 $
  * @module mapview
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -419,9 +419,10 @@ public final class MapView extends DomainMember implements Namable {
 						// SchemeCableLink has no start device
 						return null;
 					}
+					SchemeElement sourceSchemeElement = sourceAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement();
 					final SchemeElement se = SchemeUtils.getTopologicalElement(
 							scheme, 
-							sourceAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement());
+							SchemeUtils.getTopLevelSchemeElement(sourceSchemeElement));
 					return findElement(se);
 				}
 			}
@@ -449,9 +450,10 @@ public final class MapView extends DomainMember implements Namable {
 						// SchemeCableLink has no end device
 						return null;
 					}
+					SchemeElement targetSchemeElement = targetAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement();
 					final SchemeElement se = SchemeUtils.getTopologicalElement(
 							scheme, 
-							targetAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement());
+							SchemeUtils.getTopLevelSchemeElement(targetSchemeElement));
 					return findElement(se);
 				}
 			}
@@ -474,7 +476,9 @@ public final class MapView extends DomainMember implements Namable {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
 				if (scheme.getTopologicalPaths().contains(schemePath)) {
-					final SchemeElement se = SchemeUtils.getTopologicalElement(scheme, schemePath.getStartSchemeElement());
+					final SchemeElement se = SchemeUtils.getTopologicalElement(
+							scheme, 
+							SchemeUtils.getTopLevelSchemeElement(schemePath.getStartSchemeElement()));
 					return findElement(se);
 				}
 			}
@@ -497,7 +501,9 @@ public final class MapView extends DomainMember implements Namable {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
 				if (scheme.getTopologicalPaths().contains(schemePath)) {
-					final SchemeElement se = SchemeUtils.getTopologicalElement(scheme, schemePath.getEndSchemeElement());
+					final SchemeElement se = SchemeUtils.getTopologicalElement(
+							scheme, 
+							SchemeUtils.getTopLevelSchemeElement(schemePath.getEndSchemeElement()));
 					return findElement(se);
 				}
 			}
