@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerPoolContext.java,v 1.12 2005/09/07 13:13:31 bob Exp $
+ * $Id: CMServerPoolContext.java,v 1.13 2005/09/07 14:27:49 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/07 13:13:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/09/07 14:27:49 $
+ * @author $Author: arseniy $
  * @module cmserver
  */
 final class CMServerPoolContext implements PoolContext {
@@ -54,8 +54,7 @@ final class CMServerPoolContext implements PoolContext {
 		if (!databaseLoaderOnly) {
 			final long refreshTimeout = ApplicationProperties.getInt(KEY_REFRESH_TIMEOUT, REFRESH_TIMEOUT) * 1000L;
 			objectLoader = new CMServerObjectLoader(this.cmServerServantManager, refreshTimeout);
-		}
-		else {
+		} else {
 			objectLoader = new DatabaseObjectLoader();
 		}
 
@@ -72,7 +71,7 @@ final class CMServerPoolContext implements PoolContext {
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, configurationPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, measurementPoolSize);
 	}
-	
+
 	public LRUSaver<Identifier, StorableObject> getLRUSaver() {
 		return LRUMapSaver.getInstance();
 	}
