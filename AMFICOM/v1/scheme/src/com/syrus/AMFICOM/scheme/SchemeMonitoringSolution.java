@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.66 2005/09/06 17:30:26 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.67 2005/09/07 17:38:25 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/09/06 17:30:26 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/07 17:38:25 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -373,7 +373,7 @@ public final class SchemeMonitoringSolution
 		}
 	}
 
-	private Set<SchemePath> getSchemePaths0() throws ApplicationException {
+	Set<SchemePath> getSchemePaths0() throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEPATH_CODE), true);
 	}
 
