@@ -22,8 +22,8 @@ import javax.swing.table.TableColumn;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/07 02:37:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/09/07 07:09:02 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public class WrapperedPropertyTable<T> extends ATable {
@@ -34,11 +34,13 @@ public class WrapperedPropertyTable<T> extends ATable {
 	
 	private static final long	serialVersionUID	= -437251205606073016L;
 
-	public WrapperedPropertyTable(final Wrapper<T> controller, final T object, final String[] keys) {
+	public WrapperedPropertyTable(final Wrapper<T> controller, 
+	                              final T object, 
+	                              final String[] keys) {
 		this(new WrapperedPropertyTableModel<T>(controller, object, keys));
 	}
 
-	public WrapperedPropertyTable(final WrapperedPropertyTableModel dm) {
+	public WrapperedPropertyTable(final WrapperedPropertyTableModel<T> dm) {
 		super(dm);
 		this.initialization();
 	}
@@ -129,7 +131,8 @@ public class WrapperedPropertyTable<T> extends ATable {
 	}
 
 	private void initialization() {
-		this.cellEditors = new TableCellEditor[this.getModel().getRowCount()][this.getModel().getColumnCount()];
+		this.cellEditors = 
+			new TableCellEditor[this.getModel().getRowCount()][this.getModel().getColumnCount()];
 		this.updateModel();
 		this.setColumnSelectionAllowed(false);
 		this.setRowSelectionAllowed(true);		
