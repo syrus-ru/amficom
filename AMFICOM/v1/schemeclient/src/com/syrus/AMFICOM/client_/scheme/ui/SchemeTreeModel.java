@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.34 2005/09/07 12:20:14 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.35 2005/09/07 18:33:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.34 $, $Date: 2005/09/07 12:20:14 $
+ * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/09/07 18:33:01 $
  * @module schemeclient
  */
 
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.scheme.SchemeMonitoringSolution;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeWrapper;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
@@ -131,7 +131,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					}			
 					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						SchemeElement sc = (SchemeElement) it.next();
-						if (sc.getKind().equals(SchemeElementKind.SCHEMED) ) {
+						if (sc.getKind().equals(IdlSchemeElementKind.SCHEME_CONTAINER) ) {
 							Scheme scheme = sc.getScheme();
 							node.addChild(new PopulatableIconedNode(this, scheme != null ? scheme : sc));
 							}
@@ -214,13 +214,13 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					boolean has_schemes = false;
 					boolean has_elements = false;
 					for (SchemeElement el : innerSEs) {
-						if (el.getKind().equals(SchemeElementKind.EQUIPMENTED)) {
+						if (el.getKind().equals(IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER)) {
 							has_elements = true;
 							break;
 						}
 					}
 					for (SchemeElement el : innerSEs) {
-						if (el.getKind().equals(SchemeElementKind.SCHEMED)) {
+						if (el.getKind().equals(IdlSchemeElementKind.SCHEME_CONTAINER)) {
 							has_schemes = true;
 							break;
 						}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.52 2005/09/07 12:26:01 krupenn Exp $
+ * $Id: MapViewController.java,v 1.53 2005/09/07 18:33:02 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,14 +54,13 @@ import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.util.Log;
 
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: krupenn $
- * @version $Revision: 1.52 $, $Date: 2005/09/07 12:26:01 $
+ * @author $Author: bass $
+ * @version $Revision: 1.53 $, $Date: 2005/09/07 18:33:02 $
  * @module mapviewclient
  */
 public final class MapViewController {
@@ -382,7 +381,7 @@ public final class MapViewController {
 	 */
 	public void scanElements(Scheme scheme) {
 
-		for(Iterator it = SchemeUtils.getTopologicalElements(scheme).iterator(); it.hasNext();) {
+		for(Iterator it = scheme.getTopologicalSchemeElementsRecursively().iterator(); it.hasNext();) {
 			SchemeElement element = (SchemeElement )it.next();
 			scanElement(element);
 		}
@@ -429,7 +428,7 @@ public final class MapViewController {
 	 */
 	public void scanCables(Scheme scheme) {
 		long t1 = System.currentTimeMillis();
-		Set<SchemeCableLink> topologicalCableLinks = SchemeUtils.getTopologicalCableLinks(scheme);
+		Set<SchemeCableLink> topologicalCableLinks = scheme.getTopologicalSchemeCableLinksRecursively();
 		long t2 = System.currentTimeMillis();
 		for(Iterator it = topologicalCableLinks.iterator(); it.hasNext();) {
 			SchemeCableLink scl = (SchemeCableLink )it.next();
@@ -482,7 +481,7 @@ public final class MapViewController {
 	 */
 	public void scanPaths(final Scheme scheme) {
 		long t1 = System.currentTimeMillis();
-		Set<SchemePath> topologicalPaths = scheme.getTopologicalPaths();
+		Set<SchemePath> topologicalPaths = scheme.getTopologicalSchemePathsRecursively();
 		long t2 = System.currentTimeMillis();
 		for (final SchemePath schemePath : topologicalPaths) {
 			this.scanPath(schemePath);
@@ -497,7 +496,7 @@ public final class MapViewController {
 	 * @param scheme схема
 	 */
 	public void removePaths(final Scheme scheme) {
-		for (final SchemePath schemePath : scheme.getTopologicalPaths()) {
+		for (final SchemePath schemePath : scheme.getTopologicalSchemePathsRecursively()) {
 			final MeasurementPath measurementPath = this.mapView.findMeasurementPath(schemePath);
 			if (measurementPath != null) {
 				this.unplaceElement(measurementPath);
@@ -511,7 +510,7 @@ public final class MapViewController {
 	 * @param scheme схема
 	 */
 	public void removeCables(Scheme scheme) {
-		Collection schemeCables = SchemeUtils.getTopologicalCableLinks(scheme);
+		Collection schemeCables = scheme.getTopologicalSchemeCableLinksRecursively();
 		for(Iterator it = schemeCables.iterator(); it.hasNext();) {
 			SchemeCableLink scl = (SchemeCableLink )it.next();
 			CablePath cp = this.mapView.findCablePath(scl);
@@ -527,7 +526,7 @@ public final class MapViewController {
 	 * @param scheme схема
 	 */
 	public void removeElements(Scheme scheme) {
-		Collection schemeElements = SchemeUtils.getTopologicalElements(scheme);
+		Collection schemeElements = scheme.getTopologicalSchemeElementsRecursively();
 		for(Iterator it = schemeElements.iterator(); it.hasNext();) {
 			SchemeElement se = (SchemeElement )it.next();
 			SiteNode site = this.mapView.findElement(se);

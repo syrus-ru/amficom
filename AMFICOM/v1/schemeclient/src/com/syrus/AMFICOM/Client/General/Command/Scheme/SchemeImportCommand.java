@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.4 2005/09/07 12:20:14 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.5 2005/09/07 18:33:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.AMFICOM.scheme.xml.SchemesDocument;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeSeq;
@@ -189,12 +189,12 @@ public class SchemeImportCommand extends AbstractCommand {
 		}
 		
 		for (SchemeElement schemeElement : scheme.getSchemeElements()) {
- 			if (schemeElement.getKind().value() == SchemeElementKind._SCHEMED) {
+ 			if (schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
 				// if no real Scheme associated
 				if (schemeElement.getScheme() == null) {
 					Log.debugMessage("No real scheme for " + schemeElement.getName(), Level.FINEST);
 				}
-			} else if (schemeElement.getKind().value() == SchemeElementKind._EQUIPMENTED) {
+			} else if (schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_ELEMENT_CONTAINER) {
 				// if no real EqT associated
 				if (schemeElement.getEquipmentType() == null) {
 					Log.debugMessage("No real eqt for " + schemeElement.getName(), Level.FINEST);

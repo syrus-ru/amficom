@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.12 2005/09/06 12:45:57 stas Exp $
+ * $Id: Notifier.java,v 1.13 2005/09/07 18:33:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,12 +40,12 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/09/06 12:45:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/09/07 18:33:01 $
  * @module schemeclient
  */
 
@@ -130,7 +130,7 @@ public class Notifier {
 					manager = SchemeProtoElementPropertiesManager.getInstance(aContext);
 				} else if (dev.getType() == DeviceGroup.SCHEME_ELEMENT) {
 					SchemeElement el = dev.getSchemeElement();
-					if (el.getKind().value() == SchemeElementKind._SCHEMED) {
+					if (el.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
 						selectedObject = dev.getScheme();
 						selectedType = ObjectSelectedEvent.SCHEME;
 						manager = SchemePropertiesManager.getInstance(aContext);

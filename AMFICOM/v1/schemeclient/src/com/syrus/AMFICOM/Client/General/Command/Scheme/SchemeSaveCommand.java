@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.util.Log;
 
 public class SchemeSaveCommand extends AbstractCommand {
@@ -127,7 +126,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 				SchemeResource res1 = p.getSchemeResource();
 				if (res1.getCellContainerType() == SchemeResource.SCHEME) {
 					Scheme s = res1.getScheme();
-					if (SchemeUtils.isSchemeContainsElement(s, se)) {
+					if (s.containsSchemeElement(se)) {
 						// TODO refreshing view (ugo)
 						
 						

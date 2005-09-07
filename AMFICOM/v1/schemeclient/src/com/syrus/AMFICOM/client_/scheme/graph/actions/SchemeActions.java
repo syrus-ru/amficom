@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.25 2005/09/07 12:20:14 stas Exp $
+ * $Id: SchemeActions.java,v 1.26 2005/09/07 18:33:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -79,13 +79,13 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemePortWrapper;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.25 $, $Date: 2005/09/07 12:20:14 $
+ * @author $Author: bass $
+ * @version $Revision: 1.26 $, $Date: 2005/09/07 18:33:01 $
  * @module schemeclient
  */
 
@@ -270,7 +270,7 @@ public class SchemeActions {
 
 	static boolean isSchemesGroup(DeviceGroup group) {
 		SchemeElement se = group.getSchemeElement();
-		if (se != null && se.getKind().equals(SchemeElementKind.SCHEMED)) {
+		if (se != null && se.getKind().equals(IdlSchemeElementKind.SCHEME_CONTAINER)) {
 			IdlKind kind = se.getScheme().getKind();
 			if (kind.equals(IdlKind.BUILDING) || kind.equals(IdlKind.NETWORK))
 				return true;

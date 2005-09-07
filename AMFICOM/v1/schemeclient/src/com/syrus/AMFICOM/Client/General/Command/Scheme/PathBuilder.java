@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.util.Log;
 
 public class PathBuilder {
@@ -215,7 +215,7 @@ public class PathBuilder {
 		PathElement newPE = null;
 		
 		if (!path.getPathMembers().isEmpty()) {  // non fisrt element
-			if (se.getKind().value() == SchemeElementKind._SCHEMED) {
+			if (se.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
 				Scheme scheme = se.getScheme();
 				exploreScheme(path, scheme);
 				return path.getPathMembers().last();

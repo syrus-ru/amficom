@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.30 2005/09/07 12:30:12 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.31 2005/09/07 18:33:02 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,8 +82,8 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.30 $, $Date: 2005/09/07 12:30:12 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.31 $, $Date: 2005/09/07 18:33:02 $
+ * @author $Author: bass $
  * @module mapviewclient
  */
 public class MapSchemeTreeModel 
@@ -397,7 +397,7 @@ public class MapSchemeTreeModel
 		final MapSchemeTreeNode treeNode = new MapSchemeTreeNode(null, PATH_BRANCH, getObjectName(PATH_BRANCH), true);
 		treeNode.setTopological(topological);
 
-		for (final SchemePath schemePath : parentScheme.getTopologicalPaths()) {
+		for (final SchemePath schemePath : parentScheme.getTopologicalSchemePathsRecursively()) {
 			MapSchemeTreeNode childNode;
 			if (topological) {
 				childNode = new MapSchemeTreeNode(null, schemePath, getObjectName(schemePath), pathIcon, false);

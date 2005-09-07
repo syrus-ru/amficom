@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.6 2005/09/07 12:20:14 stas Exp $
+ * $Id: PopupFactory.java,v 1.7 2005/09/07 18:33:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
@@ -85,7 +85,7 @@ public class PopupFactory {
 		JPopupMenu pop = new JPopupMenu();
 		if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
 			final SchemeElement se = group.getSchemeElement();
-			if (se.getKind().value() == SchemeElementKind._SCHEMED) {
+			if (se.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
 				pop.add(createOpenSchemeMenuItem(aContext, se.getScheme()));
 				pop.addSeparator();
 				pop.add(createCutMenuItem(pane));
@@ -216,7 +216,7 @@ public class PopupFactory {
 				if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
 					try {
 						SchemeElement se = (SchemeElement)StorableObjectPool.getStorableObject(id, true);
-						if (se.getKind().value() == SchemeElementKind._SCHEMED) {
+						if (se.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
 							pop.add(createOpenSchemeMenuItem(aContext, se.getScheme()));
 							pop.addSeparator();
 							pop.add(createCancelMenuItem());
@@ -244,7 +244,7 @@ public class PopupFactory {
 				try {
 					if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
 						SchemeElement se = (SchemeElement)StorableObjectPool.getStorableObject(id, true);
-						if (se.getKind().value() == SchemeElementKind._SCHEMED) {
+						if (se.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
 							pop.add(createOpenSchemeMenuItem(aContext, se.getScheme()));
 							pop.add(createPathAddMenuItem(aContext, res, id));
 							pop.addSeparator();

@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceGroup.java,v 1.11 2005/08/19 15:41:35 stas Exp $
+ * $Id: DeviceGroup.java,v 1.12 2005/09/07 18:33:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,12 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/08/19 15:41:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/09/07 18:33:01 $
  * @module schemeclient
  */
 
@@ -101,7 +101,7 @@ public class DeviceGroup extends DefaultGraphCell {
 		else 
 		if (this.type == SCHEME_ELEMENT) { 
 			SchemeElement element = getSchemeElement();
-			if (element != null && element.getKind().value() == SchemeElementKind._SCHEMED) {
+			if (element != null && element.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
 				return element.getScheme();
 			}
 		}

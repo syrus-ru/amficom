@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.17 2005/09/07 12:20:14 stas Exp $
+ * $Id: DeleteAction.java,v 1.18 2005/09/07 18:33:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,12 +50,12 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/09/07 12:20:14 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/09/07 18:33:01 $
  * @module schemeclient
  */
 
@@ -221,7 +221,7 @@ public class DeleteAction extends AbstractAction {
 		
 	static void deleteSchemeElement(SchemeElement element) {
 		objectsToDelete.add(element.getId());
-		if (element.getKind().value() == SchemeElementKind._EQUIPMENTED) {
+		if (element.getKind().value() == IdlSchemeElementKind._SCHEME_ELEMENT_CONTAINER) {
 			if(element.getEquipment() != null)
 				objectsToDelete.add(element.getEquipment().getId());
 			for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
@@ -279,7 +279,7 @@ public class DeleteAction extends AbstractAction {
 		if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
 			SchemeElement element = group.getSchemeElement();
 			
-			if (element.getKind().value() == SchemeElementKind._SCHEMED) {
+			if (element.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
 				Scheme scheme = element.getScheme();
 				deleteScheme(scheme);
 			} else {

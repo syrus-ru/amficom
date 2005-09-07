@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.17 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.18 2005/09/07 18:33:01 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,12 +64,12 @@ import com.syrus.AMFICOM.resource.EquipmentTypeCodenames;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/09/07 18:33:01 $
  * @module schemeclient
  */
 
@@ -811,7 +811,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 				symbol = new ImageIcon(s.getImage());
 			}
 			
-			if (this.schemeElement.getKind().value() == SchemeElementKind._SCHEMED) {
+			if (this.schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
 				this.cbInstanceBox.setVisible(false);
 			} else {
 				this.cbInstanceBox.setVisible(true);

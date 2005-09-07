@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.56 2005/09/07 12:21:42 krupenn Exp $
+* $Id: MapView.java,v 1.57 2005/09/07 18:33:02 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -58,8 +58,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: krupenn $
- * @version $Revision: 1.56 $, $Date: 2005/09/07 12:21:42 $
+ * @author $Author: bass $
+ * @version $Revision: 1.57 $, $Date: 2005/09/07 18:33:02 $
  * @module mapview
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -413,15 +413,14 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getStartNode(final SchemeCableLink schemeCableLink) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (SchemeUtils.getTopologicalCableLinks(scheme).contains(schemeCableLink)) {
+				if (scheme.getTopologicalSchemeCableLinksRecursively().contains(schemeCableLink)) {
 					SchemeCablePort sourceAbstractSchemePort = schemeCableLink.getSourceAbstractSchemePort();
 					if(sourceAbstractSchemePort == null) {
 						// SchemeCableLink has no start device
 						return null;
 					}
 					SchemeElement sourceSchemeElement = sourceAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement();
-					final SchemeElement se = SchemeUtils.getTopologicalElement(
-							scheme, 
+					final SchemeElement se = scheme.getTopologicalSchemeElement(
 							SchemeUtils.getTopLevelSchemeElement(sourceSchemeElement));
 					return findElement(se);
 				}
@@ -444,15 +443,14 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getEndNode(final SchemeCableLink schemeCableLink) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (SchemeUtils.getTopologicalCableLinks(scheme).contains(schemeCableLink)) {
+				if (scheme.getTopologicalSchemeCableLinksRecursively().contains(schemeCableLink)) {
 					SchemeCablePort targetAbstractSchemePort = schemeCableLink.getTargetAbstractSchemePort();
 					if(targetAbstractSchemePort == null) {
 						// SchemeCableLink has no end device
 						return null;
 					}
 					SchemeElement targetSchemeElement = targetAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement();
-					final SchemeElement se = SchemeUtils.getTopologicalElement(
-							scheme, 
+					final SchemeElement se = scheme.getTopologicalSchemeElement(
 							SchemeUtils.getTopLevelSchemeElement(targetSchemeElement));
 					return findElement(se);
 				}
@@ -475,9 +473,8 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getStartNode(final SchemePath schemePath) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (scheme.getTopologicalPaths().contains(schemePath)) {
-					final SchemeElement se = SchemeUtils.getTopologicalElement(
-							scheme, 
+				if (scheme.getTopologicalSchemePathsRecursively().contains(schemePath)) {
+					final SchemeElement se = scheme.getTopologicalSchemeElement(
 							SchemeUtils.getTopLevelSchemeElement(schemePath.getStartSchemeElement()));
 					return findElement(se);
 				}
@@ -500,9 +497,8 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getEndNode(final SchemePath schemePath) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (scheme.getTopologicalPaths().contains(schemePath)) {
-					final SchemeElement se = SchemeUtils.getTopologicalElement(
-							scheme, 
+				if (scheme.getTopologicalSchemePathsRecursively().contains(schemePath)) {
+					final SchemeElement se = scheme.getTopologicalSchemeElement(
 							SchemeUtils.getTopLevelSchemeElement(schemePath.getEndSchemeElement()));
 					return findElement(se);
 				}
