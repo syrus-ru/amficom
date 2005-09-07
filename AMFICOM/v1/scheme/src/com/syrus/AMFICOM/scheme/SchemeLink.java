@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.68 2005/09/07 19:16:04 bass Exp $
+ * $Id: SchemeLink.java,v 1.69 2005/09/07 20:01:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,9 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
+import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
@@ -24,6 +26,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
@@ -56,7 +59,9 @@ import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeLink;
@@ -68,7 +73,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/09/07 19:16:04 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/07 20:01:59 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -1110,15 +1115,77 @@ public final class SchemeLink extends AbstractSchemeLink
 	}
 
 	/**
-	 * @param xmlSchemeLink
+	 * @param schemeLink
 	 * @param importType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public void fromXmlTransferable(final XmlSchemeLink xmlSchemeLink,
+	public void fromXmlTransferable(final XmlSchemeLink schemeLink,
 			final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		XmlComplementorRegistry.complementStorableObject(schemeLink, SCHEMELINK_CODE, importType);
+
+		super.fromXmlTransferable(schemeLink, importType);
+
+		final boolean setLinkTypeId = schemeLink.isSetLinkTypeId();
+		final boolean setLinkId = schemeLink.isSetLinkId();
+		if (setLinkTypeId) {
+			assert !setLinkId : OBJECT_STATE_ILLEGAL;
+
+			super.abstractLinkTypeId = Identifier.fromXmlTransferable(schemeLink.getLinkTypeId(), LINK_TYPE_CODE, importType);
+			super.abstractLinkId = VOID_IDENTIFIER;
+		} else if (setLinkId) {
+			assert !setLinkTypeId : OBJECT_STATE_ILLEGAL;
+
+			super.abstractLinkTypeId = VOID_IDENTIFIER;
+			super.abstractLinkId = Identifier.fromXmlTransferable(schemeLink.getLinkId(), LINK_CODE, importType);
+		} else {
+			throw new UpdateObjectException(
+					"SchemeLink.fromXmlTransferable() | "
+					+ XML_BEAN_NOT_COMPLETE);
+		}
+
+		super.sourceAbstractSchemePortId = schemeLink.isSetSourceSchemePortId()
+				? Identifier.fromXmlTransferable(schemeLink.getSourceSchemePortId(), SCHEMEPORT_CODE, importType)
+				: VOID_IDENTIFIER;
+		super.targetAbstractSchemePortId = schemeLink.isSetTargetSchemePortId()
+				? Identifier.fromXmlTransferable(schemeLink.getTargetSchemePortId(), SCHEMEPORT_CODE, importType)
+				: VOID_IDENTIFIER;
+		this.siteNodeId = schemeLink.isSetSiteNodeId()
+				? Identifier.fromXmlTransferable(schemeLink.getSiteNodeId(), SITENODE_CODE, importType)
+				: VOID_IDENTIFIER;
+
+		final boolean setParentSchemeId = schemeLink.isSetParentSchemeId();
+		final boolean setParentSchemeElementId = schemeLink.isSetParentSchemeElementId();
+		final boolean setParentSchemeProtoElementId = schemeLink.isSetParentSchemeProtoElementId();
+		if (setParentSchemeId) {
+			assert !setParentSchemeElementId : OBJECT_STATE_ILLEGAL;
+			assert !setParentSchemeProtoElementId : OBJECT_STATE_ILLEGAL;
+
+			super.parentSchemeId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeId(), SCHEME_CODE, importType);
+			this.parentSchemeElementId = VOID_IDENTIFIER;
+			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
+		} else if (setParentSchemeElementId) {
+			assert !setParentSchemeId : OBJECT_STATE_ILLEGAL;
+			assert !setParentSchemeProtoElementId : OBJECT_STATE_ILLEGAL;
+
+			super.parentSchemeId = VOID_IDENTIFIER;
+			this.parentSchemeElementId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeElementId(), SCHEMEELEMENT_CODE, importType);
+			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
+		} else if (setParentSchemeProtoElementId) {
+			assert !setParentSchemeId : OBJECT_STATE_ILLEGAL;
+			assert !setParentSchemeElementId : OBJECT_STATE_ILLEGAL;
+
+			super.parentSchemeId = VOID_IDENTIFIER;
+			this.parentSchemeElementId = VOID_IDENTIFIER;
+			this.parentSchemeProtoElementId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeProtoElementId(), SCHEMEPROTOELEMENT_CODE, importType);
+		} else {
+			throw new UpdateObjectException(
+					"SchemeLink.fromXmlTransferable() | "
+					+ XML_BEAN_NOT_COMPLETE);
+		}
+
+		this.parentSet = true;
 	}
 
 	/*-********************************************************************

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.76 2005/09/07 19:16:04 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.77 2005/09/07 20:01:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,9 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
+import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
@@ -24,6 +26,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 import static java.util.logging.Level.SEVERE;
 
@@ -65,14 +68,18 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLinkHelper;
+import com.syrus.AMFICOM.scheme.xml.XmlCableChannelingItem;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableLink;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThread;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
@@ -80,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/09/07 19:16:04 $
+ * @version $Revision: 1.77 $, $Date: 2005/09/07 20:01:59 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -709,16 +716,54 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	}
 
 	/**
-	 * @param xmlSchemeCableLink
+	 * @param schemeCableLink
 	 * @param importType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	public void fromXmlTransferable(
-			final XmlSchemeCableLink xmlSchemeCableLink,
+			final XmlSchemeCableLink schemeCableLink,
 			final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		XmlComplementorRegistry.complementStorableObject(schemeCableLink, SCHEMECABLELINK_CODE, importType);
+
+		super.fromXmlTransferable(schemeCableLink, importType);
+
+		final boolean setCableLinkTypeId = schemeCableLink.isSetCableLinkTypeId();
+		final boolean setCableLinkId = schemeCableLink.isSetCableLinkId();
+		if (setCableLinkTypeId) {
+			assert !setCableLinkId : OBJECT_STATE_ILLEGAL;
+
+			super.abstractLinkTypeId = Identifier.fromXmlTransferable(schemeCableLink.getCableLinkTypeId(), CABLELINK_TYPE_CODE, importType);
+			super.abstractLinkId = VOID_IDENTIFIER;
+		} else if (setCableLinkId) {
+			assert !setCableLinkTypeId : OBJECT_STATE_ILLEGAL;
+
+			super.abstractLinkTypeId = VOID_IDENTIFIER;
+			super.abstractLinkId = Identifier.fromXmlTransferable(schemeCableLink.getCableLinkId(), CABLELINK_CODE, importType);
+		} else {
+			throw new UpdateObjectException(
+					"SchemeCableLink.fromXmlTransferable() | "
+					+ XML_BEAN_NOT_COMPLETE);
+		}
+
+		super.sourceAbstractSchemePortId = schemeCableLink.isSetSourceSchemeCablePortId()
+				? Identifier.fromXmlTransferable(schemeCableLink.getSourceSchemeCablePortId(), SCHEMECABLEPORT_CODE, importType)
+				: VOID_IDENTIFIER;
+		super.targetAbstractSchemePortId = schemeCableLink.isSetTargetSchemeCablePortId()
+				? Identifier.fromXmlTransferable(schemeCableLink.getTargetSchemeCablePortId(), SCHEMECABLEPORT_CODE, importType)
+				: VOID_IDENTIFIER;
+		super.parentSchemeId = Identifier.fromXmlTransferable(schemeCableLink.getParentSchemeId(), SCHEME_CODE, importType);
+		if (schemeCableLink.isSetSchemeCableThreads()) {
+			for (final XmlSchemeCableThread schemeCableThread : schemeCableLink.getSchemeCableThreads().getSchemeCableThreadArray()) {
+				// empty so far
+			}
+		}
+		if (schemeCableLink.isSetCableChannelingItems()) {
+			for (final XmlCableChannelingItem cableChannelingItem : schemeCableLink.getCableChannelingItems().getCableChannelingItemArray()) {
+				CableChannelingItem.createInstance(super.creatorId, cableChannelingItem, importType);
+			}
+		}
 	}
 
 	/**

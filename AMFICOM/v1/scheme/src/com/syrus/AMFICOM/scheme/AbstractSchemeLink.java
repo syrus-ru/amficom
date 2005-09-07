@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.34 2005/09/06 17:30:25 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.35 2005/09/07 20:01:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,6 +36,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemeLink;
+import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemeLink;
 import com.syrus.util.Log;
 
 /**
@@ -44,7 +45,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/09/06 17:30:25 $
+ * @version $Revision: 1.35 $, $Date: 2005/09/07 20:01:59 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -69,14 +70,14 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * {@link com.syrus.AMFICOM.configuration.LinkType} or
 	 * {@link com.syrus.AMFICOM.configuration.CableLinkType}.
 	 */
-	private Identifier abstractLinkTypeId;
+	Identifier abstractLinkTypeId;
 
 	/**
 	 * Depending on implementation, may reference either
 	 * {@link com.syrus.AMFICOM.configuration.Link} or
 	 * {@link com.syrus.AMFICOM.configuration.CableLink}.
 	 */
-	private Identifier abstractLinkId;
+	Identifier abstractLinkId;
 
 	/**
 	 * Depending on implementation, may reference either {@link SchemePort}
@@ -501,6 +502,23 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 		this.abstractLinkId = new Identifier(abstractLinkId1);
 		this.sourceAbstractSchemePortId = new Identifier(sourceAbstractSchemePortId1);
 		this.targetAbstractSchemePortId = new Identifier(targetAbstractSchemePortId1);
+
+		this.abstractLinkTypeSet = true;
+	}
+
+	/**
+	 * @param abstractSchemeLink
+	 * @param importType
+	 * @throws CreateObjectException
+	 */
+	final void fromXmlTransferable(
+			final XmlAbstractSchemeLink abstractSchemeLink,
+			final String importType)
+	throws CreateObjectException {
+		super.fromXmlTransferable(abstractSchemeLink, importType);
+
+		this.physicalLength = abstractSchemeLink.getPhysicalLength();
+		this.opticalLength = abstractSchemeLink.getOpticalLength();
 
 		this.abstractLinkTypeSet = true;
 	}
