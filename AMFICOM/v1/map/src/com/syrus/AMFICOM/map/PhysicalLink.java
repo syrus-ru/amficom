@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.103 2005/09/05 17:43:15 bass Exp $
+ * $Id: PhysicalLink.java,v 1.104 2005/09/07 09:40:44 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,8 +69,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: bass $
- * @version $Revision: 1.103 $, $Date: 2005/09/05 17:43:15 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.104 $, $Date: 2005/09/07 09:40:44 $
  * @module map
  */
 public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XmlBeansTransferable<XmlPhysicalLink> {
@@ -103,6 +103,9 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	protected transient PhysicalLinkBinding binding = null;
 	protected transient List<AbstractNode> sortedNodes = new LinkedList<AbstractNode>();
 	protected transient boolean nodeLinksSorted = false;
+
+	protected transient AbstractNode startNode = null;
+	protected transient AbstractNode endNode = null;
 
 	PhysicalLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -381,12 +384,14 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	public AbstractNode getEndNode() {
-		try {
-			return StorableObjectPool.getStorableObject(this.endNodeId, true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return null;
+		if(this.endNode == null) {
+			try {
+				this.endNode = StorableObjectPool.<AbstractNode>getStorableObject(this.endNodeId, true);
+			} catch(ApplicationException e) {
+				Log.errorException(e);
+			}
 		}
+		return this.endNode;
 	}
 	
 	Identifier getEndNodeId() {
@@ -395,6 +400,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 
 	protected void setEndNode0(final AbstractNode endNode) {
 		this.endNodeId = endNode.getId();
+		this.endNode = endNode;
 		this.nodeLinksSorted = false;
 	}
 
@@ -437,41 +443,47 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	public List<NodeLink> getNodeLinks() {
-		List<NodeLink> returnedList;
-		String message = "";
-		if (this.nodeLinksSorted) {
-			returnedList = Collections.unmodifiableList(this.nodeLinks);
-			message += "Sorted list ";
+		if(this.nodeLinks.isEmpty()) {
+			this.nodeLinks = findNodeLinks();
 		}
-		else {
-			returnedList = findNodeLinks();
-			message += "Conditional list ";
-		}
-		message += "For physical link " + this.id.toString() + " getNodeLinks() returns " + returnedList.size() + " objects: ";
-		for(NodeLink nodeLink : returnedList) {
-			message += " " + nodeLink.getId().toString();
-		}
-		Log.debugMessage(message, FINEST);
-		return returnedList;
+		return Collections.unmodifiableList(this.nodeLinks);
+
+//		List<NodeLink> returnedList;
+//		String message = "";
+//		if (this.nodeLinksSorted) {
+//			returnedList = Collections.unmodifiableList(this.nodeLinks);
+//			message += "Sorted list ";
+//		}
+//		else {
+//			returnedList = findNodeLinks();
+//			message += "Conditional list ";
+//		}
+//		message += "For physical link " + this.id.toString() + " getNodeLinks() returns " + returnedList.size() + " objects: ";
+//		for(NodeLink nodeLink : returnedList) {
+//			message += " " + nodeLink.getId().toString();
+//		}
+//		Log.debugMessage(message, FINEST);
+//		return returnedList;
 	}
 
 	private List<NodeLink> findNodeLinks() {
-		try {
-			final StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), NODELINK_CODE);
-
-			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-			final Set<NodeLink> nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
-			final List<NodeLink> nlinkslist = new ArrayList<NodeLink>(nlinks.size());
-			for(NodeLink nodeLink : nlinks) {
-				if(!nodeLink.isRemoved()) {
-					nlinkslist.add(nodeLink);
-				}
-			}
-			return nlinkslist;
-		} catch(ApplicationException e) {
-			e.printStackTrace();
-		}
-		return new LinkedList<NodeLink>();
+		throw new UnsupportedOperationException("empty node links");
+//		try {
+//			final StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), NODELINK_CODE);
+//
+//			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+//			final Set<NodeLink> nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
+//			final List<NodeLink> nlinkslist = new ArrayList<NodeLink>(nlinks.size());
+//			for(NodeLink nodeLink : nlinks) {
+//				if(!nodeLink.isRemoved()) {
+//					nlinkslist.add(nodeLink);
+//				}
+//			}
+//			return nlinkslist;
+//		} catch(ApplicationException e) {
+//			e.printStackTrace();
+//		}
+//		return new LinkedList<NodeLink>();
 	}
 
 	public void setNodeLinks(final List<NodeLink> nodeLinks) {
@@ -483,16 +495,19 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	public AbstractNode getStartNode() {
-		try {
-			return StorableObjectPool.getStorableObject(this.startNodeId, true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return null;
+		if(this.startNode == null) {
+			try {
+				this.startNode = StorableObjectPool.<AbstractNode>getStorableObject(this.startNodeId, true);
+			} catch(ApplicationException e) {
+				Log.errorException(e);
+			}
 		}
+		return this.startNode;
 	}
 
 	protected void setStartNode0(final AbstractNode startNode) {
 		this.startNodeId = startNode.getId();
+		this.startNode = startNode;
 		this.nodeLinksSorted = false;
 
 	}
