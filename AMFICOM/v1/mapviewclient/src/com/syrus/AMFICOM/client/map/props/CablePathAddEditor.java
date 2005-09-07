@@ -8,6 +8,7 @@ import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -49,7 +50,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.18 $
+ * @version $Revision: 1.19 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -649,55 +650,71 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		}
 
 		this.startNode = (SiteNode) this.cablePath.getStartUnboundNode();
-		
-		this.endNode = (SiteNode) this.cablePath.getEndUnboundNode();
+		if(this.startNode.equals(this.cablePath.getEndNode())) {
+			this.startLastBound = null;
+			this.availableLinksFromStart = Collections.emptySet();
+			this.availableNodesFromStart = Collections.emptyList();
+			this.startAvailableLinksCount = 0;
+		}
+		else {
+			this.startLastBound = this.cablePath.getStartLastBoundLink();
 
-		this.startLastBound = this.cablePath.getStartLastBoundLink();
-		this.endLastBound = this.cablePath.getEndLastBoundLink();
-		
-		this.availableLinksFromStart = this.logicalNetLayer.getMapView().getMap().getPhysicalLinksAt(this.startNode);
-		if(this.startLastBound != null)
-			this.availableLinksFromStart.remove(this.startLastBound.getPhysicalLink());
+			this.availableLinksFromStart = this.logicalNetLayer.getMapView().getMap().getPhysicalLinksAt(this.startNode);
+			if(this.startLastBound != null)
+				this.availableLinksFromStart.remove(this.startLastBound.getPhysicalLink());
 
-		this.availableNodesFromStart = new LinkedList();
+			this.availableNodesFromStart = new LinkedList();
 
-		this.startAvailableLinksCount = this.availableLinksFromStart.size();
-		for(Iterator it = this.availableLinksFromStart.iterator(); it.hasNext();) {
-			PhysicalLink link = (PhysicalLink)it.next();
-			if(link.getType().equals(unboundType)) {
-				it.remove();
-				this.startAvailableLinksCount--;
-			}
-			else if(link.getStartNode() instanceof TopologicalNode
-				|| link.getEndNode() instanceof TopologicalNode) {
+			this.startAvailableLinksCount = this.availableLinksFromStart.size();
+			for(Iterator it = this.availableLinksFromStart.iterator(); it.hasNext();) {
+				PhysicalLink link = (PhysicalLink)it.next();
+				if(link.getType().equals(unboundType)) {
 					it.remove();
 					this.startAvailableLinksCount--;
-			}
-			else {
-				this.availableNodesFromStart.add(link.getOtherNode(this.startNode));
+				}
+				else if(link.getStartNode() instanceof TopologicalNode
+					|| link.getEndNode() instanceof TopologicalNode) {
+						it.remove();
+						this.startAvailableLinksCount--;
+				}
+				else {
+					this.availableNodesFromStart.add(link.getOtherNode(this.startNode));
+				}
 			}
 		}
+		
+		this.endNode = (SiteNode) this.cablePath.getEndUnboundNode();
+		if(this.endNode.equals(this.cablePath.getStartNode())) {
+			this.endLastBound = null;
+			this.availableLinksFromEnd = Collections.emptySet();
+			this.availableNodesFromEnd = Collections.emptyList();
+			this.endAvailableLinksCount = 0;
+		}
+		else {
+			this.endLastBound = this.cablePath.getEndLastBoundLink();
 
-		this.availableLinksFromEnd = this.logicalNetLayer.getMapView().getMap().getPhysicalLinksAt(this.endNode);
-		if(this.endLastBound != null)
-			this.availableLinksFromEnd.remove(this.endLastBound.getPhysicalLink());
+			this.availableLinksFromEnd = this.logicalNetLayer.getMapView().getMap().getPhysicalLinksAt(this.endNode);
+			if(this.endLastBound != null)
+				this.availableLinksFromEnd.remove(this.endLastBound.getPhysicalLink());
 
-		this.availableNodesFromEnd = new LinkedList();
+			this.availableNodesFromEnd = new LinkedList();
 
-		this.endAvailableLinksCount = this.availableLinksFromEnd.size();
-		for(Iterator it = this.availableLinksFromEnd.iterator(); it.hasNext();) {
-			PhysicalLink mle = (PhysicalLink)it.next();
-			if(mle.getType().equals(unboundType)) {
-				it.remove();
-				this.endAvailableLinksCount--;
-			}
-			else if(mle.getStartNode() instanceof TopologicalNode
-				|| mle.getEndNode() instanceof TopologicalNode)
+			this.endAvailableLinksCount = this.availableLinksFromEnd.size();
+			for(Iterator it = this.availableLinksFromEnd.iterator(); it.hasNext();) {
+				PhysicalLink mle = (PhysicalLink)it.next();
+				if(mle.getType().equals(unboundType)) {
 					it.remove();
-			else {
-				this.availableNodesFromEnd.add(mle.getOtherNode(this.endNode));
+					this.endAvailableLinksCount--;
+				}
+				else if(mle.getStartNode() instanceof TopologicalNode
+					|| mle.getEndNode() instanceof TopologicalNode)
+						it.remove();
+				else {
+					this.availableNodesFromEnd.add(mle.getOtherNode(this.endNode));
+				}
 			}
 		}
+
 	}
 	
 	private void setBindingPanels() {
