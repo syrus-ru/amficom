@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.7 2005/08/08 11:42:21 arseniy Exp $
+ * $Id: LEServerPoolContext.java,v 1.8 2005/09/07 13:30:25 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,19 +9,23 @@
 package com.syrus.AMFICOM.leserver;
 
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LRUMapSaver;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.AMFICOM.general.PoolContext;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
+import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/08 11:42:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/09/07 13:30:25 $
+ * @author $Author: bob $
  * @module leserver
  */
-final class LEServerPoolContext extends PoolContext {
+final class LEServerPoolContext implements PoolContext {
 	private static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
 	private static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
 	private static final String KEY_EVENT_POOL_SIZE = "EventPoolSize";
@@ -30,7 +34,6 @@ final class LEServerPoolContext extends PoolContext {
 	private static final int ADMINISTRATION_POOL_SIZE = 1000;
 	private static final int EVENT_POOL_SIZE = 1000;
 
-	@Override
 	public void init() {
 		final ObjectLoader objectLoader = new DatabaseObjectLoader();
 
@@ -44,6 +47,10 @@ final class LEServerPoolContext extends PoolContext {
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.GENERAL_GROUP_CODE, generalPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, administrationPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.EVENT_GROUP_CODE, eventPoolSize);
+	}
+	
+	public LRUSaver<Identifier, StorableObject> getLRUSaver() {
+		return LRUMapSaver.getInstance();
 	}
 
 }

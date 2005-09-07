@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.23 2005/08/08 11:42:21 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.24 2005/09/07 13:30:25 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,14 +18,15 @@ import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Application;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/08/08 11:42:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/09/07 13:30:25 $
+ * @author $Author: bob $
  * @module leserver
  */
 public final class LoginEventServer {
@@ -151,8 +152,7 @@ public final class LoginEventServer {
 
 	protected static void shutdown() {
 		final LEServerSessionEnvironment leServerSessionEnvironment = LEServerSessionEnvironment.getInstance();
-		leServerSessionEnvironment.getPoolContext().serialize();
-
+		StorableObjectPool.serialize(leServerSessionEnvironment.getPoolContext().getLRUSaver());
 		DatabaseConnection.closeConnection();
 	}
 

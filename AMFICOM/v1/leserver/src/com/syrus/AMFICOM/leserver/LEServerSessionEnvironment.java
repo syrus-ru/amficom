@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerSessionEnvironment.java,v 1.5 2005/08/08 11:42:21 arseniy Exp $
+ * $Id: LEServerSessionEnvironment.java,v 1.6 2005/09/07 13:30:25 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,10 +12,11 @@ import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifierGeneratorServer;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.PoolContext;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:42:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/09/07 13:30:25 $
+ * @author $Author: bob $
  * @module leserver
  */
 final class LEServerSessionEnvironment {
@@ -32,7 +33,7 @@ final class LEServerSessionEnvironment {
 		/* Generate identifiers using local database */
 		IdentifierPool.init(new DatabaseIdentifierGeneratorServer());
 		this.leServerPoolContext.init();
-		this.leServerPoolContext.deserialize();
+		StorableObjectPool.deserialize(this.leServerPoolContext.getLRUSaver());
 	}
 
 	public LEServerServantManager getLEServerServantManager() {
