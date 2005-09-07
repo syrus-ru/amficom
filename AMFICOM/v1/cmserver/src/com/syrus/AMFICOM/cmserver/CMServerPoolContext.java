@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerPoolContext.java,v 1.11 2005/08/08 11:44:39 arseniy Exp $
+ * $Id: CMServerPoolContext.java,v 1.12 2005/09/07 13:13:31 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,19 +9,23 @@
 package com.syrus.AMFICOM.cmserver;
 
 import com.syrus.AMFICOM.general.DatabaseObjectLoader;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LRUMapSaver;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.AMFICOM.general.PoolContext;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
+import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:44:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/09/07 13:13:31 $
+ * @author $Author: bob $
  * @module cmserver
  */
-final class CMServerPoolContext extends PoolContext {
+final class CMServerPoolContext implements PoolContext {
 	private static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
 	private static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
 	private static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
@@ -42,7 +46,6 @@ final class CMServerPoolContext extends PoolContext {
 		this.cmServerServantManager = cmServerServantManager;
 	}
 
-	@Override
 	public void init() {
 		final boolean databaseLoaderOnly = Boolean.valueOf(ApplicationProperties.getString(KEY_DATABASE_LOADER_ONLY,
 				DATABASE_LOADER_ONLY)).booleanValue();
@@ -68,5 +71,9 @@ final class CMServerPoolContext extends PoolContext {
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, administrationPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, configurationPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, measurementPoolSize);
+	}
+	
+	public LRUSaver<Identifier, StorableObject> getLRUSaver() {
+		return LRUMapSaver.getInstance();
 	}
 }
