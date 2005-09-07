@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.85 2005/09/07 09:39:53 krupenn Exp $
+ * $Id: NodeLink.java,v 1.86 2005/09/07 14:19:17 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: krupenn $
- * @version $Revision: 1.85 $, $Date: 2005/09/07 09:39:53 $
+ * @version $Revision: 1.86 $, $Date: 2005/09/07 14:19:17 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -499,6 +499,8 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 		this.physicalLinkId = physicalLinkId1;
 		this.startNodeId = startNodeId1;
 		this.endNodeId = endNodeId1;
+		
+		this.getPhysicalLink().addNodeLink(this);
 	}
 
 	/**
