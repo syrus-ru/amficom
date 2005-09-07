@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.48 2005/09/07 10:44:23 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.49 2005/09/07 13:16:02 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -127,7 +127,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.48 $, $Date: 2005/09/07 10:44:23 $
+ * @version $Revision: 1.49 $, $Date: 2005/09/07 13:16:02 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -139,14 +139,17 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * Field is used by descendants only, and never directly.
 	 */
 	protected int type;
+
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
 	protected int operation;
+
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
 	protected Object value;
+
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
@@ -158,6 +161,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * Field is used by descendants only, and never directly.
 	 */
 	protected double firstDouble;
+
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
@@ -167,6 +171,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * Field is used by descendants only, and never directly.
 	 */
 	protected long firstLong;
+
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
@@ -176,6 +181,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * Field is used by descendants only, and never directly.
 	 */
 	protected int firstInt;
+
 	/**
 	 * Field is used by descendants only, and never directly.
 	 */
@@ -240,10 +246,11 @@ public class TypicalCondition implements StorableObjectCondition {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
-				if (message == null)
+				if (message == null) {
 					assert false;
-				else
+				} else {
 					assert false : message;
+				}
 			} else {
 				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
@@ -280,16 +287,15 @@ public class TypicalCondition implements StorableObjectCondition {
 				this.delegate.operation = operation.value();
 			}
 		}
-	
 	}
-	
+
 	public TypicalCondition(final int firstInt,
 			final OperationSort operation,
 			final short entityCode,
 			final String key) {
 		this(firstInt, firstInt, operation, new Short(entityCode), key);
 	}
-	
+
 	public TypicalCondition(final int firstInt,
 			final int secondInt,
 			final OperationSort operation,
@@ -347,10 +353,11 @@ public class TypicalCondition implements StorableObjectCondition {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
-				if (message == null)
+				if (message == null) {
 					assert false;
-				else
+				} else {
 					assert false : message;
+				}
 			} else {
 				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
@@ -447,10 +454,11 @@ public class TypicalCondition implements StorableObjectCondition {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
-				if (message == null)
+				if (message == null) {
 					assert false;
-				else
+				} else {
 					assert false : message;
+				}
 			} else {
 				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
@@ -632,10 +640,11 @@ public class TypicalCondition implements StorableObjectCondition {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
-				if (message == null)
+				if (message == null) {
 					assert false;
-				else
+				} else {
 					assert false : message;
+				}
 			} else {
 				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
@@ -671,7 +680,6 @@ public class TypicalCondition implements StorableObjectCondition {
 				this.delegate.value = value;
 				this.delegate.otherValue = "";
 				this.delegate.operation = operation.value();
-
 			}
 		}
 	}
@@ -734,10 +742,11 @@ public class TypicalCondition implements StorableObjectCondition {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
-				if (message == null)
+				if (message == null) {
 					assert false;
-				else
+				} else {
 					assert false : message;
+				}
 			} else {
 				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
@@ -773,7 +782,6 @@ public class TypicalCondition implements StorableObjectCondition {
 				this.delegate.value = firstDate;
 				this.delegate.otherValue = secondDate;
 				this.delegate.operation = operation.value();
-
 			}
 		}
 	}
@@ -812,10 +820,11 @@ public class TypicalCondition implements StorableObjectCondition {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
-				if (message == null)
+				if (message == null) {
 					assert false;
-				else
+				} else {
 					assert false : message;
+				}
 			} else {
 				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
@@ -851,7 +860,6 @@ public class TypicalCondition implements StorableObjectCondition {
 				this.delegate.value = value;
 				this.delegate.otherValue = "";
 				this.delegate.operation = operation.value();
-
 			}
 		}
 	}
@@ -955,10 +963,11 @@ public class TypicalCondition implements StorableObjectCondition {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
-				if (message == null)
+				if (message == null) {
 					assert false;
-				else
+				} else {
 					assert false : message;
+				}
 			} else {
 				Log.debugMessage(TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
 						+ "constructor throws an exception in class "
