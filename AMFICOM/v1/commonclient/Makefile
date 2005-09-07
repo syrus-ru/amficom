@@ -33,7 +33,7 @@ $(LIBNAME): .mach
 		-C $(CLASSDIR) com
 
 .mach:	$(CLASSDIR)
-	$(JAVAC) $(JAVACFLAGS) -nowarn \
+	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(XMLCLASSPATH):$(EXTCLASSPATH):$(CLASSDIR) \
 		$(SOURCES)
 	touch $@
