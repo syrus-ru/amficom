@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.9 2005/09/07 14:23:31 arseniy Exp $
+ * $Id: LEServerPoolContext.java,v 1.10 2005/09/07 14:32:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/07 14:23:31 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/07 14:32:08 $
  * @author $Author: arseniy $
  * @module leserver
  */
@@ -52,5 +52,4 @@ final class LEServerPoolContext implements PoolContext {
 	public LRUSaver<Identifier, StorableObject> getLRUSaver() {
 		return LRUMapSaver.getInstance();
 	}
-
 }

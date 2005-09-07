@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerPoolContext.java,v 1.7 2005/09/07 14:23:15 arseniy Exp $
+ * $Id: MscharServerPoolContext.java,v 1.8 2005/09/07 14:33:46 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.ApplicationProperties;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/09/07 14:23:15 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/07 14:33:46 $
  * @module mscharserver
  */
 final class MscharServerPoolContext implements PoolContext {
@@ -78,5 +78,4 @@ final class MscharServerPoolContext implements PoolContext {
 	public LRUSaver<Identifier, StorableObject> getLRUSaver() {
 		return LRUMapSaver.getInstance();
 	}
-
 }

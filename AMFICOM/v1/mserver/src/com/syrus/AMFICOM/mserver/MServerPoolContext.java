@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerPoolContext.java,v 1.8 2005/09/07 14:19:07 arseniy Exp $
+ * $Id: MServerPoolContext.java,v 1.9 2005/09/07 14:32:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/07 14:19:07 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/07 14:32:21 $
  * @author $Author: arseniy $
  * @module mserver
  */
@@ -55,5 +55,4 @@ final class MServerPoolContext implements PoolContext {
 	public LRUSaver<Identifier, StorableObject> getLRUSaver() {
 		return LRUMapSaver.getInstance();
 	}
-
 }
