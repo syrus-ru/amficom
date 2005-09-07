@@ -1,5 +1,5 @@
 /*-
-* $Id: Bean.java,v 1.3 2005/08/02 14:42:06 bob Exp $
+* $Id: Bean.java,v 1.4 2005/09/07 07:08:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/02 14:42:06 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/07 07:08:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -57,7 +57,7 @@ public abstract class Bean extends AbstractBean {
 	@Override
 	public JPanel getPropertyPanel() {
 		WrapperedPropertyTableModel model = 
-			(WrapperedPropertyTableModel) this.table.getModel();
+			this.table.getModel();
 		model.setObject(this);
 		return super.getPropertyPanel();
 	}

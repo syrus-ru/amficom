@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.16 2005/09/06 16:20:34 bob Exp $
+* $Id: UserBeanFactory.java,v 1.17 2005/09/07 07:08:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -12,7 +12,7 @@ import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
 
-import javax.swing.JPanel;
+import javax.swing.JLabel;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/06 16:20:34 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/07 07:08:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -127,6 +127,8 @@ public class UserBeanFactory extends TabledBeanFactory {
 		
 		bean.addPropertyChangeListener(this.listener);
 
+		panel.add(new JLabel("A"));
+		
 		bean.setPropertyPanel(this.panel);		
 		
 		super.graphText.getDispatcher().firePropertyChange(

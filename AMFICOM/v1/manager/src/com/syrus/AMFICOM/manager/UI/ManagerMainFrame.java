@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.4 2005/09/06 16:16:26 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.5 2005/09/07 07:08:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -117,7 +117,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/06 16:16:26 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/07 07:08:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -243,7 +243,9 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			
 				
 			}
-		}, new AbstractMainToolBar() {});
+		}, new AbstractMainToolBar() {
+			// nothing
+		});
 		
 		final JDesktopPane desktopPane1 = this.desktopPane;
 		

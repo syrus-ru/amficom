@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.17 2005/09/06 16:20:24 bob Exp $
+ * $Id: UserBean.java,v 1.18 2005/09/07 07:08:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/06 16:20:24 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/07 07:08:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -429,22 +429,22 @@ public class UserBean extends Bean implements  ARMItem {
 			} else {
 				 Domain oldDomain = 
 					(Domain) StorableObjectPool.getStorableObject(oldDomainId, true); 
-				PermissionAttributes permissionAttributes = 
+				PermissionAttributes attributes = 
 					oldDomain.getPermissionAttributes(this.id);
 				
-				if (permissionAttributes == null) {
+				if (attributes == null) {
 					System.err.println(".applyTargetPort() | permissionAttributes null");
 					return;
 				}
 				
 				if (newDomainId.isVoid()) {
-					Log.debugMessage("UserBean.setDomainId() | delete " + permissionAttributes.getId(), Log.DEBUGLEVEL10);
-					StorableObjectPool.delete(permissionAttributes.getId());
+					Log.debugMessage("UserBean.setDomainId() | delete " + attributes.getId(), Log.DEBUGLEVEL10);
+					StorableObjectPool.delete(attributes.getId());
 				} else {
 					Log.debugMessage("UserBean.setDomainId() | setDomainId " + newDomainId
 						+ " to "
-						+ permissionAttributes.getId(), Log.DEBUGLEVEL10);
-					permissionAttributes.setDomainId(newDomainId);
+						+ attributes.getId(), Log.DEBUGLEVEL10);
+					attributes.setDomainId(newDomainId);
 				}
 			}
 		} catch (CreateObjectException e) {
@@ -458,6 +458,7 @@ public class UserBean extends Bean implements  ARMItem {
 	
 	protected PermissionAttributes getPermissionAttributes() throws ApplicationException {
 		final Perspective perspective = this.graphText.getPerspective();
+		// XXX think and refactor
 		if (perspective instanceof DomainPerpective) {
 			DomainPerpective domainPerpective = (DomainPerpective) perspective;
 			Identifier domainId1 = domainPerpective.getDomainId();

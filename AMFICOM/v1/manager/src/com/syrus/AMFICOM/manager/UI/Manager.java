@@ -1,5 +1,5 @@
 /*-
-* $Id: Manager.java,v 1.8 2005/09/06 10:10:04 bob Exp $
+* $Id: Manager.java,v 1.9 2005/09/07 07:08:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/06 10:10:04 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/07 07:08:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -61,7 +61,7 @@ public class Manager extends AbstractApplication {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
-		
+
 		super.startMainFrame(new ManagerMainFrame(super.aContext), 
 			Toolkit.getDefaultToolkit().getImage("images/main/administrate_mini.gif"));
 	}
