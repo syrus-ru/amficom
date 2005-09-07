@@ -13,6 +13,7 @@ $EXTLIB/xbean.jar
 MAPINFODIR=$EXTLIB/mapinfo
 COMMONMAPINFODIR=$MAPINFODIR/common
 CLIENTMAPINFODIR=$MAPINFODIR/client
+
 MAPINFOCLASSPATH=$COMMONMAPINFODIR/jdom.jar:\
 $COMMONMAPINFODIR/commons-logging.jar:\
 $COMMONMAPINFODIR/micsys.jar:\
@@ -23,6 +24,15 @@ $COMMONMAPINFODIR/mxjtabdp.jar:\
 $COMMONMAPINFODIR/mistyles.jar:\
 $COMMONMAPINFODIR/xercesImpl.jar:\
 $CLIENTMAPINFODIR/rjsclient.jar
+
+SPATIALFXCLASSPATH=$EXTLIB/ofx.spatialfx.jar
+
+XMLCLASSPATH=$LIB/generalxml.jar:\
+$LIB/configurationxml.jar:\
+$LIB/mapxml.jar:\
+$LIB/schemexml.jar:\
+$XMLBEANS_HOME/build/lib/xbean.jar:\
+$XMLBEANS_HOME/build/lib/jsr173_api.jar
 
 APPCLASSPATH=$LIB/mapviewclient.jar:\
 $LIB/general.jar:\
@@ -39,11 +49,10 @@ $LIB/commonclient.jar:\
 $LIB/filterclient.jar:\
 $LIB/mapclient.jar:\
 $LIB/mapinfo.jar:\
+$LIB/spatialfx.jar:\
 $LIB/schemeclient.jar:\
 $LIB/leserver_interface.jar:\
-$LIB/generalxml.jar:\
-$LIB/mapxml.jar:\
 $LIB/util.jar
 
-$JAVA -Xmx256m -ea -client -classpath $APPCLASSPATH:$EXTCLASSPATH:$MAPINFOCLASSPATH com.syrus.AMFICOM.client.map.editor.MapEditor
+$JAVA -Xmx256m -ea -client -classpath $APPCLASSPATH:$XMLCLASSPATH:$EXTCLASSPATH:$MAPINFOCLASSPATH:$SPATIALFXCLASSPATH com.syrus.AMFICOM.client.map.editor.MapEditor
 
