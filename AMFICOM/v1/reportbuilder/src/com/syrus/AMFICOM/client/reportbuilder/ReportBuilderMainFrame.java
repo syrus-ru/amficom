@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.7 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.8 2005/09/07 14:26:09 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -290,6 +290,11 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		this.setApplicationModelForTemplateSchemeStandart(aModel);
+		
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW, false);		
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE, false);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, false);
+		
 		aModel.fireModelChanged("");
 	}
 
@@ -306,6 +311,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 
 	private void setApplicationModelForTemplateSchemeStandart(ApplicationModel aModel){
 		//////Вообще-то эти пять строк из super
+		aModel.setEnabled(ApplicationModel.MENU_SESSION,true);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, true);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, false);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, true);
@@ -328,9 +334,9 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE, true);		
 		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE_PARAMETERS, true);
 		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW, false);		
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE, false);
-		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, false);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW, true);		
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE, true);
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, true);
 		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);		
 	}
 	

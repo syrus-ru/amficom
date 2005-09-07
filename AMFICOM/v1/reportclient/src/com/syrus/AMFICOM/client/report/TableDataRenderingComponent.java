@@ -1,5 +1,5 @@
 /*
- * $Id: TableReportDataRenderingComponent.java,v 1.3 2005/09/03 12:42:19 peskovsky Exp $
+ * $Id: TableDataRenderingComponent.java,v 1.1 2005/09/07 14:26:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,20 +13,19 @@ import javax.swing.JTable;
 
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 
-public final class TableReportDataRenderingComponent extends DataRenderingComponent {
+public final class TableDataRenderingComponent extends DataRenderingComponent {
 	private static final long serialVersionUID = -7406942647346619853L;
 
 	private JTable table = null;
 	
-	public TableReportDataRenderingComponent(TableDataStorableElement trde)
+	public TableDataRenderingComponent(TableDataStorableElement trde)
 	{
 		super(trde);
 		
 		jbinit();
 	}
 	
-	private void jbinit()
-	{
+	private void jbinit() {
 		BorderLayout layout = new BorderLayout();
 		layout.setHgap(RenderingComponent.EDGE_SIZE);
 		layout.setVgap(RenderingComponent.EDGE_SIZE);		
@@ -49,5 +48,9 @@ public final class TableReportDataRenderingComponent extends DataRenderingCompon
 
 	public void setHeight(int height) {
 		this.setSize(this.getWidth(),height);
+	}
+	
+	public JTable getTable() {
+		return this.table;
 	}
 }

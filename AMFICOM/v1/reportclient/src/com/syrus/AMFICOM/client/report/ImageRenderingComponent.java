@@ -1,5 +1,5 @@
 /*
- * $Id: ImageRenderingComponent.java,v 1.5 2005/09/05 12:22:51 peskovsky Exp $
+ * $Id: ImageRenderingComponent.java,v 1.6 2005/09/07 14:26:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,5 +73,9 @@ public class ImageRenderingComponent extends DataRenderingComponent {
 		super.setSize(
 			width > MINIMUM_IMAGE_SIZE.width ? width : MINIMUM_IMAGE_SIZE.width,
 			height > MINIMUM_IMAGE_SIZE.height ? height : MINIMUM_IMAGE_SIZE.height);
+	}
+	
+	public BufferedImage getImage() {
+		return this.imageToRender;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.4 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.5 2005/09/07 14:26:09 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import javax.swing.JPanel;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-//import com.syrus.AMFICOM.client.report.RenderingComponentsContainer;
 import com.syrus.AMFICOM.client.report.AttachedTextComponent;
 import com.syrus.AMFICOM.client.report.DataRenderingComponent;
 import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
@@ -56,7 +55,6 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	private final static int BORDER_MARGIN_SIZE = 2;
 	
 	private ApplicationContext applicationContext; 
-//	public RenderingComponentsContainer componentsContainer;
 	private ReportTemplateRendererMouseListener mouseListener = null;
 	
 	private DropTarget dropTarget = null;	
@@ -71,7 +69,6 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	private Rectangle templateBounds = new Rectangle();
 	
 	public ReportTemplateRenderer(){
-//		this.componentsContainer = new RenderingComponentsContainer(template);
 		jbInit();
 	}
 	
@@ -204,6 +201,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 
 	public void setTemplate(ReportTemplate template) {
 		this.template = template;
+		
 		IntDimension size = this.template.getSize();
 		this.setSize(size.getWidth(),size.getHeight());
 		this.setPreferredSize(this.getSize());		
@@ -232,6 +230,14 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		g.fillRect(0,0,this.getWidth(),this.getHeight());
 		
 		if (this.template != null){
+			//Рисуем края шаблона			
+			IntDimension templateSize = this.template.getSize();
+			g.setColor(Color.BLACK);
+			g.drawRect(
+					2,
+					2,
+					templateSize.getWidth() - 3,
+					templateSize.getHeight() - 3);
 			//Рисуем поля шаблона
 			g.setColor(Color.BLACK);
 			g.drawRect(
@@ -249,6 +255,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 						this.selectedComponent.getHeight() + 2 * BORDER_MARGIN_SIZE);
 			}
 		}
+		
 		this.paintChildren(g);
 	}
 	
@@ -286,9 +293,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		element.setSize(new IntDimension(defaultSize.width,defaultSize.height));
 		element.setImage(elementImage);
 		 
-		//TODO Где создавать компонент?
 		ImageRenderingComponent component = new ImageRenderingComponent(element,element.getImage());
-//			this.renderer.componentsContainer.addRenderingComponent(textComponent);
 		this.add(component);
 		component.setLocation(element.getX(),element.getY());
 		component.setSize(element.getWidth(),element.getHeight());
@@ -303,9 +308,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 
 	public AttachedTextComponent createTextRenderingComponent(Point point){
 		AttachedTextStorableElement element = new AttachedTextStorableElement();
-		//TODO Где создавать компонент?
 		AttachedTextComponent component = new AttachedTextComponent(element);
-//			this.renderer.componentsContainer.addRenderingComponent(textComponent);
 		this.add(component);
 		component.setLocation(point.x,point.y);
 		component.setSize(new Dimension(AttachedTextComponent.MINIMUM_COMPONENT_SIZE));
@@ -360,7 +363,6 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		component.initMinimumSizes();
 		
 		Dimension defaultSize = ReportTemplateDataRenderingComponent.DEFAULT_SIZE;
-		
 		component.setLocation(point.x,point.y);
 		component.setSize(new Dimension(defaultSize));
 		

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportLayout.java,v 1.2 2005/08/31 10:32:54 peskovsky Exp $
+ * $Id: ReportLayout.java,v 1.3 2005/09/07 14:26:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.DataStorableElement;
@@ -26,19 +27,23 @@ import com.syrus.AMFICOM.report.TextAttachingType;
  * элементами отчёта так, чтобы расстояния между компонентами были
  * равны расстоянию между компонентами на схеме шаблона отчёта.
  * @author $Author: peskovsky $
- * @version $Revision: 1.2 $, $Date: 2005/08/31 10:32:54 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/07 14:26:10 $
  * @module reportclient_v1
  */
 public class ReportLayout {
-	private RenderingComponentsContainer componentContainer = null;
+	private List<RenderingComponent> componentContainer = null;
+	private ReportTemplate reportTemplate = null;
+	
 	private final Map<RenderingComponent,Boolean> componentsSetUp = new HashMap<RenderingComponent,Boolean>();
 	
-	public void dolayout (RenderingComponentsContainer compContainer)
+	public void dolayout (List<RenderingComponent> container,ReportTemplate template)
 	{
-		this.componentContainer = compContainer;
+		this.componentContainer = container;
+		this.reportTemplate = template;		
+		
 		//Инициализируем таблицу "законченности" - в ней указывается,
 		//установлен элемент отображения на своё место или ещё нет.
-		for (RenderingComponent component : this.componentContainer.getRenderingComponents())
+		for (RenderingComponent component : this.componentContainer)
 			this.componentsSetUp.put(component,Boolean.FALSE);
 			
 		//Получаем упорядоченные списки значений X и Y для начал и концов
@@ -50,7 +55,7 @@ public class ReportLayout {
 		//Пока не будет завершена раскладка
 		while (!this.layoutIsFinished()){
 			//пытаемся "уложить" очередной элемент
-			for (RenderingComponent component : this.componentContainer.getRenderingComponents()){
+			for (RenderingComponent component : this.componentContainer){
 				try {
 					int newY = this.checkToTopForElements(component,xs,ys);
 					component.setY(newY);
@@ -65,7 +70,7 @@ public class ReportLayout {
 	 * в том случае, когда элементы, находящиеся выше на схеме, ещё не
 	 * реализованы.
 	 * @author $Author: peskovsky $
-	 * @version $Revision: 1.2 $, $Date: 2005/08/31 10:32:54 $
+	 * @version $Revision: 1.3 $, $Date: 2005/09/07 14:26:10 $
 	 * @module reportclient_v1
 	 */
 	private class NonImplementedElementFoundException extends Exception
@@ -125,7 +130,7 @@ public class ReportLayout {
 					break;
 
 				//Ищем в данной ячейке какой-либо элемент отображения
-				RenderingComponent componentFound = this.getComponentAtPoint(this.componentContainer,cellMiddleX, cellMiddleY);
+				RenderingComponent componentFound = this.getComponentAtPoint(cellMiddleX, cellMiddleY);
 				
 				if (componentFound == null)
 					//Не нашли - движемся дальше вниз
@@ -182,7 +187,7 @@ public class ReportLayout {
 		//знаем заранее какие надписи привязаны, а какие нет (мы отдельно
 		//учитываем только координаты непривязанных надписей) - не знаем сколько
 		//выделять ячеек в массиве.
-		for (RenderingComponent component : this.componentContainer.getRenderingComponents()){
+		for (RenderingComponent component : this.componentContainer) {
 			StorableElement element = component.getElement();
 			
 			if (element instanceof AttachedTextStorableElement)
@@ -203,8 +208,8 @@ public class ReportLayout {
 			}
 			else if (element instanceof DataStorableElement)
 			{
-				Rectangle borders = this.componentContainer.getReportTemplate().
-					getElementClasterBounds((DataStorableElement)element);
+				Rectangle borders = this.reportTemplate.getElementClasterBounds(
+						(DataStorableElement)element);
 				
 				xs.add(new Integer(borders.x));
 				ys.add(new Integer(borders.y));
@@ -234,14 +239,8 @@ public class ReportLayout {
 	 *  -1, если в этой точке нет элемента шаблона;
 	 *  -2, если есть, но он ещё не расположен в соответствующеем ему месте.
 	 */
-	private RenderingComponent getComponentAtPoint(
-			RenderingComponentsContainer componentsContainer,
-			int x,
-			int y) {
-		ReportTemplate reportTemplate = componentsContainer.getReportTemplate();
-		List<RenderingComponent> reportComponents = componentsContainer.getRenderingComponents();
-		
-		for (RenderingComponent component : reportComponents) {
+	private RenderingComponent getComponentAtPoint(int x,int y) {
+		for (RenderingComponent component : this.componentContainer) {
 			StorableElement element = component.getElement();
 			if (element instanceof AttachedTextStorableElement)
 			{
@@ -261,7 +260,7 @@ public class ReportLayout {
 				//Смотрим: принадлежит ли точка кластеру - области, в которую
 				//вписаны элемент отображения данных и прявязанные к нему надписи
 				DataStorableElement dsElement =	(DataStorableElement) element;
-				if (reportTemplate.clasterContainsPoint(dsElement,x,y))
+				if (this.reportTemplate.clasterContainsPoint(dsElement,x,y))
 					return component;
 			}
 			else if (element instanceof ImageStorableElement)
@@ -281,8 +280,8 @@ public class ReportLayout {
 	 */
 	private Rectangle getDataComponentsClasterBounds(DataRenderingComponent component)
 	{
-		Rectangle bounds = this.componentContainer.getReportTemplate().
-			getElementClasterBounds((DataStorableElement)component.getElement());
+		Rectangle bounds = this.reportTemplate.getElementClasterBounds(
+				(DataStorableElement)component.getElement());
 		
 		bounds.x = component.getX();
 		bounds.y = component.getY();
