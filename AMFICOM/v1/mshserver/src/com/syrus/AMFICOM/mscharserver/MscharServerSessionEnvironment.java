@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerSessionEnvironment.java,v 1.3 2005/08/08 11:45:43 arseniy Exp $
+ * $Id: MscharServerSessionEnvironment.java,v 1.4 2005/09/07 14:23:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,16 +14,17 @@ import com.syrus.AMFICOM.general.CommunicationException;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/08 11:45:43 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/07 14:23:15 $
  * @module mscharserver
  */
 final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
 	private static MscharServerSessionEnvironment instance;
 
-	private MscharServerSessionEnvironment(
-			final MscharServerServantManager mscharServerServantManager,
+	private MscharServerSessionEnvironment(final MscharServerServantManager mscharServerServantManager,
 			final MscharServerPoolContext mscharServerPoolContext) {
-		super(mscharServerServantManager, mscharServerPoolContext, new MapSchemeAdministrationResourceServer.MscharServerLoginRestorer());
+		super(mscharServerServantManager,
+				mscharServerPoolContext,
+				new MapSchemeAdministrationResourceServer.MscharServerLoginRestorer());
 	}
 
 	public MscharServerServantManager getMscharServerServantManager() {
@@ -31,8 +32,7 @@ final class MscharServerSessionEnvironment extends BaseSessionEnvironment {
 	}
 
 	public static void createInstance(final String serverHostName) throws CommunicationException {
-		instance = new MscharServerSessionEnvironment(
-				MscharServerServantManager.createAndStart(serverHostName),
+		instance = new MscharServerSessionEnvironment(MscharServerServantManager.createAndStart(serverHostName),
 				new MscharServerPoolContext());
 	}
 

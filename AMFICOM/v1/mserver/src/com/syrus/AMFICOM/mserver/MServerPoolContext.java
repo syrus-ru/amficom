@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerPoolContext.java,v 1.7 2005/08/08 11:43:53 arseniy Exp $
+ * $Id: MServerPoolContext.java,v 1.8 2005/09/07 14:19:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,19 +8,23 @@
 
 package com.syrus.AMFICOM.mserver;
 
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LRUMapSaver;
 import com.syrus.AMFICOM.general.ObjectGroupEntities;
 import com.syrus.AMFICOM.general.ObjectLoader;
 import com.syrus.AMFICOM.general.PoolContext;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectResizableLRUMap;
+import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/08 11:43:53 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/07 14:19:07 $
  * @author $Author: arseniy $
  * @module mserver
  */
-final class MServerPoolContext extends PoolContext {
+final class MServerPoolContext implements PoolContext {
 	private static final String KEY_GENERAL_POOL_SIZE = "GeneralPoolSize";
 	private static final String KEY_ADMINISTRATION_POOL_SIZE = "AdministrationPoolSize";
 	private static final String KEY_CONFIGURATION_POOL_SIZE = "ConfigurationPoolSize";
@@ -31,7 +35,6 @@ final class MServerPoolContext extends PoolContext {
 	private static final int CONFIGURATION_POOL_SIZE = 1000;
 	private static final int MEASUREMENT_POOL_SIZE = 1000;
 
-	@Override
 	public void init() {
 		final ObjectLoader objectLoader = new MServerObjectLoader();
 
@@ -47,6 +50,10 @@ final class MServerPoolContext extends PoolContext {
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.ADMINISTRATION_GROUP_CODE, administrationPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.CONFIGURATION_GROUP_CODE, configurationPoolSize);
 		StorableObjectPool.addObjectPoolGroup(ObjectGroupEntities.MEASUREMENT_GROUP_CODE, measurementPoolSize);
+	}
+
+	public LRUSaver<Identifier, StorableObject> getLRUSaver() {
+		return LRUMapSaver.getInstance();
 	}
 
 }
