@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.54 2005/09/04 17:17:20 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.55 2005/09/07 14:20:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapElementState;
+import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNode;
@@ -63,7 +64,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.54 $, $Date: 2005/09/04 17:17:20 $
+ * @version $Revision: 1.55 $, $Date: 2005/09/07 14:20:31 $
  * @module mapviewclient
  */
 public abstract class MapPopupMenu extends JPopupMenu {
@@ -311,6 +312,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 			point.x += 20;
 		}
 		SiteNode attachedSiteNode = this.createSiteNode(attachedSiteNodeType, point);
+		attachedSiteNode.setAttachmentSiteNode(siteNode);
 		PhysicalLink physicalLink = this.createPhysicalLink(siteNode, attachedSiteNode);
 		physicalLink.setType(LinkTypeController.getIndoorLinkType());
 		this.createNodeLink(physicalLink, siteNode, attachedSiteNode);
@@ -345,6 +347,8 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		command.setLogicalNetLayer(logicalNetLayer);
 		logicalNetLayer.getCommandList().add(command);
 		logicalNetLayer.getCommandList().execute();
+		NodeLink nodeLink = command.getNodeLink();
+		physicalLink.addNodeLink(nodeLink);
 	}
 
 	protected PhysicalLink createPhysicalLink( AbstractNode startNode, AbstractNode endNode) {
