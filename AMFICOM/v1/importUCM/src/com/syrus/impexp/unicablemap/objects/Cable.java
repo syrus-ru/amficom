@@ -1,5 +1,5 @@
 /*-
- * $Id: Cable.java,v 1.1 2005/08/29 13:04:21 stas Exp $
+ * $Id: Cable.java,v 1.2 2005/09/07 12:47:45 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,12 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import com.syrus.amficom.general.xml.UID;
-import com.syrus.amficom.scheme.xml.CableChannelingItem;
-import com.syrus.amficom.scheme.xml.CableChannelingItems;
-import com.syrus.amficom.scheme.xml.SchemeCableLink;
-import com.syrus.amficom.scheme.xml.SchemeCableThread;
-import com.syrus.amficom.scheme.xml.SchemeCableThreads;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.AMFICOM.scheme.xml.XmlCableChannelingItem;
+import com.syrus.AMFICOM.scheme.xml.XmlCableChannelingItemSeq;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableLink;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThread;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThreadSeq;
 import com.syrus.impexp.unicablemap.TextWriter;
 import com.syrus.impexp.unicablemap.UniCableMapType;
 
@@ -31,8 +31,10 @@ public class Cable {
 	private String startId; // порт
 	private String endId; // порт
 	private Integer layoutId;
-	private Collection<ChannelingItem> channelingItems = new LinkedList<ChannelingItem>(); 
+	private Collection<ChannelingItem> channelingItems = new LinkedList<ChannelingItem>();
+	private ChannelingItem last;
 	private Collection<CableThread> threads = new LinkedList<CableThread>();
+	
 
 	public Cable(String id) {
 		this.id = id;
@@ -87,6 +89,10 @@ public class Cable {
 		this.channelingItems.add(item);
 	}
 	
+	public void setChannelingItem(ChannelingItem item) {
+		this.last = item;
+	}
+
 	public void write(TextWriter writer) {
 		writer.startObject(TYPE);
 		writer.put("id", String.valueOf(this.id));
@@ -100,27 +106,36 @@ public class Cable {
 	}
 
 	int counter = 0;
-	public SchemeCableLink toXMLObject() {
-		SchemeCableLink xmlCL = SchemeCableLink.Factory.newInstance();
-		UID uid = xmlCL.addNewUid();
+	public XmlSchemeCableLink toXMLObject(XmlIdentifier parentId) {
+		XmlSchemeCableLink xmlCL = XmlSchemeCableLink.Factory.newInstance();
+		XmlIdentifier uid = xmlCL.addNewId();
 		uid.setStringValue(String.valueOf(this.id));
+		
+		if (this.name.length() > 32) {
+			System.err.println("cable");
+		}
+		
 		xmlCL.setName(this.name);
-		xmlCL.setDescription("");
+//		xmlCL.setDescription("");
+		
 		if (this.typeId == null) {
 			System.err.println("Link typeIs is null");
 			this.typeId = 0;
 		}
-		xmlCL.setLinktype(this.typeId.toString());
+		
+		XmlIdentifier linkTypeId = xmlCL.addNewCableLinkTypeId();
+		linkTypeId.setStringValue(String.valueOf(this.typeId));
+		xmlCL.setCableLinkTypeId(linkTypeId);
 		
 		if (this.startId != null) {
-			UID suid = xmlCL.addNewSourceportuid();
+			XmlIdentifier suid = xmlCL.addNewSourceSchemeCablePortId();
 			suid.setStringValue(this.startId);
 		} else {
 			System.out.println("Cable (" + (++this.counter) + "): startId is null for " + this.name);
 		}
 
 		if (this.endId != null) {
-			UID euid = xmlCL.addNewTargetportuid();
+			XmlIdentifier euid = xmlCL.addNewTargetSchemeCablePortId();
 			euid.setStringValue(this.endId);
 		} else {
 			System.out.println("Cable (" + (++this.counter) + "): endId is null for " + this.name);
@@ -130,27 +145,34 @@ public class Cable {
 		for (ChannelingItem item : this.channelingItems) {
 			length += item.getLength();
 		}
+		
+		xmlCL.setParentSchemeId(parentId);
+		
 		xmlCL.setPhysicalLength(length);
 		xmlCL.setOpticalLength(length);
 		
 		if (!this.threads.isEmpty()) {
-			SchemeCableThreads xmlSchemeThreads = xmlCL.addNewSchemecablethreads();
+			XmlSchemeCableThreadSeq xmlSchemeThreads = xmlCL.addNewSchemeCableThreads();
 
-			Collection<SchemeCableThread> scts = new ArrayList<SchemeCableThread>(this.threads.size());
+			Collection<XmlSchemeCableThread> scts = new ArrayList<XmlSchemeCableThread>(this.threads.size());
 			for (Object thread : this.threads) {
 				scts.add(((CableThread)thread).toXMLObject());
 			}
-			xmlSchemeThreads.setSchemecablethreadArray(scts.toArray(new SchemeCableThread[scts.size()]));	
+			xmlSchemeThreads.setSchemeCableThreadArray(scts.toArray(new XmlSchemeCableThread[scts.size()]));	
 		}
 		
 		if (!this.channelingItems.isEmpty()) {
-			CableChannelingItems xmlChannelingItems = xmlCL.addNewCablechannelingitems();
+			XmlCableChannelingItemSeq xmlChannelingItems = xmlCL.addNewCableChannelingItems();
 
-			Collection<CableChannelingItem> cis = new ArrayList<CableChannelingItem>(this.channelingItems.size());
+			Collection<XmlCableChannelingItem> cis = new ArrayList<XmlCableChannelingItem>(this.channelingItems.size() + (this.last == null ? 0 : 1));
 			for (Object channelingItem : this.channelingItems) {
 				cis.add(((ChannelingItem)channelingItem).toXMLObject());
 			}
-			xmlChannelingItems.setCablechannelingitemArray(cis.toArray(new CableChannelingItem[cis.size()]));	
+			if (this.last != null) {
+				this.last.setNumber(this.channelingItems.size());
+				cis.add(this.last.toXMLObject());
+			}
+			xmlChannelingItems.setCableChannelingItemArray(cis.toArray(new XmlCableChannelingItem[cis.size()]));	
 		}
 		return xmlCL;
 	}

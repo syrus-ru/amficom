@@ -1,5 +1,5 @@
 /*-
- * $Id: MuffType.java,v 1.1 2005/08/29 13:04:21 stas Exp $
+ * $Id: MuffType.java,v 1.2 2005/09/07 12:47:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 
 package com.syrus.impexp.unicablemap.objects;
 
-import com.syrus.amficom.config.xml.EquipmentType;
-import com.syrus.amficom.general.xml.UID;
+import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.impexp.unicablemap.TextWriter;
 import com.syrus.impexp.unicablemap.UniCableMapType;
 
@@ -30,6 +30,10 @@ public class MuffType {
 	public void setCablePortsNum(int cablePortsNum) {
 		this.cablePortsNum = cablePortsNum;
 	}
+	
+	public String getId() {
+		return String.valueOf(this.id);
+	}
 
 	public void setFiberNum(int fiberNum) {
 		this.fiberNum = fiberNum;
@@ -48,10 +52,10 @@ public class MuffType {
 		writer.endObject();
 	}
 	
-	public EquipmentType toXMLObject() {
-		EquipmentType xmlEQT = EquipmentType.Factory.newInstance();
+	public XmlEquipmentType toXMLObject() {
+		XmlEquipmentType xmlEQT = XmlEquipmentType.Factory.newInstance();
 		
-		UID uid = xmlEQT.addNewUid();
+		XmlIdentifier uid = xmlEQT.addNewId();
 		uid.setStringValue(String.valueOf(this.id));
 		
 		xmlEQT.setName(this.name);

@@ -1,5 +1,5 @@
 /*-
- * $Id: Device.java,v 1.1 2005/08/29 13:04:21 stas Exp $
+ * $Id: Device.java,v 1.2 2005/09/07 12:47:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,20 +12,25 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import com.syrus.amficom.general.xml.UID;
-import com.syrus.amficom.scheme.xml.SchemeDevice;
-import com.syrus.amficom.scheme.xml.SchemePort;
-import com.syrus.amficom.scheme.xml.SchemePorts;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeCablePort;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeCablePortSeq;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeDevice;
 
 public class Device {
 	private String id;
 	private String name;
+	private String parentId;
 	private Collection<Port> ports = new LinkedList<Port>();
 	
 	public Device(String id) {
 		this.id = id;
 	}
 	
+	public String getId() {
+		return this.id;
+	}
+
 	public void addPort(Port port) {
 		this.ports.add(port);
 	}
@@ -37,21 +42,35 @@ public class Device {
 	public Collection<Port> getPorts() {
 		return this.ports;
 	}
-	
-	public SchemeDevice toXMLObject() {
-		SchemeDevice xmlSD = SchemeDevice.Factory.newInstance();
-		UID uid = xmlSD.addNewUid();
+		
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public XmlSchemeDevice toXMLObject() {
+		XmlSchemeDevice xmlSD = XmlSchemeDevice.Factory.newInstance();
+		XmlIdentifier uid = xmlSD.addNewId();
 		uid.setStringValue(this.id);
+		xmlSD.setId(uid);
+		
+		if (this.name.length() > 32) {
+			System.err.println("device");
+		}
+		
 		xmlSD.setName(this.name);
 		
+		XmlIdentifier elementId = xmlSD.addNewParentSchemeElementId();
+		elementId.setStringValue(this.parentId);
+		xmlSD.setParentSchemeElementId(elementId);
+		
 		if (!this.ports.isEmpty()) {
-			SchemePorts xmlSchemePorts = xmlSD.addNewSchemecableports();
+			XmlSchemeCablePortSeq xmlSchemePorts = xmlSD.addNewSchemeCablePorts();
 			
-			Collection<SchemePort> sps = new ArrayList<SchemePort>(this.ports.size());
+			Collection<XmlSchemeCablePort> sps = new ArrayList<XmlSchemeCablePort>(this.ports.size());
 			for (Object port : this.ports) {
 				sps.add(((Port)port).toXMLObject());
 			}
-			xmlSchemePorts.setSchemeportArray(sps.toArray(new SchemePort[sps.size()]));	
+			xmlSchemePorts.setSchemeCablePortArray(sps.toArray(new XmlSchemeCablePort[sps.size()]));	
 		}
 		return xmlSD;
 	}

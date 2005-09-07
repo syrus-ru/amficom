@@ -1,5 +1,5 @@
 /*-
- * $Id: ChannelingItem.java,v 1.1 2005/08/29 13:04:21 stas Exp $
+ * $Id: ChannelingItem.java,v 1.2 2005/09/07 12:47:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,28 +8,31 @@
 
 package com.syrus.impexp.unicablemap.objects;
 
-import java.math.BigInteger;
-
-import com.syrus.amficom.general.xml.UID;
-import com.syrus.amficom.scheme.xml.CableChannelingItem;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.AMFICOM.scheme.xml.XmlCableChannelingItem;
 
 public class ChannelingItem {
-	private int id;
+	private String id;
 	private Integer number;
-	private Integer tunnelId;
-	private Integer startSiteId;
-	private Integer endSiteId;
+	private String tunnelId;
+	private String startSiteId;
+	private String endSiteId;
 	private Integer rowX;
 	private Integer placeY;
+	private String parentId;
 	
 	private transient double length = 0;
 	
-	public ChannelingItem(int id) {
+	public ChannelingItem(String id) {
 		this.id = id;
 	}
 
-	public void setEndSiteId(Integer endSiteId) {
+	public void setEndSiteId(String endSiteId) {
 		this.endSiteId = endSiteId;
+	}
+
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
 	}
 
 	public void setNumber(Integer number) {
@@ -44,11 +47,11 @@ public class ChannelingItem {
 		this.rowX = rowX;
 	}
 
-	public void setStartSiteId(Integer startSiteId) {
+	public void setStartSiteId(String startSiteId) {
 		this.startSiteId = startSiteId;
 	}
 
-	public void setTunnelId(Integer tunnelId) {
+	public void setTunnelId(String tunnelId) {
 		this.tunnelId = tunnelId;
 	}
 
@@ -60,33 +63,41 @@ public class ChannelingItem {
 		this.length = length;
 	}
 	
-	public CableChannelingItem toXMLObject() {
-		CableChannelingItem xmlCCI = CableChannelingItem.Factory.newInstance();
+	public XmlCableChannelingItem toXMLObject() {
+		XmlCableChannelingItem xmlCCI = XmlCableChannelingItem.Factory.newInstance();
+		XmlIdentifier uid = xmlCCI.addNewId();
+		uid.setStringValue(String.valueOf(this.id));
 		
-		xmlCCI.setNumber(BigInteger.valueOf(this.number));
-		UID pluid = xmlCCI.addNewPhysicallinkuid();
+		xmlCCI.setStartSpare(0);
+		xmlCCI.setEndSpare(0);
+		xmlCCI.setRowX(this.rowX);
+		xmlCCI.setPlaceY(this.placeY);
+		xmlCCI.setSequentialNumber(this.number);
+		
+		XmlIdentifier pluid = xmlCCI.addNewPhysicalLinkId();
 		if (this.tunnelId == null) {
 			System.err.println("tunnelId is null for " + this);
 		} else {
-			pluid.setStringValue(Integer.toString(this.tunnelId));
+			pluid.setStringValue(this.tunnelId);
 		}
 		
-		UID ssuid = xmlCCI.addNewStartsitenodeuid();
+		XmlIdentifier ssuid = xmlCCI.addNewStartSiteNodeId();
 		if (this.startSiteId == null) {
 			System.err.println("startSiteId is null for " + this);
 		} else {
-			ssuid.setStringValue(Integer.toString(this.startSiteId));
+			ssuid.setStringValue(this.startSiteId);
 		}
 		
-		UID esuid = xmlCCI.addNewEndsitenodeuid();
+		XmlIdentifier esuid = xmlCCI.addNewEndSiteNodeId();
 		if (this.endSiteId == null) {
 			System.err.println("endSiteId is null for " + this);
 		} else {
-			esuid.setStringValue(Integer.toString(this.endSiteId));
+			esuid.setStringValue(this.endSiteId);
 		}
-		
-		xmlCCI.setRowX(BigInteger.valueOf(this.rowX));
-		xmlCCI.setPlaceY(BigInteger.valueOf(this.placeY));
+
+		XmlIdentifier cableLinkId = xmlCCI.addNewParentSchemeCableLinkId();
+		cableLinkId.setStringValue(this.parentId);
+		xmlCCI.setParentSchemeCableLinkId(cableLinkId);
 		
 		return xmlCCI;
 	}

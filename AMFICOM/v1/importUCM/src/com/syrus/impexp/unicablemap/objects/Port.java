@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.1 2005/08/29 13:04:21 stas Exp $
+ * $Id: Port.java,v 1.2 2005/09/07 12:47:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,23 +8,25 @@
 
 package com.syrus.impexp.unicablemap.objects;
 
-import com.syrus.amficom.general.xml.UID;
-import com.syrus.amficom.scheme.xml.DirectionType;
-import com.syrus.amficom.scheme.xml.PortTypeKind;
-import com.syrus.amficom.scheme.xml.SchemePort;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeCablePort;
+import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemePort.DirectionType;
 
 public class Port {
-	public static final String DEFAULT_PORT_TYPE = "default_port_type";
+	public static final String CABLE_PORT_TYPE = "cable_port_type";
 	
 	private String id;
 	private String name;
-	private PortTypeKind.Enum kind;
 	private DirectionType.Enum directionType;
+	private String parentId;
 
 	private boolean connected = false;
 	
 	public Port(String id) {
 		this.id = id;
+		if (id.length() > 32) {
+			System.out.println("port" + id);
+		}
 	}
 	
 	public void setDirectionType(DirectionType.Enum directionType) {
@@ -35,34 +37,40 @@ public class Port {
 		return this.directionType;
 	}
 
-	public void setKind(PortTypeKind.Enum kind) {
-		this.kind = kind;
-	}
-
 	public void setName(String name) {
 		this.name = name;
 	}
 	
-	public SchemePort toXMLObject() {
-		SchemePort xmlPort = SchemePort.Factory.newInstance();
-		UID uid = xmlPort.addNewUid();
+	public void setParentId(String parentId) {
+		this.parentId = parentId;
+	}
+
+	public XmlSchemeCablePort toXMLObject() {
+		XmlSchemeCablePort xmlPort = XmlSchemeCablePort.Factory.newInstance();
+		XmlIdentifier uid = xmlPort.addNewId();
 		uid.setStringValue(this.id);
-		xmlPort.setName(this.name);
-		xmlPort.setDescription("");
+		xmlPort.setId(uid);
 		
-		if (this.kind == null) {
-			System.err.println("kind is null for " + this.name);
-			this.kind = PortTypeKind.SIMPLE;
+		if (this.name.length() > 32) {
+			System.err.println("port");
 		}
 		
-		xmlPort.setKind(this.kind);
+		xmlPort.setName(this.name);
+//		xmlPort.setDescription("");
+		
+		XmlIdentifier deviceId = xmlPort.addNewParentSchemeDeviceId();
+		deviceId.setStringValue(this.parentId);
+		xmlPort.setParentSchemeDeviceId(deviceId);
+		
 		if (this.directionType == null) {
 			System.err.println("directionType is null for " + this.name);
 			this.directionType = DirectionType.IN;
 		}
-		xmlPort.setDirectiontype(this.directionType);
+		xmlPort.setDirectionType(this.directionType);
 		
-		xmlPort.setPorttype(DEFAULT_PORT_TYPE);
+		XmlIdentifier portTypeId = xmlPort.addNewCablePortTypeId();
+		portTypeId.setStringValue(CABLE_PORT_TYPE);
+		xmlPort.setCablePortTypeId(portTypeId);
 		return xmlPort;
 	}
 	

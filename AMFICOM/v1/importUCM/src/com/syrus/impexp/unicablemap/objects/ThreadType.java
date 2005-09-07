@@ -1,5 +1,5 @@
 /*-
- * $Id: ThreadType.java,v 1.1 2005/08/29 13:04:21 stas Exp $
+ * $Id: ThreadType.java,v 1.2 2005/09/07 12:47:46 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,14 +8,14 @@
 
 package com.syrus.impexp.unicablemap.objects;
 
-import com.syrus.amficom.config.xml.CableThreadType;
-import com.syrus.amficom.general.xml.UID;
+import com.syrus.AMFICOM.configuration.xml.XmlCableThreadType;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 
 public class ThreadType {
 
 	private String id;
 	private String codename;
-	private Integer linkTypeId;
+	private String linkTypeId;
 	private Integer cableTypeId;
 
 	public ThreadType(String id) {
@@ -30,26 +30,30 @@ public class ThreadType {
 		this.codename = codename;
 	}
 
-	public void setLinkTypeId(Integer typeId) {
+	public void setLinkTypeId(String typeId) {
 		this.linkTypeId = typeId;
+	}
+	
+	public String getLinkTypeId() {
+		return this.linkTypeId.toString();
 	}
 	
 	public void setCableTypeId(Integer typeId) {
 		this.cableTypeId = typeId;
 	}
 	
-	public CableThreadType toXMLObject() {
-		CableThreadType xmlCTT = CableThreadType.Factory.newInstance();
+	public XmlCableThreadType toXMLObject() {
+		XmlCableThreadType xmlCTT = XmlCableThreadType.Factory.newInstance();
 		
-		UID uid = xmlCTT.addNewUid();
+		XmlIdentifier uid = xmlCTT.addNewId();
 		uid.setStringValue(String.valueOf(this.id));
 		xmlCTT.setName(this.codename);
 		xmlCTT.setCodename(this.codename);
 		
-		UID ltuid = xmlCTT.addNewLinktypeuid();
+		XmlIdentifier ltuid = xmlCTT.addNewLinkTypeId();
 		ltuid.setStringValue(this.linkTypeId.toString());
 		
-		UID cltuid = xmlCTT.addNewCablelinktypeuid();
+		XmlIdentifier cltuid = xmlCTT.addNewCableLinkTypeId();
 		cltuid.setStringValue(this.cableTypeId.toString());
 		
 		return xmlCTT;

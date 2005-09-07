@@ -1,5 +1,5 @@
 /*-
- * $Id: CableType.java,v 1.1 2005/08/29 13:04:21 stas Exp $
+ * $Id: CableType.java,v 1.2 2005/09/07 12:47:45 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,11 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.LinkedList;
 
-import com.syrus.amficom.config.xml.CableLinkType;
-import com.syrus.amficom.config.xml.CableThreadType;
-import com.syrus.amficom.config.xml.CableThreadTypes;
-import com.syrus.amficom.config.xml.LinkTypeSort;
-import com.syrus.amficom.general.xml.UID;
+import com.syrus.AMFICOM.configuration.xml.XmlCableLinkType;
+import com.syrus.AMFICOM.configuration.xml.XmlCableThreadType;
+import com.syrus.AMFICOM.configuration.xml.XmlCableThreadTypeSeq;
+import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSort;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.impexp.unicablemap.TextWriter;
 import com.syrus.impexp.unicablemap.UniCableMapType;
 
@@ -58,25 +58,25 @@ public class CableType {
 		writer.endObject();
 	}
 	
-	public CableLinkType toXMLObject() {
-		CableLinkType xmlLT = CableLinkType.Factory.newInstance();
+	public XmlCableLinkType toXMLObject() {
+		XmlCableLinkType xmlLT = XmlCableLinkType.Factory.newInstance();
 		
-		UID uid = xmlLT.addNewUid();
+		XmlIdentifier uid = xmlLT.addNewId();
 		uid.setStringValue(String.valueOf(this.id));
 		xmlLT.setName(this.name);
 		xmlLT.setCodename(this.name);
 		xmlLT.setDescription("");
-		xmlLT.setSort(LinkTypeSort.OPTICAL);
+		xmlLT.setSort(XmlLinkTypeSort.OPTICAL);
 		
 		if (this.threadTypes.size() == 0) {
 			System.err.println("this.threadTypes.size() = 0");
 		} else {
-		CableThreadTypes xmlCTTs = xmlLT.addNewCablethreadtypes();
-		Collection<CableThreadType> ctts = new ArrayList<CableThreadType>(this.threadTypes.size());
+		XmlCableThreadTypeSeq xmlCTTs = xmlLT.addNewCableThreadTypes();
+		Collection<XmlCableThreadType> ctts = new ArrayList<XmlCableThreadType>(this.threadTypes.size());
 		for (ThreadType tType : this.threadTypes) {
 			ctts.add(tType.toXMLObject());
 		}
-		xmlCTTs.setCablethreadtypeArray(ctts.toArray(new CableThreadType[ctts.size()]));
+		xmlCTTs.setCableThreadTypeArray(ctts.toArray(new XmlCableThreadType[ctts.size()]));
 		}
 		
 		return xmlLT;

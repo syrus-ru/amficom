@@ -42,8 +42,8 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/08/30 13:45:50 $
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/09/07 12:47:45 $
  * @module mapviewclient_v1
  */
 public class UniCableMapDialog extends JFrame 
@@ -343,10 +343,10 @@ public class UniCableMapDialog extends JFrame
 
 	void importButton_actionPerformed(ActionEvent e)
 	{
-		UniCableMapExportCommand command = new UniCableMapExportCommand(
-			this.ucmDatabase, 
-			this.exportFileField.getText());
-//		UCMSchemeExportCommand command = new UCMSchemeExportCommand(this.ucmDatabase);
+//		UniCableMapExportCommand command = new UniCableMapExportCommand(
+//			this.ucmDatabase, 
+//			this.exportFileField.getText());
+		UCMSchemeExportCommand command = new UCMSchemeExportCommand(this.ucmDatabase);
 		command.execute();
 		this.statusLabel.setText("OK!");
 	}
