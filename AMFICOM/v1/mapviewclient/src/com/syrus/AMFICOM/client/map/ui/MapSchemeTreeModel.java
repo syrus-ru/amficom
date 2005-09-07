@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.29 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.30 2005/09/07 12:30:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,8 +82,8 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.29 $, $Date: 2005/08/11 12:43:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.30 $, $Date: 2005/09/07 12:30:12 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapSchemeTreeModel 
@@ -280,16 +280,17 @@ public class MapSchemeTreeModel
 				Scheme internalScheme = element.getScheme();
 				
 				if(internalScheme != null) {
-					childNode = buildSchemeTree(
-							internalScheme, 
-							internalScheme.getKind().equals(IdlKind.CABLE_SUBNETWORK), 
-							topological); 
+					continue;
+//					childNode = buildSchemeTree(
+//							internalScheme, 
+//							internalScheme.getKind().equals(IdlKind.CABLE_SUBNETWORK), 
+//							topological); 
 				}
-				else if(element.getScheme() == null && topological) {
-					childNode = (MapSchemeTreeNode )buildElementTree(element, true, topological, allowsChildren); 
+				else if(topological) {
+					childNode = (MapSchemeTreeNode )buildElementTree(element, true, false, allowsChildren); 
 				}
 				else
-					childNode = (MapSchemeTreeNode )buildElementTree(element, false, topological, allowsChildren); 
+					childNode = (MapSchemeTreeNode )buildElementTree(element, false, false, allowsChildren); 
 				treeNode.addChild(childNode);
 			}
 		}
@@ -327,7 +328,11 @@ public class MapSchemeTreeModel
 				SchemeElement element = (SchemeElement)it.next();
 				boolean allowsChildren = (element.getSchemeLinks().size() != 0 || element.getSchemeElements().size() != 0);
 
-				if(element.getScheme() == null && topological) {
+				Scheme internalScheme = element.getScheme();
+				if(internalScheme != null) {
+					continue;
+				}
+				else if(topological) {
 					childNode = (MapSchemeTreeNode )buildElementTree(element, true, topological, allowsChildren); 
 				}
 				else
