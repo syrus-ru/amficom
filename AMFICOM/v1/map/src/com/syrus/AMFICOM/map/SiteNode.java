@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.83 2005/09/05 17:43:15 bass Exp $
+ * $Id: SiteNode.java,v 1.84 2005/09/07 12:20:25 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.util.Log;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/09/05 17:43:15 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.84 $, $Date: 2005/09/07 12:20:25 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
@@ -378,6 +378,9 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		this.street = xmlSiteNode.getStreet();
 		this.building = xmlSiteNode.getBuilding();
 		super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
+		if(xmlSiteNode.isSetAttachmentSiteNodeId()) {
+			this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), SITENODE_CODE, importType); 
+		}
 
 		String typeCodeName1 = xmlSiteNode.getSiteNodeTypeCodename();
 		final TypicalCondition condition = new TypicalCondition(typeCodeName1,
@@ -434,14 +437,11 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 	}
 
 	public Set<SiteNode> getAttachedSiteNodes() {
-		Identifier aSiteNodeId = this.getAttachmentSiteNodeId();
-		if(aSiteNodeId != null && !aSiteNodeId.equals(Identifier.VOID_IDENTIFIER)) {
-			LinkedIdsCondition condition = new LinkedIdsCondition(aSiteNodeId, SITENODE_CODE);
-			try {
-				return StorableObjectPool.<SiteNode>getStorableObjectsByCondition(condition, false);
-			} catch(ApplicationException e) {
-				Log.errorException(e);
-			}
+		LinkedIdsCondition condition = new LinkedIdsCondition(this.id, SITENODE_CODE);
+		try {
+			return StorableObjectPool.<SiteNode>getStorableObjectsByCondition(condition, true);
+		} catch(ApplicationException e) {
+			Log.errorException(e);
 		}
 		return Collections.emptySet();
 	}
