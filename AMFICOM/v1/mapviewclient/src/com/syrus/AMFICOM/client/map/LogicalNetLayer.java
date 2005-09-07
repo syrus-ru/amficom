@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.120 2005/09/02 09:27:39 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.121 2005/09/07 12:32:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.120 $, $Date: 2005/09/02 09:27:39 $
+ * @version $Revision: 1.121 $, $Date: 2005/09/07 12:32:00 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer {
@@ -388,6 +388,9 @@ public final class LogicalNetLayer {
 	 *        графический контекст
 	 */
 	public void paint(final Graphics g, final Rectangle2D.Double visibleBounds) throws MapConnectionException, MapDataException {
+		if(this.mapView == null) {
+			return;
+		}
 		final Graphics2D p = (Graphics2D) g;
 
 		// remember settings from graphics
@@ -934,7 +937,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.120 $, $Date: 2005/09/02 09:27:39 $
+	 * @version $Revision: 1.121 $, $Date: 2005/09/07 12:32:00 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1060,7 +1063,7 @@ public final class LogicalNetLayer {
 				+ "			" + MapViewController.getTime1() + " ms (fillOptimizationSets)\n"
 				+ "			" + MapViewController.getTime2() + " ms (searchLinksForNodes)\n"
 				+ "			" + MapViewController.getTime3() + " ms (fill Calculated maps)\n"
-				+ "			" + MapViewController.getTime4() + " ms (create VisualElements)\n"
+				+ "			" + Long.toString(MapViewController.getTime4()) + " ms (create VisualElements)\n"
 				+ "			" + MapViewController.getTime6() + " ns (getCharacteristics)\n"
 				+ "			" + MapViewController.getTime5() + " ms (calculate distance)\n", Level.FINE);
 	}
@@ -1197,6 +1200,11 @@ public final class LogicalNetLayer {
 			nodeProcessed = lastNode;
 		}
 		else {
+			nodeProcessed = incomingLink.getOtherNode(lastNode);
+		}
+
+		if(nodeProcessed == null){
+			int a = 0;
 			nodeProcessed = incomingLink.getOtherNode(lastNode);
 		}
 
