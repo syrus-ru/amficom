@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.168 2005/09/06 12:46:06 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.169 2005/09/07 13:02:31 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,13 +25,13 @@ import java.util.logging.Level;
 
 import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
-import com.syrus.io.LRUMapSaver;
+import com.syrus.io.LRUSaver;
 import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.168 $, $Date: 2005/09/06 12:46:06 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.169 $, $Date: 2005/09/07 13:02:31 $
+ * @author $Author: bob $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
  * (т. е. объектами, идентификаторы которых помещены в DELETED_IDS_MAP). Проверять так:
@@ -518,6 +518,13 @@ public final class StorableObjectPool {
 					+ entityCode, IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 	}
+	
+	public static void putAllStorableObject(final Set<? extends StorableObject> storableObjects) 
+	throws IllegalObjectEntityException{
+		for(final StorableObject storableObject : storableObjects) {
+			putStorableObject(storableObject);
+		}
+	}
 
 
 	/*	Clean changed objects */
@@ -989,28 +996,27 @@ public final class StorableObjectPool {
 
 	/*	Serialization */
 
-	public static void deserialize() {
+	public static void deserialize(final LRUSaver<Identifier, StorableObject> saver) {
 		for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 			entityCodeIterator.advance();
 			final short entityCode = entityCodeIterator.key();
-			final Set<Identifier> keys = LRUMapSaver.load(ObjectEntities.codeToString(entityCode));
-			if (keys != null) {
-				try {
-					getStorableObjects(keys, true);
-				} catch (ApplicationException ae) {
-					Log.errorMessage("StorableObjectPool.deserialize | Cannot get entity '"
-							+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
-					Log.errorException(ae);
-				}
+			Set<StorableObject> storableObjects = saver.load(ObjectEntities.codeToString(entityCode));
+			try {
+				putAllStorableObject(storableObjects);
+			} catch (IllegalObjectEntityException e) {
+				Log.errorMessage("StorableObjectPool.deserialize | Cannot get entity '"
+					+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
+				Log.errorException(e);
 			}
 		}
 	}
 
-	public static void serialize() {
+	public static void serialize(final LRUSaver<Identifier, StorableObject> saver) {
 		for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 			entityCodeIterator.advance();
 			final short entityCode = entityCodeIterator.key();
-			LRUMapSaver.save((LRUMap) objectPoolMap.get(entityCode), ObjectEntities.codeToString(entityCode), true);
+			LRUMap<Identifier, StorableObject> map = getLRUMap(entityCode);
+			saver.save(map, ObjectEntities.codeToString(entityCode), true);
 		}
 	}
 
