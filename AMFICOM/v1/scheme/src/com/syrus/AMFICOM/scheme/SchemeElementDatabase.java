@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementDatabase.java,v 1.18 2005/08/13 08:43:47 max Exp $
+ * $Id: SchemeElementDatabase.java,v 1.19 2005/09/07 18:30:20 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,14 +40,14 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.18 $, $Date: 2005/08/13 08:43:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/09/07 18:30:20 $
  * @module scheme
  */
 public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeElement> {
@@ -189,7 +189,7 @@ public final class SchemeElementDatabase extends StorableObjectDatabase<SchemeEl
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_CREATOR_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_MODIFIER_ID),
 				new StorableObjectVersion(resultSet.getLong(COLUMN_VERSION)),
-				SchemeElementKind.from_int(resultSet.getInt(COLUMN_KIND)),
+				IdlSchemeElementKind.from_int(resultSet.getInt(COLUMN_KIND)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_NAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_DESCRIPTION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_LABEL)),

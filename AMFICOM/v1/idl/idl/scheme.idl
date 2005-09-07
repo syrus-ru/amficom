@@ -1,5 +1,5 @@
 /*-
- * $Id: scheme.idl,v 1.37 2005/08/31 17:23:37 bass Exp $
+ * $Id: scheme.idl,v 1.38 2005/09/07 18:30:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -142,13 +142,13 @@ module scheme {
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		valuetype IdlSchemeElement : IdlAbstractSchemeElement {
 			/*\u002a\u002f@SuppressWarnings("all")/**/
-			enum SchemeElementKind {
-				EQUIPMENTED,
-				SCHEMED
+			enum IdlSchemeElementKind {
+				SCHEME_ELEMENT_CONTAINER,
+				SCHEME_CONTAINER
 			};
-			
-			public SchemeElementKind kind;
+
 			public general::corba::WString64 label;
+			public IdlSchemeElementKind kind;
 
 			public general::corba::IdlIdentifier equipmentTypeId;
 			public general::corba::IdlIdentifier equipmentId;
@@ -165,10 +165,10 @@ module scheme {
 					in general::corba::IdlIdentifier creatorId,
 					in general::corba::IdlIdentifier modifierId,
 					in long long version,
-					in SchemeElementKind kind,
 					in general::corba::WString32 name,
 					in general::corba::WString256 description,
 					in general::corba::WString64 label,
+					in IdlSchemeElementKind kind,
 					in general::corba::IdlIdentifier equipmentTypeId,
 					in general::corba::IdlIdentifier equipmentId,
 					in general::corba::IdlIdentifier kisId,

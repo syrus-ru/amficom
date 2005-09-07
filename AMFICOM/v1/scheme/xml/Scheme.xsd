@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: Scheme.xsd,v 1.6 2005/09/02 13:22:59 bass Exp $
+			$Id: Scheme.xsd,v 1.7 2005/09/07 18:30:20 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -132,7 +132,7 @@
 						<xsd:simpleType>
 							<xsd:restriction base = "xsd:string">
 								<xsd:enumeration value = "building"/>
-								<xsd:enumeration value = "cable_subnetwork"/>
+								<xsd:enumeration value = "cableSubnetwork"/>
 								<xsd:enumeration value = "network"/>
 								<xsd:enumeration value = "floor"/>
 								<xsd:enumeration value = "room"/>

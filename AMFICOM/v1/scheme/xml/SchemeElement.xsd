@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeElement.xsd,v 1.6 2005/09/02 16:28:54 bass Exp $
+			$Id: SchemeElement.xsd,v 1.7 2005/09/07 18:30:20 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -42,8 +42,8 @@
 					<xsd:element name = "kind">
 						<xsd:simpleType>
 							<xsd:restriction base = "xsd:string">
-								<xsd:enumeration value = "equipmented"/>
-								<xsd:enumeration value = "schemed"/>
+								<xsd:enumeration value = "schemeElementContainer"/>
+								<xsd:enumeration value = "schemeContainer"/>
 							</xsd:restriction>
 						</xsd:simpleType>
 					</xsd:element>
