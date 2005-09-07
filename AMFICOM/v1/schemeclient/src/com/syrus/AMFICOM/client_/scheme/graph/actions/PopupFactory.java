@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.5 2005/09/07 11:30:34 bass Exp $
+ * $Id: PopupFactory.java,v 1.6 2005/09/07 12:20:14 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import java.util.logging.Level;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuItem;
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 
 import com.jgraph.graph.DefaultGraphModel;
@@ -30,6 +31,7 @@ import com.jgraph.plaf.basic.TransferHandler;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.PathBuilder;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.graph.LangModelGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraphTransferHandler;
@@ -509,7 +511,15 @@ public class PopupFactory {
 			private static final long serialVersionUID = 3306649391548325840L;
 			public void actionPerformed(ActionEvent ev) {
 				SchemePath path = res.getSchemePath();
-				PathBuilder.explore(path, res.getCashedPathStart(), res.getCashedPathEnd());
+				try {
+					PathBuilder.explore(path, res.getCashedPathStart(), res.getCashedPathEnd());
+				} catch (ApplicationException e) {
+					Log.errorException(e);
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+							e.getMessage(), 
+							LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		});
 		menuItem.setText(LangModelScheme.getString("Menu.path.explore")); //$NON-NLS-1$

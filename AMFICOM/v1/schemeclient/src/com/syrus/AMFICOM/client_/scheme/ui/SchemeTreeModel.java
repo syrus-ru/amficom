@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.33 2005/09/06 16:40:42 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.34 2005/09/07 12:20:14 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,12 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.33 $, $Date: 2005/09/06 16:40:42 $
+ * @version $Revision: 1.34 $, $Date: 2005/09/07 12:20:14 $
  * @module schemeclient
  */
 
 import java.util.Collection;
+import java.util.Collections;
 import java.util.Iterator;
 import java.util.Set;
 
@@ -42,10 +43,12 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemeMonitoringSolution;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
@@ -292,6 +295,36 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					child.setName(LangModelScheme.getString(SchemeResourceKeys.SCHEME_LINK));
 					child.setDefaultCondition(condition1);
 					node.addChild(child);
+				}
+				if (!contents.contains(SchemeResourceKeys.SCHEME_CABLE_PORT)) {
+					Set<SchemeCablePort> cablePorts = Collections.emptySet();
+					try {
+						cablePorts = se.getSchemeCablePortsRecursively();
+					} catch (ApplicationException e) {
+						Log.errorException(e);
+					}
+					if (!cablePorts.isEmpty()) {
+						PopulatableIconedNode child = new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_CABLE_PORT, LangModelScheme.getString(SchemeResourceKeys.SCHEME_CABLE_PORT));
+						node.addChild(child);
+						for (SchemeCablePort cablePort : cablePorts) {
+							child.addChild(new PopulatableIconedNode(this, cablePort, false));
+						}
+					}
+				}
+				if (!contents.contains(SchemeResourceKeys.SCHEME_PORT)) {
+					Set<SchemePort> ports = Collections.emptySet();
+					try {
+						ports = se.getSchemePortsRecursively();
+					} catch (ApplicationException e) {
+						Log.errorException(e);
+					}
+					if (!ports.isEmpty()) {
+						PopulatableIconedNode child = new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_PORT, LangModelScheme.getString(SchemeResourceKeys.SCHEME_PORT));
+						node.addChild(child);
+						for (SchemePort port : ports) {
+							child.addChild(new PopulatableIconedNode(this, port, false));
+						}
+					}
 				}
 			} 
 			else if (node.getObject() instanceof SchemeMonitoringSolution) {

@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.16 2005/09/06 12:45:57 stas Exp $
+ * $Id: DeleteAction.java,v 1.17 2005/09/07 12:20:14 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -50,10 +51,11 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.SchemeElementKind;
+import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/09/06 12:45:57 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/07 12:20:14 $
  * @module schemeclient
  */
 
@@ -225,11 +227,19 @@ public class DeleteAction extends AbstractAction {
 			for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
 				objectsToDelete.add(((SchemeLink)it.next()).getId());
 			}
-			for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemePort)it.next()).getId());
+			try {
+				for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
+					objectsToDelete.add(((SchemePort)it.next()).getId());
+				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
-			for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
-				objectsToDelete.add(((SchemeCablePort)it.next()).getId());
+			try {
+				for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
+					objectsToDelete.add(((SchemeCablePort)it.next()).getId());
+				}
+			} catch (ApplicationException e) {
+				Log.errorException(e);
 			}
 			for (Iterator it = element.getSchemeDevices().iterator(); it.hasNext();) {
 				objectsToDelete.add(((SchemeDevice)it.next()).getId());
@@ -245,11 +255,19 @@ public class DeleteAction extends AbstractAction {
 		for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
 			objectsToDelete.add(((SchemeLink)it.next()).getId());
 		}
-		for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
-			objectsToDelete.add(((SchemePort)it.next()).getId());
+		try {
+			for (Iterator it = element.getSchemePortsRecursively().iterator(); it.hasNext();) {
+				objectsToDelete.add(((SchemePort)it.next()).getId());
+			}
+		} catch (ApplicationException e1) {
+			Log.errorException(e1);
 		}
-		for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
-			objectsToDelete.add(((SchemeCablePort)it.next()).getId());
+		try {
+			for (Iterator it = element.getSchemeCablePortsRecursively().iterator(); it.hasNext();) {
+				objectsToDelete.add(((SchemeCablePort)it.next()).getId());
+			}
+		} catch (ApplicationException e) {
+			Log.errorException(e);
 		}
 		for (Iterator it = element.getSchemeDevices().iterator(); it.hasNext();) {
 			objectsToDelete.add(((SchemeDevice)it.next()).getId());

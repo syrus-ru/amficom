@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.24 2005/09/06 12:45:57 stas Exp $
+ * $Id: SchemeActions.java,v 1.25 2005/09/07 12:20:14 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,7 +85,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/09/06 12:45:57 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/07 12:20:14 $
  * @module schemeclient
  */
 
@@ -366,7 +366,7 @@ public class SchemeActions {
 		}
 	}
 	
-	public static void insertSEbyPE(SchemeGraph graph, SchemeElement schemeElement, Point p, boolean doClone) {
+	public static Map<DefaultGraphCell, DefaultGraphCell> insertSEbyPE(SchemeGraph graph, SchemeElement schemeElement, Point p, boolean doClone) {
 		Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
 		SchemeImageResource res = schemeElement.getUgoCell();
 		if (res == null) {
@@ -374,7 +374,7 @@ public class SchemeActions {
 				schemeElement.setUgoCell(SchemeObjectsFactory.createSchemeImageResource());
 			} catch (CreateObjectException e) {
 				Log.errorException(e);
-				return;
+				return null;
 			}
 			schemeElement.getUgoCell().setData(schemeElement.getSchemeCell().getData());
 			res = schemeElement.getSchemeCell();
@@ -390,6 +390,7 @@ public class SchemeActions {
 		}
 		Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = openSchemeImageResource(graph, res, doClone, p, true); 
 		SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+		return clonedObjects;
 	}
 	
 	/**

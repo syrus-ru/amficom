@@ -41,7 +41,7 @@ public class PathBuilder {
 		// empty
 	}
 	
-	private static boolean exploreSchemeElement(SchemePath path, SchemeElement scheme_element) {
+	private static boolean exploreSchemeElement(SchemePath path, SchemeElement scheme_element) throws ApplicationException {
 		if (path.getPathMembers().isEmpty()) {
 			return false;
 		}
@@ -74,7 +74,7 @@ public class PathBuilder {
 		}
 	}
 
-	private static boolean exploreScheme(SchemePath path, Scheme scheme) {
+	private static boolean exploreScheme(SchemePath path, Scheme scheme) throws ApplicationException {
 		if (path.getPathMembers().isEmpty()) {
 			return false;
 		}
@@ -107,7 +107,7 @@ public class PathBuilder {
 		}
 	}
 
-	public static boolean explore(SchemePath path, Identifier startId, Identifier endId) {
+	public static boolean explore(SchemePath path, Identifier startId, Identifier endId) throws ApplicationException {
 		if (path.getPathMembers().isEmpty()) {
 			if (startId.getMajor() != ObjectEntities.SCHEMEELEMENT_CODE) {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
@@ -148,7 +148,7 @@ public class PathBuilder {
 		}
 	}
 	
-	private static boolean exploreNext(SchemePath path) {
+	private static boolean exploreNext(SchemePath path) throws ApplicationException {
 		PathElement lastPE = path.getPathMembers().last();
 		
 		if (lastPE.getKind() == IdlKind.SCHEME_ELEMENT) {
@@ -211,7 +211,7 @@ public class PathBuilder {
 		return true;
 	}
 
-	public static PathElement createPEbySE(SchemePath path, SchemeElement se) {
+	public static PathElement createPEbySE(SchemePath path, SchemeElement se) throws ApplicationException {
 		PathElement newPE = null;
 		
 		if (!path.getPathMembers().isEmpty()) {  // non fisrt element
@@ -352,7 +352,7 @@ public class PathBuilder {
 		return newPE;
 	}
 
-	public static PathElement createPEbySL(SchemePath path, SchemeLink link) {
+	public static PathElement createPEbySL(SchemePath path, SchemeLink link) throws ApplicationException {
 		SortedSet<PathElement> pes = path.getPathMembers();
 		if (!pes.isEmpty()) {
 			PathElement lastPE = pes.last();
@@ -388,7 +388,7 @@ public class PathBuilder {
 		}
 	}
 
-	public static PathElement createPEbySCL(SchemePath path, SchemeCableLink link) {
+	public static PathElement createPEbySCL(SchemePath path, SchemeCableLink link) throws ApplicationException {
 		SortedSet<PathElement> pes = path.getPathMembers();
 		if (!pes.isEmpty()) {
 			PathElement lastPE = pes.last();

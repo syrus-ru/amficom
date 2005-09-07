@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.31 2005/09/01 13:39:18 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.32 2005/09/07 12:20:14 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -72,7 +72,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.31 $, $Date: 2005/09/01 13:39:18 $
+ * @version $Revision: 1.32 $, $Date: 2005/09/07 12:20:14 $
  * @module schemeclient
  */
 
@@ -153,11 +153,19 @@ public class SchemeObjectsFactory {
 		schemeElement.setEquipment(eq);
 		
 		Identifier equipmentId = eq.getId();
-		for (SchemePort sp : schemeElement.getSchemePortsRecursively()) {
-			createPort(sp, equipmentId);
+		try {
+			for (SchemePort sp : schemeElement.getSchemePortsRecursively()) {
+				createPort(sp, equipmentId);
+			}
+		} catch (ApplicationException e) {
+			throw new CreateObjectException(e);
 		}
-		for (SchemeCablePort sp : schemeElement.getSchemeCablePortsRecursively()) {
-			createPort(sp, equipmentId);
+		try {
+			for (SchemeCablePort sp : schemeElement.getSchemeCablePortsRecursively()) {
+				createPort(sp, equipmentId);
+			}
+		} catch (ApplicationException e) {
+			throw new CreateObjectException(e);
 		}
 		for (SchemeLink sl : schemeElement.getSchemeLinks()) {
 			createLink(sl);
