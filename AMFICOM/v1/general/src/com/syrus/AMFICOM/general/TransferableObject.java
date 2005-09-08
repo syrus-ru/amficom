@@ -1,5 +1,5 @@
 /*-
- * $Id: TransferableObject.java,v 1.9 2005/08/08 11:27:26 arseniy Exp $
+ * $Id: TransferableObject.java,v 1.10 2005/09/08 07:27:16 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -8,15 +8,17 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.io.Serializable;
+
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:27:26 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.10 $, $Date: 2005/09/08 07:27:16 $
+ * @author $Author: bob $
  * @module general
  */
-public interface TransferableObject {
+public interface TransferableObject extends Serializable {
 
 	String KEY_VALUE_SEPERATOR = ":";
 	String ID 				= "id" + KEY_VALUE_SEPERATOR;
