@@ -8,7 +8,7 @@ import com.syrus.util.Wrapper;
  * Simple stub of AbstractLabelCellRenderer. see
  * {@link AbstractLabelCellRenderer}
  * 
- * @version $Revision: 1.3 $, $Date: 2005/09/08 13:53:11 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/08 14:05:42 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -28,6 +28,7 @@ public class StubLabelCellRenderer extends AbstractLabelCellRenderer {
 		return instance;
 	}
 
+	@Override
 	protected void customRendering(	JTable table,
 					Object objec,
 					Wrapper controller,
