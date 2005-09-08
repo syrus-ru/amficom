@@ -11,7 +11,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/08 10:21:41 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/08 10:24:18 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -135,9 +135,12 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 	}
 
 	public void setKeys(final String[] keys) {
+		final int oldKeysSize = this.keys != null ? this.keys.length : 0;
 		this.keys = keys;
-		this.ascendings = new boolean[this.keys.length];		
-		this.names = new String[keys.length];
+		if (keys.length > oldKeysSize) {
+			this.ascendings = new boolean[this.keys.length];		
+			this.names = new String[keys.length];
+		}
 		for(int i = 0; i < keys.length; i++) {			
 			this.names[i] = this.wrapper.getName(keys[i]);
 		}
