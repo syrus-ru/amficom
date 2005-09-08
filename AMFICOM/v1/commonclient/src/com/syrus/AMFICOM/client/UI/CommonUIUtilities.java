@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/08 14:02:59 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/08 14:27:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -117,9 +117,7 @@ public final class CommonUIUtilities {
 	public static final String convertToHTMLString(final String string) {
 		final StringBuffer buffer = new StringBuffer("<html>");
 		String s = string.replaceAll("<", "&lt;").replaceAll("<", "&lt;");
-		if (s.indexOf('\n') >= 0) {
-			buffer.append(s.replaceAll("\n", "<br>"));			
-		}
+		buffer.append(s.replaceAll("\n", "<br>"));			
 		buffer.append("</html>");
 		return buffer.toString();
 	}
