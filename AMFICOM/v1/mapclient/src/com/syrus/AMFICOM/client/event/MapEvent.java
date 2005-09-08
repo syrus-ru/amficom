@@ -1,5 +1,5 @@
 /**
- * $Id: MapEvent.java,v 1.11 2005/08/25 15:59:02 krupenn Exp $
+ * $Id: MapEvent.java,v 1.12 2005/09/08 15:53:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,7 +17,7 @@ import java.beans.PropertyChangeEvent;
  * 
  * 
  * 
- * @version $Revision: 1.11 $, $Date: 2005/08/25 15:59:02 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/08 15:53:10 $
  * @module mapclient_v2
  * @author $Author: krupenn $
  */
@@ -72,6 +72,8 @@ public class MapEvent extends PropertyChangeEvent {
 	public static final String NEED_REPAINT = "needrepaint";
 	/** Необходимо перерисовать карту, включая картографические объекты. */
 	public static final String NEED_FULL_REPAINT = "needfullrepaint";
+
+	public static final String TOPOLOGY_CHANGED = "topologychanged";
 
 	/** Необходимо перерисовать карту. */
 	public static final String MAP_REPAINTED = "maprepainted";
