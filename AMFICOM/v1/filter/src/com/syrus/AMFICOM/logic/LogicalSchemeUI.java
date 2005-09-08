@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.24 2005/08/29 09:59:27 max Exp $
+ * $Id: LogicalSchemeUI.java,v 1.25 2005/09/08 06:28:32 max Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/08/29 09:59:27 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/08 06:28:32 $
  * @author $Author: max $
  * @module filter
  */
@@ -860,8 +860,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		Collection<Item> selections;
 		if (this.selectedItems != null && !this.selectedItems.isEmpty()) {
 			selections = new ArrayList<Item>(this.selectedItems.size());
-			for (final Iterator it = this.selectedItems.iterator(); it.hasNext();) {
-				final ViewItem element = (ViewItem) it.next();
+			for (ViewItem element : this.selectedItems) {
 				selections.add(element.getSourceItem());
 			}
 
