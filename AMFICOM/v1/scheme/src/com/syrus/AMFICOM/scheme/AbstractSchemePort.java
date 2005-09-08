@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.59 2005/09/06 19:49:50 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.60 2005/09/08 17:06:51 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.59 $, $Date: 2005/09/06 19:49:50 $
+ * @version $Revision: 1.60 $, $Date: 2005/09/08 17:06:51 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -140,6 +140,24 @@ public abstract class AbstractSchemePort
 
 		this.measurementPortId = Identifier.possiblyVoid(measurementPort);
 		this.parentSchemeDeviceId = Identifier.possiblyVoid(parentSchemeDevice);
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	AbstractSchemePort(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
+				creatorId,
+				creatorId,
+				StorableObjectVersion.createInitial());
 	}
 
 	/**

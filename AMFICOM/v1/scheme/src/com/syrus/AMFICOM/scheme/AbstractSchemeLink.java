@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.35 2005/09/07 20:01:59 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.36 2005/09/08 17:06:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/09/07 20:01:59 $
+ * @version $Revision: 1.36 $, $Date: 2005/09/08 17:06:51 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -147,6 +147,19 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 
 		this.sourceAbstractSchemePortId = Identifier.possiblyVoid(sourceAbstractSchemePort);
 		this.targetAbstractSchemePortId = Identifier.possiblyVoid(targetAbstractSchemePort);
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	AbstractSchemeLink(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id, created, creatorId);
 	}
 
 	/**

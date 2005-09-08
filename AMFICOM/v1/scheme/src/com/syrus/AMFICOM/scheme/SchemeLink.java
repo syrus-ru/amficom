@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.69 2005/09/07 20:01:59 bass Exp $
+ * $Id: SchemeLink.java,v 1.70 2005/09/08 17:06:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,7 +73,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/09/07 20:01:59 $
+ * @version $Revision: 1.70 $, $Date: 2005/09/08 17:06:51 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -179,21 +179,7 @@ public final class SchemeLink extends AbstractSchemeLink
 	private SchemeLink(final Identifier id,
 			final Date created,
 			final Identifier creatorId) {
-		super(id,
-				created, 
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				null,
-				null,
-				0,
-				0,
-				null,
-				null,
-				null,
-				null,
-				null);
+		super(id, created, creatorId);
 	}
 
 	/**

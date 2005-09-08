@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.58 2005/09/06 19:49:50 bass Exp $
+ * $Id: SchemePort.java,v 1.59 2005/09/08 17:06:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/09/06 19:49:50 $
+ * @version $Revision: 1.59 $, $Date: 2005/09/08 17:06:51 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
@@ -135,19 +135,7 @@ public final class SchemePort extends AbstractSchemePort
 	private SchemePort(final Identifier id,
 			final Date created,
 			final Identifier creatorId) {
-		super(id,
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				null,
-				null,
-				null,
-				null,
-				null,
-				null,
-				null);
+		super(id, created, creatorId);
 	}
 
 	/**

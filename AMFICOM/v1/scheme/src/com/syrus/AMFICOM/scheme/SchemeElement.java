@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.92 2005/09/07 19:16:04 bass Exp $
+ * $Id: SchemeElement.java,v 1.93 2005/09/08 17:06:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.92 $, $Date: 2005/09/07 19:16:04 $
+ * @version $Revision: 1.93 $, $Date: 2005/09/08 17:06:51 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -203,15 +203,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	private SchemeElement(final Identifier id,
 			final Date created,
 			final Identifier creatorId) {
-		super(id,
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				null,
-				null,
-				null);
+		super(id, created, creatorId);
 	}
 
 	/**

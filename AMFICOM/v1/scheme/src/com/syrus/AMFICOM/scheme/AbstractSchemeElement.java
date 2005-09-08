@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.49 2005/09/06 17:30:26 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.50 2005/09/08 17:06:51 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.49 $, $Date: 2005/09/06 17:30:26 $
+ * @version $Revision: 1.50 $, $Date: 2005/09/08 17:06:51 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -93,6 +93,24 @@ public abstract class AbstractSchemeElement
 		this.name = name;
 		this.description = description;
 		this.parentSchemeId = Identifier.possiblyVoid(parentScheme);
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	AbstractSchemeElement(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
+				creatorId,
+				creatorId,
+				StorableObjectVersion.createInitial());
 	}
 
 	/**

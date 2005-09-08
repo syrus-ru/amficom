@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.78 2005/09/08 16:43:40 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.79 2005/09/08 17:06:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.78 $, $Date: 2005/09/08 16:43:40 $
+ * @version $Revision: 1.79 $, $Date: 2005/09/08 17:06:51 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -160,21 +160,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	private SchemeCableLink(final Identifier id,
 			final Date created,
 			final Identifier creatorId) {
-		super(id,
-				created,
-				created,
-				creatorId,
-				creatorId,
-				StorableObjectVersion.createInitial(),
-				null,
-				null,
-				0,
-				0,
-				null,
-				null,
-				null,
-				null,
-				null);
+		super(id, created, creatorId);
 	}
 
 	/**
