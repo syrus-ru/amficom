@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierLoader.java,v 1.11 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: IdentifierLoader.java,v 1.12 2005/09/08 11:07:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:27:25 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/08 11:07:25 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -39,20 +39,18 @@ public class IdentifierLoader extends SleepButWorkThread {
 
 	@Override
 	public void run() {
-		synchronized (this.idPool) {
-			int numberToLoad = this.idPool.capacity() - this.idPool.getNumber();
-			while (this.running && numberToLoad > 0) {
-				try {
-					final IdlIdentifier[] identifiersT = this.igServer.getGeneratedIdentifierRange(this.entityCode, numberToLoad);
-					for (int i = 0; i < identifiersT.length; i++) {
-						Identifier id = new Identifier(identifiersT[i]);
-						this.idPool.push(id);
-					}
-					numberToLoad -= identifiersT.length;
-				} catch (AMFICOMRemoteException are) {
-					Log.errorMessage(are.message);
-					super.sleepCauseOfFall();
+		int numberToLoad = this.idPool.capacity() - this.idPool.getNumber();
+		while (this.running && numberToLoad > 0) {
+			try {
+				final IdlIdentifier[] identifiersT = this.igServer.getGeneratedIdentifierRange(this.entityCode, numberToLoad);
+				for (int i = 0; i < identifiersT.length; i++) {
+					Identifier id = new Identifier(identifiersT[i]);
+					this.idPool.push(id);
 				}
+				numberToLoad -= identifiersT.length;
+			} catch (AMFICOMRemoteException are) {
+				Log.errorMessage(are.message);
+				super.sleepCauseOfFall();
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.29 2005/09/08 10:52:07 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.30 2005/09/08 11:07:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,7 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/09/08 10:52:07 $
+ * @version $Revision: 1.30 $, $Date: 2005/09/08 11:07:25 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -63,14 +63,16 @@ public class IdentifierPool {
 			}
 		}
 
-		/* Transfer ids when fifo filling minimum than minFillFactor */
-		if (fifo.getNumber() < MIN_FILL_FACTOR * fifo.capacity()) {
-			fillFifo(fifo, entityCode);
-		}
+		synchronized (fifo) {
+			/* Transfer ids when fifo filling minimum than minFillFactor */
+			if (fifo.getNumber() < MIN_FILL_FACTOR * fifo.capacity()) {
+				fillFifo(fifo, entityCode);
+			}
 
-		/* If identifiers available -- return one*/
-		if (fifo.getNumber() >= 1) {
-			return (Identifier) fifo.remove();
+			/* If identifiers available -- return one*/
+			if (fifo.getNumber() >= 1) {
+				return (Identifier) fifo.remove();
+			}
 		}
 
 		/* Else - throw IdentifierGenerationException*/
