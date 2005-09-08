@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.8 2005/09/07 14:26:09 peskovsky Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.9 2005/09/08 13:59:09 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,9 +14,12 @@ import java.awt.Rectangle;
 import java.awt.event.WindowEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 
 import javax.swing.JInternalFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
 import javax.swing.UIDefaults;
 import javax.swing.UIManager;
@@ -32,9 +35,13 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
+import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
+import com.syrus.AMFICOM.client.report.ReportRenderer;
 import com.syrus.AMFICOM.client.reportbuilder.command.template.NewTemplateCommand;
+import com.syrus.AMFICOM.client.reportbuilder.command.template.PrintReportCommand;
+import com.syrus.AMFICOM.client.reportbuilder.command.template.SaveReportCommand;
 import com.syrus.AMFICOM.client.reportbuilder.command.template.TemplateParametersCommand;
 import com.syrus.AMFICOM.client.reportbuilder.command.templatescheme.ReportSendEventCommand;
 import com.syrus.AMFICOM.client.reportbuilder.event.AttachLabelEvent;
@@ -44,6 +51,7 @@ import com.syrus.AMFICOM.client.reportbuilder.event.ReportEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTemplateRenderer;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.util.Log;
 
 public class ReportBuilderMainFrame extends AbstractMainFrame implements PropertyChangeListener {
@@ -58,8 +66,13 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 	 * поскольку рендереры могут менять, а тулбар - неизменен.
 	 */
 	protected TemplateRendererInnerToolbar innerToolbar = null;
+
+	protected enum MAIN_FRAME_MODE {TEMPLATE_SCHEME,REPORT_PREVIEW}
+	protected MAIN_FRAME_MODE mode = MAIN_FRAME_MODE.TEMPLATE_SCHEME;
 	
+	protected JScrollPane rendererScrollPane = null;	
 	protected ReportTemplateRenderer reportTemplateRenderer = null;
+	protected ReportRenderer reportPreviewRenderer = null;
 	
 	public ReportBuilderMainFrame(final ApplicationContext aContext) {
 		super(
@@ -91,14 +104,18 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 				templateSchemeFrame.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
 				templateSchemeFrame.setTitle(LangModelReport.getString(TEMPLATE_SCHEME_FRAME));
 				
-				JScrollPane rendererScrollPane = new JScrollPane();
-				rendererScrollPane.getViewport().add(ReportBuilderMainFrame.this.reportTemplateRenderer);
-				rendererScrollPane.setAutoscrolls(true);
+				ReportBuilderMainFrame.this.rendererScrollPane = new JScrollPane();
+				ReportBuilderMainFrame.this.rendererScrollPane.getViewport().add(ReportBuilderMainFrame.this.reportTemplateRenderer);
+				ReportBuilderMainFrame.this.rendererScrollPane.setAutoscrolls(true);
 
 				templateSchemeFrame.getContentPane().setLayout(new BorderLayout());				
-				templateSchemeFrame.getContentPane().add(rendererScrollPane, BorderLayout.CENTER);
+				templateSchemeFrame.getContentPane().add(
+						ReportBuilderMainFrame.this.rendererScrollPane,
+						BorderLayout.CENTER);
 				
-				templateSchemeFrame.getContentPane().add(ReportBuilderMainFrame.this.innerToolbar, BorderLayout.NORTH);				
+				templateSchemeFrame.getContentPane().add(
+						ReportBuilderMainFrame.this.innerToolbar,
+						BorderLayout.NORTH);				
 
 				ReportBuilderMainFrame.this.desktopPane.add(templateSchemeFrame);
 				return templateSchemeFrame;
@@ -249,13 +266,13 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 		
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_CHANGE_VIEW,
-				new NewTemplateCommand(this.aContext));
+				new ReportSendEventCommand(this.aContext,ReportFlagEvent.CHANGE_VIEW));
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_SAVE_REPORT,
-				new NewTemplateCommand(this.aContext));
+				new SaveReportCommand(this));
 		aModel.setCommand(
 				ReportBuilderApplicationModel.MENU_PRINT_REPORT,
-				new NewTemplateCommand(this.aContext));
+				new PrintReportCommand(this));
 		
 		setDefaultModel(aModel);
 		aModel.fireModelChanged("");
@@ -294,6 +311,9 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW, false);		
 		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE, false);
 		aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, false);
+
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE, false);		
+		aModel.setEnabled(ReportBuilderApplicationModel.MENU_TEMPLATE_PARAMETERS, false);
 		
 		aModel.fireModelChanged("");
 	}
@@ -365,11 +385,45 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 				aModel.setEnabled(ReportBuilderApplicationModel.MENU_DELETE_OBJECT,false);
 				aModel.fireModelChanged("");
 			}
+			else if (eventType.equals(ReportFlagEvent.CHANGE_VIEW)) {
+				if (this.mode.equals(MAIN_FRAME_MODE.TEMPLATE_SCHEME)) {
+					ReportTemplate reportTemplate = this.reportTemplateRenderer.getTemplate();
+					this.reportPreviewRenderer = new ReportRenderer();
+					this.reportPreviewRenderer.setReportTemplate(reportTemplate);
+					//TODO Подумать откуда перекидывать сюда данные
+					Map<String, Object> data = new HashMap<String, Object>();
+					try {
+						this.reportPreviewRenderer.setData(data);
+					} catch (CreateReportException e) {
+						JOptionPane.showMessageDialog(
+								Environment.getActiveWindow(),
+								e.getMessage(),
+								"Ошибка",
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					
+					this.rendererScrollPane.getViewport().remove(this.reportTemplateRenderer);
+					this.rendererScrollPane.getViewport().add(this.reportPreviewRenderer);					
+					
+					this.mode = MAIN_FRAME_MODE.REPORT_PREVIEW;
+					
+					aModel.setAllItemsEnabled(false);
+					aModel.setEnabled(ReportBuilderApplicationModel.MENU_CHANGE_VIEW,true);					
+					aModel.setEnabled(ReportBuilderApplicationModel.MENU_SAVE_REPORT,true);
+					aModel.setEnabled(ReportBuilderApplicationModel.MENU_PRINT_REPORT,true);					
+				}
+				else {
+					this.rendererScrollPane.getViewport().remove(this.reportPreviewRenderer);
+					this.rendererScrollPane.getViewport().add(this.reportTemplateRenderer);					
+					
+					this.mode = MAIN_FRAME_MODE.TEMPLATE_SCHEME;
+					this.setApplicationModelForTemplateSchemeStandart(aModel);
+				}
+				aModel.fireModelChanged("");
+			}
 		}
 		else if (pce instanceof ComponentSelectionChangeEvent) {
-//			if (!RendererMode.getMode().equals(RendererMode.MODE.NO_SPECIAL))
-//				return;
-			
 			RenderingComponent component =
 				((ComponentSelectionChangeEvent)pce).getRenderingComponent();
 			//Делаем кнопку удаления объектов активной, если выбран объект
@@ -381,9 +435,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 			aModel.fireModelChanged("");
 		}
 		else if (pce instanceof NewReportTemplateEvent) {
-			aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW, true);		
-			aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TREE, true);
-			aModel.setEnabled(ReportBuilderApplicationModel.MENU_WINDOW_TEMPLATE_SCHEME, true);
+			this.setApplicationModelForTemplateSchemeStandart(aModel);			
 			aModel.fireModelChanged("");
 		}
 	}
@@ -400,5 +452,9 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 
 	public ReportTemplateRenderer getTemplateRenderer() {
 		return this.reportTemplateRenderer;
+	}
+
+	public ReportRenderer getReportRenderer() {
+		return this.reportPreviewRenderer;
 	}
 }

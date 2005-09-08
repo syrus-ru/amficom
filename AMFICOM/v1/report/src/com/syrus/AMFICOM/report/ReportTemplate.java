@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.5 2005/09/07 08:43:27 peskovsky Exp $
+ * $Id: ReportTemplate.java,v 1.6 2005/09/08 13:59:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
  * отчёт </p>
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.5 $, $Date: 2005/09/07 08:43:27 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/08 13:59:10 $
  * @module generalclient_v1
  */
 public class ReportTemplate implements Serializable
@@ -81,6 +81,10 @@ public class ReportTemplate implements Serializable
 	 */
 	private String destinationModule = DestinationModules.UNKNOWN_MODULE;
 
+	//Приходится хранить элементы в разных списках, несмотря на то, что они
+	//все наследуют StorableElement, поскольку при загрузке (импорте) важно,
+	//чтобы сначала были подгружены элементы хранения данных, а уже потом -
+	//надписи к ним привязанные.
 	//Это хранимое поле	
 	/**
 	 * Список всех элементов шаблона
@@ -400,5 +404,14 @@ public class ReportTemplate implements Serializable
 
 	public void setOrientation(ORIENTATION orientation) {
 		this.orientation = orientation;
+	}
+	
+	public void addElement(StorableElement element) {
+		if (element instanceof DataStorableElement)
+			this.dataStorableElements.add((DataStorableElement)element);
+		else if (element instanceof ImageStorableElement)
+			this.imageStorableElements.add((ImageStorableElement)element);
+		else if (element instanceof AttachedTextStorableElement)
+			this.textStorableElements.add((AttachedTextStorableElement)element);
 	}
 }

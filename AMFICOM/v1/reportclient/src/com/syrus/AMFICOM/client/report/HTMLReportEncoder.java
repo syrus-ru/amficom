@@ -1,5 +1,5 @@
 /*
- * $Id: HTMLReportEncoder.java,v 1.1 2005/09/07 14:26:10 peskovsky Exp $
+ * $Id: HTMLReportEncoder.java,v 1.2 2005/09/08 13:59:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,91 +9,79 @@ package com.syrus.AMFICOM.client.report;
 
 import java.awt.Dimension;
 import java.awt.Font;
-import java.awt.Graphics2D;
-import java.awt.Point;
-import java.awt.font.FontRenderContext;
-import java.awt.image.BufferedImage;
 import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
-import java.util.ListIterator;
-import java.util.Set;
-import java.util.TreeSet;
 
 import javax.swing.JComponent;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
-import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JTextPane;
 
 import com.sun.image.codec.jpeg.ImageFormatException;
 import com.sun.image.codec.jpeg.JPEGCodec;
 import com.sun.image.codec.jpeg.JPEGImageEncoder;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.report.AttachedTextStorableElement;
-import com.syrus.AMFICOM.report.DataStorableElement;
-import com.syrus.AMFICOM.report.ImageStorableElement;
-import com.syrus.AMFICOM.report.StorableElement;
-import com.syrus.AMFICOM.report.TextAttachingType;
+import com.syrus.AMFICOM.report.ReportTemplate;
 
 public class HTMLReportEncoder {
+	private static final String FILE_SEPARATOR = System.getProperty("file.separator");
 	private static final String FILES_DIRECTORY = ".files";
 	private List<RenderingComponent> components = null;
-	private String reportTitle = null;
+	private ReportTemplate reportTemplate = null;
 	/**
 	 * Используется для присвоения имён файлам с изображениями
 	 */
 	private int imagesSaved = 0;
 	
-	private String filesDirName = null;
+	private String absoluteFilesDirName = null;
+	private String relativeFilesDirName = null;	
 	
-	public HTMLReportEncoder(List<RenderingComponent> components, String reportTitle) {
+	public HTMLReportEncoder(List<RenderingComponent> components, ReportTemplate template) {
 		this.components = components;
-		this.reportTitle = reportTitle;
+		this.reportTemplate = template;
 	}
-	
-	public void encodeToHTML() {
+
+	public void encodeToHTML() throws IOException {
 		String fileName = this.getHTMLFileName();
 		if (fileName == null)
 			return;
 		
-		try {
-			File htmlFile = new File(fileName);
-			String absoluteHTMLFileName = htmlFile.getAbsolutePath();
-			String htmlNameWOExtension =
-				absoluteHTMLFileName.substring(0,absoluteHTMLFileName.lastIndexOf('.'));
-			this.filesDirName = htmlNameWOExtension + FILES_DIRECTORY;
-			File imageDir = new File(this.filesDirName);
-			//Создали каталог для хранения изображений из этого отчёта 
-			if(!imageDir.exists())
-				imageDir.mkdir();
-			
-			FileOutputStream out = new FileOutputStream(htmlFile);
-			
-			List<Integer> xs = new ArrayList<Integer>();
-			List<Integer> ys = new ArrayList<Integer>();
-			this.getAxisValuesMatrices(xs,ys);
-			int[][] componentsMatrix = this.createComponentsMatrix(xs,ys);
-			
-			int mainTableWidth = xs.get(xs.size() - 1);
-			this.encodeHeader(out,mainTableWidth);
-			this.encodeAllComponents(componentsMatrix,xs,ys,out);
-			this.encodeFooter(out);			
-			out.close();
-		} catch (FileNotFoundException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
-		}
+		encodeToHTML(fileName);
+	}
+	
+	public void encodeToHTML(String fileName) throws IOException {
+		File htmlFile = new File(fileName);
+		//Абсолютное имя файла HTML 
+		String absoluteHTMLFileName = htmlFile.getAbsolutePath();
+		//Абсолютное имя файла HTML, только без расширения файла		
+		String htmlNameWOExtension =
+			absoluteHTMLFileName.substring(0,absoluteHTMLFileName.lastIndexOf('.'));
+		//Абсолютное имя каталога .files для данного HTML файла		
+		this.absoluteFilesDirName = htmlNameWOExtension + FILES_DIRECTORY;
+		File filesDir = new File(this.absoluteFilesDirName);
+		//Создали каталог для хранения изображений из этого отчёта 
+		if(!filesDir.exists())
+			filesDir.mkdir();
+		
+		this.relativeFilesDirName = filesDir.getName();
+		
+		FileOutputStream out = new FileOutputStream(htmlFile);
+		
+		List<Integer> xs = new ArrayList<Integer>();
+		List<Integer> ys = new ArrayList<Integer>();
+		this.getAxisValuesMatrices(xs,ys);
+		int[][] componentsMatrix = this.createComponentsMatrix(xs,ys);
+		
+		int mainTableWidth = xs.get(xs.size() - 1);
+		this.encodeHeader(out,mainTableWidth);
+		this.encodeAllComponents(componentsMatrix,xs,ys,out);
+		this.encodeFooter(out);			
+		out.close();
 	}
 	/**
 	 * Возвращает сортированные списки xs и ys начал и концов
@@ -108,6 +96,9 @@ public class HTMLReportEncoder {
 		//знаем заранее какие надписи привязаны, а какие нет (мы отдельно
 		//учитываем только координаты непривязанных надписей) - не знаем сколько
 		//выделять ячеек в массиве.
+		xs.add(new Integer(0));
+		ys.add(new Integer(0));
+		
 		for (RenderingComponent component : this.components) {
 			xs.add(new Integer(component.getX()));
 			ys.add(new Integer(component.getY()));
@@ -147,13 +138,19 @@ public class HTMLReportEncoder {
 					"<td"
 					+ " width=\"" + cellWidth + "\""
 					+ " height=\""+ cellHeight + "\"";
-				if (cellWidth > 1)
-					buffer += "colspan=\"" + cellWidth + "\"";
-				if (cellHeight > 1)
-					buffer += "rowspan=\"" + cellHeight + "\"";
+				if (size.width > 1)
+					buffer += "colspan=\"" + size.width + "\"";
+				if (size.height > 1)
+					buffer += "rowspan=\"" + size.height + "\"";
 				
 				//Пишем компонент
-				if (componentsMatrix[row][col] > 0) {
+				if (componentsMatrix[row][col] < 0) {
+					String emptyCellEndOfTDTag = ">";
+					
+					buffer += emptyCellEndOfTDTag;
+					out.write(buffer.getBytes());					
+				}
+				else {
 					//В ячейке есть компонент
 					RenderingComponent component = this.components.get(componentsMatrix[row][col]);
 
@@ -189,7 +186,7 @@ public class HTMLReportEncoder {
 					else if (component instanceof TableDataRenderingComponent)
 						this.encodeTableComponent((TableDataRenderingComponent)component,out);
 					else
-						throw new AssertionError("HTMLReportEncoder - encodeAllComponents -Unknown component!!");
+						throw new AssertionError("HTMLReportEncoder - encodeAllComponents - Unknown component!!");
 				}
 				out.write("</td>\n".getBytes());
 				
@@ -204,7 +201,7 @@ public class HTMLReportEncoder {
 	
 	private String createImageFileForComponent(ImageRenderingComponent component) throws ImageFormatException, IOException {
 		String fileShortName = "image" + (this.imagesSaved++) + ".jpg";
-		File imageFile = new File(this.filesDirName + "/" + fileShortName);
+		File imageFile = new File(this.absoluteFilesDirName + FILE_SEPARATOR + fileShortName);
 		
 		FileOutputStream jpgOs = new FileOutputStream(imageFile);
 		JPEGImageEncoder enc = JPEGCodec.createJPEGEncoder(jpgOs);
@@ -292,12 +289,16 @@ public class HTMLReportEncoder {
 			"<html>\n\n"
 			
 			+ "<head>\n"
+			
 			+ "<meta http-equiv=\"Content-Type\" content=\"text/html; charset=windows-1251\">\n"
 			+ "<meta name=\"GENERATOR\" content=\"AMFICOM HTML generator\">\n"
 			+ "<meta name=\"ProgId\" content=\"AMFICOM report\">\n"
+			
 			+ "<title>"
-			+ LangModelReport.getString("report.reportForTemplate") + " " + this.reportTitle
-			+ "</title>\n"
+			+ LangModelReport.getString("report.reportForTemplate") + " \"" 
+			+ this.reportTemplate.getName()
+			+ "\"</title>\n"
+			
 			+ "</head>\n\n"
 			
 			+ "<body>\n\n"
@@ -323,7 +324,7 @@ public class HTMLReportEncoder {
 		FileOutputStream out) throws IOException {
 		//TODO Имя подставить правильное
 		String buffer = "<img border=\"0\" "
-			+ "src=\"" + imageFileName + "\" "
+			+ "src=\"" + this.relativeFilesDirName + FILE_SEPARATOR + imageFileName + "\" "
 			+ "width=\"" + Integer.toString(component.getWidth()) + "\" "
 			+ "height=\"" + Integer.toString(component.getHeight())
 			+ "\">";
@@ -380,22 +381,31 @@ public class HTMLReportEncoder {
 				"HTML file formats");
 		fileChooser.addChoosableFileFilter(bmpFilter);
 
-		fileChooser.setDialogTitle("Выберите файл для чтения");
+		fileChooser.setDialogTitle("Укажите файл для записи");
 		fileChooser.setMultiSelectionEnabled(false);
 
-		int option = fileChooser.showOpenDialog(Environment.getActiveWindow());
+		int option = fileChooser.showSaveDialog(Environment.getActiveWindow());
 		if(option == JFileChooser.APPROVE_OPTION) {
 			fileName = fileChooser.getSelectedFile().getPath();
-			if(!	(	fileName.endsWith(".htm")
-					 || fileName.endsWith(".html")))
-				return null;
 		}
 
 		if(fileName == null)
 			return null;
 
-		if(!(new File(fileName)).exists())
-			return null;
+		if (!	(	fileName.endsWith(".htm")
+				||	fileName.endsWith(".html")))
+			fileName += ".html";
+		
+		if(new File(fileName).exists()) {
+			int answer = JOptionPane.showConfirmDialog(
+					Environment.getActiveWindow(),
+					"Указанный файл существует. Переписать?",
+					"Ошибка",
+					JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.ERROR_MESSAGE);
+			if (answer == JOptionPane.CANCEL_OPTION)
+				return null;
+		}
 
 		return fileName;
 	}
@@ -428,7 +438,7 @@ public class HTMLReportEncoder {
 				int xValue = (xs.get(column).intValue() + xs.get(column + 1)) / 2;
 				RenderingComponent componentAtPoint = getComponentAtPoint(xValue, yValue);
 				result[row][column] = (componentAtPoint != null) 
-					? this.components.indexOf(componentAtPoint) : 0;
+					? this.components.indexOf(componentAtPoint) : -1;
 			}
 		}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: TemplateParametersCommand.java,v 1.1 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: TemplateParametersCommand.java,v 1.2 2005/09/08 13:59:09 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,21 +7,12 @@
  */
 package com.syrus.AMFICOM.client.reportbuilder.command.template;
 
-import javax.swing.JOptionPane;
-
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderApplicationModel;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderMainFrame;
-import com.syrus.AMFICOM.client.reportbuilder.ReportTemplateFactory;
 import com.syrus.AMFICOM.client.reportbuilder.TemplateParametersDialog;
-import com.syrus.AMFICOM.client.reportbuilder.event.NewReportTemplateEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.report.ReportTemplate;
-import com.syrus.util.Log;
 
 public class TemplateParametersCommand extends AbstractCommand {
 	ApplicationContext aContext;

@@ -1,5 +1,5 @@
 /*
- * $Id: ATComponentPropertyChangeListener.java,v 1.3 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: ATComponentPropertyChangeListener.java,v 1.4 2005/09/08 13:59:09 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,6 +84,7 @@ public class ATComponentPropertyChangeListener implements PropertyChangeListener
 				
 				//Выставляем размер хранимому элементу
 				StorableElement element = this.textComponent.getElement();
+				element.setSize(textSize.width,textSize.height);
 				element.setModified(System.currentTimeMillis());
 			}
 		}

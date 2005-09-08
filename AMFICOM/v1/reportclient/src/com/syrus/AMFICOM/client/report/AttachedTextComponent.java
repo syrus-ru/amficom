@@ -1,5 +1,5 @@
 /*
- * $Id: AttachedTextComponent.java,v 1.6 2005/09/07 08:43:27 peskovsky Exp $
+ * $Id: AttachedTextComponent.java,v 1.7 2005/09/08 13:59:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,18 +52,8 @@ public class AttachedTextComponent extends JTextPane implements RenderingCompone
 	public AttachedTextComponent(AttachedTextStorableElement atre) {
 		this.textRenderingElement = atre;
 		//Выставляется шрифт по умолчанию
-		this.setFont(DEFAULT_FONT);
+		this.setFont(atre.getFont());
 		this.getCaret().setBlinkRate(500);
-	}
-
-	@Override
-	public void setFont(Font newFont){
-		super.setFont(newFont);
-		if (this.textRenderingElement == null)
-			return;
-		
-		this.textRenderingElement.setFont(newFont);
-		this.textRenderingElement.setModified(System.currentTimeMillis());		
 	}
 	
 	public StorableElement getElement() {

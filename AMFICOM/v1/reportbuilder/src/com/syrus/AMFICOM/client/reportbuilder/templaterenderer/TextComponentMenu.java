@@ -1,5 +1,5 @@
 /*
- * $Id: TextComponentMenu.java,v 1.4 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: TextComponentMenu.java,v 1.5 2005/09/08 13:59:09 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,6 +51,12 @@ public class TextComponentMenu extends JPopupMenu {
 					return;
 
 				component.setFont(FontChooserDialog.selectedFont);
+				element.setFont(FontChooserDialog.selectedFont);
+	
+				component.setSize(component.getTextSize());
+				element.setSize(component.getWidth(),component.getHeight());
+				
+				element.setModified(System.currentTimeMillis());				
 			}
 		});
 

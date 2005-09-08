@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.5 2005/09/07 14:26:09 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.6 2005/09/08 13:59:09 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -292,6 +292,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		Dimension defaultSize = ImageRenderingComponent.DEFAULT_IMAGE_SIZE;
 		element.setSize(new IntDimension(defaultSize.width,defaultSize.height));
 		element.setImage(elementImage);
+		this.template.addElement(element);
 		 
 		ImageRenderingComponent component = new ImageRenderingComponent(element,element.getImage());
 		this.add(component);
@@ -308,6 +309,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 
 	public AttachedTextComponent createTextRenderingComponent(Point point){
 		AttachedTextStorableElement element = new AttachedTextStorableElement();
+		element.setFont(AttachedTextComponent.DEFAULT_FONT);
 		AttachedTextComponent component = new AttachedTextComponent(element);
 		this.add(component);
 		component.setLocation(point.x,point.y);
@@ -327,6 +329,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		element.setSize(
 			AttachedTextComponent.MINIMUM_COMPONENT_SIZE.width,
 			AttachedTextComponent.MINIMUM_COMPONENT_SIZE.height);
+		this.template.addElement(element);		
 		
 		this.applicationContext.getDispatcher().addPropertyChangeListener(
 				ReportEvent.TYPE,
@@ -368,6 +371,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		
 		storableElement.setLocation(point.x,point.y);
 		storableElement.setSize(defaultSize.width,defaultSize.height);
+		this.template.addElement(storableElement);
 
 		return component;
 	}

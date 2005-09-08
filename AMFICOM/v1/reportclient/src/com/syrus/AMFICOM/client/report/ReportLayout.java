@@ -1,5 +1,5 @@
 /*
- * $Id: ReportLayout.java,v 1.3 2005/09/07 14:26:10 peskovsky Exp $
+ * $Id: ReportLayout.java,v 1.4 2005/09/08 13:59:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Set;
 
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.DataStorableElement;
@@ -27,7 +26,7 @@ import com.syrus.AMFICOM.report.TextAttachingType;
  * элементами отчёта так, чтобы расстояния между компонентами были
  * равны расстоянию между компонентами на схеме шаблона отчёта.
  * @author $Author: peskovsky $
- * @version $Revision: 1.3 $, $Date: 2005/09/07 14:26:10 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/08 13:59:10 $
  * @module reportclient_v1
  */
 public class ReportLayout {
@@ -59,6 +58,7 @@ public class ReportLayout {
 				try {
 					int newY = this.checkToTopForElements(component,xs,ys);
 					component.setY(newY);
+					this.componentsSetUp.put(component,Boolean.TRUE);
 				} catch (NonImplementedElementFoundException e) {
 				}
 			}
@@ -70,7 +70,7 @@ public class ReportLayout {
 	 * в том случае, когда элементы, находящиеся выше на схеме, ещё не
 	 * реализованы.
 	 * @author $Author: peskovsky $
-	 * @version $Revision: 1.3 $, $Date: 2005/09/07 14:26:10 $
+	 * @version $Revision: 1.4 $, $Date: 2005/09/08 13:59:10 $
 	 * @module reportclient_v1
 	 */
 	private class NonImplementedElementFoundException extends Exception
@@ -147,7 +147,8 @@ public class ReportLayout {
 				 */
 				int componentFoundBottomY = 0;
 
-				if (componentFound instanceof DataRenderingComponent)
+				if (	(componentFound instanceof DataRenderingComponent)
+					&& !(componentFound instanceof ImageRenderingComponent))
 				{
 					Rectangle compBounds = this.getDataComponentsClasterBounds(
 							(DataRenderingComponent) componentFound);
@@ -225,10 +226,9 @@ public class ReportLayout {
 				xs.add(new Integer(element.getX() + element.getWidth()));
 				ys.add(new Integer(element.getY() + element.getHeight()));
 			}
-			
-			Collections.sort(xs);
-			Collections.sort(ys);			
 		}
+		Collections.sort(xs);
+		Collections.sort(ys);			
 	}
 
 	/**

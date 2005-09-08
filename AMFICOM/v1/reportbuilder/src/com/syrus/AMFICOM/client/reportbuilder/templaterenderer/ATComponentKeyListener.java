@@ -1,5 +1,5 @@
 /*
- * $Id: ATComponentKeyListener.java,v 1.2 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: ATComponentKeyListener.java,v 1.3 2005/09/08 13:59:09 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -58,6 +58,7 @@ public class ATComponentKeyListener implements KeyListener{
 			component.setSize(
 					textSize.width + additionalSize.width,
 					textSize.height + additionalSize.height);
+			element.setSize(textSize.width,textSize.height);
 			//Проверяем, чтоб он был не меньше прдельного
 			component.checkComponentWidth();
 			//Выставляем размер хранимому элементу
