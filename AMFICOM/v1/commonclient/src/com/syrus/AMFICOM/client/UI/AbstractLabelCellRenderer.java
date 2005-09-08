@@ -19,8 +19,8 @@ import com.syrus.util.Wrapper;
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.4 $, $Date: 2005/09/07 02:37:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/09/08 14:05:19 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public abstract class AbstractLabelCellRenderer extends JLabel implements TableCellRenderer {
@@ -77,8 +77,15 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 				if (cellRenderer != null) {
 					return cellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
 				}
-			}
+			}			
+			
 			this.setText((value == null) ? "" : value.toString());
+			
+			final int heightWanted = (int) this.getPreferredSize().getHeight();
+			if (heightWanted > table.getRowHeight(rowIndex)) {
+				table.setRowHeight(rowIndex, heightWanted);
+			}			
+			
 		}
 
 		Object obj = null;
