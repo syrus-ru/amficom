@@ -1,5 +1,5 @@
 /*
-* $Id: IntDimension.java,v 1.1 2005/08/12 14:21:50 arseniy Exp $
+* $Id: IntDimension.java,v 1.2 2005/09/08 09:07:29 max Exp $
 *
 * Copyright © 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,17 +8,19 @@
 
 package com.syrus.AMFICOM.resource;
 
+import java.io.Serializable;
+
 
 /**
  * Пара целых чисел, соответствующих размерности чего-либо в двухмерном
  * пространстве (ширина и высота)
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.1 $, $Date: 2005/08/12 14:21:50 $
+ * @author $Author: max $
+ * @version $Revision: 1.2 $, $Date: 2005/09/08 09:07:29 $
  * @module resource
  */
 
-public class IntDimension implements java.io.Serializable {
+public class IntDimension implements Serializable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>

@@ -1,5 +1,5 @@
 /*-
- * $Id: DoublePoint.java,v 1.2 2005/08/24 15:00:30 bass Exp $
+ * $Id: DoublePoint.java,v 1.3 2005/09/08 09:04:25 max Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,18 +8,22 @@
 
 package com.syrus.AMFICOM.resource;
 
+import java.io.Serializable;
+
 /**
  * Пара вещественных чисел, соответствующих географическим координатам.
  * Класс необходим для работы с географическими объектами, их отображения,
  * конвертации координат.
  *
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/08/24 15:00:30 $
+ * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/09/08 09:04:25 $
  * @module resource
  */
-public class DoublePoint implements Cloneable {
+public class DoublePoint implements Cloneable, Serializable {
 
-        /**
+   private static final long	serialVersionUID	= 6292323585767436128L;
+
+		/**
          * Координата, соответствующая долготе (longitude)
          */
 	private double x;

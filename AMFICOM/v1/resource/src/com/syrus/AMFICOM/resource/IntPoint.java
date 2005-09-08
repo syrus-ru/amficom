@@ -1,5 +1,5 @@
 /*-
- * $Id: IntPoint.java,v 1.2 2005/08/24 15:00:30 bass Exp $
+ * $Id: IntPoint.java,v 1.3 2005/09/08 09:07:29 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,17 +8,21 @@
 
 package com.syrus.AMFICOM.resource;
 
+import java.io.Serializable;
+
 import com.syrus.util.HashCodeGenerator;
 
 /**
  * \u041f\u0430\u0440\u0430 \u0446\u0435\u043b\u044b\u0445 \u0447\u0438\u0441\u0435\u043b, \u0441\u043e\u043e\u0442\u0432\u0435\u0442\u0441\u0442\u0432\u0443\u044e\u0449\u0438\u0445, \u043d\u0430\u043f\u0440\u0438\u043c\u0435\u0440, \u043a\u043e\u043e\u0440\u0434\u0438\u043d\u0430\u0442\u0430\u043c \u043e\u0431\u044a\u0435\u043a\u0442\u0430 \u0432
  * \u0446\u0435\u043b\u043e\u0447\u0438\u0441\u043b\u0435\u043d\u043d\u043e\u0439 \u0434\u0432\u0443\u043c\u0435\u0440\u043d\u043e\u0439 \u043f\u043b\u043e\u0441\u043a\u043e\u0441\u0442\u0438.
  *
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/08/24 15:00:30 $
+ * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/09/08 09:07:29 $
  * @module resource
  */
-public class IntPoint implements Cloneable {
+public class IntPoint implements Cloneable, Serializable {
+
+	private static final long	serialVersionUID	= -7524861510543511881L;
 
 	public int x;
 
