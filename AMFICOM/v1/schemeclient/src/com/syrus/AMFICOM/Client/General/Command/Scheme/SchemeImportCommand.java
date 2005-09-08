@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.5 2005/09/07 18:33:01 bass Exp $
+ * $Id: SchemeImportCommand.java,v 1.6 2005/09/08 18:22:41 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -184,7 +184,7 @@ public class SchemeImportCommand extends AbstractCommand {
 		for (SchemeProtoElement muff : muffs) {
 			Set<SchemeCablePort> cablePorts = muff.getSchemeCablePortsRecursively();
 			if (cablePorts.size() == 2) {
-				straightMuffs.put(muff.getSchemePortsRecursively().size() / 2, muff);
+				straightMuffs.put(Integer.valueOf(muff.getSchemePortsRecursively().size() / 2), muff);
 			}
 		}
 		
@@ -212,10 +212,10 @@ public class SchemeImportCommand extends AbstractCommand {
 						//  search for muff with corresponding number of ports, if nothing found search with larger number, 
 						//  if not again - get any
 						SchemeProtoElement suitableMuff = null;
-						suitableMuff = straightMuffs.get(maxFibers);
+						suitableMuff = straightMuffs.get(Integer.valueOf(maxFibers));
 						if (suitableMuff == null) {
 							for (Integer i : straightMuffs.keySet()) {
-								if (i > maxFibers) {
+								if (i.intValue() > maxFibers) {
 									suitableMuff = straightMuffs.get(i);
 									break;
 								}

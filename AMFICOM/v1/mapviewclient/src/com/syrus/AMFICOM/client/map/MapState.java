@@ -1,5 +1,5 @@
 /**
- * $Id: MapState.java,v 1.12 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: MapState.java,v 1.13 2005/09/08 18:22:41 bass Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -22,8 +22,8 @@ import com.syrus.util.Log;
  * (mouseMode) - включенный режим (operationMode) - действие над элементами в
  * нулевом режиме (actionMode) -режим отображени€ линий (showMode)
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/08/26 15:39:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.13 $, $Date: 2005/09/08 18:22:41 $
  * @module mapviewclient
  */
 public final class MapState {
@@ -104,34 +104,34 @@ public final class MapState {
 	static Map<Integer, String> showModeNames = new HashMap<Integer, String>();
 
 	static {
-		actionModeNames.put(NULL_ACTION_MODE, "NULL_ACTION_MODE");
-		actionModeNames.put(ALT_LINK_ACTION_MODE, "ALT_LINK_ACTION_MODE");
-		actionModeNames.put(MOVE_ACTION_MODE, "MOVE_ACTION_MODE");
-		actionModeNames.put(DRAW_ACTION_MODE, "DRAW_ACTION_MODE");
-		actionModeNames.put(SELECT_ACTION_MODE, "SELECT_ACTION_MODE");
-		actionModeNames.put(SELECT_MARKER_ACTION_MODE, "SELECT_MARKER_ACTION_MODE");
-		actionModeNames.put(DRAW_LINES_ACTION_MODE, "DRAW_LINES_ACTION_MODE");
+		actionModeNames.put(Integer.valueOf(NULL_ACTION_MODE), "NULL_ACTION_MODE");
+		actionModeNames.put(Integer.valueOf(ALT_LINK_ACTION_MODE), "ALT_LINK_ACTION_MODE");
+		actionModeNames.put(Integer.valueOf(MOVE_ACTION_MODE), "MOVE_ACTION_MODE");
+		actionModeNames.put(Integer.valueOf(DRAW_ACTION_MODE), "DRAW_ACTION_MODE");
+		actionModeNames.put(Integer.valueOf(SELECT_ACTION_MODE), "SELECT_ACTION_MODE");
+		actionModeNames.put(Integer.valueOf(SELECT_MARKER_ACTION_MODE), "SELECT_MARKER_ACTION_MODE");
+		actionModeNames.put(Integer.valueOf(DRAW_LINES_ACTION_MODE), "DRAW_LINES_ACTION_MODE");
 
-		operationModeNames.put(NO_OPERATION, "NO_OPERATION");
-		operationModeNames.put(ZOOM_TO_POINT, "ZOOM_TO_POINT");
-		operationModeNames.put(ZOOM_TO_RECT, "ZOOM_TO_RECT");
-		operationModeNames.put(MOVE_TO_CENTER, "MOVE_TO_CENTER");
-		operationModeNames.put(MOVE_HAND, "MOVE_HAND");
-		operationModeNames.put(NODELINK_SIZE_EDIT, "NODELINK_SIZE_EDIT");
-		operationModeNames.put(MEASURE_DISTANCE, "MEASURE_DISTANCE");
-		operationModeNames.put(MOVE_FIXDIST, "MOVE_FIXDIST");
-		operationModeNames.put(NAVIGATE, "NAVIGATE");
+		operationModeNames.put(Integer.valueOf(NO_OPERATION), "NO_OPERATION");
+		operationModeNames.put(Integer.valueOf(ZOOM_TO_POINT), "ZOOM_TO_POINT");
+		operationModeNames.put(Integer.valueOf(ZOOM_TO_RECT), "ZOOM_TO_RECT");
+		operationModeNames.put(Integer.valueOf(MOVE_TO_CENTER), "MOVE_TO_CENTER");
+		operationModeNames.put(Integer.valueOf(MOVE_HAND), "MOVE_HAND");
+		operationModeNames.put(Integer.valueOf(NODELINK_SIZE_EDIT), "NODELINK_SIZE_EDIT");
+		operationModeNames.put(Integer.valueOf(MEASURE_DISTANCE), "MEASURE_DISTANCE");
+		operationModeNames.put(Integer.valueOf(MOVE_FIXDIST), "MOVE_FIXDIST");
+		operationModeNames.put(Integer.valueOf(NAVIGATE), "NAVIGATE");
 
-		mouseModeNames.put(MOUSE_NONE, "MOUSE_NONE");
-		mouseModeNames.put(MOUSE_PRESSED, "MOUSE_PRESSED");
-		mouseModeNames.put(MOUSE_RELEASED, "MOUSE_RELEASED");
-		mouseModeNames.put(MOUSE_MOVED, "MOUSE_MOVED");
-		mouseModeNames.put(MOUSE_DRAGGED, "MOUSE_DRAGGED");
+		mouseModeNames.put(Integer.valueOf(MOUSE_NONE), "MOUSE_NONE");
+		mouseModeNames.put(Integer.valueOf(MOUSE_PRESSED), "MOUSE_PRESSED");
+		mouseModeNames.put(Integer.valueOf(MOUSE_RELEASED), "MOUSE_RELEASED");
+		mouseModeNames.put(Integer.valueOf(MOUSE_MOVED), "MOUSE_MOVED");
+		mouseModeNames.put(Integer.valueOf(MOUSE_DRAGGED), "MOUSE_DRAGGED");
 
-		showModeNames.put(SHOW_NODE_LINK, "SHOW_NODE_LINK");
-		showModeNames.put(SHOW_PHYSICAL_LINK, "SHOW_PHYSICAL_LINK");
-		showModeNames.put(SHOW_CABLE_PATH, "SHOW_CABLE_PATH");
-		showModeNames.put(SHOW_MEASUREMENT_PATH, "SHOW_MEASUREMENT_PATH");
+		showModeNames.put(Integer.valueOf(SHOW_NODE_LINK), "SHOW_NODE_LINK");
+		showModeNames.put(Integer.valueOf(SHOW_PHYSICAL_LINK), "SHOW_PHYSICAL_LINK");
+		showModeNames.put(Integer.valueOf(SHOW_CABLE_PATH), "SHOW_CABLE_PATH");
+		showModeNames.put(Integer.valueOf(SHOW_MEASUREMENT_PATH), "SHOW_MEASUREMENT_PATH");
 	}
 
 	/**
@@ -211,19 +211,19 @@ public final class MapState {
 	}
 
 	public String actionModeToString() {
-		return actionModeNames.get(this.actionMode);
+		return actionModeNames.get(Integer.valueOf(this.actionMode));
 	}
 
 	public String operationModeToString() {
-		return operationModeNames.get(this.operationMode);
+		return operationModeNames.get(Integer.valueOf(this.operationMode));
 	}
 
 	public String mouseModeToString() {
-		return mouseModeNames.get(this.mouseMode);
+		return mouseModeNames.get(Integer.valueOf(this.mouseMode));
 	}
 
 	public String showModeToString() {
-		return showModeNames.get(this.showMode);
+		return showModeNames.get(Integer.valueOf(this.showMode));
 	}
 
 	@Override

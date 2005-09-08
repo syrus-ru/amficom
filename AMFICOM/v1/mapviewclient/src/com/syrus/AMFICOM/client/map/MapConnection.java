@@ -1,5 +1,5 @@
 /**
- * $Id: MapConnection.java,v 1.17 2005/08/29 12:27:24 krupenn Exp $
+ * $Id: MapConnection.java,v 1.18 2005/09/08 18:22:41 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,8 +16,8 @@ import java.util.logging.Level;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/29 12:27:24 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/09/08 18:22:41 $
+ * @author $Author: bass $
  * @module mapviewclient
  */
 public abstract class MapConnection {
@@ -26,26 +26,26 @@ public abstract class MapConnection {
 	
 	private static Map<String,Boolean> LAYER_SEARCHABILITIES = new HashMap<String,Boolean>();
 	static{
-		LAYER_SEARCHABILITIES.put("Msk_Bridges_a",true);
-		LAYER_SEARCHABILITIES.put("Msk_Cemetry_a",true);		
-		LAYER_SEARCHABILITIES.put("Msk_house_a",false);
-		LAYER_SEARCHABILITIES.put("Msk_house_p",false);
-		LAYER_SEARCHABILITIES.put("Msk_hydrography_la",true);
-		LAYER_SEARCHABILITIES.put("Msk_metro_title_l",true);
-		LAYER_SEARCHABILITIES.put("Msk_metro_title_p",true);
-		LAYER_SEARCHABILITIES.put("Msk_municip_a",true);
-		LAYER_SEARCHABILITIES.put("Msk_quarter_a",true);
-		LAYER_SEARCHABILITIES.put("Msk_railway_l",true);
-		LAYER_SEARCHABILITIES.put("Msk_railway_p",true);
-		LAYER_SEARCHABILITIES.put("Msk_region_a",true);
-		LAYER_SEARCHABILITIES.put("Msk_road_a",false);
-		LAYER_SEARCHABILITIES.put("Msk_square_a",true);
-		LAYER_SEARCHABILITIES.put("Msk_Street_l",true);
-		LAYER_SEARCHABILITIES.put("Msk_Street_l_1",true);
-		LAYER_SEARCHABILITIES.put("Msk_vegetation_a",true);
-		LAYER_SEARCHABILITIES.put("Msk_Bridges_a",true);
-		LAYER_SEARCHABILITIES.put("Msk_Bridges_a",true);
-		LAYER_SEARCHABILITIES.put("Msk_Bridges_a",true);
+		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_Cemetry_a", Boolean.valueOf(true));		
+		LAYER_SEARCHABILITIES.put("Msk_house_a", Boolean.valueOf(false));
+		LAYER_SEARCHABILITIES.put("Msk_house_p", Boolean.valueOf(false));
+		LAYER_SEARCHABILITIES.put("Msk_hydrography_la", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_metro_title_l", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_metro_title_p", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_municip_a", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_quarter_a", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_railway_l", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_railway_p", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_region_a", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_road_a", Boolean.valueOf(false));
+		LAYER_SEARCHABILITIES.put("Msk_square_a", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_Street_l", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_Street_l_1", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_vegetation_a", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true));
 	}
 
 	public abstract boolean connect() throws MapConnectionException;
