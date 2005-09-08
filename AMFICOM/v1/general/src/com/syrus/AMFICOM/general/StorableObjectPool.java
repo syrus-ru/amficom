@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.171 2005/09/07 16:37:42 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.172 2005/09/08 05:34:41 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.171 $, $Date: 2005/09/07 16:37:42 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.172 $, $Date: 2005/09/08 05:34:41 $
+ * @author $Author: bob $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
  * (т. е. объектами, идентификаторы которых помещены в DELETED_IDS_MAP). Проверять так:
@@ -1001,6 +1001,8 @@ public final class StorableObjectPool {
 
 	public static void deserialize(final LRUSaver<Identifier, StorableObject> saver) {
 		synchronized (objectPoolMap) {
+			final long time0 = System.currentTimeMillis();
+			long refreshingTime = 0;
 			for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 				entityCodeIterator.advance();
 				final short entityCode = entityCodeIterator.key();
@@ -1015,22 +1017,34 @@ public final class StorableObjectPool {
 					Log.errorException(e);
 				}
 				try {
+					final long time1 = System.currentTimeMillis();
 					refresh(Identifier.createIdentifiers(storableObjects));
+					refreshingTime += (System.currentTimeMillis() - time1);
+
 				} catch (ApplicationException ae) {
 					Log.errorException(ae);
 				}
 			}
+
+			Log.debugMessage("StorableObjectPool.deserialize | deserializing time "
+				+ (System.currentTimeMillis() - time0) 
+				+ " ms, refreshing time " 
+				+ refreshingTime + " ms", Log.DEBUGLEVEL10);
+
 		}
 	}
 
 	public static void serialize(final LRUSaver<Identifier, StorableObject> saver) {
 		synchronized (objectPoolMap) {
+			final long time0 = System.currentTimeMillis();
 			for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 				entityCodeIterator.advance();
 				final short entityCode = entityCodeIterator.key();
 				final LRUMap<Identifier, StorableObject> map = getLRUMap(entityCode);
 				saver.save(map, ObjectEntities.codeToString(entityCode), true);
 			}
+			Log.debugMessage("StorableObjectPool.serialize | serializing time "
+				+ (System.currentTimeMillis() - time0) + " ms", Log.DEBUGLEVEL10);
 		}
 	}
 
