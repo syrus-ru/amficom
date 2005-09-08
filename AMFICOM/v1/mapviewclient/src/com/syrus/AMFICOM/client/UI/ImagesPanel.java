@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanel.java,v 1.8 2005/09/02 16:45:30 krupenn Exp $
+ * $Id: ImagesPanel.java,v 1.9 2005/09/08 06:55:07 krupenn Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,6 @@ import javax.swing.border.BevelBorder;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -45,7 +44,7 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $
+ * @version $Revision: 1.9 $
  * @module commonclient_v1
  */
 public class ImagesPanel extends JPanel

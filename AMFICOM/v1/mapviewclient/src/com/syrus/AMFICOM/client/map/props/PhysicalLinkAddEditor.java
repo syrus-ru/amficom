@@ -28,7 +28,6 @@ import javax.swing.event.ListSelectionListener;
 
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
-import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.command.action.CreateUnboundLinkCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.CableController;
@@ -569,7 +568,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 
 		this.physicalLink.getBinding().remove(cablePath);
 
-		((WrapperedListModel )this.cableList.getModel()).removeElement(cablePath);
+		this.cableList.getModel().removeElement(cablePath);
 
 		this.tunnelLayout.updateElements();
 	}

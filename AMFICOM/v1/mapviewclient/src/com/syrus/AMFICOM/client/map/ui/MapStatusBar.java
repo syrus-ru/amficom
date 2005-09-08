@@ -1,5 +1,5 @@
 /*
- * $Id: MapStatusBar.java,v 1.18 2005/09/02 09:45:59 krupenn Exp $
+ * $Id: MapStatusBar.java,v 1.19 2005/09/08 06:55:07 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.client.map.ui;
 import java.awt.Dimension;
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Insets;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -29,7 +28,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/09/02 09:45:59 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/08 06:55:07 $
  * @module mapviewclient
  */
 public final class MapStatusBar extends JPanel {
