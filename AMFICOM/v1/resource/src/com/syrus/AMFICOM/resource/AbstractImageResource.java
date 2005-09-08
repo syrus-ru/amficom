@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractImageResource.java,v 1.22 2005/08/08 11:33:54 arseniy Exp $
+ * $Id: AbstractImageResource.java,v 1.23 2005/09/08 18:26:31 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,38 +16,21 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.22 $, $Date: 2005/08/08 11:33:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.23 $, $Date: 2005/09/08 18:26:31 $
  * @module resource
  */
 public abstract class AbstractImageResource extends StorableObject {
 	static final long serialVersionUID = -730035505208725678L;
-
-	/**
-	 * Server-side constructor. Shouldn't be invoked by clients.
-	 */
-	protected AbstractImageResource(final Identifier id) throws ApplicationException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.IMAGERESOURCE_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	/**
 	 * Client-side constructor. Shouldn't be invoked directly but only via

@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.21 2005/09/05 17:43:15 bass Exp $
+ * $Id: MapLibrary.java,v 1.22 2005/09/08 18:26:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,16 +31,12 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -61,7 +57,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/05 17:43:15 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/08 18:26:29 $
  * @author $Author: bass $
  * @module map
  */
@@ -72,16 +68,6 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 	private String codename;
 	private String description;
 	private Identifier parentMapLibraryId;
-
-	MapLibrary(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(MAPLIBRARY_CODE).retrieve(this);
-		} catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-	}
 
 	public MapLibrary(final IdlMapLibrary mlt) throws CreateObjectException {
 		try {

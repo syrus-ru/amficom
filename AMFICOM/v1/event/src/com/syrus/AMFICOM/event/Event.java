@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.39 2005/08/08 11:32:37 arseniy Exp $
+ * $Id: Event.java,v 1.40 2005/09/08 18:26:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,16 +20,12 @@ import com.syrus.AMFICOM.event.corba.IdlEventHelper;
 import com.syrus.AMFICOM.event.corba.IdlEventPackage.IdlEventParameter;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
@@ -39,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/08/08 11:32:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/09/08 18:26:31 $
+ * @author $Author: bass $
  * @module event
  */
 
@@ -52,21 +48,6 @@ public final class Event extends StorableObject implements TypedObject {
 
 	private Set<EventParameter> eventParameters;	//Set <EventParameter>
 	private Set<Identifier> eventSourceIds; //Set <Identifier>
-
-	Event(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-		this.eventParameters = new HashSet<EventParameter>();
-		this.eventSourceIds = new HashSet<Identifier>();
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.EVENT_CODE).retrieve(this);
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
 
 	public Event(final IdlEvent et) throws CreateObjectException {
 		try {

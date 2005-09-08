@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.4 2005/09/06 16:22:45 bob Exp $
+* $Id: PermissionAttributes.java,v 1.5 2005/09/08 18:26:26 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,24 +18,20 @@ import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributes;
 import com.syrus.AMFICOM.administration.corba.IdlPermissionAttributesHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/06 16:22:45 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/09/08 18:26:26 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module admin
  */
@@ -122,22 +118,6 @@ public class PermissionAttributes extends StorableObject {
 	
 	private long permissionMask = 0;
 	
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	PermissionAttributes(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.PERMATTR_CODE).retrieve(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
-
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */

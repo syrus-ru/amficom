@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.92 2005/09/01 16:54:35 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.93 2005/09/08 18:26:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,16 +18,12 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -38,8 +34,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 
 /**
- * @version $Revision: 1.92 $, $Date: 2005/09/01 16:54:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.93 $, $Date: 2005/09/08 18:26:30 $
+ * @author $Author: bass $
  * @module measurement
  */
 
@@ -59,24 +55,6 @@ public final class MeasurementSetup extends StorableObject {
 
 	private Set<Identifier> monitoredElementIds;
 	private EnumSet<MeasurementType> measurementTypes;
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	MeasurementSetup(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		this.monitoredElementIds = new HashSet<Identifier>();
-		this.measurementTypes = EnumSet.noneOf(MeasurementType.class);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTSETUP_CODE).retrieve(this);
-		} catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>

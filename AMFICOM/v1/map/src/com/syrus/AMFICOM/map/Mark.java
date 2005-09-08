@@ -1,5 +1,5 @@
 /*-
- * $Id: Mark.java,v 1.61 2005/08/31 05:50:36 bass Exp $
+ * $Id: Mark.java,v 1.62 2005/09/08 18:26:29 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,14 +21,10 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.map.corba.IdlMark;
@@ -43,7 +39,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * фрагментами линий, переопределены и бросают
  * <code>{@link UnsupportedOperationException}</code>.
  * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/08/31 05:50:36 $
+ * @version $Revision: 1.62 $, $Date: 2005/09/08 18:26:29 $
  * @module map
  */
 public final class Mark extends AbstractNode {
@@ -64,16 +60,6 @@ public final class Mark extends AbstractNode {
 	protected transient double sizeInDoubleLt;
 	protected transient NodeLink nodeLink;
 	protected transient AbstractNode startNode;
-
-	Mark(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(MARK_CODE).retrieve(this);
-		} catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-	}
 
 	public Mark(final IdlMark mt) throws CreateObjectException {
 		super(mt);

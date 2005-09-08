@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.54 2005/08/24 11:33:34 bass Exp $
+ * $Id: Domain.java,v 1.55 2005/09/08 18:26:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,24 +22,20 @@ import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/08/24 11:33:34 $
+ * @version $Revision: 1.55 $, $Date: 2005/09/08 18:26:26 $
  * @author $Author: bass $
  * @module administration
  */
@@ -51,22 +47,6 @@ public final class Domain extends DomainMember implements Characterizable {
 	private String description;
 
 	private transient CharacterizableDelegate characterizableDelegate;
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	Domain(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.DOMAIN_CODE).retrieve(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>

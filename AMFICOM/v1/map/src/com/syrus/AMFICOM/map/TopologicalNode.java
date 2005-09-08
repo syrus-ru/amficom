@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.75 2005/09/05 17:43:15 bass Exp $
+ * $Id: TopologicalNode.java,v 1.76 2005/09/08 18:26:29 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,15 +21,11 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -46,7 +42,7 @@ import com.syrus.util.Log;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/09/05 17:43:15 $
+ * @version $Revision: 1.76 $, $Date: 2005/09/08 18:26:29 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode implements XmlBeansTransferable<XmlTopologicalNode> {
@@ -66,16 +62,6 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 	 * physical node can be bound to site only if it is part of an unbound link
 	 */
 	private transient boolean canBind = false;
-
-	TopologicalNode(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(TOPOLOGICALNODE_CODE).retrieve(this);
-		} catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-	}
 
 	public TopologicalNode(final IdlTopologicalNode tnt) throws CreateObjectException {
 		super(tnt);

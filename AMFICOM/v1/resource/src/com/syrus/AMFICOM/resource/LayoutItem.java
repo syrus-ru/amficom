@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.2 2005/09/06 11:13:21 bob Exp $
+* $Id: LayoutItem.java,v 1.3 2005/09/08 18:26:31 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,17 +19,13 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -38,8 +34,8 @@ import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.2 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $
+ * @author $Author: bass $
  * @module resource
  */
 
@@ -56,21 +52,6 @@ public final class LayoutItem extends StorableObject implements Characterizable,
 	private String								name;
 
 	private transient CharacterizableDelegate characterizableDelegate;
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	LayoutItem(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-		
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.LAYOUT_ITEM_CODE).retrieve(this);
-		} catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>

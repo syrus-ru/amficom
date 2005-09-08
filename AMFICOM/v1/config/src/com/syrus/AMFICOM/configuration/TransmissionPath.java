@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.87 2005/08/30 16:35:09 bass Exp $
+ * $Id: TransmissionPath.java,v 1.88 2005/09/08 18:26:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,21 +25,17 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.87 $, $Date: 2005/08/30 16:35:09 $
+ * @version $Revision: 1.88 $, $Date: 2005/09/08 18:26:27 $
  * @author $Author: bass $
  * @module config
  */
@@ -55,16 +51,6 @@ public final class TransmissionPath extends DomainMember implements MonitoredDom
 	private Identifier finishPortId;
 
 	private transient CharacterizableDelegate characterizableDelegate;
-
-	TransmissionPath(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(TRANSMISSIONPATH_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public TransmissionPath(final IdlTransmissionPath tpt) throws CreateObjectException {
 		try {

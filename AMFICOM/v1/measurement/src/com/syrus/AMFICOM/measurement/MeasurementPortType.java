@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortType.java,v 1.3 2005/08/25 20:13:56 arseniy Exp $
+ * $Id: MeasurementPortType.java,v 1.4 2005/09/08 18:26:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,31 +15,27 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 
-import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
-import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortTypeHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortType;
+import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortTypeHelper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/25 20:13:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/09/08 18:26:30 $
+ * @author $Author: bass $
  * @module measurement
  */
 
@@ -50,18 +46,6 @@ public final class MeasurementPortType extends StorableObjectType implements Cha
 	private EnumSet<MeasurementType> measurementTypes;
 
 	private transient CharacterizableDelegate characterizableDelegate;
-
-	MeasurementPortType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		this.measurementTypes = EnumSet.noneOf(MeasurementType.class);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_TYPE_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public MeasurementPortType(final IdlMeasurementPortType mptt) throws CreateObjectException {
 		try {

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.2 2005/08/20 20:03:29 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.3 2005/09/08 18:26:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,16 +19,12 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
@@ -39,8 +35,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortHelper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/20 20:03:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/09/08 18:26:30 $
+ * @author $Author: bass $
  * @module measurement
  */
 public final class MeasurementPort extends StorableObject implements Characterizable, TypedObject {
@@ -55,16 +51,6 @@ public final class MeasurementPort extends StorableObject implements Characteriz
 	private Identifier portId;
 
 	private transient CharacterizableDelegate characterizableDelegate;
-
-	MeasurementPort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.MEASUREMENTPORT_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public MeasurementPort(final IdlMeasurementPort mpt) throws CreateObjectException {
 		try {

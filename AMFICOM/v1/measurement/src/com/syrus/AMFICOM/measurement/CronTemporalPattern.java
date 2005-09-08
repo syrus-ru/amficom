@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.23 2005/08/19 16:22:05 arseniy Exp $
+ * $Id: CronTemporalPattern.java,v 1.24 2005/09/08 18:26:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,16 +25,12 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPattern;
@@ -42,8 +38,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPatternHelper;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/08/19 16:22:05 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/09/08 18:26:30 $
+ * @author $Author: bass $
  * @module measurement
  */
 
@@ -743,16 +739,6 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	 * Map of <{@link TimeLine},{@link TimeLine}>
 	 */
 	private Set<TimeLine>			templates;
-
-	CronTemporalPattern(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.CRONTEMPORALPATTERN_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public CronTemporalPattern(final IdlCronTemporalPattern ctpt) throws CreateObjectException {
 		try {

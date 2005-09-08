@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.31 2005/08/08 11:32:37 arseniy Exp $
+ * $Id: EventSource.java,v 1.32 2005/09/08 18:26:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,41 +18,26 @@ import com.syrus.AMFICOM.event.corba.IdlEventSource;
 import com.syrus.AMFICOM.event.corba.IdlEventSourceHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/08/08 11:32:37 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/09/08 18:26:31 $
+ * @author $Author: bass $
  * @module event
  */
 public final class EventSource extends StorableObject {
 	private static final long serialVersionUID = 3833179220682682674L;
 
 	private Identifier sourceEntityId;
-
-	EventSource (final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.EVENTSOURCE_CODE).retrieve(this);
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-	}
 
 	public EventSource(final IdlEventSource est) {
 		this.fromTransferable(est);

@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.2 2005/08/20 20:03:29 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.3 2005/09/08 18:26:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/20 20:03:29 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/09/08 18:26:30 $
+ * @author $Author: bass $
  * @module measurement
  */
 
@@ -50,6 +50,13 @@ public final class MonitoredElement extends DomainMember {
 
 	private Set<Identifier> monitoredDomainMemberIds;
 
+	/**
+	 * @param id
+	 * @throws RetrieveObjectException
+	 * @throws ObjectNotFoundException
+	 * @deprecated
+	 */
+	@Deprecated
 	MonitoredElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 

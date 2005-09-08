@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.117 2005/08/30 17:21:18 arseniy Exp $
+ * $Id: Equipment.java,v 1.118 2005/09/08 18:26:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,15 +28,11 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
@@ -44,8 +40,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.117 $, $Date: 2005/08/30 17:21:18 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.118 $, $Date: 2005/09/08 18:26:27 $
+ * @author $Author: bass $
  * @module config
  */
 
@@ -68,16 +64,6 @@ public final class Equipment extends DomainMember implements MonitoredDomainMemb
 	private String inventoryNumber;
 
 	private transient CharacterizableDelegate characterizableDelegate;
-
-	Equipment(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(EQUIPMENT_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public Equipment(final IdlEquipment et) throws CreateObjectException {
 		try {

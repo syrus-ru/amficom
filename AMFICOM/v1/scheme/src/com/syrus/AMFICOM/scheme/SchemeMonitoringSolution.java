@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.67 2005/09/07 17:38:25 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.68 2005/09/08 18:26:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,16 +35,12 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -60,7 +56,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.67 $, $Date: 2005/09/07 17:38:25 $
+ * @version $Revision: 1.68 $, $Date: 2005/09/08 18:26:26 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -87,21 +83,6 @@ public final class SchemeMonitoringSolution
 	 * void at the same time.
 	 */
 	Identifier parentSchemeOptimizeInfoId;
-
-	/**
-	 * @param id
-	 * @throws RetrieveObjectException
-	 * @throws ObjectNotFoundException
-	 */
-	SchemeMonitoringSolution(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-	
-		try {
-			DatabaseContext.getDatabase(SCHEMEMONITORINGSOLUTION_CODE).retrieve(this);
-		} catch (final IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	/**
 	 * @param id

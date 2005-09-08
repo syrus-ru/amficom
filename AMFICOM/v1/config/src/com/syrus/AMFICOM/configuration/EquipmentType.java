@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.87 2005/09/08 16:35:16 bass Exp $
+ * $Id: EquipmentType.java,v 1.88 2005/09/08 18:26:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,15 +26,11 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -44,7 +40,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/09/08 16:35:16 $
+ * @version $Revision: 1.88 $, $Date: 2005/09/08 18:26:27 $
  * @author $Author: bass $
  * @module config
  */
@@ -57,16 +53,6 @@ public final class EquipmentType extends StorableObjectType implements Character
 	private String manufacturerCode;
 
 	private transient CharacterizableDelegate characterizableDelegate;
-
-	EquipmentType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(EQUIPMENT_TYPE_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public EquipmentType(final IdlEquipmentType ett) throws CreateObjectException {
 		try {

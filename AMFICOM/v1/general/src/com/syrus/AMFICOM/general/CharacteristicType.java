@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.47 2005/08/18 15:31:39 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.48 2005/09/08 18:26:28 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/08/18 15:31:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.48 $, $Date: 2005/09/08 18:26:28 $
+ * @author $Author: bass $
  * @module general
  */
 
@@ -32,19 +32,6 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	private String name;
 	private DataType dataType;
 	private int sort;
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	CharacteristicType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_TYPE_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>

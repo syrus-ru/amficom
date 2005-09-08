@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.37 2005/08/25 20:13:56 arseniy Exp $
+ * $Id: Action.java,v 1.38 2005/09/08 18:26:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/08/25 20:13:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.38 $, $Date: 2005/09/08 18:26:30 $
+ * @author $Author: bass $
  * @module measurement
  */
 
@@ -33,17 +33,9 @@ public abstract class Action extends StorableObject {
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @param id
-	 */	
-	Action(final Identifier id) {
-		super(id);
-	}
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	Action() {
-		super();
+		// super();
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.75 2005/09/08 16:35:16 bass Exp $
+ * $Id: LinkType.java,v 1.76 2005/09/08 18:26:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,14 +26,10 @@ import com.syrus.AMFICOM.configuration.xml.XmlLinkType;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
@@ -42,7 +38,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/09/08 16:35:16 $
+ * @version $Revision: 1.76 $, $Date: 2005/09/08 18:26:27 $
  * @author $Author: bass $
  * @module config
  */
@@ -59,16 +55,6 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 	private String manufacturer;
 	private String manufacturerCode;
 	private Identifier imageId;
-
-	LinkType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(LINK_TYPE_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public LinkType(final IdlLinkType ltt) throws CreateObjectException {
 		try {

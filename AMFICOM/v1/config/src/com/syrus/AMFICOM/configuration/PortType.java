@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.84 2005/09/08 16:35:16 bass Exp $
+ * $Id: PortType.java,v 1.85 2005/09/08 18:26:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,15 +30,11 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.Namable;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -48,7 +44,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/09/08 16:35:16 $
+ * @version $Revision: 1.85 $, $Date: 2005/09/08 18:26:27 $
  * @author $Author: bass $
  * @module config
  */
@@ -61,16 +57,6 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	private int kind;
 
 	private transient CharacterizableDelegate characterizableDelegate;
-
-	PortType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(PORT_TYPE_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public PortType(final IdlPortType ptt) throws CreateObjectException {
 		try {

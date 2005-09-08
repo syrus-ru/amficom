@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeLink.java,v 1.36 2005/09/08 17:06:51 bass Exp $
+ * $Id: AbstractSchemeLink.java,v 1.37 2005/09/08 18:26:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeLink}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.36 $, $Date: 2005/09/08 17:06:51 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/08 18:26:26 $
  * @module scheme
  */
 public abstract class AbstractSchemeLink extends AbstractSchemeElement {
@@ -96,14 +96,6 @@ public abstract class AbstractSchemeLink extends AbstractSchemeElement {
 	 * drag&apos;n&apos;drop. 
 	 */
 	boolean abstractLinkTypeSet = false;
-
-	/**
-	 * @param id
-	 */
-	AbstractSchemeLink(Identifier id) {
-		super(id);
-		this.abstractLinkTypeSet = true;
-	}
 
 	/**
 	 * @param id

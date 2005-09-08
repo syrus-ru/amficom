@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.70 2005/09/08 17:06:51 bass Exp $
+ * $Id: SchemeLink.java,v 1.71 2005/09/08 18:26:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,14 +48,10 @@ import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -73,7 +69,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/09/08 17:06:51 $
+ * @version $Revision: 1.71 $, $Date: 2005/09/08 18:26:26 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -92,22 +88,6 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * drag&apos;n&apos;drop. 
 	 */
 	private boolean parentSet = false;
-
-	/**
-	 * @param id
-	 * @throws RetrieveObjectException
-	 * @throws ObjectNotFoundException
-	 */
-	SchemeLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(SCHEMELINK_CODE).retrieve(this);
-			this.parentSet = true;
-		} catch (final IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	/**
 	 * @param id

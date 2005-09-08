@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.91 2005/08/25 20:13:56 arseniy Exp $
+ * $Id: Measurement.java,v 1.92 2005/09/08 18:26:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,17 +16,13 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -38,8 +34,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/08/25 20:13:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.92 $, $Date: 2005/09/08 18:26:30 $
+ * @author $Author: bass $
  * @module measurement
  */
 
@@ -60,21 +56,6 @@ public final class Measurement extends Action {
 	private int status;
 	private String localAddress;
 	private Identifier testId;
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	public Measurement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_CODE).retrieve(this);
-		} catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>

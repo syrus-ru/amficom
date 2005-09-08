@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.58 2005/09/08 17:06:51 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.59 2005/09/08 18:26:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,14 +32,10 @@ import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.UpdateObjectException;
@@ -57,27 +53,12 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.58 $, $Date: 2005/09/08 17:06:51 $
+ * @version $Revision: 1.59 $, $Date: 2005/09/08 18:26:26 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort
 		implements XmlBeansTransferable<XmlSchemeCablePort> {
 	private static final long serialVersionUID = 4050767078690534455L;
-
-	/**
-	 * @param id
-	 * @throws RetrieveObjectException
-	 * @throws ObjectNotFoundException
-	 */
-	SchemeCablePort(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-		
-		try {
-			DatabaseContext.getDatabase(SCHEMECABLEPORT_CODE).retrieve(this);
-		} catch (final IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	/**
 	 * @param id

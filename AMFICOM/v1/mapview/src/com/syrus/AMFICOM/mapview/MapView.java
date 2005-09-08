@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.57 2005/09/07 18:33:02 bass Exp $
+* $Id: MapView.java,v 1.58 2005/09/08 18:26:30 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,17 +20,13 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -59,7 +55,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: bass $
- * @version $Revision: 1.57 $, $Date: 2005/09/07 18:33:02 $
+ * @version $Revision: 1.58 $, $Date: 2005/09/08 18:26:30 $
  * @module mapview
  * @todo use getCenter, setCenter instead of pair longitude, latitude
  */
@@ -100,16 +96,6 @@ public final class MapView extends DomainMember implements Namable {
 	 * Сортированный список всех элементов топологической схемы
 	 */
 	protected transient List<MapElement> allElements;
-
-	MapView(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.MAPVIEW_CODE).retrieve(this);
-		} catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-	}
 
 	public MapView(final IdlMapView mvt) throws CreateObjectException {
 		try {

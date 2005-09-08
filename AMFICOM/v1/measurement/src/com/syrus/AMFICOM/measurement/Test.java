@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.152 2005/09/05 17:54:13 arseniy Exp $
+ * $Id: Test.java,v 1.153 2005/09/08 18:26:30 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -19,7 +19,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -27,8 +26,6 @@ import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -47,8 +44,8 @@ import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.152 $, $Date: 2005/09/05 17:54:13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.153 $, $Date: 2005/09/08 18:26:30 $
+ * @author $Author: bass $
  * @module measurement
  */
 
@@ -70,21 +67,6 @@ public final class Test extends StorableObject {
 	private Identifier groupTestId;
 	private Identifier kisId;
 	private Identifier mcmId;
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	Test(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-		this.measurementSetupIds = new HashSet<Identifier>();
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.TEST_CODE).retrieve(this);
-		} catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>

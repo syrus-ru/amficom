@@ -1,5 +1,5 @@
 /*-
- * $Id: Link.java,v 1.71 2005/08/30 16:35:08 bass Exp $
+ * $Id: Link.java,v 1.72 2005/09/08 18:26:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,34 +20,20 @@ import com.syrus.AMFICOM.configuration.corba.IdlLink;
 import com.syrus.AMFICOM.configuration.corba.IdlLinkHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.71 $, $Date: 2005/08/30 16:35:08 $
+ * @version $Revision: 1.72 $, $Date: 2005/09/08 18:26:27 $
  * @module config
  */
 public final class Link extends AbstractLink {
 	private static final long serialVersionUID = 3257283626012783672L;
-
-	Link(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(LINK_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public Link(final IdlLink idlLink) throws CreateObjectException {
 		try {

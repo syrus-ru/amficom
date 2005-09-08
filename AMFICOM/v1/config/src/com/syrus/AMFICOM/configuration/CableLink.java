@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLink.java,v 1.11 2005/08/30 16:35:09 bass Exp $
+ * $Id: CableLink.java,v 1.12 2005/09/08 18:26:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,13 +20,9 @@ import com.syrus.AMFICOM.configuration.corba.IdlCableLink;
 import com.syrus.AMFICOM.configuration.corba.IdlCableLinkHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
@@ -34,21 +30,11 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/08/30 16:35:09 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/08 18:26:27 $
  * @module config
  */
 public final class CableLink extends AbstractLink {
 	private static final long serialVersionUID = 7733720151418798562L;
-
-	CableLink(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(CABLELINK_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public CableLink(final IdlCableLink idlCableLink) throws CreateObjectException {
 		try {

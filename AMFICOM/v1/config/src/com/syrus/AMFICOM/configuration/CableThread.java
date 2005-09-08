@@ -1,5 +1,5 @@
 /*
- * $Id: CableThread.java,v 1.40 2005/08/30 16:35:09 bass Exp $
+ * $Id: CableThread.java,v 1.41 2005/09/08 18:26:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,14 +21,10 @@ import com.syrus.AMFICOM.configuration.corba.IdlCableThread;
 import com.syrus.AMFICOM.configuration.corba.IdlCableThreadHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -36,7 +32,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/08/30 16:35:09 $
+ * @version $Revision: 1.41 $, $Date: 2005/09/08 18:26:27 $
  * @author $Author: bass $
  * @module config
  */
@@ -47,16 +43,6 @@ public final class CableThread extends DomainMember implements TypedObject {
 	private String name;
 	private String description;
 	private CableThreadType type;
-
-	public CableThread(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(CABLETHREAD_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public CableThread(final IdlCableThread ctt) throws CreateObjectException {
 		try {

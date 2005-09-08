@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.75 2005/09/05 17:43:15 bass Exp $
+ * $Id: Collector.java,v 1.76 2005/09/08 18:26:29 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,14 +24,10 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -51,7 +47,7 @@ import com.syrus.util.Log;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/09/05 17:43:15 $
+ * @version $Revision: 1.76 $, $Date: 2005/09/08 18:26:29 $
  * @module map
  */
 public final class Collector extends StorableObject implements MapElement, XmlBeansTransferable<XmlCollector> {
@@ -76,17 +72,6 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 	protected transient boolean selected = false;
 	protected transient boolean removed = false;
 	protected transient boolean alarmState = false;
-
-	Collector(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-		this.physicalLinkIds = new HashSet<Identifier>();
-
-		try {
-			DatabaseContext.getDatabase(COLLECTOR_CODE).retrieve(this);
-		} catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-	}
 
 	public Collector(final IdlCollector ct) throws CreateObjectException {
 		try {

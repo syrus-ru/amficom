@@ -1,5 +1,5 @@
 /*
- * $Id: KIS.java,v 1.3 2005/09/07 01:02:19 arseniy Exp $
+ * $Id: KIS.java,v 1.4 2005/09/08 18:26:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,30 +17,26 @@ import java.util.logging.Level;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.measurement.corba.IdlKIS;
-import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.measurement.corba.IdlKIS;
+import com.syrus.AMFICOM.measurement.corba.IdlKISHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/07 01:02:19 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/09/08 18:26:30 $
+ * @author $Author: bass $
  * @module measurement
  */
 
@@ -57,16 +53,6 @@ public final class KIS extends DomainMember implements Namable {
 	private String description;
 	private String hostname;
 	private short tcpPort;
-
-	KIS(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.KIS_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public KIS(final IdlKIS kt) throws CreateObjectException {
 		try {

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.50 2005/09/08 17:06:51 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.51 2005/09/08 18:26:26 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.50 $, $Date: 2005/09/08 17:06:51 $
+ * @version $Revision: 1.51 $, $Date: 2005/09/08 18:26:26 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -65,13 +65,6 @@ public abstract class AbstractSchemeElement
 	Identifier parentSchemeId;
 
 	private transient CharacterizableDelegate characterizableDelegate;
-
-	/**
-	 * @param id
-	 */
-	AbstractSchemeElement(final Identifier id) {
-		super(id);
-	}
 
 	/**
 	 * @param id

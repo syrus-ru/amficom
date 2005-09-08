@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.19 2005/08/08 14:23:52 arseniy Exp $
+ * $Id: AbstractLinkType.java,v 1.20 2005/09/08 18:26:27 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/08 14:23:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/09/08 18:26:27 $
+ * @author $Author: bass $
  * @module config
  */
 public abstract class AbstractLinkType extends StorableObjectType implements Namable, Characterizable {
@@ -31,10 +31,6 @@ public abstract class AbstractLinkType extends StorableObjectType implements Nam
 
 	private transient CharacterizableDelegate characterizableDelegate;
 
-	public AbstractLinkType(Identifier id) {
-		super(id);
-	}
-	
 	public AbstractLinkType() {
 		super();
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.71 2005/09/05 17:43:16 bass Exp $
+ * $Id: PathElement.java,v 1.72 2005/09/08 18:26:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,15 +44,11 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -75,7 +71,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.71 $, $Date: 2005/09/05 17:43:16 $
+ * @version $Revision: 1.72 $, $Date: 2005/09/08 18:26:26 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -118,21 +114,6 @@ public final class PathElement extends StorableObject
 	private transient String name;
 
 	private transient String description;
-
-	/**
-	 * @param id
-	 * @throws RetrieveObjectException
-	 * @throws ObjectNotFoundException
-	 */
-	PathElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-		
-		try {
-			DatabaseContext.getDatabase(PATHELEMENT_CODE).retrieve(this);
-		} catch (final IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	/**
 	 * Common constructor to be indirectly invoked by both clients and

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractCloneableStorableObject.java,v 1.9 2005/08/02 08:19:38 bass Exp $
+ * $Id: AbstractCloneableStorableObject.java,v 1.10 2005/09/08 18:26:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Map;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/08/02 08:19:38 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/08 18:26:28 $
  * @module general
  */
 public abstract class AbstractCloneableStorableObject extends StorableObject
@@ -27,15 +27,8 @@ public abstract class AbstractCloneableStorableObject extends StorableObject
 	 */
 	protected Map<Identifier, Identifier> clonedIdMap;
 
-	/**
-	 * @param id
-	 */
-	protected AbstractCloneableStorableObject(final Identifier id) {
-		super(id);
-	}
-
 	protected AbstractCloneableStorableObject() {
-		super();
+		// super();
 	}
 
 	/**

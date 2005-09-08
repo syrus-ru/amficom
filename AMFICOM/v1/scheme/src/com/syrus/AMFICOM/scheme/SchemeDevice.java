@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.75 2005/09/07 08:33:56 bass Exp $
+ * $Id: SchemeDevice.java,v 1.76 2005/09/08 18:26:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,16 +44,12 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -73,7 +69,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/09/07 08:33:56 $
+ * @version $Revision: 1.76 $, $Date: 2005/09/08 18:26:26 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -97,21 +93,6 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	private boolean parentSet = false;
 
 	private transient CharacterizableDelegate characterizableDelegate;
-
-	/**
-	 * @param id
-	 * @throws RetrieveObjectException
-	 * @throws ObjectNotFoundException
-	 */
-	SchemeDevice(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-		try {
-			DatabaseContext.getDatabase(SCHEMEDEVICE_CODE).retrieve(this);
-			this.parentSet = true;
-		} catch (final IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	/**
 	 * @param id

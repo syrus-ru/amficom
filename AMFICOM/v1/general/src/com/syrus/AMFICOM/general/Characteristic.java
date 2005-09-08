@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.58 2005/09/06 15:05:48 bass Exp $
+ * $Id: Characteristic.java,v 1.59 2005/09/08 18:26:28 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 
 /**
- * @version $Revision: 1.58 $, $Date: 2005/09/06 15:05:48 $
+ * @version $Revision: 1.59 $, $Date: 2005/09/08 18:26:28 $
  * @author $Author: bass $
  * @module general
  */
@@ -37,22 +37,6 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	private Identifier characterizableId;
 	private boolean editable;
 	private boolean visible;
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @param id
-	 * @throws ObjectNotFoundException
-	 * @throws RetrieveObjectException
-	 */
-	Characteristic(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.CHARACTERISTIC_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>

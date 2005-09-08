@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.69 2005/09/08 16:35:16 bass Exp $
+ * $Id: CableLinkType.java,v 1.70 2005/09/08 18:26:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,15 +31,11 @@ import com.syrus.AMFICOM.configuration.xml.XmlCableThreadTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSort;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
@@ -48,7 +44,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/09/08 16:35:16 $
+ * @version $Revision: 1.70 $, $Date: 2005/09/08 18:26:27 $
  * @author $Author: bass $
  * @module config
  */
@@ -61,16 +57,6 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 	private String manufacturer;
 	private String manufacturerCode;
 	private Identifier imageId;
-
-	CableLinkType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(CABLELINK_TYPE_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public CableLinkType(final IdlCableLinkType cltt) throws CreateObjectException {
 		try {

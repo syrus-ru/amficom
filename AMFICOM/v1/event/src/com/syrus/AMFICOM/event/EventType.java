@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.48 2005/08/22 14:47:46 arseniy Exp $
+ * $Id: EventType.java,v 1.49 2005/09/08 18:26:31 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,17 +24,13 @@ import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.AlertKind;
 import com.syrus.AMFICOM.event.corba.IdlEventTypePackage.IdlUserAlertKinds;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
@@ -42,8 +38,8 @@ import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/08/22 14:47:46 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.49 $, $Date: 2005/09/08 18:26:31 $
+ * @author $Author: bass $
  * @module event
  */
 
@@ -54,22 +50,6 @@ public final class EventType extends StorableObjectType {
 
 	private EnumSet<ParameterType> parameterTypes;
 	private Map<Identifier, Set<AlertKind>> userAlertKindsMap;	//Map <Identifier userId, Set <AlertKind> alertKinds>
-
-	EventType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		this.parameterTypes = EnumSet.noneOf(ParameterType.class);
-		this.userAlertKindsMap = new HashMap<Identifier, Set<AlertKind>>();
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.EVENT_TYPE_CODE).retrieve(this);
-		}
-		catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
 
 	public EventType(final IdlEventType ett) throws CreateObjectException {
 		try {

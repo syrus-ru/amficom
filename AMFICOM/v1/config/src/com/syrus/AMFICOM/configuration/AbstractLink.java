@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.7 2005/08/30 16:35:09 bass Exp $
+ * $Id: AbstractLink.java,v 1.8 2005/09/08 18:26:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,10 +35,6 @@ public abstract class AbstractLink extends DomainMember implements Characterizab
 	int color;
 
 	private transient CharacterizableDelegate characterizableDelegate;
-
-	AbstractLink(final Identifier id) {
-		super(id);
-	}
 
 	AbstractLink() {
 //		super();

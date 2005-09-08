@@ -1,5 +1,5 @@
 /*
- * $Id: FileImageResource.java,v 1.31 2005/08/08 11:33:54 arseniy Exp $
+ * $Id: FileImageResource.java,v 1.32 2005/09/08 18:26:31 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResourceDataPackage.ImageResourceSort;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2005/08/08 11:33:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/09/08 18:26:31 $
  * @module resource
  */
 public final class FileImageResource extends AbstractBitmapImageResource {
@@ -37,10 +37,6 @@ public final class FileImageResource extends AbstractBitmapImageResource {
 
 	private String fileName;
 	private String codeName;
-
-	FileImageResource(final Identifier id) throws ApplicationException {
-		super(id);
-	}
 
 	/**
 	 * If given a bad argument, will raise an AssertionError if assertions

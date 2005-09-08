@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImageResource.java,v 1.34 2005/08/05 16:50:21 arseniy Exp $
+ * $Id: SchemeImageResource.java,v 1.35 2005/09/08 18:26:31 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,18 +38,14 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.34 $, $Date: 2005/08/05 16:50:21 $
+ * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/09/08 18:26:31 $
  * @module resource
  */
 public final class SchemeImageResource extends AbstractCloneableImageResource {
 	private static final long serialVersionUID = -5633433107083921318L;
 
 	private byte image[];
-
-	SchemeImageResource(final Identifier id) throws ApplicationException {
-		super(id);
-	}
 
 	/**
 	 * If given a bad argument, will raise an AssertionError if assertions

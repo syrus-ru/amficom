@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.83 2005/09/08 14:09:26 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.84 2005/09/08 18:26:29 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,19 +24,14 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -57,8 +52,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: krupenn $
- * @version $Revision: 1.83 $, $Date: 2005/09/08 14:09:26 $
+ * @author $Author: bass $
+ * @version $Revision: 1.84 $, $Date: 2005/09/08 18:26:29 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -97,16 +92,6 @@ public final class PhysicalLinkType extends StorableObjectType
 	private boolean topological;
 
 	private transient Set<Characteristic> characteristics;
-
-	PhysicalLinkType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(PHYSICALLINK_TYPE_CODE).retrieve(this);
-		} catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-	}
 
 	public PhysicalLinkType(final IdlPhysicalLinkType pltt) throws CreateObjectException {
 		try {

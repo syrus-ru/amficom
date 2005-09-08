@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcess.java,v 1.23 2005/08/05 16:49:49 arseniy Exp $
+ * $Id: ServerProcess.java,v 1.24 2005/09/08 18:26:26 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,24 +17,20 @@ import com.syrus.AMFICOM.administration.corba.IdlServerProcess;
 import com.syrus.AMFICOM.administration.corba.IdlServerProcessHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/08/05 16:49:49 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/09/08 18:26:26 $
+ * @author $Author: bass $
  * @module admin_v1
  */
 public final class ServerProcess extends StorableObject {
@@ -44,24 +40,6 @@ public final class ServerProcess extends StorableObject {
 	private Identifier serverId;
 	private Identifier userId;
 	private String description;
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @throws RetrieveObjectException
-	 * @throws ObjectNotFoundException
-	 */
-	ServerProcess(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE).retrieve(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-		
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>

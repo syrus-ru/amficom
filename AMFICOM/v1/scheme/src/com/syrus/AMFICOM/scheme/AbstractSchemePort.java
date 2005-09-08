@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.60 2005/09/08 17:06:51 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.61 2005/09/08 18:26:26 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.60 $, $Date: 2005/09/08 17:06:51 $
+ * @version $Revision: 1.61 $, $Date: 2005/09/08 18:26:26 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -92,14 +92,6 @@ public abstract class AbstractSchemePort
 	boolean portTypeSet = false;
 
 	private transient CharacterizableDelegate characterizableDelegate;
-
-	/**
-	 * @param id
-	 */
-	AbstractSchemePort(final Identifier id) {
-		super(id);
-		this.portTypeSet = true;
-	}
 
 	/**
 	 * @param id

@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractBitmapImageResource.java,v 1.11 2005/08/08 11:33:54 arseniy Exp $
+ * $Id: AbstractBitmapImageResource.java,v 1.12 2005/09/08 18:26:31 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,23 +10,18 @@ package com.syrus.AMFICOM.resource;
 
 import java.util.Date;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.resource.corba.IdlImageResource;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:33:54 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/09/08 18:26:31 $
  * @module resource
  */
 public abstract class AbstractBitmapImageResource extends AbstractImageResource {
 	static final long serialVersionUID = -7202305745749708023L;
-
-	protected AbstractBitmapImageResource(final Identifier id) throws ApplicationException {
-		super(id);
-	}
 
 	protected AbstractBitmapImageResource(final Identifier id,
 			final Date created,

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractCloneableDomainMember.java,v 1.10 2005/08/02 08:19:37 bass Exp $
+ * $Id: AbstractCloneableDomainMember.java,v 1.11 2005/09/08 18:26:26 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/08/02 08:19:37 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/08 18:26:26 $
  * @module admin
  */
 public abstract class AbstractCloneableDomainMember extends DomainMember
@@ -33,15 +33,8 @@ public abstract class AbstractCloneableDomainMember extends DomainMember
 	 */
 	protected Map<Identifier, Identifier> clonedIdMap;
 
-	/**
-	 * @param id
-	 */
-	protected AbstractCloneableDomainMember(final Identifier id) {
-		super(id);
-	}
-
 	protected AbstractCloneableDomainMember() {
-		super();
+		// super();
 	}
 
 	/**

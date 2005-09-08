@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.16 2005/08/19 14:19:04 arseniy Exp $
+ * $Id: ParameterSet.java,v 1.17 2005/09/08 18:26:30 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,16 +18,12 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
@@ -39,8 +35,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSo
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/19 14:19:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/09/08 18:26:30 $
+ * @author $Author: bass $
  * @module measurement
  */
 
@@ -59,22 +55,6 @@ public final class ParameterSet extends StorableObject {
 	protected static final String ID_MONITORED_ELEMENTS_IDS = "monitoredElementId"+KEY_VALUE_SEPERATOR;
 	protected static final String ID_SORT = "sort"+KEY_VALUE_SEPERATOR;
 	protected static final String ID_PARAMETERS = "parameter"+KEY_VALUE_SEPERATOR;
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	ParameterSet(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		this.monitoredElementIds = new HashSet<Identifier>();
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.PARAMETERSET_CODE).retrieve(this);
-		} catch (IllegalDataException e) {
-			throw new RetrieveObjectException(e.getMessage(), e);
-		}
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
