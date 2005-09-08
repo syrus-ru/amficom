@@ -431,18 +431,18 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		constraints.ipady = 0;
 		this.jPanel.add(this.thicknessComboBox, constraints);
 
-		constraints.gridx = 0;
-		constraints.gridy = 11;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.weightx = 0.0;
-		constraints.weighty = 0.0;
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.jPanel.add(this.styleLabel, constraints);
+//		constraints.gridx = 0;
+//		constraints.gridy = 11;
+//		constraints.gridwidth = 1;
+//		constraints.gridheight = 1;
+//		constraints.weightx = 0.0;
+//		constraints.weighty = 0.0;
+//		constraints.anchor = GridBagConstraints.WEST;
+//		constraints.fill = GridBagConstraints.NONE;
+//		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+//		constraints.ipadx = 0;
+//		constraints.ipady = 0;
+//		this.jPanel.add(this.styleLabel, constraints);
 
 //		constraints.gridx = 2;
 //		constraints.gridy = 11;
