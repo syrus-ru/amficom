@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.79 2005/09/07 19:16:04 bass Exp $
+ * $Id: Scheme.java,v 1.80 2005/09/08 16:43:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/09/07 19:16:04 $
+ * @version $Revision: 1.80 $, $Date: 2005/09/08 16:43:40 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -465,7 +465,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 								SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE) {
 					@Override
 					public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
-						return false;
+						return storableObjects.isEmpty();
 					}
 				};
 			}

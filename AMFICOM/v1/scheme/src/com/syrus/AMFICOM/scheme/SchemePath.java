@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.80 2005/09/07 18:38:10 bass Exp $
+ * $Id: SchemePath.java,v 1.81 2005/09/08 16:43:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.80 $, $Date: 2005/09/07 18:38:10 $
+ * @version $Revision: 1.81 $, $Date: 2005/09/08 16:43:40 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -532,7 +532,7 @@ public final class SchemePath extends StorableObject
 				PathElementWrapper.COLUMN_SEQUENTIAL_NUMBER) {
 			@Override
 			public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
-				return false;
+				return storableObjects.isEmpty();
 			}
 		};
 		final StorableObjectCondition linkedIdsCondition = new LinkedIdsCondition(

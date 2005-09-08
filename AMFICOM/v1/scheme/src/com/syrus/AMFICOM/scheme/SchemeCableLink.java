@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.77 2005/09/07 20:01:59 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.78 2005/09/08 16:43:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/09/07 20:01:59 $
+ * @version $Revision: 1.78 $, $Date: 2005/09/08 16:43:40 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -821,7 +821,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 				CableChannelingItemWrapper.COLUMN_SEQUENTIAL_NUMBER) {
 			@Override
 			public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
-				return false;
+				return storableObjects.isEmpty();
 			}
 		};
 		final StorableObjectCondition linkedIdsCondition = new LinkedIdsCondition(
