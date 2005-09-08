@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.106 2005/09/08 06:55:23 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.107 2005/09/08 14:07:26 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -38,9 +37,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -67,7 +69,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: krupenn $
- * @version $Revision: 1.106 $, $Date: 2005/09/08 06:55:23 $
+ * @version $Revision: 1.107 $, $Date: 2005/09/08 14:07:26 $
  * @module map
  */
 public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XmlBeansTransferable<XmlPhysicalLink> {
@@ -91,19 +93,60 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	private boolean leftToRight;
 	private boolean topToBottom;
 
-	private transient CharacterizableDelegate characterizableDelegate;
+	protected PhysicalLinkBinding binding = null;
 
-	private transient List<NodeLink> nodeLinks = null;
 	protected transient boolean selected = false;
 	protected transient boolean removed = false;
 	protected transient boolean alarmState = false;
-	protected transient PhysicalLinkBinding binding = null;
-	protected transient List<AbstractNode> sortedNodes = new LinkedList<AbstractNode>();
+
 	protected transient boolean nodeLinksSorted = false;
 
+	protected transient List<NodeLink> nodeLinks;
+	protected transient List<AbstractNode> sortedNodes;
 	protected transient AbstractNode startNode = null;
 	protected transient AbstractNode endNode = null;
+	private transient Set<Characteristic> characteristics;
 
+	private transient boolean transientFieldsInitialized = false;
+	
+	private void initialize() {
+		if(!this.transientFieldsInitialized) {
+			this.nodeLinks = findNodeLinks();
+			this.sortedNodes = new LinkedList<AbstractNode>();
+			if (this.characteristics == null) {
+				try {
+					final Set<Characteristic> chs = StorableObjectPool.getStorableObjectsByCondition(
+							new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE), 
+							false);
+					this.characteristics = new HashSet<Characteristic>(chs);
+				} catch(ApplicationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+			this.transientFieldsInitialized = true;
+		}		
+	}
+
+	private List<NodeLink> findNodeLinks() {
+		try {
+			final StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), ObjectEntities.NODELINK_CODE);
+
+			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
+			final Set<NodeLink> nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
+			final List<NodeLink> nlinkslist = new ArrayList<NodeLink>(nlinks.size());
+			for(NodeLink nodeLink : nlinks) {
+				if(!nodeLink.isRemoved()) {
+					nlinkslist.add(nodeLink);
+				}
+			}
+			return nlinkslist;
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+		}
+		return new LinkedList<NodeLink>();
+	}
+	
 	PhysicalLink(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
 
@@ -154,7 +197,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.leftToRight = leftToRight;
 		this.topToBottom = topToBottom;
 
-		this.nodeLinks = new ArrayList<NodeLink>();
+		initialize();
 
 		this.selected = false;
 
@@ -263,7 +306,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.selected = false;
 
 		this.binding = new PhysicalLinkBinding(new IntDimension(plt.dimensionX, plt.dimensionY));
-		this.nodeLinks = new ArrayList<NodeLink>();
+
+		initialize();
 	}
 
 	@Override
@@ -440,52 +484,15 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	}
 
 	public List<NodeLink> getNodeLinks() {
+		this.initialize();
 		if(this.nodeLinks.isEmpty()) {
-//			this.nodeLinks = findNodeLinks();
 			System.out.println("no nodelinks for link " + this.id + " between \'" + this.getStartNode().getName() + "\' and " + this.getEndNode().getName() + "\'");
 		}
 		return Collections.unmodifiableList(this.nodeLinks);
-
-//		List<NodeLink> returnedList;
-//		String message = "";
-//		if (this.nodeLinksSorted) {
-//			returnedList = Collections.unmodifiableList(this.nodeLinks);
-//			message += "Sorted list ";
-//		}
-//		else {
-//			returnedList = findNodeLinks();
-//			message += "Conditional list ";
-//		}
-//		message += "For physical link " + this.id.toString() + " getNodeLinks() returns " + returnedList.size() + " objects: ";
-//		for(NodeLink nodeLink : returnedList) {
-//			message += " " + nodeLink.getId().toString();
-//		}
-//		Log.debugMessage(message, FINEST);
-//		return returnedList;
-	}
-
-	@SuppressWarnings("unused")
-	private List<NodeLink> findNodeLinks() {
-		throw new UnsupportedOperationException("empty node links");
-//		try {
-//			final StorableObjectCondition condition = new LinkedIdsCondition(this.getId(), NODELINK_CODE);
-//
-//			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-//			final Set<NodeLink> nlinks = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
-//			final List<NodeLink> nlinkslist = new ArrayList<NodeLink>(nlinks.size());
-//			for(NodeLink nodeLink : nlinks) {
-//				if(!nodeLink.isRemoved()) {
-//					nlinkslist.add(nodeLink);
-//				}
-//			}
-//			return nlinkslist;
-//		} catch(ApplicationException e) {
-//			e.printStackTrace();
-//		}
-//		return new LinkedList<NodeLink>();
 	}
 
 	public void setNodeLinks(final List<NodeLink> nodeLinks) {
+		this.initialize();
 		this.nodeLinks.clear();
 		if (nodeLinks != null)
 			this.nodeLinks.addAll(nodeLinks);
@@ -610,6 +617,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 *          фрагмент линии
 	 */
 	public void removeNodeLink(final NodeLink nodeLink) {
+		this.initialize();
 		this.nodeLinks.remove(nodeLink);
 		Log.debugMessage("For physical link " + this.id.toString() + " remove nodeLink = " + nodeLink.getId().toString(), FINEST);
 		this.nodeLinksSorted = false;
@@ -624,6 +632,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 *          фрагмент линии
 	 */
 	public void addNodeLink(final NodeLink nodeLink) {
+		this.initialize();
 		if (!this.nodeLinks.contains(nodeLink)) {
 			this.nodeLinks.add(nodeLink);
 			Log.debugMessage("For physical link " + this.id.toString() + " add nodeLink = " + nodeLink.getId().toString(), FINEST);
@@ -636,6 +645,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 * Убрать все фрагмента из состава линии.
 	 */
 	public void clearNodeLinks() {
+		this.initialize();
 		this.nodeLinks.clear();
 		this.nodeLinksSorted = false;
 		super.markAsChanged();
@@ -696,6 +706,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 *         не отсортированы
 	 */
 	public List<AbstractNode> getSortedNodes() {
+		this.initialize();
 		if (!this.nodeLinksSorted) {
 			return Collections.emptyList();
 		}
@@ -708,6 +719,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 	 *
 	 */
 	public void sortNodeLinks() {
+		this.initialize();
 		if (!this.nodeLinksSorted) {
 			AbstractNode smne = this.getStartNode();
 			NodeLink currentNodeLink = null;
@@ -857,8 +869,8 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		double y = 0.0;
 		DoublePoint point = new DoublePoint(0.0, 0.0);
 
-		for (NodeLink mnle: getNodeLinks()) {
-			DoublePoint an = mnle.getLocation();
+		for (NodeLink nodeLink : getNodeLinks()) {
+			DoublePoint an = nodeLink.getLocation();
 			x += an.getX();
 			y += an.getY();
 			count++;
@@ -900,11 +912,14 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.nodeLinksSorted = false;
 	}
 
+	public void addCharacteristic(Characteristic characteristic) {
+		this.initialize();
+		this.characteristics.add(characteristic);
+	}
+	
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characterizableDelegate == null) {
-			this.characterizableDelegate = new CharacterizableDelegate(this.id);
-		}
-		return this.characterizableDelegate.getCharacteristics(usePool);
+		this.initialize();
+		return this.characteristics;
 	}
 
 	public XmlPhysicalLink getXmlTransferable(final String importType) {
