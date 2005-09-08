@@ -308,7 +308,8 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 			LinkTypeController linkTypeController = (LinkTypeController)
 				LinkTypeController.getInstance();
 			
-			this.colorComboBox.setSelectedItem(linkTypeController.getColor(this.type));
+			Color color = linkTypeController.getColor(this.type);
+			this.colorComboBox.addItem(color);
 			this.thicknessComboBox.setSelectedValue(linkTypeController.getLineSize(this.type));
 //			this.styleComboBox.setSelectedItem(physicalLinkController.getStyle(this.link);
 		}
