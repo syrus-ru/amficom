@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.82 2005/09/05 17:43:15 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.83 2005/09/08 14:09:26 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,9 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.Namable;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -55,8 +57,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.82 $, $Date: 2005/09/05 17:43:15 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.83 $, $Date: 2005/09/08 14:09:26 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -94,7 +96,7 @@ public final class PhysicalLinkType extends StorableObjectType
 	
 	private boolean topological;
 
-	private transient CharacterizableDelegate characterizableDelegate;
+	private transient Set<Characteristic> characteristics;
 
 	PhysicalLinkType(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
 		super(id);
@@ -306,11 +308,34 @@ public final class PhysicalLinkType extends StorableObjectType
 		super.setCodename0(codename);
 	}
 
-	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characterizableDelegate == null) {
-			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+	public void addCharacteristic(Characteristic characteristic) {
+		if(this.characteristics == null) {
+			try {
+				final Set<Characteristic> chs = StorableObjectPool.getStorableObjectsByCondition(
+						new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE), 
+						true);
+				this.characteristics = new HashSet<Characteristic>(chs);
+			} catch(ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
-		return this.characterizableDelegate.getCharacteristics(usePool);
+		this.characteristics.add(characteristic);
+	}
+	
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if(this.characteristics == null) {
+			try {
+				final Set<Characteristic> chs = StorableObjectPool.getStorableObjectsByCondition(
+						new LinkedIdsCondition(this.id, ObjectEntities.CHARACTERISTIC_CODE), 
+						true);
+				this.characteristics = new HashSet<Characteristic>(chs);
+			} catch(ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+		return this.characteristics;
 	}
 
 	public PhysicalLinkTypeSort getSort() {
