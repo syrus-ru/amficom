@@ -1,9 +1,9 @@
-/*
- * $Id: PortType.java,v 1.83 2005/09/05 17:43:15 bass Exp $
+/*-
+ * $Id: PortType.java,v 1.84 2005/09/08 16:35:16 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.configuration;
@@ -48,7 +48,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/09/05 17:43:15 $
+ * @version $Revision: 1.84 $, $Date: 2005/09/08 16:35:16 $
  * @author $Author: bass $
  * @module config
  */
@@ -200,20 +200,22 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	}
 
 	/**
-	 * @param xmlPortType
+	 * @param portType
 	 * @param importType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
-	public void fromXmlTransferable(final XmlPortType xmlPortType,
+	public void fromXmlTransferable(final XmlPortType portType,
 			final String importType)
 	throws ApplicationException {
-		this.name = xmlPortType.getName();
-		this.codename = xmlPortType.getCodename();
-		this.description = xmlPortType.getDescription();
-		this.sort = xmlPortType.getSort().intValue();
-		this.kind = xmlPortType.getKind().intValue();
+		this.name = portType.getName();
+		this.codename = portType.getCodename();
+		this.description = portType.isSetDescription()
+				? portType.getDescription()
+				: "";
+		this.sort = portType.getSort().intValue();
+		this.kind = portType.getKind().intValue();
 	}
 
 	/**

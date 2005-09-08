@@ -1,14 +1,15 @@
-/*
- * $Id: LinkType.java,v 1.74 2005/09/05 17:43:15 bass Exp $
+/*-
+ * $Id: LinkType.java,v 1.75 2005/09/08 16:35:16 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
 
@@ -41,7 +42,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/09/05 17:43:15 $
+ * @version $Revision: 1.75 $, $Date: 2005/09/08 16:35:16 $
  * @author $Author: bass $
  * @module config
  */
@@ -208,22 +209,29 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 	}
 
 	/**
-	 * @param xmlLinkType
+	 * @param linkType
 	 * @param importType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
-	public void fromXmlTransferable(final XmlLinkType xmlLinkType,
+	public void fromXmlTransferable(final XmlLinkType linkType,
 			final String importType)
 	throws ApplicationException {
-		this.name = xmlLinkType.getName();
-		this.codename = xmlLinkType.getCodename();
-		this.description = xmlLinkType.getDescription();
-		this.sort = xmlLinkType.getSort().intValue();
-		this.manufacturer = xmlLinkType.getManufacturer();
-		this.manufacturerCode = xmlLinkType.getManufacturerCode();
+		this.name = linkType.getName();
+		this.codename = linkType.getCodename();
+		this.description = linkType.isSetDescription()
+				? linkType.getDescription()
+				: "";
+		this.sort = linkType.getSort().intValue();
+		this.manufacturer = linkType.isSetManufacturer()
+				? linkType.getManufacturer()
+				: "";
+		this.manufacturerCode = linkType.isSetManufacturerCode() 
+				? linkType.getManufacturerCode()
+				: "";
 		// TODO read imageId - see SiteNodeType.getImageId(Identifier userId, String codename) for example
+		this.imageId = VOID_IDENTIFIER;
 	}
 
 	/**

@@ -1,9 +1,9 @@
-/*
- * $Id: EquipmentType.java,v 1.86 2005/09/05 17:43:15 bass Exp $
+/*-
+ * $Id: EquipmentType.java,v 1.87 2005/09/08 16:35:16 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.configuration;
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.86 $, $Date: 2005/09/05 17:43:15 $
+ * @version $Revision: 1.87 $, $Date: 2005/09/08 16:35:16 $
  * @author $Author: bass $
  * @module config
  */
@@ -193,20 +193,26 @@ public final class EquipmentType extends StorableObjectType implements Character
 	}
 
 	/**
-	 * @param xmlEquipmentType
+	 * @param equipmentType
 	 * @param importType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
-	public void fromXmlTransferable(final XmlEquipmentType xmlEquipmentType,
+	public void fromXmlTransferable(final XmlEquipmentType equipmentType,
 			final String importType)
 	throws ApplicationException {
-		this.name = xmlEquipmentType.getName();
-		this.codename = xmlEquipmentType.getCodename();
-		this.description = xmlEquipmentType.getDescription();
-		this.manufacturer = xmlEquipmentType.getManufacturer();
-		this.manufacturerCode = xmlEquipmentType.getManufacturerCode();
+		this.name = equipmentType.getName();
+		this.codename = equipmentType.getCodename();
+		this.description = equipmentType.isSetDescription()
+				? equipmentType.getDescription()
+				: "";
+		this.manufacturer = equipmentType.isSetManufacturer()
+				? equipmentType.getManufacturer()
+				: "";
+		this.manufacturerCode = equipmentType.isSetManufacturerCode()
+				? equipmentType.getManufacturerCode()
+				: "";
 	}
 
 	/**

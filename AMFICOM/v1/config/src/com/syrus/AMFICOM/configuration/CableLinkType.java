@@ -1,14 +1,15 @@
-/*
- * $Id: CableLinkType.java,v 1.68 2005/09/05 17:43:15 bass Exp $
+/*-
+ * $Id: CableLinkType.java,v 1.69 2005/09/08 16:35:16 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -47,7 +48,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/09/05 17:43:15 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/08 16:35:16 $
  * @author $Author: bass $
  * @module config
  */
@@ -208,26 +209,33 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 	}
 
 	/**
-	 * @param xmlCableLinkType
+	 * @param cableLinkType
 	 * @param importType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
-	public void fromXmlTransferable(final XmlCableLinkType xmlCableLinkType,
+	public void fromXmlTransferable(final XmlCableLinkType cableLinkType,
 			final String importType)
 	throws ApplicationException {
-		this.name = xmlCableLinkType.getName();
-		this.codename = xmlCableLinkType.getCodename();
-		this.description = xmlCableLinkType.getDescription();
-		this.sort = xmlCableLinkType.getSort().intValue();
-		this.manufacturer = xmlCableLinkType.getManufacturer();
-		this.manufacturerCode = xmlCableLinkType.getManufacturerCode();
+		this.name = cableLinkType.getName();
+		this.codename = cableLinkType.getCodename();
+		this.description = cableLinkType.isSetDescription()
+				? cableLinkType.getDescription()
+				: "";
+		this.sort = cableLinkType.getSort().intValue();
+		this.manufacturer = cableLinkType.isSetManufacturer()
+				? cableLinkType.getManufacturer()
+				: "";
+		this.manufacturerCode = cableLinkType.isSetManufacturerCode()
+				? cableLinkType.getManufacturerCode()
+				: "";
 		// TODO read imageId - see SiteNodeType.getImageId(Identifier userId, String codename) for example
-
-		final List<XmlCableThreadType> xmlCableThreadTypeList = xmlCableLinkType.getCableThreadTypes().getCableThreadTypeList();
-		for (XmlCableThreadType xmlCableThreadType : xmlCableThreadTypeList) {
-			CableThreadType.createInstance(this.creatorId, importType, xmlCableThreadType);
+		this.imageId = VOID_IDENTIFIER;
+		if (cableLinkType.isSetCableThreadTypes()) {
+			for (final XmlCableThreadType cableThreadType : cableLinkType.getCableThreadTypes().getCableThreadTypeArray()) {
+				CableThreadType.createInstance(this.creatorId, importType, cableThreadType);
+			}
 		}
 	}
 

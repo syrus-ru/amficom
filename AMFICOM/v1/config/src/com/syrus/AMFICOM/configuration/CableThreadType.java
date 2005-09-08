@@ -1,9 +1,9 @@
-/*
- * $Id: CableThreadType.java,v 1.61 2005/09/08 14:19:15 max Exp $
+/*-
+ * $Id: CableThreadType.java,v 1.62 2005/09/08 16:35:16 bass Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.configuration;
@@ -51,8 +51,8 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.61 $, $Date: 2005/09/08 14:19:15 $
- * @author $Author: max $
+ * @version $Revision: 1.62 $, $Date: 2005/09/08 16:35:16 $
+ * @author $Author: bass $
  * @module config
  */
 
@@ -210,21 +210,25 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	}
 
 	/**
-	 * @param xmlCableThreadType
+	 * @param cableThreadType
 	 * @param importType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
-	public void fromXmlTransferable(final XmlCableThreadType xmlCableThreadType,
+	public void fromXmlTransferable(final XmlCableThreadType cableThreadType,
 			final String importType)
 	throws ApplicationException {
-		this.name = xmlCableThreadType.getName();
-		this.codename = xmlCableThreadType.getCodename();
-		this.description = xmlCableThreadType.getDescription();
-		this.color = Integer.parseInt(xmlCableThreadType.getColor());
-		this.linkTypeId = Identifier.fromXmlTransferable(xmlCableThreadType.getLinkTypeId(), LINK_TYPE_CODE, importType);
-		this.cableLinkTypeId = Identifier.fromXmlTransferable(xmlCableThreadType.getCableLinkTypeId(), CABLELINK_TYPE_CODE, importType);
+		this.name = cableThreadType.getName();
+		this.codename = cableThreadType.getCodename();
+		this.description = cableThreadType.isSetDescription()
+				? cableThreadType.getDescription()
+				: "";
+		this.color = cableThreadType.isSetColor()
+				? Integer.parseInt(cableThreadType.getColor())
+				: -1;
+		this.linkTypeId = Identifier.fromXmlTransferable(cableThreadType.getLinkTypeId(), LINK_TYPE_CODE, importType);
+		this.cableLinkTypeId = Identifier.fromXmlTransferable(cableThreadType.getCableLinkTypeId(), CABLELINK_TYPE_CODE, importType);
 	}
 
 	/**
