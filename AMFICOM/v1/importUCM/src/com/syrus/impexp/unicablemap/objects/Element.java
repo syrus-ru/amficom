@@ -1,5 +1,5 @@
 /*-
- * $Id: Element.java,v 1.2 2005/09/07 12:47:46 stas Exp $
+ * $Id: Element.java,v 1.3 2005/09/08 06:34:32 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -146,9 +146,9 @@ public class Element {
 		xmlSE.setLabel(this.label);
 		
 		if (this.kind.equals("SCHEMED")) {
-			xmlSE.setKind(Kind.SCHEMED);
+			xmlSE.setKind(Kind.SCHEME_CONTAINER);
 		} else {
-			xmlSE.setKind(Kind.EQUIPMENTED);
+			xmlSE.setKind(Kind.SCHEME_ELEMENT_CONTAINER);
 		}
 		
 		XmlIdentifier siteNodeUid = xmlSE.addNewSiteNodeId();
