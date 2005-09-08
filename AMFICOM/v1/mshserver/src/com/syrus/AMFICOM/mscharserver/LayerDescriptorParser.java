@@ -1,5 +1,5 @@
 /*-
- * $Id: LayerDescriptorParser.java,v 1.5 2005/08/24 15:35:52 arseniy Exp $
+ * $Id: LayerDescriptorParser.java,v 1.6 2005/09/08 06:42:22 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.util.Log;
 
 /**
  * @author max
- * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/24 15:35:52 $
+ * @author $Author: max $
+ * @version $Revision: 1.6 $, $Date: 2005/09/08 06:42:22 $
  * @module mshserver_v1
  */
 
@@ -41,6 +41,7 @@ public class LayerDescriptorParser {
 			return layerFiles;
 		}
 
+		@SuppressWarnings("unchecked")
 		final List<Node> layerNodeList = document.selectNodes("//MapDefinitionLayer");
 		for (Node node : layerNodeList) {
 			final Node layerNameNode = node.selectSingleNode("ServerQuery/Table");
@@ -59,16 +60,21 @@ public class LayerDescriptorParser {
 			String datFileName = layerName.substring(0 , layerName.length()-3) + "DAT";
 			String idFileName = layerName.substring(0 , layerName.length()-3) + "ID";
 			String mapFileName = layerName.substring(0 , layerName.length()-3) + "MAP";
+			String indFileName = layerName.substring(0 , layerName.length()-3) + "IND";
 			
 			final File layerFile = new File(layerPath, layerName);
 			final File datFile = new File(layerPath, datFileName);
 			final File idFile = new File(layerPath, idFileName);
 			final File mapFile = new File(layerPath, mapFileName);
-			
+			final File indFile = new File(layerPath, indFileName);
+						
 			layerFiles.add(new LayerDescriptor(layerName, layerFile.getPath(), layerFile.length(), layerFile.lastModified()));
 			layerFiles.add(new LayerDescriptor(datFileName, datFile.getPath(), datFile.length(), datFile.lastModified()));
 			layerFiles.add(new LayerDescriptor(idFileName, idFile.getPath(), idFile.length(), idFile.lastModified()));
 			layerFiles.add(new LayerDescriptor(mapFileName, mapFile.getPath(), mapFile.length(), mapFile.lastModified()));
+			if(indFile.exists() && indFile.isFile()) {
+				layerFiles.add(new LayerDescriptor(indFileName, indFile.getPath(), indFile.length(), indFile.lastModified()));
+			}
 		}
 		return layerFiles;
 	}	
