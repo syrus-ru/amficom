@@ -1,5 +1,5 @@
 /*
- * $Id: DateCondition.java,v 1.4 2005/08/25 10:28:12 max Exp $
+ * $Id: DateCondition.java,v 1.5 2005/09/08 06:22:49 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.newFilter;
 import java.util.Date;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/08/25 10:28:12 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/08 06:22:49 $
  * @author $Author: max $
  * @module filter
  */
@@ -41,6 +41,6 @@ public class DateCondition implements TemporalCondition {
 	}
 	
 	public boolean isEmpty() {
-		return empty;
+		return this.empty;
 	}
 }
