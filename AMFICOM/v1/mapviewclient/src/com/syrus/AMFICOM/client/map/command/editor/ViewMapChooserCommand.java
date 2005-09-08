@@ -1,5 +1,5 @@
 /*
- * $Id: ViewMapChooserCommand.java,v 1.5 2005/08/29 08:17:24 krupenn Exp $
+ * $Id: ViewMapChooserCommand.java,v 1.6 2005/09/08 15:54:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.5 $, $Date: 2005/08/29 08:17:24 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/08 15:54:01 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand
@@ -73,7 +73,7 @@ public class ViewMapChooserCommand extends AbstractCommand {
 //			mapChooserPanel.mapSelected();
 			this.mapFrame.getMapViewer().getLogicalNetLayer()
 					.getContext().getDispatcher().firePropertyChange(
-							new MapEvent(this, MapEvent.NEED_FULL_REPAINT));
+							new MapEvent(this, MapEvent.TOPOLOGY_CHANGED));
 		}		
 		setResult(Command.RESULT_OK);
 	}
