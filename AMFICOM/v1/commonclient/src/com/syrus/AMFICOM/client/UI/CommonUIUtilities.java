@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/31 07:53:39 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/08 14:02:59 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -107,6 +107,21 @@ public final class CommonUIUtilities {
 			}
 		}
 		return toAdd;
+	}
+	
+	/**
+	 * convert string into HTML
+	 * @param string input string 
+	 * @return htmled string
+	 */
+	public static final String convertToHTMLString(final String string) {
+		final StringBuffer buffer = new StringBuffer("<html>");
+		String s = string.replaceAll("<", "&lt;").replaceAll("<", "&lt;");
+		if (s.indexOf('\n') >= 0) {
+			buffer.append(s.replaceAll("\n", "<br>"));			
+		}
+		buffer.append("</html>");
+		return buffer.toString();
 	}
 
 	public static boolean contains(Collection collection, StorableObject obj) {
