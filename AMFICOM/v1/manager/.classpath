@@ -12,5 +12,7 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/leserver"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/resource"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement"/>
+	<classpathentry kind="var" path="AMFICOM_HOME/lib/generalxml.jar"/>
+	<classpathentry kind="var" path="EXTLIB/trove.jar"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
