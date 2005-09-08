@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserXML.java,v 1.2 2005/08/24 11:34:02 bass Exp $
+* $Id: SystemUserXML.java,v 1.3 2005/09/08 16:34:40 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.AbstractStorableObjectXML;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/24 11:34:02 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/08 16:34:40 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module admin
@@ -48,7 +48,6 @@ public class SystemUserXML extends AbstractStorableObjectXML<SystemUser> {
 		return keys;
 	}
 	
-	@SuppressWarnings("boxing")
 	@Override
 	public SystemUser getStorableObject(final Map<String, Object> objectMap) {
 		SystemUser systemUser = 
@@ -56,7 +55,7 @@ public class SystemUserXML extends AbstractStorableObjectXML<SystemUser> {
 				this.getIdentifier(objectMap, StorableObjectWrapper.COLUMN_CREATOR_ID),
 				this.getVersion(objectMap, StorableObjectWrapper.COLUMN_VERSION),
 				this.getString(objectMap, COLUMN_LOGIN),
-				this.getInteger(objectMap, COLUMN_SORT),
+				this.getInteger(objectMap, COLUMN_SORT).intValue(),
 				this.getString(objectMap, COLUMN_NAME),
 				this.getString(objectMap, COLUMN_DESCRIPTION));
 		return systemUser;

@@ -1,10 +1,11 @@
 /*-
- * $Id: SchemeCableLinkWrapper.java,v 1.8 2005/08/13 11:20:58 max Exp $
+ * $Id: SchemeCableLinkWrapper.java,v 1.9 2005/09/08 16:34:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.scheme;
 
 import java.util.Arrays;
@@ -15,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/13 11:20:58 $
- * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2005/09/08 16:34:40 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class SchemeCableLinkWrapper extends StorableObjectWrapper<SchemeCableLink> {
@@ -99,7 +100,6 @@ public final class SchemeCableLinkWrapper extends StorableObjectWrapper<SchemeCa
 	}
 
 	@Override
-	@SuppressWarnings("boxing")
 	public Object getValue(SchemeCableLink schemeCableLink, String key) {
 		final Object value = super.getValue(schemeCableLink, key);
 		if (value != null) {
@@ -111,9 +111,9 @@ public final class SchemeCableLinkWrapper extends StorableObjectWrapper<SchemeCa
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				return schemeCableLink.getDescription();
 			} else if (key.equals(COLUMN_PHYSICAL_LENGTH)) {
-				return schemeCableLink.getPhysicalLength();
+				return Double.valueOf(schemeCableLink.getPhysicalLength());
 			} else if (key.equals(COLUMN_OPTICAL_LENGTH)) {
-				return schemeCableLink.getOpticalLength();
+				return Double.valueOf(schemeCableLink.getOpticalLength());
 			} else if (key.equals(COLUMN_CABLE_LINK_TYPE_ID)) {
 				return schemeCableLink.getAbstractLinkTypeId();
 			} else if (key.equals(COLUMN_CABLE_LINK_ID)) {
@@ -134,7 +134,6 @@ public final class SchemeCableLinkWrapper extends StorableObjectWrapper<SchemeCa
 	}
 
 	@Override
-	@SuppressWarnings("boxing")
 	public void setValue(SchemeCableLink schemeCableLink, String key, Object value) {
 		if (schemeCableLink != null) {
 			if (key.equals(COLUMN_NAME)) {
@@ -142,9 +141,9 @@ public final class SchemeCableLinkWrapper extends StorableObjectWrapper<SchemeCa
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				schemeCableLink.setDescription((String) value);
 			} else if (key.equals(COLUMN_PHYSICAL_LENGTH)) {
-				schemeCableLink.setPhysicalLength((Double) value);
+				schemeCableLink.setPhysicalLength(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_OPTICAL_LENGTH)) {
-				schemeCableLink.setOpticalLength((Double) value);
+				schemeCableLink.setOpticalLength(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_CABLE_LINK_TYPE_ID)) {
 				schemeCableLink.setAbstractLinkTypeId((Identifier) value);
 			} else if (key.equals(COLUMN_CABLE_LINK_ID)) {

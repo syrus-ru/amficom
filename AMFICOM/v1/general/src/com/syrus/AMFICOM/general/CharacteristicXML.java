@@ -1,5 +1,5 @@
 /*-
-* $Id: CharacteristicXML.java,v 1.2 2005/08/24 11:34:02 bass Exp $
+* $Id: CharacteristicXML.java,v 1.3 2005/09/08 16:34:41 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import java.util.Map;
 
 import static com.syrus.AMFICOM.general.CharacteristicWrapper.*;
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/24 11:34:02 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/08 16:34:41 $
  * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module general
@@ -44,7 +44,6 @@ public class CharacteristicXML extends AbstractStorableObjectXML<Characteristic>
 		return keys;
 	}
 	
-	@SuppressWarnings("boxing")
 	@Override
 	public Characteristic getStorableObject(final Map<String, Object> objectMap) {
 		Characteristic characteristic = 
@@ -56,8 +55,8 @@ public class CharacteristicXML extends AbstractStorableObjectXML<Characteristic>
 				this.getString(objectMap, COLUMN_DESCRIPTION),
 				this.getString(objectMap, COLUMN_VALUE),
 				this.getIdentifier(objectMap, COLUMN_CHARACTERIZABLE_ID),
-				this.getBoolean(objectMap, COLUMN_EDITABLE),
-				this.getBoolean(objectMap, COLUMN_VISIBLE));
+				this.getBoolean(objectMap, COLUMN_EDITABLE).booleanValue(),
+				this.getBoolean(objectMap, COLUMN_VISIBLE).booleanValue());
 		return characteristic;
 	}
 	

@@ -1,5 +1,5 @@
 /*-
-* $Id: KISXML.java,v 1.1 2005/08/22 13:55:29 bob Exp $
+* $Id: KISXML.java,v 1.2 2005/09/08 16:38:29 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/22 13:55:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/09/08 16:38:29 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
@@ -66,7 +66,7 @@ private static List<String> keys;
 				this.getString(objectMap, COLUMN_NAME),
 				this.getString(objectMap, COLUMN_DESCRIPTION),
 				this.getString(objectMap, COLUMN_HOSTNAME),
-				this.getShort(objectMap, COLUMN_TCP_PORT),
+				this.getShort(objectMap, COLUMN_TCP_PORT).shortValue(),
 				this.getIdentifier(objectMap, COLUMN_EQUIPMENT_ID),
 				this.getIdentifier(objectMap, COLUMN_MCM_ID));
 		return kis;

@@ -1,10 +1,11 @@
 /*-
- * $Id: CableChannelingItemWrapper.java,v 1.12 2005/08/25 14:01:12 bass Exp $
+ * $Id: CableChannelingItemWrapper.java,v 1.13 2005/09/08 16:34:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.scheme;
 
 import java.util.Arrays;
@@ -15,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/25 14:01:12 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/08 16:34:40 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -87,7 +88,6 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper<Cabl
 	}
 
 	@Override
-	@SuppressWarnings("boxing")
 	public Object getValue(final CableChannelingItem cableChannelingItem, final String key) {
 		final Object value = super.getValue(cableChannelingItem, key);
 		if (value != null) {
@@ -95,13 +95,13 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper<Cabl
 		}
 		if (cableChannelingItem != null) {
 			if (key.equals(COLUMN_START_SPARE)) {
-				return cableChannelingItem.getStartSpare();
+				return Double.valueOf(cableChannelingItem.getStartSpare());
 			} else if (key.equals(COLUMN_END_SPARE)) {
-				return cableChannelingItem.getEndSpare();
+				return Double.valueOf(cableChannelingItem.getEndSpare());
 			} else if (key.equals(COLUMN_ROW_X)) {
-				return cableChannelingItem.getRowX();
+				return Integer.valueOf(cableChannelingItem.getRowX());
 			} else if (key.equals(COLUMN_PLACE_Y)) {
-				return cableChannelingItem.getPlaceY();
+				return Integer.valueOf(cableChannelingItem.getPlaceY());
 			} else if (key.equals(COLUMN_PHYSICAL_LINK_ID)) {
 				return cableChannelingItem.getPhysicalLinkId();
 			} else if (key.equals(COLUMN_START_SITE_NODE_ID)) {
@@ -120,17 +120,16 @@ public final class CableChannelingItemWrapper extends StorableObjectWrapper<Cabl
 	}
 
 	@Override
-	@SuppressWarnings("boxing")
 	public void setValue(final CableChannelingItem cableChannelingItem, final String key, final Object value) {
 		if (cableChannelingItem != null) {
 			if (key.equals(COLUMN_START_SPARE)) {
-				cableChannelingItem.setStartSpare((Double) value);
+				cableChannelingItem.setStartSpare(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_END_SPARE)) {
-				cableChannelingItem.setEndSpare((Double) value);
+				cableChannelingItem.setEndSpare(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_ROW_X)) {
-				cableChannelingItem.setRowX((Integer) value);
+				cableChannelingItem.setRowX(((Integer) value).intValue());
 			} else if (key.equals(COLUMN_PLACE_Y)) {
-				cableChannelingItem.setPlaceY((Integer) value);
+				cableChannelingItem.setPlaceY(((Integer) value).intValue());
 			} else if (key.equals(COLUMN_PHYSICAL_LINK_ID)) {
 				cableChannelingItem.setPhysicalLinkId((Identifier) value);
 			} else if (key.equals(COLUMN_START_SITE_NODE_ID)) {

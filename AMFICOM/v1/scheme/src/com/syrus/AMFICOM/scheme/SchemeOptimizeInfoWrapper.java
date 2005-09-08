@@ -1,10 +1,11 @@
 /*-
- * $Id: SchemeOptimizeInfoWrapper.java,v 1.8 2005/08/15 15:19:23 max Exp $
+ * $Id: SchemeOptimizeInfoWrapper.java,v 1.9 2005/09/08 16:34:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.scheme;
 
 import java.util.Arrays;
@@ -15,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/15 15:19:23 $
- * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2005/09/08 16:34:40 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper<SchemeOptimizeInfo> {
@@ -128,7 +129,6 @@ public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper<Schem
 	}
 
 	@Override
-	@SuppressWarnings("boxing")
 	public Object getValue(SchemeOptimizeInfo schemeOptimizeInfo, String key) {
 		final Object value = super.getValue(schemeOptimizeInfo, key);
 		if (value != null) {
@@ -140,29 +140,29 @@ public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper<Schem
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				return schemeOptimizeInfo.getDescription();
 			} else if (key.equals(COLUMN_OPTIMIZATION_MODE)) {
-				return schemeOptimizeInfo.getOptimizationMode();
+				return Integer.valueOf(schemeOptimizeInfo.getOptimizationMode());
 			} else if (key.equals(COLUMN_ITERATIONS)) {
-				return schemeOptimizeInfo.getIterations();
+				return Integer.valueOf(schemeOptimizeInfo.getIterations());
 			} else if (key.equals(COLUMN_PRICE)) {
-				return schemeOptimizeInfo.getPrice();
+				return Double.valueOf(schemeOptimizeInfo.getPrice());
 			} else if (key.equals(COLUMN_WAVE_LENGTH)) {
-				return schemeOptimizeInfo.getWaveLength();
+				return Double.valueOf(schemeOptimizeInfo.getWaveLength());
 			} else if (key.equals(COLUMN_LEN_MARGIN)) {
-				return schemeOptimizeInfo.getLenMargin();
+				return Double.valueOf(schemeOptimizeInfo.getLenMargin());
 			} else if (key.equals(COLUMN_MUTATION_RATE)) {
-				return schemeOptimizeInfo.getMutationRate();
+				return Double.valueOf(schemeOptimizeInfo.getMutationRate());
 			} else if (key.equals(COLUMN_MUTATION_DEGREE)) {
-				return schemeOptimizeInfo.getMutationDegree();
+				return Double.valueOf(schemeOptimizeInfo.getMutationDegree());
 			} else if (key.equals(COLUMN_RTU_DELETE_PROB)) {
-				return schemeOptimizeInfo.getRtuDeleteProb();
+				return Double.valueOf(schemeOptimizeInfo.getRtuDeleteProb());
 			} else if (key.equals(COLUMN_RTU_CREATE_PROB)) {
-				return schemeOptimizeInfo.getRtuCreateProb();
+				return Double.valueOf(schemeOptimizeInfo.getRtuCreateProb());
 			} else if (key.equals(COLUMN_NODES_SPLICE_PROB)) {
-				return schemeOptimizeInfo.getNodesSpliceProb();
+				return Double.valueOf(schemeOptimizeInfo.getNodesSpliceProb());
 			} else if (key.equals(COLUMN_NODES_CUT_PROB)) {
-				return schemeOptimizeInfo.getNodesCutProb();
+				return Double.valueOf(schemeOptimizeInfo.getNodesCutProb());
 			} else if (key.equals(COLUMN_SURVIVOR_RATE)) {
-				return schemeOptimizeInfo.getSurvivorRate();
+				return Double.valueOf(schemeOptimizeInfo.getSurvivorRate());
 			} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
 				return schemeOptimizeInfo.getParentScheme();
 			}
@@ -175,7 +175,6 @@ public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper<Schem
 	}
 
 	@Override
-	@SuppressWarnings("boxing")
 	public void setValue(SchemeOptimizeInfo schemeOptimizeInfo, String key, Object value) {
 		if (schemeOptimizeInfo != null) {
 			if (key.equals(COLUMN_NAME)) {
@@ -183,29 +182,29 @@ public final class SchemeOptimizeInfoWrapper extends StorableObjectWrapper<Schem
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				schemeOptimizeInfo.setDescription((String) value);
 			} else if (key.equals(COLUMN_OPTIMIZATION_MODE)) {
-				schemeOptimizeInfo.setOptimizationMode((Integer) value);
+				schemeOptimizeInfo.setOptimizationMode(((Integer) value).intValue());
 			} else if (key.equals(COLUMN_ITERATIONS)) {
-				schemeOptimizeInfo.setIterations((Integer) value);
+				schemeOptimizeInfo.setIterations(((Integer) value).intValue());
 			} else if (key.equals(COLUMN_PRICE)) {
-				schemeOptimizeInfo.setPrice((Double) value);
+				schemeOptimizeInfo.setPrice(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_WAVE_LENGTH)) {
-				schemeOptimizeInfo.setWaveLength((Double) value);
+				schemeOptimizeInfo.setWaveLength(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_LEN_MARGIN)) {
-				schemeOptimizeInfo.setLenMargin((Double) value);
+				schemeOptimizeInfo.setLenMargin(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_MUTATION_RATE)) {
-				schemeOptimizeInfo.setMutationRate((Double) value);
+				schemeOptimizeInfo.setMutationRate(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_MUTATION_DEGREE)) {
-				schemeOptimizeInfo.setMutationDegree((Double) value);
+				schemeOptimizeInfo.setMutationDegree(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_RTU_DELETE_PROB)) {
-				schemeOptimizeInfo.setRtuDeleteProb((Double) value);
+				schemeOptimizeInfo.setRtuDeleteProb(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_RTU_CREATE_PROB)) {
-				schemeOptimizeInfo.setRtuCreateProb((Double) value);
+				schemeOptimizeInfo.setRtuCreateProb(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_NODES_SPLICE_PROB)) {
-				schemeOptimizeInfo.setNodesSpliceProb((Double) value);
+				schemeOptimizeInfo.setNodesSpliceProb(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_NODES_CUT_PROB)) {
-				schemeOptimizeInfo.setNodesCutProb((Double) value);
+				schemeOptimizeInfo.setNodesCutProb(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_SURVIVOR_RATE)) {
-				schemeOptimizeInfo.setSurvivorRate((Double) value);
+				schemeOptimizeInfo.setSurvivorRate(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_PARENT_SCHEME_ID)) {
 				schemeOptimizeInfo.setParentSchemeId((Identifier) value);
 			}

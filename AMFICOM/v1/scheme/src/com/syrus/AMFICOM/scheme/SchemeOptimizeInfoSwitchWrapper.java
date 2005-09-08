@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.7 2005/08/16 12:01:39 max Exp $
+ * $Id: SchemeOptimizeInfoSwitchWrapper.java,v 1.8 2005/09/08 16:34:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.7 $, $Date: 2005/08/16 12:01:39 $
+ * @author $Author: bass $
+ * @version $Revision: 1.8 $, $Date: 2005/09/08 16:34:40 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper<SchemeOptimizeInfoSwitch> {
@@ -109,15 +109,14 @@ public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper
 	 * @see com.syrus.util.Wrapper#setValue(java.lang.Object, java.lang.String, java.lang.Object)
 	 */
 	@Override
-	@SuppressWarnings("boxing")
 	public void setValue(SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch, String key, Object value) {
 		if (schemeOptimizeInfoSwitch != null) {
 			if (key.equals(COLUMN_NAME)) {
 				schemeOptimizeInfoSwitch.setName((String) value);
 			} else if (key.equals(COLUMN_PRICE)) {
-				schemeOptimizeInfoSwitch.setPriceUsd((Integer) value);
+				schemeOptimizeInfoSwitch.setPriceUsd(((Integer) value).intValue());
 			} else if (key.equals(COLUMN_NO_OF_PORTS)) {
-				schemeOptimizeInfoSwitch.setNoOfPorts((Byte) value);
+				schemeOptimizeInfoSwitch.setNoOfPorts(((Byte) value).byteValue());
 			} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
 				schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfoId((Identifier) value);
 			}
@@ -129,7 +128,6 @@ public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper
 	 * @param key
 	 */
 	@Override
-	@SuppressWarnings("boxing")
 	public Object getValue(SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch, String key) {
 		final Object value = super.getValue(schemeOptimizeInfoSwitch, key);
 		if (value != null) {
@@ -139,9 +137,9 @@ public final class SchemeOptimizeInfoSwitchWrapper extends StorableObjectWrapper
 			if (key.equals(COLUMN_NAME)) {
 				return schemeOptimizeInfoSwitch.getName();
 			} else if (key.equals(COLUMN_PRICE)) {
-				return schemeOptimizeInfoSwitch.getPriceUsd();
+				return Integer.valueOf(schemeOptimizeInfoSwitch.getPriceUsd());
 			} else if (key.equals(COLUMN_NO_OF_PORTS)) {
-				return schemeOptimizeInfoSwitch.getNoOfPorts();
+				return Byte.valueOf(schemeOptimizeInfoSwitch.getNoOfPorts());
 			} else if (key.equals(COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID)) {
 				return schemeOptimizeInfoSwitch.getParentSchemeOptimizeInfoId();
 			}

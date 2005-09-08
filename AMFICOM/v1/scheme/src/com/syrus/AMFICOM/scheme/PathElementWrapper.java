@@ -1,10 +1,11 @@
 /*-
- * $Id: PathElementWrapper.java,v 1.11 2005/08/30 08:00:18 bass Exp $
+ * $Id: PathElementWrapper.java,v 1.12 2005/09/08 16:34:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.scheme;
 
 import java.util.Arrays;
@@ -15,7 +16,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/30 08:00:18 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/08 16:34:40 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -95,7 +96,6 @@ public final class PathElementWrapper extends StorableObjectWrapper<PathElement>
 		//There is no property
 	}
 
-	@SuppressWarnings("boxing")
 	@Override
 	public Object getValue(final PathElement pathElement, final String key) {
 		final Object value = super.getValue(pathElement, key);
@@ -104,9 +104,9 @@ public final class PathElementWrapper extends StorableObjectWrapper<PathElement>
 		}
 		if (pathElement != null) {
 			if (key.equals(COLUMN_KIND)) {
-				return pathElement.getKind().value();
+				return Integer.valueOf(pathElement.getKind().value());
 			} else if (key.equals(COLUMN_SEQUENTIAL_NUMBER)) {
-				return pathElement.getSequentialNumber();
+				return Integer.valueOf(pathElement.getSequentialNumber());
 			} else if (key.equals(COLUMN_START_ABSTRACT_SCHEME_PORT_ID)) {
 				return pathElement.getStartAbstractSchemePortId();
 			} else if (key.equals(COLUMN_END_ABSTRACT_SCHEME_PORT_ID)) {

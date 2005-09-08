@@ -1,10 +1,11 @@
 /*-
- * $Id: SchemeLinkWrapper.java,v 1.10 2005/08/16 12:13:46 max Exp $
+ * $Id: SchemeLinkWrapper.java,v 1.11 2005/09/08 16:34:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.scheme;
 
 import java.util.Arrays;
@@ -15,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/16 12:13:46 $
- * @author $Author: max $
+ * @version $Revision: 1.11 $, $Date: 2005/09/08 16:34:40 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class SchemeLinkWrapper extends StorableObjectWrapper<SchemeLink> {
@@ -113,7 +114,6 @@ public final class SchemeLinkWrapper extends StorableObjectWrapper<SchemeLink> {
 //		there is no property
 	}
 
-	@SuppressWarnings("boxing")
 	@Override
 	public Object getValue(SchemeLink schemeLink, String key) {
 		final Object value = super.getValue(schemeLink, key);
@@ -126,9 +126,9 @@ public final class SchemeLinkWrapper extends StorableObjectWrapper<SchemeLink> {
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				return schemeLink.getDescription();
 			} else if (key.equals(COLUMN_PHYSICAL_LENGTH)) {
-				return schemeLink.getPhysicalLength();
+				return Double.valueOf(schemeLink.getPhysicalLength());
 			} else if (key.equals(COLUMN_OPTICAL_LENGTH)) {
-				return schemeLink.getOpticalLength();
+				return Double.valueOf(schemeLink.getOpticalLength());
 			} else if (key.equals(COLUMN_LINK_TYPE_ID)) {
 				return schemeLink.getAbstractLinkTypeId();
 			} else if (key.equals(COLUMN_LINK_ID)) {
@@ -154,7 +154,6 @@ public final class SchemeLinkWrapper extends StorableObjectWrapper<SchemeLink> {
 		return false;
 	}
 
-	@SuppressWarnings("boxing")
 	@Override
 	public void setValue(SchemeLink schemeLink, String key, Object value) {
 		if (schemeLink != null) {
@@ -163,9 +162,9 @@ public final class SchemeLinkWrapper extends StorableObjectWrapper<SchemeLink> {
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				schemeLink.setDescription((String) value);
 			} else if (key.equals(COLUMN_PHYSICAL_LENGTH)) {
-				schemeLink.setPhysicalLength((Double) value);
+				schemeLink.setPhysicalLength(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_OPTICAL_LENGTH)) {
-				schemeLink.setOpticalLength((Double) value);
+				schemeLink.setOpticalLength(((Double) value).doubleValue());
 			} else if (key.equals(COLUMN_LINK_TYPE_ID)) {
 				schemeLink.setAbstractLinkTypeId((Identifier) value);
 			} else if (key.equals(COLUMN_LINK_ID)) {

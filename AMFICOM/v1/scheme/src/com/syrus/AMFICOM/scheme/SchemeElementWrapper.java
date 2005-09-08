@@ -1,10 +1,11 @@
 /*-
- * $Id: SchemeElementWrapper.java,v 1.11 2005/08/16 12:22:10 max Exp $
+ * $Id: SchemeElementWrapper.java,v 1.12 2005/09/08 16:34:40 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.scheme;
 
 import java.util.Arrays;
@@ -15,8 +16,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/16 12:22:10 $
- * @author $Author: max $
+ * @version $Revision: 1.12 $, $Date: 2005/09/08 16:34:40 $
+ * @author $Author: bass $
  * @module scheme
  */
 public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElement> {
@@ -116,7 +117,6 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 		//there is no property
 	}
 
-	@SuppressWarnings("boxing")
 	@Override
 	public Object getValue(SchemeElement schemeElement, String key) {
 		final Object value = super.getValue(schemeElement, key);
@@ -129,7 +129,7 @@ public final class SchemeElementWrapper extends StorableObjectWrapper<SchemeElem
 			} else if (key.equals(COLUMN_DESCRIPTION)) {
 				return schemeElement.getDescription();
 			} else if (key.equals(COLUMN_KIND)) {
-				return schemeElement.getKind().value();
+				return Integer.valueOf(schemeElement.getKind().value());
 			} else if (key.equals(COLUMN_LABEL)) {
 				return schemeElement.getLabel();
 			} else if (key.equals(COLUMN_EQUIPMENT_TYPE_ID)) {
