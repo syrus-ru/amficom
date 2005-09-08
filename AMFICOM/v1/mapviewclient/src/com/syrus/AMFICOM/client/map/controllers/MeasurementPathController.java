@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.35 2005/09/07 12:26:20 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.36 2005/09/08 06:50:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
@@ -39,7 +40,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Контроллер топологическиго пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.35 $, $Date: 2005/09/07 12:26:20 $
+ * @version $Revision: 1.36 $, $Date: 2005/09/08 06:50:34 $
  * @module mapviewclient
  */
 public final class MeasurementPathController extends AbstractLinkController {
@@ -223,15 +224,20 @@ public final class MeasurementPathController extends AbstractLinkController {
 				}
 				break;
 			case IdlKind._SCHEME_LINK:
-				final SchemeLink link = (SchemeLink) pe.getAbstractSchemeElement();
-				final SchemeElement sse = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme(),
-						link.getSourceAbstractSchemePort().getParentSchemeDevice());
-				final SchemeElement ese = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme(),
-						link.getTargetAbstractSchemePort().getParentSchemeDevice());
-				final SiteNode ssite = mapView.findElement(sse);
-				final SiteNode esite = mapView.findElement(ese);
-				if (ssite != null && ssite.equals(esite)) {
-					me = ssite;
+				try {
+					final SchemeLink link = (SchemeLink) pe.getAbstractSchemeElement();
+					final SchemeElement sse = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme(),
+							link.getSourceAbstractSchemePort().getParentSchemeDevice());
+					final SchemeElement ese = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme(),
+							link.getTargetAbstractSchemePort().getParentSchemeDevice());
+					final SiteNode ssite = mapView.findElement(sse);
+					final SiteNode esite = mapView.findElement(ese);
+					if (ssite != null && ssite.equals(esite)) {
+						me = ssite;
+					}
+				} catch(ApplicationException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
 				}
 				break;
 			case IdlKind._SCHEME_CABLE_LINK:

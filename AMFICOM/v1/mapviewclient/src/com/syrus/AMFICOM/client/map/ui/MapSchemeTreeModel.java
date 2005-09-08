@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.31 2005/09/07 18:33:02 bass Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.32 2005/09/08 06:50:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,6 +20,7 @@ import java.util.Set;
 import javax.swing.ImageIcon;
 
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
@@ -82,8 +83,8 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.31 $, $Date: 2005/09/07 18:33:02 $
- * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/09/08 06:50:34 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapSchemeTreeModel 
@@ -397,15 +398,20 @@ public class MapSchemeTreeModel
 		final MapSchemeTreeNode treeNode = new MapSchemeTreeNode(null, PATH_BRANCH, getObjectName(PATH_BRANCH), true);
 		treeNode.setTopological(topological);
 
-		for (final SchemePath schemePath : parentScheme.getTopologicalSchemePathsRecursively()) {
-			MapSchemeTreeNode childNode;
-			if (topological) {
-				childNode = new MapSchemeTreeNode(null, schemePath, getObjectName(schemePath), pathIcon, false);
-				childNode.setDragDropEnabled(true);
-			} else {
-				childNode = new MapSchemeTreeNode(null, schemePath, getObjectName(schemePath), false);
+		try {
+			for (final SchemePath schemePath : parentScheme.getTopologicalSchemePathsRecursively()) {
+				MapSchemeTreeNode childNode;
+				if (topological) {
+					childNode = new MapSchemeTreeNode(null, schemePath, getObjectName(schemePath), pathIcon, false);
+					childNode.setDragDropEnabled(true);
+				} else {
+					childNode = new MapSchemeTreeNode(null, schemePath, getObjectName(schemePath), false);
+				}
+				treeNode.addChild(childNode);
 			}
-			treeNode.addChild(childNode);
+		} catch(ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 		
 		return treeNode;

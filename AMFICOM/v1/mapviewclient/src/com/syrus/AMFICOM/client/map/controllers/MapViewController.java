@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.53 2005/09/07 18:33:02 bass Exp $
+ * $Id: MapViewController.java,v 1.54 2005/09/08 06:50:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -59,8 +59,8 @@ import com.syrus.util.Log;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: bass $
- * @version $Revision: 1.53 $, $Date: 2005/09/07 18:33:02 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.54 $, $Date: 2005/09/08 06:50:34 $
  * @module mapviewclient
  */
 public final class MapViewController {
@@ -381,11 +381,16 @@ public final class MapViewController {
 	 */
 	public void scanElements(Scheme scheme) {
 
-		for(Iterator it = scheme.getTopologicalSchemeElementsRecursively().iterator(); it.hasNext();) {
-			SchemeElement element = (SchemeElement )it.next();
-			scanElement(element);
+		try {
+			for(Iterator it = scheme.getTopologicalSchemeElementsRecursively().iterator(); it.hasNext();) {
+				SchemeElement element = (SchemeElement )it.next();
+				scanElement(element);
+			}
+			scanCables(scheme);
+		} catch(ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		scanCables(scheme);
 	}
 
 	/**
@@ -427,19 +432,24 @@ public final class MapViewController {
 	 * @param scheme схема
 	 */
 	public void scanCables(Scheme scheme) {
-		long t1 = System.currentTimeMillis();
-		Set<SchemeCableLink> topologicalCableLinks = scheme.getTopologicalSchemeCableLinksRecursively();
-		long t2 = System.currentTimeMillis();
-		for(Iterator it = topologicalCableLinks.iterator(); it.hasNext();) {
-			SchemeCableLink scl = (SchemeCableLink )it.next();
-			scanCable(scl);
+		try {
+			long t1 = System.currentTimeMillis();
+			Set<SchemeCableLink> topologicalCableLinks = scheme.getTopologicalSchemeCableLinksRecursively();
+			long t2 = System.currentTimeMillis();
+			for(Iterator it = topologicalCableLinks.iterator(); it.hasNext();) {
+				SchemeCableLink scl = (SchemeCableLink )it.next();
+				scanCable(scl);
+			}
+			long t3 = System.currentTimeMillis();
+			scanPaths(scheme);
+			long t4 = System.currentTimeMillis();
+			Log.debugMessage("scanCables :: SchemeUtils.getTopologicalCableLinks(scheme) " + (t2 - t1) + " ms", Level.FINE);
+			Log.debugMessage("scanCables :: scanCable(scl) : topologicalCableLinks " + (t3 - t2) + " ms", Level.FINE);
+			Log.debugMessage("scanCables :: scanPaths(scheme); " + (t4 - t3) + " ms", Level.FINE);
+		} catch(ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		long t3 = System.currentTimeMillis();
-		scanPaths(scheme);
-		long t4 = System.currentTimeMillis();
-		Log.debugMessage("scanCables :: SchemeUtils.getTopologicalCableLinks(scheme) " + (t2 - t1) + " ms", Level.FINE);
-		Log.debugMessage("scanCables :: scanCable(scl) : topologicalCableLinks " + (t3 - t2) + " ms", Level.FINE);
-		Log.debugMessage("scanCables :: scanPaths(scheme); " + (t4 - t3) + " ms", Level.FINE);
 	}
 
 	/**
@@ -480,15 +490,20 @@ public final class MapViewController {
 	 * @param scheme схема
 	 */
 	public void scanPaths(final Scheme scheme) {
-		long t1 = System.currentTimeMillis();
-		Set<SchemePath> topologicalPaths = scheme.getTopologicalSchemePathsRecursively();
-		long t2 = System.currentTimeMillis();
-		for (final SchemePath schemePath : topologicalPaths) {
-			this.scanPath(schemePath);
+		try {
+			long t1 = System.currentTimeMillis();
+			Set<SchemePath> topologicalPaths = scheme.getTopologicalSchemePathsRecursively();
+			long t2 = System.currentTimeMillis();
+			for (final SchemePath schemePath : topologicalPaths) {
+				this.scanPath(schemePath);
+			}
+			long t3 = System.currentTimeMillis();
+			Log.debugMessage("scanPaths :: scheme.getTopologicalPaths() " + (t2 - t1) + " ms", Level.FINE);
+			Log.debugMessage("scanPaths :: scanPath(schemePath) : topologicalPaths " + (t3 - t2) + " ms", Level.FINE);
+		} catch(ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
-		long t3 = System.currentTimeMillis();
-		Log.debugMessage("scanPaths :: scheme.getTopologicalPaths() " + (t2 - t1) + " ms", Level.FINE);
-		Log.debugMessage("scanPaths :: scanPath(schemePath) : topologicalPaths " + (t3 - t2) + " ms", Level.FINE);
 	}
 
 	/**
@@ -496,11 +511,16 @@ public final class MapViewController {
 	 * @param scheme схема
 	 */
 	public void removePaths(final Scheme scheme) {
-		for (final SchemePath schemePath : scheme.getTopologicalSchemePathsRecursively()) {
-			final MeasurementPath measurementPath = this.mapView.findMeasurementPath(schemePath);
-			if (measurementPath != null) {
-				this.unplaceElement(measurementPath);
+		try {
+			for (final SchemePath schemePath : scheme.getTopologicalSchemePathsRecursively()) {
+				final MeasurementPath measurementPath = this.mapView.findMeasurementPath(schemePath);
+				if (measurementPath != null) {
+					this.unplaceElement(measurementPath);
+				}
 			}
+		} catch(ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -510,13 +530,18 @@ public final class MapViewController {
 	 * @param scheme схема
 	 */
 	public void removeCables(Scheme scheme) {
-		Collection schemeCables = scheme.getTopologicalSchemeCableLinksRecursively();
-		for(Iterator it = schemeCables.iterator(); it.hasNext();) {
-			SchemeCableLink scl = (SchemeCableLink )it.next();
-			CablePath cp = this.mapView.findCablePath(scl);
-			if(cp != null) {
-				unplaceElement(cp);
+		try {
+			Collection schemeCables = scheme.getTopologicalSchemeCableLinksRecursively();
+			for(Iterator it = schemeCables.iterator(); it.hasNext();) {
+				SchemeCableLink scl = (SchemeCableLink )it.next();
+				CablePath cp = this.mapView.findCablePath(scl);
+				if(cp != null) {
+					unplaceElement(cp);
+				}
 			}
+		} catch(ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
@@ -526,17 +551,22 @@ public final class MapViewController {
 	 * @param scheme схема
 	 */
 	public void removeElements(Scheme scheme) {
-		Collection schemeElements = scheme.getTopologicalSchemeElementsRecursively();
-		for(Iterator it = schemeElements.iterator(); it.hasNext();) {
-			SchemeElement se = (SchemeElement )it.next();
-			SiteNode site = this.mapView.findElement(se);
-			if(site != null) {
-				if(site instanceof UnboundNode) {
-					RemoveNodeCommandAtomic cmd = new RemoveNodeCommandAtomic(site);
-					cmd.setLogicalNetLayer(this.logicalNetLayer);
-					cmd.execute();
+		try {
+			Collection schemeElements = scheme.getTopologicalSchemeElementsRecursively();
+			for(Iterator it = schemeElements.iterator(); it.hasNext();) {
+				SchemeElement se = (SchemeElement )it.next();
+				SiteNode site = this.mapView.findElement(se);
+				if(site != null) {
+					if(site instanceof UnboundNode) {
+						RemoveNodeCommandAtomic cmd = new RemoveNodeCommandAtomic(site);
+						cmd.setLogicalNetLayer(this.logicalNetLayer);
+						cmd.execute();
+					}
 				}
 			}
+		} catch(ApplicationException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
 		}
 	}
 
