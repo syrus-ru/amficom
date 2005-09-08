@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.44 2005/09/05 09:38:04 arseniy Exp $
+ * $Id: MeasurementPath.java,v 1.45 2005/09/08 06:28:01 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Элемент пути.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.44 $, $Date: 2005/09/05 09:38:04 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.45 $, $Date: 2005/09/08 06:28:01 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -356,15 +356,19 @@ public final class MeasurementPath implements MapElement {
 						break;
 					case IdlKind._SCHEME_LINK:
 						final SchemeLink schemeLink = (SchemeLink) pathElement.getAbstractSchemeElement();
-						final SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme,
-								schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice());
-						final SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme,
-								schemeLink.getTargetAbstractSchemePort().getParentSchemeDevice());
-						final SiteNode startSiteNode = this.mapView.findElement(startSchemeElement);
-						final SiteNode endSiteNode = this.mapView.findElement(endSchemeElement);
-						if (startSiteNode == endSiteNode) {
-							// TODO think if link to 'link' is needed for mPath
-							// mPath.addCablePath(startSiteNode);
+						try {
+							final SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme,
+									schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice());
+							final SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme,
+									schemeLink.getTargetAbstractSchemePort().getParentSchemeDevice());
+							final SiteNode startSiteNode = this.mapView.findElement(startSchemeElement);
+							final SiteNode endSiteNode = this.mapView.findElement(endSchemeElement);
+							if (startSiteNode == endSiteNode) {
+								// TODO think if link to 'link' is needed for mPath
+								// mPath.addCablePath(startSiteNode);
+							}
+						} catch(ApplicationException e) {
+							e.printStackTrace();
 						}
 						break;
 					case IdlKind._SCHEME_CABLE_LINK:
