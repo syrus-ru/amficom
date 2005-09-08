@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainToolBar.java,v 1.12 2005/09/07 02:37:31 arseniy Exp $
+ * $Id: AbstractMainToolBar.java,v 1.13 2005/09/08 09:31:16 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.logging.Level;
 
 import javax.swing.AbstractButton;
 import javax.swing.JButton;
@@ -24,8 +23,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/07 02:37:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/09/08 09:31:16 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -44,25 +43,20 @@ public abstract class AbstractMainToolBar extends JToolBar {
 	public AbstractMainToolBar() {		
 		this.actionListener = new ActionListener() {
 
-			private boolean	executed	= false;
-
-			public void actionPerformed(final ActionEvent e) {
+			public synchronized void actionPerformed(final ActionEvent e) {
 				final ApplicationModel model = AbstractMainToolBar.this.getApplicationModel();
-				if (this.executed || model == null) {
+				if (model == null) {
 					return;
 				}
-				this.executed = true;
 				final AbstractButton jb = (AbstractButton) e.getSource();
 				final String s = jb.getName();
 				final Command command = model.getCommand(s);
-				Log.debugMessage("AbstractMainToolBar$ActionListener.actionPerformed | command " + (command != null ? '[' + command.getClass().getName() + ']' : "'null'"), Level.FINEST);
-				try {
-					command.execute();
-				} catch (Exception ex) {
-					ex.printStackTrace();
-				} finally {
-					this.executed = false;
-				}
+				Log.debugMessage("AbstractMainToolBar$ActionListener.actionPerformed | command " 
+						+ (command != null ? 
+							'[' + command.getClass().getName() + ']' : 
+							"'null'"), 
+					Log.DEBUGLEVEL10);
+				command.execute();
 			}
 		};
 
