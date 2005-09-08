@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMapSaver.java,v 1.3 2005/09/07 14:08:35 arseniy Exp $
+ * $Id: LRUMapSaver.java,v 1.4 2005/09/08 05:35:03 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/07 14:08:35 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/09/08 05:35:03 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -31,19 +31,19 @@ public class LRUMapSaver extends AbstractLRUMapSaver {
 		super("LRUMap.serialized");
 	}
 	
-	public static final LRUMapSaver getInstance() {
+	public static final synchronized LRUMapSaver getInstance() {
 		if (instance == null) {
-			synchronized (LRUMapSaver.class) {
-				if (instance == null) {
-					instance = new LRUMapSaver();
-				}
-			}
+			instance = new LRUMapSaver();
 		}
 		return instance;
 	}
 	
+	
+	// Арсений, заебал своими COSMETICs и менять постоянно code style  
+	@SuppressWarnings("unchecked")
 	@Override
-	protected Set<StorableObject> loading(final ObjectInputStream in) throws IOException, ClassNotFoundException {
+	protected Set<StorableObject> loading(final ObjectInputStream in) 
+	throws IOException, ClassNotFoundException {
 		try {
 			return StorableObjectPool.getStorableObjects((Set) in.readObject(), true);
 		} catch (final ApplicationException ae) {
@@ -59,6 +59,6 @@ public class LRUMapSaver extends AbstractLRUMapSaver {
 			final Identifier key = it.next();
 			keys.add(key);
 		}
-		return keys;
+		return !keys.isEmpty() ? keys : null;
 	}	
 }
