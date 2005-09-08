@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.63 2005/09/08 07:38:57 bob Exp $
+ * $Id: Identifier.java,v 1.64 2005/09/08 10:37:00 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.util.Shitlet;
 
 /**
  * <code>Identifier</code>s, alike {@link String}s, are immutable. Hence, when
@@ -29,7 +28,7 @@ import com.syrus.util.Shitlet;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.63 $, $Date: 2005/09/08 07:38:57 $
+ * @version $Revision: 1.64 $, $Date: 2005/09/08 10:37:00 $
  * @author $Author: bob $
  * @module general
  */
@@ -94,10 +93,8 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 * @param obj
 	 * @see Object#equals(Object)
 	 */
-	@Shitlet
 	@Override
 	public boolean equals(final Object obj) {
-		// is really need ClassCastException ? 
 		if (obj instanceof Identifiable) {
 			final Identifier that = ((Identifiable) obj).getId();
 			return that.major == this.major && that.minor == this.minor;
@@ -106,14 +103,16 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	}
 
 	public long getIdentifierCode() {
-		if (this.identifierCode == 0)
+		if (this.identifierCode == 0) {
 			this.identifierCode = (((long) this.major) << MINOR_SIZE_BITS) | this.minor;
+		}
 		return this.identifierCode;
 	}
 
 	public String getIdentifierString() {
-		if (this.identifierString == null)
+		if (this.identifierString == null) {
 			this.identifierString = ObjectEntities.codeToString(this.major) + SEPARATOR + Long.toString(this.minor);
+		}
 		return this.identifierString;
 	}
 
