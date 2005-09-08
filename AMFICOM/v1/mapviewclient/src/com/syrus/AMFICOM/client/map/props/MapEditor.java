@@ -5,6 +5,7 @@ import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.Collection;
+import java.util.Collections;
 
 import javax.swing.JButton;
 import javax.swing.JComponent;
@@ -32,8 +33,8 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.13 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapEditor extends DefaultStorableObjectEditor {
@@ -207,16 +208,16 @@ public class MapEditor extends DefaultStorableObjectEditor {
 
 			Domain domain = null;
 			Collection domains = null;
-			
-			StorableObjectCondition condition = 
-				new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
-			try {
-				domains = StorableObjectPool.getStorableObjectsByCondition(
-						condition,
-						true);
-			} catch(ApplicationException e) {
-				e.printStackTrace();
-			}
+
+//			StorableObjectCondition condition = 
+//				new EquivalentCondition(ObjectEntities.DOMAIN_CODE);
+//			try {
+//				domains = StorableObjectPool.getStorableObjectsByCondition(
+//						condition,
+//						true);
+//			} catch(ApplicationException e) {
+//				e.printStackTrace();
+//			}
 
 			try {
 				domain = StorableObjectPool.getStorableObject(
@@ -225,6 +226,7 @@ public class MapEditor extends DefaultStorableObjectEditor {
 			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
+			domains = Collections.singleton(domain);
 
 			this.domainComboBox.addElements(domains);
 			this.domainComboBox.setSelectedItem(domain);
