@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeDatabase.java,v 1.43 2005/08/30 16:35:09 bass Exp $
+ * $Id: CableThreadTypeDatabase.java,v 1.44 2005/09/08 14:19:54 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,20 +14,18 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/08/30 16:35:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.44 $, $Date: 2005/09/08 14:19:54 $
+ * @author $Author: max $
  * @module config
  */
 
@@ -106,17 +104,7 @@ public final class CableThreadTypeDatabase extends StorableObjectDatabase<CableT
 						null,
 						null)
 				: storableObject;
-		LinkType linkType;
-		CableLinkType cableLinkType;
-		try {
-			linkType = (LinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-					CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID), true);
-			cableLinkType = (CableLinkType) StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet,
-					CableThreadTypeWrapper.COLUMN_CABLE_LINK_TYPE_ID), true);
-		} catch (final ApplicationException ae) {
-			throw new RetrieveObjectException(ae);
-		}
-
+		
 		cableThreadType.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -126,9 +114,8 @@ public final class CableThreadTypeDatabase extends StorableObjectDatabase<CableT
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)),
 				resultSet.getInt(CableThreadTypeWrapper.COLUMN_COLOR),
-				linkType,
-				cableLinkType);
-
+				DatabaseIdentifier.getIdentifier(resultSet, CableThreadTypeWrapper.COLUMN_LINK_TYPE_ID),
+				DatabaseIdentifier.getIdentifier(resultSet,	CableThreadTypeWrapper.COLUMN_CABLE_LINK_TYPE_ID));
 		return cableThreadType;
 	}
 
