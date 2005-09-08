@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBean.java,v 1.9 2005/09/06 10:08:55 bob Exp $
+ * $Id: RTUBean.java,v 1.10 2005/09/08 14:33:22 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/06 10:08:55 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/08 14:33:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -89,7 +89,7 @@ public class RTUBean extends Bean implements DomainNetworkItem {
 	}
 
 	
-	public final int getPort() {
+	public final short getPort() {
 		return this.kis.getTCPPort();
 	}
 
@@ -98,7 +98,7 @@ public class RTUBean extends Bean implements DomainNetworkItem {
 		short port2 = this.kis.getTCPPort();
 		if (port2 != port) {
 			this.kis.setTCPPort(port);
-			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_PORT, port2, port));
+			this.firePropertyChangeEvent(new PropertyChangeEvent(this, KEY_PORT, Short.valueOf(port2), Short.valueOf(port)));
 		}		
 
 	}
