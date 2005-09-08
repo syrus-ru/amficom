@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMapSaver.java,v 1.4 2005/09/08 05:35:03 bob Exp $
+ * $Id: LRUMapSaver.java,v 1.5 2005/09/08 10:56:49 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,32 +18,29 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/08 05:35:03 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/09/08 10:56:49 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
  */
 public class LRUMapSaver extends AbstractLRUMapSaver {
 
 	private static LRUMapSaver instance;
-	
+
 	private LRUMapSaver() {
 		super("LRUMap.serialized");
 	}
-	
+
 	public static final synchronized LRUMapSaver getInstance() {
 		if (instance == null) {
 			instance = new LRUMapSaver();
 		}
 		return instance;
 	}
-	
-	
-	// Арсений, заебал своими COSMETICs и менять постоянно code style  
+  
 	@SuppressWarnings("unchecked")
 	@Override
-	protected Set<StorableObject> loading(final ObjectInputStream in) 
-	throws IOException, ClassNotFoundException {
+	protected Set<StorableObject> loading(final ObjectInputStream in) throws IOException, ClassNotFoundException {
 		try {
 			return StorableObjectPool.getStorableObjects((Set) in.readObject(), true);
 		} catch (final ApplicationException ae) {
@@ -51,7 +48,7 @@ public class LRUMapSaver extends AbstractLRUMapSaver {
 		}
 		return null;
 	}
-	
+
 	@Override
 	protected Set<Object> saving(LRUMap<Identifier, StorableObject> lruMap) {
 		final Set<Object> keys = new HashSet<Object>();
