@@ -7,11 +7,10 @@ import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.client.resource.LangModel;
-import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/08 10:24:18 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/08 14:06:38 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -33,12 +32,6 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 	protected String[] names;
 
 	private T object;
-
-	/**
-	 * saved direction of column sorting. Used when change direction to negative
-	 * to current. see {@link com.syrus.util.WrapperComparator#ascend}
-	 */
-	private boolean[] ascendings;
 
 	/**
 	 * @param wrapper
@@ -138,11 +131,11 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 		final int oldKeysSize = this.keys != null ? this.keys.length : 0;
 		this.keys = keys;
 		if (keys.length > oldKeysSize) {
-			this.ascendings = new boolean[this.keys.length];		
 			this.names = new String[keys.length];
 		}
 		for(int i = 0; i < keys.length; i++) {			
-			this.names[i] = this.wrapper.getName(keys[i]);
+			this.names[i] = CommonUIUtilities.convertToHTMLString(this.wrapper.getName(keys[i]));
+//			this.names[i] = this.wrapper.getName(keys[i]);
 		}
 		super.fireTableDataChanged();
 	}
