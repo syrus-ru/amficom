@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.5 2005/09/07 07:08:02 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.6 2005/09/08 14:35:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,8 @@
 package com.syrus.AMFICOM.manager.UI;
 
 import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_NAME;
+
+import gnu.trove.TObjectIntHashMap;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -117,7 +119,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/07 07:08:02 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/08 14:35:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -142,21 +144,14 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 	GridBagConstraints	gbc2;
 
 	public JButton				userButton;
-
 	public JButton				armButton;
-
 	public JButton				rtuButton;
-
 	public JButton				serverButton;
-
 	public JButton				mcmButton;
-
 	public JButton				netButton;
-
 	public JButton				domainButton;
-
 	public JButton				domainsButton;
-
+	
 	public JLabel				currentPerspectiveLabel;
 
 	Perspective			perspective;
@@ -174,9 +169,9 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 	
 	UIDefaults					frames;
 	
-	static final String TREE_FRAME = "Label.ElementsTree";
-	static final String GRAPH_FRAME = "Label.Graph";
-	static final String PROPERTIES_FRAME = "Label.Properties";
+	static final String							TREE_FRAME			= "Label.ElementsTree";
+	static final String							GRAPH_FRAME			= "Label.Graph";
+	static final String							PROPERTIES_FRAME	= "Label.Properties";
 	
 	public ManagerMainFrame(final ApplicationContext aContext) {
 		super(aContext, "Manager", new AbstractMainMenuBar(aContext.getApplicationModel()) {
@@ -455,112 +450,99 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		this.graph.getModel().addGraphModelListener(
 			new GraphModelListener() {
 			public void graphChanged(GraphModelEvent e) {
-				if (ManagerMainFrame.this.arranging) {
-					return;
-				}
-				GraphModelChange change = e.getChange();
-				
-				GraphModel model = ManagerMainFrame.this.graph.getModel();
-				
-				Object[] inserted = change.getInserted();
-				Object[] changed = change.getChanged();
-				Object[] removed = change.getRemoved();
-				
-				if (inserted != null) {
-					for(Object insertedObject : inserted) {
-						if (model.isPort(insertedObject)) {
-							TreeNode[] pathToRoot = ManagerMainFrame.this.treeModel.getPathToRoot((TreeNode) insertedObject);
-							if (pathToRoot != null)
-								ManagerMainFrame.this.tree.scrollPathToVisible(new TreePath(pathToRoot));
+				try {
+					if (ManagerMainFrame.this.arranging) {
+						return;
+					}
+					GraphModelChange change = e.getChange();
+					
+					GraphModel model = ManagerMainFrame.this.graph.getModel();
+					
+					Object[] inserted = change.getInserted();
+					Object[] changed = change.getChanged();
+					Object[] removed = change.getRemoved();
+					
+					if (inserted != null) {
+						for(Object insertedObject : inserted) {
+							if (model.isPort(insertedObject)) {
+								TreeNode[] pathToRoot = ManagerMainFrame.this.treeModel.getPathToRoot((TreeNode) insertedObject);
+								if (pathToRoot != null)
+									ManagerMainFrame.this.tree.scrollPathToVisible(new TreePath(pathToRoot));
+							}
 						}
 					}
-				}
-				
-				if (changed != null && removed == null) {
-					for(Object changedObject : changed) {
-						Log.debugMessage(".graphChanged() | changedObject " + changedObject + '[' + changedObject.getClass().getName() + ']', Log.DEBUGLEVEL10);
-						if (model.isPort(changedObject)) {
-							TreeNode[] pathToRoot = ManagerMainFrame.this.treeModel.getPathToRoot((TreeNode) changedObject);
-							if (pathToRoot != null) {
-								ManagerMainFrame.this.tree.scrollPathToVisible(new TreePath(pathToRoot));
-							}
-						} else  if (model.isEdge(changedObject)) {
-							Edge edge = (Edge) changedObject;
-							final MPort source = (MPort) edge.getSource();
-							final MPort target = (MPort) edge.getTarget();
-							source.updateCache();
-							target.updateCache();
-							
-							Log.debugMessage(".graphChanged() | " + source  +" -> " + target,
-								Log.DEBUGLEVEL10);
-							AbstractBean bean = source.getUserObject();
-							
-							
-							ConnectionSet connectionSet = change.getConnectionSet();							
-							MPort source2 = (MPort) connectionSet.getPort(edge, true);
-							MPort target2 = (MPort) connectionSet.getPort(edge, false);
-
-							Log.debugMessage(".graphChanged() | ' " + source2  +" -> " + target2, Log.DEBUGLEVEL10);
-							
-							if (source2 != null) {
-								source2.updateCache();
-							}
-							
-							if (target2 == null) {
-								AbstractBean bean2 = source2.getUserObject();
-								Log.debugMessage(".graphChanged() | " + bean2, Log.DEBUGLEVEL10);
-								bean2.applyTargetPort(null, null);
-								try {
+					
+					if (changed != null && removed == null) {
+						for(Object changedObject : changed) {
+							Log.debugMessage(".graphChanged() | changedObject " + changedObject + '[' + changedObject.getClass().getName() + ']', Log.DEBUGLEVEL10);
+							if (model.isPort(changedObject)) {
+								TreeNode[] pathToRoot = ManagerMainFrame.this.treeModel.getPathToRoot((TreeNode) changedObject);
+								if (pathToRoot != null) {
+									ManagerMainFrame.this.tree.scrollPathToVisible(new TreePath(pathToRoot));
+								}
+							} else  if (model.isEdge(changedObject)) {
+								Edge edge = (Edge) changedObject;
+								final MPort source = (MPort) edge.getSource();
+								final MPort target = (MPort) edge.getTarget();
+								source.updateCache();
+								target.updateCache();
+								
+								Log.debugMessage(".graphChanged() | " + source  +" -> " + target,
+									Log.DEBUGLEVEL10);
+								AbstractBean bean = source.getUserObject();
+								
+								
+								ConnectionSet connectionSet = change.getConnectionSet();							
+								MPort source2 = (MPort) connectionSet.getPort(edge, true);
+								MPort target2 = (MPort) connectionSet.getPort(edge, false);
+	
+								Log.debugMessage(".graphChanged() | ' " + source2  +" -> " + target2, Log.DEBUGLEVEL10);
+								
+								if (source2 != null) {
+									source2.updateCache();
+								}
+								
+								if (target2 == null) {
+									AbstractBean bean2 = source2.getUserObject();
+									Log.debugMessage(".graphChanged() | " + bean2, Log.DEBUGLEVEL10);
+									bean2.applyTargetPort(null, null);
 									LayoutItem layoutItem = this.getLayoutItem(bean2.getCodeName());
 									Log.debugMessage(
 										"JGraphText.createModelListener | set layoutItem:" 
 										+ layoutItem.getName() 
 										+ ", parentId:" + Identifier.VOID_IDENTIFIER,
 										Log.DEBUGLEVEL10);
-									layoutItem.setParentId(Identifier.VOID_IDENTIFIER);
-								} catch (ApplicationException e1) {
-									// TODO Auto-generated catch block
-									e1.printStackTrace();
+									layoutItem.setParentId(Identifier.VOID_IDENTIFIER); 
+								} else {
+									target2.updateCache();
 								}
-							} else {
-								target2.updateCache();
-							}
-							bean.applyTargetPort(target2, target);
-							
-							
-							if (!ManagerMainFrame.this.arranging) {								
-								String codeName = bean.getCodeName();
-								try {									
+								bean.applyTargetPort(target2, target);
+								
+								
+								if (!ManagerMainFrame.this.arranging) {								
+									String codeName = bean.getCodeName();
 									LayoutItem sourceItem = this.getLayoutItem(codeName);
 									Identifier targetItemId = 
 										target != null ? 
 												this.getLayoutItem(target.getBean().getCodeName()).getId() :
 												Identifier.VOID_IDENTIFIER;
 									sourceItem.setParentId(targetItemId);
-								} catch (ApplicationException e2) {
-									e2.printStackTrace();
-									JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, 
-										e2.getMessage(), 
-										LangModelManager.getString("Error"),
-										JOptionPane.ERROR_MESSAGE);
 								}
-							}
-							
-						} else {
-							DefaultGraphCell cell = (DefaultGraphCell)changedObject;
-							MPort port = (MPort) cell.getChildAt(0);
-							AbstractBean bean = port.getBean();
-							if (bean != null) {
-								bean.setName((String) cell.getUserObject());
-							}
-							
-							AttributeMap attributes = cell.getAttributes();
-							Rectangle2D rectangle2D = GraphConstants.getBounds(attributes);
-							String title = cell.getUserObject().toString();
-
-							if (!ManagerMainFrame.this.arranging) {								
-								String codeName = bean.getCodeName();
-								try {
+								
+							} else {
+								DefaultGraphCell cell = (DefaultGraphCell)changedObject;
+								MPort port = (MPort) cell.getChildAt(0);
+								AbstractBean bean = port.getBean();
+								if (bean != null) {
+									bean.setName((String) cell.getUserObject());
+								}
+								
+								AttributeMap attributes = cell.getAttributes();
+								Rectangle2D rectangle2D = GraphConstants.getBounds(attributes);
+								String title = cell.getUserObject().toString();
+	
+								if (!ManagerMainFrame.this.arranging) {								
+									String codeName = bean.getCodeName();
 									LayoutItem item = this.getLayoutItem(codeName);
 									if (item == null) {
 										item = LayoutItem.createInstance(LoginManager.getUserId(),
@@ -609,54 +591,57 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 											}
 										}
 	
-									}
-									
-								} catch (ApplicationException e2) {
-									e2.printStackTrace();
-									JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, 
-										e2.getMessage(), 
-										LangModelManager.getString("Error"),
-										JOptionPane.ERROR_MESSAGE);
+									} 
 								}
+							
 							}
+						}
+					} 
+					if (removed != null) {
+						if (changed != null) {
+							for(Object changedObject : changed) {
+								System.out.println(".graphChanged() | changedObject after delete " + changedObject + '[' + changedObject.getClass().getName() + ']');
+							}
+						}
+						for(Object removedObject : removed) {
+							System.out.println(".graphChanged() | removedObject " + removedObject + '[' + removedObject.getClass().getName() + ']');
+							// First of all remove all edges
+							 if (model.isEdge(removedObject)) {
+								Edge edge = (Edge) removedObject;
+								ConnectionSet connectionSet = change.getConnectionSet();							
+								MPort source = (MPort) connectionSet.getPort(edge, true);
+								MPort target = (MPort) connectionSet.getPort(edge, false);
+	
+								AbstractBean bean = source.getUserObject();
+								bean.applyTargetPort(target, null);
+									final LayoutItem layoutItem = this.getLayoutItem(bean.getCodeName());
+									Log.debugMessage(".graphChanged | removedObject | layoutItem:" 
+											+ layoutItem.getName() 
+											+ ", layoutName:" 
+											+ layoutItem.getLayoutName(),
+										Log.DEBUGLEVEL10);
+									layoutItem.setParentId(Identifier.VOID_IDENTIFIER);
+									
+									bean.dispose();																
+							 } 
+						}
 						
+						for(Object removedObject : removed) {
+							System.out.println(".graphChanged() | removedObject " + removedObject + '[' + removedObject.getClass().getName() + ']');
+							// First of all remove all edges
+							 if (model.isPort(removedObject)) {
+								 MPort source = (MPort) removedObject;
+								 AbstractBean bean = source.getUserObject();
+								 bean.dispose();
+							 }
 						}
-					}
-				} 
-				if (removed != null) {
-					if (changed != null) {
-						for(Object changedObject : changed) {
-							System.out.println(".graphChanged() | changedObject after delete " + changedObject + '[' + changedObject.getClass().getName() + ']');
-						}
-					}
-					for(Object removedObject : removed) {
-						System.out.println(".graphChanged() | removedObject " + removedObject + '[' + removedObject.getClass().getName() + ']');
-						 if (model.isEdge(removedObject)) {
-							Edge edge = (Edge) removedObject;
-							ConnectionSet connectionSet = change.getConnectionSet();							
-							MPort source = (MPort) connectionSet.getPort(edge, true);
-							MPort target = (MPort) connectionSet.getPort(edge, false);
-
-							AbstractBean bean = source.getUserObject();
-							bean.applyTargetPort(target, null);
-							try {
-								final LayoutItem layoutItem = this.getLayoutItem(bean.getCodeName());
-								Log.debugMessage(".graphChanged | removedObject | layoutItem:" 
-										+ layoutItem.getName() 
-										+ ", layoutName:" 
-										+ layoutItem.getLayoutName(),
-									Log.DEBUGLEVEL10);
-								layoutItem.setParentId(Identifier.VOID_IDENTIFIER);
-								
-								bean.dispose();																
-							} catch (ApplicationException e1) {
-								// TODO Auto-generated catch block
-								e1.printStackTrace();
-							}
-							
-							
-						 } 
-					}
+					}				
+				} catch (final ApplicationException exception) {
+					// TODO Auto-generated catch block
+					exception.printStackTrace();
+					JOptionPane.showMessageDialog(ManagerMainFrame.this.graph, exception
+							.getMessage(), LangModelManager.getString("Error"),
+						JOptionPane.ERROR_MESSAGE);
 				}
 			}
 			
@@ -1230,16 +1215,16 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		Icon icon = factory.getIcon();
 		this.factoryMap.put(factory.getCodename(), factory);
 		AbstractAction action = new AbstractAction(icon != null ? "" : name, icon) {
-			private Map<String, Integer> entityIndices;
+//			private Map<String, Integer> entityIndices;
+			private TObjectIntHashMap entityIndices;
 			
 			public void actionPerformed(ActionEvent e) {
 				try {
 					AbstractBean bean = factory.createBean(ManagerMainFrame.this.perspective);
 					if (this.entityIndices == null) {
-						this.entityIndices = new HashMap<String, Integer>();
+						this.entityIndices = new TObjectIntHashMap();
 					}
-					Integer i = this.entityIndices.get(name);
-					int index = (i != null ? i : 0) + 1;
+					int index = this.entityIndices.get(name) + 1;					
 					this.entityIndices.put(name, index);
 					ManagerMainFrame.this.createChild(null, 
 						factory.getShortName() + "-" + index, 

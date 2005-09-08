@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.17 2005/09/07 07:08:02 bob Exp $
+* $Id: UserBeanFactory.java,v 1.18 2005/09/08 14:35:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,8 +11,6 @@ package com.syrus.AMFICOM.manager;
 import java.beans.PropertyChangeEvent;
 import java.util.ArrayList;
 import java.util.List;
-
-import javax.swing.JLabel;
 
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
@@ -29,7 +27,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/07 07:08:02 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/08 14:35:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -126,8 +124,6 @@ public class UserBeanFactory extends TabledBeanFactory {
 			keys.toArray(new String[keys.size()]));
 		
 		bean.addPropertyChangeListener(this.listener);
-
-		panel.add(new JLabel("A"));
 		
 		bean.setPropertyPanel(this.panel);		
 		

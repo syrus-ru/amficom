@@ -1,5 +1,5 @@
 /*-
-* $Id: GraphTreeModel.java,v 1.7 2005/09/06 16:20:24 bob Exp $
+* $Id: GraphTreeModel.java,v 1.8 2005/09/08 14:35:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
 */
 
 package com.syrus.AMFICOM.manager.UI;
+
+import gnu.trove.TObjectIntHashMap;
 
 import java.util.HashMap;
 import java.util.LinkedList;
@@ -30,7 +32,7 @@ import org.jgraph.graph.GraphModel;
 import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/06 16:20:24 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/08 14:35:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -39,7 +41,8 @@ public class GraphTreeModel implements TreeModel {
 
 	private List<TreeModelListener>	treeModelListeners;
 
-	private Map<TreeNode, Integer>	treeNodeIndexMap;
+//	private Map<TreeNode, Integer>	treeNodeIndexMap;
+	private TObjectIntHashMap treeNodeIndexMap;
 	private Map<TreeNode, TreeNode[]>	treeNodePathMap;
 
 	protected GraphModel			model;
@@ -51,7 +54,7 @@ public class GraphTreeModel implements TreeModel {
 	public GraphTreeModel(GraphModel model, boolean direct) {
 		this.model = model;
 		this.root = (DefaultGraphCell) this.model.getRootAt(0);
-		this.treeNodeIndexMap = new HashMap<TreeNode, Integer>();
+		this.treeNodeIndexMap = new TObjectIntHashMap();
 		this.treeNodePathMap = new HashMap<TreeNode, TreeNode[]>();
 		this.direct = direct;
 		this.clearCache();		
@@ -129,7 +132,7 @@ public class GraphTreeModel implements TreeModel {
 
 			if (count == index && targetEdgeSourceCount == 1) {
 				DefaultGraphCell treeNode = (DefaultGraphCell) target.getParent();
-				if (this.treeNodeIndexMap.get(treeNode) == null) {
+				if (this.treeNodeIndexMap.get(treeNode) == 0) {
 					this.treeNodeIndexMap.put(treeNode, index);
 					this.cacheTreePath(treeNode);
 				}
@@ -198,7 +201,7 @@ public class GraphTreeModel implements TreeModel {
 
 			if (targetEdgeSourceCount == 1) {
 				DefaultGraphCell treeNode = (DefaultGraphCell) target.getParent();
-				if (this.treeNodeIndexMap.get(treeNode) == null) {
+				if (this.treeNodeIndexMap.get(treeNode) == 0) {
 					this.treeNodeIndexMap.put(treeNode, count);
 					this.cacheTreePath(treeNode);
 				}
@@ -461,8 +464,8 @@ public class GraphTreeModel implements TreeModel {
 	 * way to remove a node as it handles the event creation for you.
 	 */
 	public void removeNodeFromParent(MutableTreeNode node) {
-		Integer integer = this.treeNodeIndexMap.get(node);		
-		if (integer == null) {
+		int index = this.treeNodeIndexMap.get(node);		
+		if (index == 0) {
 			System.err.println("GraphTreeModel.removeNodeFromParent() | cache is null, return");
 			return;
 		}
@@ -476,7 +479,7 @@ public class GraphTreeModel implements TreeModel {
 		}
 
 		this.nodesWereRemoved(nodes[nodes.length - 2], 
-				new int[] {integer}, 
+				new int[] {index}, 
 				new Object[] {node});
 	}
 

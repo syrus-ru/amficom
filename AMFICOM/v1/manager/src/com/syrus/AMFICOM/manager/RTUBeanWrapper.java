@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanWrapper.java,v 1.8 2005/08/24 14:05:47 bob Exp $
+ * $Id: RTUBeanWrapper.java,v 1.9 2005/09/08 14:33:50 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/24 14:05:47 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/08 14:33:50 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -159,7 +159,7 @@ public class RTUBeanWrapper implements Wrapper {
 			} else if (key.equals(KEY_HOSTNAME)) {
 				return bean.getHostname();
 			} else if (key.equals(KEY_PORT)) { 
-				return bean.getPort(); 
+				return Short.valueOf(bean.getPort()); 
 			} else if (key.equals(KEY_MCM_ID)) { 
 				return bean.getMcmId(); 
 			}  
@@ -192,7 +192,7 @@ public class RTUBeanWrapper implements Wrapper {
 				bean.setHostname((String) value);
 			} else if (key.equals(KEY_PORT)) { 
 				try {
-					bean.setPort(Short.valueOf((String)value));
+					bean.setPort(Short.parseShort((String)value));
 				} catch(NumberFormatException nfe) {
 					// nothing can do 
 				}

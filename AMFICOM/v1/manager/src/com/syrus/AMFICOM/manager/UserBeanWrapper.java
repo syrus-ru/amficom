@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: UserBeanWrapper.java,v 1.6 2005/09/06 16:16:53 bob Exp $
+ * $Id: UserBeanWrapper.java,v 1.7 2005/09/08 14:35:02 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/06 16:16:53 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/08 14:35:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -201,7 +201,7 @@ public class UserBeanWrapper implements Wrapper {
 				} else {
 					final PermissionCodenames codename = this.permissionCodenamesMap.get(key);
 					if (codename != null) {
-						return userBean.getPermissionAttributes().isPermissionEnable(codename);
+						return Boolean.valueOf(userBean.getPermissionAttributes().isPermissionEnable(codename));
 					}
 				}
 				
