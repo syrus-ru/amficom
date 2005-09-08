@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.36 2005/08/12 14:24:16 arseniy Exp $
+ * $Id: AbstractNode.java,v 1.37 2005/09/08 18:31:32 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.36 $, $Date: 2005/08/12 14:24:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.37 $, $Date: 2005/09/08 18:31:32 $
  * @module map
  * @see SiteNode
  * @see TopologicalNode
@@ -60,6 +60,11 @@ public abstract class AbstractNode extends StorableObject implements MapElement 
 
 	private transient CharacterizableDelegate characterizableDelegate;
 
+	/**
+	 * @param id
+	 * @deprecated invalid use. Period. 
+	 */
+	@Deprecated
 	protected AbstractNode(final Identifier id) {
 		super(id);
 	}
