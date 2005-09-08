@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadTypeWrapper.java,v 1.15 2005/08/08 13:24:41 arseniy Exp $
+ * $Id: CableThreadTypeWrapper.java,v 1.16 2005/09/08 14:20:25 max Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,11 +12,12 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/08 13:24:41 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.16 $, $Date: 2005/09/08 14:20:25 $
+ * @author $Author: max $
  * @module config
  */
 public final class CableThreadTypeWrapper extends StorableObjectWrapper<CableThreadType> {
@@ -73,7 +74,7 @@ public final class CableThreadTypeWrapper extends StorableObjectWrapper<CableThr
 			if (key.equals(COLUMN_COLOR))
 				return new Integer(cableThreadType.getColor());
 			if (key.equals(COLUMN_LINK_TYPE_ID))
-				return cableThreadType.getLinkType();
+				return cableThreadType.getLinkTypeId();
 		}
 		return value;
 	}
@@ -94,7 +95,7 @@ public final class CableThreadTypeWrapper extends StorableObjectWrapper<CableThr
 			else if (key.equals(COLUMN_COLOR))
 				object.setColor(((Integer)value).intValue());
 			else if (key.equals(COLUMN_LINK_TYPE_ID))
-				object.setLinkType((LinkType)value);
+				object.setLinkTypeId((Identifier) value);
 		}
 	}
 
@@ -122,7 +123,7 @@ public final class CableThreadTypeWrapper extends StorableObjectWrapper<CableThr
 			return Integer.class;
 		}
 		if (key.equals(COLUMN_LINK_TYPE_ID)) {
-			return LinkType.class;
+			return Identifier.class;
 		}
 		return null;
 	}
