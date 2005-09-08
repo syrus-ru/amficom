@@ -1,5 +1,5 @@
 /*
- * $Id: CableThreadType.java,v 1.60 2005/09/05 17:43:15 bass Exp $
+ * $Id: CableThreadType.java,v 1.61 2005/09/08 14:19:15 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -51,8 +51,8 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.60 $, $Date: 2005/09/05 17:43:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.61 $, $Date: 2005/09/08 14:19:15 $
+ * @author $Author: max $
  * @module config
  */
 
@@ -65,8 +65,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 
 	private String name;
 	private int color;
-	private LinkType linkType;
-	private CableLinkType cableLinkType;
+	private Identifier linkTypeId;
+	private Identifier cableLinkTypeId;
 
 	CableThreadType(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
 		super(id);
@@ -93,8 +93,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 			final String description,
 			final String name,
 			final int color,
-			final LinkType linkType,
-			final CableLinkType cableLinkType) {
+			final Identifier linkTypeId,
+			final Identifier cableLinkTypeId) {
 		super(id,
 			new Date(),
 			new Date(),
@@ -106,8 +106,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 
 		this.name = name;
 		this.color = color;
-		this.linkType = linkType;
-		this.cableLinkType = cableLinkType;
+		this.linkTypeId = linkTypeId;
+		this.cableLinkTypeId = cableLinkTypeId;
 	}
 
 	/**
@@ -184,8 +184,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 					description,
 					name,
 					color,
-					linkType,
-					cableLinkType);
+					linkType.getId(),
+					cableLinkType.getId());
 
 			assert cableThreadType.isValid() : OBJECT_BADLY_INITIALIZED;
 
@@ -205,8 +205,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		super.fromTransferable(idlCableThreadType, idlCableThreadType.codename, idlCableThreadType.description);
 		this.name = idlCableThreadType.name;
 		this.color = idlCableThreadType.color;
-		this.setLinkTypeId(new Identifier(idlCableThreadType.linkTypeId));
-		this.setCableLinkTypeId(new Identifier(idlCableThreadType.cableLinkTypeId));
+		this.linkTypeId = new Identifier(idlCableThreadType.linkTypeId);
+		this.cableLinkTypeId = new Identifier(idlCableThreadType.cableLinkTypeId);
 	}
 
 	/**
@@ -223,8 +223,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		this.codename = xmlCableThreadType.getCodename();
 		this.description = xmlCableThreadType.getDescription();
 		this.color = Integer.parseInt(xmlCableThreadType.getColor());
-		this.setLinkTypeId(Identifier.fromXmlTransferable(xmlCableThreadType.getLinkTypeId(), LINK_TYPE_CODE, importType));
-		this.setCableLinkTypeId(Identifier.fromXmlTransferable(xmlCableThreadType.getCableLinkTypeId(), CABLELINK_TYPE_CODE, importType));
+		this.linkTypeId = Identifier.fromXmlTransferable(xmlCableThreadType.getLinkTypeId(), LINK_TYPE_CODE, importType);
+		this.cableLinkTypeId = Identifier.fromXmlTransferable(xmlCableThreadType.getCableLinkTypeId(), CABLELINK_TYPE_CODE, importType);
 	}
 
 	/**
@@ -244,8 +244,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 				super.description != null ? super.description : "",
 				this.name != null ? this.name : "",
 				this.color,
-				this.linkType.getId().getTransferable(),
-				this.cableLinkType.getId().getTransferable());
+				this.linkTypeId.getTransferable(),
+				this.cableLinkTypeId.getTransferable());
 	}
 
 	/**
@@ -265,8 +265,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 			final String description,
 			final String name,
 			final int color,
-			final LinkType linkType,
-			final CableLinkType cableLinkType) {
+			final Identifier linkTypeId,
+			final Identifier cableLinkTypeId) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -276,16 +276,34 @@ public final class CableThreadType extends StorableObjectType implements Namable
 			description);
 		this.name = name;
 		this.color = color;
-		this.linkType = linkType;
-		this.cableLinkType = cableLinkType;
+		this.linkTypeId = linkTypeId;
+		this.cableLinkTypeId = cableLinkTypeId;
 	}
 
+	protected Identifier getLinkTypeId() {
+		return this.linkTypeId;
+	}
+	
+	protected Identifier getCableLinkTypeId() {
+		return this.cableLinkTypeId;
+	}
+	
 	public LinkType getLinkType() {
-		return this.linkType;
+		try {
+			return StorableObjectPool.<LinkType>getStorableObject(this.linkTypeId, true);
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			return null;
+		}
 	}
 
 	public CableLinkType getCableLinkType() {
-		return this.cableLinkType;
+		try {
+			return StorableObjectPool.<CableLinkType>getStorableObject(this.cableLinkTypeId, true);
+		} catch (ApplicationException e) {
+			Log.errorException(e);
+			return null;
+		}
 	}
 
 	public void setColor(final int color) {
@@ -309,43 +327,33 @@ public final class CableThreadType extends StorableObjectType implements Namable
 
 	/**
 	 * @param linkTypeId
-	 * @throws ApplicationException
 	 */
-	private void setLinkTypeId(final Identifier linkTypeId)
-	throws ApplicationException {
+	protected void setLinkTypeId(final Identifier linkTypeId) {
 		assert linkTypeId != null : NON_NULL_EXPECTED;
 		assert !linkTypeId.isVoid() : NON_VOID_EXPECTED;
 		assert linkTypeId.getMajor() == LINK_TYPE_CODE;
-		if (Identifier.possiblyVoid(this.linkType).equals(linkTypeId)) {
-			return;
-		}
-		this.setLinkType(StorableObjectPool.<LinkType>getStorableObject(linkTypeId, true));
+		this.linkTypeId = linkTypeId;
 	}
 
 	public void setLinkType(final LinkType linkType) {
 		assert linkType != null;
-		this.linkType = linkType;
+		this.setLinkTypeId(linkType.getId());
 		super.markAsChanged();
 	}
 
 	/**
 	 * @param cableLinkTypeId
-	 * @throws ApplicationException
 	 */
-	private void setCableLinkTypeId(final Identifier cableLinkTypeId)
-	throws ApplicationException {
+	protected void setCableLinkTypeId(final Identifier cableLinkTypeId) {
 		assert cableLinkTypeId != null : NON_NULL_EXPECTED;
 		assert !cableLinkTypeId.isVoid() : NON_VOID_EXPECTED;
 		assert cableLinkTypeId.getMajor() == CABLELINK_TYPE_CODE;
-		if (Identifier.possiblyVoid(this.cableLinkType).equals(cableLinkTypeId)) {
-			return;
-		}
-		this.setCableLinkType(StorableObjectPool.<CableLinkType>getStorableObject(cableLinkTypeId, true));
+		this.cableLinkTypeId = cableLinkTypeId;
 	}
 
 	public void setCableLinkType(final CableLinkType cableLinkType) {
 		assert cableLinkType != null;
-		this.cableLinkType = cableLinkType;
+		setCableLinkTypeId(cableLinkType.getId());
 		super.markAsChanged();
 	}
 
@@ -354,8 +362,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		assert this.isValid() : OBJECT_BADLY_INITIALIZED;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
-		dependencies.add(this.linkType);
-		dependencies.add(this.cableLinkType);
+		dependencies.add(this.linkTypeId);
+		dependencies.add(this.cableLinkTypeId);
 		return Collections.unmodifiableSet(dependencies);
 	}
 }
