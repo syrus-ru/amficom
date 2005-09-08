@@ -8,8 +8,8 @@ import com.syrus.util.Wrapper;
  * Simple stub of AbstractLabelCellRenderer. see
  * {@link AbstractLabelCellRenderer}
  * 
- * @version $Revision: 1.2 $, $Date: 2005/08/11 18:51:08 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/09/08 13:53:11 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public class StubLabelCellRenderer extends AbstractLabelCellRenderer {
@@ -21,9 +21,10 @@ public class StubLabelCellRenderer extends AbstractLabelCellRenderer {
 		// empty
 	}
 
-	public static StubLabelCellRenderer getInstance() {
-		if (instance == null)
+	public static synchronized StubLabelCellRenderer getInstance() {
+		if (instance == null) {
 			instance = new StubLabelCellRenderer();
+		}
 		return instance;
 	}
 
