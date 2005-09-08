@@ -7,11 +7,12 @@ import java.util.Map;
 import javax.swing.table.AbstractTableModel;
 
 import com.syrus.AMFICOM.client.resource.LangModel;
+import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/07 02:37:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/09/08 10:21:41 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
@@ -47,12 +48,7 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 	public WrapperedPropertyTableModel(final Wrapper<T> wrapper, final T object, final String[] keys) {
 		this.wrapper = wrapper;
 		this.object = object;
-		this.keys = keys;
-		this.names = new String[keys.length];
-		for(int i = 0; i < keys.length; i++) {
-			this.names[i] = wrapper.getName(keys[i]);
-		}
-		this.ascendings = new boolean[this.keys.length];
+		this.setKeys(keys);
 	}
 
 	/**
@@ -140,7 +136,11 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 
 	public void setKeys(final String[] keys) {
 		this.keys = keys;
-		this.ascendings = new boolean[this.keys.length];
+		this.ascendings = new boolean[this.keys.length];		
+		this.names = new String[keys.length];
+		for(int i = 0; i < keys.length; i++) {			
+			this.names[i] = this.wrapper.getName(keys[i]);
+		}
 		super.fireTableDataChanged();
 	}
 
