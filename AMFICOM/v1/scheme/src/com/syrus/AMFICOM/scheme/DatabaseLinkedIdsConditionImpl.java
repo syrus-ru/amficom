@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.33 2005/08/31 08:07:48 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.34 2005/09/08 16:35:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.33 $, $Date: 2005/08/31 08:07:48 $
+ * @author $Author: bass $
+ * @version $Revision: 1.34 $, $Date: 2005/09/08 16:35:41 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -55,7 +55,6 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 	/**
 	 * @see com.syrus.AMFICOM.general.DatabaseStorableObjectCondition#getSQLQuery()
 	 */
-	@SuppressWarnings("static-access")
 	public String getSQLQuery() throws IllegalObjectEntityException {
 		switch (super.condition.getEntityCode().shortValue()) {
 			case SCHEMEPROTOGROUP_CODE:
