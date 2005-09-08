@@ -1,5 +1,5 @@
 /*-
-* $Id: LRUSaver.java,v 1.3 2005/09/08 05:35:41 bob Exp $
+* $Id: LRUSaver.java,v 1.4 2005/09/08 11:10:04 arseniy Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -14,17 +14,14 @@ import com.syrus.util.LRUMap;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/08 05:35:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/09/08 11:10:04 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module util
  */
 public interface LRUSaver<K, V> {
 
-//	 Арсений, заебал своими COSMETICs и менять постоянно code style
-	void save(final LRUMap<K, V> lruMap, 
-	          final String objectEntityName, 
-	          final boolean cleanLRUMap);
+	void save(final LRUMap<K, V> lruMap, final String objectEntityName, final boolean cleanLRUMap);
 
 	Set<V> load(final String objectEntityName);
 }
