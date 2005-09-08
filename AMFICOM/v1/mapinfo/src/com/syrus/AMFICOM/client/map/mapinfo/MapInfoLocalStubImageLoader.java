@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoLocalStubImageLoader.java,v 1.19 2005/08/29 12:13:34 peskovsky Exp $
+ * $Id: MapInfoLocalStubImageLoader.java,v 1.20 2005/09/08 14:16:25 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: peskovsky $
- * @version $Revision: 1.19 $, $Date: 2005/08/29 12:13:34 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.20 $, $Date: 2005/09/08 14:16:25 $
  * @module mapinfo
  */
 public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectionListener {
@@ -40,6 +40,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 	private MapJLocalRenderer renderer;
 
 	private MapInfoConnection connection;
+	private boolean alreadyPerformed = false;
 
 	public MapInfoLocalStubImageLoader(final MapInfoConnection connection) throws MapConnectionException {
 		this.connection = connection;
@@ -49,6 +50,20 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 		try {
 			this.renderer = new MapJLocalRenderer(this.connection.getPath());
 
+//			checkFirstSearch();
+//		} catch (MapDataException e) {
+//			throw new MapConnectionException("Error while first search.");
+		} catch (IOException e) {
+			throw new MapConnectionException("Failed initializing MapJLocalRenderer");
+		}
+	}
+
+	/**
+	 * @throws MapDataException
+	 * @throws MapConnectionException
+	 */
+	private void checkFirstSearch() throws MapDataException, MapConnectionException {
+		if(!this.alreadyPerformed ) {
 			//Осуществляется ПЕРВЫЙ поиск по всем слоям с надписями - тот, который сильно тормозит из-за
 			//MapJшного кэширования таблиц.
 			Log.debugMessage("MapInfoLocalStubImageLoader.MapInfoLocalStubImageLoader | Starting first search.", Level.FINE);
@@ -57,17 +72,13 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 			for (SpatialLayer spatialLayer : this.connection.getLayers()){
 				if (!this.connection.searchIsAvailableForLayer(spatialLayer))
 					continue;
-
+	
 				MapInfoSpatialLayer miSpatialLayer = (MapInfoSpatialLayer)spatialLayer;
 				if (miSpatialLayer.getFeatureLayer().getLabelProperties().getLabelColumns().size() != 0)
 					this.findSpatialObjects(miSpatialLayer,FIRST_SEARCH_STRING);
 			}
 			long t2 = System.currentTimeMillis();			
 			Log.debugMessage("MapInfoLocalStubImageLoader.MapInfoLocalStubImageLoader | First search completed ( "+ (t2 - t1) + " ms).", Level.FINE);
-		} catch (MapDataException e) {
-			throw new MapConnectionException("Error while first search.");
-		} catch (IOException e) {
-			throw new MapConnectionException("Failed initializing MapJLocalRenderer");
 		}
 	}
 
@@ -117,6 +128,7 @@ public class MapInfoLocalStubImageLoader implements MapImageLoader, MapConnectio
 	}
 
 	public List<SpatialObject> findSpatialObjects(SpatialLayer layer, String searchText) throws MapConnectionException, MapDataException {
+		checkFirstSearch();
 		String minimizedSearchText = searchText.toLowerCase();
 		
 		final List<SpatialObject> searchResultsList = new ArrayList<SpatialObject>();
