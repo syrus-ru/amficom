@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkBinding.java,v 1.13 2005/08/24 15:00:28 bass Exp $
+ * $Id: PhysicalLinkBinding.java,v 1.14 2005/09/08 14:08:37 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.map;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import java.util.List;
@@ -20,29 +21,43 @@ import com.syrus.AMFICOM.resource.IntPoint;
  * включает всебя список кабелей, которые проходят по данному тоннелю,
  * и матрицу пролегания кабелей по трубам тоннеля.
  *
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/08/24 15:00:28 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/09/08 14:08:37 $
  * @module map
  */
-public final class PhysicalLinkBinding {
+public final class PhysicalLinkBinding implements Serializable {
 	/** карта привязки кабелей к трубам */
-	private List<Object>[][] bindingMap = null;
+	private transient List<Object>[][] bindingMap = null;
 
 	/** список кабелей, проложенных по данному тоннелю */
-	private ArrayList<Object> bindObjects = new ArrayList<Object>();
+	private transient ArrayList<Object> bindObjects = new ArrayList<Object>();
 
 	/** размерность тоннеля (матрица труб) */
 	private IntDimension dimension = null;
 
 	/** порядок нумерации труб сверху вниз. */
-	protected boolean topToBottom = true;
+	private boolean topToBottom = true;
 
 	/** порядок нумерации слева направо. */
-	protected boolean leftToRight = true;
+	private boolean leftToRight = true;
 
 	/** порядок нумерации сначала по горизонтали, затем по вертикали. */
-	protected boolean horizontalVertical = true;
+	private boolean horizontalVertical = true;
 
+	private transient boolean transientFieldsInitialized = false;
+	
+	private void initialize() {
+		if(!this.transientFieldsInitialized) {
+			this.bindObjects = new ArrayList<Object>();
+			this.bindingMap = new List[this.dimension.getWidth()][this.dimension.getHeight()];
+			for (int i = 0; i < this.bindingMap.length; i++) {
+				for (int j = 0; j < this.bindingMap[i].length; j++) {
+					this.bindingMap[i][j] = new LinkedList<Object>();
+				}
+			}
+			this.transientFieldsInitialized = true;
+		}		
+	}
 
 	/**
 	 * Конструктор.
@@ -61,6 +76,7 @@ public final class PhysicalLinkBinding {
 	 *        кабель (com.syrus.AMFICOM.scheme.corba.SchemeCableLink)
 	 */
 	public void add(final Object object) {
+		this.initialize();
 		final int index = this.bindObjects.indexOf(object);
 		if (index == -1)
 			this.bindObjects.add(object);
@@ -71,6 +87,7 @@ public final class PhysicalLinkBinding {
 	 * @param object кабель (com.syrus.AMFICOM.scheme.corba.SchemeCableLink)
 	 */
 	public void remove(final Object object) {
+		this.initialize();
 		if (object != null) {
 			unbind(object);
 			this.bindObjects.remove(object);
@@ -81,6 +98,7 @@ public final class PhysicalLinkBinding {
 	 * Удалить все кабели из тоннеля.
 	 */
 	public void clear() {
+		this.initialize();
 		this.bindObjects.clear();
 
 		for (int i = 0; i < this.bindingMap.length; i++) {
@@ -96,6 +114,7 @@ public final class PhysicalLinkBinding {
 	 * @return список кабелей
 	 */
 	public List<Object> getBindObjects() {
+		this.initialize();
 		return (List) this.bindObjects.clone();
 	}
 	
@@ -113,6 +132,7 @@ public final class PhysicalLinkBinding {
 	 */
 	public void setDimension(final IntDimension dimension) {
 		this.dimension = dimension;
+		this.initialize();
 
 		// создается новая матрица прокладки
 		final List<Object>[][] bindingMap2 = new List[dimension.getWidth()][dimension.getHeight()];
@@ -203,6 +223,7 @@ public final class PhysicalLinkBinding {
 	 *        координата по вертикали
 	 */
 	public void bind(final Object object, final int i, final int j) {
+		this.initialize();
 		this.unbind(object);
 		this.bindingMap[i][j].add(object);
 	}
@@ -224,6 +245,7 @@ public final class PhysicalLinkBinding {
 	 * @return список привязанных по заданной координате кабелей
 	 */
 	public List getBound(final int i, final int j) {
+		this.initialize();
 		return this.bindingMap[i][j];
 	}
 
@@ -236,6 +258,7 @@ public final class PhysicalLinkBinding {
 	 *         <code>false</code> иначе
 	 */
 	public boolean isBound(final Object object) {
+		this.initialize();
 		final int index = this.bindObjects.indexOf(object);
 		if (index == -1) {
 			return false;
@@ -259,6 +282,7 @@ public final class PhysicalLinkBinding {
 	 *         кабеля не задано
 	 */
 	public IntPoint getBinding(final Object object) {
+		this.initialize();
 		final int index = this.bindObjects.indexOf(object);
 		if (index == -1) {
 			return null;
