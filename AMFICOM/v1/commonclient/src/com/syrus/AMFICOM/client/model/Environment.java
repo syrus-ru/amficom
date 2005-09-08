@@ -1,5 +1,5 @@
 /*
- * $Id: Environment.java,v 1.12 2005/09/02 14:21:25 bob Exp $
+ * $Id: Environment.java,v 1.13 2005/09/08 14:37:23 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
  * Класс Environment используется для хранения общей для приложения информации.
  * 
  * @author $Author: bob $
- * @version $Revision: 1.12 $, $Date: 2005/09/02 14:21:25 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/08 14:37:23 $
  * @module commonclient
  */
 public final class Environment {
@@ -42,11 +42,13 @@ public final class Environment {
 
 	private static List<Window>	windows						= new ArrayList<Window>();
 
+	@SuppressWarnings("deprecation")
 	private static IniFile		iniFile;
 	private static String		iniFileName					= "Application.properties";
 
 	private static JFrame		activeWindow				= null;
 
+	@SuppressWarnings("unused")
 	private static final String	RUN_INSTALLED				= "installed";
 
 	/** Domain */
@@ -102,7 +104,7 @@ public final class Environment {
 	public static final Level	LOG_LEVEL_FINE				= Level.FINE;
 	public static final Level	LOG_LEVEL_FINER				= Level.FINER;
 	public static final Level	LOG_LEVEL_FINEST			= Level.FINEST;
-
+	
 	static {
 
 		// load values from properties file
@@ -257,6 +259,7 @@ public final class Environment {
 		}
 	}
 
+	@SuppressWarnings("deprecation")
 	private static void saveProperties() {
 		try {
 			domainId = LoginManager.getDomainId();
@@ -280,69 +283,85 @@ public final class Environment {
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_ADMINISTRATE	= 0;
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_CONFIGURE	= 1;
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_COMPONENTS	= 2;
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_SCHEMATICS	= 3;
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_MAP			= 4;
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_OPTIMIZE		= 5;
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_MODEL		= 6;
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_SCHEDULE		= 7;
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_ANALYSE		= 8;
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_EVALUATE		= 9;
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_SURVEY		= 10;
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_OBSERVE		= 11;
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_MAINTAIN		= 12;
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	public static final int			MODULE_PROGNOSIS	= 13;
 
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	protected static final String[]	code				= { "abyrvalg", "", "kirgudu", "", "", "piyavka", "merchen",
 			"", "", "opanki", "iiyama", "", "", "parol"	};
 
 	/**
 	 * @deprecated as moved to {@link AbstractApplication}
 	 */
+	@Deprecated
 	protected static final String[]	name				= { "Администрирование", "Конфигурирование",
 			"Редактор компонентов", "Редактор схем", "Редакторо топологических схем", "Проектирование",
 			"Моделирование", "Планирование", "Анализ", "Оценка", "Исследование", "Наблюдение", "Сопровождение",
