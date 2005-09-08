@@ -1,5 +1,5 @@
 /*
- * $Id: ADefaultTableCellRenderer.java,v 1.5 2005/09/07 02:39:39 arseniy Exp $
+ * $Id: ADefaultTableCellRenderer.java,v 1.6 2005/09/08 14:25:57 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/07 02:39:39 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/09/08 14:25:57 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -114,12 +114,14 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 		}
 	}
 
+	@SuppressWarnings("unchecked")
 	private void setLazyValue(	Hashtable h,
 								Class c,
 								String s) {
 		h.put(c, new UIDefaults.ProxyLazyValue(s));
 	}
 
+	@SuppressWarnings("unchecked")
 	private void setLazyValue(	Hashtable h,
 								Class c,
 								String s,
@@ -210,10 +212,12 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 			setText((value == null) ? "" : value.toString());
 		}
 
+		@Override
 		public void setBackground(Color c) {
 			super.setBackground(c);
 		}
 
+		@Override
 		public void setForeground(Color c) {
 			super.setForeground(c);
 			this.unselectedForeground = c;
@@ -248,6 +252,7 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 			super();
 		}
 
+		@Override
 		public void setValue(Object value) {
 			if (this.formatter == null) {
 				this.formatter = NumberFormat.getInstance();
@@ -265,6 +270,7 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 			super();
 		}
 
+		@Override
 		public void setValue(Object value) {
 			if (this.formatter == null) {
 				this.formatter = DateFormat.getDateInstance();
@@ -282,8 +288,9 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 			setHorizontalAlignment(SwingConstants.CENTER);
 		}
 
+		@Override
 		public void setValue(Object value) {
-			setIcon((value instanceof Icon) ? (Icon) value : null);
+			this.setIcon((value instanceof Icon) ? (Icon) value : null);
 		}
 	}
 

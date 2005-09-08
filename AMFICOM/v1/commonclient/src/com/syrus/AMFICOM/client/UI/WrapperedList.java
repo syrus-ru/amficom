@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedList.java,v 1.7 2005/09/07 13:07:11 bob Exp $
+* $Id: WrapperedList.java,v 1.8 2005/09/08 14:25:57 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -13,13 +13,11 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JList;
-import javax.swing.ListModel;
 
-import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/07 13:07:11 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/08 14:25:57 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient

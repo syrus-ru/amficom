@@ -1,5 +1,5 @@
 /*-
- * $Id: WindowCloseCommand.java,v 1.1 2005/06/21 14:25:54 bob Exp $
+ * $Id: WindowCloseCommand.java,v 1.2 2005/09/08 14:25:57 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ public class WindowCloseCommand extends AbstractCommand {
 		this.desktop = desktop;
 	}
 
+	@Override
 	public void setParameter(	final String field,
 								final Object value) {
 		if (field.equals("desktop")) {

@@ -13,8 +13,8 @@ import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/02 13:03:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/09/08 14:25:57 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -26,8 +26,9 @@ public class WindowCommand implements Command {
 		this.source = source;
 	}
 
-	public Object clone() {
-		return new WindowCommand(this.source);
+	@Override
+	public Object clone() throws CloneNotSupportedException {
+		return super.clone();
 	}
 
 	public void commitExecute() {
@@ -84,7 +85,7 @@ public class WindowCommand implements Command {
 		return null;
 	}	
 	
-	public void setNext(Command next) {
+	public void setNext(@SuppressWarnings("unused") Command next) {
 		// TODO Auto-generated method stub
 
 	}
@@ -103,7 +104,7 @@ public class WindowCommand implements Command {
 	/* (non-Javadoc)
 	 * @see com.syrus.AMFICOM.Client.General.Command.Command#setPrevious(com.syrus.AMFICOM.Client.General.Command.Command)
 	 */
-	public void setPrevious(Command previous) {
+	public void setPrevious(@SuppressWarnings("unused") Command previous) {
 		// TODO Auto-generated method stub
 
 	}

@@ -1,5 +1,5 @@
 /*
-* $Id: ArrangeWindowCommand.java,v 1.2 2005/08/02 13:03:21 arseniy Exp $
+* $Id: ArrangeWindowCommand.java,v 1.3 2005/09/08 14:26:23 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 
 /**
  * 
- * @version $Revision: 1.2 $, $Date: 2005/08/02 13:03:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/09/08 14:26:23 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -24,6 +24,7 @@ public class ArrangeWindowCommand extends AbstractCommand {
 		this.arranger = arranger;
 	}
 
+	@Override
 	public void execute() {
 		this.arranger.arrange();
 	}

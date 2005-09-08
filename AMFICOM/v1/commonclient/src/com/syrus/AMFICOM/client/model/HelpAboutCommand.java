@@ -1,5 +1,5 @@
 /*
- * $Id: HelpAboutCommand.java,v 1.4 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: HelpAboutCommand.java,v 1.5 2005/09/08 14:25:57 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,8 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 /**
  * 
- * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/09/08 14:25:57 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -32,6 +32,7 @@ public class HelpAboutCommand extends AbstractCommand {
 		this.parent = parent;
 	}
 
+	@Override
 	public void execute() {
 		JOptionPane.showMessageDialog(this.parent, this.getAboutPanel(), "О программе", JOptionPane.PLAIN_MESSAGE);
 	}

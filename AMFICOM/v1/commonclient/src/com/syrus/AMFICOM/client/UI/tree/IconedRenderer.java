@@ -1,5 +1,5 @@
 /*-
- * $Id: IconedRenderer.java,v 1.4 2005/08/11 18:51:08 arseniy Exp $
+ * $Id: IconedRenderer.java,v 1.5 2005/09/08 14:25:57 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,8 @@ import javax.swing.tree.TreeCellRenderer;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/11 18:51:08 $
+ * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/09/08 14:25:57 $
  * @module commonclient
  */
 
@@ -56,6 +56,7 @@ public class IconedRenderer extends JLabel implements TreeCellRenderer {
 		return this;
 	}
 	
+	@Override
 	protected void paintComponent (Graphics g) {
 		if (this.selected) {
 			int x = 0;

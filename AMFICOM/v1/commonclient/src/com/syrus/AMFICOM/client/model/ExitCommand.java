@@ -1,5 +1,5 @@
 /*
- * $Id: ExitCommand.java,v 1.2 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: ExitCommand.java,v 1.3 2005/09/08 14:25:57 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,8 @@ import java.awt.Window;
 
 /**
  * 
- * @version $Revision: 1.2 $, $Date: 2005/08/02 13:03:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/09/08 14:25:57 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -25,6 +25,7 @@ public class ExitCommand extends AbstractCommand {
 		this.window = window;
 	}
 
+	@Override
 	public void execute() {
 		System.out.println("exit window " + this.window.getName());
 		Environment.disposeWindow(this.window); // Реально удаление окна
@@ -32,6 +33,7 @@ public class ExitCommand extends AbstractCommand {
 		// только класс окружения Environment
 	}
 
+	@Override
 	public void setParameter(	String field,
 								Object value) {
 		if (field.equals("window")) {

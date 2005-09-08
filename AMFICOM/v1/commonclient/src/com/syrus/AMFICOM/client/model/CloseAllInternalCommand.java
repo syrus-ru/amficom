@@ -1,5 +1,5 @@
 /**
- * $Id: CloseAllInternalCommand.java,v 1.2 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: CloseAllInternalCommand.java,v 1.3 2005/09/08 14:25:57 bob Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -10,8 +10,8 @@ import javax.swing.JDesktopPane;
 import javax.swing.JInternalFrame;
 
 /**
- * @version $Revision: 1.2 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public class CloseAllInternalCommand extends AbstractCommand {
@@ -21,6 +21,7 @@ public class CloseAllInternalCommand extends AbstractCommand {
 		this.desktop = desktop;
 	}
 
+	@Override
 	public void execute() {
 
 		JInternalFrame frame = null;

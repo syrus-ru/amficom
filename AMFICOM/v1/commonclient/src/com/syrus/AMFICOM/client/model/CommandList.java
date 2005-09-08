@@ -1,5 +1,5 @@
 /**
- * $Id: CommandList.java,v 1.3 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: CommandList.java,v 1.4 2005/09/08 14:25:57 bob Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.client.model;
 
 /**
- * @version $Revision: 1.3 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $
+ * @author $Author: bob $
  * @module commonclient
  */
 public class CommandList extends AbstractCommand {
@@ -158,6 +158,7 @@ public class CommandList extends AbstractCommand {
 	/**
 	 * выполнить одну следующую команду
 	 */
+	@Override
 	public void execute() {
 		if(this.current == this.top)
 			return;
@@ -172,6 +173,7 @@ public class CommandList extends AbstractCommand {
 	/**
 	 * выполнить одну следующую команду
 	 */
+	@Override
 	public void redo() {
 		if(this.current == this.top)
 			return;
@@ -185,6 +187,7 @@ public class CommandList extends AbstractCommand {
 	/**
 	 * обратно выполнить одну команду
 	 */
+	@Override
 	public void undo() {
 		if(this.current == null)
 			return;// если в начале списка то выполнять нечего

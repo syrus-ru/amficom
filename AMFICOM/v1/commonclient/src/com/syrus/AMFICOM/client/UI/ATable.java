@@ -55,17 +55,19 @@ public class ATable extends JTable {
 
 	public ATable(int numRows, int numColumns) {
 		super(numRows, numColumns);
-		updateHeaderSize();
+		this.updateHeaderSize();
 	}
 
+	@Override
 	public void setModel(TableModel dataModel) {
 		super.setModel(dataModel);
-		updateHeaderSize();
+		this.updateHeaderSize();
 	}
 
+	@Override
 	public void setColumnModel(TableColumnModel columnModel) {
 		super.setColumnModel(columnModel);
-		updateHeaderSize();
+		this.updateHeaderSize();
 	}
 
 	public void setHeaderHeight(int height) {
@@ -106,6 +108,7 @@ public class ATable extends JTable {
 	 * @see javax.swing.table.DefaultTableCellRenderer
 	 * 
 	 */
+	@Override
 	protected void createDefaultRenderers() {
 		super.defaultRenderersByColumnClass = new UIDefaults();
 
@@ -139,6 +142,7 @@ public class ATable extends JTable {
 		setLazyValue(this.defaultRenderersByColumnClass, c, s, m);
 	}
 
+	@SuppressWarnings("unchecked")
 	private void setLazyValue(	Hashtable h,
 								Class c,
 								String s,

@@ -1,5 +1,5 @@
 /*-
- * $Id: LazyCommand.java,v 1.2 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: LazyCommand.java,v 1.3 2005/09/08 14:25:57 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.client.model;
 import javax.swing.UIDefaults;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/02 13:03:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/09/08 14:25:57 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -30,35 +30,43 @@ public class LazyCommand extends AbstractCommand {
 		return (Command) this.defaults.get(this.commandKey);
 	}
 
+	@Override
 	public void commitExecute() {
 		this.getLazyCommand().commitExecute();
 	}
 
+	@Override
 	public void commitUndo() {
 		this.getLazyCommand().commitUndo();
 	}
 
+	@Override
 	public void execute() {
 		this.getLazyCommand().execute();
 	}
 
+	@Override
 	public int getResult() {
 		return this.getLazyCommand().getResult();
 	}
 
+	@Override
 	public Object getSource() {
 		return this.getLazyCommand().getSource();
 	}
 
+	@Override
 	public void redo() {
 		this.getLazyCommand().redo();
 	}
 
-	public void setParameter(	String field,
-								Object value) {
+	@Override
+	public void setParameter(	final String field,
+								final Object value) {
 		this.getLazyCommand().setParameter(field, value);
 	}
 
+	@Override
 	public void undo() {
 		this.getLazyCommand().undo();
 

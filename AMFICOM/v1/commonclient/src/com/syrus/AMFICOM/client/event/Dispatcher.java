@@ -1,5 +1,5 @@
 /*-
- * $Id: Dispatcher.java,v 1.13 2005/08/24 08:05:43 bob Exp $
+ * $Id: Dispatcher.java,v 1.14 2005/09/08 14:25:57 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @version $Revision: 1.13 $, $Date: 2005/08/24 08:05:43 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/08 14:25:57 $
  * @author $Author: bob $
  * @author Kholshin Stanislav
  * @author Vladimir Dolzhenko
@@ -70,6 +70,7 @@ public class Dispatcher {
 		this.firePropertyChange(event, false);
 	}
 
+	@SuppressWarnings("unused")
 	private void printListeners() {
 		Log.debugMessage("Dispatcher.printListeners | this.hashCode(): " + this.hashCode(), Level.FINEST);
 		for (Iterator iterator = this.events.keySet().iterator(); iterator.hasNext();) {

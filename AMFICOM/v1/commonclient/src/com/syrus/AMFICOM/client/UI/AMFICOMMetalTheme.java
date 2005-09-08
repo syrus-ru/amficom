@@ -1,6 +1,9 @@
 package com.syrus.AMFICOM.client.UI;
 
 import java.awt.Font;
+import java.security.AccessController;
+import java.security.PrivilegedAction;
+
 import javax.swing.*;
 
 import javax.swing.plaf.FontUIResource;
@@ -81,35 +84,41 @@ public class AMFICOMMetalTheme extends DefaultMetalTheme
 	}
 
 	void install() {
-		fontDelegate = new FontDelegate();
+		this.fontDelegate = new FontDelegate();
 	}
 
+	@Override
 	public FontUIResource getControlTextFont() {
 		return getFont(CONTROL_TEXT_FONT);
 	}
 
+	@Override
 	public FontUIResource getSystemTextFont() {
 		return getFont(SYSTEM_TEXT_FONT);
 	}
 
+	@Override
 	public FontUIResource getUserTextFont() {
 		return getFont(USER_TEXT_FONT);
 	}
 
+	@Override
 	public FontUIResource getMenuTextFont() {
 		return getFont(MENU_TEXT_FONT);
 	}
 
+	@Override
 	public FontUIResource getWindowTitleFont() {
 		return getFont(WINDOW_TITLE_FONT);
 	}
 
+	@Override
 	public FontUIResource getSubTextFont() {
 		return getFont(SUB_TEXT_FONT);
 	}
 
 	private FontUIResource getFont(int key) {
-		return fontDelegate.getFont(key);
+		return this.fontDelegate.getFont(key);
 	}
 
 	/**
@@ -125,12 +134,12 @@ public class AMFICOMMetalTheme extends DefaultMetalTheme
 
 		// menu and window are mapped to controlFont
 		public FontDelegate() {
-			fonts = new FontUIResource[6];
+			this.fonts = new FontUIResource[6];
 		}
 
 		public FontUIResource getFont(int type) {
 			type = defaultMapping[type];
-			if (fonts[type] == null) {
+			if (this.fonts[type] == null) {
 				Font f = getPrivilegedFont(type);
 
 				if (f == null) {
@@ -138,9 +147,9 @@ public class AMFICOMMetalTheme extends DefaultMetalTheme
 											 getDefaultFontStyle(type),
 											 getDefaultFontSize(type));
 				}
-				fonts[type] = new FontUIResource(f);
+				this.fonts[type] = new FontUIResource(f);
 			}
-			return fonts[type];
+			return this.fonts[type];
 		}
 
 		/**
@@ -148,9 +157,10 @@ public class AMFICOMMetalTheme extends DefaultMetalTheme
 		 * <code>Font.getFont(key)</code>, with the exception
 		 * that it is wrapped inside a <code>doPrivileged</code> call.
 		 */
+		@SuppressWarnings("unchecked")
 		protected Font getPrivilegedFont(final int key) {
-			return (Font)java.security.AccessController.doPrivileged(
-					new java.security.PrivilegedAction() {
+			return (Font)AccessController.doPrivileged(
+					new PrivilegedAction() {
 				public Object run() {
 					return Font.getFont(getDefaultPropertyName(key));
 				}
@@ -159,106 +169,140 @@ public class AMFICOMMetalTheme extends DefaultMetalTheme
 		}
 	}
 
+	@Override
 	public ColorUIResource getControl() {
 			return getSecondary3();//new ColorUIResource(Color.green);
 	}
+	@Override
 	public ColorUIResource getControlShadow() {
 			return getSecondary2();
 	}
+	@Override
 	public ColorUIResource getControlDarkShadow() {
 			return getSecondary1();
 	}
+	@Override
 	public ColorUIResource getControlInfo() {
 			return getBlack();
 	}
+	@Override
 	public ColorUIResource getControlHighlight() {
 			return getWhite();
 	}
+	@Override
 	public ColorUIResource getControlDisabled() {
 			return getSecondary2();
 	}
 
+	@Override
 	public ColorUIResource getPrimaryControl() {
 			return getPrimary3();
 	}
+	@Override
 	public ColorUIResource getPrimaryControlShadow() {
 			return getPrimary2();
 	}
+	@Override
 	public ColorUIResource getPrimaryControlDarkShadow() {
 			return getPrimary1();
 	}
+	@Override
 	public ColorUIResource getPrimaryControlInfo() {
 			return getBlack();
 	}
+	@Override
 	public ColorUIResource getPrimaryControlHighlight() {
 			return getWhite();
 	}
 
 	/**
 	 * Returns the color used, by default, for the text in labels
-	 * and titled borders.
+	 * and titled bord@Override
+	ers.
 	 */
+	@Override
 	public ColorUIResource getSystemTextColor() {
 			return getBlack();
 	}
+	@Override
 	public ColorUIResource getControlTextColor() {
 			return getControlInfo();
 	}
+	@Override
 	public ColorUIResource getInactiveControlTextColor() {
 			return getControlDisabled();
 	}
+	@Override
 	public ColorUIResource getInactiveSystemTextColor() {
 			return getSecondary2();
 	}
+	@Override
 	public ColorUIResource getUserTextColor() {
 			return getBlack();
 	}
+	@Override
 	public ColorUIResource getTextHighlightColor() {
 			return getPrimary3();
 	}
+	@Override
 	public ColorUIResource getHighlightedTextColor() {
 			return getControlTextColor();
 	}
 
+	@Override
 	public ColorUIResource getWindowBackground() {
 			return getWhite();
 	}
+	@Override
 	public ColorUIResource getWindowTitleBackground() {
-			return getPrimary3(); }
+			return getPrimary3(); 
+	}
+	@Override
 	public ColorUIResource getWindowTitleForeground() {
 			return getBlack();
 	}
+	@Override
 	public ColorUIResource getWindowTitleInactiveBackground() {
 			return getSecondary3();
 	}
+	@Override
 	public ColorUIResource getWindowTitleInactiveForeground() {
 			return getBlack();
 	}
 
+	@Override
 	public ColorUIResource getMenuBackground() {
 			return getSecondary3();
 	}
+	@Override
 	public ColorUIResource getMenuForeground() {
 			return  getBlack();
 	}
+	@Override
 	public ColorUIResource getMenuSelectedBackground() {
 			return getPrimary2();
 	}
+	@Override
 	public ColorUIResource getMenuSelectedForeground() {
 			return getBlack();
 	}
+	@Override
 	public ColorUIResource getMenuDisabledForeground() {
 			return getSecondary2();
 	}
+	@Override
 	public ColorUIResource getSeparatorBackground() {
 			return getWhite();
 	}
+	@Override
 	public ColorUIResource getSeparatorForeground() {
 			return getPrimary1();
 	}
+	@Override
 	public ColorUIResource getAcceleratorForeground() {
 			return getPrimary1();
 	}
+	@Override
 	public ColorUIResource getAcceleratorSelectedForeground() {
 			return getBlack();
 	}

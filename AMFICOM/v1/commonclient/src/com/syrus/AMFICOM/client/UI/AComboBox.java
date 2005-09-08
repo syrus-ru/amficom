@@ -14,10 +14,11 @@ public class AComboBox extends JComboBox {
 		Font	font;
 
 		public ComboBoxRenderer() {
-			setOpaque(true);
+			super.setOpaque(true);
 			this.font = UIManager.getFont("Combobox.font");
 		}
 
+		@Override
 		public Font getFont() {
 			return this.font;
 		}
@@ -54,12 +55,12 @@ public class AComboBox extends JComboBox {
 	public AComboBox() {
 		super();
 		// setPreferredSize(new Dimension(10, 21));
-		actualResize();
+		this.actualResize();
 	}
 
 	public AComboBox(ComboBoxModel aModel) {
 		super(aModel);
-		actualResize();
+		this.actualResize();
 	}
 
 	public AComboBox(int fontsize) {
@@ -69,35 +70,37 @@ public class AComboBox extends JComboBox {
 
 	public AComboBox(final Object items[]) {
 		super(items);
-		actualResize();
+		this.actualResize();
 	}
 
 	public AComboBox(Vector items) {
 		super(items);
-		actualResize();
+		this.actualResize();
 	}
 
+	@Override
 	public void setFont(Font font) {
 		super.setFont(font);
-		actualResize();
+		this.actualResize();
 	}
 
 	public void setFontSize(int fontsize) {
 		Font font = getFont();
 		this.setFont(new Font(font.getName(), Font.PLAIN, fontsize));
-		actualResize();
+		this.actualResize();
 	}
 
+	@Override
 	public void setModel(ComboBoxModel aModel) {
 		super.setModel(aModel);
-		actualResize();
+		this.actualResize();
 	}
 
 	private void actualResize() {
-		ComboBoxRenderer renderer = null;
+		ComboBoxRenderer renderer1 = null;
 		if (this.getRenderer() instanceof ComboBoxRenderer)
-			renderer = ((ComboBoxRenderer) this.getRenderer());
-		Font font = (renderer == null ? this.getFont() : renderer.getFont());
+			renderer1 = ((ComboBoxRenderer) this.getRenderer());
+		Font font = (renderer1 == null ? this.getFont() : renderer1.getFont());
 		if (font != null) {
 			// System.out.println("font:" + font.toString());
 			FontMetrics fm = this.getFontMetrics(font);

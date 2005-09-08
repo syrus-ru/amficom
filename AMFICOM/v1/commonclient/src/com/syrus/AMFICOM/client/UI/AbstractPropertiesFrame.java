@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractPropertiesFrame.java,v 1.4 2005/08/19 12:45:55 bob Exp $
+ * $Id: AbstractPropertiesFrame.java,v 1.5 2005/09/08 14:25:57 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/08/19 12:45:55 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/08 14:25:57 $
  * @module commonclient
  */
 
@@ -56,8 +56,9 @@ public abstract class AbstractPropertiesFrame extends JInternalFrame {
 		setPropertiesPane(this.emptyPane);
 	}
 	
+	@Override
 	public void doDefaultCloseAction() {
-		if (isMaximum()) {
+		if (super.isMaximum()) {
 			try {
 				setMaximum(false);
 			} catch (java.beans.PropertyVetoException ex) {

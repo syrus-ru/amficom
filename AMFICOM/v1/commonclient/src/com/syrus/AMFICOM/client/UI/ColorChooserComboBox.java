@@ -1,5 +1,5 @@
 /*-
- * $Id: ColorChooserComboBox.java,v 1.4 2005/08/02 13:03:21 arseniy Exp $
+ * $Id: ColorChooserComboBox.java,v 1.5 2005/09/08 14:25:57 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import javax.swing.BorderFactory;
 import javax.swing.DefaultComboBoxModel;
 import javax.swing.JButton;
 import javax.swing.JColorChooser;
-import javax.swing.JComboBox;
 import javax.swing.SwingConstants;
 
 import com.syrus.AMFICOM.client.model.Environment;
@@ -24,8 +23,8 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/02 13:03:21 $
+ * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/09/08 14:25:57 $
  * @module commonclient
  */
 
@@ -81,6 +80,7 @@ public class ColorChooserComboBox extends AComboBox {
 		this.selectedColor = (Color) getSelectedItem();
 	}
 	
+	@Override
 	public void addItem(Object newColor) {
 		if (newColor instanceof Color) {
 			Color color = (Color)newColor;
