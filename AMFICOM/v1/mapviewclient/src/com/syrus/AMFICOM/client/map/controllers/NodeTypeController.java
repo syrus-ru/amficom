@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.48 2005/09/08 06:55:07 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.49 2005/09/09 17:25:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.resource.FileImageResource;
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.48 $, $Date: 2005/09/08 06:55:07 $
+ * @version $Revision: 1.49 $, $Date: 2005/09/09 17:25:22 $
  * @module mapviewclient
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -237,34 +237,6 @@ public class NodeTypeController extends AbstractNodeController {
 	 * @return список типов сетевых узлов &lt;{@link SiteNodeType}&gt;
 	 */
 	public static Collection<SiteNodeType> getTopologicalNodeTypes(Map map) {
-//		Set<SiteNodeType> objects = Collections.emptySet();
-//		final StorableObjectCondition pTypeCondition = new EquivalentCondition(ObjectEntities.SITENODE_TYPE_CODE);
-
-		// todo getTopologicalNodeTypes should get only included libraries
-		// Set<Identifier> libIds = new HashSet<Identifier>();
-		// for(Iterator iter = map.getMapLibraries().iterator(); iter.hasNext();) {
-		// MapLibrary library = (MapLibrary )iter.next();
-		// libIds.add(library.getId());
-		// }
-		//		
-		// StorableObjectCondition pTypeCondition = new LinkedIdsCondition(libIds,
-		// ObjectEntities.SITENODE_TYPE_CODE);
-
-//		try {
-//			objects = StorableObjectPool.getStorableObjectsByCondition(pTypeCondition, false);
-//
-//			objects.remove(getUnboundNodeType());
-//
-//			for (final Iterator<SiteNodeType> it = objects.iterator(); it.hasNext();) {
-//				final SiteNodeType type = it.next();
-//				if (!type.isTopological()) {
-//					it.remove();
-//				}
-//			}
-//		} catch (Exception e) {
-//			e.printStackTrace();
-//		}
-
 		Set<SiteNodeType> objects = new HashSet<SiteNodeType>();
 		for(MapLibrary library : map.getMapLibraries()) {
 			for(SiteNodeType siteNodeType : library.getSiteNodeTypes()) {
