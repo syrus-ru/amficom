@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.3 2005/09/08 18:26:30 bass Exp $
+ * $Id: MonitoredElement.java,v 1.4 2005/09/09 14:27:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,27 +16,23 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.administration.DomainMember;
-import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElement;
-import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
-import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElement;
+import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
+import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/08 18:26:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/09/09 14:27:37 $
+ * @author $Author: arseniy $
  * @module measurement
  */
 
@@ -50,24 +46,6 @@ public final class MonitoredElement extends DomainMember {
 
 	private Set<Identifier> monitoredDomainMemberIds;
 
-	/**
-	 * @param id
-	 * @throws RetrieveObjectException
-	 * @throws ObjectNotFoundException
-	 * @deprecated
-	 */
-	@Deprecated
-	MonitoredElement(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		super(id);
-
-		this.monitoredDomainMemberIds = new HashSet<Identifier>();
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.MONITOREDELEMENT_CODE).retrieve(this);
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-	}
 
 	public MonitoredElement(final IdlMonitoredElement met) throws CreateObjectException {
 		this.fromTransferable(met);
