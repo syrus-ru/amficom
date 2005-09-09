@@ -1,5 +1,5 @@
 /*-
-* $Id: StorableObjectXMLData.java,v 1.2 2005/08/19 14:41:20 arseniy Exp $
+* $Id: StorableObjectXMLData.java,v 1.3 2005/09/09 14:34:21 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,14 +8,15 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.math.BigInteger;
 import java.util.Collection;
 import java.util.Date;
 import java.util.Map;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/19 14:41:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/09/09 14:34:21 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general
  */
@@ -38,6 +39,9 @@ public abstract class StorableObjectXMLData {
 			object = DataType.fromInt(Integer.parseInt(value));
 		} else if (className.equals(Date.class.getName())) {
 			object = new Date(Long.parseLong(value));
+		} else if (className.equals(BigInteger.class.getName())) {
+			final BigInteger bigInteger = new BigInteger(value);
+			object = bigInteger;
 		} else if (className.equals(Short.class.getName())) {
 			final Short short1 = Short.valueOf(value);
 			object = short1;
@@ -56,7 +60,7 @@ public abstract class StorableObjectXMLData {
 		} else if (className.equals(String.class.getName())) {
 			object = value != null ? value : "";
 		} else if (className.equals(Boolean.class.getName())) {
-			object = new Boolean(value);
+			object = Boolean.valueOf(value);
 		} else if (className.equals(byte[].class.getName())) {
 			/* if value is null, array is empty */
 			if (value != null) {

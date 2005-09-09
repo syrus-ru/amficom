@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractStorableObjectXML.java,v 1.2 2005/08/22 13:54:40 bob Exp $
+* $Id: AbstractStorableObjectXML.java,v 1.3 2005/09/09 14:34:31 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.general;
 
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.List;
@@ -15,7 +16,7 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/22 13:54:40 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/09 14:34:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module general
@@ -43,7 +44,12 @@ public abstract class AbstractStorableObjectXML<T extends StorableObject> {
 	protected final Boolean getBoolean(final Map<String, Object> objectMap, 
                                  final String key) {
 		return (Boolean) objectMap.get(key);
-	}	
+	}
+	
+	protected final BigInteger getBigInteger(final Map<String, Object> objectMap, 
+	                                   final String key) {
+  		return (BigInteger) objectMap.get(key);
+  	}
 
 	protected final Date getDate(final Map<String, Object> objectMap, 
                                  final String key) {
