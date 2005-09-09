@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserDatabase.java,v 1.15 2005/09/09 12:34:56 arseniy Exp $
+ * $Id: SystemUserDatabase.java,v 1.16 2005/09/09 14:22:59 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,7 +14,6 @@ import java.sql.SQLException;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
-import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
@@ -26,7 +25,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/09 12:34:56 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/09 14:22:59 $
  * @author $Author: arseniy $
  * @module administration
  */
@@ -123,16 +122,4 @@ public final class SystemUserDatabase extends StorableObjectDatabase<SystemUser>
 		}
 	}
 
-	public SystemUser retrieveForId(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
-		final String condition = StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
-		try {
-			final Set<SystemUser> set = this.retrieveByCondition(condition);
-			if (!set.isEmpty()) {
-				return set.iterator().next();
-			}
-			throw new ObjectNotFoundException("SystemUser for id '" + id + "' not found");
-		} catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide);
-		}
-	}
 }

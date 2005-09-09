@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElementDatabase.java,v 1.3 2005/08/28 15:16:33 arseniy Exp $
+ * $Id: MonitoredElementDatabase.java,v 1.4 2005/09/09 14:24:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,6 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -29,7 +27,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -42,7 +39,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/28 15:16:33 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/09 14:24:42 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -102,13 +99,6 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getLocalAddress(),
 			SIZE_LOCAL_ADDRESS_COLUMN);
 		return startParameterNumber;
-	}
-
-	@Override
-	public void retrieve(final MonitoredElement storableObject) throws IllegalDataException, ObjectNotFoundException,
-			RetrieveObjectException {
-		super.retrieveEntity(storableObject);
-		this.retrieveMonitoredDomainMemberIdsByOneQuery(Collections.singleton(storableObject));
 	}
 
 	@Override
@@ -336,73 +326,6 @@ public final class MonitoredElementDatabase extends StorableObjectDatabase<Monit
 		}
 
 		super.updateLinkedEntityIds(mdmIdsMap, linkTable, MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID, linkColumn);
-	}
-
-	@Override
-	public void delete(final Identifier id) {
-		assert (id.getMajor() == ObjectEntities.MONITOREDELEMENT_CODE) : "Illegal entity code: "
-				+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
-
-		try {
-			final MonitoredElement monitoredElement = new MonitoredElement(id);
-			final String meIdStr = DatabaseIdentifier.toSQLString(monitoredElement.getId());
-			final int meSort = monitoredElement.getSort().value();
-
-			final StringBuffer sql1 = new StringBuffer(SQL_DELETE_FROM);
-			switch (meSort) {
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_EQUIPMENT:
-					sql1.append(EQUIPMENT_ME_LINK);
-					break;
-				case MonitoredElementSort._MONITOREDELEMENT_SORT_TRANSMISSION_PATH:
-					sql1.append(TRANSMISSIONPATH_ME_LINK);
-					break;
-				default:
-					final String mesg = "MonitoredElementDatabase.delete | ERROR: Unknown sort of monitored element: "
-							+ meSort;
-					Log.errorMessage(mesg);
-			}
-			sql1.append(SQL_WHERE);
-			sql1.append(MonitoredElementWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
-			sql1.append(EQUALS);
-			sql1.append(meIdStr);
-
-			final String sql2 = SQL_DELETE_FROM + ObjectEntities.MONITOREDELEMENT
-					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + meIdStr;
-
-			Statement statement = null;
-			Connection connection = null;
-			try {
-				connection = DatabaseConnection.getConnection();
-				statement = connection.createStatement();
-				Log.debugMessage("MonitoredElementDatabase.delete | Trying: " + sql1, Log.DEBUGLEVEL09);
-				statement.executeUpdate(sql1.toString());
-				Log.debugMessage("MonitoredElementDatabase.delete | Trying: " + sql2, Log.DEBUGLEVEL09);
-				statement.executeUpdate(sql2);
-				connection.commit();
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			} finally {
-				try {
-					try {
-						if (statement != null) {
-							statement.close();
-							statement = null;
-						}
-					} finally {
-						if (connection != null) {
-							DatabaseConnection.releaseConnection(connection);
-							connection = null;
-						}
-					}
-				} catch (SQLException sqle1) {
-					Log.errorException(sqle1);
-				}
-			}
-		} catch (RetrieveObjectException e) {
-			Log.errorException(e);
-		} catch (ObjectNotFoundException e) {
-			Log.errorException(e);
-		}
 	}
 
 	@Override

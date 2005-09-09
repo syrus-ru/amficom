@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetupDatabase.java,v 1.106 2005/08/28 15:16:33 arseniy Exp $
+ * $Id: MeasurementSetupDatabase.java,v 1.107 2005/09/09 14:24:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import static com.syrus.AMFICOM.general.TableNames.MEASUREMENTSETUP_MT_LINK;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -27,7 +26,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -38,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.106 $, $Date: 2005/08/28 15:16:33 $
+ * @version $Revision: 1.107 $, $Date: 2005/09/09 14:24:42 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -166,14 +164,6 @@ public final class MeasurementSetupDatabase extends StorableObjectDatabase<Measu
 				(description != null) ? description : "",
 				resultSet.getLong(MeasurementSetupWrapper.COLUMN_MEASUREMENT_DURAION));
 		return measurementSetup;
-	}
-
-	@Override
-	public void retrieve(final MeasurementSetup storableObject)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		super.retrieveEntity(storableObject);
-		this.retrieveMeasurementSetupMELinksByOneQuery(Collections.singleton(storableObject));
-		this.retrieveMeasurementTypesByOneQuery(Collections.singleton(storableObject));
 	}
 
 	private void retrieveMeasurementSetupMELinksByOneQuery(final Set<MeasurementSetup> measurementSetups)

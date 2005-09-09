@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.16 2005/08/28 15:16:33 arseniy Exp $
+ * $Id: ParameterSetDatabase.java,v 1.17 2005/09/09 14:24:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -24,7 +23,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -39,7 +37,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/08/28 15:16:33 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/09 14:24:42 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -109,14 +107,6 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 				resultSet.getInt(ParameterSetWrapper.COLUMN_SORT),
 				(description != null) ? description : "");
 		return set;
-	}
-
-	@Override
-	public void retrieve(final ParameterSet storableObject)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		this.retrieveEntity(storableObject);
-		this.retrieveSetParametersByOneQuery(Collections.singleton(storableObject));
-		this.retrieveSetMELinksByOneQuery(Collections.singleton(storableObject));
 	}
 
 	private void retrieveSetParametersByOneQuery(final Set<ParameterSet> sets) throws RetrieveObjectException {
@@ -316,48 +306,6 @@ public final class ParameterSetDatabase extends StorableObjectDatabase<Parameter
 				TableNames.PARAMETERSETMELINK,
 				ParameterSetWrapper.LINK_COLUMN_SET_ID,
 				ParameterSetWrapper.LINK_COLUMN_MONITORED_ELEMENT_ID);
-	}
-
-	@Override
-	public void delete(final Identifier id) {
-		assert (id.getMajor() == ObjectEntities.PARAMETERSET_CODE) : "Illegal entity code: "
-			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
-
-		final String setIdStr = DatabaseIdentifier.toSQLString(id);
-		Statement statement = null;
-		Connection connection = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM
-					+ TableNames.PARAMETERSETMELINK
-					+ SQL_WHERE + ParameterSetWrapper.LINK_COLUMN_SET_ID + EQUALS + setIdStr);
-			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.PARAMETER
-					+ SQL_WHERE + ParameterSetWrapper.LINK_COLUMN_SET_ID + EQUALS + setIdStr);									
-			statement.executeUpdate(SQL_DELETE_FROM
-					+ this.getEntityName()
-					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + setIdStr);
-			connection.commit();
-		} catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		} finally {
-			try {
-				try {
-					if (statement != null) {
-						statement.close();
-						statement = null;
-					}
-				} finally {
-					if (connection != null) {
-						DatabaseConnection.releaseConnection(connection);
-						connection = null;
-					}
-				}
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
 	}
 
 	@Override

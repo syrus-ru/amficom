@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.5 2005/08/28 15:16:33 arseniy Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.6 2005/09/09 14:24:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import static com.syrus.AMFICOM.measurement.MeasurementPortTypeWrapper.LINK_COLU
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.util.Collections;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Map;
@@ -26,7 +25,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -36,7 +34,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/28 15:16:33 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/09 14:24:42 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -108,15 +106,6 @@ public final class MeasurementPortTypeDatabase extends StorableObjectDatabase<Me
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_NAME)));
 		return measurementPortType;
-	}
-
-	@Override
-	public void retrieve(final MeasurementPortType storableObject)
-			throws ObjectNotFoundException,
-				RetrieveObjectException,
-				IllegalDataException {
-		this.retrieveEntity(storableObject);
-		this.retrieveMeasurementTypesByOneQuery(Collections.singleton(storableObject));
 	}
 
 	private void retrieveMeasurementTypesByOneQuery(final Set<MeasurementPortType> measurementPortTypes) throws RetrieveObjectException {

@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.116 2005/08/28 15:16:33 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.117 2005/09/09 14:24:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,7 +16,6 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.sql.Timestamp;
-import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
@@ -45,7 +44,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.116 $, $Date: 2005/08/28 15:16:33 $
+ * @version $Revision: 1.117 $, $Date: 2005/09/09 14:24:42 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -188,13 +187,6 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				resultSet.getInt(TestWrapper.COLUMN_NUMBER_OF_MEASUREMENTS));
 
 		return test;
-	}
-
-	@Override
-	public void retrieve(final Test storableObject)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		this.retrieveEntity(storableObject);
-		this.retrieveMeasurementSetupTestLinksByOneQuery(Collections.singleton(storableObject));
 	}
 
 	private void retrieveMeasurementSetupTestLinksByOneQuery(final Set<Test> tests) throws RetrieveObjectException {

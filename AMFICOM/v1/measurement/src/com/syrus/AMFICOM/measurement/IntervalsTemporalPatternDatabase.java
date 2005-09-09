@@ -1,5 +1,5 @@
 /*-
- * $Id: IntervalsTemporalPatternDatabase.java,v 1.18 2005/08/08 11:31:45 arseniy Exp $
+ * $Id: IntervalsTemporalPatternDatabase.java,v 1.19 2005/09/09 14:24:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/08 11:31:45 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/09 14:24:42 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -180,12 +180,6 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 		}
 	}
 
-	@Override
-	public void delete(final Identifier id) {
-		super.delete(id);
-		this.remove(id);
-	}
-	
 	private void remove(final Identifier id) {
 		final String sql = SQL_DELETE_FROM + IntervalsTemporalPatternWrapper.OFFSET_TEMP_PATTERN_AND_DURATION_TABLE
 		+ SQL_WHERE + IntervalsTemporalPatternWrapper.COLUMN_INTERVALS_TEMPORAL_PARENT_ID
@@ -225,7 +219,7 @@ public final class IntervalsTemporalPatternDatabase extends StorableObjectDataba
 	public void delete(final Set<? extends Identifiable> identifiables) {
 		super.delete(identifiables);
 		for (final Identifiable identifiable : identifiables) {
-			this.delete(identifiable.getId());
+			this.remove(identifiable.getId());
 		}
 	}
 	

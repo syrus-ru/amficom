@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.105 2005/08/25 20:13:56 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.106 2005/09/09 14:24:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,7 +26,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -41,7 +39,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2005/08/25 20:13:56 $
+ * @version $Revision: 1.106 $, $Date: 2005/09/09 14:24:42 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -141,13 +139,6 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 		}
 		preparedStatement.setInt(++startParameterNumber, storableObject.getSort().value());
 		return startParameterNumber;
-	}
-
-	@Override
-	public void retrieve(final Result storableObject)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		this.retrieveEntity(storableObject);
-		this.retrieveResultParametersByOneQuery(Collections.singleton(storableObject));
 	}
 
 	@Override
@@ -349,42 +340,6 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 					if (connection != null) {
 						DatabaseConnection.releaseConnection(connection);
 						connection = null;
-					}
-				}
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
-
-	@Override
-	public void delete(final Identifier id) {
-		assert (id.getMajor() != ObjectEntities.RESULT_CODE) : "Illegal entity code: "
-			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
-
-		final String resultIdStr = DatabaseIdentifier.toSQLString(id);
-		Statement statement = null;
-		Connection connection = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULTPARAMETER
-					+ SQL_WHERE + ResultWrapper.LINK_COLUMN_RESULT_ID + EQUALS + resultIdStr);
-			statement.executeUpdate(SQL_DELETE_FROM + ObjectEntities.RESULT
-					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + resultIdStr);
-			connection.commit();
-		} catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		} finally {
-			try {
-				try {
-					if (statement != null) {
-						statement.close();
-						statement = null;
-					}
-				} finally {
-					if (connection != null) {
-						DatabaseConnection.releaseConnection(connection);
 					}
 				}
 			} catch (SQLException sqle1) {
