@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.47 2005/09/08 15:54:49 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.48 2005/09/09 17:22:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.47 $, $Date: 2005/09/08 15:54:49 $
+ * @version $Revision: 1.48 $, $Date: 2005/09/09 17:22:45 $
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
@@ -593,7 +593,7 @@ public abstract class NetMapViewer {
 
 						PhysicalLink physicalLink = marker.getNodeLink().getPhysicalLink();
 						this.animateTimer.container.add(physicalLink);
-						// todo alarm marker can belink to site node, not link
+						// todo alarm marker can be link to site node, not link
 					}
 				}
 				else if(mne.getMarkerEventType() == MarkerEvent.MARKER_MOVED_EVENT) {
