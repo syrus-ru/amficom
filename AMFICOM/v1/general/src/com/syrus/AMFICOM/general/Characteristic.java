@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.59 2005/09/08 18:26:28 bass Exp $
+ * $Id: Characteristic.java,v 1.60 2005/09/09 18:12:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 
 /**
- * @version $Revision: 1.59 $, $Date: 2005/09/08 18:26:28 $
+ * @version $Revision: 1.60 $, $Date: 2005/09/09 18:12:53 $
  * @author $Author: bass $
  * @module general
  */
@@ -197,6 +197,16 @@ public final class Characteristic extends AbstractCloneableStorableObject
 				this.characterizableId.getTransferable(),
 				this.editable,
 				this.visible);
+	}
+
+	/**
+	 * @param importType
+	 * @throws ApplicationException
+	 */
+	@SuppressWarnings("unused")
+	public XmlCharacteristic getXmlTransferable(final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 
 	public boolean isEditable() {

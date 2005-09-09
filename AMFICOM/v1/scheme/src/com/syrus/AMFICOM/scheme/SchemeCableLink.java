@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.80 2005/09/08 18:26:26 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.81 2005/09/09 18:12:53 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -83,7 +83,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.80 $, $Date: 2005/09/08 18:26:26 $
+ * @version $Revision: 1.81 $, $Date: 2005/09/09 18:12:53 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -723,7 +723,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		super.parentSchemeId = Identifier.fromXmlTransferable(schemeCableLink.getParentSchemeId(), SCHEME_CODE, importType);
 		if (schemeCableLink.isSetSchemeCableThreads()) {
 			for (final XmlSchemeCableThread schemeCableThread : schemeCableLink.getSchemeCableThreads().getSchemeCableThreadArray()) {
-				// empty so far
+				SchemeCableThread.createInstance(super.creatorId, schemeCableThread, importType);
 			}
 		}
 		if (schemeCableLink.isSetCableChannelingItems()) {
