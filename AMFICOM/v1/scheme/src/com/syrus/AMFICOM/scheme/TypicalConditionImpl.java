@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.11 2005/08/05 11:20:03 bass Exp $
+ * $Id: TypicalConditionImpl.java,v 1.12 2005/09/09 18:19:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,10 +21,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/08/05 11:20:03 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/09 18:19:58 $
  * @module scheme
  */
 final class TypicalConditionImpl extends TypicalCondition {
+	private static final long serialVersionUID = 1019929903178052406L;
+
 	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final int firstInt,
 			final int secondInt,

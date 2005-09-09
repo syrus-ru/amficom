@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.81 2005/09/08 18:26:26 bass Exp $
+ * $Id: Scheme.java,v 1.82 2005/09/09 18:19:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.81 $, $Date: 2005/09/08 18:26:26 $
+ * @version $Revision: 1.82 $, $Date: 2005/09/09 18:19:58 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -444,6 +444,8 @@ public final class Scheme extends AbstractCloneableDomainMember
 								OperationSort.OPERATION_EQUALS,
 								SCHEMEMONITORINGSOLUTION_CODE,
 								SchemeMonitoringSolutionWrapper.COLUMN_ACTIVE) {
+					private static final long serialVersionUID = -2174802384926550856L;
+
 					@Override
 					public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
 						return storableObjects.isEmpty();

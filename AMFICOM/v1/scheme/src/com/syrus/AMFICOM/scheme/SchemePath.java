@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.82 2005/09/08 18:26:26 bass Exp $
+ * $Id: SchemePath.java,v 1.83 2005/09/09 18:19:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.82 $, $Date: 2005/09/08 18:26:26 $
+ * @version $Revision: 1.83 $, $Date: 2005/09/09 18:19:58 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -512,6 +512,8 @@ public final class SchemePath extends StorableObject
 				OperationSort.OPERATION_EQUALS,
 				PATHELEMENT_CODE,
 				PathElementWrapper.COLUMN_SEQUENTIAL_NUMBER) {
+			private static final long serialVersionUID = -9024929076725678350L;
+
 			@Override
 			public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
 				return storableObjects.isEmpty();

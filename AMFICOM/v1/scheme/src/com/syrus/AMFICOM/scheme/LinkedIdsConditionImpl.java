@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.37 2005/08/31 07:30:44 max Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.38 2005/09/09 18:19:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,11 +46,13 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.37 $, $Date: 2005/08/31 07:30:44 $
+ * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/09/09 18:19:58 $
  * @module scheme
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
+	private static final long serialVersionUID = -7694706898728720012L;
+
 	@SuppressWarnings("unused")
 	private LinkedIdsConditionImpl(final Set<Identifier> linkedIds, final Short linkedEntityCode, final Short entityCode) {
 		this.linkedIds = linkedIds;
