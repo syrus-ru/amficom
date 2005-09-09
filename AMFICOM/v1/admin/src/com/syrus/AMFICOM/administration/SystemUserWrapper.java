@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUserWrapper.java,v 1.12 2005/08/09 21:12:34 arseniy Exp $
+ * $Id: SystemUserWrapper.java,v 1.13 2005/09/09 18:54:42 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.administration.corba.IdlSystemUserPackage.SystemUserSor
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/09 21:12:34 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/09 18:54:42 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -49,8 +49,9 @@ public class SystemUserWrapper extends StorableObjectWrapper<SystemUser> {
 	}
 
 	public static SystemUserWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new SystemUserWrapper();
+		}
 		return instance;
 	}
 

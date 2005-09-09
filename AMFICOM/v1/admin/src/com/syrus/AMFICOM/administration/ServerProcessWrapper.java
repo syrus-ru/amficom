@@ -1,5 +1,5 @@
 /*
- * $Id: ServerProcessWrapper.java,v 1.11 2005/08/08 13:15:50 arseniy Exp $
+ * $Id: ServerProcessWrapper.java,v 1.12 2005/09/09 18:54:42 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/08 13:15:50 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/09 18:54:42 $
  * @author $Author: arseniy $
  * @module admin_v1
  */
@@ -47,8 +47,9 @@ public class ServerProcessWrapper extends StorableObjectWrapper<ServerProcess> {
 	}
 
 	public static ServerProcessWrapper getInstance() {
-		if (instance == null)
+		if (instance == null) {
 			instance = new ServerProcessWrapper();
+		}
 		return instance;
 	}
 
