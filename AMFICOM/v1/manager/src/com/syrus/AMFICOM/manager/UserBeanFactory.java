@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.19 2005/09/09 15:03:32 bob Exp $
+* $Id: UserBeanFactory.java,v 1.20 2005/09/09 15:36:39 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/09 15:03:32 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/09 15:36:39 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -117,8 +117,8 @@ public class UserBeanFactory extends TabledBeanFactory {
 
 		bean.setId(identifier);	
 		
-		UserBeanWrapper userBeanWrapper = UserBeanWrapper.getInstance();
-		List<String> keys = UserBeanWrapper.getInstance().getKeys();
+		final UserBeanWrapper userBeanWrapper = UserBeanWrapper.getInstance();
+		final List<String> keys = userBeanWrapper.getKeys();
 		
 		bean.table = super.getTable(bean, 
 			userBeanWrapper,
