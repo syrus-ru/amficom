@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.187 2005/09/09 14:09:59 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.188 2005/09/09 14:14:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.187 $, $Date: 2005/09/09 14:09:59 $
+ * @version $Revision: 1.188 $, $Date: 2005/09/09 14:14:00 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -341,6 +341,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	}
 
 	public final T retrieveForId(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+		assert id != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert id.getMajor() == this.getEntityCode() : ErrorMessages.ILLEGAL_ENTITY_CODE;
+
 		final String condition = StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
 		try {
 			final Set<T> objects = this.retrieveByCondition(condition);
