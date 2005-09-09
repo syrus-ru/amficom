@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.47 2005/09/04 17:29:18 krupenn Exp $
+ * $Id: MapDatabase.java,v 1.48 2005/09/09 14:29:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -41,8 +40,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/09/04 17:29:18 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.48 $, $Date: 2005/09/09 14:29:43 $
+ * @author $Author: arseniy $
  * @module map
  */
 public final class MapDatabase extends StorableObjectDatabase<Map> {
@@ -123,148 +122,6 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 		}
 		return tableName;
 	}
-
-	@Override
-	public void retrieve(Map storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		this.retrieveEntity(storableObject);
-		final Set<Map> maps = Collections.singleton(storableObject);
-		
-		{
-			final java.util.Map<Identifier, Set<Identifier>> collectors = this.retrieveLinkedObjects(maps, _MAP_COLLECTOR);
-			for (final Identifier id : collectors.keySet()) {
-				final Set<Identifier> collectorIds = collectors.get(id);
-				if (id.equals(storableObject.getId())) {
-					try {
-						final Set<Collector> loadedCollectors = StorableObjectPool.getStorableObjects(collectorIds, true);
-						storableObject.setCollectors0(loadedCollectors);
-					} catch (ApplicationException e) {
-						throw new RetrieveObjectException(e);
-					}
-				}
-			}
-		}
-		
-		{
-			final java.util.Map<Identifier, Set<Identifier>> marks = this.retrieveLinkedObjects(maps, _MAP_MARK);
-			for (final Identifier id : marks.keySet()) {
-				final Set<Identifier> markIds = marks.get(id);
-				if (id.equals(storableObject.getId())) {
-					try {
-						final Set<Mark> loadedMarks = StorableObjectPool.getStorableObjects(markIds, true);
-						storableObject.setMarks0(loadedMarks);
-					} catch (ApplicationException e) {
-						throw new RetrieveObjectException(e);
-					}
-				}
-			}
-		}
-		
-		{
-			final java.util.Map<Identifier, Set<Identifier>> nodeLinks = this.retrieveLinkedObjects(maps, _MAP_NODE_LINK);
-			for (final Identifier id : nodeLinks.keySet()) {
-				final Set<Identifier> nodeLinkIds = nodeLinks.get(id);
-				if (id.equals(storableObject.getId())) {
-					try {
-						final Set<NodeLink> loadedNodeLinks = StorableObjectPool.getStorableObjects(nodeLinkIds, true);
-						storableObject.setNodeLinks0(loadedNodeLinks);
-					} catch (ApplicationException e) {
-						throw new RetrieveObjectException(e);
-					}
-				}
-			}
-		}
-		
-		{
-			final java.util.Map<Identifier, Set<Identifier>> physicalLinks = this.retrieveLinkedObjects(maps, _MAP_PHYSICAL_LINK);
-			for (final Identifier id : physicalLinks.keySet()) {
-				final Set<Identifier> physicalLinkIds = physicalLinks.get(id);
-				if (id.equals(storableObject.getId())) {
-					try {
-						final Set<PhysicalLink> loadedPhysicalLinks = StorableObjectPool.getStorableObjects(physicalLinkIds, true);
-						storableObject.setPhysicalLinks0(loadedPhysicalLinks);
-					} catch (ApplicationException e) {
-						throw new RetrieveObjectException(e);
-					}
-				}
-			}
-		}
-		
-		{
-			final java.util.Map<Identifier, Set<Identifier>> siteNodes = this.retrieveLinkedObjects(maps, _MAP_SITE_NODE);
-			for (final Identifier id : siteNodes.keySet()) {
-				final Set<Identifier> siteNodeIds = siteNodes.get(id);
-				if (id.equals(storableObject.getId())) {
-					try {
-						final Set<SiteNode> loadedSiteNodes = StorableObjectPool.getStorableObjects(siteNodeIds, true);
-						storableObject.setSiteNodes0(loadedSiteNodes);
-					} catch (ApplicationException e) {
-						throw new RetrieveObjectException(e);
-					}
-				}
-			}
-		}
-		
-		{
-			final java.util.Map<Identifier, Set<Identifier>> topologicalNodes = this.retrieveLinkedObjects(maps, _MAP_TOPOLOGICAL_NODE);
-			for (final Identifier id : topologicalNodes.keySet()) {
-				final Set<Identifier> topologicalNodeIds = topologicalNodes.get(id);
-				if (id.equals(storableObject.getId())) {
-					try {
-						final Set<TopologicalNode> loadedTopologicalNodes = StorableObjectPool.getStorableObjects(topologicalNodeIds, true);
-						storableObject.setTopologicalNodes0(loadedTopologicalNodes);
-					} catch (ApplicationException e) {
-						throw new RetrieveObjectException(e);
-					}
-				}
-			}
-		}
-		
-		{
-			final java.util.Map<Identifier, Set<Identifier>> linkedMaps = this.retrieveLinkedObjects(maps, _MAP_MAP);
-			for (final Identifier id : linkedMaps.keySet()) {
-				final Set<Identifier> linkedMapIds = linkedMaps.get(id);
-				if (id.equals(storableObject.getId())) {
-					try {
-						final Set<Map> loadedLinkedMaps = StorableObjectPool.getStorableObjects(linkedMapIds, true);
-						storableObject.setMaps0(loadedLinkedMaps);
-					} catch (ApplicationException e) {
-						throw new RetrieveObjectException(e);
-					}
-				}
-				
-			} 
-		}
-		
-		{
-			final java.util.Map<Identifier, Set<Identifier>> externalNodes = this.retrieveLinkedObjects(maps, _MAP_EXTERNAL_NODE);
-			for (final Identifier id : externalNodes.keySet()) {
-				final Set<Identifier> externalNodeIds = externalNodes.get(id);
-				if (id.equals(storableObject.getId())) {
-					try {
-						final Set<SiteNode> loadedExternalNodes = StorableObjectPool.getStorableObjects(externalNodeIds, true);
-						storableObject.setExternalNodes0(loadedExternalNodes);
-					} catch (ApplicationException e) {
-						throw new RetrieveObjectException(e);
-					}
-				}
-			}
-		}
-		
-		{
-			final java.util.Map<Identifier, Set<Identifier>> mapLibraries = this.retrieveLinkedObjects(maps, _MAP_MAP_LIBRARY);
-			for (final Identifier id : mapLibraries.keySet()) {
-				final Set<Identifier> mapLibraryIds = mapLibraries.get(id);
-				if (id.equals(storableObject.getId())) {
-					try {
-						final Set<MapLibrary> loadedMapLibraries = StorableObjectPool.getStorableObjects(mapLibraryIds, true);
-						storableObject.setMapLibraries0(loadedMapLibraries);
-					} catch (ApplicationException e) {
-						throw new RetrieveObjectException(e);
-					}
-				}
-			}
-		}
-	}	
 
 	private java.util.Map<Identifier, Set<Identifier>> retrieveLinkedObjects(final Set<Map> maps, final int linkedTable)
 			throws RetrieveObjectException,
@@ -436,11 +293,6 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 		}
 
 		super.updateLinkedEntityIds(mapIdLinkedObjectIds, tableName, MapWrapper.LINK_COLUMN_MAP_ID, columnName);
-	}
-
-	@Override
-	public void delete(final Identifier id) {
-		this.delete(Collections.singleton(id));
 	}
 
 	@Override

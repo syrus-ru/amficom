@@ -1,5 +1,5 @@
 /*-
- * $Id: CollectorDatabase.java,v 1.45 2005/09/05 14:35:57 max Exp $
+ * $Id: CollectorDatabase.java,v 1.46 2005/09/09 14:29:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Set;
 
@@ -24,7 +23,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -37,8 +35,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/09/05 14:35:57 $
- * @author $Author: max $
+ * @version $Revision: 1.46 $, $Date: 2005/09/09 14:29:43 $
+ * @author $Author: arseniy $
  * @module map
  */
 public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
@@ -47,13 +45,6 @@ public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
 	private static String updateMultipleSQLValues;
 
 	private static final String COLLECTOR_PHYSICAL_LINK = "CollPhLink";
-
-	@Override
-	public void retrieve(final Collector storableObject)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		super.retrieveEntity(storableObject);
-		this.retrievePhysicalLinks(Collections.singleton(storableObject));
-	}
 
 	private void retrievePhysicalLinks(final Set<Collector> collectors) throws RetrieveObjectException {
 		if (collectors == null || collectors.isEmpty())
@@ -160,11 +151,6 @@ public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
 				COLLECTOR_PHYSICAL_LINK,
 				CollectorWrapper.LINK_COLUMN_COLLECTOR_ID,
 				CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
-	}
-
-	@Override
-	public void delete(final Identifier id) {
-		this.delete(Collections.singleton(id));
 	}
 
 	@Override

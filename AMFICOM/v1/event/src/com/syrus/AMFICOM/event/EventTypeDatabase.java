@@ -1,5 +1,5 @@
 /*
- * $Id: EventTypeDatabase.java,v 1.41 2005/08/25 20:15:02 arseniy Exp $
+ * $Id: EventTypeDatabase.java,v 1.42 2005/09/09 14:28:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -27,7 +26,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -40,7 +38,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/08/25 20:15:02 $
+ * @version $Revision: 1.42 $, $Date: 2005/09/09 14:28:04 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -110,14 +108,6 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_CODENAME)),
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));
 		return eventType;
-	}
-
-	@Override
-	public void retrieve(final EventType storableObject)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		this.retrieveEntity(storableObject);
-		this.retrieveParameterTypesByOneQuery(Collections.singleton(storableObject));
-		this.retrieveUserAlertKindsByOneQuery(Collections.singleton(storableObject));
 	}
 
 	private void retrieveParameterTypesByOneQuery(final Set<EventType> eventTypes) throws RetrieveObjectException {
@@ -460,47 +450,6 @@ public final class EventTypeDatabase extends StorableObjectDatabase<EventType> {
 			statement = connection.createStatement();
 			Log.debugMessage(this.getEntityName() + "Database.deleteUserAlertKinds | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
-			connection.commit();
-		}
-		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		}
-		finally {
-			try {
-				try {
-					if (statement != null) {
-						statement.close();
-						statement = null;
-					}
-				} finally {
-					if (connection != null) {
-						DatabaseConnection.releaseConnection(connection);
-						connection = null;
-					}
-				}
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
-
-	@Override
-	public void delete(final Identifier id) {
-		assert (id.getMajor() == ObjectEntities.EVENT_TYPE_CODE) : "Illegal entity code: "
-			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
-
-		Statement statement = null;
-		Connection connection = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.EVENTTYPPARTYPLINK
-					+ SQL_WHERE + EventTypeWrapper.LINK_COLUMN_EVENT_TYPE_ID + EQUALS + id);
-			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.EVENT_TYPE
-					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + id);
-
 			connection.commit();
 		}
 		catch (SQLException sqle1) {

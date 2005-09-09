@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.43 2005/08/19 15:52:05 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.44 2005/09/09 14:28:04 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,7 +13,6 @@ import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -25,7 +24,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
@@ -39,7 +37,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/08/19 15:52:05 $
+ * @version $Revision: 1.44 $, $Date: 2005/09/09 14:28:04 $
  * @author $Author: arseniy $
  * @module event
  */
@@ -117,13 +115,6 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 				DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION)));		
 		return event;
 	}
-
-	@Override
-	public void retrieve(final Event storableObject) throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		this.retrieveEntity(storableObject);
-		this.retrieveEventParametersByOneQuery(Collections.singleton(storableObject));
-		this.retrieveEventSourceIdsByOneQuery(Collections.singleton(storableObject));
-	}	
 
 	private void retrieveEventParametersByOneQuery(final Set<Event> events) throws RetrieveObjectException {
     if ((events == null) || (events.isEmpty())) {
@@ -326,47 +317,4 @@ public final class EventDatabase extends StorableObjectDatabase<Event> {
 		return objects;
 	}
 
-	@Override
-	public void delete(final Identifier id) {
-		assert (id.getMajor() == ObjectEntities.EVENT_CODE) : "Illegal entity code: "
-			+ id.getMajor() + ", entity '" + ObjectEntities.codeToString(id.getMajor()) + "'";
-
-		final String eventIdStr = DatabaseIdentifier.toSQLString(id);
-		Statement statement = null;
-		Connection connection = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.EVENTSOURCELINK
-					+ SQL_WHERE + EventWrapper.LINK_COLUMN_EVENT_ID + EQUALS + eventIdStr);
-			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.EVENTPARAMETER
-					+ SQL_WHERE + EventWrapper.LINK_COLUMN_EVENT_ID + EQUALS + eventIdStr);
-			statement.executeUpdate(SQL_DELETE_FROM
-					+ ObjectEntities.EVENT
-					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + eventIdStr);
-			connection.commit();
-		}
-		catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		}
-		finally {
-			try {
-				try {
-					if (statement != null) {
-						statement.close();
-						statement = null;
-					}
-				} finally {
-					if (connection != null) {
-						DatabaseConnection.releaseConnection(connection);
-						connection = null;
-					}
-				}
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
 }
