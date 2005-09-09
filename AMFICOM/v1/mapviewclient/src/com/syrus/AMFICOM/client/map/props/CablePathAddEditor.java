@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.19 $
+ * @version $Revision: 1.20 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -766,10 +766,6 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.logicalNetLayer.sendSelectionChangeEvent();
 	}
 
-	/**
-	 * @throws ApplicationException 
-	 * @todo working woth nodelinks and creation/deletion of elements
-	 */
 	void removeBinding() throws ApplicationException
 	{
 		PhysicalLink link = (PhysicalLink)this.model.getObject(this.table.getSelectedRow());
