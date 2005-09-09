@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.39 2005/09/06 14:17:33 max Exp $
+ * $Id: MapViewDatabase.java,v 1.40 2005/09/09 17:21:47 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/09/06 14:17:33 $
- * @author $Author: max $
+ * @version $Revision: 1.40 $, $Date: 2005/09/09 17:21:47 $
+ * @author $Author: krupenn $
  * @module mapview
  */
 public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
@@ -130,8 +130,8 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getName(), SIZE_NAME_COLUMN);
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getLongitude());
-		preparedStatement.setDouble(++startParameterNumber, storableObject.getLatitude());
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getCenter().getX());
+		preparedStatement.setDouble(++startParameterNumber, storableObject.getCenter().getY());
 		preparedStatement.setDouble(++startParameterNumber, storableObject.getScale());
 		preparedStatement.setDouble(++startParameterNumber, storableObject.getDefaultScale());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMap().getId());
@@ -144,8 +144,8 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 		final String values = DatabaseIdentifier.toSQLString(mapView.getDomainId()) + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(mapView.getName(), SIZE_NAME_COLUMN) + APOSTROPHE + COMMA
 				+ APOSTROPHE + DatabaseString.toQuerySubString(mapView.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-				+ mapView.getLongitude() + COMMA
-				+ mapView.getLatitude() + COMMA
+				+ mapView.getCenter().getX() + COMMA
+				+ mapView.getCenter().getY() + COMMA
 				+ mapView.getScale() + COMMA
 				+ mapView.getDefaultScale() + COMMA
 				+ DatabaseIdentifier.toSQLString(mapView.getMap().getId());
