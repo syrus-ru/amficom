@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.188 2005/09/09 14:14:00 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.189 2005/09/09 19:07:50 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.188 $, $Date: 2005/09/09 14:14:00 $
+ * @version $Revision: 1.189 $, $Date: 2005/09/09 19:07:50 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -222,56 +222,6 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	 */
 	protected abstract T updateEntityFromResultSet(T storableObject, ResultSet resultSet)
 			throws IllegalDataException, RetrieveObjectException, SQLException;
-
-	// ////////////////////// retrieve /////////////////////////
-
-	protected final void retrieveEntity(final T storableObject)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		final String strorableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
-		final String sql = this.retrieveQuery(StorableObjectWrapper.COLUMN_ID + EQUALS + strorableObjectIdStr);
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			Log.debugMessage(this.getEntityName() + "Database.retrieveEntity | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {
-				this.updateEntityFromResultSet(storableObject, resultSet);
-			}
-			else {
-				throw new ObjectNotFoundException("No such " + getEntityName() + ": " + strorableObjectIdStr);
-			}
-		} catch (SQLException sqle) {
-			final String mesg = this.getEntityName() + "Database.retrieveEntity | Cannot retrieve " + getEntityName()
-					+ " '" + strorableObjectIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
-			try {
-				try {
-					if (resultSet != null) {
-						resultSet.close();
-						resultSet = null;
-					}
-				} finally {
-					try {
-						if (statement != null) {
-							statement.close();
-							statement = null;
-						}
-					} finally {
-						if (connection != null) {
-							DatabaseConnection.releaseConnection(connection);
-							connection = null;
-						}
-					}
-				}
-			} catch (SQLException sqle) {
-				Log.errorException(sqle);
-			}
-		}
-	}
 
 	public final Set<T> retrieveByCondition(final StorableObjectCondition condition)
 			throws RetrieveObjectException, IllegalDataException {
