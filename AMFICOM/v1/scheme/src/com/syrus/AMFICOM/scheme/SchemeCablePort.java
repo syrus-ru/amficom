@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.59 2005/09/08 18:26:26 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.60 2005/09/09 18:52:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -53,7 +51,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.59 $, $Date: 2005/09/08 18:26:26 $
+ * @version $Revision: 1.60 $, $Date: 2005/09/09 18:52:50 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort
@@ -329,13 +327,13 @@ public final class SchemeCablePort extends AbstractSchemePort
 		if (setCablePortTypeId) {
 			assert !setCablePortId : OBJECT_STATE_ILLEGAL;
 
-			super.portTypeId = Identifier.fromXmlTransferable(schemeCablePort.getCablePortTypeId(), PORT_TYPE_CODE, importType);
+			super.portTypeId = Identifier.fromXmlTransferable(schemeCablePort.getCablePortTypeId(), importType);
 			super.portId = VOID_IDENTIFIER;
 		} else if (setCablePortId) {
 			assert !setCablePortTypeId : OBJECT_STATE_ILLEGAL;
 
 			super.portTypeId = VOID_IDENTIFIER;
-			super.portId = Identifier.fromXmlTransferable(schemeCablePort.getCablePortId(), PORT_CODE, importType);
+			super.portId = Identifier.fromXmlTransferable(schemeCablePort.getCablePortId(), importType);
 		} else {
 			throw new UpdateObjectException(
 					"SchemeCablePort.fromXmlTransferable() | "

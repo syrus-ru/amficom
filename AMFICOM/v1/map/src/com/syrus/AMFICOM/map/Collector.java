@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.76 2005/09/08 18:26:29 bass Exp $
+ * $Id: Collector.java,v 1.77 2005/09/09 18:52:51 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -47,7 +46,7 @@ import com.syrus.util.Log;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/09/08 18:26:29 $
+ * @version $Revision: 1.77 $, $Date: 2005/09/09 18:52:51 $
  * @module map
  */
 public final class Collector extends StorableObject implements MapElement, XmlBeansTransferable<XmlCollector> {
@@ -402,7 +401,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 		this.description = xmlCollector.getDescription();
 
 		for (final XmlIdentifier physicalLinkId : xmlCollector.getPhysicalLinkIds().getIdArray()) {
-			this.addPhysicalLinkId(Identifier.fromXmlTransferable(physicalLinkId, PHYSICALLINK_CODE, importType));
+			this.addPhysicalLinkId(Identifier.fromXmlTransferable(physicalLinkId, importType));
 		}
 	}
 

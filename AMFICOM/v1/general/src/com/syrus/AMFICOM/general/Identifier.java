@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.64 2005/09/08 10:37:00 bob Exp $
+ * $Id: Identifier.java,v 1.65 2005/09/09 18:52:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,8 +28,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.64 $, $Date: 2005/09/08 10:37:00 $
- * @author $Author: bob $
+ * @version $Revision: 1.65 $, $Date: 2005/09/09 18:52:50 $
+ * @author $Author: bass $
  * @module general
  */
 public final class Identifier implements Comparable<Identifier>, TransferableObject, Serializable, Identifiable {
@@ -341,6 +341,10 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 * if the mapping is not present, an {@link ObjectNotFoundException}
 	 * will be thrown.</p>
 	 *
+	 * <p>Should be invoked only from
+	 * {@code createInstance(Identifier, XmlstorableObject, String)}
+	 * methods.</p>
+	 *
 	 * @param xmlId
 	 * @param entityCode
 	 * @param importType
@@ -375,6 +379,33 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		LocalXmlIdentifierPool.put(id, xmlId, importType);
 
 		return id;
+	}
+
+	/**
+	 * <p>The same as {@link #fromXmlTransferable(XmlIdentifier, short, String)},
+	 * but never generates a new identifier if the corresponding mapping
+	 * is not found, throwing an {@link ObjectNotFoundException} instead.</p>
+	 *
+	 * <p>Should be invoked only from
+	 * {@link XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)}
+	 * methods.</p>
+	 *
+	 * @param xmlId
+	 * @param importType
+	 * @throws ObjectNotFoundException
+	 */
+	public static Identifier fromXmlTransferable(final XmlIdentifier xmlId,
+			final String importType)
+	throws ObjectNotFoundException {
+		try {
+			return fromXmlTransferable(xmlId, ABSTRACT_CODE, importType);
+		} catch (final IdentifierGenerationException ige) {
+			/*
+			 * Never.
+			 */
+			assert false;
+			return null;
+		}
 	}
 
 	/**

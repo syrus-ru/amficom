@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.87 2005/09/08 18:26:29 bass Exp $
+ * $Id: NodeLink.java,v 1.88 2005/09/09 18:52:51 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,9 +10,7 @@ package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
-import static com.syrus.AMFICOM.general.Identifier.ABSTRACT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
 
@@ -48,7 +46,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2005/09/08 18:26:29 $
+ * @version $Revision: 1.88 $, $Date: 2005/09/09 18:52:51 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -475,15 +473,10 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 	public void fromXmlTransferable(final XmlNodeLink xmlNodeLink, final String importType) throws ApplicationException {
 		this.length = xmlNodeLink.getLength();
 
-		final Identifier physicalLinkId1 = Identifier.fromXmlTransferable(xmlNodeLink.getPhysicalLinkId(), PHYSICALLINK_CODE, importType);
-		/*
-		 * startNodeId and endNodeId may refer objects other than
-		 * SiteNode, but any AbstractNode descendants.
-		 */
-		final Identifier startNodeId1 = Identifier.fromXmlTransferable(xmlNodeLink.getStartNodeId(), ABSTRACT_CODE, importType);
-		final Identifier endNodeId1 = Identifier.fromXmlTransferable(xmlNodeLink.getEndNodeId(), ABSTRACT_CODE, importType);
+		final Identifier startNodeId1 = Identifier.fromXmlTransferable(xmlNodeLink.getStartNodeId(), importType);
+		final Identifier endNodeId1 = Identifier.fromXmlTransferable(xmlNodeLink.getEndNodeId(), importType);
 
-		this.physicalLinkId = physicalLinkId1;
+		this.physicalLinkId = Identifier.fromXmlTransferable(xmlNodeLink.getPhysicalLinkId(), importType);
 		this.startNodeId = startNodeId1;
 		this.endNodeId = endNodeId1;
 		

@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.82 2005/09/09 18:19:58 bass Exp $
+ * $Id: Scheme.java,v 1.83 2005/09/09 18:52:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
@@ -76,7 +75,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.82 $, $Date: 2005/09/09 18:19:58 $
+ * @version $Revision: 1.83 $, $Date: 2005/09/09 18:52:50 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1252,25 +1251,25 @@ public final class Scheme extends AbstractCloneableDomainMember
 		this.height = scheme.getHeight();
 		this.kind = IdlKind.from_int(scheme.getKind().intValue() - 1);
 		if (scheme.isSetDomainId()) {
-			super.setDomainId0(Identifier.fromXmlTransferable(scheme.getDomainId(), DOMAIN_CODE, importType));
+			super.setDomainId0(Identifier.fromXmlTransferable(scheme.getDomainId(), importType));
 		} else {
 			throw new UpdateObjectException("Scheme.fromXmlTransferable() | "
 					+ XML_BEAN_NOT_COMPLETE);
 		}
 		this.mapId = scheme.isSetMapId()
-				? Identifier.fromXmlTransferable(scheme.getMapId(), MAP_CODE, importType)
+				? Identifier.fromXmlTransferable(scheme.getMapId(), importType)
 				: VOID_IDENTIFIER;
 		this.symbolId = scheme.isSetSymbolId()
-				? Identifier.fromXmlTransferable(scheme.getSymbolId(), IMAGERESOURCE_CODE, importType)
+				? Identifier.fromXmlTransferable(scheme.getSymbolId(), importType)
 				: VOID_IDENTIFIER;
 		this.ugoCellId = scheme.isSetUgoCellId()
-				? Identifier.fromXmlTransferable(scheme.getUgoCellId(), IMAGERESOURCE_CODE, importType)
+				? Identifier.fromXmlTransferable(scheme.getUgoCellId(), importType)
 				: VOID_IDENTIFIER;
 		this.schemeCellId = scheme.isSetSchemeCellId()
-				? Identifier.fromXmlTransferable(scheme.getSchemeCellId(), IMAGERESOURCE_CODE, importType)
+				? Identifier.fromXmlTransferable(scheme.getSchemeCellId(), importType)
 				: VOID_IDENTIFIER;
 		this.parentSchemeElementId = scheme.isSetParentSchemeElementId()
-				? Identifier.fromXmlTransferable(scheme.getParentSchemeElementId(), SCHEMEELEMENT_CODE, importType)
+				? Identifier.fromXmlTransferable(scheme.getParentSchemeElementId(), importType)
 				: VOID_IDENTIFIER;
 		if (scheme.isSetSchemeElements()) {
 			for (final XmlSchemeElement schemeElement : scheme.getSchemeElements().getSchemeElementArray()) {

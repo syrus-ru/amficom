@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.76 2005/09/08 18:26:26 bass Exp $
+ * $Id: SchemeDevice.java,v 1.77 2005/09/09 18:52:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/09/08 18:26:26 $
+ * @version $Revision: 1.77 $, $Date: 2005/09/09 18:52:50 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -825,13 +825,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		if (setParentSchemeProtoElementId) {
 			assert !setParentSchemeElementId : OBJECT_STATE_ILLEGAL;
 
-			this.parentSchemeProtoElementId = Identifier.fromXmlTransferable(schemeDevice.getParentSchemeProtoElementId(), SCHEMEPROTOELEMENT_CODE, importType);
+			this.parentSchemeProtoElementId = Identifier.fromXmlTransferable(schemeDevice.getParentSchemeProtoElementId(), importType);
 			this.parentSchemeElementId = VOID_IDENTIFIER;
 		} else if (setParentSchemeElementId) {
 			assert !setParentSchemeProtoElementId : OBJECT_STATE_ILLEGAL;
 
 			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
-			this.parentSchemeElementId = Identifier.fromXmlTransferable(schemeDevice.getParentSchemeElementId(), SCHEMEELEMENT_CODE, importType);
+			this.parentSchemeElementId = Identifier.fromXmlTransferable(schemeDevice.getParentSchemeElementId(), importType);
 		} else {
 			throw new UpdateObjectException(
 					"SchemeDevice.fromXmlTransferable() | "

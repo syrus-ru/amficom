@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.87 2005/09/08 18:26:29 bass Exp $
+ * $Id: SiteNode.java,v 1.88 2005/09/09 18:52:51 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -54,7 +55,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2005/09/08 18:26:29 $
+ * @version $Revision: 1.88 $, $Date: 2005/09/09 18:52:51 $
  * @module map
  */
 public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
@@ -368,26 +369,25 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 		this.street = xmlSiteNode.getStreet();
 		this.building = xmlSiteNode.getBuilding();
 		super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
-		if(xmlSiteNode.isSetAttachmentSiteNodeId()) {
-			this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), SITENODE_CODE, importType); 
+		if (xmlSiteNode.isSetAttachmentSiteNodeId()) {
+			this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), importType); 
+		} else {
+			this.attachmentSiteNodeId = VOID_IDENTIFIER;
 		}
 
-		String typeCodeName1 = xmlSiteNode.getSiteNodeTypeCodename();
-		final TypicalCondition condition = new TypicalCondition(typeCodeName1,
+		final TypicalCondition condition = new TypicalCondition(xmlSiteNode.getSiteNodeTypeCodename(),
 				OperationSort.OPERATION_EQUALS,
 				SITENODE_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
 		Set<SiteNodeType> siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
-		if (siteNodeTypes == null || siteNodeTypes.size() == 0) {
-			typeCodeName1 = SiteNodeType.DEFAULT_BUILDING;
-
-			condition.setValue(typeCodeName1);
+		if (siteNodeTypes.isEmpty()) {
+			condition.setValue(SiteNodeType.DEFAULT_BUILDING);
 
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
 			siteNodeTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
-			if (siteNodeTypes == null || siteNodeTypes.size() == 0) {
+			if (siteNodeTypes.isEmpty()) {
 				throw new CreateObjectException("SiteNodeType \'" + SiteNodeType.DEFAULT_BUILDING + "\' not found");
 			}
 		}

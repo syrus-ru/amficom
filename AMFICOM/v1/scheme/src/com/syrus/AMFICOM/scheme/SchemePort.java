@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.60 2005/09/08 18:26:26 bass Exp $
+ * $Id: SchemePort.java,v 1.61 2005/09/09 18:52:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
-import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
-import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
@@ -54,7 +52,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.60 $, $Date: 2005/09/08 18:26:26 $
+ * @version $Revision: 1.61 $, $Date: 2005/09/09 18:52:50 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
@@ -343,13 +341,13 @@ public final class SchemePort extends AbstractSchemePort
 		if (setPortTypeId) {
 			assert !setPortId : OBJECT_STATE_ILLEGAL;
 
-			super.portTypeId = Identifier.fromXmlTransferable(schemePort.getPortTypeId(), PORT_TYPE_CODE, importType);
+			super.portTypeId = Identifier.fromXmlTransferable(schemePort.getPortTypeId(), importType);
 			super.portId = VOID_IDENTIFIER;
 		} else if (setPortId) {
 			assert !setPortTypeId : OBJECT_STATE_ILLEGAL;
 
 			super.portTypeId = VOID_IDENTIFIER;
-			super.portId = Identifier.fromXmlTransferable(schemePort.getPortId(), PORT_CODE, importType);
+			super.portId = Identifier.fromXmlTransferable(schemePort.getPortId(), importType);
 		} else {
 			throw new UpdateObjectException(
 					"SchemePort.fromXmlTransferable() | "

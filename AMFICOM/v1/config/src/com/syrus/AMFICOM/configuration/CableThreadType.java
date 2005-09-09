@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.63 2005/09/08 18:26:27 bass Exp $
+ * $Id: CableThreadType.java,v 1.64 2005/09/09 18:52:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.63 $, $Date: 2005/09/08 18:26:27 $
+ * @version $Revision: 1.64 $, $Date: 2005/09/09 18:52:50 $
  * @author $Author: bass $
  * @module config
  */
@@ -213,8 +213,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		this.color = cableThreadType.isSetColor()
 				? Integer.parseInt(cableThreadType.getColor())
 				: -1;
-		this.linkTypeId = Identifier.fromXmlTransferable(cableThreadType.getLinkTypeId(), LINK_TYPE_CODE, importType);
-		this.cableLinkTypeId = Identifier.fromXmlTransferable(cableThreadType.getCableLinkTypeId(), CABLELINK_TYPE_CODE, importType);
+		this.linkTypeId = Identifier.fromXmlTransferable(cableThreadType.getLinkTypeId(), importType);
+		this.cableLinkTypeId = Identifier.fromXmlTransferable(cableThreadType.getCableLinkTypeId(), importType);
 	}
 
 	/**

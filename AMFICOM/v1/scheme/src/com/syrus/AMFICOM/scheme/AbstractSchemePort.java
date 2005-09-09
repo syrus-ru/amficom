@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.61 2005/09/08 18:26:26 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.62 2005/09/09 18:52:50 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/09/08 18:26:26 $
+ * @version $Revision: 1.62 $, $Date: 2005/09/09 18:52:50 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -574,9 +574,9 @@ public abstract class AbstractSchemePort
 				: "";
 		this.directionType = IdlDirectionType.from_int(abstractSchemePort.getDirectionType().intValue() - 1);
 		this.measurementPortId = abstractSchemePort.isSetMeasurementPortId()
-				? Identifier.fromXmlTransferable(abstractSchemePort.getMeasurementPortId(), MEASUREMENTPORT_CODE, importType)
+				? Identifier.fromXmlTransferable(abstractSchemePort.getMeasurementPortId(), importType)
 				: VOID_IDENTIFIER;
-		this.parentSchemeDeviceId = Identifier.fromXmlTransferable(abstractSchemePort.getParentSchemeDeviceId(), SCHEMEDEVICE_CODE, importType);
+		this.parentSchemeDeviceId = Identifier.fromXmlTransferable(abstractSchemePort.getParentSchemeDeviceId(), importType);
 		if (abstractSchemePort.isSetCharacteristics()) {
 			for (final XmlCharacteristic characteristic : abstractSchemePort.getCharacteristics().getCharacteristicArray()) {
 				Characteristic.createInstance(super.creatorId, characteristic, importType);

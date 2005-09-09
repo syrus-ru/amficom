@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.73 2005/09/09 18:12:53 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.74 2005/09/09 18:52:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/09/09 18:12:53 $
+ * @version $Revision: 1.74 $, $Date: 2005/09/09 18:52:50 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -807,13 +807,13 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		if (setLinkTypeId) {
 			assert !setLinkId : OBJECT_STATE_ILLEGAL;
 
-			this.linkTypeId = Identifier.fromXmlTransferable(schemeCableThread.getLinkTypeId(), LINK_TYPE_CODE, importType);
+			this.linkTypeId = Identifier.fromXmlTransferable(schemeCableThread.getLinkTypeId(), importType);
 			this.linkId = VOID_IDENTIFIER;
 		} else if (setLinkId) {
 			assert !setLinkTypeId : OBJECT_STATE_ILLEGAL;
 
 			this.linkTypeId = VOID_IDENTIFIER;
-			this.linkId = Identifier.fromXmlTransferable(schemeCableThread.getLinkId(), LINK_CODE, importType);
+			this.linkId = Identifier.fromXmlTransferable(schemeCableThread.getLinkId(), importType);
 		} else {
 			throw new UpdateObjectException(
 					"SchemeCableThread.fromXmlTransferable() | "
@@ -821,12 +821,12 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		}
 
 		this.sourceSchemePortId = schemeCableThread.isSetSourceSchemePortId()
-				? Identifier.fromXmlTransferable(schemeCableThread.getSourceSchemePortId(), SCHEMEPORT_CODE, importType)
+				? Identifier.fromXmlTransferable(schemeCableThread.getSourceSchemePortId(), importType)
 				: VOID_IDENTIFIER;
 		this.targetSchemePortId = schemeCableThread.isSetTargetSchemePortId()
-				? Identifier.fromXmlTransferable(schemeCableThread.getTargetSchemePortId(), SCHEMEPORT_CODE, importType)
+				? Identifier.fromXmlTransferable(schemeCableThread.getTargetSchemePortId(), importType)
 				: VOID_IDENTIFIER;
-		this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(schemeCableThread.getParentSchemeCableLinkId(), SCHEMECABLELINK_CODE, importType);
+		this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(schemeCableThread.getParentSchemeCableLinkId(), importType);
 		if (schemeCableThread.isSetCharacteristics()) {
 			for (final XmlCharacteristic characteristic : schemeCableThread.getCharacteristics().getCharacteristicArray()) {
 				Characteristic.createInstance(super.creatorId, characteristic, importType);

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.109 2005/09/09 17:20:42 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.110 2005/09/09 18:52:51 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.map;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
-import static com.syrus.AMFICOM.general.Identifier.ABSTRACT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static java.util.logging.Level.FINEST;
@@ -64,8 +63,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.109 $, $Date: 2005/09/09 17:20:42 $
+ * @author $Author: bass $
+ * @version $Revision: 1.110 $, $Date: 2005/09/09 18:52:51 $
  * @module map
  */
 public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XmlBeansTransferable<XmlPhysicalLink> {
@@ -951,33 +950,27 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 		this.street = xmlPhysicalLink.getStreet();
 		this.building = xmlPhysicalLink.getBuilding();
 
-		final Identifier startNodeId1 = Identifier.fromXmlTransferable(xmlPhysicalLink.getStartNodeId(), ABSTRACT_CODE, importType);
-		final Identifier endNodeId1 = Identifier.fromXmlTransferable(xmlPhysicalLink.getEndNodeId(), ABSTRACT_CODE, importType);
+		this.startNodeId = Identifier.fromXmlTransferable(xmlPhysicalLink.getStartNodeId(), importType);
+		this.endNodeId = Identifier.fromXmlTransferable(xmlPhysicalLink.getEndNodeId(), importType);
 
-		this.startNodeId = startNodeId1;
-		this.endNodeId = endNodeId1;
-
-		String typeCodeName1 = xmlPhysicalLink.getPhysicalLinkTypeCodename();
-		final TypicalCondition condition = new TypicalCondition(typeCodeName1,
+		final TypicalCondition condition = new TypicalCondition(xmlPhysicalLink.getPhysicalLinkTypeCodename(),
 				OperationSort.OPERATION_EQUALS,
 				PHYSICALLINK_TYPE_CODE,
 				StorableObjectWrapper.COLUMN_CODENAME);
 
 		//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-		Set<PhysicalLinkType> objects = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
-		if (objects == null || objects.size() == 0) {
-			typeCodeName1 = PhysicalLinkType.DEFAULT_TUNNEL;
-
-			condition.setValue(typeCodeName1);
+		Set<PhysicalLinkType> physicalLinkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
+		if (physicalLinkTypes.isEmpty()) {
+			condition.setValue(PhysicalLinkType.DEFAULT_TUNNEL);
 
 			//NOTE: This call never results in using loader, so it doesn't matter what to pass as 3-d argument
-			objects = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
-			if (objects == null || objects.size() == 0) {
+			physicalLinkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, false, false);
+			if (physicalLinkTypes.isEmpty()) {
 				throw new CreateObjectException("PhysicalLinkType \'" + PhysicalLinkType.DEFAULT_TUNNEL + "\' not found");
 			}
 		}
 		
-		this.physicalLinkType = objects.iterator().next();
+		this.physicalLinkType = physicalLinkTypes.iterator().next();
 
 		this.leftToRight = true;
 		this.topToBottom = true;
