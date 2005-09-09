@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.186 2005/09/05 16:31:32 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.187 2005/09/09 14:09:59 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.186 $, $Date: 2005/09/05 16:31:32 $
+ * @version $Revision: 1.187 $, $Date: 2005/09/09 14:09:59 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -225,11 +225,6 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	// ////////////////////// retrieve /////////////////////////
 
-	public void retrieve(final T storableObject)
-			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
-		this.retrieveEntity(storableObject);
-	}
-
 	protected final void retrieveEntity(final T storableObject)
 			throws IllegalDataException, ObjectNotFoundException, RetrieveObjectException {
 		final String strorableObjectIdStr = DatabaseIdentifier.toSQLString(storableObject.getId());
@@ -343,6 +338,19 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		}
 
 		return this.retrieveByCondition(stringBuffer.toString());
+	}
+
+	public final T retrieveForId(final Identifier id) throws RetrieveObjectException, ObjectNotFoundException {
+		final String condition = StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
+		try {
+			final Set<T> objects = this.retrieveByCondition(condition);
+			if (!objects.isEmpty()) {
+				return objects.iterator().next();
+			}
+			throw new ObjectNotFoundException("Object for id '" + id + "' not found");
+		} catch (IllegalDataException ide) {
+			throw new RetrieveObjectException(ide);
+		}
 	}
 
 	public final Set<T> retrieveAll() throws RetrieveObjectException {
@@ -1204,41 +1212,6 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 
 	// //////////////////// delete /////////////////////////
-
-	public final void delete(final Identifiable identifiable) {
-		this.delete(identifiable.getId());
-	}
-
-	public void delete(final Identifier id) {
-		Statement statement = null;
-		Connection connection = null;
-		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			final String sql = SQL_DELETE_FROM + this.getEntityName()
-					+ SQL_WHERE + StorableObjectWrapper.COLUMN_ID + EQUALS + DatabaseIdentifier.toSQLString(id);
-			Log.debugMessage(this.getEntityName() + "Database.delete | Trying: " + sql, Log.DEBUGLEVEL09);
-			statement.executeUpdate(sql);
-		} catch (SQLException sqle1) {
-			Log.errorException(sqle1);
-		} finally {
-			try {
-				try {
-					if (statement != null) {
-						statement.close();
-						statement = null;
-					}
-				} finally {
-					if (connection != null) {
-						DatabaseConnection.releaseConnection(connection);
-						connection = null;
-					}
-				}
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
-		}
-	}
 
 	public void delete(Set<? extends Identifiable> identifiables) {
 		if ((identifiables == null) || (identifiables.isEmpty())) {
