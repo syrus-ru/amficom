@@ -13,11 +13,10 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodenames;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: UserBeanWrapper.java,v 1.8 2005/09/09 15:03:32 bob Exp $
+ * $Id: UserBeanWrapper.java,v 1.9 2005/09/09 15:36:21 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +24,7 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/09 15:03:32 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/09 15:36:21 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -73,18 +72,19 @@ public class UserBeanWrapper implements Wrapper {
 				USER_PHONE,
 				USER_CELLULAR};
 		
+		final List<String> selfUserKeys = new ArrayList<String>(Arrays.asList(keysArray));
+		
 		this.permissionCodenamesMap = new HashMap<String, PermissionCodenames>();
 		PermissionCodenames[] codenames = PermissionAttributes.PermissionCodenames.values();
 		for(int i = 0; i < codenames.length; i++) {
 			this.permissionCodenamesMap.put(codenames[i].name(), codenames[i]);
+			selfUserKeys.add(codenames[i].name());
 		}
 		
-		final List<String> selfUserKeys = new ArrayList<String>(Arrays.asList(keysArray));
-		selfUserKeys.addAll(this.permissionCodenamesMap.keySet());
 		this.keys = Collections.unmodifiableList(selfUserKeys);
 	}
 
-	public static UserBeanWrapper getInstance() {
+	public static synchronized UserBeanWrapper getInstance() {
 		if (instance == null) {
 			instance = new UserBeanWrapper();
 		}
