@@ -1,5 +1,5 @@
 /*
- * $Id: ColorListCellRenderer.java,v 1.3 2005/08/11 18:51:08 arseniy Exp $
+ * $Id: ColorListCellRenderer.java,v 1.4 2005/09/09 18:54:27 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client.UI;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/11 18:51:08 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/09 18:54:27 $
  * @module commonclient
  */
 
@@ -26,15 +26,16 @@ import javax.swing.ListCellRenderer;
 /**
  * Renderer for java.awt.Color cell at JList.
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/11 18:51:08 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/09 18:54:27 $
  * @module commonclient
  */
 
 public class ColorListCellRenderer extends JLabel implements ListCellRenderer {
+	private static final long serialVersionUID = -7358452357896522533L;
 
-	private static ColorListCellRenderer	instance;
-	private Color				curColor;
-	private Color				unselectedForeground;
+	private static ColorListCellRenderer instance;
+	private Color curColor;
+	private Color unselectedForeground;
 
 	private ColorListCellRenderer() {
 		// empty
@@ -42,7 +43,8 @@ public class ColorListCellRenderer extends JLabel implements ListCellRenderer {
 
 	/**
 	 * There is no need in more than one instance of this renderer.
-	 * @return ColorCellRenderer instance. 
+	 * 
+	 * @return ColorCellRenderer instance.
 	 */
 	public static ColorListCellRenderer getInstance() {
 		if (instance == null) {
@@ -52,16 +54,19 @@ public class ColorListCellRenderer extends JLabel implements ListCellRenderer {
 		return instance;
 	}
 
-	
-	public Component getListCellRendererComponent(JList list, Object value,
-			int index, boolean isSelected, boolean hasFocus) {
+	public Component getListCellRendererComponent(final JList list,
+			final Object value,
+			final int index,
+			final boolean isSelected,
+			final boolean hasFocus) {
 
-		if (value instanceof JComponent)
-			return (JComponent)value;
-		
+		if (value instanceof JComponent) {
+			return (JComponent) value;
+		}
+
 		// Set the color to paint
 		if (this.curColor != null) {
-			//System.out.println(value.getClass().getName());
+			// System.out.println(value.getClass().getName());
 			this.curColor = (Color) value;
 		} else {
 			// If color unknown, use table's background
@@ -72,17 +77,13 @@ public class ColorListCellRenderer extends JLabel implements ListCellRenderer {
 		color = (color == null) ? list.getBackground() : color;
 
 		if (isSelected) {
-			super.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : list
-					.getForeground());
+			super.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : list.getForeground());
 			Color c = list.getSelectionBackground();
 			// calculate color with alpha-channel weight alpha
-			this.unselectedForeground = new Color(
-								(int) (c.getRed() * AbstractLabelCellRenderer.ONE_MINUS_ALPHA + AbstractLabelCellRenderer.ALPHA
-										* color.getRed()) % 256,
-								(int) (c.getGreen() * AbstractLabelCellRenderer.ONE_MINUS_ALPHA + AbstractLabelCellRenderer.ALPHA
-										* color.getGreen()) % 256,
-								(int) (c.getBlue() * AbstractLabelCellRenderer.ONE_MINUS_ALPHA + AbstractLabelCellRenderer.ALPHA
-										* color.getBlue()) % 256);
+			this.unselectedForeground = new Color((int) (c.getRed() * AbstractLabelCellRenderer.ONE_MINUS_ALPHA + AbstractLabelCellRenderer.ALPHA
+					* color.getRed()) % 256,
+					(int) (c.getGreen() * AbstractLabelCellRenderer.ONE_MINUS_ALPHA + AbstractLabelCellRenderer.ALPHA * color.getGreen()) % 256,
+					(int) (c.getBlue() * AbstractLabelCellRenderer.ONE_MINUS_ALPHA + AbstractLabelCellRenderer.ALPHA * color.getBlue()) % 256);
 		} else {
 			this.unselectedForeground = list.getBackground();
 		}
@@ -92,9 +93,10 @@ public class ColorListCellRenderer extends JLabel implements ListCellRenderer {
 	/**
 	 * Paint current color
 	 */ 
-	protected void paintComponent(Graphics g) {
-		int w = getWidth();
-		int h = getHeight();
+	@Override
+	protected void paintComponent(final Graphics g) {
+		final int w = getWidth();
+		final int h = getHeight();
 		g.setColor(this.curColor);
 		g.fillRect(0, 0, w, h);
 	}

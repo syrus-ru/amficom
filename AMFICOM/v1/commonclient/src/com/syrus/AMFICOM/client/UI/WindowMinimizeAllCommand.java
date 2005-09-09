@@ -1,5 +1,5 @@
 /*-
- * $Id: WindowMinimizeAllCommand.java,v 1.1 2005/06/21 14:25:54 bob Exp $
+ * $Id: WindowMinimizeAllCommand.java,v 1.2 2005/09/09 18:54:27 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,18 +13,24 @@ import javax.swing.JInternalFrame;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2005/09/09 18:54:27 $
+ * @author $Author: arseniy $
+ * @author Vladimir Dolzhenko
+ * @module commonclient
+ */
 public class WindowMinimizeAllCommand extends AbstractCommand {
 
-	private JDesktopPane	desktop;
+	private JDesktopPane desktop;
 
 	public WindowMinimizeAllCommand(final JDesktopPane desktop) {
 		this.desktop = desktop;
 	}
 
-	public void setParameter(	final String field,
-								final Object value) {
+	@Override
+	public void setParameter(final String field, final Object value) {
 		if (field.equals("desktop")) {
-			setDesktop((JDesktopPane) value);
+			this.setDesktop((JDesktopPane) value);
 		}
 	}
 
@@ -34,9 +40,11 @@ public class WindowMinimizeAllCommand extends AbstractCommand {
 
 	@Override
 	public void execute() {
-		if (this.desktop == null) { return; }
+		if (this.desktop == null) {
+			return;
+		}
 
-		for (JInternalFrame internalFrame : this.desktop.getAllFrames()) {
+		for (final JInternalFrame internalFrame : this.desktop.getAllFrames()) {
 			if (internalFrame.isIconifiable()) {
 				try {
 					internalFrame.setIcon(true);

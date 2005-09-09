@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedComboBox.java,v 1.5 2005/09/07 13:07:11 bob Exp $
+* $Id: WrapperedComboBox.java,v 1.6 2005/09/09 18:54:27 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,8 +15,8 @@ import java.util.List;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/07 13:07:11 $
- * @author $Author: bob $
+ * @version $Revision: 1.6 $, $Date: 2005/09/09 18:54:27 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -28,7 +28,7 @@ public class WrapperedComboBox<T> extends AComboBox {
 
 	public WrapperedComboBox(final WrapperedListModel<T> model) {
 		super(model);
-		this.setRenderer(new LabelCheckBoxRenderer(model.wrapper, model.key));
+		this.setRenderer(new LabelCheckBoxRenderer<T>(model.wrapper, model.key));
 		this.model = model;
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: StatusBar.java,v 1.7 2005/08/02 13:03:21 arseniy Exp $
+ * $Id: StatusBar.java,v 1.8 2005/09/09 18:54:27 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,33 +41,33 @@ import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/02 13:03:21 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/09 18:54:27 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
 public class StatusBar implements PropertyChangeListener {
 
-	public static final String		FIELD_PREFIX	= "field";
-	public static final String		FIELD_DOMAIN	= "domain";
-	public static final String		FIELD_PROGRESS	= "progress";
-	public static final String		FIELD_STATUS	= "status";
-	public static final String		FIELD_SERVER	= "server";
-	public static final String		FIELD_SESSION	= "session";
-	public static final String		FIELD_USER		= "user";
-	public static final String		FIELD_TIME		= "time";
+	public static final String FIELD_PREFIX = "field";
+	public static final String FIELD_DOMAIN = "domain";
+	public static final String FIELD_PROGRESS = "progress";
+	public static final String FIELD_STATUS = "status";
+	public static final String FIELD_SERVER = "server";
+	public static final String FIELD_SESSION = "session";
+	public static final String FIELD_USER = "user";
+	public static final String FIELD_TIME = "time";
 
-	private JPanel					panel;
+	private JPanel panel;
 
-	private DefaultTableColumnModel	model;
-	private DefaultTableModel		tableModel;
+	private DefaultTableColumnModel model;
+	private DefaultTableModel tableModel;
 
-	private Timer					timeTimer;
-//	private Timer					progressBarTimer;
+	private Timer timeTimer;
+	// private Timer progressBarTimer;
 
-	private JTable					table;
+	private JTable table;
 
-	int								number			= 5;
+	int number = 5;
 
 	private class TableHeaderCellRenderer extends DefaultTableCellRenderer {
 
@@ -83,14 +83,15 @@ public class StatusBar implements PropertyChangeListener {
 				new Color(99, 99, 99)));
 		}
 
-		public Component getTableCellRendererComponent(	JTable jtable,
-														Object value,
-														boolean isSelected,
-														boolean hasFocus,
-														int row,
-														int column) {
+		@Override
+		public Component getTableCellRendererComponent(final JTable jtable,
+				final Object value,
+				final boolean isSelected,
+				final boolean hasFocus,
+				final int row,
+				final int column) {
 			if (jtable != null) {
-				JTableHeader header = jtable.getTableHeader();
+				final JTableHeader header = jtable.getTableHeader();
 				if (header != null) {
 					this.setForeground(header.getForeground());
 					this.setBackground(header.getBackground());
@@ -99,7 +100,7 @@ public class StatusBar implements PropertyChangeListener {
 			}
 
 			if (value instanceof Date) {
-				SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT);
+				final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.HOURS_MINUTES_SECONDS_DATE_FORMAT);
 				this.setText(sdf.format((Date) value));
 			} else if (value instanceof Component) {
 				return (Component) value;
@@ -128,27 +129,28 @@ public class StatusBar implements PropertyChangeListener {
 
 		this.table.setDefaultRenderer(Object.class, new DefaultTableCellRenderer() {
 
-			private static final long	serialVersionUID	= 4968210937248459683L;
+			private static final long serialVersionUID = 4968210937248459683L;
 
-			public Component getTableCellRendererComponent(	JTable jtable,
-															Object value,
-															boolean isSelected,
-															boolean hasFocus,
-															int row,
-															int column) {
+			@Override
+			public Component getTableCellRendererComponent(final JTable jtable,
+					final Object value,
+					final boolean isSelected,
+					final boolean hasFocus,
+					final int row,
+					final int column) {
 				super.getTableCellRendererComponent(jtable, value, isSelected, hasFocus, row, column);
 				this.setBorder(null);
 				return this;
 			}
 		});
 
-		JTableHeader tableHeader = this.table.getTableHeader();
+		final JTableHeader tableHeader = this.table.getTableHeader();
 		tableHeader.setDefaultRenderer(new TableHeaderCellRenderer());
 
 		this.panel = new JPanel(new GridBagLayout());
-//		this.panel.setBorder(BorderFactory.createEtchedBorder());
+		// this.panel.setBorder(BorderFactory.createEtchedBorder());
 
-		GridBagConstraints gbc = new GridBagConstraints();
+		final GridBagConstraints gbc = new GridBagConstraints();
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		gbc.weightx = 1.0;
 		gbc.gridwidth = GridBagConstraints.REMAINDER;
@@ -166,14 +168,13 @@ public class StatusBar implements PropertyChangeListener {
 		this.add(-1, fieldId);
 	}
 
-	public void add(final int index,
-					final String fieldId) {
+	public void add(final int index, final String fieldId) {
 		assert fieldId != null : ErrorMessages.NON_NULL_EXPECTED;
-		TableColumn column = new TableColumn();
+		final TableColumn column = new TableColumn();
 		column.setHeaderValue(" " + fieldId);
 		column.setIdentifier(fieldId);
 		this.model.addColumn(column);
-		int index2 = this.model.getColumnIndex(fieldId);
+		final int index2 = this.model.getColumnIndex(fieldId);
 		if (index >= 0) {
 			this.model.moveColumn(index2, index);
 		}
@@ -187,7 +188,7 @@ public class StatusBar implements PropertyChangeListener {
 		assert fieldId != null : ErrorMessages.NON_NULL_EXPECTED;
 
 		for (int i = 0; i < this.model.getColumnCount(); i++) {
-			TableColumn column = this.model.getColumn(i);
+			final TableColumn column = this.model.getColumn(i);
 			if (fieldId.equals(column.getIdentifier())) {
 				this.model.removeColumn(column);
 				break;
@@ -196,8 +197,7 @@ public class StatusBar implements PropertyChangeListener {
 
 	}
 
-	public void setValue(	final String fieldId,
-							final Object value) {
+	public void setValue(final String fieldId, final Object value) {
 		final JTableHeader tableHeader = this.table.getTableHeader();
 		TableColumn column = null;
 		int index;
@@ -210,32 +210,28 @@ public class StatusBar implements PropertyChangeListener {
 		}
 		if (column != null) {
 			column.setHeaderValue(value);
-			//tableHeader.repaint();
-			Rectangle headerRect = tableHeader.getHeaderRect(index);
-				if (headerRect != null) {
-					Component componentAt = tableHeader.getComponentAt(
-							headerRect.x, 
-							headerRect.y);
-					if (componentAt != null) {
-						componentAt.repaint();		
-					}
+			// tableHeader.repaint();
+			final Rectangle headerRect = tableHeader.getHeaderRect(index);
+			if (headerRect != null) {
+				final Component componentAt = tableHeader.getComponentAt(headerRect.x, headerRect.y);
+				if (componentAt != null) {
+					componentAt.repaint();
+				}
 			}
 		} else {
 			Log.debugMessage("StatusBar.addTimerField | fieldId '" + fieldId + "' not found.", Level.FINEST);
 		}
 	}
 
-	public void setText(final String fieldId,
-						final String text) {
+	public void setText(final String fieldId, final String text) {
 		this.setValue(fieldId, text);
 	}
 
-	public void setWidth(	final String fieldId,
-							final int width) {
+	public void setWidth(final String fieldId, final int width) {
 		this.table.getColumn(fieldId).setPreferredWidth(width);
 	}
 
-//	private void addStatusBarField(final String fieldId) {
+// private void addStatusBarField(final String fieldId) {
 //
 //		JProgressBar progressBar = new JProgressBar();
 //		progressBar.setString(LangModelGeneral.getString("StatusBar.PleaseWait"));
@@ -271,7 +267,7 @@ public class StatusBar implements PropertyChangeListener {
 		if (this.timeTimer == null) {
 			this.timeTimer = new Timer(1000, new ActionListener() {
 
-				public void actionPerformed(ActionEvent e) {
+				public void actionPerformed(final ActionEvent e) {
 					StatusBar.this.setValue(fieldId, new Date());
 				}
 			});
@@ -297,7 +293,7 @@ public class StatusBar implements PropertyChangeListener {
 //		}
 //	}
 
-	public void removeDispatcher(Dispatcher dispatcher) {
+	public void removeDispatcher(final Dispatcher dispatcher) {
 		if (dispatcher != null) {
 			dispatcher.removePropertyChangeListener(StatusMessageEvent.STATUS_MESSAGE, this);
 			dispatcher.removePropertyChangeListener(StatusMessageEvent.STATUS_USER, this);
@@ -308,7 +304,7 @@ public class StatusBar implements PropertyChangeListener {
 		}
 	}
 
-	public void addDispatcher(Dispatcher dispatcher) {
+	public void addDispatcher(final Dispatcher dispatcher) {
 		if (dispatcher != null) {
 			dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_MESSAGE, this);
 			dispatcher.addPropertyChangeListener(StatusMessageEvent.STATUS_USER, this);
@@ -319,10 +315,10 @@ public class StatusBar implements PropertyChangeListener {
 		}
 	}
 
-	public void propertyChange(PropertyChangeEvent evt) {
-		String propertyName = evt.getPropertyName();
+	public void propertyChange(final PropertyChangeEvent evt) {
+		final String propertyName = evt.getPropertyName();
 		if (evt instanceof StatusMessageEvent) {
-			StatusMessageEvent sme = (StatusMessageEvent) evt;
+			final StatusMessageEvent sme = (StatusMessageEvent) evt;
 			if (propertyName.equals(StatusMessageEvent.STATUS_MESSAGE)) {
 				this.setValue(FIELD_STATUS, sme.getText());
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_SESSION)) {
@@ -334,7 +330,7 @@ public class StatusBar implements PropertyChangeListener {
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_DOMAIN)) {
 				this.setValue(FIELD_DOMAIN, sme.getText());
 			} else if (propertyName.equals(StatusMessageEvent.STATUS_PROGRESS_BAR)) {
-//				this.setProgressBarEnable(sme.isShowProgressBar());
+				// this.setProgressBarEnable(sme.isShowProgressBar());
 			}
 		}
 	}

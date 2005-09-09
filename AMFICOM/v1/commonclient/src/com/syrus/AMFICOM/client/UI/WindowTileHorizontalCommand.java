@@ -1,5 +1,5 @@
 /*-
- * $Id: WindowTileHorizontalCommand.java,v 1.2 2005/06/21 14:26:44 bob Exp $
+ * $Id: WindowTileHorizontalCommand.java,v 1.3 2005/09/09 18:54:27 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,18 +15,25 @@ import javax.swing.JInternalFrame;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 
+/**
+ * @version $Revision: 1.3 $, $Date: 2005/09/09 18:54:27 $
+ * @author $Author: arseniy $
+ * @author Vladimir Dolzhenko
+ * @module commonclient
+ */
 public class WindowTileHorizontalCommand extends AbstractCommand {
 
-	private JDesktopPane	desktop;
+	private JDesktopPane desktop;
 
 	public WindowTileHorizontalCommand(final JDesktopPane desktop) {
 		this.desktop = desktop;
 	}
 
-	public void setParameter(	final String field,
-								final Object value) {
-		if (field.equals("desktop"))
-			setDesktop((JDesktopPane) value);
+	@Override
+	public void setParameter(final String field, final Object value) {
+		if (field.equals("desktop")) {
+			this.setDesktop((JDesktopPane) value);
+		}
 	}
 
 	public void setDesktop(final JDesktopPane desktop) {
@@ -52,11 +59,11 @@ public class WindowTileHorizontalCommand extends AbstractCommand {
 
 		final int frameWidth = this.desktop.getWidth();
 		final int frameHeight = (this.desktop.getHeight() - (areIcons ? 50 : 0)) / frameList.size();
-		
+
 		int xpos = 0;
 		int ypos = 0;
-		
-		for (final JInternalFrame frame : frameList) {			
+
+		for (final JInternalFrame frame : frameList) {
 			if (frame.isResizable()) {
 				frame.reshape(xpos, ypos, frameWidth, frameHeight);
 			} else {

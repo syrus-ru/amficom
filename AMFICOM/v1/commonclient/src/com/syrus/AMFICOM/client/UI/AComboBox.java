@@ -1,15 +1,30 @@
 
 package com.syrus.AMFICOM.client.UI;
 
-import java.awt.*;
-
-import javax.swing.*;
-
+import java.awt.Component;
+import java.awt.Dimension;
+import java.awt.Font;
+import java.awt.FontMetrics;
 import java.util.Vector;
 
+import javax.swing.ComboBoxModel;
+import javax.swing.JComboBox;
+import javax.swing.JLabel;
+import javax.swing.JList;
+import javax.swing.ListCellRenderer;
+import javax.swing.UIManager;
+
+/**
+ * @version $Revision: 1.3 $, $Date: 2005/09/09 18:54:27 $
+ * @author $Author: arseniy $
+ * @author Vladimir Dolzhenko
+ * @module commonclient
+ */
 public class AComboBox extends JComboBox {
+	private static final long serialVersionUID = -4432933469351433936L;
 
 	class ComboBoxRenderer extends JLabel implements ListCellRenderer {
+		private static final long serialVersionUID = -7138467780868027135L;
 
 		Font	font;
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.20 2005/09/07 02:37:31 arseniy Exp $
+ * $Id: CharacteristicsPanel.java,v 1.21 2005/09/09 18:54:27 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,10 +63,9 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/09/07 02:37:31 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/09 18:54:27 $
  * @module commonclient
  */
-
 public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	protected static CharacteristicTypeSort[] sorts = new CharacteristicTypeSort[] {
 		CharacteristicTypeSort.CHARACTERISTICTYPESORT_OPTICAL,	

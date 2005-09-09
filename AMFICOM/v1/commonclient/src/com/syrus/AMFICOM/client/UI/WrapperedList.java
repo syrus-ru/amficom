@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedList.java,v 1.8 2005/09/08 14:25:57 bob Exp $
+* $Id: WrapperedList.java,v 1.9 2005/09/09 18:54:27 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import javax.swing.JList;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/08 14:25:57 $
- * @author $Author: bob $
+ * @version $Revision: 1.9 $, $Date: 2005/09/09 18:54:27 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -30,7 +30,7 @@ public class WrapperedList<T> extends JList {
 
 	public WrapperedList(final WrapperedListModel<T> model) {
 		super(model);
-		final LabelCheckBoxRenderer renderer = new LabelCheckBoxRenderer(model.wrapper, model.key);
+		final LabelCheckBoxRenderer renderer = new LabelCheckBoxRenderer<T>(model.wrapper, model.key);
 		this.setCellRenderer(renderer);
 		this.model = model;
 	}

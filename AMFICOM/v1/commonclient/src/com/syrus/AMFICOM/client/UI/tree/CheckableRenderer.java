@@ -1,5 +1,5 @@
 /*-
- * $Id: CheckableRenderer.java,v 1.4 2005/09/08 14:25:57 bob Exp $
+ * $Id: CheckableRenderer.java,v 1.5 2005/09/09 18:54:27 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,8 @@ import javax.swing.tree.TreeCellRenderer;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @author $Author: bob $
- * @version $Revision: 1.4 $, $Date: 2005/09/08 14:25:57 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.5 $, $Date: 2005/09/09 18:54:27 $
  * @module commonclient
  */
 
@@ -30,14 +30,14 @@ public class CheckableRenderer extends JCheckBox implements TreeCellRenderer {
 	public static int preferredHeight = 18;
 	public static Color selectedBackground = Color.BLUE;
 	public static Color selectedForeground = Color.WHITE;
-	
-	private boolean selected = false; 
+
+	private boolean selected = false;
 	private static CheckableRenderer instance;
-	
+
 	private CheckableRenderer() {
 		// empty
 	}
-	
+
 	public static CheckableRenderer getInstance() {
 		if (instance == null) {
 			instance = new CheckableRenderer();
@@ -46,42 +46,48 @@ public class CheckableRenderer extends JCheckBox implements TreeCellRenderer {
 		}
 		return instance;
 	}
-	
-	public Component getTreeCellRendererComponent(JTree tree, Object value, boolean selected, boolean expanded, boolean leaf, int row, boolean hasFocus) {
-		this.selected = selected;
-		Item node = (Item)value;
-		setText(node.getName());
-		
-		if (!selected) {
-			setForeground(tree.getForeground());
-			setBackground(tree.getBackground());
+
+	public Component getTreeCellRendererComponent(final JTree tree,
+			final Object value,
+			final boolean selected1,
+			final boolean expanded,
+			final boolean leaf,
+			final int row,
+			final boolean hasFocus) {
+		this.selected = selected1;
+		final Item node = (Item) value;
+		super.setText(node.getName());
+
+		if (!selected1) {
+			super.setForeground(tree.getForeground());
+			super.setBackground(tree.getBackground());
 		} else {
-			setForeground(selectedForeground);
-			setBackground(selectedBackground);
+			super.setForeground(selectedForeground);
+			super.setBackground(selectedBackground);
 		}
 		if (node instanceof CheckableNode) {
-			setSelected(((CheckableNode)node).isChecked());
+			super.setSelected(((CheckableNode) node).isChecked());
 		}
 		return this;
 	}
-	
+
 	@Override
 	public Dimension getPreferredSize() {
-		Dimension ps = super.getPreferredSize();
+		final Dimension ps = super.getPreferredSize();
 		return new Dimension(ps.width, preferredHeight);
 	}
 
 	@Override
-	protected void paintComponent(Graphics g) {
+	protected void paintComponent(final Graphics g) {
 		if (this.selected) {
 			int x = 0;
-			Icon icon = ((BasicRadioButtonUI)instance.getUI()).getDefaultIcon();
+			final Icon icon = ((BasicRadioButtonUI) instance.getUI()).getDefaultIcon();
 			if (icon != null) {
-				x += icon.getIconWidth() + getIconTextGap(); 
+				x += icon.getIconWidth() + getIconTextGap();
 			}
 			g.setColor(selectedBackground);
-			Insets i = getInsets();
-			g.fillRect(i.left + x, 0 , getWidth() - i.right - i.left - x, getHeight());
+			final Insets i = getInsets();
+			g.fillRect(i.left + x, 0, getWidth() - i.right - i.left - x, getHeight());
 		}
 		super.paintComponent(g);
 	}

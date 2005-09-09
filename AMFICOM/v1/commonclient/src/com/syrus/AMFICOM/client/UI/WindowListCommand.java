@@ -1,5 +1,5 @@
 /*-
- * $Id: WindowListCommand.java,v 1.2 2005/06/21 14:26:44 bob Exp $
+ * $Id: WindowListCommand.java,v 1.3 2005/09/09 18:54:27 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,18 +11,24 @@ import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 
+/**
+ * @version $Revision: 1.3 $, $Date: 2005/09/09 18:54:27 $
+ * @author $Author: arseniy $
+ * @author Vladimir Dolzhenko
+ * @module commonclient
+ */
 public class WindowListCommand extends AbstractCommand {
 
-	private JDesktopPane	desktop;
+	private JDesktopPane desktop;
 
 	public WindowListCommand(final JDesktopPane desktop) {
 		this.desktop = desktop;
 	}
 
-	public void setParameter(	final String field,
-								final Object value) {
+	@Override
+	public void setParameter(final String field, final Object value) {
 		if (field.equals("desktop")) {
-			setDesktop((JDesktopPane) value);
+			this.setDesktop((JDesktopPane) value);
 		}
 	}
 
@@ -32,8 +38,8 @@ public class WindowListCommand extends AbstractCommand {
 
 	@Override
 	public void execute() {
-		if (this.desktop == null)
+		if (this.desktop == null) {
 			return;
-
+		}
 	}
 }

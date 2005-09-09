@@ -1,5 +1,5 @@
 /*-
- * $Id: SplashScreen.java,v 1.3 2005/08/02 13:03:21 arseniy Exp $
+ * $Id: SplashScreen.java,v 1.4 2005/09/09 18:54:27 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,13 +8,21 @@
 
 package com.syrus.AMFICOM.client.UI;
 
-import java.awt.*;
+import java.awt.AWTException;
+import java.awt.Dimension;
+import java.awt.Graphics;
+import java.awt.Image;
+import java.awt.Rectangle;
+import java.awt.Robot;
+import java.awt.Toolkit;
 
-import javax.swing.*;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
+import javax.swing.JWindow;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/08/02 13:03:21 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/09 18:54:27 $
  * @module commonclient
  */
 
@@ -45,6 +53,7 @@ public final class SplashScreen extends JWindow {
 		this.setBounds(r);
 		this.getContentPane().add(new JComponent() {
 
+			@Override
 			public void paintComponent(Graphics g) {
 				g.drawImage(SplashScreen.this.capture, 0, 0, this);
 				g.drawImage(SplashScreen.this.splash, 0, 0, this);

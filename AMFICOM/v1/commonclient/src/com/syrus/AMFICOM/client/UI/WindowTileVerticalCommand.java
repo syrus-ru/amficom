@@ -1,5 +1,5 @@
 /*-
- * $Id: WindowTileVerticalCommand.java,v 1.1 2005/06/21 14:25:54 bob Exp $
+ * $Id: WindowTileVerticalCommand.java,v 1.2 2005/09/09 18:54:27 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,18 +16,24 @@ import javax.swing.JInternalFrame;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 
+/**
+ * @version $Revision: 1.2 $, $Date: 2005/09/09 18:54:27 $
+ * @author $Author: arseniy $
+ * @author Vladimir Dolzhenko
+ * @module commonclient
+ */
 public class WindowTileVerticalCommand extends AbstractCommand {
 
-	private JDesktopPane	desktop;
+	private JDesktopPane desktop;
 
 	public WindowTileVerticalCommand(final JDesktopPane desktop) {
 		this.desktop = desktop;
 	}
 
-	public void setParameter(	final String field,
-								final Object value) {
+	@Override
+	public void setParameter(final String field, final Object value) {
 		if (field.equals("desktop")) {
-			setDesktop((JDesktopPane) value);
+			this.setDesktop((JDesktopPane) value);
 		}
 	}
 
@@ -54,11 +60,11 @@ public class WindowTileVerticalCommand extends AbstractCommand {
 
 		final int frameWidth = this.desktop.getWidth() / frameList.size();
 		final int frameHeight = this.desktop.getHeight() - (areIcons ? 50 : 0);
-		
+
 		int xpos = 0;
 		int ypos = 0;
-		
-		for (final JInternalFrame frame : frameList) {			
+
+		for (final JInternalFrame frame : frameList) {
 			if (frame.isResizable()) {
 				frame.reshape(xpos, ypos, frameWidth, frameHeight);
 			} else {
