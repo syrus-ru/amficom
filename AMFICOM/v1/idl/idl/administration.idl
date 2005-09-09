@@ -1,5 +1,5 @@
 /*-
- * $Id: administration.idl,v 1.19 2005/08/24 11:31:20 bass Exp $
+ * $Id: administration.idl,v 1.20 2005/09/09 14:37:17 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,7 +74,7 @@ module administration {
 		valuetype IdlPermissionAttributes : general::corba::IdlStorableObject {
 			public general::corba::IdlIdentifier domainId;			
 			public general::corba::IdlIdentifier userId;			
-			public long long permissionMask;			
+			public ::CORBA::OctetSeq permissionMask;			
 
 			factory init(in general::corba::IdlIdentifier id,
 					in long long created,
@@ -84,7 +84,7 @@ module administration {
 					in long long version,
 					in general::corba::IdlIdentifier domainId,
 					in general::corba::IdlIdentifier userId,
-					in long long permissionMask);
+					in ::CORBA::OctetSeq permissionMask);
 		};
 
 
