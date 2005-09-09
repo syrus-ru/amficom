@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.38 2005/09/09 14:22:59 arseniy Exp $
+ * $Id: MCMDatabase.java,v 1.39 2005/09/09 15:02:47 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,7 +17,6 @@ import com.syrus.AMFICOM.general.DatabaseIdentifier;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -26,8 +25,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/09/09 14:22:59 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/09/09 15:02:47 $
+ * @author $Author: bob $
  * @module administration
  */
 
