@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.48 2005/08/10 11:24:44 bob Exp $
+ * $Id: MCM.java,v 1.49 2005/09/09 14:22:17 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,23 +21,19 @@ import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
-import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/08/10 11:24:44 $
- * @author $Author: bob $
+ * @version $Revision: 1.49 $, $Date: 2005/09/09 14:22:17 $
+ * @author $Author: arseniy $
  * @module administration
  */
 
@@ -51,22 +47,6 @@ public final class MCM extends DomainMember implements Characterizable, Namable 
 	private Identifier serverId;
 
 	private transient CharacterizableDelegate characterizableDelegate;
-
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	public MCM(final Identifier id) throws ObjectNotFoundException, RetrieveObjectException {
-		super(id);
-
-		try {
-			DatabaseContext.getDatabase(ObjectEntities.MCM_CODE).retrieve(this);
-		}
-		catch (IllegalDataException ide) {
-			throw new RetrieveObjectException(ide.getMessage(), ide);
-		}
-
-		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
-	}
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
