@@ -13,10 +13,11 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
 import com.syrus.AMFICOM.administration.PermissionAttributes.PermissionCodenames;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /*-
- * $Id: UserBeanWrapper.java,v 1.7 2005/09/08 14:35:02 bob Exp $
+ * $Id: UserBeanWrapper.java,v 1.8 2005/09/09 15:03:32 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +25,7 @@ import com.syrus.util.Wrapper;
  */
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/08 14:35:02 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/09 15:03:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager

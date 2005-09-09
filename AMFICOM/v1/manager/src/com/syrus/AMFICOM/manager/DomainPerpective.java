@@ -1,5 +1,5 @@
 /*-
-* $Id: DomainPerpective.java,v 1.2 2005/08/15 14:20:05 bob Exp $
+* $Id: DomainPerpective.java,v 1.3 2005/09/09 15:03:32 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
 */
 
 package com.syrus.AMFICOM.manager;
+
+import java.math.BigInteger;
 
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.administration.PermissionAttributes;
@@ -19,7 +21,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/09 15:03:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -60,7 +62,7 @@ public class DomainPerpective implements Perspective {
 							LoginManager.getUserId(),
 							this.getDomainId(),
 							userId,
-							0L);
+							new BigInteger("0"));
 					}
 				}
 			} catch (ApplicationException e) {

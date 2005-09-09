@@ -1,5 +1,5 @@
 /*-
- * $Id: UserBean.java,v 1.18 2005/09/07 07:08:02 bob Exp $
+ * $Id: UserBean.java,v 1.19 2005/09/09 15:03:32 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.manager;
 import java.awt.Color;
 import java.awt.event.ActionEvent;
 import java.beans.PropertyChangeEvent;
+import java.math.BigInteger;
 import java.util.HashMap;
 import java.util.Hashtable;
 import java.util.List;
@@ -48,7 +49,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/07 07:08:02 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/09 15:03:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -423,7 +424,7 @@ public class UserBean extends Bean implements  ARMItem {
 					PermissionAttributes.createInstance(LoginManager.getUserId(),
 					newDomainId,
 					this.id, 
-					0);
+					new BigInteger("0"));
 				
 				Log.debugMessage("UserBean.setDomainId() | create new PermissionAttributes: " + attributes.getId(), Log.DEBUGLEVEL10);
 			} else {

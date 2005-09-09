@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.18 2005/09/08 14:35:02 bob Exp $
+* $Id: UserBeanFactory.java,v 1.19 2005/09/09 15:03:32 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.manager;
 
 import java.beans.PropertyChangeEvent;
+import java.math.BigInteger;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/08 14:35:02 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/09 15:03:32 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -97,7 +98,7 @@ public class UserBeanFactory extends TabledBeanFactory {
 					LoginManager.getUserId(),
 					domainId,
 					userId,
-					0L);
+					new BigInteger("0"));
 			}
 			
 			return this.createBean(user.getId());
