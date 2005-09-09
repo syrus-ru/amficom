@@ -1,5 +1,5 @@
 /*-
- * $Id: Marker.java,v 1.36 2005/09/02 16:41:21 krupenn Exp $
+ * $Id: Marker.java,v 1.37 2005/09/09 17:22:08 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElementState;
@@ -48,7 +49,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  *
  *
  *
- * @version $Revision: 1.36 $, $Date: 2005/09/02 16:41:21 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/09 17:22:08 $
  * @module mapview
  * @author $Author: krupenn $
  */
@@ -191,17 +192,16 @@ public class Marker extends AbstractNode {
 			final MeasurementPath path,
 			final Identifier monitoredElementId,
 			final String name) {
-		super(id);
-
-		final long time = System.currentTimeMillis();
-		super.created = new Date(time);
-		super.modified = new Date(time);
-		super.creatorId = creatorId;
-		super.modifierId = super.creatorId;
-		super.name = id.toString();
-		super.description = "";
-		super.location = new DoublePoint(0.0, 0.0);
-		super.name = name;
+		super(
+				id, 
+				new Date(System.currentTimeMillis()), 
+				new Date(System.currentTimeMillis()), 
+				creatorId, 
+				creatorId, 
+				StorableObjectVersion.createInitial(),
+				name,
+				"",
+				new DoublePoint(0.0, 0.0));
 
 		this.mapView = mapView;
 		this.monitoredElementId = monitoredElementId;
