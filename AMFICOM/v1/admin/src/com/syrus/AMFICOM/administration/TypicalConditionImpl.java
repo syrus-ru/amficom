@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.18 2005/08/05 14:36:32 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.19 2005/09/09 17:41:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,11 +20,13 @@ import com.syrus.util.Shitlet;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/05 14:36:32 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/09 17:41:08 $
  * @author $Author: arseniy $
  * @module admin
  */
 final class TypicalConditionImpl extends TypicalCondition {
+	private static final long serialVersionUID = -182818603007872200L;
+
 	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final int firstInt,
 			final int secondInt,
