@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.27 2005/08/17 14:14:18 arseniy Exp $
+ * $Id: MapViewOpenCommand.java,v 1.28 2005/09/09 17:24:15 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * открыть вид 
- * @author $Author: arseniy $
- * @version $Revision: 1.27 $, $Date: 2005/08/17 14:14:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.28 $, $Date: 2005/09/09 17:24:15 $
  * @module mapviewclient
  */
 public class MapViewOpenCommand extends AbstractCommand {
@@ -108,6 +108,12 @@ public class MapViewOpenCommand extends AbstractCommand {
 			return;
 		}
 
+		try {
+			this.mapView.getMap().open();
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+			return;
+		}
 		setResult(Command.RESULT_OK);
 
 		this.aContext.getDispatcher().firePropertyChange(
