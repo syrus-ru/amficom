@@ -1,5 +1,5 @@
 /*-
- * $Id: MapViewDatabase.java,v 1.40 2005/09/09 17:21:47 krupenn Exp $
+ * $Id: MapViewDatabase.java,v 1.41 2005/09/09 17:57:48 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,24 +8,23 @@
 
 package com.syrus.AMFICOM.mapview;
 
-import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_DESCRIPTION;
-import static com.syrus.AMFICOM.mapview.MapViewWrapper.MAPVIEW_SCHEME;
+import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_NAME;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_DEFAULTSCALE;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_DOMAIN_ID;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_LATITUDE;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_LONGITUDE;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_MAP_ID;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_SCALE;
 import static com.syrus.AMFICOM.mapview.MapViewWrapper.LINK_COLUMN_MAPVIEW_ID;
 import static com.syrus.AMFICOM.mapview.MapViewWrapper.LINK_COLUMN_SCHEME_ID;
-import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_LONGITUDE;
-import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_LATITUDE;
-import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_SCALE;
-import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_DEFAULTSCALE;
-import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_MAP_ID;
-import static com.syrus.AMFICOM.mapview.MapViewWrapper.COLUMN_DOMAIN_ID;
+import static com.syrus.AMFICOM.mapview.MapViewWrapper.MAPVIEW_SCHEME;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Map;
@@ -38,7 +37,6 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -53,8 +51,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/09/09 17:21:47 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.41 $, $Date: 2005/09/09 17:57:48 $
+ * @author $Author: arseniy $
  * @module mapview
  */
 public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
@@ -62,31 +60,6 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 
 	private static String updateMultipleSQLValues;	
 
-
-	@Override
-	public void retrieve(final MapView storableObject)
-			throws IllegalDataException,
-				ObjectNotFoundException,
-				RetrieveObjectException {
-		this.retrieveEntity(storableObject);
-		final Set<MapView> maps = Collections.singleton(storableObject);
-
-		final java.util.Map<Identifier, Set<Identifier>> schemeIdsMap = super.retrieveLinkedEntityIds(maps,
-				MAPVIEW_SCHEME,
-				LINK_COLUMN_MAPVIEW_ID,
-				LINK_COLUMN_SCHEME_ID);
-		for (final Identifier id : schemeIdsMap.keySet()) {
-			final Set<Identifier> schemeIds = schemeIdsMap.get(id);
-			if (id.equals(storableObject.getId())) {
-				try {
-					final Set<Scheme> schemes = StorableObjectPool.getStorableObjects(schemeIds, true);
-					storableObject.setSchemes0(schemes);
-				} catch (ApplicationException ae) {
-					throw new RetrieveObjectException(this.getEntityName() + "Database.retrieve | cannot retrieve schemes", ae);
-				}
-			}
-		}
-	}	
 
 	@Override
 	protected short getEntityCode() {		
@@ -224,12 +197,7 @@ public final class MapViewDatabase extends StorableObjectDatabase<MapView> {
 		//super.updateLinkedEntities(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
 		super.updateLinkedEntityIds(mapIdLinkedObjectIds, MAPVIEW_SCHEME, LINK_COLUMN_MAPVIEW_ID, LINK_COLUMN_SCHEME_ID);
 	}
-	
-	@Override
-	public void delete(final Identifier id) {
-		this.delete(Collections.singleton(id));
-	}
-	
+
 	@Override
 	public void delete(final Set<? extends Identifiable> ids) {
 		super.delete(ids);
