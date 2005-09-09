@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.53 2005/09/04 13:44:29 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.54 2005/09/09 17:26:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
  * 
  * 
  * 
- * @version $Revision: 1.53 $, $Date: 2005/09/04 13:44:29 $
+ * @version $Revision: 1.54 $, $Date: 2005/09/09 17:26:38 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -190,7 +190,8 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN, 
 				new MapEditorOpenViewCommand(
 						this.desktopPane, 
-						this.aContext));
+						this.aContext,
+						new MapMapEditorApplicationModelFactory()));
 		aModel.setCommand(MapEditorApplicationModel.ITEM_MAP_VIEW_CLOSE, 
 				new MapEditorCloseViewCommand(
 						this.desktopPane, 
