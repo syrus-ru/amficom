@@ -31,14 +31,13 @@ public class FileOpenCommand extends AbstractCommand
 	private ApplicationContext aContext;
 	private String propertiesFileName = "analysis.properties";
 
-	public FileOpenCommand(Dispatcher dispatcher, ApplicationContext aContext)
-	{
+	public FileOpenCommand(Dispatcher dispatcher, ApplicationContext aContext) {
 		this.dispatcher = dispatcher;
 		this.aContext = aContext;
 	}
 
-	public Object clone()
-	{
+	@Override
+	public Object clone() {
 		return new FileOpenCommand(dispatcher, aContext);
 	}
 
@@ -57,47 +56,45 @@ public class FileOpenCommand extends AbstractCommand
 	 * —читать рефлектограмму из файла с возможностью разбора бќльшего числа
 	 * форматов (включа€ текстовый)
 	 * @param file файл
-	 * @param moreFormats true, чтобы разбирать бќльшее число форматов (режим дл€ отладки), false дл€ работы
+	 * @param moreFormats true, чтобы разбирать бќльшее число форматов
+	 *   (режим дл€ отладки), false дл€ работы
 	 * @return BellcoreStructure либо null при ошибке
 	 */
-	public static BellcoreStructure readTraceFromFileEx(File file, boolean moreFormats) {
+	public static BellcoreStructure readTraceFromFileEx(File file,
+			boolean moreFormats) {
 		TraceReader tr = new TraceReader();
 		BellcoreStructure bs = null;
 		//System.out.println("FileName: " + file.getName());
 		bs = tr.getData(file); // note: UnsatisfiedLinkError is possible if no DLL loaded. Stas says that this needs not be catched
-		if (bs != null)
+		if (bs != null) {
 			return bs;
-		if (moreFormats)
-		{
+		}
+		if (moreFormats) {
 			// FIXME: debug-only code
 			// этот код написан дл€ отладочных целей и предназначен дл€
 			// считывани€ рефлектограммы из текстового файла,
 			// если не удаетс€ считать с помощью известного формата
-			try
-			{
-				{
-					FileReader fr = new FileReader(file);
-					BufferedReader br = new BufferedReader(fr);
-					ArrayList al = new ArrayList();
-					String s;
-					while ((s = br.readLine()) != null)
-						al.add(s);
-					final int N = al.size();
-					//System.out.println("reading file: N=" + N);
-					double[] dl = new double[N];
-					for (int i = 0; i < N; i++)
-						dl[i] = Double.parseDouble(((String)al.get(i))
-								.replaceFirst("\\S+\\s+", "")); // cut first column if present
-					bs = new BellcoreCreator(dl).getBS();
-					br.close();
+			try {
+				FileReader fr = new FileReader(file);
+				BufferedReader br = new BufferedReader(fr);
+				ArrayList al = new ArrayList();
+				String s;
+				while ((s = br.readLine()) != null)
+					al.add(s);
+				final int N = al.size();
+				//System.out.println("reading file: N=" + N);
+				double[] dl = new double[N];
+				for (int i = 0; i < N; i++) {
+					dl[i] = Double.parseDouble(((String)al.get(i))
+							.replaceFirst("\\S+\\s+", "")); // cut first column if present
 				}
-			} catch (IOException e1)
-			{
+				bs = new BellcoreCreator(dl).getBS();
+				br.close();
+			} catch (IOException e1) {
 				// FIXME: exceptions: (debug only) could not load text mode trace
 				e1.printStackTrace();
 			}
-		} else
-		{
+		} else {
 			bs = tr.getData(file); // second attempt
 		}
 		return bs;
@@ -124,16 +121,14 @@ public class FileOpenCommand extends AbstractCommand
 			Heap.setMTMEtalon(Heap.getMTMEtalon());
 	}
 
-	public void execute()
-	{
+	@Override
+	public void execute() {
 		Properties properties = new Properties();
 		String lastDir = "";
-		try
-		{
+		try {
 			properties.load(new FileInputStream(propertiesFileName));
 			lastDir = properties.getProperty("lastdir");
-		} catch (IOException ex)
-		{
+		} catch (IOException ex) {
 		}
 
 		JFileChooser chooser = new JFileChooser(lastDir); // XXX: при подмонтированных сетевых дисках с drive Letter-ами тут может тормозить
@@ -165,12 +160,10 @@ public class FileOpenCommand extends AbstractCommand
 
 			processBS(bs);
 
-			try
-			{
+			try {
 				properties.setProperty("lastdir", selectedFile.getParent().toLowerCase());
 				properties.store(new FileOutputStream(propertiesFileName), null);
-			} catch (IOException ex)
-			{
+			} catch (IOException ex) {
 			}
 		} finally {
 			Environment.getActiveWindow().setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
