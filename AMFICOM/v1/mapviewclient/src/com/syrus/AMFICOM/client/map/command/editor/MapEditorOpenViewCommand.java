@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.24 2005/08/17 14:14:18 arseniy Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.25 2005/09/09 17:23:36 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -27,9 +28,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открываетс€ окно карты и сопутствующие окна
  * и MapContext передаетс€ в окно карты
  * 
- * @version $Revision: 1.24 $, $Date: 2005/08/17 14:14:18 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/09 17:23:36 $
  * @module map_v2
- * @author $Author: arseniy $
+ * @author $Author: krupenn $
  * @see com.syrus.AMFICOM.client.map.command.map.MapOpenCommand
  */
 public class MapEditorOpenViewCommand extends AbstractCommand {
@@ -49,15 +50,19 @@ public class MapEditorOpenViewCommand extends AbstractCommand {
 
 	private boolean checkSave = true;
 
+	private final MapApplicationModelFactory factory;
+
 	/**
 	 * @param desktop куда класть окно карты
 	 * @param aContext  онтекст модул€ "–едактор топологических схем"
 	 */
 	public MapEditorOpenViewCommand(
 			JDesktopPane desktop,
-			ApplicationContext aContext) {
+			ApplicationContext aContext,
+			MapApplicationModelFactory factory) {
 		this.desktop = desktop;
 		this.aContext = aContext;
+		this.factory = factory;
 	}
 
 	@Override
@@ -84,7 +89,7 @@ public class MapEditorOpenViewCommand extends AbstractCommand {
 				ViewMapWindowCommand mapCommand = new ViewMapWindowCommand(
 						this.desktop,
 						this.aContext,
-						new MapMapEditorApplicationModelFactory());
+						this.factory);
 
 				mapCommand.execute();
 				this.mapFrame = mapCommand.mapFrame;
@@ -124,6 +129,10 @@ public class MapEditorOpenViewCommand extends AbstractCommand {
 
 	public boolean isCheckSave() {
 		return this.checkSave;
+	}
+
+	public MapFrame getMapFrame() {
+		return this.mapFrame;
 	}
 
 }
