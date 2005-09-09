@@ -1,5 +1,5 @@
 /*-
-* $Id: PermissionAttributes.java,v 1.5 2005/09/08 18:26:26 bass Exp $
+* $Id: PermissionAttributes.java,v 1.6 2005/09/09 15:03:06 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.administration;
 
+import java.math.BigInteger;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
@@ -30,8 +31,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/08 18:26:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.6 $, $Date: 2005/09/09 15:03:06 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module admin
  */
@@ -79,7 +80,56 @@ public class PermissionAttributes extends StorableObject {
 		CONFIG_READ_SCHEMES,
 		CONFIG_READ_TOPOLOGY,
 		CONFIG_READ_CATALOG_TS,		
-		CONFIG_READ_CATALOG_SM;
+		CONFIG_READ_CATALOG_SM,
+		
+		OPTIMIZE_ENTER,
+		
+		OPTIMIZE_OPEN_MAP,
+		OPTIMIZE_OPEN_SCHEME,
+		OPTIMIZE_SET_OPTIONS,
+		OPTIMIZE_START,
+		OPTIMIZE_ABORT,
+		OPTIMIZE_SAVE_RESULTS,
+		OPTIMIZE_SAVE_OPTIONS,
+		
+		MODELING_ENTER,
+		
+		MODELING_OPEN_MODELING_LINE_SCHEME,
+		MODELING_OPEN_MODELING_LINE_MAP,
+		MODELING_PERFORM,
+		MODELING_SET_OPTIONS,
+		MODELING_SAVE_REFLECTOGRAM_MODEL,
+		
+		SCHEDULER_ENTER,
+		SCHEDULER_ADD_ONETIME_TEST ,
+		SCHEDULER_ADD_PERIODIAL_TEST ,
+		SCHEDULER_ADD_GROUP_TEST ,
+		SCHEDULER_REFRESH_TESTS ,
+		SCHEDULER_SAVE_TESTS,
+		
+		ANALYSIS_ENTER,
+		EXTEND_ANALYSIS_ENTER,
+		EVALUATION_ENTER,
+		ANALYSIS_OPEN_REFLECTOGRAM_FILE,
+		ANALYSIS_OPEN_REFLECTOGRAM_FROM_DB,
+		ANALYSIS_PERFORM,
+		ANALYSIS_SAVE_REFLECTOGRAM_FILE,
+		ANALYSIS_SAVE_REFLECTOGRAM_TO_DB,
+		
+		
+		SURVEY_ENTER,
+		SURVEY_VIEW_OPERATIVAL_INFO,
+		SURVEY_VIEW_CHANGES_ARCHIVE,
+		SURVEY_QUICK_TASK_SETTING,
+		SURVEY_VIEW_REFLECTOGRAM,
+		SURVEY_VIEW_ALARM_SIGNALS,
+		SURVEY_SIGNAL_CONFIRMING,
+		SURVEY_DELETE_ALARM_SIGNAL,
+		
+		PROGNOSTICATION_ENTER,
+		PROGNOSTICATION_CALCULATE_REFLECTOGRAM,
+		PROGNOSTICATION_ACQUIRE_DATA,
+		PROGNOSTICATION_SAVE_REFLECTOGRAM;
 		
 
 		private static final String KEY_ROOT = "PermissionAttributes.Description.";
@@ -116,7 +166,7 @@ public class PermissionAttributes extends StorableObject {
 	
 	private Identifier domainId;
 	
-	private long permissionMask = 0;
+	private BigInteger permissionMask;
 	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -138,7 +188,7 @@ public class PermissionAttributes extends StorableObject {
 			final StorableObjectVersion version,
 			final Identifier domainId,
 			final Identifier userId,
-			final long permissionMask) {
+			final BigInteger permissionMask) {
 		super(id,
 				new Date(System.currentTimeMillis()),
 				new Date(System.currentTimeMillis()),
@@ -159,7 +209,7 @@ public class PermissionAttributes extends StorableObject {
 		super.fromTransferable(pat);
 		this.domainId = new Identifier(pat.domainId);
 		this.userId = new Identifier(pat.userId);
-		this.permissionMask = pat.permissionMask;
+		this.permissionMask = new BigInteger(pat.permissionMask);
 
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
@@ -179,14 +229,15 @@ public class PermissionAttributes extends StorableObject {
 				super.version.longValue(),
 				this.domainId.getTransferable(),
 				this.userId.getTransferable(),
-				this.permissionMask);
+				this.permissionMask.toByteArray());
 	}	
 
 	@Override
 	protected boolean isValid() {
 		return super.isValid()
 				&& this.domainId != null && !this.domainId.isVoid()
-				&& this.userId != null && !this.userId.isVoid();
+				&& this.userId != null && !this.userId.isVoid() 
+				&& this.permissionMask != null;
 	}
 
 	/**
@@ -201,7 +252,7 @@ public class PermissionAttributes extends StorableObject {
 	public static PermissionAttributes createInstance(final Identifier creatorId,
 	                                                  final Identifier domainId,
 	                                                  final Identifier userId,
-	                                                  final long permissionMask) 
+	                                                  final BigInteger permissionMask) 
 	throws CreateObjectException {
 		try {
 			final PermissionAttributes permissionAttributes = 
@@ -236,7 +287,7 @@ public class PermissionAttributes extends StorableObject {
 			final StorableObjectVersion version,
 			final Identifier domainId,
 			final Identifier userId,
-            final long permissionMask) {
+            final BigInteger permissionMask) {
 		super.setAttributes(created, modified, creatorId, modifierId, version);
 		this.domainId = domainId;
 		this.userId = userId;
@@ -262,18 +313,17 @@ public class PermissionAttributes extends StorableObject {
 	
 	public final void setPermissionEnable(final PermissionCodenames codename,
 	                                      final boolean enable) {
-		long mask = 1 << codename.ordinal();
+		final int bit = codename.ordinal();
 		if (enable) {
-			this.permissionMask |= mask;
+			this.permissionMask = this.permissionMask.setBit(bit);
 		} else {
-			this.permissionMask &= ~mask;
+			this.permissionMask = this.permissionMask.clearBit(bit);
 		}
-		
 		super.markAsChanged();
 	}
 	
-	public final boolean isPermissionEnable(PermissionCodenames codename) {
-		return (this.permissionMask & (1 << codename.ordinal())) != 0;
+	public final boolean isPermissionEnable(final PermissionCodenames codename) {
+		return this.permissionMask.testBit(codename.ordinal());
 	}
 	
 	public final Identifier getDomainId() {
@@ -299,7 +349,7 @@ public class PermissionAttributes extends StorableObject {
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
-	final long getPermissionMask() {
+	final BigInteger getPermissionMask() {
 		return this.permissionMask;
 	}
 	
@@ -308,7 +358,7 @@ public class PermissionAttributes extends StorableObject {
 	 * <b>Clients must never explicitly call this method. </b>
 	 * </p>
 	 */
-	final void setPermissionMask(final long permissionMask) {
+	final void setPermissionMask(final BigInteger permissionMask) {
 		this.permissionMask = permissionMask;
 		super.markAsChanged();
 	}

@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesWrapper.java,v 1.3 2005/08/08 13:15:50 arseniy Exp $
+ * $Id: PermissionAttributesWrapper.java,v 1.4 2005/09/09 15:03:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.administration;
 
 import static com.syrus.AMFICOM.administration.DomainMember.COLUMN_DOMAIN_ID;
 
+import java.math.BigInteger;
 import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
@@ -18,8 +19,8 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/08 13:15:50 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/09/09 15:03:06 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module admin
  */
@@ -68,7 +69,7 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 				return permissionAttributes.getUserId();
 			}
 			if (key.equals(COLUMN_PERMISSION_MASK)) {
-				return new Long(permissionAttributes.getPermissionMask());
+				return permissionAttributes.getPermissionMask();
 			}
 		}
 		return value;
@@ -86,7 +87,7 @@ public class PermissionAttributesWrapper extends StorableObjectWrapper<Permissio
 			} else if (key.equals(COLUMN_USER_ID)) {
 				permissionAttributes.setUserId((Identifier) value);
 			} else if (key.equals(COLUMN_PERMISSION_MASK)) {
-				permissionAttributes.setPermissionMask(((Long) value).longValue());
+				permissionAttributes.setPermissionMask((BigInteger) value);
 			}
 
 		}

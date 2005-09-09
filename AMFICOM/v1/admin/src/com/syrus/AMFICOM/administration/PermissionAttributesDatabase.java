@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesDatabase.java,v 1.1 2005/08/04 14:04:16 bob Exp $
+ * $Id: PermissionAttributesDatabase.java,v 1.2 2005/09/09 15:03:06 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.administration;
 import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_PERMISSION_MASK;
 import static com.syrus.AMFICOM.administration.PermissionAttributesWrapper.COLUMN_USER_ID;
 
+import java.math.BigInteger;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
@@ -25,7 +26,7 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/04 14:04:16 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/09 15:03:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module admin
@@ -72,7 +73,7 @@ public final class PermissionAttributesDatabase extends StorableObjectDatabase<P
 	protected PermissionAttributes updateEntityFromResultSet(final PermissionAttributes storableObject, final ResultSet resultSet)
 			throws IllegalDataException, SQLException {
 		final PermissionAttributes permissionAttributes = (storableObject == null) ? new PermissionAttributes(DatabaseIdentifier.getIdentifier(resultSet,
-				StorableObjectWrapper.COLUMN_ID), null, StorableObjectVersion.ILLEGAL_VERSION, null, null, 0L) : storableObject;
+				StorableObjectWrapper.COLUMN_ID), null, StorableObjectVersion.ILLEGAL_VERSION, null, null, null) : storableObject;
 		permissionAttributes.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -80,7 +81,8 @@ public final class PermissionAttributesDatabase extends StorableObjectDatabase<P
 				new StorableObjectVersion(resultSet.getLong(StorableObjectWrapper.COLUMN_VERSION)),
 				DatabaseIdentifier.getIdentifier(resultSet, DomainMember.COLUMN_DOMAIN_ID),
 				DatabaseIdentifier.getIdentifier(resultSet, COLUMN_USER_ID),
-				resultSet.getLong(COLUMN_PERMISSION_MASK));
+				// store without DatabaseString.fromQuerySubString because of contains only numbers
+				new BigInteger(resultSet.getString(COLUMN_PERMISSION_MASK)));
 		return permissionAttributes;
 	}
 
@@ -90,7 +92,7 @@ public final class PermissionAttributesDatabase extends StorableObjectDatabase<P
 			int startParameterNumber) throws IllegalDataException, SQLException {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getDomainId());
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getUserId());
-		preparedStatement.setLong(++startParameterNumber, storableObject.getPermissionMask());
+		preparedStatement.setString(++startParameterNumber, storableObject.getPermissionMask().toString());
 		return startParameterNumber;
 	}
 
