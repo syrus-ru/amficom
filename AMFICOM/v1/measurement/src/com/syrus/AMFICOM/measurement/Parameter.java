@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.14 2005/09/05 17:39:27 bass Exp $
+ * $Id: Parameter.java,v 1.15 2005/09/09 13:07:28 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,12 +29,14 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/05 17:39:27 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/09/09 13:07:28 $
+ * @author $Author: arseniy $
  * @module measurement
  */
 
 public final class Parameter implements TransferableObject, Identifiable {
+	private static final long serialVersionUID = -5102988777073070109L;
+
 	private Identifier id;
 	private ParameterType type;
 	private byte[] value;	

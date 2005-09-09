@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.153 2005/09/08 18:26:30 bass Exp $
+ * $Id: Test.java,v 1.154 2005/09/09 13:06:31 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.153 $, $Date: 2005/09/08 18:26:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.154 $, $Date: 2005/09/09 13:06:31 $
+ * @author $Author: arseniy $
  * @module measurement
  */
 
@@ -530,6 +530,8 @@ public final class Test extends StorableObject {
 	}
 
 	public final class TestTimeStamps implements TransferableObject {
+		private static final long serialVersionUID = -3560328752462377043L;
+
 		Date endTime;
 		Date startTime;
 		Identifier temporalPatternId;
