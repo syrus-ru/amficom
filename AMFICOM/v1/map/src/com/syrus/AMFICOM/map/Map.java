@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.89 2005/09/08 18:26:29 bass Exp $
+ * $Id: Map.java,v 1.90 2005/09/09 17:19:59 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,8 +65,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2005/09/08 18:26:29 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.90 $, $Date: 2005/09/09 17:19:59 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -218,9 +218,11 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		this.mapIds = Identifier.fromTransferables(mt.mapIds);
 		this.externalNodeIds = Identifier.fromTransferables(mt.externalNodeIds);
 		this.mapLibraryIds = Identifier.fromTransferables(mt.mapLibraryIds);
-
+	}
+	
+	public void open() throws ApplicationException {
 		LinkedIdsCondition condition = new LinkedIdsCondition(this.siteNodeIds, ObjectEntities.CHARACTERISTIC_CODE);
-		
+
 		if(!this.siteNodeIds.isEmpty()) {
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
