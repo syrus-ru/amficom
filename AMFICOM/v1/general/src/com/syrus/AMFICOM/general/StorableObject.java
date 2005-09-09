@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.91 2005/09/07 17:36:00 bass Exp $
+ * $Id: StorableObject.java,v 1.92 2005/09/09 14:14:59 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.util.Log;
  * there can only be a single inctance of <code>StorableObject</code> with the
  * same identifier, comparison of object references (in Java terms) is enough.
  *
- * @author $Author: bass $
- * @version $Revision: 1.91 $, $Date: 2005/09/07 17:36:00 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.92 $, $Date: 2005/09/09 14:14:59 $
  * @module general
  */
 public abstract class StorableObject implements Identifiable, TransferableObject, Serializable {
@@ -58,17 +58,6 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	protected StorableObject() {
-		this.changed = false;
-	}
-
-	/**
-	 * Server-side constructor.
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 * @param id
-	 */
-	protected StorableObject(final Identifier id) {
-		this.id = id;
-
 		this.changed = false;
 	}
 
@@ -260,8 +249,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 			final Identifier creatorId,
 			final Identifier modifierId,
 			final StorableObjectVersion version) {
-		assert created != null && modified != null && creatorId != null
-				&& modifierId != null;
+		assert created != null && modified != null && creatorId != null && modifierId != null;
 		this.created = created;
 		this.modified = modified;
 		this.creatorId = creatorId;
