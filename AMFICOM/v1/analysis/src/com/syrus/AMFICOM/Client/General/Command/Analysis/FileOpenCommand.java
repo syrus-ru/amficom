@@ -42,15 +42,32 @@ public class FileOpenCommand extends AbstractCommand
 		return new FileOpenCommand(dispatcher, aContext);
 	}
 
-	// may return null
+	/**
+	 * —читать рефлектограмму из файла. ѕоддержка отладочных форматов файла
+	 * включаетс€ в зависимости от AnalyseMainFrameSimplified.DEBUG
+	 * @param file файл
+	 * @return BellcoreStructure либо null при ошибке
+	 */
 	public static BellcoreStructure readTraceFromFile(File file) {
+		return readTraceFromFileEx(file,
+				true && AnalyseMainFrameSimplified.DEBUG);
+	}
+
+	/**
+	 * —читать рефлектограмму из файла с возможностью разбора бќльшего числа
+	 * форматов (включа€ текстовый)
+	 * @param file файл
+	 * @param moreFormats true, чтобы разбирать бќльшее число форматов (режим дл€ отладки), false дл€ работы
+	 * @return BellcoreStructure либо null при ошибке
+	 */
+	public static BellcoreStructure readTraceFromFileEx(File file, boolean moreFormats) {
 		TraceReader tr = new TraceReader();
 		BellcoreStructure bs = null;
 		//System.out.println("FileName: " + file.getName());
 		bs = tr.getData(file); // note: UnsatisfiedLinkError is possible if no DLL loaded. Stas says that this needs not be catched
 		if (bs != null)
 			return bs;
-		if (true && AnalyseMainFrameSimplified.DEBUG)
+		if (moreFormats)
 		{
 			// FIXME: debug-only code
 			// этот код написан дл€ отладочных целей и предназначен дл€
