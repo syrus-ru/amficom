@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.11 2005/09/08 06:55:07 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.12 2005/09/09 17:27:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -15,18 +15,14 @@ import java.awt.Toolkit;
 
 import javax.swing.UIManager;
 
-
 /**
  * содержит список функциональных элементов, доступных пользователю 
  * 
- * 
- * 
- * @version $Revision: 1.11 $, $Date: 2005/09/08 06:55:07 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/09 17:27:36 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
-public class MapEditorApplicationModel extends ApplicationModel 
-{
+public class MapEditorApplicationModel extends ApplicationModel {
 	public static final String ITEM_VIEW_PROPERTIES = "mapActionViewProperties";
 	public static final String ITEM_EDIT_PROPERTIES = "mapActionEditProperties";
 
@@ -77,8 +73,7 @@ public class MapEditorApplicationModel extends ApplicationModel
 	public static final String ITEM_REPORT = "menuReport";
 	public static final String ITEM_REPORT_CREATE = "menuReportCreate";
 
-	public MapEditorApplicationModel()
-	{
+	public MapEditorApplicationModel() {
 		UIManager.put("images/main/map_mini.gif", Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif"));
 
 		add(ITEM_VIEW_PROPERTIES);
