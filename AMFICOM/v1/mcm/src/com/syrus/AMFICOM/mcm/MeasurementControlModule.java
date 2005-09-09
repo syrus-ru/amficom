@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.121 2005/09/05 20:58:23 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.122 2005/09/09 12:38:19 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,10 +24,12 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginException;
@@ -35,6 +37,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.LoginRestorer;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
@@ -51,7 +54,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.121 $, $Date: 2005/09/05 20:58:23 $
+ * @version $Revision: 1.122 $, $Date: 2005/09/09 12:38:19 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -184,8 +187,12 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		mcmId = new Identifier(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
 		try {
 			final MCM mcm = new MCM(mcmId);
-			final SystemUser user = new SystemUser(mcm.getUserId());
+
+			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
+			final SystemUser user = ((SystemUserDatabase) systemUserDatabase).retrieveForId(mcm.getUserId());
+
 			final Server server = new Server(mcm.getServerId());
+
 			login = user.getLogin();
 
 			/*	Create session environment*/

@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.68 2005/09/05 20:59:44 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.69 2005/09/09 12:36:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.administration.ServerProcess;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -57,7 +58,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/09/05 20:59:44 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/09 12:36:06 $
  * @author $Author: arseniy $
  * @module mserver
  */
@@ -164,12 +165,17 @@ public class MeasurementServer extends SleepButWorkThread {
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
 		try {
 			final Server server = new Server(serverId);
+
 			final StorableObjectDatabase<ServerProcess> serverProcessDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
 			final ServerProcess serverProcess = ((ServerProcessDatabase) serverProcessDatabase).retrieveForServerAndCodename(serverId,
 					processCodename);
-			final SystemUser user = new SystemUser(serverProcess.getUserId());
+
+			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
+			final SystemUser user = ((SystemUserDatabase) systemUserDatabase).retrieveForId(serverProcess.getUserId());
+
 			final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
 			final Set<Identifier> mcmIds = Identifier.createIdentifiers(((MCMDatabase) mcmDatabase).retrieveForServer(serverId));
+
 			login = user.getLogin();
 
 			/*	Create map of test queues*/
