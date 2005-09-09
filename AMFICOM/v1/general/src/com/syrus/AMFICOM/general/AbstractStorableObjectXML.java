@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractStorableObjectXML.java,v 1.3 2005/09/09 14:34:31 bob Exp $
+* $Id: AbstractStorableObjectXML.java,v 1.4 2005/09/09 17:17:22 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,14 +16,14 @@ import java.util.Map;
 
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/09 14:34:31 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/09/09 17:17:22 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
  */
 public abstract class AbstractStorableObjectXML<T extends StorableObject> {
 
-	public final List<String> getKeys(){
+	public final List<String> getKeys() {
 		List<String> keys = new ArrayList<String>();
 		keys.add(StorableObjectWrapper.COLUMN_ID);
 		keys.add(StorableObjectWrapper.COLUMN_CREATED);
