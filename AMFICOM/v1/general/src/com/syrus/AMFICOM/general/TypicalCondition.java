@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.49 2005/09/07 13:16:02 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.50 2005/09/09 17:16:57 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -127,11 +127,12 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.49 $, $Date: 2005/09/07 13:16:02 $
+ * @version $Revision: 1.50 $, $Date: 2005/09/09 17:16:57 $
  * @author $Author: arseniy $
  * @module general
  */
 public class TypicalCondition implements StorableObjectCondition {
+	private static final long serialVersionUID = -2099200598390912964L;
 
 	protected static final String ENTITY_NOT_REGISTERED = "Entity not registered for this condition -- ";
 

@@ -1,5 +1,5 @@
 /*
-* $Id: EquivalentCondition.java,v 1.15 2005/08/19 09:24:22 bob Exp $
+* $Id: EquivalentCondition.java,v 1.16 2005/09/09 17:16:57 arseniy Exp $
 *
 * Copyright ø 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,11 +19,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlEqui
 /**
  * Equivalent (identical, allways true) condition
  * written with especial cynicism
- * @version $Revision: 1.15 $, $Date: 2005/08/19 09:24:22 $
- * @author ÷÷œ‘ $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/09/09 17:16:57 $
+ * @author ÷÷œ‘ $Author: arseniy $
  * @module general
  */
 public final class EquivalentCondition implements StorableObjectCondition {
+	private static final long serialVersionUID = -5534092579946240509L;
 
 	private Short entityCode;
 	

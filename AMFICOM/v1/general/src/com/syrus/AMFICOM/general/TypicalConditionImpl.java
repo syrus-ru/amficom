@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.15 2005/08/19 14:01:33 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.16 2005/09/09 17:16:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,11 +16,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/08/19 14:01:33 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/09 17:16:57 $
  * @author $Author: arseniy $
  * @module general
  */
 final class TypicalConditionImpl extends TypicalCondition {
+	private static final long serialVersionUID = 6237963440184759584L;
 
 	@SuppressWarnings("unused")
 	private TypicalConditionImpl(final int firstInt,
@@ -112,17 +113,18 @@ final class TypicalConditionImpl extends TypicalCondition {
 
 	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
-		Wrapper wrapper;
 		if (storableObject instanceof CharacteristicType) {
-			wrapper = CharacteristicTypeWrapper.getInstance();
+			final CharacteristicType characteristicType = (CharacteristicType) storableObject;
+			final Wrapper<CharacteristicType> wrapper = CharacteristicTypeWrapper.getInstance();
+			return super.parseCondition(wrapper.getValue(characteristicType, this.key));
 		} else if (storableObject instanceof Characteristic) {
-			wrapper = CharacteristicWrapper.getInstance();
+			final Characteristic characteristic = (Characteristic) storableObject;
+			final Wrapper<Characteristic> wrapper = CharacteristicWrapper.getInstance();
+			return super.parseCondition(wrapper.getValue(characteristic, this.key));
 		} else {
 			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
-
-		return super.parseCondition(wrapper.getValue(storableObject, this.key));
 	}
 
 }
