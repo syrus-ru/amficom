@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.122 2005/09/09 12:38:19 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.123 2005/09/09 18:04:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,7 +24,6 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.MCM;
 import com.syrus.AMFICOM.administration.Server;
 import com.syrus.AMFICOM.administration.SystemUser;
-import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -54,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.122 $, $Date: 2005/09/09 12:38:19 $
+ * @version $Revision: 1.123 $, $Date: 2005/09/09 18:04:39 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -186,12 +185,14 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		/*	Retrieve information about MCM, it's user and server*/
 		mcmId = new Identifier(ApplicationProperties.getString(KEY_MCM_ID, MCM_ID));
 		try {
-			final MCM mcm = new MCM(mcmId);
+			final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
+			final MCM mcm = mcmDatabase.retrieveForId(mcmId);
 
 			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
-			final SystemUser user = ((SystemUserDatabase) systemUserDatabase).retrieveForId(mcm.getUserId());
+			final SystemUser user = systemUserDatabase.retrieveForId(mcm.getUserId());
 
-			final Server server = new Server(mcm.getServerId());
+			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
+			final Server server = serverDatabase.retrieveForId(mcm.getServerId());
 
 			login = user.getLogin();
 

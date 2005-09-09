@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.24 2005/09/07 13:30:25 bob Exp $
+ * $Id: LoginEventServer.java,v 1.25 2005/09/09 18:01:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/09/07 13:30:25 $
- * @author $Author: bob $
+ * @version $Revision: 1.25 $, $Date: 2005/09/09 18:01:47 $
+ * @author $Author: arseniy $
  * @module leserver
  */
 public final class LoginEventServer {
@@ -98,7 +98,8 @@ public final class LoginEventServer {
 		/*	Retrieve info about server*/
 		final Identifier serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
 		try {
-			final Server server = new Server(serverId);
+			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
+			final Server server = serverDatabase.retrieveForId(serverId);
 
 			/*	Retrieve info about processes*/
 			loginProcessCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME,

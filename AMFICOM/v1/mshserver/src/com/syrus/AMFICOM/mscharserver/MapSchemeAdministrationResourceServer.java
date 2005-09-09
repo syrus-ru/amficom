@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.15 2005/09/09 12:37:38 arseniy Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.16 2005/09/09 18:04:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/09 12:37:38 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/09 18:04:04 $
  * @author $Author: arseniy $
  * @module mscharserver
  */
@@ -128,7 +128,8 @@ public class MapSchemeAdministrationResourceServer {
 				ServerProcessWrapper.KEY_MSCHARSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.MSCHARSERVER_PROCESS_CODENAME);
 		try {
-			final Server server = new Server(serverId);
+			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
+			final Server server = serverDatabase.retrieveForId(serverId);
 
 			final StorableObjectDatabase<ServerProcess> storableObjectDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
 			final ServerProcess serverProcess = ((ServerProcessDatabase) storableObjectDatabase).retrieveForServerAndCodename(serverId,

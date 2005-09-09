@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.69 2005/09/09 12:36:06 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.70 2005/09/09 18:02:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.administration.ServerProcess;
 import com.syrus.AMFICOM.administration.ServerProcessDatabase;
 import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.AMFICOM.administration.SystemUser;
-import com.syrus.AMFICOM.administration.SystemUserDatabase;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
@@ -58,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.69 $, $Date: 2005/09/09 12:36:06 $
+ * @version $Revision: 1.70 $, $Date: 2005/09/09 18:02:33 $
  * @author $Author: arseniy $
  * @module mserver
  */
@@ -164,14 +163,15 @@ public class MeasurementServer extends SleepButWorkThread {
 		final String processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.MSERVER_PROCESS_CODENAME);
 		try {
-			final Server server = new Server(serverId);
+			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
+			final Server server = serverDatabase.retrieveForId(serverId);
 
 			final StorableObjectDatabase<ServerProcess> serverProcessDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVERPROCESS_CODE);
 			final ServerProcess serverProcess = ((ServerProcessDatabase) serverProcessDatabase).retrieveForServerAndCodename(serverId,
 					processCodename);
 
 			final StorableObjectDatabase<SystemUser> systemUserDatabase = DatabaseContext.getDatabase(ObjectEntities.SYSTEMUSER_CODE);
-			final SystemUser user = ((SystemUserDatabase) systemUserDatabase).retrieveForId(serverProcess.getUserId());
+			final SystemUser user = systemUserDatabase.retrieveForId(serverProcess.getUserId());
 
 			final StorableObjectDatabase<MCM> mcmDatabase = DatabaseContext.getDatabase(ObjectEntities.MCM_CODE);
 			final Set<Identifier> mcmIds = Identifier.createIdentifiers(((MCMDatabase) mcmDatabase).retrieveForServer(serverId));
