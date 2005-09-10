@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreCreator.java,v 1.8 2005/09/10 14:35:33 saa Exp $
+ * $Id: BellcoreCreator.java,v 1.9 2005/09/10 15:55:32 saa Exp $
  * Very poor bellcore creator for development purposes
  * 
  * Copyright © Syrus Systems.
@@ -10,7 +10,7 @@ package com.syrus.io;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.8 $, $Date: 2005/09/10 14:35:33 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/10 15:55:32 $
  * @module
  */
 public class BellcoreCreator
@@ -32,7 +32,7 @@ public class BellcoreCreator
 			y[i] = 65535 - (int )(yarr[i] * 1000);
 		bs.dataPts = bs.new DataPts();
 		bs.dataPts.tndp = y.length;
-		System.out.println("BellcoreCreator: TNDP set to " + bs.dataPts.tndp);
+		//System.out.println("BellcoreCreator: TNDP set to " + bs.dataPts.tndp);
 		bs.dataPts.dsf = new int[][] { y };
 		bs.dataPts.tsf = 1;
 		bs.dataPts.tps = new int[] { N };
