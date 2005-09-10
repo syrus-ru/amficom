@@ -85,22 +85,14 @@ inline double rdB2dy(double y0, double dB)
 	return ret;
 }
 
-/*
- * findNoiseArray()
- * определение уровня шума в зависимости от координаты
- * с учетом возможности уменьшения уровня шума на
- * р/г
- * вых. значение - в отн. дБ, по ур. ~1 сигма
- * len2 - интересующий пользователя интервал шума, д б <= size (кр. желательно чтобы включал м.з.)
- */
-void findNoiseArray(double *data, double *outNoise, int size, int len2)
+void findAbsNoiseArray(double *data, double *outNoise, int size, int len2)
 {
 	if (len2 <= 0)
 		return;
 
 	assert(len2 <= size);
 
-	prf_b("findNoiseArray: enter");
+	prf_b("findAbsNoiseArray: enter");
 
 	const int width = NETTESTWIDTH;
 	// mlen должно получиться четным
@@ -117,14 +109,15 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 
 	int i;
 
-	if (size < mlen)
+	if (size <= mlen)
 	{
 		// Нештатная ситуация - р/г так коротка, что шум определить нельзя
 		// В таком случае в качестве уровня шума выдаем везде prec0 -- это
 		// не очень здорово, но достаточно просто.
+		double prec0LS = dy2dB(0, prec0); // переводим prec0 в абс. уровень на лог. шкале
 		for (i = 0; i < len2; i++)
-			outNoise[i] = prec0;
-		prf_b("findNoiseArray: done/ too short trace");
+			outNoise[i] = data[i] - prec0LS;
+		prf_b("findAbsNoiseArray: done/ too short trace");
 		return;
 	}
 
@@ -139,7 +132,7 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 	double levelPrec0 = log2add(prec0) - 1;
 	const int effSize = size < len2 + mlen - mofs ? size : len2 + mlen - mofs;
 
-	prf_b("findNoiseArray: log2add");
+	prf_b("findAbsNoiseArray: log2add");
 
 	// приводим к линейному масштабу
 	for (i = 0; i < effSize; i++)
@@ -148,7 +141,7 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 	}
 
 	// начальная оценка уровня шума
-	prf_b("findNoiseArray: first estimation");
+	prf_b("findAbsNoiseArray: first estimation");
 	for (i = 0; i < effSize - mlen + nsam; i++)
 	{
 		// строго говоря, I2+I0-2I1 - это не то совсем что нам нужно,
@@ -169,7 +162,7 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 	}
 
 	// усреднение
-	prf_b("findNoiseArray: averaging");
+	prf_b("findAbsNoiseArray: averaging");
 	i = 0;
 	while(i < effSize - mlen)
 	{
@@ -223,7 +216,7 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 #endif
 #endif
 	}
-	prf_b("findNoiseArray: expand & process");
+	prf_b("findAbsNoiseArray: expand & process");
 
     // расширяем до краев массива - влево
 	for (i = 0; i < mofs; i++)
@@ -257,15 +250,37 @@ void findNoiseArray(double *data, double *outNoise, int size, int len2)
 			out[i] = out[i - 1];
 	}
 
-	prf_b("findNoiseArray: init exp");
-	init_exp();
-	prf_b("findNoiseArray: dB2dy");
-	// формируем выходной массив
+	// записываем в выходной массив
 	for (i = 0; i < len2; i++)
-		outNoise[i] = rdB2dy(data[i], out[i]);
+		outNoise[i] = out[i];
 
-	prf_b("findNoiseArray: done");
+	prf_b("findAbsNoiseArray: done");
 
 	delete[] temp;
 	delete[] out;
+}
+
+/*
+ * findNoiseArray()
+ * определение уровня шума в зависимости от координаты
+ * с учетом возможности уменьшения уровня шума на
+ * р/г
+ * вых. значение - в отн. дБ, по ур. ~1 сигма
+ * len2 - интересующий пользователя интервал шума, д б <= size (кр. желательно чтобы включал м.з.)
+ */
+void findNoiseArray(double *data, double *outNoise, int size, int len2) {
+	prf_b("findNoiseArray: findAbsNoiseArray");
+	findAbsNoiseArray(data, outNoise, size, len2);
+
+	prf_b("findNoiseArray: init exp");
+	init_exp();
+
+	prf_b("findNoiseArray: dB2dy");
+
+	// преобразуем выходной массив
+	int i;
+	for (i = 0; i < len2; i++)
+		outNoise[i] = rdB2dy(data[i], outNoise[i]);
+
+	prf_b("findNoiseArray: done");
 }

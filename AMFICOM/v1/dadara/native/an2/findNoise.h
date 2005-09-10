@@ -39,9 +39,14 @@
  * size должен быть достаточно большим.... -- FIXME
  * data - входной массив[size]
  * len2 - длина до опознанного конца р/г
- * out - массив[len22] для записи вых. значения шума
+ * out - массив[len2] для записи вых. значения шума
  */
-void findNoiseArray(double *data, double *out, int size, int len2);
+void findNoiseArray(double *data, double *outNoise, int size, int len2);
+
+/*
+ * то же, что и findNoiseArray, но на выходе не относительные децибеллы,
+ * а абсолютные.
+ */
+void findAbsNoiseArray(double *data, double *outNoise, int size, int len2);
 
 #endif
-
