@@ -1,5 +1,6 @@
 package com.syrus.AMFICOM.Client.General.Command.Analysis;
 
+import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -50,7 +51,8 @@ public class FileAddCommand extends AbstractCommand
 		if(returnVal == JFileChooser.APPROVE_OPTION)
 		{
 			//System.out.println("DEBUG: the user has added file " + chooser.getSelectedFile().getAbsolutePath()); // FIX//ME: debugging purpose only
-			String id = chooser.getSelectedFile().getAbsolutePath().toLowerCase();
+			File selectedFile = chooser.getSelectedFile();
+			String id = selectedFile.getAbsolutePath().toLowerCase();
 			if (Heap.hasSecondaryBSKey(id))
 			{
 				//JOptionPane cDialog = new JOptionPane();
@@ -64,6 +66,7 @@ public class FileAddCommand extends AbstractCommand
 				if (ret == JOptionPane.YES_OPTION)
 					 new FileRemoveCommand(id, aContext).execute();
 			}
+			/*
 			TraceReader tr = new TraceReader();
 			BellcoreStructure bs = tr.getData(chooser.getSelectedFile());
 			if (bs == null)
@@ -78,13 +81,15 @@ public class FileAddCommand extends AbstractCommand
 					return;
 				}
 			}
-			bs.title = chooser.getSelectedFile().getName();
+			*/
+			BellcoreStructure bs = FileOpenCommand.readTraceFromFile(selectedFile);
+			bs.title = selectedFile.getName();
 			Heap.putSecondaryTraceByKey(id, bs);
 			// Heap.secondaryTraceOpened(id, bs);
 			Heap.setCurrentTrace(id);
 			try
 			{
-				properties.setProperty("lastdir", chooser.getSelectedFile().getParent().toLowerCase());
+				properties.setProperty("lastdir", selectedFile.getParent().toLowerCase());
 				properties.store(new FileOutputStream(propertiesFileName), null);
 			} catch (IOException ex)
 			{
