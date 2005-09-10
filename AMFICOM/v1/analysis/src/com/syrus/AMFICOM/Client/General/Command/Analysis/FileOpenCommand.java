@@ -9,6 +9,8 @@ import java.io.FileReader;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.Properties;
+import java.util.regex.Matcher;
+import java.util.regex.Pattern;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -65,9 +67,13 @@ public class FileOpenCommand extends AbstractCommand
 		TraceReader tr = new TraceReader();
 		BellcoreStructure bs = null;
 		//System.out.println("FileName: " + file.getName());
-		bs = tr.getData(file); // note: UnsatisfiedLinkError is possible if no DLL loaded. Stas says that this needs not be catched
-		if (bs != null) {
-			return bs;
+
+		if (!moreFormats || !file.getName().matches(".*\\.(dat|DAT)")) {
+			// note: UnsatisfiedLinkError is possible if no DLL loaded. Stas says that this needs not be catched
+			bs = tr.getData(file);
+			if (bs != null) {
+				return bs;
+			}
 		}
 		if (moreFormats) {
 			// FIXME: debug-only code
@@ -99,7 +105,20 @@ public class FileOpenCommand extends AbstractCommand
 				} catch (NumberFormatException e) {
 					resolution = 1.0; // default resolution
 				}
-				bs = new BellcoreCreator(dl, resolution).getBS();
+				// try to find pulse width using file name
+				Pattern pat = Pattern.compile("\\b(\\d+)ns");
+				Matcher m = pat.matcher(file.getName());
+				int pulseWidth;
+				if (m.find()) {
+					String g = m.group(1);
+					pulseWidth = Integer.parseInt(g);
+					//System.out.println("File " + file.getName() + " group " + g + " pulse " + pulseWidth);
+				} else {
+					pulseWidth = 0; // undefined
+					//System.out.println("File " + file.getName() + " pulse not detected");
+				}
+				
+				bs = new BellcoreCreator(dl, resolution, pulseWidth).getBS();
 				br.close();
 			} catch (IOException e1) {
 				// FIXME: exceptions: (debug only) could not load text mode trace
