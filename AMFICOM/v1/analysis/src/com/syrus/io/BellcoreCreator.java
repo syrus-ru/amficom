@@ -1,5 +1,5 @@
 /*
- * $Id: BellcoreCreator.java,v 1.7 2005/09/10 11:15:51 saa Exp $
+ * $Id: BellcoreCreator.java,v 1.8 2005/09/10 14:35:33 saa Exp $
  * Very poor bellcore creator for development purposes
  * 
  * Copyright © Syrus Systems.
@@ -10,7 +10,7 @@ package com.syrus.io;
 
 /**
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/09/10 11:15:51 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/10 14:35:33 $
  * @module
  */
 public class BellcoreCreator
@@ -18,10 +18,13 @@ public class BellcoreCreator
 	private BellcoreStructure bs = new BellcoreStructure();
 
 	public BellcoreCreator(double []yarr) {
-		this(yarr, 1.0);
+		this(yarr, 1.0, 0);
 	}
 
 	public BellcoreCreator(double []yarr, double resolution) {
+		this(yarr, resolution, 0);
+	}
+	public BellcoreCreator(double []yarr, double resolution, int pulseWidth) {
 		final int N = yarr.length;
 		double res = resolution; // resolution, m
 		int[] y = new int[N];
@@ -36,7 +39,7 @@ public class BellcoreCreator
 		bs.dataPts.sf = new short[] { 1000 };
 		bs.fxdParams = bs.new FxdParams();
 		bs.fxdParams.tpw = 1;
-		bs.fxdParams.pwu = new short[] { 0 };
+		bs.fxdParams.pwu = new short[] { (short) pulseWidth };
 		bs.fxdParams.ds = new int[] {
 				(int)(bs.fxdParams.gi * 1e-5 * res / (1e-14 * 3e8)) };
 		bs.fxdParams.nppw = new int[] { y.length };
