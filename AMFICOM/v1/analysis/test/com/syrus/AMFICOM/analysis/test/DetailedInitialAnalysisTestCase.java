@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.analysis.test;
 /*-
- * $Id: DetailedInitialAnalysisTestCase.java,v 1.7 2005/08/29 11:46:23 saa Exp $
+ * $Id: DetailedInitialAnalysisTestCase.java,v 1.8 2005/09/10 14:39:19 saa Exp $
  * 
  * 
  * Copyright © 2005 Syrus Systems.
@@ -34,7 +34,7 @@ import com.syrus.util.HashCodeGenerator;
  * Фактически, это не TestCase, а программа для полуавтоматизированного
  * контроля качества анализа
  * @author $Author: saa $
- * @version $Revision: 1.7 $, $Date: 2005/08/29 11:46:23 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/10 14:39:19 $
  * @module
  */
 public class DetailedInitialAnalysisTestCase extends TestCase {
@@ -485,8 +485,8 @@ public class DetailedInitialAnalysisTestCase extends TestCase {
 		if (cache != null && cache.containsKey(fName))
 			bs = cache.get(fName);
 		else {
-			bs = FileOpenCommand.readTraceFromFile(
-				new File(fPrefix + fName));
+			bs = FileOpenCommand.readTraceFromFileEx(
+				new File(fPrefix + fName), true);
 			if (cache != null && bs != null)
 				cache.put(fName, bs);
 		}
