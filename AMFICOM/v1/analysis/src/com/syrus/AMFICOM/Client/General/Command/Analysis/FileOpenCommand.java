@@ -84,11 +84,22 @@ public class FileOpenCommand extends AbstractCommand
 				final int N = al.size();
 				//System.out.println("reading file: N=" + N);
 				double[] dl = new double[N];
+				String ln = "";
 				for (int i = 0; i < N; i++) {
-					dl[i] = Double.parseDouble(((String)al.get(i))
-							.replaceFirst("\\S+\\s+", "")); // cut first column if present
+					ln = (String) al.get(i);
+					dl[i] = Double.parseDouble(
+							ln.replaceFirst("\\S+\\s+", "")); // cut first column if present
 				}
-				bs = new BellcoreCreator(dl).getBS();
+				// try to find resolution
+				double resolution;
+				try {
+					double distance = Double.parseDouble(
+							ln.replaceFirst("\\S+$", ""));
+					resolution = distance / (N - 1);
+				} catch (NumberFormatException e) {
+					resolution = 1.0; // default resolution
+				}
+				bs = new BellcoreCreator(dl, resolution).getBS();
 				br.close();
 			} catch (IOException e1) {
 				// FIXME: exceptions: (debug only) could not load text mode trace
