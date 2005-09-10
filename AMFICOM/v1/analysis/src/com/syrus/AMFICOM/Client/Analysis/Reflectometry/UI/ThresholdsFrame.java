@@ -1,22 +1,21 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.beans.*;
+import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.HashMap;
 import java.util.Map;
 
 import com.syrus.AMFICOM.Client.Analysis.Heap;
-import com.syrus.AMFICOM.Client.General.Event.*;
-import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
 import com.syrus.AMFICOM.Client.General.Event.BsHashChangeListener;
+import com.syrus.AMFICOM.Client.General.Event.EtalonMTMListener;
+import com.syrus.AMFICOM.Client.General.Event.RefUpdateEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
-import com.syrus.AMFICOM.analysis.*;
+import com.syrus.AMFICOM.analysis.TraceResource;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.io.BellcoreStructure;
 
 public class ThresholdsFrame extends SimpleResizableFrame
-implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener
-{
+implements BsHashChangeListener, EtalonMTMListener, PropertyChangeListener {
 	private Dispatcher dispatcher;
 	Map traces = new HashMap();
 
