@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlComplementorRegistry.java,v 1.7 2005/09/06 15:45:31 bass Exp $
+ * $Id: XmlComplementorRegistry.java,v 1.8 2005/09/11 15:34:29 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,9 +12,11 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static java.util.logging.Level.INFO;
 
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.xml.XmlStorableObject;
 import com.syrus.util.Log;
@@ -22,11 +24,13 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/09/06 15:45:31 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/11 15:34:29 $
  * @module general
  */
 public final class XmlComplementorRegistry {
 	private static final Map<Short, List<XmlComplementor>> REGISTRY = new HashMap<Short, List<XmlComplementor>>();
+
+	private static final Set<String> QUIET_CLASS_NAMES = new HashSet<String>();
 
 	private XmlComplementorRegistry() {
 		assert false;
@@ -75,11 +79,12 @@ public final class XmlComplementorRegistry {
 		assert storableObject != null : NON_NULL_EXPECTED;
 		final List<XmlComplementor> complementors = REGISTRY.get(new Short(entityCode));
 		if (complementors == null || complementors.isEmpty()) {
-			Log.debugMessage("XmlComplementorRegistry.complementStorableObject() | no complementor(s) found to complement the object: "
-					+ storableObject.getClass().getName()
-					+ "; id = ``"
-					+ storableObject.getId().getStringValue()
-					+ "''", INFO);
+			final String className = storableObject.getClass().getName();
+			if (!QUIET_CLASS_NAMES.contains(className)) {
+				QUIET_CLASS_NAMES.add(className);
+				Log.debugMessage("XmlComplementorRegistry.complementStorableObject() | no complementor(s) found fot type: "
+						+ className, INFO);
+			}
 			return;
 		}
 		for (final XmlComplementor complementor : complementors) {
