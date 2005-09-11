@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.2 2005/09/11 11:45:47 bass Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.3 2005/09/11 16:32:13 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseConnection;
 
 /**
  * @author max
- * @author $Author: bass $
- * @version $Revision: 1.2 $, $Date: 2005/09/11 11:45:47 $
+ * @author $Author: max $
+ * @version $Revision: 1.3 $, $Date: 2005/09/11 16:32:13 $
  * @module general
  */
 
@@ -116,7 +116,9 @@ final class XmlIdentifierDatabase {
 
 	public static Map<Identifier, XmlIdentifier> retrievePrefetchedMap(final String importType) throws RetrieveObjectException {
 		Map<Identifier, XmlIdentifier> idXmlIdMap = new HashMap<Identifier, XmlIdentifier>(); 
-		
+		if (importType == null || importType.equals("")) {
+			return idXmlIdMap;
+		}
 		StringBuilder sql = new StringBuilder();
 		sql.append(StorableObjectDatabase.SQL_SELECT);
 		sql.append(getColumnsTmpl());
@@ -174,6 +176,9 @@ final class XmlIdentifierDatabase {
 	}
 
 	public static void removeIds(final Set<Identifier> idsToDelete) {
+		if(idsToDelete == null || idsToDelete.isEmpty()) {
+			return;
+		}
 		StringBuilder sql = new StringBuilder();
 		sql.append(StorableObjectDatabase.SQL_DELETE_FROM);
 		sql.append(TABLE_NAME_IMPORT_UID_MAP);
@@ -185,6 +190,9 @@ final class XmlIdentifierDatabase {
 	}
 	
 	public static void removeXmlIds(final Set<XmlIdentifier> xmlIdsToDelete) {
+		if(xmlIdsToDelete == null || xmlIdsToDelete.isEmpty()) {
+			return;
+		}
 		StringBuilder sql = new StringBuilder();
 		sql.append(StorableObjectDatabase.SQL_DELETE_FROM);
 		sql.append(TABLE_NAME_IMPORT_UID_MAP);
@@ -246,6 +254,9 @@ final class XmlIdentifierDatabase {
 	}
 
 	public static void insertKeys(Map<Key, XmlIdentifier> keysToCreate) throws CreateObjectException {
+		if(keysToCreate == null || keysToCreate.isEmpty()) {
+			return;
+		}
 		final StringBuilder sql = new StringBuilder();
 		sql.append(SQL_INSERT_INTO);
 		sql.append(TABLE_NAME_IMPORT_UID_MAP);
