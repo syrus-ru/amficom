@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.3 2005/09/11 15:15:08 krupenn Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.4 2005/09/11 15:18:27 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,6 +14,8 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.LinkedList;
 import java.util.logging.Level;
 
 import org.apache.xmlbeans.XmlOptions;
@@ -22,8 +24,12 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.configuration.xml.XmlCableLinkType;
 import com.syrus.AMFICOM.configuration.xml.XmlCableLinkTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlConfigurationLibrary;
+import com.syrus.AMFICOM.configuration.xml.XmlEquipment;
+import com.syrus.AMFICOM.configuration.xml.XmlEquipmentSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipmentTypeSeq;
+import com.syrus.AMFICOM.configuration.xml.XmlLinkType;
+import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.scheme.xml.SchemesDocument;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
@@ -39,14 +45,16 @@ import com.syrus.impexp.unicablemap.objects.CableThread;
 import com.syrus.impexp.unicablemap.objects.CableType;
 import com.syrus.impexp.unicablemap.objects.ChannelingItem;
 import com.syrus.impexp.unicablemap.objects.Element;
+import com.syrus.impexp.unicablemap.objects.Equipment;
+import com.syrus.impexp.unicablemap.objects.LinkType;
 import com.syrus.impexp.unicablemap.objects.MuffType;
 import com.syrus.impexp.unicablemap.objects.Port;
 import com.syrus.impexp.unicablemap.objects.ThreadType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.3 $, $Date: 2005/09/11 15:15:08 $
+ * @author $Author: stas $
+ * @version $Revision: 1.4 $, $Date: 2005/09/11 15:18:27 $
  * @module importUCM
  */
 
@@ -54,7 +62,9 @@ public class UCMSchemeExportCommand extends AbstractCommand {
 	UniCableMapDatabase ucmDatabase;
 	
 	HashMap<Integer, CableType> cabletypes = new HashMap<Integer, CableType>();
+	HashMap<Integer, LinkType> linktypes = new HashMap<Integer, LinkType>();
 	HashMap<Integer, MuffType> eqtypes = new HashMap<Integer, MuffType>();
+	HashSet<Equipment> equipments = new HashSet<Equipment>();
 	HashMap<Integer, Element> muffs = new HashMap<Integer, Element>();
 	HashMap<Integer, Element> buildings = new HashMap<Integer, Element>();
 	HashMap<Integer, Cable> cables = new HashMap<Integer, Cable>();
@@ -72,11 +82,19 @@ public class UCMSchemeExportCommand extends AbstractCommand {
 		createMuffTypes(muffTypes);
 		System.out.println(muffTypes.size() + " EquimpentType созданно за " + (System.currentTimeMillis() - this.start) + " ms");
 
+		Collection<UniCableMapObject> linkTypes = new LinkedList<UniCableMapObject>();
+		linkTypes.add(this.ucmDatabase.getType(UniCableMapType.UCM_FIBRE));
+		linkTypes.add(this.ucmDatabase.getType(UniCableMapType.UCM_PATCHCORD));
+		System.out.println(linkTypes.size() + " типов волокон прочитано");
+		this.start = System.currentTimeMillis();
+		createLinkTypes(linkTypes);
+		System.out.println(linkTypes.size() + " LinkType созданно за " + (System.currentTimeMillis() - this.start) + " ms");
+
 		Collection<UniCableMapObject> cableTypes = this.ucmDatabase.getObjects(this.ucmDatabase.getType(UniCableMapType.UCM_CABLE_TYPE));
 		System.out.println(cableTypes.size() + " типов кабеля прочитано");
 		this.start = System.currentTimeMillis();
 		createCableTypes(cableTypes);
-		System.out.println(cableTypes.size() + " EquimpentType созданно за " + (System.currentTimeMillis() - this.start) + " ms");
+		System.out.println(cableTypes.size() + " CableLinkType созданно за " + (System.currentTimeMillis() - this.start) + " ms");
 	}
 	
 	public void processSchemeObjects(int cableNumber) throws SQLException {
@@ -331,21 +349,37 @@ public class UCMSchemeExportCommand extends AbstractCommand {
 		}
 	}
 	
+	void createLinkTypes(Collection<UniCableMapObject> objects) {
+		for (UniCableMapObject ucmObject : objects) {
+			LinkType type = new LinkType(ucmObject.un);
+			type.setName(ucmObject.text);
+			this.linktypes.put(ucmObject.un, type);
+		}
+	}
+	
 	void createMuffs(Collection<UniCableMapObject> objects) throws SQLException {
 	
 		for (UniCableMapObject ucmObject : objects) {
 			Element muf = new Element(ucmObject.un);
 			muf.setName(ucmObject.text);
 			muf.setLabel("MO");
+			Equipment eq = new Equipment("eq" + ucmObject.un);
+			eq.setName(ucmObject.text);
+			eq.setLatitude((float)ucmObject.x0);
+			eq.setLongitude((float)ucmObject.y0);
+			muf.setEquipment(eq);
+			this.equipments.add(eq);
+			
 			this.muffs.put(ucmObject.un, muf);
 			
 			for(UniCableMapLink ucmLink : this.ucmDatabase.getParents(ucmObject)) {
 				if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_TYPE_REALIZATION)) {
-					 muf.setEqtId(ucmLink.parent.un);
+//					 muf.setEqtId(ucmLink.parent.un);
 				} else if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_KIND_HAS_KIND)) {
 					muf.setKind("MUFF_STRAIGHT");
 					
-					muf.setEquipmentTypeId(this.eqtypes.values().iterator().next().getId());
+//					muf.setEquipmentTypeId(this.eqtypes.values().iterator().next().getId());
+					eq.setTypeId(this.eqtypes.values().iterator().next().getId());
 //					 muf.setCodename(Integer.toString(ucmLink.parent.un));
 				} else if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE)) {
 					UniCableMapObject wellLarge = ucmLink.parent;
@@ -370,6 +404,13 @@ public class UCMSchemeExportCommand extends AbstractCommand {
 	void createBuildings(Collection<UniCableMapObject> objects) {
 		for (UniCableMapObject plan : objects) {
 			Element building = new Element(plan.un);
+			Equipment eq = new Equipment("eq" + plan.un);
+			eq.setName(plan.text);
+			eq.setLatitude((float)plan.x0);
+			eq.setLongitude((float)plan.y0);
+			building.setEquipment(eq);
+			this.equipments.add(eq);
+			
 			building.setWellId("site" + plan.un);
 			building.setName(plan.text);
 			building.setLabel(plan.text);
@@ -432,13 +473,21 @@ public class UCMSchemeExportCommand extends AbstractCommand {
 		
 		XmlConfigurationLibrary doc = XmlConfigurationLibrary.Factory.newInstance(xmlOptions);
 		XmlIdentifier uid = doc.addNewId();
-		uid.setStringValue("1");
+		uid.setStringValue("ucm_config_library");
 		doc.setName("UCM types");
 		doc.setCodename("UCM types");
 		doc.setImportType("ucm");
-		
+
+		XmlLinkTypeSeq xmlLinkTypes = doc.addNewLinkTypes();
 		XmlCableLinkTypeSeq xmlCableLinkTypes = doc.addNewCableLinkTypes();
 		XmlEquipmentTypeSeq xmlEquipmentTypes = doc.addNewEquipmentTypes();
+		XmlEquipmentSeq xmlEquipments = doc.addNewEquipments();
+
+		Collection<XmlLinkType> lts1 = new ArrayList<XmlLinkType>(this.linktypes.size());
+		for (LinkType linkType : this.linktypes.values()) {
+			lts1.add(linkType.toXMLObject());
+		}
+		xmlLinkTypes.setLinkTypeArray(lts1.toArray(new XmlLinkType[lts1.size()]));
 
 		Collection<XmlCableLinkType> lts = new ArrayList<XmlCableLinkType>(this.cabletypes.size());
 		for (CableType cableType : this.cabletypes.values()) {
@@ -451,6 +500,12 @@ public class UCMSchemeExportCommand extends AbstractCommand {
 			eqts.add(eqType.toXMLObject());
 		}
 		xmlEquipmentTypes.setEquipmentTypeArray(eqts.toArray(new XmlEquipmentType[eqts.size()]));
+		
+		Collection<XmlEquipment> eqs = new ArrayList<XmlEquipment>(this.equipments.size());
+		for (Equipment eq : this.equipments) {
+			eqs.add(eq.toXMLObject());
+		}
+		xmlEquipments.setEquipmentArray(eqs.toArray(new XmlEquipment[eqs.size()]));
 
 		Log.debugMessage("Проверка на валидность XML", Level.FINE);
 		this.start = System.currentTimeMillis();
@@ -489,13 +544,14 @@ public class UCMSchemeExportCommand extends AbstractCommand {
 		XmlSchemeSeq xmlSchemes = doc.addNewSchemes();
 		XmlScheme xmlScheme = xmlSchemes.addNewScheme();
 		XmlIdentifier uid = xmlScheme.addNewId();
-		uid.setStringValue("1");
+		uid.setStringValue("ucm_top_scheme");
 		
 		xmlScheme.setName("UCM top scheme");
 //		xmlScheme.setDescription("");
 		xmlScheme.setKind(Kind.NETWORK);
 		xmlScheme.setWidth(840);
 		xmlScheme.setHeight(1190);
+		xmlScheme.setImportType("ucm");
 		
 		XmlSchemeElementSeq xmlSchemeElements = xmlScheme.addNewSchemeElements();
 		XmlSchemeCableLinkSeq xmlSchemeCableLinks = xmlScheme.addNewSchemeCableLinks();
@@ -559,7 +615,7 @@ public class UCMSchemeExportCommand extends AbstractCommand {
 			processTypeObjects();
 			processSchemeObjects(Integer.MAX_VALUE);
 			saveConfigXML("\\export\\config.xml");
-			saveSchemeXML("\\export\\scheme.xml", Integer.MAX_VALUE);
+//			saveSchemeXML("\\export\\scheme.xml", Integer.MAX_VALUE);
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}

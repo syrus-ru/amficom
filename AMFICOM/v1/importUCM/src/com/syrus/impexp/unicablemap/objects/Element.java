@@ -1,5 +1,5 @@
 /*-
- * $Id: Element.java,v 1.3 2005/09/08 06:34:32 stas Exp $
+ * $Id: Element.java,v 1.4 2005/09/11 15:18:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,17 +24,15 @@ public class Element {
 
 	private int id;
 	private String name;
-	private Integer eqtId;
+//	private Integer eqtId;
 	private String equipmentTypeId;
+	private Equipment equipment;
 	private String wellId;
 	
 	private Device device;
 	private int counter = 0;
 	private String label;
 	private String kind;
-//	private Integer startCableId;
-//	private Integer endCableId;
-	
 	
 	public Element(int id) {
 		this.id = id;
@@ -43,8 +41,6 @@ public class Element {
 	public int getId() {
 		return this.id;
 	}
-
-
 
 	public void setEquipmentTypeId(String equipmentTypeId) {
 		this.equipmentTypeId = equipmentTypeId;
@@ -64,9 +60,9 @@ public class Element {
 		return port;
 	}
 
-	public void setEqtId(Integer eqtId) {
-		this.eqtId = eqtId;
-	}
+//	public void setEqtId(Integer eqtId) {
+//		this.eqtId = eqtId;
+//	}
 
 	public void setName(String name) {
 		this.name = name;
@@ -88,6 +84,10 @@ public class Element {
 		port.setName(Integer.toString(++this.counter) + "i");
 		this.device.addPort(port);
 		return port;
+	}
+
+	public void setEquipment(Equipment equipment) {
+		this.equipment = equipment;
 	}
 
 	public void setWellId(String wellId) {
@@ -114,7 +114,7 @@ public class Element {
 		writer.startObject(UniCableMapType.UCM_MUFF);
 		writer.put("id", String.valueOf(this.id));
 		writer.put("name", this.name);
-		writer.put("eqtid", String.valueOf(this.eqtId));
+		writer.put("eqtid", String.valueOf(this.equipmentTypeId));
 		writer.put("codenameid", this.equipmentTypeId);
 		writer.put("wellid", String.valueOf(this.wellId));
 //		writer.put("startid", String.valueOf(this.startCableId));
@@ -134,14 +134,21 @@ public class Element {
 		xmlSE.setName(this.name);
 //		xmlSE.setDescription("");
 		
-		if (this.equipmentTypeId == null) {
-			System.err.println("equipmentTypeId is null for " + this.name);
-			this.equipmentTypeId = "VOID";
+		if (this.equipment != null) {
+			XmlIdentifier eqid = xmlSE.addNewEquipmentId();
+			eqid.setStringValue(this.equipment.getId());
+			xmlSE.setEquipmentId(eqid);
 		}
-		
-		XmlIdentifier eqtid = xmlSE.addNewEquipmentTypeId();
-		eqtid.setStringValue(this.equipmentTypeId);
-		xmlSE.setEquipmentTypeId(eqtid);
+		else if (this.equipmentTypeId != null) {
+			XmlIdentifier eqtid = xmlSE.addNewEquipmentTypeId();
+			eqtid.setStringValue(this.equipmentTypeId);
+			xmlSE.setEquipmentTypeId(eqtid);
+		} else {
+			this.equipmentTypeId = "VOID";
+			XmlIdentifier eqtid = xmlSE.addNewEquipmentTypeId();
+			eqtid.setStringValue(this.equipmentTypeId);
+			xmlSE.setEquipmentTypeId(eqtid);
+		}
 		
 		xmlSE.setLabel(this.label);
 		
@@ -151,12 +158,13 @@ public class Element {
 			xmlSE.setKind(Kind.SCHEME_ELEMENT_CONTAINER);
 		}
 		
-		XmlIdentifier siteNodeUid = xmlSE.addNewSiteNodeId();
-		if (this.wellId == null) {
-			System.err.println("well is null for " + this.name);
-			this.wellId = "";
-		}
-		siteNodeUid.setStringValue(String.valueOf(this.wellId));
+//		XmlIdentifier siteNodeUid = xmlSE.addNewSiteNodeId();
+//		if (this.wellId == null) {
+//			System.err.println("well is null for " + this.name);
+//			this.wellId = "";
+//		} else {
+//			siteNodeUid.setStringValue(String.valueOf(this.wellId));
+//		}
 		
 		xmlSE.setParentSchemeId(parentId);
 				

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableType.java,v 1.2 2005/09/07 12:47:45 stas Exp $
+ * $Id: CableType.java,v 1.3 2005/09/11 15:18:27 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,11 @@ public class CableType {
 	public CableType(int id) {
 		this.id = id;
 	}
-	
+		
+	public String getName() {
+		return this.name;
+	}
+
 	public int getId() {
 		return this.id;
 	}
@@ -50,6 +54,10 @@ public class CableType {
 		}
 	}
 	
+	public Collection<ThreadType> getThreadTypes() {
+		return this.threadTypes;
+	}
+
 	void write(TextWriter writer) {
 		writer.startObject(TYPE);
 		writer.put("id", String.valueOf(this.id));
@@ -65,7 +73,6 @@ public class CableType {
 		uid.setStringValue(String.valueOf(this.id));
 		xmlLT.setName(this.name);
 		xmlLT.setCodename(this.name);
-		xmlLT.setDescription("");
 		xmlLT.setSort(XmlLinkTypeSort.OPTICAL);
 		
 		if (this.threadTypes.size() == 0) {
