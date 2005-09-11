@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.120 2005/09/11 17:24:58 bass Exp $
+ * $Id: Equipment.java,v 1.121 2005/09/11 19:33:10 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -47,10 +47,11 @@ import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.120 $, $Date: 2005/09/11 17:24:58 $
+ * @version $Revision: 1.121 $, $Date: 2005/09/11 19:33:10 $
  * @author $Author: bass $
  * @module config
  */
@@ -357,7 +358,76 @@ public final class Equipment extends DomainMember
 	 */
 	public XmlEquipment getXmlTransferable(final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		final XmlEquipment equipment = XmlEquipment.Factory.newInstance();
+		equipment.setName(this.name);
+		if (this.description == null || this.description.length() == 0) {
+			equipment.unsetDescription();
+		} else {
+			equipment.setDescription(this.description);
+		}
+		if (this.supplier == null || this.supplier.length() == 0) {
+			equipment.unsetSupplier();
+		} else {
+			equipment.setSupplier(this.supplier);
+		}
+		if (this.supplierCode == null || this.supplierCode.length() == 0) {
+			equipment.unsetSupplierCode();
+		} else {
+			equipment.setSupplierCode(this.supplierCode);
+		}
+		equipment.setLatitude(this.latitude);
+		equipment.setLongitude(this.longitude);
+		if (this.hwSerial == null || this.hwSerial.length() == 0) {
+			equipment.unsetHwSerial();
+		} else {
+			equipment.setHwSerial(this.hwSerial);
+		}
+		if (this.hwVersion == null || this.hwVersion.length() == 0) {
+			equipment.unsetHwVersion();
+		} else {
+			equipment.setHwVersion(this.hwVersion);
+		}
+		if (this.swSerial == null || this.swSerial.length() == 0) {
+			equipment.unsetSwSerial();
+		} else {
+			equipment.setSwSerial(this.swSerial);
+		}
+		if (this.swVersion == null || this.swVersion.length() == 0) {
+			equipment.unsetSwVersion();
+		} else {
+			equipment.setSwVersion(this.swVersion);
+		}
+		if (this.inventoryNumber == null || this.inventoryNumber.length() == 0) {
+			equipment.unsetInventoryNumber();
+		} else {
+			equipment.setInventoryNumber(this.inventoryNumber);
+		}
+		final Identifier domainId = super.getDomainId();
+		if (domainId.isVoid()) {
+			equipment.unsetDomainId();
+		} else {
+			equipment.setDomainId(domainId.getXmlTransferable(importType));
+		}
+		equipment.setEquipmentTypeId(this.type.getId().getXmlTransferable(importType));
+		if (this.imageId.isVoid()) {
+			equipment.unsetSymbolId();
+		} else {
+			equipment.setSymbolId(this.imageId.getXmlTransferable(importType));
+		}
+		final Set<Characteristic> characteristics = this.getCharacteristics(false);
+		if (characteristics.isEmpty()) {
+			equipment.unsetCharacteristics();
+		} else {
+			final XmlCharacteristic characteristicArray[] = new XmlCharacteristic[characteristics.size()];
+			int i = 0;
+			for (final Characteristic characteristic : characteristics) {
+				characteristicArray[i++] = characteristic.getXmlTransferable(importType);
+			}
+			final XmlCharacteristicSeq characteristicSeq = XmlCharacteristicSeq.Factory.newInstance();
+			characteristicSeq.setCharacteristicArray(characteristicArray);
+			equipment.setCharacteristics(characteristicSeq);
+		}
+		return equipment;
 	}
 
 	public EquipmentType getType() {
