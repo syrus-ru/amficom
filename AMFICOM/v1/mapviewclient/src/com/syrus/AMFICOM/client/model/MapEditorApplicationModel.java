@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.12 2005/09/09 17:27:36 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.13 2005/09/11 20:16:07 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,9 +18,9 @@ import javax.swing.UIManager;
 /**
  * содержит список функциональных элементов, доступных пользователю 
  * 
- * @version $Revision: 1.12 $, $Date: 2005/09/09 17:27:36 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/11 20:16:07 $
  * @module mapviewclient
- * @author $Author: krupenn $
+ * @author $Author: bass $
  */
 public class MapEditorApplicationModel extends ApplicationModel {
 	public static final String ITEM_VIEW_PROPERTIES = "mapActionViewProperties";
@@ -63,7 +63,7 @@ public class MapEditorApplicationModel extends ApplicationModel {
 	public static final String ITEM_VIEW = "menuView";
 	public static final String ITEM_VIEW_GENERAL = "menuViewGeneral";
 	public static final String ITEM_VIEW_ADDITIONAL = "menuViewAdditional";
-	public static final String ITEM_VIEW_CHARACTERISTICS = "menuViewСharacteristics";
+	public static final String ITEM_VIEW_CHARACTERISTICS = "menuViewCharacteristics";
 	public static final String ITEM_VIEW_MAP_CHOOSER = "menuViewMapChooser";
 	public static final String ITEM_VIEW_MAP_LAYERS = "menuViewMapLayers";
 	public static final String ITEM_VIEW_MAP = "menuViewMap";
