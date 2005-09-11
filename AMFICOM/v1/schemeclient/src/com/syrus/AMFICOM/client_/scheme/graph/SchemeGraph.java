@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.12 2005/09/06 12:45:57 stas Exp $
+ * $Id: SchemeGraph.java,v 1.13 2005/09/11 16:17:22 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Map;
+import java.util.logging.Level;
 
 import com.jgraph.graph.CellMapper;
 import com.jgraph.graph.ConnectionSet;
@@ -40,11 +41,12 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.LinkView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeEllipseView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.SchemeVertexView;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
+import com.syrus.util.Log;
 
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/09/06 12:45:57 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/11 16:17:22 $
  * @module schemeclient
  */
 
@@ -303,43 +305,47 @@ public class SchemeGraph extends GPGraph {
 	public Map<DefaultGraphCell, DefaultGraphCell> copyFromArchivedState(Object s, Point p, boolean isCenterPoint) {
 		if (s instanceof List) {
 			List v = (List) s;
-			Object[] cells = (Object[]) v.get(0);
-			Map viewAttributes = (Map) v.get(1);
-			ConnectionSet cs = (ConnectionSet) v.get(2);
-
-			List<DeviceGroup> newGroups = new ArrayList<DeviceGroup>();
-			for (int i = 0; i < cells.length; i++) {
-				if (cells[i] instanceof DeviceGroup)
-					newGroups.add((DeviceGroup)cells[i]);
+			if (!v.isEmpty()) {
+				Object[] cells = (Object[]) v.get(0);
+				Map viewAttributes = (Map) v.get(1);
+				ConnectionSet cs = (ConnectionSet) v.get(2);
+				
+				List<DeviceGroup> newGroups = new ArrayList<DeviceGroup>();
+				for (int i = 0; i < cells.length; i++) {
+					if (cells[i] instanceof DeviceGroup)
+						newGroups.add((DeviceGroup)cells[i]);
+				}
+				DeviceGroup[] groups = newGroups.toArray(new DeviceGroup[newGroups.size()]);
+				
+				if (groups.length == 0) {
+					getGraphLayoutCache().insert(cells, viewAttributes, cs, null, null);
+					return Collections.emptyMap();
+				}
+				
+				// клонируем селлы
+				Map<DefaultGraphCell, DefaultGraphCell> clones = super.cloneCells(cells);
+				// клонируем аттрубуты
+				Map cell_attr = GraphConstants.createAttributes(cells,
+						getGraphLayoutCache());
+				Map new_attributes = GraphConstants.cloneMap(cell_attr);
+				// клонируем коннекшены
+				// Object[] flat = getDescendants(cells);
+				// ConnectionSet cs =
+				// ConnectionSet.create(getGraphLayoutCache().getModel(), flat, false);
+				cs = cs.clone(clones);
+				// устанавливаем аттрибуты для клона
+				new_attributes = GraphConstants.replaceKeys(clones, new_attributes);
+				// вставляем клонированные селлы
+				Object[] cloned_cells = clones.values().toArray();
+				getGraphLayoutCache().insert(cloned_cells, viewAttributes, cs, null, null);
+				
+				if (p != null) { // переносим вставленный объект в новую точку
+					GraphActions.move(this, cloned_cells, p, isCenterPoint);
+				}
+				return clones;
+			} else {
+				Log.debugMessage("Try open empty cell", Level.FINER);
 			}
-			DeviceGroup[] groups = newGroups.toArray(new DeviceGroup[newGroups.size()]);
-
-			if (groups.length == 0) {
-				getGraphLayoutCache().insert(cells, viewAttributes, cs, null, null);
-				return Collections.emptyMap();
-			}
-
-			// клонируем селлы
-			Map<DefaultGraphCell, DefaultGraphCell> clones = super.cloneCells(cells);
-			// клонируем аттрубуты
-			Map cell_attr = GraphConstants.createAttributes(cells,
-					getGraphLayoutCache());
-			Map new_attributes = GraphConstants.cloneMap(cell_attr);
-			// клонируем коннекшены
-			// Object[] flat = getDescendants(cells);
-			// ConnectionSet cs =
-			// ConnectionSet.create(getGraphLayoutCache().getModel(), flat, false);
-			cs = cs.clone(clones);
-			// устанавливаем аттрибуты для клона
-			new_attributes = GraphConstants.replaceKeys(clones, new_attributes);
-			// вставляем клонированные селлы
-			Object[] cloned_cells = clones.values().toArray();
-			getGraphLayoutCache().insert(cloned_cells, viewAttributes, cs, null, null);
-
-			if (p != null) { // переносим вставленный объект в новую точку
-				GraphActions.move(this, cloned_cells, p, isCenterPoint);
-			}
-			return clones;
 		}
 		return null;
 	}

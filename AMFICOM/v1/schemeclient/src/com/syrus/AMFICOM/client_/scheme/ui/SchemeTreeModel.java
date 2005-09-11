@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.35 2005/09/07 18:33:01 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.36 2005/09/11 16:17:22 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.35 $, $Date: 2005/09/07 18:33:01 $
+ * @author $Author: stas $
+ * @version $Revision: 1.36 $, $Date: 2005/09/11 16:17:22 $
  * @module schemeclient
  */
 
@@ -102,6 +102,10 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			return SchemeCableLinkPropertiesManager.getInstance(this.aContext);
 		if (object instanceof SchemePath)
 			return SchemePathPropertiesManager.getInstance(this.aContext);
+		if (object instanceof SchemePort)
+			return SchemePortPropertiesManager.getInstance(this.aContext);
+		if (object instanceof SchemeCablePort)
+			return SchemeCablePortPropertiesManager.getInstance(this.aContext);
 		if (object instanceof SchemeMonitoringSolution)
 			return null;
 		throw new UnsupportedOperationException("Unknown object " + object); //$NON-NLS-1$

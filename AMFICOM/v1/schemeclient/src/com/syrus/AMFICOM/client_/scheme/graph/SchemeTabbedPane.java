@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.19 2005/09/06 16:40:42 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.20 2005/09/11 16:17:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.graph;
 
 import java.awt.BorderLayout;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
@@ -19,6 +20,7 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -38,12 +40,18 @@ import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 
 import com.jgraph.graph.DefaultGraphCell;
+import com.jgraph.graph.DefaultPort;
+import com.jgraph.graph.Edge;
+import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -56,13 +64,16 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.19 $, $Date: 2005/09/06 16:40:42 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/11 16:17:22 $
  * @module schemeclient
  */
 
@@ -296,13 +307,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							image = schemeElement.getSchemeCell();
 						}
 						if (image == null) {
-							// search suitable ProtoElement
-							String codename = schemeElement.getEquipmentType().getCodename();
-							TypicalCondition condition = new TypicalCondition(codename, OperationSort.OPERATION_EQUALS, ObjectEntities.SCHEMEPROTOELEMENT_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-							Set<SchemeProtoElement> protos = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-							
-							//TODO search suitable ProtoElement
-							
+							Log.debugMessage("Try to insert schemeElement with empty imageresource" + schemeElement.getId(), Level.SEVERE); //$NON-NLS-1$
+							return;
 						}
 						SchemeGraph graph = panel1.getGraph();
 						SchemeActions.openSchemeImageResource(graph, image, true, see.getInsertionPoint(), false);
@@ -329,13 +335,68 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							return;
 						}
 						SchemeGraph graph = panel1.getGraph();
-						SchemeActions.insertSEbyPE(graph, schemeElement, see.getInsertionPoint(), true);
+						SchemeActions.insertSEbyPE(graph, schemeElement, schemeElement.getClonedIdMap(), see.getInsertionPoint(), true);
 						graph.selectionNotify();
 					} catch (CreateObjectException e) {
 						Log.errorException(e);
 					}
 					setLinkMode();
 					return;
+				} else if (see.isType(SchemeEvent.INSERT_SCHEME_CABLELINK)) {
+					SchemeCableLink schemeCableLink = (SchemeCableLink)see.getStorableObject();
+					
+					ElementsPanel panel1 = getCurrentPanel();
+					SchemeResource res = panel1.getSchemeResource();
+					if (res.getCellContainerType() != SchemeResource.SCHEME) {
+						Log.debugMessage("Try to insert SchemeCableLink into SchemeElement " + schemeCableLink.getId(), Level.INFO); //$NON-NLS-1$
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+								LangModelScheme.getString("Message.error.schemecablelink_insert_schemeelement"),  //$NON-NLS-1$
+								LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					}
+					if (res.getScheme().getId().equals(schemeCableLink.getParentScheme().getId())) {
+						SchemeGraph graph = panel1.getGraph();
+						
+						SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
+						SchemeCablePort targetPort = schemeCableLink.getTargetAbstractSchemePort();
+						PortView sourceView = null;
+						PortView targetView = null;
+						if (sourcePort != null) {
+							CablePortCell sourcePortCell = SchemeActions.findCablePortCellById(graph, sourcePort.getId());
+							try {
+								DefaultPort source = SchemeActions.getSuitablePort(sourcePortCell, schemeCableLink.getId());
+								sourceView = (PortView)graph.getGraphLayoutCache().getMapping(source, false);
+							} catch (CreateObjectException e) {
+								Log.errorMessage(e.getMessage());
+								return;
+							}
+						}
+						if (targetPort != null) {
+							CablePortCell targetPortCell = SchemeActions.findCablePortCellById(graph, targetPort.getId());
+							try {
+								DefaultPort target = SchemeActions.getSuitablePort(targetPortCell, schemeCableLink.getId());
+								targetView = (PortView)graph.getGraphLayoutCache().getMapping(target, false);
+							} catch (CreateObjectException e) {
+								Log.errorMessage(e.getMessage());
+								return;
+							}
+						}
+						
+						Point p = see.getInsertionPoint();
+						int d = graph.getGridSize();
+						Point p1 = sourceView == null ? new Point(p.x - 2 * d, p.y) : sourceView.getBounds().getLocation();
+						Point p2 = targetView == null ? new Point(p.x + 2 * d, p.y) : targetView.getBounds().getLocation();
+						DefaultCableLink cell = SchemeActions.createCableLink(graph,
+								sourceView, targetView, graph.fromScreen(p1), 
+								graph.fromScreen(p2), schemeCableLink.getId());
+//						link.setName((String)cell.getUserObject());
+					} else {
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+								LangModelScheme.getString("Message.error.insert_cable_to_other_parent"),  //$NON-NLS-1$
+								LangModelScheme.getString("Message.error"), //$NON-NLS-1$
+								JOptionPane.ERROR_MESSAGE);
+					}
 				}	else if (see.isType(SchemeEvent.UPDATE_OBJECT)) {
 					Identifier id = see.getIdentifier();
 					if (id.getMajor() == ObjectEntities.SCHEME_CODE) {
@@ -364,6 +425,8 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 		}
 		super.propertyChange(ae);
 	}
+	
+
 	
 	private void setPathMode() {
 		AbstractButton b = this.toolBar.commands.get(Constants.PATH_MODE);

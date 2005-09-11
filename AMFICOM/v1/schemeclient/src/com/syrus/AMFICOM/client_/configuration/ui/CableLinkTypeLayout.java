@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.11 2005/09/01 13:39:18 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.12 2005/09/11 16:17:22 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.resource.NumberedComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/09/01 13:39:18 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/11 16:17:22 $
  * @module schemeclient
  */
 
@@ -75,7 +75,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		GraphActions.clearGraph(this.panel.getGraph());
 
 		if (this.type != null) {
-			List ctts = getSortedThreadTypes();
+			List ctts = getSortedThreadTypes(this.type);
 		// TODO разобраться с числом модулей
 			int nModules = 8;
 			if (ctts.size() == 6 || ctts.size() == 12 || ctts.size() == 18 || ctts.size() == 24 || ctts.size() == 30) {
@@ -103,8 +103,8 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 	}
 	
 //XXX check use of numbered comparator
-	private List<CableThreadType> getSortedThreadTypes() {
-		List<CableThreadType> threads = new ArrayList<CableThreadType>(this.type.getCableThreadTypes(false));
+	public static List<CableThreadType> getSortedThreadTypes(CableLinkType type) {
+		List<CableThreadType> threads = new ArrayList<CableThreadType>(type.getCableThreadTypes(false));
 		Collections.sort(threads, new NumberedComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
 				StorableObjectWrapper.COLUMN_CODENAME));
 		return threads;

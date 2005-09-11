@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeGraphUI.java,v 1.18 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: SchemeGraphUI.java,v 1.19 2005/09/11 16:17:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.jgraph.pad.GPGraphUI;
 import com.jgraph.plaf.basic.BasicGraphUI;
 import com.jgraph.plaf.basic.TransferHandler;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.PopupFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
@@ -53,8 +54,8 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: stas $
+ * @version $Revision: 1.19 $, $Date: 2005/09/11 16:17:22 $
  * @module schemeclient
  */
 
@@ -110,7 +111,10 @@ public class SchemeGraphUI extends GPGraphUI {
 						if (transferableObject instanceof Identifiable) {
 							Identifier transferable = ((Identifiable)transferableObject).getId(); 
 							long actionType = 0;
-							if (transferable.getMajor() == ObjectEntities.SCHEMEPROTOELEMENT_CODE) {
+							if (transferable.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
+								ApplicationContext aContext = ((SchemeGraph)SchemeGraphUI.this.graph).aContext; 
+								aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, transferable, p, SchemeEvent.INSERT_SCHEME_CABLELINK));
+							} else if (transferable.getMajor() == ObjectEntities.SCHEMEPROTOELEMENT_CODE) {
 								actionType = SchemeEvent.INSERT_PROTOELEMENT;
 							} else if (transferable.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
 								actionType = SchemeEvent.INSERT_SCHEMEELEMENT;

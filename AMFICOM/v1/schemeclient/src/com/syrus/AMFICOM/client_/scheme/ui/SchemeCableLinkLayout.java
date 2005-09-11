@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.11 2005/09/06 16:40:42 stas Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.12 2005/09/11 16:17:22 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/09/06 16:40:42 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/11 16:17:22 $
  * @module schemeclient
  */
 
@@ -99,7 +99,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		GraphActions.clearGraph(this.panel.getGraph());
 
 		if (this.link != null) {
-			List<SchemeCableThread> scts = getSortedCableThreads();
+			List<SchemeCableThread> scts = getSortedCableThreads(this.link);
 		// TODO разобраться с числом модулей
 			int nModules = 8;
 			if (scts.size() == 6 || scts.size() == 12 || scts.size() == 18 || scts.size() == 24 || scts.size() == 30) {
@@ -119,8 +119,8 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 	}
 	
 //XXX check use of numbered comparator
-	private List<SchemeCableThread> getSortedCableThreads() {
-		Set<SchemeCableThread> schemeCableThreads = this.link.getSchemeCableThreads();
+	public static List<SchemeCableThread> getSortedCableThreads(SchemeCableLink link) {
+		Set<SchemeCableThread> schemeCableThreads = link.getSchemeCableThreads();
 		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(schemeCableThreads);
 		Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(),
 				StorableObjectWrapper.COLUMN_NAME));

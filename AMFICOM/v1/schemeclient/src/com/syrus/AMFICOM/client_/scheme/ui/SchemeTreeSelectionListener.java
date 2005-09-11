@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeSelectionListener.java,v 1.9 2005/09/06 12:45:57 stas Exp $
+ * $Id: SchemeTreeSelectionListener.java,v 1.10 2005/09/11 16:17:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,9 +35,11 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
@@ -45,7 +47,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/09/06 12:45:57 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/11 16:17:22 $
  * @module schemeclient
  */
 
@@ -115,6 +117,10 @@ public class SchemeTreeSelectionListener implements TreeSelectionListener, Prope
 			type = ObjectSelectedEvent.SCHEME_CABLELINK;
 		else if (object instanceof SchemePath)
 			type = ObjectSelectedEvent.SCHEME_PATH;
+		else if (object instanceof SchemePort)
+			type = ObjectSelectedEvent.SCHEME_PORT;
+		else if (object instanceof SchemeCablePort)
+			type = ObjectSelectedEvent.SCHEME_CABLEPORT;
 		else if (object instanceof Result)
 			type = ObjectSelectedEvent.RESULT;
 		else if (object instanceof String || object instanceof IdlKind) {

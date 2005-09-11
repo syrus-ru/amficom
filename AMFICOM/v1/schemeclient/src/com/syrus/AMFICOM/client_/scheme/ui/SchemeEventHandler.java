@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEventHandler.java,v 1.5 2005/08/19 15:41:35 stas Exp $
+ * $Id: SchemeEventHandler.java,v 1.6 2005/09/11 16:17:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.5 $, $Date: 2005/08/19 15:41:35 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/11 16:17:22 $
  * @module schemeclient
  */
 
@@ -55,7 +55,7 @@ public class SchemeEventHandler extends AbstractEventHandler {
 				Object newObject = e.getNewValue();
 				StorableObjectEditor editor = this.frame.getCurrentEditor();
 				if (editor != null && newObject.equals(editor.getObject())) {
-					editor.setObject(newObject);
+					editor.setObject(editor.getObject());
 				}
 			}
 		}

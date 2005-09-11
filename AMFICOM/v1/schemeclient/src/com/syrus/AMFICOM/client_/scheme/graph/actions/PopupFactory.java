@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.7 2005/09/07 18:33:01 bass Exp $
+ * $Id: PopupFactory.java,v 1.8 2005/09/11 16:17:22 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -312,7 +312,7 @@ public class PopupFactory {
 							if (newCells != null) {
 								
 								Point p = getCenterPoint(graph, view);
-								SchemeActions.insertSEbyPE(graph, schemeElement, p, true);
+								SchemeActions.insertSEbyPE(graph, schemeElement, schemeElement.getClonedIdMap(), p, true);
 								Set<SchemeCablePort> cablePorts = schemeElement.getSchemeCablePortsRecursively();
 								CablePortCell inPort = null;
 								CablePortCell outPort = null;

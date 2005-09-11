@@ -126,19 +126,15 @@ public class SchemeSaveCommand extends AbstractCommand {
 				SchemeResource res1 = p.getSchemeResource();
 				if (res1.getCellContainerType() == SchemeResource.SCHEME) {
 					Scheme s = res1.getScheme();
-					try {
-						if (s.containsSchemeElement(se)) {
-							// TODO refreshing view (ugo)
-							
-							this.schemeTab.setGraphChanged(true);
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-									se.getName() + LangModelScheme.getString("Message.information.element_saved_in_scheme") + s.getName(),  //$NON-NLS-1$
-									LangModelScheme.getString("Message.information"), //$NON-NLS-1$
-									JOptionPane.INFORMATION_MESSAGE);
-							break;
-						}
-					} catch (ApplicationException e) {
-						Log.errorException(e);
+					if (s.equals(se.getParentScheme())) {
+						// TODO refreshing view (ugo)
+						
+						this.schemeTab.setGraphChanged(true);
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+								se.getName() + LangModelScheme.getString("Message.information.element_saved_in_scheme") + s.getName(),  //$NON-NLS-1$
+								LangModelScheme.getString("Message.information"), //$NON-NLS-1$
+								JOptionPane.INFORMATION_MESSAGE);
+						break;
 					}
 				}
 			}

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeEvent.java,v 1.8 2005/08/19 15:41:34 stas Exp $
+ * $Id: SchemeEvent.java,v 1.9 2005/09/11 16:17:22 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/11 16:17:22 $
  * @module schemeclient
  */
 
@@ -34,6 +34,7 @@ public class SchemeEvent extends PropertyChangeEvent {
 	public static final long INSERT_SCHEME = 						0x00000010;
 	public static final long INSERT_SCHEMEELEMENT = 		0x00000020;
 	public static final long INSERT_PROTOELEMENT = 			0x00000040;
+	public static final long INSERT_SCHEME_CABLELINK = 	0x00000080;
 	
 //	public static final long CLOSE_SCHEME = 					0x00000008;
 //	public static final long CLOSE_SCHEMEELEMENT = 		0x00000010;

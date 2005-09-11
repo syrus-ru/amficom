@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.14 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.15 2005/09/11 16:17:22 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,8 +75,8 @@ import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: stas $
+ * @version $Revision: 1.15 $, $Date: 2005/09/11 16:17:22 $
  * @module schemeclient
  */
 
@@ -647,6 +647,10 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 				}
 				Log.debugMessage("Will be removed " + removed.size() + " CableThreadTypes", Level.FINEST);
 				StorableObjectPool.delete(removed);
+				Identifier userId = LoginManager.getUserId();
+				for (Identifier id : removed) {
+					StorableObjectPool.flush(id, userId, false);
+				}
 			}
 		} catch (ApplicationException e1) {
 			Log.errorException(e1);

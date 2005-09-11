@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.22 2005/09/06 11:20:40 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.23 2005/09/11 16:17:22 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.22 $, $Date: 2005/09/06 11:20:40 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/11 16:17:22 $
  * @module schemeclient
  */
 
@@ -224,7 +224,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		
 //		aModel.setCommand("menuSchemeExport", new SchemeToFileCommand(Environment
 //				.getDispatcher(), aContext));
-		 aModel.setCommand("menuSchemeImport", new SchemeImportCommand());
+		 aModel.setCommand("menuSchemeImport", new SchemeImportCommand(this.schemeTab));
 
 		// TODO разобраться с созданием пути
 		
