@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.7 2005/09/11 17:14:40 max Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.8 2005/09/11 18:06:03 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseConnection;
 /**
  * @author max
  * @author $Author: max $
- * @version $Revision: 1.7 $, $Date: 2005/09/11 17:14:40 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/11 18:06:03 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -138,7 +138,7 @@ final class XmlIdentifierDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement(
-	                ResultSet.TYPE_SCROLL_INSENSITIVE, 
+	                ResultSet.TYPE_FORWARD_ONLY, 
 	                ResultSet.CONCUR_UPDATABLE);
 			Log.debugMessage("XmlIdentifierDatabase.retrieveByCondition | Trying: " + sql, DEBUGLEVEL10);
 			resultSet = statement.executeQuery(sql.toString());
