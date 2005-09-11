@@ -1,26 +1,28 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.4 2005/09/11 16:39:38 bass Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.5 2005/09/11 16:46:27 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
+
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.APOSTROPHE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.COMMA;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.EQUALS;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FROM;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.idsEnumerationString;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.MAXIMUM_EXPRESSION_NUMBER;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.QUESTION;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FROM;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_IN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_INSERT_INTO;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_OR;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_VALUES;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.QUESTION;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.APOSTROPHE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.idsEnumerationString;
+import static com.syrus.util.Log.DEBUGLEVEL10;
 
 import java.sql.Connection;
 import java.sql.PreparedStatement;
@@ -41,10 +43,9 @@ import com.syrus.util.database.DatabaseConnection;
 /**
  * @author max
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/09/11 16:39:38 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/11 16:46:27 $
  * @module general
  */
-
 final class XmlIdentifierDatabase {
 	private static final String KEY_DB_HOST_NAME = "DBHostName";
 	private static final String KEY_DB_SID = "DBSID";
@@ -137,7 +138,7 @@ final class XmlIdentifierDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("XmlIdentifierDatabase.retrieveByCondition | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("XmlIdentifierDatabase.retrieveByCondition | Trying: " + sql, DEBUGLEVEL10);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
 				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
@@ -229,7 +230,7 @@ final class XmlIdentifierDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			statement = connection.createStatement();
-			Log.debugMessage("XmlIdentifierDatabase.delete(List) | Trying: " + query, Log.DEBUGLEVEL09);
+			Log.debugMessage("XmlIdentifierDatabase.delete(List) | Trying: " + query, DEBUGLEVEL10);
 			statement.executeUpdate(query.toString());
 			connection.commit();
 		} catch (SQLException sqle1) {
@@ -272,7 +273,7 @@ final class XmlIdentifierDatabase {
 		try {
 			connection = DatabaseConnection.getConnection();
 			preparedStatement = connection.prepareStatement(sql.toString());
-			Log.debugMessage("XmlIdentifierDatabase.insertEntities | Trying: " + sql, Log.DEBUGLEVEL09);
+			Log.debugMessage("XmlIdentifierDatabase.insertEntities | Trying: " + sql, DEBUGLEVEL10);
 			for (final Key key : keysToCreate.keySet()) {
 				Identifier id = key.getId();
 				XmlIdentifier xmlId = keysToCreate.get(key);
