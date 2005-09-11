@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.83 2005/09/09 18:52:50 bass Exp $
+ * $Id: Scheme.java,v 1.84 2005/09/11 12:23:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/09/09 18:52:50 $
+ * @version $Revision: 1.84 $, $Date: 2005/09/11 12:23:50 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1369,6 +1369,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	public Set<SchemeCableLink> getTopologicalSchemeCableLinksRecursively()
 	throws ApplicationException {
 		final Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
+		schemeCableLinks.addAll(this.getSchemeCableLinks0());
 		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
 			for (final Scheme scheme : schemeElement.getSchemes0()) {
 				if (scheme.kind == CABLE_SUBNETWORK) {
