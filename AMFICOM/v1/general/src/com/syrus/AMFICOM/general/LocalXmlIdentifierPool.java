@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.4 2005/09/11 11:45:47 bass Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.5 2005/09/11 15:18:05 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/09/11 11:45:47 $
+ * @author $Author: max $
+ * @version $Revision: 1.5 $, $Date: 2005/09/11 15:18:05 $
  * @module general
  */
 public final class LocalXmlIdentifierPool {
@@ -30,6 +30,8 @@ public final class LocalXmlIdentifierPool {
 	private static final Map<XmlKey, Identifier> REVERSE_MAP = new HashMap<XmlKey, Identifier>();
 
 	private enum KeyState { NEW, UP_TO_DATE, DELETED }
+	
+	private static boolean prefetched = false; 
 	
 	private LocalXmlIdentifierPool() {
 		assert false;
@@ -210,17 +212,20 @@ public final class LocalXmlIdentifierPool {
 	}
 
 	private static void prefetch(final String importType) {
-		final Map<Identifier, XmlIdentifier> idXmlIdMap;
-		try {
-			idXmlIdMap = XmlIdentifierDatabase.retrievePrefetchedMap(importType);
-		} catch (final RetrieveObjectException e) {
-			Log.errorException(e);
-			return;
-		}
-		for (final Identifier id : idXmlIdMap.keySet()) {
-			final XmlIdentifier xmlId =  idXmlIdMap.get(id);
-			FORWARD_MAP.put(new Key(id, importType, KeyState.UP_TO_DATE), xmlId);
-			REVERSE_MAP.put(new XmlKey(xmlId, importType, KeyState.UP_TO_DATE), id);
+		if (!prefetched) {
+			final Map<Identifier, XmlIdentifier> idXmlIdMap;
+			try {
+				idXmlIdMap = XmlIdentifierDatabase.retrievePrefetchedMap(importType);
+			} catch (final RetrieveObjectException e) {
+				Log.errorException(e);
+				return;
+			}
+			for (final Identifier id : idXmlIdMap.keySet()) {
+				final XmlIdentifier xmlId =  idXmlIdMap.get(id);
+				FORWARD_MAP.put(new Key(id, importType, KeyState.UP_TO_DATE), xmlId);
+				REVERSE_MAP.put(new XmlKey(xmlId, importType, KeyState.UP_TO_DATE), id);
+			}
+			prefetched = true;
 		}
 	}
 
@@ -257,8 +262,8 @@ public final class LocalXmlIdentifierPool {
 	
 	/**
 	 * @author Maxim Selivanov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.4 $, $Date: 2005/09/11 11:45:47 $
+	 * @author $Author: max $
+	 * @version $Revision: 1.5 $, $Date: 2005/09/11 15:18:05 $
 	 * @module general
 	 */
 	private abstract static class State {
@@ -275,8 +280,8 @@ public final class LocalXmlIdentifierPool {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.4 $, $Date: 2005/09/11 11:45:47 $
+	 * @author $Author: max $
+	 * @version $Revision: 1.5 $, $Date: 2005/09/11 15:18:05 $
 	 * @module general
 	 */
 	static final class Key extends State {
@@ -344,8 +349,8 @@ public final class LocalXmlIdentifierPool {
 	
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.4 $, $Date: 2005/09/11 11:45:47 $
+	 * @author $Author: max $
+	 * @version $Revision: 1.5 $, $Date: 2005/09/11 15:18:05 $
 	 * @module general
 	 */
 	private static class XmlKey extends State{
