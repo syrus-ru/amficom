@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.26 2005/09/07 18:33:01 bass Exp $
+ * $Id: SchemeActions.java,v 1.27 2005/09/11 15:28:45 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,7 @@ import java.util.SortedSet;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import com.jgraph.graph.ConnectionSet;
@@ -36,6 +37,7 @@ import com.jgraph.graph.Port;
 import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
@@ -60,6 +62,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
+import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.NumberedComparator;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
@@ -84,8 +87,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/09/07 18:33:01 $
+ * @author $Author: stas $
+ * @version $Revision: 1.27 $, $Date: 2005/09/11 15:28:45 $
  * @module schemeclient
  */
 
@@ -103,7 +106,7 @@ public class SchemeActions {
 			case DeviceGroup.SCHEME_ELEMENT:
 				SchemeElement se = groups[i].getSchemeElement();
 				DeviceCell cell = GraphActions.getMainCell(groups[i]);
-				if (cell != null) {
+				if (cell != null && se != null) {
 					GraphActions.setText(graph, cell, se.getLabel());
 					ImageIcon icon = null;
 					if (se.getSymbol() != null)
@@ -114,7 +117,7 @@ public class SchemeActions {
 			case DeviceGroup.PROTO_ELEMENT:
 				SchemeProtoElement proto = groups[i].getProtoElement();
 				cell = GraphActions.getMainCell(groups[i]);
-				if (cell != null) {
+				if (cell != null && proto != null) {
 					GraphActions.setText(graph, cell, proto.getLabel());
 					ImageIcon icon = null;
 					if (proto.getSymbol() != null)
@@ -125,7 +128,7 @@ public class SchemeActions {
 			case DeviceGroup.SCHEME:
 				Scheme scheme = groups[i].getScheme();
 				cell = GraphActions.getMainCell(groups[i]);
-				if (cell != null) {
+				if (cell != null && scheme != null) {
 					GraphActions.setText(graph, cell, scheme.getLabel());
 					ImageIcon icon = null;
 					if (scheme.getSymbol() != null)
@@ -366,31 +369,44 @@ public class SchemeActions {
 		}
 	}
 	
-	public static Map<DefaultGraphCell, DefaultGraphCell> insertSEbyPE(SchemeGraph graph, SchemeElement schemeElement, Point p, boolean doClone) {
-		Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
-		SchemeImageResource res = schemeElement.getUgoCell();
-		if (res == null) {
+	public static void insertSEbyPE(SchemeGraph graph, SchemeElement schemeElement, Map<Identifier, Identifier>clonedIds, Point p, boolean doClone) {
+		SchemeImageResource ugoRes = schemeElement.getUgoCell();
+		SchemeImageResource schemeRes = schemeElement.getSchemeCell();
+		if (ugoRes == null) {
 			try {
-				schemeElement.setUgoCell(SchemeObjectsFactory.createSchemeImageResource());
+				ugoRes = SchemeObjectsFactory.createSchemeImageResource();
+				schemeElement.setUgoCell(ugoRes);
 			} catch (CreateObjectException e) {
 				Log.errorException(e);
-				return null;
+				return;
 			}
-			schemeElement.getUgoCell().setData(schemeElement.getSchemeCell().getData());
-			res = schemeElement.getSchemeCell();
-		} else { // write cloned ids to SchemeCell 
+
+			// open scheme cell and save to ugo
 			ApplicationContext internalContext =  new ApplicationContext();
 			internalContext.setDispatcher(new Dispatcher());
 			UgoTabbedPane pane = new UgoTabbedPane(internalContext);
 			SchemeGraph invisibleGraph = pane.getGraph();
-			SchemeImageResource res1 = schemeElement.getSchemeCell();
-			Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = openSchemeImageResource(invisibleGraph, res1, doClone);
+			Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = openSchemeImageResource(invisibleGraph, schemeRes, doClone);
 			SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
-			res1.setData((List)invisibleGraph.getArchiveableState());
+			ugoRes.setData((List)invisibleGraph.getArchiveableState());
+		} else {
+			// open scheme cell and save to scheme
+			ApplicationContext internalContext =  new ApplicationContext();
+			internalContext.setDispatcher(new Dispatcher());
+			UgoTabbedPane pane = new UgoTabbedPane(internalContext);
+			SchemeGraph invisibleGraph = pane.getGraph();
+			Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = openSchemeImageResource(invisibleGraph, schemeRes, doClone);
+			SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+			schemeRes.setData((List)invisibleGraph.getArchiveableState());
+
+			// open ugo cell and save to ugo
+			GraphActions.clearGraph(invisibleGraph);
+			clonedObjects = openSchemeImageResource(invisibleGraph, ugoRes, doClone);
+			SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+			ugoRes.setData((List)invisibleGraph.getArchiveableState());
 		}
-		Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = openSchemeImageResource(graph, res, doClone, p, true); 
-		SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
-		return clonedObjects;
+		// fanally open ugo to current graph
+		openSchemeImageResource(graph, ugoRes, doClone, p, true); 
 	}
 	
 	/**
@@ -850,6 +866,12 @@ public class SchemeActions {
 
 		GraphActions.setObjectBackColor(graph, port, determinePortColor(sp, sl));
 		
+		connect(sp, sl, is_source);
+		
+		return true;
+	}
+	
+	public static void connect(SchemeCablePort sp, SchemeCableLink sl, boolean is_source) {
 		IdlDirectionType direction = sp.getDirectionType().equals(IdlDirectionType._IN) ? IdlDirectionType._OUT : IdlDirectionType._IN;
 		List<SchemePort> ports = new ArrayList<SchemePort>(findPorts(sp.getParentSchemeDevice(), direction));
 		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(sl.getSchemeCableThreads());	
@@ -867,8 +889,6 @@ public class SchemeActions {
 				thread.setTargetSchemePort(sport);
 			}
 		}
-		
-		return true;
 	}
 
 	public static void disconnectSchemeCableLink(SchemeGraph graph,
@@ -912,6 +932,37 @@ public class SchemeActions {
 				}
 			}
 		}
+	}
+	
+	public static  DefaultPort getSuitablePort(CablePortCell sourcePortCell, Identifier cableId) throws CreateObjectException {
+		if (sourcePortCell != null) {
+			for (Object obj : sourcePortCell.getChildren()) {
+				DefaultPort defaultPort = (DefaultPort)obj;
+				if (defaultPort.getUserObject().equals("Center")) {
+					Set edges = defaultPort.getEdges();
+					if (edges.isEmpty()) {
+						return defaultPort;
+					} else if (edges.size() == 1) {
+						 Object link = edges.iterator().next();
+						 if (link instanceof DefaultCableLink && ((DefaultCableLink)link).getSchemeCableLinkId().equals(cableId)) {
+							 JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+										LangModelScheme.getString("Message.information.schemecablelink_already_connected"),  //$NON-NLS-1$
+										LangModelScheme.getString("Message.information"),  //$NON-NLS-1$
+										JOptionPane.INFORMATION_MESSAGE);
+							 throw new CreateObjectException("SchemeCableLink already connected");
+						 }
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+									LangModelScheme.getString("Message.error.another_schemecablelink_connected"),  //$NON-NLS-1$
+									LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
+									JOptionPane.ERROR_MESSAGE);
+						throw new CreateObjectException("Another SchemeCableLink connected");
+					} else {
+						throw new CreateObjectException("Incorrect scheme! More then one links connected to port");
+					}
+				}
+			}
+		}
+		return null;
 	}
 	
 	public static Set<SchemePort> findPorts(SchemeDevice dev, IdlDirectionType direction) {
