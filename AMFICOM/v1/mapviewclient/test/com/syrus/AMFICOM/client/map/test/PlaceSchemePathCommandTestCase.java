@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommandTestCase.java,v 1.1 2005/08/18 14:20:30 krupenn Exp $
+ * $Id: PlaceSchemePathCommandTestCase.java,v 1.2 2005/09/11 14:32:40 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
 
 public class PlaceSchemePathCommandTestCase extends SchemeBindingTestCase {
 
-	public void _test1() {
+	public void test1() {
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
 		startcommand.execute();
@@ -49,7 +49,7 @@ public class PlaceSchemePathCommandTestCase extends SchemeBindingTestCase {
 		assertSame(measurementPath.getEndNode(), this.building2);
 	}
 
-	public void _test2() {
+	public void test2() {
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
 		startcommand.execute();
@@ -86,7 +86,7 @@ public class PlaceSchemePathCommandTestCase extends SchemeBindingTestCase {
 		assertSame(measurementPath.getEndNode(), this.building2);
 	}
 
-	public void _test3() {
+	public void test3() {
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
 		startcommand.execute();
@@ -123,7 +123,7 @@ public class PlaceSchemePathCommandTestCase extends SchemeBindingTestCase {
 		assertSame(measurementPath.getEndNode(), this.building2);
 	}
 
-	public void _test4() {
+	public void test4() {
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
 		startcommand.execute();
@@ -169,7 +169,7 @@ public class PlaceSchemePathCommandTestCase extends SchemeBindingTestCase {
 		assertSame(measurementPath.getEndNode(), this.building2);
 	}
 
-	public void _test5() {
+	public void test5() {
 		PlaceSchemeElementCommand startcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element0, this.building1location);
 		startcommand.setNetMapViewer(METS.netMapViewer);
 		startcommand.execute();
