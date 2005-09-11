@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.4 2005/09/11 15:18:27 stas Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.5 2005/09/11 15:37:31 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import java.util.logging.Level;
 
 import org.apache.xmlbeans.XmlOptions;
 
-import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.configuration.xml.XmlCableLinkType;
 import com.syrus.AMFICOM.configuration.xml.XmlCableLinkTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlConfigurationLibrary;
@@ -53,12 +52,12 @@ import com.syrus.impexp.unicablemap.objects.ThreadType;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.4 $, $Date: 2005/09/11 15:18:27 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.5 $, $Date: 2005/09/11 15:37:31 $
  * @module importUCM
  */
 
-public class UCMSchemeExportCommand extends AbstractCommand {
+public class UCMSchemeExportCommand {
 	UniCableMapDatabase ucmDatabase;
 	
 	HashMap<Integer, CableType> cabletypes = new HashMap<Integer, CableType>();

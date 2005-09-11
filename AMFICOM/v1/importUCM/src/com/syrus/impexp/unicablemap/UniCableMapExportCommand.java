@@ -9,8 +9,6 @@ import java.util.LinkedList;
 
 import org.apache.xmlbeans.XmlOptions;
 
-import com.syrus.AMFICOM.client.model.AbstractCommand;
-import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.xml.MapsDocument;
 import com.syrus.AMFICOM.map.xml.XmlCollector;
@@ -32,10 +30,10 @@ import com.syrus.impexp.unicablemap.map.Site;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/09/11 15:15:08 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/11 15:37:31 $
  * @module mapviewclient_v1
  */
-public class UniCableMapExportCommand extends AbstractCommand 
+public class UniCableMapExportCommand 
 {
 	UniCableMapDatabase ucmDatabase;
 
@@ -75,11 +73,9 @@ public class UniCableMapExportCommand extends AbstractCommand
 //			else if(ext.equals(".esf")) {
 //				saveESF(this.fileName);
 //			}
-			setResult(Command.RESULT_OK);
 		}
 		catch (SQLException e) {
 			e.printStackTrace();
-			setResult(Command.RESULT_NO);
 		}
 	}
 	

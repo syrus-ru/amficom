@@ -13,11 +13,13 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.WindowEvent;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.util.Collection;
+import java.util.Properties;
 
 import javax.swing.ButtonGroup;
 import javax.swing.ButtonModel;
@@ -35,14 +37,13 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
+import com.syrus.impexp.ChoosableFileFilter;
 import com.syrus.impexp.ImportExportException;
-import com.syrus.util.ApplicationProperties;
 
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/09/11 15:15:08 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/11 15:37:31 $
  * @module mapviewclient_v1
  */
 public class UniCableMapDialog extends JFrame 
@@ -122,11 +123,11 @@ public class UniCableMapDialog extends JFrame
 	 */
 	private void jbInit() throws Exception
 	{
-		final String	BUNDLE_NAME		= "impexp";
-		ApplicationProperties.init(BUNDLE_NAME);
+		Properties properties = new Properties();
+		properties.load(new FileInputStream("impexp"));
 		
-		String input = ApplicationProperties.getString("base", "");
-		String output = ApplicationProperties.getString("output", "");
+		String input = properties.getProperty("base");
+		String output = properties.getProperty("output");
 		
 		Dimension size = new Dimension(600, 530);
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
