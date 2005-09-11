@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.3 2005/09/11 16:32:13 max Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.4 2005/09/11 16:39:38 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseConnection;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.3 $, $Date: 2005/09/11 16:32:13 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/09/11 16:39:38 $
  * @module general
  */
 
@@ -116,7 +116,7 @@ final class XmlIdentifierDatabase {
 
 	public static Map<Identifier, XmlIdentifier> retrievePrefetchedMap(final String importType) throws RetrieveObjectException {
 		Map<Identifier, XmlIdentifier> idXmlIdMap = new HashMap<Identifier, XmlIdentifier>(); 
-		if (importType == null || importType.equals("")) {
+		if (importType == null || importType.length() == 0) {
 			return idXmlIdMap;
 		}
 		StringBuilder sql = new StringBuilder();
