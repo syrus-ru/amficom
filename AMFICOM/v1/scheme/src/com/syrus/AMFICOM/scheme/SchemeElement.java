@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.95 2005/09/09 18:52:50 bass Exp $
+ * $Id: SchemeElement.java,v 1.96 2005/09/11 14:29:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.95 $, $Date: 2005/09/09 18:52:50 $
+ * @version $Revision: 1.96 $, $Date: 2005/09/11 14:29:11 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1534,7 +1534,7 @@ public final class SchemeElement extends AbstractSchemeElement
 
 		if (schemeElement.isSetSchemes()) {
 			for (final XmlScheme scheme : schemeElement.getSchemes().getSchemeArray()) {
-				Scheme.createInstance(super.creatorId, scheme, importType);
+				Scheme.createInstance(super.creatorId, scheme);
 			}
 		}
 		if (schemeElement.isSetSchemeElements()) {
