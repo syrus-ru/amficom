@@ -1,5 +1,5 @@
 /*-
- * $Id: ThreadType.java,v 1.3 2005/09/11 15:18:27 stas Exp $
+ * $Id: ThreadType.java,v 1.4 2005/09/11 20:24:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ public class ThreadType {
 	private String id;
 	private String codename;
 	private String linkTypeId;
-	private Integer cableTypeId;
+	private String cableTypeId;
 
 	public ThreadType(String id) {
 		this.id = id;
@@ -38,7 +38,7 @@ public class ThreadType {
 		return this.linkTypeId.toString();
 	}
 	
-	public void setCableTypeId(Integer typeId) {
+	public void setCableTypeId(String typeId) {
 		this.cableTypeId = typeId;
 	}
 	

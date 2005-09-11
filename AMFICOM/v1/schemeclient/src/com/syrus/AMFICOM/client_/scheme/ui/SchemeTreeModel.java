@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.36 2005/09/11 16:17:22 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.37 2005/09/11 20:23:53 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.36 $, $Date: 2005/09/11 16:17:22 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/11 20:23:53 $
  * @module schemeclient
  */
 
@@ -157,7 +157,9 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					}			
 					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						SchemeElement sc = (SchemeElement) it.next();
-						node.addChild(new PopulatableIconedNode(this, sc));
+						if (sc.getKind().equals(IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER)) {
+							node.addChild(new PopulatableIconedNode(this, sc));
+						}
 					}
 				} catch (ApplicationException e) {
 					Log.errorException(e);
@@ -399,7 +401,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 
 			for (Item child : toRemove) {
 				child.setParent(null);
-			}			
+			}
 			for (Iterator it = toAdd.iterator(); it.hasNext();) {
 				Scheme sc = (Scheme) it.next();
 				if (sc.getParentSchemeElement() == null) {

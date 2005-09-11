@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.2 2005/09/07 12:47:46 stas Exp $
+ * $Id: Port.java,v 1.3 2005/09/11 20:24:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,9 +68,9 @@ public class Port {
 		}
 		xmlPort.setDirectionType(this.directionType);
 		
-		XmlIdentifier portTypeId = xmlPort.addNewCablePortTypeId();
-		portTypeId.setStringValue(CABLE_PORT_TYPE);
-		xmlPort.setCablePortTypeId(portTypeId);
+//		XmlIdentifier portTypeId = xmlPort.addNewCablePortTypeId();
+//		portTypeId.setStringValue(CABLE_PORT_TYPE);
+//		xmlPort.setCablePortTypeId(portTypeId);
 		return xmlPort;
 	}
 	

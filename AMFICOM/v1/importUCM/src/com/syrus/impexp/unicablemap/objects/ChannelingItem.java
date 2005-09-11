@@ -1,5 +1,5 @@
 /*-
- * $Id: ChannelingItem.java,v 1.2 2005/09/07 12:47:46 stas Exp $
+ * $Id: ChannelingItem.java,v 1.3 2005/09/11 20:24:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,12 @@ import com.syrus.AMFICOM.scheme.xml.XmlCableChannelingItem;
 
 public class ChannelingItem {
 	private String id;
-	private Integer number;
+	private int number;
 	private String tunnelId;
 	private String startSiteId;
 	private String endSiteId;
-	private Integer rowX;
-	private Integer placeY;
+	private int rowX;
+	private int placeY;
 	private String parentId;
 	
 	private transient double length = 0;
@@ -35,15 +35,15 @@ public class ChannelingItem {
 		this.parentId = parentId;
 	}
 
-	public void setNumber(Integer number) {
+	public void setNumber(int number) {
 		this.number = number;
 	}
 
-	public void setPlaceY(Integer placeY) {
+	public void setPlaceY(int placeY) {
 		this.placeY = placeY;
 	}
 
-	public void setRowX(Integer rowX) {
+	public void setRowX(int rowX) {
 		this.rowX = rowX;
 	}
 

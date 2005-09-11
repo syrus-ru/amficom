@@ -1,5 +1,5 @@
 /*-
- * $Id: CableType.java,v 1.4 2005/09/11 15:25:58 stas Exp $
+ * $Id: CableType.java,v 1.5 2005/09/11 20:24:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,12 +22,12 @@ import com.syrus.impexp.unicablemap.UniCableMapType;
 public class CableType {
 	public static final String TYPE = UniCableMapType.UCM_CABLE_TYPE;
 	
-	private int id;
+	private String id;
 	private String name;
 	private Collection<ThreadType> threadTypes = new LinkedList<ThreadType>();
 	private int threadNum;
 	
-	public CableType(int id) {
+	public CableType(String id) {
 		this.id = id;
 	}
 		
@@ -35,7 +35,7 @@ public class CableType {
 		return this.name;
 	}
 
-	public int getId() {
+	public String getId() {
 		return this.id;
 	}
 
@@ -61,7 +61,7 @@ public class CableType {
 		XmlCableLinkType xmlLT = XmlCableLinkType.Factory.newInstance();
 		
 		XmlIdentifier uid = xmlLT.addNewId();
-		uid.setStringValue(String.valueOf(this.id));
+		uid.setStringValue(this.id);
 		xmlLT.setName(this.name);
 		xmlLT.setCodename(this.name);
 		xmlLT.setSort(XmlLinkTypeSort.OPTICAL);

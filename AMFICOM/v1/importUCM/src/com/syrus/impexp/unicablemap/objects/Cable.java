@@ -1,5 +1,5 @@
 /*-
- * $Id: Cable.java,v 1.3 2005/09/11 15:25:58 stas Exp $
+ * $Id: Cable.java,v 1.4 2005/09/11 20:24:19 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -107,7 +107,7 @@ public class Cable {
 		
 		if (this.typeId == null) {
 			System.err.println("Link typeIs is null");
-			this.typeId = 0;
+			this.typeId = Integer.valueOf(0);
 		}
 		
 		XmlIdentifier linkTypeId = xmlCL.addNewCableLinkTypeId();
