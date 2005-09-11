@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.85 2005/09/11 12:46:07 bass Exp $
+ * $Id: Scheme.java,v 1.86 2005/09/11 13:14:07 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.85 $, $Date: 2005/09/11 12:46:07 $
+ * @version $Revision: 1.86 $, $Date: 2005/09/11 13:14:07 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -286,16 +286,15 @@ public final class Scheme extends AbstractCloneableDomainMember
 	/**
 	 * @param creatorId
 	 * @param xmlScheme
-	 * @param importType
 	 * @throws CreateObjectException
 	 */
 	public static Scheme createInstance(final Identifier creatorId,
-			final XmlScheme xmlScheme,
-			final String importType)
+			final XmlScheme xmlScheme)
 	throws CreateObjectException {
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
+			final String importType = xmlScheme.getImportType();
 			final Identifier id = Identifier.fromXmlTransferable(xmlScheme.getId(), SCHEME_CODE, importType);
 			Scheme scheme = StorableObjectPool.getStorableObject(id, true);
 			if (scheme == null) {
