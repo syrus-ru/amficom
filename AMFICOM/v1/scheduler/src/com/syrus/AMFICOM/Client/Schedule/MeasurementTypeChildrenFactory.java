@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.12 2005/08/31 09:26:01 bob Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.13 2005/09/11 15:27:43 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/31 09:26:01 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/09/11 15:27:43 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -85,7 +85,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 				for (Iterator it = measurementPorts.iterator(); it.hasNext();) {
 					MeasurementPort measurementPort = (MeasurementPort) it.next();
 
-					MeasurementPortType measurementPortType = (MeasurementPortType) measurementPort.getType();
+					MeasurementPortType measurementPortType = measurementPort.getType();
 					measurementPortTypeIds.add(measurementPortType.getId());
 					measurementTypes.addAll(measurementPortType.getMeasurementTypes());
 				}

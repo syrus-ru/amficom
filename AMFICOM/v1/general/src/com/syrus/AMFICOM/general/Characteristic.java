@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.60 2005/09/09 18:12:53 bass Exp $
+ * $Id: Characteristic.java,v 1.61 2005/09/11 15:27:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,12 +22,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/09/09 18:12:53 $
+ * @version $Revision: 1.61 $, $Date: 2005/09/11 15:27:42 $
  * @author $Author: bass $
  * @module general
  */
 public final class Characteristic extends AbstractCloneableStorableObject
-		implements TypedObject, ReverseDependencyContainer {
+		implements TypedObject<CharacteristicType>, ReverseDependencyContainer {
 	private static final long serialVersionUID = -2746555753961778403L;
 
 	private CharacteristicType type;

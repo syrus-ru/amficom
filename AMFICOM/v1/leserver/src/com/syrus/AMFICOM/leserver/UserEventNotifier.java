@@ -1,5 +1,5 @@
 /*
- * $Id: UserEventNotifier.java,v 1.7 2005/08/08 11:42:21 arseniy Exp $
+ * $Id: UserEventNotifier.java,v 1.8 2005/09/11 15:27:43 bass Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/08 11:42:21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/09/11 15:27:43 $
+ * @author $Author: bass $
  * @module leserver
  */
 final class UserEventNotifier extends SleepButWorkThread {
@@ -53,7 +53,7 @@ final class UserEventNotifier extends SleepButWorkThread {
 		synchronized (this.eventQueue) {
 			for (final Iterator<Event> it1 = this.eventQueue.iterator(); it1.hasNext();) {
 				final Event event = it1.next();
-				final EventType eventType = (EventType) event.getType();
+				final EventType eventType = event.getType();
 				final Set userAlertKinds = eventType.getUserAlertKinds(this.userId);
 				boolean delivered = false;
 				for (final Iterator it2 = userAlertKinds.iterator(); it2.hasNext();) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.110 2005/09/09 18:52:51 bass Exp $
+ * $Id: PhysicalLink.java,v 1.111 2005/09/11 15:27:43 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,10 +64,12 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.110 $, $Date: 2005/09/09 18:52:51 $
+ * @version $Revision: 1.111 $, $Date: 2005/09/11 15:27:43 $
  * @module map
  */
-public class PhysicalLink extends StorableObject implements TypedObject, MapElement, XmlBeansTransferable<XmlPhysicalLink> {
+public class PhysicalLink extends StorableObject
+		implements TypedObject<PhysicalLinkType>, MapElement,
+		XmlBeansTransferable<XmlPhysicalLink> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -339,7 +341,7 @@ public class PhysicalLink extends StorableObject implements TypedObject, MapElem
 				nodeLinkIds);
 	}
 
-	public PhysicalLinkType getType() {
+	public final PhysicalLinkType getType() {
 		return this.physicalLinkType;
 	}
 

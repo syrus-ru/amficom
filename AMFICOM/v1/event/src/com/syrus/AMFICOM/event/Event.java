@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.40 2005/09/08 18:26:31 bass Exp $
+ * $Id: Event.java,v 1.41 2005/09/11 15:27:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,19 +28,19 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/09/08 18:26:31 $
+ * @version $Revision: 1.41 $, $Date: 2005/09/11 15:27:43 $
  * @author $Author: bass $
  * @module event
  */
 
-public final class Event extends StorableObject implements TypedObject {
+public final class Event extends StorableObject
+		implements TypedObject<EventType> {
 	private static final long serialVersionUID = 3977015150102788401L;
 
 	private EventType type;
@@ -167,7 +167,7 @@ public final class Event extends StorableObject implements TypedObject {
 				esIdsT);
 	}
 
-	public StorableObjectType getType() {
+	public EventType getType() {
 		return this.type;
 	}
 

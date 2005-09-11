@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.88 2005/09/09 18:52:51 bass Exp $
+ * $Id: SiteNode.java,v 1.89 2005/09/11 15:27:43 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,10 +55,11 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.88 $, $Date: 2005/09/09 18:52:51 $
+ * @version $Revision: 1.89 $, $Date: 2005/09/11 15:27:43 $
  * @module map
  */
-public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTransferable<XmlSiteNode> {
+public class SiteNode extends AbstractNode
+		implements TypedObject<SiteNodeType>, XmlBeansTransferable<XmlSiteNode> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -205,7 +206,7 @@ public class SiteNode extends AbstractNode implements TypedObject, XmlBeansTrans
 				this.attachmentSiteNodeId.getTransferable());
 	}
 
-	public SiteNodeType getType() {
+	public final SiteNodeType getType() {
 		return this.type;
 	}
 
