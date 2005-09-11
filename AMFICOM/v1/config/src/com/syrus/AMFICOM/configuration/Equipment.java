@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.119 2005/09/11 15:27:42 bass Exp $
+ * $Id: Equipment.java,v 1.120 2005/09/11 17:24:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,9 +8,14 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -23,6 +28,7 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.configuration.corba.IdlEquipment;
 import com.syrus.AMFICOM.configuration.corba.IdlEquipmentHelper;
+import com.syrus.AMFICOM.configuration.xml.XmlEquipment;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
@@ -36,18 +42,21 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
+import com.syrus.AMFICOM.general.UpdateObjectException;
+import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.119 $, $Date: 2005/09/11 15:27:42 $
+ * @version $Revision: 1.120 $, $Date: 2005/09/11 17:24:58 $
  * @author $Author: bass $
  * @module config
  */
-
 public final class Equipment extends DomainMember
 		implements MonitoredDomainMember, Characterizable,
-		TypedObject<EquipmentType> {
+		TypedObject<EquipmentType>, XmlBeansTransferable<XmlEquipment> {
 
 	private static final long serialVersionUID = -6115401698444070841L;
 
@@ -113,6 +122,25 @@ public final class Equipment extends DomainMember
 		this.swSerial = swSerial;
 		this.swVersion = swVersion;
 		this.inventoryNumber = inventoryNumber;
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param created
+	 * @param creatorId
+	 */
+	private Equipment(final Identifier id,
+			final Date created,
+			final Identifier creatorId) {
+		super(id,
+				created,
+				created,
+				creatorId,
+				creatorId,
+				StorableObjectVersion.createInitial(),
+				VOID_IDENTIFIER);
 	}
 
 	/**
@@ -185,6 +213,36 @@ public final class Equipment extends DomainMember
 		}
 	}
 
+	/**
+	 * @param creatorId
+	 * @param xmlEquipment
+	 * @param importType
+	 * @throws CreateObjectException
+	 */
+	public static Equipment createInstance(final Identifier creatorId,
+			final XmlEquipment xmlEquipment,
+			final String importType)
+	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
+		try {
+			final Identifier id = Identifier.fromXmlTransferable(xmlEquipment.getId(), EQUIPMENT_CODE, importType);
+			Equipment equipment = StorableObjectPool.getStorableObject(id, true);
+			if (equipment == null) {
+				equipment = new Equipment(id, new Date(), creatorId);
+			}
+			equipment.fromXmlTransferable(xmlEquipment, importType);
+			assert equipment.isValid() : OBJECT_BADLY_INITIALIZED;
+			equipment.markAsChanged();
+			return equipment;
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
+		}
+	}
+
 	@Override
 	protected synchronized void fromTransferable(final IdlStorableObject transferable) throws ApplicationException {
 		IdlEquipment et = (IdlEquipment) transferable;
@@ -204,6 +262,63 @@ public final class Equipment extends DomainMember
 		this.swSerial = et.swSerial;
 		this.swVersion = et.swVersion;
 		this.inventoryNumber = et.inventoryNumber;
+	}
+
+	/**
+	 * @param equipment
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 */
+	public void fromXmlTransferable(final XmlEquipment equipment,
+			final String importType)
+	throws ApplicationException {
+		XmlComplementorRegistry.complementStorableObject(equipment, EQUIPMENT_CODE, importType);
+
+		this.name = equipment.getName();
+		this.description = equipment.isSetDescription()
+				? equipment.getDescription()
+				: "";
+		this.supplier = equipment.isSetSupplier()
+				? equipment.getSupplier()
+				: "";
+		this.supplierCode = equipment.isSetSupplierCode()
+				? equipment.getSupplierCode()
+				: "";
+		this.latitude = equipment.getLatitude();
+		this.longitude = equipment.getLongitude();
+		this.hwSerial = equipment.isSetHwSerial()
+				? equipment.getHwSerial()
+				: "";
+		this.hwVersion = equipment.isSetHwVersion()
+				? equipment.getHwVersion()
+				: "";
+		this.swSerial = equipment.isSetSwSerial()
+				? equipment.getSwSerial()
+				: "";
+		this.swVersion = equipment.isSetSwVersion()
+				? equipment.getSwVersion()
+				: "";
+		this.inventoryNumber = equipment.isSetInventoryNumber()
+				? equipment.getInventoryNumber()
+				: "";
+		if (equipment.isSetDomainId()) {
+			super.setDomainId0(Identifier.fromXmlTransferable(equipment.getDomainId(), importType));
+		} else {
+			throw new UpdateObjectException("Equipment.fromXmlTransferable() | "
+					+ XML_BEAN_NOT_COMPLETE);
+		}
+		this.type = StorableObjectPool.getStorableObject(
+				Identifier.fromXmlTransferable(equipment.getEquipmentTypeId(), importType),
+				true);
+		this.imageId = equipment.isSetSymbolId()
+				? Identifier.fromXmlTransferable(equipment.getSymbolId(), importType)
+				: VOID_IDENTIFIER;
+		if (equipment.isSetCharacteristics()) {
+			for (final XmlCharacteristic characteristic : equipment.getCharacteristics().getCharacteristicArray()) {
+				Characteristic.createInstance(super.creatorId, characteristic, importType);
+			}
+		}
 	}
 
 	/**
@@ -233,6 +348,16 @@ public final class Equipment extends DomainMember
 				this.swVersion != null ? this.swVersion : "",
 				this.inventoryNumber != null ? this.inventoryNumber : "",
 				this.imageId.getTransferable());
+	}
+
+	/**
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 */
+	public XmlEquipment getXmlTransferable(final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 
 	public EquipmentType getType() {
