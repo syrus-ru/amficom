@@ -1,5 +1,5 @@
 /*-
- * $Id: Element.java,v 1.4 2005/09/11 15:18:27 stas Exp $
+ * $Id: Element.java,v 1.5 2005/09/11 15:25:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,6 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeDeviceSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeElement;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemePort.DirectionType;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeElement.Kind;
-import com.syrus.impexp.unicablemap.TextWriter;
-import com.syrus.impexp.unicablemap.UniCableMapType;
 
 public class Element {
 
@@ -108,18 +106,6 @@ public class Element {
 	
 	public void setLabel(String label) {
 		this.label = label;
-	}
-
-	public void write(TextWriter writer) {
-		writer.startObject(UniCableMapType.UCM_MUFF);
-		writer.put("id", String.valueOf(this.id));
-		writer.put("name", this.name);
-		writer.put("eqtid", String.valueOf(this.equipmentTypeId));
-		writer.put("codenameid", this.equipmentTypeId);
-		writer.put("wellid", String.valueOf(this.wellId));
-//		writer.put("startid", String.valueOf(this.startCableId));
-//		writer.put("endid", String.valueOf(this.endCableId));
-		writer.endObject();
 	}
 	
 	public XmlSchemeElement toXMLObject(XmlIdentifier parentId) {

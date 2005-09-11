@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.1 2005/09/11 15:18:27 stas Exp $
+ * $Id: LinkType.java,v 1.2 2005/09/11 15:25:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,6 @@ package com.syrus.impexp.unicablemap.objects;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkType;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.impexp.unicablemap.TextWriter;
 import com.syrus.impexp.unicablemap.UniCableMapType;
 
 public class LinkType {
@@ -30,14 +29,6 @@ public class LinkType {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-
-	void write(TextWriter writer) {
-		writer.startObject(TYPE);
-		writer.put("id", String.valueOf(this.id));
-		writer.put("name", this.name);
-//		writer.put("threads", String.valueOf(this.threadNum));
-		writer.endObject();
 	}
 	
 	public XmlLinkType toXMLObject() {

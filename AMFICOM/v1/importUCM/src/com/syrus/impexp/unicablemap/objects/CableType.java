@@ -1,5 +1,5 @@
 /*-
- * $Id: CableType.java,v 1.3 2005/09/11 15:18:27 stas Exp $
+ * $Id: CableType.java,v 1.4 2005/09/11 15:25:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,6 @@ import com.syrus.AMFICOM.configuration.xml.XmlCableThreadType;
 import com.syrus.AMFICOM.configuration.xml.XmlCableThreadTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSort;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.impexp.unicablemap.TextWriter;
 import com.syrus.impexp.unicablemap.UniCableMapType;
 
 public class CableType {
@@ -58,14 +57,6 @@ public class CableType {
 		return this.threadTypes;
 	}
 
-	void write(TextWriter writer) {
-		writer.startObject(TYPE);
-		writer.put("id", String.valueOf(this.id));
-		writer.put("name", this.name);
-//		writer.put("threads", String.valueOf(this.threadNum));
-		writer.endObject();
-	}
-	
 	public XmlCableLinkType toXMLObject() {
 		XmlCableLinkType xmlLT = XmlCableLinkType.Factory.newInstance();
 		

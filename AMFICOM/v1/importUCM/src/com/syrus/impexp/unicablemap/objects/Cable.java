@@ -1,5 +1,5 @@
 /*-
- * $Id: Cable.java,v 1.2 2005/09/07 12:47:45 stas Exp $
+ * $Id: Cable.java,v 1.3 2005/09/11 15:25:58 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import com.syrus.AMFICOM.scheme.xml.XmlCableChannelingItemSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableLink;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThread;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThreadSeq;
-import com.syrus.impexp.unicablemap.TextWriter;
 import com.syrus.impexp.unicablemap.UniCableMapType;
 
 public class Cable {
@@ -91,18 +90,6 @@ public class Cable {
 	
 	public void setChannelingItem(ChannelingItem item) {
 		this.last = item;
-	}
-
-	public void write(TextWriter writer) {
-		writer.startObject(TYPE);
-		writer.put("id", String.valueOf(this.id));
-		writer.put("name", this.name);
-		writer.put("typeid", String.valueOf(this.typeId));
-		writer.put("codenameid", String.valueOf(this.codenameId));
-		writer.put("startid", String.valueOf(this.startId)); // муфта или кабельный ввод
-		writer.put("endid", String.valueOf(this.endId)); // муфта или кабельный ввод
-		writer.put("layoutid", String.valueOf(this.layoutId));
-		writer.endObject();
 	}
 
 	int counter = 0;

@@ -1,5 +1,5 @@
 /*-
- * $Id: MuffType.java,v 1.2 2005/09/07 12:47:46 stas Exp $
+ * $Id: MuffType.java,v 1.3 2005/09/11 15:25:58 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,6 @@ package com.syrus.impexp.unicablemap.objects;
 
 import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.impexp.unicablemap.TextWriter;
 import com.syrus.impexp.unicablemap.UniCableMapType;
 
 public class MuffType {
@@ -41,15 +40,6 @@ public class MuffType {
 
 	public void setName(String name) {
 		this.name = name;
-	}
-	
-	void write(TextWriter writer) {
-		writer.startObject(TYPE);
-		writer.put("id", String.valueOf(this.id));
-		writer.put("name", this.name);
-		writer.put("fibers", String.valueOf(this.fiberNum));
-		writer.put("cableports", String.valueOf(this.cablePortsNum));
-		writer.endObject();
 	}
 	
 	public XmlEquipmentType toXMLObject() {
