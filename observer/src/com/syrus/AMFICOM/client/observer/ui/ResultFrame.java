@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.1 2005/09/11 17:39:24 krupenn Exp $
+ * $Id: ResultFrame.java,v 1.2 2005/09/11 19:30:50 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,6 +42,7 @@ import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.controllers.ParameterController;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -56,7 +57,6 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Modeling;
 import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.ParameterSet;
-import com.syrus.AMFICOM.measurement.ParameterWrapper;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.resource.LangModelObserver;
@@ -65,7 +65,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.1 $, $Date: 2005/09/11 17:39:24 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/11 19:30:50 $
  * @module surveyclient_v1
  */
 
@@ -116,10 +116,10 @@ public class ResultFrame extends JInternalFrame implements PropertyChangeListene
 			}
 		});
 		
-		this.inParamsTableModel = new WrapperedTableModel(ParameterWrapper.getInstance(), 
-				new String[] {StorableObjectWrapper.COLUMN_NAME, ParameterWrapper.COLUMN_VALUE });
-		this.outParamsTableModel = new WrapperedTableModel(ParameterWrapper.getInstance(), 
-				new String[] {StorableObjectWrapper.COLUMN_NAME, ParameterWrapper.COLUMN_VALUE });
+		this.inParamsTableModel = new WrapperedTableModel(ParameterController.getInstance(), 
+				new String[] {StorableObjectWrapper.COLUMN_NAME, ParameterController.COLUMN_VALUE });
+		this.outParamsTableModel = new WrapperedTableModel(ParameterController.getInstance(), 
+				new String[] {StorableObjectWrapper.COLUMN_NAME, ParameterController.COLUMN_VALUE });
 
 		WrapperedTable inParamsTable = new WrapperedTable(this.inParamsTableModel);
 		WrapperedTable outParamsTable = new WrapperedTable(this.outParamsTableModel);

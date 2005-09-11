@@ -1,6 +1,7 @@
 package com.syrus.AMFICOM.client.observer;
 
 import java.awt.Image;
+import java.awt.Toolkit;
 
 import javax.swing.UIManager;
 
@@ -20,7 +21,7 @@ public class Observer extends AbstractApplication {
 	protected void init() {
 		super.init();		
 		super.aContext.setApplicationModel(new DefaultObserverApplicationModelFactory().create());
-		super.startMainFrame(new ObserverMainFrame(this.aContext), (Image) UIManager.get(ObserverResourceKeys.ICON_OBSERVE));
+		super.startMainFrame(new ObserverMainFrame(this.aContext), Toolkit.getDefaultToolkit().getImage("images/main/observe_mini.gif"));
 	}
 	
 	public static void main(String[] args) {

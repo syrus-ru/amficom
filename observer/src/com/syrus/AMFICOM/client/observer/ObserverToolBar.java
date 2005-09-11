@@ -1,5 +1,7 @@
 package com.syrus.AMFICOM.client.observer;
 
+import java.awt.Dimension;
+
 import javax.swing.JButton;
 import javax.swing.UIManager;
 
@@ -12,6 +14,7 @@ import com.syrus.AMFICOM.resource.LangModelObserver;
 import com.syrus.AMFICOM.resource.ObserverResourceKeys;
 
 public class ObserverToolBar extends AbstractMainToolBar {
+
 	public ObserverToolBar() {
 		initItems();
 	}

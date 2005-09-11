@@ -1,7 +1,9 @@
 package com.syrus.AMFICOM.client.model;
 
+import java.awt.Image;
 import java.awt.Toolkit;
 
+import javax.swing.ImageIcon;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.model.ApplicationModel;
@@ -76,28 +78,41 @@ public class ObserverApplicationModel extends ApplicationModel {
 		this.initUIConstats();
 	}
 	
+	public static final int IMG_SIZE = 16;
+
 	private void initUIConstats() {
-		UIManager.put(ObserverResourceKeys.ICON_OBSERVE, Toolkit
-				.getDefaultToolkit().getImage("images/main/observe_mini.gif"));
-		UIManager.put(ObserverResourceKeys.ICON_MAP_OPEN, Toolkit
-				.getDefaultToolkit().getImage("images/main/map_mini.gif"));
-		UIManager.put(ObserverResourceKeys.ICON_SCHEME_OPEN, Toolkit
-				.getDefaultToolkit().getImage("images/main/schematics_mini.gif"));
-		UIManager.put(ObserverResourceKeys.ICON_ARCHIVE, Toolkit
-				.getDefaultToolkit().getImage("images/archive_mini.gif"));
-		UIManager.put(ObserverResourceKeys.ICON_ALARM, Toolkit
-				.getDefaultToolkit().getImage("images/alarm_bell_red.gif"));
-		UIManager.put(ObserverResourceKeys.ICON_RESULT, Toolkit
-				.getDefaultToolkit().getImage("images/result.gif"));
-		UIManager.put(ObserverResourceKeys.ICON_SCHEDULER, Toolkit
-				.getDefaultToolkit().getImage("images/main/scheduling_mini.gif"));
-		UIManager.put(ObserverResourceKeys.ICON_ANALYSIS, Toolkit
-				.getDefaultToolkit().getImage("images/main/analyse_mini.gif"));
-		UIManager.put(ObserverResourceKeys.ICON_SURVEY, Toolkit
-				.getDefaultToolkit().getImage("images/main/survey_mini.gif"));
-		UIManager.put(ObserverResourceKeys.ICON_EVALUATION, Toolkit
-				.getDefaultToolkit().getImage("images/main/evaluation_mini.gif"));
-		UIManager.put(ObserverResourceKeys.ICON_PREDICTION, Toolkit
-				.getDefaultToolkit().getImage("images/main/prognosis_mini.gif"));
+		UIManager.put(ObserverResourceKeys.ICON_OBSERVE, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/main/observe_mini.gif").
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
+		UIManager.put(ObserverResourceKeys.ICON_MAP_OPEN, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/main/map_mini.gif").
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
+		UIManager.put(ObserverResourceKeys.ICON_SCHEME_OPEN, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/main/schematics_mini.gif").
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
+		UIManager.put(ObserverResourceKeys.ICON_ARCHIVE, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/archive_mini.gif").
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
+		UIManager.put(ObserverResourceKeys.ICON_ALARM, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/alarm_bell_red.gif").
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
+		UIManager.put(ObserverResourceKeys.ICON_RESULT, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/result.gif").
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
+		UIManager.put(ObserverResourceKeys.ICON_SCHEDULER, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/main/scheduling_mini.gif").
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
+		UIManager.put(ObserverResourceKeys.ICON_ANALYSIS, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/main/analyse_mini.gif").
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
+		UIManager.put(ObserverResourceKeys.ICON_SURVEY, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/main/survey_mini.gif").
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
+		UIManager.put(ObserverResourceKeys.ICON_EVALUATION, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/main/evaluation_mini.gif").
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
+		UIManager.put(ObserverResourceKeys.ICON_PREDICTION, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/main/prognosis_mini.gif").
+				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 	}
 }

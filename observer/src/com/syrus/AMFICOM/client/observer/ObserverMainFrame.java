@@ -20,6 +20,7 @@ import com.syrus.AMFICOM.client.UI.WindowArranger;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.command.editor.ViewMapWindowCommand;
+import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapPropertiesEventHandler;
 import com.syrus.AMFICOM.client.map.ui.MapViewTreeEventHandler;
 import com.syrus.AMFICOM.client.map.ui.MapViewTreeModel;
@@ -45,6 +46,8 @@ import com.syrus.AMFICOM.client.observer.command.start.OpenSchemeEditorCommand;
 import com.syrus.AMFICOM.client.observer.ui.AlarmFrame;
 import com.syrus.AMFICOM.client.observer.ui.ObserverTreeModel;
 import com.syrus.AMFICOM.client.observer.ui.ResultFrame;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeViewerFrame;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
@@ -103,7 +106,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 			@SuppressWarnings("synthetic-access")
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | GENERAL_PROPERIES_FRAME", Level.FINEST);
-				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame("Title");
+				GeneralPropertiesFrame generalFrame = new GeneralPropertiesFrame(LangModelGeneral.getString("Properties"));
 				ObserverMainFrame.this.desktopPane.add(generalFrame);
 				new SchemeEventHandler(generalFrame, ObserverMainFrame.this.aContext);
 				new MapPropertiesEventHandler(generalFrame, ObserverMainFrame.this.aContext);
@@ -115,7 +118,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 			@SuppressWarnings("synthetic-access")
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | ADDITIONAL_PROPERIES_FRAME", Level.FINEST);
-				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame("Title");
+				AdditionalPropertiesFrame additionalFrame = new AdditionalPropertiesFrame(LangModelMap.getString("AdditionalProperties"));
 				ObserverMainFrame.this.desktopPane.add(additionalFrame);
 				new SchemeEventHandler(additionalFrame, ObserverMainFrame.this.aContext);
 				new MapPropertiesEventHandler(additionalFrame, ObserverMainFrame.this.aContext);
@@ -127,7 +130,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 			@SuppressWarnings("synthetic-access")
 			public Object createValue(UIDefaults table) {
 				Log.debugMessage(".createValue | CHARACTERISTIC_PROPERIES_FRAME", Level.FINEST);
-				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame("Title");
+				CharacteristicPropertiesFrame characteristicFrame = new CharacteristicPropertiesFrame(LangModelMap.getString("Characteristics"));
 				ObserverMainFrame.this.desktopPane.add(characteristicFrame);
 				new SchemeEventHandler(characteristicFrame, ObserverMainFrame.this.aContext);
 				new MapPropertiesEventHandler(characteristicFrame, ObserverMainFrame.this.aContext);
@@ -202,40 +205,56 @@ public class ObserverMainFrame extends AbstractMainFrame {
 
 				JInternalFrame resultFrame = null;
 				JInternalFrame alarmFrame = null;
-				JInternalFrame editorFrame = null;
+				JInternalFrame mapFrame = null;
+				JInternalFrame schemeFrame = null;
 				JInternalFrame generalFrame = null;
+				JInternalFrame additionalFrame = null;
 				JInternalFrame characteristicsFrame = null;
 				JInternalFrame treeFrame = null;
 				
 				for (Component component : ObserverMainFrame.this.desktopPane.getComponents()) {
 					if (TREE_FRAME.equals(component.getName()))
 						treeFrame = (JInternalFrame)component;
+					else if (MapFrame.NAME.equals(component.getName()))
+						mapFrame = (JInternalFrame)component;
 					else if (ResultFrame.NAME.equals(component.getName()))
 						resultFrame = (JInternalFrame)component;
 					else if (ALARM_FRAME.equals(component.getName()))
 						alarmFrame = (JInternalFrame)component;
 					else if (SchemeViewerFrame.NAME.equals(component.getName()))
-						editorFrame = (JInternalFrame)component;
+						schemeFrame = (JInternalFrame)component;
 					else if (GeneralPropertiesFrame.NAME.equals(component.getName()))
 						generalFrame = (JInternalFrame)component;
+					else if (AdditionalPropertiesFrame.NAME.equals(component.getName()))
+						additionalFrame = (JInternalFrame)component;
 					else if (CharacteristicPropertiesFrame.NAME.equals(component.getName()))
 						characteristicsFrame = (JInternalFrame)component;
 				}
 				
-				if (editorFrame != null) {
-					normalize(editorFrame);
-					editorFrame.setSize(3 * w / 5, 3 * h / 4);
-					editorFrame.setLocation(w / 5, h / 4);
+				if (mapFrame != null) {
+					normalize(schemeFrame);
+					schemeFrame.setSize(3 * w / 5, 3 * h / 4);
+					schemeFrame.setLocation(w / 5, h / 4);
+				}
+				if (schemeFrame != null) {
+					normalize(schemeFrame);
+					schemeFrame.setSize(3 * w / 5, 3 * h / 4);
+					schemeFrame.setLocation(w / 5, h / 4);
 				}
 				if (generalFrame != null) {
 					normalize(generalFrame);
-					generalFrame.setSize(w/5, h / 2);
-					generalFrame.setLocation(4*w/5, h / 4);
+					generalFrame.setSize(w / 5, h / 4);
+					generalFrame.setLocation(4 * w / 5, h / 4);
+				}
+				if (additionalFrame != null) {
+					normalize(additionalFrame);
+					additionalFrame.setSize(w / 5, h / 4);
+					additionalFrame.setLocation(4 * w / 5, 2 * h / 4);
 				}
 				if (characteristicsFrame != null) {
 					normalize(characteristicsFrame);
-					characteristicsFrame.setSize(w/5, h / 4);
-					characteristicsFrame.setLocation(4*w/5, 3 * h / 4);
+					characteristicsFrame.setSize(w / 5, h / 4);
+					characteristicsFrame.setLocation(4 * w / 5, 3 * h / 4);
 				}
 				if (resultFrame != null) {
 					normalize(resultFrame);
@@ -244,8 +263,8 @@ public class ObserverMainFrame extends AbstractMainFrame {
 				}
 				if (alarmFrame != null) {
 					normalize(alarmFrame);
-					alarmFrame.setSize(w * 3 / 5, h / 4);
-					alarmFrame.setLocation(0, 0);
+					alarmFrame.setSize(w * 2 / 5, h / 4);
+					alarmFrame.setLocation(w / 5, 0);
 				}
 				if (treeFrame != null) {
 					normalize(treeFrame);
@@ -361,6 +380,9 @@ public class ObserverMainFrame extends AbstractMainFrame {
 
 	public void setDomainSelected() {
 		super.setDomainSelected();
+
+		Command command = new OpenSchemeViewCommand(this.aContext);
+		command.execute();
 
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 
