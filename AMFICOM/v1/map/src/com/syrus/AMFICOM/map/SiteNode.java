@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.90 2005/09/11 16:28:28 krupenn Exp $
+ * $Id: SiteNode.java,v 1.91 2005/09/11 19:47:10 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: krupenn $
- * @version $Revision: 1.90 $, $Date: 2005/09/11 16:28:28 $
+ * @version $Revision: 1.91 $, $Date: 2005/09/11 19:47:10 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -178,9 +178,11 @@ public class SiteNode extends AbstractNode
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.type);
 		dependencies.add(this.imageId);
-		if(this.attachmentSiteNodeId != null && !this.attachmentSiteNodeId.equals(Identifier.VOID_IDENTIFIER)) {
-			dependencies.add(this.attachmentSiteNodeId);
-		}
+		dependencies.add(this.attachmentSiteNodeId);
+		
+		dependencies.remove(null);
+		dependencies.remove(VOID_IDENTIFIER);
+
 		return dependencies;
 	}
 
@@ -374,7 +376,7 @@ public class SiteNode extends AbstractNode
 		this.building = xmlSiteNode.getBuilding();
 		super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
 		if (xmlSiteNode.isSetAttachmentSiteNodeId()) {
-			this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), importType); 
+			this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), SITENODE_CODE, importType); 
 		} else {
 			this.attachmentSiteNodeId = VOID_IDENTIFIER;
 		}
