@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.12 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: AbstractApplication.java,v 1.13 2005/09/11 22:35:14 bass Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/02 13:03:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.13 $, $Date: 2005/09/11 22:35:14 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -68,6 +68,7 @@ public abstract class AbstractApplication {
 	public static final String		LOOK_AND_FEEL_METAL			= "Metal";
 	public static final String		LOOK_AND_FEEL_MOTIF			= "Motif";
 	public static final String		LOOK_AND_FEEL_WINDOWS		= "Windows";
+	public static final String		LOOK_AND_FEEL_GTK = "GTK";		
 
 	public static final String XMLSESSION_KEY = "XMLSession";
 	public static final String XML_PATH_KEY = "XMLPath";
@@ -151,15 +152,20 @@ public abstract class AbstractApplication {
 			lnf = new WindowsLookAndFeel();
 		} else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_MOTIF)) {
 			lnf = new MotifLookAndFeel();
-		}
-		// else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_GTK)) {
-		// plaf = (LookAndFeel) (GTKLookAndFeel.class.newInstance());
-		// }
-		else {
+		} else if (lookAndFeel.equalsIgnoreCase(LOOK_AND_FEEL_GTK)) {
+			try {
+				lnf = (LookAndFeel) Class.forName("com.sun.java.swing.plaf.gtk.GTKLookAndFeel").newInstance();
+			} catch (final RuntimeException re) {
+				throw re;
+			} catch (final Exception e) {
+				return this.getDefaultLookAndFeel();
+			}
+		} else {
 			return this.getDefaultLookAndFeel();
 		}
-		if (lnf.isSupportedLookAndFeel()) { return lnf; }
-		return this.getDefaultLookAndFeel();
+		return lnf.isSupportedLookAndFeel()
+				? lnf
+				: this.getDefaultLookAndFeel();
 	}
 
 	/**
