@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: ConfigurationLibrary.xsd,v 1.7 2005/09/01 10:47:11 bass Exp $
+			$Id: ConfigurationLibrary.xsd,v 1.8 2005/09/11 14:38:15 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -36,6 +36,7 @@
 					<xsd:element name = "cableLinkTypes" type = "configuration:XmlCableLinkTypeSeq" minOccurs = "0"/>
 					<xsd:element name = "portTypes" type = "configuration:XmlPortTypeSeq" minOccurs = "0"/>
 					<xsd:element name = "equipmentTypes" type = "configuration:XmlEquipmentTypeSeq" minOccurs = "0"/>
+					<xsd:element name = "equipments" type = "configuration:XmlEquipmentSeq" minOccurs = "0"/>
 				</xsd:sequence>
 				<xsd:attribute name = "importType" type = "xsd:string" use = "required"/>
 			</xsd:extension>
