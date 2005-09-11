@@ -1,5 +1,5 @@
 /*-
- * $Id: Element.java,v 1.5 2005/09/11 15:25:58 stas Exp $
+ * $Id: Element.java,v 1.6 2005/09/11 17:08:10 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -144,13 +144,13 @@ public class Element {
 			xmlSE.setKind(Kind.SCHEME_ELEMENT_CONTAINER);
 		}
 		
-//		XmlIdentifier siteNodeUid = xmlSE.addNewSiteNodeId();
-//		if (this.wellId == null) {
-//			System.err.println("well is null for " + this.name);
-//			this.wellId = "";
-//		} else {
-//			siteNodeUid.setStringValue(String.valueOf(this.wellId));
-//		}
+		XmlIdentifier siteNodeUid = xmlSE.addNewSiteNodeId();
+		if (this.wellId == null) {
+			System.err.println("well is null for " + this.name);
+			this.wellId = "";
+		} else {
+			siteNodeUid.setStringValue(String.valueOf(this.wellId));
+		}
 		
 		xmlSE.setParentSchemeId(parentId);
 				

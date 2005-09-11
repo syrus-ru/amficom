@@ -42,8 +42,8 @@ import com.syrus.impexp.ImportExportException;
 
 /**
  * 
- * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/09/11 15:37:31 $
+ * @author $Author: stas $
+ * @version $Revision: 1.10 $, $Date: 2005/09/11 17:08:10 $
  * @module mapviewclient_v1
  */
 public class UniCableMapDialog extends JFrame 
@@ -124,7 +124,7 @@ public class UniCableMapDialog extends JFrame
 	private void jbInit() throws Exception
 	{
 		Properties properties = new Properties();
-		properties.load(new FileInputStream("impexp"));
+		properties.load(new FileInputStream("impexp.properties"));
 		
 		String input = properties.getProperty("base");
 		String output = properties.getProperty("output");

@@ -1,5 +1,5 @@
 /*-
- * $Id: Equipment.java,v 1.1 2005/09/11 15:18:27 stas Exp $
+ * $Id: Equipment.java,v 1.2 2005/09/11 17:08:11 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.impexp.unicablemap.objects;
 
 import com.syrus.AMFICOM.configuration.xml.XmlEquipment;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.impexp.unicablemap.map.Site;
 
 
 public class Equipment {
@@ -48,10 +49,21 @@ public class Equipment {
 		
 		XmlIdentifier uid = xmlEq.addNewId();
 		uid.setStringValue(String.valueOf(this.id));
+		xmlEq.setId(uid);
+		
+		if (this.typeId == null) {
+			System.out.println("Type id is null for " + this.name);
+			this.typeId = "VOID";
+		}
+		XmlIdentifier eqtid = xmlEq.addNewEquipmentTypeId();
+		eqtid.setStringValue(this.typeId);
+		xmlEq.setEquipmentTypeId(eqtid);
+		
+		double[] d = Site.UTMtoGeo(latitude, longitude);
 		
 		xmlEq.setName(this.name);
-		xmlEq.setLatitude(this.latitude);
-		xmlEq.setLongitude(this.longitude);
+		xmlEq.setLatitude((float)d[0]);
+		xmlEq.setLongitude((float)d[1]);
 		
 		return xmlEq;
 	}

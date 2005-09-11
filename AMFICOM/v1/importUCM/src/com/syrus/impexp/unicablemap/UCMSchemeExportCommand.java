@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.5 2005/09/11 15:37:31 krupenn Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.6 2005/09/11 17:08:10 stas Exp $
  *
  * Copyright њ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,6 @@ import java.util.Collection;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.LinkedList;
-import java.util.logging.Level;
 
 import org.apache.xmlbeans.XmlOptions;
 
@@ -49,11 +48,10 @@ import com.syrus.impexp.unicablemap.objects.LinkType;
 import com.syrus.impexp.unicablemap.objects.MuffType;
 import com.syrus.impexp.unicablemap.objects.Port;
 import com.syrus.impexp.unicablemap.objects.ThreadType;
-import com.syrus.util.Log;
 
 /**
- * @author $Author: krupenn $
- * @version $Revision: 1.5 $, $Date: 2005/09/11 15:37:31 $
+ * @author $Author: stas $
+ * @version $Revision: 1.6 $, $Date: 2005/09/11 17:08:10 $
  * @module importUCM
  */
 
@@ -68,52 +66,32 @@ public class UCMSchemeExportCommand {
 	HashMap<Integer, Element> buildings = new HashMap<Integer, Element>();
 	HashMap<Integer, Cable> cables = new HashMap<Integer, Cable>();
 	
-	private long start;
-	
 	public UCMSchemeExportCommand(UniCableMapDatabase ucmDatabase) {
 		this.ucmDatabase = ucmDatabase;
 	}
 	
 	public void processTypeObjects() {
 		Collection<UniCableMapObject> muffTypes = this.ucmDatabase.getObjects(this.ucmDatabase.getType(UniCableMapType.UCM_MUFF_TYPE));
-		System.out.println(muffTypes.size() + " видов муфт прочитано");
-		this.start = System.currentTimeMillis();
 		createMuffTypes(muffTypes);
-		System.out.println(muffTypes.size() + " EquimpentType созданно за " + (System.currentTimeMillis() - this.start) + " ms");
 
 		Collection<UniCableMapObject> linkTypes = new LinkedList<UniCableMapObject>();
 		linkTypes.add(this.ucmDatabase.getType(UniCableMapType.UCM_FIBRE));
 		linkTypes.add(this.ucmDatabase.getType(UniCableMapType.UCM_PATCHCORD));
-		System.out.println(linkTypes.size() + " типов волокон прочитано");
-		this.start = System.currentTimeMillis();
 		createLinkTypes(linkTypes);
-		System.out.println(linkTypes.size() + " LinkType созданно за " + (System.currentTimeMillis() - this.start) + " ms");
 
 		Collection<UniCableMapObject> cableTypes = this.ucmDatabase.getObjects(this.ucmDatabase.getType(UniCableMapType.UCM_CABLE_TYPE));
-		System.out.println(cableTypes.size() + " типов кабел€ прочитано");
-		this.start = System.currentTimeMillis();
 		createCableTypes(cableTypes);
-		System.out.println(cableTypes.size() + " CableLinkType созданно за " + (System.currentTimeMillis() - this.start) + " ms");
 	}
 	
 	public void processSchemeObjects(int cableNumber) throws SQLException {
 		Collection<UniCableMapObject> buildings1 = this.ucmDatabase.getObjects(this.ucmDatabase.getType(UniCableMapType.UCM_BUILDING_PLAN));
-		System.out.println(buildings1.size() + " зданий прочитано");
-		this.start = System.currentTimeMillis();
 		createBuildings(buildings1);
-		System.out.println(buildings1.size() + " SchemeElement созданно за " + (System.currentTimeMillis() - this.start) + " ms");
 		
 		Collection<UniCableMapObject> muffs1 = this.ucmDatabase.getObjects(this.ucmDatabase.getType(UniCableMapType.UCM_MUFF));
-		System.out.println(muffs1.size() + " муфт прочитано");
-		this.start = System.currentTimeMillis();
 		createMuffs(muffs1);
-		System.out.println(muffs1.size() + " SchemeElement созданно за " + (System.currentTimeMillis() - this.start) + " ms");
 		
 		Collection<UniCableMapObject> cables1 = this.ucmDatabase.getObjects(this.ucmDatabase.getType(UniCableMapType.UCM_CABLE_LINEAR));
-		System.out.println(cables1.size() + " кабелей прочитано");
-		this.start = System.currentTimeMillis();
 		createCables(cables1, cableNumber);
-		System.out.println(Math.min(cableNumber, cables1.size()) + " Cable созданно за " + (System.currentTimeMillis() - this.start) + " ms");
 	}
 	
 	void createCables(Collection<UniCableMapObject> objects, int number) throws SQLException {
@@ -462,7 +440,7 @@ public class UCMSchemeExportCommand {
 	
 	@SuppressWarnings("unchecked")
 	private void saveConfigXML(String fileName) throws SQLException {
-		Log.debugMessage("Start saving config XML", Level.FINE);
+		System.out.println("Start saving config XML");
 		
 		XmlOptions xmlOptions = new XmlOptions();
 		xmlOptions.setSavePrettyPrint();
@@ -506,14 +484,11 @@ public class UCMSchemeExportCommand {
 		}
 		xmlEquipments.setEquipmentArray(eqs.toArray(new XmlEquipment[eqs.size()]));
 
-		Log.debugMessage("ѕроверка на валидность XML", Level.FINE);
-		this.start = System.currentTimeMillis();
+		System.out.println("Check if XML valid...");
 		boolean isXmlValid = UCMParser.validateXml(doc);
-		System.out.println("проверка завершена за " + (System.currentTimeMillis() - this.start) + " ms");
 		if(isXmlValid) {
 			File f = new File(fileName);
 
-			Log.debugMessage("Save XML to file", Level.FINE);
 			try {
 				// Writing the XML Instance to a file.
 				doc.save(f, xmlOptions);
@@ -522,15 +497,15 @@ public class UCMSchemeExportCommand {
 			}
 			System.out.println("\nXML Instance Document saved at : "
 					+ f.getPath());
-			Log.debugMessage("Done successfully", Level.FINE);
+			System.out.println("Done successfully");
 		} else {
-			Log.debugMessage("Done with errors", Level.FINE);
+			System.out.println("Done with errors");
 		}
 	}
 	
 	@SuppressWarnings("unchecked")
 	private void saveSchemeXML(String fileName, int number) {
-		Log.debugMessage("Start saving scheme XML", Level.FINE);
+		System.out.println("Start saving scheme XML");
 		
 		XmlOptions xmlOptions = new XmlOptions();
 		xmlOptions.setSavePrettyPrint();
@@ -557,7 +532,6 @@ public class UCMSchemeExportCommand {
 //		SchemeLinks xmlSchemeLinks = xmlScheme.addNewSchemelinks();
 
 		int counter = 0;
-		this.start = System.currentTimeMillis();
 		Collection<XmlSchemeElement> ses = new ArrayList<XmlSchemeElement>(this.muffs.size() + this.buildings.size());
 		for (Element muff : this.muffs.values()) {
 			if (counter++ > number) {
@@ -572,11 +546,9 @@ public class UCMSchemeExportCommand {
 			}
 			ses.add(building.toXMLObject(xmlScheme.getId()));
 		}
-		System.out.println(ses.size() + " XMLSchemeElement созданно за " + (System.currentTimeMillis() - this.start) + " ms");
 		xmlSchemeElements.setSchemeElementArray(ses.toArray(new XmlSchemeElement[ses.size()]));
 
 		counter = 0;
-		this.start = System.currentTimeMillis();
 		Collection<XmlSchemeCableLink> cls = new ArrayList<XmlSchemeCableLink>(this.cables.size());
 		for (Cable cable : this.cables.values()) {
 			if (counter++ > number) {
@@ -584,12 +556,10 @@ public class UCMSchemeExportCommand {
 			}
 			cls.add(cable.toXMLObject(xmlScheme.getId()));
 		}
-		System.out.println(cls.size() + " XMLSchemeCableLink созданно за " + (System.currentTimeMillis() - this.start) + " ms");
 		xmlSchemeCableLinks.setSchemeCableLinkArray(cls.toArray(new XmlSchemeCableLink[cls.size()]));
 		
 		File f = new File(fileName);
 
-		Log.debugMessage("Save XML to file", Level.FINE);
 		try {
 			// Writing the XML Instance to a file.
 			doc.save(f, xmlOptions);
@@ -598,14 +568,12 @@ public class UCMSchemeExportCommand {
 			e.printStackTrace();
 		}
 		
-		Log.debugMessage("ѕроверка на валидность XML", Level.FINE);
-		this.start = System.currentTimeMillis();
+		System.out.println("Check if XML valid...");
 		boolean isXmlValid = UCMParser.validateXml(doc);
-		System.out.println("проверка завершена за " + (System.currentTimeMillis() - this.start) + " ms");
 		if(isXmlValid) {
-			Log.debugMessage("Done successfully", Level.FINE);			
+			System.out.println("Done successfully");			
 		} else {
-			Log.debugMessage("Done with errors", Level.FINE);
+			System.out.println("Done with errors");
 		}
 	}
 
@@ -614,7 +582,7 @@ public class UCMSchemeExportCommand {
 			processTypeObjects();
 			processSchemeObjects(Integer.MAX_VALUE);
 			saveConfigXML("\\export\\config.xml");
-//			saveSchemeXML("\\export\\scheme.xml", Integer.MAX_VALUE);
+			saveSchemeXML("\\export\\scheme.xml", Integer.MAX_VALUE);
 		} catch (SQLException e2) {
 			e2.printStackTrace();
 		}
