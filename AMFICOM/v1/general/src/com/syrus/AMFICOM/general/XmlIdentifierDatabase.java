@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.8 2005/09/11 18:06:03 max Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.9 2005/09/11 19:37:30 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseConnection;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.8 $, $Date: 2005/09/11 18:06:03 $
+ * @author $Author: bass $
+ * @version $Revision: 1.9 $, $Date: 2005/09/11 19:37:30 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -145,7 +145,13 @@ final class XmlIdentifierDatabase {
 			
 			while (resultSet.next()) {
 				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
-				if (StorableObjectDatabase.isPresentInDatabase(id)) {
+				/*
+				 * The check is turned of since it's a lengthy
+				 * operation if you have 12k objects. We really
+				 * must add hooks to save/delete operations of
+				 * CORBA object loader.
+				 */
+				if (true || StorableObjectDatabase.isPresentInDatabase(id)) {
 					final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
 					xmlId.setStringValue(resultSet.getString(COLUMN_FOREIGN_UID));
 					idXmlIdMap.put(id, xmlId);
