@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.89 2005/09/11 15:27:43 bass Exp $
+ * $Id: SiteNode.java,v 1.90 2005/09/11 16:28:28 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2005/09/11 15:27:43 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.90 $, $Date: 2005/09/11 16:28:28 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -178,6 +178,9 @@ public class SiteNode extends AbstractNode
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.add(this.type);
 		dependencies.add(this.imageId);
+		if(this.attachmentSiteNodeId != null && !this.attachmentSiteNodeId.equals(Identifier.VOID_IDENTIFIER)) {
+			dependencies.add(this.attachmentSiteNodeId);
+		}
 		return dependencies;
 	}
 
