@@ -6,12 +6,11 @@ import java.sql.SQLException;
 import java.util.Collection;
 import java.util.HashMap;
 import java.util.LinkedList;
-import java.util.List;
 
 import org.apache.xmlbeans.XmlOptions;
 
-import com.syrus.AMFICOM.Client.General.Command.Command;
-import com.syrus.AMFICOM.Client.General.Command.ExportCommand;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.xml.MapsDocument;
 import com.syrus.AMFICOM.map.xml.XmlCollector;
@@ -33,10 +32,10 @@ import com.syrus.impexp.unicablemap.map.Site;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.8 $, $Date: 2005/09/07 12:23:17 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/11 15:15:08 $
  * @module mapviewclient_v1
  */
-public class UniCableMapExportCommand extends ExportCommand 
+public class UniCableMapExportCommand extends AbstractCommand 
 {
 	UniCableMapDatabase ucmDatabase;
 
@@ -280,148 +279,6 @@ public class UniCableMapExportCommand extends ExportCommand
 			links.addAll(collector.getLinks());
 			nodeLinks.addAll(collector.getNodeLinks());
 		}
-	}
-
-	private void saveESF(String fileName) throws SQLException {
-			super.open(fileName);
-	
-			super.startObject(MAP_TYPE);
-				super.put("description", "");
-				super.put("name", "UCM");
-				super.put("id", "1");
-			super.endObject();
-	
-			Collection<UniCableMapObject> wells = this.ucmDatabase.getObjects(
-				this.ucmDatabase.getType(UniCableMapType.UCM_WELL));
-			writeESFSites(wells, "well", "images/well.gif");
-
-			Collection<UniCableMapObject> piquets = this.ucmDatabase.getObjects(
-				this.ucmDatabase.getType(UniCableMapType.UCM_PIQUET));
-			writeESFSites(piquets, "piquet", "images/piquet.gif");
-	
-			Collection<UniCableMapObject> cableinlets = this.ucmDatabase.getObjects(
-				this.ucmDatabase.getType(UniCableMapType.UCM_CABLE_INLET));
-			writeESFSites(cableinlets, "cableinlet", "images/cableinlet.gif");
-	
-			Collection<UniCableMapObject> tunnels = this.ucmDatabase.getObjects(
-				this.ucmDatabase.getType(UniCableMapType.UCM_TUNNEL));
-			writeESFLinks(tunnels, "tunnel");
-	
-			Collection<UniCableMapObject> collectors = this.ucmDatabase.getObjects(
-				this.ucmDatabase.getType(UniCableMapType.UCM_COLLECTOR));
-			writeESFCollectors(collectors, "collector");
-	
-			super.close();
-
-	}
-
-	void writeESFSites(
-			Collection<UniCableMapObject> objects,
-			String proto,
-			String imageId) throws SQLException {
-		for(UniCableMapObject ucmObject : objects) {
-			Site site = Site.parseSite(this.ucmDatabase, ucmObject, proto);
-
-			writeESFSite(site);
-		}
-	}
-
-	void writeESFLinks(Collection<UniCableMapObject> objects, String proto)
-			throws SQLException {
-		for(UniCableMapObject ucmObject : objects) {
-			Link link = Link.parseLink(this.ucmDatabase, ucmObject, proto);
-			NodeLink nodeLink = NodeLink.createNodeLink(link);
-
-			writeESFLink(link);
-			writeESFNodeLink(nodeLink);
-		}
-	}
-
-	void writeESFCollectors(
-			Collection<UniCableMapObject> objects,
-			String linkProto) throws SQLException {
-		for(UniCableMapObject ucmObject : objects) {
-			Collector collector = Collector.parseCollector(
-					this.ucmDatabase,
-					ucmObject,
-					linkProto);
-			for(Link link : collector.getLinks()) {
-				writeESFLink(link);
-			}
-			for(NodeLink nodeLink : collector.getNodeLinks()) {
-				writeESFNodeLink(nodeLink);
-			}
-
-			writeESFCollector(collector);
-		}
-	}
-
-	private void writeESFSite(Site site) {
-		super.startObject(SITE_TYPE);
-
-		super.put("id", site.getId());
-		super.put("name", site.getName());
-		super.put("description", site.getDescription());
-		super.put("x", site.getX());
-		super.put("y", site.getY());
-		// super.put("image_id", image);
-		super.put("proto_id", site.getSiteNodeTypeCodename());
-		super.put("city", site.getCity());
-		super.put("street", site.getStreet());
-		super.put("building", site.getBuilding());
-
-		super.endObject();
-	}
-
-	private void writeESFNodeLink(NodeLink nodeLink) {
-		super.startObject(NODELINK_TYPE);
-
-		super.put("id", nodeLink.getId());
-		super.put("name", "");
-		super.put("start_node_id", nodeLink.getStartNodeId());
-		super.put("end_node_id", nodeLink.getEndNodeId());
-		super.put("physical_link_id", nodeLink.getPhysicalLinkId());
-		super.put("length", nodeLink.getLength());
-
-		super.endObject();
-	}
-
-	private void writeESFLink(Link link) {
-		List<String> nodeLinkIds = new LinkedList<String>();
-		for(NodeLink nodeLink : link.getNodeLinks()) {
-			nodeLinkIds.add(nodeLink.getId());
-		}
-
-		super.startObject(LINK_TYPE);
-
-		super.put("id", link.getId());
-		super.put("name", link.getName());
-		super.put("description", link.getDescription());
-		super.put("start_node_id", link.getStartNodeId());
-		super.put("end_node_id", link.getEndNodeId());
-		super.put("node_links", nodeLinkIds);
-		super.put("proto_id", link.getPhysicalLinkTypeCodename());
-		super.put("city", link.getCity());
-		super.put("street", link.getStreet());
-		super.put("building", link.getBuilding());
-
-		super.endObject();
-	}
-
-	private void writeESFCollector(Collector collector) {
-		List<String> physicalLinkIds = new LinkedList<String>();
-		for(Link link : collector.getLinks()) {
-			physicalLinkIds.add(link.getId());
-		}
-
-		super.startObject(COLLECTOR_TYPE);
-
-		super.put("id", collector.getId());
-		super.put("name", collector.getName());
-		super.put("description", collector.getDescription());
-		super.put("links", physicalLinkIds);
-
-		super.endObject();
 	}
 
 }

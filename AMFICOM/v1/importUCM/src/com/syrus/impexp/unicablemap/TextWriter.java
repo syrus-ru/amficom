@@ -1,5 +1,5 @@
 /*-
- * $Id: TextWriter.java,v 1.1 2005/08/29 13:14:35 stas Exp $
+ * $Id: TextWriter.java,v 1.2 2005/09/11 15:15:08 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import java.util.Iterator;
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
 
-import com.syrus.AMFICOM.Client.General.Model.Environment;
-import com.syrus.AMFICOM.Client.General.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.model.Environment;
 
 public class TextWriter {
 	private FileOutputStream fos;

@@ -35,15 +35,14 @@ import javax.swing.JSeparator;
 import javax.swing.JTextArea;
 import javax.swing.JTextField;
 
-import com.syrus.AMFICOM.Client.General.UI.ReusedGridBagConstraints;
-import com.syrus.AMFICOM.client_.general.ui_.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.impexp.ImportExportException;
 import com.syrus.util.ApplicationProperties;
 
 /**
  * 
- * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/09/07 12:47:45 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.8 $, $Date: 2005/09/11 15:15:08 $
  * @module mapviewclient_v1
  */
 public class UniCableMapDialog extends JFrame 
@@ -78,7 +77,8 @@ public class UniCableMapDialog extends JFrame
 	private JTextField exportFileField = new JTextField();
 	private JButton browseESFButton = new JButton();
 	private JLabel statusLabel = new JLabel();
-	private JButton importButton = new JButton();
+	private JButton importMapButton = new JButton();
+	private JButton importSchemeButton = new JButton();
 
 	private JPanel surveyPanel = new JPanel();
 	private JList surveyTypes = new JList();
@@ -149,7 +149,7 @@ public class UniCableMapDialog extends JFrame
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					connectButton_actionPerformed(e);
+					connect();
 				}
 			});
 		this.disconnectButton.setText("Disconnect");
@@ -157,7 +157,7 @@ public class UniCableMapDialog extends JFrame
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					disconnectButton_actionPerformed(e);
+					disconnect();
 				}
 			});
 		this.databaseLabel.setText("База данных");
@@ -167,7 +167,7 @@ public class UniCableMapDialog extends JFrame
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					browseGDBButton_actionPerformed(e);
+					browseGDB();
 				}
 			});
 		this.usernameLabel.setText("Пользователь");
@@ -186,18 +186,29 @@ public class UniCableMapDialog extends JFrame
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					browseESFButton_actionPerformed(e);
+					browseESF();
 				}
 			});
-		this.importButton.setText("Import");
-		this.importButton.addActionListener(new ActionListener()
+		this.importMapButton.setText("ImportMap");
+		this.importMapButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					importButton_actionPerformed(e);
+					importMap();
 				}
 			});
-		this.importButton.setPreferredSize(this.browseESFButton.getPreferredSize());
+		this.importMapButton.setPreferredSize(this.browseESFButton.getPreferredSize());
+
+		this.importSchemeButton.setText("ImportScheme");
+		this.importSchemeButton.addActionListener(new ActionListener()
+			{
+				public void actionPerformed(ActionEvent e)
+				{
+					importScheme();
+				}
+			});
+		this.importSchemeButton.setPreferredSize(this.browseESFButton.getPreferredSize());
+
 		this.statusLabel.setSize(new Dimension(0, 17));
 		this.statusLabel.setPreferredSize(new Dimension(0, 17));
 		this.statusLabel.setMinimumSize(new Dimension(0, 17));
@@ -246,7 +257,7 @@ public class UniCableMapDialog extends JFrame
 			{
 				public void actionPerformed(ActionEvent e)
 				{
-					surveyButton_actionPerformed(e);
+					survey();
 				}
 			});
 
@@ -255,36 +266,338 @@ public class UniCableMapDialog extends JFrame
 		this.connectionButtonsPanel.add(this.connectButton, null);
 		this.connectionButtonsPanel.add(this.disconnectButton, null);
 
+		GridBagConstraints constraints = new GridBagConstraints();
+		
 		this.connectionPanel.setLayout(new GridBagLayout());
-		this.connectionPanel.add(this.databaseLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.connectionPanel.add(this.databaseField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.connectionPanel.add(this.browseGDBButton, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-		this.connectionPanel.add(this.hostLabel, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.connectionPanel.add(this.hostField, ReusedGridBagConstraints.get(1, 1, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.connectionPanel.add(this.usernameLabel, ReusedGridBagConstraints.get(0, 2, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.connectionPanel.add(this.usernameField, ReusedGridBagConstraints.get(1, 2, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.connectionPanel.add(this.passwordLabel, ReusedGridBagConstraints.get(0, 3, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.connectionPanel.add(this.passwordField, ReusedGridBagConstraints.get(1, 3, 2, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.connectionPanel.add(this.connectionButtonsPanel, ReusedGridBagConstraints.get(0, 4, 3, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.connectionPanel.add(this.databaseLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 0, 0, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.connectionPanel.add(this.databaseField, constraints);
+
+		constraints.gridx = 2;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(0, 0, 0, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.connectionPanel.add(this.browseGDBButton, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.connectionPanel.add(this.hostLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 1;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 0, 0, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.connectionPanel.add(this.hostField, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.connectionPanel.add(this.usernameLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 2;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 0, 0, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.connectionPanel.add(this.usernameField, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 3;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.connectionPanel.add(this.passwordLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 3;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 0, 0, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.connectionPanel.add(this.passwordField, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		constraints.gridwidth = 3;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.connectionPanel.add(this.connectionButtonsPanel, constraints);
 
 		this.importPanel.setLayout(new GridBagLayout());
-		this.importPanel.add(this.exportFileLabel, ReusedGridBagConstraints.get(0, 0, 1, 1, 0.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.importPanel.add(this.exportFileField, ReusedGridBagConstraints.get(1, 0, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 0, 0, 0), 0, 0));
-		this.importPanel.add(this.browseESFButton, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.NONE, new Insets(0, 0, 0, 0), 0, 0));
-		this.importPanel.add(this.statusLabel, ReusedGridBagConstraints.get(1, 1, 2, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
-		this.importPanel.add(this.importButton, ReusedGridBagConstraints.get(0, 1, 1, 1, 0.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
+
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.importPanel.add(this.exportFileLabel, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 0, 0, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.importPanel.add(this.exportFileField, constraints);
+
+		constraints.gridx = 3;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(0, 0, 0, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.importPanel.add(this.browseESFButton, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.importPanel.add(this.importMapButton, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.importPanel.add(this.importSchemeButton, constraints);
+
+		constraints.gridx = 2;
+		constraints.gridy = 1;
+		constraints.gridwidth = 2;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.importPanel.add(this.statusLabel, constraints);
 
 		this.surveyPanel.setLayout(new GridBagLayout());
-		this.surveyPanel.add(this.surveyTypesScrollPane, ReusedGridBagConstraints.get(0, 0, 1, 2, 0.7, 1.0, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 5, 0, 5), 0, 0));
-		this.surveyPanel.add(this.radioButtonsPanel, ReusedGridBagConstraints.get(1, 0, 1, 2, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
-		this.surveyPanel.add(this.surveyFileField, ReusedGridBagConstraints.get(2, 0, 1, 1, 0.3, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
-		this.surveyPanel.add(this.surveyButton, ReusedGridBagConstraints.get(2, 1, 1, 1, 0.0, 0.0, GridBagConstraints.NORTHWEST, GridBagConstraints.NONE, new Insets(0, 5, 0, 5), 0, 0));
+
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 2;
+		constraints.weightx = 0.7;
+		constraints.weighty = 1.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.surveyPanel.add(this.surveyTypesScrollPane, constraints);
+
+		constraints.gridx = 1;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 2;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTHWEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.surveyPanel.add(this.radioButtonsPanel, constraints);
+
+		constraints.gridx = 2;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.3;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.surveyPanel.add(this.surveyFileField, constraints);
+
+		constraints.gridx = 2;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 0.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.NORTHWEST;
+		constraints.fill = GridBagConstraints.NONE;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.surveyPanel.add(this.surveyButton, constraints);
 		
-		this.mainPanel.add(this.connectionPanel, ReusedGridBagConstraints.get(0, 0, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
-		this.mainPanel.add(this.jSeparator1, ReusedGridBagConstraints.get(0, 1, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
-		this.mainPanel.add(this.importPanel, ReusedGridBagConstraints.get(0, 2, 1, 1, 1.0, 0.0, GridBagConstraints.WEST, GridBagConstraints.HORIZONTAL, new Insets(0, 5, 0, 5), 0, 0));
-		this.mainPanel.add(this.jSeparator2, ReusedGridBagConstraints.get(0, 3, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
-		this.mainPanel.add(this.surveyPanel, ReusedGridBagConstraints.get(0, 4, 1, 1, 1.0, 0.7, GridBagConstraints.WEST, GridBagConstraints.BOTH, new Insets(0, 5, 0, 5), 0, 0));
+
+		constraints.gridx = 0;
+		constraints.gridy = 0;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.mainPanel.add(this.connectionPanel, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 1;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(5, 0, 5, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.mainPanel.add(this.jSeparator1, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 2;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.mainPanel.add(this.importPanel, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 3;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.0;
+		constraints.anchor = GridBagConstraints.CENTER;
+		constraints.fill = GridBagConstraints.HORIZONTAL;
+		constraints.insets = new Insets(5, 0, 5, 0);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.mainPanel.add(this.jSeparator2, constraints);
+
+		constraints.gridx = 0;
+		constraints.gridy = 4;
+		constraints.gridwidth = 1;
+		constraints.gridheight = 1;
+		constraints.weightx = 1.0;
+		constraints.weighty = 0.7;
+		constraints.anchor = GridBagConstraints.WEST;
+		constraints.fill = GridBagConstraints.BOTH;
+		constraints.insets = new Insets(0, 5, 0, 5);
+		constraints.ipadx = 0;
+		constraints.ipady = 0;
+		this.mainPanel.add(this.surveyPanel, constraints);
 //		this.mainPanel.add(this.jSeparator3, ReusedGridBagConstraints.get(0, 5, 1, 1, 1.0, 0.0, GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, new Insets(5, 0, 5, 0), 0, 0));
 //		this.mainPanel.add(this.logTextArea, ReusedGridBagConstraints.get(0, 6, 1, 1, 1.0, 0.3, GridBagConstraints.CENTER, GridBagConstraints.BOTH, new Insets(5, 0, 5, 0), 0, 0));
 		
@@ -297,12 +610,13 @@ public class UniCableMapDialog extends JFrame
 		this.exportFileField.setText(output);
 
 		this.connectButton.setEnabled(true);
-		this.importButton.setEnabled(false);
+		this.importMapButton.setEnabled(false);
+		this.importSchemeButton.setEnabled(false);
 		this.surveyButton.setEnabled(false);
 		this.disconnectButton.setEnabled(false);
 	}
 
-	void connectButton_actionPerformed(ActionEvent e)
+	void connect()
 	{
 		try
 		{
@@ -313,7 +627,8 @@ public class UniCableMapDialog extends JFrame
 					this.databaseField.getText());
 			this.statusLabel.setText("Connected!");
 			this.connectButton.setEnabled(false);
-			this.importButton.setEnabled(true);
+			this.importMapButton.setEnabled(true);
+			this.importSchemeButton.setEnabled(true);
 			this.surveyButton.setEnabled(true);
 			this.disconnectButton.setEnabled(true);
 
@@ -324,34 +639,41 @@ public class UniCableMapDialog extends JFrame
 		{
 			this.statusLabel.setText(ex.getMessage());
 			this.connectButton.setEnabled(true);
-			this.importButton.setEnabled(false);
+			this.importMapButton.setEnabled(false);
 			this.surveyButton.setEnabled(false);
 			this.disconnectButton.setEnabled(false);
 		}
 	}
 
-	void disconnectButton_actionPerformed(@SuppressWarnings("unused") ActionEvent e)
+	void disconnect()
 	{
 		this.surveyTypes.removeAll();
 		this.ucmDatabase.close();
 		this.statusLabel.setText("Disconnected!");
 		this.connectButton.setEnabled(true);
-		this.importButton.setEnabled(false);
+		this.importMapButton.setEnabled(false);
+		this.importSchemeButton.setEnabled(false);
 		this.surveyButton.setEnabled(false);
 		this.disconnectButton.setEnabled(false);
 	}
 
-	void importButton_actionPerformed(ActionEvent e)
+	void importMap()
 	{
-//		UniCableMapExportCommand command = new UniCableMapExportCommand(
-//			this.ucmDatabase, 
-//			this.exportFileField.getText());
+		UniCableMapExportCommand command = new UniCableMapExportCommand(
+			this.ucmDatabase, 
+			this.exportFileField.getText());
+		command.execute();
+		this.statusLabel.setText("OK!");
+	}
+
+	void importScheme()
+	{
 		UCMSchemeExportCommand command = new UCMSchemeExportCommand(this.ucmDatabase);
 		command.execute();
 		this.statusLabel.setText("OK!");
 	}
 
-	protected void surveyButton_actionPerformed(ActionEvent e) {
+	protected void survey() {
 		File f;
 		FileOutputStream fos = null;
 		PrintWriter pw;
@@ -382,7 +704,7 @@ public class UniCableMapDialog extends JFrame
 		}
 	}
 
-	void browseGDBButton_actionPerformed(ActionEvent e)
+	void browseGDB()
 	{
 		JFileChooser fileChooser = new JFileChooser();
 
@@ -405,7 +727,7 @@ public class UniCableMapDialog extends JFrame
 		}
 	}
 
-	void browseESFButton_actionPerformed(ActionEvent e)
+	void browseESF()
 	{
 		JFileChooser fileChooser = new JFileChooser();
 
