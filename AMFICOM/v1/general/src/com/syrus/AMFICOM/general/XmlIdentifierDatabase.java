@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.1 2005/09/10 17:06:56 max Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.2 2005/09/11 11:45:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,12 +40,12 @@ import com.syrus.util.database.DatabaseConnection;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.1 $, $Date: 2005/09/10 17:06:56 $
+ * @author $Author: bass $
+ * @version $Revision: 1.2 $, $Date: 2005/09/11 11:45:47 $
  * @module general
  */
 
-public class XmlIdentifierDatabase {
+final class XmlIdentifierDatabase {
 	private static final String KEY_DB_HOST_NAME = "DBHostName";
 	private static final String KEY_DB_SID = "DBSID";
 	private static final String KEY_DB_CONNECTION_TIMEOUT = "DBConnectionTimeout";
@@ -138,10 +138,14 @@ public class XmlIdentifierDatabase {
 			Log.debugMessage("XmlIdentifierDatabase.retrieveByCondition | Trying: " + sql, Log.DEBUGLEVEL09);
 			resultSet = statement.executeQuery(sql.toString());
 			while (resultSet.next()) {
-				final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
-				xmlId.setStringValue(resultSet.getString(COLUMN_FOREIGN_UID));
 				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
-				idXmlIdMap.put(id, xmlId);				
+				if (StorableObjectDatabase.isPresentInDatabase(id)) {
+					final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
+					xmlId.setStringValue(resultSet.getString(COLUMN_FOREIGN_UID));
+					idXmlIdMap.put(id, xmlId);
+				} else {
+					resultSet.deleteRow();
+				}
 			}
 		} catch (final SQLException sqle) {
 			final String mesg = "Cannot retrieve ImportUIDItem" + sqle.getMessage();

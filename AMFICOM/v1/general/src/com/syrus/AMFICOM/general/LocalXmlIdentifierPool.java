@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.3 2005/09/10 17:07:53 max Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.4 2005/09/11 11:45:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: max $
- * @version $Revision: 1.3 $, $Date: 2005/09/10 17:07:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/09/11 11:45:47 $
  * @module general
  */
 public final class LocalXmlIdentifierPool {
@@ -176,13 +176,92 @@ public final class LocalXmlIdentifierPool {
 	}
 
 	/**
-	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: max $
-	 * @version $Revision: 1.3 $, $Date: 2005/09/10 17:07:53 $
+	 * @param xmlId
+	 * @param importType
+	 * @deprecated can't be used unless a hook is added to CORBAObjectLoader.
+	 */
+	@Deprecated
+	static void remove(final XmlIdentifier xmlId, final String importType) {
+		final XmlKey xmlKey = new XmlKey(xmlId, importType);
+		final Identifier id = REVERSE_MAP.remove(xmlKey);
+		xmlKey.setState(KeyState.DELETED);
+		REVERSE_MAP.put(xmlKey, id);
+		final Key key = new Key(id, importType); 
+		FORWARD_MAP.remove(key);
+		key.setState(KeyState.DELETED);
+		FORWARD_MAP.put(key, xmlId);
+	}
+
+	/**
+	 * @param id
+	 * @param importType
+	 * @deprecated can't be used unless a hook is added to CORBAObjectLoader.
+	 */
+	@Deprecated
+	static void remove(final Identifier id, final String importType) {
+		final Key key = new Key(id, importType);
+		final XmlIdentifier xmlId = FORWARD_MAP.remove(key);
+		key.setState(KeyState.DELETED);
+		FORWARD_MAP.put(key, xmlId);
+		final XmlKey xmlKey = new XmlKey(xmlId, importType);
+		REVERSE_MAP.remove(xmlKey);
+		xmlKey.setState(KeyState.DELETED);
+		REVERSE_MAP.put(xmlKey, id);
+	}
+
+	private static void prefetch(final String importType) {
+		final Map<Identifier, XmlIdentifier> idXmlIdMap;
+		try {
+			idXmlIdMap = XmlIdentifierDatabase.retrievePrefetchedMap(importType);
+		} catch (final RetrieveObjectException e) {
+			Log.errorException(e);
+			return;
+		}
+		for (final Identifier id : idXmlIdMap.keySet()) {
+			final XmlIdentifier xmlId =  idXmlIdMap.get(id);
+			FORWARD_MAP.put(new Key(id, importType, KeyState.UP_TO_DATE), xmlId);
+			REVERSE_MAP.put(new XmlKey(xmlId, importType, KeyState.UP_TO_DATE), id);
+		}
+	}
+
+	public static void flush() {
+		final Set<Identifier> idsToDelete = new HashSet<Identifier>();
+		final Map<Key, XmlIdentifier> keysToCreate = new HashMap<Key, XmlIdentifier>();
+		for (final Key key : FORWARD_MAP.keySet()) {
+			KeyState state = key.getState();
+			if (state.equals(KeyState.DELETED)) {				
+				idsToDelete.add(key.getId());
+			} else if (state.equals(KeyState.NEW)) {
+				keysToCreate.put(key, FORWARD_MAP.get(key));
+			}
+		}
+		final Set<XmlIdentifier> xmlIdToDelete = new HashSet<XmlIdentifier>();
+		for (final XmlKey xmlKey : REVERSE_MAP.keySet()) {
+			final KeyState state = xmlKey.getState();
+			if (state.equals(KeyState.DELETED)) {				
+				xmlIdToDelete.add(xmlKey.getXmlId());
+			} else if (state.equals(KeyState.NEW)) {
+				keysToCreate.put(new Key(REVERSE_MAP.get(xmlKey), xmlKey.getImportType()), xmlKey.getXmlId());
+			}
+		}
+		
+		XmlIdentifierDatabase.removeIds(idsToDelete);
+		XmlIdentifierDatabase.removeXmlIds(xmlIdToDelete);
+		
+		try {
+			XmlIdentifierDatabase.insertKeys(keysToCreate);
+		} catch (final CreateObjectException e) {
+			Log.errorException(e);
+		}
+	}
+	
+	/**
+	 * @author Maxim Selivanov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.4 $, $Date: 2005/09/11 11:45:47 $
 	 * @module general
 	 */
-	
-	private static abstract class State {
+	private abstract static class State {
 		protected KeyState state;
 		
 		protected KeyState getState() {
@@ -193,18 +272,25 @@ public final class LocalXmlIdentifierPool {
 			this.state = state;
 		}
 	}
-	
-	protected static class Key extends State {
+
+	/**
+	 * @author Andrew ``Bass'' Shcheglov
+	 * @author $Author: bass $
+	 * @version $Revision: 1.4 $, $Date: 2005/09/11 11:45:47 $
+	 * @module general
+	 */
+	static final class Key extends State {
 		private Identifier id;
 
 		private String importType;
 
 		private HashCodeGenerator hashCodeGenerator;
 		
-		protected Identifier getId() {
+		Identifier getId() {
 			return this.id;
 		}
-		protected String getImportType() {
+
+		String getImportType() {
 			return this.importType;
 		}
 		
@@ -212,13 +298,16 @@ public final class LocalXmlIdentifierPool {
 		 * @param id
 		 * @param importType
 		 */
-		public Key(final Identifier id, final String importType) {
-			this.id = id;
-			this.importType = importType;
-			this.state = KeyState.NEW;
+		Key(final Identifier id, final String importType) {
+			this(id, importType, KeyState.NEW);
 		}
 		
-		public Key(final Identifier id, final String importType, KeyState state) {
+		/**
+		 * @param id
+		 * @param importType
+		 * @param state
+		 */
+		Key(final Identifier id, final String importType, final KeyState state) {
 			this.id = id;
 			this.importType = importType;
 			this.state = state;
@@ -253,80 +342,10 @@ public final class LocalXmlIdentifierPool {
 		}
 	}
 	
-	static void remove(XmlIdentifier xmlId, String importType) {
-		XmlKey xmlKey = new XmlKey(xmlId, importType);
-		Identifier id = REVERSE_MAP.remove(xmlKey);
-		xmlKey.setState(KeyState.DELETED);
-		REVERSE_MAP.put(xmlKey, id);
-		Key key = new Key(id, importType); 
-		FORWARD_MAP.remove(key);
-		key.setState(KeyState.DELETED);
-		FORWARD_MAP.put(key, xmlId);
-	}
-	
-	static void remove(Identifier id, String importType) {
-		Key key = new Key(id, importType);
-		XmlIdentifier xmlId = FORWARD_MAP.remove(key);
-		key.setState(KeyState.DELETED);
-		FORWARD_MAP.put(key, xmlId);
-		XmlKey xmlKey = new XmlKey(xmlId, importType);
-		REVERSE_MAP.remove(xmlKey);
-		xmlKey.setState(KeyState.DELETED);
-		REVERSE_MAP.put(xmlKey, id);
-	}
-	
-	private static void prefetch(String importType) {
-		
-		Map<Identifier, XmlIdentifier> idXmlIdMap;
-		try {
-			idXmlIdMap = XmlIdentifierDatabase.retrievePrefetchedMap(importType);
-		} catch (RetrieveObjectException e) {
-			Log.errorException(e);
-			return;
-		}
-		for (Identifier id : idXmlIdMap.keySet()) {
-			XmlIdentifier xmlId =  idXmlIdMap.get(id);
-			FORWARD_MAP.put(new Key(id, importType, KeyState.UP_TO_DATE), xmlId);
-			REVERSE_MAP.put(new XmlKey(xmlId, importType, KeyState.UP_TO_DATE), id);
-		}
-	}
-	
-	static void flush() {
-		Set<Identifier> idsToDelete = new HashSet<Identifier>();
-		Map<Key, XmlIdentifier> keysToCreate = new HashMap<Key, XmlIdentifier>();
-		for (Key key : FORWARD_MAP.keySet()) {
-			KeyState state = key.getState();
-			if(state.equals(KeyState.DELETED)) {				
-				idsToDelete.add(key.getId());
-			} else if(state.equals(KeyState.NEW)) {
-				keysToCreate.put(key, FORWARD_MAP.get(key));
-			}
-		}
-		Set<XmlIdentifier> xmlIdToDelete = new HashSet<XmlIdentifier>();
-		for (XmlKey xmlKey : REVERSE_MAP.keySet()) {
-			KeyState state = xmlKey.getState();
-			if(state.equals(KeyState.DELETED)) {				
-				xmlIdToDelete.add(xmlKey.getXmlId());
-			} else if(state.equals(KeyState.NEW)) {
-				keysToCreate.put(new Key(REVERSE_MAP.get(xmlKey), xmlKey.getImportType()), xmlKey.getXmlId());
-			}
-		}
-		
-		XmlIdentifierDatabase.removeIds(idsToDelete);
-		XmlIdentifierDatabase.removeXmlIds(xmlIdToDelete);
-		
-		try {
-			XmlIdentifierDatabase.insertKeys(keysToCreate);
-		} catch (CreateObjectException e) {
-			Log.errorException(e);
-		}
-	}
-	
-		
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: max $
-	 * @version $Revision: 1.3 $, $Date: 2005/09/10 17:07:53 $
+	 * @author $Author: bass $
+	 * @version $Revision: 1.4 $, $Date: 2005/09/11 11:45:47 $
 	 * @module general
 	 */
 	private static class XmlKey extends State{
@@ -336,11 +355,11 @@ public final class LocalXmlIdentifierPool {
 
 		private HashCodeGenerator hashCodeGenerator;
 		
-		protected XmlIdentifier getXmlId() {
+		XmlIdentifier getXmlId() {
 			return this.id;
 		}
 		
-		protected String getImportType() {
+		String getImportType() {
 			return this.importType;
 		}
 
@@ -349,12 +368,15 @@ public final class LocalXmlIdentifierPool {
 		 * @param importType
 		 */
 		private XmlKey(final XmlIdentifier id, final String importType) {
-			this.id = id;
-			this.importType = importType;
-			this.state = KeyState.NEW;
+			this(id, importType, KeyState.NEW);
 		}
-		
-		private XmlKey(final XmlIdentifier id, final String importType, KeyState state) {
+
+		/**
+		 * @param id
+		 * @param importType
+		 * @param state
+		 */
+		private XmlKey(final XmlIdentifier id, final String importType, final KeyState state) {
 			this.id = id;
 			this.importType = importType;
 			this.state = state;
