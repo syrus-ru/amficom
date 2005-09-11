@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.54 2005/09/09 17:26:38 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.55 2005/09/11 19:47:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
  * 
  * 
  * 
- * @version $Revision: 1.54 $, $Date: 2005/09/09 17:26:38 $
+ * @version $Revision: 1.55 $, $Date: 2005/09/11 19:47:32 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -500,7 +500,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_MAP, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_NAVIGATOR, true);
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_VIEW_ALL, true);
-    
+
 		aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT_CREATE, true);
 
 		aModel.fireModelChanged();
