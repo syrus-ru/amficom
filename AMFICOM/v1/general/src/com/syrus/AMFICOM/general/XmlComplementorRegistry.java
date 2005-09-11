@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlComplementorRegistry.java,v 1.8 2005/09/11 15:34:29 bass Exp $
+ * $Id: XmlComplementorRegistry.java,v 1.9 2005/09/11 15:36:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/09/11 15:34:29 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/11 15:36:58 $
  * @module general
  */
 public final class XmlComplementorRegistry {
@@ -79,11 +79,15 @@ public final class XmlComplementorRegistry {
 		assert storableObject != null : NON_NULL_EXPECTED;
 		final List<XmlComplementor> complementors = REGISTRY.get(new Short(entityCode));
 		if (complementors == null || complementors.isEmpty()) {
+			final long timeMillis = System.currentTimeMillis();
 			final String className = storableObject.getClass().getName();
 			if (!QUIET_CLASS_NAMES.contains(className)) {
 				QUIET_CLASS_NAMES.add(className);
 				Log.debugMessage("XmlComplementorRegistry.complementStorableObject() | no complementor(s) found fot type: "
-						+ className, INFO);
+						+ className + " ("
+						+ (System.currentTimeMillis() - timeMillis)
+						+ " ms)",
+						INFO);
 			}
 			return;
 		}
