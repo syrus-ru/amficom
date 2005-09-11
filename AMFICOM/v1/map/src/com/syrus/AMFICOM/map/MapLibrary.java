@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.22 2005/09/08 18:26:29 bass Exp $
+ * $Id: MapLibrary.java,v 1.23 2005/09/11 12:45:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/08 18:26:29 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/11 12:45:42 $
  * @author $Author: bass $
  * @module map
  */
@@ -332,7 +332,7 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 		}
 		xmlSitenodetypes.setSiteNodeTypeArray(xmlSiteNodeTypesArray.toArray(new XmlSiteNodeType[xmlSiteNodeTypesArray.size()]));
 
-		xmlMapLibrary.setImportType("amficom");
+		xmlMapLibrary.setImportType(importType);
 
 		return xmlMapLibrary;
 	}
