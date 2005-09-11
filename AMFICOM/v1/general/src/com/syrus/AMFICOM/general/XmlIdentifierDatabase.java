@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.6 2005/09/11 17:06:30 max Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.7 2005/09/11 17:14:40 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,6 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
-import com.sun.rowset.JdbcRowSetImpl;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool.Key;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.ApplicationProperties;
@@ -44,7 +43,7 @@ import com.syrus.util.database.DatabaseConnection;
 /**
  * @author max
  * @author $Author: max $
- * @version $Revision: 1.6 $, $Date: 2005/09/11 17:06:30 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/11 17:14:40 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -138,18 +137,20 @@ final class XmlIdentifierDatabase {
 		Connection connection = null;
 		try {
 			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
+			statement = connection.createStatement(
+	                ResultSet.TYPE_SCROLL_INSENSITIVE, 
+	                ResultSet.CONCUR_UPDATABLE);
 			Log.debugMessage("XmlIdentifierDatabase.retrieveByCondition | Trying: " + sql, DEBUGLEVEL10);
 			resultSet = statement.executeQuery(sql.toString());
-			JdbcRowSetImpl jdbcRS = new JdbcRowSetImpl(resultSet);
-			while (jdbcRS.next()) {
-				final Identifier id = DatabaseIdentifier.getIdentifier(jdbcRS, COLUMN_ID);
+			
+			while (resultSet.next()) {
+				final Identifier id = DatabaseIdentifier.getIdentifier(resultSet, COLUMN_ID);
 				if (StorableObjectDatabase.isPresentInDatabase(id)) {
 					final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
-					xmlId.setStringValue(jdbcRS.getString(COLUMN_FOREIGN_UID));
+					xmlId.setStringValue(resultSet.getString(COLUMN_FOREIGN_UID));
 					idXmlIdMap.put(id, xmlId);
 				} else {
-					jdbcRS.deleteRow();
+					resultSet.deleteRow();
 				}
 			}
 		} catch (final SQLException sqle) {
