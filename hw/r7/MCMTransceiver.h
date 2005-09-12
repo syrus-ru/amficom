@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: MCMTransceiver.h,v 1.4 2005/08/29 18:04:49 arseniy Exp $
+// $Id: MCMTransceiver.h,v 1.5 2005/09/12 18:40:34 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.4 $, $Date: 2005/08/29 18:04:49 $
+// $Revision: 1.5 $, $Date: 2005/09/12 18:40:34 $
 // $Author: arseniy $
 //
 // MCMTransceiver.h: interface for the MCMTransceiver class.
@@ -43,7 +43,6 @@ public:
 
 	pthread_t get_thread() const;
 	unsigned int get_max_mcm_timeout() const;
-	
 
 private:
 	static void* run(void* args);
