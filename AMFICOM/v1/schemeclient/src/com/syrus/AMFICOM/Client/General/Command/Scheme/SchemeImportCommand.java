@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.9 2005/09/12 02:52:18 bass Exp $
+ * $Id: SchemeImportCommand.java,v 1.10 2005/09/12 13:00:11 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -286,11 +286,8 @@ public class SchemeImportCommand extends AbstractCommand {
 			XmlLinkType xmlLinkType = xmlLinkTypesArray[i];
 			LinkType.createInstance(userId, importType, xmlLinkType);
 		}
-		XmlCableLinkTypeSeq xmlCableLinkTypes = doc.getCableLinkTypes();
-		XmlCableLinkType[] xmlCableLinkTypesArray = xmlCableLinkTypes.getCableLinkTypeArray();
-		for(int i = 0; i < xmlCableLinkTypesArray.length; i++) {
-			XmlCableLinkType xmlCableLinkType = xmlCableLinkTypesArray[i];
-			CableLinkType.createInstance(userId, importType, xmlCableLinkType);
+		for (final XmlCableLinkType cableLinkType : doc.getCableLinkTypes().getCableLinkTypeArray()) {
+			CableLinkType.createInstance(userId, cableLinkType, importType);
 		}
 		XmlEquipmentTypeSeq xmlEquipmentTypes = doc.getEquipmentTypes();
 		if (xmlEquipmentTypes != null) {
