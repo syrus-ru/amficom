@@ -142,69 +142,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		});
 
 		// PlanLayeredPanel panel = new PlanLayeredPanel();
-		this.frames = new UIDefaults();
-		this.frames.put(PLAN_FRAME, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				PlanFrame frame = new PlanFrame(aContext);
-				desktopPane1.add(frame);
-				return frame;
-			}
-		});
-
-		this.frames.put(PARAMETERS_FRAME, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				TestParametersFrame frame = new TestParametersFrame(aContext);
-				desktopPane1.add(frame);
-				return frame;
-			}
-		});
-
-		this.frames.put(PROPERTIES_FRAME, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				TestRequestFrame frame = new TestRequestFrame(aContext);
-				desktopPane1.add(frame);
-				return frame;
-			}
-		});
-
-		this.frames.put(TIME_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				TimeParametersFrame frame = new TimeParametersFrame(aContext);
-				desktopPane1.add(frame);
-				return frame;
-			}
-		});
-
-		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				ElementsTreeFrame frame = new ElementsTreeFrame(aContext);
-				desktopPane1.add(frame);
-				return frame;
-			}
-		});
-
-//		this.frames.put(SAVE_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
-//
-//			public Object createValue(UIDefaults table) {
-//				SaveParametersFrame frame = new SaveParametersFrame(aContext);
-//				desktopPane1.add(frame);
-//				return frame;
-//			}
-//		});
-
-		this.frames.put(TABLE_FRAME, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults table) {
-				TableFrame frame = new TableFrame(aContext);
-				desktopPane1.add(frame);
-				return frame;
-			}
-		});
+		
 
 	}
 
@@ -250,6 +188,72 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 	protected void initModule() {
 		super.initModule();
 
+		final JDesktopPane desktopPane1 = this.desktopPane;
+		
+		this.frames = new UIDefaults();
+		this.frames.put(PLAN_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				PlanFrame frame = new PlanFrame(getContext());
+				desktopPane1.add(frame);
+				return frame;
+			}
+		});
+
+		this.frames.put(PARAMETERS_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				TestParametersFrame frame = new TestParametersFrame(getContext());
+				desktopPane1.add(frame);
+				return frame;
+			}
+		});
+
+		this.frames.put(PROPERTIES_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				TestRequestFrame frame = new TestRequestFrame(getContext());
+				desktopPane1.add(frame);
+				return frame;
+			}
+		});
+
+		this.frames.put(TIME_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				TimeParametersFrame frame = new TimeParametersFrame(getContext());
+				desktopPane1.add(frame);
+				return frame;
+			}
+		});
+
+		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				ElementsTreeFrame frame = new ElementsTreeFrame(getContext());
+				desktopPane1.add(frame);
+				return frame;
+			}
+		});
+
+//		this.frames.put(SAVE_PARAMETERS_FRAME, new UIDefaults.LazyValue() {
+//
+//			public Object createValue(UIDefaults table) {
+//				SaveParametersFrame frame = new SaveParametersFrame(aContext);
+//				desktopPane1.add(frame);
+//				return frame;
+//			}
+//		});
+
+		this.frames.put(TABLE_FRAME, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults table) {
+				TableFrame frame = new TableFrame(getContext());
+				desktopPane1.add(frame);
+				return frame;
+			}
+		});
+		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PLAN, this.getLazyCommand(PLAN_FRAME));
 		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TREE, this.getLazyCommand(TREE_FRAME));
