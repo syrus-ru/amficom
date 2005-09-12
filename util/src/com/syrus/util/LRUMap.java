@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.39 2005/09/01 16:45:03 arseniy Exp $
+ * $Id: LRUMap.java,v 1.40 2005/09/12 16:39:43 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/09/01 16:45:03 $
+ * @version $Revision: 1.40 $, $Date: 2005/09/12 16:39:43 $
  * @author $Author: arseniy $
  * @module util
  */
@@ -36,8 +36,9 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 	public LRUMap(final int capacity) {
 		if (capacity > 0) {
 			this.array = new IEntry[capacity];
-		} else
+		} else {
 			throw new IllegalArgumentException("Illegal capacity: " + capacity);
+		}
 	}
 
 	public synchronized void clear() {
