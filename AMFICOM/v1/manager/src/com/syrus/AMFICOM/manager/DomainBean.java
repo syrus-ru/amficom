@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBean.java,v 1.12 2005/09/06 10:08:55 bob Exp $
+ * $Id: DomainBean.java,v 1.13 2005/09/12 11:10:16 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/06 10:08:55 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/12 11:10:16 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -66,7 +66,8 @@ public class DomainBean extends Bean {
 						Log.debugMessage("DomainBean.getMenu | " + port3, Log.DEBUGLEVEL10);
 						AbstractBean bean2 = port3.getBean();
 						
-						if (bean2 == null || !bean2.getCodeName().startsWith(NetBeanFactory.NET_CODENAME)) {
+						if (bean2 == null || 
+								!bean2.getCodeName().startsWith(NetBeanFactory.NET_CODENAME)) {
 							JOptionPane.showMessageDialog(popupMenu, 
 								LangModelManager.getString("Error.DomainContainsNotOnlyNetwork"), 
 								LangModelManager.getString("Error"),
@@ -75,34 +76,8 @@ public class DomainBean extends Bean {
 						}
 					}
 					
-					DomainBean.this.graphText.currentPerspectiveLabel.setText(LangModelManager.getString("Label.SelectedDomain") + ':' + ((DefaultGraphCell) cell).getUserObject());
+					DomainBean.this.graphText.setPerspective(new DomainPerpective(DomainBean.this.graphText, DomainBean.this, cell));				
 					
-					DomainBean.this.graphText.domainsButton.setEnabled(true);
-					
-					DomainBean.this.graphText.domainButton.setEnabled(false);
-					
-					DomainBean.this.graphText.netButton.setEnabled(false);
-					
-					DomainBean.this.graphText.userButton.setEnabled(true);
-
-					DomainBean.this.graphText.armButton.setEnabled(true);
-
-					DomainBean.this.graphText.rtuButton.setEnabled(true);
-
-					DomainBean.this.graphText.serverButton.setEnabled(true);
-
-					DomainBean.this.graphText.mcmButton.setEnabled(true);
-					
-					DomainBean.this.graphText.setPerspective(new DomainPerpective(DomainBean.this));
-					
-					DomainBean.this.graphText.showOnlyDescendants((DefaultGraphCell) cell);
-					
-					DomainBean.this.graphText.showOnly(new String[] {NetBeanFactory.NET_CODENAME, 
-							ObjectEntities.SYSTEMUSER, 
-							ARMBeanFactory.ARM_CODENAME, 
-							ObjectEntities.KIS, 
-							ObjectEntities.SERVER, 
-							ObjectEntities.MCM});
 					
 					
 				}

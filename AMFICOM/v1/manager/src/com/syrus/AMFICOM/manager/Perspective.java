@@ -1,5 +1,5 @@
 /*-
-* $Id: Perspective.java,v 1.2 2005/08/15 14:20:05 bob Exp $
+* $Id: Perspective.java,v 1.3 2005/09/12 11:10:16 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -10,16 +10,18 @@ package com.syrus.AMFICOM.manager;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/15 14:20:05 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/12 11:10:16 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
  */
 public interface Perspective {
 
-	// nothing ?
+	boolean isValid();
 	
 	String getPerspectiveName();
+	
+	void perspectiveApplied();
 	
 }
 

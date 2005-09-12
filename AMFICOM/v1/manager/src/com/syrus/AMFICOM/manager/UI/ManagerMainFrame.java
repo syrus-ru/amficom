@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.6 2005/09/08 14:35:02 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.7 2005/09/12 11:10:16 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -119,7 +119,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/08 14:35:02 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/12 11:10:16 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -1504,15 +1504,28 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		return this.perspective;
 	}
 	
-	public final void setPerspective(final Perspective perspective) {
+	public final boolean setPerspective(final Perspective perspective) {
 		assert perspective != null;		
-		this.perspective = perspective;
+		
+		if (this.perspective != null) {
+			if (!this.perspective.isValid()) {
+				JOptionPane.showMessageDialog(this.graph, 
+					LangModelManager.getString("Error.LayoutIsInvalid"),
+					LangModelGeneral.getString("Error"),
+					JOptionPane.ERROR_MESSAGE);
+				return false;
+			}
+		}
+		
 		try {
-			this.arrangeLayoutItems();
+			this.perspective = perspective;
+			this.arrangeLayoutItems();		
+			this.perspective.perspectiveApplied();
 		} catch (ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
+		return true;
 	}
 	
 	public final Dispatcher getDispatcher() {

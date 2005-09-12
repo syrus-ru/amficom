@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.20 2005/09/06 16:15:09 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.21 2005/09/12 11:10:16 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/06 16:15:09 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/12 11:10:16 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -91,33 +91,35 @@ public class NetBeanFactory extends AbstractBeanFactory {
 					}
 				}
 				
-				LinkedIdsCondition linkedIdsCondition = 
-					new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
-						ObjectEntities.LAYOUT_ITEM_CODE);
-				
-				Set<LayoutItem> beanChildrenLayoutItems =  StorableObjectPool.getStorableObjectsByCondition(
-					linkedIdsCondition, 
-					true, 
-					true);
-				
-				beanChildrenLayoutItems.addAll(beanLayoutItems);
-				
-				for(LayoutItem layoutItem : beanChildrenLayoutItems) {
-					if(layoutItem.getName().startsWith(NET_CODENAME)) {
-						continue;
-					}
-					if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
-						Log.debugMessage("NetBean.dispose | " 
-							+ layoutItem.getId() + ", "
-							+ layoutItem.getName() 
-							+ ", layoutName:" 
-							+ layoutItem.getLayoutName(),							
-						Log.DEBUGLEVEL10);		
-						
-						AbstractBean childBean = this.graphText.getCell(layoutItem);
-						System.out.println(".dispose() | " + childBean);
-						childBean.dispose();
-						childBean.disposeLayoutItem();
+				if (!beanLayoutItems.isEmpty()) {
+					LinkedIdsCondition linkedIdsCondition = 
+						new LinkedIdsCondition(Identifier.createIdentifiers(beanLayoutItems),
+							ObjectEntities.LAYOUT_ITEM_CODE);
+					
+					Set<LayoutItem> beanChildrenLayoutItems =  StorableObjectPool.getStorableObjectsByCondition(
+						linkedIdsCondition, 
+						true, 
+						true);
+					
+					beanChildrenLayoutItems.addAll(beanLayoutItems);
+					
+					for(LayoutItem layoutItem : beanChildrenLayoutItems) {
+						if(layoutItem.getName().startsWith(NET_CODENAME)) {
+							continue;
+						}
+						if (layoutItem.getLayoutName().startsWith(ObjectEntities.DOMAIN)) {
+							Log.debugMessage("NetBean.dispose | " 
+								+ layoutItem.getId() + ", "
+								+ layoutItem.getName() 
+								+ ", layoutName:" 
+								+ layoutItem.getLayoutName(),							
+							Log.DEBUGLEVEL10);		
+							
+							AbstractBean childBean = this.graphText.getCell(layoutItem);
+							System.out.println(".dispose() | " + childBean);
+							childBean.dispose();
+							childBean.disposeLayoutItem();
+						}
 					}
 				}
 				
