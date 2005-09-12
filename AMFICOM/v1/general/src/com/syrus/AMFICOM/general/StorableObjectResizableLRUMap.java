@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectResizableLRUMap.java,v 1.10 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: StorableObjectResizableLRUMap.java,v 1.11 2005/09/12 19:53:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Set;
 import com.syrus.util.LRUMap;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/08 11:27:25 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/12 19:53:00 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -36,10 +36,15 @@ public class StorableObjectResizableLRUMap extends LRUMap<Identifier, StorableOb
 
 	@Override
 	public synchronized StorableObject put(final Identifier key, final StorableObject value) {
-		assert (value != null) : "Use only StorableObject as value";
+		assert (value != null) : ErrorMessages.NON_NULL_EXPECTED;
+
 		final StorableObject thrownObject = super.put(key, value);
-		if (thrownObject == null || !thrownObject.isChanged())
+		if (thrownObject == null || !thrownObject.isChanged()) {
 			return thrownObject;
+		}
+
+		assert (super.array.length == super.entityCount) : "ERROR before LRUMap resize: entity count " + super.entityCount
+				+ " does not match array length " + super.array.length;
 
 		for (int i = super.array.length - 1; i >= 0; i--) {
 			final StorableObject storableObject = super.array[i].getValue();
@@ -52,11 +57,11 @@ public class StorableObjectResizableLRUMap extends LRUMap<Identifier, StorableOb
 			}
 		}
 
-		super.entityCount++;
 		final IEntry<Identifier, StorableObject>[] array1 = new IEntry[super.array.length + SIZE];
 		System.arraycopy(super.array, 0, array1, 0, super.array.length);
 		array1[super.array.length] = new Entry(thrownObject.getId(), thrownObject);
 		super.array = array1;
+		super.entityCount++;
 		return null;
 	}
 
