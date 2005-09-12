@@ -56,6 +56,7 @@ AMFICOM_v1	&tools\
 		&report \
 		&reportclient \
 		&reportbuilder \
+		&reportother \
 		&resource \
 		&server \
 		&servermisc \
@@ -175,6 +176,8 @@ reportclient		AMFICOM/v1/reportclient
 #M	reportbuilder	Report builder module
 reportbuilder		AMFICOM/v1/reportbuilder
 reportbuilder_v1	AMFICOM/v1/reportbuilder
+#M	reportother
+reportother		AMFICOM/v1/reportother
 #M	resource	Images'n'stuff
 resource		AMFICOM/v1/resource
 resource_v1		AMFICOM/v1/resource
