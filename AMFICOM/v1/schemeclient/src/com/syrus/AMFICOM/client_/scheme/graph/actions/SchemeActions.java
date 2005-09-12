@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.27 2005/09/11 15:28:45 stas Exp $
+ * $Id: SchemeActions.java,v 1.28 2005/09/12 02:52:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
+
+import static java.util.logging.Level.SEVERE;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -87,8 +89,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.27 $, $Date: 2005/09/11 15:28:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/09/12 02:52:18 $
  * @module schemeclient
  */
 
@@ -272,11 +274,15 @@ public class SchemeActions {
 	}
 
 	static boolean isSchemesGroup(DeviceGroup group) {
-		SchemeElement se = group.getSchemeElement();
-		if (se != null && se.getKind().equals(IdlSchemeElementKind.SCHEME_CONTAINER)) {
-			IdlKind kind = se.getScheme().getKind();
-			if (kind.equals(IdlKind.BUILDING) || kind.equals(IdlKind.NETWORK))
-				return true;
+		try {
+			SchemeElement se = group.getSchemeElement();
+			if (se != null && se.getKind().equals(IdlSchemeElementKind.SCHEME_CONTAINER)) {
+				IdlKind kind = se.getScheme(false).getKind();
+				if (kind.equals(IdlKind.BUILDING) || kind.equals(IdlKind.NETWORK))
+					return true;
+			}
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
 		}
 		return false;
 	}

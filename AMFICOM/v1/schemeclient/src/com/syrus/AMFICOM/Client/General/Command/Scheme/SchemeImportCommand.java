@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.8 2005/09/11 20:23:53 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.9 2005/09/12 02:52:18 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -419,7 +419,7 @@ public class SchemeImportCommand extends AbstractCommand {
 		for (SchemeElement schemeElement : scheme.getSchemeElements()) {
  			if (schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
 				// if no real Scheme associated create new scheme with internal VRM's
-				if (schemeElement.getScheme() == null) {
+				if (schemeElement.getScheme(false) == null) {
 					Log.debugMessage("No real scheme for " + schemeElement.getName(), Level.FINEST);
 					
 					Scheme internalScheme = Scheme.createInstance(userId, schemeElement.getName(), IdlKind.BUILDING, domainId);

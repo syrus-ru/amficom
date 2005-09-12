@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.87 2005/09/12 00:10:48 bass Exp $
+ * $Id: Scheme.java,v 1.88 2005/09/12 02:52:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2005/09/12 00:10:48 $
+ * @version $Revision: 1.88 $, $Date: 2005/09/12 02:52:17 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1321,14 +1321,15 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
+	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	public Set<SchemeLink> getSchemeLinksRecursively()
+	public Set<SchemeLink> getSchemeLinksRecursively(final boolean usePool)
 	throws ApplicationException {
 		final Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
 		schemeLinks.addAll(this.getSchemeLinks0());
 		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
-			schemeLinks.addAll(schemeElement.getSchemeLinksRecursively());
+			schemeLinks.addAll(schemeElement.getSchemeLinksRecursively(usePool));
 		}
 		return Collections.unmodifiableSet(schemeLinks);
 	}
@@ -1336,12 +1337,12 @@ public final class Scheme extends AbstractCloneableDomainMember
 	/**
 	 * @throws ApplicationException
 	 */
-	public Set<SchemeCableLink> getSchemeCableLinksRecursively()
+	public Set<SchemeCableLink> getSchemeCableLinksRecursively(final boolean usePool)
 	throws ApplicationException {
 		final Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
 		schemeCableLinks.addAll(this.getSchemeCableLinks0());
 		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
-			schemeCableLinks.addAll(schemeElement.getSchemeCableLinksRecursively());
+			schemeCableLinks.addAll(schemeElement.getSchemeCableLinksRecursively(usePool));
 		}
 		return Collections.unmodifiableSet(schemeCableLinks);
 	}
@@ -1370,14 +1371,14 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 */
 	@Shitlet
 	@Deprecated
-	public Set<SchemeCableLink> getTopologicalSchemeCableLinksRecursively()
+	public Set<SchemeCableLink> getTopologicalSchemeCableLinksRecursively(final boolean usePool)
 	throws ApplicationException {
 		final Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
 		schemeCableLinks.addAll(this.getSchemeCableLinks0());
 		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
-			for (final Scheme scheme : schemeElement.getSchemes0()) {
+			for (final Scheme scheme : schemeElement.getSchemes0(usePool)) {
 				if (scheme.kind == CABLE_SUBNETWORK) {
-					schemeCableLinks.addAll(scheme.getTopologicalSchemeCableLinksRecursively());
+					schemeCableLinks.addAll(scheme.getTopologicalSchemeCableLinksRecursively(usePool));
 				}
 			}
 		}
@@ -1390,7 +1391,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 */
 	@Shitlet
 	@Deprecated
-	public Set<SchemePath> getTopologicalSchemePathsRecursively()
+	public Set<SchemePath> getTopologicalSchemePathsRecursively(final boolean usePool)
 	throws ApplicationException {
 		final Set<SchemePath> schemePaths = new HashSet<SchemePath>();
 		final SchemeMonitoringSolution currentSchemeMonitoringSolution = this.getCurrentSchemeMonitoringSolution();
@@ -1398,9 +1399,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 			schemePaths.addAll(currentSchemeMonitoringSolution.getSchemePaths0());
 		}
 		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
-			for (final Scheme scheme : schemeElement.getSchemes0()) {
+			for (final Scheme scheme : schemeElement.getSchemes0(usePool)) {
 				if (scheme.kind == CABLE_SUBNETWORK) {
-					schemePaths.addAll(scheme.getTopologicalSchemePathsRecursively());
+					schemePaths.addAll(scheme.getTopologicalSchemePathsRecursively(usePool));
 				}
 			}
 		}
@@ -1413,16 +1414,16 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 */
 	@Shitlet
 	@Deprecated
-	public Set<SchemeElement> getTopLevelSchemeElementsRecursively()
+	public Set<SchemeElement> getTopLevelSchemeElementsRecursively(final boolean usePool)
 	throws ApplicationException {
 		final Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
 		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
-			final Set<Scheme> schemes = schemeElement.getSchemes0();
+			final Set<Scheme> schemes = schemeElement.getSchemes0(usePool);
 			if (schemes.isEmpty()) {
 				schemeElements.add(schemeElement);
 			} else {
 				for (final Scheme scheme : schemes) {
-					schemeElements.addAll(scheme.getTopLevelSchemeElementsRecursively());
+					schemeElements.addAll(scheme.getTopLevelSchemeElementsRecursively(usePool));
 				}
 			}
 		}
@@ -1435,17 +1436,17 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 */
 	@Shitlet
 	@Deprecated
-	public Set<SchemeElement> getTopologicalSchemeElementsRecursively()
+	public Set<SchemeElement> getTopologicalSchemeElementsRecursively(final boolean usePool)
 	throws ApplicationException {
 		final Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
 		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
-			final Set<Scheme> schemes = schemeElement.getSchemes0();
+			final Set<Scheme> schemes = schemeElement.getSchemes0(usePool);
 			if (schemes.isEmpty()) {
 				schemeElements.add(schemeElement);
 			} else {
 				for (final Scheme scheme: schemes) {
 					if (scheme.getKind() == CABLE_SUBNETWORK) {
-						schemeElements.addAll(scheme.getTopologicalSchemeElementsRecursively());
+						schemeElements.addAll(scheme.getTopologicalSchemeElementsRecursively(usePool));
 					} else {
 						schemeElements.add(schemeElement);
 					}
@@ -1462,17 +1463,18 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 */
 	@Shitlet
 	@Deprecated
-	public SchemeElement getTopologicalSchemeElement(final SchemeElement schemeElement)
+	public SchemeElement getTopologicalSchemeElement(final SchemeElement schemeElement,
+			final boolean usePool)
 	throws ApplicationException {
 		if (schemeElement.getParentSchemeId().equals(this)) {
 			return schemeElement;
 		}
 		for (final SchemeElement schemeElement1 : this.getSchemeElements0()) {
-			for (final Scheme scheme : schemeElement1.getSchemes0()) {
-				if (schemeElement1.getChildSchemeElementsRecursively().contains(schemeElement)) {
+			for (final Scheme scheme : schemeElement1.getSchemes0(usePool)) {
+				if (schemeElement1.getChildSchemeElementsRecursively(usePool).contains(schemeElement)) {
 					return schemeElement1;
 				}
-				final SchemeElement schemeElement2 = scheme.getTopologicalSchemeElement(schemeElement);
+				final SchemeElement schemeElement2 = scheme.getTopologicalSchemeElement(schemeElement, usePool);
 				if (schemeElement2 != null) {
 					return scheme.getKind() == CABLE_SUBNETWORK ? schemeElement2 : schemeElement;
 				}
@@ -1488,15 +1490,16 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 */
 	@Shitlet
 	@Deprecated
-	public boolean containsSchemeLink(final Identifier schemeLinkId)
+	public boolean containsSchemeLink(final Identifier schemeLinkId,
+			final boolean usePool)
 	throws ApplicationException {
 		if (this.getSchemeLinks0().contains(schemeLinkId)) {
 			return true;
 		}
 		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
-			for (final Scheme scheme : schemeElement.getSchemes0()) {
-				if (schemeElement.containsSchemeLink(schemeLinkId)
-						|| scheme.containsSchemeLink(schemeLinkId)) {
+			for (final Scheme scheme : schemeElement.getSchemes0(usePool)) {
+				if (schemeElement.containsSchemeLink(schemeLinkId, usePool)
+						|| scheme.containsSchemeLink(schemeLinkId, usePool)) {
 					return true;
 				}
 			}
@@ -1506,19 +1509,21 @@ public final class Scheme extends AbstractCloneableDomainMember
 
 	/**
 	 * @param schemeCableLinkId
+	 * @param usePool
 	 * @throws ApplicationException
 	 * @deprecated
 	 */
 	@Shitlet
 	@Deprecated
-	public boolean containsSchemeCableLink(final Identifier schemeCableLinkId)
+	public boolean containsSchemeCableLink(final Identifier schemeCableLinkId,
+			final boolean usePool)
 	throws ApplicationException {
 		if (this.getSchemeCableLinks0().contains(schemeCableLinkId)) {
 			return true;
 		}
 		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
-			for (final Scheme scheme : schemeElement.getSchemes0()) {
-				if (scheme.containsSchemeCableLink(schemeCableLinkId)) {
+			for (final Scheme scheme : schemeElement.getSchemes0(usePool)) {
+				if (scheme.containsSchemeCableLink(schemeCableLinkId, usePool)) {
 					return true;
 				}
 			}
@@ -1533,15 +1538,16 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 */
 	@Shitlet
 	@Deprecated
-	public boolean containsSchemeElement(final SchemeElement schemeElement)
+	public boolean containsSchemeElement(final SchemeElement schemeElement,
+			final boolean usePool)
 	throws ApplicationException {
 		if (schemeElement.getParentSchemeId().equals(this)) {
 			return true;
 		}
 		for (final SchemeElement schemeElement1 : this.getSchemeElements0()) {
-			for (final Scheme scheme : schemeElement1.getSchemes0()) {
-				if ((schemeElement1.containsSchemeElement(schemeElement))
-						|| scheme.containsSchemeElement(schemeElement)) {
+			for (final Scheme scheme : schemeElement1.getSchemes0(usePool)) {
+				if ((schemeElement1.containsSchemeElement(schemeElement, usePool))
+						|| scheme.containsSchemeElement(schemeElement, usePool)) {
 					return true;
 				}
 			}

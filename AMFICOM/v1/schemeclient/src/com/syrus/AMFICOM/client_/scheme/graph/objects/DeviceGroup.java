@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceGroup.java,v 1.12 2005/09/07 18:33:01 bass Exp $
+ * $Id: DeviceGroup.java,v 1.13 2005/09/12 02:52:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client_.scheme.graph.objects;
+
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Map;
 
@@ -23,7 +25,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/09/07 18:33:01 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/12 02:52:18 $
  * @module schemeclient
  */
 
@@ -91,19 +93,17 @@ public class DeviceGroup extends DefaultGraphCell {
 	}
 
 	public Scheme getScheme() {
-		if (this.type == SCHEME) {
-			try {
-				return (Scheme)StorableObjectPool.getStorableObject(this.elementId, true);
-			} catch (ApplicationException e) {
-				Log.errorException(e);
+		try {
+			if (this.type == SCHEME) {
+				return StorableObjectPool.getStorableObject(this.elementId, true);
+			} else if (this.type == SCHEME_ELEMENT) { 
+				SchemeElement element = getSchemeElement();
+				if (element != null && element.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
+					return element.getScheme(false);
+				}
 			}
-		}
-		else 
-		if (this.type == SCHEME_ELEMENT) { 
-			SchemeElement element = getSchemeElement();
-			if (element != null && element.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
-				return element.getScheme();
-			}
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
 		}
 		return null;
 	}

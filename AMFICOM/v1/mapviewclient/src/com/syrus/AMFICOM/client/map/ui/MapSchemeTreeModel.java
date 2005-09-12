@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.32 2005/09/08 06:50:34 krupenn Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.33 2005/09/12 02:52:18 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -8,6 +8,8 @@
  */
 
 package com.syrus.AMFICOM.client.map.ui;
+
+import static java.util.logging.Level.SEVERE;
 
 import java.awt.Image;
 import java.awt.Toolkit;
@@ -32,6 +34,7 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
+import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 
@@ -83,8 +86,8 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.32 $, $Date: 2005/09/08 06:50:34 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.33 $, $Date: 2005/09/12 02:52:18 $
+ * @author $Author: bass $
  * @module mapviewclient
  */
 public class MapSchemeTreeModel 
@@ -232,71 +235,79 @@ public class MapSchemeTreeModel
 	}
 
 	Item buildInternalSchemesTree(Scheme parentScheme, boolean topological) {
-		
-		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(null,SCHEME_BRANCH, getObjectName(SCHEME_BRANCH), true);
-		MapSchemeTreeNode childNode;
-		treeNode.setTopological(topological);
-
-		List compoundElements = new LinkedList();
-		for (final Iterator schemeElementIterator = parentScheme.getSchemeElements().iterator(); schemeElementIterator.hasNext();) {
-			final SchemeElement schemeElement = (SchemeElement) 
-					schemeElementIterator.next();
-			if (schemeElement.getScheme() != null)
-				compoundElements.add(schemeElement);
-		}
-		
-		if(compoundElements.size() > 0) {
-			for(Iterator it = compoundElements.iterator(); it.hasNext();) {
-				SchemeElement schemeElement = (SchemeElement )it.next();
-				Scheme internalScheme = schemeElement.getScheme();
-
-				if(	internalScheme.getKind().value() != IdlKind._CABLE_SUBNETWORK) {
-					if(topological)
-						childNode = buildSchemeTree(internalScheme, true, false);
-					else
-						childNode = buildSchemeTree(internalScheme, false, false);
-				}
-				else
-					childNode = buildSchemeTree(internalScheme, false, topological);
-				treeNode.addChild(childNode);
+		try {
+			MapSchemeTreeNode treeNode = new MapSchemeTreeNode(null,SCHEME_BRANCH, getObjectName(SCHEME_BRANCH), true);
+			MapSchemeTreeNode childNode;
+			treeNode.setTopological(topological);
+	
+			List compoundElements = new LinkedList();
+			for (final Iterator schemeElementIterator = parentScheme.getSchemeElements().iterator(); schemeElementIterator.hasNext();) {
+				final SchemeElement schemeElement = (SchemeElement) 
+						schemeElementIterator.next();
+				if (schemeElement.getScheme(false) != null)
+					compoundElements.add(schemeElement);
 			}
-		}
+			
+			if(compoundElements.size() > 0) {
+				for(Iterator it = compoundElements.iterator(); it.hasNext();) {
+					SchemeElement schemeElement = (SchemeElement )it.next();
+					Scheme internalScheme = schemeElement.getScheme(false);
+	
+					if(	internalScheme.getKind().value() != IdlKind._CABLE_SUBNETWORK) {
+						if(topological)
+							childNode = buildSchemeTree(internalScheme, true, false);
+						else
+							childNode = buildSchemeTree(internalScheme, false, false);
+					}
+					else
+						childNode = buildSchemeTree(internalScheme, false, topological);
+					treeNode.addChild(childNode);
+				}
+			}
 		
-		return treeNode;
+			return treeNode;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
 	}
 
 	Item buildElementsTree(Scheme scheme, boolean topological) {
-		
-		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(null,ELEMENT_BRANCH, getObjectName(ELEMENT_BRANCH), true);
-		MapSchemeTreeNode childNode;
-		treeNode.setTopological(topological);
-
-		Set compoundElements = scheme.getSchemeElements();
-
-		if(compoundElements.size() > 0) {
-			for(Iterator it = compoundElements.iterator(); it.hasNext();) {
-				SchemeElement element = (SchemeElement)it.next();
-				boolean allowsChildren = (element.getSchemeLinks().size() != 0 || element.getSchemeElements().size() != 0);
-
-				Scheme internalScheme = element.getScheme();
-				
-				if(internalScheme != null) {
-					continue;
-//					childNode = buildSchemeTree(
-//							internalScheme, 
-//							internalScheme.getKind().equals(IdlKind.CABLE_SUBNETWORK), 
-//							topological); 
+		try {
+			MapSchemeTreeNode treeNode = new MapSchemeTreeNode(null,ELEMENT_BRANCH, getObjectName(ELEMENT_BRANCH), true);
+			MapSchemeTreeNode childNode;
+			treeNode.setTopological(topological);
+	
+			Set compoundElements = scheme.getSchemeElements();
+	
+			if(compoundElements.size() > 0) {
+				for(Iterator it = compoundElements.iterator(); it.hasNext();) {
+					SchemeElement element = (SchemeElement)it.next();
+					boolean allowsChildren = (element.getSchemeLinks().size() != 0 || element.getSchemeElements().size() != 0);
+	
+					Scheme internalScheme = element.getScheme(false);
+					
+					if(internalScheme != null) {
+						continue;
+//						childNode = buildSchemeTree(
+//								internalScheme, 
+//								internalScheme.getKind().equals(IdlKind.CABLE_SUBNETWORK), 
+//								topological); 
+					}
+					else if(topological) {
+						childNode = (MapSchemeTreeNode )buildElementTree(element, true, false, allowsChildren); 
+					}
+					else
+						childNode = (MapSchemeTreeNode )buildElementTree(element, false, false, allowsChildren); 
+					treeNode.addChild(childNode);
 				}
-				else if(topological) {
-					childNode = (MapSchemeTreeNode )buildElementTree(element, true, false, allowsChildren); 
-				}
-				else
-					childNode = (MapSchemeTreeNode )buildElementTree(element, false, false, allowsChildren); 
-				treeNode.addChild(childNode);
 			}
+	
+			return treeNode;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
 		}
-
-		return treeNode;
 	}
 	
 	Item buildElementTree(SchemeElement element, boolean isDragDropEnabled, boolean topological, boolean allowsChildren) {
@@ -317,32 +328,50 @@ public class MapSchemeTreeModel
 	}
 
 	Item buildElementsTree(SchemeElement schemeElement, boolean topological) {
-		
-		MapSchemeTreeNode treeNode = new MapSchemeTreeNode(null,ELEMENT_BRANCH, getObjectName(ELEMENT_BRANCH), true);
-		MapSchemeTreeNode childNode;
-		treeNode.setTopological(topological);
+		try {
+			MapSchemeTreeNode treeNode = new MapSchemeTreeNode(
+					null, ELEMENT_BRANCH,
+					getObjectName(ELEMENT_BRANCH), true);
+			MapSchemeTreeNode childNode;
+			treeNode.setTopological(topological);
 
-		Set compoundElements = schemeElement.getSchemeElements();
+			Set compoundElements = schemeElement
+					.getSchemeElements();
 
-		if(compoundElements.size() > 0) {
-			for(Iterator it = compoundElements.iterator(); it.hasNext();) {
-				SchemeElement element = (SchemeElement)it.next();
-				boolean allowsChildren = (element.getSchemeLinks().size() != 0 || element.getSchemeElements().size() != 0);
+			if (compoundElements.size() > 0) {
+				for (Iterator it = compoundElements.iterator(); it
+						.hasNext();) {
+					SchemeElement element = (SchemeElement) it
+							.next();
+					boolean allowsChildren = (element
+							.getSchemeLinks()
+							.size() != 0 || element
+							.getSchemeElements()
+							.size() != 0);
 
-				Scheme internalScheme = element.getScheme();
-				if(internalScheme != null) {
-					continue;
+					Scheme internalScheme = element
+							.getScheme(false);
+					if (internalScheme != null) {
+						continue;
+					} else if (topological) {
+						childNode = (MapSchemeTreeNode) buildElementTree(
+								element, true,
+								topological,
+								allowsChildren);
+					} else
+						childNode = (MapSchemeTreeNode) buildElementTree(
+								element, false,
+								topological,
+								allowsChildren);
+					treeNode.addChild(childNode);
 				}
-				else if(topological) {
-					childNode = (MapSchemeTreeNode )buildElementTree(element, true, topological, allowsChildren); 
-				}
-				else
-					childNode = (MapSchemeTreeNode )buildElementTree(element, false, topological, allowsChildren); 
-				treeNode.addChild(childNode);
 			}
-		}
 
-		return treeNode;
+			return treeNode;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return null;
+		}
 	}
 
 	Item buildLinksTree(SchemeElement schemeElement, boolean topological) {
@@ -399,7 +428,7 @@ public class MapSchemeTreeModel
 		treeNode.setTopological(topological);
 
 		try {
-			for (final SchemePath schemePath : parentScheme.getTopologicalSchemePathsRecursively()) {
+			for (final SchemePath schemePath : parentScheme.getTopologicalSchemePathsRecursively(false)) {
 				MapSchemeTreeNode childNode;
 				if (topological) {
 					childNode = new MapSchemeTreeNode(null, schemePath, getObjectName(schemePath), pathIcon, false);

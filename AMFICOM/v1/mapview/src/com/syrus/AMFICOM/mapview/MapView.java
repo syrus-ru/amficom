@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.59 2005/09/09 17:21:47 krupenn Exp $
+* $Id: MapView.java,v 1.60 2005/09/12 02:52:18 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: krupenn $
- * @version $Revision: 1.59 $, $Date: 2005/09/09 17:21:47 $
+ * @author $Author: bass $
+ * @version $Revision: 1.60 $, $Date: 2005/09/12 02:52:18 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Namable {
@@ -380,15 +380,14 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getStartNode(final SchemeCableLink schemeCableLink) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (scheme.getTopologicalSchemeCableLinksRecursively().contains(schemeCableLink)) {
+				if (scheme.getTopologicalSchemeCableLinksRecursively(false).contains(schemeCableLink)) {
 					SchemeCablePort sourceAbstractSchemePort = schemeCableLink.getSourceAbstractSchemePort();
 					if(sourceAbstractSchemePort == null) {
 						// SchemeCableLink has no start device
 						return null;
 					}
 					SchemeElement sourceSchemeElement = sourceAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement();
-					final SchemeElement se = scheme.getTopologicalSchemeElement(
-							SchemeUtils.getTopLevelSchemeElement(sourceSchemeElement));
+					final SchemeElement se = scheme.getTopologicalSchemeElement(SchemeUtils.getTopLevelSchemeElement(sourceSchemeElement), false);
 					return findElement(se);
 				}
 			}
@@ -410,15 +409,14 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getEndNode(final SchemeCableLink schemeCableLink) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (scheme.getTopologicalSchemeCableLinksRecursively().contains(schemeCableLink)) {
+				if (scheme.getTopologicalSchemeCableLinksRecursively(false).contains(schemeCableLink)) {
 					SchemeCablePort targetAbstractSchemePort = schemeCableLink.getTargetAbstractSchemePort();
 					if(targetAbstractSchemePort == null) {
 						// SchemeCableLink has no end device
 						return null;
 					}
 					SchemeElement targetSchemeElement = targetAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement();
-					final SchemeElement se = scheme.getTopologicalSchemeElement(
-							SchemeUtils.getTopLevelSchemeElement(targetSchemeElement));
+					final SchemeElement se = scheme.getTopologicalSchemeElement(SchemeUtils.getTopLevelSchemeElement(targetSchemeElement), false);
 					return findElement(se);
 				}
 			}
@@ -440,9 +438,8 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getStartNode(final SchemePath schemePath) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (scheme.getTopologicalSchemePathsRecursively().contains(schemePath)) {
-					final SchemeElement se = scheme.getTopologicalSchemeElement(
-							SchemeUtils.getTopLevelSchemeElement(schemePath.getStartSchemeElement()));
+				if (scheme.getTopologicalSchemePathsRecursively(false).contains(schemePath)) {
+					final SchemeElement se = scheme.getTopologicalSchemeElement(SchemeUtils.getTopLevelSchemeElement(schemePath.getStartSchemeElement()), false);
 					return findElement(se);
 				}
 			}
@@ -464,9 +461,8 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getEndNode(final SchemePath schemePath) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (scheme.getTopologicalSchemePathsRecursively().contains(schemePath)) {
-					final SchemeElement se = scheme.getTopologicalSchemeElement(
-							SchemeUtils.getTopLevelSchemeElement(schemePath.getEndSchemeElement()));
+				if (scheme.getTopologicalSchemePathsRecursively(false).contains(schemePath)) {
+					final SchemeElement se = scheme.getTopologicalSchemeElement(SchemeUtils.getTopLevelSchemeElement(schemePath.getEndSchemeElement()), false);
 					return findElement(se);
 				}
 			}

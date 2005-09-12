@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.19 2005/08/31 17:23:36 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.20 2005/09/12 02:52:17 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/08/31 17:23:36 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/12 02:52:17 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -681,7 +681,7 @@ public final class SchemePathTestCase extends TestCase {
 		}
 	}
 
-	public void testSchemeClone() throws CreateObjectException, CloneNotSupportedException {
+	public void testSchemeClone() throws ApplicationException, CloneNotSupportedException {
 		final Identifier userId = new Identifier("User_0");
 		final Identifier domainId = new Identifier("Domain_0");
 
@@ -709,7 +709,7 @@ public final class SchemePathTestCase extends TestCase {
 		
 		final Scheme scheme0prime = scheme0.clone();
 		final SchemeElement schemeElement0prime = scheme0prime.getSchemeElements().iterator().next();
-		final Scheme scheme1prime = schemeElement0prime.getSchemes().iterator().next();
+		final Scheme scheme1prime = schemeElement0prime.getSchemes(true).iterator().next();
 		final SchemeElement schemeElement1prime = scheme1prime.getSchemeElements().iterator().next();
 
 		final SchemeDevice schemeDevice0prime = schemeElement1prime.getSchemeDevices().iterator().next();

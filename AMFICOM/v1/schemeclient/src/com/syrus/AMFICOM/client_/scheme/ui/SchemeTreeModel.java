@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.37 2005/09/11 20:23:53 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.38 2005/09/12 02:52:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.37 $, $Date: 2005/09/11 20:23:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/09/12 02:52:18 $
  * @module schemeclient
  */
 
@@ -136,7 +136,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						SchemeElement sc = (SchemeElement) it.next();
 						if (sc.getKind().equals(IdlSchemeElementKind.SCHEME_CONTAINER) ) {
-							Scheme scheme = sc.getScheme();
+							Scheme scheme = sc.getScheme(false);
 							node.addChild(new PopulatableIconedNode(this, scheme != null ? scheme : sc));
 							}
 					}

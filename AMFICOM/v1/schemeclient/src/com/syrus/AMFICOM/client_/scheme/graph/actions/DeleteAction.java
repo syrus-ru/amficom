@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.18 2005/09/07 18:33:01 bass Exp $
+ * $Id: DeleteAction.java,v 1.19 2005/09/12 02:52:18 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.client_.scheme.graph.actions;
+
+import static java.util.logging.Level.SEVERE;
 
 import java.awt.event.ActionEvent;
 import java.util.Enumeration;
@@ -55,7 +57,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/09/07 18:33:01 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/12 02:52:18 $
  * @module schemeclient
  */
 
@@ -275,26 +277,30 @@ public class DeleteAction extends AbstractAction {
 	}
 	
 	static void deleteDeviceGroup(DeviceGroup group) {
-		cellsToDelete.add(group);
-		if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
-			SchemeElement element = group.getSchemeElement();
-			
-			if (element.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
-				Scheme scheme = element.getScheme();
+		try {
+			cellsToDelete.add(group);
+			if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
+				SchemeElement element = group.getSchemeElement();
+				
+				if (element.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
+					Scheme scheme = element.getScheme(false);
+					deleteScheme(scheme);
+				} else {
+					deleteSchemeElement(element);
+				}
+			} else if (group.getType() == DeviceGroup.PROTO_ELEMENT) {
+				SchemeProtoElement element = group.getProtoElement();
+				deleteSchemeProtoElement(element);
+				// FIXME can't check childs while object itself not saved
+//				for (Iterator it = element.getSchemeProtoElements().iterator(); it.hasNext();) {
+//					this.objectsToDelete.add(((SchemeElement)it.next()).getId());
+//				}
+			} else if (group.getType() == DeviceGroup.SCHEME) {
+				Scheme scheme = group.getScheme();
 				deleteScheme(scheme);
-			} else {
-				deleteSchemeElement(element);
 			}
-		} else if (group.getType() == DeviceGroup.PROTO_ELEMENT) {
-			SchemeProtoElement element = group.getProtoElement();
-			deleteSchemeProtoElement(element);
-			// FIXME can't check childs while object itself not saved
-//			for (Iterator it = element.getSchemeProtoElements().iterator(); it.hasNext();) {
-//				this.objectsToDelete.add(((SchemeElement)it.next()).getId());
-//			}
-		} else if (group.getType() == DeviceGroup.SCHEME) {
-			Scheme scheme = group.getScheme();
-			deleteScheme(scheme);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
 		}
 	}
 	

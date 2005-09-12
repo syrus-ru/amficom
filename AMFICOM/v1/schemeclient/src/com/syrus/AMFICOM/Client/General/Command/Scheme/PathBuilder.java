@@ -216,7 +216,7 @@ public class PathBuilder {
 		
 		if (!path.getPathMembers().isEmpty()) {  // non fisrt element
 			if (se.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
-				Scheme scheme = se.getScheme();
+				Scheme scheme = se.getScheme(false);
 				exploreScheme(path, scheme);
 				return path.getPathMembers().last();
 			} else if (!se.getSchemeElements().isEmpty()) {
@@ -316,7 +316,7 @@ public class PathBuilder {
 			}
 		} else {//first element
 			// must be non scheme element
-			if (se.getScheme() != null) {
+			if (se.getScheme(false) != null) {
 				JOptionPane.showMessageDialog(Environment.getActiveWindow(), "Начальным устройством не может быть схема", "Ошибка", JOptionPane.OK_OPTION);
 				return null;
 			}
