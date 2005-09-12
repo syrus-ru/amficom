@@ -1,5 +1,5 @@
 /*
- * $Id: CreateBlockPortAction.java,v 1.11 2005/09/06 12:45:57 stas Exp $
+ * $Id: CreateBlockPortAction.java,v 1.12 2005/09/12 14:09:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/09/06 12:45:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/09/12 14:09:54 $
  * @module schemeclient
  */
 
@@ -99,7 +99,7 @@ public class CreateBlockPortAction extends AbstractAction {
 			 return;*/
 			
 			
-			if (abstractSchemePort.getDirectionType().equals(IdlDirectionType._IN))
+			if (abstractSchemePort.getDirectionType().value() == IdlDirectionType.__IN)
 				bounds = new Rectangle(new Point(_bounds.x - 6 * grid, _bounds.y - 2),
 						new Dimension(grid * 3, _bounds.height + 4));
 			else
@@ -119,7 +119,7 @@ public class CreateBlockPortAction extends AbstractAction {
 			 if (vport == null)
 			 return;
 			 */
-			if (abstractSchemePort.getDirectionType().equals(IdlDirectionType._IN))
+			if (abstractSchemePort.getDirectionType().value() == IdlDirectionType.__IN)
 				bounds = new Rectangle(new Point(_bounds.x - 6 * grid, _bounds.y - 2),
 						new Dimension(grid * 3, _bounds.height + 4));
 			else
@@ -132,9 +132,9 @@ public class CreateBlockPortAction extends AbstractAction {
 		graph.getGraphLayoutCache().insert(new Object[] { blockport }, viewMap, null, null, null);
 		
 		int u = GraphConstants.PERCENT;
-		Point p = new Point((abstractSchemePort.getDirectionType().equals(IdlDirectionType._IN)) ? u : 0, u / 2);
+		Point p = new Point((abstractSchemePort.getDirectionType().value() == IdlDirectionType.__IN) ? u : 0, u / 2);
 		DefaultPort bpcPort = GraphActions.addPort(graph, "", blockport, p);
-		p = new Point((abstractSchemePort.getDirectionType().equals(IdlDirectionType._OUT)) ? u : 0, u / 2);		
+		p = new Point((abstractSchemePort.getDirectionType().value() == IdlDirectionType.__OUT) ? u : 0, u / 2);		
 		DefaultPort dp = GraphActions.addPort(graph, "", (DefaultGraphCell)cell, p);
 		
 		Map edgemap = GraphConstants.createMap();

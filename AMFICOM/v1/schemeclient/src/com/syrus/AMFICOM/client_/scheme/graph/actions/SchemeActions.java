@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.28 2005/09/12 02:52:18 bass Exp $
+ * $Id: SchemeActions.java,v 1.29 2005/09/12 14:09:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.28 $, $Date: 2005/09/12 02:52:18 $
+ * @version $Revision: 1.29 $, $Date: 2005/09/12 14:09:54 $
  * @module schemeclient
  */
 
@@ -505,19 +505,19 @@ public class SchemeActions {
 		Rectangle dev_bounds = GraphConstants.getBounds(m);
 		
 		int u = GraphConstants.PERCENT;
-		int distance = (direction.equals(IdlDirectionType._OUT) ?
+		int distance = (direction.value() == IdlDirectionType.__OUT ?
 				(p.x - (dev_bounds.x + dev_bounds.width)) / graph.getGridSize() + 1 :
 				(dev_bounds.x - p.x) / graph.getGridSize());
-		Point labelPosition = (direction.equals(IdlDirectionType._OUT) ? 
+		Point labelPosition = (direction.value() == IdlDirectionType.__OUT ? 
 				new Point (-2 * u / distance, 0) : 
 				new Point (u + (int)(1.5 * u / distance), 0));
-		Rectangle portCellBounds = (direction.equals(IdlDirectionType._OUT) ? 
+		Rectangle portCellBounds = (direction.value() == IdlDirectionType.__OUT ? 
 				new Rectangle(p.x - 6, p.y - 3, 7, 7) : 
 				new Rectangle(p.x, p.y - 3, 7, 7));
-		Point devportPos = (direction.equals(IdlDirectionType._OUT) ?
+		Point devportPos = (direction.value() == IdlDirectionType.__OUT ?
 				new Point(u, (int)(u * ( (double)(p.y + 1 - dev_bounds.y) / (double)dev_bounds.height))) :		
 				new Point(0, (int)(u * ( (double)(p.y + 1 - dev_bounds.y) / (double)dev_bounds.height))));
-		Point ellipseportPos = (direction.equals(IdlDirectionType._OUT) ?
+		Point ellipseportPos = (direction.value() == IdlDirectionType.__OUT ?
 				new Point(0, u / 2) :
 				new Point(u, u / 2));
 		
@@ -878,7 +878,7 @@ public class SchemeActions {
 	}
 	
 	public static void connect(SchemeCablePort sp, SchemeCableLink sl, boolean is_source) {
-		IdlDirectionType direction = sp.getDirectionType().equals(IdlDirectionType._IN) ? IdlDirectionType._OUT : IdlDirectionType._IN;
+		IdlDirectionType direction = sp.getDirectionType().value() == IdlDirectionType.__IN ? IdlDirectionType._OUT : IdlDirectionType._IN;
 		List<SchemePort> ports = new ArrayList<SchemePort>(findPorts(sp.getParentSchemeDevice(), direction));
 		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(sl.getSchemeCableThreads());	
 		

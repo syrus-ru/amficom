@@ -262,9 +262,9 @@ public class PathBuilder {
 			// searching for ports with opposite direction
 			AbstractSchemePort newEndPort = null;
 			SchemeDevice dev = newStartPort.getParentSchemeDevice();
-			Set<SchemePort> ports = SchemeActions.findPorts(dev, newStartPort.getDirectionType().equals(IdlDirectionType._IN) ? 
+			Set<SchemePort> ports = SchemeActions.findPorts(dev, newStartPort.getDirectionType().value() == IdlDirectionType.__IN ? 
 					IdlDirectionType._OUT : IdlDirectionType._IN);
-			Set<SchemeCablePort> cports = SchemeActions.findCablePorts(dev, newStartPort.getDirectionType().equals(IdlDirectionType._IN) ? 
+			Set<SchemeCablePort> cports = SchemeActions.findCablePorts(dev, newStartPort.getDirectionType().value() == IdlDirectionType.__IN ? 
 							IdlDirectionType._OUT : IdlDirectionType._IN);
 			
 			// для предыдущего линка подходят варианты (для противоположный портов):

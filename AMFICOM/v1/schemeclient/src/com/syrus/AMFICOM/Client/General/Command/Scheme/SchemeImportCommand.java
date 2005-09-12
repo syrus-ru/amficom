@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.10 2005/09/12 13:00:11 bass Exp $
+ * $Id: SchemeImportCommand.java,v 1.11 2005/09/12 14:09:54 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -445,7 +445,7 @@ public class SchemeImportCommand extends AbstractCommand {
 						if (cableLink != null) {
 							fibers = cableLink.getSchemeCableThreads().size();
 						}
-						boolean isInput = cablePort.getDirectionType().equals(IdlDirectionType._IN);
+						boolean isInput = cablePort.getDirectionType().value() == IdlDirectionType.__IN;
 						SchemeProtoElement suitableVrm = getSuitableProto(isInput ? this.inVrms : this.outVrms, Integer.valueOf(fibers));
 						
 						SchemeElement newSchemeElement = SchemeObjectsFactory.createSchemeElement(internalScheme, suitableVrm);
@@ -652,7 +652,7 @@ public class SchemeImportCommand extends AbstractCommand {
 			Set<SchemePort> ports = vrm.getSchemePortsRecursively();
 			if (ports.size() > 0) {
 				SchemePort port = ports.iterator().next();
-				if (port.getDirectionType().equals(IdlDirectionType._OUT)) {
+				if (port.getDirectionType().value() == IdlDirectionType.__OUT) {
 					this.inVrms.put(Integer.valueOf(ports.size()), vrm);
 				} else {
 					this.outVrms.put(Integer.valueOf(ports.size()), vrm);

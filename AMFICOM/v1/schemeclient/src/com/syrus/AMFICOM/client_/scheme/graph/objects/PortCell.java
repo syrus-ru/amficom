@@ -1,5 +1,5 @@
 /*
- * $Id: PortCell.java,v 1.9 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: PortCell.java,v 1.10 2005/09/12 14:09:54 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: bass $
+ * @version $Revision: 1.10 $, $Date: 2005/09/12 14:09:54 $
  * @module schemeclient
  */
 
@@ -52,7 +52,7 @@ public class PortCell extends EllipseCell {
 		int u = GraphConstants.PERCENT;
 		DefaultPort dp = new DefaultPort("Center"); //$NON-NLS-1$
 		map = GraphConstants.createMap();
-		GraphConstants.setOffset(map, new Point(direction.equals(IdlDirectionType._IN) ? 0 : u, u / 2));
+		GraphConstants.setOffset(map, new Point(direction.value() == IdlDirectionType.__IN ? 0 : u, u / 2));
 		viewMap.put(dp, map);
 		cell.add(dp);
 		
