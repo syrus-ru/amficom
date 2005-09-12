@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThread.java,v 1.3 2005/09/11 20:24:19 stas Exp $
+ * $Id: CableThread.java,v 1.4 2005/09/12 06:11:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,15 +73,15 @@ public class CableThread {
 		cableLinkId.setStringValue(this.parentId);
 		xmlCT.setParentSchemeCableLinkId(cableLinkId);
 		
-		if (this.sourcePortId != null) {
-			XmlIdentifier suid = xmlCT.addNewSourceSchemePortId();
-			suid.setStringValue(this.sourcePortId.toString());
-		}
-		
-		if (this.targetPortId != null) {
-			XmlIdentifier euid = xmlCT.addNewTargetSchemePortId();
-			euid.setStringValue(this.targetPortId.toString());
-		}
+//		if (this.sourcePortId != null) {
+//			XmlIdentifier suid = xmlCT.addNewSourceSchemePortId();
+//			suid.setStringValue(this.sourcePortId.toString());
+//		}
+//		
+//		if (this.targetPortId != null) {
+//			XmlIdentifier euid = xmlCT.addNewTargetSchemePortId();
+//			euid.setStringValue(this.targetPortId.toString());
+//		}
 		
 		return xmlCT;
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: UCMSchemeExportCommand.java,v 1.7 2005/09/11 20:24:19 stas Exp $
+ * $Id: UCMSchemeExportCommand.java,v 1.8 2005/09/12 06:11:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.impexp.unicablemap.objects.ThreadType;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/09/11 20:24:19 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/12 06:11:57 $
  * @module importUCM
  */
 
@@ -177,7 +177,8 @@ public class UCMSchemeExportCommand {
 
 				CableThread thread = new CableThread(cable.getId() + "thread" + (++fiberCount));
 				thread.setParentId(cable.getId());
-				thread.setName(fiber.text);
+//				thread.setName(fiber.text);
+				thread.setName(Integer.toString(fiberCount));
 				cable.addCableThread(thread);
 				
 				for(UniCableMapLink ucmLink4 : this.ucmDatabase.getChildren(fiber)) {
@@ -574,7 +575,9 @@ public class UCMSchemeExportCommand {
 			if (counter++ > number) {
 				break;
 			}
-			ses.add(building.toXMLObject(xmlScheme.getId()));
+			if (building.getDevice() != null) {
+				ses.add(building.toXMLObject(xmlScheme.getId()));
+			}
 		}
 		xmlSchemeElements.setSchemeElementArray(ses.toArray(new XmlSchemeElement[ses.size()]));
 

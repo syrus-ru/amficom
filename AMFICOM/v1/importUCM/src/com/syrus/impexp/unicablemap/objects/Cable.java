@@ -1,5 +1,5 @@
 /*-
- * $Id: Cable.java,v 1.4 2005/09/11 20:24:19 stas Exp $
+ * $Id: Cable.java,v 1.5 2005/09/12 06:11:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -147,7 +147,7 @@ public class Cable {
 			}
 			xmlSchemeThreads.setSchemeCableThreadArray(scts.toArray(new XmlSchemeCableThread[scts.size()]));	
 		}
-		
+
 		if (!this.channelingItems.isEmpty()) {
 			XmlCableChannelingItemSeq xmlChannelingItems = xmlCL.addNewCableChannelingItems();
 

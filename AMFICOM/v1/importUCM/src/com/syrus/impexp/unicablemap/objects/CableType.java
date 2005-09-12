@@ -1,5 +1,5 @@
 /*-
- * $Id: CableType.java,v 1.5 2005/09/11 20:24:19 stas Exp $
+ * $Id: CableType.java,v 1.6 2005/09/12 06:11:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,12 +69,12 @@ public class CableType {
 		if (this.threadTypes.size() == 0) {
 			System.err.println("this.threadTypes.size() = 0");
 		} else {
-		XmlCableThreadTypeSeq xmlCTTs = xmlLT.addNewCableThreadTypes();
-		Collection<XmlCableThreadType> ctts = new ArrayList<XmlCableThreadType>(this.threadTypes.size());
-		for (ThreadType tType : this.threadTypes) {
-			ctts.add(tType.toXMLObject());
-		}
-		xmlCTTs.setCableThreadTypeArray(ctts.toArray(new XmlCableThreadType[ctts.size()]));
+			XmlCableThreadTypeSeq xmlCTTs = xmlLT.addNewCableThreadTypes();
+			Collection<XmlCableThreadType> ctts = new ArrayList<XmlCableThreadType>(this.threadTypes.size());
+			for (ThreadType tType : this.threadTypes) {
+				ctts.add(tType.toXMLObject());
+			}
+			xmlCTTs.setCableThreadTypeArray(ctts.toArray(new XmlCableThreadType[ctts.size()]));
 		}
 		
 		return xmlLT;

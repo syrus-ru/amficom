@@ -1,5 +1,5 @@
 /*-
- * $Id: Element.java,v 1.6 2005/09/11 17:08:10 stas Exp $
+ * $Id: Element.java,v 1.7 2005/09/12 06:11:57 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -92,6 +92,10 @@ public class Element {
 		this.wellId = wellId;
 	}
 	
+	public Device getDevice() {
+		return this.device;
+	}
+
 	public Collection<Port> getPorts(DirectionType.Enum directionType) {
 		Collection<Port> ports = new LinkedList<Port>();
 		if (this.device != null) {
