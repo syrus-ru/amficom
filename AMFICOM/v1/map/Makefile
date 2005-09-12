@@ -126,7 +126,8 @@ arch:
 	tar -cjvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/map.idl \
-		$(SOURCES)
+		$(SOURCES) \
+		$(XMLDIR)/*.xsd $(XMLDIR)/*.xsdconfig
 
 .PHONY: pmd
 pmd:

@@ -1,10 +1,12 @@
 #
-# $Id: Makefile,v 1.28 2005/07/10 13:41:28 bass Exp $
+# $Id: Makefile,v 1.29 2005/09/12 20:52:45 arseniy Exp $
 #
 # vim:ft=make:
 #
 
 MODULE_NAME = idl
+ARCHFILE := $(MODULE_NAME).tar.gz
+
 
 include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
@@ -32,3 +34,10 @@ dist: distclean
 	$(RM) ../$(MODULE_NAME)-$(MODULE_VERSION).tar*
 	cd .. && tar cf $(MODULE_NAME)-$(MODULE_VERSION).tar $(MODULE_NAME)
 	bzip2 -9 ../$(MODULE_NAME)-$(MODULE_VERSION).tar
+
+.PHONY: arch
+arch:
+	tar -czvf $(ARCHFILE) \
+		idl/*.idl \
+		Makefile
+

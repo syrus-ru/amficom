@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.20 2005/07/28 15:01:40 arseniy Exp $
+# $Id: Makefile,v 1.21 2005/09/12 20:52:17 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -51,4 +51,11 @@ cleancorba:
 .PHONY:	install
 install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
+
+#### Archive ####
+.PHONY:	arch
+arch:
+	tar -czvf $(ARCHFILE) \
+		Makefile \
+		$(SOURCES)
 

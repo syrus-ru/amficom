@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.70 2005/09/01 11:10:16 bass Exp $
+# $Id: Makefile,v 1.71 2005/09/12 20:52:41 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -121,4 +121,7 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/general.idl \
-		$(SOURCES)
+		$(SOURCES) \
+		$(SRCDIR)/com/syrus/AMFICOM/general/general.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/general/general_ru.properties \
+		$(XMLDIR)/*.xsd $(XMLDIR)/*.xsdconfig

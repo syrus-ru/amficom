@@ -112,4 +112,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/configuration.idl \
-		$(SOURCES)
+		$(SOURCES) \
+		$(XMLDIR)/*.xsd $(XMLDIR)/*.xsdconfig

@@ -52,5 +52,6 @@ install: $(LIBNAME)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(foreach dir,$(PACKAGES),$(wildcard $(SRCDIR)/$(dir)/*.java))
+		$(foreach dir,$(PACKAGES),$(wildcard $(SRCDIR)/$(dir)/*.java)) \
+		native
 

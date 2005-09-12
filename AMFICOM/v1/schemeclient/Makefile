@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.13 2005/09/01 17:15:33 arseniy Exp $
+# $Id: Makefile,v 1.14 2005/09/12 20:53:48 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -67,4 +67,14 @@ install: $(LIBNAME) $(LIBDIR)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(SRCDIR)
+		$(SOURCES) \
+		$(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/schematics_ru.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/config_ru.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/SchemeMessages.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/SchemeMessages_ru.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/EquipmentTypeCodenames.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/resource/EquipmentTypeCodenames_ru.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/client_/scheme/graph/messages.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/client_/scheme/graph/messages_ru.properties \
+		scheme.properties \
+		schemeeditor.sh

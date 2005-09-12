@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.37 2005/07/10 13:41:29 bass Exp $
+# $Id: Makefile,v 1.38 2005/09/12 20:53:29 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -90,4 +90,6 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/mserver.idl \
-		$(SOURCES)
+		$(SOURCES) \
+		mserver.properties \
+		mserver.sh

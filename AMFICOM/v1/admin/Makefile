@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.20 2005/09/06 17:37:40 arseniy Exp $
+# $Id: Makefile,v 1.21 2005/09/12 20:51:47 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -79,4 +79,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/administration.idl \
-		$(SOURCES)
+		$(SOURCES) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/administration/*.properties)

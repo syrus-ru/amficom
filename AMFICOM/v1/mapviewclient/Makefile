@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.6 2005/09/01 17:18:03 arseniy Exp $
+# $Id: Makefile,v 1.7 2005/09/12 20:53:13 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -54,4 +54,6 @@ install: $(LIBNAME) $(LIBDIR)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(SRCDIR)
+		$(SOURCES) \
+		Map.properties mapeditor.properties \
+		mapeditor.sh

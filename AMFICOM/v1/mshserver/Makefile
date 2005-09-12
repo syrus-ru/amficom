@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.20 2005/08/24 15:35:24 arseniy Exp $
+# $Id: Makefile,v 1.21 2005/09/12 20:53:25 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -92,7 +92,10 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/mscharserver.idl \
-		$(SOURCES)
+		$(SOURCES) \
+		mscharserver.properties \
+		mscharserver.sh \
+		map_descriptor.xml
 
 lib: $(LIBNAME)
 	$(CP) $(LIBNAME) $(LIBDIR)

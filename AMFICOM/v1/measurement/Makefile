@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.70 2005/09/03 19:40:27 arseniy Exp $
+# $Id: Makefile,v 1.71 2005/09/12 20:53:21 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -110,7 +110,8 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/measurement.idl \
-		$(SOURCES)
+		$(SOURCES) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/measurement/*.properties)
 
 .PHONY: pmd
 pmd:

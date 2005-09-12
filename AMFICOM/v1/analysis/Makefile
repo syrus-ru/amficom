@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.10 2005/07/22 14:24:53 arseniy Exp $
+# $Id: Makefile,v 1.11 2005/09/12 20:51:51 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -45,3 +45,12 @@ cleanmach:
 install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
 
+#### Archive ####
+.PHONY: arch
+arch:
+	tar -czvf $(ARCHFILE) \
+		Makefile \
+		$(SOURCES) \
+		$(SRCDIR)/com/syrus/AMFICOM/Client/General/Lang/analysis_ru.properties \
+		Application.properties analysis.properties \
+		analysis.sh

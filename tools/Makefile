@@ -30,3 +30,11 @@ clean:
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(PMD_JARS) \
 		$(SOURCES)
+
+#### Archive ####
+.PHONY: arch
+arch:
+	tar -czvf $(ARCHFILE) \
+		Makefile Makefile.inc \
+		copyjars.sh
+

@@ -1,5 +1,8 @@
 # Simple Makefile to compile single test class
 
+MODULE_NAME := test
+ARCHFILE := $(MODULE_NAME).tar.gz
+
 #TEST_CLASS = TestInitialSetup
 #TEST_PACKAGE = com.syrus.AMFICOM.setup
 TEST_CLASS=TestIdentifier
@@ -38,3 +41,13 @@ clean:	cleanmach
 cleanmach:
 	$(RM) $(CLASSDIR)/$(subst .,/,$(TEST_PACKAGE))/$(TEST_CLASS)*$(CLASS_SUFFIX)
 	$(RM) .mach
+
+
+#### Archive ####
+.PHONY: arch
+arch:
+	tar -czvf $(ARCHFILE) \
+		Makefile \
+		$(SRCDIR) \
+		test.properties \
+		runtest

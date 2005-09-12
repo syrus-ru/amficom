@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.3 2005/08/29 11:09:35 arseniy Exp $
+# $Id: Makefile,v 1.4 2005/09/12 20:53:01 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -55,4 +55,6 @@ install: $(LIBNAME) $(LIBDIR)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(SRCDIR)
+		$(SOURCES) \
+		$(SRCDIR)/com/syrus/AMFICOM/client/resource/map_ru.properties
+

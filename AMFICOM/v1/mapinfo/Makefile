@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.5 2005/08/25 20:24:38 arseniy Exp $
+# $Id: Makefile,v 1.6 2005/09/12 20:53:05 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -57,4 +57,4 @@ install: $(LIBNAME) $(LIBDIR)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(SRCDIR)
+		$(SOURCES)

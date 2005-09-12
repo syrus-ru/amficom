@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.25 2005/08/19 09:34:28 arseniy Exp $
+# $Id: Makefile,v 1.26 2005/09/12 20:54:04 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -7,6 +7,7 @@
 MODULE_NAME = util
 
 LIBNAME = util.jar
+ARCHFILE := $(MODULE_NAME).tar.gz
 
 CLIENT_EXCLUDED_CLASSES = \
 	com.syrus.util.ServerLogger \
@@ -31,6 +32,9 @@ include ../tools/Makefile.inc
 $(call checkenve,JAVA_HOME)
 $(call checkenve,ORACLE_HOME)
 
+SOURCES := $(shell find $(SRCDIR) -name '*.java')
+
+
 .PHONY: export
 export: $(LIBNAME) $(MODULE_NAME)client.jar $(MODULE_NAME)server.jar
 
@@ -38,7 +42,7 @@ export: $(LIBNAME) $(MODULE_NAME)client.jar $(MODULE_NAME)server.jar
 	$(JAVAC) \
 		$(JAVACFLAGS) \
 		-classpath $(JDBCCLASSPATH):$(CLASSDIR) \
-	 	$(shell find $(SRCDIR) -name '*.java')
+	 	$(SOURCES)
 	touch $@
 
 .PHONY: sqlj
@@ -95,3 +99,10 @@ $(MODULE_NAME)server.jar: .mach
 
 install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
+
+#### Archive ####
+.PHONY: arch
+arch:
+	tar -czvf $(ARCHFILE) \
+		Makefile \
+		$(SOURCES)

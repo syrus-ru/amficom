@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.65 2005/07/10 13:41:29 bass Exp $
+# $Id: Makefile,v 1.66 2005/09/12 20:53:18 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -111,4 +111,6 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/mcm.idl \
-		$(SOURCES)
+		$(SOURCES) \
+		mcm.properties \
+		mcm.sh

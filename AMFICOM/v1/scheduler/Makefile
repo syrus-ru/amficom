@@ -15,8 +15,8 @@ $(call checkenve,JAVA_HOME)
 APPCLASSPATH := $(LIBDIR)/util.jar:$(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/event.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/csbridge.jar:$(LIBDIR)/commonclient.jar:$(LIBDIR)/filterclient.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 
+SOURCES := $(shell find . -name *java)
 
-$(call checkenve,JAVA_HOME)
 
 $(LIBNAME): .mach
 	$(CP) \
@@ -32,7 +32,7 @@ $(LIBNAME): .mach
 .mach:	$(CLASSDIR)
 	$(JAVAC) $(JAVACFLAGS) \
 		-classpath $(APPCLASSPATH):$(EXTCLASSPATH) \
-		$(shell find . -name *java)
+		$(SOURCES)
 	touch $@
 
 
@@ -51,6 +51,17 @@ cleanmach:
 .PHONY:	install
 install: $(LIBNAME) $(LIBDIR)
 	$(CP) $^
+
+#### Archive ####
+.PHONY: arch
+arch:
+	tar -czvf $(ARCHFILE) \
+		Makefile \
+		$(SOURCES) \
+		$(SRCDIR)/com/syrus/AMFICOM/Client/Schedule/UI/parametersPanel.properties \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/Client/General/lang/*.properties) \
+		scheduler.properties Application.properties \
+		scheduler.sh
 
 .PHONY: pmd
 pmd:

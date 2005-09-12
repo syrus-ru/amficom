@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.40 2005/09/12 06:05:23 bass Exp $
+# $Id: Makefile,v 1.41 2005/09/12 20:53:45 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -143,7 +143,8 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/scheme.idl \
-		$(SOURCES)
+		$(SOURCES) \
+		$(XMLDIR)/*.xsd $(XMLDIR)/*.xsdconfig
 
 #### Distribution ####
 .PHONY: dist

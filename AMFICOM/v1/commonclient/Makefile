@@ -27,7 +27,7 @@ all: $(LIBNAME)
 
 $(LIBNAME): .mach
 	$(CP) \
-		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/resource/*.properties)\
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/resource/*.properties) \
 		$(CLASSDIR)/com/syrus/AMFICOM/client/resource
 	$(JAR) -cf $@ \
 		-C $(CLASSDIR) com
@@ -57,5 +57,6 @@ install: $(LIBNAME)
 arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
-		$(SOURCES)
+		$(SOURCES) \
+		$(wildcard $(SRCDIR)/com/syrus/AMFICOM/client/resource/*.properties)
 
