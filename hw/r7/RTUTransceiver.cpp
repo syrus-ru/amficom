@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: RTUTransceiver.cpp,v 1.22 2005/09/02 14:05:29 arseniy Exp $
+// $Id: RTUTransceiver.cpp,v 1.23 2005/09/12 10:47:42 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.22 $, $Date: 2005/09/02 14:05:29 $
+// $Revision: 1.23 $, $Date: 2005/09/12 10:47:42 $
 // $Author: arseniy $
 //
 // RTUTransceiver.cpp: implementation of the RTUTransceiver class.
@@ -151,6 +151,10 @@ void* RTUTransceiver::run(void* args) {
 				printf("RTUTransceiver | ERROR: Incorrect parameters used, measurement canceled!\n");
 				delete measurement_segment;
 				free(rtuTransceiver->plugin_data);
+
+				rtuTransceiver->otauController->shutdown();
+				pthread_join(rtuTransceiver->otauController->get_thread(), NULL);
+
 				continue;
 			}
 
