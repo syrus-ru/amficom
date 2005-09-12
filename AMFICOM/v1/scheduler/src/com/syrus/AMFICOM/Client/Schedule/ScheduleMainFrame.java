@@ -1,5 +1,5 @@
 /*-
-* $Id: ScheduleMainFrame.java,v 1.37 2005/09/12 07:10:28 bob Exp $
+* $Id: ScheduleMainFrame.java,v 1.38 2005/09/12 12:51:37 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -33,15 +33,12 @@ import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.AbstractMainToolBar;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
-import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.model.LazyCommand;
-import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/09/12 07:10:28 $
+ * @version $Revision: 1.38 $, $Date: 2005/09/12 12:51:37 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -159,19 +156,19 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 
 	}
 
-	private Command getLazyCommand(final Object windowKey) {
-		final String commandKey = windowKey.toString() + "_COMMAND";
-		if (this.frames == null) {
-			this.frames = new UIDefaults();
-		}
-		this.frames.put(commandKey, new UIDefaults.LazyValue() {
-
-			public Object createValue(UIDefaults defaults) {
-				return new ShowWindowCommand((JInternalFrame) defaults.get(windowKey));
-			}
-		});
-		return new LazyCommand(this.frames, commandKey);
-	}
+//	private Command getLazyCommand(final Object windowKey) {
+//		final String commandKey = windowKey.toString() + "_COMMAND";
+//		if (this.frames == null) {
+//			this.frames = new UIDefaults();
+//		}
+//		this.frames.put(commandKey, new UIDefaults.LazyValue() {
+//
+//			public Object createValue(UIDefaults defaults) {
+//				return new ShowWindowCommand((JInternalFrame) defaults.get(windowKey));
+//			}
+//		});
+//		return new LazyCommand(this.frames, commandKey);
+//	}
 
 	@Override
 	public void setDomainSelected() {
@@ -268,13 +265,13 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 		});
 		
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PLAN, this.getLazyCommand(PLAN_FRAME));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TREE, this.getLazyCommand(TREE_FRAME));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, this.getLazyCommand(PARAMETERS_FRAME));
-//		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, this.getLazyCommand(SAVE_PARAMETERS_FRAME));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, this.getLazyCommand(PROPERTIES_FRAME));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TIME, this.getLazyCommand(TIME_PARAMETERS_FRAME));
-		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TABLE, this.getLazyCommand(TABLE_FRAME));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PLAN, this.getShowWindowLazyCommand(this.frames, PLAN_FRAME));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TREE, this.getShowWindowLazyCommand(this.frames, TREE_FRAME));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, this.getShowWindowLazyCommand(this.frames, PARAMETERS_FRAME));
+//		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, this.getShowWindowLazyCommand(this.frames, SAVE_PARAMETERS_FRAME));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, this.getShowWindowLazyCommand(this.frames, PROPERTIES_FRAME));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TIME, this.getShowWindowLazyCommand(this.frames, TIME_PARAMETERS_FRAME));
+		aModel.setCommand(ScheduleMainMenuBar.MENU_VIEW_TABLE, this.getShowWindowLazyCommand(this.frames, TABLE_FRAME));
 		aModel.fireModelChanged();
 	}
 	
