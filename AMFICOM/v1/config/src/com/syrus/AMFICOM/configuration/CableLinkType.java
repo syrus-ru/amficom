@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.71 2005/09/12 00:13:47 bass Exp $
+ * $Id: CableLinkType.java,v 1.72 2005/09/12 12:57:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/09/12 00:13:47 $
+ * @version $Revision: 1.72 $, $Date: 2005/09/12 12:57:33 $
  * @author $Author: bass $
  * @module config
  */
@@ -98,32 +98,36 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private CableLinkType(final Identifier id,
+	private CableLinkType(final XmlIdentifier id,
+			final String importType,
 			final Date created,
-			final Identifier creatorId) {
-		super(id,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, CABLELINK_TYPE_CODE),
 				created,
 				created,
 				creatorId,
 				creatorId,
 				StorableObjectVersion.createInitial(),
-				"",
-				"");
+				null,
+				null);
 	}
 
 	/**
 	 * @param creatorId
-	 * @param importType
 	 * @param xmlCableLinkType
+	 * @param importType
 	 * @throws CreateObjectException
 	 */
 	public static CableLinkType createInstance(
 			final Identifier creatorId,
-			final String importType,
-			final XmlCableLinkType xmlCableLinkType)
+			final XmlCableLinkType xmlCableLinkType,
+			final String importType)
 	throws CreateObjectException {
 		try {
 			final XmlIdentifier xmlId = xmlCableLinkType.getId();
@@ -131,16 +135,16 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
 			CableLinkType cableLinkType;
 			if (id.isVoid()) {
-				cableLinkType = new CableLinkType(
-						Identifier.fromXmlTransferable(xmlId, importType, CABLELINK_TYPE_CODE),
+				cableLinkType = new CableLinkType(xmlId,
+						importType,
 						created,
 						creatorId);
 			} else {
 				cableLinkType = StorableObjectPool.getStorableObject(id, true);
 				if (cableLinkType == null) {
 					LocalXmlIdentifierPool.remove(xmlId, importType);
-					cableLinkType = new CableLinkType(
-							Identifier.fromXmlTransferable(xmlId, importType, CABLELINK_TYPE_CODE),
+					cableLinkType = new CableLinkType(xmlId,
+							importType,
 							created,
 							creatorId);
 				}
@@ -237,7 +241,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 		this.imageId = VOID_IDENTIFIER;
 		if (cableLinkType.isSetCableThreadTypes()) {
 			for (final XmlCableThreadType cableThreadType : cableLinkType.getCableThreadTypes().getCableThreadTypeArray()) {
-				CableThreadType.createInstance(this.creatorId, importType, cableThreadType);
+				CableThreadType.createInstance(this.creatorId, cableThreadType, importType);
 			}
 		}
 	}

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.66 2005/09/12 10:27:45 bass Exp $
+ * $Id: CableThreadType.java,v 1.67 2005/09/12 12:57:33 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.66 $, $Date: 2005/09/12 10:27:45 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/12 12:57:33 $
  * @author $Author: bass $
  * @module config
  */
@@ -104,32 +104,36 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private CableThreadType(final Identifier id,
+	private CableThreadType(final XmlIdentifier id,
+			final String importType,
 			final Date created,
-			final Identifier creatorId) {
-		super(id,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, CABLETHREAD_TYPE_CODE),
 				created,
 				created,
 				creatorId,
 				creatorId,
 				StorableObjectVersion.createInitial(),
-				"",
-				"");
+				null,
+				null);
 	}
 
 	/**
 	 * @param creatorId
-	 * @param importType
 	 * @param xmlCableThreadType
+	 * @param importType
 	 * @throws CreateObjectException
 	 */
 	public static CableThreadType createInstance(
 			final Identifier creatorId,
-			final String importType,
-			final XmlCableThreadType xmlCableThreadType)
+			final XmlCableThreadType xmlCableThreadType,
+			final String importType)
 	throws CreateObjectException {
 		try {
 			final XmlIdentifier xmlId = xmlCableThreadType.getId();
@@ -137,16 +141,16 @@ public final class CableThreadType extends StorableObjectType implements Namable
 			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
 			CableThreadType cableThreadType;
 			if (id.isVoid()) {
-				cableThreadType = new CableThreadType(
-						Identifier.fromXmlTransferable(xmlId, importType, CABLETHREAD_TYPE_CODE),
+				cableThreadType = new CableThreadType(xmlId,
+						importType,
 						created,
 						creatorId);
 			} else {
 				cableThreadType = StorableObjectPool.getStorableObject(id, true);
 				if (cableThreadType == null) {
 					LocalXmlIdentifierPool.remove(xmlId, importType);
-					cableThreadType = new CableThreadType(
-							Identifier.fromXmlTransferable(xmlId, importType, CABLETHREAD_TYPE_CODE),
+					cableThreadType = new CableThreadType(xmlId,
+							importType,
 							created,
 							creatorId);
 				}
