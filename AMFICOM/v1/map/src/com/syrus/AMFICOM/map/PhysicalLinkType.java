@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.84 2005/09/08 18:26:29 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.85 2005/09/12 00:10:49 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2005/09/08 18:26:29 $
+ * @version $Revision: 1.85 $, $Date: 2005/09/12 00:10:49 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -397,7 +397,7 @@ public final class PhysicalLinkType extends StorableObjectType
 			final XmlPhysicalLinkType xmlPhysicalLinkType)
 	throws CreateObjectException {
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlPhysicalLinkType.getId(), PHYSICALLINK_TYPE_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlPhysicalLinkType.getId(), importType, PHYSICALLINK_TYPE_CODE);
 			PhysicalLinkType physicalLinkType = StorableObjectPool.getStorableObject(id, true);
 			if (physicalLinkType == null) {
 				physicalLinkType = new PhysicalLinkType(id, new Date(), creatorId, xmlPhysicalLinkType.getCodename(), xmlPhysicalLinkType.getDescription());

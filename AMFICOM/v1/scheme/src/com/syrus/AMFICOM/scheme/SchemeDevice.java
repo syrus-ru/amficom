@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.77 2005/09/09 18:52:50 bass Exp $
+ * $Id: SchemeDevice.java,v 1.78 2005/09/12 00:10:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
@@ -69,7 +70,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/09/09 18:52:50 $
+ * @version $Revision: 1.78 $, $Date: 2005/09/12 00:10:48 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -317,7 +318,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeDevice.getId(), SCHEMEDEVICE_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeDevice.getId(), importType, SCHEMEDEVICE_CODE);
 			SchemeDevice schemeDevice = StorableObjectPool.getStorableObject(id, true);
 			if (schemeDevice == null) {
 				schemeDevice = new SchemeDevice(id, new Date(), creatorId);
@@ -825,13 +826,13 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		if (setParentSchemeProtoElementId) {
 			assert !setParentSchemeElementId : OBJECT_STATE_ILLEGAL;
 
-			this.parentSchemeProtoElementId = Identifier.fromXmlTransferable(schemeDevice.getParentSchemeProtoElementId(), importType);
+			this.parentSchemeProtoElementId = Identifier.fromXmlTransferable(schemeDevice.getParentSchemeProtoElementId(), importType, MODE_THROW_IF_ABSENT);
 			this.parentSchemeElementId = VOID_IDENTIFIER;
 		} else if (setParentSchemeElementId) {
 			assert !setParentSchemeProtoElementId : OBJECT_STATE_ILLEGAL;
 
 			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
-			this.parentSchemeElementId = Identifier.fromXmlTransferable(schemeDevice.getParentSchemeElementId(), importType);
+			this.parentSchemeElementId = Identifier.fromXmlTransferable(schemeDevice.getParentSchemeElementId(), importType, MODE_THROW_IF_ABSENT);
 		} else {
 			throw new UpdateObjectException(
 					"SchemeDevice.fromXmlTransferable() | "

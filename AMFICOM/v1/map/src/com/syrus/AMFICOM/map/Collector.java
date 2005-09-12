@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.77 2005/09/09 18:52:51 bass Exp $
+ * $Id: Collector.java,v 1.78 2005/09/12 00:10:49 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
 import static java.util.logging.Level.SEVERE;
 
@@ -46,7 +47,7 @@ import com.syrus.util.Log;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/09/09 18:52:51 $
+ * @version $Revision: 1.78 $, $Date: 2005/09/12 00:10:49 $
  * @module map
  */
 public final class Collector extends StorableObject implements MapElement, XmlBeansTransferable<XmlCollector> {
@@ -401,7 +402,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 		this.description = xmlCollector.getDescription();
 
 		for (final XmlIdentifier physicalLinkId : xmlCollector.getPhysicalLinkIds().getIdArray()) {
-			this.addPhysicalLinkId(Identifier.fromXmlTransferable(physicalLinkId, importType));
+			this.addPhysicalLinkId(Identifier.fromXmlTransferable(physicalLinkId, importType, MODE_THROW_IF_ABSENT));
 		}
 	}
 
@@ -417,7 +418,7 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 			final XmlCollector xmlCollector)
 	throws CreateObjectException {
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlCollector.getId(), COLLECTOR_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlCollector.getId(), importType, COLLECTOR_CODE);
 			Collector collector = StorableObjectPool.getStorableObject(id, true);
 			if (collector == null) {
 				collector = new Collector(id, new Date(), creatorId);

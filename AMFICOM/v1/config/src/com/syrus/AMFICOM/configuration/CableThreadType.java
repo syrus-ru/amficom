@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.64 2005/09/09 18:52:50 bass Exp $
+ * $Id: CableThreadType.java,v 1.65 2005/09/12 00:10:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
@@ -47,7 +48,7 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.64 $, $Date: 2005/09/09 18:52:50 $
+ * @version $Revision: 1.65 $, $Date: 2005/09/12 00:10:48 $
  * @author $Author: bass $
  * @module config
  */
@@ -128,7 +129,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 			final XmlCableThreadType xmlCableThreadType)
 	throws CreateObjectException {
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlCableThreadType.getId(), CABLETHREAD_TYPE_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlCableThreadType.getId(), importType, CABLETHREAD_TYPE_CODE);
 			CableThreadType cableThreadType = StorableObjectPool.getStorableObject(id, true);
 			if (cableThreadType == null) {
 				cableThreadType = new CableThreadType(id, new Date(), creatorId);
@@ -213,8 +214,8 @@ public final class CableThreadType extends StorableObjectType implements Namable
 		this.color = cableThreadType.isSetColor()
 				? Integer.parseInt(cableThreadType.getColor())
 				: -1;
-		this.linkTypeId = Identifier.fromXmlTransferable(cableThreadType.getLinkTypeId(), importType);
-		this.cableLinkTypeId = Identifier.fromXmlTransferable(cableThreadType.getCableLinkTypeId(), importType);
+		this.linkTypeId = Identifier.fromXmlTransferable(cableThreadType.getLinkTypeId(), importType, MODE_THROW_IF_ABSENT);
+		this.cableLinkTypeId = Identifier.fromXmlTransferable(cableThreadType.getCableLinkTypeId(), importType, MODE_THROW_IF_ABSENT);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.62 2005/09/09 18:52:50 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.63 2005/09/12 00:10:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NO_COMMON_PARENT;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
@@ -56,7 +57,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.62 $, $Date: 2005/09/09 18:52:50 $
+ * @version $Revision: 1.63 $, $Date: 2005/09/12 00:10:48 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -242,7 +243,7 @@ public final class CableChannelingItem
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlCableChannelingItem.getId(), CABLECHANNELINGITEM_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlCableChannelingItem.getId(), importType, CABLECHANNELINGITEM_CODE);
 			CableChannelingItem cableChannelingItem = StorableObjectPool.getStorableObject(id, true);
 			if (cableChannelingItem == null) {
 				cableChannelingItem = new CableChannelingItem(id, new Date(), creatorId);
@@ -747,11 +748,11 @@ public final class CableChannelingItem
 		this.placeY = cableChannelingItem.getPlaceY();
 		this.sequentialNumber = cableChannelingItem.getSequentialNumber();
 		this.physicalLinkId = cableChannelingItem.isSetPhysicalLinkId()
-				? Identifier.fromXmlTransferable(cableChannelingItem.getPhysicalLinkId(), importType)
+				? Identifier.fromXmlTransferable(cableChannelingItem.getPhysicalLinkId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
-		this.startSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getStartSiteNodeId(), importType);
-		this.endSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getEndSiteNodeId(), importType);
-		this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(cableChannelingItem.getParentSchemeCableLinkId(), importType);
+		this.startSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getStartSiteNodeId(), importType, MODE_THROW_IF_ABSENT);
+		this.endSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getEndSiteNodeId(), importType, MODE_THROW_IF_ABSENT);
+		this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(cableChannelingItem.getParentSchemeCableLinkId(), importType, MODE_THROW_IF_ABSENT);
 	}
 
 	/**

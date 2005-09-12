@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.91 2005/09/11 19:47:10 krupenn Exp $
+ * $Id: SiteNode.java,v 1.92 2005/09/12 00:10:49 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,8 +54,8 @@ import com.syrus.util.Log;
  * Дополнительно описывается полями
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
- * @author $Author: krupenn $
- * @version $Revision: 1.91 $, $Date: 2005/09/11 19:47:10 $
+ * @author $Author: bass $
+ * @version $Revision: 1.92 $, $Date: 2005/09/12 00:10:49 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -376,7 +376,7 @@ public class SiteNode extends AbstractNode
 		this.building = xmlSiteNode.getBuilding();
 		super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
 		if (xmlSiteNode.isSetAttachmentSiteNodeId()) {
-			this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), SITENODE_CODE, importType); 
+			this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), importType, SITENODE_CODE); 
 		} else {
 			this.attachmentSiteNodeId = VOID_IDENTIFIER;
 		}
@@ -415,7 +415,7 @@ public class SiteNode extends AbstractNode
 			final XmlSiteNode xmlSiteNode) 
 	throws CreateObjectException {
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlSiteNode.getId(), SITENODE_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlSiteNode.getId(), importType, SITENODE_CODE);
 			SiteNode siteNode = StorableObjectPool.getStorableObject(id, true);
 			if (siteNode == null) {
 				siteNode = new SiteNode(id, new Date(), creatorId);

@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.85 2005/09/08 18:26:27 bass Exp $
+ * $Id: PortType.java,v 1.86 2005/09/12 00:10:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.85 $, $Date: 2005/09/08 18:26:27 $
+ * @version $Revision: 1.86 $, $Date: 2005/09/12 00:10:49 $
  * @author $Author: bass $
  * @module config
  */
@@ -119,7 +119,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 			final XmlPortType xmlPortType)
 	throws CreateObjectException {
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlPortType.getId(), PORT_TYPE_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlPortType.getId(), importType, PORT_TYPE_CODE);
 			PortType portType = StorableObjectPool.getStorableObject(id, true);
 			if (portType == null) {
 				portType = new PortType(id, new Date(), creatorId);

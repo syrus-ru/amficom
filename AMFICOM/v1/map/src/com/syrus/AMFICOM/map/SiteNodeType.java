@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.84 2005/09/08 18:26:29 bass Exp $
+ * $Id: SiteNodeType.java,v 1.85 2005/09/12 00:10:49 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2005/09/08 18:26:29 $
+ * @version $Revision: 1.85 $, $Date: 2005/09/12 00:10:49 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -378,7 +378,7 @@ public final class SiteNodeType extends StorableObjectType
 			final XmlSiteNodeType xmlSiteNodeType) 
 	throws CreateObjectException {
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlSiteNodeType.getId(), SITENODE_TYPE_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlSiteNodeType.getId(), importType, SITENODE_TYPE_CODE);
 			SiteNodeType siteNodeType = StorableObjectPool.getStorableObject(id, true);
 			if (siteNodeType == null) {
 				siteNodeType = new SiteNodeType(id, new Date(), creatorId, xmlSiteNodeType.getCodename(), xmlSiteNodeType.getDescription());

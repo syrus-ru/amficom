@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.121 2005/09/11 19:33:10 bass Exp $
+ * $Id: Equipment.java,v 1.122 2005/09/12 00:10:49 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -51,7 +52,7 @@ import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.121 $, $Date: 2005/09/11 19:33:10 $
+ * @version $Revision: 1.122 $, $Date: 2005/09/12 00:10:49 $
  * @author $Author: bass $
  * @module config
  */
@@ -227,7 +228,7 @@ public final class Equipment extends DomainMember
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlEquipment.getId(), EQUIPMENT_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlEquipment.getId(), importType, EQUIPMENT_CODE);
 			Equipment equipment = StorableObjectPool.getStorableObject(id, true);
 			if (equipment == null) {
 				equipment = new Equipment(id, new Date(), creatorId);
@@ -304,16 +305,16 @@ public final class Equipment extends DomainMember
 				? equipment.getInventoryNumber()
 				: "";
 		if (equipment.isSetDomainId()) {
-			super.setDomainId0(Identifier.fromXmlTransferable(equipment.getDomainId(), importType));
+			super.setDomainId0(Identifier.fromXmlTransferable(equipment.getDomainId(), importType, MODE_THROW_IF_ABSENT));
 		} else {
 			throw new UpdateObjectException("Equipment.fromXmlTransferable() | "
 					+ XML_BEAN_NOT_COMPLETE);
 		}
 		this.type = StorableObjectPool.getStorableObject(
-				Identifier.fromXmlTransferable(equipment.getEquipmentTypeId(), importType),
+				Identifier.fromXmlTransferable(equipment.getEquipmentTypeId(), importType, MODE_THROW_IF_ABSENT),
 				true);
 		this.imageId = equipment.isSetSymbolId()
-				? Identifier.fromXmlTransferable(equipment.getSymbolId(), importType)
+				? Identifier.fromXmlTransferable(equipment.getSymbolId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
 		if (equipment.isSetCharacteristics()) {
 			for (final XmlCharacteristic characteristic : equipment.getCharacteristics().getCharacteristicArray()) {

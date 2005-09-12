@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.77 2005/09/09 17:20:57 krupenn Exp $
+ * $Id: TopologicalNode.java,v 1.78 2005/09/12 00:10:49 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,8 +41,8 @@ import com.syrus.util.Log;
  * быть концевым дл€ линии и дл€ фрагмента линии. ¬ физическом смысле
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
- * @author $Author: krupenn $
- * @version $Revision: 1.77 $, $Date: 2005/09/09 17:20:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.78 $, $Date: 2005/09/12 00:10:49 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode implements XmlBeansTransferable<XmlTopologicalNode> {
@@ -307,7 +307,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 			final XmlTopologicalNode xmlTopologicalNode)
 	throws CreateObjectException {
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlTopologicalNode.getId(), TOPOLOGICALNODE_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlTopologicalNode.getId(), importType, TOPOLOGICALNODE_CODE);
 			TopologicalNode topologicalNode = StorableObjectPool.getStorableObject(id, true);
 			if (topologicalNode == null) {
 				topologicalNode = new TopologicalNode(id, new Date(), creatorId);

@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.76 2005/09/08 18:26:27 bass Exp $
+ * $Id: LinkType.java,v 1.77 2005/09/12 00:10:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/09/08 18:26:27 $
+ * @version $Revision: 1.77 $, $Date: 2005/09/12 00:10:48 $
  * @author $Author: bass $
  * @module config
  */
@@ -121,7 +121,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 			final XmlLinkType xmlLinkType)
 	throws CreateObjectException {
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlLinkType.getId(), LINK_TYPE_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlLinkType.getId(), importType, LINK_TYPE_CODE);
 			LinkType linkType = StorableObjectPool.getStorableObject(id, true);
 			if (linkType == null) {
 				linkType = new LinkType(id, new Date(), creatorId);

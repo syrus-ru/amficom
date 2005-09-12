@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.7 2005/09/11 16:39:38 bass Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.8 2005/09/12 00:10:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.7 $, $Date: 2005/09/11 16:39:38 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/12 00:10:50 $
  * @module general
  */
 public final class LocalXmlIdentifierPool {
@@ -32,8 +32,6 @@ public final class LocalXmlIdentifierPool {
 	private static final Set<String> PREFETCHED_SET = new HashSet<String>();
 
 	private enum KeyState { NEW, UP_TO_DATE, DELETED }
-	
-	//private static boolean prefetched = false; 
 	
 	private LocalXmlIdentifierPool() {
 		assert false;
@@ -182,10 +180,8 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @param xmlId
 	 * @param importType
-	 * @deprecated can't be used unless a hook is added to CORBAObjectLoader.
 	 */
-	@Deprecated
-	static void remove(final XmlIdentifier xmlId, final String importType) {
+	public static void remove(final XmlIdentifier xmlId, final String importType) {
 		final XmlKey xmlKey = new XmlKey(xmlId, importType);
 		final Identifier id = REVERSE_MAP.remove(xmlKey);
 		xmlKey.setState(KeyState.DELETED);
@@ -199,10 +195,8 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @param id
 	 * @param importType
-	 * @deprecated can't be used unless a hook is added to CORBAObjectLoader.
 	 */
-	@Deprecated
-	static void remove(final Identifier id, final String importType) {
+	public static void remove(final Identifier id, final String importType) {
 		final Key key = new Key(id, importType);
 		final XmlIdentifier xmlId = FORWARD_MAP.remove(key);
 		key.setState(KeyState.DELETED);
@@ -265,7 +259,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Maxim Selivanov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.7 $, $Date: 2005/09/11 16:39:38 $
+	 * @version $Revision: 1.8 $, $Date: 2005/09/12 00:10:50 $
 	 * @module general
 	 */
 	private abstract static class State {
@@ -283,7 +277,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.7 $, $Date: 2005/09/11 16:39:38 $
+	 * @version $Revision: 1.8 $, $Date: 2005/09/12 00:10:50 $
 	 * @module general
 	 */
 	static final class Key extends State {
@@ -352,7 +346,7 @@ public final class LocalXmlIdentifierPool {
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.7 $, $Date: 2005/09/11 16:39:38 $
+	 * @version $Revision: 1.8 $, $Date: 2005/09/12 00:10:50 $
 	 * @module general
 	 */
 	private static class XmlKey extends State{

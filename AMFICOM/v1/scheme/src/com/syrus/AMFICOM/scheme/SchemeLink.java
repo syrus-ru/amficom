@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.72 2005/09/09 18:52:50 bass Exp $
+ * $Id: SchemeLink.java,v 1.73 2005/09/12 00:10:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
@@ -68,7 +69,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.72 $, $Date: 2005/09/09 18:52:50 $
+ * @version $Revision: 1.73 $, $Date: 2005/09/12 00:10:48 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -481,7 +482,7 @@ public final class SchemeLink extends AbstractSchemeLink
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeLink.getId(), SCHEMELINK_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeLink.getId(), importType, SCHEMELINK_CODE);
 			SchemeLink schemeLink = StorableObjectPool.getStorableObject(id, true);
 			if (schemeLink == null) {
 				schemeLink = new SchemeLink(id, new Date(), creatorId);
@@ -1097,13 +1098,13 @@ public final class SchemeLink extends AbstractSchemeLink
 		if (setLinkTypeId) {
 			assert !setLinkId : OBJECT_STATE_ILLEGAL;
 
-			super.abstractLinkTypeId = Identifier.fromXmlTransferable(schemeLink.getLinkTypeId(), importType);
+			super.abstractLinkTypeId = Identifier.fromXmlTransferable(schemeLink.getLinkTypeId(), importType, MODE_THROW_IF_ABSENT);
 			super.abstractLinkId = VOID_IDENTIFIER;
 		} else if (setLinkId) {
 			assert !setLinkTypeId : OBJECT_STATE_ILLEGAL;
 
 			super.abstractLinkTypeId = VOID_IDENTIFIER;
-			super.abstractLinkId = Identifier.fromXmlTransferable(schemeLink.getLinkId(), importType);
+			super.abstractLinkId = Identifier.fromXmlTransferable(schemeLink.getLinkId(), importType, MODE_THROW_IF_ABSENT);
 		} else {
 			throw new UpdateObjectException(
 					"SchemeLink.fromXmlTransferable() | "
@@ -1111,13 +1112,13 @@ public final class SchemeLink extends AbstractSchemeLink
 		}
 
 		super.sourceAbstractSchemePortId = schemeLink.isSetSourceSchemePortId()
-				? Identifier.fromXmlTransferable(schemeLink.getSourceSchemePortId(), importType)
+				? Identifier.fromXmlTransferable(schemeLink.getSourceSchemePortId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
 		super.targetAbstractSchemePortId = schemeLink.isSetTargetSchemePortId()
-				? Identifier.fromXmlTransferable(schemeLink.getTargetSchemePortId(), importType)
+				? Identifier.fromXmlTransferable(schemeLink.getTargetSchemePortId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
 		this.siteNodeId = schemeLink.isSetSiteNodeId()
-				? Identifier.fromXmlTransferable(schemeLink.getSiteNodeId(), importType)
+				? Identifier.fromXmlTransferable(schemeLink.getSiteNodeId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
 
 		final boolean setParentSchemeId = schemeLink.isSetParentSchemeId();
@@ -1127,7 +1128,7 @@ public final class SchemeLink extends AbstractSchemeLink
 			assert !setParentSchemeElementId : OBJECT_STATE_ILLEGAL;
 			assert !setParentSchemeProtoElementId : OBJECT_STATE_ILLEGAL;
 
-			super.parentSchemeId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeId(), importType);
+			super.parentSchemeId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeId(), importType, MODE_THROW_IF_ABSENT);
 			this.parentSchemeElementId = VOID_IDENTIFIER;
 			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
 		} else if (setParentSchemeElementId) {
@@ -1135,7 +1136,7 @@ public final class SchemeLink extends AbstractSchemeLink
 			assert !setParentSchemeProtoElementId : OBJECT_STATE_ILLEGAL;
 
 			super.parentSchemeId = VOID_IDENTIFIER;
-			this.parentSchemeElementId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeElementId(), importType);
+			this.parentSchemeElementId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeElementId(), importType, MODE_THROW_IF_ABSENT);
 			this.parentSchemeProtoElementId = VOID_IDENTIFIER;
 		} else if (setParentSchemeProtoElementId) {
 			assert !setParentSchemeId : OBJECT_STATE_ILLEGAL;
@@ -1143,7 +1144,7 @@ public final class SchemeLink extends AbstractSchemeLink
 
 			super.parentSchemeId = VOID_IDENTIFIER;
 			this.parentSchemeElementId = VOID_IDENTIFIER;
-			this.parentSchemeProtoElementId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeProtoElementId(), importType);
+			this.parentSchemeProtoElementId = Identifier.fromXmlTransferable(schemeLink.getParentSchemeProtoElementId(), importType, MODE_THROW_IF_ABSENT);
 		} else {
 			throw new UpdateObjectException(
 					"SchemeLink.fromXmlTransferable() | "

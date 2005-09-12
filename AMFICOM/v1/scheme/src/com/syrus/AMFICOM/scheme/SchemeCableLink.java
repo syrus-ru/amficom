@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.83 2005/09/09 18:52:50 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.84 2005/09/12 00:10:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
@@ -82,7 +83,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/09/09 18:52:50 $
+ * @version $Revision: 1.84 $, $Date: 2005/09/12 00:10:48 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -233,7 +234,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeCableLink.getId(), SCHEMECABLELINK_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeCableLink.getId(), importType, SCHEMECABLELINK_CODE);
 			SchemeCableLink schemeCableLink = StorableObjectPool.getStorableObject(id, true);
 			if (schemeCableLink == null) {
 				schemeCableLink = new SchemeCableLink(id, new Date(), creatorId);
@@ -700,13 +701,13 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		if (setCableLinkTypeId) {
 			assert !setCableLinkId : OBJECT_STATE_ILLEGAL;
 
-			super.abstractLinkTypeId = Identifier.fromXmlTransferable(schemeCableLink.getCableLinkTypeId(), importType);
+			super.abstractLinkTypeId = Identifier.fromXmlTransferable(schemeCableLink.getCableLinkTypeId(), importType, MODE_THROW_IF_ABSENT);
 			super.abstractLinkId = VOID_IDENTIFIER;
 		} else if (setCableLinkId) {
 			assert !setCableLinkTypeId : OBJECT_STATE_ILLEGAL;
 
 			super.abstractLinkTypeId = VOID_IDENTIFIER;
-			super.abstractLinkId = Identifier.fromXmlTransferable(schemeCableLink.getCableLinkId(), importType);
+			super.abstractLinkId = Identifier.fromXmlTransferable(schemeCableLink.getCableLinkId(), importType, MODE_THROW_IF_ABSENT);
 		} else {
 			throw new UpdateObjectException(
 					"SchemeCableLink.fromXmlTransferable() | "
@@ -714,12 +715,12 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		}
 
 		super.sourceAbstractSchemePortId = schemeCableLink.isSetSourceSchemeCablePortId()
-				? Identifier.fromXmlTransferable(schemeCableLink.getSourceSchemeCablePortId(), importType)
+				? Identifier.fromXmlTransferable(schemeCableLink.getSourceSchemeCablePortId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
 		super.targetAbstractSchemePortId = schemeCableLink.isSetTargetSchemeCablePortId()
-				? Identifier.fromXmlTransferable(schemeCableLink.getTargetSchemeCablePortId(), importType)
+				? Identifier.fromXmlTransferable(schemeCableLink.getTargetSchemeCablePortId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
-		super.parentSchemeId = Identifier.fromXmlTransferable(schemeCableLink.getParentSchemeId(), importType);
+		super.parentSchemeId = Identifier.fromXmlTransferable(schemeCableLink.getParentSchemeId(), importType, MODE_THROW_IF_ABSENT);
 		if (schemeCableLink.isSetSchemeCableThreads()) {
 			for (final XmlSchemeCableThread schemeCableThread : schemeCableLink.getSchemeCableThreads().getSchemeCableThreadArray()) {
 				SchemeCableThread.createInstance(super.creatorId, schemeCableThread, importType);

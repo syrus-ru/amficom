@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.65 2005/09/09 18:52:50 bass Exp $
+ * $Id: Identifier.java,v 1.66 2005/09/12 00:10:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,8 @@ package com.syrus.AMFICOM.general;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.*;
+import static com.syrus.AMFICOM.general.ObjectEntities.*;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -28,7 +30,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.65 $, $Date: 2005/09/09 18:52:50 $
+ * @version $Revision: 1.66 $, $Date: 2005/09/12 00:10:50 $
  * @author $Author: bass $
  * @module general
  */
@@ -42,12 +44,11 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 
 	public static final Identifier VOID_IDENTIFIER = new Identifier(ObjectEntities.UPDIKE_CODE, 0);
 
-	/**
-	 * Used for conversion from XML identifiers to pure-Java ones.
-	 * <strong>Should not overlap with any value from
-	 * {@link ObjectEntities}!</strong>
-	 */
-	public static final short ABSTRACT_CODE = -1;
+	public static enum XmlConversionMode {
+		MODE_GENERATE_NEW_IF_ABSENT,
+		MODE_RETURN_VOID_IF_ABSENT,
+		MODE_THROW_IF_ABSENT
+	}
 
 	private short major;
 	private long minor;
@@ -329,82 +330,84 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	}
 
 	/**
-	 * <p>If the pure-Java pair for this {@code xmlId} is not found in the
-	 * pool, a new one is generated and added to the pool. The
-	 * {@code entityCode} parameter must be specified in order for the
-	 * correct identifier to be generated if necessary.</p>
-	 * 
-	 * <p>To obtain the pair for an XML identifier that points to an
-	 * instance of abstract type (i. e. when one's unable to specify
-	 * {@code entityCode}) directly), assuming the appropriate mapping is
-	 * already present in the pool, use {@link #ABSTRACT_CODE}. However,
-	 * if the mapping is not present, an {@link ObjectNotFoundException}
-	 * will be thrown.</p>
-	 *
-	 * <p>Should be invoked only from
-	 * {@code createInstance(Identifier, XmlstorableObject, String)}
-	 * methods.</p>
-	 *
 	 * @param xmlId
-	 * @param entityCode
 	 * @param importType
+	 * @param entityCode
 	 * @throws IdentifierGenerationException
-	 * @throws ObjectNotFoundException if {@link #ABSTRACT_CODE} is used
-	 *         as an {@code entityCode} value, and the appropriate mapping
-	 *         is not found in the pool.
-	 * @see #ABSTRACT_CODE
 	 */
 	public static Identifier fromXmlTransferable(final XmlIdentifier xmlId,
-			final short entityCode,
-			final String importType)
-	throws IdentifierGenerationException, ObjectNotFoundException {
-		final boolean entityCodeAbstract = entityCode == ABSTRACT_CODE;
-		if (LocalXmlIdentifierPool.contains(xmlId, importType)) {
-			final Identifier id = LocalXmlIdentifierPool.get(xmlId, importType);
-
-			assert !id.isVoid() : NON_VOID_EXPECTED;
-			assert entityCodeAbstract || entityCode == id.getMajor();
-
-			return id;
+			final String importType,
+			final short entityCode)
+	throws IdentifierGenerationException {
+		try {
+			return fromXmlTransferable(xmlId, entityCode, importType, MODE_GENERATE_NEW_IF_ABSENT);
+		} catch (final ObjectNotFoundException onfe) {
+			/*
+			 * Never.
+			 */
+			assert false;
+			return null;
 		}
-
-		if (entityCodeAbstract) {
-			throw new ObjectNotFoundException("Unable to generate an identifier for an abstract type");
-		}
-
-		final Identifier id = IdentifierPool.getGeneratedIdentifier(entityCode);
-
-		assert !LocalXmlIdentifierPool.contains(id, importType);
-
-		LocalXmlIdentifierPool.put(id, xmlId, importType);
-
-		return id;
 	}
 
 	/**
-	 * <p>The same as {@link #fromXmlTransferable(XmlIdentifier, short, String)},
-	 * but never generates a new identifier if the corresponding mapping
-	 * is not found, throwing an {@link ObjectNotFoundException} instead.</p>
-	 *
-	 * <p>Should be invoked only from
-	 * {@link XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)}
-	 * methods.</p>
-	 *
 	 * @param xmlId
 	 * @param importType
+	 * @param xmlConversionMode
 	 * @throws ObjectNotFoundException
 	 */
 	public static Identifier fromXmlTransferable(final XmlIdentifier xmlId,
-			final String importType)
+			final String importType,
+			final XmlConversionMode xmlConversionMode)
 	throws ObjectNotFoundException {
 		try {
-			return fromXmlTransferable(xmlId, ABSTRACT_CODE, importType);
+			assert xmlConversionMode != MODE_GENERATE_NEW_IF_ABSENT;
+			return fromXmlTransferable(xmlId, UNKNOWN_CODE, importType, xmlConversionMode);
 		} catch (final IdentifierGenerationException ige) {
 			/*
 			 * Never.
 			 */
 			assert false;
 			return null;
+		}
+	}
+
+	/**
+	 * @param xmlId
+	 * @param entityCode
+	 * @param importType
+	 * @param xmlConversionMode
+	 * @throws IdentifierGenerationException
+	 * @throws ObjectNotFoundException
+	 */
+	private static Identifier fromXmlTransferable(final XmlIdentifier xmlId,
+			final short entityCode,
+			final String importType,
+			final XmlConversionMode xmlConversionMode)
+	throws IdentifierGenerationException, ObjectNotFoundException {
+		if (LocalXmlIdentifierPool.contains(xmlId, importType)) {
+			final Identifier id = LocalXmlIdentifierPool.get(xmlId, importType);
+
+			assert !id.isVoid() : NON_VOID_EXPECTED;
+			assert entityCode == UNKNOWN_CODE || entityCode == id.getMajor();
+
+			return id;
+		}
+
+		switch (xmlConversionMode) {
+		case MODE_GENERATE_NEW_IF_ABSENT:
+			final Identifier id = IdentifierPool.getGeneratedIdentifier(entityCode);
+
+			assert !LocalXmlIdentifierPool.contains(id, importType);
+
+			LocalXmlIdentifierPool.put(id, xmlId, importType);
+
+			return id;
+		case MODE_RETURN_VOID_IF_ABSENT:
+			return VOID_IDENTIFIER;
+		case MODE_THROW_IF_ABSENT:
+		default:
+			throw new ObjectNotFoundException("Mapping not found");
 		}
 	}
 

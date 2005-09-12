@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.86 2005/09/11 13:14:07 bass Exp $
+ * $Id: Scheme.java,v 1.87 2005/09/12 00:10:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
@@ -75,7 +76,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.86 $, $Date: 2005/09/11 13:14:07 $
+ * @version $Revision: 1.87 $, $Date: 2005/09/12 00:10:48 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -295,7 +296,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 
 		try {
 			final String importType = xmlScheme.getImportType();
-			final Identifier id = Identifier.fromXmlTransferable(xmlScheme.getId(), SCHEME_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlScheme.getId(), importType, SCHEME_CODE);
 			Scheme scheme = StorableObjectPool.getStorableObject(id, true);
 			if (scheme == null) {
 				scheme = new Scheme(id, new Date(), creatorId);
@@ -1254,25 +1255,25 @@ public final class Scheme extends AbstractCloneableDomainMember
 		this.height = scheme.getHeight();
 		this.kind = IdlKind.from_int(scheme.getKind().intValue() - 1);
 		if (scheme.isSetDomainId()) {
-			super.setDomainId0(Identifier.fromXmlTransferable(scheme.getDomainId(), importType));
+			super.setDomainId0(Identifier.fromXmlTransferable(scheme.getDomainId(), importType, MODE_THROW_IF_ABSENT));
 		} else {
 			throw new UpdateObjectException("Scheme.fromXmlTransferable() | "
 					+ XML_BEAN_NOT_COMPLETE);
 		}
 		this.mapId = scheme.isSetMapId()
-				? Identifier.fromXmlTransferable(scheme.getMapId(), importType)
+				? Identifier.fromXmlTransferable(scheme.getMapId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
 		this.symbolId = scheme.isSetSymbolId()
-				? Identifier.fromXmlTransferable(scheme.getSymbolId(), importType)
+				? Identifier.fromXmlTransferable(scheme.getSymbolId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
 		this.ugoCellId = scheme.isSetUgoCellId()
-				? Identifier.fromXmlTransferable(scheme.getUgoCellId(), importType)
+				? Identifier.fromXmlTransferable(scheme.getUgoCellId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
 		this.schemeCellId = scheme.isSetSchemeCellId()
-				? Identifier.fromXmlTransferable(scheme.getSchemeCellId(), importType)
+				? Identifier.fromXmlTransferable(scheme.getSchemeCellId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
 		this.parentSchemeElementId = scheme.isSetParentSchemeElementId()
-				? Identifier.fromXmlTransferable(scheme.getParentSchemeElementId(), importType)
+				? Identifier.fromXmlTransferable(scheme.getParentSchemeElementId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
 		if (scheme.isSetSchemeElements()) {
 			for (final XmlSchemeElement schemeElement : scheme.getSchemeElements().getSchemeElementArray()) {

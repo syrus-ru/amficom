@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.62 2005/09/09 18:52:50 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.63 2005/09/12 00:10:48 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
@@ -55,7 +56,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.62 $, $Date: 2005/09/09 18:52:50 $
+ * @version $Revision: 1.63 $, $Date: 2005/09/12 00:10:48 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -574,9 +575,9 @@ public abstract class AbstractSchemePort
 				: "";
 		this.directionType = IdlDirectionType.from_int(abstractSchemePort.getDirectionType().intValue() - 1);
 		this.measurementPortId = abstractSchemePort.isSetMeasurementPortId()
-				? Identifier.fromXmlTransferable(abstractSchemePort.getMeasurementPortId(), importType)
+				? Identifier.fromXmlTransferable(abstractSchemePort.getMeasurementPortId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
-		this.parentSchemeDeviceId = Identifier.fromXmlTransferable(abstractSchemePort.getParentSchemeDeviceId(), importType);
+		this.parentSchemeDeviceId = Identifier.fromXmlTransferable(abstractSchemePort.getParentSchemeDeviceId(), importType, MODE_THROW_IF_ABSENT);
 		if (abstractSchemePort.isSetCharacteristics()) {
 			for (final XmlCharacteristic characteristic : abstractSchemePort.getCharacteristics().getCharacteristicArray()) {
 				Characteristic.createInstance(super.creatorId, characteristic, importType);

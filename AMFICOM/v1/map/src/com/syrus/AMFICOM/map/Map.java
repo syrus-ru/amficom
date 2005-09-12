@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.91 2005/09/11 12:45:42 bass Exp $
+ * $Id: Map.java,v 1.92 2005/09/12 00:10:49 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -66,7 +66,7 @@ import com.syrus.util.Log;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.91 $, $Date: 2005/09/11 12:45:42 $
+ * @version $Revision: 1.92 $, $Date: 2005/09/12 00:10:49 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -1256,7 +1256,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 			final String importType,
 			final XmlMap xmlMap) throws CreateObjectException {
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlMap.getId(), MAP_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlMap.getId(), importType, MAP_CODE);
 			Map map = StorableObjectPool.getStorableObject(id, true);
 			if (map == null) {
 				map = new Map(id, new Date(), creatorId, domainId);

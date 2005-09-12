@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.111 2005/09/11 15:27:43 bass Exp $
+ * $Id: PhysicalLink.java,v 1.112 2005/09/12 00:10:49 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.map;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static java.util.logging.Level.FINEST;
@@ -64,7 +65,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.111 $, $Date: 2005/09/11 15:27:43 $
+ * @version $Revision: 1.112 $, $Date: 2005/09/12 00:10:49 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -952,8 +953,8 @@ public class PhysicalLink extends StorableObject
 		this.street = xmlPhysicalLink.getStreet();
 		this.building = xmlPhysicalLink.getBuilding();
 
-		this.startNodeId = Identifier.fromXmlTransferable(xmlPhysicalLink.getStartNodeId(), importType);
-		this.endNodeId = Identifier.fromXmlTransferable(xmlPhysicalLink.getEndNodeId(), importType);
+		this.startNodeId = Identifier.fromXmlTransferable(xmlPhysicalLink.getStartNodeId(), importType, MODE_THROW_IF_ABSENT);
+		this.endNodeId = Identifier.fromXmlTransferable(xmlPhysicalLink.getEndNodeId(), importType, MODE_THROW_IF_ABSENT);
 
 		final TypicalCondition condition = new TypicalCondition(xmlPhysicalLink.getPhysicalLinkTypeCodename(),
 				OperationSort.OPERATION_EQUALS,
@@ -991,7 +992,7 @@ public class PhysicalLink extends StorableObject
 			final XmlPhysicalLink xmlPhysicalLink)
 	throws CreateObjectException {
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlPhysicalLink.getId(), PHYSICALLINK_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlPhysicalLink.getId(), importType, PHYSICALLINK_CODE);
 			PhysicalLink physicalLink = StorableObjectPool.getStorableObject(id, true);
 			if (physicalLink == null) {
 				physicalLink = new PhysicalLink(id, new Date(), creatorId);

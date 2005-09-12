@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.74 2005/09/09 18:52:50 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.75 2005/09/12 00:10:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
@@ -68,7 +69,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/09/09 18:52:50 $
+ * @version $Revision: 1.75 $, $Date: 2005/09/12 00:10:48 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -237,7 +238,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeCableThread.getId(), SCHEMECABLETHREAD_CODE, importType);
+			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeCableThread.getId(), importType, SCHEMECABLETHREAD_CODE);
 			SchemeCableThread schemeCableThread = StorableObjectPool.getStorableObject(id, true);
 			if (schemeCableThread == null) {
 				schemeCableThread = new SchemeCableThread(id, new Date(), creatorId);
@@ -807,13 +808,13 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		if (setLinkTypeId) {
 			assert !setLinkId : OBJECT_STATE_ILLEGAL;
 
-			this.linkTypeId = Identifier.fromXmlTransferable(schemeCableThread.getLinkTypeId(), importType);
+			this.linkTypeId = Identifier.fromXmlTransferable(schemeCableThread.getLinkTypeId(), importType, MODE_THROW_IF_ABSENT);
 			this.linkId = VOID_IDENTIFIER;
 		} else if (setLinkId) {
 			assert !setLinkTypeId : OBJECT_STATE_ILLEGAL;
 
 			this.linkTypeId = VOID_IDENTIFIER;
-			this.linkId = Identifier.fromXmlTransferable(schemeCableThread.getLinkId(), importType);
+			this.linkId = Identifier.fromXmlTransferable(schemeCableThread.getLinkId(), importType, MODE_THROW_IF_ABSENT);
 		} else {
 			throw new UpdateObjectException(
 					"SchemeCableThread.fromXmlTransferable() | "
@@ -821,12 +822,12 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		}
 
 		this.sourceSchemePortId = schemeCableThread.isSetSourceSchemePortId()
-				? Identifier.fromXmlTransferable(schemeCableThread.getSourceSchemePortId(), importType)
+				? Identifier.fromXmlTransferable(schemeCableThread.getSourceSchemePortId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
 		this.targetSchemePortId = schemeCableThread.isSetTargetSchemePortId()
-				? Identifier.fromXmlTransferable(schemeCableThread.getTargetSchemePortId(), importType)
+				? Identifier.fromXmlTransferable(schemeCableThread.getTargetSchemePortId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
-		this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(schemeCableThread.getParentSchemeCableLinkId(), importType);
+		this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(schemeCableThread.getParentSchemeCableLinkId(), importType, MODE_THROW_IF_ABSENT);
 		if (schemeCableThread.isSetCharacteristics()) {
 			for (final XmlCharacteristic characteristic : schemeCableThread.getCharacteristics().getCharacteristicArray()) {
 				Characteristic.createInstance(super.creatorId, characteristic, importType);
