@@ -1,5 +1,5 @@
 /*-
- * $Id: LocalXmlIdentifierPool.java,v 1.8 2005/09/12 00:10:50 bass Exp $
+ * $Id: LocalXmlIdentifierPool.java,v 1.9 2005/09/12 12:01:15 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.8 $, $Date: 2005/09/12 00:10:50 $
+ * @author $Author: max $
+ * @version $Revision: 1.9 $, $Date: 2005/09/12 12:01:15 $
  * @module general
  */
 public final class LocalXmlIdentifierPool {
@@ -29,9 +29,11 @@ public final class LocalXmlIdentifierPool {
 
 	private static final Map<XmlKey, Identifier> REVERSE_MAP = new HashMap<XmlKey, Identifier>();
 	
+	private static final Set<Identifier> IDS_TO_DELETE = new HashSet<Identifier>();
+	private static final Set<XmlIdentifier> XML_IDS_TO_DELETE = new HashSet<XmlIdentifier>();
 	private static final Set<String> PREFETCHED_SET = new HashSet<String>();
 
-	private enum KeyState { NEW, UP_TO_DATE, DELETED }
+	private enum KeyState { NEW, UP_TO_DATE}
 	
 	private LocalXmlIdentifierPool() {
 		assert false;
@@ -184,12 +186,9 @@ public final class LocalXmlIdentifierPool {
 	public static void remove(final XmlIdentifier xmlId, final String importType) {
 		final XmlKey xmlKey = new XmlKey(xmlId, importType);
 		final Identifier id = REVERSE_MAP.remove(xmlKey);
-		xmlKey.setState(KeyState.DELETED);
-		REVERSE_MAP.put(xmlKey, id);
-		final Key key = new Key(id, importType); 
-		FORWARD_MAP.remove(key);
-		key.setState(KeyState.DELETED);
-		FORWARD_MAP.put(key, xmlId);
+		final Key key = new Key(id, importType);
+		FORWARD_MAP.remove(key);		
+		IDS_TO_DELETE.add(id);
 	}
 
 	/**
@@ -199,12 +198,9 @@ public final class LocalXmlIdentifierPool {
 	public static void remove(final Identifier id, final String importType) {
 		final Key key = new Key(id, importType);
 		final XmlIdentifier xmlId = FORWARD_MAP.remove(key);
-		key.setState(KeyState.DELETED);
-		FORWARD_MAP.put(key, xmlId);
 		final XmlKey xmlKey = new XmlKey(xmlId, importType);
 		REVERSE_MAP.remove(xmlKey);
-		xmlKey.setState(KeyState.DELETED);
-		REVERSE_MAP.put(xmlKey, id);
+		XML_IDS_TO_DELETE.add(xmlId);
 	}
 
 	private static void prefetch(final String importType) {
@@ -226,40 +222,35 @@ public final class LocalXmlIdentifierPool {
 	}
 
 	public static void flush() {
-		final Set<Identifier> idsToDelete = new HashSet<Identifier>();
+		
 		final Map<Key, XmlIdentifier> keysToCreate = new HashMap<Key, XmlIdentifier>();
 		for (final Key key : FORWARD_MAP.keySet()) {
 			KeyState state = key.getState();
-			if (state.equals(KeyState.DELETED)) {				
-				idsToDelete.add(key.getId());
-			} else if (state.equals(KeyState.NEW)) {
+			if (state.equals(KeyState.NEW)) {
 				keysToCreate.put(key, FORWARD_MAP.get(key));
 			}
 		}
-		final Set<XmlIdentifier> xmlIdToDelete = new HashSet<XmlIdentifier>();
+		
 		for (final XmlKey xmlKey : REVERSE_MAP.keySet()) {
 			final KeyState state = xmlKey.getState();
-			if (state.equals(KeyState.DELETED)) {				
-				xmlIdToDelete.add(xmlKey.getXmlId());
-			} else if (state.equals(KeyState.NEW)) {
+			if (state.equals(KeyState.NEW)) {
 				keysToCreate.put(new Key(REVERSE_MAP.get(xmlKey), xmlKey.getImportType()), xmlKey.getXmlId());
 			}
 		}
-		
-		XmlIdentifierDatabase.removeIds(idsToDelete);
-		XmlIdentifierDatabase.removeXmlIds(xmlIdToDelete);
 		
 		try {
 			XmlIdentifierDatabase.insertKeys(keysToCreate);
 		} catch (final CreateObjectException e) {
 			Log.errorException(e);
 		}
+		XmlIdentifierDatabase.removeIds(IDS_TO_DELETE);
+		XmlIdentifierDatabase.removeXmlIds(XML_IDS_TO_DELETE);
 	}
 	
 	/**
 	 * @author Maxim Selivanov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.8 $, $Date: 2005/09/12 00:10:50 $
+	 * @author $Author: max $
+	 * @version $Revision: 1.9 $, $Date: 2005/09/12 12:01:15 $
 	 * @module general
 	 */
 	private abstract static class State {
@@ -276,8 +267,8 @@ public final class LocalXmlIdentifierPool {
 
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.8 $, $Date: 2005/09/12 00:10:50 $
+	 * @author $Author: max $
+	 * @version $Revision: 1.9 $, $Date: 2005/09/12 12:01:15 $
 	 * @module general
 	 */
 	static final class Key extends State {
@@ -345,8 +336,8 @@ public final class LocalXmlIdentifierPool {
 	
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
-	 * @author $Author: bass $
-	 * @version $Revision: 1.8 $, $Date: 2005/09/12 00:10:50 $
+	 * @author $Author: max $
+	 * @version $Revision: 1.9 $, $Date: 2005/09/12 12:01:15 $
 	 * @module general
 	 */
 	private static class XmlKey extends State{
