@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.9 2005/09/11 19:37:30 bass Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.10 2005/09/12 07:26:52 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,7 +43,7 @@ import com.syrus.util.database.DatabaseConnection;
 /**
  * @author max
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/09/11 19:37:30 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/12 07:26:52 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -229,7 +229,8 @@ final class XmlIdentifierDatabase {
 				}
 			}
 		}
-		
+		sql.append(CLOSE_BRACKET);
+
 		executeQuery(sql.toString());
 	}
 	
