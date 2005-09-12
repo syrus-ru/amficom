@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.70 2005/09/08 18:26:27 bass Exp $
+ * $Id: CableLinkType.java,v 1.71 2005/09/12 00:13:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLETHREAD_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -36,15 +37,17 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/09/08 18:26:27 $
+ * @version $Revision: 1.71 $, $Date: 2005/09/12 00:13:47 $
  * @author $Author: bass $
  * @module config
  */
@@ -123,10 +126,24 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 			final XmlCableLinkType xmlCableLinkType)
 	throws CreateObjectException {
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlCableLinkType.getId(), CABLELINK_TYPE_CODE, importType);
-			CableLinkType cableLinkType = StorableObjectPool.getStorableObject(id, true);
-			if (cableLinkType == null) {
-				cableLinkType = new CableLinkType(id, new Date(), creatorId);
+			final XmlIdentifier xmlId = xmlCableLinkType.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			CableLinkType cableLinkType;
+			if (id.isVoid()) {
+				cableLinkType = new CableLinkType(
+						Identifier.fromXmlTransferable(xmlId, importType, CABLELINK_TYPE_CODE),
+						created,
+						creatorId);
+			} else {
+				cableLinkType = StorableObjectPool.getStorableObject(id, true);
+				if (cableLinkType == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					cableLinkType = new CableLinkType(
+							Identifier.fromXmlTransferable(xmlId, importType, CABLELINK_TYPE_CODE),
+							created,
+							creatorId);
+				}
 			}
 			cableLinkType.fromXmlTransferable(xmlCableLinkType, importType);
 			assert cableLinkType.isValid() : OBJECT_BADLY_INITIALIZED;
