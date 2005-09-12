@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeProtoElement.xsd,v 1.5 2005/09/12 12:21:01 bass Exp $
+			$Id: SchemeProtoElement.xsd,v 1.6 2005/09/12 13:12:53 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -17,12 +17,10 @@
 		</xsd:documentation>
 	</xsd:annotation>
 
-	<xsd:import
-		namespace = "http://syrus.com/AMFICOM/general/xml"
-		schemaLocation = "../../general/xml/general.xsd"/>
-	<xsd:import
-		namespace = "http://syrus.com/AMFICOM/general/xml"
-		schemaLocation = "../../general/xml/Characteristic.xsd"/>
+	<xsd:include
+		schemaLocation = "SchemeDevice.xsd"/>
+	<xsd:include
+		schemaLocation = "SchemeLink.xsd"/>
 
 	<xsd:element name = "schemeProtoElements" type = "scheme:XmlSchemeProtoElementSeq">
 		<xsd:key name = "schemeProtoElementId">
@@ -107,6 +105,12 @@
 						<xsd:element name = "parentSchemeProtoElementId" type = "general:XmlIdentifier"/>
 					</xsd:choice>
 					<xsd:element ref = "general:characteristics"
+						minOccurs = "0"/>
+					<xsd:element ref = "scheme:schemeProtoElements"
+						minOccurs = "0"/>
+					<xsd:element ref = "scheme:schemeDevices"
+						minOccurs = "0"/>
+					<xsd:element ref = "scheme:schemeLinks"
 						minOccurs = "0"/>
 				</xsd:sequence>
 			</xsd:extension>
