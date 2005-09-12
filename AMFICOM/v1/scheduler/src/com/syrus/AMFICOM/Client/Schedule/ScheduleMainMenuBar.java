@@ -1,3 +1,10 @@
+/*-
+* $Id: ScheduleMainMenuBar.java,v 1.12 2005/09/12 07:10:28 bob Exp $
+*
+* Copyright ¿ 2004-2005 Syrus Systems.
+* Dept. of Science & Technology.
+* Project: AMFICOM.
+*/
 
 package com.syrus.AMFICOM.Client.Schedule;
 
@@ -10,6 +17,12 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 
+/**
+ * @version $Revision: 1.12 $, $Date: 2005/09/12 07:10:28 $
+ * @author $Author: bob $
+ * @author Vladimir Dolzhenko
+ * @module scheduler
+ */
 public class ScheduleMainMenuBar extends AbstractMainMenuBar {
 
 	private static final long	serialVersionUID			= 3689065136446912305L;

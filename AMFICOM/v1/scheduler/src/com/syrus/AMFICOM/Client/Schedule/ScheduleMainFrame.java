@@ -1,3 +1,10 @@
+/*-
+* $Id: ScheduleMainFrame.java,v 1.37 2005/09/12 07:10:28 bob Exp $
+*
+* Copyright ¿ 2004-2005 Syrus Systems.
+* Dept. of Science & Technology.
+* Project: AMFICOM.
+*/
 
 package com.syrus.AMFICOM.Client.Schedule;
 
@@ -33,6 +40,12 @@ import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
+/**
+ * @version $Revision: 1.37 $, $Date: 2005/09/12 07:10:28 $
+ * @author $Author: bob $
+ * @author Vladimir Dolzhenko
+ * @module scheduler
+ */
 public class ScheduleMainFrame extends AbstractMainFrame {
 
 	private static final long	serialVersionUID		= 3257563988626848055L;
