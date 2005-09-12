@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeProtoElement.xsd,v 1.4 2005/09/02 13:22:59 bass Exp $
+			$Id: SchemeProtoElement.xsd,v 1.5 2005/09/12 12:21:01 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -19,7 +19,10 @@
 
 	<xsd:import
 		namespace = "http://syrus.com/AMFICOM/general/xml"
-		schemaLocation = "../../general/xml/StorableObject.xsd"/>
+		schemaLocation = "../../general/xml/general.xsd"/>
+	<xsd:import
+		namespace = "http://syrus.com/AMFICOM/general/xml"
+		schemaLocation = "../../general/xml/Characteristic.xsd"/>
 
 	<xsd:element name = "schemeProtoElements" type = "scheme:XmlSchemeProtoElementSeq">
 		<xsd:key name = "schemeProtoElementId">
@@ -31,6 +34,81 @@
 	<xsd:complexType name = "XmlSchemeProtoElement" final = "#all">
 		<xsd:complexContent>
 			<xsd:extension base = "general:XmlStorableObject">
+				<xsd:sequence>
+					<xsd:element ref = "general:name"/>
+					<xsd:element ref = "general:description"
+						minOccurs = "0"/>
+					<xsd:element ref = "general:label"
+						minOccurs = "0"/>
+					<xsd:element name = "equipmentTypeId" type = "general:XmlIdentifier"
+						minOccurs = "0"/>
+					<xsd:choice
+						minOccurs = "0">
+						<xsd:element name = "symbolId" type = "general:XmlIdentifier"/>
+						<xsd:element name = "symbolCodename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "32"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name = "symbolFilename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "256"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:choice>
+					<xsd:choice
+						minOccurs = "0">
+						<xsd:element name = "ugoCellId" type = "general:XmlIdentifier"/>
+						<xsd:element name = "ugoCellCodename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "32"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name = "ugoCellFilename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "256"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:choice>
+					<xsd:choice
+						minOccurs = "0">
+						<xsd:element name = "schemeCellId" type = "general:XmlIdentifier"/>
+						<xsd:element name = "schemeCellCodename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "32"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+						<xsd:element name = "schemeCellFilename">
+							<xsd:simpleType>
+								<xsd:restriction base = "xsd:string">
+									<xsd:minLength value = "1"/>
+									<xsd:maxLength value = "256"/>
+								</xsd:restriction>
+							</xsd:simpleType>
+						</xsd:element>
+					</xsd:choice>
+					<xsd:choice>
+						<xsd:element name = "parentSchemeProtoGroupId" type = "general:XmlIdentifier"/>
+						<xsd:element name = "parentSchemeProtoElementId" type = "general:XmlIdentifier"/>
+					</xsd:choice>
+					<xsd:element ref = "general:characteristics"
+						minOccurs = "0"/>
+				</xsd:sequence>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
