@@ -1,5 +1,5 @@
 /*-
- * $Id: RTUBeanFactory.java,v 1.14 2005/09/04 11:31:23 bob Exp $
+ * $Id: RTUBeanFactory.java,v 1.15 2005/09/12 12:06:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 import com.syrus.AMFICOM.measurement.KIS;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/04 11:31:23 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/12 12:06:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -44,13 +44,9 @@ public class RTUBeanFactory extends TabledBeanFactory {
 		super.graphText = graphText;
 	}
 	
-	public static final RTUBeanFactory getInstance(final ManagerMainFrame graphText) {
+	public static final synchronized RTUBeanFactory getInstance(final ManagerMainFrame graphText) {
 		if(instance == null) {
-			synchronized (RTUBeanFactory.class) {
-				if(instance == null) {
-					instance = new RTUBeanFactory(graphText);
-				}
-			}
+			instance = new RTUBeanFactory(graphText);
 		}		
 		return instance;
 	}
@@ -75,6 +71,7 @@ public class RTUBeanFactory extends TabledBeanFactory {
 	@Override
 	public AbstractBean createBean(Identifier identifier) {
 		final RTUBean bean = new RTUBean();
+		++super.count;
 		bean.setGraphText(super.graphText);
 		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());

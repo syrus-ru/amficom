@@ -1,5 +1,5 @@
 /*-
-* $Id: UserBeanFactory.java,v 1.20 2005/09/09 15:36:39 bob Exp $
+* $Id: UserBeanFactory.java,v 1.21 2005/09/12 12:06:26 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/09 15:36:39 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/12 12:06:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -58,13 +58,9 @@ public class UserBeanFactory extends TabledBeanFactory {
 		this.names.add(null);
 	}
 	
-	public static final UserBeanFactory getInstance(final ManagerMainFrame graphText) {
+	public static final synchronized UserBeanFactory getInstance(final ManagerMainFrame graphText) {
 		if (instance == null) {
-			synchronized (UserBeanFactory.class) {
-				if (instance == null) {
-					instance = new UserBeanFactory(graphText);
-				}				
-			}
+			instance = new UserBeanFactory(graphText);
 		}
 		return instance;
 	}
@@ -111,6 +107,7 @@ public class UserBeanFactory extends TabledBeanFactory {
 	@Override
 	protected AbstractBean createBean(Identifier identifier) {
 		final UserBean bean = new UserBean(this.names);
+		++super.count;
 		bean.setGraphText(super.graphText);
 		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());		

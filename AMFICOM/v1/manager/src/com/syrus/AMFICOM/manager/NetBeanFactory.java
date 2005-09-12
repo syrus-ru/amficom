@@ -1,5 +1,5 @@
 /*-
- * $Id: NetBeanFactory.java,v 1.21 2005/09/12 11:10:16 bob Exp $
+ * $Id: NetBeanFactory.java,v 1.22 2005/09/12 12:06:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/12 11:10:16 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/12 12:06:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -47,13 +47,9 @@ public class NetBeanFactory extends AbstractBeanFactory {
 		super.graphText = graphText;
 	}
 	
-	public static final NetBeanFactory getInstance(final ManagerMainFrame graphText) {
+	public static final synchronized NetBeanFactory getInstance(final ManagerMainFrame graphText) {
 		if(instance == null) {
-			synchronized (NetBeanFactory.class) {
-				if(instance == null) {
-					instance = new NetBeanFactory(graphText);
-				}
-			}
+			instance = new NetBeanFactory(graphText);
 		}		
 		return instance;
 	}

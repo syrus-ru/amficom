@@ -1,5 +1,5 @@
 /*-
- * $Id: DomainBeanFactory.java,v 1.14 2005/09/04 11:31:23 bob Exp $
+ * $Id: DomainBeanFactory.java,v 1.15 2005/09/12 12:06:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/04 11:31:23 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/12 12:06:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -36,13 +36,9 @@ public class DomainBeanFactory extends TabledBeanFactory {
 		super.graphText = graphText;
 	}
 	
-	public static final DomainBeanFactory getInstance(final ManagerMainFrame graphText) {
+	public static final synchronized DomainBeanFactory getInstance(final ManagerMainFrame graphText) {
 		if(instance == null) {
-			synchronized (DomainBeanFactory.class) {
-				if(instance == null) {
-					instance = new DomainBeanFactory(graphText);
-				}
-			}
+			instance = new DomainBeanFactory(graphText);
 		}		
 		return instance;
 	}
@@ -56,8 +52,9 @@ public class DomainBeanFactory extends TabledBeanFactory {
 	}
 	
 	@Override
-	protected AbstractBean createBean(final Identifier id) {
-		DomainBean bean = new DomainBean();
+	protected AbstractBean createBean(final Identifier id) {		
+		final DomainBean bean = new DomainBean();
+		++super.count;
 		bean.setGraphText(super.graphText);
 		bean.setCodeName(id.getIdentifierString());
 		bean.setValidator(this.getValidator());

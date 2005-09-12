@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.7 2005/09/12 11:10:16 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.8 2005/09/12 12:06:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,6 @@
 package com.syrus.AMFICOM.manager.UI;
 
 import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_NAME;
-
-import gnu.trove.TObjectIntHashMap;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
@@ -119,7 +117,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/12 11:10:16 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/12 12:06:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -1215,19 +1213,12 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		Icon icon = factory.getIcon();
 		this.factoryMap.put(factory.getCodename(), factory);
 		AbstractAction action = new AbstractAction(icon != null ? "" : name, icon) {
-//			private Map<String, Integer> entityIndices;
-			private TObjectIntHashMap entityIndices;
 			
 			public void actionPerformed(ActionEvent e) {
 				try {
 					AbstractBean bean = factory.createBean(ManagerMainFrame.this.perspective);
-					if (this.entityIndices == null) {
-						this.entityIndices = new TObjectIntHashMap();
-					}
-					int index = this.entityIndices.get(name) + 1;					
-					this.entityIndices.put(name, index);
 					ManagerMainFrame.this.createChild(null, 
-						factory.getShortName() + "-" + index, 
+						factory.getShortName() + "-" + factory.getCount(), 
 						bean, 
 						20, 
 						20, 

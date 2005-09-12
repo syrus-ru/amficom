@@ -1,5 +1,5 @@
 /*-
- * $Id: ARMBeanFactory.java,v 1.15 2005/09/06 10:08:55 bob Exp $
+ * $Id: ARMBeanFactory.java,v 1.16 2005/09/12 12:06:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.AMFICOM.resource.LayoutItem;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/06 10:08:55 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/12 12:06:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -44,13 +44,9 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 		super.graphText = graphText;
 	}
 	
-	public static final ARMBeanFactory getInstance(final ManagerMainFrame graphText) {
+	public static final synchronized ARMBeanFactory getInstance(final ManagerMainFrame graphText) {
 		if(instance == null) {
-			synchronized (ARMBeanFactory.class) {
-				if(instance == null) {
-					instance = new ARMBeanFactory(graphText);
-				}
-			}
+			instance = new ARMBeanFactory(graphText);
 		}		
 		return instance;
 	}
@@ -63,7 +59,7 @@ public class ARMBeanFactory extends AbstractBeanFactory {
 	@Override
 	public AbstractBean createBean(final String codename) {
 		++super.count;
-		AbstractBean bean = new ARMBean();
+		final AbstractBean bean = new ARMBean();
 		bean.setGraphText(super.graphText);
 		bean.setValidator(this.getValidator());
 		bean.setCodeName(codename);

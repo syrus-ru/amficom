@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMBeanFactory.java,v 1.11 2005/09/04 11:31:23 bob Exp $
+ * $Id: MCMBeanFactory.java,v 1.12 2005/09/12 12:06:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/04 11:31:23 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/12 12:06:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -47,13 +47,9 @@ public class MCMBeanFactory extends TabledBeanFactory {
 		super.graphText = graphText;
 	}
 	
-	public static final MCMBeanFactory getInstance(final ManagerMainFrame graphText) {
+	public static final synchronized  MCMBeanFactory getInstance(final ManagerMainFrame graphText) {
 		if(instance == null) {
-			synchronized (MCMBeanFactory.class) {
-				if(instance == null) {
-					instance = new MCMBeanFactory(graphText);
-				}
-			}
+			instance = new MCMBeanFactory(graphText);
 		}		
 		return instance;
 	}
@@ -80,6 +76,7 @@ public class MCMBeanFactory extends TabledBeanFactory {
 	@Override
 	public AbstractBean createBean(Identifier identifier) {
 		final MCMBean bean = new MCMBean();
+		++super.count;
 		bean.setGraphText(super.graphText);
 		bean.setCodeName(identifier.getIdentifierString());
 		bean.setValidator(this.getValidator());

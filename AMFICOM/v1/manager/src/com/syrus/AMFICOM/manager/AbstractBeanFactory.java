@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractBeanFactory.java,v 1.9 2005/09/04 11:31:23 bob Exp $
+* $Id: AbstractBeanFactory.java,v 1.10 2005/09/12 12:06:26 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/04 11:31:23 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/12 12:06:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -87,5 +87,9 @@ public abstract class AbstractBeanFactory {
 	}
 	
 	public abstract String getCodename();
+	
+	public final int getCount() {
+		return this.count;
+	}
 }
 

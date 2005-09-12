@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerBeanFactory.java,v 1.9 2005/09/04 11:31:23 bob Exp $
+ * $Id: ServerBeanFactory.java,v 1.10 2005/09/12 12:06:26 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.AMFICOM.manager.UI.ManagerMainFrame;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/04 11:31:23 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/12 12:06:26 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -42,13 +42,9 @@ public class ServerBeanFactory extends TabledBeanFactory {
 		super.graphText = graphText;
 	}
 	
-	public static final ServerBeanFactory getInstance(final ManagerMainFrame graphText) {
+	public static final synchronized ServerBeanFactory getInstance(final ManagerMainFrame graphText) {
 		if(instance == null) {
-			synchronized (ServerBeanFactory.class) {
-				if(instance == null) {
-					instance = new ServerBeanFactory(graphText);
-				}
-			}
+			instance = new ServerBeanFactory(graphText);
 		}		
 		return instance;
 	}
@@ -71,7 +67,8 @@ public class ServerBeanFactory extends TabledBeanFactory {
 	
 	@Override
 	protected AbstractBean createBean(Identifier identifier) {
-		ServerBean bean = new ServerBean();
+		final ServerBean bean = new ServerBean();
+		++super.count;
 		bean.setGraphText(super.graphText);
 		bean.setId(identifier);
 		bean.setCodeName(identifier.getIdentifierString());
