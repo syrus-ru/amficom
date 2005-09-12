@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.14 2005/08/02 19:12:24 arseniy Exp $
+ * $Id: AbstractMainFrame.java,v 1.15 2005/09/12 12:50:32 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,10 +24,12 @@ import java.util.List;
 import javax.swing.BorderFactory;
 import javax.swing.JDesktopPane;
 import javax.swing.JFrame;
+import javax.swing.JInternalFrame;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JViewport;
+import javax.swing.UIDefaults;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.administration.Domain;
@@ -46,8 +48,8 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/02 19:12:24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.15 $, $Date: 2005/09/12 12:50:32 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -328,6 +330,18 @@ implements PropertyChangeListener {
 			exception.getMessage(),
 			LangModelGeneral.getString("Error.ErrorOccur"),
 			JOptionPane.OK_OPTION);
+	}
+	
+	protected Command getShowWindowLazyCommand(final UIDefaults frames,
+	                                           final Object windowKey) {
+		final String commandKey = windowKey.toString() + "_COMMAND";
+		frames.put(commandKey, new UIDefaults.LazyValue() {
+
+			public Object createValue(UIDefaults defaults) {
+				return new ShowWindowCommand((JInternalFrame) defaults.get(windowKey));
+			}
+		});
+		return new LazyCommand(frames, commandKey);
 	}
 
 	protected void initModule() {
