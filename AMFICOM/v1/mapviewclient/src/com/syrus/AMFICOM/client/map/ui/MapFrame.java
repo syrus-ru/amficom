@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.72 2005/09/04 13:48:55 krupenn Exp $
+ * $Id: MapFrame.java,v 1.73 2005/09/12 06:24:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -207,7 +207,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * 
  * 
  * 
- * @version $Revision: 1.72 $, $Date: 2005/09/04 13:48:55 $
+ * @version $Revision: 1.73 $, $Date: 2005/09/12 06:24:15 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -370,23 +370,23 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 		constraints.ipady = 0;
 		this.getContentPane().add(this.mapStatusbar, constraints);
 
-		final JSlider testSlider = new JSlider(JSlider.HORIZONTAL, 1, 3100, 1);
-		
-		constraints.gridx = 0;
-		constraints.gridy = 3;
-		constraints.gridwidth = 1;
-		constraints.gridheight = 1;
-		constraints.weightx = 0;
-		constraints.weighty = 0;
-		constraints.anchor = GridBagConstraints.WEST;
-		constraints.fill = GridBagConstraints.NONE;
-		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
-		constraints.ipadx = 0;
-		constraints.ipady = 0;
-		this.getContentPane().add(testSlider, constraints);
-
-		TestSliderListener testSliderListener = new TestSliderListener(this, testSlider);
-		testSlider.addChangeListener(testSliderListener);
+//		final JSlider testSlider = new JSlider(JSlider.HORIZONTAL, 1, 3100, 1);
+//		
+//		constraints.gridx = 0;
+//		constraints.gridy = 3;
+//		constraints.gridwidth = 1;
+//		constraints.gridheight = 1;
+//		constraints.weightx = 0;
+//		constraints.weighty = 0;
+//		constraints.anchor = GridBagConstraints.WEST;
+//		constraints.fill = GridBagConstraints.NONE;
+//		constraints.insets = UIManager.getInsets(ResourceKeys.INSETS_NULL);
+//		constraints.ipadx = 0;
+//		constraints.ipady = 0;
+//		this.getContentPane().add(testSlider, constraints);
+//
+//		TestSliderListener testSliderListener = new TestSliderListener(this, testSlider);
+//		testSlider.addChangeListener(testSliderListener);
 		
 		this.addComponentListener(new MapMainFrameComponentAdapter(this));
 		this.addInternalFrameListener(new MapMainFrameInternalFrameAdapter(this));

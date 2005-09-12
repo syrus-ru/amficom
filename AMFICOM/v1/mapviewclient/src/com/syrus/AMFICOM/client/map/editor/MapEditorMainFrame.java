@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.55 2005/09/11 19:47:32 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.56 2005/09/12 06:24:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -82,7 +82,7 @@ import com.syrus.AMFICOM.scheme.SchemeSampleData;
  * 
  * 
  * 
- * @version $Revision: 1.55 $, $Date: 2005/09/11 19:47:32 $
+ * @version $Revision: 1.56 $, $Date: 2005/09/12 06:24:15 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -505,19 +505,19 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 
 		aModel.fireModelChanged();
 
-		try {
-			SchemeSampleData.populate(
-					LoginManager.getUserId(),
-					LoginManager.getDomainId());
-		} catch(DatabaseException e) {
-			e.printStackTrace();
-		} catch(IllegalObjectEntityException e) {
-			e.printStackTrace();
-		} catch(IdentifierGenerationException e) {
-			e.printStackTrace();
-		} catch(ApplicationException e) {
-			e.printStackTrace();
-		}
+//		try {
+//			SchemeSampleData.populate(
+//					LoginManager.getUserId(),
+//					LoginManager.getDomainId());
+//		} catch(DatabaseException e) {
+//			e.printStackTrace();
+//		} catch(IllegalObjectEntityException e) {
+//			e.printStackTrace();
+//		} catch(IdentifierGenerationException e) {
+//			e.printStackTrace();
+//		} catch(ApplicationException e) {
+//			e.printStackTrace();
+//		}
 	}
 
 	@Override
