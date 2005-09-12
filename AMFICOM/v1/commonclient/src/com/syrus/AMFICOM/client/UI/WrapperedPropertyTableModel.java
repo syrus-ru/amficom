@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/08 14:06:38 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/12 07:53:44 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -30,17 +30,18 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 	protected String[] keys;
 
 	protected String[] names;
+	protected Object[] values;
 
-	private T object;
+	private T t;
 
 	/**
 	 * @param wrapper
 	 *            see {@link #wrapper}
-	 * @param object
+	 * @param t
 	 */
-	public WrapperedPropertyTableModel(final Wrapper<T> wrapper, final T object, final String[] keys) {
+	public WrapperedPropertyTableModel(final Wrapper<T> wrapper, final T t, final String[] keys) {
 		this.wrapper = wrapper;
-		this.object = object;
+		this.t = t;
 		this.setKeys(keys);
 	}
 
@@ -82,7 +83,7 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 	}
 
 	public T getObject() {
-		return this.object;
+		return this.t;
 	}
 
 	public int getRowCount() {
@@ -90,27 +91,31 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 	}
 
 	public Object getValueAt(final int rowIndex, final int columnIndex) {
-		// String key = this.wrapper.getKey(rowIndex);
 		if (columnIndex == 0) {
 			return this.names[rowIndex];
 		}
-		Object obj = this.wrapper.getValue(this.object, this.keys[rowIndex]);
-
-		if (this.wrapper.getPropertyValue(this.keys[rowIndex]) instanceof Map) {
-			final Map map = (Map) this.wrapper.getPropertyValue(this.keys[rowIndex]);
-			Object keyObject = null;
-			for (final Iterator it = map.keySet().iterator(); it.hasNext();) {
-				final Object keyObj = it.next();
-				if (map.get(keyObj).equals(obj)) {
-					keyObject = keyObj;
-					break;
+		
+		Object object = this.values[rowIndex];
+		if (object == null) {
+			object = this.wrapper.getValue(this.t, this.keys[rowIndex]);
+	
+			if (this.wrapper.getPropertyValue(this.keys[rowIndex]) instanceof Map) {
+				final Map map = (Map) this.wrapper.getPropertyValue(this.keys[rowIndex]);
+				Object keyObject = null;
+				for (final Iterator it = map.keySet().iterator(); it.hasNext();) {
+					final Object keyObj = it.next();
+					if (map.get(keyObj).equals(object)) {
+						keyObject = keyObj;
+						break;
+					}
 				}
+				object = keyObject;	
 			}
-			obj = keyObject;
-
+			
+			this.values[rowIndex] = object;
 		}
 
-		return obj;
+		return object;
 	}
 
 	@Override
@@ -122,9 +127,9 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 		return this.wrapper.isEditable(this.keys[rowIndex]);
 	}
 
-	public void setObject(final T object) {
-		this.object = object;
-		super.fireTableDataChanged();
+	public void setObject(final T t) {
+		this.t = t;
+		this.fireTableDataChanged();
 	}
 
 	public void setKeys(final String[] keys) {
@@ -132,30 +137,36 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 		this.keys = keys;
 		if (keys.length > oldKeysSize) {
 			this.names = new String[keys.length];
+			this.values = new Object[keys.length];
 		}
 		for(int i = 0; i < keys.length; i++) {			
 			this.names[i] = CommonUIUtilities.convertToHTMLString(this.wrapper.getName(keys[i]));
-//			this.names[i] = this.wrapper.getName(keys[i]);
 		}
-		super.fireTableDataChanged();
+		this.fireTableDataChanged();
 	}
 
 	@Override
-	public void setValueAt(final Object obj, final int rowIndex, final int columnIndex) {
+	public void fireTableDataChanged() {
+		super.fireTableDataChanged();
+		for(int i = 0; i < this.values.length; i++) {
+			this.values[i] = null;
+		}
+	}
+	
+	@Override
+	public void setValueAt(final Object object, final int rowIndex, final int columnIndex) {
 		if (columnIndex == 0) {
 			return;
 		}
-		// String key = this.wrapper.getKey(rowIndex);
-
-		// ObjectResource or = (ObjectResource)
-		// this.orList.get(rowIndex);
 		if (this.wrapper.getPropertyValue(this.keys[rowIndex]) instanceof Map) {
 			final Map map = (Map) this.wrapper.getPropertyValue(this.keys[rowIndex]);
-			this.wrapper.setValue(this.object, this.keys[rowIndex], map.get(obj));
+			this.values[rowIndex] = map.get(object);
+			this.wrapper.setValue(this.t, this.keys[rowIndex], this.values[rowIndex]);			
 		} else {
-			this.wrapper.setValue(this.object, this.keys[rowIndex], obj);
+			this.values[rowIndex] = object;
+			this.wrapper.setValue(this.t, this.keys[rowIndex], object);
 		}
-		this.fireTableDataChanged();
+		super.fireTableDataChanged();
 	}
 
 }
