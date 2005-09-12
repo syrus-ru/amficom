@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTAUController.cpp,v 1.3 2005/08/29 18:15:44 arseniy Exp $
+// $Id: OTAUController.cpp,v 1.4 2005/09/12 18:55:45 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.3 $, $Date: 2005/08/29 18:15:44 $
+// $Revision: 1.4 $, $Date: 2005/09/12 18:55:45 $
 // $Author: arseniy $
 //
 // OTAUController.cpp: implementation of the OTAUController class.
@@ -380,7 +380,7 @@ int OTAUController::switch_OTAU() {
 	char* switch_command = new char[OTAU_COMMAND_CONNECT_LENGTH];
 	memset(switch_command, 0, OTAU_COMMAND_CONNECT_LENGTH);
 
-	int j = sprintf(switch_command, "%s", OTAU_COMMAND_CONNECT1);
+	int j = sprintf(switch_command, "%s", OTAU_COMMAND_CONNECT1);//XXX
 	
 	if (this->otau_id < 10) {
 		j += sprintf(switch_command + j, "%s", "0");

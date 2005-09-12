@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: OTAUController.h,v 1.3 2005/08/29 18:15:44 arseniy Exp $
+// $Id: OTAUController.h,v 1.4 2005/09/12 18:55:45 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.3 $, $Date: 2005/08/29 18:15:44 $
+// $Revision: 1.4 $, $Date: 2005/09/12 18:55:45 $
 // $Author: arseniy $
 //
 // OTAUController.h: interface for the OTAUController class.
@@ -31,13 +31,13 @@
 #define COM_PORT_REPLY_LENGTH (unsigned int) 4000
 #define MAX_POSSIBLE_OTAUS (unsigned int) 100
 #define MAX_POSSIBLE_OTAU_PORTS (unsigned int) 100
-#define OTAU_COMMAND_INIT ";INIT-SYS::ALL:WXYZ1::0;"
-#define OTAU_COMMAND_HDR ";RTRV-HDR:::ABCD;"
-#define OTAU_COMMAND_DISCONNECT "DISC-TACC:1:1:1;"
+#define OTAU_COMMAND_INIT ";INIT-SYS::ALL:WXYZ1::0;"//XXX
+#define OTAU_COMMAND_HDR ";RTRV-HDR:::ABCD;"//XXX
+#define OTAU_COMMAND_DISCONNECT "DISC-TACC:1:1:1;"//XXX
 #define OTAU_COMMAND_CONNECT1 "CONN-TACC-OTAU:OTAU"
-#define OTAU_COMMAND_CONNECT2 ":ABCD:1;"
+#define OTAU_COMMAND_CONNECT2 ":ABCD:1;"//XXX
 #define OTAU_COMMAND_CONNECT_LENGTH 50
-#define OTAU_COMMAND_REANIMATE_CONNECTION ";REPT-STAT:::ABCD;"
+#define OTAU_COMMAND_REANIMATE_CONNECTION ";REPT-STAT:::ABCD;"//XXX
 #define OTAU_HOLD_PORT_TIMEOUT (unsigned int) 50 //sec
 
 class OTAUController {
