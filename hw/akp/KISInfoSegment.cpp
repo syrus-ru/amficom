@@ -45,8 +45,9 @@ void KISInfoSegment::createSegment() {
 
 	//kis_id
 	segment1 = this->kis_id->getSegment();
-	for (i = 0; i < INTSIZE + this->kis_id->getLength(); i++)
+	for (i = 0; i < INTSIZE + this->kis_id->getLength(); i++) {
 		this->data[i + mile] = segment1[i];
+	}
 	delete[] segment1;
 	mile += i;
 

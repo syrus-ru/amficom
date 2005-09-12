@@ -34,8 +34,9 @@ MeasurementSegment::~MeasurementSegment() {
 	delete this->measurement_type_id;
 	delete this->local_address;
 	unsigned int i;
-	for (i = 0; i < this->parnumber; i++)
+	for (i = 0; i < this->parnumber; i++) {
 		delete this->parameters[i];
+	}
 	delete[] this->parameters;
 }
 
@@ -61,8 +62,9 @@ Parameter** MeasurementSegment::getParameters() const {
 
 void MeasurementSegment::createSegment() {
 	unsigned int i, parslen = 0;
-	for (i = 0; i < this->parnumber; i++)
+	for (i = 0; i < this->parnumber; i++) {
 		parslen += this->parameters[i]->getLength();
+	}
 
 	this->length = 1 + 
 			INTSIZE + this->measurement_id->getLength() +
@@ -80,37 +82,42 @@ void MeasurementSegment::createSegment() {
 
 	//measurement_id
 	segment1 = this->measurement_id->getSegment();
-	for (i = 0; i < INTSIZE + this->measurement_id->getLength(); i++)
+	for (i = 0; i < INTSIZE + this->measurement_id->getLength(); i++) {
 		this->data[i + mile] = segment1[i];
+	}
 	delete[] segment1;
 	mile += i;
 
 	//measurement_type_id
 	segment1 = this->measurement_type_id->getSegment();
-	for (i = 0; i < INTSIZE + this->measurement_type_id->getLength(); i++)
+	for (i = 0; i < INTSIZE + this->measurement_type_id->getLength(); i++) {
 		this->data[i + mile] = segment1[i];
+	}
 	delete[] segment1;
 	mile += i;
 
 	//local_address
 	segment1 = this->local_address->getSegment();
-	for (i = 0; i < INTSIZE + this->local_address->getLength(); i++)
+	for (i = 0; i < INTSIZE + this->local_address->getLength(); i++) {
 		this->data[i + mile] = segment1[i];
+	}
 	delete[] segment1;
 	mile += i;
 
 	//parameters
 	uint32_t nparnumber = htonl(this->parnumber);
 	segment1 = (char*) &nparnumber;
-	for (i = 0; i < INTSIZE; i++)
+	for (i = 0; i < INTSIZE; i++) {
 		this->data[i + mile] = segment1[i];
+	}
 	mile += i;
 
 	unsigned int j;
 	for (j = 0; j < this->parnumber; j++) {
 		segment1 = this->parameters[j]->getSegment();
-		for (i = 0; i < this->parameters[j]->getLength(); i++)
+		for (i = 0; i < this->parameters[j]->getLength(); i++) {
 			this->data[i + mile] = segment1[i];
+		}
 		delete[] segment1;
 		mile += i;
 	}
@@ -133,8 +140,9 @@ void MeasurementSegment::parseSegment() {
 
 	//parameters
 	uint_frame uiframe;
-	for (unsigned int i = 0; i < sizeof(uint32_t); i++)
+	for (unsigned int i = 0; i < sizeof(uint32_t); i++) {
 		uiframe.bytes[i] = p[i];
+	}
 	this->parnumber = ntohl(uiframe.value);
 	p += INTSIZE;
 

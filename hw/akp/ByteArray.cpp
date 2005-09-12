@@ -45,10 +45,12 @@ char* ByteArray::getSegment() const {
 	char* segment = new char[INTSIZE + this->length];
 	uint32_t nlength = htonl(this->length);
 	unsigned int i;
-	for (i = 0; i < INTSIZE; i++)
+	for (i = 0; i < INTSIZE; i++) {
 		segment[i] = ((char*) &nlength)[i];
-	for (i = 0; i < this->length; i++)
+	}
+	for (i = 0; i < this->length; i++) {
 		segment[INTSIZE + i] = this->data[i];
+	}
 	return segment;
 }
 
@@ -59,42 +61,50 @@ char* ByteArray::getData() const {
 ByteArray* ByteArray::clone() const {
 	char* data1 = new char[this->length];
 	unsigned int i;
-	for (i = 0; i < this->length; i++)
+	for (i = 0; i < this->length; i++) {
 		data1[i] = this->data[i];
+	}
 	return new ByteArray(this->length, data1);
 }
 
 ByteArray* ByteArray::getReversed() const {
 	char* data1 = new char[this->length];
 	unsigned int i;
-	for (i = 0; i < this->length; i++)
+	for (i = 0; i < this->length; i++) {
 		data1[i] = this->data[this->length - 1 - i];
+	}
 	return new ByteArray(this->length, data1);
 }
 
 int operator == (const ByteArray& ba1, const ByteArray& ba2) {
 	unsigned int l = ba1.getLength();
-	if (l != ba2.getLength())
+	if (l != ba2.getLength()) {
 		return 0;
+	}
 	unsigned int i;
 	char* data1 = ba1.getData();
 	char* data2 = ba2.getData();
-	for (i = 0; i < l; i++)
-		if (data1[i] != data2[i])
+	for (i = 0; i < l; i++) {
+		if (data1[i] != data2[i]) {
 			return 0;
+		}
+	}
 	return 1;
 }
 
 int operator != (const ByteArray& ba1, const ByteArray& ba2) {
 	unsigned int l = ba1.getLength();
-	if (l != ba2.getLength())
+	if (l != ba2.getLength()) {
 		return 1;
+	}
 	unsigned int i;
 	char* data1 = ba1.getData();
 	char* data2 = ba2.getData();
-	for (i = 0; i < l; i++)
-		if (data1[i] != data2[i])
+	for (i = 0; i < l; i++) {
+		if (data1[i] != data2[i]) {
 			return 1;
+		}
+	}
 	return 0;
 }
 

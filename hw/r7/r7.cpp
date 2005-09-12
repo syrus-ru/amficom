@@ -1,5 +1,5 @@
 //////////////////////////////////////////////////////////////////////
-// $Id: r7.cpp,v 1.4 2005/09/03 19:20:22 arseniy Exp $
+// $Id: r7.cpp,v 1.5 2005/09/12 18:54:50 arseniy Exp $
 // 
 // Syrus Systems.
 // Научно-технический центр
@@ -8,7 +8,7 @@
 //////////////////////////////////////////////////////////////////////
 
 //////////////////////////////////////////////////////////////////////
-// $Revision: 1.4 $, $Date: 2005/09/03 19:20:22 $
+// $Revision: 1.5 $, $Date: 2005/09/12 18:54:50 $
 // $Author: arseniy $
 //
 // r7.cpp: main function of application.
@@ -34,19 +34,19 @@ int main(const int argc, const char* argv[]) {
 		return 1;
 	}
 
-	id = (char*)argv[1];
-	timewait = (unsigned int)atoi(argv[2]);
-	max_mcm_timeout = (unsigned int)atoi(argv[3]);
-	port = (unsigned short)atoi(argv[4]);
-	com_port_number = (unsigned short)atoi(argv[5]);
+	id = (char*) argv[1];
+	timewait = (unsigned int) atoi(argv[2]);
+	max_mcm_timeout = (unsigned int) atoi(argv[3]);
+	port = (unsigned short) atoi(argv[4]);
+	com_port_number = (unsigned short) atoi(argv[5]);
 
 
 	MeasurementQueueT* measurement_queue = new MeasurementQueueT();
 	ResultQueueT* result_queue = new ResultQueueT();
 
-	pthread_mutex_t* tmutex = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_t* tmutex = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t));
 	pthread_mutex_init(tmutex, NULL);
-	pthread_mutex_t* rmutex = (pthread_mutex_t*)malloc(sizeof(pthread_mutex_t));
+	pthread_mutex_t* rmutex = (pthread_mutex_t*) malloc(sizeof(pthread_mutex_t));
 	pthread_mutex_init(rmutex, NULL);
 
 	RTUTransceiver* rtuTransceiver = new RTUTransceiver(timewait,

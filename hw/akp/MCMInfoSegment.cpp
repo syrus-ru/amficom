@@ -45,8 +45,9 @@ void MCMInfoSegment::createSegment() {
 
 	//mcm_id
 	segment1 = this->mcm_id->getSegment();
-	for (i = 0; i < INTSIZE + this->mcm_id->getLength(); i++)
+	for (i = 0; i < INTSIZE + this->mcm_id->getLength(); i++) {
 		this->data[i + mile] = segment1[i];
+	}
 	delete[] segment1;
 	mile += i;
 

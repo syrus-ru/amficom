@@ -25,12 +25,14 @@ char* Parameter::getSegment() const {
 	unsigned int i;
 	char* segment1 = this->name->getSegment();
 	unsigned int mile = INTSIZE + this->name->getLength();
-	for (i = 0; i < mile; i++)
+	for (i = 0; i < mile; i++) {
 		segment[i] = segment1[i];
+	}
 	delete[] segment1;
 	segment1 = this->value->getSegment();
-	for (i = mile; i < this->length; i++)
+	for (i = mile; i < this->length; i++) {
 		segment[i] = segment1[i - mile];
+	}
 	delete[] segment1;
 	return segment;
 }
@@ -48,14 +50,16 @@ ByteArray* Parameter::getValue() const {
 }
 
 int operator == (const Parameter& p1, const Parameter& p2) {
-	if(&p1 == &p2)
+	if(&p1 == &p2) {
 		return 1;
+	}
 	return *(p1.getName()) == *(p2.getName()) && *(p1.getValue()) == *(p2.getValue());
 }
 
 int operator != (const Parameter& p1, const Parameter& p2) {
-	if (&p1 == &p2)
+	if (&p1 == &p2) {
 		return 0;
+	}
 	return *(p1.getName()) != *(p2.getName()) || *(p1.getValue()) != *(p2.getValue());
 }
 
