@@ -10,16 +10,19 @@
 //////////////////////////////////////////////////////////////////////
 
 SocketConnectionAcceptor::SocketConnectionAcceptor(SOCKET lsockfd) {
-	if (lsockfd != INVALID_SOCKET)
+	if (lsockfd != INVALID_SOCKET) {
 		this->lsockfd = lsockfd;
-	else
+	}
+	else {
 		printf("SocketConnectionAcceptor | Listening socket is INVALID_SOCKET\n");
+	}
 	this->csockfd = INVALID_SOCKET;
 }
 
 SocketConnectionAcceptor::~SocketConnectionAcceptor() {
-	if (this->communication_available())
+	if (this->communication_available()) {
 		this->close_communication();
+	}
 }
 
 void SocketConnectionAcceptor::accept_connection(const unsigned int timewait) {
@@ -40,11 +43,12 @@ void SocketConnectionAcceptor::accept_connection(const unsigned int timewait) {
 	if (sel_ret == 0) {
 		printf("SocketConnectionAcceptor.accept_connection | Nothing to accept\n");
 	}
-	else 
+	else {
 		if (sel_ret > 0) {
 			this->csockfd = accept(this->lsockfd, (sockaddr*)&remote_addr, &remote_addr_len);
-			if (this->csockfd > 0)
+			if (this->csockfd > 0) {
 				printf("Accepted new connection from %s:%hu\n", inet_ntoa(remote_addr.sin_addr), ntohs(remote_addr.sin_port));
+			}
 			else {
 				show_error("SocketConnectionAcceptor.accept_connection | accept");
 				this->csockfd = INVALID_SOCKET;
@@ -54,6 +58,7 @@ void SocketConnectionAcceptor::accept_connection(const unsigned int timewait) {
 			show_error("SocketConnectionAcceptor.accept_connection | select");
 			sleep_sec(timewait);
 		}
+	}
 
 
 	

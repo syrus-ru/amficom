@@ -21,8 +21,9 @@ ReadSegmentStatus receive_segment(const SOCKET sockfd, const unsigned int timewa
 	sr = new SocketReader(sockfd, HEADERSIZE, buffer);
 	while (! sr->is_failed() && sr->has_more_data_to_read()) {
 		sr->read();
-		if (sr->has_more_data_to_read())
+		if (sr->has_more_data_to_read()) {
 			sleep_sec(timewait);
+		}
 	}
 	if (sr->is_failed() && sr->has_more_data_to_read()) {
 		printf("(akptcp) Cannot read header of segment\n");
@@ -46,8 +47,9 @@ ReadSegmentStatus receive_segment(const SOCKET sockfd, const unsigned int timewa
 	sr = new SocketReader(sockfd, length, buffer);
 	while (! sr->is_failed() && sr->has_more_data_to_read()) {
 		sr->read();
-		if (sr->has_more_data_to_read())
+		if (sr->has_more_data_to_read()) {
 			sleep_sec(timewait);
+		}
 	}
 	if (sr->is_failed() && sr->has_more_data_to_read()) {
 		printf("(akptcp) Cannot read data of segment\n");
@@ -83,8 +85,9 @@ WriteSegmentStatus transmit_segment(SOCKET sockfd, const unsigned int timewait, 
 	SocketWriter* sw = new SocketWriter(sockfd, data_length, data);
 	while (! sw->is_failed() && sw->has_more_data_to_write()) {
 		sw->write();
-		if (sw->has_more_data_to_write())
+		if (sw->has_more_data_to_write()) {
 			sleep_sec(timewait);
+		}
 	}
 	if (sw->is_failed() && sw->has_more_data_to_write()) {
 		printf("(akptcp) Cannot write segment\n");
