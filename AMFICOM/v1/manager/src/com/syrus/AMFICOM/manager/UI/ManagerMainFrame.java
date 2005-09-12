@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.8 2005/09/12 12:06:26 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.9 2005/09/12 12:58:29 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -117,7 +117,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/09/12 12:06:26 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/12 12:58:29 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -279,6 +279,19 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			}
 		});
 
+		
+	
+		super.windowArranger.arrange();
+		
+	}
+	
+
+	@Override
+	protected void initModule() {
+		super.initModule();
+		
+		final JDesktopPane desktopPane1 = this.desktopPane;
+		
 		this.frames = new UIDefaults();		
 		
 		this.frames.put(TREE_FRAME, new UIDefaults.LazyValue() {
@@ -286,6 +299,8 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			public Object createValue(UIDefaults table) {
 				JScrollPane pane = new JScrollPane(ManagerMainFrame.this.tree);
 				JInternalFrame frame = new JInternalFrame(LangModelManager.getString(TREE_FRAME), true);
+				frame.setIconifiable(true);
+				frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 				desktopPane1.add(frame);
 				frame.getContentPane().add(pane);
 				return frame;
@@ -341,6 +356,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			panel.add(ManagerMainFrame.this.currentPerspectiveLabel, gbc);
 			
 			JInternalFrame frame = new JInternalFrame(LangModelManager.getString(GRAPH_FRAME), true);
+			frame.setIconifiable(true);
 			desktopPane1.add(frame);
 			frame.getContentPane().add(panel);
 
@@ -355,7 +371,9 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 				
 	//			 show property frame
 				JInternalFrame frame = new JInternalFrame(LangModelManager.getString(PROPERTIES_FRAME), true);
-				desktopPane1.add(frame);
+				frame.setIconifiable(true);
+				frame.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+				desktopPane1.add(frame);				
 				ManagerMainFrame.this.propertyPanel = new JPanel(new GridBagLayout());
 				ManagerMainFrame.this.gbc2 = new GridBagConstraints();
 				ManagerMainFrame.this.gbc2.fill = GridBagConstraints.BOTH;
@@ -369,19 +387,14 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 	
 			}
 		});	
-	
-		super.windowArranger.arrange();
-		
-	}
-	
-
-	@Override
-	protected void initModule() {
-		super.initModule();
 		
 		final ApplicationModel applicationModel = this.aContext.getApplicationModel();
 		applicationModel.setCommand(ManagerModel.DOMAINS_COMMAND, new DomainsPerspective(this));
 		applicationModel.setCommand(ManagerModel.FLUSH_COMMAND, new FlushCommand());	
+		
+		applicationModel.setCommand(TREE_FRAME, this.getShowWindowLazyCommand(this.frames, TREE_FRAME));
+		applicationModel.setCommand(GRAPH_FRAME, this.getShowWindowLazyCommand(this.frames, GRAPH_FRAME));
+		applicationModel.setCommand(PROPERTIES_FRAME, this.getShowWindowLazyCommand(this.frames, PROPERTIES_FRAME));
 		
 		this.beanMap = new HashMap<String, AbstractBean>();
 		this.factoryMap = new HashMap<String, AbstractBeanFactory>();
