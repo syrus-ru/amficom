@@ -1,5 +1,5 @@
 /*-
- * $Id: KISConnectionLRUMap.java,v 1.5 2005/08/02 12:40:44 arseniy Exp $
+ * $Id: KISConnectionLRUMap.java,v 1.6 2005/09/12 19:50:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,16 +8,17 @@
 
 package com.syrus.util;
 
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.mcm.KISConnection;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/02 12:40:44 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/12 19:50:07 $
  * @module mcm
  */
 public class KISConnectionLRUMap extends LRUMap<Identifier, KISConnection> {
-	static final long serialVersionUID = -1243965322879317241L;
+	private static final long serialVersionUID = 2946433898920082018L;
 
 	public KISConnectionLRUMap() {
 		super();
@@ -29,6 +30,8 @@ public class KISConnectionLRUMap extends LRUMap<Identifier, KISConnection> {
 
 	@Override
 	public synchronized KISConnection put(final Identifier kisId, final KISConnection kisConnection) {
+		assert (kisConnection != null) : ErrorMessages.NON_NULL_EXPECTED;
+
 		final KISConnection removedKISConnection = super.put(kisId, kisConnection);
 		if (removedKISConnection == null || !removedKISConnection.isEstablished()) {
 			return removedKISConnection;
@@ -36,8 +39,11 @@ public class KISConnectionLRUMap extends LRUMap<Identifier, KISConnection> {
 
 		// Find the nearest to the right side of array non-established connection.
 		//Return it if exists.
+		assert (super.array.length == super.entityCount) : "ERROR before LRUMap resize: entity count " + super.entityCount
+				+ " does not match array length " + super.array.length;
+
 		for (int i = super.array.length - 1; i >= 0; i--) {
-			final KISConnection aKISConnection = (KISConnection) super.array[i];
+			final KISConnection aKISConnection = super.array[i].getValue();
 			if (!aKISConnection.isEstablished()) {
 				for (int j = i; j < super.array.length - 1; j++) {
 					super.array[j] = super.array[j + 1];
