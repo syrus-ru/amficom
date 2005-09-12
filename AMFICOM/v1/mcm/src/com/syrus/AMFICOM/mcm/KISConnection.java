@@ -8,15 +8,15 @@ public interface KISConnection {
 
 	boolean isEstablished();
 
-	void establish(long kisConnectionTimeout) throws CommunicationException;
+	void establish(final long kisConnectionTimeout) throws CommunicationException;
 
-	void establish(long kisConnectionTimeout, boolean dropIfAlreadyEstablished) throws CommunicationException;
+	void establish(final long kisConnectionTimeout, final boolean dropIfAlreadyEstablished) throws CommunicationException;
 
 	void drop();
 
-	void transmitMeasurement(Measurement measurement, long timewait) throws CommunicationException;
+	void transmitMeasurement(final Measurement measurement, final long timewait) throws CommunicationException;
 
-	KISReport receiveKISReport(long timewait) throws CommunicationException;
+	KISReport receiveKISReport(final long timewait) throws CommunicationException;
 
 	Identifier getKISId();
 }
