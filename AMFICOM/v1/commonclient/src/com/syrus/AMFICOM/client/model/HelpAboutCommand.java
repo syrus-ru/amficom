@@ -1,5 +1,5 @@
 /*
- * $Id: HelpAboutCommand.java,v 1.5 2005/09/08 14:25:57 bob Exp $
+ * $Id: HelpAboutCommand.java,v 1.6 2005/09/12 06:30:38 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -16,9 +16,11 @@ import javax.swing.BorderFactory;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
+
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 /**
  * 
- * @version $Revision: 1.5 $, $Date: 2005/09/08 14:25:57 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/12 06:30:38 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -28,13 +30,13 @@ public class HelpAboutCommand extends AbstractCommand {
 	private Window	parent;
 	private JPanel	about;
 
-	public HelpAboutCommand(Window parent) {
+	public HelpAboutCommand(final Window parent) {
 		this.parent = parent;
 	}
 
 	@Override
 	public void execute() {
-		JOptionPane.showMessageDialog(this.parent, this.getAboutPanel(), "О программе", JOptionPane.PLAIN_MESSAGE);
+		JOptionPane.showMessageDialog(this.parent, this.getAboutPanel(), LangModelGeneral.getString("Text.About"), JOptionPane.PLAIN_MESSAGE);
 	}
 
 	private JPanel getAboutPanel() {
@@ -47,10 +49,11 @@ public class HelpAboutCommand extends AbstractCommand {
 			gbc.insets =  new Insets(5, 5, 0, 5);
 			gbc.anchor = GridBagConstraints.WEST;
 			
-			this.about.add(new JLabel("АМФИКОМ"), gbc);
+			this.about.add(new JLabel(LangModelGeneral.getString("Text.About.AMFICOM")), gbc);
 			
 			gbc.insets = new Insets(0, 5, 0, 5);
-			this.about.add(new JLabel("Версия " + Version.getVersionNumber() + " обновление " + Version.getPatchVersion()), gbc);
+			this.about.add(new JLabel(LangModelGeneral.getString("Text.About.Version") + ' ' + Version.getVersionNumber() + ' ' + 
+				LangModelGeneral.getString("Text.About.update") + ' ' + Version.getPatchVersion()), gbc);
 			this.about.add(new JLabel(Version.getVersionText()), gbc);
 			
 			gbc.insets = new Insets(0, 5, 5, 5);

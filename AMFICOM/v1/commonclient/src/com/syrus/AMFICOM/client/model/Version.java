@@ -1,6 +1,8 @@
 
 package com.syrus.AMFICOM.client.model;
 
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+
 public class Version {
 
 	public Version() {
@@ -13,7 +15,7 @@ public class Version {
 	}
 
 	public static String getVersionText() {
-		return "Ограниченная демо-версия";
+		return LangModelGeneral.getString("Text.About.Version.VersionName");
 	}
 
 	public static String getVersionCopyright() {
@@ -21,6 +23,6 @@ public class Version {
 	}
 	
 	public static String getPatchVersion() {
-		return "clear";
+		return "";
 	}
 }
