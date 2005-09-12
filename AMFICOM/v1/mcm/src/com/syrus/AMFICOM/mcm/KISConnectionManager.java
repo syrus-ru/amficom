@@ -1,5 +1,5 @@
 /*-
- * $Id: KISConnectionManager.java,v 1.7 2005/08/20 19:57:39 arseniy Exp $
+ * $Id: KISConnectionManager.java,v 1.8 2005/09/12 19:51:34 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.ApplicationProperties;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/20 19:57:39 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/12 19:51:34 $
  * @module mcm
  */
 final class KISConnectionManager/* extends SleepButWorkThread*/ {
@@ -41,8 +41,9 @@ final class KISConnectionManager/* extends SleepButWorkThread*/ {
 		KISConnection kisConnection;
 
 		kisConnection = this.kisConnections.get(kisId);
-		if (kisConnection != null)
+		if (kisConnection != null) {
 			return kisConnection;
+		}
 
 		Log.debugMessage("KISConnectionManager.getConnection | Connection for KIS '" + kisId
 				+ "' not found in map; establishing new one", Log.DEBUGLEVEL07);
