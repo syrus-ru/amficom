@@ -1,5 +1,5 @@
 /**
- * $Id: Site.java,v 1.4 2005/09/07 12:23:17 krupenn Exp $
+ * $Id: Site.java,v 1.5 2005/09/12 06:53:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -115,6 +115,10 @@ public class Site {
 		this.attachmentSiteNodeId = attachmentSiteNodeId;
 	}
 
+	public String getAttachmentSiteNodeId() {
+		return this.attachmentSiteNodeId;
+	}
+
 	private void setBuildingPlan(Site buildingPlan) {
 		this.buildingPlan = buildingPlan;
 	}
@@ -171,7 +175,8 @@ public class Site {
 				}
 			if(ucmLink.mod.text.equals(UniCableMapLinkType.UCM_CONTAINS_INSIDE))
 				if(ucmLink.parent.typ.text.equals(UniCableMapType.UCM_BUILDING_PLAN)) {
-					site.setBuildingPlan(Site.parseSite(ucmDatabase, ucmLink.parent, "building"));
+					site.setAttachmentSiteNodeId("site" + String.valueOf(ucmLink.parent.un));
+//					site.setBuildingPlan(Site.parseSite(ucmDatabase, ucmLink.parent, "building"));
 				}
 		}
 
@@ -192,7 +197,11 @@ public class Site {
 		site.setX(dp[0]);
 		site.setY(dp[1]);
 
-		site.setId(String.valueOf(ucmObject.un));
+		String id = String.valueOf(ucmObject.un);
+		if(ucmObject.typ.text.equals(UniCableMapType.UCM_BUILDING_PLAN)) {
+			id = "site" + id;
+		}
+		site.setId(id);
 		site.setSiteNodeTypeCodename(proto);
 
 		return site;

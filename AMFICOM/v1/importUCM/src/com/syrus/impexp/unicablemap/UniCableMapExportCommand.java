@@ -30,7 +30,7 @@ import com.syrus.impexp.unicablemap.map.Site;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/09/11 15:37:31 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/12 06:53:15 $
  * @module mapviewclient_v1
  */
 public class UniCableMapExportCommand 
@@ -130,29 +130,37 @@ public class UniCableMapExportCommand
 		long t3 = System.currentTimeMillis();
 		System.out.println(" Done in " + (t3 - t2) + " ms!");
 
+		System.out.print("Scanning buildings... ");
+		Collection<UniCableMapObject> ucmBuildings = this.ucmDatabase.getObjects(
+			this.ucmDatabase.getType(UniCableMapType.UCM_BUILDING_PLAN));
+		System.out.print(ucmPiquets.size() + " objects... ");
+		createSites(importSites, ucmBuildings, "defaultbuilding");
+		long t4 = System.currentTimeMillis();
+		System.out.println(" Done in " + (t4 - t3) + " ms!");
+
 		System.out.print("Scanning cable inlets... ");
 		Collection<UniCableMapObject> ucmCableinlets = this.ucmDatabase.getObjects(
 			this.ucmDatabase.getType(UniCableMapType.UCM_CABLE_INLET));
 		System.out.print(ucmCableinlets.size() + " objects... ");
 		createCableInlets(importSites, importLinks, importNodeLinks, ucmCableinlets, "defaultcableinlet");
-		long t4 = System.currentTimeMillis();
-		System.out.println(" Done in " + (t4 - t3) + " ms!");
+		long t5 = System.currentTimeMillis();
+		System.out.println(" Done in " + (t5 - t4) + " ms!");
 
 		System.out.print("Scanning tunnels... ");
 		Collection<UniCableMapObject> ucmTunnels = this.ucmDatabase.getObjects(
 			this.ucmDatabase.getType(UniCableMapType.UCM_TUNNEL));
 		System.out.print(ucmTunnels.size() + " objects... ");
 		createLinks(importLinks, importNodeLinks, ucmTunnels, "defaulttunnel");
-		long t5 = System.currentTimeMillis();
-		System.out.println(" Done in " + (t5 - t4) + " ms!");
+		long t6 = System.currentTimeMillis();
+		System.out.println(" Done in " + (t6 - t5) + " ms!");
 
 		System.out.print("Scanning collectors... ");
 		Collection<UniCableMapObject> ucmCollectors = this.ucmDatabase.getObjects(
 			this.ucmDatabase.getType(UniCableMapType.UCM_COLLECTOR));
 		System.out.print(ucmCollectors.size() + " objects... ");
 		createCollectors(importCollectors, importLinks, importNodeLinks, ucmCollectors, "defaultcollector");
-		long t6 = System.currentTimeMillis();
-		System.out.println(" Done in " + (t6 - t5) + " ms!");
+		long t7 = System.currentTimeMillis();
+		System.out.println(" Done in " + (t7 - t6) + " ms!");
 
 		System.out.print("Filling XML document... ");
 		XmlSiteNode[] xmlSiteNodesArray = new XmlSiteNode[importSites.size()];
@@ -183,13 +191,13 @@ public class UniCableMapExportCommand
 		xmlNodeLinks.setNodeLinkArray(xmlNodeLinksArray);
 		xmlCollectors.setCollectorArray(xmlCollectorsArray);
 
-		long t7 = System.currentTimeMillis();
-		System.out.println(" Done in " + (t7 - t6) + " ms!");
+		long t8 = System.currentTimeMillis();
+		System.out.println(" Done in " + (t8 - t7) + " ms!");
 		
 		System.out.print("Validating XML document... ");
 		boolean isXmlValid = UCMParser.validateXml(doc);
-		long t8 = System.currentTimeMillis();
-		System.out.println(" Done in " + (t8 - t7) + " ms!");
+		long t9 = System.currentTimeMillis();
+		System.out.println(" Done in " + (t9 - t8) + " ms!");
 		if(isXmlValid) {
 			System.out.print("Writing XML document... ");
 			File f = new File(fileName);
@@ -199,8 +207,8 @@ public class UniCableMapExportCommand
 			} catch(IOException e) {
 				e.printStackTrace();
 			}
-			long t9 = System.currentTimeMillis();
-			System.out.println("\nXML Instance Document saved at : " + f.getPath() + " in " + (t9 - t8) + " ms!");
+			long t10 = System.currentTimeMillis();
+			System.out.println("\nXML Instance Document saved at : " + f.getPath() + " in " + (t10 - t9) + " ms!");
 		}
 	}
 
@@ -211,23 +219,23 @@ public class UniCableMapExportCommand
 //				break;
 			Site cableInlet = Site.parseSite(this.ucmDatabase, ucmObject, proto);
 
-			Site building = cableInlet.getBuildingPlan();
-			if(building != null) {
-				building.setBuilding(cableInlet.getBuilding());
-				building.setCity(cableInlet.getCity());
-				building.setId("site" + building.getId());
-				building.setSiteNodeTypeCodename("defaultbuilding");
-				building.setStreet(cableInlet.getStreet());
-				sites.add(building);
-	
-				cableInlet.setAttachmentSiteNodeId(building.getId());
-				
+//			Site building = cableInlet.getBuildingPlan();
+			if(cableInlet.getAttachmentSiteNodeId() != null) {
+//				building.setBuilding(cableInlet.getBuilding());
+//				building.setCity(cableInlet.getCity());
+//				building.setId("site" + building.getId());
+//				building.setSiteNodeTypeCodename("defaultbuilding");
+//				building.setStreet(cableInlet.getStreet());
+//				sites.add(building);
+//	
+//				cableInlet.setAttachmentSiteNodeId(building.getId());
+//				
 				Link link = new Link();
 				link.setBuilding(cableInlet.getBuilding());
 				link.setCity(cableInlet.getCity());
 				link.setDescription("");
-				link.setId(building.getId() + "indoor" + cableInlet.getId());
-				link.setStartNodeId(building.getId());
+				link.setId(cableInlet.getAttachmentSiteNodeId() + "indoor" + cableInlet.getId());
+				link.setStartNodeId(cableInlet.getAttachmentSiteNodeId());
 				link.setEndNodeId(cableInlet.getId());
 				link.setPhysicalLinkTypeCodename("defaultindoor");
 				link.setLength(0.0D);
