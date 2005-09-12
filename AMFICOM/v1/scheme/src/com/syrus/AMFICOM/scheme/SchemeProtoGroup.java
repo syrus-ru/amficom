@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.61 2005/09/08 18:26:26 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.62 2005/09/12 13:24:10 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,10 +12,13 @@ import static com.syrus.AMFICOM.general.ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.UNSUPPORTED_CHILD_TYPE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
@@ -38,12 +41,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -51,6 +56,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoGroupHelper;
 import com.syrus.AMFICOM.scheme.logic.Library;
 import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElement;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
 import com.syrus.util.Log;
 
@@ -58,7 +64,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/09/08 18:26:26 $
+ * @version $Revision: 1.62 $, $Date: 2005/09/12 13:24:10 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -108,6 +114,28 @@ public final class SchemeProtoGroup extends StorableObject
 		this.description = description;
 		this.symbolId = Identifier.possiblyVoid(symbol);
 		this.parentSchemeProtoGroupId = Identifier.possiblyVoid(parentSchemeProtoGroup);
+	}
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param importType
+	 * @param created
+	 * @param creatorId
+	 * @throws IdentifierGenerationException
+	 */
+	private SchemeProtoGroup(final XmlIdentifier id,
+			final String importType,
+			final Date created,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, SCHEMEPROTOGROUP_CODE),
+				created,
+				created,
+				creatorId,
+				creatorId,
+				StorableObjectVersion.createInitial());
 	}
 
 	/**
@@ -164,6 +192,49 @@ public final class SchemeProtoGroup extends StorableObject
 			return schemeProtoGroup;
 		} catch (final IdentifierGenerationException ige) {
 			throw new CreateObjectException("SchemeProtoGroup.createInstance | cannot generate identifier ", ige);
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param xmlSchemeProtoGroup
+	 * @param importType
+	 * @throws CreateObjectException
+	 */
+	public static SchemeProtoGroup createInstance(
+			final Identifier creatorId,
+			final XmlSchemeProtoGroup xmlSchemeProtoGroup,
+			final String importType)
+	throws CreateObjectException {
+		try {
+			final XmlIdentifier xmlId = xmlSchemeProtoGroup.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			SchemeProtoGroup schemeProtoGroup;
+			if (id.isVoid()) {
+				schemeProtoGroup = new SchemeProtoGroup(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				schemeProtoGroup = StorableObjectPool.getStorableObject(id, true);
+				if (schemeProtoGroup == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					schemeProtoGroup = new SchemeProtoGroup(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
+			}
+			schemeProtoGroup.fromXmlTransferable(xmlSchemeProtoGroup, importType);
+			assert schemeProtoGroup.isValid() : OBJECT_BADLY_INITIALIZED;
+			schemeProtoGroup.markAsChanged();
+			return schemeProtoGroup;
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 
@@ -676,15 +747,34 @@ public final class SchemeProtoGroup extends StorableObject
 	}
 
 	/**
-	 * @param xmlSchemeProtoGroup
+	 * @param schemeProtoGroup
 	 * @param importType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	public void fromXmlTransferable(
-			final XmlSchemeProtoGroup xmlSchemeProtoGroup,
+			final XmlSchemeProtoGroup schemeProtoGroup,
 			final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		this.name = schemeProtoGroup.getName();
+		this.description = schemeProtoGroup.isSetDescription()
+				? schemeProtoGroup.getDescription()
+				: "";
+		this.symbolId = schemeProtoGroup.isSetSymbolId()
+				? Identifier.fromXmlTransferable(schemeProtoGroup.getSymbolId(), importType, MODE_THROW_IF_ABSENT)
+				: VOID_IDENTIFIER;
+		this.parentSchemeProtoGroupId = schemeProtoGroup.isSetParentSchemeProtoGroupId()
+				? Identifier.fromXmlTransferable(schemeProtoGroup.getParentSchemeProtoGroupId(), importType, MODE_THROW_IF_ABSENT)
+				: VOID_IDENTIFIER;
+		if (schemeProtoGroup.isSetSchemeProtoGroups()) {
+			for (final XmlSchemeProtoGroup schemeProtoGroup2 : schemeProtoGroup.getSchemeProtoGroups().getSchemeProtoGroupArray()) {
+				createInstance(super.creatorId, schemeProtoGroup2, importType);
+			}
+		}
+		if (schemeProtoGroup.isSetSchemeProtoElements()) {
+			for (final XmlSchemeProtoElement schemeProtoElement : schemeProtoGroup.getSchemeProtoElements().getSchemeProtoElementArray()) {
+				SchemeProtoElement.createInstance(super.creatorId, schemeProtoElement, importType);
+			}
+		}
 	}
 }
