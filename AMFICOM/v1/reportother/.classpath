@@ -1,0 +1,23 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<classpath>
+	<classpathentry kind="src" path="src"/>
+	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/report_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/reportclient_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/analysis"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/general_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/scheme_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/admin_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/schemeclient_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/commonclient_v1"/>
+	<classpathentry kind="lib" path="D:/WORK/libs/schemexml.jar"/>
+	<classpathentry kind="lib" path="D:/WORK/libs/mapxml.jar"/>
+	<classpathentry kind="lib" path="D:/WORK/libs/generalxml.jar"/>
+	<classpathentry kind="lib" path="D:/WORK/libs/configxml.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/resource_v1"/>
+	<classpathentry kind="lib" path="D:/WORK/libs/supp/jgraphpad.jar"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/config_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/measurement_v1"/>
+	<classpathentry kind="output" path="classes"/>
+</classpath>
