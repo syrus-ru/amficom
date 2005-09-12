@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.31 2005/09/07 02:56:04 arseniy Exp $
+ * $Id: TableFrame.java,v 1.32 2005/09/12 11:19:48 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,8 +53,8 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/09/07 02:56:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.32 $, $Date: 2005/09/12 11:19:48 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -176,12 +176,12 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 			rowSM.addListSelectionListener(new ListSelectionListener() {
 
 				public void valueChanged(final ListSelectionEvent e) {
-					if (e.getValueIsAdjusting()) {
+					if (e.getValueIsAdjusting() || TableFrame.this.propertyChangeEvent != null) {
 						return;
 					}
 
 					final ListSelectionModel lsm = (ListSelectionModel) e.getSource();
-					if (!lsm.isSelectionEmpty() && TableFrame.this.propertyChangeEvent == null) {
+					if (!lsm.isSelectionEmpty()) {
 						final int selectedRow = lsm.getMinSelectionIndex();
 						CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
@@ -197,6 +197,8 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 
 							}
 						}, LangModelGeneral.getString("Message.Information.PlsWait"));
+					} else {
+						TableFrame.this.schedulerModel.unselectTests();
 					}
 				}
 
