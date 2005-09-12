@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.39 2005/09/01 13:17:51 arseniy Exp $
+# $Id: Makefile,v 1.40 2005/09/12 06:05:23 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -129,8 +129,8 @@ cleanxml xmlclean:
 
 #### Install ####
 .PHONY: install
-install: $(LIBNAME) $(LIBDIR)
-	$(CP) $^
+install: xmlinstall $(LIBNAME) $(LIBDIR)
+	install -m 0644 $(LIBNAME) $(LIBDIR)
 
 #### Uninstall ####
 .PHONY: uninstall
