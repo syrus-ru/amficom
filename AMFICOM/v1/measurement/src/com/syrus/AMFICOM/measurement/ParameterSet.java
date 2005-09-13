@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.17 2005/09/08 18:26:30 bass Exp $
+ * $Id: ParameterSet.java,v 1.18 2005/09/13 13:46:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,11 +32,10 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameter;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSet;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
-import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/08 18:26:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/09/13 13:46:29 $
+ * @author $Author: bob $
  * @module measurement
  */
 
@@ -292,42 +291,6 @@ public final class ParameterSet extends StorableObject {
 	public void setSort(final ParameterSetSort sort) {
 		this.sort = sort.value();
 		super.markAsChanged();
-	}
-
-	@Override
-	public boolean equals(Object obj) {
-		boolean equals = (obj==this);
-		if ((!equals)&&(obj instanceof ParameterSet)){
-			ParameterSet set = (ParameterSet)obj;
-			if ((this.id.equals(set.id))&&
-				 HashCodeGenerator.equalsDate(this.created,set.created) &&
-				 (this.creatorId.equals(set.creatorId))&&
-				 HashCodeGenerator.equalsDate(this.modified,set.modified) &&
-				 (this.modifierId.equals(set.modifierId))&&
-				 (this.monitoredElementIds.equals(set.monitoredElementIds))&&
-				 (this.description.equals(set.description))&&
-				 (this.sort==set.sort)&&
-				 (HashCodeGenerator.equalsArray(this.parameters,set.parameters)))
-				 equals = true;
-		}
-		return equals;
-	}
-
-	@Override
-	public int hashCode() {
-		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
-		hashCodeGenerator.addObject(this.id);
-		hashCodeGenerator.addObject(this.created);
-		hashCodeGenerator.addObject(this.creatorId);
-		hashCodeGenerator.addObject(this.modified);
-		hashCodeGenerator.addObject(this.modifierId);
-		hashCodeGenerator.addObject(this.monitoredElementIds);
-		hashCodeGenerator.addObject(this.description);
-		hashCodeGenerator.addInt(this.sort);
-		hashCodeGenerator.addObjectArray(this.parameters);
-		int result = hashCodeGenerator.getResult();
-		hashCodeGenerator = null;
-		return result;
 	}
 
 	@Override

@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.24 2005/09/08 18:26:30 bass Exp $
+ * $Id: CronTemporalPattern.java,v 1.25 2005/09/13 13:46:29 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,8 +38,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPatternHelper;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/09/08 18:26:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.25 $, $Date: 2005/09/13 13:46:29 $
+ * @author $Author: bob $
  * @module measurement
  */
 
@@ -1013,38 +1013,6 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	public void setDescription(final String description) {
 		this.description = description;
 		super.markAsChanged();
-	}
-
-	@Override
-	public boolean equals(final Object obj) {
-		boolean equals = (obj == this);
-		if ((!equals) && (obj instanceof CronTemporalPattern)) {
-			final CronTemporalPattern pattern = (CronTemporalPattern) obj;
-			if ((pattern.id.equals(super.id))
-					&& HashCodeGenerator.equalsDate(this.created, pattern.created)
-					&& (this.creatorId.equals(pattern.creatorId))
-					&& HashCodeGenerator.equalsDate(this.modified, pattern.modified)
-					&& (this.modifierId.equals(pattern.modifierId))
-					&& (this.modifierId.equals(pattern.modifierId))
-					&& (HashCodeGenerator.equalsArray(pattern.templates.toArray(),
-						this.templates.toArray())))
-				equals = true;
-		}
-		return equals;
-	}
-
-	@Override
-	public int hashCode() {
-		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
-		hashCodeGenerator.addObject(this.id);
-		hashCodeGenerator.addObject(this.created);
-		hashCodeGenerator.addObject(this.creatorId);
-		hashCodeGenerator.addObject(this.modified);
-		hashCodeGenerator.addObject(this.modifierId);
-		hashCodeGenerator.addObject(this.templates);
-		final int result = hashCodeGenerator.getResult();
-		hashCodeGenerator = null;
-		return result;
 	}
 
 	@Override
