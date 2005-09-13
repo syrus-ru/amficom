@@ -1,7 +1,7 @@
 MODULE_NAME := map
 
 LIBNAME := $(MODULE_NAME).jar
-ARCHFILE := $(MODULE_NAME).tar.bz2
+ARCHFILE := $(MODULE_NAME).tar.gz
 
 IDL_SOURCES = $(IDLDIR)/map.idl
 
@@ -123,7 +123,7 @@ install: xmlinstall $(LIBNAME) $(LIBDIR)
 #### Archive ####
 .PHONY: arch
 arch:
-	tar -cjvf $(ARCHFILE) \
+	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(IDLDIR)/map.idl \
 		$(SOURCES) \
