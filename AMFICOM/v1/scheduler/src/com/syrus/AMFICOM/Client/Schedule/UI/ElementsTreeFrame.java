@@ -39,9 +39,8 @@ import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 
+@SuppressWarnings("serial")
 public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeListener {
-
-	private static final long serialVersionUID = 3761121639580186678L;
 
 	SchedulerModel schedulerModel;
 
@@ -62,11 +61,11 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	public ElementsTreeFrame(final ApplicationContext aContext) {
 		this.aContext = aContext;
-		this.setTitle(LangModelSchedule.getString("Text.ElementsTree.Title")); //$NON-NLS-1$
-		this.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
-		this.setResizable(true);
-		this.setClosable(true);
-		this.setIconifiable(true);
+		super.setTitle(LangModelSchedule.getString("Text.ElementsTree.Title")); //$NON-NLS-1$
+		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		super.setResizable(true);
+		super.setClosable(false);
+		super.setIconifiable(true);
 	}
 
 	private Identifier getObject(final short entityCode) {

@@ -625,7 +625,7 @@ public class TestLine extends TimeLine {
 						try {
 							final Test test = (Test) StorableObjectPool.getStorableObject((Identifier) object, true);
 							return "<html>" + testController.getValue(test, TestController.KEY_TEMPORAL_TYPE_NAME).toString()
-									+ ",<br>" + testController.getName(TestController.KEY_START_TIME) + ':'
+									+ "<br>" + testController.getName(TestController.KEY_START_TIME) + " : " 
 									+ testController.getValue(test, TestController.KEY_START_TIME) + "</html>";
 						} catch (ApplicationException e) {
 							AbstractMainFrame.showErrorMessage(this, e);

@@ -61,13 +61,10 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.AMFICOM.newFilter.DateSpinner;
 import com.syrus.AMFICOM.newFilter.TimeSpinner;
 
+@SuppressWarnings("serial")
 public class TimeParametersFrame extends JInternalFrame {
 
-	private static final long	serialVersionUID	= 6562288896016470275L;
-
 	public class TimeParametersPanel implements	PropertyChangeListener {
-
-		private static final long	serialVersionUID	= -7975294015403739057L;
 
 		SchedulerModel schedulerModel;
 		ApplicationContext			aContext;
@@ -1021,11 +1018,11 @@ public class TimeParametersFrame extends JInternalFrame {
 	TimeParametersPanel	timeParametersPanel;
 
 	public TimeParametersFrame(ApplicationContext aContext) {
-		setTitle(LangModelSchedule.getString("Text.TimePanel.Title")); //$NON-NLS-1$
-		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
-		setResizable(true);
-		setClosable(true);
-		setIconifiable(true);
+		super.setTitle(LangModelSchedule.getString("Text.TimePanel.Title")); //$NON-NLS-1$
+		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		super.setResizable(true);
+		super.setClosable(false);
+		super.setIconifiable(true);
 		this.timeParametersPanel = new TimeParametersPanel(aContext);
 		this.getContentPane().add(this.timeParametersPanel.panel, BorderLayout.CENTER);
 	}

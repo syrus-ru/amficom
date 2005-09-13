@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.33 2005/09/13 09:41:40 bob Exp $
+ * $Id: TableFrame.java,v 1.34 2005/09/13 12:10:11 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,14 +54,14 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/09/13 09:41:40 $
+ * @version $Revision: 1.34 $, $Date: 2005/09/13 12:10:11 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
+@SuppressWarnings("serial")
 public class TableFrame extends JInternalFrame implements PropertyChangeListener {
-
-	private static final long serialVersionUID = 3761405313630156343L;
+	
 	Dispatcher dispatcher;
 	SchedulerModel schedulerModel;
 	WrapperedTable<Test> listTable;
@@ -337,7 +337,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 		super.setTitle(LangModelSchedule.getString("Text.Table.Title")); //$NON-NLS-1$
 		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		super.setResizable(true);
-		super.setClosable(true);
+		super.setClosable(false);
 		super.setIconifiable(true);
 		this.panel = getPanel();
 		super.setContentPane(this.panel);

@@ -11,18 +11,17 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
+@SuppressWarnings("serial")
 public class TestParametersFrame extends JInternalFrame {
-
-	private static final long	serialVersionUID	= 3257291331117134642L;
 	
 	private TestParametersPanel	panel;
 
-	public TestParametersFrame(ApplicationContext aContext) {
-		setTitle(LangModelSchedule.getString("Text.MeasurementParameter.Title")); //$NON-NLS-1$
-		setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
-		setResizable(true);
-		setClosable(true);
-		setIconifiable(true);
+	public TestParametersFrame(final ApplicationContext aContext) {
+		super.setTitle(LangModelSchedule.getString("Text.MeasurementParameter.Title")); //$NON-NLS-1$
+		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		super.setResizable(true);
+		super.setClosable(false);
+		super.setIconifiable(true);
 
 		this.panel = new TestParametersPanel(aContext);
 		this.getContentPane().add(this.panel.getComponent(), BorderLayout.CENTER);
