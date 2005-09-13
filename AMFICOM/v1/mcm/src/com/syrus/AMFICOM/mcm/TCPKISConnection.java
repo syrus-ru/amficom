@@ -1,5 +1,5 @@
 /*-
- * $Id: TCPKISConnection.java,v 1.17 2005/09/12 19:51:34 arseniy Exp $
+ * $Id: TCPKISConnection.java,v 1.18 2005/09/13 13:37:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/09/12 19:51:34 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/13 13:37:05 $
  * @module mcm
  */
 final class TCPKISConnection implements KISConnection {
@@ -114,7 +114,7 @@ final class TCPKISConnection implements KISConnection {
 	public synchronized void transmitMeasurement(final Measurement measurement, final long timewait) throws CommunicationException {
 		final Identifier measurementId  = measurement.getId();
 		Log.debugMessage("TCPKISConnection.transmitMeasurement | Transmitting measurement '" + measurementId
-				+ "' to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
+				+ "' to KIS '" + this.kisId + "' on " + this.kisHostName + ":" + this.kisTCPPort, Log.DEBUGLEVEL07);
 		if (this.transmitMeasurementBySocket(measurementId.toString(),
 				measurement.getType().getCodename(),
 				measurement.getLocalAddress(),
