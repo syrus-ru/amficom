@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.14 2005/08/29 12:27:24 krupenn Exp $ 
+ * $Id: MapTreeModel.java,v 1.15 2005/09/13 11:38:04 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный Интеллектуальный 
@@ -33,7 +33,15 @@ import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CommunicationException;
+import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.map.Collector;
@@ -48,11 +56,13 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/29 12:27:24 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/13 11:38:04 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapTreeModel implements ChildrenFactory {
+
+	public static final String ALL_MAPS_BRANCH = "allmaps";
 
 	public static final String MAPS_BRANCH = "innermaps";
 
@@ -116,6 +126,16 @@ public class MapTreeModel implements ChildrenFactory {
 		return instance;
 	}
 
+	public PopulatableIconedNode createAllMapsRoot() {
+		PopulatableIconedNode root = new PopulatableIconedNode(
+				MapTreeModel.getInstance(),
+				MapTreeModel.ALL_MAPS_BRANCH,
+				MapTreeModel.getInstance().getObjectName(MapTreeModel.ALL_MAPS_BRANCH),
+				mapIcon, 
+				true);
+		return root;
+	}
+	
 	public Item findNode(Item item, Object object) {
 		if(item.getObject().equals(object))
 			return item;
@@ -126,7 +146,6 @@ public class MapTreeModel implements ChildrenFactory {
 				return foundNode;
 		}
 		return null;
-
 	}
 
 	public String getObjectName(Object object) {
@@ -150,37 +169,13 @@ public class MapTreeModel implements ChildrenFactory {
 		return LangModelMap.getString(NONAME_BRANCH);
 	}
 
-	public String getNodeName(Item node) {
-		if(node.getObject() instanceof String)
-			return LangModelMap.getString((String )(node.getObject()));
-		else
-		if(node.getObject() instanceof MapView) {
-			MapView mapView = (MapView )node.getObject();
-			return mapView.getName();
-		}
-		else
-		if(node.getObject() instanceof Map) {
-			Map map = (Map )node.getObject();
-			return map.getName();
-		}
-		else
-		if(node.getObject() instanceof SiteNodeType) {
-			SiteNodeType type = (SiteNodeType )node.getObject();
-			return type.getName();
-		}
-		else
-		if(node.getObject() instanceof MapElement) {
-			MapElement mapElement = (MapElement )node
-					.getObject();
-			return mapElement.getName();
-		}
-		return LangModelMap.getString(NONAME_BRANCH);
-	}
-
 	public void populate(Item node) {
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
-			if (s.equals(MapTreeModel.MAPS_BRANCH)) {
+			if (s.equals(MapTreeModel.ALL_MAPS_BRANCH)) {
+				populateAllMapsNode((PopulatableIconedNode )node);
+			}
+			else if (s.equals(MapTreeModel.MAPS_BRANCH)) {
 				populateMapsNode((PopulatableIconedNode )node);
 			}
 			else if (s.equals(MapTreeModel.EXTERNAL_NODES_BRANCH)) {
@@ -223,7 +218,6 @@ public class MapTreeModel implements ChildrenFactory {
 					getObjectName(MapTreeModel.MAPS_BRANCH),
 					folderIcon,
 					true);
-//			mapsNode.populate();
 			node.addChild(mapsNode);
 
 			externalNodesNode = new FiltrableIconedNode();
@@ -234,7 +228,6 @@ public class MapTreeModel implements ChildrenFactory {
 			externalNodesNode.setCanHaveChildren(true);
 			externalNodesNode.setDefaultCondition(null);
 			externalNodesNode.setFilter(new Filter(new SiteNodeConditionWrapper()));
-//			externalNodesNode.populate();
 			node.addChild(externalNodesNode);
 
 			sitesNode = new FiltrableIconedNode();
@@ -245,7 +238,6 @@ public class MapTreeModel implements ChildrenFactory {
 			sitesNode.setCanHaveChildren(true);
 			sitesNode.setDefaultCondition(null);
 			sitesNode.setFilter(new Filter(new SiteNodeConditionWrapper()));
-//			sitesNode.populate();
 			node.addChild(sitesNode);
 
 			nodesNode = new PopulatableIconedNode(
@@ -254,7 +246,6 @@ public class MapTreeModel implements ChildrenFactory {
 					getObjectName(MapViewController.ELEMENT_TOPOLOGICALNODE),
 					folderIcon,
 					true);
-//			nodesNode.populate();
 			node.addChild(nodesNode);
 
 			linksNode = new FiltrableIconedNode();
@@ -265,7 +256,6 @@ public class MapTreeModel implements ChildrenFactory {
 			linksNode.setCanHaveChildren(true);
 			linksNode.setDefaultCondition(null);
 			linksNode.setFilter(new Filter(new PhysicalLinkConditionWrapper()));
-//			linksNode.populate();
 			node.addChild(linksNode);
 
 			collectorsNode = new FiltrableIconedNode();
@@ -276,7 +266,6 @@ public class MapTreeModel implements ChildrenFactory {
 			collectorsNode.setCanHaveChildren(true);
 			collectorsNode.setDefaultCondition(null);
 			collectorsNode.setFilter(new Filter(new CollectorConditionWrapper()));
-//			collectorsNode.populate();
 			node.addChild(collectorsNode);
 		}
 		else {
@@ -284,6 +273,58 @@ public class MapTreeModel implements ChildrenFactory {
 				PopulatableIconedNode childNode = (PopulatableIconedNode )iter.next();
 				if(childNode.isPopulated())
 					childNode.populate();
+			}
+		}
+	}
+
+	void populateAllMapsNode(PopulatableIconedNode node) {
+		List<Map> mapsChildren = new LinkedList();
+		try {
+			Identifier domainId = LoginManager.getDomainId();
+			StorableObjectCondition condition = new LinkedIdsCondition(
+					domainId,
+					ObjectEntities.MAP_CODE);
+			Set<Map> maps = StorableObjectPool.getStorableObjectsByCondition(
+					condition,
+					true);
+			mapsChildren = new ArrayList<Map>(maps);
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		Collections.sort(mapsChildren, MapTreeModel.mapComparator);
+
+		java.util.Map nodePresense = new HashMap();
+
+		List toRemove = new LinkedList();
+
+		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
+			PopulatableIconedNode childNode = (PopulatableIconedNode )iter.next();
+			Map innerMap = (Map )childNode.getObject();
+			if(mapsChildren.contains(innerMap)) {
+				if(childNode.isPopulated())
+					childNode.populate();
+				nodePresense.put(innerMap, childNode);
+			}
+			else
+				toRemove.add(childNode);
+		}
+		for(Iterator it = toRemove.iterator(); it.hasNext();) {
+			Item childItem = (Item )it.next();
+			childItem.setParent(null);
+		}
+
+		for(Iterator it = mapsChildren.iterator(); it.hasNext();) {
+			Map innerMap = (Map )it.next();
+			Item childNode = (Item )nodePresense.get(innerMap);
+			if(childNode == null) {
+				PopulatableIconedNode newItem = new PopulatableIconedNode(
+						this,
+						innerMap,
+						mapIcon, 
+						true);
+				node.addChild(newItem);
 			}
 		}
 	}
