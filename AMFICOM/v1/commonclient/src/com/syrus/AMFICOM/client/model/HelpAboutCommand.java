@@ -1,5 +1,5 @@
 /*-
-* $Id: HelpAboutCommand.java,v 1.8 2005/09/13 07:12:36 bob Exp $
+* $Id: HelpAboutCommand.java,v 1.9 2005/09/13 13:37:30 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,18 +20,18 @@ import java.awt.event.MouseEvent;
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 /**
  * 
- * @version $Revision: 1.8 $, $Date: 2005/09/13 07:12:36 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/13 13:37:30 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -47,43 +47,61 @@ public class HelpAboutCommand extends AbstractCommand {
 		
 		this.panel = new JPanel(new BorderLayout());
 		this.about = new JLabel();
-		Icon logo = UIManager.getIcon(ResourceKeys.IMAGE_LOGIN_LOGO);
-		if (logo == null) {
-			logo = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/logo2.jpg"));
+		Icon image = UIManager.getIcon(ResourceKeys.IMAGE_LOGIN_LOGO);
+		if (image == null) {
+			image = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/logo2.jpg"));
 		}
-		if (logo != null) {
-			this.panel.add(new JLabel(logo), BorderLayout.NORTH);
+		if (image != null) {
+			final JLabel logo = new JLabel(image);
+			
+			final JLabel label = this.about;
+			logo.addMouseListener(new MouseAdapter() {
+				@Override
+				public void mouseClicked(final MouseEvent e) {					
+					final int x = e.getX();
+					final int y = e.getY();
+					if (e.getClickCount() == 2 && 
+							e.isAltDown() && 
+							e.isShiftDown() && 
+							e.isControlDown() && 
+							x >= 410 && x <= 430 &&
+							y >= 26 && y <= 38) {
+						SwingUtilities.invokeLater(new Runnable() {
+							private Window getSuperParent(final Container parent1) {
+								if (parent1 instanceof Window) {
+									return (Window)parent1;
+								}
+								return parent1 == null ? null : this.getSuperParent(parent1.getParent());					
+							}
+							
+							public void run() {
+								updateCodenameInfo();
+
+								final Window superParent = this.getSuperParent(label.getParent());
+								if (superParent != null) {
+									superParent.pack();
+									final GraphicsEnvironment localGraphicsEnvironment = 
+										GraphicsEnvironment.getLocalGraphicsEnvironment();			
+									final Rectangle maximumWindowBounds = 
+										localGraphicsEnvironment.getMaximumWindowBounds();
+									superParent.setLocation((maximumWindowBounds.width - superParent.getWidth()) / 2, 
+										(maximumWindowBounds.height - superParent.getHeight()) / 2);
+								} 
+							}
+						});
+						
+					}
+				}
+				
+				
+				
+			});
+			this.panel.add(logo, BorderLayout.NORTH);
 		}
 		this.panel.setBorder(BorderFactory.createEtchedBorder());
 		this.about.setHorizontalAlignment(SwingConstants.CENTER);
-		this.about.addMouseListener(new MouseAdapter() {
-			@Override
-			public void mouseClicked(MouseEvent e) {
-				if (e.getClickCount() == 2 && e.isAltDown() && e.isShiftDown() && e.isControlDown()) {
-					updateCodenameInfo();
-					final JComponent component = (JComponent) e.getSource();
-					final Window superParent = this.getSuperParent(component.getParent());
-					if (superParent != null) {
-						superParent.pack();
-					}
-					
-					final GraphicsEnvironment localGraphicsEnvironment = 
-						GraphicsEnvironment.getLocalGraphicsEnvironment();			
-					final Rectangle maximumWindowBounds = 
-						localGraphicsEnvironment.getMaximumWindowBounds();
-					superParent.setLocation((maximumWindowBounds.width - superParent.getWidth()) / 2, 
-						(maximumWindowBounds.height - superParent.getHeight()) / 2);
-				}
-			}
-			
-			private Window getSuperParent(final Container parent1) {
-				if (parent1 instanceof Window) {
-					return (Window)parent1;
-				}
-				return parent1 == null ? null : this.getSuperParent(parent1.getParent());					
-			}
-			
-		});
+		
+		
 		
 		this.panel.add(this.about, BorderLayout.SOUTH);
 	}
@@ -108,6 +126,7 @@ public class HelpAboutCommand extends AbstractCommand {
 		buffer.append("</center></html>");
 		this.about.setToolTipText(null);
 		this.about.setText(buffer.toString());
+		this.about.revalidate();
 	}
 	
 	void updateCodenameInfo() {
@@ -128,5 +147,10 @@ public class HelpAboutCommand extends AbstractCommand {
 		buffer.append("</center><html>");
 		this.about.setToolTipText("\u0431/\u043f");
 		this.about.setText(buffer.toString());
+		this.about.revalidate();
+	}
+	
+	public static void main(String[] args) {
+		new HelpAboutCommand(null).execute();
 	}
 }
