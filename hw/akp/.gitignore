@@ -4,3 +4,5 @@
 *.swp
 *.tar
 *.gz
+.cdtproject
+.project
