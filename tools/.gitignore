@@ -6,3 +6,5 @@ tools.jar
 *.jpr
 *.jpx*
 *.swp
+*.tar
+*.gz
