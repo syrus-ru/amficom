@@ -1,5 +1,5 @@
 /*-
-* $Id: HelpAboutCommand.java,v 1.7 2005/09/12 14:25:46 bob Exp $
+* $Id: HelpAboutCommand.java,v 1.8 2005/09/13 07:12:36 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,20 +8,30 @@
 
 package com.syrus.AMFICOM.client.model;
 
+import java.awt.BorderLayout;
 import java.awt.Container;
+import java.awt.GraphicsEnvironment;
+import java.awt.Rectangle;
+import java.awt.Toolkit;
 import java.awt.Window;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 
 import javax.swing.BorderFactory;
+import javax.swing.Icon;
+import javax.swing.ImageIcon;
+import javax.swing.JComponent;
 import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.SwingConstants;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.ResourceKeys;
 /**
  * 
- * @version $Revision: 1.7 $, $Date: 2005/09/12 14:25:46 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/13 07:12:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -29,75 +39,94 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 public class HelpAboutCommand extends AbstractCommand {
 
 	private Window	parent;
-	JLabel	about;
+	private JPanel  panel; 
+	private JLabel	about;
 
 	public HelpAboutCommand(final Window parent) {
 		this.parent = parent;
+		
+		this.panel = new JPanel(new BorderLayout());
+		this.about = new JLabel();
+		Icon logo = UIManager.getIcon(ResourceKeys.IMAGE_LOGIN_LOGO);
+		if (logo == null) {
+			logo = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/logo2.jpg"));
+		}
+		if (logo != null) {
+			this.panel.add(new JLabel(logo), BorderLayout.NORTH);
+		}
+		this.panel.setBorder(BorderFactory.createEtchedBorder());
+		this.about.setHorizontalAlignment(SwingConstants.CENTER);
+		this.about.addMouseListener(new MouseAdapter() {
+			@Override
+			public void mouseClicked(MouseEvent e) {
+				if (e.getClickCount() == 2 && e.isAltDown() && e.isShiftDown() && e.isControlDown()) {
+					updateCodenameInfo();
+					final JComponent component = (JComponent) e.getSource();
+					final Window superParent = this.getSuperParent(component.getParent());
+					if (superParent != null) {
+						superParent.pack();
+					}
+					
+					final GraphicsEnvironment localGraphicsEnvironment = 
+						GraphicsEnvironment.getLocalGraphicsEnvironment();			
+					final Rectangle maximumWindowBounds = 
+						localGraphicsEnvironment.getMaximumWindowBounds();
+					superParent.setLocation((maximumWindowBounds.width - superParent.getWidth()) / 2, 
+						(maximumWindowBounds.height - superParent.getHeight()) / 2);
+				}
+			}
+			
+			private Window getSuperParent(final Container parent1) {
+				if (parent1 instanceof Window) {
+					return (Window)parent1;
+				}
+				return parent1 == null ? null : this.getSuperParent(parent1.getParent());					
+			}
+			
+		});
+		
+		this.panel.add(this.about, BorderLayout.SOUTH);
 	}
 
 	@Override
 	public void execute() {
-		JOptionPane.showMessageDialog(this.parent, this.getAboutPanel(), LangModelGeneral.getString("Text.About"), JOptionPane.PLAIN_MESSAGE);
+		this.updateAboutInfo();
+		JOptionPane.showMessageDialog(this.parent, this.panel, LangModelGeneral.getString("Text.About"), JOptionPane.PLAIN_MESSAGE);
 	}
 
-	private JLabel getAboutPanel() {
-		if (this.about == null) {
-			
-			final StringBuffer buffer = new StringBuffer("<html><center>");
-			buffer.append(LangModelGeneral.getString("Text.About.AMFICOM"));
-			buffer.append("<br>");
-			buffer.append(LangModelGeneral.getString("Text.About.Version"));
-			buffer.append(' '); 
-			buffer.append(LangModelGeneral.getString("Text.About.Version.Number"));
-			buffer.append("<br>");
-			buffer.append(LangModelGeneral.getString("Text.About.Version.VersionName"));
-			buffer.append("<br>");
-			buffer.append(LangModelGeneral.getString("Text.About.Version.Copyright"));
-			buffer.append("</center></html>");
-
-			this.about = new JLabel(buffer.toString());
-			this.about.setBorder(BorderFactory.createEtchedBorder());
-			this.about.setHorizontalAlignment(SwingConstants.CENTER);
-			this.about.addMouseListener(new MouseAdapter() {
-				@Override
-				public void mouseClicked(MouseEvent e) {
-					if (e.getClickCount() == 2 && e.isAltDown() && e.isShiftDown() && e.isControlDown()) {
-						final StringBuffer buffer1 = new StringBuffer("<html><center>");
-						buffer1.append(LangModelGeneral.getString("Text.About.Version.Codename.AMFICOM"));
-						buffer1.append("<br>");
-						buffer1.append(LangModelGeneral.getString("Text.About.Version"));
-						buffer1.append(' '); 
-						buffer1.append(LangModelGeneral.getString("Text.About.Version.Codename"));
-						buffer1.append("<br>");
-						buffer1.append(LangModelGeneral.getString("Text.About.Version.VersionName"));
-						buffer1.append("<br>");
-						buffer1.append(LangModelGeneral.getString("Text.About.Version.Copyright"));
-						buffer1.append("<br>");
-						buffer1.append("<br>");
-						buffer1.append(LangModelGeneral.getString("Text.About.Version.Codename.info").replaceAll("\n", "<br>"));
-						buffer1.append("</center><html>");
-						HelpAboutCommand.this.about.setText(buffer1.toString());
-						final Window superParent = this.getSuperParent(HelpAboutCommand.this.about.getParent());
-						if (superParent != null) {
-							superParent.pack();
-						}
-					}
-				}
-				
-				private Window getSuperParent(final Container parent1) {
-					if (parent1 instanceof Window) {
-						return (Window)parent1;
-					}
-					return parent1 == null ? null : this.getSuperParent(parent1.getParent());					
-				}
-				
-			});
-
-		}
-		return this.about;
+	private void updateAboutInfo() {
+		final StringBuffer buffer = new StringBuffer("<html><center><br>");
+		buffer.append(LangModelGeneral.getString("Text.About.AMFICOM"));
+		buffer.append("<br><br>");
+		buffer.append(LangModelGeneral.getString("Text.About.Version"));
+		buffer.append(' '); 
+		buffer.append(LangModelGeneral.getString("Text.About.Version.Number"));
+		buffer.append("<br>");
+		buffer.append(LangModelGeneral.getString("Text.About.Version.VersionName"));
+		buffer.append("<br>");
+		buffer.append(LangModelGeneral.getString("Text.About.Version.Copyright"));
+		buffer.append("</center></html>");
+		this.about.setToolTipText(null);
+		this.about.setText(buffer.toString());
 	}
 	
-	public static void main(String[] args) {
-		new HelpAboutCommand(null).execute();
+	void updateCodenameInfo() {
+		final StringBuffer buffer = new StringBuffer("<html><center><br>");
+		buffer.append(LangModelGeneral.getString("Text.About.Version.Codename.AMFICOM"));
+		buffer.append("<br><br>");
+		buffer.append(LangModelGeneral.getString("Text.About.Version"));
+		buffer.append(' ');		
+		buffer.append(LangModelGeneral.getString("Text.About.Version.Number"));		
+		buffer.append(" \u00AB");
+		buffer.append(LangModelGeneral.getString("Text.About.Version.Codename"));
+		buffer.append("\u00BB<br>");
+		buffer.append(LangModelGeneral.getString("Text.About.Version.VersionName"));
+		buffer.append("<br>");
+		buffer.append(LangModelGeneral.getString("Text.About.Version.Copyright"));
+		buffer.append("<br><br>");
+		buffer.append(LangModelGeneral.getString("Text.About.Version.Codename.info").replaceAll("\n", "<br>"));
+		buffer.append("</center><html>");
+		this.about.setToolTipText("\u0431/\u043f");
+		this.about.setText(buffer.toString());
 	}
 }
