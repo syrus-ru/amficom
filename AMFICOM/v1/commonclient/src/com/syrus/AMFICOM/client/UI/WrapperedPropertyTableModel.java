@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/12 07:53:44 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/13 09:57:43 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -89,6 +89,17 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 	public int getRowCount() {
 		return this.keys.length;
 	}
+	
+	public int getRowIndex(final String key) {
+		int index = -1;
+		for(int i = 0; i < this.keys.length; i++) {
+			if (key.equals(this.keys[i])) {
+				index = i;
+				break;
+			}
+		}
+		return index;
+	}
 
 	public Object getValueAt(final int rowIndex, final int columnIndex) {
 		if (columnIndex == 0) {
@@ -166,7 +177,7 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 			this.values[rowIndex] = object;
 			this.wrapper.setValue(this.t, this.keys[rowIndex], object);
 		}
-		super.fireTableDataChanged();
+		super.fireTableRowsUpdated(rowIndex, rowIndex);
 	}
 
 }
