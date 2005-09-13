@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.66 2005/09/12 00:10:50 bass Exp $
+ * $Id: Identifier.java,v 1.67 2005/09/13 10:25:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,8 @@ package com.syrus.AMFICOM.general;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
-import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.*;
-import static com.syrus.AMFICOM.general.ObjectEntities.*;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_GENERATE_NEW_IF_ABSENT;
+import static com.syrus.AMFICOM.general.ObjectEntities.UNKNOWN_CODE;
 
 import java.io.Serializable;
 import java.util.Collection;
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.66 $, $Date: 2005/09/12 00:10:50 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/13 10:25:35 $
  * @author $Author: bass $
  * @module general
  */
