@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.99 2005/09/12 11:52:14 bass Exp $
+ * $Id: SchemeElement.java,v 1.100 2005/09/13 08:35:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.99 $, $Date: 2005/09/12 11:52:14 $
+ * @version $Revision: 1.100 $, $Date: 2005/09/13 08:35:41 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -89,7 +89,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		SchemeContainer {
 	private static final long serialVersionUID = 3618977875802797368L;
 
-	private IdlSchemeElementKind kind;
+	private int kind;
 	
 	private Identifier equipmentId;
 
@@ -159,7 +159,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final Scheme parentScheme,
 			final SchemeElement parentSchemeElement) {
 		super(id, created, modified, creatorId, modifierId, version, name, description, parentScheme);
-		this.kind = kind;
+		this.kind = (kind == null) ? 0 : kind.value();
 		this.label = label;
 
 		assert equipmentType == null || equipment == null;
@@ -716,7 +716,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	Identifier getEquipmentId() {
-		if (this.kind == SCHEME_ELEMENT_CONTAINER) {
+		if (this.getKind() == SCHEME_ELEMENT_CONTAINER) {
 			assert true || this.assertEquipmentTypeSetStrict() : OBJECT_BADLY_INITIALIZED;
 			if (!this.assertEquipmentTypeSetStrict()) {
 				throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
@@ -739,7 +739,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	Identifier getEquipmentTypeId() {
-		if (this.kind == SCHEME_ELEMENT_CONTAINER) {
+		if (this.getKind() == SCHEME_ELEMENT_CONTAINER) {
 			assert true || this.assertEquipmentTypeSetStrict(): OBJECT_BADLY_INITIALIZED;
 			if (!this.assertEquipmentTypeSetStrict()) {
 				throw new IllegalStateException(OBJECT_BADLY_INITIALIZED);
@@ -897,7 +897,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	Set<SchemeElement> getSchemeElements0() throws ApplicationException {
-		return this.kind == SCHEME_ELEMENT_CONTAINER
+		return this.getKind() == SCHEME_ELEMENT_CONTAINER
 				? StorableObjectPool.<SchemeElement>getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true)
 				: Collections.<SchemeElement>emptySet();
 	}
@@ -926,7 +926,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	Set<Scheme> getSchemes0(final boolean usePool) throws ApplicationException {
-		if (this.kind == SCHEME_CONTAINER) {
+		if (this.getKind() == SCHEME_CONTAINER) {
 			if (this.schemeContainerDelegate == null) {
 				this.schemeContainerDelegate = new SchemeContainerDelegate(this);
 			}
@@ -989,7 +989,7 @@ public final class SchemeElement extends AbstractSchemeElement
 				super.getName(),
 				super.getDescription(),
 				this.label,
-				this.kind,
+				this.getKind(),
 				this.getEquipmentTypeId().getTransferable(),
 				this.getEquipmentId().getTransferable(),
 				this.getKisId().getTransferable(),
@@ -1143,7 +1143,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		assert parentSchemeElementId != null : NON_NULL_EXPECTED;
 		assert parentSchemeId.isVoid() ^ parentSchemeElementId.isVoid();
 
-		this.kind = kind;
+		this.kind = kind.value();
 		this.label = label;
 		this.equipmentTypeId = equipmentTypeId;
 		this.equipmentId = equipmentId;
@@ -1449,7 +1449,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final IdlSchemeElement schemeElement = (IdlSchemeElement) transferable;
 			super.fromTransferable(schemeElement);
 			this.label = schemeElement.label;
-			this.kind = schemeElement.kind;
+			this.kind = schemeElement.kind.value();
 			this.equipmentTypeId = new Identifier(schemeElement.equipmentTypeId);
 			this.equipmentId = new Identifier(schemeElement.equipmentId);
 			this.kisId = new Identifier(schemeElement.kisId);
@@ -1480,7 +1480,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		this.label = schemeElement.isSetLabel()
 				? schemeElement.getLabel()
 				: "";
-		this.kind = IdlSchemeElementKind.from_int(schemeElement.getKind().intValue() - 1);
+		this.kind = schemeElement.getKind().intValue() - 1;
 
 		final boolean setEquipmentTypeId = schemeElement.isSetEquipmentTypeId();
 		final boolean setEquipmentId = schemeElement.isSetEquipmentId();		
@@ -1559,8 +1559,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	public IdlSchemeElementKind getKind() {
-		assert this.kind != null : NON_NULL_EXPECTED;
-		return this.kind;
+		return IdlSchemeElementKind.from_int(this.kind);
 	}
 
 	/*-********************************************************************

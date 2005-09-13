@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.88 2005/09/12 02:52:17 bass Exp $
+ * $Id: Scheme.java,v 1.89 2005/09/13 08:35:41 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.88 $, $Date: 2005/09/12 02:52:17 $
+ * @version $Revision: 1.89 $, $Date: 2005/09/13 08:35:41 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -99,7 +99,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 
 	private int height;
 
-	private IdlKind kind;
+	private int kind;
 
 	private Identifier mapId;
 
@@ -167,7 +167,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 		this.label = label;
 		this.width = width;
 		this.height = height;
-		this.kind = kind;
+		this.kind = (kind == null) ? 0 : kind.value();
 		this.mapId = Identifier.possiblyVoid(map);
 		this.symbolId = Identifier.possiblyVoid(symbol);
 		this.ugoCellId = Identifier.possiblyVoid(ugoCell);
@@ -675,8 +675,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	public IdlKind getKind() {
-		assert this.kind != null: OBJECT_NOT_INITIALIZED;
-		return this.kind;
+		return IdlKind.from_int(this.kind);
 	}
 
 	public Set<SchemeLink> getSchemeLinks() {
@@ -765,7 +764,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 				this.modifierId.getTransferable(),
 				this.version.longValue(),
 				this.name, this.description, this.label,
-				this.width, this.height, this.kind,
+				this.width, this.height, this.getKind(),
 				super.getDomainId().getTransferable(),
 				this.mapId.getTransferable(),
 				this.symbolId.getTransferable(),
@@ -932,7 +931,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 			this.label = label;
 			this.width = width;
 			this.height = height;
-			this.kind = kind;
+			this.kind = kind.value();
 			this.mapId = mapId;
 			this.symbolId = symbolId;
 			this.ugoCellId = ugoCellId;
@@ -1102,12 +1101,11 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @param kind
 	 */
 	public void setKind(final IdlKind kind) {
-		assert this.kind != null: OBJECT_NOT_INITIALIZED;
 		assert kind != null: NON_NULL_EXPECTED;
-		if (this.kind.value() == kind.value()) {
+		if (this.getKind() == kind) {
 			return;
 		}
-		this.kind = kind;
+		this.kind = kind.value();
 		super.markAsChanged();
 	}
 
@@ -1224,7 +1222,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 			this.label = scheme.label;
 			this.width = scheme.width;
 			this.height = scheme.height;
-			this.kind = scheme.kind;
+			this.kind = scheme.kind.value();
 			this.mapId = new Identifier(scheme.mapId);
 			this.symbolId = new Identifier(scheme.symbolId);
 			this.ugoCellId = new Identifier(scheme.ugoCellId);
@@ -1253,7 +1251,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 				: "";
 		this.width = scheme.getWidth();
 		this.height = scheme.getHeight();
-		this.kind = IdlKind.from_int(scheme.getKind().intValue() - 1);
+		this.kind = scheme.getKind().intValue() - 1;
 		if (scheme.isSetDomainId()) {
 			super.setDomainId0(Identifier.fromXmlTransferable(scheme.getDomainId(), importType, MODE_THROW_IF_ABSENT));
 		} else {
@@ -1377,7 +1375,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 		schemeCableLinks.addAll(this.getSchemeCableLinks0());
 		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
 			for (final Scheme scheme : schemeElement.getSchemes0(usePool)) {
-				if (scheme.kind == CABLE_SUBNETWORK) {
+				if (scheme.getKind() == CABLE_SUBNETWORK) {
 					schemeCableLinks.addAll(scheme.getTopologicalSchemeCableLinksRecursively(usePool));
 				}
 			}
@@ -1400,7 +1398,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 		}
 		for (final SchemeElement schemeElement : this.getSchemeElements0()) {
 			for (final Scheme scheme : schemeElement.getSchemes0(usePool)) {
-				if (scheme.kind == CABLE_SUBNETWORK) {
+				if (scheme.getKind() == CABLE_SUBNETWORK) {
 					schemePaths.addAll(scheme.getTopologicalSchemePathsRecursively(usePool));
 				}
 			}

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.63 2005/09/12 00:10:48 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.64 2005/09/13 08:35:41 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2005/09/12 00:10:48 $
+ * @version $Revision: 1.64 $, $Date: 2005/09/13 08:35:41 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -68,7 +68,7 @@ public abstract class AbstractSchemePort
 
 	private String description;
 
-	private IdlDirectionType directionType;
+	private int directionType;
 
 	/**
 	 * Depending on implementation, may reference either
@@ -125,7 +125,7 @@ public abstract class AbstractSchemePort
 		super(id, created, modified, creatorId, modifierId, version);
 		this.name = name;
 		this.description = description;
-		this.directionType = directionType;
+		this.directionType = (directionType == null) ? 0 : directionType.value();
 
 		assert portType == null || port == null;
 		this.portTypeId = Identifier.possiblyVoid(portType);
@@ -164,8 +164,7 @@ public abstract class AbstractSchemePort
 	public abstract AbstractSchemeLink getAbstractSchemeLink();
 
 	public final IdlDirectionType getDirectionType() {
-		assert this.directionType != null: OBJECT_NOT_INITIALIZED;
-		return this.directionType;
+		return IdlDirectionType.from_int(this.directionType);
 	}
 
 	/**
@@ -353,7 +352,7 @@ public abstract class AbstractSchemePort
 	
 			this.name = name;
 			this.description = description;
-			this.directionType = directionType;
+			this.directionType = directionType.value();
 			this.portTypeId = portTypeId;
 			this.portId = portId;
 			this.measurementPortId = measurementPortId;
@@ -367,12 +366,11 @@ public abstract class AbstractSchemePort
 	 * @param directionType
 	 */
 	public final void setDirectionType(final IdlDirectionType directionType) {
-		assert this.directionType != null: OBJECT_NOT_INITIALIZED;
 		assert directionType != null: NON_NULL_EXPECTED;
-		if (this.directionType.value() == directionType.value()) {
+		if (this.getDirectionType() == directionType) {
 			return;
 		}
-		this.directionType = directionType;
+		this.directionType = directionType.value();
 		super.markAsChanged();
 	}
 
@@ -552,7 +550,7 @@ public abstract class AbstractSchemePort
 		}
 		this.name = abstractSchemePort.name;
 		this.description = abstractSchemePort.description;
-		this.directionType = abstractSchemePort.directionType;
+		this.directionType = abstractSchemePort.directionType.value();
 		this.portTypeId = new Identifier(abstractPortTypeId);
 		this.portId = new Identifier(abstractPortId);
 		this.measurementPortId = new Identifier(abstractSchemePort.measurementPortId);
@@ -573,7 +571,7 @@ public abstract class AbstractSchemePort
 		this.description = abstractSchemePort.isSetDescription()
 				? abstractSchemePort.getDescription()
 				: "";
-		this.directionType = IdlDirectionType.from_int(abstractSchemePort.getDirectionType().intValue() - 1);
+		this.directionType = abstractSchemePort.getDirectionType().intValue() - 1;
 		this.measurementPortId = abstractSchemePort.isSetMeasurementPortId()
 				? Identifier.fromXmlTransferable(abstractSchemePort.getMeasurementPortId(), importType, MODE_THROW_IF_ABSENT)
 				: VOID_IDENTIFIER;
