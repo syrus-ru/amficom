@@ -1,5 +1,5 @@
 /*-
-* $Id: PeriodicalTemporalPattern.java,v 1.22 2005/08/25 14:22:36 arseniy Exp $
+* $Id: PeriodicalTemporalPattern.java,v 1.23 2005/09/13 12:12:32 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlPeriodicalTemporalPatternHelper;
 
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/08/25 14:22:36 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/09/13 12:12:32 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module measurement
  */
@@ -181,6 +181,7 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 		
 		if (days > 0) {
 			buffer.append(days);
+			buffer.append(" ");
 			buffer.append(LangModelMeasurement.getString(I18N_KEY_DAYS));
 		}
 		
@@ -189,6 +190,7 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 				buffer.append(", ");
 			}
 			buffer.append(hours);
+			buffer.append(" ");
 			buffer.append(LangModelMeasurement.getString(I18N_KEY_HOUR));
 		}
 		
@@ -197,6 +199,7 @@ public final class PeriodicalTemporalPattern extends AbstractTemporalPattern {
 				buffer.append(", ");
 			}
 			buffer.append(mins);
+			buffer.append(" ");
 			buffer.append(LangModelMeasurement.getString(I18N_KEY_MIN));
 		}
 		return buffer.toString();
