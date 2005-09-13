@@ -15,3 +15,7 @@ Makefile.inc
 files
 *.txt
 .mach
+cache
+images
+logs
+*.properties
