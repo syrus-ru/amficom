@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.11 2005/09/12 14:09:54 bass Exp $
+ * $Id: SchemeImportCommand.java,v 1.12 2005/09/13 10:19:05 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -414,7 +414,7 @@ public class SchemeImportCommand extends AbstractCommand {
 		
 		Map<SchemeElement, SchemeElement> schemeElementMapping = new HashMap<SchemeElement, SchemeElement>();
 		for (SchemeElement schemeElement : scheme.getSchemeElements()) {
- 			if (schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
+ 			if (schemeElement.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 				// if no real Scheme associated create new scheme with internal VRM's
 				if (schemeElement.getScheme(false) == null) {
 					Log.debugMessage("No real scheme for " + schemeElement.getName(), Level.FINEST);
@@ -445,7 +445,7 @@ public class SchemeImportCommand extends AbstractCommand {
 						if (cableLink != null) {
 							fibers = cableLink.getSchemeCableThreads().size();
 						}
-						boolean isInput = cablePort.getDirectionType().value() == IdlDirectionType.__IN;
+						boolean isInput = cablePort.getDirectionType() == IdlDirectionType._IN;
 						SchemeProtoElement suitableVrm = getSuitableProto(isInput ? this.inVrms : this.outVrms, Integer.valueOf(fibers));
 						
 						SchemeElement newSchemeElement = SchemeObjectsFactory.createSchemeElement(internalScheme, suitableVrm);
@@ -482,7 +482,7 @@ public class SchemeImportCommand extends AbstractCommand {
 					}
 					
 				}
-			} else if (schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_ELEMENT_CONTAINER) {
+			} else if (schemeElement.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER) {
 				// if no real EqT associated
 				if (schemeElement.getEquipmentType() == null) {
 					Log.debugMessage("No real eqt for " + schemeElement.getName(), Level.FINEST);
@@ -652,7 +652,7 @@ public class SchemeImportCommand extends AbstractCommand {
 			Set<SchemePort> ports = vrm.getSchemePortsRecursively();
 			if (ports.size() > 0) {
 				SchemePort port = ports.iterator().next();
-				if (port.getDirectionType().value() == IdlDirectionType.__OUT) {
+				if (port.getDirectionType() == IdlDirectionType._OUT) {
 					this.inVrms.put(Integer.valueOf(ports.size()), vrm);
 				} else {
 					this.outVrms.put(Integer.valueOf(ports.size()), vrm);

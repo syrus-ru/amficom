@@ -54,7 +54,7 @@ public class PathBuilder {
 			PathElement lastPE = path.getPathMembers().last();
 			
 		
-			if (lastPE.getKind().value() == IdlKind._SCHEME_ELEMENT) {
+			if (lastPE.getKind() == IdlKind.SCHEME_ELEMENT) {
 				SchemeElement se = lastPE.getSchemeElement();
 				SchemeElement top = SchemeUtils.getTopLevelSchemeElement(se);
 				if (!top.equals(scheme_element)) {
@@ -86,7 +86,7 @@ public class PathBuilder {
 			
 			PathElement lastPE = path.getPathMembers().last();
 			
-			if (lastPE.getKind().value() == IdlKind._SCHEME_ELEMENT) {
+			if (lastPE.getKind() == IdlKind.SCHEME_ELEMENT) {
 				SchemeElement se = lastPE.getSchemeElement();
 				Scheme top = se.getParentScheme();
 				if (!top.equals(scheme)) {
@@ -133,7 +133,7 @@ public class PathBuilder {
 				return true;
 			}
 
-			if (lastPE.getKind().value() == IdlKind._SCHEME_ELEMENT && lastPE.getEndAbstractSchemePort() == null) {
+			if (lastPE.getKind() == IdlKind.SCHEME_ELEMENT && lastPE.getEndAbstractSchemePort() == null) {
 				if (state == PathBuilder.MULTIPLE_PORTS)
 					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 							"Через элемент " + lastPE.getName() +
@@ -171,7 +171,7 @@ public class PathBuilder {
 				return false;
 		} else  {
 			PathElement beforeLastPE = path.getPreviousPathElement(lastPE);
-			if (beforeLastPE.getKind().value() == IdlKind._SCHEME_ELEMENT) {
+			if (beforeLastPE.getKind() == IdlKind.SCHEME_ELEMENT) {
 				SchemeElement seBeforeLast = beforeLastPE.getSchemeElement();
 
 				SchemeElement seToAdd = null;
@@ -215,7 +215,7 @@ public class PathBuilder {
 		PathElement newPE = null;
 		
 		if (!path.getPathMembers().isEmpty()) {  // non fisrt element
-			if (se.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
+			if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 				Scheme scheme = se.getScheme(false);
 				exploreScheme(path, scheme);
 				return path.getPathMembers().last();
@@ -262,9 +262,9 @@ public class PathBuilder {
 			// searching for ports with opposite direction
 			AbstractSchemePort newEndPort = null;
 			SchemeDevice dev = newStartPort.getParentSchemeDevice();
-			Set<SchemePort> ports = SchemeActions.findPorts(dev, newStartPort.getDirectionType().value() == IdlDirectionType.__IN ? 
+			Set<SchemePort> ports = SchemeActions.findPorts(dev, newStartPort.getDirectionType() == IdlDirectionType._IN ? 
 					IdlDirectionType._OUT : IdlDirectionType._IN);
-			Set<SchemeCablePort> cports = SchemeActions.findCablePorts(dev, newStartPort.getDirectionType().value() == IdlDirectionType.__IN ? 
+			Set<SchemeCablePort> cports = SchemeActions.findCablePorts(dev, newStartPort.getDirectionType() == IdlDirectionType._IN ? 
 							IdlDirectionType._OUT : IdlDirectionType._IN);
 			
 			// для предыдущего линка подходят варианты (для противоположный портов):

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.38 2005/09/12 02:52:18 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.39 2005/09/13 10:19:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.38 $, $Date: 2005/09/12 02:52:18 $
+ * @version $Revision: 1.39 $, $Date: 2005/09/13 10:19:05 $
  * @module schemeclient
  */
 
@@ -135,7 +135,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					}			
 					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						SchemeElement sc = (SchemeElement) it.next();
-						if (sc.getKind().equals(IdlSchemeElementKind.SCHEME_CONTAINER) ) {
+						if (sc.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 							Scheme scheme = sc.getScheme(false);
 							node.addChild(new PopulatableIconedNode(this, scheme != null ? scheme : sc));
 							}
@@ -157,7 +157,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					}			
 					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						SchemeElement sc = (SchemeElement) it.next();
-						if (sc.getKind().equals(IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER)) {
+						if (sc.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER) {
 							node.addChild(new PopulatableIconedNode(this, sc));
 						}
 					}
@@ -220,13 +220,13 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					boolean has_schemes = false;
 					boolean has_elements = false;
 					for (SchemeElement el : innerSEs) {
-						if (el.getKind().equals(IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER)) {
+						if (el.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER) {
 							has_elements = true;
 							break;
 						}
 					}
 					for (SchemeElement el : innerSEs) {
-						if (el.getKind().equals(IdlSchemeElementKind.SCHEME_CONTAINER)) {
+						if (el.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 							has_schemes = true;
 							break;
 						}

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.18 2005/09/07 18:33:01 bass Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.19 2005/09/13 10:19:05 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/09/07 18:33:01 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/13 10:19:05 $
  * @module schemeclient
  */
 
@@ -811,7 +811,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 				symbol = new ImageIcon(s.getImage());
 			}
 			
-			if (this.schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
+			if (this.schemeElement.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 				this.cbInstanceBox.setVisible(false);
 			} else {
 				this.cbInstanceBox.setVisible(true);

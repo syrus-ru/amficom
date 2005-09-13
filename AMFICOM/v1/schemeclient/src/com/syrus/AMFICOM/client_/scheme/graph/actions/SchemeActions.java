@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.29 2005/09/12 14:09:54 bass Exp $
+ * $Id: SchemeActions.java,v 1.30 2005/09/13 10:19:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.29 $, $Date: 2005/09/12 14:09:54 $
+ * @version $Revision: 1.30 $, $Date: 2005/09/13 10:19:05 $
  * @module schemeclient
  */
 
@@ -276,9 +276,9 @@ public class SchemeActions {
 	static boolean isSchemesGroup(DeviceGroup group) {
 		try {
 			SchemeElement se = group.getSchemeElement();
-			if (se != null && se.getKind().equals(IdlSchemeElementKind.SCHEME_CONTAINER)) {
+			if (se != null && se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 				IdlKind kind = se.getScheme(false).getKind();
-				if (kind.equals(IdlKind.BUILDING) || kind.equals(IdlKind.NETWORK))
+				if (kind == IdlKind.BUILDING || kind == IdlKind.NETWORK)
 					return true;
 			}
 		} catch (final ApplicationException ae) {
@@ -505,19 +505,19 @@ public class SchemeActions {
 		Rectangle dev_bounds = GraphConstants.getBounds(m);
 		
 		int u = GraphConstants.PERCENT;
-		int distance = (direction.value() == IdlDirectionType.__OUT ?
+		int distance = (direction == IdlDirectionType._OUT ?
 				(p.x - (dev_bounds.x + dev_bounds.width)) / graph.getGridSize() + 1 :
 				(dev_bounds.x - p.x) / graph.getGridSize());
-		Point labelPosition = (direction.value() == IdlDirectionType.__OUT ? 
+		Point labelPosition = (direction == IdlDirectionType._OUT ? 
 				new Point (-2 * u / distance, 0) : 
 				new Point (u + (int)(1.5 * u / distance), 0));
-		Rectangle portCellBounds = (direction.value() == IdlDirectionType.__OUT ? 
+		Rectangle portCellBounds = (direction == IdlDirectionType._OUT ? 
 				new Rectangle(p.x - 6, p.y - 3, 7, 7) : 
 				new Rectangle(p.x, p.y - 3, 7, 7));
-		Point devportPos = (direction.value() == IdlDirectionType.__OUT ?
+		Point devportPos = (direction == IdlDirectionType._OUT ?
 				new Point(u, (int)(u * ( (double)(p.y + 1 - dev_bounds.y) / (double)dev_bounds.height))) :		
 				new Point(0, (int)(u * ( (double)(p.y + 1 - dev_bounds.y) / (double)dev_bounds.height))));
-		Point ellipseportPos = (direction.value() == IdlDirectionType.__OUT ?
+		Point ellipseportPos = (direction == IdlDirectionType._OUT ?
 				new Point(0, u / 2) :
 				new Point(u, u / 2));
 		
@@ -878,7 +878,7 @@ public class SchemeActions {
 	}
 	
 	public static void connect(SchemeCablePort sp, SchemeCableLink sl, boolean is_source) {
-		IdlDirectionType direction = sp.getDirectionType().value() == IdlDirectionType.__IN ? IdlDirectionType._OUT : IdlDirectionType._IN;
+		IdlDirectionType direction = sp.getDirectionType() == IdlDirectionType._IN ? IdlDirectionType._OUT : IdlDirectionType._IN;
 		List<SchemePort> ports = new ArrayList<SchemePort>(findPorts(sp.getParentSchemeDevice(), direction));
 		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(sl.getSchemeCableThreads());	
 		

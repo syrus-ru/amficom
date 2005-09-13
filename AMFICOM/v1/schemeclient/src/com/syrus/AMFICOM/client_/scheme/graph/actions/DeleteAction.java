@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.19 2005/09/12 02:52:18 bass Exp $
+ * $Id: DeleteAction.java,v 1.20 2005/09/13 10:19:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/09/12 02:52:18 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/13 10:19:05 $
  * @module schemeclient
  */
 
@@ -223,7 +223,7 @@ public class DeleteAction extends AbstractAction {
 		
 	static void deleteSchemeElement(SchemeElement element) {
 		objectsToDelete.add(element.getId());
-		if (element.getKind().value() == IdlSchemeElementKind._SCHEME_ELEMENT_CONTAINER) {
+		if (element.getKind() == IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER) {
 			if(element.getEquipment() != null)
 				objectsToDelete.add(element.getEquipment().getId());
 			for (Iterator it = element.getSchemeLinks().iterator(); it.hasNext();) {
@@ -282,7 +282,7 @@ public class DeleteAction extends AbstractAction {
 			if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
 				SchemeElement element = group.getSchemeElement();
 				
-				if (element.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
+				if (element.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 					Scheme scheme = element.getScheme(false);
 					deleteScheme(scheme);
 				} else {

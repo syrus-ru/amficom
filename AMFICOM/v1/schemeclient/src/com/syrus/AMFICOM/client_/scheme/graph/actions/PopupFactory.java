@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.9 2005/09/12 02:52:18 bass Exp $
+ * $Id: PopupFactory.java,v 1.10 2005/09/13 10:19:05 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -88,7 +88,7 @@ public class PopupFactory {
 			JPopupMenu pop = new JPopupMenu();
 			if (group.getType() == DeviceGroup.SCHEME_ELEMENT) {
 				final SchemeElement se = group.getSchemeElement();
-				if (se.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
+				if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 					pop.add(createOpenSchemeMenuItem(aContext, se.getScheme(false)));
 					pop.addSeparator();
 					pop.add(createCutMenuItem(pane));
@@ -223,7 +223,7 @@ public class PopupFactory {
 				if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
 					try {
 						SchemeElement se = (SchemeElement)StorableObjectPool.getStorableObject(id, true);
-						if (se.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
+						if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 							pop.add(createOpenSchemeMenuItem(aContext, se.getScheme(false)));
 							pop.addSeparator();
 							pop.add(createCancelMenuItem());
@@ -251,7 +251,7 @@ public class PopupFactory {
 				try {
 					if (id.getMajor() == ObjectEntities.SCHEMEELEMENT_CODE) {
 						SchemeElement se = (SchemeElement)StorableObjectPool.getStorableObject(id, true);
-						if (se.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
+						if (se.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 							pop.add(createOpenSchemeMenuItem(aContext, se.getScheme(false)));
 							pop.add(createPathAddMenuItem(aContext, res, id));
 							pop.addSeparator();
@@ -325,7 +325,7 @@ public class PopupFactory {
 								CablePortCell outPort = null;
 
 								for (SchemeCablePort cport : cablePorts) {
-									if (cport.getDirectionType().value() == IdlDirectionType.__IN) {
+									if (cport.getDirectionType() == IdlDirectionType._IN) {
 										if (inPort == null) {
 											inPort = SchemeActions.findCablePortCellById(graph, cport.getId());
 										}

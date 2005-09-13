@@ -1,5 +1,5 @@
 /*
- * $Id: GraphActions.java,v 1.14 2005/09/12 14:09:54 bass Exp $
+ * $Id: GraphActions.java,v 1.15 2005/09/13 10:19:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.14 $, $Date: 2005/09/12 14:09:54 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/13 10:19:05 $
  * @module schemeclient
  */
 
@@ -483,8 +483,8 @@ public class GraphActions {
 					bounds.x = (bounds.x / grid) * grid;
 					bounds.y = ((bounds.y / grid) + 1) * grid - 5;
 				} else if (cells[i] instanceof PortCell) {
-					if (((PortCell) cells[i]).getSchemePort().getDirectionType().value() ==
-							IdlDirectionType.__OUT) {
+					if (((PortCell) cells[i]).getSchemePort().getDirectionType() ==
+							IdlDirectionType._OUT) {
 						bounds.x = ((bounds.x / grid) + 1) * grid - 6;
 						bounds.y = ((bounds.y / grid) + 1) * grid - 3;
 					} else {
@@ -492,8 +492,8 @@ public class GraphActions {
 						bounds.y = ((bounds.y / grid) + 1) * grid - 3;
 					}
 				} else if (cells[i] instanceof CablePortCell) {
-					if (((CablePortCell) cells[i]).getSchemeCablePort().getDirectionType().value()
-							== IdlDirectionType.__OUT) {
+					if (((CablePortCell) cells[i]).getSchemeCablePort().getDirectionType()
+							== IdlDirectionType._OUT) {
 						bounds.x = ((bounds.x / grid) + 1) * grid - 6;
 						bounds.y = ((bounds.y / grid) + 1) * grid - 3;
 					} else {

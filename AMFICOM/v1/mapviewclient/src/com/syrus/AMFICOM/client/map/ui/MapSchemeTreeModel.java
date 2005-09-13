@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.33 2005/09/12 02:52:18 bass Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.34 2005/09/13 10:19:04 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -86,7 +86,7 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.33 $, $Date: 2005/09/12 02:52:18 $
+ * @version $Revision: 1.34 $, $Date: 2005/09/13 10:19:04 $
  * @author $Author: bass $
  * @module mapviewclient
  */
@@ -253,7 +253,7 @@ public class MapSchemeTreeModel
 					SchemeElement schemeElement = (SchemeElement )it.next();
 					Scheme internalScheme = schemeElement.getScheme(false);
 	
-					if(	internalScheme.getKind().value() != IdlKind._CABLE_SUBNETWORK) {
+					if(	internalScheme.getKind() != IdlKind.CABLE_SUBNETWORK) {
 						if(topological)
 							childNode = buildSchemeTree(internalScheme, true, false);
 						else

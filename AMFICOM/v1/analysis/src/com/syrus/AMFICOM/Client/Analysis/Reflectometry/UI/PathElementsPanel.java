@@ -65,12 +65,12 @@ public final class PathElementsPanel extends AnalysisPanel
 				this.activePathElement = this.path.getPathElementByOpticalDistance(distance);
 				double[] d = this.path.getOpticalDistanceFromStart(this.activePathElement);
 				
-				if (this.activePathElement.getKind().value() != IdlKind._SCHEME_ELEMENT &&
+				if (this.activePathElement.getKind() != IdlKind.SCHEME_ELEMENT &&
 						Math.abs(distance - d[0]) < 3 / scaleX * deltaX && 
 						this.path.hasPreviousPathElement(this.activePathElement)) {
 					this.activePathElement = this.path.getPreviousPathElement(this.activePathElement);
 					Log.debugMessage("Set previous pathElement : " + this.activePathElement.getName() + "(" + (3 / scaleX * deltaX) + ")", Level.FINER);
-				} else if (this.activePathElement.getKind().value() != IdlKind._SCHEME_ELEMENT &&
+				} else if (this.activePathElement.getKind() != IdlKind.SCHEME_ELEMENT &&
 						Math.abs(distance - d[1]) < 3 / scaleX * deltaX && 
 						this.path.hasNextPathElement(this.activePathElement)) {
 					this.activePathElement = this.path.getNextPathElement(this.activePathElement);
@@ -85,7 +85,7 @@ public final class PathElementsPanel extends AnalysisPanel
 	protected void this_mouseDragged(MouseEvent e)
 	{
 		if (setting_active_pe) {
-			if (this.activePathElement.getKind().value() == IdlKind._SCHEME_ELEMENT) {
+			if (this.activePathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
 				setCursor(Cursor.getPredefinedCursor(Cursor.E_RESIZE_CURSOR));
 				Log.debugMessage("PathElement " + this.activePathElement.getName() + " moved on " + ((currpos.x - startpos.x) / scaleX * deltaX) + " m", Level.FINER);
 				upd_currpos(e);
@@ -139,9 +139,9 @@ public final class PathElementsPanel extends AnalysisPanel
 				
 				if (pathElement == this.activePathElement)
 					g.setColor(Color.RED);
-				else if (pathElement.getKind().value() == IdlKind._SCHEME_CABLE_LINK)
+				else if (pathElement.getKind() == IdlKind.SCHEME_CABLE_LINK)
 					g.setColor(Color.CYAN);
-				else if (pathElement.getKind().value() == IdlKind._SCHEME_LINK)
+				else if (pathElement.getKind() == IdlKind.SCHEME_LINK)
 					g.setColor(Color.BLUE);
 				else 
 					g.setColor(Color.GREEN);
@@ -150,7 +150,7 @@ public final class PathElementsPanel extends AnalysisPanel
 				final int start1 = index2coord((int)Math.round(d[0] / this.deltaX));
 				final int end1 = index2coord((int)Math.round(d[1] / this.deltaX));
 				Log.debugMessage("PathElement " + pathElement.getName() + " from " + start1 + " to " + end1, Level.FINER);
-				if (pathElement.getKind().value() == IdlKind._SCHEME_ELEMENT) {
+				if (pathElement.getKind() == IdlKind.SCHEME_ELEMENT) {
 					SchemeElement se = pathElement.getSchemeElement();
 					// if muff - paint only small box and dashed line
 					if (se.getEquipmentType().getCodename().equals(EquipmentTypeCodename.MUFF.toString())) {

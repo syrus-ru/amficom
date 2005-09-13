@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.18 2005/09/12 14:09:54 bass Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.19 2005/09/13 10:19:05 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/09/12 14:09:54 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/13 10:19:05 $
  * @module schemeclient
  */
 
@@ -99,7 +99,7 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 
 		for (int i = 0; i < bpcs.length; i++) {
 			AbstractSchemePort port = bpcs[i].getAbstractSchemePort();
-			if (port.getDirectionType().value() == IdlDirectionType.__IN)
+			if (port.getDirectionType() == IdlDirectionType._IN)
 				blockports_in.add(bpcs[i]);
 			else
 				blockports_out.add(bpcs[i]);

@@ -1,5 +1,5 @@
 /*-
- * $Id: Notifier.java,v 1.13 2005/09/07 18:33:01 bass Exp $
+ * $Id: Notifier.java,v 1.14 2005/09/13 10:19:05 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/09/07 18:33:01 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/13 10:19:05 $
  * @module schemeclient
  */
 
@@ -130,7 +130,7 @@ public class Notifier {
 					manager = SchemeProtoElementPropertiesManager.getInstance(aContext);
 				} else if (dev.getType() == DeviceGroup.SCHEME_ELEMENT) {
 					SchemeElement el = dev.getSchemeElement();
-					if (el.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
+					if (el.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 						selectedObject = dev.getScheme();
 						selectedType = ObjectSelectedEvent.SCHEME;
 						manager = SchemePropertiesManager.getInstance(aContext);

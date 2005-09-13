@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.83 2005/09/09 18:19:58 bass Exp $
+ * $Id: SchemePath.java,v 1.84 2005/09/13 10:19:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/09/09 18:19:58 $
+ * @version $Revision: 1.84 $, $Date: 2005/09/13 10:19:04 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -546,7 +546,7 @@ public final class SchemePath extends StorableObject
 		final SortedSet<PathElement> pathElements = this.getPathMembers();
 		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
 		final PathElement startPathElement = pathElements.first();
-		assert startPathElement.getKind().value() == IdlKind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
+		assert startPathElement.getKind() == IdlKind.SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
 		return startPathElement.getSchemeElement();
 	}
 
@@ -558,7 +558,7 @@ public final class SchemePath extends StorableObject
 		final SortedSet<PathElement> pathElements = this.getPathMembers();
 		assert !pathElements.isEmpty(): NON_EMPTY_EXPECTED;
 		final PathElement endPathElement = pathElements.last();
-		assert endPathElement.getKind().value() == IdlKind._SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
+		assert endPathElement.getKind() == IdlKind.SCHEME_ELEMENT: OBJECT_STATE_ILLEGAL;
 		return endPathElement.getSchemeElement();
 	}
 
@@ -575,7 +575,7 @@ public final class SchemePath extends StorableObject
 		
 		while (pathElementIterator.hasNext()) {
 			final PathElement pathElement1 = pathElementIterator.next();
-			if (pathElement1.getKind().value() == IdlKind._SCHEME_ELEMENT
+			if (pathElement1.getKind() == IdlKind.SCHEME_ELEMENT
 					&& !pathElement1.getSchemeElement().getEquipmentType().getCodename().equals(MUFF.stringValue())) {
 				return pathElement1;
 			}
@@ -744,7 +744,7 @@ public final class SchemePath extends StorableObject
 
 		PathElement previousNode = null;
 		for (final PathElement pathElement1 : getPathMembers().headSet(pathElement)) {
-			if (pathElement1.getKind().value() == IdlKind._SCHEME_ELEMENT && 
+			if (pathElement1.getKind() == IdlKind.SCHEME_ELEMENT && 
 					!pathElement1.getSchemeElement().getEquipmentType().getCodename().equals(MUFF.stringValue())) {
 				previousNode = pathElement1;
 			}
