@@ -1,5 +1,5 @@
 /*
- * $Id: MapInfoVirtualCorbaConnection.java,v 1.4 2005/08/29 16:10:58 arseniy Exp $
+ * $Id: MapInfoVirtualCorbaConnection.java,v 1.5 2005/09/13 10:31:38 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -225,6 +225,7 @@ public class MapInfoVirtualCorbaConnection extends MapInfoConnection{
 						}
 						inputStream.close();				
 						outputStream.close();
+						virtualDiskLayer.setLastModified(diskCacheLayer.lastModified());
 					}
 				}
 			} catch (FileNotFoundException e) {
