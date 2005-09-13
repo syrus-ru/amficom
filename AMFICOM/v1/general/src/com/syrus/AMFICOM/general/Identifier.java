@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.68 2005/09/13 12:42:18 bob Exp $
+ * $Id: Identifier.java,v 1.69 2005/09/13 12:54:31 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.68 $, $Date: 2005/09/13 12:42:18 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/13 12:54:31 $
  * @author $Author: bob $
  * @module general
  */
@@ -52,6 +52,8 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 
 	private short major;
 	private long minor;
+	
+	private transient int hashCode; 
 
 	private transient long identifierCode;
 	private transient String identifierString;
@@ -157,10 +159,13 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 
 	@Override
 	public int hashCode() {
-		int ret = 17;
-		ret = 37 * ret + this.major;
-		ret = 37 * ret + (int)(this.minor ^ (this.minor >>> 32));
-		return ret;
+		if (this.hashCode == 0) {
+			// hashCode can be cached due to immutability 
+			this.hashCode = 17;
+			this.hashCode = 37 * this.hashCode + this.major;
+			this.hashCode = 37 * this.hashCode + (int)(this.minor ^ (this.minor >>> 32));
+		}
+		return this.hashCode;
 	}
 
 	public String toHexString() {
