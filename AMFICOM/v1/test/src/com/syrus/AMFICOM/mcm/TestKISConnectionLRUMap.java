@@ -1,11 +1,11 @@
 /*-
- * $Id: TestKISConnectionLRUMap.java,v 1.1 2005/09/12 19:54:03 arseniy Exp $
+ * $Id: TestKISConnectionLRUMap.java,v 1.1 2005/09/13 18:25:11 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
-package com.syrus.util;
+package com.syrus.AMFICOM.mcm;
 
 import java.util.HashSet;
 import java.util.Set;
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.measurement.Measurement;
 import junit.framework.TestCase;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/09/12 19:54:03 $
+ * @version $Revision: 1.1 $, $Date: 2005/09/13 18:25:11 $
  * @author $Author: arseniy $
  * @module test
  */
