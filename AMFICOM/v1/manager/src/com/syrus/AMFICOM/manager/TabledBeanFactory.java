@@ -1,5 +1,5 @@
 /*-
-* $Id: TabledBeanFactory.java,v 1.4 2005/09/07 07:08:02 bob Exp $
+* $Id: TabledBeanFactory.java,v 1.5 2005/09/13 11:07:45 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -23,7 +23,7 @@ import com.syrus.util.Wrapper;
 
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/07 07:08:02 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/13 11:07:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -59,8 +59,9 @@ public abstract class TabledBeanFactory extends AbstractBeanFactory {
 	
 			this.listener = new PropertyChangeListener() {
 				public void propertyChange(PropertyChangeEvent evt) {
-					WrapperedPropertyTableModel model = TabledBeanFactory.this.table.getModel();
-					model.fireTableDataChanged();
+					final WrapperedPropertyTableModel model = TabledBeanFactory.this.table.getModel();
+					final int rowIndex = model.getRowIndex(evt.getPropertyName());
+					model.fireTableRowsUpdated(rowIndex, rowIndex);
 				}
 			};
 			
