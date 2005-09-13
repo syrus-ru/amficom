@@ -1,5 +1,5 @@
 /*-
- * $Id: ManagerMainFrame.java,v 1.9 2005/09/12 12:58:29 bob Exp $
+ * $Id: ManagerMainFrame.java,v 1.10 2005/09/13 11:30:16 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,7 +12,6 @@ import static com.syrus.AMFICOM.manager.DomainBeanWrapper.KEY_NAME;
 
 import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
-import java.awt.Toolkit;
 import java.awt.event.ActionEvent;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeEvent;
@@ -117,7 +116,7 @@ import com.syrus.AMFICOM.resource.LayoutItemWrapper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/12 12:58:29 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/13 11:30:16 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module manager
@@ -390,7 +389,7 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		
 		final ApplicationModel applicationModel = this.aContext.getApplicationModel();
 		applicationModel.setCommand(ManagerModel.DOMAINS_COMMAND, new DomainsPerspective(this));
-		applicationModel.setCommand(ManagerModel.FLUSH_COMMAND, new FlushCommand());	
+		applicationModel.setCommand(ManagerModel.FLUSH_COMMAND, new FlushCommand(this));	
 		
 		applicationModel.setCommand(TREE_FRAME, this.getShowWindowLazyCommand(this.frames, TREE_FRAME));
 		applicationModel.setCommand(GRAPH_FRAME, this.getShowWindowLazyCommand(this.frames, GRAPH_FRAME));
@@ -712,16 +711,6 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 		});	
 
 		perspectives.addSeparator();
-		
-		JButton button = perspectives.add(new AbstractAction("", new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/refresh.gif"))) {
-			
-			public void actionPerformed(ActionEvent e) {
-				ManagerMainFrame.this.getContext().getApplicationModel().getCommand(ManagerModel.FLUSH_COMMAND).execute();
-				}
-		});
-		
-		button.setToolTipText(LangModelManager.getString("Action.Save"));
 		
 		return perspectives;
 	}
@@ -1170,6 +1159,21 @@ public class ManagerMainFrame extends AbstractMainFrame implements GraphSelectio
 			};
 			toolBar.add(zoomOut);
 			zoomOut.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.ZoomOut"));
+		}
+		
+		
+		toolBar.addSeparator();
+		
+		{
+			
+			AbstractAction flush = new AbstractAction("", UIManager.getIcon(ResourceKeys.ICON_REFRESH)) {
+				
+				public void actionPerformed(ActionEvent e) {
+					ManagerMainFrame.this.getContext().getApplicationModel().getCommand(ManagerModel.FLUSH_COMMAND).execute();
+					}
+			};
+			toolBar.add(flush);
+			flush.putValue(Action.SHORT_DESCRIPTION, LangModelManager.getString("Action.Save"));
 		}
 		
 		return toolBar;
