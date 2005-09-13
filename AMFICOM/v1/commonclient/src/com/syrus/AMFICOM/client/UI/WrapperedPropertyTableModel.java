@@ -10,8 +10,8 @@ import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/13 13:37:18 $
- * @author $Author: bob $
+ * @version $Revision: 1.13 $, $Date: 2005/09/13 15:48:49 $
+ * @author $Author: arseniy $
  * @module commonclient
  */
 public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
@@ -150,10 +150,10 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 			this.names = new String[keys.length];
 			this.values = new Object[keys.length];
 		} else {
-			for(int i = 0; i < oldKeysSize; i++) {
+			for(int i = 0; i < oldKeysSize; i++) {//XXX А нет ли здесь лажи, Володенька?
 				this.names[i] = null;
 				this.values = null;
-			}
+			}//XXX ^^^^
 		}
 		for(int i = 0; i < keys.length; i++) {			
 			this.names[i] = CommonUIUtilities.convertToHTMLString(this.wrapper.getName(keys[i]));
