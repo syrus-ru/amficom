@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedPropertyTable.java,v 1.11 2005/09/07 13:06:33 bob Exp $
+* $Id: WrapperedPropertyTable.java,v 1.12 2005/09/13 10:46:13 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import java.util.Map;
 import javax.swing.DefaultCellEditor;
 import javax.swing.JCheckBox;
 import javax.swing.JTextField;
+import javax.swing.SwingConstants;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumn;
@@ -28,7 +29,7 @@ import javax.swing.table.TableColumn;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/07 13:06:33 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/13 10:46:13 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -79,13 +80,9 @@ public class WrapperedPropertyTable<T> extends ATable {
 	 *                see {@link com.syrus.util.Wrapper#getKeys()}
 	 */
 	public void setRenderer(final TableCellRenderer renderer, final String key) {
-		final WrapperedPropertyTableModel<T> model = this.getModel();
-		for (int mRowIndex = 0; mRowIndex < model.getRowCount(); mRowIndex++) {
-			if (model.keys[mRowIndex].equals(key)) {
-				final TableColumn col = this.getColumnModel().getColumn(mRowIndex);
-				col.setCellRenderer(renderer);
-			}
-		}
+		int rowIndex = this.getModel().getRowIndex(key);
+		final TableColumn col = this.getColumnModel().getColumn(rowIndex);
+		col.setCellRenderer(renderer);		
 	}
 
 	public void updateModel() {
@@ -130,7 +127,8 @@ public class WrapperedPropertyTable<T> extends ATable {
 			} else {
 				final Class clazz = model.wrapper.getPropertyClass(model.keys[mRowIndex]);
 				if (clazz.equals(Boolean.class)) {
-					JCheckBox checkBox = new JCheckBox();
+					final JCheckBox checkBox = new JCheckBox();
+					checkBox.setHorizontalAlignment(SwingConstants.CENTER);
 					this.cellEditors[mRowIndex][1] = new DefaultCellEditor(checkBox);
 				}
 			}
