@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.32 2005/09/12 11:19:48 bob Exp $
+ * $Id: TableFrame.java,v 1.33 2005/09/13 09:41:40 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,9 +51,10 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/09/12 11:19:48 $
+ * @version $Revision: 1.33 $, $Date: 2005/09/13 09:41:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -207,7 +208,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 			this.listTable.addMouseListener(new MouseAdapter() {
 
 				@Override
-				public void mouseClicked(final MouseEvent evt) {
+				public void mousePressed(MouseEvent evt) {
 					final JTable table = ((JTable) evt.getSource());
 					if (SwingUtilities.isRightMouseButton(evt)) {
 						
@@ -239,7 +240,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 							if (status != TestStatus._TEST_STATUS_NEW) {
 								enableDeleting = false;
 							}
-							if (status != TestStatus._TEST_STATUS_PROCESSING ||
+							if (status != TestStatus._TEST_STATUS_PROCESSING &&
 								status != TestStatus._TEST_STATUS_SCHEDULED) {
 								enableStopping = false;
 							}
@@ -309,6 +310,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 							if (enableDeleting) {
 								popup.addSeparator();
 							}
+							Log.debugMessage(".mouseClicked | stopTestMenuItem " + stopTestMenuItem, Log.DEBUGLEVEL09);
 							popup.add(stopTestMenuItem);
 						}
 						popup.show(table, evt.getX(), evt.getY());
