@@ -1,5 +1,5 @@
 /*
- * $Id: UGOReport.java,v 1.1 2005/09/12 11:36:24 peskovsky Exp $
+ * $Id: UGOReport.java,v 1.2 2005/09/13 13:44:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,7 +7,6 @@
  */
 package com.syrus.AMFICOM.client.scheme.report;
 
-import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.image.BufferedImage;
 

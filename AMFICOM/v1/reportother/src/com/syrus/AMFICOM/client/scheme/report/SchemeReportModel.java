@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeReportModel.java,v 1.1 2005/09/12 11:36:24 peskovsky Exp $
+ * $Id: SchemeReportModel.java,v 1.2 2005/09/13 13:44:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 
@@ -52,6 +53,10 @@ public class SchemeReportModel extends ReportModel
 	 * Характеристики объекта
 	 */
 	public static String SELECTED_OBJECT_CHARS = "selectedObjectChars";
+	/**
+	 * Прокладка кабеля по тоннелям (список колодцев и тоннелей)
+	 */ 
+	public static String CABLE_LAYOUT = "cableLayout";
 
 	public SchemeReportModel(){
 	}
@@ -75,7 +80,7 @@ public class SchemeReportModel extends ReportModel
 		if (!(data instanceof Identifier))
 			throw new CreateReportException(
 					element.getReportName(),
-					CreateReportException.NO_DATA_TO_INSTALL);
+					CreateReportException.WRONG_DATA_TO_INSTALL);
 		
 		Identifier objectId = (Identifier)data;
 		
@@ -84,6 +89,13 @@ public class SchemeReportModel extends ReportModel
 				if (objectId.getMajor() == ObjectEntities.SCHEME_CODE) {
 					Scheme scheme = StorableObjectPool.getStorableObject(objectId,true);
 					result = SchemeReport.createReport(scheme,element,aContext);
+				}
+			}
+			else if (element.getReportName().equals(CABLE_LAYOUT)) {
+				if (objectId.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
+					SchemeCableLink schemeCableLink = StorableObjectPool.getStorableObject(objectId,true);
+					//TODO Реализовать
+					result = null;
 				}
 			}
 			else if (element.getReportName().equals(SELECTED_OBJECT_UGO)) {
@@ -184,6 +196,7 @@ public class SchemeReportModel extends ReportModel
 		String langReportName = null;
 		if (	reportName.equals(ON_SCREEN_SCHEME)
 			||	reportName.equals(SELECTED_OBJECT_UGO)
+			||	reportName.equals(CABLE_LAYOUT)			
 			||	reportName.equals(SELECTED_OBJECT_CHARS))
 			langReportName = LangModelReport.getString("report.Modules.SchemeEditor." + reportName);
 		
@@ -207,6 +220,7 @@ public class SchemeReportModel extends ReportModel
 		result.add(ON_SCREEN_SCHEME);
 		result.add(SELECTED_OBJECT_UGO);
 		result.add(SELECTED_OBJECT_CHARS);
+		result.add(CABLE_LAYOUT);		
 		
 		return result;
 	}

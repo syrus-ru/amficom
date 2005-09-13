@@ -19,5 +19,10 @@
 	<classpathentry kind="lib" path="D:/WORK/libs/supp/jgraphpad.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/config_v1"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/measurement_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/map_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mapclient_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mapinfo_v1_modifying"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mapview_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mapviewclient_v1_modifying"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
