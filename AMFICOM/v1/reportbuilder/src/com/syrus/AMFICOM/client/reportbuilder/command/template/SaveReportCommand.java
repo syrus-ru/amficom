@@ -1,5 +1,5 @@
 /*
- * $Id: SaveReportCommand.java,v 1.2 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: SaveReportCommand.java,v 1.3 2005/09/13 14:19:21 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,6 +17,7 @@ import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.ReportRenderer;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderMainFrame;
 import com.syrus.AMFICOM.report.ReportTemplate;
+import com.syrus.util.Log;
 
 public class SaveReportCommand extends AbstractCommand {
 	ReportBuilderMainFrame mainFrame = null;
@@ -43,6 +44,8 @@ public class SaveReportCommand extends AbstractCommand {
 			encoder.encodeToHTML();	
 			this.result = RESULT_OK;
 		} catch (IOException e) {
+			Log.errorMessage("SaveReportCommand.execute | " + e.getMessage());
+			Log.errorException(e);			
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					LangModelReport.getString("report.Exception.errorSavingHTML")

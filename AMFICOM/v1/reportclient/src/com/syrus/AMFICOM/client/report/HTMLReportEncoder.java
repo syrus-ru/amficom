@@ -1,5 +1,5 @@
 /*
- * $Id: HTMLReportEncoder.java,v 1.3 2005/09/13 12:23:10 peskovsky Exp $
+ * $Id: HTMLReportEncoder.java,v 1.4 2005/09/13 14:19:20 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -401,7 +401,7 @@ public class HTMLReportEncoder {
 					LangModelReport.getString("report.File.rewriteFile"),
 					LangModelReport.getString("report.File.confirm"),
 					JOptionPane.OK_CANCEL_OPTION,
-					JOptionPane.ERROR_MESSAGE);
+					JOptionPane.WARNING_MESSAGE);
 			if (answer == JOptionPane.CANCEL_OPTION)
 				return null;
 		}

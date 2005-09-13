@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.10 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.11 2005/09/13 14:19:21 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -419,6 +419,9 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 					try {
 						this.reportPreviewRenderer.setData(reportData);
 					} catch (CreateReportException e) {
+						Log.errorMessage("ReportBuilderMainFrame.propertyChange | "
+								+ e.getMessage());
+						Log.errorException(e);
 						JOptionPane.showMessageDialog(
 								Environment.getActiveWindow(),
 								e.getMessage(),

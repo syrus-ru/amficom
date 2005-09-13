@@ -1,5 +1,5 @@
 /*
- * $Id: CreateReportDialog.java,v 1.1 2005/09/13 13:43:37 peskovsky Exp $
+ * $Id: CreateReportDialog.java,v 1.2 2005/09/13 14:19:20 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,13 +39,14 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.AMFICOM.resource.IntDimension;
+import com.syrus.util.Log;
 
 /**
  * Диалог, используемый другими модулями для
  * открытия шаблонов определённого типа.
  *
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/09/13 13:43:37 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/13 14:19:20 $
  * @module generalclient_v1
  */
 public class CreateReportDialog extends JDialog {
@@ -81,7 +82,8 @@ public class CreateReportDialog extends JDialog {
 
 	private void jbInit() {
 		this.setSize(new Dimension(293, 255));
-		this.setTitle(LangModelReport.getString("label_chooseReport"));
+		this.setTitle(LangModelReport.getString(
+				"report.UI.CreateReportDialog.title"));
 		this.setResizable(true);
 
 		JPanel mainPanel = new JPanel();
@@ -92,7 +94,8 @@ public class CreateReportDialog extends JDialog {
 		JPanel buttonPanel = new JPanel();
 		buttonPanel.setLayout(new GridBagLayout());
 
-		this.viewButton.setText(LangModelReport.getString("label_viewReport"));
+		this.viewButton.setText(LangModelReport.getString(
+				"report.UI.CreateReportDialog.viewReport"));
 		this.viewButton.setEnabled(false);
 		buttonPanel.add(this.viewButton, new GridBagConstraints(0, 0, 1, 1, 1.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, defaultMargins, 0, 0));
@@ -102,7 +105,7 @@ public class CreateReportDialog extends JDialog {
 			}
 		});
 
-		this.cancelButton.setText(LangModelReport.getString("label_cancel"));
+		this.cancelButton.setText(LangModelReport.getString("report.UI.cancel"));
 		buttonPanel.add(this.cancelButton,  new GridBagConstraints(1, 0, 1, 1, 1.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, defaultMargins, 0, 0));
 		this.cancelButton.addActionListener(new java.awt.event.ActionListener() {
@@ -111,7 +114,8 @@ public class CreateReportDialog extends JDialog {
 			}
 		});
 
-		this.saveButton.setText(LangModelReport.getString("label_saveReport"));
+		this.saveButton.setText(LangModelReport.getString(
+				"report.UI.InnerToolbar.saveReport"));
 		this.saveButton.setEnabled(false);
 		buttonPanel.add(this.saveButton, new GridBagConstraints(0, 1, 1, 1, 1.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, defaultMargins, 0, 0));
@@ -121,7 +125,8 @@ public class CreateReportDialog extends JDialog {
 			}
 		});
 		
-		this.printButton.setText(LangModelReport.getString("label_print"));
+		this.printButton.setText(LangModelReport.getString(
+				"report.UI.InnerToolbar.printReport"));
 		this.printButton.setEnabled(false);
 		buttonPanel.add(this.printButton, new GridBagConstraints(1, 1, 1, 1, 1.0, 0.0
 				,GridBagConstraints.CENTER, GridBagConstraints.HORIZONTAL, defaultMargins, 0, 0));
@@ -178,14 +183,15 @@ public class CreateReportDialog extends JDialog {
 				new JScrollPane (reportRenderer),
 				BorderLayout.CENTER);
 
-		JButton closeButton = new JButton (LangModelReport.getString("label_close"));
+		JButton closeButton = new JButton (LangModelReport.getString("report.UI.close"));
 		closeButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CreateReportDialog.this.openedViewDialog.dispose();
 			}
 		});
 
-		JButton vSaveButton = new JButton (LangModelReport.getString("label_saveReport"));
+		JButton vSaveButton = new JButton (LangModelReport.getString(
+				"report.UI.InnerToolbar.saveReport"));
 		vSaveButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CreateReportDialog.this.saveSelectedTemplate();
@@ -193,7 +199,8 @@ public class CreateReportDialog extends JDialog {
 			}
 		});
 
-		JButton vPrintButton = new JButton (LangModelReport.getString("label_print"));
+		JButton vPrintButton = new JButton (LangModelReport.getString(
+				"report.UI.InnerToolbar.printReport"));
 		vPrintButton.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				CreateReportDialog.this.printSelectedTemplate();
@@ -231,11 +238,12 @@ public class CreateReportDialog extends JDialog {
 		try {
 			encoder.encodeToHTML();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
+			Log.errorMessage("CreateReportDialog.saveSelectedTemplate | " + e.getMessage());
+			Log.errorException(e);
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					e.getMessage(),
-					LangModelReport.getString("label_error"),
+					LangModelReport.getString("report.Exception.errorSavingHTML"),
+					LangModelReport.getString("report.Exception.error"),
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -251,11 +259,12 @@ public class CreateReportDialog extends JDialog {
 					this.reportData,
 					this.aContext);
 		} catch (CreateReportException e) {
-			// TODO Auto-generated catch block
+			Log.errorMessage("CreateReportDialog.printSelectedTemplate | " + e.getMessage());
+			Log.errorException(e);			
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					e.getMessage(),
-					LangModelReport.getString("label_error"),
+					LangModelReport.getString("report.Exception.error"),
 					JOptionPane.ERROR_MESSAGE);
 		}
 	}
@@ -275,10 +284,13 @@ public class CreateReportDialog extends JDialog {
 			reportRenderer.setData(this.reportData);
 		}
 		catch (CreateReportException cre) {
+			Log.errorMessage("CreateReportDialog.createReportRendererForSelectedTemplate | " 
+					+ cre.getMessage());
+			Log.errorException(cre);
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					cre.getMessage(),
-					LangModelReport.getString("label_error"),
+					LangModelReport.getString("report.Exception.error"),
 					JOptionPane.ERROR_MESSAGE);
 		}
 		return reportRenderer;		

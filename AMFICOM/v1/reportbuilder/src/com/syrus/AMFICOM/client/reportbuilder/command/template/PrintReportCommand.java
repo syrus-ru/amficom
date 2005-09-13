@@ -1,5 +1,5 @@
 /*
- * $Id: PrintReportCommand.java,v 1.2 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: PrintReportCommand.java,v 1.3 2005/09/13 14:19:21 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.ReportPrinter;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderMainFrame;
 import com.syrus.AMFICOM.report.ReportTemplate;
+import com.syrus.util.Log;
 
 public class PrintReportCommand extends AbstractCommand {
 	ReportBuilderMainFrame mainFrame = null;
@@ -38,6 +39,8 @@ public class PrintReportCommand extends AbstractCommand {
 		try {
 			ReportPrinter.printReport(reportTemplate,reportData,aContext);
 		} catch (CreateReportException e) {
+			Log.errorMessage("PrintReportCommand.execute | " + e.getMessage());
+			Log.errorException(e);			
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
 					e.getMessage(),
