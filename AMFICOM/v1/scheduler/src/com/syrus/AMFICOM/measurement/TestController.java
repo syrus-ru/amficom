@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.23 2005/09/07 02:56:04 arseniy Exp $
+ * $Id: TestController.java,v 1.24 2005/09/13 12:09:08 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/09/07 02:56:04 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.24 $, $Date: 2005/09/13 12:09:08 $
+ * @author $Author: bob $
  * @module module
  */
 public class TestController implements Wrapper<Test> {
@@ -207,7 +207,7 @@ public class TestController implements Wrapper<Test> {
 							try {
 								final PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId,
 										true);
-								value = value + ", " + periodicalTemporalPattern.getPeriodDescription();
+								value = value + ", " + LangModelSchedule.getString("Text.TimePanel.Period") + ": " + periodicalTemporalPattern.getPeriodDescription();
 							} catch (ApplicationException e) {
 								// TODO Auto-generated catch block
 								e.printStackTrace();
