@@ -3,7 +3,6 @@ package com.syrus.AMFICOM.client.UI;
 
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Font;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -19,7 +18,7 @@ import com.syrus.util.Wrapper;
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.5 $, $Date: 2005/09/08 14:05:19 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/13 09:57:08 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -113,9 +112,9 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 
 		if (isSelected) {
 			this.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table.getForeground());
-			Font font = table.getFont();
-			font = new Font(font.getName(), Font.BOLD | Font.ITALIC, font.getSize());
-			this.setFont(font);
+//			Font font = table.getFont();
+//			font = new Font(font.getName(), Font.BOLD | Font.ITALIC, font.getSize());
+//			this.setFont(font);
 			final Color c = table.getSelectionBackground();
 			// calculate color with alpha-channel weight alpha
 			this.setBackground(new Color((int) (c.getRed() * ONE_MINUS_ALPHA + ALPHA * color.getRed()) % 256,
