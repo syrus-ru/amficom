@@ -1,5 +1,5 @@
 /*-
-* $Id: HelpAboutCommand.java,v 1.9 2005/09/13 13:37:30 bob Exp $
+* $Id: HelpAboutCommand.java,v 1.10 2005/09/13 13:37:45 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 /**
  * 
- * @version $Revision: 1.9 $, $Date: 2005/09/13 13:37:30 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/13 13:37:45 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -148,9 +148,5 @@ public class HelpAboutCommand extends AbstractCommand {
 		this.about.setToolTipText("\u0431/\u043f");
 		this.about.setText(buffer.toString());
 		this.about.revalidate();
-	}
-	
-	public static void main(String[] args) {
-		new HelpAboutCommand(null).execute();
 	}
 }
