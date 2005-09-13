@@ -1,5 +1,5 @@
 /*
- * $Id: ReportPrinter.java,v 1.2 2005/09/08 13:59:10 peskovsky Exp $
+ * $Id: ReportPrinter.java,v 1.3 2005/09/13 12:23:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.client.report;
 
 import java.util.Map;
 
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.report.ReportTemplate;
 
 public class ReportPrinter {
@@ -18,8 +19,9 @@ public class ReportPrinter {
 	
 	public static void printReport(
 			ReportTemplate reportTemplate,
-			Map<String, Object> data) throws CreateReportException {
-		ReportRenderer reportPreviewRenderer = new ReportRenderer();
+			Map<Object, Object> data,
+			ApplicationContext aContext) throws CreateReportException {
+		ReportRenderer reportPreviewRenderer = new ReportRenderer(aContext);
 		reportPreviewRenderer.setReportTemplate(reportTemplate);
 		reportPreviewRenderer.setData(data);
 		reportPreviewRenderer.setPrintable();

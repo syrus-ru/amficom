@@ -76,7 +76,7 @@ public class FontChooserDialog extends JDialog
 	private void jbInit()
 	{
 		this.border1 = BorderFactory.createBevelBorder(BevelBorder.LOWERED,Color.white,Color.white,new Color(103, 101, 98),new Color(148, 145, 140));
-		this.setTitle(LangModelReport.getString("label_chooseFont"));
+		this.setTitle(LangModelReport.getString("report.UI.FontChooserDialog.title"));
 		this.setResizable(false);
 		this.setSize(new Dimension(299, 287));
 		this.setModal(true);
@@ -88,26 +88,26 @@ public class FontChooserDialog extends JDialog
 
 		this.getContentPane().setLayout(new GridBagLayout());
 		this.fontParamsPanel.setLayout(this.gridBagLayout1);
-		this.fontNameLabel.setText(LangModelReport.getString("label_fontName"));
-		this.fontSizeLabel.setText(LangModelReport.getString("label_fontSize"));
+		this.fontNameLabel.setText(LangModelReport.getString("report.UI.FontChooserDialog.fontName"));
+		this.fontSizeLabel.setText(LangModelReport.getString("report.UI.FontChooserDialog.fontSize"));
 		this.examplePanel.setLayout(this.borderLayout1);
-		this.exampTitleLabel.setText(LangModelReport.getString("label_fontExample"));
+		this.exampTitleLabel.setText(LangModelReport.getString("report.UI.FontChooserDialog.example"));
 		this.exampLabel.setBorder(this.border1);
 		this.exampLabel.setText("aAbBcC123");
 		this.exampLabelPanel.setLayout(this.borderLayout2);
 		this.applyButton.setPreferredSize(new Dimension(99, 24));
-		this.applyButton.setText(LangModelReport.getString("label_apply"));
+		this.applyButton.setText(LangModelReport.getString("report.UI.apply"));
 		this.applyButton.addActionListener(new FontChooserDialog1_applyButton_actionAdapter(this));
 		this.cancelButton.setPreferredSize(new Dimension(79, 24));
-		this.cancelButton.setText(LangModelReport.getString("label_cancel"));
+		this.cancelButton.setText(LangModelReport.getString("report.UI.cancel"));
 		this.cancelButton.addActionListener(new FontChooserDialog1_cancelButton_actionAdapter(this));
 		Font boldFont = this.boldCheckBox.getFont().deriveFont(Font.BOLD);
 		this.boldCheckBox.setFont(boldFont);
-		this.boldCheckBox.setText(LangModelReport.getString("label_fontBold"));
+		this.boldCheckBox.setText(LangModelReport.getString("report.UI.FontChooserDialog.styleBold"));
 		this.boldCheckBox.addActionListener(new FontChooserDialog1_boldCheckBox_actionAdapter(this));
 		Font italicFont = this.boldCheckBox.getFont().deriveFont(Font.ITALIC);		
 		this.italicCheckBox.setFont(italicFont);
-		this.italicCheckBox.setText(LangModelReport.getString("label_fontItalic"));
+		this.italicCheckBox.setText(LangModelReport.getString("report.UI.FontChooserDialog.styleItalic"));
 		this.italicCheckBox.addActionListener(new FontChooserDialog1_italicCheckBox_actionAdapter(this));
 		this.fontNameComboBox.addActionListener(new FontChooserDialog1_fontNameComboBox_actionAdapter(this));
 		this.fontSizeComboBox.addActionListener(new FontChooserDialog1_fontSizeComboBox_actionAdapter(this));

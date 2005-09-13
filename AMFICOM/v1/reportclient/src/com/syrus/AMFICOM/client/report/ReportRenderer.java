@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.5 2005/09/08 13:59:10 peskovsky Exp $
+ * $Id: ReportRenderer.java,v 1.6 2005/09/13 12:23:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,24 +18,36 @@ import java.util.Map;
 import javax.swing.JComponent;
 import javax.swing.JPanel;
 
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate;
+import com.syrus.AMFICOM.report.ReportTemplate.ORIENTATION;
 import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
  * Реализует отчёт по шаблону
  * @author $Author: peskovsky $
- * @version $Revision: 1.5 $, $Date: 2005/09/08 13:59:10 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/13 12:23:10 $
  * @module reportclient_v1
  */
 public class ReportRenderer extends JPanel {
 	private static final long serialVersionUID = 6316228563298763509L;
 
 	private ReportTemplate reportTemplate = null;
+	/**
+	 * Значение ординаты для нижнего края самого нижнего отображенного
+	 * элемента.
+	 */
+	private int theLowestBorder = 0;
 	
-	public ReportRenderer() {
+	private IntDimension templateBounds = null;
+	
+	private ApplicationContext aContext = null;
+	
+	public ReportRenderer(ApplicationContext aContext) {
+		this.aContext = aContext;
 		jbInit();
 	}
 	
@@ -45,31 +57,41 @@ public class ReportRenderer extends JPanel {
 	
 	public void setReportTemplate (ReportTemplate reportTemplate) {
 		this.reportTemplate = reportTemplate;
+		refreshTemplateBounds();
 	}
 	
-	public void setData(Map<String, Object> data) throws CreateReportException {
+	public void setData(Map<Object, Object> data) throws CreateReportException {
 		if (this.reportTemplate == null)
 			throw new AssertionError("Report template is not set!");
 		
 		for (DataStorableElement dataElement : this.reportTemplate.getDataStorableElements()) {
-			String dsElementLangName = LangModelReport.getString(dataElement.getReportName());
 			String modelName = dataElement.getModelClassName();
-			
 			ReportModel model = ReportModelPool.getModel(modelName);
 			if (model == null)
 				throw new CreateReportException (
-						dsElementLangName,
-						CreateReportException.reportModelIsAbsent);
+						dataElement.getReportName(),
+						CreateReportException.REPORT_MODEL_IS_ABSENT);
+
+			//Для сиюминутных отчётов - где могут быть два элемента с одинаквым именем
+			//(например, "Характеристики схемного объекта") - пытаемся достать
+			//данные по ID.
+			Object dsElementData = data.get(dataElement.getId());
+			if (dsElementData == null) {
+				//Иначе - при создании отчёта из другого модуля, где не может
+				//быть двух элементов с одинаковыми именами - достаём по имени
+				//очёта.
+				dsElementData = data.get(dataElement.getReportName());
+			}
 			
-			Object dsElementData = data.get(dsElementLangName);
 			if (dsElementData == null)
 				throw new CreateReportException (
-						dsElementLangName,
-						CreateReportException.noDataToInstall);
+						dataElement.getReportName(),
+						CreateReportException.NO_DATA_TO_INSTALL);
 			
 			RenderingComponent component = model.createReport(
 					dataElement,
-					dsElementData);
+					dsElementData,
+					this.aContext);
 			
 			((JComponent)component).setLocation(dataElement.getX(),dataElement.getY());
 			//Размеры выставляются в createReport
@@ -82,7 +104,7 @@ public class ReportRenderer extends JPanel {
 			component.setText(textElement.getText());
 			component.setLocation(textElement.getX(),textElement.getY());
 			component.setSize(textElement.getWidth(),textElement.getHeight());
-			component.setBorder(AttachedTextComponent.DEFAULT_BORDER);
+			component.setBorder(DataRenderingComponent.DEFAULT_BORDER);
 			this.add(component);			
 		}
 
@@ -96,6 +118,31 @@ public class ReportRenderer extends JPanel {
 		}
 		ReportLayout layout = new ReportLayout();
 		layout.dolayout(this.getRenderingComponents(),this.reportTemplate);
+		
+		for (int i = 0; i < this.getComponentCount(); i++) {
+			Component component = this.getComponent(i);
+			int componentBottomBorder = component.getY() + component.getHeight();
+			if (componentBottomBorder >	this.theLowestBorder)
+				this.theLowestBorder = componentBottomBorder;
+		}
+		
+		refreshTemplateBounds();
+	}
+	
+	private void refreshTemplateBounds() {
+		this.templateBounds = new IntDimension(this.reportTemplate.getSize());
+		if (this.reportTemplate.getOrientation().equals(ORIENTATION.LANDSCAPE)) {
+			int tempWidth = this.templateBounds.getWidth();
+			this.templateBounds.setWidth(this.templateBounds.getHeight());
+			this.templateBounds.setHeight(tempWidth);
+		}
+
+		int marginSize = this.reportTemplate.getMarginSize();
+		if (this.templateBounds.getHeight()	< this.theLowestBorder + marginSize)
+			this.templateBounds.setHeight(this.theLowestBorder + marginSize);
+
+		this.setSize(this.templateBounds.getWidth(),this.templateBounds.getHeight());
+		this.setPreferredSize(this.getSize());
 	}
 	
 	public List<RenderingComponent> getRenderingComponents() {
@@ -111,23 +158,21 @@ public class ReportRenderer extends JPanel {
 		g.fillRect(0,0,this.getWidth(),this.getHeight());
 		
 		if (this.reportTemplate != null){
-			//Рисуем края шаблона			
-			IntDimension templateSize = this.reportTemplate.getSize();
+			//Рисуем края шаблона
 			g.setColor(Color.BLACK);
 			g.drawRect(
 					2,
 					2,
-					templateSize.getWidth() - 3,
-					templateSize.getHeight() - 3);
+					this.templateBounds.getWidth() - 3,
+					this.templateBounds.getHeight() - 3);
 			
-			//Рисуем поля шаблона
-			int marginSize = this.reportTemplate.getMarginSize();
-			g.setColor(Color.BLACK);
-			g.drawRect(
-					marginSize,
-					marginSize,
-					templateSize.getWidth() - 2 * marginSize,
-					templateSize.getHeight() - 2 * marginSize);
+//			//Рисуем поля шаблона
+//			g.setColor(Color.BLACK);
+//			g.drawRect(
+//					marginSize,
+//					marginSize,
+//					templateSize.getWidth() - 2 * marginSize,
+//					this.theLowestBorder - marginSize + 3);
 		}
 		
 		this.paintChildren(g);

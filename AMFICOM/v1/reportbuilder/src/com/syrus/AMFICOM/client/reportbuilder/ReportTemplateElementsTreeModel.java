@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeModel.java,v 1.7 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeModel.java,v 1.8 2005/09/13 12:23:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,21 +19,26 @@ import com.syrus.AMFICOM.client.UI.tree.VisualManagerFactory;
 import com.syrus.AMFICOM.client.analysis.report.AnalysisReportModel;
 import com.syrus.AMFICOM.client.analysis.report.EvaluationReportModel;
 import com.syrus.AMFICOM.client.analysis.report.SurveyReportModel;
+import com.syrus.AMFICOM.client.map.report.MapReportModel;
+import com.syrus.AMFICOM.client.map.ui.MapTreeModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.modelling.ModellingReportModel;
-import com.syrus.AMFICOM.client.prediction.PredictionReportModel;
+import com.syrus.AMFICOM.client.modelling.report.ModelingReportModel;
+import com.syrus.AMFICOM.client.observe.report.ObserveReportModel;
+import com.syrus.AMFICOM.client.prediction.report.PredictionReportModel;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.ReportModelPool;
 import com.syrus.AMFICOM.client.report.ReportModel.ReportType;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTreeItem;
+import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
+import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 
 public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualManagerFactory {
 	private static final String TREE_ROOT = "report.Tree.availableElements";
-	private static final String REPORT_ELEMENTS_ROOT = "report.Tree.reportElements";
-	private static final String TEMPLATE_ELEMENTS_ROOT = "report.Tree.templateElements";
+	protected static final String REPORT_ELEMENTS_ROOT = "report.Tree.reportElements";
+	protected static final String TEMPLATE_ELEMENTS_ROOT = "report.Tree.templateElements";
 	
 	private static final String ICON_CATALOG = "icon.catalog";
 
@@ -101,6 +106,24 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 	}
 	
 	private void createTemplateElementsModels(Item node, Collection contents) {
+		//Модель для модуля "Карта"
+		ReportModel mapReportModel =
+			ReportModelPool.getModel(MapReportModel.class.getName());
+		node.addChild(new PopulatableIconedNode(
+				this,
+				mapReportModel,
+				mapReportModel.getLocalizedName(),
+				UIManager.getIcon(ICON_CATALOG)));
+
+		//Модель для модуля "Схема"
+		ReportModel schemeReportModel =
+			ReportModelPool.getModel(SchemeReportModel.class.getName());
+		node.addChild(new PopulatableIconedNode(
+				this,
+				schemeReportModel,
+				schemeReportModel.getLocalizedName(),
+				UIManager.getIcon(ICON_CATALOG)));
+		
 		//Модель для модуля "Анализ"
 		ReportModel analysisReportModel =
 			ReportModelPool.getModel(AnalysisReportModel.class.getName());
@@ -128,48 +151,37 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 				surveyReportModel.getLocalizedName(),
 				UIManager.getIcon(ICON_CATALOG)));
 
-		//Модель для модуля "Моделирование"
-		ReportModel modellingReportModel =
-			ReportModelPool.getModel(ModellingReportModel.class.getName());
+		//Модель для модуля "Наблюдение"
+		ReportModel observeReportModel =
+			ReportModelPool.getModel(ObserveReportModel.class.getName());
 		node.addChild(new PopulatableIconedNode(
 				this,
-				modellingReportModel,
-				modellingReportModel.getLocalizedName(),
+				observeReportModel,
+				observeReportModel.getLocalizedName(),
 				UIManager.getIcon(ICON_CATALOG)));
-
-		//Модель для модуля "Прогнозирование"
-		ReportModel predictionReportModel =
-			ReportModelPool.getModel(PredictionReportModel.class.getName());
-		node.addChild(new PopulatableIconedNode(
-				this,
-				predictionReportModel,
-				predictionReportModel.getLocalizedName(),
-				UIManager.getIcon(ICON_CATALOG)));
+		
+//		//Модель для модуля "Моделирование"
+//		ReportModel modellingReportModel =
+//			ReportModelPool.getModel(ModelingReportModel.class.getName());
+//		node.addChild(new PopulatableIconedNode(
+//				this,
+//				modellingReportModel,
+//				modellingReportModel.getLocalizedName(),
+//				UIManager.getIcon(ICON_CATALOG)));
+//
+//		//Модель для модуля "Прогнозирование"
+//		ReportModel predictionReportModel =
+//			ReportModelPool.getModel(PredictionReportModel.class.getName());
+//		node.addChild(new PopulatableIconedNode(
+//				this,
+//				predictionReportModel,
+//				predictionReportModel.getLocalizedName(),
+//				UIManager.getIcon(ICON_CATALOG)));
 	}
 
 	private void createReportElementsModels(Item node, Collection contents) {
-//		String type = (IdlKind) node.getObject();
-//		
-//		try {
-//			TypicalCondition condition = new TypicalCondition(String.valueOf(type.value()), 
-//					OperationSort.OPERATION_EQUALS, ObjectEntities.SCHEME_CODE,
-//					SchemeWrapper.COLUMN_KIND);
-//			Set<StorableObject> schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-//			
-//			Collection toAdd = CommonUIUtilities.getObjectsToAdd(schemes, contents);
-//			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(schemes, node.getChildren());
-//
-//			for (Item child : toRemove) {
-//				child.setParent(null);
-//			}			
-//			for (Iterator it = toAdd.iterator(); it.hasNext();) {
-//				Scheme sc = (Scheme) it.next();
-//				node.addChild(new PopulatableIconedNode(this, sc));
-//			}
-//		} 
-//		catch (ApplicationException ex1) {
-//			ex1.printStackTrace();
-//		}
+		node.addChild((new SchemeTreeModel(this.aContext)).getRoot());
+		node.addChild(MapTreeModel.getInstance().createAllMapsRoot());
 	}
 	
 	private void createReportModelItems(Item node, Collection contents) {

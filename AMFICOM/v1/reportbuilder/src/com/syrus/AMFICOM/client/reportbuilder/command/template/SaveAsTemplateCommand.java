@@ -1,5 +1,5 @@
 /*
- * $Id: SaveAsTemplateCommand.java,v 1.1 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: SaveAsTemplateCommand.java,v 1.2 2005/09/13 12:23:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,28 +7,28 @@
  */
 package com.syrus.AMFICOM.client.reportbuilder.command.template;
 
-import java.util.HashMap;
-import java.util.Map;
+import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderMainFrame;
+import com.syrus.AMFICOM.client.reportbuilder.TemplateOpenSaveDialog;
+import com.syrus.AMFICOM.report.ReportTemplate;
 
-import com.syrus.AMFICOM.client.report.LangModelReport;
-import com.syrus.AMFICOM.report.DestinationModules;
+public class SaveAsTemplateCommand extends AbstractCommand {
+	ApplicationContext aContext;
+	ReportBuilderMainFrame mainFrame;
 
-public class SaveAsTemplateCommand {
-	/**
-	 * Список всех модулей
-	 */
-	static final public Map<String,String> MODULES_MAP = new HashMap<String,String>();
-	static {
-		MODULES_MAP.put(DestinationModules.ANALYSIS,LangModelReport.getString(DestinationModules.ANALYSIS));
-		MODULES_MAP.put(DestinationModules.EVALUATION,LangModelReport.getString(DestinationModules.EVALUATION));
-		MODULES_MAP.put(DestinationModules.MAP,LangModelReport.getString(DestinationModules.MAP));
-		MODULES_MAP.put(DestinationModules.MODELING,LangModelReport.getString(DestinationModules.MODELING));
-		MODULES_MAP.put(DestinationModules.OBSERVE,LangModelReport.getString(DestinationModules.OBSERVE));
-		MODULES_MAP.put(DestinationModules.OPTIMIZATION,LangModelReport.getString(DestinationModules.OPTIMIZATION));
-		MODULES_MAP.put(DestinationModules.PREDICTION,LangModelReport.getString(DestinationModules.PREDICTION));
-		MODULES_MAP.put(DestinationModules.SCHEDULER,LangModelReport.getString(DestinationModules.SCHEDULER));
-		MODULES_MAP.put(DestinationModules.SCHEME,LangModelReport.getString(DestinationModules.SCHEME));
-		MODULES_MAP.put(DestinationModules.SURVEY,LangModelReport.getString(DestinationModules.SURVEY));
+	public SaveAsTemplateCommand(
+			ApplicationContext aContext,
+			ReportBuilderMainFrame mainFrame) {
+		this.aContext = aContext;
+		this.mainFrame = mainFrame;
 	}
 
+	@Override
+	public void execute() {
+		ReportTemplate currentTemplate = this.mainFrame.getTemplateRenderer().getTemplate();		
+		TemplateOpenSaveDialog.saveTemplate(currentTemplate);
+		currentTemplate.refreshModified();
+		this.result = RESULT_OK;
+	}
 }

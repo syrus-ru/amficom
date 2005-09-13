@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderToolBar.java,v 1.4 2005/09/01 14:21:40 peskovsky Exp $
+ * $Id: ReportBuilderToolBar.java,v 1.5 2005/09/13 12:23:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,6 +39,13 @@ public class ReportBuilderToolBar extends AbstractMainToolBar {
 		saveTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE);
 		saveTemplateButton.addActionListener(super.actionListener);
 
+		final JButton saveAsTemplateButton = new JButton();
+		saveAsTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_SAVE_AS_TEMPLATE));
+		saveAsTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		saveAsTemplateButton.setToolTipText(LangModelReport.getString("report.UI.Toolbar.saveAsTemplate"));
+		saveAsTemplateButton.setName(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE_AS);
+		saveAsTemplateButton.addActionListener(super.actionListener);
+		
 		final JButton loadTemplateButton = new JButton();
 		loadTemplateButton.setIcon(UIManager.getIcon(ReportBuilderResourceKeys.ICON_LOAD_TEMPLATE));
 		loadTemplateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
@@ -64,6 +71,7 @@ public class ReportBuilderToolBar extends AbstractMainToolBar {
 		add(newTemplateButton);
 		add(loadTemplateButton);
 		add(saveTemplateButton);
+		add(saveAsTemplateButton);		
 		addSeparator();
 		add(importTemplateButton);
 		add(exportTemplateButton);
@@ -81,6 +89,8 @@ public class ReportBuilderToolBar extends AbstractMainToolBar {
 				newTemplateButton.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_NEW));
 				saveTemplateButton.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE));
 				saveTemplateButton.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE));
+				saveAsTemplateButton.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE_AS));
+				saveAsTemplateButton.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE_AS));
 				loadTemplateButton.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD));
 				loadTemplateButton.setEnabled(aModel.isEnabled(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_LOAD));
 				exportTemplateButton.setVisible(aModel.isVisible(ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_EXPORT));

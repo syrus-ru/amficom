@@ -2,13 +2,11 @@ package com.syrus.AMFICOM.client.reportbuilder;
 
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.report.ReportTemplate;
 
 /*
- * $Id: ReportTemplateFactory.java,v 1.4 2005/09/08 13:59:09 peskovsky Exp $
+ * $Id: ReportTemplateFactory.java,v 1.5 2005/09/13 12:23:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +14,7 @@ import com.syrus.AMFICOM.report.ReportTemplate;
  */
 
 public class ReportTemplateFactory {
-	private static final String NEW_REPORT_NAME = "report.Command.NewTemplate.newTemplateName";
+	public static final String NEW_REPORT_NAME = "report.Command.NewTemplate.newTemplateName";
 	
 	public static final ReportTemplate createReportTemplate() throws CreateObjectException{
 		ReportTemplate reportTemplate = new ReportTemplate();

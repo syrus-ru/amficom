@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderApplicationModel.java,v 1.6 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: ReportBuilderApplicationModel.java,v 1.7 2005/09/13 12:23:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 	
 	public static final String	MENU_REPORT_TEMPLATE_NEW		= "menuReportTemplateNew";
 	public static final String	MENU_REPORT_TEMPLATE_SAVE		= "menuReportTemplateSave";
+	public static final String	MENU_REPORT_TEMPLATE_SAVE_AS		= "menuReportTemplateSaveAs";	
 	public static final String	MENU_REPORT_TEMPLATE_LOAD		= "menuReportTemplateLoad";
 	public static final String	MENU_REPORT_TEMPLATE_EXPORT		= "menuReportTemplateExport";
 	public static final String	MENU_REPORT_TEMPLATE_IMPORT		= "menuReportTemplateImport";	
@@ -59,6 +60,7 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 		
 		add(MENU_REPORT_TEMPLATE_NEW);
 		add(MENU_REPORT_TEMPLATE_SAVE);
+		add(MENU_REPORT_TEMPLATE_SAVE_AS);		
 		add(MENU_REPORT_TEMPLATE_LOAD);
 		add(MENU_REPORT_TEMPLATE_EXPORT);
 		add(MENU_REPORT_TEMPLATE_IMPORT);
@@ -111,6 +113,9 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 		UIManager.put(
 				ReportBuilderResourceKeys.ICON_SAVE_TEMPLATE,
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/save.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
+		UIManager.put(
+				ReportBuilderResourceKeys.ICON_SAVE_AS_TEMPLATE,
+				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/saveas.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));
 		UIManager.put(
 				ReportBuilderResourceKeys.ICON_LOAD_TEMPLATE,
 				new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openfile.gif").getScaledInstance(16, 16, Image.SCALE_SMOOTH)));

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderResourceKeys.java,v 1.2 2005/09/05 07:58:03 peskovsky Exp $
+ * $Id: ReportBuilderResourceKeys.java,v 1.3 2005/09/13 12:23:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ public interface ReportBuilderResourceKeys extends ResourceKeys{
 		
 	String ICON_NEW_TEMPLATE = "icon.newTemplate";
 	String ICON_SAVE_TEMPLATE = "icon.saveTemplate";
+	String ICON_SAVE_AS_TEMPLATE = "icon.saveAsTemplate";	
 	String ICON_LOAD_TEMPLATE = "icon.loadTemplate";
 	String ICON_IMPORT_TEMPLATES = "icon.importTemplates";	
 	String ICON_EXPORT_TEMPLATES = "icon.exportTemplates";

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.6 2005/09/08 13:59:09 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.7 2005/09/13 12:23:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,8 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
@@ -27,32 +29,49 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
+import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.report.AttachedTextComponent;
 import com.syrus.AMFICOM.client.report.DataRenderingComponent;
 import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
+import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
+import com.syrus.AMFICOM.client.report.ReportLayout;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.ReportModelPool;
 import com.syrus.AMFICOM.client.report.ReportModel.ReportType;
+import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderApplicationModel;
 import com.syrus.AMFICOM.client.reportbuilder.event.AttachLabelEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEvent;
-import com.syrus.AMFICOM.client.reportbuilder.event.NewReportTemplateEvent;
+import com.syrus.AMFICOM.client.reportbuilder.event.UseTemplateEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
+import com.syrus.AMFICOM.client.reportbuilder.event.ReportQuickViewEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.MODE;
+import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
+import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.AMFICOM.report.StorableElement;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
+import com.syrus.AMFICOM.report.TextAttachingType;
 import com.syrus.AMFICOM.report.ReportTemplate.ORIENTATION;
 import com.syrus.AMFICOM.resource.IntDimension;
+import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
+import com.syrus.AMFICOM.scheme.AbstractSchemePort;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
 
 public class ReportTemplateRenderer extends JPanel implements PropertyChangeListener{
 	private final static int BORDER_MARGIN_SIZE = 2;
+	private static final int HEADER_TOCOMPONENT_DISTANCE = 10;	
 	
 	private ApplicationContext applicationContext; 
 	private ReportTemplateRendererMouseListener mouseListener = null;
@@ -61,12 +80,15 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	private ReportTemplateRendererDropTargetListener dropTargetListener = null;	
 	
 	private ReportTemplate template = null;
+	private Map<Object,Object> dataForReport = new HashMap<Object,Object>();
+	
 	private RenderingComponent selectedComponent = null;
 	
 	private AttachedTextComponent labelToBeAttached = null;
 	private String labelAttachingType = null;
 	
-	private Rectangle templateBounds = new Rectangle();
+	private Rectangle marginBounds = new Rectangle();
+	private Rectangle templateBounds = new Rectangle();	
 	
 	public ReportTemplateRenderer(){
 		jbInit();
@@ -109,25 +131,68 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				ReportTemplateRenderer.this.repaint();
 			}
 			else if (eventType.equals(ReportFlagEvent.TEMPLATE_PARAMETERS_CHANGED)) {
-				IntDimension size = this.template.getSize();
-				this.setSize(size.getWidth(),size.getHeight());
-				this.setPreferredSize(this.getSize());				
 				this.refreshTemplateBounds();
 				ReportTemplateRenderer.this.repaint();				
 			}			
 			else if (eventType.equals(ReportFlagEvent.REPAINT_RENDERER))
 				ReportTemplateRenderer.this.repaint();
 		}
-		else if (evt instanceof NewReportTemplateEvent){
-			//TODO Запрос на сохранение.
-			this.removeAll();
+		else if (evt instanceof UseTemplateEvent){
+			this.removeAllComponents();
 			
-			this.setTemplate(((NewReportTemplateEvent)evt).getReportTemplate());
-			DRIComponentMouseMotionListener.createInstance(this.applicationContext,this.templateBounds);
+			this.setTemplate(((UseTemplateEvent)evt).getReportTemplate());
+			DRIComponentMouseMotionListener.createInstance(this.applicationContext,this.marginBounds);
 			DRIComponentMouseListener.createInstance(this.applicationContext);			
-			ATComponentMouseMotionListener.createInstance(this.applicationContext,this.templateBounds);
+			ATComponentMouseMotionListener.createInstance(this.applicationContext,this.marginBounds);
 			ATComponentMouseListener.createInstance(this.applicationContext);
 			ATComponentKeyListener.createInstance(this.applicationContext);			
+		}
+		else if (evt instanceof ReportQuickViewEvent){
+			Object reportObject = ((ReportQuickViewEvent)evt).getReportObject();
+			//Для сиюминутных отчётов по схеме
+			String reportModelName = null;
+			String reportName = null;
+			Object additionalData = null;			
+			if (	(reportObject instanceof Scheme)
+					||	(reportObject instanceof SchemeElement)
+					||	(reportObject instanceof AbstractSchemePort)
+					||	(reportObject instanceof AbstractSchemeLink)
+					||	(reportObject instanceof SchemePath)) {
+				reportModelName = SchemeReportModel.class.getName();
+				reportName = SchemeReportModel.SELECTED_OBJECT_CHARS;
+				additionalData = ((StorableObject)reportObject).getId();
+			}
+			//Для сиюминутных отчётов по карте				
+			else if (	(reportObject instanceof com.syrus.AMFICOM.map.Map)
+					||	(reportObject instanceof PhysicalLink)
+					||	(reportObject instanceof SiteNode)) {
+				reportModelName = MapReportModel.class.getName();
+				reportName = SchemeReportModel.SELECTED_OBJECT_CHARS;
+				additionalData = ((StorableObject)reportObject).getId();
+			}
+			else
+				return;
+			
+			//Для быстрого просмотра содержимое рабочего поля стирается
+			//и вместо него лепится один элемент.
+			Command command =
+				this.applicationContext.getApplicationModel().getCommand(
+					ReportBuilderApplicationModel.MENU_SAVE_REPORT);
+			command.execute();
+			if (command.getResult() == Command.RESULT_CANCEL)
+				return;
+			
+			this.removeAllComponents();
+			
+			this.createDataComponentWithText(
+					reportName,
+					reportModelName,
+					additionalData,
+					new Point(this.marginBounds.x + 5,this.marginBounds.y + 50),
+					new Dimension(this.marginBounds.width - 10,300));
+
+			this.applicationContext.getDispatcher().firePropertyChange(
+					new ReportFlagEvent(this,ReportFlagEvent.CHANGE_VIEW));
 		}
 		else if (evt instanceof ComponentSelectionChangeEvent){
 			RenderingComponent eventComponent = ((ComponentSelectionChangeEvent)evt).getRenderingComponent();
@@ -158,6 +223,13 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		}
 	}
 
+	private void removeAllComponents() {
+		for (int i = 0; i < this.getComponentCount(); i++) {
+			this.removeRenderingComponent(
+					(RenderingComponent)this.getComponent(i));
+		}
+	}
+	
 	private void removeRenderingComponent(RenderingComponent component) {
 		if (component instanceof DataRenderingComponent) {
 			DataRenderingComponent drComponent =
@@ -193,6 +265,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 					atComponent.getATPropertyChangeListener());
 		}
 		this.remove((JComponent)component);
+		this.template.removeElement(component.getElement());
 	}
 	
 	public ReportTemplate getTemplate() {
@@ -201,27 +274,65 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 
 	public void setTemplate(ReportTemplate template) {
 		this.template = template;
+		this.refreshTemplateBounds();
 		
-		IntDimension size = this.template.getSize();
-		this.setSize(size.getWidth(),size.getHeight());
-		this.setPreferredSize(this.getSize());		
-		
-		this.refreshTemplateBounds();		
+		for (DataStorableElement dataElement : this.template.getDataStorableElements()) {
+			this.createReportTemplateDataRenderingComponent(
+					dataElement.getReportName(),
+					dataElement.getModelClassName(),
+					new Point(dataElement.getX(),dataElement.getY()),
+					new Dimension(dataElement.getWidth(),dataElement.getHeight()));
+		}
+
+		for (AttachedTextStorableElement textElement : this.template.getTextStorableElements()) {
+			AttachedTextComponent component = this.createTextRenderingComponent(
+					new Point(textElement.getX(),textElement.getY()));
+			component.setText(textElement.getText());
+			component.setLocation(textElement.getX(),textElement.getY());
+			component.setSize(textElement.getWidth(),textElement.getHeight());
+			component.setBorder(DataRenderingComponent.DEFAULT_BORDER);
+		}
+
+		for (ImageStorableElement imageElement : this.template.getImageStorableElements()) {
+			ImageRenderingComponent component = this.createImageRenderingComponent(
+					new Point(imageElement.getX(),imageElement.getY()));
+			component.setLocation(imageElement.getX(),imageElement.getY());
+			component.setSize(imageElement.getWidth(),imageElement.getHeight());			
+			this.add(component);
+		}
 	}
 	
 	private void refreshTemplateBounds() {
-		int templateMarginSize = this.template.getMarginSize();
-		this.templateBounds.setLocation(
-				new Point(templateMarginSize,templateMarginSize));
 		IntDimension size = this.template.getSize();
+		
 		if (this.template.getOrientation().equals(ORIENTATION.PORTRAIT))
-			this.templateBounds.setSize(
-					size.getWidth() - 2 * templateMarginSize,
-					size.getHeight() - 2 * templateMarginSize);
+			this.setSize(size.getWidth(),size.getHeight() * 2);
 		else
+			this.setSize(2 * size.getHeight(),size.getWidth());
+		this.setPreferredSize(this.getSize());				
+		
+		int templateMarginSize = this.template.getMarginSize();
+		this.marginBounds.setLocation(
+				new Point(templateMarginSize,templateMarginSize));
+		this.templateBounds.setLocation(
+				new Point(2,2));
+
+		if (this.template.getOrientation().equals(ORIENTATION.PORTRAIT)){
+			this.marginBounds.setSize(
+					size.getWidth() - 2 * templateMarginSize,
+					2 * size.getHeight() - 2 * templateMarginSize);
 			this.templateBounds.setSize(
-					size.getHeight() - 2 * templateMarginSize,
+					size.getWidth() - 4,
+					2 * size.getHeight() - 4);
+		}
+		else {
+			this.marginBounds.setSize(
+					2 * size.getHeight() - 2 * templateMarginSize,
 					size.getWidth() - 2 * templateMarginSize);
+			this.templateBounds.setSize(
+					2 * size.getHeight() - 4,
+					size.getWidth() - 4);
+		}
 	}
 	
 	@Override
@@ -231,20 +342,20 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		
 		if (this.template != null){
 			//Рисуем края шаблона			
-			IntDimension templateSize = this.template.getSize();
-			g.setColor(Color.BLACK);
-			g.drawRect(
-					2,
-					2,
-					templateSize.getWidth() - 3,
-					templateSize.getHeight() - 3);
-			//Рисуем поля шаблона
 			g.setColor(Color.BLACK);
 			g.drawRect(
 					this.templateBounds.x,
 					this.templateBounds.y,
 					this.templateBounds.width,
 					this.templateBounds.height);
+			
+			//Рисуем поля шаблона
+			g.setColor(Color.BLACK);
+			g.drawRect(
+					this.marginBounds.x,
+					this.marginBounds.y,
+					this.marginBounds.width,
+					this.marginBounds.height);
 			//Рисуем рамку выделенного элемента
 			if (this.selectedComponent != null){
 				g.setColor(Color.BLUE);
@@ -274,11 +385,10 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		}
 		
 		if (!imageReadCorrectly) {
-			//TODO Лэнги!!!
 			JOptionPane.showMessageDialog(
 				Environment.getActiveWindow(),
-				"Ошибка при чтении файла изображения.",
-				"Ошибка",
+				LangModelReport.getString("report.Exception.errorReadingImage"),
+				LangModelReport.getString("report.Exception.error"),
 				JOptionPane.ERROR_MESSAGE);
 				
 			this.applicationContext.getDispatcher().firePropertyChange(
@@ -314,7 +424,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		this.add(component);
 		component.setLocation(point.x,point.y);
 		component.setSize(new Dimension(AttachedTextComponent.MINIMUM_COMPONENT_SIZE));
-		component.setBorder(AttachedTextComponent.DEFAULT_BORDER);
+		component.setBorder(DataRenderingComponent.DEFAULT_BORDER);
 		
 		component.addMouseListener(ATComponentMouseListener.getInstance());
 		component.addMouseMotionListener(ATComponentMouseMotionListener.getInstance());
@@ -323,7 +433,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				new ATComponentPropertyChangeListener(
 						component,
 						this.applicationContext,
-						this.templateBounds));
+						this.marginBounds));
 		
 		element.setLocation(point.x,point.y);
 		element.setSize(
@@ -341,7 +451,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	public ReportTemplateDataRenderingComponent createReportTemplateDataRenderingComponent(
 			String reportName,
 			String reportModelName,			
-			Point point){
+			Point location,
+			Dimension size) {
 		ReportModel reportModel = ReportModelPool.getModel(reportModelName);
 		ReportType reportType = reportModel.getReportKind(reportName);
 		
@@ -365,15 +476,69 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		this.add(component);
 		component.initMinimumSizes();
 		
-		Dimension defaultSize = ReportTemplateDataRenderingComponent.DEFAULT_SIZE;
-		component.setLocation(point.x,point.y);
-		component.setSize(new Dimension(defaultSize));
+		component.setLocation(location.x,location.y);
+		if (size == null)
+			component.setSize(new Dimension(
+					ReportTemplateDataRenderingComponent.DEFAULT_SIZE));
+		else
+			component.setSize(size);
 		
-		storableElement.setLocation(point.x,point.y);
-		storableElement.setSize(defaultSize.width,defaultSize.height);
+		storableElement.setLocation(location.x,location.y);
+		storableElement.setSize(component.getWidth(),component.getHeight());
 		this.template.addElement(storableElement);
 
 		return component;
+	}
+	/**
+	 * Создаёт элемент отображения данных с заголовком, привязанным сверху,
+	 * по центру.
+	 * @param reportName Имя элемента шаблона
+	 * @param reportModelName Имя класса модели отчётов для элемента
+	 * @param additionalData Дополнительные данные
+	 * @param location Расположение
+	 * @param size Размер или null для размера по умолчанию
+	 */
+	public void createDataComponentWithText(
+			String reportName,
+			String reportModelName,
+			Object additionalData,
+			Point location,
+			Dimension size) {
+		ReportTemplateDataRenderingComponent dataComponent = 
+			this.createReportTemplateDataRenderingComponent(
+				reportName,
+				reportModelName,
+				location,
+				size);
+		DataStorableElement dataElement =
+			(DataStorableElement)dataComponent.getElement();
+		
+		Map<Object,Object> reportData = this.getDataForReport();
+		reportData.put(dataElement.getId(),additionalData);
+		
+		//Заголовок для элемента шаблона
+		AttachedTextComponent headerTextComponent =
+			this.createTextRenderingComponent(location);
+		AttachedTextStorableElement headerTextElement =
+			(AttachedTextStorableElement)headerTextComponent.getElement();
+		
+		headerTextComponent.setText(dataComponent.getReportFullName());
+		headerTextElement.setText(headerTextComponent.getText());
+		
+		Dimension textSize = headerTextComponent.getTextSize();
+		headerTextComponent.setSize(textSize);
+		headerTextElement.setSize(textSize.width,textSize.height);
+		
+		Point textLocation = new Point(
+				dataComponent.getX() + dataComponent.getWidth() / 2
+					- headerTextComponent.getWidth() / 2,
+				dataComponent.getY() - headerTextComponent.getHeight()
+					- HEADER_TOCOMPONENT_DISTANCE);
+		headerTextComponent.setLocation(textLocation);
+		headerTextElement.setLocation(textLocation.x,textLocation.y);
+
+		headerTextElement.setAttachment(dataElement,TextAttachingType.TO_TOP);
+		headerTextElement.setAttachment(dataElement,TextAttachingType.TO_WIDTH_CENTER);			
 	}
 	
 	private String getImageFileName() {
@@ -386,7 +551,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				"Image file formats");
 		fileChooser.addChoosableFileFilter(bmpFilter);
 
-		fileChooser.setDialogTitle("Выберите файл для чтения");
+		fileChooser.setDialogTitle(LangModelReport.getString("report.File.selectFileToRead"));
 		fileChooser.setMultiSelectionEnabled(false);
 
 		int option = fileChooser.showOpenDialog(Environment.getActiveWindow());
@@ -407,33 +572,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 
 		return fileName;
 	}
-	
-////		RenderingComponentsContainer componentsContainer =
-////		new RenderingComponentsContainer(template);
-//	
-//	for (DataStorableElement drElement : template.getDataStorableElements())
-//	{
-//		//Для элементов отображения данных создаём панельки,
-//		//на которых отображаются названия отчётов
-//		ReportTemplateDataRenderingComponent textComponent = 
-//			new ReportTemplateDataRenderingComponent(drElement);
-//
-//		this.add(textComponent);
-////		componentsContainer.addRenderingComponent(textComponent);
-//	}
-//
-//	for (AttachedTextStorableElement label : template.getTextStorableElements())
-//	{
-//		AttachedTextComponent textComponent = new AttachedTextComponent(label);
-//		this.add(textComponent);			
-////		componentsContainer.addRenderingComponent(textComponent);
-//	}
-//
-//	for (ImageStorableElement imageSE : template.getImageStorableElements())
-//	{
-//		ImageRenderingComponent textComponent = new ImageRenderingComponent(imageSE,imageSE.getImage());
-//		this.add(textComponent);			
-////		componentsContainer.addRenderingComponent(textComponent);
-//	}
-//		
+
+	public Map<Object, Object> getDataForReport() {
+		return this.dataForReport;
+	}
 }

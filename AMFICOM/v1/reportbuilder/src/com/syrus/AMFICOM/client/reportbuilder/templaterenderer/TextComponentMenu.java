@@ -1,5 +1,5 @@
 /*
- * $Id: TextComponentMenu.java,v 1.5 2005/09/08 13:59:09 peskovsky Exp $
+ * $Id: TextComponentMenu.java,v 1.6 2005/09/13 12:23:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,7 +37,7 @@ public class TextComponentMenu extends JPopupMenu {
 		
 		//Установка шрифта надписи
 		JMenuItem setFontMenuItem = new JMenuItem();
-		setFontMenuItem.setText(LangModelReport.getString("report.FontChooserDialog.font"));
+		setFontMenuItem.setText(LangModelReport.getString("report.UI.FontChooserDialog.font"));
 		setFontMenuItem.addActionListener(new java.awt.event.ActionListener() {
 			public void actionPerformed(ActionEvent el) {
 				AttachedTextComponent component = TextComponentMenu.this.compElement;

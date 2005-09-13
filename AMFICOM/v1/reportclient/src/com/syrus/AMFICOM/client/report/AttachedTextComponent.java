@@ -1,5 +1,5 @@
 /*
- * $Id: AttachedTextComponent.java,v 1.7 2005/09/08 13:59:10 peskovsky Exp $
+ * $Id: AttachedTextComponent.java,v 1.8 2005/09/13 12:23:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,7 +7,6 @@
  */
 package com.syrus.AMFICOM.client.report;
 
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.FontMetrics;
@@ -16,10 +15,8 @@ import java.awt.Point;
 import java.awt.geom.Rectangle2D;
 import java.beans.PropertyChangeListener;
 
-import javax.swing.BorderFactory;
 import javax.swing.JTextPane;
 import javax.swing.SwingUtilities;
-import javax.swing.border.Border;
 
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.StorableElement;
@@ -27,7 +24,6 @@ import com.syrus.AMFICOM.report.StorableElement;
 public class AttachedTextComponent extends JTextPane implements RenderingComponent{
 	private static final long serialVersionUID = 8382110834808763027L;
 	
-	public static Border DEFAULT_BORDER = BorderFactory.createLineBorder(Color.BLACK,1);
 	public static Font DEFAULT_FONT = new Font("Times New Roman",Font.BOLD,20);
 	
 	protected final AttachedTextStorableElement textRenderingElement;

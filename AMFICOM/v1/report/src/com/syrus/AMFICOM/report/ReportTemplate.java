@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.6 2005/09/08 13:59:10 peskovsky Exp $
+ * $Id: ReportTemplate.java,v 1.7 2005/09/13 12:23:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,14 +8,16 @@
 
 package com.syrus.AMFICOM.report;
 
-import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.io.IOException;
-import java.io.Serializable;
 import java.util.ArrayList;
+import java.util.Date;
 import java.util.List;
+import java.util.Set;
 
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.resource.IntDimension;
 
 /**
@@ -27,10 +29,10 @@ import com.syrus.AMFICOM.resource.IntDimension;
  * отчёт </p>
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.6 $, $Date: 2005/09/08 13:59:10 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/13 12:23:10 $
  * @module generalclient_v1
  */
-public class ReportTemplate implements Serializable
+public class ReportTemplate extends StorableObject
 {
 	private static final long serialVersionUID = 6270406142449624592L;
 	
@@ -44,21 +46,10 @@ public class ReportTemplate implements Serializable
 	
 	public static final int STANDART_MARGIN_SIZE = 60;
 
-	//Это хранимое поле
-	private Identifier id = null;
 	//Это хранимое поле	
 	private String name = "";
 	//Это хранимое поле	
 	private String description = "";
-
-	/**
-	 * Время сохранения
-	 */
-	private long savedTime = 0L;
-	/**
-	 * Время последнего изменения
-	 */
-	private long modifiedTime = 0L;
 
 	//Это хранимое поле
 	/**
@@ -106,11 +97,36 @@ public class ReportTemplate implements Serializable
 	 */
 	private List<ImageStorableElement> imageStorableElements = new ArrayList<ImageStorableElement>();
 
-	public boolean isModified()
-	{
-		return (this.savedTime != this.modifiedTime);
+	public boolean isModified()	{
+		long templateModified = this.getModified().getTime();
+		
+		for (StorableElement element : this.dataStorableElements)
+			if (element.getModified() > templateModified)
+				return true;
+		for (StorableElement element : this.textStorableElements)
+			if (element.getModified() > templateModified)
+				return true;
+		for (StorableElement element : this.imageStorableElements)
+			if (element.getModified() > templateModified)
+				return true;
+		
+		return false;
 	}
 
+	public void refreshModified() {
+		Date modifiedDate = this.getModified();
+		if (modifiedDate == null)
+			return;
+		
+		long templateModified = modifiedDate.getTime();		
+		for (StorableElement element : this.dataStorableElements)
+			element.setModified(templateModified);
+		for (StorableElement element : this.textStorableElements)
+			element.setModified(templateModified);
+		for (StorableElement element : this.imageStorableElements)
+			element.setModified(templateModified);		
+	}
+	
 	private void writeObject(java.io.ObjectOutputStream out)
 			throws IOException
 	{
@@ -327,20 +343,8 @@ public class ReportTemplate implements Serializable
 		this.description = description;
 	}
 
-	public long getModifiedTime() {
-		return this.modifiedTime;
-	}
-
-	public void setModifiedTime(long modifiedTime) {
-		this.modifiedTime = modifiedTime;
-	}
-
 	public List<DataStorableElement> getDataStorableElements() {
 		return this.dataStorableElements;
-	}
-
-	public Identifier getId() {
-		return this.id;
 	}
 
 	public List<ImageStorableElement> getImageStorableElements() {
@@ -394,10 +398,6 @@ public class ReportTemplate implements Serializable
 		this.size = size;
 	}
 
-	public void setId(Identifier id) {
-		this.id = id;
-	}
-
 	public ORIENTATION getOrientation() {
 		return this.orientation;
 	}
@@ -413,5 +413,20 @@ public class ReportTemplate implements Serializable
 			this.imageStorableElements.add((ImageStorableElement)element);
 		else if (element instanceof AttachedTextStorableElement)
 			this.textStorableElements.add((AttachedTextStorableElement)element);
+	}
+
+	public void removeElement(StorableElement element) {
+		if (element instanceof DataStorableElement)
+			this.dataStorableElements.remove(element);
+		else if (element instanceof ImageStorableElement)
+			this.imageStorableElements.remove(element);
+		else if (element instanceof AttachedTextStorableElement)
+			this.textStorableElements.remove(element);
+	}
+
+	@Override
+	public Set<Identifiable> getDependencies() {
+		// TODO Auto-generated method stub
+		return null;
 	}
 }

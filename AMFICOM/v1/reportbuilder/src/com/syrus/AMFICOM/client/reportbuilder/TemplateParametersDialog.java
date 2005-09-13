@@ -1,5 +1,5 @@
 /*
- * $Id: TemplateParametersDialog.java,v 1.1 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: TemplateParametersDialog.java,v 1.2 2005/09/13 12:23:11 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,8 +37,8 @@ public class TemplateParametersDialog extends JDialog {
 	private static final String ORIENTATION_LABEL = LangModelReport.getString("report.UI.TemplateParametersDialog.orientation");
 	private static final String PORTRAIT = LangModelReport.getString("report.UI.TemplateParametersDialog.portraitOrientation");
 	private static final String LANDSCAPE = LangModelReport.getString("report.UI.TemplateParametersDialog.landscapeOrientation");	
-	private static final String APPLY = LangModelReport.getString("report.UI.TemplateParametersDialog.apply");
-	private static final String CANCEL = LangModelReport.getString("report.UI.TemplateParametersDialog.cancel");
+	private static final String APPLY = LangModelReport.getString("report.UI.apply");
+	private static final String CANCEL = LangModelReport.getString("report.UI.cancel");
 	
 	private static final String A0 = "A0";
 	private static final String A1 = "A1";
@@ -163,8 +163,8 @@ public class TemplateParametersDialog extends JDialog {
 		} catch (NumberFormatException e) {
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					"Значение ширины поля шаблона должно быть числовым.",
-					"Ошибка",
+					LangModelReport.getString("report.Exception.marginSizeMustBeNumber"),
+					LangModelReport.getString("report.Exception.error"),
 					JOptionPane.ERROR_MESSAGE);
 			return;
 		}

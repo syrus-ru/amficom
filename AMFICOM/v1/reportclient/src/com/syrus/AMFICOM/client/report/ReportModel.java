@@ -1,8 +1,10 @@
 package com.syrus.AMFICOM.client.report;
 
 import java.util.Collection;
+
+import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
-import com.syrus.AMFICOM.report.StorableElement;
 
 /**
  * <p>Title: </p>
@@ -28,8 +30,9 @@ public abstract class ReportModel
 	 * заполнения отчёта или данные заданы в неправильном формате
 */
 	public abstract RenderingComponent createReport(
-		StorableElement element,
-		Object data) throws CreateReportException;
+		DataStorableElement element,
+		Object data,
+		ApplicationContext aContext) throws CreateReportException;
 
 	/**
 	 * Название модели (список значений лежит в DestinationModules)
@@ -68,7 +71,7 @@ public abstract class ReportModel
 	public String getReportElementFullName(String reportName) {
 		return this.getLocalizedShortName()
 			+ ReportModel.REPORT_NAME_DIVIDER
-			+ LangModelReport.getString(reportName);
+			+ this.getReportElementName(reportName);
 	}
 
 	/**

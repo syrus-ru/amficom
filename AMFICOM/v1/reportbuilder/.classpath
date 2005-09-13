@@ -10,5 +10,12 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/util"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/resource_v1"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/reportother"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/schemeclient_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/scheme_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/admin_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/map_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mapclient_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mapinfo_v1_modifying"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mapviewclient_v1_modifying"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

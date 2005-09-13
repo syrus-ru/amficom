@@ -1,5 +1,5 @@
 /*
- * $Id: HTMLReportEncoder.java,v 1.2 2005/09/08 13:59:10 peskovsky Exp $
+ * $Id: HTMLReportEncoder.java,v 1.3 2005/09/13 12:23:10 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -322,7 +322,6 @@ public class HTMLReportEncoder {
 		ImageRenderingComponent component,
 		String imageFileName,
 		FileOutputStream out) throws IOException {
-		//TODO Имя подставить правильное
 		String buffer = "<img border=\"0\" "
 			+ "src=\"" + this.relativeFilesDirName + FILE_SEPARATOR + imageFileName + "\" "
 			+ "width=\"" + Integer.toString(component.getWidth()) + "\" "
@@ -381,7 +380,7 @@ public class HTMLReportEncoder {
 				"HTML file formats");
 		fileChooser.addChoosableFileFilter(bmpFilter);
 
-		fileChooser.setDialogTitle("Укажите файл для записи");
+		fileChooser.setDialogTitle(LangModelReport.getString("report.File.selectFileToWrite"));
 		fileChooser.setMultiSelectionEnabled(false);
 
 		int option = fileChooser.showSaveDialog(Environment.getActiveWindow());
@@ -399,8 +398,8 @@ public class HTMLReportEncoder {
 		if(new File(fileName).exists()) {
 			int answer = JOptionPane.showConfirmDialog(
 					Environment.getActiveWindow(),
-					"Указанный файл существует. Переписать?",
-					"Ошибка",
+					LangModelReport.getString("report.File.rewriteFile"),
+					LangModelReport.getString("report.File.confirm"),
 					JOptionPane.OK_CANCEL_OPTION,
 					JOptionPane.ERROR_MESSAGE);
 			if (answer == JOptionPane.CANCEL_OPTION)
