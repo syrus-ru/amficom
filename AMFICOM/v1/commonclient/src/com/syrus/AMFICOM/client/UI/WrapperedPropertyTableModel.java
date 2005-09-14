@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/14 05:21:46 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/14 05:22:37 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -144,7 +144,7 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 	}
 
 	public void setKeys(final String[] keys) {
-		final int oldKeysSize = this.keys != null ? this.keys.length : 0;
+		final int oldKeysSize = this.keys != null ? this.keys.length : -1;
 		this.keys = keys;
 		if (keys.length > oldKeysSize) {
 			this.names = new String[keys.length];
