@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.11 2005/08/28 16:41:33 arseniy Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.12 2005/09/14 14:04:10 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,9 +8,17 @@
 
 package com.syrus.AMFICOM.general;
 
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.APOSTROPHE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.EQUALS;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.GREAT_THAN;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.GREAT_THAN_OR_EQUALS;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.LESS_THAN;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.LESS_THAN_OR_EQUALS;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.LIKE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.PATTERN_CHARACTERS;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_AND;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FROM;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_IN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
@@ -27,11 +35,13 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/28 16:41:33 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/14 14:04:10 $
  * @author $Author: arseniy $
  * @module general
  */
 public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorableObjectCondition {
+	private static final String ERROR_UNKNOWN_NUMBER_CODE = "ERROR: Unknown number code: ";
+	private static final String ERROR_UNKNOWN_OPERATION_CODE = "ERROR: Unknown operation code: ";
 
 	protected TypicalCondition condition;
 	
@@ -80,7 +90,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 				switch (this.condition.getOperation().value()) {
 					case OperationSort._OPERATION_EQUALS: {
 						buffer.append(this.getColumnName());
-						buffer.append(StorableObjectDatabase.EQUALS);
+						buffer.append(EQUALS);
 						switch (this.condition.getType().value()) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								buffer.append(this.condition.getFirstInt());
@@ -92,14 +102,14 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(this.condition.getFirstLong());
 								break;								
 							default:
-								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | unknown number code "
+								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
 					}
 						break;
 					case OperationSort._OPERATION_GREAT: {
 						buffer.append(this.getColumnName());
-						buffer.append(" > ");
+						buffer.append(GREAT_THAN);
 						switch (this.condition.getType().value()) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								buffer.append(this.condition.getFirstInt());
@@ -111,14 +121,14 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(this.condition.getFirstLong());
 								break;								
 							default:
-								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | unknown number code "
+								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
 					}
 						break;
 					case OperationSort._OPERATION_LESS: {
 						buffer.append(this.getColumnName());
-						buffer.append(" < ");
+						buffer.append(LESS_THAN);
 						switch (this.condition.getType().value()) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								buffer.append(this.condition.getFirstInt());
@@ -130,14 +140,14 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(this.condition.getFirstLong());
 								break;								
 							default:
-								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | unknown number code "
+								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
 					}
 						break;
 					case OperationSort._OPERATION_GREAT_EQUALS: {
 						buffer.append(this.getColumnName());
-						buffer.append(" >= ");
+						buffer.append(GREAT_THAN_OR_EQUALS);
 						switch (this.condition.getType().value()) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								buffer.append(this.condition.getFirstInt());
@@ -149,14 +159,14 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(this.condition.getFirstLong());
 								break;								
 							default:
-								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | unknown number code "
+								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
 					}
 						break;
 					case OperationSort._OPERATION_LESS_EQUALS: {
 						buffer.append(this.getColumnName());
-						buffer.append(" <= ");
+						buffer.append(LESS_THAN_OR_EQUALS);
 						switch (this.condition.getType().value()) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								buffer.append(this.condition.getFirstInt());
@@ -168,46 +178,53 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(this.condition.getFirstLong());
 								break;								
 							default:
-								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | unknown number code "
+								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
 					}
 						break;
 					case OperationSort._OPERATION_IN_RANGE: {
-						buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+						buffer.append(OPEN_BRACKET);
 						buffer.append(this.getColumnName());
-						buffer.append(" > ");
+						buffer.append(GREAT_THAN);
 						switch (this.condition.getType().value()) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								buffer.append(this.condition.getFirstInt());
-								buffer.append(StorableObjectDatabase.SQL_AND);
-								buffer.append(this.getColumnName());
-								buffer.append(" < ");
-								buffer.append(this.condition.getSecondInt());
 								break;
 							case TypicalSort._TYPE_NUMBER_DOUBLE:
 								buffer.append(this.condition.getFirstDouble());
-								buffer.append(StorableObjectDatabase.SQL_AND);
-								buffer.append(this.getColumnName());
-								buffer.append(" < ");
-								buffer.append(this.condition.getSecondDouble());
 								break;
 							case TypicalSort._TYPE_NUMBER_LONG:
 								buffer.append(this.condition.getFirstLong());
-								buffer.append(StorableObjectDatabase.SQL_AND);
-								buffer.append(this.getColumnName());
-								buffer.append(" < ");
-								buffer.append(this.condition.getSecondLong());
-								break;								
+								break;
 							default:
-								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | unknown number code "
+								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
+								buffer.append(Long.MIN_VALUE);
 						}
-						buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+						buffer.append(SQL_AND);
+						buffer.append(this.getColumnName());
+						buffer.append(LESS_THAN);
+						switch (this.condition.getType().value()) {
+							case TypicalSort._TYPE_NUMBER_INT:
+								buffer.append(this.condition.getSecondInt());
+								break;
+							case TypicalSort._TYPE_NUMBER_DOUBLE:
+								buffer.append(this.condition.getSecondDouble());
+								break;
+							case TypicalSort._TYPE_NUMBER_LONG:
+								buffer.append(this.condition.getSecondLong());
+								break;
+							default:
+								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_NUMBER_CODE
+										+ this.condition.getType().value());
+								buffer.append(Long.MAX_VALUE);
+						}
+						buffer.append(CLOSE_BRACKET);
 					}
 						break;
 					default:
-						Log.errorMessage("TypicalCondition.getSQLQuery | unknown operation code "
+						Log.errorMessage("TypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_OPERATION_CODE
 								+ this.condition.getOperation().value());
 						break;
 				}
@@ -217,18 +234,18 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 				buffer.append(this.getColumnName());
 				switch (this.condition.getOperation().value()) {
 					case OperationSort._OPERATION_EQUALS:
-						buffer.append(StorableObjectDatabase.EQUALS);
-						buffer.append(StorableObjectDatabase.APOSTROPHE);
+						buffer.append(EQUALS);
+						buffer.append(APOSTROPHE);
 						buffer.append(DatabaseString.toQuerySubString(v));
-						buffer.append(StorableObjectDatabase.APOSTROPHE);
+						buffer.append(APOSTROPHE);
 						break;
 					case OperationSort._OPERATION_SUBSTRING:
-						buffer.append(" LIKE ");
-						buffer.append(StorableObjectDatabase.APOSTROPHE);
-						buffer.append("%");
+						buffer.append(LIKE);
+						buffer.append(APOSTROPHE);
+						buffer.append(PATTERN_CHARACTERS);
 						buffer.append(DatabaseString.toQuerySubString(v));
-						buffer.append("%");
-						buffer.append(StorableObjectDatabase.APOSTROPHE);
+						buffer.append(PATTERN_CHARACTERS);
+						buffer.append(APOSTROPHE);
 						break;
 					case OperationSort._OPERATION_REGEXP:
 						/* TODO isn't implement */
@@ -237,7 +254,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 						/* TODO isn't implement */
 						break;
 					default:
-						Log.errorMessage("TypicalCondition.getSQLQuery | unknown operation code "
+						Log.errorMessage("TypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_OPERATION_CODE
 								+ this.condition.getOperation().value());
 						break;
 				}
@@ -248,35 +265,35 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 				Date date2 = (Date) this.condition.getOtherValue();
 				switch (this.condition.getOperation().value()) {
 					case OperationSort._OPERATION_EQUALS:
-						buffer.append(StorableObjectDatabase.EQUALS);
+						buffer.append(EQUALS);
 						buffer.append(DatabaseDate.toUpdateSubString(date1));
 						break;
 					case OperationSort._OPERATION_IN_RANGE:
-						buffer.append(" >= ");
+						buffer.append(GREAT_THAN_OR_EQUALS);
 						buffer.append(DatabaseDate.toUpdateSubString(date1));
-						buffer.append(StorableObjectDatabase.SQL_AND);
+						buffer.append(SQL_AND);
 						buffer.append(this.getColumnName());
-						buffer.append(" <= ");
+						buffer.append(LESS_THAN_OR_EQUALS);
 						buffer.append(DatabaseDate.toUpdateSubString(date2));
 						break;
 					case OperationSort._OPERATION_GREAT:
-						buffer.append(" > ");
+						buffer.append(GREAT_THAN);
 						buffer.append(DatabaseDate.toUpdateSubString(date1));
 						break;
 					case OperationSort._OPERATION_GREAT_EQUALS:
-						buffer.append(" >= ");
+						buffer.append(GREAT_THAN_OR_EQUALS);
 						buffer.append(DatabaseDate.toUpdateSubString(date1));
 						break;
 					case OperationSort._OPERATION_LESS:
-						buffer.append(" < ");
+						buffer.append(LESS_THAN);
 						buffer.append(DatabaseDate.toUpdateSubString(date1));
 						break;
 					case OperationSort._OPERATION_LESS_EQUALS:
-						buffer.append(" <= ");
+						buffer.append(LESS_THAN_OR_EQUALS);
 						buffer.append(DatabaseDate.toUpdateSubString(date1));
 						break;						
 					default:
-						Log.errorMessage("TypicalCondition.getSQLQuery | unknown operation code "
+						Log.errorMessage("TypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_OPERATION_CODE
 								+ this.condition.getOperation().value());
 						break;
 				}
@@ -286,11 +303,11 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 				buffer.append(this.getColumnName());
 				switch (this.condition.getOperation().value()) {
 				case OperationSort._OPERATION_EQUALS:
-					buffer.append(StorableObjectDatabase.EQUALS);
+					buffer.append(EQUALS);
 					buffer.append(value ? '1' : '0');
 					break;
 				default:
-					Log.errorMessage("TypicalCondition.getSQLQuery | unknown operation code "
+					Log.errorMessage("TypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_OPERATION_CODE
 							+ this.condition.getOperation().value());
 					break;
 				}
