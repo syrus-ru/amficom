@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.70 2005/09/09 18:02:33 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.71 2005/09/14 18:07:16 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.70 $, $Date: 2005/09/09 18:02:33 $
+ * @version $Revision: 1.71 $, $Date: 2005/09/14 18:07:16 $
  * @author $Author: arseniy $
  * @module mserver
  */
@@ -232,12 +232,10 @@ public class MeasurementServer extends SleepButWorkThread {
 	private static void createTestLoadCondition() {
 		final LinkedIdsCondition lic = new LinkedIdsCondition(mcmTestQueueMap.keySet(), ObjectEntities.TEST_CODE);
 		final TypicalCondition tc1 = new TypicalCondition(TestStatus._TEST_STATUS_NEW,
-				0,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_STATUS);
 		final TypicalCondition tc2 = new TypicalCondition(TestStatus._TEST_STATUS_STOPPING,
-				0,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_STATUS);
