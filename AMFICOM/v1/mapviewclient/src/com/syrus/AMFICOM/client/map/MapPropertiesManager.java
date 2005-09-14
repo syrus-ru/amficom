@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.45 2005/09/04 17:11:02 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.46 2005/09/14 10:21:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.45 $, $Date: 2005/09/04 17:11:02 $
+ * @version $Revision: 1.46 $, $Date: 2005/09/14 10:21:53 $
  * @module mapviewclient
  */
 public final class MapPropertiesManager 
@@ -121,7 +121,7 @@ public final class MapPropertiesManager
 	protected static boolean optimizeLinks = false;
 	protected static long topoImageMaxTimeWait = 30000;
 	protected static boolean moveMouseNavigating = true;
-	protected static boolean useVirtualDisk = true;
+	protected static boolean useVirtualDisk = false;
 	protected static String virtualDiskPath = "";	
 	/**
 	 * Величина габарита области границы (при входе в неё происходит смещение экрана)
@@ -482,7 +482,7 @@ public final class MapPropertiesManager
 	}
 	
  	public static boolean isVirtualDiskUsed() {
-		return useTopologicalImageCache;
+		return useVirtualDisk;
 	}
 
  	public static String getVirtualDiskPath() {
