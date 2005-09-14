@@ -1,5 +1,5 @@
 /*-
-* $Id: Launcher.java,v 1.3 2005/09/07 07:09:02 bob Exp $
+* $Id: Launcher.java,v 1.4 2005/09/14 09:08:27 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.util.Log;
 
 /**
  * local implementation of Винтилйатар
- * @version $Revision: 1.3 $, $Date: 2005/09/07 07:09:02 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/14 09:08:27 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -38,7 +38,7 @@ public final class Launcher {
 	private static void addAWTHandler() {
 		String property = System.getProperty(HANDLER_PROP_NAME);
 		if (property == null) {
-			System.setProperty(HANDLER_PROP_NAME, MyAWTHandler.class.getName()); 
+			System.setProperty(HANDLER_PROP_NAME, DefaultThrowableHandler.class.getName()); 
 		}
 	}
 	
@@ -47,7 +47,7 @@ public final class Launcher {
 			addAWTHandler();
 			Constructor declaredConstructor = applicationClass.getDeclaredConstructor(new Class[] {});			
 			declaredConstructor.newInstance(new Object[] {});
-		} catch (SecurityException e) {
+		} catch (final SecurityException e) {
 			e.printStackTrace();
 			final String msg = "Launcher.launchApplicationClass | applicationClass " 
 				+ applicationClass.getName() 
@@ -55,7 +55,7 @@ public final class Launcher {
 			System.err.println(msg);
 			Log.debugMessage(msg, Log.DEBUGLEVEL01);
 			System.exit(CANNOT_RUN_EXIT);
-		} catch (NoSuchMethodException e) {
+		} catch (final NoSuchMethodException e) {
 			e.printStackTrace();
 			final String msg = "Launcher.launchApplicationClass | applicationClass " 
 				+ applicationClass.getName() 
@@ -63,7 +63,7 @@ public final class Launcher {
 			System.err.println(msg);
 			Log.debugMessage(msg, Log.DEBUGLEVEL01);
 			System.exit(CANNOT_RUN_EXIT);
-		} catch (IllegalArgumentException e) {
+		} catch (final IllegalArgumentException e) {
 			e.printStackTrace();
 			final String msg = "Launcher.launchApplicationClass | applicationClass " 
 				+ applicationClass.getName() 
@@ -71,7 +71,7 @@ public final class Launcher {
 			System.err.println(msg);
 			Log.debugMessage(msg, Log.DEBUGLEVEL01);
 			System.exit(CANNOT_RUN_EXIT);
-		} catch (InstantiationException e) {
+		} catch (final InstantiationException e) {
 			e.printStackTrace();
 			final String msg = "Launcher.launchApplicationClass | applicationClass " 
 				+ applicationClass.getName() 
@@ -79,7 +79,7 @@ public final class Launcher {
 			System.err.println(msg);
 			Log.debugMessage(msg, Log.DEBUGLEVEL01);
 			System.exit(CANNOT_RUN_EXIT);
-		} catch (IllegalAccessException e) {
+		} catch (final IllegalAccessException e) {
 			e.printStackTrace();
 			final String msg = "Launcher.launchApplicationClass | applicationClass " 
 				+ applicationClass.getName() 
@@ -87,34 +87,32 @@ public final class Launcher {
 			System.err.println(msg);
 			Log.debugMessage(msg, Log.DEBUGLEVEL01);
 			System.exit(CANNOT_RUN_EXIT);
-		} catch (InvocationTargetException e) {
-			final Throwable cause = e.getCause();
-			final String msg = "Launcher.launchApplicationClass | applicationClass " 
-				+ applicationClass.getName() 
-				+ ", caught a " + cause.getClass().getName() + " during invocation, exit";
-			
-			System.err.println(msg);	
-			
-			Log.debugMessage(msg, Log.DEBUGLEVEL01);
-			Log.errorException(cause);
-			
-			final String text = "<html>" 
-				+ LangModelGeneral.getString("Error.GetUncatchedException") + ":<br>"
-				+ cause.getClass().getSimpleName() + " : " + cause.getMessage() + "<br>"
-				+ "<br><br>" + LangModelGeneral.getString("Message.Information.ApplicationWillBeTerminated")
-				+ "</html>";
-			JOptionPane.showMessageDialog(null, text, LangModelGeneral.getString("Error"), JOptionPane.ERROR_MESSAGE);
-			System.exit(CANNOT_RUN_EXIT);
+		} catch (final InvocationTargetException e) {
+			// too unlikely 
+			new Launcher.DefaultThrowableHandler(LangModelGeneral.getString("Error")).handle(e.getCause());
 		} 
 	}
 	
 	
-	public static class MyAWTHandler {
+	public static class DefaultThrowableHandler {
+		
+		private final String title;
+		
+		public DefaultThrowableHandler(final String title) {
+			this.title = title;
+		}
+		
+		/**
+		 * <p><b>Clients must never explicitly call this method. Only for AWT Thread purposes</b></p>
+		 */
+		public DefaultThrowableHandler() {
+			this(LangModelGeneral.getString("Error.AWTThread"));
+		}
 		
 		public void handle(final Throwable thrown) {
 			thrown.printStackTrace();
 			
-			final String msg = "AMFICOMAWTHandler.handle | unhandled exception in awt thead " 
+			final String msg = "AMFICOMAWTHandler.handle | unhandled exception " 
 				+ thrown.getClass().getName() + ", exit";
 			
 			System.err.println(msg);	
@@ -127,7 +125,7 @@ public final class Launcher {
 				+ thrown.getClass().getSimpleName() + " : " + thrown.getMessage() + "<br>"
 				+ "<br><br>" + LangModelGeneral.getString("Message.Information.ApplicationWillBeTerminated")
 				+ "</html>";
-			JOptionPane.showMessageDialog(null, text, LangModelGeneral.getString("Error.AWTThread"), JOptionPane.ERROR_MESSAGE);
+			JOptionPane.showMessageDialog(null, text, this.title, JOptionPane.ERROR_MESSAGE);
 			System.exit(CANNOT_RUN_EXIT);
 		}
 	}
