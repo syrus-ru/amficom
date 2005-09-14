@@ -23,7 +23,6 @@ import com.syrus.AMFICOM.client.map.command.editor.ViewMapWindowCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.map.ui.MapPropertiesEventHandler;
 import com.syrus.AMFICOM.client.map.ui.MapViewTreeEventHandler;
-import com.syrus.AMFICOM.client.map.ui.MapViewTreeModel;
 import com.syrus.AMFICOM.client.map.ui.MapViewTreeMouseListener;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
@@ -32,8 +31,8 @@ import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.MapSurveyApplicationModelFactory;
-import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.model.ObserverApplicationModel;
+import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.observer.command.OpenMapViewCommand;
 import com.syrus.AMFICOM.client.observer.command.OpenSchemeViewCommand;
 import com.syrus.AMFICOM.client.observer.command.start.OpenAnalysisCommand;
@@ -55,7 +54,6 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeSelectionListener;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
-import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.resource.LangModelObserver;
 import com.syrus.AMFICOM.resource.ObserverResourceKeys;
 import com.syrus.util.Log;
@@ -180,12 +178,10 @@ public class ObserverMainFrame extends AbstractMainFrame {
 
 				new SchemeTreeSelectionListener(iconedTreeUI, ObserverMainFrame.this.aContext);
 
-				ItemTreeModel treeModel = iconedTreeUI.getTreeUI().getTreeModel();
 				MapViewTreeEventHandler mapViewTreeEventHandler = new MapViewTreeEventHandler(
 						iconedTreeUI, 
 						ObserverMainFrame.this.aContext, 
-						MapViewTreeModel.getInstance(), 
-						iconedTreeUI.findNode(model.getRoot(), MapViewTreeModel.MAP_VIEW_TREE_ROOT, false));
+						model.getRoot());
 				tree.addTreeSelectionListener(mapViewTreeEventHandler);
 				tree.addTreeWillExpandListener(mapViewTreeEventHandler);
 				tree.addMouseListener(new MapViewTreeMouseListener(tree, ObserverMainFrame.this.aContext));
@@ -311,7 +307,7 @@ public class ObserverMainFrame extends AbstractMainFrame {
 		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_NAVIGATOR, this.getLazyCommand(TREE_FRAME));
 		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_CHARACTERISTICS, this.getLazyCommand(CharacteristicPropertiesFrame.NAME));
 		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_GENERAL_PROPERTIES, this.getLazyCommand(GeneralPropertiesFrame.NAME));
-		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_ADDITIONAL_PROPERTIES, this.getLazyCommand(GeneralPropertiesFrame.NAME));
+		aModel.setCommand(ObserverApplicationModel.MENU_VIEW_ADDITIONAL_PROPERTIES, this.getLazyCommand(AdditionalPropertiesFrame.NAME));
 		aModel.setCommand(ApplicationModel.MENU_VIEW_ARRANGE, new ArrangeWindowCommand(this.windowArranger));
 
 		aModel.setCommand(ObserverApplicationModel.MENU_OPEN_SCHEME, new OpenSchemeViewCommand(this.aContext));
@@ -366,11 +362,13 @@ public class ObserverMainFrame extends AbstractMainFrame {
 				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.setEnabled(ObserverApplicationModel.MENU_VIEW_MAP, true);
 				aModel.fireModelChanged();
+				this.windowArranger.arrange();
 				
 			} else if (pce.getPropertyName().equals(MapEvent.MAP_VIEW_CLOSED)) {
 				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.setEnabled(ObserverApplicationModel.MENU_VIEW_MAP, false);
 				aModel.fireModelChanged();
+				this.windowArranger.arrange();
 			}
 		}
 		super.propertyChange(pce);
