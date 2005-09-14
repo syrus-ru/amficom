@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortTypeDatabase.java,v 1.6 2005/09/09 14:24:42 arseniy Exp $
+ * $Id: MeasurementPortTypeDatabase.java,v 1.7 2005/09/14 18:35:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/09 14:24:42 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/14 18:35:57 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class MeasurementPortTypeDatabase extends StorableObjectDatabase<MeasurementPortType> {

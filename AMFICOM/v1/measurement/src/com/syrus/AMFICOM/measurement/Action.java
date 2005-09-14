@@ -1,5 +1,5 @@
 /*
- * $Id: Action.java,v 1.38 2005/09/08 18:26:30 bass Exp $
+ * $Id: Action.java,v 1.39 2005/09/14 18:35:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,9 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/09/08 18:26:30 $
- * @author $Author: bass $
+ * @version $Revision: 1.39 $, $Date: 2005/09/14 18:35:57 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 

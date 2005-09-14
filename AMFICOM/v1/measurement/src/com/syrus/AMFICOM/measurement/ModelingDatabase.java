@@ -1,5 +1,5 @@
 /*
- * $Id: ModelingDatabase.java,v 1.52 2005/08/25 20:13:56 arseniy Exp $
+ * $Id: ModelingDatabase.java,v 1.53 2005/09/14 18:35:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,9 +26,10 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.52 $, $Date: 2005/08/25 20:13:56 $
+ * @version $Revision: 1.53 $, $Date: 2005/09/14 18:35:57 $
  * @author $Author: arseniy $
- * @module module_name
+ * @author Tashoyan Arseniy Feliksovich
+ * @module measurement
  */
 
 public final class ModelingDatabase extends StorableObjectDatabase<Modeling> {

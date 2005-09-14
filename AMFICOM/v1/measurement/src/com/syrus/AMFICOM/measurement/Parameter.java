@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.15 2005/09/09 13:07:28 arseniy Exp $
+ * $Id: Parameter.java,v 1.16 2005/09/14 18:35:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,9 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/09 13:07:28 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/14 18:35:57 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 

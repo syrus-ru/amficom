@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.154 2005/09/09 13:06:31 arseniy Exp $
+ * $Id: Test.java,v 1.155 2005/09/14 18:35:57 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,9 @@ import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.154 $, $Date: 2005/09/09 13:06:31 $
+ * @version $Revision: 1.155 $, $Date: 2005/09/14 18:35:57 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 

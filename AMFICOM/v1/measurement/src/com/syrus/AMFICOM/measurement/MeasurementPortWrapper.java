@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPortWrapper.java,v 1.2 2005/08/20 20:03:29 arseniy Exp $
+ * $Id: MeasurementPortWrapper.java,v 1.3 2005/09/14 18:35:57 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,9 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/20 20:03:29 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/14 18:35:57 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class MeasurementPortWrapper extends StorableObjectWrapper<MeasurementPort> {

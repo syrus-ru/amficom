@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementType.java,v 1.100 2005/08/29 16:41:13 arseniy Exp $
+ * $Id: MeasurementType.java,v 1.101 2005/09/14 18:35:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,9 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/08/29 16:41:13 $
+ * @version $Revision: 1.101 $, $Date: 2005/09/14 18:35:57 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public enum MeasurementType implements ActionType {

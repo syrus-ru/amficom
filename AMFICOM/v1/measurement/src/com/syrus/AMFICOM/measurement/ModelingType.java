@@ -1,5 +1,5 @@
 /*-
- * $Id: ModelingType.java,v 1.56 2005/08/29 16:41:13 arseniy Exp $
+ * $Id: ModelingType.java,v 1.57 2005/09/14 18:35:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,9 @@ import com.syrus.AMFICOM.measurement.corba.IdlModelingType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/08/29 16:41:13 $
+ * @version $Revision: 1.57 $, $Date: 2005/09/14 18:35:57 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public enum ModelingType implements TransferableObject, ActionType {

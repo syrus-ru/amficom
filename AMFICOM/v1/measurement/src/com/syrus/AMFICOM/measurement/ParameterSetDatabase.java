@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSetDatabase.java,v 1.17 2005/09/09 14:24:42 arseniy Exp $
+ * $Id: ParameterSetDatabase.java,v 1.18 2005/09/14 18:35:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/09 14:24:42 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/14 18:35:57 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 

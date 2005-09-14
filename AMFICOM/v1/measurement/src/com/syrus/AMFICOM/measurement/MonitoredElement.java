@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredElement.java,v 1.4 2005/09/09 14:27:37 arseniy Exp $
+ * $Id: MonitoredElement.java,v 1.5 2005/09/14 18:35:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,8 +31,9 @@ import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMonitoredElementPackage.MonitoredElementSort;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/09 14:27:37 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/14 18:35:57 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 

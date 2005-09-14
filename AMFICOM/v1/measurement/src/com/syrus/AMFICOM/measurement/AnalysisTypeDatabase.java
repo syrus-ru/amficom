@@ -1,5 +1,5 @@
 /*-
- * $Id: AnalysisTypeDatabase.java,v 1.105 2005/08/29 09:58:59 arseniy Exp $
+ * $Id: AnalysisTypeDatabase.java,v 1.106 2005/09/14 18:35:57 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,9 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.105 $, $Date: 2005/08/29 09:58:59 $
+ * @version $Revision: 1.106 $, $Date: 2005/09/14 18:35:57 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 public final class AnalysisTypeDatabase {

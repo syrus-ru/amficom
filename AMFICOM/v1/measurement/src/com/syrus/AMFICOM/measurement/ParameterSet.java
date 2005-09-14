@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.18 2005/09/13 13:46:29 bob Exp $
+ * $Id: ParameterSet.java,v 1.19 2005/09/14 18:35:57 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,9 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/13 13:46:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/09/14 18:35:57 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
