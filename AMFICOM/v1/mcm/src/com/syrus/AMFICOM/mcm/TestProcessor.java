@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.66 2005/09/05 17:48:53 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.67 2005/09/14 18:02:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,17 +15,23 @@ import java.util.List;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.TypicalCondition;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
+import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementWrapper;
 import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestDatabase;
@@ -36,7 +42,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/09/05 17:48:53 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/14 18:02:52 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -278,8 +284,25 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 	protected void stopTest() {
 		if (this.transceiver != null) {
-			this.transceiver.abortMeasurementsForTestProcessor(this);
+			this.transceiver.removeMeasurementsOfTestProcessor(this);
 		}
+
+		try {
+			final LinkedIdsCondition lic = new LinkedIdsCondition(this.test.getId(), ObjectEntities.MEASUREMENT_CODE);
+			final TypicalCondition tc = new TypicalCondition(MeasurementStatus._MEASUREMENT_STATUS_COMPLETED,
+					OperationSort.OPERATION_NOT_EQUALS,
+					ObjectEntities.MEASUREMENT_CODE,
+					MeasurementWrapper.COLUMN_STATUS);
+			final CompoundCondition condition = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
+			final Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
+			for (final Measurement measurement : measurements) {
+				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+			}
+			StorableObjectPool.flush(ObjectEntities.MEASUREMENT_CODE, LoginManager.getUserId(), false);
+		} catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+
 		this.shutdown();
 	}
 
@@ -288,7 +311,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		this.stopTest();
 	}
 
-	private void shutdown() {
+	protected void shutdown() {
 		this.running = false;
 		this.cleanup();
 	}
