@@ -4,17 +4,12 @@ import java.awt.BorderLayout;
 
 import javax.swing.JPanel;
 import javax.swing.JTree;
-import javax.swing.UIManager;
 import javax.swing.tree.TreeSelectionModel;
 
-import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
-import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
-import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 
 public final class MapViewTreePanel extends JPanel {
@@ -31,14 +26,9 @@ public final class MapViewTreePanel extends JPanel {
 	private void jbInit() {
 		this.setLayout(this.borderLayout1);
 
-		MapViewTreeModel model = MapViewTreeModel.getInstance();
+		MapEditorTreeModel model = new MapEditorTreeModel();
 
-		Item root = new IconedNode(
-				MapViewTreeModel.MAP_VIEW_TREE_ROOT, 
-				LangModelMap.getString(MapViewTreeModel.MAP_VIEW_TREE_ROOT),
-				UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG));
-
-		IconedTreeUI iconedTreeUI = new IconedTreeUI(root);
+		IconedTreeUI iconedTreeUI = new IconedTreeUI(model.getRoot());
 		TreeFilterUI flterTreeUI = new TreeFilterUI(iconedTreeUI, new FilterPanel());
 
 		JTree tree = iconedTreeUI.getTree();
@@ -48,7 +38,7 @@ public final class MapViewTreePanel extends JPanel {
 
 		tree.getSelectionModel().setSelectionMode(TreeSelectionModel.DISCONTIGUOUS_TREE_SELECTION);
 
-		MapViewTreeEventHandler mapViewTreeEventHandler = new MapViewTreeEventHandler(iconedTreeUI, this.aContext, model, root);
+		MapViewTreeEventHandler mapViewTreeEventHandler = new MapViewTreeEventHandler(iconedTreeUI, this.aContext, model.getRoot());
 		tree.addTreeSelectionListener(mapViewTreeEventHandler);
 		tree.addTreeWillExpandListener(mapViewTreeEventHandler);
 		tree.addMouseListener(new MapViewTreeMouseListener(tree, this.aContext));

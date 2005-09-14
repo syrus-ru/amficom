@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorTreeModel.java,v 1.1 2005/09/14 10:19:21 krupenn Exp $ Syrus
+ * $Id: MapEditorTreeModel.java,v 1.2 2005/09/14 14:07:49 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -16,6 +16,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
@@ -23,7 +24,7 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/09/14 10:19:21 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/14 14:07:49 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -46,7 +47,7 @@ public final class MapEditorTreeModel implements ChildrenFactory {
 	public PopulatableIconedNode getRoot() {
 		if(this.root == null) {
 			this.root = new PopulatableIconedNode(
-				new MapEditorTreeModel(),
+				this,
 				MapEditorTreeModel.MAP_EDITOR_TREE_ROOT,
 				LangModelMap.getString(MapEditorTreeModel.MAP_EDITOR_TREE_ROOT),
 				UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG), 
@@ -90,8 +91,8 @@ public final class MapEditorTreeModel implements ChildrenFactory {
 	public void setMapView(MapView mapView) {
 		if(mapView == null
 				|| (this.mapView != null
-						&& mapView.equals(this.mapView)) ) {
-			List children = new LinkedList(this.root.getChildren());
+						&& !mapView.equals(this.mapView)) ) {
+			List children = new LinkedList(this.getRoot().getChildren());
 			for(Iterator iter = children.iterator(); iter.hasNext();) {
 				Item item = (Item )iter.next();
 				item.setParent(null);
@@ -100,7 +101,17 @@ public final class MapEditorTreeModel implements ChildrenFactory {
 
 		this.mapView = mapView;
 
-		this.root.getChildrenFactory().populate(this.root);
+		this.getRoot().getChildrenFactory().populate(this.getRoot());
+	}
+
+	public void updateTopologyTree(NetMapViewer netMapViewer) {
+		if(this.topologyNode != null) {
+			this.topologyNode.setParent(null);
+		}
+		TopologyTreeModel topologyTreeModel = new TopologyTreeModel();
+		this.topologyNode = topologyTreeModel.getRoot();
+		topologyTreeModel.setNetMapViewer(netMapViewer);
+		this.getRoot().addChild(this.topologyNode);
 	}
 
 }
