@@ -3,11 +3,13 @@ package com.syrus.AMFICOM.client.UI;
 
 import java.awt.Color;
 import java.awt.Component;
+import java.awt.Font;
 import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JLabel;
 import javax.swing.JTable;
+import javax.swing.SwingConstants;
 import javax.swing.UIManager;
 import javax.swing.table.TableCellRenderer;
 
@@ -18,7 +20,7 @@ import com.syrus.util.Wrapper;
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.6 $, $Date: 2005/09/13 09:57:08 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/14 06:35:23 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -39,6 +41,7 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 
 	public AbstractLabelCellRenderer() {
 		super.setOpaque(true);
+		super.setVerticalAlignment(SwingConstants.CENTER);
 		super.setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
 		this.renderers = new HashMap<Class, TableCellRenderer>();
 		this.renderers.put(Color.class, ColorCellRenderer.getInstance());
@@ -111,10 +114,11 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 		final Color color = this.getBackground();
 
 		if (isSelected) {
+			final Font font = UIManager.getFont("Table.selectedFont");
+			if (font != null) {
+				this.setFont(font);
+			}
 			this.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table.getForeground());
-//			Font font = table.getFont();
-//			font = new Font(font.getName(), Font.BOLD | Font.ITALIC, font.getSize());
-//			this.setFont(font);
 			final Color c = table.getSelectionBackground();
 			// calculate color with alpha-channel weight alpha
 			this.setBackground(new Color((int) (c.getRed() * ONE_MINUS_ALPHA + ALPHA * color.getRed()) % 256,
