@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseTypicalCondition.java,v 1.12 2005/08/28 16:41:33 arseniy Exp $
+ * $Id: DatabaseTypicalCondition.java,v 1.13 2005/09/14 13:09:38 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,75 +28,70 @@ import com.syrus.util.Log;
  * }
  * </pre>
  *
- * @version $Revision: 1.12 $, $Date: 2005/08/28 16:41:33 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/14 13:09:38 $
  * @author $Author: arseniy $
  * @module general
  */
 public final class DatabaseTypicalCondition extends AbstractDatabaseTypicalCondition {
 
-	private AbstractDatabaseTypicalCondition	delegate;
+	private AbstractDatabaseTypicalCondition delegate;
 
-	private static final String					INVALID_UNDERLYING_IMPLEMENTATION	= "Invalid underlying implementation: ";	
+	private static final String INVALID_UNDERLYING_IMPLEMENTATION = "Invalid underlying implementation: ";
 
-	private static final String					DATABASE_TYPICAL_CONDITION_INIT		= "DatabaseTypicalCondition.<init>() | ";	
+	private static final String DATABASE_TYPICAL_CONDITION_INIT = "DatabaseTypicalCondition.<init>() | ";	
 
 	public DatabaseTypicalCondition(TypicalCondition condition) {
 		super(condition);
-		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(condition.getEntityCode().shortValue()).toLowerCase().replaceAll("group$", "") + ".DatabaseTypicalConditionImpl";
+		final String className = "com.syrus.AMFICOM."
+				+ ObjectGroupEntities.getGroupName(condition.getEntityCode().shortValue()).toLowerCase().replaceAll("group$", "")
+				+ ".DatabaseTypicalConditionImpl";
 		try {
-			Constructor ctor;
-			ctor = Class.forName(className).getDeclaredConstructor(new Class[] { TypicalCondition.class});
+			final Constructor ctor = Class.forName(className).getDeclaredConstructor(new Class[] { TypicalCondition.class });
 			ctor.setAccessible(true);
-			this.delegate = (AbstractDatabaseTypicalCondition) ctor.newInstance(new Object[] { condition});
+			this.delegate = (AbstractDatabaseTypicalCondition) ctor.newInstance(new Object[] { condition });
 		} catch (ClassNotFoundException cnfe) {
-			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + "Class " + className
-					+ " not found on the classpath"
-			, Level.WARNING);
+			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + "Class " + className + " not found on the classpath", Level.WARNING);
 		} catch (ClassCastException cce) {
-			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
-					+ className + " doesn't inherit from "
-					+ LinkedIdsCondition.class.getName(), Level.WARNING);
+			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+					+ "class " + className + " doesn't inherit from " + LinkedIdsCondition.class.getName(), Level.WARNING);
 		} catch (NoSuchMethodException nsme) {
-			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
-					+ className + " doesn't have the constructor expected"
-			, Level.WARNING);
+			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+					+ "class " + className + " doesn't have the constructor expected", Level.WARNING);
 		} catch (InstantiationException ie) {
-			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION + "class "
-					+ className + " is abstract"
-			, Level.WARNING);
+			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
+					+ "class " + className + " is abstract", Level.WARNING);
 		} catch (InvocationTargetException ite) {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AssertionError) {
 				final String message = cause.getMessage();
-				if (message == null)
+				if (message == null) {
 					assert false;
-				else
+				}
+				else {
 					assert false : message;
-			} else
+				}
+			} else {
 				Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + INVALID_UNDERLYING_IMPLEMENTATION
-						+ "constructor throws an exception in class "
-						+ className, Level.WARNING);
+						+ "constructor throws an exception in class " + className, Level.WARNING);
+			}
 		} catch (IllegalAccessException iae) {
 			/*
 			 * Never.
 			 */
 			Log.debugException(iae, Level.SEVERE);
-			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + "Caught an IllegalAccessException"
-			, Level.SEVERE);
+			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + "Caught an IllegalAccessException", Level.SEVERE);
 		} catch (IllegalArgumentException iae) {
 			/*
 			 * Never.
 			 */
 			Log.debugException(iae, Level.SEVERE);
-			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + "Caught an IllegalArgumentException"
-			, Level.SEVERE);
+			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + "Caught an IllegalArgumentException", Level.SEVERE);
 		} catch (SecurityException se) {
 			/*
 			 * Never.
 			 */
 			Log.debugException(se, Level.SEVERE);
-			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + "Caught a SecurityException"
-			, Level.SEVERE);
+			Log.debugMessage(DATABASE_TYPICAL_CONDITION_INIT + "Caught a SecurityException", Level.SEVERE);
 		}
 	}
 
