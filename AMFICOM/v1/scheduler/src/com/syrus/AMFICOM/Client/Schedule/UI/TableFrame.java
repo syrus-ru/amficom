@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.34 2005/09/13 12:10:11 bob Exp $
+ * $Id: TableFrame.java,v 1.35 2005/09/14 07:33:56 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/09/13 12:10:11 $
+ * @version $Revision: 1.35 $, $Date: 2005/09/14 07:33:56 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -173,6 +173,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 					TestController.KEY_TEST_OBJECT, TestController.KEY_MEASUREMENT_TYPE, TestController.KEY_START_TIME,
 					TestController.KEY_STATUS});
 			this.listTable.setDefaultTableCellRenderer();
+			this.listTable.setAllowAutoResize(true);
 			final ListSelectionModel rowSM = this.listTable.getSelectionModel();
 			rowSM.addListSelectionListener(new ListSelectionListener() {
 
