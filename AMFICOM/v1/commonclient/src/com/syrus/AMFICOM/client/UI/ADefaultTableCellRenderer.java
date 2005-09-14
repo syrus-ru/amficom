@@ -1,5 +1,5 @@
 /*
- * $Id: ADefaultTableCellRenderer.java,v 1.6 2005/09/08 14:25:57 bob Exp $
+ * $Id: ADefaultTableCellRenderer.java,v 1.7 2005/09/14 10:58:18 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/08 14:25:57 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/14 10:58:18 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -63,6 +63,16 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 		}
 		return instance;
 	}
+	
+	/**
+	 * add custom renderer for object of Clazz clazz
+	 * 
+	 * @param clazz
+	 * @param cellRenderer
+	 */
+	public void addCustomRenderer(final Class clazz, final TableCellRenderer cellRenderer) {
+		renderers.put(clazz, cellRenderer);
+	}
 
 	/**
 	 * This method is called each time a cell in a column using this renderer
@@ -78,10 +88,16 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 			return null;
 		}
 		assert value != null : ErrorMessages.NON_NULL_EXPECTED;
-		Class clazz = value.getClass();
+		final Class clazz = value.getClass();
 		TableCellRenderer cellRenderer = (TableCellRenderer) renderers.get(clazz);
-		if (cellRenderer != null)
-			return cellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
+		if (cellRenderer != null) {
+			return cellRenderer.getTableCellRendererComponent(table, 
+				value, 
+				isSelected, 
+				hasFocus, 
+				rowIndex, 
+				vColIndex);
+		}
 		cellRenderer = (TableCellRenderer) renderers.get(clazz.getSuperclass());
 		return cellRenderer.getTableCellRendererComponent(table, value, isSelected, hasFocus, rowIndex, vColIndex);
 	}
@@ -175,10 +191,9 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 			if (isSelected) {
 				this.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table
 						.getForeground());
-				if (usingItalic) {
-				Font font = table.getFont();
-				font = new Font(font.getName(), Font.BOLD | Font.ITALIC, font.getSize());
-				this.setFont(font);
+				final Font font = UIManager.getFont("Table.selectedFont");
+				if (usingItalic && font != null ) {
+					this.setFont(font);
 				}
 				Color c = table.getSelectionBackground();
 				// calculate color with alpha-channel weight alpha
