@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewOpenCommand.java,v 1.28 2005/09/09 17:24:15 krupenn Exp $
+ * $Id: MapViewOpenCommand.java,v 1.29 2005/09/14 10:34:14 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -10,6 +10,10 @@
 package com.syrus.AMFICOM.client.map.command.map;
 
 import java.util.Collection;
+import java.util.HashMap;
+import java.util.HashSet;
+import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JDesktopPane;
 
@@ -24,6 +28,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.DatabaseException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -31,11 +36,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.mapview.MapView;
+import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
  * открыть вид 
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/09/09 17:24:15 $
+ * @version $Revision: 1.29 $, $Date: 2005/09/14 10:34:14 $
  * @module mapviewclient
  */
 public class MapViewOpenCommand extends AbstractCommand {
@@ -110,6 +116,9 @@ public class MapViewOpenCommand extends AbstractCommand {
 
 		try {
 			this.mapView.getMap().open();
+			for(Scheme scheme : this.mapView.getSchemes()) {
+				MapViewOpenCommand.openScheme(scheme);
+			}
 		} catch(ApplicationException e) {
 			e.printStackTrace();
 			return;
@@ -121,5 +130,26 @@ public class MapViewOpenCommand extends AbstractCommand {
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
 						LangModelGeneral.getString("Finished")));
+	}
+
+	// TODO think of moving this method to 'Scheme'
+	public static void openScheme(Scheme scheme) throws ApplicationException {
+		Set<Identifiable> reverseDependencies = scheme.getReverseDependencies();
+
+		Map<Short, Set<Identifier>> objectsToLoad = new HashMap<Short, Set<Identifier>>();
+
+		for(Identifiable identifiable : reverseDependencies) {
+			Short major = Short.valueOf(identifiable.getId().getMajor());
+			Set<Identifier> identifierSet = objectsToLoad.get(major);
+			if(identifierSet == null) {
+				identifierSet = new HashSet<Identifier>();
+			}
+			identifierSet.add(identifiable.getId());
+		}
+
+		for(Short major : objectsToLoad.keySet()) {
+			Set<Identifier> identifierSet = objectsToLoad.get(major);
+			StorableObjectPool.getStorableObjects(identifierSet, true);
+		}
 	}
 }
