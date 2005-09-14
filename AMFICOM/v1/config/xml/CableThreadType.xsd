@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: CableThreadType.xsd,v 1.6 2005/09/02 13:22:58 bass Exp $
+			$Id: CableThreadType.xsd,v 1.7 2005/09/14 19:49:30 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -18,7 +18,7 @@
 
 	<xsd:import
 		namespace = "http://syrus.com/AMFICOM/general/xml"
-		schemaLocation = "../../general/xml/StorableObject.xsd"/>
+		schemaLocation = "../../general/xml/StorableObjectType.xsd"/>
 
 	<xsd:element name = "cableThreadTypes" type = "configuration:XmlCableThreadTypeSeq">
 		<xsd:key name = "cableThreadTypeId">
@@ -29,11 +29,9 @@
 
 	<xsd:complexType name = "XmlCableThreadType" final = "#all">
 		<xsd:complexContent>
-			<xsd:extension base = "general:XmlStorableObject">
+			<xsd:extension base = "general:XmlStorableObjectType">
 				<xsd:sequence>
 					<xsd:element name = "name" type = "xsd:string"/>
-					<xsd:element name = "codename" type = "xsd:string"/>
-					<xsd:element name = "description" type = "xsd:string" minOccurs = "0"/>
 					<xsd:element name = "color" type = "xsd:string" minOccurs = "0"/>
 					<xsd:element name = "linkTypeId" type = "general:XmlIdentifier"/>
 					<xsd:element name = "cableLinkTypeId" type = "general:XmlIdentifier"/>

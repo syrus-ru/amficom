@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: Map.xsd,v 1.12 2005/09/02 13:22:58 bass Exp $
+			$Id: Map.xsd,v 1.13 2005/09/14 19:49:07 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -33,13 +33,20 @@
 			<xsd:extension base = "general:XmlStorableObject">
 				<xsd:sequence>
 					<xsd:element name = "name" type = "xsd:string"/>
-					<xsd:element name = "description" type = "xsd:string" minOccurs = "0"/>
-					<xsd:element name = "mapLibraryEntries" type = "map:XmlMapLibraryEntrySeq" minOccurs = "0"/>
-					<xsd:element name = "topologicalNodes" type = "map:XmlTopologicalNodeSeq" minOccurs = "0"/>
-					<xsd:element name = "siteNodes" type = "map:XmlSiteNodeSeq" minOccurs = "0"/>
-					<xsd:element name = "physicalLinks" type = "map:XmlPhysicalLinkSeq" minOccurs = "0"/>
-					<xsd:element name = "nodeLinks" type = "map:XmlNodeLinkSeq" minOccurs = "0"/>
-					<xsd:element name = "collectors" type = "map:XmlCollectorSeq" minOccurs = "0"/>
+					<xsd:element name = "description" type = "xsd:string"
+						minOccurs = "0"/>
+					<xsd:element ref = "map:mapLibraryEntries"
+						minOccurs = "0"/>
+					<xsd:element ref = "map:topologicalNodes"
+						minOccurs = "0"/>
+					<xsd:element ref = "map:siteNodes"
+						minOccurs = "0"/>
+					<xsd:element ref = "map:physicalLinks"
+						minOccurs = "0"/>
+					<xsd:element ref = "map:nodeLinks"
+						minOccurs = "0"/>
+					<xsd:element ref = "map:collectors"
+						minOccurs = "0"/>
 				</xsd:sequence>
 				<xsd:attribute name = "importType" type = "xsd:string" use = "required"/>
 			</xsd:extension>
@@ -48,13 +55,17 @@
 
 	<xsd:complexType name = "XmlMapSeq" final = "#all">
 		<xsd:sequence>
-			<xsd:element name = "map" type = "map:XmlMap" maxOccurs = "unbounded"/>
+			<xsd:element name = "map" type = "map:XmlMap"
+				minOccurs = "0" maxOccurs = "unbounded"/>
 		</xsd:sequence>
 	</xsd:complexType>
 
+	<xsd:element name = "mapLibraryEntries" type = "map:XmlMapLibraryEntrySeq"/>
+
 	<xsd:complexType name = "XmlMapLibraryEntrySeq" final = "#all">
 		<xsd:sequence>
-			<xsd:element name = "mapLibraryEntry" type = "xsd:string" maxOccurs = "unbounded"/>
+			<xsd:element name = "mapLibraryEntry" type = "xsd:string"
+				minOccurs = "0" maxOccurs = "unbounded"/>
 		</xsd:sequence>
 	</xsd:complexType>
 </xsd:schema>

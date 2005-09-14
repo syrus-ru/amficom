@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.71 2005/09/12 20:52:41 arseniy Exp $
+# $Id: Makefile,v 1.72 2005/09/14 19:49:08 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -78,6 +78,7 @@ $(LIBNAME_GENERALXML):
 		$(XMLDIR)/general.xsd \
 		$(XMLDIR)/Identifier.xsd \
 		$(XMLDIR)/StorableObject.xsd \
+		$(XMLDIR)/StorableObjectType.xsd \
 		$(XMLDIR)/Characteristic.xsd \
 		$(XMLDIR)/CharacteristicType.xsd \
 		$(XMLDIR)/general.xsdconfig

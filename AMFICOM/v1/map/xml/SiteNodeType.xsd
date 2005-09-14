@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SiteNodeType.xsd,v 1.15 2005/09/02 13:22:58 bass Exp $
+			$Id: SiteNodeType.xsd,v 1.16 2005/09/14 19:49:07 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -40,11 +40,9 @@
 
 	<xsd:complexType name = "XmlSiteNodeType" final = "#all">
 		<xsd:complexContent>
-			<xsd:extension base = "general:XmlStorableObject">
+			<xsd:extension base = "general:XmlStorableObjectType">
 				<xsd:sequence>
 					<xsd:element name = "name" type = "xsd:string"/>
-					<xsd:element name = "codename" type = "xsd:string"/>
-					<xsd:element name = "description" type = "xsd:string" minOccurs = "0"/>
 					<xsd:element name = "sort" type = "map:XmlSiteNodeTypeSort"/>
 					<xsd:element name = "topological" type = "xsd:boolean"/>
 					<xsd:element name = "image" type = "xsd:string" minOccurs = "0"/>

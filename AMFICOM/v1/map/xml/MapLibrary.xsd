@@ -8,7 +8,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: MapLibrary.xsd,v 1.11 2005/09/02 13:22:58 bass Exp $
+			$Id: MapLibrary.xsd,v 1.12 2005/09/14 19:49:07 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -29,9 +29,12 @@
 				<xsd:sequence>
 					<xsd:element name = "name" type = "xsd:string"/>
 					<xsd:element name = "codename" type = "xsd:string"/>
-					<xsd:element name = "description" type = "xsd:string" minOccurs = "0"/>
-					<xsd:element name = "physicalLinkTypes" type = "map:XmlPhysicalLinkTypeSeq"/>
-					<xsd:element name = "siteNodeTypes" type = "map:XmlSiteNodeTypeSeq"/>
+					<xsd:element name = "description" type = "xsd:string"
+						minOccurs = "0"/>
+					<xsd:element ref = "map:physicalLinkTypes"
+						minOccurs = "0"/>
+					<xsd:element ref = "map:siteNodeTypes"
+						minOccurs = "0"/>
 				</xsd:sequence>
 				<xsd:attribute name = "importType" type = "xsd:string" use = "required"/>
 			</xsd:extension>
