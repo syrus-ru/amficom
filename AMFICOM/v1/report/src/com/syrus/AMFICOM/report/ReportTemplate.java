@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplate.java,v 1.7 2005/09/13 12:23:10 peskovsky Exp $
+ * $Id: ReportTemplate.java,v 1.8 2005/09/14 14:37:53 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
  * отчёт </p>
  * 
  * @author $Author: peskovsky $
- * @version $Revision: 1.7 $, $Date: 2005/09/13 12:23:10 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/14 14:37:53 $
  * @module generalclient_v1
  */
 public class ReportTemplate extends StorableObject
@@ -98,6 +98,10 @@ public class ReportTemplate extends StorableObject
 	private List<ImageStorableElement> imageStorableElements = new ArrayList<ImageStorableElement>();
 
 	public boolean isModified()	{
+		Date modifiedDate = this.getModified();
+		if (modifiedDate == null)
+			return true;
+		
 		long templateModified = this.getModified().getTime();
 		
 		for (StorableElement element : this.dataStorableElements)
