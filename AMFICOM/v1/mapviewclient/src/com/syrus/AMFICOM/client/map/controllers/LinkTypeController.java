@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.54 2005/09/09 17:25:22 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.55 2005/09/14 10:35:06 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -40,7 +40,6 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.MapLibrary;
-import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
 import com.syrus.AMFICOM.resource.IntDimension;
@@ -49,7 +48,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.54 $, $Date: 2005/09/09 17:25:22 $
+ * @version $Revision: 1.55 $, $Date: 2005/09/14 10:35:06 $
  * @module mapviewclient
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -210,7 +209,7 @@ public final class LinkTypeController extends AbstractLinkController {
 			final long d = System.nanoTime();
 			final Set<Characteristic> characteristics = linkType.getCharacteristics(false);
 			final long f = System.nanoTime();
-			MapViewController.addTime4(f - d);
+			MapViewController.addTime6(f - d);
 			// Log.debugMessage("linkType.getCharacteristics() at " + (f - d) + " ns",
 			// Level.INFO);
 			for (final Characteristic ch : characteristics) {

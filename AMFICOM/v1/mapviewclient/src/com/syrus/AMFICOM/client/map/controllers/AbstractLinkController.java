@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.38 2005/09/08 14:13:48 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.39 2005/09/14 10:35:06 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.38 $, $Date: 2005/09/08 14:13:48 $
+ * @version $Revision: 1.39 $, $Date: 2005/09/14 10:35:06 $
  * @module mapviewclient
  */
 public abstract class AbstractLinkController extends AbstractMapElementController {
@@ -160,7 +160,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			final long d = System.nanoTime();
 			final Set<Characteristic> characteristics = mapElement.getCharacteristics(false);
 			final long f = System.nanoTime();
-			MapViewController.addTime4(f - d);
+			MapViewController.addTime6(f - d);
 			// Log.debugMessage("mapElement.getCharacteristics() at " + (f - d) + "
 			// ns", Level.INFO);
 			for (final Characteristic ch : characteristics) {
