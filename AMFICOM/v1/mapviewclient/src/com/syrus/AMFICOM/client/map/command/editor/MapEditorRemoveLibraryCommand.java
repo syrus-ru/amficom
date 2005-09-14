@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveLibraryCommand.java,v 1.3 2005/08/17 14:14:18 arseniy Exp $
+ * $Id: MapEditorRemoveLibraryCommand.java,v 1.4 2005/09/14 10:30:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,6 +37,14 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
+		if(mapFrame == null) {
+			this.aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this, 
+							StatusMessageEvent.STATUS_MESSAGE, 
+							"Open map frame first!"));
+			return;
+		}
 		MapLibraryTableController mapLibraryTableController = MapLibraryTableController.getInstance();
 
 		Map map = mapFrame.getMapView().getMap();

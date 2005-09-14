@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewSiteTypeCommand.java,v 1.5 2005/08/17 14:14:17 arseniy Exp $
+ * $Id: MapEditorNewSiteTypeCommand.java,v 1.6 2005/09/14 10:29:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client.map.command.editor;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.UI.dialogs.EditorDialog;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.controllers.MapLibraryController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
@@ -40,6 +41,14 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 	public void execute() {
 		try {
 			MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
+			if(mapFrame == null) {
+				this.aContext.getDispatcher().firePropertyChange(
+						new StatusMessageEvent(
+								this, 
+								StatusMessageEvent.STATUS_MESSAGE, 
+								"Open map frame first!"));
+				return;
+			}
 			SiteNodeType siteNodeType = SiteNodeType.createInstance(
 					LoginManager.getUserId(), 
 					SiteNodeTypeSort.BUILDING, 

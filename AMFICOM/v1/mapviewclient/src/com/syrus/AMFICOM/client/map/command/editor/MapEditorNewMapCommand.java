@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorNewMapCommand.java,v 1.19 2005/08/18 14:06:44 krupenn Exp $
+ * $Id: MapEditorNewMapCommand.java,v 1.20 2005/09/14 10:29:31 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.client.map.command.editor;
 import javax.swing.JDesktopPane;
 
 import com.syrus.AMFICOM.client.event.MapEvent;
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapCloseCommand;
 import com.syrus.AMFICOM.client.map.command.map.MapNewCommand;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.19 $, $Date: 2005/08/18 14:06:44 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/14 10:29:31 $
  * @module
  * @author $Author: krupenn $
  * @see MapNewCommand
@@ -55,6 +56,14 @@ public class MapEditorNewMapCommand extends AbstractCommand {
 					this.aContext,
 					new MapMapEditorApplicationModelFactory()).execute();
 			mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
+		}
+		if(mapFrame == null) {
+			this.aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this, 
+							StatusMessageEvent.STATUS_MESSAGE, 
+							"Open map frame first!"));
+			return;
 		}
 
 		if(mapFrame.checkChangesPresent())

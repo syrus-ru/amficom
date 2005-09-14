@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveSiteTypeCommand.java,v 1.5 2005/09/04 17:17:20 krupenn Exp $
+ * $Id: MapEditorRemoveSiteTypeCommand.java,v 1.6 2005/09/14 10:30:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -39,6 +39,14 @@ public class MapEditorRemoveSiteTypeCommand extends AbstractCommand {
 	@Override
 	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
+		if(mapFrame == null) {
+			this.aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this, 
+							StatusMessageEvent.STATUS_MESSAGE, 
+							"Open map frame first!"));
+			return;
+		}
 		Collection<SiteNodeType> topologicalNodeTypes = NodeTypeController.getTopologicalNodeTypes(mapFrame.getMapView().getMap());
 		topologicalNodeTypes.removeAll(MapLibraryController.getDefaultMapLibrary().getSiteNodeTypes());
 		SiteNodeType siteNodeType = (SiteNodeType )WrapperedComboChooserDialog.showChooserDialog(

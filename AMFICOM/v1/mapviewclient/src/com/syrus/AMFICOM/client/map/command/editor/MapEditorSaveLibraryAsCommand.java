@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorSaveLibraryAsCommand.java,v 1.3 2005/08/17 14:14:18 arseniy Exp $
+ * $Id: MapEditorSaveLibraryAsCommand.java,v 1.4 2005/09/14 10:30:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ import java.util.Set;
 
 import javax.swing.JDesktopPane;
 
+import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -36,6 +37,14 @@ public class MapEditorSaveLibraryAsCommand extends AbstractCommand {
 	@Override
 	public void execute() {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
+		if(mapFrame == null) {
+			this.aContext.getDispatcher().firePropertyChange(
+					new StatusMessageEvent(
+							this, 
+							StatusMessageEvent.STATUS_MESSAGE, 
+							"Open map frame first!"));
+			return;
+		}
 
 		Map map = mapFrame.getMapView().getMap();
 
