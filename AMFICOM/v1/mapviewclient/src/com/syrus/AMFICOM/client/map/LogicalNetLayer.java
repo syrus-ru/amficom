@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.121 2005/09/07 12:32:00 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.122 2005/09/14 10:20:10 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,6 +45,7 @@ import com.syrus.AMFICOM.client.map.controllers.NodeLinkController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.map.controllers.TopologicalNodeController;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.CommandList;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
@@ -75,7 +76,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.121 $, $Date: 2005/09/07 12:32:00 $
+ * @version $Revision: 1.122 $, $Date: 2005/09/14 10:20:10 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer {
@@ -937,7 +938,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.121 $, $Date: 2005/09/07 12:32:00 $
+	 * @version $Revision: 1.122 $, $Date: 2005/09/14 10:20:10 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
@@ -1063,7 +1064,7 @@ public final class LogicalNetLayer {
 				+ "			" + MapViewController.getTime1() + " ms (fillOptimizationSets)\n"
 				+ "			" + MapViewController.getTime2() + " ms (searchLinksForNodes)\n"
 				+ "			" + MapViewController.getTime3() + " ms (fill Calculated maps)\n"
-				+ "			" + Long.toString(MapViewController.getTime4()) + " ms (create VisualElements)\n"
+				+ "			" + MapViewController.getTime4() + " ms (create VisualElements)\n"
 				+ "			" + MapViewController.getTime6() + " ns (getCharacteristics)\n"
 				+ "			" + MapViewController.getTime5() + " ms (calculate distance)\n", Level.FINE);
 	}
@@ -1362,8 +1363,8 @@ public final class LogicalNetLayer {
 			// но ПОСЛЕДНИЙ узел цепочки ставится во фронт волны.
 
 
-				VisualMapElement visualMapElement;
-				final long t1 = System.currentTimeMillis();
+			VisualMapElement visualMapElement;
+			final long t1 = System.currentTimeMillis();
 			if (lastNode == nodeToPullFrom) {
 				// Если последний "натягиваемый" отображаемый элемент состоит из одного
 				// линка - его и отображаем
@@ -1430,9 +1431,17 @@ public final class LogicalNetLayer {
 
 		// Если режим показа nodeLink не разрешён, то включам режим показа
 		// physicalLink
-		if (!this.aContext.getApplicationModel().isEnabled(MapApplicationModel.MODE_NODE_LINK)) {
-			final Command modeCommand = this.getContext().getApplicationModel().getCommand(MapApplicationModel.MODE_LINK);
-			modeCommand.execute();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
+		if (this.getMapState().getShowMode() == MapState.SHOW_NODE_LINK
+				&& !aModel.isEnabled(MapApplicationModel.MODE_NODE_LINK)) {
+			aModel.setSelected(MapApplicationModel.MODE_NODE_LINK, false);
+			aModel.setSelected(MapApplicationModel.MODE_LINK, true);
+			aModel.setSelected(MapApplicationModel.MODE_CABLE_PATH, false);
+			aModel.setSelected(MapApplicationModel.MODE_PATH, false);
+
+			this.getMapState().setShowMode(MapState.SHOW_PHYSICAL_LINK);
+
+			aModel.fireModelChanged();
 		}
 
 		for (final Object veElement : this.visualElements) {
