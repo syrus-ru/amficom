@@ -1,3 +1,10 @@
+/*
+ * $Id: SiteNodeReport.java,v 1.1 2005/09/14 14:35:45 peskovsky Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
+ */
 package com.syrus.AMFICOM.client.map.report;
 
 import java.util.ArrayList;
@@ -18,26 +25,28 @@ import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.PhysicalLinkWrapper;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 
-public class TunnelCableListReport {
+public class SiteNodeReport {
 	protected static final int COLUMNS_COUNT = 2;
 	private static final int PROPERTY_NAME_COLUMN_WIDTH = 200;
 	private static final int PROPERTY_VALUE_COLUMN_WIDTH = 150;
 	
 	public static TableDataRenderingComponent createReport(
 			TableDataStorableElement tableStorableElement,
-			PhysicalLink physicalLink) throws CreateReportException {
+			SiteNode siteNode) throws CreateReportException {
 		int vertDivisionsCount = tableStorableElement.getVerticalDivisionsCount();
 		TableDataRenderingComponent renderingComponent = null;
 		
 		try {
 			renderingComponent = new TableDataRenderingComponent(
 				tableStorableElement,
-				new TunnelCableListTableModel(
-						physicalLink,
+				new SiteNodeInfoTableModel(
+						siteNode,
 						vertDivisionsCount),
 				createTableColumnModel(vertDivisionsCount));
 		} catch (ApplicationException e) {
@@ -64,7 +73,7 @@ public class TunnelCableListReport {
 	}
 }
 
-class TunnelCableListTableModel extends AbstractTableModel {
+class SiteNodeInfoTableModel extends AbstractTableModel {
 	private static final String NAME = "report.Modules.SchemeEditor.Common.name";		
 	private static final String TYPE = "report.Modules.SchemeEditor.Common.type";
 	private static final String DESCRIPTION = "report.Modules.SchemeEditor.Common.description";
@@ -95,82 +104,81 @@ class TunnelCableListTableModel extends AbstractTableModel {
 	private List<String> propertyNamesColumn = new ArrayList<String>();
 	private List<String> propertyValuesColumn = new ArrayList<String>();		
 	
-	protected TunnelCableListTableModel (
-			PhysicalLink physicalLink,
+	protected SiteNodeInfoTableModel (
+			SiteNode siteNode,
 			int vertDivisionsCount) throws ApplicationException {
 		this.vertDivisionsCount = vertDivisionsCount;
 
-		//TODO Здесь объект com.syrus.AMFICOM.map.Map получаем по кондишену. 
-		Map mapObject = null;
-		
-		Collector pipePath = mapObject.getCollector(physicalLink);
-		String nameString = null;		
-		String typeString = null;
-		String descriptionString = null;		
-		if(pipePath != null) {
-			nameString = pipePath.getName();
-			typeString = LangModelMap.getString(COLLECTOR);
-			descriptionString = pipePath.getDescription();
-		}
-		else {
-			nameString = physicalLink.getName();
-			typeString = LangModelMap.getString(TUNNEL);
-			descriptionString = physicalLink.getDescription();			
-		}
-		
-		this.propertyNamesColumn.add(LangModelReport.getString(NAME));
-		this.propertyValuesColumn.add(nameString);
-		this.propertyNamesColumn.add(LangModelReport.getString(TYPE));
-		this.propertyValuesColumn.add(typeString);
-		this.propertyNamesColumn.add(LangModelReport.getString(DESCRIPTION));
-		this.propertyValuesColumn.add(descriptionString);
-		
-		this.propertyNamesColumn.add(LangModelMap.getString(PhysicalLinkWrapper.COLUMN_START_NODE_ID));
-		this.propertyValuesColumn.add(physicalLink.getStartNode().getName());
-		this.propertyNamesColumn.add(LangModelMap.getString(PhysicalLinkWrapper.COLUMN_END_NODE_ID));
-		this.propertyValuesColumn.add(physicalLink.getEndNode().getName());
-		
-		this.propertyNamesColumn.add(LangModelReport.getString(TOPOLOGICAL_LENGTH));
-		this.propertyValuesColumn.add(Double.toString(physicalLink.getLengthLt()));
-
-		this.propertyNamesColumn.add(LangModelReport.getString(ADDRESS));
-		this.propertyValuesColumn.add(
-				CITY_KURZ
-				+ physicalLink.getCity()
-				+ ADDRESS_SEPARATOR
-				+ STREET_KURZ
-				+ physicalLink.getStreet()
-				+ ADDRESS_SEPARATOR
-				+ BUILDING_KURZ
-				+ physicalLink.getBuilding());
-		
-		this.originalRowCount += 7;
-		
-		this.propertyNamesColumn.add(EMPTY_STRING);
-		this.propertyValuesColumn.add(EMPTY_STRING);
-		this.propertyNamesColumn.add(LangModelMap.getString(TUNNEL_CABLE_LIST));
-		this.propertyValuesColumn.add(EMPTY_STRING);
-		
-		this.propertyNamesColumn.add(LangModelMap.getString(CABLE));
-		String subTableColumnHeader = null;
-		if(pipePath != null)
-			subTableColumnHeader = LangModelMap.getString(MAP_TUNNEL_POSIT);
-		else
-			subTableColumnHeader = LangModelMap.getString(MAP_COLLECTOR_POSIT);			
-		this.propertyValuesColumn.add(subTableColumnHeader);
-
-		this.originalRowCount += 3;
-
-		//TODO Здесь тоже всё по кондишенам
+		//TODO Получается из Condition
+		MapView mapViewObject = null;
+//		mapViewObject.get
+//		Collector pipePath = mapViewObject.getCollector(siteNode);
+//		String nameString = null;		
+//		String typeString = null;
+//		String descriptionString = null;		
+//		if(pipePath != null) {
+//			nameString = pipePath.getName();
+//			typeString = LangModelMap.getString(COLLECTOR);
+//			descriptionString = pipePath.getDescription();
+//		}
+//		else {
+//			nameString = siteNode.getName();
+//			typeString = LangModelMap.getString(TUNNEL);
+//			descriptionString = siteNode.getDescription();			
+//		}
+//		
+//		this.propertyNamesColumn.add(LangModelReport.getString(NAME));
+//		this.propertyValuesColumn.add(nameString);
+//		this.propertyNamesColumn.add(LangModelReport.getString(TYPE));
+//		this.propertyValuesColumn.add(typeString);
+//		this.propertyNamesColumn.add(LangModelReport.getString(DESCRIPTION));
+//		this.propertyValuesColumn.add(descriptionString);
+//		
+//		this.propertyNamesColumn.add(LangModelMap.getString(PhysicalLinkWrapper.COLUMN_START_NODE_ID));
+//		this.propertyValuesColumn.add(siteNode.getStartNode().getName());
+//		this.propertyNamesColumn.add(LangModelMap.getString(PhysicalLinkWrapper.COLUMN_END_NODE_ID));
+//		this.propertyValuesColumn.add(siteNode.getEndNode().getName());
+//		
+//		this.propertyNamesColumn.add(LangModelReport.getString(TOPOLOGICAL_LENGTH));
+//		this.propertyValuesColumn.add(Double.toString(siteNode.getLengthLt()));
+//
+//		this.propertyNamesColumn.add(LangModelReport.getString(ADDRESS));
+//		this.propertyValuesColumn.add(
+//				CITY_KURZ
+//				+ siteNode.getCity()
+//				+ ADDRESS_SEPARATOR
+//				+ STREET_KURZ
+//				+ siteNode.getStreet()
+//				+ ADDRESS_SEPARATOR
+//				+ BUILDING_KURZ
+//				+ siteNode.getBuilding());
+//		
+//		this.originalRowCount += 7;
+//		
+//		this.propertyNamesColumn.add(EMPTY_STRING);
+//		this.propertyValuesColumn.add(EMPTY_STRING);
+//		this.propertyNamesColumn.add(LangModelMap.getString(TUNNEL_CABLE_LIST));
+//		this.propertyValuesColumn.add(EMPTY_STRING);
+//		
+//		this.propertyNamesColumn.add(LangModelMap.getString(CABLE));
+//		String subTableColumnHeader = null;
+//		if(pipePath != null)
+//			subTableColumnHeader = LangModelMap.getString(MAP_TUNNEL_POSIT);
+//		else
+//			subTableColumnHeader = LangModelMap.getString(MAP_COLLECTOR_POSIT);			
+//		this.propertyValuesColumn.add(subTableColumnHeader);
+//
+//		this.originalRowCount += 3;
+//		
 //		// Getting scheme cable link iterator
-//		Iterator sclIterator = physicalLink.getBinding().getBindObjects().iterator();
+//		Iterator sclIterator = siteNode.getBinding().getBindObjects().iterator();
 //		for(; sclIterator.hasNext();) {
 //			SchemeCableLink cableLink = (SchemeCableLink)sclIterator.next();
 //			// Имя колодца/узла
 //			this.propertyNamesColumn.add(cableLink.getName());
 //			// Информация о тоннеле - строка типа Тоннель тон.1, место N, L =
 //			// xxx
-//			IntPoint binding = physicalLink.getBinding().getBinding(cableLink);
+//			IntPoint binding = siteNode.getBinding().getBinding(cableLink);
 //			this.propertyValuesColumn.add(Integer.toString(binding.x) + ":"
 //					+ Integer.toString(binding.y));
 //			this.originalRowCount++;

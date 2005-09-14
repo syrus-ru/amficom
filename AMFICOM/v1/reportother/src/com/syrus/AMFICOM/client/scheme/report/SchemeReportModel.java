@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeReportModel.java,v 1.2 2005/09/13 13:44:19 peskovsky Exp $
+ * $Id: SchemeReportModel.java,v 1.3 2005/09/14 14:35:45 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -94,8 +94,9 @@ public class SchemeReportModel extends ReportModel
 			else if (element.getReportName().equals(CABLE_LAYOUT)) {
 				if (objectId.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
 					SchemeCableLink schemeCableLink = StorableObjectPool.getStorableObject(objectId,true);
-					//TODO Реализовать
-					result = null;
+					result = CableLayoutReport.createReport(
+							(TableDataStorableElement)element,
+							schemeCableLink);
 				}
 			}
 			else if (element.getReportName().equals(SELECTED_OBJECT_UGO)) {

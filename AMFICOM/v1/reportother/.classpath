@@ -24,5 +24,12 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/mapinfo_v1_modifying"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mapview_v1"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mapviewclient_v1_modifying"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/filter_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/filterclient_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/cmserver_interface"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/csbridge_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/leserver_interface"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/mscharserver_interface"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/event_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

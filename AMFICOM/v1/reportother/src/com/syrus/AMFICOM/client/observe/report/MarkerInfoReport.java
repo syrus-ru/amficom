@@ -1,4 +1,4 @@
-package com.syrus.AMFICOM.client.map.report;
+package com.syrus.AMFICOM.client.observe.report;
 /*
 import javax.swing.table.TableColumn;
 

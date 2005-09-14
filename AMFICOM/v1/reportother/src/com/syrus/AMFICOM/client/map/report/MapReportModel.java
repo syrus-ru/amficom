@@ -1,5 +1,5 @@
 /*
- * $Id: MapReportModel.java,v 1.1 2005/09/13 13:44:19 peskovsky Exp $
+ * $Id: MapReportModel.java,v 1.2 2005/09/14 14:35:45 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,16 +18,16 @@ import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
-import com.syrus.AMFICOM.client.scheme.report.SchemeReport;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
-import com.syrus.AMFICOM.scheme.Scheme;
 
 public class MapReportModel extends ReportModel {
 	// Названия отчётов для карты
@@ -46,8 +46,8 @@ public class MapReportModel extends ReportModel {
 	/**
 	 * Информация по колодцу/узлу
 	 */ 
-	public static String SHAFT_INFO = "shaftInfo";
-  	
+	public static String SITE_NODE_INFO = "shaftInfo";
+	
 	public MapReportModel(){
 	}
 
@@ -88,12 +88,23 @@ public class MapReportModel extends ReportModel {
 				
 				if (element.getReportName().equals(TUNNEL_CABLE_LIST)) {
 					if (objectID.getMajor() == ObjectEntities.PHYSICALLINK_CODE) {
-						PhysicalLink physicalLink = StorableObjectPool.getStorableObject(objectID,true);
+						PhysicalLink physicalLink =
+							StorableObjectPool.getStorableObject(objectID,true);
 						result = TunnelCableListReport.createReport(
 								(TableDataStorableElement)element,
 								physicalLink);
 					}
 				}
+				else if (element.getReportName().equals(SITE_NODE_INFO)) {
+					if (objectID.getMajor() == ObjectEntities.SITENODE_CODE) {
+						SiteNode siteNode =
+							StorableObjectPool.getStorableObject(objectID,true);
+						result = SiteNodeReport.createReport(
+								(TableDataStorableElement)element,
+								siteNode);
+					}
+				}
+
 			}
 		} catch (ApplicationException e) {
 			throw new CreateReportException(
@@ -118,7 +129,7 @@ public class MapReportModel extends ReportModel {
 		if (	reportName.equals(TOPOLOGY_IMAGE)
 			||	reportName.equals(TUNNEL_CABLE_LIST)
 			||	reportName.equals(COLLECTOR_INFO)
-			||	reportName.equals(SHAFT_INFO))
+			||	reportName.equals(SITE_NODE_INFO))
 			langReportName = LangModelReport.getString("report.Modules.Map." + reportName);
 		
 		return langReportName;
@@ -141,7 +152,7 @@ public class MapReportModel extends ReportModel {
 		result.add(TOPOLOGY_IMAGE);
 		result.add(TUNNEL_CABLE_LIST);
 		result.add(COLLECTOR_INFO);
-		result.add(SHAFT_INFO);		
+		result.add(SITE_NODE_INFO);		
 		
 		return result;
 	}
