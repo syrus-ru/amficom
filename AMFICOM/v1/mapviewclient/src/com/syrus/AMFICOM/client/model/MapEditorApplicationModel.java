@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.13 2005/09/11 20:16:07 bass Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.14 2005/09/14 10:41:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -11,16 +11,20 @@
 
 package com.syrus.AMFICOM.client.model;
 
+import java.awt.Image;
 import java.awt.Toolkit;
 
+import javax.swing.ImageIcon;
 import javax.swing.UIManager;
+
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 
 /**
  * содержит список функциональных элементов, доступных пользователю 
  * 
- * @version $Revision: 1.13 $, $Date: 2005/09/11 20:16:07 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/14 10:41:41 $
  * @module mapviewclient
- * @author $Author: bass $
+ * @author $Author: krupenn $
  */
 public class MapEditorApplicationModel extends ApplicationModel {
 	public static final String ITEM_VIEW_PROPERTIES = "mapActionViewProperties";
@@ -75,6 +79,9 @@ public class MapEditorApplicationModel extends ApplicationModel {
 
 	public MapEditorApplicationModel() {
 		UIManager.put("images/main/map_mini.gif", Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif"));
+		UIManager.put(MapEditorResourceKeys.ICON_CATALOG, new ImageIcon(Toolkit
+				.getDefaultToolkit().getImage("images/folder.gif").getScaledInstance(
+						16, 16, Image.SCALE_SMOOTH)));
 
 		add(ITEM_VIEW_PROPERTIES);
 		add(ITEM_EDIT_PROPERTIES);
