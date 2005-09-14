@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.42 2005/09/04 13:43:14 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.43 2005/09/14 10:27:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * Разместить кабель на карте.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.42 $, $Date: 2005/09/04 13:43:14 $
+ * @version $Revision: 1.43 $, $Date: 2005/09/14 10:27:35 $
  * @module mapviewclient
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
@@ -184,8 +184,6 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 				unbound.setCablePath(this.cablePath);
 			}
 			long t7 = System.currentTimeMillis();
-			this.logicalNetLayer.getMapViewController().scanPaths(this.schemeCableLink.getParentScheme());
-			long t8 = System.currentTimeMillis();
 			setResult(Command.RESULT_OK);
 			// операция закончена - оповестить слушателей
 			this.logicalNetLayer.setCurrentMapElement(this.cablePath);
@@ -195,7 +193,6 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			Log.debugMessage("PlaceSchemeCableLinkCommand :: create cable path " + (t5 - t4) + " ms", Level.FINE);
 			Log.debugMessage("PlaceSchemeCableLinkCommand :: walk through CCIs " + (t6 - t5) + " ms", Level.FINE);
 			Log.debugMessage("PlaceSchemeCableLinkCommand :: create final unbound node " + (t7 - t6) + " ms", Level.FINE);
-			Log.debugMessage("PlaceSchemeCableLinkCommand :: scan Paths " + (t8 - t7) + " ms", Level.FINE);
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);

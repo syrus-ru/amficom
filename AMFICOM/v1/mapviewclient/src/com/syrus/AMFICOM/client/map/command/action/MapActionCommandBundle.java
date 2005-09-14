@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.32 2005/09/05 13:54:00 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.33 2005/09/14 10:26:53 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/09/05 13:54:00 $
+ * @version $Revision: 1.33 $, $Date: 2005/09/14 10:26:53 $
  * @module maviewclient_v1
  */
 public class MapActionCommandBundle extends CommandBundle
@@ -176,8 +176,6 @@ public class MapActionCommandBundle extends CommandBundle
 		if(cmd.getResult() != Command.RESULT_OK)
 			throw cmd.getException();
 		add(cmd);
-		this.logicalNetLayer.getMapViewController().scanPaths(
-				cablePath.getSchemeCableLink().getParentScheme());
 	}
 
 	/**
