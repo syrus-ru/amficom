@@ -1,11 +1,15 @@
-/*
- * $Id: MapExportCommand.java,v 1.25 2005/09/05 17:43:20 bass Exp $ Syrus
- * Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
+/*-
+ * $Id: MapExportCommand.java,v 1.26 2005/09/14 19:51:10 bass Exp $
+ *
+ * Copyright ї 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
 
 package com.syrus.AMFICOM.client.map.command.map;
 
 import static java.util.logging.Level.INFO;
+import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
 import java.io.File;
@@ -25,10 +29,9 @@ import com.syrus.AMFICOM.client.map.command.MapDesktopCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.xml.MapsDocument;
-import com.syrus.AMFICOM.map.xml.XmlMap;
-import com.syrus.AMFICOM.map.xml.XmlMapSeq;
 import com.syrus.util.Log;
 
 /**
@@ -38,7 +41,7 @@ import com.syrus.util.Log;
  * по умолчанию
  * 
  * @author $Author: bass $
- * @version $Revision: 1.25 $, $Date: 2005/09/05 17:43:20 $
+ * @version $Revision: 1.26 $, $Date: 2005/09/14 19:51:10 $
  * @module mapviewclient
  */
 public class MapExportCommand extends ExportCommand {
@@ -90,35 +93,35 @@ public class MapExportCommand extends ExportCommand {
 	}
 
 	protected void saveXML(Map map, String fileName) {
+		try {
+			XmlOptions xmlOptions = new XmlOptions();
+			xmlOptions.setSavePrettyPrint();
+			xmlOptions.setSavePrettyPrintIndent(2);
+			java.util.Map<String, String> prefixes = new HashMap<String, String>();
+			prefixes.put("http://syrus.com/AMFICOM/map/xml", "map");
+			prefixes.put("http://syrus.com/AMFICOM/general/xml", "general");
+			xmlOptions.setSaveSuggestedPrefixes(prefixes);
+			xmlOptions.setSaveAggressiveNamespaces();
+	
+			MapsDocument doc = 
+				MapsDocument.Factory.newInstance(xmlOptions);
 
-		XmlOptions xmlOptions = new XmlOptions();
-		xmlOptions.setSavePrettyPrint();
-		xmlOptions.setSavePrettyPrintIndent(2);
-		java.util.Map prefixes = new HashMap();
-		prefixes.put("http://syrus.com/AMFICOM/map/xml", "map");
-		prefixes.put("http://syrus.com/AMFICOM/general/xml", "general");
-		xmlOptions.setSaveSuggestedPrefixes(prefixes);
-		xmlOptions.setSaveAggressiveNamespaces();
+			map.getXmlTransferable(doc.addNewMaps().addNewMap(), "amficom");
 
-		MapsDocument doc = 
-			MapsDocument.Factory.newInstance(xmlOptions);
-
-		XmlMapSeq xmlMaps = doc.addNewMaps();
-
-		xmlMaps.setMapArray(new XmlMap[] {map.getXmlTransferable("amficom")});
-		
-		// Validate the new XML
-		boolean isXmlValid = validateXml(doc);
-		if(isXmlValid) {
-			File f = new File(fileName);
-
-			try {
-				// Writing the XML Instance to a file.
-				doc.save(f, xmlOptions);
-			} catch(IOException e) {
-				e.printStackTrace();
+			// Validate the new XML
+			if (validateXml(doc)) {
+				File f = new File(fileName);
+	
+				try {
+					// Writing the XML Instance to a file.
+					doc.save(f, xmlOptions);
+				} catch(IOException e) {
+					e.printStackTrace();
+				}
+				Log.debugMessage("\nXML Instance Document saved at : " + f.getPath(), INFO);
 			}
-			Log.debugMessage("\nXML Instance Document saved at : " + f.getPath(), INFO);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
 		}
 	}
 

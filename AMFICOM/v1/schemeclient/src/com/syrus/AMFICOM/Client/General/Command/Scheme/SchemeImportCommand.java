@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.13 2005/09/14 10:20:04 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.14 2005/09/14 19:51:10 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,6 +37,7 @@ import org.apache.xmlbeans.XmlException;
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.PortView;
+
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -93,7 +94,6 @@ import com.syrus.AMFICOM.general.XmlComplementor;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.general.xml.XmlStorableObject;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
@@ -127,19 +127,23 @@ public class SchemeImportCommand extends AbstractCommand {
 	private static void init() {
 		XmlComplementorRegistry.registerComplementor(SCHEME_CODE, new XmlComplementor() {
 			public void complementStorableObject(
-					final XmlStorableObject scheme,
+					final XmlStorableObject storableObject,
 					final String importType)
 			throws CreateObjectException, UpdateObjectException {
-				((XmlScheme) scheme).setDomainId(LoginManager.getDomainId().getXmlTransferable(importType));
+				final XmlScheme scheme = (XmlScheme) storableObject;
+				scheme.unsetDomainId();
+				LoginManager.getDomainId().getXmlTransferable(scheme.addNewDomainId(), importType);
 			}
 		});
-		
+
 		XmlComplementorRegistry.registerComplementor(EQUIPMENT_CODE, new XmlComplementor() {
 			public void complementStorableObject(
-					final XmlStorableObject equipment,
+					final XmlStorableObject storableObject,
 					final String importType)
 			throws CreateObjectException, UpdateObjectException {
-				((XmlEquipment) equipment).setDomainId(LoginManager.getDomainId().getXmlTransferable(importType));
+				final XmlEquipment equipment = (XmlEquipment) storableObject;
+				equipment.unsetDomainId();
+				LoginManager.getDomainId().getXmlTransferable(equipment.addNewDomainId(), importType);
 			}
 		});
 		
@@ -154,11 +158,12 @@ public class SchemeImportCommand extends AbstractCommand {
 				final PortType portType = portTypes.iterator().next(); 
 				XmlComplementorRegistry.registerComplementor(SCHEMECABLEPORT_CODE, new XmlComplementor() {
 					public void complementStorableObject(
-							final XmlStorableObject schemeCablePort,
+							final XmlStorableObject storableObject,
 							final String importType)
 					throws CreateObjectException, UpdateObjectException {
-						XmlIdentifier portTypeId = portType.getId().getXmlTransferable(importType);
-						((XmlSchemeCablePort) schemeCablePort).setCablePortTypeId(portTypeId);
+						final XmlSchemeCablePort schemeCablePort = (XmlSchemeCablePort) storableObject;
+						schemeCablePort.unsetCablePortTypeId();
+						portType.getId().getXmlTransferable(schemeCablePort.addNewCablePortTypeId(), importType);
 					}
 				});				
 			}
