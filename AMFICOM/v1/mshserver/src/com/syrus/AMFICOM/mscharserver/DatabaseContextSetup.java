@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseContextSetup.java,v 1.6 2005/08/24 18:01:38 arseniy Exp $
+ * $Id: DatabaseContextSetup.java,v 1.7 2005/09/14 13:06:39 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.measurement.MeasurementPortDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementPortTypeDatabase;
 import com.syrus.AMFICOM.measurement.MonitoredElementDatabase;
 import com.syrus.AMFICOM.resource.ImageResourceDatabase;
+import com.syrus.AMFICOM.resource.LayoutItemDatabase;
 import com.syrus.AMFICOM.scheme.CableChannelingItemDatabase;
 import com.syrus.AMFICOM.scheme.PathElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeCableLinkDatabase;
@@ -50,8 +51,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElementDatabase;
 import com.syrus.AMFICOM.scheme.SchemeProtoGroupDatabase;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/24 18:01:38 $
+ * @author $Author: bob $
+ * @version $Revision: 1.7 $, $Date: 2005/09/14 13:06:39 $
  * @module mscharserver
  */
 final class DatabaseContextSetup {
@@ -74,6 +75,7 @@ final class DatabaseContextSetup {
 		DatabaseContext.registerDatabase(new MonitoredElementDatabase());
 
 		DatabaseContext.registerDatabase(new ImageResourceDatabase());
+		DatabaseContext.registerDatabase(new LayoutItemDatabase());
 
 		DatabaseContext.registerDatabase(new SiteNodeTypeDatabase());
 		DatabaseContext.registerDatabase(new PhysicalLinkTypeDatabase());
