@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectVersion.java,v 1.5 2005/09/14 18:51:56 arseniy Exp $
+ * $Id: StorableObjectVersion.java,v 1.6 2005/09/14 20:13:08 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/14 18:51:56 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/14 20:13:08 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -27,22 +27,25 @@ public final class StorableObjectVersion implements Cloneable, Serializable {
 	}
 
 	public boolean isNewer(final StorableObjectVersion storableObjectVersion) {
-		if (Math.abs(this.version - storableObjectVersion.version) < (Long.MAX_VALUE >> 1 - Long.MIN_VALUE >> 1))
+		if (Math.abs(this.version - storableObjectVersion.version) < (Long.MAX_VALUE >> 1 - Long.MIN_VALUE >> 1)) {
 			return (this.version > storableObjectVersion.version);
+		}
 		return (this.version < storableObjectVersion.version);
 	}
 
 	public final boolean isOlder(final StorableObjectVersion storableObjectVersion) {
-		if (Math.abs(this.version - storableObjectVersion.version) < (Long.MAX_VALUE >> 1 - Long.MIN_VALUE >> 1))
+		if (Math.abs(this.version - storableObjectVersion.version) < (Long.MAX_VALUE >> 1 - Long.MIN_VALUE >> 1)) {
 			return (this.version < storableObjectVersion.version);
+		}
 		return (this.version > storableObjectVersion.version);
 	}
 
 	public void increment() {
 		if (this.version < Long.MAX_VALUE) {
 			this.version++;
-			if (this.equals(ILLEGAL_VERSION))
+			if (this.equals(ILLEGAL_VERSION)) {
 				this.version++;
+			}
 		}
 		else {
 			this.version = Long.MIN_VALUE;

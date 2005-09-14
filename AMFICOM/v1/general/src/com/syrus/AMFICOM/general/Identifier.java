@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.71 2005/09/14 19:50:50 bass Exp $
+ * $Id: Identifier.java,v 1.72 2005/09/14 20:12:34 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.71 $, $Date: 2005/09/14 19:50:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.72 $, $Date: 2005/09/14 20:12:34 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -267,8 +267,8 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	/**
 	 * Creates new set of identifiers, containing values from set <code>identifiables1</code>
 	 * with exception to those, containing in set <code>identifiables2</code>
-	 * @param identifiables1
-	 * @param identifiables2
+	 * @param identifiables1 - уменьшаемое
+	 * @param identifiables2 - вычитаемое
 	 * @return Set of identifiers
 	 */
 	public static final Set<Identifier> createSubtractionIdentifiers(final Set<? extends Identifiable> identifiables1,
@@ -276,7 +276,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		assert identifiables1 != null : NON_NULL_EXPECTED;
 		assert identifiables2 != null : NON_NULL_EXPECTED;
 
-		final Set<Identifier> identifiers = Identifier.createIdentifiers(identifiables1);
+		final Set<Identifier> identifiers = createIdentifiers(identifiables1);
 		synchronized (identifiables2) {
 			for (final Identifiable identifiable : identifiables2) {
 				identifiers.remove(identifiable.getId());
@@ -307,8 +307,8 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 * Removes from set of identifiers <code>identifiers</code> those,
 	 * which contained in set of identifiables <code>identifiables</code>.
 	 * (I. e., parameter <code>identifiers</code> is passed as &quot;inout&quot; argument.)
-	 * @param identifiers
-	 * @param identifiables
+	 * @param identifiers - уменьшаемое
+	 * @param identifiables - вычитаемое
 	 */
 	public static final void subtractFromIdentifiers(final Set<Identifier> identifiers,
 			final Set<? extends Identifiable> identifiables) {
