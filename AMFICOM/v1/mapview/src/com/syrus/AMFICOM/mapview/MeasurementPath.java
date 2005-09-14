@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.45 2005/09/08 06:28:01 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.46 2005/09/14 10:16:41 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
  * Элемент пути.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.45 $, $Date: 2005/09/08 06:28:01 $
+ * @version $Revision: 1.46 $, $Date: 2005/09/14 10:16:41 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -356,19 +356,20 @@ public final class MeasurementPath implements MapElement {
 						break;
 					case IdlKind._SCHEME_LINK:
 						final SchemeLink schemeLink = (SchemeLink) pathElement.getAbstractSchemeElement();
-						try {
-							final SchemeElement startSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme,
-									schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice());
-							final SchemeElement endSchemeElement = SchemeUtils.getSchemeElementByDevice(scheme,
-									schemeLink.getTargetAbstractSchemePort().getParentSchemeDevice());
-							final SiteNode startSiteNode = this.mapView.findElement(startSchemeElement);
-							final SiteNode endSiteNode = this.mapView.findElement(endSchemeElement);
-							if (startSiteNode == endSiteNode) {
-								// TODO think if link to 'link' is needed for mPath
-								// mPath.addCablePath(startSiteNode);
-							}
-						} catch(ApplicationException e) {
-							e.printStackTrace();
+
+						SchemeElement innerSourceElement = schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
+						SchemeElement topSourceElement = MapView.getTopLevelSchemeElement(innerSourceElement);
+						final SchemeElement startSchemeElement = MapView.getTopologicalSchemeElement(scheme, topSourceElement);
+
+						SchemeElement innerTargetElement = schemeLink.getTargetAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
+						SchemeElement topTargetElement = MapView.getTopLevelSchemeElement(innerTargetElement);
+						final SchemeElement endSchemeElement = MapView.getTopologicalSchemeElement(scheme, topTargetElement);
+
+						final SiteNode startSiteNode = this.mapView.findElement(startSchemeElement);
+						final SiteNode endSiteNode = this.mapView.findElement(endSchemeElement);
+						if (startSiteNode == endSiteNode) {
+							// TODO think if link to 'link' is needed for mPath
+							// mPath.addCablePath(startSiteNode);
 						}
 						break;
 					case IdlKind._SCHEME_CABLE_LINK:

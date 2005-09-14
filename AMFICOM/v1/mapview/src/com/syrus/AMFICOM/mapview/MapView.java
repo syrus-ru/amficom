@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.60 2005/09/12 02:52:18 bass Exp $
+* $Id: MapView.java,v 1.61 2005/09/14 10:16:41 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,6 +7,7 @@
 */
 
 package com.syrus.AMFICOM.mapview;
+
 
 import java.util.Collections;
 import java.util.Date;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
+import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBNETWORK;
 
 /**
  * Класс используется для хранения объектов, отображаемых на
@@ -54,8 +55,8 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: bass $
- * @version $Revision: 1.60 $, $Date: 2005/09/12 02:52:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.61 $, $Date: 2005/09/14 10:16:41 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Namable {
@@ -380,14 +381,15 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getStartNode(final SchemeCableLink schemeCableLink) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (scheme.getTopologicalSchemeCableLinksRecursively(false).contains(schemeCableLink)) {
+				if (isSchemeCableLinkTopological(scheme, schemeCableLink)) {
 					SchemeCablePort sourceAbstractSchemePort = schemeCableLink.getSourceAbstractSchemePort();
 					if(sourceAbstractSchemePort == null) {
 						// SchemeCableLink has no start device
 						return null;
 					}
 					SchemeElement sourceSchemeElement = sourceAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement();
-					final SchemeElement se = scheme.getTopologicalSchemeElement(SchemeUtils.getTopLevelSchemeElement(sourceSchemeElement), false);
+					final SchemeElement se =
+						getTopologicalSchemeElement(scheme, getTopLevelSchemeElement(sourceSchemeElement));
 					return findElement(se);
 				}
 			}
@@ -409,14 +411,15 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getEndNode(final SchemeCableLink schemeCableLink) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (scheme.getTopologicalSchemeCableLinksRecursively(false).contains(schemeCableLink)) {
+				if(isSchemeCableLinkTopological(scheme, schemeCableLink)) {
 					SchemeCablePort targetAbstractSchemePort = schemeCableLink.getTargetAbstractSchemePort();
 					if(targetAbstractSchemePort == null) {
 						// SchemeCableLink has no end device
 						return null;
 					}
 					SchemeElement targetSchemeElement = targetAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement();
-					final SchemeElement se = scheme.getTopologicalSchemeElement(SchemeUtils.getTopLevelSchemeElement(targetSchemeElement), false);
+					final SchemeElement se = 
+						getTopologicalSchemeElement(scheme, getTopLevelSchemeElement(targetSchemeElement));
 					return findElement(se);
 				}
 			}
@@ -438,8 +441,9 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getStartNode(final SchemePath schemePath) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (scheme.getTopologicalSchemePathsRecursively(false).contains(schemePath)) {
-					final SchemeElement se = scheme.getTopologicalSchemeElement(SchemeUtils.getTopLevelSchemeElement(schemePath.getStartSchemeElement()), false);
+				if (isSchemePathTopological(scheme, schemePath)) {
+					final SchemeElement se = 
+						getTopologicalSchemeElement(scheme, getTopLevelSchemeElement(schemePath.getStartSchemeElement()));
 					return findElement(se);
 				}
 			}
@@ -461,8 +465,9 @@ public final class MapView extends DomainMember implements Namable {
 	public SiteNode getEndNode(final SchemePath schemePath) {
 		try {
 			for (final Scheme scheme : this.getSchemes()) {
-				if (scheme.getTopologicalSchemePathsRecursively(false).contains(schemePath)) {
-					final SchemeElement se = scheme.getTopologicalSchemeElement(SchemeUtils.getTopLevelSchemeElement(schemePath.getEndSchemeElement()), false);
+				if (isSchemePathTopological(scheme, schemePath)) {
+					final SchemeElement se = 
+						getTopologicalSchemeElement(scheme, getTopLevelSchemeElement(schemePath.getEndSchemeElement()));
 					return findElement(se);
 				}
 			}
@@ -772,4 +777,83 @@ public final class MapView extends DomainMember implements Namable {
 		this.removeMarkers();
 	}
 
+	public static SchemeElement getTopologicalSchemeElement(final Scheme scheme, final SchemeElement schemeElement) {
+		Scheme parentScheme = schemeElement.getParentScheme();
+		if(scheme.equals(parentScheme)) {
+			return schemeElement;
+		}
+		if(parentScheme.getKind().value() == CABLE_SUBNETWORK.value()) {
+			return schemeElement;
+		}
+		SchemeElement parentSchemeElement = parentScheme.getParentSchemeElement();
+		if(parentSchemeElement == null) {
+			return null;
+		}
+		return getTopologicalSchemeElement(scheme, parentSchemeElement);
+	}
+
+	public static boolean isSchemeElementTopological(final Scheme scheme, final SchemeElement schemeElement) {
+		Scheme parentScheme = schemeElement.getParentScheme();
+		if(scheme.equals(parentScheme)) {
+			return true;
+		}
+		if(parentScheme.getKind().value() != CABLE_SUBNETWORK.value()) {
+			return false;
+		}
+		SchemeElement parentSchemeElement = parentScheme.getParentSchemeElement();
+		if(parentSchemeElement == null) {
+			return false;
+		}
+		if(isSchemeElementTopological(scheme, parentSchemeElement)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isSchemeCableLinkTopological(final Scheme scheme, final SchemeCableLink schemeCableLink) {
+		Scheme parentScheme = schemeCableLink.getParentScheme();
+		if(scheme.equals(parentScheme)) {
+			return true;
+		}
+		if(parentScheme.getKind().value() != CABLE_SUBNETWORK.value()) {
+			return false;
+		}
+		SchemeElement parentSchemeElement = parentScheme.getParentSchemeElement();
+		if(parentSchemeElement == null) {
+			return false;
+		}
+		if(isSchemeElementTopological(scheme, parentSchemeElement)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static boolean isSchemePathTopological(final Scheme scheme, final SchemePath schemePath) {
+		Scheme parentScheme = schemePath.getParentSchemeMonitoringSolution().getParentScheme();
+		if(parentScheme == null) {
+			return false;
+		}
+		if(scheme.equals(parentScheme)) {
+			return true;
+		}
+		if(parentScheme.getKind().value() != CABLE_SUBNETWORK.value()) {
+			return false;
+		}
+		SchemeElement parentSchemeElement = parentScheme.getParentSchemeElement();
+		if(parentSchemeElement == null) {
+			return false;
+		}
+		if(isSchemeElementTopological(scheme, parentSchemeElement)) {
+			return true;
+		}
+		return false;
+	}
+
+	public static SchemeElement getTopLevelSchemeElement(SchemeElement schemeElement) {
+		SchemeElement top = schemeElement;
+		while (top.getParentSchemeElement() != null) {
+			top = getTopLevelSchemeElement(top);
+		}
+		return top;
+	}
 }
