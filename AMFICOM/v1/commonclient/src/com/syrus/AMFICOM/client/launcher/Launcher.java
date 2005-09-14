@@ -1,5 +1,5 @@
 /*-
-* $Id: Launcher.java,v 1.4 2005/09/14 09:08:27 bob Exp $
+* $Id: Launcher.java,v 1.5 2005/09/14 11:45:52 bob Exp $
 *
 * Copyright © 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,10 +8,19 @@
 
 package com.syrus.AMFICOM.client.launcher;
 
+import java.awt.BorderLayout;
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
 
+import javax.swing.JLabel;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
+import javax.swing.JScrollPane;
+import javax.swing.JTree;
+import javax.swing.SwingConstants;
+import javax.swing.tree.DefaultMutableTreeNode;
+import javax.swing.tree.DefaultTreeModel;
+import javax.swing.tree.TreePath;
 
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.util.Log;
@@ -19,7 +28,7 @@ import com.syrus.util.Log;
 
 /**
  * local implementation of Винтилйатар
- * @version $Revision: 1.4 $, $Date: 2005/09/14 09:08:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/14 11:45:52 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -94,6 +103,14 @@ public final class Launcher {
 	}
 	
 	
+	public static void main(String[] args) {
+		try {
+			throw new Exception("" + Integer.parseInt("a"));
+		} catch (Exception e) {
+			new DefaultThrowableHandler().handle(e);
+		}
+	}
+	
 	public static class DefaultThrowableHandler {
 		
 		private final String title;
@@ -120,12 +137,30 @@ public final class Launcher {
 			Log.debugMessage(msg, Log.DEBUGLEVEL01);
 			Log.errorException(thrown);
 			
-			final String text = "<html>" 
-				+ LangModelGeneral.getString("Error.GetUncatchedException") + ":<br>"
-				+ thrown.getClass().getSimpleName() + " : " + thrown.getMessage() + "<br>"
-				+ "<br><br>" + LangModelGeneral.getString("Message.Information.ApplicationWillBeTerminated")
-				+ "</html>";
-			JOptionPane.showMessageDialog(null, text, this.title, JOptionPane.ERROR_MESSAGE);
+			StackTraceElement[] stackTrace = thrown.getStackTrace();
+			DefaultMutableTreeNode root = new DefaultMutableTreeNode(thrown);
+			for (final StackTraceElement traceElement : stackTrace) {
+				root.add(new DefaultMutableTreeNode(traceElement.toString()));					
+			}			
+			
+			final JTree tree = new JTree(new DefaultTreeModel(root));
+			tree.collapsePath(new TreePath(root));
+			
+			final JPanel panel = new JPanel(new BorderLayout());
+			final JLabel label = new JLabel(LangModelGeneral.getString("Error.GetUncatchedException") + ":");
+			label.setHorizontalAlignment(SwingConstants.CENTER);
+			
+			
+			panel.add(label, BorderLayout.NORTH);
+			
+			panel.add(new JScrollPane(tree), BorderLayout.CENTER);
+
+			final JLabel label2 = new JLabel(
+				LangModelGeneral.getString("Message.Information.ApplicationWillBeTerminated"));
+			label2.setHorizontalAlignment(SwingConstants.CENTER);
+			panel.add(label2, BorderLayout.SOUTH);
+
+			JOptionPane.showMessageDialog(null, panel, this.title, JOptionPane.ERROR_MESSAGE);
 			System.exit(CANNOT_RUN_EXIT);
 		}
 	}
