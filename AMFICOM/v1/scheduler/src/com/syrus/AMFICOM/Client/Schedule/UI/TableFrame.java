@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.35 2005/09/14 07:33:56 bob Exp $
+ * $Id: TableFrame.java,v 1.36 2005/09/14 11:01:49 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -37,6 +37,7 @@ import javax.swing.table.JTableHeader;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.UI.StubLabelCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -54,7 +55,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.35 $, $Date: 2005/09/14 07:33:56 $
+ * @version $Revision: 1.36 $, $Date: 2005/09/14 11:01:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -172,7 +173,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 					TestController.KEY_TEMPORAL_TYPE, TestController.KEY_MONITORED_ELEMENT,
 					TestController.KEY_TEST_OBJECT, TestController.KEY_MEASUREMENT_TYPE, TestController.KEY_START_TIME,
 					TestController.KEY_STATUS});
-			this.listTable.setDefaultTableCellRenderer();
+			this.listTable.setRenderer(StubLabelCellRenderer.getInstance(), TestController.KEY_STATUS);
 			this.listTable.setAllowAutoResize(true);
 			final ListSelectionModel rowSM = this.listTable.getSelectionModel();
 			rowSM.addListSelectionListener(new ListSelectionListener() {
