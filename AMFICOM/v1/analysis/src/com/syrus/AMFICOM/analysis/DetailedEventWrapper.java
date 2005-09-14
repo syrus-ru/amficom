@@ -1,5 +1,5 @@
 /*-
- * $Id: DetailedEventWrapper.java,v 1.4 2005/09/07 02:56:49 arseniy Exp $
+ * $Id: DetailedEventWrapper.java,v 1.5 2005/09/14 05:24:03 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,8 @@ import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.util.Wrapper;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/09/07 02:56:49 $
+ * @author $Author: bob $
+ * @version $Revision: 1.5 $, $Date: 2005/09/14 05:24:03 $
  * @module analysis
  */
 
@@ -73,7 +73,7 @@ public class DetailedEventWrapper implements Wrapper<DetailedEventResource> {
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
 	}
 
-	public static DetailedEventWrapper getInstance() {
+	public static synchronized DetailedEventWrapper getInstance() {
 		if (instance == null) {
 			instance = new DetailedEventWrapper();
 		}
