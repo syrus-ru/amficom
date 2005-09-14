@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.32 2005/07/28 19:01:32 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.33 2005/09/14 18:21:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/07/28 19:01:32 $
+ * @version $Revision: 1.33 $, $Date: 2005/09/14 18:21:32 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public class DatabaseObjectLoader implements ObjectLoader {

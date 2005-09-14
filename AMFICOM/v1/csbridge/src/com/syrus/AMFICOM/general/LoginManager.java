@@ -1,5 +1,5 @@
 /*
- * $Id: LoginManager.java,v 1.20 2005/09/06 19:35:39 arseniy Exp $
+ * $Id: LoginManager.java,v 1.21 2005/09/14 18:21:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,9 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/06 19:35:39 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/14 18:21:32 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public final class LoginManager {

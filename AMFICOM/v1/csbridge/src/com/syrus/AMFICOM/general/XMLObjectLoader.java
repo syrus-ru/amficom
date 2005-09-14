@@ -1,5 +1,5 @@
 /*
- * $Id: XMLObjectLoader.java,v 1.10 2005/08/19 14:46:19 arseniy Exp $
+ * $Id: XMLObjectLoader.java,v 1.11 2005/09/14 18:21:32 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/19 14:46:19 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/14 18:21:32 $
  * @author $Author: arseniy $
+ * @author Voffka
  * @module csbridge
  */
 public final class XMLObjectLoader implements ObjectLoader {

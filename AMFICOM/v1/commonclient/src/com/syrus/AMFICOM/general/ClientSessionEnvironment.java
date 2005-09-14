@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.18 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.19 2005/09/14 18:23:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,9 @@ import java.beans.PropertyChangeListener;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/08/02 13:03:22 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/14 18:23:22 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
 public final class ClientSessionEnvironment extends BaseSessionEnvironment {

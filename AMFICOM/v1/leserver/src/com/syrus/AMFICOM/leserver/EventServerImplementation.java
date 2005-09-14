@@ -1,5 +1,5 @@
 /*
- * $Id: EventServerImplementation.java,v 1.10 2005/09/11 15:27:43 bass Exp $
+ * $Id: EventServerImplementation.java,v 1.11 2005/09/14 18:18:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -24,8 +24,9 @@ import com.syrus.AMFICOM.leserver.corba.EventServerPOA;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/11 15:27:43 $
- * @author $Author: bass $
+ * @version $Revision: 1.11 $, $Date: 2005/09/14 18:18:39 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
 public class EventServerImplementation extends EventServerPOA {

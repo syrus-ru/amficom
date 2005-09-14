@@ -1,5 +1,5 @@
 /*
- * $Id: LoginServerImplementation.java,v 1.29 2005/08/08 11:42:21 arseniy Exp $
+ * $Id: LoginServerImplementation.java,v 1.30 2005/09/14 18:18:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,9 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/08/08 11:42:21 $
+ * @version $Revision: 1.30 $, $Date: 2005/09/14 18:18:39 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
 final class LoginServerImplementation extends LoginServerPOA {

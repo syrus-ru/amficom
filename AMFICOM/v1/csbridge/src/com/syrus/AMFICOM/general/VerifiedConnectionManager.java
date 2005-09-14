@@ -1,5 +1,5 @@
 /*-
- * $Id: VerifiedConnectionManager.java,v 1.12 2005/08/08 11:38:11 arseniy Exp $
+ * $Id: VerifiedConnectionManager.java,v 1.13 2005/09/14 18:21:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,9 @@ import com.syrus.AMFICOM.general.corba.VerifiableHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/08 11:38:11 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/14 18:21:32 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public class VerifiedConnectionManager {

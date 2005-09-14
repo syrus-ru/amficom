@@ -1,5 +1,5 @@
 /*-
- * $Id: IdentifierGeneratorServerCore.java,v 1.1 2005/07/28 15:57:58 arseniy Exp $
+ * $Id: IdentifierGeneratorServerCore.java,v 1.2 2005/09/14 18:21:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,9 @@ import com.syrus.AMFICOM.general.corba.AMFICOMRemoteExceptionPackage.IdlErrorCod
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/07/28 15:57:58 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/14 18:21:32 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public abstract class IdentifierGeneratorServerCore extends ServerCore implements IdentifierGeneratorServer {

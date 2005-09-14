@@ -1,5 +1,5 @@
 /*
- * $Id: BaseConnectionManager.java,v 1.6 2005/08/08 11:38:11 arseniy Exp $
+ * $Id: BaseConnectionManager.java,v 1.7 2005/09/14 18:21:31 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,9 @@ package com.syrus.AMFICOM.general;
 
 /**
  * The sum of all extended interfaces
- * @version $Revision: 1.6 $, $Date: 2005/08/08 11:38:11 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/14 18:21:31 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
 public interface BaseConnectionManager extends LoginServerConnectionManager, EventServerConnectionManager, IGSConnectionManager {

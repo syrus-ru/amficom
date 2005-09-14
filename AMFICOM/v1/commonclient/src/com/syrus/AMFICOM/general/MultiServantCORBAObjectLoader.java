@@ -1,5 +1,5 @@
 /*-
- * $Id: MultiServantCORBAObjectLoader.java,v 1.3 2005/07/29 13:57:23 arseniy Exp $
+ * $Id: MultiServantCORBAObjectLoader.java,v 1.4 2005/09/14 18:23:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,9 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/07/29 13:57:23 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/14 18:23:22 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
 public final class MultiServantCORBAObjectLoader implements ObjectLoader {

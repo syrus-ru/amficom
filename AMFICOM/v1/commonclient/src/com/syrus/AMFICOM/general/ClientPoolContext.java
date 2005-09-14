@@ -1,5 +1,5 @@
 /*
- * $Id: ClientPoolContext.java,v 1.17 2005/09/07 14:11:42 arseniy Exp $
+ * $Id: ClientPoolContext.java,v 1.18 2005/09/14 18:23:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,8 +12,9 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/07 14:11:42 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/14 18:23:22 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
 class ClientPoolContext implements PoolContext {

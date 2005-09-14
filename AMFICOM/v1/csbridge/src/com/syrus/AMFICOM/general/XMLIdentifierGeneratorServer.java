@@ -1,5 +1,5 @@
 /*
- * $Id: XMLIdentifierGeneratorServer.java,v 1.10 2005/08/23 15:01:53 bob Exp $
+ * $Id: XMLIdentifierGeneratorServer.java,v 1.11 2005/09/14 18:21:32 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,9 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/23 15:01:53 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/09/14 18:21:32 $
+ * @author $Author: arseniy $
+ * @author Voffka
  * @module csbridge
  */
 public class XMLIdentifierGeneratorServer implements IdentifierGeneratorServer, IGSConnectionManager {

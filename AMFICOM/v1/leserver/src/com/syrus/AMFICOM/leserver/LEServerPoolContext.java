@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerPoolContext.java,v 1.10 2005/09/07 14:32:08 arseniy Exp $
+ * $Id: LEServerPoolContext.java,v 1.11 2005/09/14 18:18:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,9 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/07 14:32:08 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/14 18:18:39 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
 final class LEServerPoolContext implements PoolContext {

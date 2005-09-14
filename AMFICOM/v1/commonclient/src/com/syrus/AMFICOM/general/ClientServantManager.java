@@ -1,5 +1,5 @@
 /*
- * $Id: ClientServantManager.java,v 1.8 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: ClientServantManager.java,v 1.9 2005/09/14 18:23:22 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,8 +18,9 @@ import com.syrus.AMFICOM.leserver.corba.LoginServerHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/02 13:03:22 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/14 18:23:22 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
 abstract class ClientServantManager extends VerifiedConnectionManager implements BaseConnectionManager, ServerConnectionManager {

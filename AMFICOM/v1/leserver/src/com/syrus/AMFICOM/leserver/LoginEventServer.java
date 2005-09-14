@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.25 2005/09/09 18:01:47 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.26 2005/09/14 18:18:39 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,8 +25,9 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/09/09 18:01:47 $
+ * @version $Revision: 1.26 $, $Date: 2005/09/14 18:18:39 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
 public final class LoginEventServer {

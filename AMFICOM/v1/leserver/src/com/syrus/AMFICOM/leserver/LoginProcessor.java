@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.14 2005/08/08 11:42:21 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.15 2005/09/14 18:18:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,9 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/08 11:42:21 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/14 18:18:39 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
 final class LoginProcessor extends SleepButWorkThread {

@@ -1,5 +1,5 @@
 /*-
- * $Id: MClientServantManager.java,v 1.7 2005/08/02 13:03:22 arseniy Exp $
+ * $Id: MClientServantManager.java,v 1.8 2005/09/14 18:23:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,9 @@ import com.syrus.AMFICOM.administration.ServerProcessWrapper;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/02 13:03:22 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/14 18:23:22 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
 public final class MClientServantManager extends ClientServantManager implements BaseConnectionManager {

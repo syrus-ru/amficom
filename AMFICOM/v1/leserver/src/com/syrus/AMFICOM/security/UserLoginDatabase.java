@@ -1,5 +1,5 @@
 /*
- * $Id: UserLoginDatabase.java,v 1.9 2005/08/08 11:42:21 arseniy Exp $
+ * $Id: UserLoginDatabase.java,v 1.10 2005/09/14 18:18:39 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,8 +26,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/08 11:42:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/14 18:18:39 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
 public final class UserLoginDatabase {

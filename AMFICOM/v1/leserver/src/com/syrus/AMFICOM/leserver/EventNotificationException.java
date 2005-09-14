@@ -1,5 +1,5 @@
 /*
- * $Id: EventNotificationException.java,v 1.3 2005/08/08 11:42:21 arseniy Exp $
+ * $Id: EventNotificationException.java,v 1.4 2005/09/14 18:18:39 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -10,8 +10,9 @@ package com.syrus.AMFICOM.leserver;
 import com.syrus.AMFICOM.general.ApplicationException;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/08 11:42:21 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/14 18:18:39 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module leserver
  */
 final class EventNotificationException extends ApplicationException {
