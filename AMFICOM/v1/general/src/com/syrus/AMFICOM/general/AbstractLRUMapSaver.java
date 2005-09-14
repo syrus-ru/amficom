@@ -1,5 +1,5 @@
 /*-
-* $Id: AbstractLRUMapSaver.java,v 1.2 2005/09/07 14:08:35 arseniy Exp $
+* $Id: AbstractLRUMapSaver.java,v 1.3 2005/09/14 16:31:00 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/07 14:08:35 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/14 16:31:00 $
  * @author $Author: arseniy $
  * @author Maxim Selivanov
  * @author Vladimir Dolzhenko
@@ -111,7 +111,7 @@ public abstract class AbstractLRUMapSaver implements LRUSaver<Identifier, Storab
 				Log.errorMessage("AbstractLRUMapSaver.load | Wrong input file " + saveFile.getAbsolutePath() + ". Loading failed");
 				return Collections.emptySet();
 			}
-			return loading(in);
+			return this.loading(in);
 		} catch (FileNotFoundException fnfe) {
 			Log.debugMessage("AbstractLRUMapSaver.load | Warning: " + fnfe.getMessage(), Log.DEBUGLEVEL10);
 		} catch (ClassNotFoundException cnfe) {
