@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.41 2005/09/05 13:54:00 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.42 2005/09/14 10:25:53 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -34,13 +34,14 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.UnboundNode;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.util.Log;
 
 /**
  *   оманда удалени€ элемента наследника класса MapNodeElement.  оманда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.41 $, $Date: 2005/09/05 13:54:00 $
+ * @version $Revision: 1.42 $, $Date: 2005/09/14 10:25:53 $
  * @module mapviewclient
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -88,6 +89,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			}
 		}
 
+		List<Scheme> schemes = new LinkedList<Scheme>();
 		// если удал€етс€ сетевой узел (не неприв€занный элемент),
 		// необходимо проверить все кабельные пути, включающие его
 		for(Iterator it = mapView.getCablePaths(site).iterator(); it.hasNext();)
@@ -101,6 +103,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			{
 				super.removeCablePathLinks(cablePath);
 				super.removeCablePath(cablePath);
+				schemes.add(cablePath.getSchemeCableLink().getParentScheme());
 			}
 			else
 			// в противном случае прохождение кабельного пути через узел
@@ -181,6 +184,10 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 					super.removeUnboundLink((UnboundLink)right);
 				}
 			}
+		}
+
+		for(Scheme scheme : schemes) {
+			this.logicalNetLayer.getMapViewController().scanPaths(scheme);
 		}
 
 		//ѕри удалении узла удал€ютс€ все фрагменты линий, исход€щие из него
@@ -405,11 +412,16 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		// отдельный список дл€ удалени€		
 		List cablePaths = new LinkedList();
 		cablePaths.addAll(mapView.getCablePaths(unbound));
+		List<Scheme> schemes = new LinkedList<Scheme>();
 		
 		for(Iterator it = cablePaths.iterator(); it.hasNext();) {
 			CablePath cpath = (CablePath)it.next();
 			super.removeCablePathLinks(cpath);
 			super.removeCablePath(cpath);
+			schemes.add(cpath.getSchemeCableLink().getParentScheme());
+		}
+		for(Scheme scheme : schemes) {
+			this.logicalNetLayer.getMapViewController().scanPaths(scheme);
 		}
 		setResult(Command.RESULT_OK);
 	}

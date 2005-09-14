@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.30 2005/08/31 14:36:26 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.31 2005/09/14 10:26:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@
 package com.syrus.AMFICOM.client.map.command.action;
 
 import java.util.LinkedList;
+import java.util.List;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapState;
@@ -25,6 +26,7 @@ import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSo
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.mapview.VoidElement;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.util.Log;
 
 /**
@@ -32,7 +34,7 @@ import com.syrus.util.Log;
  * (CommandBundle), удаляющих отдельные элементы.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/08/31 14:36:26 $
+ * @version $Revision: 1.31 $, $Date: 2005/09/14 10:26:13 $
  * @module mapviewclient
  */
 public class DeleteSelectionCommand extends MapActionCommandBundle {
@@ -113,12 +115,18 @@ public class DeleteSelectionCommand extends MapActionCommandBundle {
 			}
 		}
 
+		List<Scheme> schemes = new LinkedList<Scheme>();
+
 		// создать список команд удаления узлов
 		for(CablePath cablePath : cablePathsToDelete) {
 			UnPlaceSchemeCableLinkCommand command = 
 				new UnPlaceSchemeCableLinkCommand(cablePath);
 			command.setNetMapViewer(this.netMapViewer);
 			command.execute();
+			schemes.add(cablePath.getSchemeCableLink().getParentScheme());
+		}
+		for(Scheme scheme : schemes) {
+			this.logicalNetLayer.getMapViewController().scanPaths(scheme);
 		}
 	}
 
