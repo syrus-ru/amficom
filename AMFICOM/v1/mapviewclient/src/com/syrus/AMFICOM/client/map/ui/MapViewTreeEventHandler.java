@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeEventHandler.java,v 1.10 2005/09/08 15:55:49 krupenn Exp $
+ * $Id: MapViewTreeEventHandler.java,v 1.11 2005/09/14 10:41:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,6 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.map.Map;
@@ -83,6 +82,9 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 
 	public void valueChanged(TreeSelectionEvent e) {
 		if(!this.performProcessing) {
+			return;
+		}
+		if(this.mapView == null) {
 			return;
 		}
 		Dispatcher dispatcher = this.aContext.getDispatcher();
@@ -204,7 +206,7 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 			else if(mapEventType.equals(MapEvent.TOPOLOGY_CHANGED)) {
 				this.topologyNode.setParent(null);
 				TopologyTreeModel topologyTreeModel = new TopologyTreeModel();
-				this.topologyNode = createTopologyNode(topologyTreeModel);
+				this.topologyNode = topologyTreeModel.getRoot();
 				if(this.mapFrame != null) {
 					topologyTreeModel.setNetMapViewer(this.mapFrame.getMapViewer());
 				}
@@ -238,27 +240,28 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 	}
 
 	public void updateTree(MapView mapView) {
+		Item mapRoot = this.iconedTreeUI.findNode(this.root, MapViewTreeModel.MAP_VIEW_TREE_ROOT, false);
 		if(this.mapView != null) {
 			if(mapView == null) {
-				List children = new LinkedList(this.root.getChildren());
+				List children = new LinkedList(mapRoot.getChildren());
 				for(Iterator iter = children.iterator(); iter.hasNext();) {
 					Item item = (Item )iter.next();
 					item.setParent(null);
 				}
 			}
 			else if(mapView.equals(this.mapView)) {
-				for(Iterator iter = this.root.getChildren().iterator(); iter.hasNext();) {
+				for(Iterator iter = mapRoot.getChildren().iterator(); iter.hasNext();) {
 					Item item = (Item )iter.next();
 					this.model.populate(item);
 				}
 			}
 			else {
-				List children = new LinkedList(this.root.getChildren());
+				List children = new LinkedList(mapRoot.getChildren());
 				for(Iterator iter = children.iterator(); iter.hasNext();) {
 					Item item = (Item )iter.next();
 					item.setParent(null);
 				}
-				createNewTree(mapView);
+				createNewTree(mapView, mapRoot);
 			}
 		}
 		else {
@@ -266,7 +269,7 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 				// empty
 			}
 			else {
-				createNewTree(mapView);
+				createNewTree(mapView, mapRoot);
 			}
 		}
 		this.mapView = mapView;
@@ -275,34 +278,18 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 
 	/**
 	 * @param mapView
+	 * @param mapRoot TODO
 	 */
-	private void createNewTree(MapView mapView) {
-		Item item = new PopulatableIconedNode(
-				this.model,
-				mapView,
-				MapViewTreeModel.mapViewIcon,
-				true);
+	private void createNewTree(MapView mapView, Item mapRoot) {
+		Item item = MapViewTreeModel.createSingleMapViewRoot(mapView);
 		this.model.populate(item);
-		this.root.addChild(item);
+		mapRoot.addChild(item);
 
 		if(this.topologyNode == null) {
 			TopologyTreeModel topologyTreeModel = new TopologyTreeModel();
-			this.topologyNode = createTopologyNode(topologyTreeModel);
+			this.topologyNode = topologyTreeModel.getRoot();
 		}
-		this.root.addChild(this.topologyNode);
-	}
-
-	/**
-	 * @param topologyTreeModel
-	 * @return
-	 */
-	private PopulatableIconedNode createTopologyNode(TopologyTreeModel topologyTreeModel) {
-		return new PopulatableIconedNode(
-			topologyTreeModel,
-			TopologyTreeModel.TOPOLOGY_BRANCH,
-			LangModelMap.getString(TopologyTreeModel.TOPOLOGY_BRANCH),
-			MapViewTreeModel.folderIcon,
-			true);
+		mapRoot.addChild(this.topologyNode);
 	}
 
 	public void treeWillExpand(TreeExpansionEvent event) throws ExpandVetoException {

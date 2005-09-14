@@ -1,5 +1,5 @@
 /**
- * $Id: TopologyTreeModel.java,v 1.9 2005/08/29 16:16:21 arseniy Exp $
+ * $Id: TopologyTreeModel.java,v 1.10 2005/09/14 10:41:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,6 +19,8 @@ import java.util.Map;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
+import javax.swing.SwingUtilities;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
@@ -28,6 +30,7 @@ import com.syrus.AMFICOM.client.map.SpatialLayer;
 import com.syrus.AMFICOM.client.map.SpatialObject;
 import com.syrus.AMFICOM.client.map.TopologyConditionWrapper;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -56,10 +59,24 @@ public class TopologyTreeModel implements ChildrenFactory {
 	
 	static Map<Item, SpatialLayerPopulateThread> threads = new HashMap<Item, SpatialLayerPopulateThread>(); 
 	
+	private PopulatableIconedNode root;
+
 	public TopologyTreeModel() {
 		// empty
 	}
 	
+	public PopulatableIconedNode getRoot() {
+		if(this.root == null) {
+			this.root = new PopulatableIconedNode(
+					this,
+					TopologyTreeModel.TOPOLOGY_BRANCH,
+					LangModelMap.getString(TopologyTreeModel.TOPOLOGY_BRANCH),
+					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
+					true);			
+		}
+		return this.root;
+	}
+
 	public void populate(Item node) {
 		if(this.netMapViewer == null) {
 			return;
@@ -148,9 +165,9 @@ public class TopologyTreeModel implements ChildrenFactory {
 
 	class SpatialLayerPopulateThread extends Thread {
 
-		private final PopulatableIconedNode node;
+		final PopulatableIconedNode node;
 
-		private boolean running = false;
+		boolean running = false;
 
 		private String initialName = null;
 		
@@ -173,15 +190,23 @@ public class TopologyTreeModel implements ChildrenFactory {
 
 				initialAction();
 
-				synchronized(this.node) {
-					for(Iterator iter = new LinkedList<Item>(this.node.getChildren()).iterator(); iter.hasNext();) {
-						if(!this.running) {
-							finalAction();
-							return;
+				SwingUtilities.invokeAndWait( new Runnable() {
+					public void run() {
+						synchronized(SpatialLayerPopulateThread.this.node) {
+							for(Iterator iter = new LinkedList<Item>(SpatialLayerPopulateThread.this.node.getChildren()).iterator(); iter.hasNext();) {
+								if(!SpatialLayerPopulateThread.this.running) {
+									finalAction();
+									return;
+								}
+								IconedNode childNode = (IconedNode) iter.next();
+								childNode.setParent(null);
+							}
 						}
-						IconedNode childNode = (IconedNode) iter.next();
-						childNode.setParent(null);
 					}
+				});
+				if(!this.running) {
+					finalAction();
+					return;
 				}
 
 				System.out.println("children of \'" + this.initialName + "\' are removed");
@@ -247,7 +272,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 			}
 		}
 
-		private void finalAction() {
+		void finalAction() {
 			if(this.initialName != null) {
 				this.node.setName(this.initialName);
 				System.out.println("Set initial name \'" + this.initialName + "\'");
@@ -266,5 +291,6 @@ public class TopologyTreeModel implements ChildrenFactory {
 		}
 		
 	}
+
 }
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.23 2005/08/23 09:45:24 krupenn Exp $ Syrus
+ * $Id: MapViewTreeModel.java,v 1.24 2005/09/14 10:41:04 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -17,23 +17,38 @@ import java.util.HashMap;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/08/23 09:45:24 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/14 10:41:04 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapViewTreeModel implements ChildrenFactory {
+
+	public static final String ALL_MAP_VIEWS_BRANCH = "allmapviews";
+
+	public static final String MAP_VIEW_TREE_ROOT = "mapviewroot";
 
 	public static final String MAP_BRANCH = "Map";
 
@@ -51,30 +66,47 @@ public class MapViewTreeModel implements ChildrenFactory {
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
-	static ImageIcon folderIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/folder.gif").getScaledInstance(
-					IMG_SIZE,
-					IMG_SIZE,
-					Image.SCALE_SMOOTH));
-
-	static ImageIcon libraryIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/maplibrary.gif").getScaledInstance(
-					IMG_SIZE,
-					IMG_SIZE,
-					Image.SCALE_SMOOTH));
-
-	public static MapLibraryComparator libraryComparator = new MapLibraryComparator();
-
-	private static MapViewTreeModel instance;
+	public static MapViewComparator mapViewComparator = new MapViewComparator();
 	
+	private static MapViewTreeModel instance;
+
 	protected MapViewTreeModel() {
 		// empty
 	}
-	
+
 	public static MapViewTreeModel getInstance() {
 		if(instance == null)
 			instance = new MapViewTreeModel();
 		return instance;
+	}
+
+	public static PopulatableIconedNode createMapViewTreeRoot() {
+		PopulatableIconedNode root = new PopulatableIconedNode(
+				MapViewTreeModel.getInstance(),
+				MapViewTreeModel.MAP_VIEW_TREE_ROOT,
+				LangModelMap.getString(MapViewTreeModel.MAP_VIEW_TREE_ROOT),
+				UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG), 
+				true);
+		return root;
+	}
+
+	public static PopulatableIconedNode createAllMapViewsRoot() {
+		PopulatableIconedNode root = new PopulatableIconedNode(
+				MapViewTreeModel.getInstance(),
+				MapViewTreeModel.ALL_MAP_VIEWS_BRANCH,
+				LangModelMap.getString(MapViewTreeModel.ALL_MAP_VIEWS_BRANCH),
+				mapViewIcon, 
+				true);
+		return root;
+	}
+
+	public static PopulatableIconedNode createSingleMapViewRoot(MapView mapView) {
+		PopulatableIconedNode root = new PopulatableIconedNode(
+				MapViewTreeModel.getInstance(),
+				mapView,
+				mapViewIcon, 
+				true);
+		return root;
 	}
 
 	public Item findNode(Item item, Object object) {
@@ -107,7 +139,9 @@ public class MapViewTreeModel implements ChildrenFactory {
 	public void populate(Item node) {
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
-			if (s.equals(MapViewTreeModel.MAP_BRANCH)) {
+			if (s.equals(MapViewTreeModel.ALL_MAP_VIEWS_BRANCH)) {
+				populateAllMapViewsNode((PopulatableIconedNode )node);
+			} else if (s.equals(MapViewTreeModel.MAP_BRANCH)) {
 				populateMapNode((PopulatableIconedNode )node);
 			} else if (s.equals(MapViewTreeModel.SCHEMES_BRANCH)) {
 				populateSchemesNode((PopulatableIconedNode )node);
@@ -117,6 +151,58 @@ public class MapViewTreeModel implements ChildrenFactory {
 		}
 		else if(node.getObject() instanceof MapView) {
 			populateMapViewNode((PopulatableIconedNode )node);
+		}
+	}
+
+	void populateAllMapViewsNode(PopulatableIconedNode node) {
+		List<MapView> mapViewsChildren = new LinkedList();
+		try {
+			Identifier domainId = LoginManager.getDomainId();
+			StorableObjectCondition condition = new LinkedIdsCondition(
+					domainId,
+					ObjectEntities.MAPVIEW_CODE);
+			Set<MapView> mapViews = StorableObjectPool.getStorableObjectsByCondition(
+					condition,
+					true);
+			mapViewsChildren = new ArrayList<MapView>(mapViews);
+		} catch(ApplicationException e) {
+			e.printStackTrace();
+			return;
+		}
+
+		Collections.sort(mapViewsChildren, MapViewTreeModel.mapViewComparator);
+
+		java.util.Map nodePresense = new HashMap();
+
+		List toRemove = new LinkedList();
+
+		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
+			PopulatableIconedNode childNode = (PopulatableIconedNode )iter.next();
+			MapView mapView = (MapView )childNode.getObject();
+			if(mapViewsChildren.contains(mapView)) {
+				if(childNode.isPopulated())
+					childNode.populate();
+				nodePresense.put(mapView, childNode);
+			}
+			else
+				toRemove.add(childNode);
+		}
+		for(Iterator it = toRemove.iterator(); it.hasNext();) {
+			Item childItem = (Item )it.next();
+			childItem.setParent(null);
+		}
+
+		for(Iterator it = mapViewsChildren.iterator(); it.hasNext();) {
+			MapView mapView = (MapView )it.next();
+			Item childNode = (Item )nodePresense.get(mapView);
+			if(childNode == null) {
+				PopulatableIconedNode newItem = new PopulatableIconedNode(
+						this,
+						mapView,
+						mapViewIcon, 
+						true);
+				node.addChild(newItem);
+			}
 		}
 	}
 
@@ -130,27 +216,24 @@ public class MapViewTreeModel implements ChildrenFactory {
 					this,
 					MapViewTreeModel.MAP_BRANCH,
 					LangModelMap.getString(MapViewTreeModel.MAP_BRANCH),
-					folderIcon,
+					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
 					true);
-//			mapNode.populate();
 			node.addChild(mapNode);
 
 			schemesNode = new PopulatableIconedNode(
 					this,
 					MapViewTreeModel.SCHEMES_BRANCH,
 					LangModelMap.getString(MapViewTreeModel.SCHEMES_BRANCH),
-					folderIcon,
+					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
 					true);
-//			schemesNode.populate();
 			node.addChild(schemesNode);
 
 			librariesNode = new PopulatableIconedNode(
 					this,
 					MapViewTreeModel.LIBRARIES_BRANCH,
 					LangModelMap.getString(MapViewTreeModel.LIBRARIES_BRANCH),
-					folderIcon,
+					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
 					true);
-//			mapNode.populate();
 			node.addChild(librariesNode);
 			
 		}
@@ -166,29 +249,21 @@ public class MapViewTreeModel implements ChildrenFactory {
 	void populateMapNode(PopulatableIconedNode node) {
 		Item parentNode = node.getParent();
 		MapView mapView = (MapView )parentNode.getObject();
-		if(node.getChildren().size() == 0) {
-			PopulatableIconedNode mapNode = new PopulatableIconedNode(
-					MapTreeModel.getInstance(),
-					mapView.getMap(), 
-					MapTreeModel.mapIcon,
-					true);
-			node.addChild(mapNode);
-		}
-		else {
-			PopulatableIconedNode childNode = (PopulatableIconedNode )node.getChildren().iterator().next();
+		PopulatableIconedNode childNode = null;
+		if(node.getChildren().size() != 0) {
+			childNode = (PopulatableIconedNode )node.getChildren().iterator().next();
 			if(childNode.getObject().equals(mapView.getMap())) {
 				if(childNode.isPopulated())
 					childNode.populate();
 			}
 			else {
 				childNode.setParent(null);
-				childNode = new PopulatableIconedNode(
-						MapTreeModel.getInstance(),
-						mapView.getMap(), 
-						MapTreeModel.mapIcon,
-						true);
-				node.addChild(childNode);
+				childNode = null;
 			}
+		}
+		if(childNode == null) {
+			childNode = MapTreeModel.createSingleMapRoot(mapView.getMap());
+			node.addChild(childNode);
 		}
 	}
 
@@ -242,7 +317,7 @@ public class MapViewTreeModel implements ChildrenFactory {
 
 		List librariesChildren = new ArrayList();
 		librariesChildren.addAll(mapView.getMap().getMapLibraries());
-		Collections.sort(librariesChildren, libraryComparator);
+		Collections.sort(librariesChildren, MapLibraryTreeModel.libraryComparator);
 
 		java.util.Map nodePresense = new HashMap();
 
@@ -268,11 +343,7 @@ public class MapViewTreeModel implements ChildrenFactory {
 			MapLibrary library = (MapLibrary )it.next();
 			Item childNode = (Item )nodePresense.get(library);
 			if(childNode == null) {
-				PopulatableIconedNode newItem = new PopulatableIconedNode(
-						MapLibraryTreeModel.getInstance(),
-						library,
-						libraryIcon, 
-						true);
+				PopulatableIconedNode newItem = MapLibraryTreeModel.createSingleMapLibraryRoot(library);
 //				newItem.populate();
 				node.addChild(newItem);
 			}
@@ -280,15 +351,15 @@ public class MapViewTreeModel implements ChildrenFactory {
 	}
 }
 
-final class MapLibraryComparator implements Comparator {
+final class MapViewComparator implements Comparator {
 	public int compare(Object o1, Object o2) {
-		MapLibrary library1 = (MapLibrary )o1;
-		MapLibrary library2 = (MapLibrary )o2;
-		return library1.getName().compareTo(library2.getName());
+		MapView mapView1 = (MapView )o1;
+		MapView mapView2 = (MapView )o2;
+		return mapView1.getName().compareTo(mapView2.getName());
 	}
 
 	@Override
 	public boolean equals(Object obj) {
-		return (obj instanceof MapLibraryComparator);
+		return (obj instanceof MapViewComparator);
 	}
 }

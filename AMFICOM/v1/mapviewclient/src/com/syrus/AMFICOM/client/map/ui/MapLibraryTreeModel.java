@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryTreeModel.java,v 1.5 2005/08/29 12:27:24 krupenn Exp $
+ * $Id: MapLibraryTreeModel.java,v 1.6 2005/09/14 10:41:04 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,11 +19,13 @@ import java.util.List;
 
 import javax.swing.Icon;
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.map.MapLibrary;
@@ -31,6 +33,8 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 import com.syrus.AMFICOM.map.SiteNodeType;
 
 public class MapLibraryTreeModel implements ChildrenFactory {
+
+	public static MapLibraryComparator libraryComparator = new MapLibraryComparator();
 
 	private static MapLibraryTreeModel instance = null;
 
@@ -47,6 +51,12 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
+	static ImageIcon libraryIcon = new ImageIcon(Toolkit.getDefaultToolkit()
+			.getImage("images/maplibrary.gif").getScaledInstance(
+					IMG_SIZE,
+					IMG_SIZE,
+					Image.SCALE_SMOOTH));
+
 	protected MapLibraryTreeModel() {
 		// empty
 	}
@@ -56,6 +66,15 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 			instance = new MapLibraryTreeModel();
 		}
 		return instance;
+	}
+
+	public static PopulatableIconedNode createSingleMapLibraryRoot(MapLibrary mapLibrary) {
+		PopulatableIconedNode root = new PopulatableIconedNode(
+				MapLibraryTreeModel.getInstance(),
+				mapLibrary,
+				libraryIcon, 
+				true);
+		return root;
 	}
 
 	public void populate(Item node) {
@@ -81,7 +100,7 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 					this,
 					MapLibraryTreeModel.SITENODETYPE_BRANCH,
 					LangModelMap.getString(MapLibraryTreeModel.SITENODETYPE_BRANCH),
-					MapViewTreeModel.folderIcon,
+					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
 					true);
 			node.addChild(siteNodeTypesNode);
 
@@ -89,15 +108,14 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 					this,
 					MapLibraryTreeModel.PHYSICALLINKTYPE_BRANCH,
 					LangModelMap.getString(MapLibraryTreeModel.PHYSICALLINKTYPE_BRANCH),
-					MapViewTreeModel.folderIcon,
+					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
 					true);
 			node.addChild(physicalLinkTypesNode);
 		}
 		else {
 			for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
 				PopulatableIconedNode childNode = (PopulatableIconedNode )iter.next();
-//				if(childNode.isPopulated())
-					childNode.populate();
+				childNode.populate();
 			}
 		}
 	}
@@ -192,6 +210,19 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 		}
 	}
 
+}
+
+final class MapLibraryComparator implements Comparator {
+	public int compare(Object o1, Object o2) {
+		MapLibrary library1 = (MapLibrary )o1;
+		MapLibrary library2 = (MapLibrary )o2;
+		return library1.getName().compareTo(library2.getName());
+	}
+
+	@Override
+	public boolean equals(Object obj) {
+		return (obj instanceof MapLibraryComparator);
+	}
 }
 
 final class NodeTypeComparator implements Comparator {

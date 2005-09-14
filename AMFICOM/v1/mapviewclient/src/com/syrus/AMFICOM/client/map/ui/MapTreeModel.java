@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.15 2005/09/13 11:38:04 krupenn Exp $ 
+ * $Id: MapTreeModel.java,v 1.16 2005/09/14 10:41:04 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный Интеллектуальный 
@@ -22,6 +22,7 @@ import java.util.Set;
 import java.util.logging.Level;
 
 import javax.swing.ImageIcon;
+import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
@@ -32,6 +33,7 @@ import com.syrus.AMFICOM.client.map.SiteNodeConditionWrapper;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
+import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
@@ -56,7 +58,7 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/13 11:38:04 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/14 10:41:04 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -108,12 +110,6 @@ public class MapTreeModel implements ChildrenFactory {
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
-	public static ImageIcon folderIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/folder.gif").getScaledInstance(
-					IMG_SIZE,
-					IMG_SIZE,
-					Image.SCALE_SMOOTH));
-
 	private static MapTreeModel instance;
 
 	protected MapTreeModel() {
@@ -126,7 +122,7 @@ public class MapTreeModel implements ChildrenFactory {
 		return instance;
 	}
 
-	public PopulatableIconedNode createAllMapsRoot() {
+	public static PopulatableIconedNode createAllMapsRoot() {
 		PopulatableIconedNode root = new PopulatableIconedNode(
 				MapTreeModel.getInstance(),
 				MapTreeModel.ALL_MAPS_BRANCH,
@@ -136,6 +132,15 @@ public class MapTreeModel implements ChildrenFactory {
 		return root;
 	}
 	
+	public static PopulatableIconedNode createSingleMapRoot(Map map) {
+		PopulatableIconedNode root = new PopulatableIconedNode(
+				MapTreeModel.getInstance(),
+				map,
+				mapIcon, 
+				true);
+		return root;
+	}
+
 	public Item findNode(Item item, Object object) {
 		if(item.getObject().equals(object))
 			return item;
@@ -216,13 +221,13 @@ public class MapTreeModel implements ChildrenFactory {
 					this,
 					MapTreeModel.MAPS_BRANCH,
 					getObjectName(MapTreeModel.MAPS_BRANCH),
-					folderIcon,
+					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
 					true);
 			node.addChild(mapsNode);
 
 			externalNodesNode = new FiltrableIconedNode();
 			externalNodesNode.setObject(MapTreeModel.EXTERNAL_NODES_BRANCH);
-			externalNodesNode.setIcon(folderIcon);
+			externalNodesNode.setIcon(UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG));
 			externalNodesNode.setName(getObjectName(MapTreeModel.EXTERNAL_NODES_BRANCH));
 			externalNodesNode.setChildrenFactory(this);
 			externalNodesNode.setCanHaveChildren(true);
@@ -232,7 +237,7 @@ public class MapTreeModel implements ChildrenFactory {
 
 			sitesNode = new FiltrableIconedNode();
 			sitesNode.setObject(MapViewController.ELEMENT_SITENODE);
-			sitesNode.setIcon(folderIcon);
+			sitesNode.setIcon(UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG));
 			sitesNode.setName(getObjectName(MapViewController.ELEMENT_SITENODE));
 			sitesNode.setChildrenFactory(this);
 			sitesNode.setCanHaveChildren(true);
@@ -244,13 +249,13 @@ public class MapTreeModel implements ChildrenFactory {
 					this,
 					MapViewController.ELEMENT_TOPOLOGICALNODE,
 					getObjectName(MapViewController.ELEMENT_TOPOLOGICALNODE),
-					folderIcon,
+					UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG),
 					true);
 			node.addChild(nodesNode);
 
 			linksNode = new FiltrableIconedNode();
 			linksNode.setObject(MapViewController.ELEMENT_PHYSICALLINK);
-			linksNode.setIcon(folderIcon);
+			linksNode.setIcon(UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG));
 			linksNode.setName(getObjectName(MapViewController.ELEMENT_PHYSICALLINK));
 			linksNode.setChildrenFactory(this);
 			linksNode.setCanHaveChildren(true);
@@ -260,7 +265,7 @@ public class MapTreeModel implements ChildrenFactory {
 
 			collectorsNode = new FiltrableIconedNode();
 			collectorsNode.setObject(MapViewController.ELEMENT_COLLECTOR);
-			collectorsNode.setIcon(folderIcon);
+			collectorsNode.setIcon(UIManager.getIcon(MapEditorResourceKeys.ICON_CATALOG));
 			collectorsNode.setName(getObjectName(MapViewController.ELEMENT_COLLECTOR));
 			collectorsNode.setChildrenFactory(this);
 			collectorsNode.setCanHaveChildren(true);
