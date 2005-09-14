@@ -1,17 +1,14 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
 
 import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JInternalFrame;
-import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.JTabbedPane;
 import javax.swing.JTable;
-import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
@@ -32,61 +29,52 @@ import com.syrus.AMFICOM.client.UI.WrapperedPropertyTable;
 import com.syrus.AMFICOM.client.UI.WrapperedPropertyTableModel;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
-public class DetailedEventsFrame extends JInternalFrame implements EtalonMTMListener, CurrentEventChangeListener,
+final class DetailedEventsFrame extends JInternalFrame implements EtalonMTMListener, CurrentEventChangeListener,
 		PrimaryRefAnalysisListener {
 	private static final long serialVersionUID = 2729642346362069321L;
 
 	private ModelTrace alignedDataMT;
 
-	private WrapperedPropertyTableModel<DetailedEventResource> tModel;
-	private WrapperedPropertyTableModel<DetailedEventResource> ctModel;
 	private DetailedEventResource res;
 
 	private WrapperedPropertyTable<DetailedEventResource> mainTable;
 	private WrapperedPropertyTable<DetailedEventResource> comparativeTable;
 
-	private JPanel mainPanel = new JPanel();
-	private JScrollPane scrollPane = new JScrollPane();
-	private JViewport viewport = new JViewport();
+	private JTabbedPane tabbedPane;
 
-	private JPanel mainPanelComp = new JPanel(new BorderLayout());
-	private JScrollPane scrollPaneComp = new JScrollPane();
-	private JViewport viewportComp = new JViewport();
-	private JTabbedPane tabbedPane = new JTabbedPane();
+	private static final String[] EMPTY_KEYS = new String[0];
 
-	private static final String[] emptyKeys = new String[] {};
-
-	private static final String[] linearKeys = new String[] { DetailedEventWrapper.KEY_EXTENSION,
+	private static final String[] LINEAR_KEYS = new String[] { DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_START_LEVEL,
 			DetailedEventWrapper.KEY_END_LEVEL,
 			DetailedEventWrapper.KEY_MAXDEVIATION,
 			DetailedEventWrapper.KEY_MEAN_DEVIATION };
 
-	private static final String[] dzKeys = new String[] { DetailedEventWrapper.KEY_EXTENSION,
+	private static final String[] DZ_KEYS = new String[] { DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_START_LEVEL,
 			DetailedEventWrapper.KEY_END_LEVEL,
 			DetailedEventWrapper.KEY_EDZ,
 			DetailedEventWrapper.KEY_ADZ };
 
-	private static final String[] spliceKeys = new String[] { DetailedEventWrapper.KEY_EXTENSION,
+	private static final String[] SPLICE_KEYS = new String[] { DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_START_LEVEL,
 			DetailedEventWrapper.KEY_END_LEVEL };
 
-	private static final String[] notidKeys = new String[] { DetailedEventWrapper.KEY_EXTENSION,
+	private static final String[] NOT_ID_KEYS = new String[] { DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_MAX_LEVEL,
 			DetailedEventWrapper.KEY_MIN_LEVEL,
 			DetailedEventWrapper.KEY_MAXDEVIATION };
 
-	private static final String[] reflectionKeys = new String[] { DetailedEventWrapper.KEY_EXTENSION,
+	private static final String[] REFLECTION_KEYS = new String[] { DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_START_LEVEL,
 			DetailedEventWrapper.KEY_END_LEVEL,
 			DetailedEventWrapper.KEY_REFLECTION_LEVEL };
 
-	private static final String[] endKeys = new String[] { DetailedEventWrapper.KEY_EXTENSION,
+	private static final String[] END_KEYS = new String[] { DetailedEventWrapper.KEY_EXTENSION,
 			DetailedEventWrapper.KEY_START_LEVEL,
 			DetailedEventWrapper.KEY_REFLECTION_LEVEL };
 
-	private static final String[] compareKeys = new String[] { DetailedEventWrapper.KEY_TYPE,
+	private static final String[] COMPARE_KEYS = new String[] { DetailedEventWrapper.KEY_TYPE,
 			DetailedEventWrapper.KEY_ETALON_TYPE,
 			DetailedEventWrapper.KEY_ETALON_MAX_DEVIATION,
 			DetailedEventWrapper.KEY_ETALON_MEAN_DEVIATION,
@@ -120,11 +108,13 @@ public class DetailedEventsFrame extends JInternalFrame implements EtalonMTMList
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
 		this.res = new DetailedEventResource();
-		this.tModel = new WrapperedPropertyTableModel<DetailedEventResource>(DetailedEventWrapper.getInstance(), this.res, emptyKeys);
 
-		this.mainTable = new WrapperedPropertyTable<DetailedEventResource>(this.tModel);
+		this.mainTable = new WrapperedPropertyTable<DetailedEventResource>(
+				new WrapperedPropertyTableModel<DetailedEventResource>(
+						DetailedEventWrapper.getInstance(), this.res, EMPTY_KEYS));
 
-		this.getContentPane().add(this.tabbedPane, BorderLayout.CENTER);
+		this.tabbedPane = new JTabbedPane();
+		this.getContentPane().add(this.tabbedPane);
 
 		this.setResizable(true);
 		this.setClosable(true);
@@ -132,35 +122,33 @@ public class DetailedEventsFrame extends JInternalFrame implements EtalonMTMList
 		// this.setMaximizable(true);
 		this.setTitle(LangModelAnalyse.getString("eventDetailedTableTitle"));
 
-		this.tabbedPane.add(LangModelAnalyse.getString("Title.mains"), this.mainPanel);
-
-		this.mainPanel.setLayout(new BorderLayout());
-		this.mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		this.scrollPane.setViewport(this.viewport);
-		this.scrollPane.setAutoscrolls(true);
+		final JScrollPane scrollPane = new JScrollPane(this.mainTable);
+		scrollPane.setAutoscrolls(true);
+		scrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
+		
+		this.tabbedPane.add(LangModelAnalyse.getString("Title.mains"), scrollPane);
 
 		this.mainTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.mainTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 		this.mainTable.getColumnModel().getColumn(1).setPreferredWidth(100);
-		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
-		this.scrollPane.getViewport().add(this.mainTable);
+		
 		this.tabbedPane.setEnabledAt(0, true);
 
-		this.tabbedPane.add(LangModelAnalyse.getString("Title.comparatives"), this.mainPanelComp);
-
-		this.ctModel = new WrapperedPropertyTableModel<DetailedEventResource>(DetailedEventWrapper.getInstance(), this.res, compareKeys);
-		this.comparativeTable = new WrapperedPropertyTable<DetailedEventResource>(this.ctModel);
+		this.comparativeTable = new WrapperedPropertyTable<DetailedEventResource>(
+				new WrapperedPropertyTableModel<DetailedEventResource>(
+						DetailedEventWrapper.getInstance(), this.res, COMPARE_KEYS));
 		this.comparativeTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
 		this.comparativeTable.getColumnModel().getColumn(0).setPreferredWidth(130);
 		this.comparativeTable.getColumnModel().getColumn(1).setPreferredWidth(100);
 
-		this.mainPanelComp.setBorder(BorderFactory.createLoweredBevelBorder());
-		this.scrollPaneComp.setViewport(this.viewportComp);
-		this.scrollPaneComp.setAutoscrolls(true);
-		this.comparativeTable.setDefaultRenderer(Object.class, new CompareTableRenderer());
-
-		this.mainPanelComp.add(this.scrollPaneComp, BorderLayout.CENTER);
-		this.scrollPaneComp.getViewport().add(this.comparativeTable);
+		final JScrollPane scrollPaneComp = new JScrollPane(this.comparativeTable);
+		scrollPaneComp.setAutoscrolls(true);
+		scrollPaneComp.setBorder(BorderFactory.createLoweredBevelBorder());
+		this.comparativeTable.setDefaultRenderer(Object.class, new CompareTableRenderer());		
+		
+		this.tabbedPane.add(LangModelAnalyse.getString("Title.comparatives"), 
+			scrollPaneComp);
+		
 		this.tabbedPane.setSelectedIndex(0);
 		this.tabbedPane.setEnabledAt(1, false);
 	}
@@ -196,6 +184,8 @@ public class DetailedEventsFrame extends JInternalFrame implements EtalonMTMList
 
 	private void updateTableModel() {
 		int num = Heap.getCurrentEvent1();
+		final WrapperedPropertyTableModel<DetailedEventResource> model = 
+			this.mainTable.getModel();
 		if (num >= 0) {
 			final DetailedEvent ev = Heap.getMTAEPrimary().getDetailedEvent(num);
 			final int eventType = ev.getEventType();
@@ -204,28 +194,28 @@ public class DetailedEventsFrame extends JInternalFrame implements EtalonMTMList
 			this.res.initAdditional(ev, resKm);
 			switch (eventType) {
 				case SimpleReflectogramEvent.LINEAR:
-					this.tModel.setKeys(linearKeys);
+					model.setKeys(LINEAR_KEYS);
 					break;
 				case SimpleReflectogramEvent.DEADZONE:
-					this.tModel.setKeys(dzKeys);
+					model.setKeys(DZ_KEYS);
 					break;
 				case SimpleReflectogramEvent.NOTIDENTIFIED:
-					this.tModel.setKeys(notidKeys);
+					model.setKeys(NOT_ID_KEYS);
 					break;
 				case SimpleReflectogramEvent.CONNECTOR:
-					this.tModel.setKeys(reflectionKeys);
+					model.setKeys(REFLECTION_KEYS);
 					break;
 				case SimpleReflectogramEvent.LOSS:
 				case SimpleReflectogramEvent.GAIN:
-					this.tModel.setKeys(spliceKeys);
+					model.setKeys(SPLICE_KEYS);
 					break;
 				case SimpleReflectogramEvent.ENDOFTRACE:
-					this.tModel.setKeys(endKeys);
+					model.setKeys(END_KEYS);
 					break;
 			}
 			this.mainTable.updateUI();
 		} else {
-			this.tModel.setKeys(emptyKeys);
+			model.setKeys(EMPTY_KEYS);
 			this.mainTable.updateUI();
 		}
 		this.setData();
@@ -271,10 +261,12 @@ public class DetailedEventsFrame extends JInternalFrame implements EtalonMTMList
 	}
 
 	private void clearCTModelValues() {
-		for (int i = 0; i < this.ctModel.getRowCount(); i++) {
-			this.ctModel.setValueAt("--", i, 1);
+		final WrapperedPropertyTableModel<DetailedEventResource> model = 
+			this.comparativeTable.getModel();
+		for (int i = 0; i < model.getRowCount(); i++) {
+			model.setValueAt("--", i, 1);
 		}
-	}
+	}	
 
 	private class CompareTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer {
 

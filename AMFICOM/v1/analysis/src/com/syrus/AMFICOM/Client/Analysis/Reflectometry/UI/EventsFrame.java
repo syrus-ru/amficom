@@ -1,10 +1,7 @@
 package com.syrus.AMFICOM.Client.Analysis.Reflectometry.UI;
 
-import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Component;
-import java.awt.Dimension;
-import java.awt.FontMetrics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.MouseAdapter;
@@ -16,18 +13,15 @@ import javax.swing.BorderFactory;
 import javax.swing.Icon;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
-import javax.swing.JPanel;
 import javax.swing.JPopupMenu;
 import javax.swing.JScrollPane;
 import javax.swing.JTable;
-import javax.swing.JViewport;
 import javax.swing.ListSelectionModel;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 import com.syrus.AMFICOM.Client.Analysis.CompositeEventList;
@@ -47,24 +41,19 @@ import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEvent;
 import com.syrus.AMFICOM.analysis.dadara.SimpleReflectogramEventComparer;
 import com.syrus.AMFICOM.analysis.dadara.events.DetailedEvent;
 import com.syrus.AMFICOM.client.UI.ADefaultTableCellRenderer;
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.io.BellcoreStructure;
 
-public class EventsFrame extends JInternalFrame implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
+final class EventsFrame extends JInternalFrame implements EtalonMTMListener, PrimaryRefAnalysisListener, ReportTable,
 		CurrentEventChangeListener, PropertyChangeListener, RefMismatchListener {
 	private static final long serialVersionUID = 6768761574582221386L;
 
-	ApplicationContext aContext;
-	private WrapperedTableModel<DetailedEventResource> tModel;
-	WrapperedTable jTable;
-
-	private JPanel mainPanel = new JPanel();
-	private JScrollPane scrollPane = new JScrollPane();
-	private JViewport viewport = new JViewport();
+	private ApplicationContext aContext;
+	private WrapperedTable<DetailedEventResource> table;
+	
 	private boolean primaryShown = false;
 	private boolean etalonShown = false;
 	private boolean primaryOpened = false;
@@ -185,14 +174,7 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 	protected TableView view; // State
 
 	public EventsFrame(final ApplicationContext aContext) {
-		super();
-
-		try {
-			this.jbInit();
-		} catch (Exception e) {
-			e.printStackTrace();
-		}
-
+		this.init();
 		this.initModule(aContext);
 	}
 
@@ -214,47 +196,37 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 	}
 
 	public TableModel getTableModel() {
-		return this.tModel;
+		return this.table.getModel();
 	}
 
-	private void jbInit() throws Exception {
+	private void init() {
 		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
 		this.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 
-		this.tModel = new WrapperedTableModel<DetailedEventResource>(
+		this.table = 
+			new WrapperedTable<DetailedEventResource>(new WrapperedTableModel<DetailedEventResource>(
 				DetailedEventWrapper.getInstance(),
 				new String[] { DetailedEventWrapper.KEY_N, DetailedEventWrapper.KEY_IMAGE,
 						DetailedEventWrapper.KEY_TYPE, DetailedEventWrapper.KEY_DISTANCE,
 						DetailedEventWrapper.KEY_LENGTH,
 						DetailedEventWrapper.KEY_REFLECTANCE,
-						DetailedEventWrapper.KEY_LOSS, DetailedEventWrapper.KEY_ATTENUATION });
+						DetailedEventWrapper.KEY_LOSS, DetailedEventWrapper.KEY_ATTENUATION }));
+		this.table.setAllowSorting(false);
+		this.table.setAllowAutoResize(true);
 
-		this.jTable = new WrapperedTable<DetailedEventResource>(this.tModel);
-		this.jTable.setAllowSorting(false);
-
-		final FontMetrics fontMetrics = this.jTable.getFontMetrics(this.jTable.getFont());
-		CommonUIUtilities.arrangeTableColumns(this.jTable);
-		final TableColumnModel cModel = this.jTable.getColumnModel();
-		cModel.getColumn(0).setMinWidth(fontMetrics.stringWidth("WW"));
-		cModel.getColumn(0).setMaxWidth(fontMetrics.stringWidth("WWWW"));
-		final Dimension bttnSize = (Dimension) UIManager.get(ResourceKeys.SIZE_BUTTON);
-		cModel.getColumn(1).setMaxWidth(bttnSize.width);
-		this.jTable.getColumnModel().getColumn(2).setPreferredWidth(120);
+		final JScrollPane scrollPane = new JScrollPane();
+		scrollPane.setBorder(BorderFactory.createLoweredBevelBorder());
+		scrollPane.setAutoscrolls(true);
 		
-		super.setContentPane(this.mainPanel);
+		super.setContentPane(scrollPane);
 		this.setResizable(true);
 		this.setClosable(true);
 		this.setMaximizable(true);
 		this.setIconifiable(true);
 		this.setTitle(LangModelAnalyse.getString("eventTableTitle"));
 
-		this.mainPanel.setLayout(new BorderLayout());
-		this.mainPanel.setBorder(BorderFactory.createLoweredBevelBorder());
-		this.scrollPane.setViewport(this.viewport);
-		this.scrollPane.setAutoscrolls(true);
-
-		this.jTable.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-		final ListSelectionModel rowSM = this.jTable.getSelectionModel();		
+		this.table.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+		final ListSelectionModel rowSM = this.table.getSelectionModel();		
 		rowSM.addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(final ListSelectionEvent e) {
@@ -276,7 +248,7 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 		final JPopupMenu popupMenu = this.createPopupMenu();
 
 		// FIXME: event edition is currently for internal use only. Should be either improved or disabled in final version. 
-		this.jTable.addMouseListener(new MouseAdapter() {
+		this.table.addMouseListener(new MouseAdapter() {
 
 			@Override
 			public void mouseClicked(final MouseEvent e) {
@@ -286,10 +258,9 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 			}
 		});
 
-		this.jTable.setDefaultRenderer(Object.class, new EventTableRenderer());
-
-		this.mainPanel.add(this.scrollPane, BorderLayout.CENTER);
-		this.scrollPane.getViewport().add(this.jTable);
+		this.table.setDefaultRenderer(Object.class, new EventTableRenderer());
+		
+		scrollPane.getViewport().add(this.table);
 	}
 
 	public void propertyChange(final PropertyChangeEvent evt) {
@@ -406,15 +377,15 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 		// которое должно соответствовать текущей паре событий
 		// XXX: если текущего выделения не должно быть, надо бы его убрать.
 		final int nRow = this.view.currentRow2();
-		if (nRow != -1 && nRow < this.jTable.getRowCount()) {
-			this.jTable.setRowSelectionInterval(nRow, nRow);
-			this.jTable.scrollRectToVisible(this.jTable.getCellRect(this.jTable.getSelectedRow(), this.jTable.getSelectedColumn(), true));
+		if (nRow != -1 && nRow < this.table.getRowCount()) {
+			this.table.setRowSelectionInterval(nRow, nRow);
+			this.table.scrollRectToVisible(this.table.getCellRect(this.table.getSelectedRow(), this.table.getSelectedColumn(), true));
 		}
 	}
 
 	private void updateColors() {
 		// this.jTable.revalidate();
-		this.jTable.repaint();
+		this.table.repaint();
 	}
 
 	private void setTableModel() {
@@ -433,7 +404,8 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 		final CompositeEventList eList = Heap.getEventList();
 		final CompositeEventList.Walker w = eList.new Walker();
 
-		this.tModel.clear();
+		final WrapperedTableModel<DetailedEventResource> model = this.table.getModel();
+		model.clear();
 
 		for (int row = 0; row < nRows; row++, this.view.toNextRow(w)) {
 			// nPri или nEt может быть -1, но не оба одновременно
@@ -445,10 +417,10 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 			final DetailedEvent ev = nPri >= 0 ? pevents[nPri] : eevents[nEt];
 			final DetailedEventResource res = new DetailedEventResource();
 			res.initGeneral(ev, nPri + 1, resKm, sigma);
-			this.tModel.addObject(res);
+			model.addObject(res);
 		}
 		this.updateTableModel();
-		this.jTable.updateUI();
+		this.table.updateUI();
 	}
 
 	private class EventTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer {
@@ -544,10 +516,10 @@ public class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pr
 
 	public void primaryRefAnalysisRemoved() {
 		this.primaryOpened = false;
-		this.tModel.clear();
+		this.table.getModel().clear();
 
-		this.jTable.revalidate();
-		this.jTable.repaint();
+		this.table.revalidate();
+		this.table.repaint();
 		super.setVisible(false);
 	}
 	
