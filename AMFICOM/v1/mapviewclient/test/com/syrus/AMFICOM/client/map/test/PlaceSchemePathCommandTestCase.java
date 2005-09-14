@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommandTestCase.java,v 1.2 2005/09/11 14:32:40 krupenn Exp $
+ * $Id: PlaceSchemePathCommandTestCase.java,v 1.3 2005/09/14 10:18:01 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -66,6 +66,8 @@ public class PlaceSchemePathCommandTestCase extends SchemeBindingTestCase {
 		command.setNetMapViewer(METS.netMapViewer);
 		command.execute();
 
+		METS.logicalNetLayer.getMapViewController().scanCables(SchemeSampleData.scheme1);
+		
 		Collection cablePaths = METS.mapView.getCablePaths();
 		Collection measurementPaths = METS.mapView.getMeasurementPaths();
 
@@ -103,6 +105,8 @@ public class PlaceSchemePathCommandTestCase extends SchemeBindingTestCase {
 		intercommand.setNetMapViewer(METS.netMapViewer);
 		intercommand.execute();
 
+		METS.logicalNetLayer.getMapViewController().scanCables(SchemeSampleData.scheme1);
+		
 		Collection cablePaths = METS.mapView.getCablePaths();
 		Collection measurementPaths = METS.mapView.getMeasurementPaths();
 
@@ -144,6 +148,8 @@ public class PlaceSchemePathCommandTestCase extends SchemeBindingTestCase {
 		command.setNetMapViewer(METS.netMapViewer);
 		command.execute();
 
+		METS.logicalNetLayer.getMapViewController().scanCables(SchemeSampleData.scheme1);
+		
 		Collection cablePaths = METS.mapView.getCablePaths();
 		Collection measurementPaths = METS.mapView.getMeasurementPaths();
 
@@ -190,6 +196,8 @@ public class PlaceSchemePathCommandTestCase extends SchemeBindingTestCase {
 		command.setNetMapViewer(METS.netMapViewer);
 		command.execute();
 
+		METS.logicalNetLayer.getMapViewController().scanCables(SchemeSampleData.scheme1);
+		
 		Collection cablePaths = METS.mapView.getCablePaths();
 		Collection measurementPaths = METS.mapView.getMeasurementPaths();
 
@@ -239,6 +247,8 @@ public class PlaceSchemePathCommandTestCase extends SchemeBindingTestCase {
 		UnPlaceSchemeElementCommand unplaceCommand = new UnPlaceSchemeElementCommand(this.well1, SchemeSampleData.scheme1element1);
 		unplaceCommand.setNetMapViewer(METS.netMapViewer);
 		unplaceCommand.execute();
+		
+		METS.logicalNetLayer.getMapViewController().scanCables(SchemeSampleData.scheme1);
 		
 		Collection cablePaths = METS.mapView.getCablePaths();
 		Collection measurementPaths = METS.mapView.getMeasurementPaths();
