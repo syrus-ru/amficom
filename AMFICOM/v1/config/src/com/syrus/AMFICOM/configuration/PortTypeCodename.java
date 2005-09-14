@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeCodename.java,v 1.2 2005/08/15 10:38:36 arseniy Exp $
+ * $Id: PortTypeCodename.java,v 1.3 2005/09/14 18:42:07 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,8 +8,9 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/08/15 10:38:36 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/14 18:42:07 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 

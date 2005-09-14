@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathTypeWrapper.java,v 1.14 2005/08/08 13:24:42 arseniy Exp $
+ * $Id: TransmissionPathTypeWrapper.java,v 1.15 2005/09/14 18:42:07 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,8 +15,9 @@ import java.util.List;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/08/08 13:24:42 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/14 18:42:07 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class TransmissionPathTypeWrapper extends StorableObjectWrapper<TransmissionPathType> {

@@ -1,5 +1,5 @@
 /*
- * $Id: EquipmentDatabase.java,v 1.96 2005/08/30 16:35:09 bass Exp $
+ * $Id: EquipmentDatabase.java,v 1.97 2005/09/14 18:42:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/08/30 16:35:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.97 $, $Date: 2005/09/14 18:42:06 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 

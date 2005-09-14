@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.122 2005/09/12 00:10:49 bass Exp $
+ * $Id: Equipment.java,v 1.123 2005/09/14 18:42:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,8 +52,9 @@ import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.122 $, $Date: 2005/09/12 00:10:49 $
- * @author $Author: bass $
+ * @version $Revision: 1.123 $, $Date: 2005/09/14 18:42:06 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class Equipment extends DomainMember

@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentTypeCodename.java,v 1.1 2005/08/15 10:38:33 arseniy Exp $
+ * $Id: EquipmentTypeCodename.java,v 1.2 2005/09/14 18:42:07 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,9 @@
 package com.syrus.AMFICOM.configuration;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/15 10:38:33 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/14 18:42:07 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 

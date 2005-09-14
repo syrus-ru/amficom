@@ -1,5 +1,5 @@
 /*
- * $Id: MonitoredDomainMember.java,v 1.14 2005/07/27 15:59:22 bass Exp $
+ * $Id: MonitoredDomainMember.java,v 1.15 2005/09/14 18:42:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,9 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.Identifier;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/07/27 15:59:22 $
- * @author $Author: bass $
+ * @version $Revision: 1.15 $, $Date: 2005/09/14 18:42:07 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 

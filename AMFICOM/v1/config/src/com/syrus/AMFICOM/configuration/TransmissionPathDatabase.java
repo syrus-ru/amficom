@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPathDatabase.java,v 1.72 2005/08/30 16:35:09 bass Exp $
+ * $Id: TransmissionPathDatabase.java,v 1.73 2005/09/14 18:42:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,8 +27,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/08/30 16:35:09 $
- * @author $Author: bass $
+ * @version $Revision: 1.73 $, $Date: 2005/09/14 18:42:07 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 

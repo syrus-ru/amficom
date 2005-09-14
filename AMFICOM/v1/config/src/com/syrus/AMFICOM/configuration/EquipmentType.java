@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.89 2005/09/12 00:10:48 bass Exp $
+ * $Id: EquipmentType.java,v 1.90 2005/09/14 18:42:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,9 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/09/12 00:10:48 $
- * @author $Author: bass $
+ * @version $Revision: 1.90 $, $Date: 2005/09/14 18:42:07 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 

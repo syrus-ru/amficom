@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.89 2005/09/11 15:27:42 bass Exp $
+ * $Id: TransmissionPath.java,v 1.90 2005/09/14 18:42:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,9 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.89 $, $Date: 2005/09/11 15:27:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.90 $, $Date: 2005/09/14 18:42:07 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 

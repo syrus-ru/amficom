@@ -1,5 +1,5 @@
 /*
- * $Id: PortTypeDatabase.java,v 1.61 2005/08/30 16:35:08 bass Exp $
+ * $Id: PortTypeDatabase.java,v 1.62 2005/09/14 18:42:07 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/08/30 16:35:08 $
- * @author $Author: bass $
+ * @version $Revision: 1.62 $, $Date: 2005/09/14 18:42:07 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
 public final class PortTypeDatabase extends StorableObjectDatabase<PortType> {
