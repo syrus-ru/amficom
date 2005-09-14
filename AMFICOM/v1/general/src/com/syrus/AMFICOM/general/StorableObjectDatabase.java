@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.190 2005/09/14 14:03:44 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.191 2005/09/14 14:07:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,7 +32,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.190 $, $Date: 2005/09/14 14:03:44 $
+ * @version $Revision: 1.191 $, $Date: 2005/09/14 14:07:27 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -46,8 +46,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	public static final String OPEN_BRACKET = " ( ";
 	public static final String CLOSE_BRACKET = " ) ";
 	public static final String QUESTION = "?";
-	public static final String PATTERN_SINGLE_CHARACTER = "_";
-	public static final String PATTERN_CHARACTERS = "%";
+	public static final String SQL_PATTERN_SINGLE_CHARACTER = "_";
+	public static final String SQL_PATTERN_CHARACTERS = "%";
 
 	public static final String EQUALS = " = ";
 	public static final String NOT_EQUALS = " <> ";
@@ -55,7 +55,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	public static final String LESS_THAN = " < ";
 	public static final String GREAT_THAN_OR_EQUALS = " >= ";
 	public static final String LESS_THAN_OR_EQUALS = " <= ";
-	public static final String LIKE = " LIKE ";
+	public static final String SQL_LIKE = " LIKE ";
 	
 	public static final String SQL_AND = " AND ";
 	public static final String SQL_ASC = " ASC ";

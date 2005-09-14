@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.13 2005/09/14 14:05:33 arseniy Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.14 2005/09/14 14:07:27 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,9 +15,9 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.GREAT_THAN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.GREAT_THAN_OR_EQUALS;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.LESS_THAN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.LESS_THAN_OR_EQUALS;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.LIKE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_LIKE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.PATTERN_CHARACTERS;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_PATTERN_CHARACTERS;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_AND;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FROM;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_IN;
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/14 14:05:33 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/14 14:07:27 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -240,11 +240,11 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 						buffer.append(APOSTROPHE);
 						break;
 					case OperationSort._OPERATION_SUBSTRING:
-						buffer.append(LIKE);
+						buffer.append(SQL_LIKE);
 						buffer.append(APOSTROPHE);
-						buffer.append(PATTERN_CHARACTERS);
+						buffer.append(SQL_PATTERN_CHARACTERS);
 						buffer.append(DatabaseString.toQuerySubString(v));
-						buffer.append(PATTERN_CHARACTERS);
+						buffer.append(SQL_PATTERN_CHARACTERS);
 						buffer.append(APOSTROPHE);
 						break;
 					case OperationSort._OPERATION_REGEXP:
