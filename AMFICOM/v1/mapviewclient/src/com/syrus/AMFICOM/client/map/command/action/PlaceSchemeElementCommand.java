@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.32 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.33 2005/09/14 10:28:06 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * координатам
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.33 $, $Date: 2005/09/14 10:28:06 $
  * @module mapviewclient
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle {
@@ -97,7 +97,6 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle {
 			long t3 = System.currentTimeMillis();
 			long t4 = System.currentTimeMillis();
 			long t5 = System.currentTimeMillis();
-			long t6 = System.currentTimeMillis();
 			if(this.site == null)
 			{
 				MapElement mapElement = this.logicalNetLayer.getMapElementAtPoint(this.point, this.netMapViewer.getVisibleBounds());
@@ -116,18 +115,15 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle {
 				}
 				t5 = System.currentTimeMillis();
 				
-				this.logicalNetLayer.getMapViewController().scanCables(this.schemeElement.getParentScheme());
-				t6 = System.currentTimeMillis();
 			}
 			// операция закончена - оповестить слушателей
 			this.logicalNetLayer.setCurrentMapElement(this.site);
-			long t7 = System.currentTimeMillis();
+			long t6 = System.currentTimeMillis();
 			Log.debugMessage("PlaceSchemeElementCommand :: calculate coordinates " + (t2 - t1) + " ms", Level.FINE);
 			Log.debugMessage("PlaceSchemeElementCommand :: find scheme element " + (t3 - t2) + " ms", Level.FINE);
 			Log.debugMessage("PlaceSchemeElementCommand :: get map element at point " + (t4 - t3) + " ms", Level.FINE);
 			Log.debugMessage("PlaceSchemeElementCommand :: create unbound node " + (t5 - t4) + " ms", Level.FINE);
-			Log.debugMessage("PlaceSchemeElementCommand :: scan cables " + (t6 - t5) + " ms", Level.FINE);
-			Log.debugMessage("PlaceSchemeElementCommand :: notify " + (t7 - t6) + " ms", Level.FINE);
+			Log.debugMessage("PlaceSchemeElementCommand :: notify " + (t6 - t5) + " ms", Level.FINE);
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);
