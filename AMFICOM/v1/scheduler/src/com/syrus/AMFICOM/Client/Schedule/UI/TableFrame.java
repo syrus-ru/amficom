@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.36 2005/09/14 11:01:49 bob Exp $
+ * $Id: TableFrame.java,v 1.37 2005/09/14 17:39:22 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.36 $, $Date: 2005/09/14 11:01:49 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/14 17:39:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -175,6 +175,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 					TestController.KEY_STATUS});
 			this.listTable.setRenderer(StubLabelCellRenderer.getInstance(), TestController.KEY_STATUS);
 			this.listTable.setAllowAutoResize(true);
+			this.listTable.setAutoscrolls(true);
 			final ListSelectionModel rowSM = this.listTable.getSelectionModel();
 			rowSM.addListSelectionListener(new ListSelectionListener() {
 
@@ -189,15 +190,9 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 						CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
 							public void run() {
-								try {
-									TableFrame.this.schedulerModel.unselectTests();
-									final WrapperedTableModel<Test> model = TableFrame.this.listTable.getModel();
-									TableFrame.this.schedulerModel.addSelectedTest(model.getObject(selectedRow));
-
-								} catch (ApplicationException ae) {
-									AbstractMainFrame.showErrorMessage(TableFrame.this, ae);
-								}
-
+								TableFrame.this.schedulerModel.unselectTests();
+								final WrapperedTableModel<Test> model = TableFrame.this.listTable.getModel();
+								TableFrame.this.schedulerModel.addSelectedTest(model.getObject(selectedRow));
 							}
 						}, LangModelGeneral.getString("Message.Information.PlsWait"));
 					} else {
@@ -224,7 +219,8 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 						for (final int index : rowIndices) {
 							final Test test = model.getObject(index);
 							final int status = test.getStatus().value();
-							if (status != TestStatus._TEST_STATUS_NEW &&
+							if ((!test.isChanged() || 
+									status != TestStatus._TEST_STATUS_NEW) &&
 								status != TestStatus._TEST_STATUS_PROCESSING &&
 								status != TestStatus._TEST_STATUS_SCHEDULED) {
 								return;
@@ -237,9 +233,9 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 						boolean enableStopping = true;
 
 						for (int i = 0; i < rowIndices.length; i++) {
-							final Test test1 = model.getObject(rowIndices[i]);
-							final int status = test1.getStatus().value();
-							if (status != TestStatus._TEST_STATUS_NEW) {
+							final Test test = model.getObject(rowIndices[i]);
+							final int status = test.getStatus().value();
+							if (!test.isChanged() || status != TestStatus._TEST_STATUS_NEW) {
 								enableDeleting = false;
 							}
 							if (status != TestStatus._TEST_STATUS_PROCESSING &&

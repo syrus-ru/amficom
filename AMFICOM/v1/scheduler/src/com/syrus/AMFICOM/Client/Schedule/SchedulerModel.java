@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.93 2005/09/06 07:45:46 bob Exp $
+ * $Id: SchedulerModel.java,v 1.94 2005/09/14 17:39:22 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,6 @@ import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Date;
-import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -35,7 +34,6 @@ import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
-import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -61,7 +59,6 @@ import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
-import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestTemporalStamps;
 import com.syrus.AMFICOM.measurement.TestWrapper;
@@ -71,7 +68,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/09/06 07:45:46 $
+ * @version $Revision: 1.94 $, $Date: 2005/09/14 17:39:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -107,8 +104,8 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	public static final String	COMMAND_GET_ANALYSIS_TYPE			= "GetAnalysisType";
 	public static final String	COMMAND_SET_ANALYSIS_TYPE			= "SetAnalysisType";
 
-	public static final String	COMMAND_GET_SET						= "GetSet";
-	public static final String	COMMAND_SET_SET						= "SetSet";
+//	public static final String	COMMAND_GET_SET						= "GetSet";
+//	public static final String	COMMAND_SET_SET						= "SetSet";
 
 	public static final String	COMMAND_GET_MEASUREMENT_SETUP		= "GetMeasurementSetup";
 	public static final String	COMMAND_SET_MEASUREMENT_SETUP		= "SetMeasurementSetup";
@@ -133,7 +130,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	private String				name								= null;
 	MonitoredElement			monitoredElement					= null;
 	private AnalysisType		analysisType						= AnalysisType.UNKNOWN;
-	private ParameterSet		set									= null;
 	private MeasurementSetup	measurementSetup					= null;
 	private TestTemporalStamps	testTimeStamps						= null;
 
@@ -181,7 +177,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.dispatcher.addPropertyChangeListener(COMMAND_CLEAN, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_NAME, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_TEMPORAL_STAMPS, this);
-		this.dispatcher.addPropertyChangeListener(COMMAND_SET_SET, this);
+//		this.dispatcher.addPropertyChangeListener(COMMAND_SET_SET, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_MONITORED_ELEMENT, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_MEASUREMENT_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(COMMAND_SET_MEASUREMENT_SETUP, this);
@@ -203,7 +199,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.add(ScheduleMainMenuBar.MENU_VIEW_PLAN);
 		this.add(ScheduleMainMenuBar.MENU_VIEW_TREE);
 		this.add(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS);
-//		this.add(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS);
 		this.add(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES);
 		this.add(ScheduleMainMenuBar.MENU_VIEW_TIME);
 		this.add(ScheduleMainMenuBar.MENU_VIEW_TABLE);
@@ -219,7 +214,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_PLAN, true);
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_TREE, true);
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_PARAMETERS, true);
-//		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_SAVE_PARAMETERS, true);
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_PROPERTIES, true);
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_TIME, true);
 		this.setVisible(ScheduleMainMenuBar.MENU_VIEW_TABLE, true);
@@ -249,9 +243,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			this.measurementType = (MeasurementType) evt.getNewValue();
 		} else if (propertyName.equals(COMMAND_SET_MONITORED_ELEMENT)) {
 			this.monitoredElement = (MonitoredElement) evt.getNewValue();
-		} else if (propertyName.equals(COMMAND_SET_SET)) {
-			this.set = (ParameterSet) evt.getNewValue();
-		} else if (propertyName.equals(COMMAND_SET_MEASUREMENT_SETUP)) {
+		} 
+//		else if (propertyName.equals(COMMAND_SET_SET)) {
+//			this.set = (ParameterSet) evt.getNewValue();
+//		} 
+		else if (propertyName.equals(COMMAND_SET_MEASUREMENT_SETUP)) {
 			this.measurementSetup = (MeasurementSetup) evt.getNewValue();
 		} else if (propertyName.equals(COMMAND_SET_TEMPORAL_STAMPS)) {
 			this.testTimeStamps = (TestTemporalStamps) evt.getNewValue();
@@ -291,8 +287,11 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				}
 				StorableObjectPool.delete(testIds1);
 			} catch (ApplicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					LangModelGeneral.getString("Error.CannotAcquireObject"),
+					LangModelGeneral.getString("Error"),
+					JOptionPane.OK_OPTION);
+				return;
 			}
 		} else {
 			Identifier testId = test.getId();
@@ -335,7 +334,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		this.refreshMeasurementSetups();
 	}
 
-	private void refreshTest() throws ApplicationException {
+	private void refreshTest() {
 		Test test = this.getSelectedTest();
 
 		if (test != null) {
@@ -351,11 +350,19 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			final Set<Identifier> measurementSetupIds = test.getMeasurementSetupIds();
 			if (!measurementSetupIds.isEmpty()) {
 				final Identifier mainMeasurementSetupId = measurementSetupIds.iterator().next();
-				final MeasurementSetup measurementSetup1 = (MeasurementSetup) StorableObjectPool.getStorableObject(mainMeasurementSetupId,
-						true);
-				if (measurementSetup1 != null) {
-					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP,
-																				null, measurementSetup1));
+				try {
+					final MeasurementSetup measurementSetup1 = 
+						(MeasurementSetup) StorableObjectPool.getStorableObject(mainMeasurementSetupId, true);
+					if (measurementSetup1 != null) {
+						this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP,
+																					null, measurementSetup1));
+					}
+				} catch (final ApplicationException e) {
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+						LangModelGeneral.getString("Error.CannotAcquireObject"),
+						LangModelGeneral.getString("Error"),
+						JOptionPane.OK_OPTION);
+					return;
 				}
 			}
 
@@ -377,28 +384,31 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			AbstractTemporalPattern temporalPattern = null;
 			if (temporalPatternId != null) {
 				try {
-					temporalPattern = (AbstractTemporalPattern) StorableObjectPool.getStorableObject(temporalPatternId,
-						true);
-				} catch (ApplicationException e) {
-					Log.errorException(e);
+					temporalPattern = 
+						(AbstractTemporalPattern) 
+							StorableObjectPool.getStorableObject(temporalPatternId, true);
+				} catch (final ApplicationException e) {
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+						LangModelGeneral.getString("Error.CannotAcquireObject"),
+						LangModelGeneral.getString("Error"),
+						JOptionPane.OK_OPTION);
 				}
 			}
 			final TestTemporalStamps timeStamps = new TestTemporalStamps(test.getTemporalType(),
 					test.getStartTime(),
 					test.getEndTime(),
 					temporalPattern);
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_TEMPORAL_STAMPS, null, timeStamps));
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, 
+				COMMAND_SET_TEMPORAL_STAMPS, 
+				null, 
+				timeStamps));
 		}
 
 	}
 
 	private void refreshTests() {
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
-		try {
-			this.refreshTest();
-		} catch (ApplicationException e) {
-			AbstractMainFrame.showErrorMessage(Environment.getActiveWindow(), e);
-		}
+		this.refreshTest();
 	}
 
 	public void applyTest() {
@@ -420,10 +430,10 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_ANALYSIS_TYPE, null, null));
 		}
-		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
-			this.set = null;
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_SET, null, null));
-		}
+//		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
+//			this.set = null;
+//			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_SET, null, null));
+//		}
 		if (this.flag == FLAG_APPLY || this.flag == FLAG_CREATE) {
 			this.measurementSetup = null;
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_GET_MEASUREMENT_SETUP, null, null));
@@ -457,6 +467,12 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 		final Date startDate = new Date(startTime);
 		final Date endDate = new Date(endTime);
+		
+		Log.debugMessage("SchedulerModel.updateTests | [ " + startDate 
+				+ ", " 
+				+ endDate
+				+ "]", 
+			Log.DEBUGLEVEL09);
 
 		TypicalCondition startTypicalCondition = new TypicalCondition(startDate,
 				endDate,
@@ -479,21 +495,24 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_END_TIME);
 
-		CompoundCondition compoundCondition1 = new CompoundCondition(startTypicalCondition,
-				CompoundConditionSort.OR,
-				endTypicalCondition);
+		try {
+			CompoundCondition compoundCondition1 = new CompoundCondition(startTypicalCondition,
+					CompoundConditionSort.OR,
+					endTypicalCondition);
 
-		CompoundCondition compoundCondition2 = new CompoundCondition(startTypicalCondition1,
-				CompoundConditionSort.AND,
-				endTypicalCondition2);
+			CompoundCondition compoundCondition2 = new CompoundCondition(startTypicalCondition1,
+					CompoundConditionSort.AND,
+					endTypicalCondition2);
 
-		CompoundCondition compoundCondition = new CompoundCondition(compoundCondition1, CompoundConditionSort.OR, compoundCondition2);
+			CompoundCondition compoundCondition = new CompoundCondition(compoundCondition1, CompoundConditionSort.OR, compoundCondition2);
 
-		final Set<Test> tests = StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true, true);
-		this.testIds.clear();
-		for (final Test test : tests) {
-			this.testIds.add(test.getId());
-//			System.out.println("SchedulerModel.updateTests() | " + test.getId() + ", " + test.getVersion() + "v, " + test.getStartTime() + ", " + test.getStatus().value());
+			this.testIds.clear();
+			this.testIds.addAll(Identifier.createIdentifiers(StorableObjectPool.getStorableObjectsByCondition(compoundCondition, true, true)));
+		} catch (final ApplicationException e) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				LangModelGeneral.getString("Error.CannotAcquireObject"),
+				LangModelGeneral.getString("Error"),
+				JOptionPane.OK_OPTION);
 		}
 
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
@@ -512,12 +531,16 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			return this.selectedFirstTestId != null
 					? (Test) StorableObjectPool.getStorableObject(this.selectedFirstTestId, true)
 						: null;
-		} catch (ApplicationException e) {
+		} catch (final ApplicationException e) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				LangModelGeneral.getString("Error.CannotAcquireObject"),
+				LangModelGeneral.getString("Error"),
+				JOptionPane.OK_OPTION);
 			return null;
 		}
 	}
 
-	public void addSelectedTest(final Test selectedTest) throws ApplicationException {
+	public void addSelectedTest(final Test selectedTest) {
 		final Identifier selectedTestId = selectedTest.getId();
 		if (this.selectedTestIds == null) {
 			this.selectedTestIds = new HashSet<Identifier>();
@@ -543,7 +566,7 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		}
 		this.selectedFirstTestId = null;
 		this.measurementSetup = null;
-		this.set = null;
+//		this.set = null;
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TEST, null, null));
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_SET_MEASUREMENT_SETUP, null, null));
 	}
@@ -615,9 +638,9 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 					idSet = Collections.singleton(identifier);
 					condition = monitoredElementCondition;
 				}
-			} catch (CreateObjectException e) {
-				// never !
-				e.printStackTrace();
+			} catch (final CreateObjectException e) {
+				// never occur
+				assert false;
 				return;
 			}
 		} else {
@@ -626,7 +649,6 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			}
 		}
 
-		try {
 			if (condition != null) {
 				final Set<Identifier> idSet1 = idSet;
 				final StorableObjectCondition condition1 = condition;
@@ -656,8 +678,12 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 									COMMAND_SET_MEASUREMENT_SETUPS,
 									null,
 									measurementSetups));
-						} catch (ApplicationException e) {
-							AbstractMainFrame.showErrorMessage(Environment.getActiveWindow(), e);
+						} catch (final ApplicationException e) {
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+								LangModelGeneral.getString("Error.CannotAcquireObject"),
+								LangModelGeneral.getString("Error"),
+								JOptionPane.OK_OPTION);
+							return;
 						}
 
 					}
@@ -668,23 +694,25 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 				final Collection<Identifier> measurementSetupIds = getSelectedTest().getMeasurementSetupIds();
 				if (!measurementSetupIds.isEmpty()) {
 					final Identifier mainMeasurementSetupId = measurementSetupIds.iterator().next();
-					final MeasurementSetup measurementSetup1 = (MeasurementSetup) StorableObjectPool.getStorableObject(mainMeasurementSetupId,
-							true);
-					if (measurementSetup1 != null) {
-						SchedulerModel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-								COMMAND_SET_MEASUREMENT_SETUP,
-								null,
-								measurementSetup1));
-
+					try {
+						final MeasurementSetup measurementSetup1 = 
+							StorableObjectPool.getStorableObject(mainMeasurementSetupId, true);
+						if (measurementSetup1 != null) {
+							SchedulerModel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+									COMMAND_SET_MEASUREMENT_SETUP,
+									null,
+									measurementSetup1));
+	
+						}
+					} catch (final ApplicationException e) {
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+							LangModelGeneral.getString("Error.CannotAcquireObject"),
+							LangModelGeneral.getString("Error"),
+							JOptionPane.OK_OPTION);
+						return;
 					}
 				}
 			}
-
-		} catch (ApplicationException e) {
-			AbstractMainFrame.showErrorMessage(Environment.getActiveWindow(), e);
-		}
-		// }
-		// }, LangModelGeneral.getString("Message.Information.PlsWait"));
 	}
 
 	public void commitChanges() throws ApplicationException {
@@ -704,31 +732,10 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 			Test test = null;
 			test = (this.flag == FLAG_APPLY) ? this.getSelectedTest() : null;
 			final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-			Set<Identifier> measurementSetupIds;
 			if (this.measurementSetup == null) {
-				if (this.set == null) {
-					return;
-				}
-				try {
-					this.measurementSetup = MeasurementSetup.createInstance(LoginManager.getUserId(),
-							this.set,
-							null,
-							null,
-							null,
-							LangModelSchedule.getString("Text.Scheduler.CreatedByScheduler") + " /" + sdf.format(new Date()) + "/",
-							1000 * 60 * 10,
-							Collections.singleton(this.monitoredElement.getId()),
-							EnumSet.of(this.measurementType));
-					if (this.measurementSetupIdMap != null) {
-						this.measurementSetupIdMap.clear();
-					}
-				} catch (CreateObjectException e) {
-					Log.debugException(e, Log.DEBUGLEVEL05);
-				}
-				this.refreshMeasurementSetups();
-
+				return;
 			}
-			measurementSetupIds = Collections.singleton(this.measurementSetup.getId());
+			final Set<Identifier> measurementSetupIds = Collections.singleton(this.measurementSetup.getId());
 
 			final Date startTime = this.testTimeStamps.getStartTime();
 			final Date endTime = this.testTimeStamps.getEndTime();
@@ -762,17 +769,23 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 
 							test.setGroupTestId(testGroupId);
 						}
-
+						this.testIds.add(test.getId());
 					} else {
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 								LangModelSchedule.getString("Error.CannotAddTest"),
 								LangModelSchedule.getString("Error"),
 								JOptionPane.OK_OPTION);
+						return;
 					}
-				} catch (CreateObjectException e) {
+				} catch (final CreateObjectException e) {
 					Log.errorException(e);
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+						LangModelSchedule.getString("Error.CannotAddTest"),
+						LangModelSchedule.getString("Error"),
+						JOptionPane.OK_OPTION);
+					return;
 				}
-				this.testIds.add(test.getId());
+				
 			} else {
 				if (this.isValid(startTime, endTime, this.monitoredElement.getId())) {
 					test.setAttributes(test.getCreated(),
@@ -796,19 +809,15 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							LangModelSchedule.getString("Error.CannotUpdateTest"),
 							LangModelSchedule.getString("Error"),
 							JOptionPane.OK_OPTION);
+					return;
 				}
 			}
 
-			try {
-				if (this.selectedTestIds != null) {
-					this.selectedTestIds.clear();
-				}
-				this.addSelectedTest(test);
-				// this.refreshTests();
-				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
-			} catch (ApplicationException e) {
-				Log.errorException(e);
+			if (this.selectedTestIds != null) {
+				this.selectedTestIds.clear();
 			}
+			this.addSelectedTest(test);
+			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
 
 		}
 	}
@@ -827,19 +836,44 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 	}
 
 	public void moveSelectedTests(final Date startDate) {
-//		Log.debugMessage("SchedulerModel.moveSelectedTests | startDate is " + startDate, Level.FINEST);
-//		final long t0 = System.currentTimeMillis();
 		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
+			final SortedSet<Test> selectedTests = new TreeSet<Test>(new WrapperComparator<Test>(TestWrapper.getInstance(),
+					TestWrapper.COLUMN_START_TIME));
 			try {
-				final SortedSet<Test> selectedTests = new TreeSet<Test>(new WrapperComparator<Test>(TestWrapper.getInstance(),
-						TestWrapper.COLUMN_START_TIME));
 				final Set<Test> tests = StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
 				selectedTests.addAll(tests);
+			} catch (final ApplicationException e) {
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					LangModelGeneral.getString("Error.CannotAcquireObject"),
+					LangModelGeneral.getString("Error"),
+					JOptionPane.OK_OPTION);
+				return;
+			}
 
-				final Test firstTest = selectedTests.first();
-				final long offset = startDate.getTime() - firstTest.getStartTime().getTime();
+			final Test firstTest = selectedTests.first();
+			final long offset = startDate.getTime() - firstTest.getStartTime().getTime();
 
-				boolean correct = true;
+			boolean correct = true;
+			for (final Test selectedTest : selectedTests) {
+				if (selectedTest.isChanged()) {
+					final Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
+					Date newEndDate = selectedTest.getEndTime();
+					if (newEndDate != null) {
+						newEndDate = new Date(newEndDate.getTime() + offset);
+					}
+					correct = this.isValid(newStartDate, newEndDate, selectedTest.getMonitoredElement().getId());
+					if (!correct) {
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+								LangModelSchedule.getString("Error.CannotMoveTests"),
+								LangModelSchedule.getString("Error"),
+								JOptionPane.OK_OPTION);
+						break;
+					}
+				}
+			}
+
+			if (correct) {
+				boolean moved = false;
 				for (final Test selectedTest : selectedTests) {
 					if (selectedTest.isChanged()) {
 						final Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
@@ -847,57 +881,28 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 						if (newEndDate != null) {
 							newEndDate = new Date(newEndDate.getTime() + offset);
 						}
-						correct = this.isValid(newStartDate, newEndDate, selectedTest.getMonitoredElement().getId());
-						if (!correct) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-									LangModelSchedule.getString("Error.CannotMoveTests"),
-									LangModelSchedule.getString("Error"),
-									JOptionPane.OK_OPTION);
-							break;
-						}
+						selectedTest.setStartTime(newStartDate);
+						selectedTest.setEndTime(newEndDate);
+						moved = true;
 					}
 				}
+				if (moved) {
+					this.refreshTests();
 
-				if (correct) {
-					boolean moved = false;
-					for (final Test selectedTest : selectedTests) {
-						if (selectedTest.isChanged()) {
-							final Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
-							Date newEndDate = selectedTest.getEndTime();
-							if (newEndDate != null) {
-								newEndDate = new Date(newEndDate.getTime() + offset);
-							}
-							selectedTest.setStartTime(newStartDate);
-							selectedTest.setEndTime(newEndDate);
-							moved = true;
-						}
-					}
-					if (moved) {
-						this.refreshTests();
+					// XXX - regenerate time line !!!
 
-						// XXX - regenerate time line !!!
-
-						final Test selectedTest = this.getSelectedTest();
-						if (selectedTest.getGroupTestId().isVoid()) {
-							this.refreshTemporalStamps();
-						} else {
-							this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-									COMMAND_SET_START_GROUP_TIME,
-									null,
-									selectedTest.getStartTime()));
-						}
+					final Test selectedTest = this.getSelectedTest();
+					if (selectedTest.getGroupTestId().isVoid()) {
+						this.refreshTemporalStamps();
+					} else {
+						this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
+								COMMAND_SET_START_GROUP_TIME,
+								null,
+								selectedTest.getStartTime()));
 					}
 				}
-			} catch (ApplicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-
 			}
 		}
-
-
-//		final long t1 = System.currentTimeMillis();
-//		Log.debugMessage("SchedulerModel.moveSelectedTests | time:" + (t1 - t0), Level.FINEST);
 	}
 
 	private void addGroupTests() {
@@ -905,10 +910,19 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 		final Identifier meId = this.monitoredElement.getId();
 		Identifier testGroupId = this.meTestGroup != null ? this.meTestGroup.get(meId) : null;
 		if (testGroupId != null) {
+			Test testGroup = null;
 			try {
-				final Test testGroup = (Test) StorableObjectPool.getStorableObject(testGroupId, true);
-				if (this.aloneGroupTest) {
-					if (this.isValid(this.startGroupDate, null, testGroup.getMonitoredElement().getId())) {
+				testGroup = (Test) StorableObjectPool.getStorableObject(testGroupId, true);
+			} catch (final ApplicationException e) {
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					LangModelGeneral.getString("Error.CannotAcquireObject"),
+					LangModelGeneral.getString("Error"),
+					JOptionPane.OK_OPTION);
+				return;
+			}
+			if (this.aloneGroupTest) {					
+				if (this.isValid(this.startGroupDate, null, testGroup.getMonitoredElement().getId())) {
+					try {
 						final Test test = Test.createInstance(LoginManager.getUserId(),
 								this.startGroupDate,
 								null,
@@ -927,142 +941,166 @@ public class SchedulerModel extends ApplicationModel implements PropertyChangeLi
 							this.selectedTestIds = new HashSet<Identifier>();
 						}
 						this.selectedTestIds.add(test.getId());
-					} else {
+					} catch (final CreateObjectException coe) {
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-								LangModelSchedule.getString("Error.CannotAddTest"),
-								LangModelSchedule.getString("Error"),
-								JOptionPane.OK_OPTION);
-					}
-				}
-			} catch (ApplicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
-
-			}
-		}
-		{
-			try {
-
-				if (this.selectedTestIds == null || (this.selectedTestIds.isEmpty())) {
-					if (testGroupId == null) {
-						this.createTest();
-					} else {
-						this.startGroupDate = new Date(this.startGroupDate.getTime() + this.interval);
-						this.aloneGroupTest = true;
-						this.addGroupTests();
+							LangModelSchedule.getString("Error.CannotAddTest"),
+							LangModelGeneral.getString("Error"),
+							JOptionPane.OK_OPTION);
+						return;
 					}
 				} else {
-
-					final SortedSet<Test> selectedTests = new TreeSet<Test>(new WrapperComparator<Test>(TestWrapper.getInstance(),
-							TestWrapper.COLUMN_START_TIME));
-					final Set<Test> tests = StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
-					selectedTests.addAll(tests);
-					final Test firstTest = selectedTests.first();
-					final Test lastTest = selectedTests.last();
-
-					final Date endTime = lastTest.getEndTime();
-					final long firstTime = firstTest.getStartTime().getTime();
-					final long offset = (endTime != null ? endTime : lastTest.getStartTime()).getTime() + this.interval - firstTime;
-
-					assert Log.debugMessage("SchedulerModel.addGroupTests | firstTime is " + new Date(firstTime), Level.FINEST);
-					assert Log.debugMessage("SchedulerModel.addGroupTests | offset is " + offset, Level.FINEST);
-
-					this.selectedTestIds.clear();
-
-					boolean correct = true;
-					for (final Test selectedTest : selectedTests) {
-						final Date startDate = new Date(selectedTest.getStartTime().getTime() + offset);
-						Date endDate = selectedTest.getEndTime();
-						if (endDate != null) {
-							endDate = new Date(endDate.getTime() + offset);
-						}
-
-						// Log.debugMessage("SchedulerModel.addGroupTests |
-						// new startDate " + startDate, Log.FINEST);
-						// Log.debugMessage("SchedulerModel.addGroupTests |
-						// new endDate " + endDate, Log.FINEST);
-						correct = this.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId());
-						if (!correct) {
-							JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-									LangModelSchedule.getString("Error.CannotAddTest"),
-									LangModelSchedule.getString("Error"),
-									JOptionPane.OK_OPTION);
-							break;
-						}
-					}
-
-					if (correct) {
-						for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
-							final Test selectedTest = (Test) iterator.next();
-							final Date startDate = new Date(selectedTest.getStartTime().getTime() + offset);
-							Date endDate = selectedTest.getEndTime();
-							if (endDate != null) {
-								endDate = new Date(endDate.getTime() + offset);
-							}
-
-							// Log.debugMessage("SchedulerModel.addGroupTests
-							// | new startDate " + startDate, Log.FINEST);
-							// Log.debugMessage("SchedulerModel.addGroupTests
-							// | new endDate " + endDate, Log.FINEST);
-							final Test test = Test.createInstance(LoginManager.getUserId(),
-									startDate,
-									endDate,
-									selectedTest.getTemporalPatternId(),
-									selectedTest.getTemporalType(),
-									selectedTest.getMeasurementType(),
-									selectedTest.getAnalysisType(),
-									testGroupId,
-									selectedTest.getMonitoredElement(),
-									selectedTest.getDescription(),
-									selectedTest.getMeasurementSetupIds());
-							final Identifier testId = test.getId();
-							if (testGroupId == null || testGroupId.isVoid()) {
-								testGroupId = testId;
-								test.setGroupTestId(testGroupId);
-							}
-							this.testIds.add(testId.getId());
-							this.selectedTestIds.add(testId);
-							assert Log.debugMessage("SchedulerModel.addGroupTests | add test " + test.getId()
-									+ " at " + startDate + "," + endDate, Level.FINEST);
-						}
-					}
-
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+							LangModelSchedule.getString("Error.CannotAddTest"),
+							LangModelGeneral.getString("Error"),
+							JOptionPane.OK_OPTION);
+					return;
 				}
-			} catch (ApplicationException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+			}
+			
+		}
+		if (this.selectedTestIds == null || (this.selectedTestIds.isEmpty())) {
+			if (testGroupId == null) {
+				this.createTest();
+			} else {
+				this.startGroupDate = new Date(this.startGroupDate.getTime() + this.interval);
+				this.aloneGroupTest = true;
+				this.addGroupTests();
+			}
+		} else {
 
+			final SortedSet<Test> selectedTests = new TreeSet<Test>(new WrapperComparator<Test>(TestWrapper.getInstance(),
+					TestWrapper.COLUMN_START_TIME));				
+			try {
+				final Set<Test> tests = StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
+				selectedTests.addAll(tests);
+			} catch (final ApplicationException e) {
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					LangModelGeneral.getString("Error.CannotAcquireObject"),
+					LangModelGeneral.getString("Error"),
+					JOptionPane.OK_OPTION);
+				return;
+			}
+			final Test firstTest = selectedTests.first();
+			final Test lastTest = selectedTests.last();
+
+			final Date endTime = lastTest.getEndTime();
+			final long firstTime = firstTest.getStartTime().getTime();
+			final long offset = (endTime != null ? endTime : lastTest.getStartTime()).getTime() + this.interval - firstTime;
+
+			assert Log.debugMessage("SchedulerModel.addGroupTests | firstTime is " + new Date(firstTime), Level.FINEST);
+			assert Log.debugMessage("SchedulerModel.addGroupTests | offset is " + offset, Level.FINEST);
+
+			this.selectedTestIds.clear();
+
+			boolean correct = true;
+			for (final Test selectedTest : selectedTests) {
+				final Date startDate = new Date(selectedTest.getStartTime().getTime() + offset);
+				Date endDate = selectedTest.getEndTime();
+				if (endDate != null) {
+					endDate = new Date(endDate.getTime() + offset);
+				}
+
+				// Log.debugMessage("SchedulerModel.addGroupTests |
+				// new startDate " + startDate, Log.FINEST);
+				// Log.debugMessage("SchedulerModel.addGroupTests |
+				// new endDate " + endDate, Log.FINEST);
+				correct = this.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId());
+				if (!correct) {
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+							LangModelSchedule.getString("Error.CannotAddTest"),
+							LangModelSchedule.getString("Error"),
+							JOptionPane.OK_OPTION);
+					break;
+				}
+			}
+
+			if (correct) {
+				for (Iterator iterator = selectedTests.iterator(); iterator.hasNext();) {
+					final Test selectedTest = (Test) iterator.next();
+					final Date startDate = new Date(selectedTest.getStartTime().getTime() + offset);
+					Date endDate = selectedTest.getEndTime();
+					if (endDate != null) {
+						endDate = new Date(endDate.getTime() + offset);
+					}
+
+					try {
+						final Test test = Test.createInstance(LoginManager.getUserId(),
+								startDate,
+								endDate,
+								selectedTest.getTemporalPatternId(),
+								selectedTest.getTemporalType(),
+								selectedTest.getMeasurementType(),
+								selectedTest.getAnalysisType(),
+								testGroupId,
+								selectedTest.getMonitoredElement(),
+								selectedTest.getDescription(),
+								selectedTest.getMeasurementSetupIds());
+						final Identifier testId = test.getId();
+						if (testGroupId == null || testGroupId.isVoid()) {
+							testGroupId = testId;
+							test.setGroupTestId(testGroupId);
+						}
+						this.testIds.add(testId.getId());
+						this.selectedTestIds.add(testId);
+						assert Log.debugMessage("SchedulerModel.addGroupTests | add test " + test.getId()
+								+ " at " + startDate + "," + endDate, Level.FINEST);
+					} catch (final CreateObjectException e) {
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+							LangModelSchedule.getString("Error.CannotAddTest"),
+							LangModelGeneral.getString("Error"),
+							JOptionPane.OK_OPTION);
+						return;
+					}
+				}
 			}
 
 		}
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
 	}
 
-	public boolean isValid(final Date startDate, final Date endDate, final Identifier monitoredElementId) {
+	public boolean isValid(final Date startDate, 
+	                       final Date endDate, 
+	                       final Identifier monitoredElementId) {
+		Log.debugMessage("SchedulerModel.isValid | ", Log.DEBUGLEVEL09);
+
+		Log.debugMessage("SchedulerModel.isValid | startDate " + startDate, Log.DEBUGLEVEL09);
+		Log.debugMessage("SchedulerModel.isValid | endDate " + endDate, Log.DEBUGLEVEL09);
+
 		boolean result = true;
-//		Log.debugMessage("SchedulerModel.isValid | ", Level.FINEST);
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
 			for (final Test test : tests) {
+				if (test.getStatus().value() == TestStatus._TEST_STATUS_STOPPED){
+					continue;
+				}
 				final Date startTime = test.getStartTime();
 				Date endTime = test.getEndTime();
 				if (endTime == null) {
 					endTime = startTime;
 				}
-//				Log.debugMessage("SchedulerModel.isValid | startDate " + startDate + ", endDate " + endDate, Level.FINEST);
+				
+				Log.debugMessage("SchedulerModel.isValid | startTime " + startTime, Log.DEBUGLEVEL09);
+				Log.debugMessage("SchedulerModel.isValid | endTime " + endTime, Log.DEBUGLEVEL09);
 
-//				Log.debugMessage("SchedulerModel.isValid | startTime " + startTime + ", endTime " + endTime, Level.FINEST);
 				if (test.getMonitoredElement().getId().equals(monitoredElementId)
-						&& ((endDate != null && endDate.after(startTime) && endDate.before(endTime)) || (startDate.after(startTime) && startDate.before(endTime)))) {
+						&& ((endDate != null && 
+								endDate.after(startTime) && 
+								endDate.before(endTime)) || 
+									(startDate.after(startTime) && 
+											startDate.before(endTime)))) {
 					result = false;
 					break;
 				}
 			}
-		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+		} catch (final ApplicationException e) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				LangModelGeneral.getString("Error.CannotAcquireObject"),
+				LangModelGeneral.getString("Error"),
+				JOptionPane.OK_OPTION);
+			Log.debugMessage("SchedulerModel.isValid | ApplicationException >> return false ", Log.DEBUGLEVEL09);
+			return false;
 		}
-//		Log.debugMessage("SchedulerModel.isValid | result is " + result, Level.FINEST);
+		Log.debugMessage("SchedulerModel.isValid | return " + result, Log.DEBUGLEVEL09);
 		return result;
 	}
 

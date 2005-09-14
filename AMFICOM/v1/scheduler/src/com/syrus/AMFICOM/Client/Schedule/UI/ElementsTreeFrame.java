@@ -21,8 +21,9 @@ import javax.swing.tree.TreePath;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -118,10 +119,13 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 	public KIS getKIS() {
 		try {
 			return (KIS) StorableObjectPool.getStorableObject(this.getObject(ObjectEntities.KIS_CODE), true);
-		} catch (ApplicationException e) {
-			//
+		} catch (final ApplicationException e) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				LangModelGeneral.getString("Error.CannotAcquireObject"),
+				LangModelGeneral.getString("Error"),
+				JOptionPane.OK_OPTION);
+			return null;
 		}
-		return null;
 	}
 
 	public MonitoredElement getMonitoredElement() {
@@ -133,10 +137,13 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 				me = (MonitoredElement) StorableObjectPool.getStorableObject(meId, true);
 			}
 			return me;
-		} catch (ApplicationException e) {
-			//
+		} catch (final ApplicationException e) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				LangModelGeneral.getString("Error.CannotAcquireObject"),
+				LangModelGeneral.getString("Error"),
+				JOptionPane.OK_OPTION);
+			return null;
 		}
-		return null;
 	}
 
 	public void setKIS(@SuppressWarnings("unused")
@@ -270,8 +277,12 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 												ElementsTreeFrame.this.schedulerModel.setSelectedMonitoredElement((MonitoredElement) StorableObjectPool.getStorableObject(identifier,
 														true),
 														parent != null ? (MeasurementType) parent.getObject() : null);
-											} catch (ApplicationException e) {
-												AbstractMainFrame.showErrorMessage(ElementsTreeFrame.this, e);
+											} catch (final ApplicationException e) {
+												JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+													LangModelGeneral.getString("Error.CannotAcquireObject"),
+													LangModelGeneral.getString("Error"),
+													JOptionPane.OK_OPTION);
+												return;
 											}
 										}
 									});

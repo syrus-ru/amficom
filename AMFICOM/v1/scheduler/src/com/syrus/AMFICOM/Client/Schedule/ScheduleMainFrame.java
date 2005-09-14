@@ -1,5 +1,5 @@
 /*-
-* $Id: ScheduleMainFrame.java,v 1.38 2005/09/12 12:51:37 bob Exp $
+* $Id: ScheduleMainFrame.java,v 1.39 2005/09/14 17:39:22 bob Exp $
 *
 * Copyright ¿ 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.38 $, $Date: 2005/09/12 12:51:37 $
+ * @version $Revision: 1.39 $, $Date: 2005/09/14 17:39:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -67,7 +67,7 @@ public class ScheduleMainFrame extends AbstractMainFrame {
 				.getApplicationModel()), new AbstractMainToolBar() {
 			// nothing
 		});
-
+		
 		final Dispatcher dispatcher1 = this.dispatcher;
 		
 		final JDesktopPane desktopPane1 = this.desktopPane;

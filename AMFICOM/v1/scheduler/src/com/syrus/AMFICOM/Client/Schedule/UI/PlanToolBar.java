@@ -26,6 +26,7 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JDialog;
 import javax.swing.JLabel;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JToolBar;
@@ -44,7 +45,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.model.AbstractMainFrame;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.filter.UI.CalendarUI;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -344,6 +345,8 @@ class PlanToolBar {
 		this.applyButton.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
+				final JButton button = (JButton) e.getSource();
+				button.setEnabled(false);
 				CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
 					public void run() {
@@ -364,8 +367,13 @@ class PlanToolBar {
 							PlanToolBar.this.dispatcher
 									.firePropertyChange(new StatusMessageEvent(PlanToolBar.this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 
-						} catch (ApplicationException e1) {
-							AbstractMainFrame.showErrorMessage(PlanToolBar.this.toolBar, e1);
+							button.setEnabled(true);
+						} catch (final ApplicationException e1) {
+							JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+								LangModelSchedule.getString("Error.CannotRefreshTests"),
+								LangModelGeneral.getString("Error"),
+								JOptionPane.OK_OPTION);
+							return;
 						}
 					}
 				}, LangModelSchedule.getString("StatusMessage.UpdatingTests"));

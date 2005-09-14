@@ -122,6 +122,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 		}
 	}
 
+	@SuppressWarnings("serial")
 	private void createGUI() {
 		final AnalysisType[] analysisTypes = AnalysisType.values();
 
@@ -490,9 +491,11 @@ public class TestParametersPanel implements PropertyChangeListener {
 			this.setMeasurementSetup((MeasurementSetup) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS)) {
 			this.setMeasurementSetups((Collection) newValue);
-		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_SET)) {
-			this.setSet((ParameterSet) newValue);
-		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE)) {
+		} 
+//		else if (propertyName.equals(SchedulerModel.COMMAND_SET_SET)) {
+//			this.setSet((ParameterSet) newValue);
+//		} 
+		else if (propertyName.equals(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE)) {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_ANALYSIS_TYPE,
 																		null, this.getAnalysisType()));
 		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP)) {
@@ -502,13 +505,15 @@ public class TestParametersPanel implements PropertyChangeListener {
 						.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP,
 																	null, measurementSetup1));
 			}
-		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_SET)) {
-			ParameterSet set = getSet();
-			if (set != null) {
-				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_SET, null,
-																			set));
-			}
-		} else if (propertyName.equals(SchedulerModel.COMMAND_ADD_NEW_MEASUREMENT_SETUP)) {
+		} 
+//		else if (propertyName.equals(SchedulerModel.COMMAND_GET_SET)) {
+//			ParameterSet set = getSet();
+//			if (set != null) {
+//				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_SET, null,
+//																			set));
+//			}
+//		}
+		else if (propertyName.equals(SchedulerModel.COMMAND_ADD_NEW_MEASUREMENT_SETUP)) {
 			int selectedIndex = this.testSetups.getSelectedIndex();
 			this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);
 			this.setMeasurementSetup((MeasurementSetup) evt.getNewValue());
@@ -530,11 +535,11 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_ANALYSIS_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS, this);
-		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_SET, this);
+//		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_SET, this);
 
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP, this);
-		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_SET, this);
+//		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_SET, this);
 
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_ADD_NEW_MEASUREMENT_SETUP, this);
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.43 2005/09/06 07:48:37 bob Exp $
+ * $Id: PlanPanel.java,v 1.44 2005/09/14 17:39:22 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,20 +27,22 @@ import java.text.SimpleDateFormat;
 import java.util.Calendar;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
 
 import javax.swing.JComponent;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
 import javax.swing.Timer;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -49,7 +51,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.43 $, $Date: 2005/09/06 07:48:37 $
+ * @version $Revision: 1.44 $, $Date: 2005/09/14 17:39:22 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -425,13 +427,15 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.WAIT_CURSOR));
 		setScale(scale);
 		setStartDate(startDate);
-		SchedulerModel model = (SchedulerModel) this.aContext.getApplicationModel();
+		final SchedulerModel model = (SchedulerModel) this.aContext.getApplicationModel();
 		try {
 			model.updateTests(this.scaleStart.getTime(), this.scaleEnd.getTime());
 			updateTestLines();
-
-		} catch (ApplicationException e) {
-			AbstractMainFrame.showErrorMessage(this, e);
+		} catch (final ApplicationException e) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				LangModelSchedule.getString("Error.CannotRefreshTests"),
+				LangModelGeneral.getString("Error"),
+				JOptionPane.OK_OPTION);
 		}
 
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -648,8 +652,8 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 
 	protected void updateTestLines() {
 		try {
-			for (Iterator it = StorableObjectPool.getStorableObjects(((SchedulerModel) this.aContext.getApplicationModel()).getTestIds(), true).iterator(); it.hasNext();) {
-				Test test = (Test) it.next();
+			final Set<Test> tests = StorableObjectPool.getStorableObjects(((SchedulerModel) this.aContext.getApplicationModel()).getTestIds(), true);
+			for (final Test test : tests) {
 				final MonitoredElement monitoredElement = test.getMonitoredElement();
 				final Identifier monitoredElementId = monitoredElement.getId();
 				if (!this.testLines.containsKey(monitoredElementId)) {
@@ -672,11 +676,12 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 			this.updateTestLinesTimeRegion();
 			this.revalidate();
 		} catch (ApplicationException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				LangModelGeneral.getString("Error.CannotAcquireObject"),
+				LangModelGeneral.getString("Error"),
+				JOptionPane.OK_OPTION);
+			return;
 		}
-		
-
 	}
 
 }

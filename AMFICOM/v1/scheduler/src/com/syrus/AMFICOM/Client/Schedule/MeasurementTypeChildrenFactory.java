@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.13 2005/09/11 15:27:43 bass Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.14 2005/09/14 17:39:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,10 +15,12 @@ import java.util.Iterator;
 import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
-import java.util.logging.Level;
 
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -33,12 +35,11 @@ import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
-import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/11 15:27:43 $
- * @author $Author: bass $
+ * @version $Revision: 1.14 $, $Date: 2005/09/14 17:39:22 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -96,10 +97,6 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 			for (Iterator iterator = kisMeasurementTypes.keySet().iterator(); iterator.hasNext();) {
 				KIS kis = (KIS) iterator.next();
 				EnumSet<MeasurementType> measurementTypesFormeasurementPortType = kisMeasurementTypes.get(kis);
-//					Log.debugMessage("MeasurementTypeChildrenFactory.populate | " + ((Identifiable)item.getObject()).getId(), Log.FINEST);
-//					for (Iterator iter = measurementTypesFormeasurementPortType.iterator(); iter.hasNext();) {
-//						Log.debugMessage("MeasurementTypeChildrenFactory.populate | storableObject " + iter.next(), Log.FINEST);
-//					}
 				if (measurementTypesFormeasurementPortType.contains(item.getObject())) {
 					IconPopulatableItem kisItem = new IconPopulatableItem();
 					kisItem.setName(kis.getName());
@@ -130,8 +127,12 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 					}
 				}
 			}
-		} catch (ApplicationException e) {
-			Log.debugException(e, Level.WARNING);
+		} catch (final ApplicationException e) {
+			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+				LangModelGeneral.getString("Error.CannotAcquireObject"),
+				LangModelGeneral.getString("Error"),
+				JOptionPane.OK_OPTION);
+			return;
 		}		
 	}
 	

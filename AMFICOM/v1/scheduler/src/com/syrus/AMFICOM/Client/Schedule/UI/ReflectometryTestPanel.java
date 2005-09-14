@@ -61,7 +61,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/09/06 07:48:17 $
+ * @version $Revision: 1.75 $, $Date: 2005/09/14 17:39:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -905,6 +905,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 				} catch (IOException e) {
 					AbstractMainFrame.showErrorMessage(this, e);
+					return;
 				}
 			} else if (parameterType.equals(ParameterType.REF_FLAG_LIFE_FIBER_DETECT)) {
 				try {
@@ -915,6 +916,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 				} catch (IOException e) {
 					AbstractMainFrame.showErrorMessage(this, e);
+					return;
 				}
 			}
 		}

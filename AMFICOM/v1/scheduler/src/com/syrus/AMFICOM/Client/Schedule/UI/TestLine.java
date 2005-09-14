@@ -27,6 +27,7 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
+import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -36,6 +37,7 @@ import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -170,14 +172,9 @@ public class TestLine extends TimeLine {
 					CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
 						public void run() {
-							try {
-								TestLine.this.skip = true;
-								TestLine.this.schedulerModel.addSelectedTest(test);
-								TestLine.this.skip = false;
-							} catch (ApplicationException e) {
-								AbstractMainFrame.showErrorMessage(TestLine.this, e);
-							}
-
+							TestLine.this.skip = true;
+							TestLine.this.schedulerModel.addSelectedTest(test);
+							TestLine.this.skip = false;
 						}
 					}, LangModelGeneral.getString("Message.Information.PlsWait"));
 				} catch (ApplicationException e) {
@@ -321,10 +318,12 @@ public class TestLine extends TimeLine {
 		final int h = this.getHeight() - y - 2;
 
 		if (!this.timeItems.isEmpty() && super.scale > 0.0) {
-			for (final TestTimeItem testTimeItem : this.timeItems) {
-				this.drawItemRect(g, testTimeItem.x, y, testTimeItem.getWidth(), h, (this.selectedTestIds == null)
-						|| (!this.selectedTestIds.contains(testTimeItem.object)) ? testTimeItem.color
-						: testTimeItem.selectedColor);
+			synchronized (this) {
+				for (final TestTimeItem testTimeItem : this.timeItems) {
+					this.drawItemRect(g, testTimeItem.x, y, testTimeItem.getWidth(), h, (this.selectedTestIds == null)
+							|| (!this.selectedTestIds.contains(testTimeItem.object)) ? testTimeItem.color
+							: testTimeItem.selectedColor);
+				}
 			}
 		}
 		this.paintFlash(g);
@@ -539,61 +538,66 @@ public class TestLine extends TimeLine {
 	
 	@Override
 	void refreshTimeItems() {
-		this.timeItems.clear();
-		if (this.scale <= 0.0 || super.start == 0 || super.end == 0) {
-			super.scale = (double) (this.getWidth() - PlanPanel.MARGIN) / (double) (this.end - this.start);
-		}
-
-		try {
-			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
-			for (final Test test : tests) {				
-				final List<TestTimeLine> testTimeLineList = this.measurements.get(test.getId());
-				if (testTimeLineList == null) {
-					continue;
-				}
-
-				Color selectedColor = null;
-				Color unselectedColor = null;
-
-				for (final TestTimeLine testTimeLine : testTimeLineList) {
-					final TestTimeItem testTimeItem = new TestTimeItem();
-
-					testTimeItem.x = PlanPanel.MARGIN / 2 + (int) (this.scale * (testTimeLine.startTime - this.start));
-					int width = (int) (this.scale * testTimeLine.duration);
-
-					width = width > this.minimalWidth ? width : this.minimalWidth;
-					testTimeItem.setWidth(width);
-
-					if (testTimeLine.haveMeasurement) {
-						selectedColor = SchedulerModel.COLOR_COMPLETED_SELECTED;
-						unselectedColor = SchedulerModel.COLOR_COMPLETED;
-					}
-					// TODO : testing bypass
-					else 
-					{
-						selectedColor = SchedulerModel.getColor(test.getStatus(), true);
-						unselectedColor = SchedulerModel.getColor(test.getStatus(), false);
-					}
-					
-					testTimeItem.object = test.getId();
-					testTimeItem.selectedColor = selectedColor;
-					testTimeItem.color = unselectedColor;
-					
-					this.timeItems.add(testTimeItem);
-				}
-
+		synchronized (this) {
+			this.timeItems.clear();
+			if (this.scale <= 0.0 || super.start == 0 || super.end == 0) {
+				super.scale = (double) (this.getWidth() - PlanPanel.MARGIN) / (double) (this.end - this.start);
 			}
-
-			this.unsavedTestTimeItems.clear();
-			for (final Iterator it = this.timeItems.iterator(); it.hasNext();) {
-				final TestTimeItem testTimeItem = (TestTimeItem) it.next();
-				if (this.isTestNewer((Test) StorableObjectPool.getStorableObject((Identifier) testTimeItem.object, true))) {
-					it.remove();
-					this.unsavedTestTimeItems.add(testTimeItem);
+	
+			try {
+				final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
+				for (final Test test : tests) {				
+					final List<TestTimeLine> testTimeLineList = this.measurements.get(test.getId());
+					if (testTimeLineList == null) {
+						continue;
+					}
+	
+					Color selectedColor = null;
+					Color unselectedColor = null;
+	
+					for (final TestTimeLine testTimeLine : testTimeLineList) {
+						final TestTimeItem testTimeItem = new TestTimeItem();
+	
+						testTimeItem.x = PlanPanel.MARGIN / 2 + (int) (this.scale * (testTimeLine.startTime - this.start));
+						int width = (int) (this.scale * testTimeLine.duration);
+	
+						width = width > this.minimalWidth ? width : this.minimalWidth;
+						testTimeItem.setWidth(width);
+	
+						if (testTimeLine.haveMeasurement) {
+							selectedColor = SchedulerModel.COLOR_COMPLETED_SELECTED;
+							unselectedColor = SchedulerModel.COLOR_COMPLETED;
+						}
+						// TODO : testing bypass
+						else 
+						{
+							selectedColor = SchedulerModel.getColor(test.getStatus(), true);
+							unselectedColor = SchedulerModel.getColor(test.getStatus(), false);
+						}
+						
+						testTimeItem.object = test.getId();
+						testTimeItem.selectedColor = selectedColor;
+						testTimeItem.color = unselectedColor;
+						
+						this.timeItems.add(testTimeItem);
+					}
+	
 				}
+	
+				this.unsavedTestTimeItems.clear();
+				for (final Iterator it = this.timeItems.iterator(); it.hasNext();) {
+					final TestTimeItem testTimeItem = (TestTimeItem) it.next();
+					if (this.isTestNewer((Test) StorableObjectPool.getStorableObject((Identifier) testTimeItem.object, true))) {
+						it.remove();
+						this.unsavedTestTimeItems.add(testTimeItem);
+					}
+				}
+			} catch (ApplicationException e) {
+				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+					LangModelGeneral.getString("Error.CannotAcquireObject"),
+					LangModelGeneral.getString("Error"),
+					JOptionPane.OK_OPTION);
 			}
-		} catch (ApplicationException e) {
-			AbstractMainFrame.showErrorMessage(this, e);
 		}
 		super.repaint();
 		super.revalidate();

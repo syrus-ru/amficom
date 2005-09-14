@@ -1,5 +1,5 @@
 /*-
- * $Id: LangModelSchedule.java,v 1.4 2005/09/06 07:44:12 bob Exp $
+ * $Id: LangModelSchedule.java,v 1.5 2005/09/14 17:39:22 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,7 +11,7 @@ import java.util.MissingResourceException;
 import java.util.ResourceBundle;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/06 07:44:12 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/14 17:39:22 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -32,12 +32,12 @@ public class LangModelSchedule {
 		String string;
 		try {
 			string = RESOURCE_BUNDLE.getString(keyName);
-		} catch (MissingResourceException e) {
+		} catch (final MissingResourceException e0) {
 			try {
 				throw new Exception(keyName);
-			} catch (Exception e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+			} catch (final Exception e1) {
+				StackTraceElement[] stackTrace = e1.getStackTrace();
+				System.err.println("key '" + keyName + "' not found : " + stackTrace[1]);
 			}			
 			string = "!" + keyName + "!";
 

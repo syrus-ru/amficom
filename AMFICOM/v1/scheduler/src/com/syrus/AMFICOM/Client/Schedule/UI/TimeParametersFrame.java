@@ -39,9 +39,9 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.filter.UI.CalendarUI;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -853,10 +853,12 @@ public class TimeParametersFrame extends JInternalFrame {
 		}
 		
 		public TestTemporalStamps getTestTemporalStamps() {
-			if (this.temporalStamps != null)
+			if (this.temporalStamps != null) {
 				return this.temporalStamps;
+			}
 				
-				
+			final Date start = this.getStartDate();
+			Date end = null;
 			TestTemporalType temporalType = null;
 			AbstractTemporalPattern temporalPattern = null;
 			if (this.oneRadioButton.isSelected()) {
@@ -865,14 +867,22 @@ public class TimeParametersFrame extends JInternalFrame {
 				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL;
 //				temporalPattern = (TemporalPattern) TimeParametersPanel.this.timeStamps.getSelectedValue();
 				long intervalLength = this.getIntervalLength();
-				TypicalCondition typicalCondition = new TypicalCondition(intervalLength, intervalLength, OperationSort.OPERATION_EQUALS, ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, PeriodicalTemporalPatternWrapper.COLUMN_PERIOD); 
+				TypicalCondition typicalCondition = new TypicalCondition(intervalLength, 
+					intervalLength, 
+					OperationSort.OPERATION_EQUALS, 
+					ObjectEntities.PERIODICALTEMPORALPATTERN_CODE, 
+					PeriodicalTemporalPatternWrapper.COLUMN_PERIOD); 
 				try {
-					java.util.Set set = StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true, true);
-					if (!set.isEmpty()) {
-						temporalPattern = (AbstractTemporalPattern)set.iterator().next();
+					final Set<PeriodicalTemporalPattern> periodicalTemporalPatterns = StorableObjectPool.getStorableObjectsByCondition(typicalCondition, true, true);
+					if (!periodicalTemporalPatterns.isEmpty()) {
+						temporalPattern = periodicalTemporalPatterns.iterator().next();
 					}
-				} catch (ApplicationException e) {
-					AbstractMainFrame.showErrorMessage(this.panel, e);
+				} catch (final ApplicationException e) {
+					this.schedulerModel.setBreakData();
+					JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+						LangModelGeneral.getString("Error.CannotAcquireObject"),
+						LangModelGeneral.getString("Error"),
+						JOptionPane.OK_OPTION);
 					return null;
 				}
 				
@@ -880,21 +890,19 @@ public class TimeParametersFrame extends JInternalFrame {
 					try {
 						temporalPattern = PeriodicalTemporalPattern.createInstance(LoginManager.getUserId(), intervalLength);
 					} catch (CreateObjectException e) {
-						AbstractMainFrame.showErrorMessage(this.panel, e);
+						this.schedulerModel.setBreakData();
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+							LangModelSchedule.getString("Error.CannotCreatePeriodicalPattern"),
+							LangModelGeneral.getString("Error"),
+							JOptionPane.OK_OPTION);
 						return null;
 					}
 
-				}
-				
-				if (temporalPattern == null) {
-					JOptionPane.showMessageDialog(this.panel,
-						LangModelSchedule.getString("Error.HaveNotChoosenTemporalPattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
-						JOptionPane.OK_OPTION);
-					this.schedulerModel.setBreakData();
-					return null;
-				}
+				}				
+				 end = this.getEndDate();
 			} else if (this.continuosRadioButton.isSelected()) {
 				temporalType = TestTemporalType.TEST_TEMPORAL_TYPE_CONTINUOUS;
+				end = this.getEndDate();
 			} else  if (this.groupRadioButton.isSelected()) {
 				if (this.choosedButton != null) {
 					if (this.choosedButton == this.startTimeButton) {
@@ -908,26 +916,22 @@ public class TimeParametersFrame extends JInternalFrame {
 					return null;
 				}
 			}
-			else {
-				// ModuleMainFrame.showErrorMessage(this, ne)
-				this.schedulerModel.setBreakData();
-				return null;
-			}
-
-			Date start = this.getStartDate();
-			Date end = this.getEndDate();
-		
-			if (!temporalType.equals(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME) && end.getTime() < start.getTime()) {
+			
+			if (!temporalType.equals(TestTemporalType.TEST_TEMPORAL_TYPE_ONETIME) && start.after(end)) {
 				JOptionPane.showMessageDialog(this.panel,
-					LangModelSchedule.getString("Error.EndTimeLessThanBeginTime"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
+					LangModelSchedule.getString("Error.EndTimeLessThanBeginTime"), 
+					LangModelSchedule.getString("Error"), 
 					JOptionPane.OK_OPTION);
 				this.schedulerModel.setBreakData();
-				return null;
-				
+				return null;				
 			}
 
-			return new TestTemporalStamps(temporalType, start, end,
-																	temporalPattern);
+			assert end == null || start.before(end) : "end time less than start time";
+			
+			return new TestTemporalStamps(temporalType, 
+				start, 
+				end,
+				temporalPattern);
 			
 		}
 		
