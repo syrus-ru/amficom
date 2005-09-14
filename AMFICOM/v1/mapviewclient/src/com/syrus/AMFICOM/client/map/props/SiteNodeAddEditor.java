@@ -306,6 +306,9 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		MapView mapView = this.logicalNetLayer.getMapView();
 
 		se.setSiteNode(null);
+
+		List<Scheme> schemes = new LinkedList<Scheme>();
+
 		for (int i = 0; i < this.elementsBranch.getChildCount(); i++) {
 			DefaultMutableTreeNode node = (DefaultMutableTreeNode )this.elementsBranch.getChildAt(i);
 			if(node.getUserObject().equals(se)) {
@@ -318,9 +321,14 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 					UnPlaceSchemeCableLinkCommand command = new UnPlaceSchemeCableLinkCommand(cablePath);
 					command.setNetMapViewer(this.netMapViewer);
 					command.execute();
+
+					schemes.add(cablePath.getSchemeCableLink().getParentScheme());
 				}
 				break;
 			}
+		}
+		for(Scheme scheme : schemes) {
+			this.logicalNetLayer.getMapViewController().scanPaths(scheme);
 		}
 		this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 		
@@ -496,7 +504,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 			this.logicalNetLayer.deselectAll();
 			this.logicalNetLayer.setCurrentMapElement(mapElement);
 			this.logicalNetLayer.getMapView().getMap().setSelected(mapElement, true);
-			this.logicalNetLayer.sendSelectionChangeEvent();
+			this.logicalNetLayer.getContext().getDispatcher().firePropertyChange(
+					new MapEvent(this, MapEvent.SELECTION_CHANGED, this.logicalNetLayer.getMapView().getMap().getSelectedElements()));
 		}
 	}
 
