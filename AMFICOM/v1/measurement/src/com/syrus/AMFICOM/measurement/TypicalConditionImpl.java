@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.22 2005/09/09 13:06:12 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.23 2005/09/14 17:29:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/09 13:06:12 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/14 17:29:56 $
  * @author $Author: arseniy $
  * @module measurement
  */
@@ -129,7 +129,9 @@ final class TypicalConditionImpl extends TypicalCondition {
 	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		Wrapper wrapper;
-		if (storableObject instanceof Test) {
+		if (storableObject instanceof Measurement) {
+			wrapper = MeasurementWrapper.getInstance();
+		} else if (storableObject instanceof Test) {
 			wrapper = TestWrapper.getInstance();
 		} else if (storableObject instanceof PeriodicalTemporalPattern) {
 			wrapper = PeriodicalTemporalPatternWrapper.getInstance();
@@ -140,7 +142,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		} else if (storableObject instanceof MeasurementPortType) {
 			wrapper = MeasurementPortTypeWrapper.getInstance();
 		} else {
-			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
+			throw new IllegalObjectEntityException(ERROR_ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 
