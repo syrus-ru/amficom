@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.36 2005/09/08 06:50:34 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.37 2005/09/14 10:36:00 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,6 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
@@ -31,16 +30,16 @@ import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeLink;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
 
 /**
  * Контроллер топологическиго пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.36 $, $Date: 2005/09/08 06:50:34 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/14 10:36:00 $
  * @module mapviewclient
  */
 public final class MeasurementPathController extends AbstractLinkController {
@@ -224,20 +223,19 @@ public final class MeasurementPathController extends AbstractLinkController {
 				}
 				break;
 			case IdlKind._SCHEME_LINK:
-				try {
-					final SchemeLink link = (SchemeLink) pe.getAbstractSchemeElement();
-					final SchemeElement sse = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme(),
-							link.getSourceAbstractSchemePort().getParentSchemeDevice());
-					final SchemeElement ese = SchemeUtils.getSchemeElementByDevice(path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme(),
-							link.getTargetAbstractSchemePort().getParentSchemeDevice());
-					final SiteNode ssite = mapView.findElement(sse);
-					final SiteNode esite = mapView.findElement(ese);
-					if (ssite != null && ssite.equals(esite)) {
-						me = ssite;
-					}
-				} catch(ApplicationException e) {
-					// TODO Auto-generated catch block
-					e.printStackTrace();
+				final SchemeLink schemeLink = (SchemeLink) pe.getAbstractSchemeElement();
+				Scheme scheme = path.getSchemePath().getParentSchemeMonitoringSolution().getParentScheme();
+				SchemeElement innerSourceElement = schemeLink.getSourceAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
+				SchemeElement topSourceElement = MapView.getTopLevelSchemeElement(innerSourceElement);
+				final SchemeElement startSchemeElement = MapView.getTopologicalSchemeElement(scheme, topSourceElement);
+
+				SchemeElement innerTargetElement = schemeLink.getTargetAbstractSchemePort().getParentSchemeDevice().getParentSchemeElement();
+				SchemeElement topTargetElement = MapView.getTopLevelSchemeElement(innerTargetElement);
+				final SchemeElement endSchemeElement = MapView.getTopologicalSchemeElement(scheme, topTargetElement);
+				final SiteNode ssite = mapView.findElement(startSchemeElement);
+				final SiteNode esite = mapView.findElement(endSchemeElement);
+				if (ssite != null && ssite.equals(esite)) {
+					me = ssite;
 				}
 				break;
 			case IdlKind._SCHEME_CABLE_LINK:
