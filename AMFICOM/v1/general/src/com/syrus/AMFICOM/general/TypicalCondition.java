@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.51 2005/09/14 13:02:02 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.52 2005/09/14 17:46:44 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -127,14 +127,22 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.51 $, $Date: 2005/09/14 13:02:02 $
+ * @version $Revision: 1.52 $, $Date: 2005/09/14 17:46:44 $
  * @author $Author: arseniy $
  * @module general
  */
 public class TypicalCondition implements StorableObjectCondition {
 	private static final long serialVersionUID = -2099200598390912964L;
 
-	protected static final String ENTITY_NOT_REGISTERED = "Entity not registered for this condition -- ";
+	protected static final String ERROR_ENTITY_NOT_REGISTERED = "ERROR: Entity not registered for this condition -- ";
+	private static final String ERROR_UNKNOWN_TYPE_CODE = "ERROR: Unknown type code: ";
+	private static final String ERROR_UNKNOWN_NUMBER_CODE = "ERROR: Unknown number code: ";
+	private static final String ERROR_UNKNOWN_OPERATION_CODE = "ERROR: Unknown operation code: ";
+	private static final String TYPICAL_CONDITION_INIT = "TypicalCondition.<init>() | ";
+	private static final String CREATING_A_DUMMY_CONDITION = "; creating a dummy condition...";
+	private static final String INVALID_UNDERLYING_IMPLEMENTATION = "Invalid underlying implementation: ";
+	private static final String TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE = "StringFieldCondition$1.isConditionTrue() | ";
+	private static final String TYPICAL_CONDITION_INNER_ONE_IS_NEED_MORE = "StringFieldCondition$1.isNeedMore() | ";
 
 	/**
 	 * Field is used by descendants only, and never directly.
@@ -200,12 +208,6 @@ public class TypicalCondition implements StorableObjectCondition {
 
 	private TypicalCondition delegate;
 
-	private static final String TYPICAL_CONDITION_INIT = "TypicalCondition.<init>() | ";
-	private static final String CREATING_A_DUMMY_CONDITION = "; creating a dummy condition...";
-	private static final String INVALID_UNDERLYING_IMPLEMENTATION = "Invalid underlying implementation: ";
-	private static final String TYPICAL_CONDITION_INNER_ONE_IS_CONDITION_TRUE = "StringFieldCondition$1.isConditionTrue() | ";
-	private static final String TYPICAL_CONDITION_INNER_ONE_IS_NEED_MORE = "StringFieldCondition$1.isNeedMore() | ";
-
 	/**
 	 * Empty constructor used by descendants only.
 	 */
@@ -213,11 +215,23 @@ public class TypicalCondition implements StorableObjectCondition {
 		// Empty constructor used by descendants only.
 	}
 
+	/**
+	 * 
+	 * @param e
+	 *            value enum
+	 * @param operation
+	 *        one of {@link OperationSort#OPERATION_EQUALS},
+	 *        {@link OperationSort#OPERATION_NOT_EQUALS},
+	 *        {@link OperationSort#OPERATION_IN}
+	 * @param entityCode
+	 *            code of searching entity
+	 * @param key
+	 *        key for controller (wrapper)
+	 */
 	public TypicalCondition(final Enum e,
 			final OperationSort operation,
 			final short entityCode,
 			final String key) {
-
 		final String className = "com.syrus.AMFICOM." + ObjectGroupEntities.getGroupName(entityCode).toLowerCase().replaceAll("group$", "") + ".TypicalConditionImpl";
 		try {
 			final Constructor ctor = Class.forName(className).getDeclaredConstructor(
@@ -312,11 +326,16 @@ public class TypicalCondition implements StorableObjectCondition {
 	 *        right edge of range
 	 * @param operation
 	 *        one of {@link OperationSort#OPERATION_EQUALS},
+	 *        {@link OperationSort#OPERATION_NOT_EQUALS},
 	 *        {@link OperationSort#OPERATION_GREAT},
 	 *        {@link OperationSort#OPERATION_LESS},
 	 *        {@link OperationSort#OPERATION_GREAT_EQUALS},
-	 *        {@link OperationSort#OPERATION_IN_RANGE}or
-	 *        {@link OperationSort#OPERATION_LESS_EQUALS}
+	 *        {@link OperationSort#OPERATION_LESS_EQUALS},
+	 *        {@link OperationSort#OPERATION_IN_RANGE},
+	 *        {@link OperationSort#OPERATION_SUBSTRING},
+	 *        {@link OperationSort#OPERATION_REGEXP},
+	 *        {@link OperationSort#OPERATION_CI_REGEXP},
+	 *        {@link OperationSort#OPERATION_IN}
 	 * @param entityCode
 	 *        code of searching entity
 	 * @param key
@@ -413,11 +432,16 @@ public class TypicalCondition implements StorableObjectCondition {
 	 *        right edge of range
 	 * @param operation
 	 *        one of {@link OperationSort#OPERATION_EQUALS},
+	 *        {@link OperationSort#OPERATION_NOT_EQUALS},
 	 *        {@link OperationSort#OPERATION_GREAT},
 	 *        {@link OperationSort#OPERATION_LESS},
 	 *        {@link OperationSort#OPERATION_GREAT_EQUALS},
-	 *        {@link OperationSort#OPERATION_IN_RANGE}or
-	 *        {@link OperationSort#OPERATION_LESS_EQUALS}
+	 *        {@link OperationSort#OPERATION_LESS_EQUALS},
+	 *        {@link OperationSort#OPERATION_IN_RANGE},
+	 *        {@link OperationSort#OPERATION_SUBSTRING},
+	 *        {@link OperationSort#OPERATION_REGEXP},
+	 *        {@link OperationSort#OPERATION_CI_REGEXP},
+	 *        {@link OperationSort#OPERATION_IN}
 	 * @param entityCode
 	 *        code of searching entity
 	 * @param key
@@ -514,11 +538,16 @@ public class TypicalCondition implements StorableObjectCondition {
 	 *        right edge of range
 	 * @param operation
 	 *        one of {@link OperationSort#OPERATION_EQUALS},
+	 *        {@link OperationSort#OPERATION_NOT_EQUALS},
 	 *        {@link OperationSort#OPERATION_GREAT},
 	 *        {@link OperationSort#OPERATION_LESS},
 	 *        {@link OperationSort#OPERATION_GREAT_EQUALS},
-	 *        {@link OperationSort#OPERATION_IN_RANGE}or
-	 *        {@link OperationSort#OPERATION_LESS_EQUALS}
+	 *        {@link OperationSort#OPERATION_LESS_EQUALS},
+	 *        {@link OperationSort#OPERATION_IN_RANGE},
+	 *        {@link OperationSort#OPERATION_SUBSTRING},
+	 *        {@link OperationSort#OPERATION_REGEXP},
+	 *        {@link OperationSort#OPERATION_CI_REGEXP},
+	 *        {@link OperationSort#OPERATION_IN}
 	 * @param entityCode
 	 *        code of searching entity
 	 * @param key
@@ -607,9 +636,17 @@ public class TypicalCondition implements StorableObjectCondition {
 	 * @param value
 	 *            value such as substring, regexp
 	 * @param operation
-	 *            one of {@link OperationSort#OPERATION_EQUALS},
-	 *            {@link OperationSort#OPERATION_REGEXP}or
-	 *            {@link OperationSort#OPERATION_CI_REGEXP}
+	 *        one of {@link OperationSort#OPERATION_EQUALS},
+	 *        {@link OperationSort#OPERATION_NOT_EQUALS},
+	 *        {@link OperationSort#OPERATION_GREAT},
+	 *        {@link OperationSort#OPERATION_LESS},
+	 *        {@link OperationSort#OPERATION_GREAT_EQUALS},
+	 *        {@link OperationSort#OPERATION_LESS_EQUALS},
+	 *        {@link OperationSort#OPERATION_IN_RANGE},
+	 *        {@link OperationSort#OPERATION_SUBSTRING},
+	 *        {@link OperationSort#OPERATION_REGEXP},
+	 *        {@link OperationSort#OPERATION_CI_REGEXP},
+	 *        {@link OperationSort#OPERATION_IN}
 	 * @param entityCode
 	 *            code of searching entity
 	 * @param key
@@ -686,30 +723,35 @@ public class TypicalCondition implements StorableObjectCondition {
 	}
 
 	public TypicalCondition(final Date firstDate,
-	            			final Date secondDate,
-	            			final OperationSort operation,
-	            			final short entityCode,
-	            			final String key) {
+			final Date secondDate,
+			final OperationSort operation,
+			final short entityCode,
+			final String key) {
 		this(firstDate, secondDate, operation, new Short(entityCode), key);
 	}
 
 	/**
 	 * @param firstDate
-	 *            start date range
+	 *        start date range
 	 * @param secondDate
-	 *            end date range or the same object as firstDate if not need (is
-	 *            not NULL)
+	 *        end date range or the same object as firstDate if not need (is not
+	 *        NULL)
 	 * @param operation
-	 *            one of {@link OperationSort#OPERATION_EQUALS},
-	 *            {@link OperationSort#OPERATION_GREAT},
-	 *            {@link OperationSort#OPERATION_LESS},
-	 *            {@link OperationSort#OPERATION_GREAT_EQUALS},
-	 *            {@link OperationSort#OPERATION_IN_RANGE}or
-	 *            {@link OperationSort#OPERATION_LESS_EQUALS}
+	 *        one of {@link OperationSort#OPERATION_EQUALS},
+	 *        {@link OperationSort#OPERATION_NOT_EQUALS},
+	 *        {@link OperationSort#OPERATION_GREAT},
+	 *        {@link OperationSort#OPERATION_LESS},
+	 *        {@link OperationSort#OPERATION_GREAT_EQUALS},
+	 *        {@link OperationSort#OPERATION_LESS_EQUALS},
+	 *        {@link OperationSort#OPERATION_IN_RANGE},
+	 *        {@link OperationSort#OPERATION_SUBSTRING},
+	 *        {@link OperationSort#OPERATION_REGEXP},
+	 *        {@link OperationSort#OPERATION_CI_REGEXP},
+	 *        {@link OperationSort#OPERATION_IN}
 	 * @param entityCode
-	 *            code of searching entity
+	 *        code of searching entity
 	 * @param key
-	 *            key for controller (wrapper)
+	 *        key for controller (wrapper)
 	 */
 	public TypicalCondition(final Date firstDate,
 			final Date secondDate,
@@ -792,8 +834,16 @@ public class TypicalCondition implements StorableObjectCondition {
 	}
 
 	/**
-	 * @param operation only {@link OperationSort#OPERATION_EQUALS} is
-	 *        currently supported.
+	 * 
+	 * @param value
+	 *            value boolean
+	 * @param operation
+	 *        one of {@link OperationSort#OPERATION_EQUALS},
+	 *        {@link OperationSort#OPERATION_NOT_EQUALS}
+	 * @param entityCode
+	 *            code of searching entity
+	 * @param key
+	 *        key for controller (wrapper)
 	 */
 	public TypicalCondition(final Boolean value, final OperationSort operation, final Short entityCode, final String key) {
 		final String className = ObjectGroupEntities.getPackageName(entityCode.shortValue()) + ".TypicalConditionImpl";
@@ -1077,7 +1127,7 @@ public class TypicalCondition implements StorableObjectCondition {
 	}
 
 	public final IdlStorableObjectCondition getTransferable() {
-		IdlTypicalCondition transferable = new IdlTypicalCondition();
+		final IdlTypicalCondition transferable = new IdlTypicalCondition();
 		switch (this.delegate.type) {
 			case TypicalSort._TYPE_NUMBER_INT:
 				transferable.value = Integer.toString(this.delegate.firstInt);
@@ -1108,9 +1158,8 @@ public class TypicalCondition implements StorableObjectCondition {
 				transferable.otherValue = this.delegate.value.getClass().getName();
 				break;
 			default:
-				Log.errorMessage("TypicalCondition.parseCondition | unknown type code " + this.delegate.type);
+				Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_TYPE_CODE + this.delegate.type);
 				break;
-
 		}
 		transferable.key = this.delegate.key;
 		transferable.entityCode = this.delegate.entityCode.shortValue();
@@ -1159,7 +1208,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						}
 						break;
 					default:
-						Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
+						Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_NUMBER_CODE + this.type);
 				}
 
 				switch (this.operation) {
@@ -1175,7 +1224,22 @@ public class TypicalCondition implements StorableObjectCondition {
 								result = (l == this.firstLong);
 								break;
 							default:
-								Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
+								Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_NUMBER_CODE + this.type);
+						}
+						break;
+					case OperationSort._OPERATION_NOT_EQUALS:
+						switch (this.type) {
+							case TypicalSort._TYPE_NUMBER_INT:
+								result = (i != this.firstInt);
+								break;
+							case TypicalSort._TYPE_NUMBER_DOUBLE:
+								result = Math.abs(d - this.firstDouble) >= PRECISION;
+								break;
+							case TypicalSort._TYPE_NUMBER_LONG:
+								result = (l != this.firstLong);
+								break;
+							default:
+								Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_NUMBER_CODE + this.type);
 						}
 						break;
 					case OperationSort._OPERATION_GREAT:
@@ -1190,7 +1254,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								result = (l > this.firstLong);
 								break;
 							default:
-								Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
+								Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_NUMBER_CODE + this.type);
 						}
 						break;
 					case OperationSort._OPERATION_LESS:
@@ -1205,7 +1269,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								result = (l < this.firstLong);
 								break;
 							default:
-								Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
+								Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_NUMBER_CODE + this.type);
 						}
 						break;
 					case OperationSort._OPERATION_GREAT_EQUALS:
@@ -1220,7 +1284,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								result = (l >= this.firstLong);
 								break;
 							default:
-								Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
+								Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_NUMBER_CODE + this.type);
 						}
 						break;
 					case OperationSort._OPERATION_LESS_EQUALS:
@@ -1235,7 +1299,7 @@ public class TypicalCondition implements StorableObjectCondition {
 								result = (l <= this.firstLong);
 								break;
 							default:
-								Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
+								Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_NUMBER_CODE + this.type);
 						}
 						break;
 					case OperationSort._OPERATION_IN_RANGE:
@@ -1250,11 +1314,11 @@ public class TypicalCondition implements StorableObjectCondition {
 								result = (this.firstLong < l && l < this.secondLong);
 								break;
 							default:
-								Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
+								Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_NUMBER_CODE + this.type);
 						}
 						break;
 					default:
-						Log.errorMessage("TypicalCondition.parseCondition | unknown operation code " + this.operation);
+						Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
@@ -1265,6 +1329,9 @@ public class TypicalCondition implements StorableObjectCondition {
 				switch (this.operation) {
 					case OperationSort._OPERATION_EQUALS:
 						result = v.equals(o);
+						break;
+					case OperationSort._OPERATION_NOT_EQUALS:
+						result = !v.equals(o);
 						break;
 					case OperationSort._OPERATION_SUBSTRING:
 						result = o.indexOf(v) > -1;
@@ -1278,7 +1345,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						result = m.matches();
 						break;
 					default:
-						Log.errorMessage("TypicalCondition.parseCondition | unknown operation code " + this.operation);
+						Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
@@ -1290,6 +1357,9 @@ public class TypicalCondition implements StorableObjectCondition {
 				switch (this.operation) {
 					case OperationSort._OPERATION_EQUALS:
 						result = Math.abs(t - t1) < 1000L;
+						break;
+					case OperationSort._OPERATION_NOT_EQUALS:
+						result = Math.abs(t - t1) >= 1000L;
 						break;
 					case OperationSort._OPERATION_IN_RANGE:
 						result = (t1 <= t && t <= t2);
@@ -1307,7 +1377,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						result = (t < t1) || Math.abs(t - t1) < 1000L;
 						break;
 					default:
-						Log.errorMessage("TypicalCondition.parseCondition | unknown operation code " + this.operation);
+						Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
@@ -1316,8 +1386,11 @@ public class TypicalCondition implements StorableObjectCondition {
 					case OperationSort._OPERATION_EQUALS:
 						result = ((Boolean) this.value).booleanValue() == ((Boolean) object).booleanValue();
 						break;
+					case OperationSort._OPERATION_NOT_EQUALS:
+						result = ((Boolean) this.value).booleanValue() != ((Boolean) object).booleanValue();
+						break;
 					default:
-						Log.errorMessage("TypicalCondition.parseCondition | unknown operation code " + this.operation);
+						Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
@@ -1326,12 +1399,15 @@ public class TypicalCondition implements StorableObjectCondition {
 					case OperationSort._OPERATION_EQUALS:
 						result = (this.value == object);
 						break;
+					case OperationSort._OPERATION_NOT_EQUALS:
+						result = (this.value != object);
+						break;
 					case OperationSort._OPERATION_IN:
 						final EnumSet enumSet = (EnumSet) object;
 						result = enumSet.contains(this.value);
 						break;
 					default:
-						Log.errorMessage("TypicalCondition.parseCondition | unknown operation code " + this.operation);
+						Log.errorMessage("TypicalCondition.parseCondition | " + ERROR_UNKNOWN_OPERATION_CODE + this.operation);
 						break;
 				}
 				break;
@@ -1430,7 +1506,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			case TypicalSort._TYPE_NUMBER_DOUBLE:
 			case TypicalSort._TYPE_NUMBER_LONG:
 				switch (this.delegate.operation) {
-					case OperationSort._OPERATION_EQUALS: {
+					case OperationSort._OPERATION_EQUALS:
 						switch (this.delegate.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								buffer.append(" [int] == ");
@@ -1445,12 +1521,30 @@ public class TypicalCondition implements StorableObjectCondition {
 								buffer.append(this.delegate.firstLong);
 								break;
 							default:
-								Log.errorMessage("TypicalCondition.toString | unknown number code " + this.delegate.type);
+								Log.errorMessage("TypicalCondition.toString | " + ERROR_UNKNOWN_NUMBER_CODE + this.delegate.type);
 								break;
 						}
-					}
 						break;
-					case OperationSort._OPERATION_GREAT: {
+					case OperationSort._OPERATION_NOT_EQUALS:
+						switch (this.delegate.type) {
+							case TypicalSort._TYPE_NUMBER_INT:
+								buffer.append(" [int] != ");
+								buffer.append(this.delegate.firstInt);
+								break;
+							case TypicalSort._TYPE_NUMBER_DOUBLE:
+								buffer.append(" [double] != ");
+								buffer.append(this.delegate.firstDouble);
+								break;
+							case TypicalSort._TYPE_NUMBER_LONG:
+								buffer.append(" [long] != ");
+								buffer.append(this.delegate.firstLong);
+								break;
+							default:
+								Log.errorMessage("TypicalCondition.toString | " + ERROR_UNKNOWN_NUMBER_CODE + this.delegate.type);
+								break;
+						}
+						break;
+					case OperationSort._OPERATION_GREAT:
 						switch (this.delegate.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								buffer.append(" [int] > ");
@@ -1465,12 +1559,11 @@ public class TypicalCondition implements StorableObjectCondition {
 								buffer.append(this.delegate.firstLong);
 								break;
 							default:
-								Log.errorMessage("TypicalCondition.toString | unknown number code " + this.delegate.type);
+								Log.errorMessage("TypicalCondition.toString | " + ERROR_UNKNOWN_NUMBER_CODE + this.delegate.type);
 								break;
 						}
-					}
 						break;
-					case OperationSort._OPERATION_LESS: {
+					case OperationSort._OPERATION_LESS:
 						switch (this.delegate.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								buffer.append(" [int] < ");
@@ -1485,12 +1578,11 @@ public class TypicalCondition implements StorableObjectCondition {
 								buffer.append(this.delegate.firstLong);
 								break;
 							default:
-								Log.errorMessage("TypicalCondition.toString | unknown number code " + this.delegate.type);
+								Log.errorMessage("TypicalCondition.toString | " + ERROR_UNKNOWN_NUMBER_CODE + this.delegate.type);
 								break;
 						}
-					}
 						break;
-					case OperationSort._OPERATION_GREAT_EQUALS: {
+					case OperationSort._OPERATION_GREAT_EQUALS:
 						switch (this.delegate.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								buffer.append(" [int] >= ");
@@ -1505,12 +1597,11 @@ public class TypicalCondition implements StorableObjectCondition {
 								buffer.append(this.delegate.firstLong);
 								break;
 							default:
-								Log.errorMessage("TypicalCondition.toString | unknown number code " + this.delegate.type);
+								Log.errorMessage("TypicalCondition.toString | " + ERROR_UNKNOWN_NUMBER_CODE + this.delegate.type);
 								break;
 						}
-					}
 						break;
-					case OperationSort._OPERATION_LESS_EQUALS: {
+					case OperationSort._OPERATION_LESS_EQUALS:
 						switch (this.delegate.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								buffer.append(" [int] <= ");
@@ -1525,12 +1616,11 @@ public class TypicalCondition implements StorableObjectCondition {
 								buffer.append(this.delegate.firstLong);
 								break;
 							default:
-								Log.errorMessage("TypicalCondition.toString | unknown number code " + this.delegate.type);
+								Log.errorMessage("TypicalCondition.toString | " + ERROR_UNKNOWN_NUMBER_CODE + this.delegate.type);
 								break;
 						}
-					}
 						break;
-					case OperationSort._OPERATION_IN_RANGE: {
+					case OperationSort._OPERATION_IN_RANGE:
 						switch (this.delegate.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								buffer.append(" [int] in (");
@@ -1554,13 +1644,12 @@ public class TypicalCondition implements StorableObjectCondition {
 								buffer.append(")");
 								break;
 							default:
-								Log.errorMessage("TypicalCondition.toString | unknown number code " + this.delegate.type);
+								Log.errorMessage("TypicalCondition.toString | " + ERROR_UNKNOWN_NUMBER_CODE + this.delegate.type);
 								break;
 						}
-					}
 						break;
 					default:
-						Log.errorMessage("TypicalCondition.toString | unknown operation code " + this.delegate.operation);
+						Log.errorMessage("TypicalCondition.toString | " + ERROR_UNKNOWN_OPERATION_CODE + this.delegate.operation);
 						break;
 				}
 				break;
@@ -1570,6 +1659,9 @@ public class TypicalCondition implements StorableObjectCondition {
 				switch (this.delegate.operation) {
 					case OperationSort._OPERATION_EQUALS:
 						buffer.append("equals ");
+						break;
+					case OperationSort._OPERATION_NOT_EQUALS:
+						buffer.append("not equals ");
 						break;
 					case OperationSort._OPERATION_SUBSTRING:
 						buffer.append("is substring of ");
@@ -1581,7 +1673,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						buffer.append("is match case insencetive regexp ");
 						break;
 					default:
-						Log.errorMessage("TypicalCondition.toString | unknown operation code " + this.delegate.operation);
+						Log.errorMessage("TypicalCondition.toString | " + ERROR_UNKNOWN_OPERATION_CODE + this.delegate.operation);
 						break;
 				}
 				buffer.append(APOSTROPHE);
@@ -1600,7 +1692,11 @@ public class TypicalCondition implements StorableObjectCondition {
 					case OperationSort._OPERATION_EQUALS:
 						buffer.append(" equals ");
 						buffer.append(this.delegate.value);
-						break;						
+						break;
+					case OperationSort._OPERATION_NOT_EQUALS:
+						buffer.append(" not equals ");
+						buffer.append(this.delegate.value);
+						break;
 					case OperationSort._OPERATION_GREAT:
 						buffer.append(" after ");
 						buffer.append(this.delegate.value);
@@ -1618,7 +1714,7 @@ public class TypicalCondition implements StorableObjectCondition {
 						buffer.append(this.delegate.value);
 						break;
 					default:
-						Log.errorMessage("TypicalCondition.toString | unknown operation code " + this.delegate.operation);
+						Log.errorMessage("TypicalCondition.toString | " + ERROR_UNKNOWN_OPERATION_CODE + this.delegate.operation);
 						break;
 				}
 				break;
@@ -1628,8 +1724,12 @@ public class TypicalCondition implements StorableObjectCondition {
 						buffer.append(" [boolean] is ");
 						buffer.append(this.delegate.value);
 						break;
+					case OperationSort._OPERATION_NOT_EQUALS:
+						buffer.append(" [boolean] is not ");
+						buffer.append(this.delegate.value);
+						break;
 					default:
-						Log.errorMessage("TypicalCondition.toString | unknown operation code " + this.delegate.operation);
+						Log.errorMessage("TypicalCondition.toString | " + ERROR_UNKNOWN_OPERATION_CODE + this.delegate.operation);
 						break;
 				}
 				break;
@@ -1639,15 +1739,21 @@ public class TypicalCondition implements StorableObjectCondition {
 						buffer.append(" [enum] is ");
 						buffer.append(this.delegate.value);
 						break;
+					case OperationSort._OPERATION_NOT_EQUALS:
+						buffer.append(" [enum] not is ");
+						buffer.append(this.delegate.value);
+						break;
 					case OperationSort._OPERATION_IN:
 						buffer.append(" [enum] is in ");
 						buffer.append(this.delegate.value);
 						break;
 					default:
-						Log.errorMessage("TypicalCondition.toString | unknown operation code " + this.delegate.operation);
+						Log.errorMessage("TypicalCondition.toString | " + ERROR_UNKNOWN_OPERATION_CODE + this.delegate.operation);
 						break;
 				}
 				break;
+			default:
+				Log.errorMessage("TypicalCondition.toString | " + ERROR_UNKNOWN_TYPE_CODE + this.delegate.type);
 		}
 		return buffer.toString();
 	}

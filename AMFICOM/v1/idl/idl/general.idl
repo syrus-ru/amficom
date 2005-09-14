@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.109 2005/08/29 15:56:30 arseniy Exp $
+ * $Id: general.idl,v 1.110 2005/09/14 17:48:07 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -221,6 +221,7 @@ module general {
 					/*\u002a\u002f@SuppressWarnings("all")/**/
 					enum OperationSort {
 						OPERATION_EQUALS,
+						OPERATION_NOT_EQUALS,
 						OPERATION_GREAT,
 						OPERATION_LESS,
 						OPERATION_GREAT_EQUALS,

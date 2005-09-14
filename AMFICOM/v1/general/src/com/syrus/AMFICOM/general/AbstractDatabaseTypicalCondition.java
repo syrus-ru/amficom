@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.14 2005/09/14 14:07:27 arseniy Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.15 2005/09/14 17:46:44 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -15,12 +15,13 @@ import static com.syrus.AMFICOM.general.StorableObjectDatabase.GREAT_THAN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.GREAT_THAN_OR_EQUALS;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.LESS_THAN;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.LESS_THAN_OR_EQUALS;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_LIKE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.NOT_EQUALS;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
-import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_PATTERN_CHARACTERS;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_AND;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_FROM;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_IN;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_LIKE;
+import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_PATTERN_CHARACTERS;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_SELECT;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_WHERE;
 
@@ -35,7 +36,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/14 14:07:27 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/14 17:46:44 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -55,7 +56,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 
 	protected abstract String getLinkedTableName() throws IllegalObjectEntityException;
 
-	private String getLinkedSubQuery() throws IllegalObjectEntityException {
+	private final String getLinkedSubQuery() throws IllegalObjectEntityException {
 		switch (this.condition.getType().value()) {
 			case TypicalSort._TYPE_ENUM:
 				final Enum e = (Enum) this.condition.getValue();
@@ -79,6 +80,16 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 		switch (this.condition.getType().value()) {
 			case TypicalSort._TYPE_ENUM:
 				switch (this.condition.getOperation().value()) {
+					case OperationSort._OPERATION_EQUALS:
+						buffer.append(this.getColumnName());
+						buffer.append(EQUALS);
+						buffer.append(EnumUtil.getCode((Enum) this.condition.getValue()));
+						break;
+					case OperationSort._OPERATION_NOT_EQUALS:
+						buffer.append(this.getColumnName());
+						buffer.append(NOT_EQUALS);
+						buffer.append(EnumUtil.getCode((Enum) this.condition.getValue()));
+						break;
 					case OperationSort._OPERATION_IN:
 						buffer.append(this.getLinkedSubQuery());
 						break;
@@ -88,7 +99,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 			case TypicalSort._TYPE_NUMBER_DOUBLE:
 			case TypicalSort._TYPE_NUMBER_LONG:
 				switch (this.condition.getOperation().value()) {
-					case OperationSort._OPERATION_EQUALS: {
+					case OperationSort._OPERATION_EQUALS:
 						buffer.append(this.getColumnName());
 						buffer.append(EQUALS);
 						switch (this.condition.getType().value()) {
@@ -105,9 +116,26 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
-					}
 						break;
-					case OperationSort._OPERATION_GREAT: {
+					case OperationSort._OPERATION_NOT_EQUALS:
+						buffer.append(this.getColumnName());
+						buffer.append(NOT_EQUALS);
+						switch (this.condition.getType().value()) {
+							case TypicalSort._TYPE_NUMBER_INT:
+								buffer.append(this.condition.getFirstInt());
+								break;
+							case TypicalSort._TYPE_NUMBER_DOUBLE:
+								buffer.append(this.condition.getFirstDouble());
+								break;
+							case TypicalSort._TYPE_NUMBER_LONG:
+								buffer.append(this.condition.getFirstLong());
+								break;								
+							default:
+								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_NUMBER_CODE
+										+ this.condition.getType().value());
+						}
+						break;
+					case OperationSort._OPERATION_GREAT:
 						buffer.append(this.getColumnName());
 						buffer.append(GREAT_THAN);
 						switch (this.condition.getType().value()) {
@@ -124,9 +152,8 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
-					}
 						break;
-					case OperationSort._OPERATION_LESS: {
+					case OperationSort._OPERATION_LESS:
 						buffer.append(this.getColumnName());
 						buffer.append(LESS_THAN);
 						switch (this.condition.getType().value()) {
@@ -143,9 +170,8 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
-					}
 						break;
-					case OperationSort._OPERATION_GREAT_EQUALS: {
+					case OperationSort._OPERATION_GREAT_EQUALS:
 						buffer.append(this.getColumnName());
 						buffer.append(GREAT_THAN_OR_EQUALS);
 						switch (this.condition.getType().value()) {
@@ -162,9 +188,8 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
-					}
 						break;
-					case OperationSort._OPERATION_LESS_EQUALS: {
+					case OperationSort._OPERATION_LESS_EQUALS:
 						buffer.append(this.getColumnName());
 						buffer.append(LESS_THAN_OR_EQUALS);
 						switch (this.condition.getType().value()) {
@@ -181,9 +206,8 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								Log.errorMessage("AbstractDatabaseTypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_NUMBER_CODE
 										+ this.condition.getType().value());
 						}
-					}
 						break;
-					case OperationSort._OPERATION_IN_RANGE: {
+					case OperationSort._OPERATION_IN_RANGE:
 						buffer.append(OPEN_BRACKET);
 						buffer.append(this.getColumnName());
 						buffer.append(GREAT_THAN);
@@ -221,7 +245,6 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 								buffer.append(Long.MAX_VALUE);
 						}
 						buffer.append(CLOSE_BRACKET);
-					}
 						break;
 					default:
 						Log.errorMessage("TypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_OPERATION_CODE
@@ -235,6 +258,12 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 				switch (this.condition.getOperation().value()) {
 					case OperationSort._OPERATION_EQUALS:
 						buffer.append(EQUALS);
+						buffer.append(APOSTROPHE);
+						buffer.append(DatabaseString.toQuerySubString(v));
+						buffer.append(APOSTROPHE);
+						break;
+					case OperationSort._OPERATION_NOT_EQUALS:
+						buffer.append(NOT_EQUALS);
 						buffer.append(APOSTROPHE);
 						buffer.append(DatabaseString.toQuerySubString(v));
 						buffer.append(APOSTROPHE);
@@ -266,6 +295,10 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 				switch (this.condition.getOperation().value()) {
 					case OperationSort._OPERATION_EQUALS:
 						buffer.append(EQUALS);
+						buffer.append(DatabaseDate.toUpdateSubString(date1));
+						break;
+					case OperationSort._OPERATION_NOT_EQUALS:
+						buffer.append(NOT_EQUALS);
 						buffer.append(DatabaseDate.toUpdateSubString(date1));
 						break;
 					case OperationSort._OPERATION_IN_RANGE:
@@ -302,14 +335,18 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 				final boolean value = ((Boolean) this.condition.getValue()).booleanValue();
 				buffer.append(this.getColumnName());
 				switch (this.condition.getOperation().value()) {
-				case OperationSort._OPERATION_EQUALS:
-					buffer.append(EQUALS);
-					buffer.append(value ? '1' : '0');
-					break;
-				default:
-					Log.errorMessage("TypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_OPERATION_CODE
-							+ this.condition.getOperation().value());
-					break;
+					case OperationSort._OPERATION_EQUALS:
+						buffer.append(EQUALS);
+						buffer.append(value ? '1' : '0');
+						break;
+					case OperationSort._OPERATION_NOT_EQUALS:
+						buffer.append(NOT_EQUALS);
+						buffer.append(value ? '1' : '0');
+						break;
+					default:
+						Log.errorMessage("TypicalCondition.getSQLQuery | " + ERROR_UNKNOWN_OPERATION_CODE
+								+ this.condition.getOperation().value());
+						break;
 				}
 				break;
 		}
