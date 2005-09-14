@@ -1,5 +1,5 @@
 /*
- * $Id: CableLinkTypeGeneralPanel.java,v 1.15 2005/09/11 16:17:22 stas Exp $
+ * $Id: CableLinkTypeGeneralPanel.java,v 1.16 2005/09/14 10:20:04 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,8 +18,6 @@ import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
 import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
-import java.util.ArrayList;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
@@ -55,6 +53,7 @@ import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
+import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
 import com.syrus.AMFICOM.configuration.CableThreadTypeWrapper;
@@ -70,13 +69,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
-import com.syrus.AMFICOM.resource.NumberedComparator;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/09/11 16:17:22 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/14 10:20:04 $
  * @module schemeclient
  */
 
@@ -515,15 +513,6 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 		return this.linkType;
 	}
 
-	// XXX check use of numbered comparator
-	private List<CableThreadType> getSortedThreadTypes() {
-		final Set<CableThreadType> cableThreadTypes = this.linkType.getCableThreadTypes(false);
-		final List<CableThreadType> threads = new ArrayList<CableThreadType>(cableThreadTypes);
-		Collections.sort(threads, new NumberedComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
-				StorableObjectWrapper.COLUMN_CODENAME));
-		return threads;
-	}
-
 	public void setObject(Object or) {
 		this.linkType = (CableLinkType) or;
 
@@ -541,7 +530,7 @@ public class CableLinkTypeGeneralPanel extends DefaultStorableObjectEditor {
 			this.taDescriptionArea.setText(this.linkType.getDescription());
 			this.tfManufacturerText.setText(this.linkType.getManufacturer());
 			this.tfManufacturerCodeText.setText(this.linkType.getManufacturerCode());
-			this.sortedTheradTypes = getSortedThreadTypes();
+			this.sortedTheradTypes = ClientUtils.getSortedThreadTypes(this.linkType);
 		} else {
 			this.tfNameText.setText(SchemeResourceKeys.EMPTY);
 			this.taDescriptionArea.setText(SchemeResourceKeys.EMPTY);

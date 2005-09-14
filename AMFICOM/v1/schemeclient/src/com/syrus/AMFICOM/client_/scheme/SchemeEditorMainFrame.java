@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.23 2005/09/11 16:17:22 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.24 2005/09/14 10:20:04 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.23 $, $Date: 2005/09/11 16:17:22 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/14 10:20:04 $
  * @module schemeclient
  */
 
@@ -31,6 +31,7 @@ import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.Client.General.Command.Scheme.PathNewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeImportCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeImportCommitCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeNewCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeSaveAsCommand;
@@ -55,6 +56,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
+import com.syrus.AMFICOM.client_.scheme.ui.FullSchemeTreeModel;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
@@ -134,7 +136,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 				treeFrame.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
 				treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
 				
-				SchemeTreeModel model = new SchemeTreeModel(SchemeEditorMainFrame.this.aContext);
+				FullSchemeTreeModel model = new FullSchemeTreeModel(SchemeEditorMainFrame.this.aContext);
 				TreeFilterUI tfUI = new TreeFilterUI(new SchemeTreeUI(model.getRoot(), SchemeEditorMainFrame.this.aContext), new FilterPanel());
 
 				treeFrame.getContentPane().setLayout(new BorderLayout());
@@ -225,6 +227,7 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 //		aModel.setCommand("menuSchemeExport", new SchemeToFileCommand(Environment
 //				.getDispatcher(), aContext));
 		 aModel.setCommand("menuSchemeImport", new SchemeImportCommand(this.schemeTab));
+		 aModel.setCommand("menuSchemeImportCommit", new SchemeImportCommitCommand(this.aContext));
 
 		// TODO разобраться с созданием пути
 		

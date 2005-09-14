@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElementGeneralPanel.java,v 1.19 2005/09/13 10:19:05 bass Exp $
+ * $Id: SchemeElementGeneralPanel.java,v 1.20 2005/09/14 10:20:04 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,8 +68,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKi
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/09/13 10:19:05 $
+ * @author $Author: stas $
+ * @version $Revision: 1.20 $, $Date: 2005/09/14 10:20:04 $
  * @module schemeclient
  */
 
@@ -798,7 +798,7 @@ public class SchemeElementGeneralPanel extends DefaultStorableObjectEditor {
 		Equipment eq = null;
 		KIS kis = null;
 		Icon symbol = null;
-		
+
 		this.cmbTypeCombo.removeAllItems();
 		this.cmbKisCombo.removeAllItems();
 

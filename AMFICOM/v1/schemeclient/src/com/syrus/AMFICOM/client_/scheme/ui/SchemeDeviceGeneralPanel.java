@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.10 2005/09/06 12:45:57 stas Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.11 2005/09/14 10:20:04 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,10 +41,10 @@ import com.syrus.AMFICOM.client.UI.StorableObjectEditor;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.client_.scheme.utils.NumberedComparator;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
-import com.syrus.AMFICOM.resource.NumberedComparator;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/09/06 12:45:57 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/14 10:20:04 $
  * @module schemeclient
  */
 

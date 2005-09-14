@@ -1,5 +1,5 @@
 /*
- * $Id: ElementsTabbedPane.java,v 1.15 2005/09/06 12:45:57 stas Exp $
+ * $Id: ElementsTabbedPane.java,v 1.16 2005/09/14 10:20:04 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.UndoAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomActualAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomInAction;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.ZoomOutAction;
+import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.resource.LangModelScheme;
@@ -50,16 +51,13 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/09/06 12:45:57 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/14 10:20:04 $
  * @module schemeclient
  */
 
 public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeListener {
 	private static final long serialVersionUID = -1781981917301697387L;
 
-	static JOptionPane optionPane;
-	static JDialog dialog;
-	int result;
 	protected KeyListener keyListener;
 		
 	public ElementsTabbedPane() {
@@ -133,36 +131,6 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 		}
 	}
 	
-	boolean showConfirmDialog(String text) {
-		if (optionPane == null) {
-			JButton okButton = new JButton();
-			okButton.setText(LangModelGeneral.getString("Button.OK")); //$NON-NLS-1$)
-			okButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					ElementsTabbedPane.this.result = JOptionPane.OK_OPTION;
-					dialog.dispose();
-				}
-			});
-			JButton cancelButton = new JButton();
-			cancelButton.setText(LangModelGeneral.getString("Button.Cancel")); //$NON-NLS-1$
-			cancelButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					ElementsTabbedPane.this.result = JOptionPane.CANCEL_OPTION;
-					dialog.dispose();
-				}
-			});
-			optionPane = new JOptionPane(text, JOptionPane.QUESTION_MESSAGE,
-					JOptionPane.OK_CANCEL_OPTION, null, new Object[] { okButton,
-							cancelButton}, null);
-			
-			dialog = optionPane.createDialog(Environment.getActiveWindow(), 
-					LangModelScheme.getString("Message.confirmation.title")); //$NON-NLS-1$
-			dialog.setModal(true);
-		}
-		dialog.setVisible(true);
-		return this.result == JOptionPane.OK_OPTION;
-	}
-	
 	/**
 	 * @return selected ElementsPanel
 	 */
@@ -189,7 +157,7 @@ public class ElementsTabbedPane extends UgoTabbedPane implements PropertyChangeL
 	public boolean confirmUnsavedChanges(UgoPanel p) {
 		if (hasUnsavedChanges(p)) {
 			String text = LangModelScheme.getString("Message.confirmation.object_changed");  //$NON-NLS-1$
-			return showConfirmDialog(text);
+			return ClientUtils.showConfirmDialog(text);
 		}
 		return true;
 	}

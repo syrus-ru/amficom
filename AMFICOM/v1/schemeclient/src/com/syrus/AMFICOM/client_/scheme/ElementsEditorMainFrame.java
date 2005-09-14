@@ -1,5 +1,5 @@
 /*-
- * $Id: ElementsEditorMainFrame.java,v 1.15 2005/09/06 11:20:40 stas Exp $
+ * $Id: ElementsEditorMainFrame.java,v 1.16 2005/09/14 10:20:04 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,6 +40,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
+import com.syrus.AMFICOM.client_.scheme.ui.FullSchemeTreeModel;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeUI;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
@@ -48,7 +49,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/09/06 11:20:40 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/14 10:20:04 $
  * @module schemeclient
  */
 
@@ -131,7 +132,7 @@ public class ElementsEditorMainFrame extends AbstractMainFrame {
 				treeFrame.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
 				treeFrame.setTitle(LangModelSchematics.getString("treeFrameTitle"));
 				
-				SchemeTreeModel model = new SchemeTreeModel(ElementsEditorMainFrame.this.aContext);
+				FullSchemeTreeModel model = new FullSchemeTreeModel(ElementsEditorMainFrame.this.aContext);
 				TreeFilterUI tfUI = new TreeFilterUI(new SchemeTreeUI(model.getRoot(), ElementsEditorMainFrame.this.aContext), new FilterPanel());
 
 				treeFrame.getContentPane().setLayout(new BorderLayout());

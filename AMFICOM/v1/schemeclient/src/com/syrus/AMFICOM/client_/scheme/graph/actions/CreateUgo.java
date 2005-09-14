@@ -1,5 +1,5 @@
 /*
- * $Id: CreateUgo.java,v 1.7 2005/08/19 15:41:34 stas Exp $
+ * $Id: CreateUgo.java,v 1.8 2005/09/14 10:20:04 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.Rectangle;
+import java.awt.font.FontRenderContext;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -40,7 +41,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.7 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/14 10:20:04 $
  * @module schemeclient
  */
 
@@ -82,9 +83,10 @@ public class CreateUgo {
 		// create new element
 		int grid = graph.getGridSize();
 		int max = Math.max(1, Math.max(blockports_in.size(), blockports_out.size()));
+		int stringWidth = grid * (((int)graph.getFont().getStringBounds(label, new FontRenderContext(null, false, false)).getWidth() / grid + 2));
 		Rectangle deviceBounds = new Rectangle(
 				graph.snap(new Point(grid*4, grid*2)),//oldrect.x, oldrect.y
-				graph.snap(new Dimension(grid*5, grid*(2 * max))));
+				graph.snap(new Dimension(Math.max(stringWidth, grid*5), grid*(2 * max))));
 
 		List<DefaultGraphCell> insertedObjects = new ArrayList<DefaultGraphCell>(2 * (blockports_in.size() + blockports_out.size()) + 1);
 		
@@ -109,7 +111,7 @@ public class CreateUgo {
 		{
 			BlockPortCell b = (BlockPortCell)it.next();
 			String name = (String)b.getUserObject();
-			Point p = graph.snap(new Point(grid*4 + grid*7, grid*2 + grid*(1 + (max - blockports_out.size()) /*/ 2 + 1*/ + 2 * counter++)));
+			Point p = graph.snap(new Point(deviceBounds.x + deviceBounds.width + grid*2, deviceBounds.y + grid*(1 + (max - blockports_out.size()) /*/ 2 + 1*/ + 2 * counter++)));
 			
 			AbstractSchemePort port = b.getAbstractSchemePort();
 			Color color = SchemeActions.determinePortColor(port, port.getAbstractSchemeLink());
@@ -128,7 +130,7 @@ public class CreateUgo {
 		{
 			BlockPortCell b = (BlockPortCell)it.next();
 			String name = (String)b.getUserObject();
-			Point p = graph.snap(new Point(grid*4-grid*2, grid*2+ grid*(1 + (max - blockports_in.size()) /* / 2 + 1 */+ 2 *  counter++)));
+			Point p = graph.snap(new Point(deviceBounds.x - grid*2, deviceBounds.y + grid*(1 + (max - blockports_in.size()) /* / 2 + 1 */+ 2 *  counter++)));
 			
 			AbstractSchemePort port = b.getAbstractSchemePort();
 			Color color = SchemeActions.determinePortColor(port, port.getAbstractSchemeLink());

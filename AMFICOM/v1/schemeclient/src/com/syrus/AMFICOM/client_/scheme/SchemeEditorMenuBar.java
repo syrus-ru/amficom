@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMenuBar.java,v 1.9 2005/09/07 03:02:53 arseniy Exp $
+ * $Id: SchemeEditorMenuBar.java,v 1.10 2005/09/14 10:20:04 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,10 +16,11 @@ import com.syrus.AMFICOM.client.model.AbstractMainMenuBar;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.ApplicationModelListener;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.resource.LangModelScheme;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/09/07 03:02:53 $
+ * @author $Author: stas $
+ * @version $Revision: 1.10 $, $Date: 2005/09/14 10:20:04 $
  * @module schemeclient
  */
 
@@ -39,6 +40,7 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		final JMenuItem menuSchemeSave = new JMenuItem();
 		final JMenuItem menuSchemeSaveAs = new JMenuItem();
 		final JMenuItem menuSchemeImport = new JMenuItem();
+		final JMenuItem menuSchemeImportCommit = new JMenuItem();
 		final JMenuItem menuSchemeExport = new JMenuItem();
 
 		final JMenu menuPath = new JMenu();
@@ -81,6 +83,9 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuSchemeImport.setText(LangModelSchematics.getString("menuSchemeImport"));
 		menuSchemeImport.setName("menuSchemeImport");
 		menuSchemeImport.addActionListener(this.actionAdapter);
+		menuSchemeImportCommit.setText(LangModelScheme.getString("Menu.scheme.import_commit"));
+		menuSchemeImportCommit.setName("menuSchemeImportCommit");
+		menuSchemeImportCommit.addActionListener(this.actionAdapter);
 		menuSchemeExport.setText(LangModelSchematics.getString("menuSchemeExport"));
 		menuSchemeExport.setName("menuSchemeExport");
 		menuSchemeExport.addActionListener(this.actionAdapter);
@@ -93,6 +98,7 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 		menuScheme.addSeparator();
 		menuScheme.add(menuSchemeExport);
 		menuScheme.add(menuSchemeImport);
+		menuScheme.add(menuSchemeImportCommit);
 
 		menuPath.setName("menuPath");
 		menuPath.setText(LangModelSchematics.getString("menuPath"));
@@ -201,6 +207,8 @@ public class SchemeEditorMenuBar extends AbstractMainMenuBar {
 				menuSchemeLoad.setEnabled(aModel.isEnabled("menuSchemeLoad"));
 				menuSchemeImport.setVisible(aModel.isVisible("menuSchemeImport"));
 				menuSchemeImport.setEnabled(aModel.isEnabled("menuSchemeImport"));
+				menuSchemeImportCommit.setVisible(aModel.isVisible("menuSchemeImportCommit"));
+				menuSchemeImportCommit.setEnabled(aModel.isEnabled("menuSchemeImportCommit"));
 				menuSchemeExport.setVisible(aModel.isVisible("menuSchemeExport"));
 				menuSchemeExport.setEnabled(aModel.isEnabled("menuSchemeExport"));
 

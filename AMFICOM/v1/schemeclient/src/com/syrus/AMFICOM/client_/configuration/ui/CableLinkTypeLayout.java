@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkTypeLayout.java,v 1.12 2005/09/11 16:17:22 stas Exp $
+ * $Id: CableLinkTypeLayout.java,v 1.13 2005/09/14 10:20:04 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -34,15 +32,13 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.ThreadTypeCell;
+import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
-import com.syrus.AMFICOM.configuration.CableThreadTypeWrapper;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.resource.NumberedComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/09/11 16:17:22 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/14 10:20:04 $
  * @module schemeclient
  */
 
@@ -75,7 +71,7 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		GraphActions.clearGraph(this.panel.getGraph());
 
 		if (this.type != null) {
-			List ctts = getSortedThreadTypes(this.type);
+			List ctts = ClientUtils.getSortedThreadTypes(this.type);
 		// TODO разобраться с числом модулей
 			int nModules = 8;
 			if (ctts.size() == 6 || ctts.size() == 12 || ctts.size() == 18 || ctts.size() == 24 || ctts.size() == 30) {
@@ -100,14 +96,6 @@ public class CableLinkTypeLayout extends DefaultStorableObjectEditor implements 
 		
 	public void setContext(ApplicationContext aContext) {
 		this.aContext = aContext;
-	}
-	
-//XXX check use of numbered comparator
-	public static List<CableThreadType> getSortedThreadTypes(CableLinkType type) {
-		List<CableThreadType> threads = new ArrayList<CableThreadType>(type.getCableThreadTypes(false));
-		Collections.sort(threads, new NumberedComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
-				StorableObjectWrapper.COLUMN_CODENAME));
-		return threads;
 	}
 
 	private void createFibers(int nModules, final Collection fibers) {

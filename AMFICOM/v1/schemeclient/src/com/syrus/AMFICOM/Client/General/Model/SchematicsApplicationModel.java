@@ -31,6 +31,7 @@ public class SchematicsApplicationModel extends ApplicationModel
 		add("menuSchemeSave");
 		add("menuSchemeSaveAs");
 		add("menuSchemeImport");
+		add("menuSchemeImportCommit");
 		add("menuSchemeExport");
 
 		add("menuComponent");

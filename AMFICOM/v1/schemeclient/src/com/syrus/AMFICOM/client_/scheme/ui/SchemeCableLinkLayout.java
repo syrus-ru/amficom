@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkLayout.java,v 1.12 2005/09/11 16:17:22 stas Exp $
+ * $Id: SchemeCableLinkLayout.java,v 1.13 2005/09/14 10:20:04 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,7 @@ import java.awt.Dimension;
 import java.awt.Rectangle;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.List;
@@ -28,7 +26,6 @@ import javax.swing.JScrollPane;
 import com.jgraph.graph.GraphConstants;
 import com.jgraph.pad.EllipseCell;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
-import com.syrus.AMFICOM.Client.Resource.ResourceUtil;
 import com.syrus.AMFICOM.client.UI.DefaultStorableObjectEditor;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -36,6 +33,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.ThreadCell;
+import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -45,16 +43,13 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.resource.NumberedComparator;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
-import com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper;
-import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.12 $, $Date: 2005/09/11 16:17:22 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/14 10:20:04 $
  * @module schemeclient
  */
 
@@ -99,7 +94,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 		GraphActions.clearGraph(this.panel.getGraph());
 
 		if (this.link != null) {
-			List<SchemeCableThread> scts = getSortedCableThreads(this.link);
+			List<SchemeCableThread> scts = ClientUtils.getSortedCableThreads(this.link);
 		// TODO разобраться с числом модулей
 			int nModules = 8;
 			if (scts.size() == 6 || scts.size() == 12 || scts.size() == 18 || scts.size() == 24 || scts.size() == 30) {
@@ -116,15 +111,6 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 			createModules(nModules);
 			createFibers(nModules, scts);
 		}
-	}
-	
-//XXX check use of numbered comparator
-	public static List<SchemeCableThread> getSortedCableThreads(SchemeCableLink link) {
-		Set<SchemeCableThread> schemeCableThreads = link.getSchemeCableThreads();
-		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(schemeCableThreads);
-		Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(),
-				StorableObjectWrapper.COLUMN_NAME));
-		return threads;
 	}
 	
 	public Object getObject() {
@@ -164,7 +150,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 				
 				Color color = Color.WHITE;
 				try {
-					Characteristic ch = getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COMMON_COLOUR);
+					Characteristic ch = ClientUtils.getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COMMON_COLOUR);
 					if (ch != null) {
 						color = new Color(Integer.parseInt(ch.getValue()));
 					}
@@ -175,15 +161,6 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 				addThreadCell(this.panel.getGraph(), sct, bounds,	color);
 			}
 		}
-	}
-
-	public static Characteristic getCharacteristic(final Collection<Characteristic> characteristics, final String codename) {
-		for (Characteristic characteristic : characteristics) {
-			if (characteristic.getType().getCodename().equals(codename)) {
-				return characteristic;
-			}
-		}
-		return null;
 	}
 	
 	private void createModules(int nModules) {
@@ -224,21 +201,8 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 					SchemeCableThread sct = cell.getSchemeCableThread();
 					
 					Color color = Color.WHITE;
-//					try {
-//						LinkedIdsCondition condition1 = new LinkedIdsCondition(sct.getId(), ObjectEntities.CHARACTERISTIC_CODE);
-//						TypicalCondition condition2 = new TypicalCondition(CharacteristicTypeCodenames.COMMON_COLOUR, OperationSort.OPERATION_EQUALS, ObjectEntities.CHARACTERISTIC_CODE, StorableObjectWrapper.COLUMN_TYPE_CODE);
-//						CompoundCondition condition = new CompoundCondition(condition1, CompoundConditionSort.AND, condition2);
-//						
-//						Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(condition, true);
-//						if (!characteristics.isEmpty()) {
-//							Characteristic ch = characteristics.iterator().next();
-//							color = new Color(Integer.valueOf(ch.getValue()));
-//						}
-//					} catch (ApplicationException e) {
-//						Log.errorException(e);
-//					}
 					try {
-						Characteristic ch = getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COMMON_COLOUR);
+						Characteristic ch = ClientUtils.getCharacteristic(sct.getCharacteristics(false), CharacteristicTypeCodenames.COMMON_COLOUR);
 						if (ch != null) {
 							color = new Color(Integer.parseInt(ch.getValue()));
 						}
@@ -257,15 +221,7 @@ public class SchemeCableLinkLayout extends DefaultStorableObjectEditor implement
 
 	private void addThreadCell(SchemeGraph graph, SchemeCableThread schemeCableThread,
 			Rectangle bounds, Color color) {
-		String name;
-
-		try {
-			int num = ResourceUtil.parseNumber(SchemeUtils.parseThreadName(schemeCableThread.getName()));
-			name = String.valueOf(num);
-		} 
-		catch (Exception ex) {
-			name = schemeCableThread.getName();
-		}
+		String name = ClientUtils.parseNumberedName(schemeCableThread.getName());
 
 		Map viewMap = new HashMap();
 		ThreadCell cell = ThreadCell.createInstance(name, bounds, color, viewMap, schemeCableThread);

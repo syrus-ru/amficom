@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.30 2005/09/13 10:19:05 bass Exp $
+ * $Id: SchemeActions.java,v 1.31 2005/09/14 10:20:04 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,6 +53,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.objects.PortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.PortEdge;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelCableLink;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.TopLevelElement;
+import com.syrus.AMFICOM.client_.scheme.utils.NumberedComparator;
 import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeSort;
@@ -65,7 +66,6 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.resource.LangModelScheme;
-import com.syrus.AMFICOM.resource.NumberedComparator;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
@@ -89,8 +89,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.30 $, $Date: 2005/09/13 10:19:05 $
+ * @author $Author: stas $
+ * @version $Revision: 1.31 $, $Date: 2005/09/14 10:20:04 $
  * @module schemeclient
  */
 
@@ -431,7 +431,7 @@ public class SchemeActions {
 //		GraphActions.clearGraph(graph);
 		if (schemeImageResource != null) {
 			clones = GraphActions.insertCell(graph, schemeImageResource.getData(), doClone, p, isCenterCell);
-			fixImages(graph);
+//			fixImages(graph);
 		}
 		graph.setGraphChanged(false);
 		graph.setMakeNotifications(tmp);
@@ -574,12 +574,12 @@ public class SchemeActions {
 		return status;
 	}
 	
-	public static Color determinePortColor(AbstractSchemePort port, AbstractSchemeLink link) {
+	public static Color determinePortColor(AbstractSchemePort port, Object link) {
+		if (link == null)
+			return UIManager.getColor(SchemeResourceKeys.COLOR_PORT_NO_LINK);
 		PortType type = port.getPortType();
 		if (type == null)
 			return UIManager.getColor(SchemeResourceKeys.COLOR_PORT_NO_TYPE);
-		if (link == null)
-			return UIManager.getColor(SchemeResourceKeys.COLOR_PORT_NO_LINK);
 		if (type.getSort().equals(PortTypeSort.PORTTYPESORT_THERMAL))
 			return UIManager.getColor(SchemeResourceKeys.COLOR_PORT_TERMAL);
 		return UIManager.getColor(SchemeResourceKeys.COLOR_PORT_COMMON);
@@ -753,7 +753,7 @@ public class SchemeActions {
 
 	public static boolean connectSchemeLink(SchemeGraph graph, DefaultLink link,
 			PortCell port, boolean is_source) {
-		
+
 		SchemePort sp = port.getSchemePort();
 		if (sp == null) {
 			Log.debugMessage("GraphActions.connectSchemeLink() port not found " + port.getSchemePortId(), Level.WARNING); //$NON-NLS-1$
@@ -869,20 +869,17 @@ public class SchemeActions {
 		} else {
 			sl.setTargetAbstractSchemePort(sp);
 		}
-
-		GraphActions.setObjectBackColor(graph, port, determinePortColor(sp, sl));
 		
-		connect(sp, sl, is_source);
+		connect(graph, sp, sl.getSchemeCableThreads(), is_source);
 		
 		return true;
 	}
 	
-	public static void connect(SchemeCablePort sp, SchemeCableLink sl, boolean is_source) {
-		IdlDirectionType direction = sp.getDirectionType() == IdlDirectionType._IN ? IdlDirectionType._OUT : IdlDirectionType._IN;
+	public static void connect(SchemeGraph graph, SchemeCablePort sp, Set<SchemeCableThread> threads1, boolean is_source) {
+	IdlDirectionType direction = sp.getDirectionType() == IdlDirectionType._IN ? IdlDirectionType._OUT : IdlDirectionType._IN;
 		List<SchemePort> ports = new ArrayList<SchemePort>(findPorts(sp.getParentSchemeDevice(), direction));
-		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(sl.getSchemeCableThreads());	
+		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(threads1);	
 		
-//	XXX check use of numbered comparator
 		Collections.sort(ports, new NumberedComparator<SchemePort>(SchemePortWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
 		Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
 
@@ -894,8 +891,10 @@ public class SchemeActions {
 			} else {
 				thread.setTargetSchemePort(sport);
 			}
+			GraphActions.setObjectBackColor(graph, sport, determinePortColor(sport, thread));
 		}
 	}
+
 
 	public static void disconnectSchemeCableLink(SchemeGraph graph,
 			DefaultCableLink link, CablePortCell port, boolean is_source) {
