@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.7 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.8 2005/09/14 14:37:29 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -177,7 +177,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			//и вместо него лепится один элемент.
 			Command command =
 				this.applicationContext.getApplicationModel().getCommand(
-					ReportBuilderApplicationModel.MENU_SAVE_REPORT);
+					ReportBuilderApplicationModel.MENU_REPORT_TEMPLATE_SAVE);
 			command.execute();
 			if (command.getResult() == Command.RESULT_CANCEL)
 				return;

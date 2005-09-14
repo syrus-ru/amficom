@@ -1,5 +1,5 @@
 /*
- * $Id: TemplateParametersDialog.java,v 1.2 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: TemplateParametersDialog.java,v 1.3 2005/09/14 14:37:29 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -180,10 +180,5 @@ public class TemplateParametersDialog extends JDialog {
 
 	protected void cancelButtonPressed() {
 		this.setVisible(false);
-	}
-	
-	public static void main (String[] args) {
-		TemplateParametersDialog dialog = new TemplateParametersDialog();
-		dialog.setVisible(true);
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: SaveTemplateCommand.java,v 1.2 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: SaveTemplateCommand.java,v 1.3 2005/09/14 14:37:29 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,17 +31,20 @@ public class SaveTemplateCommand extends AbstractCommand {
 	@Override
 	public void execute() {
 		ReportTemplate currentTemplate = this.mainFrame.getTemplateRenderer().getTemplate();
-		String defaultLangName = LangModelReport.getString(ReportTemplateFactory.NEW_REPORT_NAME);
-		if (currentTemplate.getName().equals(defaultLangName)) {
-			TemplateOpenSaveDialog.saveTemplate(currentTemplate);
-		}
-		else {
-			//TODO Здесь должно быть сохранение шаблона с указанным именем
-			try {
-				StorableObjectPool.putStorableObject(currentTemplate);
-			} catch (IllegalObjectEntityException e1) {
-				// TODO Auto-generated catch block
-				e1.printStackTrace();
+		if (	currentTemplate != null
+				&&	currentTemplate.isModified()) {
+			String defaultLangName = LangModelReport.getString(ReportTemplateFactory.NEW_REPORT_NAME);
+			if (currentTemplate.getName().equals(defaultLangName)) {
+				TemplateOpenSaveDialog.saveTemplate(currentTemplate);
+			}
+			else {
+				//TODO Здесь должно быть сохранение шаблона с указанным именем
+				try {
+					StorableObjectPool.putStorableObject(currentTemplate);
+				} catch (IllegalObjectEntityException e1) {
+					// TODO Auto-generated catch block
+					e1.printStackTrace();
+				}
 			}
 		}
 		currentTemplate.refreshModified();		
