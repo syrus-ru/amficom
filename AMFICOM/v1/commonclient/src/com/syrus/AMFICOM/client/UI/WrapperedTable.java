@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedTable.java,v 1.12 2005/09/14 07:33:23 bob Exp $
+* $Id: WrapperedTable.java,v 1.13 2005/09/14 10:58:02 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,7 +22,6 @@ import java.util.Map;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JTable;
-import javax.swing.event.TableModelEvent;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -32,7 +31,7 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/14 07:33:23 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/14 10:58:02 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -119,11 +118,9 @@ public class WrapperedTable<T> extends ATable {
 	public final void setAllowAutoResize(boolean allowAutoResize) {
 		this.allowAutoResize = allowAutoResize;
 	}
-
+	
 	@Override
-	public void tableChanged(TableModelEvent e) {
-		super.tableChanged(e);		
-		
+	protected void resizeAndRepaint() {
 		if (this.allowAutoResize) {
 			final TableCellRenderer headerRenderer =
 	            this.tableHeader != null ? this.tableHeader.getDefaultRenderer() : null;
@@ -142,7 +139,7 @@ public class WrapperedTable<T> extends ATable {
 	            int cellWidth = 0;
 	            for(int rowIndex = 0; rowIndex < this.getRowCount(); rowIndex++) {
 		            final Object valueAt = model.getValueAt(rowIndex, columnIndex);
-					comp = column.getCellRenderer().
+					comp = this.getCellRenderer(rowIndex, columnIndex).
 		                             getTableCellRendererComponent(
 		                                 this, valueAt,
 		                                 false, false, rowIndex, columnIndex);
@@ -152,6 +149,8 @@ public class WrapperedTable<T> extends ATable {
 	            column.setPreferredWidth(Math.max(headerWidth, cellWidth));
 	        }
 		}
+		
+		super.resizeAndRepaint();
 	}
 	
 	private void updateModel() {
