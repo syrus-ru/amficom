@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedTable.java,v 1.11 2005/09/07 13:06:33 bob Exp $
+* $Id: WrapperedTable.java,v 1.12 2005/09/14 07:33:23 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 package com.syrus.AMFICOM.client.UI;
 
 import java.awt.Color;
+import java.awt.Component;
 import java.awt.Rectangle;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -21,6 +22,7 @@ import java.util.Map;
 
 import javax.swing.DefaultCellEditor;
 import javax.swing.JTable;
+import javax.swing.event.TableModelEvent;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellEditor;
 import javax.swing.table.TableCellRenderer;
@@ -30,7 +32,7 @@ import javax.swing.table.TableColumnModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/07 13:06:33 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/14 07:33:23 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -38,7 +40,9 @@ import com.syrus.util.Wrapper;
 public class WrapperedTable<T> extends ATable {
 
 	private static final long	serialVersionUID	= -437251205606073016L;
-	boolean allowSorting = true;
+	
+	private boolean allowSorting = true;
+	private boolean allowAutoResize = false;
 
 	public WrapperedTable(final Wrapper<T> controller, final List<T> objectResourceList, final String[] keys) {
 		this(new WrapperedTableModel<T>(controller, objectResourceList, keys));
@@ -107,7 +111,49 @@ public class WrapperedTable<T> extends ATable {
 	public boolean isAllowSorting() {
 		return this.allowSorting;
 	}
+	
+	public final boolean isAllowAutoResize() {
+		return this.allowAutoResize;
+	}
+	
+	public final void setAllowAutoResize(boolean allowAutoResize) {
+		this.allowAutoResize = allowAutoResize;
+	}
 
+	@Override
+	public void tableChanged(TableModelEvent e) {
+		super.tableChanged(e);		
+		
+		if (this.allowAutoResize) {
+			final TableCellRenderer headerRenderer =
+	            this.tableHeader != null ? this.tableHeader.getDefaultRenderer() : null;
+			
+		    final WrapperedTableModel<T> model = this.getModel();
+	        for (int columnIndex = 0; columnIndex < this.getColumnCount(); columnIndex++) {
+	        	final TableColumn column = this.getColumnModel().getColumn(columnIndex);
+	
+	        	Component comp = headerRenderer != null ?
+	        			headerRenderer.getTableCellRendererComponent(
+	                                 null, column.getHeaderValue(),
+	                                 false, false, 0, 0) : 
+	                    null;
+	            final int headerWidth = comp != null ? comp.getPreferredSize().width : 0;
+	            
+	            int cellWidth = 0;
+	            for(int rowIndex = 0; rowIndex < this.getRowCount(); rowIndex++) {
+		            final Object valueAt = model.getValueAt(rowIndex, columnIndex);
+					comp = column.getCellRenderer().
+		                             getTableCellRendererComponent(
+		                                 this, valueAt,
+		                                 false, false, rowIndex, columnIndex);
+		            cellWidth = Math.max(comp.getPreferredSize().width, cellWidth);
+	            }
+	
+	            column.setPreferredWidth(Math.max(headerWidth, cellWidth));
+	        }
+		}
+	}
+	
 	private void updateModel() {
 		final WrapperedTableModel<T> model = this.getModel();
 		for (int mColIndex = 0; mColIndex < model.getColumnCount(); mColIndex++) {
@@ -180,7 +226,7 @@ public class WrapperedTable<T> extends ATable {
 
 			@Override
 			public void mouseClicked(MouseEvent evt) {
-				if (!WrapperedTable.this.allowSorting) {
+				if (!WrapperedTable.this.isAllowSorting()) {
 					return;
 				}
 				
