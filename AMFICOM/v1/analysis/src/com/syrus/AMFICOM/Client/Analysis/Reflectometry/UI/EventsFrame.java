@@ -420,7 +420,7 @@ final class EventsFrame extends JInternalFrame implements EtalonMTMListener, Pri
 			model.addObject(res);
 		}
 		this.updateTableModel();
-		this.table.updateUI();
+		this.table.getModel().fireTableDataChanged();
 	}
 
 	private class EventTableRenderer extends ADefaultTableCellRenderer.ObjectRenderer {

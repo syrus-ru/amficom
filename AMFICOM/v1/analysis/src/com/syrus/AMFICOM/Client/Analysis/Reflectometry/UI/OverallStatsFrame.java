@@ -170,7 +170,7 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 		final double lossDifference = ReflectogramComparer.getLossDifference(etalonMTM.getMTAE(), dataMTAE);
 
 		this.stats.initCompareStatistics(maxDeviation, meanDeviation, etalonLength, lossDifference, mismatch);
-		this.jTableWholeComp.updateUI();
+		this.jTableWholeComp.getModel().fireTableDataChanged();
 	}
 
 	void updTableModel() {
@@ -182,7 +182,7 @@ public class OverallStatsFrame extends JInternalFrame implements EtalonMTMListen
 		}
 
 		this.stats.initGeneralStatistics(ev, bs);
-		this.jTable.updateUI();
+		this.jTable.getModel().fireTableDataChanged();
 	}
 
 	public void etalonMTMCUpdated() {

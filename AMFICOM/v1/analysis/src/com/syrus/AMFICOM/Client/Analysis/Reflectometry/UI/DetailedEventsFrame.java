@@ -179,7 +179,7 @@ final class DetailedEventsFrame extends JInternalFrame implements EtalonMTMListe
 		// сравнение по модельной кривой
 		final ModelTrace etalonMT = Heap.getMTMEtalon().getMTAE().getModelTrace();
 		this.res.initComparative(dataEvent, etalonEvent, etalonMT, deltaX);
-		this.comparativeTable.updateUI();
+		this.comparativeTable.getModel().fireTableDataChanged();
 	}
 
 	private void updateTableModel() {
@@ -213,11 +213,10 @@ final class DetailedEventsFrame extends JInternalFrame implements EtalonMTMListe
 					model.setKeys(END_KEYS);
 					break;
 			}
-			this.mainTable.updateUI();
 		} else {
 			model.setKeys(EMPTY_KEYS);
-			this.mainTable.updateUI();
 		}
+		model.fireTableDataChanged();
 		this.setData();
 	}
 

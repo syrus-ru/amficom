@@ -105,7 +105,7 @@ public class PrimaryParametersFrame extends JInternalFrame implements BsHashChan
 		}
 
 		this.p.init(bs);
-		this.jTable.updateUI();
+		this.jTable.getModel().fireTableDataChanged();
 	}
 
 	public void bsHashAdded(final String key) {
