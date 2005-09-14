@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.174 2005/09/14 18:51:56 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.175 2005/09/14 23:23:32 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.174 $, $Date: 2005/09/14 18:51:56 $
+ * @version $Revision: 1.175 $, $Date: 2005/09/14 23:23:32 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -779,13 +779,16 @@ public final class StorableObjectPool {
 				final Identifier id = storableObject.getId();
 				final StorableObjectVersion version = storableObject.getVersion();
 				final StorableObjectVersion remoteVersion = versionsMap.get(id);
-				if (remoteVersion.equals(StorableObjectVersion.ILLEGAL_VERSION) || version.equals(remoteVersion) || force) {
-					storableObject.setUpdated(modifierId);
-					setUpdatedObjects.add(storableObject);
+
+				if (!remoteVersion.equals(StorableObjectVersion.ILLEGAL_VERSION) && version.isOlder(remoteVersion)) {
+					if (force) {
+						storableObject.version = remoteVersion;
+					} else {
+						throw new VersionCollisionException("Object '" + id + "'", version.longValue(), remoteVersion.longValue());
+					}
 				}
-				else {
-					throw new VersionCollisionException("Object '" + id + "'", version.longValue(), remoteVersion.longValue());
-				}
+				storableObject.setUpdated(modifierId);
+				setUpdatedObjects.add(storableObject);
 			}
 
 			Log.debugMessage("StorableObjectPool.saveStorableObjects | Saving objects: " + Identifier.createStrings(storableObjects),
@@ -901,6 +904,13 @@ public final class StorableObjectPool {
 
 	/*	Refresh */
 
+	/**
+	 * Refresh objects with identifiers from the given set.
+	 * 
+	 * @param ids
+	 *        Identifiers of objects to refresh
+	 * @throws ApplicationException
+	 */
 	public static void refresh(final Set<Identifier> ids) throws ApplicationException {
 		assert ids != null : ErrorMessages.NON_NULL_EXPECTED;
 		Log.debugMessage("StorableObjectPool.refresh | Requested for: " + ids, Log.DEBUGLEVEL10);
@@ -919,16 +929,16 @@ public final class StorableObjectPool {
 		}
 
 		final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
-
-		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
+		
+		final Set<StorableObject> refreshObjects = new HashSet<StorableObject>();
 		for (final StorableObject storableObject : objectPool) {
 			final Identifier id = storableObject.getId();
 			if (ids.contains(id) && !storableObject.isChanged() && (entityDeletedIds == null || !entityDeletedIds.contains(id))) {
-				storableObjects.add(storableObject);
+				refreshObjects.add(storableObject);
 			}
 		}
 
-		if (storableObjects.isEmpty()) {
+		if (refreshObjects.isEmpty()) {
 			Log.debugMessage("StorableObjectPool.refresh | LRUMap for '" + ObjectEntities.codeToString(entityCode)
 					+ "' entity has no elements to refresh", Log.DEBUGLEVEL08);
 			return;
@@ -937,25 +947,15 @@ public final class StorableObjectPool {
 		Log.debugMessage("StorableObjectPool.refresh | Refreshing pool for '"
 				+ ObjectEntities.codeToString(entityCode) + "'s: " + ids, Log.DEBUGLEVEL08);
 
-		final Set<Identifier> returnedStorableObjectsIds = objectLoader.getOldVersionIds(StorableObject.createVersionsMap(storableObjects));
-		if (returnedStorableObjectsIds.isEmpty()) {
-			return;
-		}
-
-		final Set<StorableObject> loadedObjects = objectLoader.loadStorableObjects(returnedStorableObjectsIds);
-		for (final StorableObject storableObject : loadedObjects) {
-			objectPool.put(storableObject.getId(), storableObject);
-			Log.debugMessage("StorableObjectPool.refresh | " + storableObject.getId() + ", " + storableObject.getVersion(),
-				Log.DEBUGLEVEL08);
-		}
+		refresh(refreshObjects, entityCode, objectPool);
 	}
 
 	/**
-	 * 
+	 * Refresh the whole pool
 	 * @throws ApplicationException
 	 */
 	public static void refresh() throws ApplicationException {
-		final Set<StorableObject> storableObjects = new HashSet<StorableObject>();
+		final Set<StorableObject> refreshObjects = new HashSet<StorableObject>();
 		synchronized (objectPoolMap) {
 			for (final TShortObjectIterator entityCodeIterator = objectPoolMap.iterator(); entityCodeIterator.hasNext();) {
 				entityCodeIterator.advance();
@@ -964,36 +964,72 @@ public final class StorableObjectPool {
 
 				final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
 
-				storableObjects.clear();
+				refreshObjects.clear();
 				for (final StorableObject storableObject : objectPool) {
 					if (!storableObject.isChanged() && (entityDeletedIds == null || !entityDeletedIds.contains(storableObject.getId()))) {
-						storableObjects.add(storableObject);
+						refreshObjects.add(storableObject);
 					}
 				}
-				if (storableObjects.isEmpty()) {
-					Log.debugMessage("StorableObjectPool.refresh | LRUMap for '"
-							+ ObjectEntities.codeToString(entityCode)
-							+ "' entity has no elements to refresh", Log.DEBUGLEVEL08);
+				if (refreshObjects.isEmpty()) {
+					Log.debugMessage("StorableObjectPool.refresh | LRUMap for entity '" + ObjectEntities.codeToString(entityCode)
+							+ "' has no elements to refresh", Log.DEBUGLEVEL08);
 					continue;
 				}
 
 				Log.debugMessage("StorableObjectPool.refresh | Refreshing pool for entity: '"
-						+ ObjectEntities.codeToString(entityCode)
-						+ "'/"
-						+ entityCode, Log.DEBUGLEVEL08);
+						+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode, Log.DEBUGLEVEL08);
 
-				final Set<Identifier> returnedStorableObjectsIds = objectLoader.getOldVersionIds(StorableObject.createVersionsMap(storableObjects));
-				if (returnedStorableObjectsIds.isEmpty()) {
-					continue;
-				}
-
-				final Set<StorableObject> loadedObjects = objectLoader.loadStorableObjects(returnedStorableObjectsIds);
-				for (final StorableObject storableObject : loadedObjects) {
-					objectPool.put(storableObject.getId(), storableObject);
-					Log.debugMessage("StorableObjectPool.refresh | " + storableObject.getId() + ", " + storableObject.getVersion(),
-							Log.DEBUGLEVEL08);
-				}
+				refresh(refreshObjects, entityCode, objectPool);				
 			}
+		}
+	}
+
+	/**
+	 * NOTE: This private method is used only from methods {@link #refresh()} and
+	 * {@link #refresh(Set)} of this class. It simply contains all common for both
+	 * methods code. So this method do not make any checks and asserts.
+	 * 
+	 * @param refreshObjects -
+	 *        set of objects to refresh
+	 * @param entityCode -
+	 *        entity code of these objects
+	 * @param objectPool -
+	 *        LRUMap object pool to put into / remove from
+	 * @throws ApplicationException
+	 */
+	private static void refresh(final Set<StorableObject> refreshObjects,
+			final short entityCode,
+			final LRUMap<Identifier, StorableObject> objectPool) throws ApplicationException {
+		final Set<Identifier> refreshObjectIds = Identifier.createIdentifiers(refreshObjects);
+		final Map<Identifier, StorableObjectVersion> remoteVersionsMap = objectLoader.getRemoteVersions(refreshObjectIds);
+
+		final Set<Identifier> reloadObjectIds = new HashSet<Identifier>();
+
+		for (final StorableObject storableObject : refreshObjects) {
+			final Identifier id = storableObject.getId();
+			final StorableObjectVersion version = storableObject.getVersion();
+			final StorableObjectVersion remoteVersion = remoteVersionsMap.get(id);
+			if (remoteVersion.equals(StorableObjectVersion.ILLEGAL_VERSION)) {
+				Log.debugMessage("StorableObjectPool.refresh | Object '" + ObjectEntities.codeToString(entityCode) + "' '" + id
+						+ "' removed remotely -- removing locally", Log.DEBUGLEVEL08);
+				objectPool.remove(id);
+			} else if (version.isOlder(remoteVersion)) {
+				reloadObjectIds.add(id);
+			}
+		}
+
+		if (reloadObjectIds.isEmpty()) {
+			Log.debugMessage("StorableObjectPool.refresh | LRUMap for '" + ObjectEntities.codeToString(entityCode)
+					+ "' entity has no elements to reload", Log.DEBUGLEVEL08);
+			return;
+		}
+
+		final Set<StorableObject> reloadedObjects = objectLoader.loadStorableObjects(reloadObjectIds);
+		for (final StorableObject storableObject : reloadedObjects) {
+			final Identifier id = storableObject.getId();
+			objectPool.put(id, storableObject);
+			Log.debugMessage("StorableObjectPool.refresh | Reloaded: '" + id + "' with version: " + storableObject.getVersion(),
+					Log.DEBUGLEVEL08);
 		}
 	}
 
