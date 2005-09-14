@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.12 2005/08/04 14:45:47 bob Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.13 2005/09/14 19:01:23 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,9 +22,9 @@ import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/08/04 14:45:47 $
- * @author $Author: bob $
- * @module admin
+ * @version $Revision: 1.13 $, $Date: 2005/09/14 19:01:23 $
+ * @author $Author: arseniy $
+ * @module administration
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
 

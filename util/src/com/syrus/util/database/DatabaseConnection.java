@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseConnection.java,v 1.18 2005/08/18 10:44:24 arseniy Exp $
+ * $Id: DatabaseConnection.java,v 1.19 2005/09/14 19:05:23 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,8 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/08/18 10:44:24 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/14 19:05:23 $
+ * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
 public class DatabaseConnection {

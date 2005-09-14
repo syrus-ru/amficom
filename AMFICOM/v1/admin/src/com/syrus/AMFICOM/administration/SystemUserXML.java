@@ -1,5 +1,5 @@
 /*-
-* $Id: SystemUserXML.java,v 1.3 2005/09/08 16:34:40 bass Exp $
+* $Id: SystemUserXML.java,v 1.4 2005/09/14 19:01:24 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,10 +22,10 @@ import com.syrus.AMFICOM.general.AbstractStorableObjectXML;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/08 16:34:40 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $, $Date: 2005/09/14 19:01:24 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module admin
+ * @module administration
  */
 public class SystemUserXML extends AbstractStorableObjectXML<SystemUser> {
 

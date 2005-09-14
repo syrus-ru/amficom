@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractCloneableDomainMember.java,v 1.11 2005/09/08 18:26:26 bass Exp $
+ * $Id: AbstractCloneableDomainMember.java,v 1.12 2005/09/14 19:01:23 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,9 +19,9 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/09/08 18:26:26 $
- * @module admin
+ * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/09/14 19:01:23 $
+ * @module administration
  */
 public abstract class AbstractCloneableDomainMember extends DomainMember
 		implements CloneableStorableObject {

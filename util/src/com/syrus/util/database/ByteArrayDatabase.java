@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArrayDatabase.java,v 1.18 2005/09/05 16:32:42 arseniy Exp $
+ * $Id: ByteArrayDatabase.java,v 1.19 2005/09/14 19:05:23 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,8 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/09/05 16:32:42 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/14 19:05:23 $
+ * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
 public final class ByteArrayDatabase {

@@ -1,5 +1,5 @@
 /*
- * $Id: PermissionAttributesDatabase.java,v 1.2 2005/09/09 15:03:06 bob Exp $
+ * $Id: PermissionAttributesDatabase.java,v 1.3 2005/09/14 19:01:23 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,10 +26,10 @@ import com.syrus.util.database.DatabaseDate;
 
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/09 15:03:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.3 $, $Date: 2005/09/14 19:01:23 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module admin
+ * @module administration
  */
 
 public final class PermissionAttributesDatabase extends StorableObjectDatabase<PermissionAttributes> {

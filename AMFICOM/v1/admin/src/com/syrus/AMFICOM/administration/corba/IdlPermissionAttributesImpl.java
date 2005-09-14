@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlPermissionAttributesImpl.java,v 1.2 2005/09/09 15:03:06 bob Exp $
+ * $Id: IdlPermissionAttributesImpl.java,v 1.3 2005/09/14 19:01:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,9 +18,9 @@ import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bob $
- * @version $Revision: 1.2 $, $Date: 2005/09/09 15:03:06 $
- * @module admin
+ * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/09/14 19:01:24 $
+ * @module administration
  */
 final class IdlPermissionAttributesImpl extends IdlPermissionAttributes {
 	private static final long serialVersionUID = -825118372985236838L;

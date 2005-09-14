@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlDomainMemberImpl.java,v 1.1 2005/07/05 15:23:17 bass Exp $
+ * $Id: IdlDomainMemberImpl.java,v 1.2 2005/09/14 19:01:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,9 +13,9 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.1 $, $Date: 2005/07/05 15:23:17 $
- * @module admin_v1
+ * @author $Author: arseniy $
+ * @version $Revision: 1.2 $, $Date: 2005/09/14 19:01:24 $
+ * @module administration
  */
 final class IdlDomainMemberImpl extends IdlDomainMember {
 	private static final long serialVersionUID = 5206526009305651979L;

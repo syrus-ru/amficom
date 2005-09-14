@@ -1,5 +1,5 @@
 /*
- * $Id: SystemUser.java,v 1.21 2005/09/09 12:34:23 arseniy Exp $
+ * $Id: SystemUser.java,v 1.22 2005/09/14 19:01:24 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/09 12:34:23 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/14 19:01:24 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 

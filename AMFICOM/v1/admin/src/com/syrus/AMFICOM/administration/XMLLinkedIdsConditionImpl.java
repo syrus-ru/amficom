@@ -1,5 +1,5 @@
 /*-
-* $Id: XMLLinkedIdsConditionImpl.java,v 1.1 2005/08/22 13:53:51 bob Exp $
+* $Id: XMLLinkedIdsConditionImpl.java,v 1.2 2005/09/14 19:01:24 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -20,10 +20,10 @@ import com.syrus.AMFICOM.general.XMLLinkedIdsCondition;
 
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/22 13:53:51 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/09/14 19:01:24 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module admin
+ * @module administration
  */
 public class XMLLinkedIdsConditionImpl extends XMLLinkedIdsCondition {
 

@@ -1,5 +1,5 @@
 /*-
-* $Id: ServerXML.java,v 1.1 2005/08/22 12:09:35 bob Exp $
+* $Id: ServerXML.java,v 1.2 2005/09/14 19:01:23 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -22,10 +22,10 @@ import com.syrus.AMFICOM.general.AbstractStorableObjectXML;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/22 12:09:35 $
- * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/09/14 19:01:23 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
- * @module admin
+ * @module administration
  */
 public class ServerXML extends AbstractStorableObjectXML<Server> {
 

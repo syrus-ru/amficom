@@ -1,5 +1,5 @@
 /*
- * $Id: MCMDatabase.java,v 1.39 2005/09/09 15:02:47 bob Exp $
+ * $Id: MCMDatabase.java,v 1.40 2005/09/14 19:01:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -25,8 +25,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/09/09 15:02:47 $
- * @author $Author: bob $
+ * @version $Revision: 1.40 $, $Date: 2005/09/14 19:01:23 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 

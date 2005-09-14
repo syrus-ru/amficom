@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlSystemUserImpl.java,v 1.3 2005/07/17 05:18:02 arseniy Exp $
+ * $Id: IdlSystemUserImpl.java,v 1.4 2005/09/14 19:01:24 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.3 $, $Date: 2005/07/17 05:18:02 $
- * @module admin_v1
+ * @version $Revision: 1.4 $, $Date: 2005/09/14 19:01:24 $
+ * @module administration
  */
 final class IdlSystemUserImpl extends IdlSystemUser {
 	private static final long serialVersionUID = 1550106907023939289L;

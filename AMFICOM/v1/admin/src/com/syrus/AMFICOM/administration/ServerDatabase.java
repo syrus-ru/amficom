@@ -1,5 +1,5 @@
 /*
- * $Id: ServerDatabase.java,v 1.34 2005/08/08 11:29:37 arseniy Exp $
+ * $Id: ServerDatabase.java,v 1.35 2005/09/14 19:01:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,8 +22,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.34 $, $Date: 2005/08/08 11:29:37 $
+ * @version $Revision: 1.35 $, $Date: 2005/09/14 19:01:23 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 

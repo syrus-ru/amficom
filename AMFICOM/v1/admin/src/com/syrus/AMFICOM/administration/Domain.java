@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.55 2005/09/08 18:26:26 bass Exp $
+ * $Id: Domain.java,v 1.56 2005/09/14 19:01:23 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.55 $, $Date: 2005/09/08 18:26:26 $
- * @author $Author: bass $
+ * @version $Revision: 1.56 $, $Date: 2005/09/14 19:01:23 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
 
