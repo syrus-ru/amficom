@@ -1,3 +1,5 @@
+#include <math.h>
+
 #ifndef M_PI
 #define	M_PI 3.1415926535897932384626433832795028841971693993751058209749445923078164062862
 #endif
@@ -16,8 +18,6 @@
 
 #ifndef _mathref_h_
 #define _mathref_h_
-
-#include <math.h>
 
 int findConstantPoint(double* y, int start, int end);
 int findFirstAbsMinimumPoint(double* y, int start, int end);
