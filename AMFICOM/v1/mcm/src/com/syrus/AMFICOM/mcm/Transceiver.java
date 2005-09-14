@@ -1,3 +1,11 @@
+/*
+ * $Id: Transceiver.java,v 1.61 2005/09/14 18:00:31 arseniy Exp $
+ *
+ * Copyright © 2004 Syrus Systems.
+ * Научно-технический центр.
+ * Проект: АМФИКОМ.
+ */
+
 package com.syrus.AMFICOM.mcm;
 
 import java.util.ArrayList;
@@ -19,6 +27,12 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
+
+/**
+ * @version $Revision: 1.61 $, $Date: 2005/09/14 18:00:31 $
+ * @author $Author: arseniy $
+ * @module mcm
+ */
 
 final class Transceiver extends SleepButWorkThread {
 	/*	Error codes for method processFall()	*/
