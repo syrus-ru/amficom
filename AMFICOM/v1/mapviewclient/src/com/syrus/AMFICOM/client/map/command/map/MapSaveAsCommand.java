@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.25 2005/08/17 14:14:18 arseniy Exp $
+ * $Id: MapSaveAsCommand.java,v 1.26 2005/09/14 10:32:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
@@ -28,8 +29,8 @@ import com.syrus.AMFICOM.map.Map;
 /**
  * Класс $RCSfile: MapSaveAsCommand.java,v $ используется для сохранения 
  * топологической схемы с новым именем
- * @author $Author: arseniy $
- * @version $Revision: 1.25 $, $Date: 2005/08/17 14:14:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.26 $, $Date: 2005/09/14 10:32:12 $
  * @module mapviewclient
  */
 public class MapSaveAsCommand extends AbstractCommand {
@@ -87,6 +88,7 @@ public class MapSaveAsCommand extends AbstractCommand {
 			try {
 				// save newMap
 				StorableObjectPool.flush(this.newMap, userId, true);
+				LocalXmlIdentifierPool.flush();
 			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}

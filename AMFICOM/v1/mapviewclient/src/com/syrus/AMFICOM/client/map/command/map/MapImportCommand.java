@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.45 2005/09/11 14:24:41 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.46 2005/09/14 10:32:12 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
@@ -59,7 +58,7 @@ import com.syrus.util.Log;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.45 $, $Date: 2005/09/11 14:24:41 $
+ * @version $Revision: 1.46 $, $Date: 2005/09/14 10:32:12 $
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {
@@ -215,7 +214,6 @@ public class MapImportCommand extends ImportCommand {
 		} finally {
 			System.setProperty("user.dir",  user_dir);
 		}
-		LocalXmlIdentifierPool.flush();
 		return map;
 	}
 
