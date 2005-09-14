@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.56 2005/09/12 06:24:15 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.57 2005/09/14 10:36:24 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -69,20 +69,14 @@ import com.syrus.AMFICOM.client.model.MapEditorApplicationModel;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
 import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
-import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
-import com.syrus.AMFICOM.general.IdentifierGenerationException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.mapview.MapView;
-import com.syrus.AMFICOM.scheme.SchemeSampleData;
 
 /**
  * Основное окно модуля Редактор топологической схемы
  * 
  * 
  * 
- * @version $Revision: 1.56 $, $Date: 2005/09/12 06:24:15 $
+ * @version $Revision: 1.57 $, $Date: 2005/09/14 10:36:24 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
