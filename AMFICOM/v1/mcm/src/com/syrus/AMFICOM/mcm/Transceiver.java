@@ -11,7 +11,6 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
-import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.KIS;
@@ -77,30 +76,21 @@ final class Transceiver extends SleepButWorkThread {
 		}
 	}
 
-	protected void abortMeasurementsForTestProcessor(final TestProcessor testProcessor) {
+	protected void removeMeasurementsOfTestProcessor(final TestProcessor testProcessor) {
 		synchronized (this.testProcessors) {
 			for (final Iterator<Identifier> it = this.testProcessors.keySet().iterator(); it.hasNext();) {
 				final Identifier measurementId = it.next();
-				final TestProcessor tp = this.testProcessors.get(measurementId);
-				if (tp.getTestId().equals(testProcessor.getTestId())) {
+				final TestProcessor tProcessor = this.testProcessors.get(measurementId);
+				if (tProcessor.getTestId().equals(testProcessor.getTestId())) {
 					try {
-						final Measurement measurement = (Measurement) StorableObjectPool.getStorableObject(measurementId, true);
-
-						it.remove();
+						final Measurement measurement = StorableObjectPool.getStorableObject(measurementId, true);
 						this.scheduledMeasurements.remove(measurement);
-
-						measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
 					} catch (ApplicationException ae) {
 						Log.errorException(ae);
 					}
+					it.remove();
 				}
 			}
-		}
-
-		try {
-			StorableObjectPool.flush(ObjectEntities.MEASUREMENT_CODE, LoginManager.getUserId(), false);
-		} catch (ApplicationException ae) {
-			Log.errorException(ae);
 		}
 	}
 
@@ -247,6 +237,13 @@ final class Transceiver extends SleepButWorkThread {
 			Log.debugMessage("Transceiver.throwAwayKISReport | removing measurement '" + this.measurementToRemove.getId() + "' from KIS '" + this.kis.getId() + "'", Log.DEBUGLEVEL05);
 			this.scheduledMeasurements.remove(this.measurementToRemove);
 			this.testProcessors.remove(this.measurementToRemove.getId());
+
+			this.measurementToRemove.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+			try {
+				StorableObjectPool.flush(this.measurementToRemove, LoginManager.getUserId(), false);
+			} catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
 
 			this.measurementToRemove = null;
 		} else {
