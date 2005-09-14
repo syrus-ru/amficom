@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.50 2005/09/09 17:16:57 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.51 2005/09/14 13:02:02 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -127,7 +127,7 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.50 $, $Date: 2005/09/09 17:16:57 $
+ * @version $Revision: 1.51 $, $Date: 2005/09/14 13:02:02 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -1137,34 +1137,33 @@ public class TypicalCondition implements StorableObjectCondition {
 				long l = 0;
 				double d = 0.0;
 				switch (this.type) {
-					case TypicalSort._TYPE_NUMBER_INT: {
-						if (object instanceof Integer)
+					case TypicalSort._TYPE_NUMBER_INT:
+						if (object instanceof Integer) {
 							i = ((Integer) object).intValue();
-						else
+						} else {
 							i = Integer.parseInt(object.toString());
-					}
+						}
 						break;
-					case TypicalSort._TYPE_NUMBER_DOUBLE: {
-						if (object instanceof Double)
+					case TypicalSort._TYPE_NUMBER_DOUBLE:
+						if (object instanceof Double) {
 							d = ((Double) object).doubleValue();
-						else
+						} else {
 							d = Double.parseDouble(object.toString());
-					}
-
+						}
 						break;
-					case TypicalSort._TYPE_NUMBER_LONG: {
-						if (object instanceof Long)
+					case TypicalSort._TYPE_NUMBER_LONG:
+						if (object instanceof Long) {
 							l = ((Long) object).longValue();
-						else
+						} else {
 							l = Long.parseLong(object.toString());
-					}
+						}
 						break;
 					default:
 						Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
 				}
 
 				switch (this.operation) {
-					case OperationSort._OPERATION_EQUALS: {
+					case OperationSort._OPERATION_EQUALS:
 						switch (this.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								result = (i == this.firstInt);
@@ -1178,15 +1177,14 @@ public class TypicalCondition implements StorableObjectCondition {
 							default:
 								Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
 						}
-					}
 						break;
-					case OperationSort._OPERATION_GREAT: {
+					case OperationSort._OPERATION_GREAT:
 						switch (this.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								result = (i > this.firstInt);
 								break;
 							case TypicalSort._TYPE_NUMBER_DOUBLE:
-								result = d > this.firstDouble;
+								result = (d > this.firstDouble);
 								break;
 							case TypicalSort._TYPE_NUMBER_LONG:
 								result = (l > this.firstLong);
@@ -1194,15 +1192,14 @@ public class TypicalCondition implements StorableObjectCondition {
 							default:
 								Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
 						}
-					}
 						break;
-					case OperationSort._OPERATION_LESS: {
+					case OperationSort._OPERATION_LESS:
 						switch (this.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								result = (i < this.firstInt);
 								break;
 							case TypicalSort._TYPE_NUMBER_DOUBLE:
-								result = d < this.firstDouble;
+								result = (d < this.firstDouble);
 								break;
 							case TypicalSort._TYPE_NUMBER_LONG:
 								result = (l < this.firstLong);
@@ -1210,9 +1207,8 @@ public class TypicalCondition implements StorableObjectCondition {
 							default:
 								Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
 						}
-					}
 						break;
-					case OperationSort._OPERATION_GREAT_EQUALS: {
+					case OperationSort._OPERATION_GREAT_EQUALS:
 						switch (this.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								result = (i >= this.firstInt);
@@ -1226,9 +1222,8 @@ public class TypicalCondition implements StorableObjectCondition {
 							default:
 								Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
 						}
-					}
 						break;
-					case OperationSort._OPERATION_LESS_EQUALS: {
+					case OperationSort._OPERATION_LESS_EQUALS:
 						switch (this.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								result = (i <= this.firstInt);
@@ -1242,9 +1237,8 @@ public class TypicalCondition implements StorableObjectCondition {
 							default:
 								Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
 						}
-					}
 						break;
-					case OperationSort._OPERATION_IN_RANGE: {
+					case OperationSort._OPERATION_IN_RANGE:
 						switch (this.type) {
 							case TypicalSort._TYPE_NUMBER_INT:
 								result = (this.firstInt < i && i < this.secondInt);
@@ -1258,7 +1252,6 @@ public class TypicalCondition implements StorableObjectCondition {
 							default:
 								Log.errorMessage("TypicalCondition.parseCondition | unknown number code " + this.type);
 						}
-					}
 						break;
 					default:
 						Log.errorMessage("TypicalCondition.parseCondition | unknown operation code " + this.operation);
@@ -1321,8 +1314,7 @@ public class TypicalCondition implements StorableObjectCondition {
 			case TypicalSort._TYPE_BOOLEAN:
 				switch (this.operation) {
 					case OperationSort._OPERATION_EQUALS:
-						result = ((Boolean) this.value).booleanValue() ==
-								((Boolean) object).booleanValue();
+						result = ((Boolean) this.value).booleanValue() == ((Boolean) object).booleanValue();
 						break;
 					default:
 						Log.errorMessage("TypicalCondition.parseCondition | unknown operation code " + this.operation);
