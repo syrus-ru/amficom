@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.191 2005/09/14 14:07:27 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.192 2005/09/14 18:51:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,9 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.191 $, $Date: 2005/09/14 14:07:27 $
+ * @version $Revision: 1.192 $, $Date: 2005/09/14 18:51:56 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 

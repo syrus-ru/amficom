@@ -1,5 +1,5 @@
 /*
- * $Id: Event.java,v 1.41 2005/09/11 15:27:43 bass Exp $
+ * $Id: Event.java,v 1.42 2005/09/14 18:53:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,9 @@ import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/09/11 15:27:43 $
- * @author $Author: bass $
+ * @version $Revision: 1.42 $, $Date: 2005/09/14 18:53:52 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.46 2005/08/29 10:17:30 max Exp $
+ * $Id: CharacteristicDatabase.java,v 1.47 2005/09/14 18:51:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/08/29 10:17:30 $
- * @author $Author: max $
+ * @version $Revision: 1.47 $, $Date: 2005/09/14 18:51:55 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 

@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectConditionBuilder.java,v 1.6 2005/07/24 15:01:57 arseniy Exp $
+ * $Id: StorableObjectConditionBuilder.java,v 1.7 2005/09/14 18:51:56 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,12 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlStorableObjectConditionSort;
 import com.syrus.util.Log;
 
+/**
+ * @version $Revision: 1.7 $, $Date: 2005/09/14 18:51:56 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
+ * @module general
+ */
 public final class StorableObjectConditionBuilder {
 
 	private StorableObjectConditionBuilder() {

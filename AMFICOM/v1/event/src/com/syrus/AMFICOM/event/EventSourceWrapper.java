@@ -1,5 +1,5 @@
 /*
- * $Id: EventSourceWrapper.java,v 1.10 2005/08/08 13:36:20 arseniy Exp $
+ * $Id: EventSourceWrapper.java,v 1.11 2005/09/14 18:53:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,8 +15,9 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/08 13:36:20 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/14 18:53:52 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 public class EventSourceWrapper extends StorableObjectWrapper<EventSource> {

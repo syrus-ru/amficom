@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.48 2005/09/08 18:26:28 bass Exp $
+ * $Id: CharacteristicType.java,v 1.49 2005/09/14 18:51:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,9 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.Characterist
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/09/08 18:26:28 $
- * @author $Author: bass $
+ * @version $Revision: 1.49 $, $Date: 2005/09/14 18:51:55 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 

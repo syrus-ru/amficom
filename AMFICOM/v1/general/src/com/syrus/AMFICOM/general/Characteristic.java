@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.61 2005/09/11 15:27:42 bass Exp $
+ * $Id: Characteristic.java,v 1.62 2005/09/14 18:51:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/09/11 15:27:42 $
- * @author $Author: bass $
+ * @version $Revision: 1.62 $, $Date: 2005/09/14 18:51:55 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class Characteristic extends AbstractCloneableStorableObject

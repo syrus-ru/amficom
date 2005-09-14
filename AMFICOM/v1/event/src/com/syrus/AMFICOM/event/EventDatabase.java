@@ -1,5 +1,5 @@
 /*
- * $Id: EventDatabase.java,v 1.44 2005/09/09 14:28:04 arseniy Exp $
+ * $Id: EventDatabase.java,v 1.45 2005/09/14 18:53:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -37,8 +37,9 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/09/09 14:28:04 $
+ * @version $Revision: 1.45 $, $Date: 2005/09/14 18:53:52 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 

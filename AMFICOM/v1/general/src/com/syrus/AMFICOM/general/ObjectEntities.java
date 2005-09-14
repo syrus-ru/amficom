@@ -1,5 +1,5 @@
 /*-
- * $Id: ObjectEntities.java,v 1.84 2005/09/12 00:10:50 bass Exp $
+ * $Id: ObjectEntities.java,v 1.85 2005/09/14 18:51:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,9 @@ import gnu.trove.TObjectShortHashMap;
 import gnu.trove.TShortObjectHashMap;
 
 /**
- * @version $Revision: 1.84 $, $Date: 2005/09/12 00:10:50 $
- * @author $Author: bass $
+ * @version $Revision: 1.85 $, $Date: 2005/09/14 18:51:56 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class ObjectEntities {

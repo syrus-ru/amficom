@@ -1,5 +1,5 @@
 /*-
- * $Id: TableNames.java,v 1.1 2005/08/28 15:13:01 arseniy Exp $
+ * $Id: TableNames.java,v 1.2 2005/09/14 18:51:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,9 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/28 15:13:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/14 18:51:56 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class TableNames {

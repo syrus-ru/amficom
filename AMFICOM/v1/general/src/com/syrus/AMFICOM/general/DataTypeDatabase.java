@@ -1,5 +1,5 @@
 /*-
- * $Id: DataTypeDatabase.java,v 1.5 2005/08/29 09:57:11 arseniy Exp $
+ * $Id: DataTypeDatabase.java,v 1.6 2005/09/14 18:51:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,9 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/29 09:57:11 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/14 18:51:55 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class DataTypeDatabase {

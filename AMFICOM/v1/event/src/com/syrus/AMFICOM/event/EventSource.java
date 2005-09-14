@@ -1,5 +1,5 @@
 /*
- * $Id: EventSource.java,v 1.32 2005/09/08 18:26:31 bass Exp $
+ * $Id: EventSource.java,v 1.33 2005/09/14 18:53:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -30,8 +30,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/09/08 18:26:31 $
- * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/09/14 18:53:52 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 public final class EventSource extends StorableObject {

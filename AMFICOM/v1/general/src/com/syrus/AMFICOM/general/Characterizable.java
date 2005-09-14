@@ -1,5 +1,5 @@
 /*
- * $Id: Characterizable.java,v 1.10 2005/08/08 14:22:15 arseniy Exp $
+ * $Id: Characterizable.java,v 1.11 2005/09/14 18:51:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,9 @@ package com.syrus.AMFICOM.general;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/08 14:22:15 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/14 18:51:55 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 

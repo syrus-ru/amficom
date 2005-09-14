@@ -1,5 +1,5 @@
 /*
- * $Id: IdentifierPool.java,v 1.30 2005/09/08 11:07:25 arseniy Exp $
+ * $Id: IdentifierPool.java,v 1.31 2005/09/14 18:51:55 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,9 @@ import com.syrus.util.Fifo;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.30 $, $Date: 2005/09/08 11:07:25 $
+ * @version $Revision: 1.31 $, $Date: 2005/09/14 18:51:55 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public class IdentifierPool {

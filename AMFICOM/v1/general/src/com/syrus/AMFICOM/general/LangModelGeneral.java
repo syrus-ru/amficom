@@ -1,5 +1,5 @@
 /*-
- * $Id: LangModelGeneral.java,v 1.3 2005/09/06 11:34:58 bob Exp $
+ * $Id: LangModelGeneral.java,v 1.4 2005/09/14 18:51:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,9 @@ import java.util.ResourceBundle;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/09/06 11:34:58 $
- * @author $Author: bob $
+ * @version $Revision: 1.4 $, $Date: 2005/09/14 18:51:56 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 final class LangModelGeneral {

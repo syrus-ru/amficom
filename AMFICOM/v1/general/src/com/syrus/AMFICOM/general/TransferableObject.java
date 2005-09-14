@@ -1,5 +1,5 @@
 /*-
- * $Id: TransferableObject.java,v 1.10 2005/09/08 07:27:16 bob Exp $
+ * $Id: TransferableObject.java,v 1.11 2005/09/14 18:51:56 arseniy Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,9 @@ import org.omg.CORBA.ORB;
 import org.omg.CORBA.portable.IDLEntity;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/08 07:27:16 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/09/14 18:51:56 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public interface TransferableObject extends Serializable {

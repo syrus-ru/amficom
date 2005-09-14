@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectType.java,v 1.29 2005/09/08 18:26:28 bass Exp $
+ * $Id: StorableObjectType.java,v 1.30 2005/09/14 18:51:56 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,9 @@ import java.util.Date;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.29 $, $Date: 2005/09/08 18:26:28 $
- * @author $Author: bass $
+ * @version $Revision: 1.30 $, $Date: 2005/09/14 18:51:56 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 

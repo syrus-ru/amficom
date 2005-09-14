@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.14 2005/09/14 17:51:10 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.15 2005/09/14 18:53:52 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,9 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/14 17:51:10 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/14 18:53:52 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 final class TypicalConditionImpl extends TypicalCondition {

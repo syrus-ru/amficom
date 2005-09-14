@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.21 2005/09/07 02:58:50 arseniy Exp $
+ * $Id: CharacteristicWrapper.java,v 1.22 2005/09/14 18:51:55 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,9 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/07 02:58:50 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/14 18:51:55 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public class CharacteristicWrapper extends StorableObjectWrapper<Characteristic> {

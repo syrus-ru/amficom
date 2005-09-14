@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.60 2005/09/06 05:57:28 bob Exp $
+ * $Id: ParameterType.java,v 1.61 2005/09/14 18:51:56 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,9 @@ import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/09/06 05:57:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.61 $, $Date: 2005/09/14 18:51:56 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public enum ParameterType implements TransferableObject, Codeable {

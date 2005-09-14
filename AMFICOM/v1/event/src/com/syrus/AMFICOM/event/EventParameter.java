@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.24 2005/09/09 17:48:08 arseniy Exp $
+ * $Id: EventParameter.java,v 1.25 2005/09/14 18:53:52 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -21,8 +21,9 @@ import com.syrus.AMFICOM.general.TransferableObject;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/09/09 17:48:08 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/14 18:53:52 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
 public final class EventParameter implements Identifiable, TransferableObject {

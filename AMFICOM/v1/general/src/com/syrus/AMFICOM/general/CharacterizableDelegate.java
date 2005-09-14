@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacterizableDelegate.java,v 1.1 2005/08/08 14:21:01 arseniy Exp $
+ * $Id: CharacterizableDelegate.java,v 1.2 2005/09/14 18:51:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,9 @@ import java.util.HashSet;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/08 14:21:01 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/14 18:51:55 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class CharacterizableDelegate {
