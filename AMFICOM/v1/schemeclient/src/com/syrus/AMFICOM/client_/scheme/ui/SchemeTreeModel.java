@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.39 2005/09/13 10:19:05 bass Exp $
+ * $Id: SchemeTreeModel.java,v 1.40 2005/09/14 10:15:00 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/09/13 10:19:05 $
+ * @author $Author: stas $
+ * @version $Revision: 1.40 $, $Date: 2005/09/14 10:15:00 $
  * @module schemeclient
  */
 
@@ -116,10 +116,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 		
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
-			if (s.equals(SchemeResourceKeys.ROOT)) {
-				createRootItems(node, contents);
-			} 
-			else if (s.equals(SchemeResourceKeys.SCHEME_TYPE)) {
+			if (s.equals(SchemeResourceKeys.SCHEME_TYPE)) {
 				createSchemeKinds(node, contents);
 			}
 			else if (s.equals(SchemeResourceKeys.SCHEME)) {
@@ -136,9 +133,10 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						SchemeElement sc = (SchemeElement) it.next();
 						if (sc.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-							Scheme scheme = sc.getScheme(false);
-							node.addChild(new PopulatableIconedNode(this, scheme != null ? scheme : sc));
-							}
+							// TODO Scheme scheme = sc.getScheme(false);
+							Scheme scheme = sc.getScheme(true);
+							node.addChild(new PopulatableIconedNode(this, scheme, UIManager.getIcon(SchemeResourceKeys.ICON_SCHEME)));
+						}
 					}
 				} catch (ApplicationException e) {
 					Log.errorException(e);
@@ -356,28 +354,15 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 	}
 	
 	public static final Object getRootObject() {
-		return SchemeResourceKeys.ROOT;
+		return SchemeResourceKeys.SCHEME_TYPE;
 	}
+	
 	
 	public Item getRoot() {
 		if (this.root == null) {
-			this.root = new PopulatableIconedNode(this, SchemeResourceKeys.ROOT, LangModelScheme.getString(SchemeResourceKeys.ROOT),
-					UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG));
+			this.root = new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_TYPE, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG));
 		}
 		return this.root;
-	}
-	
-	private void createRootItems(Item node, Collection contents) {
-		if (!contents.contains(ConfigurationTreeModel.getRootObject())) {
-			ConfigurationTreeModel configurationTreeModel = new ConfigurationTreeModel(this.aContext);
-			node.addChild(configurationTreeModel.getRoot());
-		}
-		if (!contents.contains(SchemeResourceKeys.SCHEME_TYPE))
-			node.addChild(new PopulatableIconedNode(this, SchemeResourceKeys.SCHEME_TYPE, LangModelScheme.getString(SchemeResourceKeys.SCHEME_TYPE), UIManager.getIcon(SchemeResourceKeys.ICON_CATALOG)));
-		if (!contents.contains(ProtoGroupTreeModel.getRootObject())) {
-			ProtoGroupTreeModel 	protoTreeModel = new ProtoGroupTreeModel(this.aContext);
-			node.addChild(protoTreeModel.getRoot());
-		}
 	}
 	
 	private void createSchemeKinds(Item node, Collection contents) {
@@ -405,7 +390,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 			for (Iterator it = toAdd.iterator(); it.hasNext();) {
 				Scheme sc = (Scheme) it.next();
 				if (sc.getParentSchemeElement() == null) {
-					node.addChild(new PopulatableIconedNode(this, sc));
+					node.addChild(new PopulatableIconedNode(this, sc, UIManager.getIcon(SchemeResourceKeys.ICON_SCHEME)));
 				}
 			}
 		} 
