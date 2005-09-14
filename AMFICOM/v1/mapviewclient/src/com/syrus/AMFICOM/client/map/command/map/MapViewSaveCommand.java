@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveCommand.java,v 1.27 2005/09/07 12:25:35 krupenn Exp $
+ * $Id: MapViewSaveCommand.java,v 1.28 2005/09/14 10:33:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.VersionCollisionException;
@@ -33,7 +34,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * Класс используется для сохранения топологической схемы на сервере
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/09/07 12:25:35 $
+ * @version $Revision: 1.28 $, $Date: 2005/09/14 10:33:13 $
  * @module mapviewclient
  */
 public class MapViewSaveCommand extends AbstractCommand
@@ -108,6 +109,7 @@ public class MapViewSaveCommand extends AbstractCommand
 			{
 //				 save mapview
 				StorableObjectPool.flush(this.mapView, userId, true);
+				LocalXmlIdentifierPool.flush();
 			} catch(ApplicationException e) {
 				e.printStackTrace();
 			}
