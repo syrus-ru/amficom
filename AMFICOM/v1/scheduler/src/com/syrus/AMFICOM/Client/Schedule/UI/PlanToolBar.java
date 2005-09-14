@@ -366,8 +366,6 @@ class PlanToolBar {
 
 						} catch (ApplicationException e1) {
 							AbstractMainFrame.showErrorMessage(PlanToolBar.this.toolBar, e1);
-						} catch (Exception e1) {
-							AbstractMainFrame.showErrorMessage(PlanToolBar.this.toolBar, e1);
 						}
 					}
 				}, LangModelSchedule.getString("StatusMessage.UpdatingTests"));
