@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.172 2005/09/08 05:34:41 bob Exp $
+ * $Id: StorableObjectPool.java,v 1.173 2005/09/14 17:47:29 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.172 $, $Date: 2005/09/08 05:34:41 $
- * @author $Author: bob $
+ * @version $Revision: 1.173 $, $Date: 2005/09/14 17:47:29 $
+ * @author $Author: arseniy $
  * @module general
  * @todo Этот класс не проверен. В первую очередь надо проверить работу с объектами, помеченными на удаление
  * (т. е. объектами, идентификаторы которых помещены в DELETED_IDS_MAP). Проверять так:
@@ -1011,9 +1011,7 @@ public final class StorableObjectPool {
 					putAllStorableObject(storableObjects);
 				} catch (IllegalObjectEntityException e) {
 					Log.errorMessage("StorableObjectPool.deserialize | Cannot get entity '"
-							+ ObjectEntities.codeToString(entityCode)
-							+ "'/"
-							+ entityCode);
+							+ ObjectEntities.codeToString(entityCode) + "'/" + entityCode);
 					Log.errorException(e);
 				}
 				try {
