@@ -1,5 +1,5 @@
 /*
- * $Id: TestServer.java,v 1.8 2005/08/30 14:24:53 arseniy Exp $
+ * $Id: TestServer.java,v 1.9 2005/09/14 19:21:18 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,14 +16,16 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBACommonTest;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
+import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.EquivalentCondition;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/30 14:24:53 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/14 19:21:18 $
  * @author $Author: arseniy $
  * @module test
  */
@@ -55,7 +57,8 @@ public final class TestServer extends TestCase {
 	}
 
 	public void _testRetrieve() throws ApplicationException {
-		final Server server = new Server(new Identifier("Server_30"));
+		final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
+		final Server server = serverDatabase.retrieveForId(new Identifier("Server_30"));
 		System.out.println("Retrieved: " + server.getHostName());
 		final Set<Characteristic> characteristics = server.getCharacteristics(true);
 		for (final Characteristic characteristic : characteristics) {
