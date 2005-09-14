@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.20 2005/09/09 17:44:13 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.21 2005/09/14 17:50:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/09 17:44:13 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/14 17:50:05 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -122,7 +122,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 		} else if (storableObject instanceof EquipmentType) {
 			wrapper = EquipmentTypeWrapper.getInstance();
 		} else {
-			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
+			throw new IllegalObjectEntityException(ERROR_ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 		return super.parseCondition(wrapper.getValue(storableObject, this.key));

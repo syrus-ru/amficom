@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.19 2005/09/09 17:41:08 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.20 2005/09/14 17:49:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ import com.syrus.util.Shitlet;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/09 17:41:08 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/14 17:49:00 $
  * @author $Author: arseniy $
  * @module admin
  */
@@ -139,7 +139,7 @@ final class TypicalConditionImpl extends TypicalCondition {
 			final Wrapper<ServerProcess> wrapper = ServerProcessWrapper.getInstance();
 			return super.parseCondition(wrapper.getValue(serverProcess, this.key));
 		} else {
-			throw new IllegalObjectEntityException(ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
+			throw new IllegalObjectEntityException(ERROR_ENTITY_NOT_REGISTERED + storableObject.getClass().getName(),
 					IllegalObjectEntityException.ENTITY_NOT_REGISTERED_CODE);
 		}
 	}
