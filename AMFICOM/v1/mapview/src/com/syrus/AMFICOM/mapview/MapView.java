@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.61 2005/09/14 10:16:41 krupenn Exp $
+* $Id: MapView.java,v 1.62 2005/09/14 14:08:37 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBN
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: krupenn $
- * @version $Revision: 1.61 $, $Date: 2005/09/14 10:16:41 $
+ * @version $Revision: 1.62 $, $Date: 2005/09/14 14:08:37 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Namable {
@@ -852,7 +852,7 @@ public final class MapView extends DomainMember implements Namable {
 	public static SchemeElement getTopLevelSchemeElement(SchemeElement schemeElement) {
 		SchemeElement top = schemeElement;
 		while (top.getParentSchemeElement() != null) {
-			top = getTopLevelSchemeElement(top);
+			top = getTopLevelSchemeElement(top.getParentSchemeElement());
 		}
 		return top;
 	}
