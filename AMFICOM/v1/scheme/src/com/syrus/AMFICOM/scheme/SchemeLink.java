@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.73 2005/09/12 00:10:48 bass Exp $
+ * $Id: SchemeLink.java,v 1.74 2005/09/14 19:50:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/09/12 00:10:48 $
+ * @version $Revision: 1.74 $, $Date: 2005/09/14 19:50:48 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -778,9 +778,15 @@ public final class SchemeLink extends AbstractSchemeLink
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param schemeLink
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeLink getXmlTransferable(final String importType) {
+	public XmlSchemeLink getXmlTransferable(
+			final XmlSchemeLink schemeLink,
+			final String importType)
+	throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 

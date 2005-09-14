@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.68 2005/09/08 18:26:26 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.69 2005/09/14 19:50:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/09/08 18:26:26 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/14 19:50:48 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -380,9 +380,15 @@ public final class SchemeMonitoringSolution
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param schemeMonitoringSolution
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeMonitoringSolution getXmlTransferable(final String importType) {
+	public XmlSchemeMonitoringSolution getXmlTransferable(
+			final XmlSchemeMonitoringSolution schemeMonitoringSolution,
+			final String importType)
+	throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 

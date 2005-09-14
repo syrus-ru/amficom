@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.24 2005/09/12 00:10:49 bass Exp $
+ * $Id: MapLibrary.java,v 1.25 2005/09/14 19:50:46 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,14 +18,10 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
 
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.LinkedList;
 import java.util.Set;
-
-import org.apache.xmlbeans.XmlObject;
 
 import org.omg.CORBA.ORB;
 
@@ -57,7 +53,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/09/12 00:10:49 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/14 19:50:46 $
  * @author $Author: bass $
  * @module map
  */
@@ -312,29 +308,36 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 		}
 	}
 
-	public XmlMapLibrary getXmlTransferable(final String importType) {
-		final XmlMapLibrary xmlMapLibrary = XmlMapLibrary.Factory.newInstance();
-		xmlMapLibrary.setCodename(this.codename);
-		xmlMapLibrary.setName(this.name);
-		xmlMapLibrary.setDescription(this.description);
-		
-		final XmlPhysicalLinkTypeSeq xmlPhysicalLinkTypes = xmlMapLibrary.addNewPhysicalLinkTypes();
-		final Collection<XmlObject> xmlPhysicalLinkTypesArray = new LinkedList<XmlObject>();
-		for (final PhysicalLinkType physicalLinkType : this.getPhysicalLinkTypes()) {
-			xmlPhysicalLinkTypesArray.add(physicalLinkType.getXmlTransferable(importType));
+	/**
+	 * @param mapLibrary
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 */
+	public XmlMapLibrary getXmlTransferable(final XmlMapLibrary mapLibrary,
+			final String importType)
+	throws ApplicationException {
+		mapLibrary.setCodename(this.codename);
+		mapLibrary.setName(this.name);
+		mapLibrary.setDescription(this.description);
+		mapLibrary.unsetPhysicalLinkTypes();
+		final Set<PhysicalLinkType> physicalLinkTypes = this.getPhysicalLinkTypes();
+		if (!physicalLinkTypes.isEmpty()) {
+			final XmlPhysicalLinkTypeSeq physicalLinkTypeSeq = mapLibrary.addNewPhysicalLinkTypes();
+			for (final PhysicalLinkType physicalLinkType : physicalLinkTypes) {
+				physicalLinkType.getXmlTransferable(physicalLinkTypeSeq.addNewPhysicalLinkType(), importType);
+			}
 		}
-		xmlPhysicalLinkTypes.setPhysicalLinkTypeArray(xmlPhysicalLinkTypesArray.toArray(new XmlPhysicalLinkType[xmlPhysicalLinkTypesArray.size()]));
-		
-		final XmlSiteNodeTypeSeq xmlSitenodetypes = xmlMapLibrary.addNewSiteNodeTypes();
-		final Collection<XmlObject> xmlSiteNodeTypesArray = new LinkedList<XmlObject>();
-		for (final SiteNodeType siteNodeType : this.getSiteNodeTypes()) {
-			xmlSiteNodeTypesArray.add(siteNodeType.getXmlTransferable(importType));
+		mapLibrary.unsetSiteNodeTypes();
+		final Set<SiteNodeType> siteNodeTypes = this.getSiteNodeTypes();
+		if (!siteNodeTypes.isEmpty()) {
+			final XmlSiteNodeTypeSeq siteNodeTypeSeq = mapLibrary.addNewSiteNodeTypes();
+			for (final SiteNodeType siteNodeType : siteNodeTypes) {
+				siteNodeType.getXmlTransferable(siteNodeTypeSeq.addNewSiteNodeType(), importType);
+			}
 		}
-		xmlSitenodetypes.setSiteNodeTypeArray(xmlSiteNodeTypesArray.toArray(new XmlSiteNodeType[xmlSiteNodeTypesArray.size()]));
-
-		xmlMapLibrary.setImportType(importType);
-
-		return xmlMapLibrary;
+		mapLibrary.setImportType(importType);
+		return mapLibrary;
 	}
 
 	/**

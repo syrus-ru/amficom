@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.112 2005/09/12 00:10:49 bass Exp $
+ * $Id: PhysicalLink.java,v 1.113 2005/09/14 19:50:46 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,7 +65,7 @@ import com.syrus.util.Log;
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
  * @author $Author: bass $
- * @version $Revision: 1.112 $, $Date: 2005/09/12 00:10:49 $
+ * @version $Revision: 1.113 $, $Date: 2005/09/14 19:50:46 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -910,18 +910,26 @@ public class PhysicalLink extends StorableObject
 		return this.characteristics;
 	}
 
-	public XmlPhysicalLink getXmlTransferable(final String importType) {
-		final XmlPhysicalLink xmlPhysicalLink = XmlPhysicalLink.Factory.newInstance();
-		xmlPhysicalLink.setId(this.id.getXmlTransferable(importType));
-		xmlPhysicalLink.setName(this.name);
-		xmlPhysicalLink.setDescription(this.description);
-		xmlPhysicalLink.setPhysicalLinkTypeCodename(this.getType().getCodename());
-		xmlPhysicalLink.setStartNodeId(this.startNodeId.getXmlTransferable(importType));
-		xmlPhysicalLink.setEndNodeId(this.endNodeId.getXmlTransferable(importType));
-		xmlPhysicalLink.setCity(this.city);
-		xmlPhysicalLink.setStreet(this.street);
-		xmlPhysicalLink.setBuilding(this.building);
-		return xmlPhysicalLink;
+	/**
+	 * @param physicalLink
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 */
+	public XmlPhysicalLink getXmlTransferable(
+			final XmlPhysicalLink physicalLink,
+			final String importType)
+	throws ApplicationException {
+		this.id.getXmlTransferable(physicalLink.addNewId(), importType);
+		physicalLink.setName(this.name);
+		physicalLink.setDescription(this.description);
+		physicalLink.setPhysicalLinkTypeCodename(this.getType().getCodename());
+		this.startNodeId.getXmlTransferable(physicalLink.addNewStartNodeId(), importType);
+		this.endNodeId.getXmlTransferable(physicalLink.addNewEndNodeId(), importType);
+		physicalLink.setCity(this.city);
+		physicalLink.setStreet(this.street);
+		physicalLink.setBuilding(this.building);
+		return physicalLink;
 	}
 
 	/**
@@ -944,7 +952,7 @@ public class PhysicalLink extends StorableObject
 		this.selected = false;
 	}
 
-	public void fromXmlTransferable(final XmlPhysicalLink xmlPhysicalLink,
+	public final void fromXmlTransferable(final XmlPhysicalLink xmlPhysicalLink,
 			final String importType)
 	throws ApplicationException {
 		this.name = xmlPhysicalLink.getName();

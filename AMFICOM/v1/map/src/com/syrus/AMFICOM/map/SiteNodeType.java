@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.85 2005/09/12 00:10:49 bass Exp $
+ * $Id: SiteNodeType.java,v 1.86 2005/09/14 19:50:46 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -68,7 +68,7 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: bass $
- * @version $Revision: 1.85 $, $Date: 2005/09/12 00:10:49 $
+ * @version $Revision: 1.86 $, $Date: 2005/09/14 19:50:46 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -288,40 +288,39 @@ public final class SiteNodeType extends StorableObjectType
 		this.sort = sort;
 	}
 
-	public XmlSiteNodeType getXmlTransferable(final String importType) {
-		final XmlSiteNodeType xmlSiteNodeType = XmlSiteNodeType.Factory.newInstance();
-		xmlSiteNodeType.setId(this.id.getXmlTransferable(importType));
-		xmlSiteNodeType.setName(this.name);
-		xmlSiteNodeType.setDescription(this.description);
-		xmlSiteNodeType.setSort(XmlSiteNodeTypeSort.Enum.forInt(this.sort.value() + 1));
-		xmlSiteNodeType.setTopological(this.isTopological());
-		
-		String imageCodeName = "";
+	/**
+	 * @param siteNodeType
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 */
+	public XmlSiteNodeType getXmlTransferable(
+			final XmlSiteNodeType siteNodeType,
+			final String importType)
+	throws ApplicationException {
 		try {
+			this.id.getXmlTransferable(siteNodeType.addNewId(), importType);
+			siteNodeType.setName(this.name);
+			siteNodeType.setDescription(this.description);
+			siteNodeType.setSort(XmlSiteNodeTypeSort.Enum.forInt(this.sort.value() + 1));
+			siteNodeType.setTopological(this.isTopological());
 			final AbstractBitmapImageResource abstractBitmapImageResource = StorableObjectPool.getStorableObject(this.getImageId(), true);
-			imageCodeName = abstractBitmapImageResource.getCodename();
+			final String imageCodename = abstractBitmapImageResource.getCodename();
 			if (abstractBitmapImageResource instanceof FileImageResource) {
 				final FileImageResource fileImageResource = (FileImageResource) abstractBitmapImageResource;
 				@SuppressWarnings("unused") String filename = fileImageResource.getFileName();
 				// TODO write image to file
 			} else if (abstractBitmapImageResource instanceof BitmapImageResource) {
-				final BitmapImageResource bitmapImageResource = (BitmapImageResource) abstractBitmapImageResource;
-				try {
-					File file = new File(imageCodeName);
-					FileOutputStream out = new FileOutputStream(file);
-					byte[] data = bitmapImageResource.getImage();
-					out.write(data);
-					out.flush();
-					out.close();
-				} catch (Exception e) {
-					e.printStackTrace();
-				}
+				FileOutputStream out = new FileOutputStream(new File(imageCodename));
+				out.write(((BitmapImageResource) abstractBitmapImageResource).getImage());
+				out.flush();
+				out.close();
 			}
-		} catch (ApplicationException e) {
-			e.printStackTrace();
+			siteNodeType.setImage(imageCodename);
+			return siteNodeType;
+		} catch (final IOException ioe) {
+			throw new ApplicationException(ioe);
 		}
-		xmlSiteNodeType.setImage(imageCodeName);
-		return xmlSiteNodeType;
 	}
 
 	/**

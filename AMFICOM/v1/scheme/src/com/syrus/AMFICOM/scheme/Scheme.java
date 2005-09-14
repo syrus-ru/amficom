@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.89 2005/09/13 08:35:41 bass Exp $
+ * $Id: Scheme.java,v 1.90 2005/09/14 19:50:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2005/09/13 08:35:41 $
+ * @version $Revision: 1.90 $, $Date: 2005/09/14 19:50:47 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -774,11 +774,14 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param scheme
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlScheme getXmlTransferable(final String importType) {
-		final XmlScheme scheme = XmlScheme.Factory.newInstance();
-
+	public XmlScheme getXmlTransferable(final XmlScheme scheme,
+			final String importType)
+	throws ApplicationException {
 		scheme.setImportType(importType);
 
 		throw new UnsupportedOperationException();

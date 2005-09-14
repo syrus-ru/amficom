@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.78 2005/09/12 00:10:48 bass Exp $
+ * $Id: SchemeDevice.java,v 1.79 2005/09/14 19:50:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.78 $, $Date: 2005/09/12 00:10:48 $
+ * @version $Revision: 1.79 $, $Date: 2005/09/14 19:50:48 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -583,9 +583,15 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param schemeDevice
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeDevice getXmlTransferable(final String importType) {
+	public XmlSchemeDevice getXmlTransferable(
+			final XmlSchemeDevice schemeDevice,
+			final String importType)
+	throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 

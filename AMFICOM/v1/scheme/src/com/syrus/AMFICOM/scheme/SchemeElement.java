@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.100 2005/09/13 08:35:41 bass Exp $
+ * $Id: SchemeElement.java,v 1.101 2005/09/14 19:50:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.100 $, $Date: 2005/09/13 08:35:41 $
+ * @version $Revision: 1.101 $, $Date: 2005/09/14 19:50:48 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1002,9 +1002,15 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param schemeElement
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeElement getXmlTransferable(final String importType) {
+	public XmlSchemeElement getXmlTransferable(
+			final XmlSchemeElement schemeElement,
+			final String importType)
+	throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 

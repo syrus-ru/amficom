@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.78 2005/09/12 00:10:49 bass Exp $
+ * $Id: Collector.java,v 1.79 2005/09/14 19:50:47 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.78 $, $Date: 2005/09/12 00:10:49 $
+ * @version $Revision: 1.79 $, $Date: 2005/09/14 19:50:47 $
  * @module map
  */
 public final class Collector extends StorableObject implements MapElement, XmlBeansTransferable<XmlCollector> {
@@ -359,23 +359,29 @@ public final class Collector extends StorableObject implements MapElement, XmlBe
 		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
-	public XmlCollector getXmlTransferable(final String importType) {
-		final XmlCollector xmlCollector = XmlCollector.Factory.newInstance();
-		xmlCollector.setId(this.id.getXmlTransferable(importType));
-		xmlCollector.setName(this.name);
-		xmlCollector.setDescription(this.description);		
+	/**
+	 * @param collector
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 */
+	public XmlCollector getXmlTransferable(final XmlCollector collector,
+			final String importType)
+	throws ApplicationException {
+		this.id.getXmlTransferable(collector.addNewId(), importType);
+		collector.setName(this.name);
+		collector.setDescription(this.description);		
 		
+		collector.unsetPhysicalLinkIds();
 		final Set<PhysicalLink> physicalLinks1 = this.getPhysicalLinks();
-		final XmlIdentifierSeq xmlPhysicalLinkIdSeq = XmlIdentifierSeq.Factory.newInstance();
-		final XmlIdentifier xmlPhysicalLinkIds[] = new XmlIdentifier[physicalLinks1.size()];
-		int i = 0;
-		for (final PhysicalLink physicalLink : physicalLinks1) {
-			xmlPhysicalLinkIds[i++] = physicalLink.getId().getXmlTransferable(importType);
+		if (!physicalLinks1.isEmpty()) {
+			final XmlIdentifierSeq physicalLinkIdSeq = collector.addNewPhysicalLinkIds();
+			for (final PhysicalLink physicalLink : physicalLinks1) {
+				 physicalLink.getId().getXmlTransferable(physicalLinkIdSeq.addNewId(), importType);
+			}
 		}
-		xmlPhysicalLinkIdSeq.setIdArray(xmlPhysicalLinkIds);
-		xmlCollector.setPhysicalLinkIds(xmlPhysicalLinkIdSeq);
 
-		return xmlCollector;
+		return collector;
 	}
 
 	/**

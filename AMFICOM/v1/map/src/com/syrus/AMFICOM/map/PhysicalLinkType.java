@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.85 2005/09/12 00:10:49 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.86 2005/09/14 19:50:46 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.85 $, $Date: 2005/09/12 00:10:49 $
+ * @version $Revision: 1.86 $, $Date: 2005/09/14 19:50:46 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -336,16 +336,24 @@ public final class PhysicalLinkType extends StorableObjectType
 		this.sort = sort;
 	}
 
-	public XmlPhysicalLinkType getXmlTransferable(final String importType) {
-		final XmlPhysicalLinkType xmlPhysicalLinkType = XmlPhysicalLinkType.Factory.newInstance();
-		xmlPhysicalLinkType.setId(this.id.getXmlTransferable(importType));
-		xmlPhysicalLinkType.setName(this.name);
-		xmlPhysicalLinkType.setDescription(this.description);
-		xmlPhysicalLinkType.setSort(XmlPhysicalLinkTypeSort.Enum.forInt(this.sort.value() + 1));
+	/**
+	 * @param physicalLinkType
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 */
+	public XmlPhysicalLinkType getXmlTransferable(
+			final XmlPhysicalLinkType physicalLinkType,
+			final String importType)
+	throws ApplicationException {
+		this.id.getXmlTransferable(physicalLinkType.addNewId(), importType);
+		physicalLinkType.setName(this.name);
+		physicalLinkType.setDescription(this.description);
+		physicalLinkType.setSort(XmlPhysicalLinkTypeSort.Enum.forInt(this.sort.value() + 1));
 		
-		xmlPhysicalLinkType.setDimensionX(BigInteger.valueOf(this.getBindingDimension().getWidth()));
-		xmlPhysicalLinkType.setDimensionY(BigInteger.valueOf(this.getBindingDimension().getHeight()));
-		return xmlPhysicalLinkType;
+		physicalLinkType.setDimensionX(BigInteger.valueOf(this.getBindingDimension().getWidth()));
+		physicalLinkType.setDimensionY(BigInteger.valueOf(this.getBindingDimension().getHeight()));
+		return physicalLinkType;
 	}
 
 	/**

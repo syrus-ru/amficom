@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.20 2005/09/08 18:26:26 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.21 2005/09/14 19:50:48 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/09/08 18:26:26 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/14 19:50:48 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu extends StorableObject
@@ -209,9 +209,15 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param schemeOptimizeInfoRtu
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeOptimizeInfoRtu getXmlTransferable(final String importType) {
+	public XmlSchemeOptimizeInfoRtu getXmlTransferable(
+			final XmlSchemeOptimizeInfoRtu schemeOptimizeInfoRtu,
+			final String importType)
+	throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 

@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.49 2005/09/14 18:51:55 arseniy Exp $
+ * $Id: CharacteristicType.java,v 1.50 2005/09/14 19:50:50 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,16 +18,18 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicType;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypeHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristicType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/09/14 18:51:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.50 $, $Date: 2005/09/14 19:50:50 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 
-public final class CharacteristicType extends StorableObjectType implements Namable {
+public final class CharacteristicType extends StorableObjectType
+		implements Namable, XmlBeansTransferable<XmlCharacteristicType> {
 	private static final long serialVersionUID = 6153350736368296076L;
 
 	private String name;
@@ -85,6 +87,19 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 	}
 
 	/**
+	 * @param characteristicType
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 */
+	public void fromXmlTransferable(
+			final XmlCharacteristicType characteristicType,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * create new instance for client
 	 *
 	 * @param creatorId
@@ -138,6 +153,19 @@ public final class CharacteristicType extends StorableObjectType implements Nama
 				this.name,
 				this.dataType.getTransferable(orb),
 				CharacteristicTypeSort.from_int(this.sort));
+	}
+
+	/**
+	 * @param characteristicType
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 */
+	public XmlCharacteristicType getXmlTransferable(
+			final XmlCharacteristicType characteristicType,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
 	}
 
 	public DataType getDataType() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.61 2005/09/12 00:10:48 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.62 2005/09/14 19:50:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.61 $, $Date: 2005/09/12 00:10:48 $
+ * @version $Revision: 1.62 $, $Date: 2005/09/14 19:50:48 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort
@@ -278,9 +278,15 @@ public final class SchemeCablePort extends AbstractSchemePort
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param schemeCablePort
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeCablePort getXmlTransferable(final String importType) {
+	public XmlSchemeCablePort getXmlTransferable(
+			final XmlSchemeCablePort schemeCablePort,
+			final String importType)
+	throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 

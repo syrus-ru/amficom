@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.84 2005/09/12 00:10:48 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.85 2005/09/14 19:50:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -83,7 +83,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2005/09/12 00:10:48 $
+ * @version $Revision: 1.85 $, $Date: 2005/09/14 19:50:48 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -470,9 +470,15 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param schemeCableLink
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeCableLink getXmlTransferable(final String importType) {
+	public XmlSchemeCableLink getXmlTransferable(
+			final XmlSchemeCableLink schemeCableLink,
+			final String importType)
+	throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 

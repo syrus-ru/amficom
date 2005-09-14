@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.62 2005/09/12 13:24:10 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.63 2005/09/14 19:50:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.logic.Item;
@@ -57,14 +58,16 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoGroupHelper;
 import com.syrus.AMFICOM.scheme.logic.Library;
 import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElement;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElementSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroupSeq;
 import com.syrus.util.Log;
 
 /**
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.62 $, $Date: 2005/09/12 13:24:10 $
+ * @version $Revision: 1.63 $, $Date: 2005/09/14 19:50:48 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -496,10 +499,47 @@ public final class SchemeProtoGroup extends StorableObject
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param schemeProtoGroup
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeProtoGroup getXmlTransferable(final String importType) {
-		throw new UnsupportedOperationException();
+	public XmlSchemeProtoGroup getXmlTransferable(
+			final XmlSchemeProtoGroup schemeProtoGroup,
+			final String importType)
+	throws ApplicationException {
+		super.id.getXmlTransferable(schemeProtoGroup.addNewId(), importType);
+		schemeProtoGroup.setName(this.name);
+		if (this.description.length() == 0) {
+			schemeProtoGroup.unsetDescription();
+		} else {
+			schemeProtoGroup.setDescription(this.description);
+		}
+		schemeProtoGroup.unsetSymbolId();
+		if (!this.symbolId.isVoid()) {
+			this.symbolId.getXmlTransferable(schemeProtoGroup.addNewSymbolId(), importType);
+		}
+		schemeProtoGroup.unsetParentSchemeProtoGroupId();
+		if (!this.parentSchemeProtoGroupId.isVoid()) {
+			this.parentSchemeProtoGroupId.getXmlTransferable(schemeProtoGroup.addNewParentSchemeProtoGroupId(), importType);
+		}
+		schemeProtoGroup.unsetSchemeProtoGroups();
+		final Set<SchemeProtoGroup> schemeProtoGroups = this.getSchemeProtoGroups0();
+		if (!schemeProtoGroups.isEmpty()) {
+			final XmlSchemeProtoGroupSeq schemeProtoGroupSeq = schemeProtoGroup.addNewSchemeProtoGroups();
+			for (final SchemeProtoGroup schemeProtoGroup2 : schemeProtoGroups) {
+				schemeProtoGroup2.getXmlTransferable(schemeProtoGroupSeq.addNewSchemeProtoGroup(), importType);
+			}
+		}
+		schemeProtoGroup.unsetSchemeProtoElements();
+		final Set<SchemeProtoElement> schemeProtoElements = this.getSchemeProtoElements0();
+		if (!schemeProtoElements.isEmpty()) {
+			final XmlSchemeProtoElementSeq schemeProtoElementSeq = schemeProtoGroup.addNewSchemeProtoElements();
+			for (final SchemeProtoElement schemeProtoElement : schemeProtoElements) {
+				schemeProtoElement.getXmlTransferable(schemeProtoElementSeq.addNewSchemeProtoElement(), importType);
+			}
+		}
+		return schemeProtoGroup;
 	}
 
 	/**
@@ -756,6 +796,8 @@ public final class SchemeProtoGroup extends StorableObject
 			final XmlSchemeProtoGroup schemeProtoGroup,
 			final String importType)
 	throws ApplicationException {
+		XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType);
+
 		this.name = schemeProtoGroup.getName();
 		this.description = schemeProtoGroup.isSetDescription()
 				? schemeProtoGroup.getDescription()

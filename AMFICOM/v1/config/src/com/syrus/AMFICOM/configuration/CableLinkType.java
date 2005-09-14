@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.72 2005/09/12 12:57:33 bass Exp $
+ * $Id: CableLinkType.java,v 1.73 2005/09/14 19:50:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,6 @@ import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
-import java.util.LinkedList;
-import java.util.List;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -47,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/09/12 12:57:33 $
+ * @version $Revision: 1.73 $, $Date: 2005/09/14 19:50:49 $
  * @author $Author: bass $
  * @module config
  */
@@ -270,27 +268,34 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param cableLinkType
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
-	public XmlCableLinkType getXmlTransferable(final String importType) {
-		final XmlCableLinkType xmlCableLinkType = XmlCableLinkType.Factory.newInstance();
-		xmlCableLinkType.setId(this.id.getXmlTransferable(importType));
-		xmlCableLinkType.setName(this.name);
-		xmlCableLinkType.setCodename(this.codename);
-		xmlCableLinkType.setDescription(this.description);
-		xmlCableLinkType.setSort(XmlLinkTypeSort.Enum.forInt(this.sort));
-		xmlCableLinkType.setManufacturer(this.manufacturer);
-		xmlCableLinkType.setManufacturerCode(this.manufacturerCode);
+	public XmlCableLinkType getXmlTransferable(
+			final XmlCableLinkType cableLinkType,
+			final String importType)
+	throws ApplicationException {
+		super.id.getXmlTransferable(cableLinkType.addNewId(), importType);
+		cableLinkType.setName(this.name);
+		cableLinkType.setCodename(this.codename);
+		cableLinkType.setDescription(this.description);
+		cableLinkType.setSort(XmlLinkTypeSort.Enum.forInt(this.sort));
+		cableLinkType.setManufacturer(this.manufacturer);
+		cableLinkType.setManufacturerCode(this.manufacturerCode);
 		// TODO write image to file
-		
-		final List<XmlCableThreadType> xmlCableThreadTypeList = new LinkedList<XmlCableThreadType>();
-		for (final CableThreadType cableThreadType : this.getCableThreadTypes(true)) {
-			xmlCableThreadTypeList.add(cableThreadType.getXmlTransferable(importType));
+
+		cableLinkType.unsetCableThreadTypes();
+		final Set<CableThreadType> cableThreadTypes = this.getCableThreadTypes(true);
+		if (!cableThreadTypes.isEmpty()) {
+			final XmlCableThreadTypeSeq cableThreadTypeSeq = cableLinkType.addNewCableThreadTypes();
+			for (final CableThreadType cableThreadType : cableThreadTypes) {
+				cableThreadType.getXmlTransferable(cableThreadTypeSeq.addNewCableThreadType(), importType);
+			}
 		}
-		final XmlCableThreadTypeSeq xmlCableThreadTypes = xmlCableLinkType.addNewCableThreadTypes();
-		xmlCableThreadTypes.setCableThreadTypeArray(xmlCableThreadTypeList.toArray(new XmlCableThreadType[xmlCableThreadTypeList.size()]));
-		return xmlCableLinkType;
+		return cableLinkType;
 	}
 
 	@Override

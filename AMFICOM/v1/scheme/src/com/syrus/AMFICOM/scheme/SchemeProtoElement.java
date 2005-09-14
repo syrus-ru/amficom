@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.83 2005/09/12 13:24:10 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.84 2005/09/14 19:50:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -65,6 +65,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
@@ -85,7 +86,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/09/12 13:24:10 $
+ * @version $Revision: 1.84 $, $Date: 2005/09/14 19:50:48 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -924,9 +925,15 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param storableObject
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeProtoElement getXmlTransferable(final String importType) {
+	public XmlSchemeProtoElement getXmlTransferable(
+			final XmlSchemeProtoElement storableObject,
+			final String importType)
+	throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 
@@ -1440,6 +1447,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final XmlSchemeProtoElement schemeProtoElement,
 			final String importType)
 	throws ApplicationException {
+		XmlComplementorRegistry.complementStorableObject(schemeProtoElement, SCHEMEPROTOELEMENT_CODE, importType);
+
 		this.name = schemeProtoElement.getName();
 		this.description = schemeProtoElement.isSetDescription()
 				? schemeProtoElement.getDescription()

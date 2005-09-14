@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.77 2005/09/12 00:10:48 bass Exp $
+ * $Id: LinkType.java,v 1.78 2005/09/14 19:50:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/09/12 00:10:48 $
+ * @version $Revision: 1.78 $, $Date: 2005/09/14 19:50:49 $
  * @author $Author: bass $
  * @module config
  */
@@ -242,20 +242,24 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param linkType
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
-	public XmlLinkType getXmlTransferable(final String importType) {
-		final XmlLinkType xmlLinkType = XmlLinkType.Factory.newInstance();
-		xmlLinkType.setId(this.id.getXmlTransferable(importType));
-		xmlLinkType.setName(this.name);
-		xmlLinkType.setCodename(this.codename);
-		xmlLinkType.setDescription(this.description);
-		xmlLinkType.setSort(XmlLinkTypeSort.Enum.forInt(this.sort));
-		xmlLinkType.setManufacturer(this.manufacturer);
-		xmlLinkType.setManufacturerCode(this.manufacturerCode);
+	public XmlLinkType getXmlTransferable(final XmlLinkType linkType,
+			final String importType)
+	throws ApplicationException {
+		this.id.getXmlTransferable(linkType.addNewId(), importType);
+		linkType.setName(this.name);
+		linkType.setCodename(this.codename);
+		linkType.setDescription(this.description);
+		linkType.setSort(XmlLinkTypeSort.Enum.forInt(this.sort));
+		linkType.setManufacturer(this.manufacturer);
+		linkType.setManufacturerCode(this.manufacturerCode);
 		// TODO write image to file
-		return xmlLinkType;
+		return linkType;
 	}
 
 	@Override

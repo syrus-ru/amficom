@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.73 2005/09/13 08:35:41 bass Exp $
+ * $Id: PathElement.java,v 1.74 2005/09/14 19:50:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.73 $, $Date: 2005/09/13 08:35:41 $
+ * @version $Revision: 1.74 $, $Date: 2005/09/14 19:50:48 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -732,9 +732,15 @@ public final class PathElement extends StorableObject
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param pathElement
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlPathElement getXmlTransferable(final String importType) {
+	public XmlPathElement getXmlTransferable(
+			final XmlPathElement pathElement,
+			final String importType)
+	throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}
 

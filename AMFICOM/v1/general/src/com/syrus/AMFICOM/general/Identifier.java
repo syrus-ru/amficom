@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.70 2005/09/14 18:51:55 arseniy Exp $
+ * $Id: Identifier.java,v 1.71 2005/09/14 19:50:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.70 $, $Date: 2005/09/14 18:51:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.71 $, $Date: 2005/09/14 19:50:50 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -141,19 +141,18 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		return new IdlIdentifier(this.getIdentifierCode());
 	}
 
-	public XmlIdentifier getXmlTransferable(final String importType) {
+	public XmlIdentifier getXmlTransferable(final XmlIdentifier xmlId, final String importType) {
 		assert !this.isVoid() : NON_VOID_EXPECTED;
 
 		if (LocalXmlIdentifierPool.contains(this, importType)) {
-			return LocalXmlIdentifierPool.get(this, importType);
+			xmlId.setStringValue(LocalXmlIdentifierPool.get(this, importType).getStringValue());
+		} else {
+			xmlId.setStringValue(this.getIdentifierString());
+			assert !LocalXmlIdentifierPool.contains(xmlId, importType);
+			LocalXmlIdentifierPool.put(this, xmlId, importType);
 		}
 
-		final XmlIdentifier xmlId = XmlIdentifier.Factory.newInstance();
-		xmlId.setStringValue(this.getIdentifierString());
-
-		assert !LocalXmlIdentifierPool.contains(xmlId, importType);
-
-		LocalXmlIdentifierPool.put(this, xmlId, importType);
+		assert LocalXmlIdentifierPool.contains(xmlId, importType);
 
 		return xmlId;
 	}

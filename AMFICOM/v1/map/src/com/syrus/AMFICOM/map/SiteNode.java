@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.92 2005/09/12 00:10:49 bass Exp $
+ * $Id: SiteNode.java,v 1.93 2005/09/14 19:50:47 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.92 $, $Date: 2005/09/12 00:10:49 $
+ * @version $Revision: 1.93 $, $Date: 2005/09/14 19:50:47 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -326,22 +326,29 @@ public class SiteNode extends AbstractNode
 		}
 	}
 
-	public XmlSiteNode getXmlTransferable(final String importType) {
-		final XmlSiteNode xmlSiteNode = XmlSiteNode.Factory.newInstance();
-		xmlSiteNode.setId(this.id.getXmlTransferable(importType));
-		xmlSiteNode.setName(this.name);
-		xmlSiteNode.setDescription(this.description);
-		xmlSiteNode.setSiteNodeTypeCodename(this.getType().getCodename());
-		xmlSiteNode.setX(this.location.getX());
-		xmlSiteNode.setY(this.location.getY());
-		xmlSiteNode.setCity(this.city);
-		xmlSiteNode.setStreet(this.street);
-		xmlSiteNode.setBuilding(this.building);
-		if(this.attachmentSiteNodeId != null
-				&& !this.attachmentSiteNodeId.equals(Identifier.VOID_IDENTIFIER)) {
-			xmlSiteNode.setAttachmentSiteNodeId(this.attachmentSiteNodeId.getXmlTransferable(importType));
+	/**
+	 * @param siteNode
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 */
+	public final XmlSiteNode getXmlTransferable(final XmlSiteNode siteNode,
+			final String importType)
+	throws ApplicationException {
+		this.id.getXmlTransferable(siteNode.addNewId(), importType);
+		siteNode.setName(this.name);
+		siteNode.setDescription(this.description);
+		siteNode.setSiteNodeTypeCodename(this.getType().getCodename());
+		siteNode.setX(this.location.getX());
+		siteNode.setY(this.location.getY());
+		siteNode.setCity(this.city);
+		siteNode.setStreet(this.street);
+		siteNode.setBuilding(this.building);
+		if (this.attachmentSiteNodeId != null
+				&& !this.attachmentSiteNodeId.isVoid()) {
+			this.attachmentSiteNodeId.getXmlTransferable(siteNode.addNewAttachmentSiteNodeId(), importType);
 		}
-		return xmlSiteNode;
+		return siteNode;
 	}
 
 	/**
@@ -366,7 +373,7 @@ public class SiteNode extends AbstractNode
 		this.selected = false;
 	}
 
-	public void fromXmlTransferable(final XmlSiteNode xmlSiteNode,
+	public final void fromXmlTransferable(final XmlSiteNode xmlSiteNode,
 			final String importType)
 	throws ApplicationException {
 		this.name = xmlSiteNode.getName();

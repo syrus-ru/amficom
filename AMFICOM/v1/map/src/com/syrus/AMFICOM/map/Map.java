@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.92 2005/09/12 00:10:49 bass Exp $
+ * $Id: Map.java,v 1.93 2005/09/14 19:50:46 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,6 @@ import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
-
-import org.apache.xmlbeans.XmlObject;
 
 import org.omg.CORBA.ORB;
 
@@ -66,7 +64,7 @@ import com.syrus.util.Log;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.92 $, $Date: 2005/09/12 00:10:49 $
+ * @version $Revision: 1.93 $, $Date: 2005/09/14 19:50:46 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -1124,51 +1122,60 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		return returnLinks;
 	}
 
-	public XmlMap getXmlTransferable(final String importType) {
-		final XmlMap xmlMap = XmlMap.Factory.newInstance();
-		xmlMap.setId(this.id.getXmlTransferable(importType));
-		xmlMap.setName(this.name);
-		xmlMap.setDescription(this.description);
-
-		final XmlTopologicalNodeSeq xmlTopologicalNodes = xmlMap.addNewTopologicalNodes();
-		final XmlSiteNodeSeq xmlSiteNodes = xmlMap.addNewSiteNodes();
-		final XmlPhysicalLinkSeq xmlPhysicalLinks = xmlMap.addNewPhysicalLinks();
-		final XmlNodeLinkSeq xmlNodeLinks = xmlMap.addNewNodeLinks();
-		final XmlCollectorSeq xmlCollectors = xmlMap.addNewCollectors();
-
-		final Collection<XmlObject> xmlTopologicalNodesArray = new LinkedList<XmlObject>();
-		for (final TopologicalNode topologicalNode : this.getTopologicalNodes()) {
-			xmlTopologicalNodesArray.add(topologicalNode.getXmlTransferable(importType));
+	/**
+	 * @param map
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 */
+	public XmlMap getXmlTransferable(final XmlMap map,
+			final String importType)
+	throws ApplicationException {
+		this.id.getXmlTransferable(map.addNewId(), importType);
+		map.setName(this.name);
+		map.setDescription(this.description);
+		map.unsetTopologicalNodes();
+		final Set<TopologicalNode> topologicalNodes2 = this.getTopologicalNodes();
+		if (!topologicalNodes2.isEmpty()) {
+			final XmlTopologicalNodeSeq topologicalNodeSeq = map.addNewTopologicalNodes();
+			for (final TopologicalNode topologicalNode : topologicalNodes2) {
+				topologicalNode.getXmlTransferable(topologicalNodeSeq.addNewTopologicalNode(), importType);
+			}
 		}
-		xmlTopologicalNodes.setTopologicalNodeArray(xmlTopologicalNodesArray.toArray(new XmlTopologicalNode[xmlTopologicalNodesArray.size()]));
-
-		final Collection<XmlObject> xmlSiteNodesArray = new LinkedList<XmlObject>();
-		for (final SiteNode siteNode : this.getSiteNodes()) {
-			xmlSiteNodesArray.add(siteNode.getXmlTransferable(importType));
+		map.unsetSiteNodes();
+		final Set<SiteNode> siteNodes2 = this.getSiteNodes();
+		if (!siteNodes2.isEmpty()) {
+			final XmlSiteNodeSeq siteNodeSeq = map.addNewSiteNodes();
+			for (final SiteNode siteNode : siteNodes2) {
+				siteNode.getXmlTransferable(siteNodeSeq.addNewSiteNode(), importType);
+			}
 		}
-		xmlSiteNodes.setSiteNodeArray(xmlSiteNodesArray.toArray(new XmlSiteNode[xmlSiteNodesArray.size()]));
-
-		final Collection<XmlObject> xmlPhysicalLinksArray = new LinkedList<XmlObject>();
-		for (final PhysicalLink physicalLink : this.getPhysicalLinks()) {
-			xmlPhysicalLinksArray.add(physicalLink.getXmlTransferable(importType));
+		map.unsetPhysicalLinks();
+		final Set<PhysicalLink> physicalLinks2 = this.getPhysicalLinks();
+		if (!physicalLinks2.isEmpty()) {
+			final XmlPhysicalLinkSeq physicalLinkSeq = map.addNewPhysicalLinks();
+			for (final PhysicalLink physicalLink : physicalLinks2) {
+				physicalLink.getXmlTransferable(physicalLinkSeq.addNewPhysicalLink(), importType);
+			}
 		}
-		xmlPhysicalLinks.setPhysicalLinkArray(xmlPhysicalLinksArray.toArray(new XmlPhysicalLink[xmlPhysicalLinksArray.size()]));
-
-		final Collection<XmlObject> xmlNodeLinksArray = new LinkedList<XmlObject>();
-		for (final NodeLink nodeLink : this.getNodeLinks()) {
-			xmlNodeLinksArray.add(nodeLink.getXmlTransferable(importType));
+		map.unsetNodeLinks();
+		final Set<NodeLink> nodeLinks2 = this.getNodeLinks();
+		if (!nodeLinks2.isEmpty()) {
+			final XmlNodeLinkSeq nodeLinkSeq = map.addNewNodeLinks();
+			for (final NodeLink nodeLink : nodeLinks2) {
+				nodeLink.getXmlTransferable(nodeLinkSeq.addNewNodeLink(), importType);
+			}
 		}
-		xmlNodeLinks.setNodeLinkArray(xmlNodeLinksArray.toArray(new XmlNodeLink[xmlNodeLinksArray.size()]));
-
-		final Collection<XmlObject> xmlCollectorsArray = new LinkedList<XmlObject>();
-		for (final Collector collector : this.getCollectors()) {
-			xmlCollectorsArray.add(collector.getXmlTransferable(importType));
+		map.unsetCollectors();
+		final Set<Collector> collectors2 = this.getCollectors();
+		if (!collectors2.isEmpty()) {
+			final XmlCollectorSeq collectorSeq = map.addNewCollectors();
+			for (final Collector collector : collectors2) {
+				collector.getXmlTransferable(collectorSeq.addNewCollector(), importType);
+			}
 		}
-		xmlCollectors.setCollectorArray(xmlCollectorsArray.toArray(new XmlCollector[xmlCollectorsArray.size()]));
-
-		xmlMap.setImportType(importType);
-
-		return xmlMap;
+		map.setImportType(importType);
+		return map;
 	}
 
 	/**

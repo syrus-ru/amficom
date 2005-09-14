@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.62 2005/09/14 18:51:55 arseniy Exp $
+ * $Id: Characteristic.java,v 1.63 2005/09/14 19:50:50 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,13 +22,15 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/09/14 18:51:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.63 $, $Date: 2005/09/14 19:50:50 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
 public final class Characteristic extends AbstractCloneableStorableObject
-		implements TypedObject<CharacteristicType>, ReverseDependencyContainer {
+		implements TypedObject<CharacteristicType>,
+		ReverseDependencyContainer,
+		XmlBeansTransferable<XmlCharacteristic> {
 	private static final long serialVersionUID = -2746555753961778403L;
 
 	private CharacteristicType type;
@@ -178,6 +180,18 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @param characteristic
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#fromXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 */
+	public void fromXmlTransferable(final XmlCharacteristic characteristic,
+			final String importType)
+	throws ApplicationException {
+		throw new UnsupportedOperationException();
+	}
+
+	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
 	@Override
@@ -201,11 +215,14 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	}
 
 	/**
+	 * @param characteristic
 	 * @param importType
 	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	@SuppressWarnings("unused")
-	public XmlCharacteristic getXmlTransferable(final String importType)
+	public XmlCharacteristic getXmlTransferable(
+			final XmlCharacteristic characteristic,
+			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();
 	}

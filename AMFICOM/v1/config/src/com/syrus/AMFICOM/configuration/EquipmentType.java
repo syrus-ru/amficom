@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.90 2005/09/14 18:42:07 arseniy Exp $
+ * $Id: EquipmentType.java,v 1.91 2005/09/14 19:50:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/09/14 18:42:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.91 $, $Date: 2005/09/14 19:50:49 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -224,18 +224,22 @@ public final class EquipmentType extends StorableObjectType implements Character
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param equipmentType
+	 * @param importType
+	 * @throws ApplicationException
 	 */
 	@Shitlet
-	public XmlEquipmentType getXmlTransferable(final String importType) {
-		final XmlEquipmentType xmlEquipmentType = XmlEquipmentType.Factory.newInstance();
-		xmlEquipmentType.setId(this.id.getXmlTransferable(importType));
-		xmlEquipmentType.setName(this.name);
-		xmlEquipmentType.setCodename(this.codename);
-		xmlEquipmentType.setDescription(this.description);
-		xmlEquipmentType.setManufacturer(this.manufacturer);
-		xmlEquipmentType.setManufacturerCode(this.manufacturerCode);
-		return xmlEquipmentType;
+	public XmlEquipmentType getXmlTransferable(
+			final XmlEquipmentType equipmentType,
+			final String importType)
+	throws ApplicationException {
+		this.id.getXmlTransferable(equipmentType.addNewId(), importType);
+		equipmentType.setName(this.name);
+		equipmentType.setCodename(this.codename);
+		equipmentType.setDescription(this.description);
+		equipmentType.setManufacturer(this.manufacturer);
+		equipmentType.setManufacturerCode(this.manufacturerCode);
+		return equipmentType;
 	}
 
 	protected synchronized void setAttributes(final Date created,

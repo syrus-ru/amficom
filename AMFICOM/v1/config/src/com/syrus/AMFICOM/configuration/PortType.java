@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.87 2005/09/14 18:42:07 arseniy Exp $
+ * $Id: PortType.java,v 1.88 2005/09/14 19:50:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.87 $, $Date: 2005/09/14 18:42:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.88 $, $Date: 2005/09/14 19:50:49 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -226,18 +226,22 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	}
 
 	/**
-	 * @see XmlBeansTransferable#getXmlTransferable(String)
+	 * @param portType
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
-	public XmlPortType getXmlTransferable(final String importType) {
-		final XmlPortType xmlPortType = XmlPortType.Factory.newInstance();
-		xmlPortType.setId(this.id.getXmlTransferable(importType));
-		xmlPortType.setName(this.name);
-		xmlPortType.setCodename(this.codename);
-		xmlPortType.setDescription(this.description);
-		xmlPortType.setSort(XmlPortTypeSort.Enum.forInt(this.sort));
-		xmlPortType.setKind(XmlPortTypeKind.Enum.forInt(this.kind));
-		return xmlPortType;
+	public XmlPortType getXmlTransferable(final XmlPortType portType,
+			final String importType)
+	throws ApplicationException {
+		this.id.getXmlTransferable(portType.addNewId(), importType);
+		portType.setName(this.name);
+		portType.setCodename(this.codename);
+		portType.setDescription(this.description);
+		portType.setSort(XmlPortTypeSort.Enum.forInt(this.sort));
+		portType.setKind(XmlPortTypeKind.Enum.forInt(this.kind));
+		return portType;
 	}
 
 	protected synchronized void setAttributes(final Date created,

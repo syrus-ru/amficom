@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.89 2005/09/12 00:10:49 bass Exp $
+ * $Id: NodeLink.java,v 1.90 2005/09/14 19:50:47 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2005/09/12 00:10:49 $
+ * @version $Revision: 1.90 $, $Date: 2005/09/14 19:50:47 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -441,15 +441,21 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 		return dependencies;
 	}
 
-	public XmlNodeLink getXmlTransferable(final String importType) {
-		final XmlNodeLink xmlNodeLink = XmlNodeLink.Factory.newInstance();
-		xmlNodeLink.setId(this.id.getXmlTransferable(importType));
-		xmlNodeLink.setLength(this.length);
-		xmlNodeLink.setPhysicalLinkId(this.physicalLinkId.getXmlTransferable(importType));
-		xmlNodeLink.setStartNodeId(this.startNodeId.getXmlTransferable(importType));
-		xmlNodeLink.setEndNodeId(this.endNodeId.getXmlTransferable(importType));
-		
-		return xmlNodeLink;
+	/**
+	 * @param nodeLink
+	 * @param importType
+	 * @throws ApplicationException
+	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
+	 */
+	public XmlNodeLink getXmlTransferable(final XmlNodeLink nodeLink,
+			final String importType)
+	throws ApplicationException {
+		this.id.getXmlTransferable(nodeLink.addNewId(), importType);
+		nodeLink.setLength(this.length);
+		this.physicalLinkId.getXmlTransferable(nodeLink.addNewPhysicalLinkId(), importType);
+		this.startNodeId.getXmlTransferable(nodeLink.addNewStartNodeId(), importType);
+		this.endNodeId.getXmlTransferable(nodeLink.addNewEndNodeId(), importType);
+		return nodeLink;
 	}
 
 	/**
