@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationProperties.java,v 1.12 2005/07/16 21:40:20 arseniy Exp $
+ * $Id: ApplicationProperties.java,v 1.13 2005/09/14 18:28:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,12 @@ import java.io.IOException;
 import java.util.PropertyResourceBundle;
 import java.util.ResourceBundle;
 
+/**
+ * @version $Revision: 1.13 $, $Date: 2005/09/14 18:28:26 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
+ * @module util
+ */
 public class ApplicationProperties {
 	public static final String COMMON_FILE_NAME = "common";
 	public static final String FILE_EXTENSION = "properties";

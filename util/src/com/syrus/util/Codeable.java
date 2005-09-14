@@ -1,5 +1,5 @@
 /*-
- * $Id: Codeable.java,v 1.1 2005/08/28 13:45:41 arseniy Exp $
+ * $Id: Codeable.java,v 1.2 2005/09/14 18:28:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,9 @@
 package com.syrus.util;
 
 /**
- * @version $Revision: 1.1 $, $Date: 2005/08/28 13:45:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/14 18:28:26 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
 public interface Codeable {

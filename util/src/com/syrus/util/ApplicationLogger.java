@@ -1,5 +1,5 @@
 /*
- * $Id: ApplicationLogger.java,v 1.11 2005/07/11 10:24:30 bass Exp $
+ * $Id: ApplicationLogger.java,v 1.12 2005/09/14 18:28:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,12 @@
 
 package com.syrus.util;
 
+/**
+ * @version $Revision: 1.12 $, $Date: 2005/09/14 18:28:26 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
+ * @module util
+ */
 public final class ApplicationLogger extends AbstractLogger {
 	public ApplicationLogger(String appName, String hostName) {
 		super(appName, hostName);

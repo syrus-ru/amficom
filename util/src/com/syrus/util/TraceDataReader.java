@@ -1,5 +1,5 @@
 /*
- * $Id: TraceDataReader.java,v 1.4 2005/05/18 10:49:17 bass Exp $
+ * $Id: TraceDataReader.java,v 1.5 2005/09/14 18:28:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,12 @@
 
 package com.syrus.util;
 
+/**
+ * @version $Revision: 1.5 $, $Date: 2005/09/14 18:28:26 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
+ * @module util
+ */
 public class TraceDataReader {
 	static {
 		System.loadLibrary("TraceData");

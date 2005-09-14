@@ -1,5 +1,5 @@
 /*
- * $Id: ByteArray.java,v 1.14 2005/07/06 12:15:16 arseniy Exp $
+ * $Id: ByteArray.java,v 1.15 2005/09/14 18:28:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,12 @@ import java.io.IOException;
 import java.util.LinkedList;
 import java.util.List;
 
+/**
+ * @version $Revision: 1.15 $, $Date: 2005/09/14 18:28:26 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
+ * @module util
+ */
 public class ByteArray {
   private byte[] bar = null;
 

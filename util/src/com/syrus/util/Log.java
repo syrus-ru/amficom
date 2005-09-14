@@ -1,5 +1,5 @@
 /*
- * $Id: Log.java,v 1.11 2005/07/11 10:24:30 bass Exp $
+ * $Id: Log.java,v 1.12 2005/09/14 18:28:26 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,9 @@ import java.util.Map;
 import java.util.logging.Level;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/07/11 10:24:30 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/14 18:28:26 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
 public class Log {

@@ -1,5 +1,5 @@
 /*-
- * $Id: Logger.java,v 1.4 2005/07/11 07:53:55 bass Exp $
+ * $Id: Logger.java,v 1.5 2005/09/14 18:28:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,8 +11,9 @@ package com.syrus.util;
 import java.util.logging.Level;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/07/11 07:53:55 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/14 18:28:26 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
 public interface Logger {
