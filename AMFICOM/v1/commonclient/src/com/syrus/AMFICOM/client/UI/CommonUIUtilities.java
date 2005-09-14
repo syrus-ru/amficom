@@ -26,12 +26,14 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
+import com.syrus.AMFICOM.client.launcher.Launcher;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.Item;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/08 14:27:56 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/14 09:08:07 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -179,8 +181,14 @@ public final class CommonUIUtilities {
 
 					@Override
 					public void run() {
-						doRun.run();
+						try {
+							doRun.run();
+						} catch(final Throwable throwable) {
+							// too unlikely 
+							new Launcher.DefaultThrowableHandler(LangModelGeneral.getString("Error")).handle(throwable);
+						}
 					}
+					
 				};
 				targetThread.start();
 
