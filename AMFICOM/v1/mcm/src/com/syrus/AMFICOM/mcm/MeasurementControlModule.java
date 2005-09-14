@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.123 2005/09/09 18:04:39 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.124 2005/09/14 18:06:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.123 $, $Date: 2005/09/09 18:04:39 $
+ * @version $Revision: 1.124 $, $Date: 2005/09/14 18:06:37 $
  * @author $Author: arseniy $
  * @module mcm
  */
@@ -273,7 +273,6 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		final LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.TEST_CODE);
 
 		tc = new TypicalCondition(TestStatus._TEST_STATUS_SCHEDULED,
-				0,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_STATUS);
@@ -296,7 +295,6 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}
 
 		tc = new TypicalCondition(TestStatus._TEST_STATUS_PROCESSING,
-				0,
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_STATUS);
@@ -428,6 +426,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				final Test test = (Test) StorableObjectPool.getStorableObject(id, true);
 				if (test != null) {
 					stopTest(test);
+					test.setStatus(TestStatus.TEST_STATUS_STOPPED);
 				} else {
 					Log.errorMessage("MeasurementControlModule.abortTests | Test '" + id + "' not found");
 				}
@@ -450,11 +449,9 @@ final class MeasurementControlModule extends SleepButWorkThread {
 			testList.remove(test);
 		} else if (testProcessors.containsKey(id)) {
 			Log.debugMessage("Test '" + id + "' has test processor -- shutting down", Log.DEBUGLEVEL07);
-			TestProcessor testProcessor = testProcessors.get(id);
+			final TestProcessor testProcessor = testProcessors.get(id);
 			testProcessor.stopTest();
 		}
-
-		test.setStatus(TestStatus.TEST_STATUS_STOPPED);
 	}
 
 	@Override
@@ -471,6 +468,10 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		this.running = false;
 		for (final Identifier kisId : transceivers.keySet()) {
 			transceivers.get(kisId).shutdown();
+		}
+		for (final Identifier testId : testProcessors.keySet()) {
+			final TestProcessor testProcessor = testProcessors.get(testId);
+			testProcessor.shutdown();
 		}
 
 		DatabaseConnection.closeConnection();
