@@ -10,7 +10,7 @@ import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/14 05:12:06 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/14 05:21:46 $
  * @author $Author: bob $
  * @module commonclient
  */
@@ -150,9 +150,8 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 			this.names = new String[keys.length];
 			this.values = new Object[keys.length];
 		} else {
-			for(int i = 0; i < oldKeysSize; i++) {
+			for(int i = oldKeysSize; i < keys.length; i++) {
 				this.names[i] = null;
-				this.values[i] = null;
 			}
 		}
 		for(int i = 0; i < keys.length; i++) {			
@@ -164,8 +163,10 @@ public class WrapperedPropertyTableModel<T> extends AbstractTableModel {
 	@Override
 	public void fireTableDataChanged() {
 		super.fireTableDataChanged();
-		for(int i = 0; i < this.values.length; i++) {
-			this.values[i] = null;
+		if (this.values != null) {
+			for(int i = 0; i < this.values.length; i++) {
+				this.values[i] = null;
+			}
 		}
 	}
 	
