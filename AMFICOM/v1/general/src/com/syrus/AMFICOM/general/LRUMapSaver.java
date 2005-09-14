@@ -1,5 +1,5 @@
 /*-
- * $Id: LRUMapSaver.java,v 1.5 2005/09/08 10:56:49 arseniy Exp $
+ * $Id: LRUMapSaver.java,v 1.6 2005/09/14 16:42:21 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.general;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.util.Collections;
 import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
@@ -18,7 +19,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/08 10:56:49 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/14 16:42:21 $
  * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module general
@@ -46,7 +47,7 @@ public class LRUMapSaver extends AbstractLRUMapSaver {
 		} catch (final ApplicationException ae) {
 			Log.errorMessage("LRUMapSaver.load | Error: " + ae.getMessage());
 		}
-		return null;
+		return Collections.emptySet();
 	}
 
 	@Override
