@@ -103,84 +103,84 @@ public class AlarmFrame extends JInternalFrame implements
 			}
 		});
 
-		table.getSelectionModel().setSelectionMode(
+		this.table.getSelectionModel().setSelectionMode(
 				ListSelectionModel.SINGLE_INTERVAL_SELECTION);
-		table.getSelectionModel().addListSelectionListener(
+		this.table.getSelectionModel().addListSelectionListener(
 				new ListSelectionListener() {
 					public void valueChanged(ListSelectionEvent e) {
 						alarmTable_valueChanged(e);
 					}
 				});
 
-		actionPanel.setLayout(new FlowLayout());
-		buttonAcknowledge.setText("Подтвердить");
-		buttonAcknowledge.addActionListener(new ActionListener() {
+		this.actionPanel.setLayout(new FlowLayout());
+		this.buttonAcknowledge.setText("Подтвердить");
+		this.buttonAcknowledge.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonAcknowledge_actionPerformed(e);
 			}
 		});
-		buttonFix.setText("Снять");
-		buttonFix.addActionListener(new ActionListener() {
+		this.buttonFix.setText("Снять");
+		this.buttonFix.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonFix_actionPerformed(e);
 			}
 		});
-		buttonClose.setText("Закрыть");
-		buttonClose.addActionListener(new ActionListener() {
+		this.buttonClose.setText("Закрыть");
+		this.buttonClose.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonClose_actionPerformed(e);
 			}
 		});
-		buttonRefresh.setText("Обновить");
-		buttonRefresh.addActionListener(new ActionListener() {
+		this.buttonRefresh.setText("Обновить");
+		this.buttonRefresh.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonRefresh_actionPerformed(e);
 			}
 		});
-		buttonDelete.setText("Удалить");
-		buttonDelete.addActionListener(new ActionListener() {
+		this.buttonDelete.setText("Удалить");
+		this.buttonDelete.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonDelete_actionPerformed(e);
 			}
 		});
-		filterButton.setText("Фильтр");
-		filterButton.addActionListener(new ActionListener() {
+		this.filterButton.setText("Фильтр");
+		this.filterButton.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				filterButton_actionPerformed(e);
 			}
 		});
-		buttonDescribe.setText("Описание");
-		buttonDescribe.addActionListener(new ActionListener() {
+		this.buttonDescribe.setText("Описание");
+		this.buttonDescribe.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				buttonDescribe_actionPerformed(e);
 			}
 		});
 
 		// this.getContentPane().add(toolBar, BorderLayout.NORTH);
-		this.getContentPane().add(table, BorderLayout.CENTER);
-		actionPanel.add(buttonAcknowledge);
-		actionPanel.add(buttonFix);
-		actionPanel.add(buttonDelete);
-		actionPanel.add(filterButton);
-		actionPanel.add(buttonDescribe);
-		actionPanel.add(buttonClose);
-		actionPanel.add(buttonRefresh);
-		this.getContentPane().add(actionPanel, BorderLayout.SOUTH);
+		this.getContentPane().add(this.table, BorderLayout.CENTER);
+		this.actionPanel.add(this.buttonAcknowledge);
+		this.actionPanel.add(this.buttonFix);
+		this.actionPanel.add(this.buttonDelete);
+		this.actionPanel.add(this.filterButton);
+		this.actionPanel.add(this.buttonDescribe);
+		this.actionPanel.add(this.buttonClose);
+		this.actionPanel.add(this.buttonRefresh);
+		this.getContentPane().add(this.actionPanel, BorderLayout.SOUTH);
 	}
 
 	public void init_module() {
-		initial_init = false;
+		this.initial_init = false;
 		System.out.println("this file ");
-		ApplicationModel aModel = aContext.getApplicationModel();
+		ApplicationModel aModel = this.aContext.getApplicationModel();
 
 		aModel.fireModelChanged("");
 
 		updateContents();
 
-		buttonAcknowledge.setEnabled(false);
-		buttonFix.setEnabled(false);
-		buttonDelete.setEnabled(false);
-		buttonDescribe.setEnabled(false);
+		this.buttonAcknowledge.setEnabled(false);
+		this.buttonFix.setEnabled(false);
+		this.buttonDelete.setEnabled(false);
+		this.buttonDescribe.setEnabled(false);
 	}
 
 	public void setContext(ApplicationContext aContext) {
@@ -208,12 +208,12 @@ public class AlarmFrame extends JInternalFrame implements
 			// TODO use ObjectEntities.ALARM_CODE
 			StorableObjectCondition condition = new EquivalentCondition(ObjectEntities.UPDIKE_CODE);
 			Set<Alarm> alarms = StorableObjectPool.<Alarm>getStorableObjectsByCondition(condition , true);
-			model.setValues(alarms);
+			this.model.setValues(alarms);
 
-			buttonAcknowledge.setEnabled(false);
-			buttonFix.setEnabled(false);
-			buttonDelete.setEnabled(false);
-			buttonDescribe.setEnabled(false);
+			this.buttonAcknowledge.setEnabled(false);
+			this.buttonFix.setEnabled(false);
+			this.buttonDelete.setEnabled(false);
+			this.buttonDescribe.setEnabled(false);
 		} catch(ApplicationException e) {
 			e.printStackTrace();
 		}
@@ -225,14 +225,14 @@ public class AlarmFrame extends JInternalFrame implements
 
 		ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 		if(lsm.isSelectionEmpty()) {
-			buttonAcknowledge.setEnabled(false);
-			buttonFix.setEnabled(false);
-			buttonDelete.setEnabled(false);
-			buttonDescribe.setEnabled(false);
+			this.buttonAcknowledge.setEnabled(false);
+			this.buttonFix.setEnabled(false);
+			this.buttonDelete.setEnabled(false);
+			this.buttonDescribe.setEnabled(false);
 			// no rows are selected
 		}
 		else {
-			Alarm alarm = (Alarm) model.getObject(table.getSelectedRow());
+			Alarm alarm = (Alarm) this.model.getObject(this.table.getSelectedRow());
 /*
 			Pool.put("activecontext", "useractionselected", "alarm_selected");
 			Pool.put("activecontext", "selected_id", alarm.getId());
@@ -328,7 +328,7 @@ public class AlarmFrame extends JInternalFrame implements
 	}
 
 	void this_componentShown(ComponentEvent e) {
-		if(initial_init)
+		if(this.initial_init)
 			init_module();
 	}
 
@@ -349,7 +349,7 @@ public class AlarmFrame extends JInternalFrame implements
 	}
 
 	void buttonDescribe_actionPerformed(ActionEvent e) {
-		Alarm alarm = (Alarm) model.getObject(table.getSelectedRow());
+		Alarm alarm = (Alarm) this.model.getObject(this.table.getSelectedRow());
 /*
 		AlarmDescriptor ad = null;
 		if(alarm.type_id.equals("rtutestalarm")
@@ -391,11 +391,11 @@ public class AlarmFrame extends JInternalFrame implements
 	}
 
 	void buttonAcknowledge_actionPerformed(ActionEvent e) {
-		int mini = table.getSelectionModel().getMinSelectionIndex();
-		int maxi = table.getSelectionModel().getMaxSelectionIndex();
+		int mini = this.table.getSelectionModel().getMinSelectionIndex();
+		int maxi = this.table.getSelectionModel().getMaxSelectionIndex();
 		Alarm[] alarms = new Alarm[maxi - mini + 1];
 		for(int i = 0; i + mini < maxi + 1; i++)
-			alarms[i] = (Alarm) model.getObject(i + mini);
+			alarms[i] = (Alarm) this.model.getObject(i + mini);
 /*
 		for(int i = 0; i < alarms.length; i++) {
 			alarms[i].status = AlarmStatus.ALARM_STATUS_ASSIGNED;
@@ -408,11 +408,11 @@ public class AlarmFrame extends JInternalFrame implements
 	}
 
 	void buttonFix_actionPerformed(ActionEvent e) {
-		int mini = table.getSelectionModel().getMinSelectionIndex();
-		int maxi = table.getSelectionModel().getMaxSelectionIndex();
+		int mini = this.table.getSelectionModel().getMinSelectionIndex();
+		int maxi = this.table.getSelectionModel().getMaxSelectionIndex();
 		Alarm[] alarms = new Alarm[maxi - mini + 1];
 		for(int i = 0; i + mini < maxi + 1; i++)
-			alarms[i] = (Alarm) model.getObject(i + mini);
+			alarms[i] = (Alarm) this.model.getObject(i + mini);
 /*
 		for(int i = 0; i < alarms.length; i++) {
 			alarms[i].status = AlarmStatus.ALARM_STATUS_FIXED;
@@ -425,11 +425,11 @@ public class AlarmFrame extends JInternalFrame implements
 	}
 
 	void buttonDelete_actionPerformed(ActionEvent e) {
-		int mini = table.getSelectionModel().getMinSelectionIndex();
-		int maxi = table.getSelectionModel().getMaxSelectionIndex();
+		int mini = this.table.getSelectionModel().getMinSelectionIndex();
+		int maxi = this.table.getSelectionModel().getMaxSelectionIndex();
 		Alarm[] alarms = new Alarm[maxi - mini + 1];
 		for(int i = 0; i + mini < maxi + 1; i++)
-			alarms[i] = (Alarm) model.getObject(i + mini);
+			alarms[i] = (Alarm) this.model.getObject(i + mini);
 /*
 		for(int i = 0; i < alarms.length; i++) {
 			alarms[i].status = AlarmStatus.ALARM_STATUS_DELETED;

@@ -1,7 +1,5 @@
 package com.syrus.AMFICOM.client.observer;
 
-import java.awt.Dimension;
-
 import javax.swing.JButton;
 import javax.swing.UIManager;
 

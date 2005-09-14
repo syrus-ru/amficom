@@ -55,6 +55,7 @@ import com.syrus.AMFICOM.client_.scheme.ui.SchemeEventHandler;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeSelectionListener;
 import com.syrus.AMFICOM.filter.UI.FilterPanel;
 import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
+import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.resource.LangModelObserver;
 import com.syrus.AMFICOM.resource.ObserverResourceKeys;
 import com.syrus.util.Log;
@@ -179,11 +180,12 @@ public class ObserverMainFrame extends AbstractMainFrame {
 
 				new SchemeTreeSelectionListener(iconedTreeUI, ObserverMainFrame.this.aContext);
 
+				ItemTreeModel treeModel = iconedTreeUI.getTreeUI().getTreeModel();
 				MapViewTreeEventHandler mapViewTreeEventHandler = new MapViewTreeEventHandler(
 						iconedTreeUI, 
 						ObserverMainFrame.this.aContext, 
 						MapViewTreeModel.getInstance(), 
-						model.getRoot());
+						iconedTreeUI.findNode(model.getRoot(), MapViewTreeModel.MAP_VIEW_TREE_ROOT, false));
 				tree.addTreeSelectionListener(mapViewTreeEventHandler);
 				tree.addTreeWillExpandListener(mapViewTreeEventHandler);
 				tree.addMouseListener(new MapViewTreeMouseListener(tree, ObserverMainFrame.this.aContext));

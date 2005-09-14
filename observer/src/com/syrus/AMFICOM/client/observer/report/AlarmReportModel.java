@@ -2,10 +2,11 @@ package com.syrus.AMFICOM.client.observer.report;
 
 import java.util.Collection;
 
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
-import com.syrus.AMFICOM.report.StorableElement;
+import com.syrus.AMFICOM.report.DataStorableElement;
 
 /**
  * <p>Title: </p>
@@ -19,7 +20,8 @@ import com.syrus.AMFICOM.report.StorableElement;
 public class AlarmReportModel extends ReportModel {
 
 	@Override
-	public RenderingComponent createReport(StorableElement element, Object data) throws CreateReportException {
+	public RenderingComponent createReport(DataStorableElement element, Object data, ApplicationContext aContext) throws CreateReportException {
+		// TODO Auto-generated method stub
 		return null;
 	}
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultFrame.java,v 1.2 2005/09/11 19:30:50 krupenn Exp $
+ * $Id: ResultFrame.java,v 1.3 2005/09/14 11:17:00 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,7 +35,6 @@ import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Lang.LangModelAnalyse;
 import com.syrus.AMFICOM.analysis.SimpleApplicationException;
 import com.syrus.AMFICOM.analysis.dadara.AnalysisResult;
-import com.syrus.AMFICOM.analysis.dadara.DataFormatException;
 import com.syrus.AMFICOM.analysis.dadara.DataStreamableUtil;
 import com.syrus.AMFICOM.analysis.dadara.ReflectogramMismatch;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
@@ -61,11 +60,12 @@ import com.syrus.AMFICOM.measurement.Result;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.resource.LangModelObserver;
 import com.syrus.io.BellcoreStructure;
+import com.syrus.io.DataFormatException;
 import com.syrus.util.Log;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.2 $, $Date: 2005/09/11 19:30:50 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/14 11:17:00 $
  * @module surveyclient_v1
  */
 
