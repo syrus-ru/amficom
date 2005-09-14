@@ -1,5 +1,5 @@
 /*
-* $Id: AbstractDatabaseTypicalCondition.java,v 1.12 2005/09/14 14:04:10 arseniy Exp $
+* $Id: AbstractDatabaseTypicalCondition.java,v 1.13 2005/09/14 14:05:33 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -35,7 +35,7 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/14 14:04:10 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/14 14:05:33 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -230,7 +230,7 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 				}
 				break;
 			case TypicalSort._TYPE_STRING:
-				String v = this.condition.getValue().toString();
+				final String v = this.condition.getValue().toString();
 				buffer.append(this.getColumnName());
 				switch (this.condition.getOperation().value()) {
 					case OperationSort._OPERATION_EQUALS:
@@ -261,8 +261,8 @@ public abstract class AbstractDatabaseTypicalCondition implements DatabaseStorab
 				break;
 			case TypicalSort._TYPE_DATE:
 				buffer.append(this.getColumnName());
-				Date date1 = (Date) this.condition.getValue();
-				Date date2 = (Date) this.condition.getOtherValue();
+				final Date date1 = (Date) this.condition.getValue();
+				final Date date2 = (Date) this.condition.getOtherValue();
 				switch (this.condition.getOperation().value()) {
 					case OperationSort._OPERATION_EQUALS:
 						buffer.append(EQUALS);
