@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerPoolContext.java,v 1.13 2005/09/07 14:27:49 arseniy Exp $
+ * $Id: CMServerPoolContext.java,v 1.14 2005/09/14 18:16:05 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,9 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/07 14:27:49 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/14 18:16:05 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
 final class CMServerPoolContext implements PoolContext {

@@ -1,5 +1,5 @@
 /*
- * $Id: MCMImpl.java,v 1.4 2005/09/05 20:58:56 arseniy Exp $
+ * $Id: MCMImpl.java,v 1.5 2005/09/14 18:13:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,8 +28,9 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/05 20:58:56 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/14 18:13:47 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 

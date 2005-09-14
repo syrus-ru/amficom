@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.66 2005/09/01 12:14:37 saa Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.67 2005/09/14 18:13:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,8 +9,9 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/09/01 12:14:37 $
- * @author $Author: saa $
+ * @version $Revision: 1.67 $, $Date: 2005/09/14 18:13:47 $
+ * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 

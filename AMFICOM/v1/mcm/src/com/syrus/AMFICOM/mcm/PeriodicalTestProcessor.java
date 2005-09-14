@@ -1,5 +1,5 @@
 /*
- * $Id: PeriodicalTestProcessor.java,v 1.47 2005/09/05 17:39:04 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.48 2005/09/14 18:13:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,8 +23,9 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/09/05 17:39:04 $
+ * @version $Revision: 1.48 $, $Date: 2005/09/14 18:13:47 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 

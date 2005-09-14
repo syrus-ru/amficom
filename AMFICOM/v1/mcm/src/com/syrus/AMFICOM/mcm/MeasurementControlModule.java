@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.124 2005/09/14 18:06:37 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.125 2005/09/14 18:13:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,8 +53,9 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.124 $, $Date: 2005/09/14 18:06:37 $
+ * @version $Revision: 1.125 $, $Date: 2005/09/14 18:13:47 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 

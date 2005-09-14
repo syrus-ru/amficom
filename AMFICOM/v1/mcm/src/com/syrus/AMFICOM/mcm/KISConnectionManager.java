@@ -1,5 +1,5 @@
 /*-
- * $Id: KISConnectionManager.java,v 1.8 2005/09/12 19:51:34 arseniy Exp $
+ * $Id: KISConnectionManager.java,v 1.9 2005/09/14 18:13:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,8 +17,9 @@ import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
+ * @version $Revision: 1.9 $, $Date: 2005/09/14 18:13:47 $
  * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/09/12 19:51:34 $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 final class KISConnectionManager/* extends SleepButWorkThread*/ {

@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerObjectLoader.java,v 1.8 2005/08/25 20:33:10 arseniy Exp $
+ * $Id: CMServerObjectLoader.java,v 1.9 2005/09/14 18:16:05 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,9 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.8 $, $Date: 2005/08/25 20:33:10 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/14 18:16:05 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
 final class CMServerObjectLoader extends DatabaseObjectLoader {

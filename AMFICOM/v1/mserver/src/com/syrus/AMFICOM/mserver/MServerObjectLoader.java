@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerObjectLoader.java,v 1.7 2005/08/25 20:31:55 arseniy Exp $
+ * $Id: MServerObjectLoader.java,v 1.8 2005/09/14 18:15:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,9 @@ import com.syrus.AMFICOM.mcm.corba.MCM;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/08/25 20:31:55 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/14 18:15:00 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
 final class MServerObjectLoader extends DatabaseObjectLoader {

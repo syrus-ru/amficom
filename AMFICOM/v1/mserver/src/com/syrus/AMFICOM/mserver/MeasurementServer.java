@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.71 2005/09/14 18:07:16 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.72 2005/09/14 18:15:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,9 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/09/14 18:07:16 $
+ * @version $Revision: 1.72 $, $Date: 2005/09/14 18:15:00 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
 

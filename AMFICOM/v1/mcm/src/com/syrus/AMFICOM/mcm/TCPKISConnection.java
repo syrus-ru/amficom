@@ -1,5 +1,5 @@
 /*-
- * $Id: TCPKISConnection.java,v 1.19 2005/09/13 19:46:58 arseniy Exp $
+ * $Id: TCPKISConnection.java,v 1.20 2005/09/14 18:13:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,8 +16,9 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
+ * @version $Revision: 1.20 $, $Date: 2005/09/14 18:13:47 $
  * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/09/13 19:46:58 $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 final class TCPKISConnection implements KISConnection {

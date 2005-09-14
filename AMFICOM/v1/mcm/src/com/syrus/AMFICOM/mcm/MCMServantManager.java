@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMServantManager.java,v 1.13 2005/08/08 11:46:55 arseniy Exp $
+ * $Id: MCMServantManager.java,v 1.14 2005/09/14 18:13:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,9 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/08/08 11:46:55 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/14 18:13:47 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 final class MCMServantManager extends RunnableVerifiedConnectionManager implements BaseConnectionManager, ServerConnectionManager {

@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMPoolContext.java,v 1.9 2005/09/07 14:31:58 arseniy Exp $
+ * $Id: MCMPoolContext.java,v 1.10 2005/09/14 18:13:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,9 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/07 14:31:58 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/14 18:13:47 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 final class MCMPoolContext implements PoolContext {

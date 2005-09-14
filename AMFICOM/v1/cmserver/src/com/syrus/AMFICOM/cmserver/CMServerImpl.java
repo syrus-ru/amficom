@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerImpl.java,v 1.118 2005/08/08 11:44:39 arseniy Exp $
+ * $Id: CMServerImpl.java,v 1.119 2005/09/14 18:16:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,9 @@ import com.syrus.AMFICOM.cmserver.corba.CMServerOperations;
 import com.syrus.AMFICOM.general.IdentifierGeneratorServerCore;
 
 /**
- * @version $Revision: 1.118 $, $Date: 2005/08/08 11:44:39 $
+ * @version $Revision: 1.119 $, $Date: 2005/09/14 18:16:05 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
 

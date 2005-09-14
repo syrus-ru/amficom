@@ -1,5 +1,5 @@
 /*
- * $Id: OnetimeTestProcessor.java,v 1.31 2005/09/05 17:40:02 arseniy Exp $
+ * $Id: OnetimeTestProcessor.java,v 1.32 2005/09/14 18:13:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,9 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.31 $, $Date: 2005/09/05 17:40:02 $
+ * @version $Revision: 1.32 $, $Date: 2005/09/14 18:13:47 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 

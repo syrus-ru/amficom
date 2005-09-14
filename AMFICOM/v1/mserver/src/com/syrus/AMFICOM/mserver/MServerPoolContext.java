@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerPoolContext.java,v 1.9 2005/09/07 14:32:21 arseniy Exp $
+ * $Id: MServerPoolContext.java,v 1.10 2005/09/14 18:15:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,9 @@ import com.syrus.io.LRUSaver;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/07 14:32:21 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/14 18:15:00 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
 final class MServerPoolContext implements PoolContext {

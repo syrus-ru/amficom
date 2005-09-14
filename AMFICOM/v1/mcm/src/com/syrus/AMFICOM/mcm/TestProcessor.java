@@ -1,5 +1,5 @@
 /*
- * $Id: TestProcessor.java,v 1.67 2005/09/14 18:02:52 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.68 2005/09/14 18:13:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,8 +42,9 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/09/14 18:02:52 $
+ * @version $Revision: 1.68 $, $Date: 2005/09/14 18:13:47 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 

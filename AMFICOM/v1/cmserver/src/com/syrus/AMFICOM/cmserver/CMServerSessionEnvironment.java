@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerSessionEnvironment.java,v 1.6 2005/08/08 11:44:39 arseniy Exp $
+ * $Id: CMServerSessionEnvironment.java,v 1.7 2005/09/14 18:16:05 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,8 +12,9 @@ import com.syrus.AMFICOM.general.BaseSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/08/08 11:44:39 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/14 18:16:05 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
 final class CMServerSessionEnvironment extends BaseSessionEnvironment {

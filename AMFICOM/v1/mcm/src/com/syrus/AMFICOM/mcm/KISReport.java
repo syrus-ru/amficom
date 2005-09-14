@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.51 2005/08/19 15:54:32 arseniy Exp $
+ * $Id: KISReport.java,v 1.52 2005/09/14 18:13:47 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -19,8 +19,9 @@ import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.Result;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/08/19 15:54:32 $
+ * @version $Revision: 1.52 $, $Date: 2005/09/14 18:13:47 $
  * @author $Author: arseniy $
+ * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
 
