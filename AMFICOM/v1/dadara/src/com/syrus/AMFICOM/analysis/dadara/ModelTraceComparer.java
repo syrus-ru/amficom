@@ -1,5 +1,5 @@
 /*
- * $Id: ModelTraceComparer.java,v 1.31 2005/08/02 19:36:33 arseniy Exp $
+ * $Id: ModelTraceComparer.java,v 1.32 2005/09/14 11:37:17 saa Exp $
  * 
  * Copyright © Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
  * <ul>
  * <li> createEventAnchor
  * </ul>
- * @author $Author: arseniy $
- * @version $Revision: 1.31 $, $Date: 2005/08/02 19:36:33 $
+ * @author $Author: saa $
+ * @version $Revision: 1.32 $, $Date: 2005/09/14 11:37:17 $
  * @module
  */
 public class ModelTraceComparer
@@ -294,10 +294,10 @@ public class ModelTraceComparer
 	 */
 	public static int compareToMinLevel(ModelTrace mt, double th)
 	{
-		// XXX: проводим выравнивание, которое, вероятно, более не нужно
 		double[] y = mt.getYArray();
-		double yMax = ReflectogramMath.getArrayMax(y);
 		int i;
+		// XXX: проводим выравнивание, которое, вероятно, более не нужно
+		double yMax = y.length > 0 ? ReflectogramMath.getArrayMax(y) : 0;
 		// ищем первую точку выше порога
 		for (i = 0; i < y.length; i++) {
 			if (y[i] >= yMax + th)
