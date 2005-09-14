@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.20 $
+ * @version $Revision: 1.21 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -624,6 +624,9 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.startNodeToComboBox.setEnabled(true);
 		this.endNodeToComboBox.setEnabled(true);
 		
+		this.bindButton.setEnabled(false);
+		this.bindChainButton.setEnabled(false);
+		this.unbindButton.setEnabled(false);
 		if(this.cablePath == null)
 		{//empty
 		}
