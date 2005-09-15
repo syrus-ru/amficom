@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.86 2005/09/14 19:50:46 bass Exp $
+ * $Id: SiteNodeType.java,v 1.87 2005/09/15 07:11:31 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import com.syrus.util.Log;
  * ”злы специального типа CABLE_INLET должны быть прив€заны к какому-либо
  * узлу BUILDING или ATS и самосто€тельно не живут
  *  
- * @author $Author: bass $
- * @version $Revision: 1.86 $, $Date: 2005/09/14 19:50:46 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.87 $, $Date: 2005/09/15 07:11:31 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -417,7 +417,7 @@ public final class SiteNodeType extends StorableObjectType
 		}
 	}
 	
-	Identifier getMapLibraryId() {
+	public Identifier getMapLibraryId() {
 		return this.mapLibraryId;
 	}
 

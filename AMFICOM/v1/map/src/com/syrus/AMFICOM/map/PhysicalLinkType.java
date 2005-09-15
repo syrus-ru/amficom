@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.86 2005/09/14 19:50:46 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.87 2005/09/15 07:11:31 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: bass $
- * @version $Revision: 1.86 $, $Date: 2005/09/14 19:50:46 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.87 $, $Date: 2005/09/15 07:11:31 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -422,7 +422,7 @@ public final class PhysicalLinkType extends StorableObjectType
 		}
 	}
 	
-	Identifier getMapLibraryId() {
+	public Identifier getMapLibraryId() {
 		return this.mapLibraryId;
 	}
 

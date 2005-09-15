@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.90 2005/09/14 19:50:47 bass Exp $
+ * $Id: NodeLink.java,v 1.91 2005/09/15 07:11:31 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,8 +46,8 @@ import com.syrus.util.Log;
  * отрезок, соединяющий два концевых узла ({@link AbstractNode}). Фрагменты
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
- * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2005/09/14 19:50:47 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.91 $, $Date: 2005/09/15 07:11:31 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -171,11 +171,11 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 				this.length);
 	}
 
-	Identifier getEndNodeId() {
+	public Identifier getEndNodeId() {
 		return this.endNodeId;
 	}
 
-	void setEndNodeId(Identifier endNodeId) {
+	public void setEndNodeId(Identifier endNodeId) {
 		this.endNodeId = endNodeId;
 		try {
 			this.endNode = StorableObjectPool.<AbstractNode>getStorableObject(this.endNodeId, true);
@@ -231,7 +231,7 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 		super.markAsChanged();
 	}
 
-	Identifier getPhysicalLinkId() {
+	public Identifier getPhysicalLinkId() {
 		return this.physicalLinkId;
 	}
 
@@ -247,7 +247,7 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 		return this.physicalLink;
 	}
 
-	void setPhysicalLinkId(Identifier physicalLinkId) {
+	public void setPhysicalLinkId(Identifier physicalLinkId) {
 		this.physicalLinkId = physicalLinkId;
 		try {
 			this.physicalLink = StorableObjectPool.<PhysicalLink>getStorableObject(this.physicalLinkId, true);
@@ -263,11 +263,11 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 		super.markAsChanged();
 	}
 
-	Identifier getStartNodeId() {
+	public Identifier getStartNodeId() {
 		return this.startNodeId;
 	}
 
-	void setStartNodeId(Identifier startNodeId) {
+	public void setStartNodeId(Identifier startNodeId) {
 		this.startNodeId = startNodeId;
 		try {
 			this.startNode = StorableObjectPool.<AbstractNode>getStorableObject(this.startNodeId, true);
