@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenViewCommand.java,v 1.26 2005/09/14 10:30:03 krupenn Exp $
+ * $Id: MapEditorOpenViewCommand.java,v 1.27 2005/09/15 14:10:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открывается окно карты и сопутствующие окна
  * и MapContext передается в окно карты
  * 
- * @version $Revision: 1.26 $, $Date: 2005/09/14 10:30:03 $
+ * @version $Revision: 1.27 $, $Date: 2005/09/15 14:10:14 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see com.syrus.AMFICOM.client.map.command.map.MapOpenCommand
@@ -108,7 +108,7 @@ public class MapEditorOpenViewCommand extends AbstractCommand {
 						this.aContext);
 				addCommand.execute();
 			} catch(MapException e) {
-				this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
+				this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с сервером картографических данных"));
 				e.printStackTrace();
 			}
 		}
