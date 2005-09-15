@@ -1,5 +1,5 @@
 /*-
- * $Id: CollectorDatabase.java,v 1.46 2005/09/09 14:29:43 arseniy Exp $
+ * $Id: CollectorDatabase.java,v 1.47 2005/09/15 09:33:08 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,8 +35,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/09/09 14:29:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.47 $, $Date: 2005/09/15 09:33:08 $
+ * @author $Author: max $
  * @module map
  */
 public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
@@ -44,13 +44,11 @@ public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
 
 	private static String updateMultipleSQLValues;
 
-	private static final String COLLECTOR_PHYSICAL_LINK = "CollPhLink";
-
 	private void retrievePhysicalLinks(final Set<Collector> collectors) throws RetrieveObjectException {
 		if (collectors == null || collectors.isEmpty())
 			return;
 		final java.util.Map<Identifier, Set<Identifier>> map = super.retrieveLinkedEntityIds(collectors,
-				COLLECTOR_PHYSICAL_LINK,
+				CollectorWrapper.COLLECTOR_PHYSICAL_LINK,
 				CollectorWrapper.LINK_COLUMN_COLLECTOR_ID,
 				CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
 		for (final Collector collector : collectors) {
@@ -148,14 +146,14 @@ public final class CollectorDatabase extends StorableObjectDatabase<Collector> {
 		}
 
 		super.updateLinkedEntityIds(collectorIdPhysicalLinkIdsMap,
-				COLLECTOR_PHYSICAL_LINK,
+				CollectorWrapper.COLLECTOR_PHYSICAL_LINK,
 				CollectorWrapper.LINK_COLUMN_COLLECTOR_ID,
 				CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID);
 	}
 
 	@Override
 	public void delete(final Set<? extends Identifiable> ids) {
-		final StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM + COLLECTOR_PHYSICAL_LINK + SQL_WHERE);
+		final StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM + CollectorWrapper.COLLECTOR_PHYSICAL_LINK + SQL_WHERE);
 		stringBuffer.append(idsEnumerationString(ids, CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, true));
 
 		Statement statement = null;

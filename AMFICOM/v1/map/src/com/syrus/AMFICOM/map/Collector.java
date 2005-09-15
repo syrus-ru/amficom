@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.79 2005/09/14 19:50:47 bass Exp $
+ * $Id: Collector.java,v 1.80 2005/09/15 09:33:08 max Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,10 +24,12 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -46,21 +48,16 @@ import com.syrus.util.Log;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/09/14 19:50:47 $
+ * @author $Author: max $
+ * @version $Revision: 1.80 $, $Date: 2005/09/15 09:33:08 $
  * @module map
  */
-public final class Collector extends StorableObject implements MapElement, XmlBeansTransferable<XmlCollector> {
+public final class Collector extends StorableObject implements Namable, Describable, MapElement, XmlBeansTransferable<XmlCollector> {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
 	 */
 	private static final long serialVersionUID = 4049922679379212598L;
-
-	public static final String COLUMN_ID = "id";
-	public static final String COLUMN_NAME = "name";
-	public static final String COLUMN_DESCRIPTION = "description";
-	public static final String COLUMN_LINKS = "links";
 
 	private String name;
 	private String description;

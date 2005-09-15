@@ -1,5 +1,5 @@
 /*
- * $Id: CollectorWrapper.java,v 1.14 2005/09/05 13:26:09 max Exp $
+ * $Id: CollectorWrapper.java,v 1.15 2005/09/15 09:33:08 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/05 13:26:09 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/15 09:33:08 $
  * @author $Author: max $
  * @module map
  */
@@ -30,6 +30,8 @@ public class CollectorWrapper extends StorableObjectWrapper<Collector> {
 	// physical_link_id VARCHAR2(32),
 	public static final String LINK_COLUMN_PHYSICAL_LINK_ID = "physical_link_id";
 
+	public static final String COLLECTOR_PHYSICAL_LINK = "CollPhLink";
+	
 	private static CollectorWrapper instance;
 
 	private List<String> keys;
