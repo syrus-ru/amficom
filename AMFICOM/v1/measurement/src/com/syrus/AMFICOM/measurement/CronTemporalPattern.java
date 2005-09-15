@@ -1,5 +1,5 @@
 /*
- * $Id: CronTemporalPattern.java,v 1.25 2005/09/13 13:46:29 bob Exp $
+ * $Id: CronTemporalPattern.java,v 1.26 2005/09/15 17:05:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlCronTemporalPatternHelper;
 import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/09/13 13:46:29 $
+ * @version $Revision: 1.26 $, $Date: 2005/09/15 17:05:55 $
  * @author $Author: bob $
  * @module measurement
  */
@@ -1013,20 +1013,6 @@ public final class CronTemporalPattern extends AbstractTemporalPattern {
 	public void setDescription(final String description) {
 		this.description = description;
 		super.markAsChanged();
-	}
-
-	@Override
-	public String toString() {
-		final StringBuffer buffer = new StringBuffer();
-		for (final Iterator<TimeLine> it = this.templates.iterator(); it.hasNext();) {
-			final TimeLine timeLine = it.next();
-			buffer.append(timeLine.getDescription());
-			if (it.hasNext()) {
-				buffer.append(";");
-				buffer.append(LangModelMeasurement.getString("and"));
-			}
-		}
-		return buffer.toString();
 	}
 
 	@Override

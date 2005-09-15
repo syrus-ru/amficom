@@ -1,5 +1,5 @@
 /*
- * $Id: ParameterSet.java,v 1.19 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: ParameterSet.java,v 1.20 2005/09/15 17:05:55 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,7 +11,6 @@ package com.syrus.AMFICOM.measurement;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -34,8 +33,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlParameterSetHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/09/15 17:05:55 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -292,47 +291,6 @@ public final class ParameterSet extends StorableObject {
 	public void setSort(final ParameterSetSort sort) {
 		this.sort = sort.value();
 		super.markAsChanged();
-	}
-
-	@Override
-	public String toString() {
-		StringBuffer buffer = new StringBuffer(getClass().getName());
-		buffer.append(EOSL);
-		buffer.append(ID + this.id + EOSL
-				+ ID_CREATED + this.created.toString() + EOSL
-				+ ID_CREATOR_ID + this.creatorId.toString() + EOSL
-				+ ID_MODIFIED + this.modified.toString() + EOSL
-				+ ID_MODIFIER_ID + this.modifierId.toString() + EOSL);
-		if (this.monitoredElementIds == null) {
-			buffer.append(ID_MONITORED_ELEMENTS_IDS);
-			buffer.append(NULL);
-			buffer.append(EOSL);
-		} else {
-			for (Iterator it = this.monitoredElementIds.iterator(); it.hasNext();) {
-				Identifier id1 = (Identifier) it.next();
-				buffer.append(ID_MONITORED_ELEMENTS_IDS);
-				buffer.append(id1.toString());
-				buffer.append(EOSL);
-			}
-		}
-		buffer.append(ID_SORT);
-		buffer.append(this.sort);
-		buffer.append(EOSL);
-		if (this.parameters == null) {
-			buffer.append(ID_PARAMETERS);
-			buffer.append(NULL);
-			buffer.append(EOSL);
-		} else {
-			for (int i = 0; i < this.parameters.length; i++) {
-				Parameter param = this.parameters[i];
-				buffer.append(ID_PARAMETERS);
-				buffer.append(OPEN_BLOCK);
-				buffer.append(param.toString());
-				buffer.append(CLOSE_BLOCK);
-			}
-		}
-
-		return buffer.toString();
 	}
 
 	/**

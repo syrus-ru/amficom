@@ -1,5 +1,5 @@
 /*
- * $Id: EventType.java,v 1.50 2005/09/14 18:53:52 arseniy Exp $
+ * $Id: EventType.java,v 1.51 2005/09/15 17:05:49 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,13 +33,12 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
-import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlParameterType;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/09/14 18:53:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/09/15 17:05:49 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -286,19 +285,6 @@ public final class EventType extends StorableObjectType {
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>();
 		dependencies.addAll(this.userAlertKindsMap.keySet());
 		return dependencies;
-	}
-
-	@Override
-	public String toString() {
-		final String str = getClass().getName() + EOSL
-		+ ID + this.id + EOSL
-		+ ID_CREATED + this.created.toString() + EOSL
-		+ ID_CREATOR_ID + this.creatorId.toString() + EOSL
-		+ ID_MODIFIED + this.modified.toString() + EOSL
-		+ ID_MODIFIER_ID + this.modifierId.toString() + EOSL
-		+ TypedObject.ID_CODENAME + this.codename+ EOSL
-		+ TypedObject.ID_DESCRIPTION + this.description + EOSL;
-		return str;
 	}
 
 	protected void printUserAlertKinds() {
