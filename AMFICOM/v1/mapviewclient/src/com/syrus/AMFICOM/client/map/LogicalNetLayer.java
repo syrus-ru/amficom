@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.122 2005/09/14 10:20:10 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.123 2005/09/15 14:08:05 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -51,7 +51,10 @@ import com.syrus.AMFICOM.client.model.CommandList;
 import com.syrus.AMFICOM.client.model.MapApplicationModel;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapElement;
@@ -68,6 +71,8 @@ import com.syrus.AMFICOM.mapview.MeasurementPath;
 import com.syrus.AMFICOM.mapview.Selection;
 import com.syrus.AMFICOM.mapview.VoidElement;
 import com.syrus.AMFICOM.resource.DoublePoint;
+import com.syrus.AMFICOM.scheme.PathElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
 
 /**
@@ -76,7 +81,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.122 $, $Date: 2005/09/14 10:20:10 $
+ * @version $Revision: 1.123 $, $Date: 2005/09/15 14:08:05 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer {
@@ -706,23 +711,63 @@ public final class LogicalNetLayer {
 
 					if (mapElement instanceof NodeLink) {
 						// Здесь смотрим по флагу linkState что делать
-						if (showMode == MapState.SHOW_NODE_LINK) {// curME остается NodeLink
-						} else if (showMode == MapState.SHOW_PHYSICAL_LINK) {
-							curME = ((NodeLink) mapElement).getPhysicalLink();
-						} else if (showMode == MapState.SHOW_CABLE_PATH) {
-							final Iterator<CablePath> it = this.mapView.getCablePaths((NodeLink) mapElement).iterator();
-							if (it.hasNext()) {
-								curME = it.next();
-							} else {
+						switch(showMode) {
+							case MapState.SHOW_NODE_LINK:
+								// curME остается NodeLink
+								break;
+							case MapState.SHOW_PHYSICAL_LINK:
 								curME = ((NodeLink) mapElement).getPhysicalLink();
+								break;
+							case MapState.SHOW_CABLE_PATH: {
+								PhysicalLink physicalLink = ((NodeLink) mapElement).getPhysicalLink();
+								final Iterator it = physicalLink.getBinding().getBindObjects().iterator();
+//								final Iterator<CablePath> it = this.mapView.getCablePaths((NodeLink) mapElement).iterator();
+								if (it.hasNext()) {
+									curME = (CablePath)it.next();
+								} else {
+									curME = physicalLink;
+								}
+								break;
 							}
-						} else if (showMode == MapState.SHOW_MEASUREMENT_PATH) {
-							final Iterator<MeasurementPath> it = this.mapView.getMeasurementPaths((NodeLink) mapElement).iterator();
-							if (it.hasNext()) {
-								curME = it.next();
-							} else {
-								curME = ((NodeLink) mapElement).getPhysicalLink();
+							case MapState.SHOW_MEASUREMENT_PATH: {
+								PhysicalLink physicalLink = ((NodeLink) mapElement).getPhysicalLink();
+								curME = physicalLink;
+								for(Object boundObject : physicalLink.getBinding().getBindObjects()) {
+									CablePath cablePath = (CablePath) boundObject;
+									curME = cablePath;
+									boolean doBreak = false;
+									LinkedIdsCondition condition = new LinkedIdsCondition(
+											cablePath.getSchemeCableLink().getId(),
+											ObjectEntities.PATHELEMENT_CODE);
+									try {
+										Set<PathElement> pathElements = StorableObjectPool.<PathElement>getStorableObjectsByCondition(condition, true);
+										for(PathElement pathElement : pathElements) {
+											SchemePath schemePath = pathElement.getParentPathOwner();
+											MeasurementPath measurementPath = this.mapView.findMeasurementPath(schemePath);
+											if(measurementPath != null) {
+												curME = measurementPath;
+												doBreak = true;
+												break;
+											}
+										}
+									} catch(ApplicationException e) {
+										e.printStackTrace();
+									}
+									if(doBreak) {
+										break;
+									}
+								}
+
+//								final Iterator<MeasurementPath> it = this.mapView.getMeasurementPaths((NodeLink) mapElement).iterator();
+//								if (it.hasNext()) {
+//									curME = it.next();
+//								} else {
+//									curME = ((NodeLink) mapElement).getPhysicalLink();
+//								}
+								break;
 							}
+							default:
+								throw new UnsupportedOperationException("Unknown show mode: " + showMode);
 						}
 					} else if (mapElement instanceof PhysicalLink) {
 						if (showMode == MapState.SHOW_CABLE_PATH) {
@@ -938,7 +983,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.122 $, $Date: 2005/09/14 10:20:10 $
+	 * @version $Revision: 1.123 $, $Date: 2005/09/15 14:08:05 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
