@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.62 2005/09/14 14:08:37 krupenn Exp $
+* $Id: MapView.java,v 1.63 2005/09/15 14:06:16 krupenn Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBN
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
  * @author $Author: krupenn $
- * @version $Revision: 1.62 $, $Date: 2005/09/14 14:08:37 $
+ * @version $Revision: 1.63 $, $Date: 2005/09/15 14:06:16 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Namable {
@@ -759,14 +759,15 @@ public final class MapView extends DomainMember implements Namable {
 	 * @return список всех топологических элементов
 	 */
 	public List<MapElement> getAllElements() {
-		this.allElements.clear();
-
-		this.allElements.addAll(this.getMap().getAllElements());
-		this.allElements.addAll(this.getCablePaths());
-		this.allElements.addAll(this.getMeasurementPaths());
-		this.allElements.addAll(this.markers);
-
-		return Collections.unmodifiableList(this.allElements);
+		return this.getMap().getAllElements();
+//		this.allElements.clear();
+//
+//		this.allElements.addAll(this.getMap().getAllElements());
+//		this.allElements.addAll(this.getCablePaths());
+//		this.allElements.addAll(this.getMeasurementPaths());
+//		this.allElements.addAll(this.markers);
+//
+//		return Collections.unmodifiableList(this.allElements);
 	}
 
 	/**
