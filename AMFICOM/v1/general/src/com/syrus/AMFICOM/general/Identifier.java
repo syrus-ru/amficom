@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.72 2005/09/14 20:12:34 arseniy Exp $
+ * $Id: Identifier.java,v 1.73 2005/09/15 10:38:01 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.72 $, $Date: 2005/09/14 20:12:34 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.73 $, $Date: 2005/09/15 10:38:01 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -177,7 +177,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		return this.getIdentifierString();
 	}
 
-	public static final Set<String> createStrings(final Collection<? extends Identifiable> identifiables) {
+	public static Set<String> createStrings(final Collection<? extends Identifiable> identifiables) {
 		assert identifiables != null: NON_NULL_EXPECTED;
 
 		final Set<String> idStrings = new HashSet<String>(identifiables.size());
@@ -195,7 +195,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 *         elements ordered in the same way as returned by the iterator.
 	 * @see #fromTransferables(IdlIdentifier[])
 	 */
-	public static final IdlIdentifier[] createTransferables(final Collection<? extends Identifiable> identifiables) {
+	public static IdlIdentifier[] createTransferables(final Collection<? extends Identifiable> identifiables) {
 		assert identifiables != null: NON_NULL_EXPECTED;
 
 		final IdlIdentifier[] ids = new IdlIdentifier[identifiables.size()];
@@ -212,7 +212,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 * @param identifiables
 	 * @see #createTransferables(Collection)
 	 */
-	public static final IdlIdentifier[] createTransferables(final Identifiable[] identifiables) {
+	public static IdlIdentifier[] createTransferables(final Identifiable[] identifiables) {
 		assert identifiables != null: NON_NULL_EXPECTED;
 		
 		final int length = identifiables.length;
@@ -227,7 +227,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 * @param identifiables
 	 * @return Set of identifiers
 	 */
-	public static final Set<Identifier> createIdentifiers(final Set<? extends Identifiable> identifiables) {
+	public static Set<Identifier> createIdentifiers(final Set<? extends Identifiable> identifiables) {
 		assert identifiables != null: NON_NULL_EXPECTED;
 
 		final Set<Identifier> identifiers = new HashSet<Identifier>(identifiables.size());
@@ -245,7 +245,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 * @param identifiables2
 	 * @return Set of identifiers
 	 */
-	public static final Set<Identifier> createSumIdentifiers(final Set<? extends Identifiable> identifiables1,
+	public static Set<Identifier> createSumIdentifiers(final Set<? extends Identifiable> identifiables1,
 			final Set<? extends Identifiable> identifiables2) {
 		assert identifiables1 != null : NON_NULL_EXPECTED;
 		assert identifiables2 != null : NON_NULL_EXPECTED;
@@ -267,19 +267,20 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	/**
 	 * Creates new set of identifiers, containing values from set <code>identifiables1</code>
 	 * with exception to those, containing in set <code>identifiables2</code>
-	 * @param identifiables1 - уменьшаемое
-	 * @param identifiables2 - вычитаемое
+	 *
+	 * @param minuendi see <a href = "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=minuend">Merriam-Webster Dictionary</a>.
+	 * @param subtrahendi <a href = "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=subtrahend">ditto</a>.
 	 * @return Set of identifiers
 	 */
-	public static final Set<Identifier> createSubtractionIdentifiers(final Set<? extends Identifiable> identifiables1,
-			final Set<? extends Identifiable> identifiables2) {
-		assert identifiables1 != null : NON_NULL_EXPECTED;
-		assert identifiables2 != null : NON_NULL_EXPECTED;
+	public static Set<Identifier> createSubtractionIdentifiers(final Set<? extends Identifiable> minuendi,
+			final Set<? extends Identifiable> subtrahendi) {
+		assert minuendi != null : NON_NULL_EXPECTED;
+		assert subtrahendi != null : NON_NULL_EXPECTED;
 
-		final Set<Identifier> identifiers = createIdentifiers(identifiables1);
-		synchronized (identifiables2) {
-			for (final Identifiable identifiable : identifiables2) {
-				identifiers.remove(identifiable.getId());
+		final Set<Identifier> identifiers = createIdentifiers(minuendi);
+		synchronized (subtrahendi) {
+			for (final Identifiable subtrahendum : subtrahendi) {
+				identifiers.remove(subtrahendum.getId());
 			}
 		}
 		return identifiers;
@@ -292,7 +293,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 * @param identifiers
 	 * @param identifiables
 	 */
-	public static final void addToIdentifiers(final Set<Identifier> identifiers, final Set<? extends Identifiable> identifiables) {
+	public static void addToIdentifiers(final Set<Identifier> identifiers, final Set<? extends Identifiable> identifiables) {
 		assert identifiers != null : NON_NULL_EXPECTED;
 		assert identifiables != null : NON_NULL_EXPECTED;
 
@@ -307,17 +308,18 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 * Removes from set of identifiers <code>identifiers</code> those,
 	 * which contained in set of identifiables <code>identifiables</code>.
 	 * (I. e., parameter <code>identifiers</code> is passed as &quot;inout&quot; argument.)
-	 * @param identifiers - уменьшаемое
-	 * @param identifiables - вычитаемое
+	 *
+	 * @param minuendi see <a href = "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=minuend">Merriam-Webster Dictionary</a>.
+	 * @param subtrahendi <a href = "http://www.m-w.com/cgi-bin/dictionary?book=Dictionary&va=subtrahend">ditto</a>.
 	 */
-	public static final void subtractFromIdentifiers(final Set<Identifier> identifiers,
-			final Set<? extends Identifiable> identifiables) {
-		assert identifiers != null : NON_NULL_EXPECTED;
-		assert identifiables != null : NON_NULL_EXPECTED;
+	public static void subtractFromIdentifiers(final Set<Identifier> minuendi,
+			final Set<? extends Identifiable> subtrahendi) {
+		assert minuendi != null : NON_NULL_EXPECTED;
+		assert subtrahendi != null : NON_NULL_EXPECTED;
 
-		synchronized (identifiables) {
-			for (final Identifiable identifiable : identifiables) {
-				identifiers.remove(identifiable.getId());
+		synchronized (subtrahendi) {
+			for (final Identifiable subtrahendum : subtrahendi) {
+				minuendi.remove(subtrahendum.getId());
 			}
 		}
 	}
@@ -327,7 +329,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 * @return a newly created <code>Set&lt;Identifier&gt;</code>.
 	 * @see #createTransferables(Collection)
 	 */
-	public static final Set<Identifier> fromTransferables(final IdlIdentifier[] transferables) {
+	public static Set<Identifier> fromTransferables(final IdlIdentifier[] transferables) {
 		final Set<Identifier> ids = new HashSet<Identifier>(transferables.length);
 		for (int i = 0; i < transferables.length; i++) {
 			ids.add(new Identifier(transferables[i]));
@@ -429,7 +431,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 	 * @return an <code>Identifier</code> of the object supplied, or
 	 *         {@link #VOID_IDENTIFIER} if the object is <code>null</code>.
 	 */
-	public static final Identifier possiblyVoid(final StorableObject storableObject) {
+	public static Identifier possiblyVoid(final StorableObject storableObject) {
 		return storableObject == null ? VOID_IDENTIFIER : storableObject.getId();
 	}
 
