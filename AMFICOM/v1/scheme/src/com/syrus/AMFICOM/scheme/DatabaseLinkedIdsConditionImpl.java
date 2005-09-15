@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.34 2005/09/08 16:35:41 bass Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.35 2005/09/15 07:48:57 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PATHELEMENT_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
@@ -28,6 +29,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.UPDIKE_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.CLOSE_BRACKET;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.OPEN_BRACKET;
@@ -42,8 +44,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/09/08 16:35:41 $
+ * @author $Author: max $
+ * @version $Revision: 1.35 $, $Date: 2005/09/15 07:48:57 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -92,6 +94,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					return super.getQuery(SchemeElementWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
 				case SCHEME_CODE:
 					return super.getQuery(SchemeElementWrapper.COLUMN_PARENT_SCHEME_ID);
+				case SITENODE_CODE:
+					return super.getQuery(SchemeElementWrapper.COLUMN_SITE_NODE_ID);
 				default:
 					throw super.newExceptionLinkedEntityIllegal();
 				}
@@ -195,6 +199,13 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 				switch (super.condition.getLinkedEntityCode()) {
 				case SCHEMECABLELINK_CODE:
 					return super.getQuery(CableChannelingItemWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
+				case SITENODE_CODE:
+					return OPEN_BRACKET
+							+ super.getQuery(CableChannelingItemWrapper.COLUMN_START_SITE_NODE_ID)
+							+ SQL_OR
+							+ super.getQuery(CableChannelingItemWrapper.COLUMN_END_SITE_NODE_ID);
+				case PHYSICALLINK_CODE:
+					return super.getQuery(CableChannelingItemWrapper.COLUMN_PHYSICAL_LINK_ID);
 				default:
 					throw super.newExceptionLinkedEntityIllegal();
 				}
