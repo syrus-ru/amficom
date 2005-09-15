@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.91 2005/09/15 07:11:31 krupenn Exp $
+ * $Id: NodeLink.java,v 1.92 2005/09/15 13:35:46 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: krupenn $
- * @version $Revision: 1.91 $, $Date: 2005/09/15 07:11:31 $
+ * @version $Revision: 1.92 $, $Date: 2005/09/15 13:35:46 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -63,14 +63,15 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 	private Identifier endNodeId;
 	private double length;
 
+	private AbstractNode startNode = null;
+	private AbstractNode endNode = null;
+	private PhysicalLink physicalLink = null;
+
 	private transient CharacterizableDelegate characterizableDelegate;
 
-	protected transient boolean selected = false;
-	protected transient boolean removed = false;
-	protected transient boolean alarmState = false;
-	protected transient AbstractNode startNode = null;
-	protected transient AbstractNode endNode = null;
-	protected transient PhysicalLink physicalLink = null;
+	private transient boolean selected = false;
+	private transient boolean removed = false;
+	private transient boolean alarmState = false;
 
 	public NodeLink(final IdlNodeLink nlt) throws CreateObjectException {
 		try {
