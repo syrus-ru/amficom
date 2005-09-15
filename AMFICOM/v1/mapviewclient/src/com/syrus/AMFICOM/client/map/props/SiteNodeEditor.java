@@ -386,7 +386,7 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 	}
 
 	public void setObject(Object objectResource) {
-		this.site = (SiteNode )objectResource;
+		this.site = (SiteNode) objectResource;
 
 		this.typeComboBox.removeAllItems();
 
