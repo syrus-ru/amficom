@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.15 2005/09/12 12:50:32 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.16 2005/09/15 17:30:53 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,7 +48,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/12 12:50:32 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/15 17:30:53 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -323,11 +323,17 @@ implements PropertyChangeListener {
 		}		
 	}
 
-	public static void showErrorMessage(Component component,
-										Exception exception) {
-		exception.printStackTrace();
+	public static void showErrorMessage(final Component component,
+										final Exception exception) {
 		JOptionPane.showMessageDialog(component, 
 			exception.getMessage(),
+			LangModelGeneral.getString("Error.ErrorOccur"),
+			JOptionPane.OK_OPTION);
+	}
+
+	public static void showErrorMessage(final String errorMessage) {
+		JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
+			errorMessage,
 			LangModelGeneral.getString("Error.ErrorOccur"),
 			JOptionPane.OK_OPTION);
 	}
