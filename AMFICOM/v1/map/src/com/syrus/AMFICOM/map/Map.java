@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.93 2005/09/14 19:50:46 bass Exp $
+ * $Id: Map.java,v 1.94 2005/09/15 13:34:23 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: bass $
- * @version $Revision: 1.93 $, $Date: 2005/09/14 19:50:46 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.94 $, $Date: 2005/09/15 13:34:23 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -88,16 +88,16 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	private Set<Identifier> externalNodeIds;
 	private Set<Identifier> mapLibraryIds;
 
-	private transient Set<SiteNode> siteNodes;
-	private transient Set<TopologicalNode> topologicalNodes;
-	private transient Set<NodeLink> nodeLinks;
-	private transient Set<PhysicalLink> physicalLinks;
-	private transient Set<Mark> marks;
-	private transient Set<Collector> collectors;
+	private Set<SiteNode> siteNodes;
+	private Set<TopologicalNode> topologicalNodes;
+	private Set<NodeLink> nodeLinks;
+	private Set<PhysicalLink> physicalLinks;
+	private Set<Mark> marks;
+	private Set<Collector> collectors;
 
-	private transient Set<Map> maps;
-	private transient Set<SiteNode> externalNodes;
-	private transient Set<MapLibrary> mapLibrarys;
+	private Set<Map> maps;
+	private Set<SiteNode> externalNodes;
+	private Set<MapLibrary> mapLibrarys;
 
 	/**
 	 * Сортированный список всех элементов топологической схемы
@@ -106,9 +106,18 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	private transient Set<AbstractNode> nodeElements;
 	private transient Set<MapElement> selectedElements;
 
-	private transient boolean transientFieldsInitialized = false;
+	private boolean transientFieldsInitialized = false;
 	
 	private void initialize() {
+		if(this.allElements == null) {
+			this.allElements = new LinkedList<MapElement>();
+		}
+		if(this.nodeElements == null) {
+			this.nodeElements = new HashSet<AbstractNode>();
+		}
+		if(this.selectedElements == null) {
+			this.selectedElements = new HashSet<MapElement>();
+		}
 		if(!this.transientFieldsInitialized) {
 			this.siteNodes = new HashSet<SiteNode>();
 			this.topologicalNodes = new HashSet<TopologicalNode>();
@@ -136,9 +145,6 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 				e.printStackTrace();
 			}
 
-			this.allElements = new LinkedList<MapElement>();
-			this.nodeElements = new HashSet<AbstractNode>();
-			this.selectedElements = new HashSet<MapElement>();
 			this.transientFieldsInitialized = true;
 		}
 	}
@@ -216,6 +222,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		this.mapIds = Identifier.fromTransferables(mt.mapIds);
 		this.externalNodeIds = Identifier.fromTransferables(mt.externalNodeIds);
 		this.mapLibraryIds = Identifier.fromTransferables(mt.mapLibraryIds);
+		this.transientFieldsInitialized = false;
 	}
 	
 	public void open() throws ApplicationException {
@@ -225,25 +232,25 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 
-		if(!this.topologicalNodeIds.isEmpty()) {
-			condition.setLinkedIds(this.topologicalNodeIds);
-			StorableObjectPool.getStorableObjectsByCondition(condition, true);
-		}
+//		if(!this.topologicalNodeIds.isEmpty()) {
+//			condition.setLinkedIds(this.topologicalNodeIds);
+//			StorableObjectPool.getStorableObjectsByCondition(condition, true);
+//		}
 
-		if(!this.nodeLinkIds.isEmpty()) {
-			condition.setLinkedIds(this.nodeLinkIds);
-			StorableObjectPool.getStorableObjectsByCondition(condition, true);
-		}
+//		if(!this.nodeLinkIds.isEmpty()) {
+//			condition.setLinkedIds(this.nodeLinkIds);
+//			StorableObjectPool.getStorableObjectsByCondition(condition, true);
+//		}
 
 		if(!this.physicalLinkIds.isEmpty()) {
 			condition.setLinkedIds(this.physicalLinkIds);
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 
-		if(!this.markIds.isEmpty()) {
-			condition.setLinkedIds(this.markIds);
-			StorableObjectPool.getStorableObjectsByCondition(condition, true);
-		}
+//		if(!this.markIds.isEmpty()) {
+//			condition.setLinkedIds(this.markIds);
+//			StorableObjectPool.getStorableObjectsByCondition(condition, true);
+//		}
 
 		if(!this.collectorIds.isEmpty()) {
 			condition.setLinkedIds(this.collectorIds);
