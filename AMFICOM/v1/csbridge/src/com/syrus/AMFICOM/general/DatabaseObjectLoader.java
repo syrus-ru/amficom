@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseObjectLoader.java,v 1.33 2005/09/14 18:21:32 arseniy Exp $
+ * $Id: DatabaseObjectLoader.java,v 1.34 2005/09/15 00:48:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.33 $, $Date: 2005/09/14 18:21:32 $
+ * @version $Revision: 1.34 $, $Date: 2005/09/15 00:48:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -79,25 +79,6 @@ public class DatabaseObjectLoader implements ObjectLoader {
 		final StorableObjectDatabase<StorableObject> database = DatabaseContext.getDatabase(entityCode);
 		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
 		database.save(storableObjects);
-	}
-
-	/**
-	 * Overridden in:
-	 * CMServerObjectLoader
-	 * MscharServerObjectLoader
-	 */
-	public Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap) throws ApplicationException {
-		assert versionsMap != null : ErrorMessages.NON_NULL_EXPECTED;
-
-		if (versionsMap.isEmpty()) {
-			return Collections.emptySet();
-		}
-
-		final short entityCode = StorableObject.getEntityCodeOfIdentifiables(versionsMap.keySet());
-		assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
-		final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
-		assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
-		return database.getOldVersionIds(versionsMap);
 	}
 
 	public final void delete(final Set<? extends Identifiable> identifiables) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: MultiServantCORBAObjectLoader.java,v 1.4 2005/09/14 18:23:22 arseniy Exp $
+ * $Id: MultiServantCORBAObjectLoader.java,v 1.5 2005/09/15 00:48:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/14 18:23:22 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/15 00:48:41 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
@@ -85,15 +85,6 @@ public final class MultiServantCORBAObjectLoader implements ObjectLoader {
 			return;
 		}
 		this.getCORBAObjectLoader(storableObjects).saveStorableObjects(storableObjects);
-	}
-
-	public final Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap)
-			throws ApplicationException {
-		assert versionsMap != null : ErrorMessages.NON_NULL_EXPECTED;
-		if (versionsMap.isEmpty()) {
-			return Collections.emptySet();
-		}
-		return this.getCORBAObjectLoader(versionsMap.keySet()).getOldVersionIds(versionsMap);
 	}
 
 	public final void delete(final Set<? extends Identifiable> identifiables) throws ApplicationException {

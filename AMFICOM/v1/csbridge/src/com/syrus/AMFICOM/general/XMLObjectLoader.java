@@ -1,5 +1,5 @@
 /*
- * $Id: XMLObjectLoader.java,v 1.11 2005/09/14 18:21:32 arseniy Exp $
+ * $Id: XMLObjectLoader.java,v 1.12 2005/09/15 00:48:22 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -15,7 +15,7 @@ import java.util.Map;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/14 18:21:32 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/15 00:48:22 $
  * @author $Author: arseniy $
  * @author Voffka
  * @module csbridge
@@ -75,11 +75,6 @@ public final class XMLObjectLoader implements ObjectLoader {
 			this.soXML.updateObject(storableObject);
 		}
 		this.soXML.flush();
-	}
-
-	public Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap) {
-		assert versionsMap != null : ErrorMessages.NON_NULL_EXPECTED;
-		return Collections.emptySet();
 	}
 
 	public void delete(final Set<? extends Identifiable> identifiables) {

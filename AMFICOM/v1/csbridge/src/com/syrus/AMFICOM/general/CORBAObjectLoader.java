@@ -1,5 +1,5 @@
 /*-
- * $Id: CORBAObjectLoader.java,v 1.53 2005/09/14 18:21:32 arseniy Exp $
+ * $Id: CORBAObjectLoader.java,v 1.54 2005/09/15 00:48:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.security.corba.IdlSessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.53 $, $Date: 2005/09/14 18:21:32 $
+ * @version $Revision: 1.54 $, $Date: 2005/09/15 00:48:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
@@ -193,45 +193,6 @@ public class CORBAObjectLoader implements ObjectLoader {
 						throw new LoginException(are.message);
 					default:
 						throw new UpdateObjectException(are.message);
-				}
-			}
-		}
-	}
-
-	public final Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap)
-			throws ApplicationException {
-		assert versionsMap != null : ErrorMessages.NON_NULL_EXPECTED;
-		if (versionsMap.isEmpty()) {
-			return Collections.emptySet();
-		}
-
-		final CommonServer server = this.serverConnectionManager.getServerReference();
-		final IdVersion[] idVersions = new IdVersion[versionsMap.size()];
-		int i = 0;
-		for (final Identifier id : versionsMap.keySet()) {
-			final StorableObjectVersion version = versionsMap.get(id);
-			idVersions[i++] = new IdVersion(id.getTransferable(), version.longValue());
-		}
-		int numEfforts = 0;
-		while (true) {
-			try {
-				final IdlSessionKey sessionKeyT = LoginManager.getSessionKeyTransferable();
-				final IdlIdentifier[] idsT = server.transmitOldVersionIds(idVersions, sessionKeyT);
-				return Identifier.fromTransferables(idsT);
-			}
-			catch (final AMFICOMRemoteException are) {
-				switch (are.errorCode.value()) {
-					case IdlErrorCode._ERROR_NOT_LOGGED_IN:
-						if (++numEfforts == 1) {
-							if (LoginManager.restoreLogin()) {
-								continue;
-							}
-							Log.debugMessage("CORBAObjectLoader.refresh | Login not restored", Level.INFO);
-							return Collections.emptySet();
-						}
-						throw new LoginException(are.message);
-					default:
-						throw new RetrieveObjectException(are.message);
 				}
 			}
 		}
