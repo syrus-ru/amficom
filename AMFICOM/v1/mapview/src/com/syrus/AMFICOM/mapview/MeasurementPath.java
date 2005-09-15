@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.46 2005/09/14 10:16:41 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.47 2005/09/15 14:06:35 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
  * Элемент пути.
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.46 $, $Date: 2005/09/14 10:16:41 $
+ * @version $Revision: 1.47 $, $Date: 2005/09/15 14:06:35 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -211,7 +211,7 @@ public final class MeasurementPath implements MapElement {
 	 */
 	public DoublePoint getLocation() {
 		int count = 0;
-		double x = 0.0D;
+		double x = 0.0D; 
 		double y = 0.0D;
 
 		for (final CablePath cablePath : this.getCablePaths()) {
@@ -458,14 +458,14 @@ public final class MeasurementPath implements MapElement {
 	 * @return следующий фрагмент, или <code>null</code>, если nl - последний в
 	 *         списке
 	 */
-	public NodeLink nextNodeLink(final NodeLink nodeLink) {
-		List nodeLinks = getSortedNodeLinks();
-		final int index = nodeLinks.indexOf(nodeLink);
-		if (index == nodeLinks.size() - 1)
-			return null;
-
-		return (NodeLink) nodeLinks.get(index + 1);
-	}
+//	public NodeLink nextNodeLink(final NodeLink nodeLink) {
+//		List nodeLinks = getSortedNodeLinks();
+//		final int index = nodeLinks.indexOf(nodeLink);
+//		if (index == nodeLinks.size() - 1)
+//			return null;
+//
+//		return (NodeLink) nodeLinks.get(index + 1);
+//	}
 
 	/**
 	 * Получить предыдущий фрагмент по цепочке сортированных фрагментов.
@@ -473,14 +473,14 @@ public final class MeasurementPath implements MapElement {
 	 * @return предыдущий фрагмент, или <code>null</code>, если nl - первый
 	 * в списке
 	 */
-	public NodeLink previousNodeLink(final NodeLink nodeLink) {
-		List nodeLinks = getSortedNodeLinks();
-		int index = nodeLinks.indexOf(nodeLink);
-		if (index == 0)
-			return null;
-
-		return (NodeLink) nodeLinks.get(index - 1);
-	}
+//	public NodeLink previousNodeLink(final NodeLink nodeLink) {
+//		List nodeLinks = getSortedNodeLinks();
+//		int index = nodeLinks.indexOf(nodeLink);
+//		if (index == 0)
+//			return null;
+//
+//		return (NodeLink) nodeLinks.get(index - 1);
+//	}
 
 	/**
 	 * {@inheritDoc} Suppress since this class is transient
