@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemeElement.java,v 1.51 2005/09/08 18:26:26 bass Exp $
+ * $Id: AbstractSchemeElement.java,v 1.52 2005/09/15 16:58:05 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -35,6 +35,7 @@ import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemeElement;
 import com.syrus.AMFICOM.scheme.xml.XmlAbstractSchemeElement;
 import com.syrus.util.Log;
@@ -45,7 +46,7 @@ import com.syrus.util.Log;
  * {@link AbstractSchemeElement}instead.
  *
  * @author $Author: bass $
- * @version $Revision: 1.51 $, $Date: 2005/09/08 18:26:26 $
+ * @version $Revision: 1.52 $, $Date: 2005/09/15 16:58:05 $
  * @module scheme
  */
 public abstract class AbstractSchemeElement
@@ -276,6 +277,32 @@ public abstract class AbstractSchemeElement
 			this.name = name;
 			this.description = description;
 			this.parentSchemeId = parentSchemeId;
+		}
+	}
+
+	/**
+	 * @param abstractSchemeElement
+	 * @param importType
+	 * @throws ApplicationException
+	 */
+	void getXmlTransferable(
+			final XmlAbstractSchemeElement abstractSchemeElement,
+			final String importType)
+	throws ApplicationException {
+		super.id.getXmlTransferable(abstractSchemeElement.addNewId(), importType);
+		abstractSchemeElement.setName(this.name);
+		if (this.description.length() == 0) {
+			abstractSchemeElement.unsetDescription();
+		} else {
+			abstractSchemeElement.setDescription(this.description);
+		}
+		final Set<Characteristic> characteristics = this.getCharacteristics(false);
+		abstractSchemeElement.unsetCharacteristics();
+		if (!characteristics.isEmpty()) {
+			final XmlCharacteristicSeq characteristicSeq = abstractSchemeElement.addNewCharacteristics();
+			for (final Characteristic characteristic : characteristics) {
+				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
+			}
 		}
 	}
 
