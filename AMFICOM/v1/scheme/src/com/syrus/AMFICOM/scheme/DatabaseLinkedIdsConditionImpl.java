@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.35 2005/09/15 07:48:57 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.36 2005/09/15 09:47:21 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: max $
- * @version $Revision: 1.35 $, $Date: 2005/09/15 07:48:57 $
+ * @version $Revision: 1.36 $, $Date: 2005/09/15 09:47:21 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -203,7 +203,8 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 					return OPEN_BRACKET
 							+ super.getQuery(CableChannelingItemWrapper.COLUMN_START_SITE_NODE_ID)
 							+ SQL_OR
-							+ super.getQuery(CableChannelingItemWrapper.COLUMN_END_SITE_NODE_ID);
+							+ super.getQuery(CableChannelingItemWrapper.COLUMN_END_SITE_NODE_ID)
+							+ CLOSE_BRACKET;
 				case PHYSICALLINK_CODE:
 					return super.getQuery(CableChannelingItemWrapper.COLUMN_PHYSICAL_LINK_ID);
 				default:
