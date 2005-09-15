@@ -1,5 +1,5 @@
 /*-
- * $Id: CablePath.java,v 1.34 2005/09/02 09:21:10 krupenn Exp $
+ * $Id: CablePath.java,v 1.35 2005/09/15 14:05:42 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,24 +34,24 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * Элемент кабельного пути. Описывает привязку кабеля к топологическим линиям.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.34 $, $Date: 2005/09/02 09:21:10 $
+ * @version $Revision: 1.35 $, $Date: 2005/09/15 14:05:42 $
  * @module mapview
  */
 public final class CablePath implements MapElement {
 	/**
 	 * Флаг выделения.
 	 */
-	protected transient boolean selected = false;
+	private transient boolean selected = false;
 
 	/**
 	 * Флаг наличия сигнала тревоги.
 	 */
-	protected transient boolean alarmState = false;
+	private transient boolean alarmState = false;
 
 	/**
 	 * Флаг удаления.
 	 */
-	protected transient boolean removed = false;
+	private transient boolean removed = false;
 
 	/**
 	 * Узел карты, к которому привязан начальный узел кабеля.
@@ -66,36 +66,30 @@ public final class CablePath implements MapElement {
 	/**
 	 * Сортированный список узлов, по которым проходит кабель.
 	 */
-	protected transient List<AbstractNode> sortedNodes = new LinkedList<AbstractNode>();
+	private transient List<AbstractNode> sortedNodes = new LinkedList<AbstractNode>();
 	/**
 	 * Сортированный список фрагментов линий, по которым проходит кабель.
 	 */
-	protected transient List<NodeLink> sortedNodeLinks = new LinkedList<NodeLink>();
+	private transient List<NodeLink> sortedNodeLinks = new LinkedList<NodeLink>();
 	/**
 	 * Флаг сортировки фрагментов.
 	 */
-	protected transient boolean nodeLinksSorted = false;
+	private transient boolean nodeLinksSorted = false;
 
 	/**
 	 * Список линий, по которым проходит кабель.
 	 */
-	protected transient List<PhysicalLink> links = new LinkedList<PhysicalLink>();
-	/**
-	 * Флаг сортировки линий.
-	 */
-	protected transient boolean linksSorted = false;
+	private transient List<PhysicalLink> links = new LinkedList<PhysicalLink>();
 
 	/**
 	 * Схемный кабель.
 	 */
-	protected transient SchemeCableLink schemeCableLink = null;
+	private transient SchemeCableLink schemeCableLink = null;
 
 	/**
 	 * Объект привязки кабеля к линиям.
 	 */
-	protected transient HashMap<CableChannelingItem, PhysicalLink> binding = null;
-
-	protected static final List EMPTY_SORTED_LIST = new LinkedList();
+	private transient HashMap<CableChannelingItem, PhysicalLink> binding = null;
 
 	/**
 	 * Конструктор.
