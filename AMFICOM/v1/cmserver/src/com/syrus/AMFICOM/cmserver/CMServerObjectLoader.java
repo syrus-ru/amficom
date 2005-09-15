@@ -1,5 +1,5 @@
 /*
- * $Id: CMServerObjectLoader.java,v 1.9 2005/09/14 18:16:05 arseniy Exp $
+ * $Id: CMServerObjectLoader.java,v 1.10 2005/09/15 00:54:11 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -12,7 +12,6 @@ import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.RESULT_CODE;
 
 import java.util.Collections;
-import java.util.Map;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -25,14 +24,15 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
-import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/14 18:16:05 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/15 00:54:11 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
+ * @todo Implement refresh (i. e. - method {@link ObjectLoader#getRemoteVersions(Set)})
+ * with timeout checking, using field {@link #refreshTimeout}
  */
 final class CMServerObjectLoader extends DatabaseObjectLoader {
 	private CORBAObjectLoader corbaObjectLoader;
@@ -142,14 +142,6 @@ final class CMServerObjectLoader extends DatabaseObjectLoader {
 		}
 
 		return objects;
-	}
-
-	@Override
-	public final Set<Identifier> getOldVersionIds(final Map<Identifier, StorableObjectVersion> versionsMap) throws ApplicationException {
-		if (System.currentTimeMillis() - this.lastRefreshTime <= this.refreshTimeout) {
-			return Collections.emptySet();
-		}
-		return super.getOldVersionIds(versionsMap);
 	}
 
 }
