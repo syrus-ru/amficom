@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.80 2005/09/15 09:33:08 max Exp $
+ * $Id: Collector.java,v 1.81 2005/09/15 13:32:53 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: max $
- * @version $Revision: 1.80 $, $Date: 2005/09/15 09:33:08 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.81 $, $Date: 2005/09/15 13:32:53 $
  * @module map
  */
 public final class Collector extends StorableObject implements Namable, Describable, MapElement, XmlBeansTransferable<XmlCollector> {
@@ -66,9 +66,9 @@ public final class Collector extends StorableObject implements Namable, Describa
 
 	private transient CharacterizableDelegate characterizableDelegate;
 
-	protected transient boolean selected = false;
-	protected transient boolean removed = false;
-	protected transient boolean alarmState = false;
+	private transient boolean selected = false;
+	private transient boolean removed = false;
+	private transient boolean alarmState = false;
 
 	public Collector(final IdlCollector ct) throws CreateObjectException {
 		try {
