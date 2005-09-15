@@ -1,5 +1,5 @@
 /**
- * $Id: ExternalMapElementChooserDialog.java,v 1.6 2005/06/06 12:20:34 krupenn Exp $
+ * $Id: ExternalMapElementChooserDialog.java,v 1.7 2005/09/15 14:11:25 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,6 +32,7 @@ import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
@@ -84,11 +85,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 			e.printStackTrace();
 		}
 		this.map = map;
-		Item item = new PopulatableIconedNode(
-				this.model,
-				map,
-				MapTreeModel.mapIcon,
-				true);
+		Item item = MapTreeModel.createSingleMapRoot(map);
 		this.model.populate(item);
 		this.root.addChild(item);
 	}
@@ -109,7 +106,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 		this.topPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
 		this.buttonHelp.setText(LangModelGeneral.getString("Help"));
 		this.buttonHelp.setEnabled(false);
-		this.buttonCancel.setText(LangModelGeneral.getString("Cancel"));
+		this.buttonCancel.setText(LangModelGeneral.getString("Button.Cancel"));
 		this.buttonCancel.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -117,7 +114,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 					buttonCancel_actionPerformed(e);
 				}
 			});
-		this.buttonOpen.setText(LangModelGeneral.getString("Ok"));
+		this.buttonOpen.setText(LangModelGeneral.getString("Choose"));
 		this.buttonOpen.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -140,7 +137,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 
 		this.model = MapTreeModel.getInstance();
 
-		this.root = new IconedNode("root", LangModelGeneral.getString("root"));
+		this.root = new IconedNode("root", LangModelMap.getString("Map"));
 		this.treeUI = new LogicalTreeUI(this.root, false);
 		this.tree = this.treeUI.getTree();
 		this.treeModel = (ItemTreeModel )this.tree.getModel();
