@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.3 2005/09/08 18:26:31 bass Exp $
+* $Id: LayoutItem.java,v 1.4 2005/09/15 17:21:22 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $
- * @author $Author: bass $
+ * @version $Revision: 1.4 $
+ * @author $Author: bob $
  * @module resource
  */
 
@@ -253,14 +253,5 @@ public final class LayoutItem extends StorableObject implements Characterizable,
 	public final void setParentId(final Identifier parentId) {
 		this.setParentId0(parentId);
 		super.markAsChanged();
-	}
-	
-	@Override
-	public String toString() {
-		return LayoutItem.class.getSimpleName() + " | \n\t" 
-			+ "id:" + this.id + "\n\t" 
-			+ "parentId:" + this.parentId + "\n\t"
-			+ "name:" + this.name + "\n\t"
-			+ "layoutName:" + this.layoutName;
 	}
 }
