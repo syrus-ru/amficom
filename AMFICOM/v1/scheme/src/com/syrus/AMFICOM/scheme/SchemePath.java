@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.85 2005/09/14 19:50:47 bass Exp $
+ * $Id: SchemePath.java,v 1.86 2005/09/15 20:11:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.85 $, $Date: 2005/09/14 19:50:47 $
+ * @version $Revision: 1.86 $, $Date: 2005/09/15 20:11:42 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -272,7 +272,7 @@ public final class SchemePath extends StorableObject
 
 	public SortedSet<PathElement> getPathMembers() {
 		try {
-			return Collections.unmodifiableSortedSet(new TreeSet<PathElement>(this.getPathMembers0()));
+			return Collections.unmodifiableSortedSet(this.getPathMembers0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.unmodifiableSortedSet(new TreeSet<PathElement>(Collections.<PathElement>emptySet()));
@@ -282,8 +282,11 @@ public final class SchemePath extends StorableObject
 	/**
 	 * @return child <code>PathElement</code>s in an unsorted manner.
 	 */
-	Set<PathElement> getPathMembers0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, PATHELEMENT_CODE), true);
+	SortedSet<PathElement> getPathMembers0() throws ApplicationException {
+		return new TreeSet<PathElement>(
+				StorableObjectPool.<PathElement>getStorableObjectsByCondition(
+						new LinkedIdsCondition(this.id, PATHELEMENT_CODE),
+						true));
 	}
 
 	/**

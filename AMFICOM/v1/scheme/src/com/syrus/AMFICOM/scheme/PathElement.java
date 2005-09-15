@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.74 2005/09/14 19:50:48 bass Exp $
+ * $Id: PathElement.java,v 1.75 2005/09/15 20:11:42 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
@@ -71,7 +70,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/09/14 19:50:48 $
+ * @version $Revision: 1.75 $, $Date: 2005/09/15 20:11:42 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -1157,7 +1156,7 @@ public final class PathElement extends StorableObject
 			return;
 		}
 
-		final SortedSet<PathElement> pathElements = new TreeSet<PathElement>(parentSchemePath.getPathMembers0());
+		final SortedSet<PathElement> pathElements = parentSchemePath.getPathMembers0();
 		if (this.sequentialNumber < thatSequentialNumber) {
 			final SortedSet<PathElement> toShiftLeft = pathElements.subSet(this, that);
 			toShiftLeft.remove(this);
@@ -1199,7 +1198,7 @@ public final class PathElement extends StorableObject
 			return;
 		}
 
-		final SortedSet<PathElement> pathElements = new TreeSet<PathElement>(parentSchemePath.getPathMembers0());
+		final SortedSet<PathElement> pathElements = parentSchemePath.getPathMembers0();
 		if (this.sequentialNumber > thatSequentialNumber) {
 			final SortedSet<PathElement> toShiftRight = pathElements.subSet(that, this);
 			toShiftRight.remove(that);
