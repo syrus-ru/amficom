@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.74 2005/09/14 19:50:48 bass Exp $
+ * $Id: SchemeLink.java,v 1.75 2005/09/15 19:27:47 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.74 $, $Date: 2005/09/14 19:50:48 $
+ * @version $Revision: 1.75 $, $Date: 2005/09/15 19:27:47 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -787,7 +787,40 @@ public final class SchemeLink extends AbstractSchemeLink
 			final XmlSchemeLink schemeLink,
 			final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		super.getXmlTransferable(schemeLink, importType);
+		schemeLink.unsetLinkTypeId();
+		if (!super.abstractLinkTypeId.isVoid()) {
+			super.abstractLinkTypeId.getXmlTransferable(schemeLink.addNewLinkTypeId(), importType);
+		}
+		schemeLink.unsetLinkId();
+		if (!super.abstractLinkId.isVoid()) {
+			super.abstractLinkId.getXmlTransferable(schemeLink.addNewLinkId(), importType);
+		}
+		schemeLink.unsetSourceSchemePortId();
+		if (!super.sourceAbstractSchemePortId.isVoid()) {
+			super.sourceAbstractSchemePortId.getXmlTransferable(schemeLink.addNewSourceSchemePortId(), importType);
+		}
+		schemeLink.unsetTargetSchemePortId();
+		if (!super.targetAbstractSchemePortId.isVoid()) {
+			super.targetAbstractSchemePortId.getXmlTransferable(schemeLink.addNewTargetSchemePortId(), importType);
+		}
+		schemeLink.unsetSiteNodeId();
+		if (!this.siteNodeId.isVoid()) {
+			this.siteNodeId.getXmlTransferable(schemeLink.addNewSiteNodeId(), importType);
+		}
+		schemeLink.unsetParentSchemeId();
+		if (!super.parentSchemeId.isVoid()) {
+			super.parentSchemeId.getXmlTransferable(schemeLink.addNewParentSchemeId(), importType);
+		}
+		schemeLink.unsetParentSchemeElementId();
+		if (!this.parentSchemeElementId.isVoid()) {
+			this.parentSchemeElementId.getXmlTransferable(schemeLink.addNewParentSchemeElementId(), importType);
+		}
+		schemeLink.unsetParentSchemeProtoElementId();
+		if (!this.parentSchemeProtoElementId.isVoid()) {
+			this.parentSchemeProtoElementId.getXmlTransferable(schemeLink.addNewParentSchemeProtoElementId(), importType);
+		}
+		return schemeLink;
 	}
 
 	void setAttributes(final Date created,
