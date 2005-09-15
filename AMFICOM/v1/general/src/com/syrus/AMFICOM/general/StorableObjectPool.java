@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.175 2005/09/14 23:23:32 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.176 2005/09/15 00:43:04 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.175 $, $Date: 2005/09/14 23:23:32 $
+ * @version $Revision: 1.176 $, $Date: 2005/09/15 00:43:04 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -431,10 +431,12 @@ public final class StorableObjectPool {
 		}
 
 		final Set<T> storableObjects = new HashSet<T>();
-		for (final T storableObject : objectPool) {
-			final Identifier id = storableObject.getId();
-			if (!loadButIds.contains(id) && condition.isConditionTrue(storableObject)) {
-				storableObjects.add(storableObject);
+		synchronized (objectPool) {
+			for (final T storableObject : objectPool) {
+				final Identifier id = storableObject.getId();
+				if (!loadButIds.contains(id) && condition.isConditionTrue(storableObject)) {
+					storableObjects.add(storableObject);
+				}
 			}
 		}
 
@@ -931,10 +933,12 @@ public final class StorableObjectPool {
 		final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
 		
 		final Set<StorableObject> refreshObjects = new HashSet<StorableObject>();
-		for (final StorableObject storableObject : objectPool) {
-			final Identifier id = storableObject.getId();
-			if (ids.contains(id) && !storableObject.isChanged() && (entityDeletedIds == null || !entityDeletedIds.contains(id))) {
-				refreshObjects.add(storableObject);
+		synchronized (objectPool) {
+			for (final StorableObject storableObject : objectPool) {
+				final Identifier id = storableObject.getId();
+				if (ids.contains(id) && !storableObject.isChanged() && (entityDeletedIds == null || !entityDeletedIds.contains(id))) {
+					refreshObjects.add(storableObject);
+				}
 			}
 		}
 
@@ -965,9 +969,11 @@ public final class StorableObjectPool {
 				final Set<Identifier> entityDeletedIds = DELETED_IDS_MAP.get(new Short(entityCode));
 
 				refreshObjects.clear();
-				for (final StorableObject storableObject : objectPool) {
-					if (!storableObject.isChanged() && (entityDeletedIds == null || !entityDeletedIds.contains(storableObject.getId()))) {
-						refreshObjects.add(storableObject);
+				synchronized (objectPool) {
+					for (final StorableObject storableObject : objectPool) {
+						if (!storableObject.isChanged() && (entityDeletedIds == null || !entityDeletedIds.contains(storableObject.getId()))) {
+							refreshObjects.add(storableObject);
+						}
 					}
 				}
 				if (refreshObjects.isEmpty()) {
@@ -1009,6 +1015,9 @@ public final class StorableObjectPool {
 			final Identifier id = storableObject.getId();
 			final StorableObjectVersion version = storableObject.getVersion();
 			final StorableObjectVersion remoteVersion = remoteVersionsMap.get(id);
+
+			assert remoteVersion != null : ErrorMessages.NON_NULL_EXPECTED + " for object '" + id + "'";
+
 			if (remoteVersion.equals(StorableObjectVersion.ILLEGAL_VERSION)) {
 				Log.debugMessage("StorableObjectPool.refresh | Object '" + ObjectEntities.codeToString(entityCode) + "' '" + id
 						+ "' removed remotely -- removing locally", Log.DEBUGLEVEL08);
