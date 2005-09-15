@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedList.java,v 1.11 2005/09/15 17:56:15 bob Exp $
+* $Id: WrapperedList.java,v 1.12 2005/09/15 17:56:37 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/15 17:56:15 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/15 17:56:37 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -76,16 +76,16 @@ public final class WrapperedList<T> extends JList {
 			// elementValue, Level.FINEST);
 			if (!anObjectValue.equals(elementValue)) {
 				int count = this.model.getSize();
-				 Log.debugMessage("WrapperedList.setSelectedValue | count " + count, Log.DEBUGLEVEL10);
+				assert Log.debugMessage("WrapperedList.setSelectedValue | count " + count, Log.DEBUGLEVEL10);
 				for (int i = 0; i < count; i++) {
 					elementValue = this.model.wrapper.getValue((T) this.model.getElementAt(i), this.model.compareKey);
-					Log.debugMessage("WrapperedList.setSelectedValue | anObjectValue " 
+					assert Log.debugMessage("WrapperedList.setSelectedValue | anObjectValue " 
 							+ anObjectValue 
 							+ " > elementValue " 
 							+ elementValue, 
 						Log.DEBUGLEVEL10);
 					if (anObjectValue.equals(elementValue)) {
-						Log.debugMessage("WrapperedList.setSelectedValue | index " + i, Log.DEBUGLEVEL10);
+						assert Log.debugMessage("WrapperedList.setSelectedValue | index " + i, Log.DEBUGLEVEL10);
 						super.setSelectedIndex(i);
 						if (shouldScroll) {
 							super.ensureIndexIsVisible(i);
@@ -96,7 +96,7 @@ public final class WrapperedList<T> extends JList {
 				}
 			}
 
-			Log.debugMessage("WrapperedList.setSelectedValue | index -1" , Log.DEBUGLEVEL10);
+			assert Log.debugMessage("WrapperedList.setSelectedValue | index -1" , Log.DEBUGLEVEL10);
 			final int selectedIndex = super.getSelectedIndex();
 			super.removeSelectionInterval(selectedIndex, selectedIndex);
 			super.repaint();
