@@ -1,5 +1,5 @@
 /*-
- * $Id: ServerCore.java,v 1.34 2005/09/14 23:24:50 arseniy Exp $
+ * $Id: ServerCore.java,v 1.35 2005/09/15 00:46:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.general;
 
-import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -30,7 +29,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.34 $, $Date: 2005/09/14 23:24:50 $
+ * @version $Revision: 1.35 $, $Date: 2005/09/15 00:46:55 $
  * @module csbridge
  * @todo Refactor ApplicationException descendants to be capable of generating
  *       an AMFICOMRemoteException.
@@ -181,43 +180,6 @@ public abstract class ServerCore implements CommonServer {
 			database.save(storableObjects);
 		} catch (ApplicationException ae) {
 			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_UPDATE);
-		} catch (final AMFICOMRemoteException are) {
-			throw are;
-		} catch (final Throwable throwable) {
-			throw this.processDefaultThrowable(throwable);
-		}
-	}
-
-	public final IdlIdentifier[] transmitOldVersionIds(final IdVersion[] idVersions, final IdlSessionKey sessionKeyT)
-			throws AMFICOMRemoteException {
-		try {
-			assert idVersions != null && sessionKeyT != null : ErrorMessages.NON_NULL_EXPECTED;
-			final int length = idVersions.length;
-			assert length != 0 : ErrorMessages.NON_EMPTY_EXPECTED;
-
-			final IdlIdentifierHolder userId = new IdlIdentifierHolder();
-			final IdlIdentifierHolder domainId = new IdlIdentifierHolder();
-			this.validateAccess(sessionKeyT, userId, domainId);
-
-			final Map<Identifier, StorableObjectVersion> versionsMap = new HashMap<Identifier, StorableObjectVersion>(idVersions.length);
-			for (int i = 0; i < idVersions.length; i++) {
-				versionsMap.put(new Identifier(idVersions[i].id), new StorableObjectVersion(idVersions[i].version));
-			}
-			final short entityCode = StorableObject.getEntityCodeOfIdentifiables(versionsMap.keySet());
-			assert ObjectEntities.isEntityCodeValid(entityCode) : ErrorMessages.ILLEGAL_ENTITY_CODE;
-			final StorableObjectDatabase<?> database = DatabaseContext.getDatabase(entityCode);
-			assert (database != null) : ErrorMessages.NON_NULL_EXPECTED;
-			final Set<Identifier> ids = database.getOldVersionIds(versionsMap);
-
-			Log.debugMessage("ServerCore.transmitOldVersionIds | Old versions have '"
-					+ ObjectEntities.codeToString(entityCode) + "'s: " + ids, Level.FINEST);
-
-			//-Before return, ensure, that objects in pool are up to date.
-			StorableObjectPool.refresh(ids);
-
-			return Identifier.createTransferables(ids);
-		} catch (ApplicationException ae) {
-			throw this.processDefaultApplicationException(ae, IdlErrorCode.ERROR_RETRIEVE);
 		} catch (final AMFICOMRemoteException are) {
 			throw are;
 		} catch (final Throwable throwable) {

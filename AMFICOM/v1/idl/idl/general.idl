@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.110 2005/09/14 17:48:07 arseniy Exp $
+ * $Id: general.idl,v 1.111 2005/09/15 00:46:28 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -295,10 +295,6 @@ module general {
 					raises (AMFICOMRemoteException);
 
 			void receiveStorableObjects(in IdlStorableObjectSeq storableObjects,
-					in security::corba::IdlSessionKey sessionKey)
-					raises (AMFICOMRemoteException);
-
-			IdlIdentifierSeq transmitOldVersionIds(in IdVersionSeq idVersions,
 					in security::corba::IdlSessionKey sessionKey)
 					raises (AMFICOMRemoteException);
 
