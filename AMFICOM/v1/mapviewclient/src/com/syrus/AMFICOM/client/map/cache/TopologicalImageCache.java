@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.14 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: TopologicalImageCache.java,v 1.15 2005/09/15 12:54:25 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import java.util.ListIterator;
 import java.util.logging.Level;
 
 import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapConnectionListener;
 import com.syrus.AMFICOM.client.map.MapContext;
 import com.syrus.AMFICOM.client.map.MapCoordinatesConverter;
 import com.syrus.AMFICOM.client.map.MapDataException;
@@ -31,8 +32,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.14 $, $Date: 2005/08/12 14:49:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.15 $, $Date: 2005/09/15 12:54:25 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -170,6 +171,18 @@ public class TopologicalImageCache implements MapImageRenderer
 		this.scale = this.mapContext.getScale();
 		this.center = this.mapContext.getCenter();
 
+		this.loader.getMapConnection().addMapConnectionListener(new MapConnectionListener() {
+			public void mapConnectionChanged() throws MapConnectionException {
+				try {
+					TopologicalImageCache.this.setScale(
+							TopologicalImageCache.this.mapContext.getScale());
+				} catch(MapDataException e) {
+					// TODO Auto-generated catch block
+					e.printStackTrace();
+				}
+			}
+		});
+		
 		this.loadingThread = new LoadingThread(loader);
 		this.loadingThread.start();
 	}
