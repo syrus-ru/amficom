@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.64 2005/09/14 19:50:48 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.65 2005/09/15 20:07:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,6 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Set;
 import java.util.SortedSet;
-import java.util.TreeSet;
 
 import org.omg.CORBA.ORB;
 
@@ -57,7 +56,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/09/14 19:50:48 $
+ * @version $Revision: 1.65 $, $Date: 2005/09/15 20:07:49 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -792,7 +791,7 @@ public final class CableChannelingItem
 			return;
 		}
 
-		final SortedSet<CableChannelingItem> cableChannelingItems = new TreeSet<CableChannelingItem>(parentSchemeCableLink.getPathMembers0());
+		final SortedSet<CableChannelingItem> cableChannelingItems = parentSchemeCableLink.getPathMembers0();
 		if (this.sequentialNumber < thatSequentialNumber) {
 			final SortedSet<CableChannelingItem> toShiftLeft = cableChannelingItems.subSet(this, that);
 			toShiftLeft.remove(this);
@@ -834,7 +833,7 @@ public final class CableChannelingItem
 			return;
 		}
 
-		final SortedSet<CableChannelingItem> cableChannelingItems = new TreeSet<CableChannelingItem>(parentSchemeCableLink.getPathMembers0());
+		final SortedSet<CableChannelingItem> cableChannelingItems = parentSchemeCableLink.getPathMembers0();
 		if (this.sequentialNumber > thatSequentialNumber) {
 			final SortedSet<CableChannelingItem> toShiftRight = cableChannelingItems.subSet(that, this);
 			toShiftRight.remove(that);

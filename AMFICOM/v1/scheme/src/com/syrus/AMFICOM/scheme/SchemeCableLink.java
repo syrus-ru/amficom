@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.85 2005/09/14 19:50:48 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.86 2005/09/15 20:07:49 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -74,8 +74,10 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLinkHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlCableChannelingItem;
+import com.syrus.AMFICOM.scheme.xml.XmlCableChannelingItemSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableLink;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThread;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThreadSeq;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
@@ -83,7 +85,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.85 $, $Date: 2005/09/14 19:50:48 $
+ * @version $Revision: 1.86 $, $Date: 2005/09/15 20:07:49 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -325,7 +327,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 
 	public SortedSet<CableChannelingItem> getPathMembers() {
 		try {
-			return Collections.unmodifiableSortedSet(new TreeSet<CableChannelingItem>(this.getPathMembers0()));
+			return Collections.unmodifiableSortedSet(this.getPathMembers0());
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
 			return Collections.unmodifiableSortedSet(new TreeSet<CableChannelingItem>(Collections.<CableChannelingItem>emptySet()));
@@ -335,8 +337,11 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	/**
 	 * @return child <code>CableChannelingItem</code>s in an unsorted manner.
 	 */
-	Set<CableChannelingItem> getPathMembers0() throws ApplicationException {
-		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, CABLECHANNELINGITEM_CODE), true);
+	SortedSet<CableChannelingItem> getPathMembers0() throws ApplicationException {
+		return new TreeSet<CableChannelingItem>(
+				StorableObjectPool.<CableChannelingItem>getStorableObjectsByCondition(
+						new LinkedIdsCondition(this.id, CABLECHANNELINGITEM_CODE),
+						true));
 	}
 
 	/**
@@ -479,7 +484,41 @@ public final class SchemeCableLink extends AbstractSchemeLink
 			final XmlSchemeCableLink schemeCableLink,
 			final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		super.getXmlTransferable(schemeCableLink, importType);
+		schemeCableLink.unsetCableLinkTypeId();
+		if (!super.abstractLinkTypeId.isVoid()) {
+			super.abstractLinkTypeId.getXmlTransferable(schemeCableLink.addNewCableLinkTypeId(), importType);
+		}
+		schemeCableLink.unsetCableLinkId();
+		if (!super.abstractLinkId.isVoid()) {
+			super.abstractLinkId.getXmlTransferable(schemeCableLink.addNewCableLinkId(), importType);
+		}
+		schemeCableLink.unsetSourceSchemeCablePortId();
+		if (!super.sourceAbstractSchemePortId.isVoid()) {
+			super.sourceAbstractSchemePortId.getXmlTransferable(schemeCableLink.addNewSourceSchemeCablePortId(), importType);
+		}
+		schemeCableLink.unsetTargetSchemeCablePortId();
+		if (!super.targetAbstractSchemePortId.isVoid()) {
+			super.targetAbstractSchemePortId.getXmlTransferable(schemeCableLink.addNewTargetSchemeCablePortId(), importType);
+		}
+		super.parentSchemeId.getXmlTransferable(schemeCableLink.addNewParentSchemeId(), importType);
+		schemeCableLink.unsetSchemeCableThreads();
+		final Set<SchemeCableThread> schemeCableThreads = this.getSchemeCableThreads0();
+		if (!schemeCableThreads.isEmpty()) {
+			final XmlSchemeCableThreadSeq schemeCableThreadSeq = schemeCableLink.addNewSchemeCableThreads();
+			for (final SchemeCableThread schemeCableThread : schemeCableThreads) {
+				schemeCableThread.getXmlTransferable(schemeCableThreadSeq.addNewSchemeCableThread(), importType);
+			}
+		}
+		schemeCableLink.unsetCableChannelingItems();
+		final SortedSet<CableChannelingItem> cableChannelingItems = this.getPathMembers0();
+		if (!cableChannelingItems.isEmpty()) {
+			final XmlCableChannelingItemSeq cableChannelingItemSeq = schemeCableLink.addNewCableChannelingItems();
+			for (final CableChannelingItem cableChannelingItem : cableChannelingItems) {
+				cableChannelingItem.getXmlTransferable(cableChannelingItemSeq.addNewCableChannelingItem(), importType);
+			}
+		}
+		return schemeCableLink;
 	}
 
 	/**
