@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.21 2005/09/09 16:41:30 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.22 2005/09/15 07:12:14 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.DOMAIN_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.21 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $
+ * @author $Author: krupenn $
  * @module map
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -43,18 +44,40 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	@Override
 	public boolean isConditionTrue(final StorableObject storableObject) throws IllegalObjectEntityException {
 		switch (this.entityCode.shortValue()) {
+			case COLLECTOR_CODE:
+				final Collector collector = (Collector) storableObject;
+				switch (this.linkedEntityCode) {
+				case PHYSICALLINK_CODE:
+					return super.conditionTest(collector.getPhysicalLinkIds());
+				default:
+					throw newExceptionLinkedEntityIllegal();
+				}
+			case PHYSICALLINK_CODE:
+				final PhysicalLink physicalLink = (PhysicalLink) storableObject;
+				switch (this.linkedEntityCode) {
+				case TOPOLOGICALNODE_CODE:
+					// fall through.
+					// finding a physical link by endpoint is the same for
+					// topological node and site node
+				case SITENODE_CODE:
+					boolean condition1 = super.conditionTest(physicalLink.getStartNodeId());
+					boolean condition2 = super.conditionTest(physicalLink.getEndNodeId());
+					return condition1 | condition2;
+				default:
+					throw newExceptionLinkedEntityIllegal();
+				}
 			case NODELINK_CODE:
 				final NodeLink nodeLink = (NodeLink) storableObject;
 				switch (this.linkedEntityCode) {
 				case PHYSICALLINK_CODE:
-					return super.conditionTest(nodeLink.getPhysicalLink().getId());
+					return super.conditionTest(nodeLink.getPhysicalLinkId());
 				case TOPOLOGICALNODE_CODE:
 					// fall through.
 					// finding a node link by endpoint is the same for
 					// topological node and site node
 				case SITENODE_CODE:
-					boolean condition1 = super.conditionTest(nodeLink.getStartNode().getId());
-					boolean condition2 = super.conditionTest(nodeLink.getEndNode().getId());
+					boolean condition1 = super.conditionTest(nodeLink.getStartNodeId());
+					boolean condition2 = super.conditionTest(nodeLink.getEndNodeId());
 					return condition1 | condition2;
 				default:
 					throw newExceptionLinkedEntityIllegal();
@@ -71,7 +94,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final SiteNodeType siteNodeType = (SiteNodeType) storableObject;
 				switch (this.linkedEntityCode) {
 				case MAPLIBRARY_CODE:
-					return super.conditionTest(siteNodeType.getMapLibrary().getId());
+					return super.conditionTest(siteNodeType.getMapLibraryId());
 				default:
 					throw newExceptionLinkedEntityIllegal();
 				}
@@ -79,7 +102,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				final PhysicalLinkType physicalLinkType = (PhysicalLinkType) storableObject;
 				switch (this.linkedEntityCode) {
 				case MAPLIBRARY_CODE:
-					return super.conditionTest(physicalLinkType.getMapLibrary().getId());
+					return super.conditionTest(physicalLinkType.getMapLibraryId());
 				default:
 					throw newExceptionLinkedEntityIllegal();
 				}
