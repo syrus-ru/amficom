@@ -2,32 +2,33 @@
 package com.syrus.AMFICOM.client.UI;
 
 import java.io.Serializable;
+import java.util.Collection;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Collection;
 import java.util.Map;
 
 import javax.swing.AbstractListModel;
 import javax.swing.MutableComboBoxModel;
 
 import com.syrus.AMFICOM.general.ErrorMessages;
+import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/07 02:37:31 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $, $Date: 2005/09/15 17:30:25 $
+ * @author $Author: bob $
  * @module commonclient
  */
-public class WrapperedListModel<T> extends AbstractListModel implements MutableComboBoxModel, Serializable {
+public final class WrapperedListModel<T> extends AbstractListModel implements MutableComboBoxModel, Serializable {
 
 	private static final long serialVersionUID = -1607982236171940302L;
 
-	protected T selectedObject;
+	protected T selectedT;
 
-	protected List<T> objects;
+	protected List<T> ts;
 
 	/**
 	 * Wrapper of Model (ObjectResource) will be used for sorting. see
@@ -51,7 +52,7 @@ public class WrapperedListModel<T> extends AbstractListModel implements MutableC
 	public WrapperedListModel(Wrapper<T> wrapper, List<T> objects, String key, String compareKey) {
 		this.wrapper = wrapper;
 		this.key = key;
-		this.objects = objects;
+		this.ts = objects;
 		this.compareKey = compareKey;
 	}
 
@@ -64,50 +65,50 @@ public class WrapperedListModel<T> extends AbstractListModel implements MutableC
 	 *            The combo box value or null for no selection.
 	 */
 	public void setSelectedItem(final Object anObject) {
-		if ((this.selectedObject != null && !this.selectedObject.equals(anObject)) || this.selectedObject == null && anObject != null) {
-			this.selectedObject = (T) anObject;
+		if ((this.selectedT != null && !this.selectedT.equals(anObject)) || this.selectedT == null && anObject != null) {
+			this.selectedT = (T) anObject;
 			super.fireContentsChanged(this, -1, -1);
 		}
 	}
 
 	// implements javax.swing.ComboBoxModel
 	public Object getSelectedItem() {
-		return this.selectedObject;
+		return this.selectedT;
 	}
 
 	// implements javax.swing.ListModel
 	public int getSize() {
-		return (this.objects != null) ? this.objects.size() : 0;
+		return (this.ts != null) ? this.ts.size() : 0;
 	}
 
 	// implements javax.swing.ListModel
 	public Object getElementAt(final int index) {
 		Object obj = null;
-		if (index >= 0 && index < this.objects.size()) {
-			obj = this.objects.get(index);
+		if (index >= 0 && index < this.ts.size()) {
+			obj = this.ts.get(index);
 		}
 		return obj;
 	}
 
-	public Object getFieldByObject(final T object) {
+	public Object getFieldByObject(final T t) {
 
-		Object obj = this.wrapper.getValue(object, this.key);
+		Object object = this.wrapper.getValue(t, this.key);
 
 		if (this.wrapper.getPropertyValue(this.key) instanceof Map) {
 			final Map map = (Map) this.wrapper.getPropertyValue(this.key);
 			Object keyObject = null;
 			for (final Iterator it = map.keySet().iterator(); it.hasNext();) {
 				final Object keyObj = it.next();
-				if (map.get(keyObj).equals(obj)) {
+				if (map.get(keyObj).equals(object)) {
 					keyObject = keyObj;
 					break;
 				}
 			}
-			obj = keyObject;
+			object = keyObject;
 
 		}
 
-		return obj;
+		return object;
 	}
 
 	public Object getObjectByField(final Object field) {
@@ -116,7 +117,7 @@ public class WrapperedListModel<T> extends AbstractListModel implements MutableC
 		
 		Object object = null;
 		if (field != null) {
-			for (final T element : this.objects) {
+			for (final T element : this.ts) {
 				if (field.equals(this.getFieldByObject(element))) {
 					object = element;
 					break;
@@ -135,12 +136,12 @@ public class WrapperedListModel<T> extends AbstractListModel implements MutableC
 	 */
 	public int getIndexOf(final T anObject) {
 		int index = -1;
-		if (this.objects != null) {
-			for (final T element : this.objects) {
+		if (this.ts != null) {
+			for (final T element : this.ts) {
 				final Object anObjectValue = this.wrapper.getValue(anObject, this.compareKey);
 				final Object elementValue = this.wrapper.getValue(element, this.compareKey);
 				if (anObjectValue.equals(elementValue)) {
-					index = this.objects.indexOf(element);
+					index = this.ts.indexOf(element);
 					break;
 				}
 			}
@@ -150,12 +151,14 @@ public class WrapperedListModel<T> extends AbstractListModel implements MutableC
 
 	// implements javax.swing.MutableComboBoxModel
 	public void addElement(final Object anObject) {
-		this.objects.add((T) anObject);
+		Log.debugMessage("WrapperedListModel.addElement | before " + this.ts, Log.DEBUGLEVEL10);
+		this.ts.add((T) anObject);
 		this.sort();
-		super.fireIntervalAdded(this, this.objects.size() - 1, this.objects.size() - 1);
-		if (this.objects.size() == 1 && this.selectedObject == null && anObject != null) {
+		super.fireIntervalAdded(this, this.ts.size() - 1, this.ts.size() - 1);
+		if (this.ts.size() == 1 && this.selectedT == null && anObject != null) {
 			this.setSelectedItem(anObject);
 		}
+		Log.debugMessage("WrapperedListModel.addElement | after " + this.ts, Log.DEBUGLEVEL10);
 	}
 
 	public void addElements(final Collection<T> addingObjects) {
@@ -165,37 +168,37 @@ public class WrapperedListModel<T> extends AbstractListModel implements MutableC
 		if (addingObjects.size() == 0) {
 			return;
 		}
-		this.objects.addAll(addingObjects);
-		super.fireIntervalAdded(this, this.objects.size() - addingObjects.size(), this.objects.size() - 1);
+		this.ts.addAll(addingObjects);
+		super.fireIntervalAdded(this, this.ts.size() - addingObjects.size(), this.ts.size() - 1);
 	}
 
 	public final void setElements(final Collection<T> objects) {
-		this.objects.clear();
+		this.ts.clear();
 		if (objects != null) {
-			this.objects.addAll(objects);
+			this.ts.addAll(objects);
 			this.sort();
-			int size = this.objects.size();
+			int size = this.ts.size();
 			super.fireContentsChanged(this, 0, size > 0 ? size - 1 : 0);
 		}
 	}
 
 	public void sort() {
-		if (this.objects != null) {
-			Collections.sort(this.objects, new WrapperComparator<T>(this.wrapper, this.key, true));
-			super.fireContentsChanged(this, 0, this.objects.size());
+		if (this.ts != null) {
+			Collections.sort(this.ts, new WrapperComparator<T>(this.wrapper, this.key, true));
+			super.fireContentsChanged(this, 0, this.ts.size());
 		}
 
 	}
 
 	// implements javax.swing.MutableComboBoxModel
 	public void insertElementAt(final Object anObject, final int index) {
-		this.objects.add(index, (T) anObject);
+		this.ts.add(index, (T) anObject);
 		super.fireIntervalAdded(this, index, index);
 	}
 
 	// implements javax.swing.MutableComboBoxModel
 	public void removeElementAt(final int index) {
-		if (this.getElementAt(index) == this.selectedObject) {
+		if (this.getElementAt(index) == this.selectedT) {
 			if (index == 0) {
 				this.setSelectedItem(getSize() == 1 ? null : this.getElementAt(index + 1));
 			} else {
@@ -203,14 +206,14 @@ public class WrapperedListModel<T> extends AbstractListModel implements MutableC
 			}
 		}
 
-		this.objects.remove(index);
+		this.ts.remove(index);
 
 		super.fireIntervalRemoved(this, index, index);
 	}
 
 	// implements javax.swing.MutableComboBoxModel
 	public void removeElement(final Object anObject) {
-		int index = this.objects.indexOf(anObject);
+		int index = this.ts.indexOf(anObject);
 		if (index != -1) {
 			this.removeElementAt(index);
 		}
@@ -220,14 +223,14 @@ public class WrapperedListModel<T> extends AbstractListModel implements MutableC
 	 * Empties the list.
 	 */
 	public void removeAllElements() {
-		if (this.objects != null && this.objects.size() > 0) {
+		if (this.ts != null && this.ts.size() > 0) {
 			final int firstIndex = 0;
-			final int lastIndex = this.objects.size() - 1;
-			this.objects.clear();
-			this.selectedObject = null;
+			final int lastIndex = this.ts.size() - 1;
+			this.ts.clear();
+			this.selectedT = null;
 			super.fireIntervalRemoved(this, firstIndex, lastIndex);
 		} else {
-			this.selectedObject = null;
+			this.selectedT = null;
 		}
 	}
 
