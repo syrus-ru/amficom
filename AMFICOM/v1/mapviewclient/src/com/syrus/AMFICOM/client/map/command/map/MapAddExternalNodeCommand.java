@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddExternalNodeCommand.java,v 1.14 2005/08/18 14:10:21 krupenn Exp $
+ * $Id: MapAddExternalNodeCommand.java,v 1.15 2005/09/15 14:10:41 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/08/18 14:10:21 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/15 14:10:41 $
  * @module mapviewclient
  */
 public class MapAddExternalNodeCommand extends AbstractCommand
@@ -117,7 +117,7 @@ public class MapAddExternalNodeCommand extends AbstractCommand
 		ExternalMapElementChooserDialog elemengChooserDialog = 
 			new ExternalMapElementChooserDialog(
 				this.map,
-				LangModelMap.getString("SiteNode"));
+				LangModelMap.getString("externalnode"));
 
 		elemengChooserDialog.setModal(true);
 		elemengChooserDialog.setVisible(true);
