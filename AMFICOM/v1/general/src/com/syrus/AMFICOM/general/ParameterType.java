@@ -1,5 +1,5 @@
 /*-
- * $Id: ParameterType.java,v 1.61 2005/09/14 18:51:56 arseniy Exp $
+ * $Id: ParameterType.java,v 1.62 2005/09/16 12:41:50 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,9 +20,9 @@ import com.syrus.util.Codeable;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/09/14 18:51:56 $
- * @author $Author: arseniy $
- * @author Tashoyan Arseniy Feliksovich
+ * @version $Revision: 1.62 $, $Date: 2005/09/16 12:41:50 $
+ * @author $Author: bob $
+ * @author Tashoyan Arseniy Felixovich
  * @module general
  */
 public enum ParameterType implements TransferableObject, Codeable {
@@ -67,52 +67,8 @@ public enum ParameterType implements TransferableObject, Codeable {
 	}
 
 	public static ParameterType fromInt(final int code) {
-		switch (code) {
-			case IdlParameterType._REF_WAVE_LENGTH:
-				return REF_WAVE_LENGTH;
-			case IdlParameterType._REF_TRACE_LENGTH:
-				return REF_TRACE_LENGTH;
-			case IdlParameterType._REF_RESOLUTION:
-				return REF_RESOLUTION;
-			case IdlParameterType._REF_PULSE_WIDTH_LOW_RES:
-				return REF_PULSE_WIDTH_LOW_RES;
-			case IdlParameterType._REF_PULSE_WIDTH_HIGH_RES:
-				return REF_PULSE_WIDTH_HIGH_RES;
-			case IdlParameterType._REF_INDEX_OF_REFRACTION:
-				return REF_INDEX_OF_REFRACTION;
-			case IdlParameterType._REF_AVERAGE_COUNT:
-				return REF_AVERAGE_COUNT;
-			case IdlParameterType._REF_FLAG_GAIN_SPLICE_ON:
-				return REF_FLAG_GAIN_SPLICE_ON;
-			case IdlParameterType._REF_FLAG_LIFE_FIBER_DETECT:
-				return REF_FLAG_LIFE_FIBER_DETECT;
-
-			case IdlParameterType._REFLECTOGRAMMA:
-				return REFLECTOGRAMMA;
-			case IdlParameterType._REFLECTOGRAMMA_ETALON:
-				return REFLECTOGRAMMA_ETALON;
-			case IdlParameterType._DADARA_ETALON:
-				return DADARA_ETALON;
-			case IdlParameterType._DADARA_CRITERIA:
-				return DADARA_CRITERIA;
-			case IdlParameterType._DADARA_ANALYSIS_RESULT:
-				return DADARA_ANALYSIS_RESULT;
-			case IdlParameterType._DADARA_ALARMS:
-				return DADARA_ALARMS;
-
-			case IdlParameterType._PREDICTION_TIME:
-				return PREDICTION_TIME;
-			case IdlParameterType._PREDICTION_TIME_START:
-				return PREDICTION_TIME_START;
-			case IdlParameterType._PREDICTION_TIME_END:
-				return PREDICTION_TIME_END;
-
-			case IdlParameterType._UNKNOWN_PARAMETERTYPE:
-				return UNKNOWN;
-			default:
-				Log.errorMessage("ParameterType.fromInt | Illegal IDL code: " + code + ", returning UNKNOWN");
-				return UNKNOWN;
-		}
+		final ParameterType[] types = ParameterType.values();
+		return types[code];
 	}
 
 	public static ParameterType fromTransferable(final IdlParameterType idlParameterType) {
