@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorTreeModel.java,v 1.4 2005/09/16 14:53:36 krupenn Exp $ Syrus
+ * $Id: MapEditorTreeModel.java,v 1.5 2005/09/16 15:12:03 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.4 $, $Date: 2005/09/16 14:53:36 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/16 15:12:03 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -95,7 +95,6 @@ public final class MapEditorTreeModel implements ChildrenFactory {
 			List children = new LinkedList(this.getRoot().getChildren());
 			for(Iterator iter = children.iterator(); iter.hasNext();) {
 				Item item = (Item )iter.next();
-				System.out.println("		" + item.getObject()); //$NON-NLS-1$
 				item.setParent(null);
 			}
 			this.topologyNode = null;
