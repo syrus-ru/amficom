@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.63 2005/09/14 19:50:48 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.64 2005/09/16 15:58:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2005/09/14 19:50:48 $
+ * @version $Revision: 1.64 $, $Date: 2005/09/16 15:58:22 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -510,20 +510,27 @@ public final class SchemeProtoGroup extends StorableObject
 	throws ApplicationException {
 		super.id.getXmlTransferable(schemeProtoGroup.addNewId(), importType);
 		schemeProtoGroup.setName(this.name);
-		if (this.description.length() == 0) {
+		if (schemeProtoGroup.isSetDescription()) {
 			schemeProtoGroup.unsetDescription();
-		} else {
+		}
+		if (this.description.length() != 0) {
 			schemeProtoGroup.setDescription(this.description);
 		}
-		schemeProtoGroup.unsetSymbolId();
+		if (schemeProtoGroup.isSetSymbolId()) {
+			schemeProtoGroup.unsetSymbolId();
+		}
 		if (!this.symbolId.isVoid()) {
 			this.symbolId.getXmlTransferable(schemeProtoGroup.addNewSymbolId(), importType);
 		}
-		schemeProtoGroup.unsetParentSchemeProtoGroupId();
+		if (schemeProtoGroup.isSetParentSchemeProtoGroupId()) {
+			schemeProtoGroup.unsetParentSchemeProtoGroupId();
+		}
 		if (!this.parentSchemeProtoGroupId.isVoid()) {
 			this.parentSchemeProtoGroupId.getXmlTransferable(schemeProtoGroup.addNewParentSchemeProtoGroupId(), importType);
 		}
-		schemeProtoGroup.unsetSchemeProtoGroups();
+		if (schemeProtoGroup.isSetSchemeProtoGroups()) {
+			schemeProtoGroup.unsetSchemeProtoGroups();
+		}
 		final Set<SchemeProtoGroup> schemeProtoGroups = this.getSchemeProtoGroups0();
 		if (!schemeProtoGroups.isEmpty()) {
 			final XmlSchemeProtoGroupSeq schemeProtoGroupSeq = schemeProtoGroup.addNewSchemeProtoGroups();
@@ -531,7 +538,9 @@ public final class SchemeProtoGroup extends StorableObject
 				schemeProtoGroup2.getXmlTransferable(schemeProtoGroupSeq.addNewSchemeProtoGroup(), importType);
 			}
 		}
-		schemeProtoGroup.unsetSchemeProtoElements();
+		if (schemeProtoGroup.isSetSchemeProtoElements()) {
+			schemeProtoGroup.unsetSchemeProtoElements();
+		}
 		final Set<SchemeProtoElement> schemeProtoElements = this.getSchemeProtoElements0();
 		if (!schemeProtoElements.isEmpty()) {
 			final XmlSchemeProtoElementSeq schemeProtoElementSeq = schemeProtoGroup.addNewSchemeProtoElements();

@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.81 2005/09/15 13:32:53 krupenn Exp $
+ * $Id: Collector.java,v 1.82 2005/09/16 15:58:21 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,8 +48,8 @@ import com.syrus.util.Log;
  * Коллектор на топологической схеме, который характеризуется набором входящих
  * в него линий. Линии не обязаны быть связными.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.81 $, $Date: 2005/09/15 13:32:53 $
+ * @author $Author: bass $
+ * @version $Revision: 1.82 $, $Date: 2005/09/16 15:58:21 $
  * @module map
  */
 public final class Collector extends StorableObject implements Namable, Describable, MapElement, XmlBeansTransferable<XmlCollector> {
@@ -369,7 +369,9 @@ public final class Collector extends StorableObject implements Namable, Describa
 		collector.setName(this.name);
 		collector.setDescription(this.description);		
 		
-		collector.unsetPhysicalLinkIds();
+		if (collector.isSetPhysicalLinkIds()) {
+			collector.unsetPhysicalLinkIds();
+		}
 		final Set<PhysicalLink> physicalLinks1 = this.getPhysicalLinks();
 		if (!physicalLinks1.isEmpty()) {
 			final XmlIdentifierSeq physicalLinkIdSeq = collector.addNewPhysicalLinkIds();

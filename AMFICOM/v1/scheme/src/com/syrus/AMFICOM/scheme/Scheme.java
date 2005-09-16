@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.91 2005/09/15 12:31:54 bass Exp $
+ * $Id: Scheme.java,v 1.92 2005/09/16 15:58:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -81,7 +81,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.91 $, $Date: 2005/09/15 12:31:54 $
+ * @version $Revision: 1.92 $, $Date: 2005/09/16 15:58:22 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -789,42 +789,58 @@ public final class Scheme extends AbstractCloneableDomainMember
 	throws ApplicationException {
 		super.id.getXmlTransferable(scheme.addNewId(), importType);
 		scheme.setName(this.name);
-		if (this.description.length() == 0) {
+		if (scheme.isSetDescription()) {
 			scheme.unsetDescription();
-		} else {
+		}
+		if (this.description.length() != 0) {
 			scheme.setDescription(this.description);
 		}
-		if (this.label.length() == 0) {
+		if (scheme.isSetLabel()) {
 			scheme.unsetLabel();
-		} else {
+		}
+		if (this.label.length() != 0) {
 			scheme.setLabel(this.label);
 		}
 		scheme.setWidth(this.width);
 		scheme.setHeight(this.height);
 		scheme.setKind(XmlScheme.Kind.Enum.forInt(this.getKind().value() + 1));
-		scheme.unsetDomainId();
+		if (scheme.isSetDomainId()) {
+			scheme.unsetDomainId();
+		}
 		super.getDomainId().getXmlTransferable(scheme.addNewDomainId(), importType);
-		scheme.unsetMapId();
+		if (scheme.isSetMapId()) {
+			scheme.unsetMapId();
+		}
 		if (!this.mapId.isVoid()) {
 			this.mapId.getXmlTransferable(scheme.addNewMapId(), importType);
 		}
-		scheme.unsetSymbolId();
+		if (scheme.isSetSymbolId()) {
+			scheme.unsetSymbolId();
+		}
 		if (!this.symbolId.isVoid()) {
 			this.symbolId.getXmlTransferable(scheme.addNewSymbolId(), importType);
 		}
-		scheme.unsetUgoCellId();
+		if (scheme.isSetUgoCellId()) {
+			scheme.unsetUgoCellId();
+		}
 		if (!this.ugoCellId.isVoid()) {
 			this.ugoCellId.getXmlTransferable(scheme.addNewUgoCellId(), importType);
 		}
-		scheme.unsetSchemeCellId();
+		if (scheme.isSetSchemeCellId()) {
+			scheme.unsetSchemeCellId();
+		}
 		if (!this.schemeCellId.isVoid()) {
 			this.schemeCellId.getXmlTransferable(scheme.addNewSchemeCellId(), importType);
 		}
-		scheme.unsetParentSchemeElementId();
+		if (scheme.isSetParentSchemeElementId()) {
+			scheme.unsetParentSchemeElementId();
+		}
 		if (!this.parentSchemeElementId.isVoid()) {
 			this.parentSchemeElementId.getXmlTransferable(scheme.addNewParentSchemeElementId(), importType);
 		}
-		scheme.unsetSchemeElements();
+		if (scheme.isSetSchemeElements()) {
+			scheme.unsetSchemeElements();
+		}
 		final Set<SchemeElement> schemeElements = this.getSchemeElements0();
 		if (!schemeElements.isEmpty()) {
 			final XmlSchemeElementSeq schemeElementSeq = scheme.addNewSchemeElements();
@@ -832,7 +848,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 				schemeElement.getXmlTransferable(schemeElementSeq.addNewSchemeElement(), importType);
 			}
 		}
-		scheme.unsetSchemeLinks();
+		if (scheme.isSetSchemeLinks()) {
+			scheme.unsetSchemeLinks();
+		}
 		final Set<SchemeLink> schemeLinks = this.getSchemeLinks0();
 		if (!schemeLinks.isEmpty()) {
 			final XmlSchemeLinkSeq schemeLinkSeq = scheme.addNewSchemeLinks(); 
@@ -840,7 +858,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 				schemeLink.getXmlTransferable(schemeLinkSeq.addNewSchemeLink(), importType);
 			}
 		}
-		scheme.unsetSchemeCableLinks();
+		if (scheme.isSetSchemeCableLinks()) {
+			scheme.unsetSchemeCableLinks();
+		}
 		final Set<SchemeCableLink> schemeCableLinks = this.getSchemeCableLinks0();
 		if (!schemeCableLinks.isEmpty()) {
 			final XmlSchemeCableLinkSeq schemeCableLinkSeq = scheme.addNewSchemeCableLinks();
@@ -848,7 +868,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 				schemeCableLink.getXmlTransferable(schemeCableLinkSeq.addNewSchemeCableLink(), importType);
 			}
 		}
-		scheme.unsetSchemeOptimizeInfos();
+		if (scheme.isSetSchemeOptimizeInfos()) {
+			scheme.unsetSchemeOptimizeInfos();
+		}
 		final Set<SchemeOptimizeInfo> schemeOptimizeInfos = this.getSchemeOptimizeInfos0();
 		if (!schemeOptimizeInfos.isEmpty()) {
 			final XmlSchemeOptimizeInfoSeq schemeOptimizeInfoSeq = scheme.addNewSchemeOptimizeInfos();
@@ -856,7 +878,9 @@ public final class Scheme extends AbstractCloneableDomainMember
 				schemeOptimizeInfo.getXmlTransferable(schemeOptimizeInfoSeq.addNewSchemeOptimizeInfo(), importType);
 			}
 		}
-		scheme.unsetSchemeMonitoringSolutions();
+		if (scheme.isSetSchemeMonitoringSolutions()) {
+			scheme.unsetSchemeMonitoringSolutions();
+		}
 		final Set<SchemeMonitoringSolution> schemeMonitoringSolutions = this.getSchemeMonitoringSolutions0();
 		if (!schemeMonitoringSolutions.isEmpty()) {
 			final XmlSchemeMonitoringSolutionSeq schemeMonitoringSolutionSeq = scheme.addNewSchemeMonitoringSolutions();

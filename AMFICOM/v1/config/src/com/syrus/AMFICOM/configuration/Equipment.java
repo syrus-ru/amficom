@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.124 2005/09/14 19:50:49 bass Exp $
+ * $Id: Equipment.java,v 1.125 2005/09/16 15:58:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.124 $, $Date: 2005/09/14 19:50:49 $
+ * @version $Revision: 1.125 $, $Date: 2005/09/16 15:58:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -365,52 +365,74 @@ public final class Equipment extends DomainMember
 	throws ApplicationException {
 		super.id.getXmlTransferable(equipment.addNewId(), importType);
 		equipment.setName(this.name);
-		equipment.unsetDescription();
+		if (equipment.isSetDescription()) {
+			equipment.unsetDescription();
+		}
 		if (this.description != null && this.description.length() != 0) {
 			equipment.setDescription(this.description);
 		}
-		equipment.unsetSupplier();
+		if (equipment.isSetSupplier()) {
+			equipment.unsetSupplier();
+		}
 		if (this.supplier != null && this.supplier.length() != 0) {
 			equipment.setSupplier(this.supplier);
 		}
-		equipment.unsetSupplierCode();
+		if (equipment.isSetSupplierCode()) {
+			equipment.unsetSupplierCode();
+		}
 		if (this.supplierCode != null && this.supplierCode.length() != 0) {
 			equipment.setSupplierCode(this.supplierCode);
 		}
 		equipment.setLatitude(this.latitude);
 		equipment.setLongitude(this.longitude);
-		equipment.unsetHwSerial();
+		if (equipment.isSetHwSerial()) {
+			equipment.unsetHwSerial();
+		}
 		if (this.hwSerial != null && this.hwSerial.length() != 0) {
 			equipment.setHwSerial(this.hwSerial);
 		}
-		equipment.unsetHwVersion();
+		if (equipment.isSetHwVersion()) {
+			equipment.unsetHwVersion();
+		}
 		if (this.hwVersion != null && this.hwVersion.length() != 0) {
 			equipment.setHwVersion(this.hwVersion);
 		}
-		equipment.unsetSwSerial();
+		if (equipment.isSetSwSerial()) {
+			equipment.unsetSwSerial();
+		}
 		if (this.swSerial != null && this.swSerial.length() != 0) {
 			equipment.setSwSerial(this.swSerial);
 		}
-		equipment.unsetSwVersion();
+		if (equipment.isSetSwVersion()) {
+			equipment.unsetSwVersion();
+		}
 		if (this.swVersion != null && this.swVersion.length() != 0) {
 			equipment.setSwVersion(this.swVersion);
 		}
-		equipment.unsetInventoryNumber();
+		if (equipment.isSetInventoryNumber()) {
+			equipment.unsetInventoryNumber();
+		}
 		if (this.inventoryNumber != null && this.inventoryNumber.length() != 0) {
 			equipment.setInventoryNumber(this.inventoryNumber);
 		}
-		equipment.unsetDomainId();
+		if (equipment.isSetDomainId()) {
+			equipment.unsetDomainId();
+		}
 		final Identifier domainId = super.getDomainId();
 		if (!domainId.isVoid()) {
 			domainId.getXmlTransferable(equipment.addNewDomainId(), importType);
 		}
 		this.type.getId().getXmlTransferable(equipment.addNewEquipmentTypeId(), importType);
-		equipment.unsetSymbolId();
+		if (equipment.isSetSymbolId()) {
+			equipment.unsetSymbolId();
+		}
 		if (!this.imageId.isVoid()) {
 			this.imageId.getXmlTransferable(equipment.addNewSymbolId(), importType);
 		}
+		if (equipment.isSetCharacteristics()) {
+			equipment.unsetCharacteristics();
+		}
 		final Set<Characteristic> characteristics = this.getCharacteristics(false);
-		equipment.unsetCharacteristics();
 		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = equipment.addNewCharacteristics();
 			for (final Characteristic characteristic : characteristics) {

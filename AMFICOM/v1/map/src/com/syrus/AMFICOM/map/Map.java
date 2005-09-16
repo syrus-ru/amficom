@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.95 2005/09/16 15:44:38 krupenn Exp $
+ * $Id: Map.java,v 1.96 2005/09/16 15:58:21 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.95 $, $Date: 2005/09/16 15:44:38 $
+ * @author $Author: bass $
+ * @version $Revision: 1.96 $, $Date: 2005/09/16 15:58:21 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -1141,7 +1141,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		this.id.getXmlTransferable(map.addNewId(), importType);
 		map.setName(this.name);
 		map.setDescription(this.description);
-		map.unsetTopologicalNodes();
+		if (map.isSetTopologicalNodes()) {
+			map.unsetTopologicalNodes();
+		}
 		final Set<TopologicalNode> topologicalNodes2 = this.getTopologicalNodes();
 		if (!topologicalNodes2.isEmpty()) {
 			final XmlTopologicalNodeSeq topologicalNodeSeq = map.addNewTopologicalNodes();
@@ -1149,7 +1151,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 				topologicalNode.getXmlTransferable(topologicalNodeSeq.addNewTopologicalNode(), importType);
 			}
 		}
-		map.unsetSiteNodes();
+		if (map.isSetSiteNodes()) {
+			map.unsetSiteNodes();
+		}
 		final Set<SiteNode> siteNodes2 = this.getSiteNodes();
 		if (!siteNodes2.isEmpty()) {
 			final XmlSiteNodeSeq siteNodeSeq = map.addNewSiteNodes();
@@ -1157,7 +1161,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 				siteNode.getXmlTransferable(siteNodeSeq.addNewSiteNode(), importType);
 			}
 		}
-		map.unsetPhysicalLinks();
+		if (map.isSetPhysicalLinks()) {
+			map.unsetPhysicalLinks();
+		}
 		final Set<PhysicalLink> physicalLinks2 = this.getPhysicalLinks();
 		if (!physicalLinks2.isEmpty()) {
 			final XmlPhysicalLinkSeq physicalLinkSeq = map.addNewPhysicalLinks();
@@ -1165,7 +1171,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 				physicalLink.getXmlTransferable(physicalLinkSeq.addNewPhysicalLink(), importType);
 			}
 		}
-		map.unsetNodeLinks();
+		if (map.isSetNodeLinks()) {
+			map.unsetNodeLinks();
+		}
 		final Set<NodeLink> nodeLinks2 = this.getNodeLinks();
 		if (!nodeLinks2.isEmpty()) {
 			final XmlNodeLinkSeq nodeLinkSeq = map.addNewNodeLinks();
@@ -1173,7 +1181,9 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 				nodeLink.getXmlTransferable(nodeLinkSeq.addNewNodeLink(), importType);
 			}
 		}
-		map.unsetCollectors();
+		if (map.isSetCollectors()) {
+			map.unsetCollectors();
+		}
 		final Set<Collector> collectors2 = this.getCollectors();
 		if (!collectors2.isEmpty()) {
 			final XmlCollectorSeq collectorSeq = map.addNewCollectors();

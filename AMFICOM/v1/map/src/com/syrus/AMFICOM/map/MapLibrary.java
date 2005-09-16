@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.25 2005/09/14 19:50:46 bass Exp $
+ * $Id: MapLibrary.java,v 1.26 2005/09/16 15:58:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/09/14 19:50:46 $
+ * @version $Revision: 1.26 $, $Date: 2005/09/16 15:58:21 $
  * @author $Author: bass $
  * @module map
  */
@@ -320,7 +320,9 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 		mapLibrary.setCodename(this.codename);
 		mapLibrary.setName(this.name);
 		mapLibrary.setDescription(this.description);
-		mapLibrary.unsetPhysicalLinkTypes();
+		if (mapLibrary.isSetPhysicalLinkTypes()) {
+			mapLibrary.unsetPhysicalLinkTypes();
+		}
 		final Set<PhysicalLinkType> physicalLinkTypes = this.getPhysicalLinkTypes();
 		if (!physicalLinkTypes.isEmpty()) {
 			final XmlPhysicalLinkTypeSeq physicalLinkTypeSeq = mapLibrary.addNewPhysicalLinkTypes();
@@ -328,7 +330,9 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 				physicalLinkType.getXmlTransferable(physicalLinkTypeSeq.addNewPhysicalLinkType(), importType);
 			}
 		}
-		mapLibrary.unsetSiteNodeTypes();
+		if (mapLibrary.isSetSiteNodeTypes()) {
+			mapLibrary.unsetSiteNodeTypes();
+		}
 		final Set<SiteNodeType> siteNodeTypes = this.getSiteNodeTypes();
 		if (!siteNodeTypes.isEmpty()) {
 			final XmlSiteNodeTypeSeq siteNodeTypeSeq = mapLibrary.addNewSiteNodeTypes();

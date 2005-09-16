@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.65 2005/09/15 20:07:49 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.66 2005/09/16 15:58:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.65 $, $Date: 2005/09/15 20:07:49 $
+ * @version $Revision: 1.66 $, $Date: 2005/09/16 15:58:22 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -445,7 +445,9 @@ public final class CableChannelingItem
 		cableChannelingItem.setRowX(this.rowX);
 		cableChannelingItem.setPlaceY(this.placeY);
 		cableChannelingItem.setSequentialNumber(this.sequentialNumber);
-		cableChannelingItem.unsetPhysicalLinkId();
+		if (cableChannelingItem.isSetPhysicalLinkId()) {
+			cableChannelingItem.unsetPhysicalLinkId();
+		}
 		if (!this.physicalLinkId.isVoid()) {
 			this.physicalLinkId.getXmlTransferable(cableChannelingItem.addNewPhysicalLinkId(), importType);
 		}

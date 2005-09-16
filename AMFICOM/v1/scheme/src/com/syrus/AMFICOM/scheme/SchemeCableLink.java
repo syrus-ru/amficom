@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.86 2005/09/15 20:07:49 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.87 2005/09/16 15:58:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,7 +85,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.86 $, $Date: 2005/09/15 20:07:49 $
+ * @version $Revision: 1.87 $, $Date: 2005/09/16 15:58:22 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -485,24 +485,34 @@ public final class SchemeCableLink extends AbstractSchemeLink
 			final String importType)
 	throws ApplicationException {
 		super.getXmlTransferable(schemeCableLink, importType);
-		schemeCableLink.unsetCableLinkTypeId();
+		if (schemeCableLink.isSetCableLinkTypeId()) {
+			schemeCableLink.unsetCableLinkTypeId();
+		}
 		if (!super.abstractLinkTypeId.isVoid()) {
 			super.abstractLinkTypeId.getXmlTransferable(schemeCableLink.addNewCableLinkTypeId(), importType);
 		}
-		schemeCableLink.unsetCableLinkId();
+		if (schemeCableLink.isSetCableLinkId()) {
+			schemeCableLink.unsetCableLinkId();
+		}
 		if (!super.abstractLinkId.isVoid()) {
 			super.abstractLinkId.getXmlTransferable(schemeCableLink.addNewCableLinkId(), importType);
 		}
-		schemeCableLink.unsetSourceSchemeCablePortId();
+		if (schemeCableLink.isSetSourceSchemeCablePortId()) {
+			schemeCableLink.unsetSourceSchemeCablePortId();
+		}
 		if (!super.sourceAbstractSchemePortId.isVoid()) {
 			super.sourceAbstractSchemePortId.getXmlTransferable(schemeCableLink.addNewSourceSchemeCablePortId(), importType);
 		}
-		schemeCableLink.unsetTargetSchemeCablePortId();
+		if (schemeCableLink.isSetTargetSchemeCablePortId()) {
+			schemeCableLink.unsetTargetSchemeCablePortId();
+		}
 		if (!super.targetAbstractSchemePortId.isVoid()) {
 			super.targetAbstractSchemePortId.getXmlTransferable(schemeCableLink.addNewTargetSchemeCablePortId(), importType);
 		}
 		super.parentSchemeId.getXmlTransferable(schemeCableLink.addNewParentSchemeId(), importType);
-		schemeCableLink.unsetSchemeCableThreads();
+		if (schemeCableLink.isSetSchemeCableThreads()) {
+			schemeCableLink.unsetSchemeCableThreads();
+		}
 		final Set<SchemeCableThread> schemeCableThreads = this.getSchemeCableThreads0();
 		if (!schemeCableThreads.isEmpty()) {
 			final XmlSchemeCableThreadSeq schemeCableThreadSeq = schemeCableLink.addNewSchemeCableThreads();
@@ -510,7 +520,9 @@ public final class SchemeCableLink extends AbstractSchemeLink
 				schemeCableThread.getXmlTransferable(schemeCableThreadSeq.addNewSchemeCableThread(), importType);
 			}
 		}
-		schemeCableLink.unsetCableChannelingItems();
+		if (schemeCableLink.isSetCableChannelingItems()) {
+			schemeCableLink.unsetCableChannelingItems();
+		}
 		final SortedSet<CableChannelingItem> cableChannelingItems = this.getPathMembers0();
 		if (!cableChannelingItems.isEmpty()) {
 			final XmlCableChannelingItemSeq cableChannelingItemSeq = schemeCableLink.addNewCableChannelingItems();

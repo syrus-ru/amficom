@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.85 2005/09/14 20:28:48 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.86 2005/09/16 15:58:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.85 $, $Date: 2005/09/14 20:28:48 $
+ * @version $Revision: 1.86 $, $Date: 2005/09/16 15:58:22 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -940,41 +940,57 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	throws ApplicationException {
 		super.id.getXmlTransferable(schemeProtoElement.addNewId(), importType);
 		schemeProtoElement.setName(this.name);
-		if (this.description.length() == 0) {
+		if (schemeProtoElement.isSetDescription()) {
 			schemeProtoElement.unsetDescription();
-		} else {
+		}
+		if (this.description.length() != 0) {
 			schemeProtoElement.setDescription(this.description);
 		}
-		if (this.label.length() == 0) {
+		if (schemeProtoElement.isSetLabel()) {
 			schemeProtoElement.unsetLabel();
-		} else {
+		}
+		if (this.label.length() != 0) {
 			schemeProtoElement.setLabel(this.label);
 		}
-		schemeProtoElement.unsetEquipmentTypeId();
+		if (schemeProtoElement.isSetEquipmentTypeId()) {
+			schemeProtoElement.unsetEquipmentTypeId();
+		}
 		if (!this.equipmentTypeId.isVoid()) {
 			this.equipmentTypeId.getXmlTransferable(schemeProtoElement.addNewEquipmentTypeId(), importType);
 		}
-		schemeProtoElement.unsetSymbolId();
+		if (schemeProtoElement.isSetSymbolId()) {
+			schemeProtoElement.unsetSymbolId();
+		}
 		if (!this.symbolId.isVoid()) {
 			this.symbolId.getXmlTransferable(schemeProtoElement.addNewSymbolId(), importType);
 		}
-		schemeProtoElement.unsetUgoCellId();
+		if (schemeProtoElement.isSetUgoCellId()) {
+			schemeProtoElement.unsetUgoCellId();
+		}
 		if (!this.ugoCellId.isVoid()) {
 			this.ugoCellId.getXmlTransferable(schemeProtoElement.addNewUgoCellId(), importType);
 		}
-		schemeProtoElement.unsetSchemeCellId();
+		if (schemeProtoElement.isSetSchemeCellId()) {
+			schemeProtoElement.unsetSchemeCellId();
+		}
 		if (!this.schemeCellId.isVoid()) {
 			this.schemeCellId.getXmlTransferable(schemeProtoElement.addNewSchemeCellId(), importType);
 		}
-		schemeProtoElement.unsetParentSchemeProtoGroupId();
+		if (schemeProtoElement.isSetParentSchemeProtoGroupId()) {
+			schemeProtoElement.unsetParentSchemeProtoGroupId();
+		}
 		if (!this.parentSchemeProtoGroupId.isVoid()) {
 			this.parentSchemeProtoGroupId.getXmlTransferable(schemeProtoElement.addNewParentSchemeProtoGroupId(), importType);
 		}
-		schemeProtoElement.unsetParentSchemeProtoElementId();
+		if (schemeProtoElement.isSetParentSchemeProtoElementId()) {
+			schemeProtoElement.unsetParentSchemeProtoElementId();
+		}
 		if (!this.parentSchemeProtoElementId.isVoid()) {
 			this.parentSchemeProtoElementId.getXmlTransferable(schemeProtoElement.addNewParentSchemeProtoElementId(), importType);
 		}
-		schemeProtoElement.unsetCharacteristics();
+		if (schemeProtoElement.isSetCharacteristics()) {
+			schemeProtoElement.unsetCharacteristics();
+		}
 		final Set<Characteristic> characteristics = this.getCharacteristics(false);
 		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq xmlCharacteristicSeq = schemeProtoElement.addNewCharacteristics();
@@ -982,7 +998,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				characteristic.getXmlTransferable(xmlCharacteristicSeq.addNewCharacteristic(), importType);
 			}
 		}
-		schemeProtoElement.unsetSchemeProtoElements();
+		if (schemeProtoElement.isSetSchemeProtoElements()) {
+			schemeProtoElement.unsetSchemeProtoElements();
+		}
 		final Set<SchemeProtoElement> schemeProtoElements = this.getSchemeProtoElements0();
 		if (!schemeProtoElements.isEmpty()) {
 			final XmlSchemeProtoElementSeq schemeProtoElementSeq = schemeProtoElement.addNewSchemeProtoElements();
@@ -990,7 +1008,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				schemeProtoElement2.getXmlTransferable(schemeProtoElementSeq.addNewSchemeProtoElement(), importType);
 			}
 		}
-		schemeProtoElement.unsetSchemeDevices();
+		if (schemeProtoElement.isSetSchemeDevices()) {
+			schemeProtoElement.unsetSchemeDevices();
+		}
 		final Set<SchemeDevice> schemeDevices = this.getSchemeDevices0();
 		if (!schemeDevices.isEmpty()) {
 			final XmlSchemeDeviceSeq schemeDeviceSeq = schemeProtoElement.addNewSchemeDevices();
@@ -998,7 +1018,9 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				schemeDevice.getXmlTransferable(schemeDeviceSeq.addNewSchemeDevice(), importType);
 			}
 		}
-		schemeProtoElement.unsetSchemeLinks();
+		if (schemeProtoElement.isSetSchemeLinks()) {
+			schemeProtoElement.unsetSchemeLinks();
+		}
 		final Set<SchemeLink> schemeLinks = this.getSchemeLinks0();
 		if (!schemeLinks.isEmpty()) {
 			final XmlSchemeLinkSeq schemeLinkSeq = schemeProtoElement.addNewSchemeLinks();

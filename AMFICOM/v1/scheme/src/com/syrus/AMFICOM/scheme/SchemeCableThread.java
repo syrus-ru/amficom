@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.76 2005/09/14 19:50:48 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.77 2005/09/16 15:58:22 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/09/14 19:50:48 $
+ * @version $Revision: 1.77 $, $Date: 2005/09/16 15:58:22 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -531,28 +531,39 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	throws ApplicationException {
 		super.id.getXmlTransferable(schemeCableThread.addNewId(), importType);
 		schemeCableThread.setName(this.name);
-		if (this.description.length() == 0) {
+		if (schemeCableThread.isSetDescription()) {
 			schemeCableThread.unsetDescription();
-		} else {
+		}
+		if (this.description.length() != 0) {
 			schemeCableThread.setDescription(this.description);
 		}
-		schemeCableThread.unsetLinkTypeId();
+		if (schemeCableThread.isSetLinkTypeId()) {
+			schemeCableThread.unsetLinkTypeId();
+		}
 		if (!this.linkTypeId.isVoid()) {
 			this.linkTypeId.getXmlTransferable(schemeCableThread.addNewLinkTypeId(), importType);
 		}
-		schemeCableThread.unsetLinkId();
+		if (schemeCableThread.isSetLinkId()) {
+			schemeCableThread.unsetLinkId();
+		}
 		if (!this.linkId.isVoid()) {
 			this.linkId.getXmlTransferable(schemeCableThread.addNewLinkId(), importType);
 		}
-		schemeCableThread.unsetSourceSchemePortId();
+		if (schemeCableThread.isSetSourceSchemePortId()) {
+			schemeCableThread.unsetSourceSchemePortId();
+		}
 		if (!this.sourceSchemePortId.isVoid()) {
 			this.sourceSchemePortId.getXmlTransferable(schemeCableThread.addNewSourceSchemePortId(), importType);
 		}
-		schemeCableThread.unsetTargetSchemePortId();
+		if (schemeCableThread.isSetTargetSchemePortId()) {
+			schemeCableThread.unsetTargetSchemePortId();
+		}
 		if (!this.targetSchemePortId.isVoid()) {
 			this.targetSchemePortId.getXmlTransferable(schemeCableThread.addNewTargetSchemePortId(), importType);
 		}
-		schemeCableThread.unsetCharacteristics();
+		if (schemeCableThread.isSetCharacteristics()) {
+			schemeCableThread.unsetCharacteristics();
+		}
 		final Set<Characteristic> characteristics = this.getCharacteristics(false);
 		if (!characteristics.isEmpty()) {
 			final XmlCharacteristicSeq characteristicSeq = schemeCableThread.addNewCharacteristics();

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.73 2005/09/14 19:50:49 bass Exp $
+ * $Id: CableLinkType.java,v 1.74 2005/09/16 15:58:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/09/14 19:50:49 $
+ * @version $Revision: 1.74 $, $Date: 2005/09/16 15:58:21 $
  * @author $Author: bass $
  * @module config
  */
@@ -287,7 +287,9 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 		cableLinkType.setManufacturerCode(this.manufacturerCode);
 		// TODO write image to file
 
-		cableLinkType.unsetCableThreadTypes();
+		if (cableLinkType.isSetCableThreadTypes()) {
+			cableLinkType.unsetCableThreadTypes();
+		}
 		final Set<CableThreadType> cableThreadTypes = this.getCableThreadTypes(true);
 		if (!cableThreadTypes.isEmpty()) {
 			final XmlCableThreadTypeSeq cableThreadTypeSeq = cableLinkType.addNewCableThreadTypes();
