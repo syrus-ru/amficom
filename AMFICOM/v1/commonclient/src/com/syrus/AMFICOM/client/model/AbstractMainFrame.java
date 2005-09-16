@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.16 2005/09/15 17:30:53 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.17 2005/09/16 14:56:04 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,9 +46,10 @@ import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/15 17:30:53 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/16 14:56:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -219,12 +220,7 @@ implements PropertyChangeListener {
 	}
 
 	public void setConnectionOpened() {
-		ApplicationModel aModel = this.aContext.getApplicationModel();
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, true);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, false);
-		aModel.setEnabled(ApplicationModel.MENU_SESSION_CHANGE_PASSWORD, false);
-		aModel.setEnabled(ApplicationModel.MENU_VIEW_ARRANGE, true);
-		aModel.fireModelChanged();
+		// nothing 
 	}
 
 	public void setContext(ApplicationContext aContext) {
@@ -293,8 +289,7 @@ implements PropertyChangeListener {
 		// TODO check ?
 		// this.checker = new
 		// Checker(aContext.getDataSourceInterface());
-
-		ApplicationModel aModel = this.aContext.getApplicationModel();
+		final ApplicationModel aModel = this.aContext.getApplicationModel();
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_DOMAIN, true);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_NEW, false);
 		aModel.setEnabled(ApplicationModel.MENU_SESSION_CLOSE, true);
