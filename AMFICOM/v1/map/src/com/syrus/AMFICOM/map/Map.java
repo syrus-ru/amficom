@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.94 2005/09/15 13:34:23 krupenn Exp $
+ * $Id: Map.java,v 1.95 2005/09/16 15:44:38 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: krupenn $
- * @version $Revision: 1.94 $, $Date: 2005/09/15 13:34:23 $
+ * @version $Revision: 1.95 $, $Date: 2005/09/16 15:44:38 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -944,14 +944,14 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 *          идентификатор фрагмента линии
 	 * @return фрагмент линии
 	 */
-	public NodeLink getNodeLink(final Identifier nodeLinkId) {
-		for (final NodeLink nodeLink : this.getAllNodeLinks()) {
-			if (nodeLink.getId().equals(nodeLinkId)) {
-				return nodeLink;
-			}
-		}
-		return null;
-	}
+//	public NodeLink getNodeLink(final Identifier nodeLinkId) {
+//		for (final NodeLink nodeLink : this.getAllNodeLinks()) {
+//			if (nodeLink.getId().equals(nodeLinkId)) {
+//				return nodeLink;
+//			}
+//		}
+//		return null;
+//	}
 
 	/**
 	 * Получить фрагмент линии по концевому узлу.
