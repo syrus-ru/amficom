@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.49 2005/09/09 17:25:22 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.50 2005/09/16 08:19:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ package com.syrus.AMFICOM.client.map.controllers;
 import java.awt.Graphics;
 import java.awt.Image;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.Collections;
@@ -45,7 +46,7 @@ import com.syrus.AMFICOM.resource.FileImageResource;
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.49 $, $Date: 2005/09/09 17:25:22 $
+ * @version $Revision: 1.50 $, $Date: 2005/09/16 08:19:17 $
  * @module mapviewclient
  */
 public class NodeTypeController extends AbstractNodeController {
@@ -288,4 +289,11 @@ public class NodeTypeController extends AbstractNodeController {
 		return objects;
 	}
 
+	/**
+	 * {@inheritDoc} Suppress since SiteNodeType is not really a Map Element
+	 */
+	@Override
+	public Rectangle getBoundingRectangle(MapElement mapElement) throws MapConnectionException, MapDataException {
+		throw new UnsupportedOperationException();
+	}
 }

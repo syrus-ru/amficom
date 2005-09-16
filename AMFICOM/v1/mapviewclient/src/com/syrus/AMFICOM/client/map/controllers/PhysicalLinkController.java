@@ -1,5 +1,5 @@
 /**
- * $Id: PhysicalLinkController.java,v 1.28 2005/08/29 12:27:24 krupenn Exp $
+ * $Id: PhysicalLinkController.java,v 1.29 2005/09/16 08:19:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ package com.syrus.AMFICOM.client.map.controllers;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
@@ -32,7 +33,7 @@ import com.syrus.AMFICOM.map.PhysicalLinkType;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/08/29 12:27:24 $
+ * @version $Revision: 1.29 $, $Date: 2005/09/16 08:19:17 $
  * @module mapviewclient
  */
 public class PhysicalLinkController extends AbstractLinkController {
@@ -338,7 +339,7 @@ public class PhysicalLinkController extends AbstractLinkController {
 			return MapPropertiesManager.getAlarmedThickness();
 		}
 
-		final PhysicalLink plink = (PhysicalLink) mapElement;
+		final PhysicalLink physicalLink = (PhysicalLink) mapElement;
 
 		final Characteristic ea = getCharacteristic(mapElement, this.alarmedThicknessCharType);
 		if (ea != null) {
@@ -346,6 +347,16 @@ public class PhysicalLinkController extends AbstractLinkController {
 		}
 
 		final LinkTypeController ltc = (LinkTypeController) LinkTypeController.getInstance();
-		return ltc.getAlarmedLineSize(plink.getType());
+		return ltc.getAlarmedLineSize(physicalLink.getType());
+	}
+
+	public Rectangle2D getBoundingRectangle(MapElement mapElement) throws MapConnectionException, MapDataException {
+		final PhysicalLink physicalLink = (PhysicalLink) mapElement;
+		Rectangle2D rectangle = new Rectangle();
+		for(NodeLink nodeLink : physicalLink.getNodeLinks()) {
+			NodeLinkController controller = (NodeLinkController) this.logicalNetLayer.getMapViewController().getController(nodeLink);
+			rectangle = rectangle.createUnion(controller.getBoundingRectangle(nodeLink));
+		}
+		return rectangle;
 	}
 }

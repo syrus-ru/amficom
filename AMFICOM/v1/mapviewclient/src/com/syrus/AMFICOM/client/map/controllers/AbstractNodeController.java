@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.17 2005/08/11 13:55:41 arseniy Exp $
+ * $Id: AbstractNodeController.java,v 1.18 2005/09/16 08:19:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.map.MapElement;
 
 /**
  * Контроллер узла.
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/11 13:55:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/09/16 08:19:17 $
  * @module mapviewclient
  */
 public abstract class AbstractNodeController extends AbstractMapElementController {
@@ -144,6 +144,19 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 	 */
 	public void setBounds(final AbstractNode node, final Rectangle rect) {
 		boundsContainer.put(node, rect);
+	}
+
+	public Rectangle2D getBoundingRectangle(final MapElement mapElement) throws MapConnectionException, MapDataException {
+		final MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
+		final Point p = converter.convertMapToScreen(mapElement.getLocation());
+		Rectangle bounds = this.getBounds((AbstractNode) mapElement);
+		final int width = bounds.width;
+		final int height = bounds.height;
+		return new Rectangle(
+				p.x - width / 2, 
+				p.y - height / 2,
+				width,
+				height);
 	}
 
 	/**

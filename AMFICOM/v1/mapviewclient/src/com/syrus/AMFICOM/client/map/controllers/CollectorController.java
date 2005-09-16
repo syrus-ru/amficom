@@ -1,5 +1,5 @@
 /**
- * $Id: CollectorController.java,v 1.12 2005/08/11 13:55:41 arseniy Exp $
+ * $Id: CollectorController.java,v 1.13 2005/09/16 08:19:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,6 +13,7 @@ import java.awt.BasicStroke;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
@@ -25,8 +26,8 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 
 /**
  * Контроллер коллектора.
- * @author $Author: arseniy $
- * @version $Revision: 1.12 $, $Date: 2005/08/11 13:55:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.13 $, $Date: 2005/09/16 08:19:17 $
  * @module mapviewclient
  */
 public final class CollectorController extends AbstractLinkController {
@@ -129,4 +130,13 @@ public final class CollectorController extends AbstractLinkController {
 		return false;
 	}
 
+	public Rectangle2D getBoundingRectangle(MapElement mapElement) throws MapConnectionException, MapDataException {
+		final Collector collector = (Collector) mapElement;
+		Rectangle2D rectangle = new Rectangle();
+		for(PhysicalLink physicalLink : collector.getPhysicalLinks()) {
+			final PhysicalLinkController controller = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(physicalLink);
+			rectangle = rectangle.createUnion(controller.getBoundingRectangle(physicalLink));
+		}
+		return rectangle;
+	}
 }

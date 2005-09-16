@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.55 2005/09/14 10:35:06 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.56 2005/09/16 08:19:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ package com.syrus.AMFICOM.client.map.controllers;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.geom.Rectangle2D;
 import java.util.Collection;
 import java.util.HashMap;
@@ -48,7 +49,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.55 $, $Date: 2005/09/14 10:35:06 $
+ * @version $Revision: 1.56 $, $Date: 2005/09/16 08:19:17 $
  * @module mapviewclient
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -634,5 +635,12 @@ public final class LinkTypeController extends AbstractLinkController {
 			e.printStackTrace();
 		}
 		return null;
+	}
+
+	/**
+	 * {@inheritDoc} Suppress since PhysicalLinkType is not really a Map Element
+	 */
+	public Rectangle getBoundingRectangle(MapElement mapElement) throws MapConnectionException, MapDataException {
+		throw new UnsupportedOperationException();
 	}
 }

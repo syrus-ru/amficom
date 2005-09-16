@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.37 2005/09/14 10:36:00 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.38 2005/09/16 08:19:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ package com.syrus.AMFICOM.client.map.controllers;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 import java.util.Set;
@@ -25,6 +26,7 @@ import com.syrus.AMFICOM.configuration.TransmissionPath;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
+import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -39,7 +41,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Контроллер топологическиго пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.37 $, $Date: 2005/09/14 10:36:00 $
+ * @version $Revision: 1.38 $, $Date: 2005/09/16 08:19:17 $
  * @module mapviewclient
  */
 public final class MeasurementPathController extends AbstractLinkController {
@@ -266,5 +268,15 @@ public final class MeasurementPathController extends AbstractLinkController {
 		if(monitoredElementIds.size() == 0)
 			return null;
 		return monitoredElementIds.iterator().next();
+	}
+
+	public Rectangle2D getBoundingRectangle(MapElement mapElement) throws MapConnectionException, MapDataException {
+		final MeasurementPath mpath = (MeasurementPath) mapElement;
+		Rectangle2D rectangle = new Rectangle();
+		for (final CablePath cablePath : mpath.getSortedCablePaths()) {
+			final CableController controller = (CableController) this.logicalNetLayer.getMapViewController().getController(cablePath);
+			rectangle = rectangle.createUnion(controller.getBoundingRectangle(cablePath));
+		}
+		return rectangle;
 	}
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapElementController.java,v 1.11 2005/08/11 17:08:10 arseniy Exp $
+ * $Id: MapElementController.java,v 1.12 2005/09/16 08:19:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,8 +21,8 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Интерфейс контроллера элемента карты. Позволяет управлять отображением
  * элементов карты.
- * @author $Author: arseniy $
- * @version $Revision: 1.11 $, $Date: 2005/08/11 17:08:10 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.12 $, $Date: 2005/09/16 08:19:17 $
  * @module mapviewclient
  */
 public interface MapElementController {
@@ -75,4 +75,7 @@ public interface MapElementController {
 	 * @return строка для всплывающей подсказки
 	 */
 	String getToolTipText(final MapElement me);
+
+	Rectangle2D getBoundingRectangle(final MapElement mapElement) throws MapConnectionException, MapDataException;
+
 }

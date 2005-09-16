@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.22 2005/09/05 13:44:58 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.23 2005/09/16 08:19:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Контроллер фрагмента линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/09/05 13:44:58 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/16 08:19:17 $
  * @module mapviewclient
  */
 public final class NodeLinkController extends AbstractLinkController {
@@ -482,6 +482,16 @@ public final class NodeLinkController extends AbstractLinkController {
 		this.slope[1] = cosB;
 
 		return this.slope;
+	}
+
+	public Rectangle getBoundingRectangle(MapElement mapElement) throws MapConnectionException, MapDataException {
+		NodeLink nodeLink = (NodeLink) mapElement;
+
+		final MapCoordinatesConverter converter = this.logicalNetLayer.getConverter();
+		final Point from = converter.convertMapToScreen(nodeLink.getStartNode().getLocation());
+		final Point to = converter.convertMapToScreen(nodeLink.getEndNode().getLocation());
+
+		return new Rectangle(from.x, from.y, to.x - from.x, to.y - from.y);
 	}
 	
 }

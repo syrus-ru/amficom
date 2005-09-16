@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.32 2005/08/15 14:29:19 krupenn Exp $
+ * $Id: CableController.java,v 1.33 2005/09/16 08:19:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -12,6 +12,7 @@ package com.syrus.AMFICOM.client.map.controllers;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
+import java.awt.Rectangle;
 import java.awt.Stroke;
 import java.awt.geom.Rectangle2D;
 
@@ -25,6 +26,7 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.map.AbstractNode;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.MapElement;
 import com.syrus.AMFICOM.map.NodeLink;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -40,7 +42,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * Контроллер кабеля.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/08/15 14:29:19 $
+ * @version $Revision: 1.33 $, $Date: 2005/09/16 08:19:17 $
  * @module mapviewclient
  */
 public final class CableController extends AbstractLinkController {
@@ -357,5 +359,15 @@ public final class CableController extends AbstractLinkController {
 	@Override
 	public int getAlarmedLineSize(final MapElement link) {
 		return MapPropertiesManager.getAlarmedThickness();
+	}
+
+	public Rectangle2D getBoundingRectangle(MapElement mapElement) throws MapConnectionException, MapDataException {
+		final CablePath cablePath = (CablePath) mapElement;
+		Rectangle2D rectangle = new Rectangle();
+		for(PhysicalLink physicalLink : cablePath.getLinks()) {
+			final PhysicalLinkController controller = (PhysicalLinkController) this.logicalNetLayer.getMapViewController().getController(physicalLink);
+			rectangle = rectangle.createUnion(controller.getBoundingRectangle(physicalLink));
+		}
+		return rectangle;
 	}
 }
