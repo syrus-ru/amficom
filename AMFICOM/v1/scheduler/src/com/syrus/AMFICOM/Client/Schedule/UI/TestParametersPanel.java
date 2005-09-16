@@ -356,17 +356,22 @@ final class TestParametersPanel implements PropertyChangeListener {
 		wrapperedListModel.sort();
 		
 		this.setMeasurementSetup(measurementSetup);
+
 	}
 	
-	
 	public void setMeasurementSetup(final MeasurementSetup measurementSetup) {
+		this.setMeasurementSetup(measurementSetup, false);
+	}
+	
+	public void setMeasurementSetup(final MeasurementSetup measurementSetup, 
+	                                final boolean switchToSetups) {
 		this.testSetups.clearSelection();
 		this.measurementSetupId = measurementSetup != null ? measurementSetup.getId() : Identifier.VOID_IDENTIFIER;
 		if (measurementSetup == null || this.msList == null) {
 			return;
 		}
 
-		if (!this.useSetupsCheckBox.isSelected()) {
+		if (switchToSetups && !this.useSetupsCheckBox.isSelected()) {
 			this.useSetupsCheckBox.doClick();
 		}
 		
@@ -444,7 +449,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 		
 		if (!this.measurementSetupId.isVoid()) {
 			try {
-				this.setMeasurementSetup((MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupId, true));
+				this.setMeasurementSetup((MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupId, true), true);
 			} catch (final ApplicationException e) {
 				JOptionPane.showMessageDialog(this.patternPanel,
 					LangModelGeneral.getString("Error.CannotAcquireObject"), 
@@ -476,7 +481,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 			final MeasurementSetup measurementSetup = 
 				StorableObjectPool.getStorableObject(mainMeasurementSetupId, true);
 			if (measurementSetup != null) {
-				this.setMeasurementSetup(measurementSetup);
+				this.setMeasurementSetup(measurementSetup, true);
 			}
 		}
 	}
@@ -515,7 +520,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 				AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 			}					
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP)) {
-			this.setMeasurementSetup((MeasurementSetup) newValue);
+			this.setMeasurementSetup((MeasurementSetup) newValue, true);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS)) {
 			this.refreshMeasurementSetups();
 		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE)) {

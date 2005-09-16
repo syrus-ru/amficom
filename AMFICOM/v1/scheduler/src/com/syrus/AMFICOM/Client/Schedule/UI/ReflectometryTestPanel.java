@@ -62,7 +62,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/09/16 15:00:09 $
+ * @version $Revision: 1.77 $, $Date: 2005/09/16 16:01:20 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -818,10 +818,11 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		
 		final ParameterSet parameterSet = this.getSet();
 		final String description = this.getDescription();
+		final boolean descriptionChanged = !description.equals(this.oldDescription);
 		if (parameterSet != null && (parameterSet.isChanged()
-				|| !description.equals(this.oldDescription))) {
+				|| descriptionChanged)) {
 				Log.debugMessage("ReflectometryTestPanel.refreshTestsSet | ",
-					Log.DEBUGLEVEL09);
+					Log.DEBUGLEVEL10);
 				this.oldDescription = description;
 				final Set<Identifier> selectedTestIds = this.schedulerModel.getSelectedTestIds();
 				if (selectedTestIds != null && !selectedTestIds.isEmpty()) { 
@@ -838,9 +839,9 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 										measurementSetupIds.iterator().next(),
 										true);
 								
-								if (baseMeasurementSetup.isChanged()) {
-									baseMeasurementSetup.setDescription(description);
+								if (baseMeasurementSetup.isChanged()) {									
 									baseMeasurementSetup.setParameterSet(parameterSet);
+									baseMeasurementSetup.setDescription(description);
 									this.testParametersPanel.refreshMeasurementSetup(baseMeasurementSetup);
 								} else {
 									Identifier measurementSetupId = 
@@ -875,34 +876,34 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 				} catch (final ApplicationException e) {
 					AbstractMainFrame.showErrorMessage(this, e);
 				}
-			}
-		} else {
-			if (this.measurementSetup != null) {
-				if (this.measurementSetup.isChanged()) {
-					this.measurementSetup.setDescription(description);
-					this.measurementSetup.setParameterSet(parameterSet);
-					this.testParametersPanel.refreshMeasurementSetup(this.measurementSetup);
-				} else {
-					{										
-						final MeasurementSetup measurementSetup;
-						try {
-							measurementSetup = MeasurementSetup.createInstance(LoginManager.getUserId(),
-								parameterSet,
-								this.measurementSetup.getCriteriaSet(),
-								this.measurementSetup.getThresholdSet(),
-								this.measurementSetup.getEtalon(),
-								description,
-								this.measurementSetup.getMeasurementDuration(),
-								this.measurementSetup.getMonitoredElementIds(),
-								this.measurementSetup.getMeasurementTypes());
-								this.skip = true;
-								this.testParametersPanel.setMeasurementSetup(measurementSetup);
-								this.skip = false;
-							this.measurementSetup = measurementSetup;
-						} catch (final CreateObjectException e) {
-							AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.CannotCreateMeasurementSetup"));
+			} else {
+				if (this.measurementSetup != null) {
+					if (this.measurementSetup.isChanged()) {
+						this.measurementSetup.setParameterSet(parameterSet);
+						this.measurementSetup.setDescription(description);
+						this.testParametersPanel.refreshMeasurementSetup(this.measurementSetup);
+					} else {
+						{										
+							final MeasurementSetup measurementSetup;
+							try {
+								measurementSetup = MeasurementSetup.createInstance(LoginManager.getUserId(),
+									parameterSet,
+									this.measurementSetup.getCriteriaSet(),
+									this.measurementSetup.getThresholdSet(),
+									this.measurementSetup.getEtalon(),
+									description,
+									this.measurementSetup.getMeasurementDuration(),
+									this.measurementSetup.getMonitoredElementIds(),
+									this.measurementSetup.getMeasurementTypes());
+									this.skip = true;
+									this.testParametersPanel.setMeasurementSetup(measurementSetup);
+									this.skip = false;
+								this.measurementSetup = measurementSetup;
+							} catch (final CreateObjectException e) {
+								AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.CannotCreateMeasurementSetup"));
+							}
+		
 						}
-	
 					}
 				}
 			}
@@ -1139,7 +1140,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 			public void actionPerformed(ActionEvent e) {
 				if (!ReflectometryTestPanel.this.skip) {
-					Log.debugMessage("ReflectometryTestPanel.ActionListener.actionPerformed | ", Log.DEBUGLEVEL09);
+					Log.debugMessage("ReflectometryTestPanel.ActionListener.actionPerformed | ", Log.DEBUGLEVEL10);
 					ReflectometryTestPanel.this.refreshTestsSet();
 				}
 			}
