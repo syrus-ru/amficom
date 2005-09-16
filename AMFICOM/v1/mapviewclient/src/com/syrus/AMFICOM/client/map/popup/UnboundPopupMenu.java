@@ -41,19 +41,19 @@ public class UnboundPopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.setText(LangModelMap.getString("Delete")); //$NON-NLS-1$
 		this.removeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeUnbound();
 			}
 		});
-		this.bindMenuItem.setText(LangModelMap.getString("Bind"));
+		this.bindMenuItem.setText(LangModelMap.getString("Bind")); //$NON-NLS-1$
 		this.bindMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				bind();
 			}
 		});
-		this.generateMenuItem.setText(LangModelMap.getString("GenerateSite"));
+		this.generateMenuItem.setText(LangModelMap.getString("GenerateSite")); //$NON-NLS-1$
 		this.generateMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				generateSite();

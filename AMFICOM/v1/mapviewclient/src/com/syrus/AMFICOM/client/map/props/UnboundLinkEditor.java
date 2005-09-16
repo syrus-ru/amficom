@@ -58,14 +58,14 @@ public class UnboundLinkEditor extends DefaultStorableObjectEditor {
 		this.endComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.typeLabel.setText(LangModelMap.getString("Type"));
-		this.cableLabel.setText(LangModelMap.getString("cable"));
-		this.startLabel.setText(LangModelMap.getString("StartNode"));
-		this.endLabel.setText(LangModelMap.getString("EndNode"));
-		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength"));
+		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
+		this.typeLabel.setText(LangModelMap.getString("Type")); //$NON-NLS-1$
+		this.cableLabel.setText(LangModelMap.getString("cable")); //$NON-NLS-1$
+		this.startLabel.setText(LangModelMap.getString("StartNode")); //$NON-NLS-1$
+		this.endLabel.setText(LangModelMap.getString("EndNode")); //$NON-NLS-1$
+		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength")); //$NON-NLS-1$
 
 		GridBagConstraints constraints = new GridBagConstraints();
 
@@ -259,8 +259,8 @@ public class UnboundLinkEditor extends DefaultStorableObjectEditor {
 		this.endComboBox.removeAllItems();
 
 		if(this.link == null) {
-			this.nameTextField.setText("");
-			this.topologicalLengthTextField.setText("");
+			this.nameTextField.setText(""); //$NON-NLS-1$
+			this.topologicalLengthTextField.setText(""); //$NON-NLS-1$
 		}
 		else {
 			this.nameTextField.setText(this.link.getName());

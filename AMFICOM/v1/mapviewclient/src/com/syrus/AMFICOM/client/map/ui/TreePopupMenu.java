@@ -1,5 +1,5 @@
 /**
- * $Id: TreePopupMenu.java,v 1.1 2005/08/18 13:53:24 krupenn Exp $
+ * $Id: TreePopupMenu.java,v 1.2 2005/09/16 14:53:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ public class TreePopupMenu extends JPopupMenu {
 		this.object = object;
 		this.aContext = context;
 
-		this.copyMenuItem.setText(LangModelMap.getString("Copy"));
+		this.copyMenuItem.setText(LangModelMap.getString("Copy")); //$NON-NLS-1$
 		this.copyMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)

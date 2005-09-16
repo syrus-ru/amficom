@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorToolBar.java,v 1.21 2005/09/04 13:46:01 krupenn Exp $
+ * $Id: MapEditorToolBar.java,v 1.22 2005/09/16 14:53:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 /**
  * Панель инструментов модуля "Редактор топологических схем". 
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/09/04 13:46:01 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/16 14:53:35 $
  * @module mapviewclient
  */
 public class MapEditorToolBar extends AbstractMainToolBar {
@@ -104,7 +104,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 
 		Dimension buttonSize = new Dimension(BTN_SIZE, BTN_SIZE);
 
-		this.menuMapNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/newmap.gif").
+		this.menuMapNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/newmap.gif"). //$NON-NLS-1$
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapNew.setMaximumSize(buttonSize);
 		this.menuMapNew.setPreferredSize(buttonSize);
@@ -112,7 +112,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapNew.setName(MapEditorApplicationModel.ITEM_MAP_NEW);
 		this.menuMapNew.addActionListener(super.actionListener);
 
-		this.menuMapOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openmap.gif").
+		this.menuMapOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openmap.gif"). //$NON-NLS-1$
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapOpen.setMaximumSize(buttonSize);
 		this.menuMapOpen.setPreferredSize(buttonSize);
@@ -120,7 +120,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapOpen.setName(MapEditorApplicationModel.ITEM_MAP_OPEN);
 		this.menuMapOpen.addActionListener(super.actionListener);
 
-		this.menuMapSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/savemap.gif").
+		this.menuMapSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/savemap.gif"). //$NON-NLS-1$
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapSave.setMaximumSize(buttonSize);
 		this.menuMapSave.setPreferredSize(buttonSize);
@@ -128,7 +128,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapSave.setName(MapEditorApplicationModel.ITEM_MAP_SAVE);
 		this.menuMapSave.addActionListener(super.actionListener);
 
-		this.menuMapAddMap.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addmap.gif").
+		this.menuMapAddMap.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addmap.gif"). //$NON-NLS-1$
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapAddMap.setMaximumSize(buttonSize);
 		this.menuMapAddMap.setPreferredSize(buttonSize);
@@ -136,7 +136,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapAddMap.setName(MapEditorApplicationModel.ITEM_MAP_ADD_MAP);
 		this.menuMapAddMap.addActionListener(super.actionListener);
 
-		this.menuMapRemoveMap.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removemap.gif").
+		this.menuMapRemoveMap.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removemap.gif"). //$NON-NLS-1$
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapRemoveMap.setMaximumSize(buttonSize);
 		this.menuMapRemoveMap.setPreferredSize(buttonSize);
@@ -144,7 +144,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapRemoveMap.setName(MapEditorApplicationModel.ITEM_MAP_REMOVE_MAP);
 		this.menuMapRemoveMap.addActionListener(super.actionListener);
 
-		this.menuMapAddExternal.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addexternal.gif").
+		this.menuMapAddExternal.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addexternal.gif"). //$NON-NLS-1$
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapAddExternal.setMaximumSize(buttonSize);
 		this.menuMapAddExternal.setPreferredSize(buttonSize);
@@ -152,7 +152,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapAddExternal.setName(MapEditorApplicationModel.ITEM_MAP_ADD_EXTERNAL);
 		this.menuMapAddExternal.addActionListener(super.actionListener);
 
-		this.menuMapViewNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/newmapview.gif").
+		this.menuMapViewNew.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/newmapview.gif"). //$NON-NLS-1$
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewNew.setMaximumSize(buttonSize);
 		this.menuMapViewNew.setPreferredSize(buttonSize);
@@ -160,7 +160,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapViewNew.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_NEW);
 		this.menuMapViewNew.addActionListener(super.actionListener);
 
-		this.menuMapViewOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openmapview.gif").
+		this.menuMapViewOpen.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/openmapview.gif"). //$NON-NLS-1$
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewOpen.setMaximumSize(buttonSize);
 		this.menuMapViewOpen.setPreferredSize(buttonSize);
@@ -168,7 +168,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapViewOpen.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_OPEN);
 		this.menuMapViewOpen.addActionListener(super.actionListener);
 
-		this.menuMapViewSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/savemapview.gif").
+		this.menuMapViewSave.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/savemapview.gif"). //$NON-NLS-1$
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewSave.setMaximumSize(buttonSize);
 		this.menuMapViewSave.setPreferredSize(buttonSize);
@@ -176,7 +176,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapViewSave.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_SAVE);
 		this.menuMapViewSave.addActionListener(super.actionListener);
 
-		this.menuMapViewAddScheme.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addtoview.gif").
+		this.menuMapViewAddScheme.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/addtoview.gif"). //$NON-NLS-1$
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewAddScheme.setMaximumSize(buttonSize);
 		this.menuMapViewAddScheme.setPreferredSize(buttonSize);
@@ -184,7 +184,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapViewAddScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_ADD_SCHEME);
 		this.menuMapViewAddScheme.addActionListener(super.actionListener);
 
-		this.menuMapViewRemoveScheme.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefromview.gif").
+		this.menuMapViewRemoveScheme.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/removefromview.gif"). //$NON-NLS-1$
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuMapViewRemoveScheme.setMaximumSize(buttonSize);
 		this.menuMapViewRemoveScheme.setPreferredSize(buttonSize);
@@ -192,7 +192,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.menuMapViewRemoveScheme.setName(MapEditorApplicationModel.ITEM_MAP_VIEW_REMOVE_SCHEME);
 		this.menuMapViewRemoveScheme.addActionListener(super.actionListener);
 
-		this.menuViewMapLayers.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/map_layers.gif").
+		this.menuViewMapLayers.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/map_layers.gif"). //$NON-NLS-1$
 				getScaledInstance(IMG_SIZE, IMG_SIZE, Image.SCALE_DEFAULT)));
 		this.menuViewMapLayers.setMaximumSize(buttonSize);
 		this.menuViewMapLayers.setPreferredSize(buttonSize);
@@ -223,7 +223,7 @@ public class MapEditorToolBar extends AbstractMainToolBar {
 		this.addApplicationModelListener(new ApplicationModelListener() {
 
 			public void modelChanged(String e[]) {
-				this.modelChanged("");
+				this.modelChanged(""); //$NON-NLS-1$
 			}
 
 			@SuppressWarnings("synthetic-access")

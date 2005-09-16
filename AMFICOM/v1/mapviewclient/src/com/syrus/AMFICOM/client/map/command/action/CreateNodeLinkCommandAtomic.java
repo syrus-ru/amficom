@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandAtomic.java,v 1.18 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: CreateNodeLinkCommandAtomic.java,v 1.19 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
  * создание фрагмента линии св€зи, внесение ее в пул и на карту - 
  * атомарное действие 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  */
 public class CreateNodeLinkCommandAtomic extends MapActionCommand {
@@ -55,14 +55,14 @@ public class CreateNodeLinkCommandAtomic extends MapActionCommand {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | "
-				+ "create NodeLink for link " 
+			getClass().getName() + "::execute() | " //$NON-NLS-1$
+				+ "create NodeLink for link "  //$NON-NLS-1$
 				+ this.physicalLink.getName() 
-				+ " (" + this.physicalLink.getId() 
-				+ ") with start at node " + this.startNode.getName() 
-				+ " (" + this.startNode.getId() 
-				+ ") and end at node " + this.endNode.getName() 
-				+ " (" + this.endNode.getId() + ")", 
+				+ " (" + this.physicalLink.getId()  //$NON-NLS-1$
+				+ ") with start at node " + this.startNode.getName()  //$NON-NLS-1$
+				+ " (" + this.startNode.getId()  //$NON-NLS-1$
+				+ ") and end at node " + this.endNode.getName()  //$NON-NLS-1$
+				+ " (" + this.endNode.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 
 		try {

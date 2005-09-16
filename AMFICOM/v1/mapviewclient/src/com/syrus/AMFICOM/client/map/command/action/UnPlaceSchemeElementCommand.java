@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeElementCommand.java,v 1.25 2005/09/11 14:23:29 krupenn Exp $
+ * $Id: UnPlaceSchemeElementCommand.java,v 1.26 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
  * убрать привязку схемного элемента с карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.25 $, $Date: 2005/09/11 14:23:29 $
+ * @version $Revision: 1.26 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class UnPlaceSchemeElementCommand extends MapActionCommandBundle {
@@ -46,12 +46,12 @@ public class UnPlaceSchemeElementCommand extends MapActionCommandBundle {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-				getClass().getName() + "::execute() | "
-					+ "unplace scheme element "
+				getClass().getName() + "::execute() | " //$NON-NLS-1$
+					+ "unplace scheme element " //$NON-NLS-1$
 					+ this.schemeElement.getName()
-					+ " (" + this.schemeElement.getId() + ") from site "
+					+ " (" + this.schemeElement.getId() + ") from site " //$NON-NLS-1$ //$NON-NLS-2$
 					+ this.node.getName()
-					+ " (" + this.node.getId() + ")", 
+					+ " (" + this.node.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 
 		this.mapView = this.logicalNetLayer.getMapView();

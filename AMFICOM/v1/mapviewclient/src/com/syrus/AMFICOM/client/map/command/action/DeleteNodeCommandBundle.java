@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.42 2005/09/14 10:25:53 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.43 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
  *   оманда удалени€ элемента наследника класса MapNodeElement.  оманда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.42 $, $Date: 2005/09/14 10:25:53 $
+ * @version $Revision: 1.43 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -451,9 +451,9 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | " 
-				+ "delete node " 
-				+ this.node.getName() + " (" + this.node.getId() + ")", 
+			getClass().getName() + "::execute() | "  //$NON-NLS-1$
+				+ "delete node "  //$NON-NLS-1$
+				+ this.node.getName() + " (" + this.node.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 
 		// узел может быть удален в результате атомарной команда в составе

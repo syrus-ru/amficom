@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomicTestCase.java,v 1.4 2005/08/24 10:19:20 krupenn Exp $
+ * $Id: CreateSiteCommandAtomicTestCase.java,v 1.5 2005/09/16 14:53:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,14 +46,14 @@ public class CreateSiteCommandAtomicTestCase extends TestCase {
 		DoublePoint geoloc = node.getLocation();
 		Point loc = METS.logicalNetLayer.getConverter().convertMapToScreen(geoloc);
 		
-		assertTrue("Map does not contain newly inserted SiteNode", METS.map.getSiteNodes().contains(node));
-		assertEquals("SiteNode created with wrong coordinates", location, loc);
+		assertTrue("Map does not contain newly inserted SiteNode", METS.map.getSiteNodes().contains(node)); //$NON-NLS-1$
+		assertEquals("SiteNode created with wrong coordinates", location, loc); //$NON-NLS-1$
 
 		RemoveNodeCommandAtomic command2 = new RemoveNodeCommandAtomic(node);
 		command2.setLogicalNetLayer(METS.logicalNetLayer);
 		command2.execute();
 		
-		assertFalse("Map contains removed SiteNode", METS.map.getSiteNodes().contains(node));
+		assertFalse("Map contains removed SiteNode", METS.map.getSiteNodes().contains(node)); //$NON-NLS-1$
 
 		node = null;
 	}

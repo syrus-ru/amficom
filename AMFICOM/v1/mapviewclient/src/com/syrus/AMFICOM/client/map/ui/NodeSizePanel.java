@@ -1,5 +1,5 @@
 /**
- * $Id: NodeSizePanel.java,v 1.13 2005/08/17 14:14:20 arseniy Exp $
+ * $Id: NodeSizePanel.java,v 1.14 2005/09/16 14:53:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,8 +29,8 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 /**
  * Панель, на которой располагаются две кнопки увеличения и уменьшения
  * коэффициента масштабирования изображений элементов карты
- * @version $Revision: 1.13 $, $Date: 2005/08/17 14:14:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/09/16 14:53:37 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public final class NodeSizePanel extends JPanel 
@@ -71,7 +71,7 @@ public final class NodeSizePanel extends JPanel
 	{
 		this.setLayout(new BorderLayout());
 
-	    ImageIcon icon1 = new ImageIcon("images/farther.gif");
+	    ImageIcon icon1 = new ImageIcon("images/farther.gif"); //$NON-NLS-1$
 		this.leftButton.setIcon(icon1);
 		this.leftButton.setPreferredSize(buttonSize);
 		this.leftButton.setMaximumSize(buttonSize);
@@ -84,7 +84,7 @@ public final class NodeSizePanel extends JPanel
 					reduce();
 				}
 			});
-	    ImageIcon icon2 = new ImageIcon("images/closer.gif");
+	    ImageIcon icon2 = new ImageIcon("images/closer.gif"); //$NON-NLS-1$
 		this.rightButton.setIcon(icon2);
 		this.rightButton.setPreferredSize(buttonSize);
 		this.rightButton.setMaximumSize(buttonSize);
@@ -98,8 +98,8 @@ public final class NodeSizePanel extends JPanel
 				}
 			});
 			
-	    this.leftButton.setToolTipText(LangModelMap.getString("ReduceIcon"));
-	    this.rightButton.setToolTipText(LangModelMap.getString("EnlargeIcon"));
+	    this.leftButton.setToolTipText(LangModelMap.getString("ReduceIcon")); //$NON-NLS-1$
+	    this.rightButton.setToolTipText(LangModelMap.getString("EnlargeIcon")); //$NON-NLS-1$
 		
 		this.add(this.leftButton, BorderLayout.WEST);
 		this.add(this.rightButton, BorderLayout.EAST);

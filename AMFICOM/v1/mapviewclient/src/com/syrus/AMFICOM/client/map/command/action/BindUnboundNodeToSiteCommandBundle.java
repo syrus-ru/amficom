@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.30 2005/09/11 14:23:58 krupenn Exp $
+ * $Id: BindUnboundNodeToSiteCommandBundle.java,v 1.31 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
 /**
  *  Команда привязывания непривязанного элемента к узлу.
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/09/11 14:23:58 $
+ * @version $Revision: 1.31 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  */
 public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle {
@@ -59,9 +59,9 @@ public class BindUnboundNodeToSiteCommandBundle extends MapActionCommandBundle {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | " 
-				+ "bind " + this.unbound.getId() + " to " 
-				+ this.site.getName() + " (" + this.site.getId() + ")", 
+			getClass().getName() + "::execute() | "  //$NON-NLS-1$
+				+ "bind " + this.unbound.getId() + " to "  //$NON-NLS-1$ //$NON-NLS-2$
+				+ this.site.getName() + " (" + this.site.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 
 		try {

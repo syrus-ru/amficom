@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveViewAsCommand.java,v 1.18 2005/08/17 14:14:18 arseniy Exp $
+ * $Id: MapEditorSaveViewAsCommand.java,v 1.19 2005/09/16 14:53:33 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ
  */
 
@@ -30,8 +30,8 @@ import com.syrus.util.Log;
  * схемы в модуле "Редактор топологических схем" с новым именем. Использует
  * команду MapSaveAsCommand
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.18 $, $Date: 2005/08/17 14:14:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.19 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  * @see MapViewSaveAsCommand
  */
@@ -78,8 +78,8 @@ public class MapEditorSaveViewAsCommand extends AbstractCommand {
 					JOptionPane
 							.showMessageDialog(
 									Environment.getActiveWindow(),
-									"Map View saved, but failed to open it in Map Frame",
-									"Map View SaveAs Command",
+									LangModelMap.getString("MapEditorSaveViewAsCommand.MapViewSavedButFailedToOpen"), //$NON-NLS-1$
+									LangModelMap.getString("MapEditorSaveViewAsCommand.SaveAs"), //$NON-NLS-1$
 									JOptionPane.WARNING_MESSAGE);
 					setResult(Command.RESULT_OK);
 					e.printStackTrace();

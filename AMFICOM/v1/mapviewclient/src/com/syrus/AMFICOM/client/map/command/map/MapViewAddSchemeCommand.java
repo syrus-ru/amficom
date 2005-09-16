@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewAddSchemeCommand.java,v 1.20 2005/09/14 10:34:14 krupenn Exp $
+ * $Id: MapViewAddSchemeCommand.java,v 1.21 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/09/14 10:34:14 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class MapViewAddSchemeCommand extends AbstractCommand {
@@ -78,7 +78,7 @@ public class MapViewAddSchemeCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapOpening")));
+						LangModelMap.getString("MapOpening"))); //$NON-NLS-1$
 
 		SchemeTableController schemeTableController = 
 			SchemeTableController.getInstance();
@@ -98,7 +98,7 @@ public class MapViewAddSchemeCommand extends AbstractCommand {
 		}
 
 		this.scheme = (Scheme )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("Scheme"),
+				LangModelMap.getString("Scheme"), //$NON-NLS-1$
 				schemes,
 				schemeTableController,
 				schemeTableController.getKeysArray(),
@@ -109,7 +109,7 @@ public class MapViewAddSchemeCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted")));
+							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 			return;
 		}
@@ -131,7 +131,7 @@ public class MapViewAddSchemeCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelGeneral.getString("Finished")));
+						LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
 		setResult(Command.RESULT_OK);
 	}
 }

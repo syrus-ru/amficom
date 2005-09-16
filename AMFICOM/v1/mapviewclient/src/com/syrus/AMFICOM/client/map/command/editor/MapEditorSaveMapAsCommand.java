@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveMapAsCommand.java,v 1.12 2005/08/17 14:14:18 arseniy Exp $
+ * $Id: MapEditorSaveMapAsCommand.java,v 1.13 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,9 +27,9 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.12 $, $Date: 2005/08/17 14:14:18 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/16 14:53:33 $
  * @module map_v2
- * @author $Author: arseniy $
+ * @author $Author: krupenn $
  * @see MapSaveAsCommand
  */
 public class MapEditorSaveMapAsCommand extends AbstractCommand {
@@ -52,7 +52,7 @@ public class MapEditorSaveMapAsCommand extends AbstractCommand {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
 		if(mapFrame == null) {
-			Log.debugMessage("map frame is null! Cannot create new map.", Level.SEVERE);
+			Log.debugMessage("map frame is null! Cannot create new map.", Level.SEVERE); //$NON-NLS-1$
 			setResult(Command.RESULT_NO);
 			return;
 		}
@@ -66,7 +66,7 @@ public class MapEditorSaveMapAsCommand extends AbstractCommand {
 
 			if(mapFrame != null) {
 				mapFrame.getMapView().setMap(newMap);
-				mapFrame.setTitle(LangModelMap.getString("Map") + " - "
+				mapFrame.setTitle(LangModelMap.getString("Map") + " - " //$NON-NLS-1$ //$NON-NLS-2$
 						+ newMap.getName());
 			}
 		}

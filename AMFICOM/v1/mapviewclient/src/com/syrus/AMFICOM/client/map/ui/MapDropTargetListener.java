@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.38 2005/09/14 10:40:17 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.39 2005/09/16 14:53:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeCableLinkCommand;
 import com.syrus.AMFICOM.client.map.command.action.PlaceSchemeElementCommand;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Map;
@@ -51,7 +52,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.38 $, $Date: 2005/09/14 10:40:17 $
+ * @version $Revision: 1.39 $, $Date: 2005/09/16 14:53:36 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -79,7 +80,7 @@ public final class MapDropTargetListener implements DropTargetListener
 			for(int i = 0; i < df.length; i++) {
 				try
 				{
-					if (df[i].getHumanPresentableName().equals("ElementLabel"))
+					if (df[i].getHumanPresentableName().equals("ElementLabel")) //$NON-NLS-1$
 					{
 						Identifier id = (Identifier )transferable.getTransferData(df[(i)]);
 						SiteNodeType mpe = StorableObjectPool.getStorableObject(id, false);
@@ -87,7 +88,7 @@ public final class MapDropTargetListener implements DropTargetListener
 						mapElementDropped(mpe, point);
 					}
 					else
-					if (df[i].getHumanPresentableName().equals("IconedTreeUI.object"))
+					if (df[i].getHumanPresentableName().equals("IconedTreeUI.object")) //$NON-NLS-1$
 					{
 						ArrayList items = (ArrayList)transferable.getTransferData(df[i]);
 						for(Iterator iter = items.iterator(); iter.hasNext();) {
@@ -213,8 +214,8 @@ public final class MapDropTargetListener implements DropTargetListener
 			{
 				JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(), 
-					"Unable to place scheme cable link",
-					"Place nodes first!", 
+					LangModelMap.getString("Error.UnableToPlaceCable"), //$NON-NLS-1$
+					LangModelMap.getString("Error.PlaceNodesFirst"),  //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
 				return;
 			}

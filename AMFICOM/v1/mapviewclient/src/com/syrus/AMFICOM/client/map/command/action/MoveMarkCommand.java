@@ -1,5 +1,5 @@
 /**
- * $Id: MoveMarkCommand.java,v 1.18 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: MoveMarkCommand.java,v 1.19 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  * местоположени€"
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class MoveMarkCommand extends MapActionCommand {
@@ -61,11 +61,11 @@ public class MoveMarkCommand extends MapActionCommand {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | "
-				+ "move mark "
+			getClass().getName() + "::execute() | " //$NON-NLS-1$
+				+ "move mark " //$NON-NLS-1$
 				+ this.mark.getName() 
-				+ " (" + this.mark.getId() + ")"
-				+ " to distance " + this.distance, 
+				+ " (" + this.mark.getId() + ")" //$NON-NLS-1$ //$NON-NLS-2$
+				+ " to distance " + this.distance,  //$NON-NLS-1$
 			Level.FINEST);
 
 		try {

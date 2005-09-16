@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMeasurementPathCommandAtomic.java,v 1.20 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: CreateMeasurementPathCommandAtomic.java,v 1.21 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
  * создание прокладки измерительного пути
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  */
 public class CreateMeasurementPathCommandAtomic extends MapActionCommand {
@@ -56,14 +56,14 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | " 
-				+ "create MeasurementPath for SchemePath " 
+			getClass().getName() + "::execute() | "  //$NON-NLS-1$
+				+ "create MeasurementPath for SchemePath "  //$NON-NLS-1$
 				+ this.schemePath.getName() 
-				+ " (" + this.schemePath.getId() 
-				+ ") with start at node " + this.startNode.getName() 
-				+ " (" + this.startNode.getId() 
-				+ ") and end at node " + this.endNode.getName() 
-				+ " (" + this.endNode.getId() + ")", 
+				+ " (" + this.schemePath.getId()  //$NON-NLS-1$
+				+ ") with start at node " + this.startNode.getName()  //$NON-NLS-1$
+				+ " (" + this.startNode.getId()  //$NON-NLS-1$
+				+ ") and end at node " + this.endNode.getName()  //$NON-NLS-1$
+				+ " (" + this.endNode.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 		
 		this.measurementPath = MeasurementPath.createInstance(

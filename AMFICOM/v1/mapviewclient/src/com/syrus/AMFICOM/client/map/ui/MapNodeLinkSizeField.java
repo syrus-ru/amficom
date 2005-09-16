@@ -1,5 +1,5 @@
 /**
- * $Id: MapNodeLinkSizeField.java,v 1.13 2005/08/17 14:14:20 arseniy Exp $
+ * $Id: MapNodeLinkSizeField.java,v 1.14 2005/09/16 14:53:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -33,8 +33,8 @@ import com.syrus.util.Log;
  * 
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2005/08/17 14:14:20 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.14 $, $Date: 2005/09/16 14:53:36 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public final class MapNodeLinkSizeField extends JTextField 
@@ -130,7 +130,7 @@ public final class MapNodeLinkSizeField extends JTextField
 				}
 				catch(Exception ex)
 				{
-					Log.debugMessage("Illegal distance", Level.INFO);
+					Log.debugMessage("Illegal distance", Level.INFO); //$NON-NLS-1$
 				}
 			}
 		}

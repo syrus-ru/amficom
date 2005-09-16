@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMarkCommandAtomic.java,v 1.27 2005/09/02 16:46:36 krupenn Exp $
+ * $Id: CreateMarkCommandAtomic.java,v 1.28 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
  * Команда создания метки на линии
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/09/02 16:46:36 $
+ * @version $Revision: 1.28 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  */
 public class CreateMarkCommandAtomic extends MapActionCommand {
@@ -72,9 +72,9 @@ public class CreateMarkCommandAtomic extends MapActionCommand {
 	public void execute() {
 		try {
 			Log.debugMessage(
-				getClass().getName() + "::execute() | " 
-					+ "create mark at link " + this.link.getName() 
-					+ " (" + this.link.getId() + ")", 
+				getClass().getName() + "::execute() | "  //$NON-NLS-1$
+					+ "create mark at link " + this.link.getName()  //$NON-NLS-1$
+					+ " (" + this.link.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 
 			if ( !getLogicalNetLayer().getContext().getApplicationModel()
@@ -110,7 +110,7 @@ public class CreateMarkCommandAtomic extends MapActionCommand {
 						LoginManager.getUserId(),
 						this.link, 
 						this.distance);
-				this.mark.setName(LangModelMap.getString("mark"));
+				this.mark.setName(LangModelMap.getString("mark")); //$NON-NLS-1$
 			} catch (CreateObjectException e) {
 				e.printStackTrace();
 			}

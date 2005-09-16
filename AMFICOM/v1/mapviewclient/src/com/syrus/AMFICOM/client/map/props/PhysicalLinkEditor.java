@@ -97,22 +97,22 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 		this.endComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.typeLabel.setText(LangModelMap.getString("Type"));
-		this.startLabel.setText(LangModelMap.getString("StartNode"));
-		this.endLabel.setText(LangModelMap.getString("EndNode"));
-		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength"));
-		this.addressLabel.setText(LangModelMap.getString("Address"));
-		this.descLabel.setText(LangModelMap.getString("Description"));
-		this.cityLabel.setText(LangModelMap.getString("CityKurz"));
-		this.streetLabel.setText(LangModelMap.getString("StreetKurz"));
-		this.buildingLabel.setText(LangModelMap.getString("BuildingKurz"));
-		this.addressLabel.setText(LangModelMap.getString("Address"));
-		this.colorLabel.setText(LangModelMap.getString("Color"));
-		this.thicknessLabel.setText(LangModelMap.getString("Thickness"));
-		this.styleLabel.setText(LangModelMap.getString("Style"));
+		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
+		this.typeLabel.setText(LangModelMap.getString("Type")); //$NON-NLS-1$
+		this.startLabel.setText(LangModelMap.getString("StartNode")); //$NON-NLS-1$
+		this.endLabel.setText(LangModelMap.getString("EndNode")); //$NON-NLS-1$
+		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength")); //$NON-NLS-1$
+		this.addressLabel.setText(LangModelMap.getString("Address")); //$NON-NLS-1$
+		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
+		this.cityLabel.setText(LangModelMap.getString("CityKurz")); //$NON-NLS-1$
+		this.streetLabel.setText(LangModelMap.getString("StreetKurz")); //$NON-NLS-1$
+		this.buildingLabel.setText(LangModelMap.getString("BuildingKurz")); //$NON-NLS-1$
+		this.addressLabel.setText(LangModelMap.getString("Address")); //$NON-NLS-1$
+		this.colorLabel.setText(LangModelMap.getString("Color")); //$NON-NLS-1$
+		this.thicknessLabel.setText(LangModelMap.getString("Thickness")); //$NON-NLS-1$
+		this.styleLabel.setText(LangModelMap.getString("Style")); //$NON-NLS-1$
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -511,15 +511,15 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 
 		if(this.link == null) {
 			this.nameTextField.setEnabled(false);
-			this.nameTextField.setText("");
-			this.topologicalLengthTextField.setText("");
+			this.nameTextField.setText(""); //$NON-NLS-1$
+			this.topologicalLengthTextField.setText(""); //$NON-NLS-1$
 			this.typeComboBox.setEnabled(false);
 			this.descTextArea.setEnabled(false);
-			this.descTextArea.setText("");
+			this.descTextArea.setText(""); //$NON-NLS-1$
 
-			this.cityTextField.setText("");
-			this.streetTextField.setText("");
-			this.buildingTextField.setText("");
+			this.cityTextField.setText(""); //$NON-NLS-1$
+			this.streetTextField.setText(""); //$NON-NLS-1$
+			this.buildingTextField.setText(""); //$NON-NLS-1$
 
 			this.colorComboBox.setEnabled(false);
 			this.thicknessComboBox.setEnabled(false);
@@ -540,7 +540,7 @@ public class PhysicalLinkEditor extends DefaultStorableObjectEditor {
 				long d = System.currentTimeMillis();
 				Collection types = LinkTypeController.getTopologicalLinkTypes(this.netMapViewer.getLogicalNetLayer().getMapView().getMap());
 				long f = System.currentTimeMillis();
-				Log.debugMessage("SiteNodeEditor::LinkTypeController.getTopologicalLinkTypes() -------- " + (f - d) + " ms ---------", Level.FINE);
+				Log.debugMessage("SiteNodeEditor::LinkTypeController.getTopologicalLinkTypes() -------- " + (f - d) + " ms ---------", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 				
 				this.typeComboBox.setEnabled(true);
 				this.typeComboBox.addElements(types);

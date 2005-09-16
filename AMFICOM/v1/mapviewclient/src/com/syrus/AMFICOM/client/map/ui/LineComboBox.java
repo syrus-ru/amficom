@@ -35,7 +35,7 @@ public class LineComboBox extends AComboBox
 	{
 		if(do_init)
 		{
-			vec.addElement( new MyLine(new BasicStroke(lineWidth), "Solid line") );
+			vec.addElement( new MyLine(new BasicStroke(lineWidth), "Solid line") ); //$NON-NLS-1$
 			vec.addElement( new MyLine(
 				new BasicStroke(
 					lineWidth,
@@ -44,7 +44,7 @@ public class LineComboBox extends AComboBox
 					(float)0.0,
 					new float[] {10, 3},
 					(float)0.0), 
-				"Dash line 1") );
+				"Dash line 1") ); //$NON-NLS-1$
 			vec.addElement( new MyLine(
 				new BasicStroke(
 					lineWidth,
@@ -53,7 +53,7 @@ public class LineComboBox extends AComboBox
 					(float)0.0,
 					new float[] {3, 10},
 					(float)0.0),
-				"Dash line 2") );
+				"Dash line 2") ); //$NON-NLS-1$
 			vec.addElement( new MyLine(
 				new BasicStroke(
 					lineWidth,
@@ -62,7 +62,7 @@ public class LineComboBox extends AComboBox
 					(float)0.0,
 					new float[] {10, 3, 10},
 					(float)0.0),
-				"Dash line 3") );
+				"Dash line 3") ); //$NON-NLS-1$
 			vec.addElement( new MyLine(
 				new BasicStroke(
 					lineWidth,
@@ -71,7 +71,7 @@ public class LineComboBox extends AComboBox
 					(float)0.0,
 					new float[] {10, 10, 3, 10},
 					(float)0.0),
-				"Dash line 4") );
+				"Dash line 4") ); //$NON-NLS-1$
 			do_init = false;
 		}
 	}
@@ -96,7 +96,7 @@ public class LineComboBox extends AComboBox
 		public MyLine ()
 		{
 			this.basicStroke = new BasicStroke(2);
-			this.text = "Solid line";
+			this.text = "Solid line"; //$NON-NLS-1$
 		}
 
 		public void setMyLine (BasicStroke col, String tx)

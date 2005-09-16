@@ -1,5 +1,5 @@
 /**
- * $Id: LayersDialog.java,v 1.10 2005/09/04 17:17:20 krupenn Exp $
+ * $Id: LayersDialog.java,v 1.11 2005/09/16 14:53:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,13 +36,13 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 
 public class LayersDialog extends JDialog {
 
-	private static final String LABEL = "label";
+	private static final String LABEL = "label"; //$NON-NLS-1$
 
-	private static final String LABEL_VISIBLE_COMBO = "labelVisibleCombo";
+	private static final String LABEL_VISIBLE_COMBO = "labelVisibleCombo"; //$NON-NLS-1$
 
-	private static final String NAME = "name";
+	private static final String NAME = "name"; //$NON-NLS-1$
 
-	private static final String VISIBLE_COMBO = "visibleCombo";
+	private static final String VISIBLE_COMBO = "visibleCombo"; //$NON-NLS-1$
 
 	private JScrollPane layersPanel = new JScrollPane();
 
@@ -92,13 +92,13 @@ public class LayersDialog extends JDialog {
 		this.setSize(new Dimension(550, 400));
 		this.getContentPane().setLayout(new BorderLayout());
 
-		this.okButton.setText("Применить");
+		this.okButton.setText(LangModelMap.getString("Button.Apply")); //$NON-NLS-1$
 		this.okButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					ok();
 				}
 			});
-		this.cancelButton.setText("Отменить");
+		this.cancelButton.setText(LangModelMap.getString("Button.Cancel")); //$NON-NLS-1$
 		this.cancelButton.addActionListener(new ActionListener() {
 				public void actionPerformed(ActionEvent e) {
 					cancel();
@@ -111,7 +111,7 @@ public class LayersDialog extends JDialog {
 				return false;
 			}
 		};
-		siteLabelTableModel.addColumn("");
+		siteLabelTableModel.addColumn(""); //$NON-NLS-1$
 		siteLabelTableModel.addRow(new String[] {LangModelMap.getString(MapViewController.ELEMENT_SITENODE)});
 		this.siteLabelTable.setModel(siteLabelTableModel);
 		this.siteLabelTable.setTableHeader(null);
@@ -122,7 +122,7 @@ public class LayersDialog extends JDialog {
 				return false;
 			}
 		};
-		linkLabelTableModel.addColumn("");
+		linkLabelTableModel.addColumn(""); //$NON-NLS-1$
 		linkLabelTableModel.addRow(new String[] {LangModelMap.getString(MapViewController.ELEMENT_PHYSICALLINK)});
 		this.linkLabelTable.setModel(linkLabelTableModel);
 		this.linkLabelTable.setTableHeader(null);
@@ -133,7 +133,7 @@ public class LayersDialog extends JDialog {
 				return false;
 			}
 		};
-		cableLabelTableModel.addColumn("");
+		cableLabelTableModel.addColumn(""); //$NON-NLS-1$
 		cableLabelTableModel.addRow(new String[] {LangModelMap.getString(MapViewController.ELEMENT_CABLEPATH)});
 		this.cableLabelTable.setModel(cableLabelTableModel);
 		this.cableLabelTable.setTableHeader(null);
@@ -193,9 +193,9 @@ public class LayersDialog extends JDialog {
 		this.siteTableModel.addRow(
 				new Object[] {
 					this.allSitesVisibility, 
-					LangModelMap.getString("all"),
+					LangModelMap.getString("all"), //$NON-NLS-1$
 					this.allSitesVisibility,
-					LangModelMap.getString("all") } );
+					LangModelMap.getString("all") } ); //$NON-NLS-1$
 		this.siteTable.setModel(this.siteTableModel);
 		this.siteTable.setTableHeader(null);
 		this.siteTable.setDefaultRenderer(LayerVisibility.class, LayersTableCellRenderer.getInstance());
@@ -256,9 +256,9 @@ public class LayersDialog extends JDialog {
 		this.linkTableModel.addRow(
 				new Object[] {
 					this.allLinksVisibility, 
-					LangModelMap.getString("all"),
+					LangModelMap.getString("all"), //$NON-NLS-1$
 					this.allLinksVisibility,
-					LangModelMap.getString("all") } );
+					LangModelMap.getString("all") } ); //$NON-NLS-1$
 		this.linkTable.setModel(this.linkTableModel);
 		this.linkTable.setTableHeader(null);
 		this.linkTable.setDefaultRenderer(LayerVisibility.class, LayersTableCellRenderer.getInstance());
@@ -285,9 +285,9 @@ public class LayersDialog extends JDialog {
 		this.cableTableModel.addRow(
 				new Object[] {
 					this.allCablesVisibility.getVisible(), 
-					LangModelMap.getString("all"),
+					LangModelMap.getString("all"), //$NON-NLS-1$
 					this.allCablesVisibility.getLabelVisible(),
-					LangModelMap.getString("all") } );
+					LangModelMap.getString("all") } ); //$NON-NLS-1$
 		this.cableTable.setModel(this.cableTableModel);
 		this.cableTable.setTableHeader(null);
 		this.cableTable.setDefaultRenderer(Boolean.class, LayersTableCellRenderer.getInstance());
@@ -337,7 +337,7 @@ public class LayersDialog extends JDialog {
 						visibility, 
 						type.getName(),
 						visibility,
-						LangModelMap.getString("label") } );
+						LangModelMap.getString("label") } ); //$NON-NLS-1$
 		}
 		updateAllSitesVisibility();
 
@@ -356,7 +356,7 @@ public class LayersDialog extends JDialog {
 						visibility, 
 						type.getName(),
 						visibility,
-						LangModelMap.getString("label") } );
+						LangModelMap.getString("label") } ); //$NON-NLS-1$
 		}
 		updateAllLinksVisibility();
 	}

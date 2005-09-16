@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.39 2005/09/14 10:35:06 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.40 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.39 $, $Date: 2005/09/14 10:35:06 $
+ * @version $Revision: 1.40 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  */
 public abstract class AbstractLinkController extends AbstractMapElementController {
@@ -67,7 +67,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	/** Кодовое имя атрибута "Толщина линии при сигнале тревоги". */
 	public static final String ATTRIBUTE_ALARMED_THICKNESS = "alarmed_thickness";
 	/** Кодовое имя атрибута "Цвет при сигнале тревоги". */
-	public static final String ATTRIBUTE_ALARMED_COLOR = "alarmed_color";
+	public static final String ATTRIBUTE_ALARMED_COLOR = "alarmed_color"; //$NON-NLS-1$
 
 	protected CharacteristicType thicknessCharType = null;
 	protected CharacteristicType styleCharType = null;
@@ -128,13 +128,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				return type;
 			}
 		} catch (ApplicationException ex) {
-			Log.debugMessage("Exception searching CharacteristicType. Creating new one.", Level.CONFIG);
+			Log.debugMessage("Exception searching CharacteristicType. Creating new one.", Level.CONFIG); //$NON-NLS-1$
 		}
 
 		try {
 			final CharacteristicType type = CharacteristicType.createInstance(userId,
 					codename,
-					"no description",
+					LangModelMap.getString("NoDescription"), //$NON-NLS-1$
 					LangModelMap.getString(codename),
 					dataType,
 					sort);
@@ -187,8 +187,8 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			try {
 				attribute = Characteristic.createInstance(LoginManager.getUserId(),
 						this.thicknessCharType,
-						"name",
-						"1",
+						LangModelMap.getString("NoName"), //$NON-NLS-1$
+						"1", //$NON-NLS-1$
 						String.valueOf(size),
 						mapElement,
 						true,
@@ -239,8 +239,8 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			try {
 				attribute = Characteristic.createInstance(LoginManager.getUserId(),
 						this.styleCharType,
-						"name",
-						"1",
+						LangModelMap.getString("NoName"), //$NON-NLS-1$
+						"1", //$NON-NLS-1$
 						style,
 						mapElement,
 						true,
@@ -289,7 +289,7 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	public Stroke getStroke(final MapElement mapElement) {
 		final int thickness = getLineSize(mapElement);
 		final String style = getStyle(mapElement);
-		final String key = style + " " + thickness;
+		final String key = style + " " + thickness; //$NON-NLS-1$
 		BasicStroke strokeForLink = this.strokes.get(key);
 		if (strokeForLink == null) {
 			strokeForLink = LineComboBox.getStrokeByType(style);
@@ -325,8 +325,8 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 				attribute = Characteristic.createInstance(
 						LoginManager.getUserId(),
 						this.colorCharType,
-						"name",
-						"1",
+						LangModelMap.getString("NoName"), //$NON-NLS-1$
+						"1", //$NON-NLS-1$
 						String.valueOf(color.getRGB()),
 						mapElement,
 						true,
@@ -382,8 +382,8 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			try {
 				attribute = Characteristic.createInstance(LoginManager.getUserId(),
 						this.alarmedColorCharType,
-						"name",
-						"1",
+						LangModelMap.getString("NoName"), //$NON-NLS-1$
+						"1", //$NON-NLS-1$
 						String.valueOf(color.getRGB()),
 						mapElement,
 						true,
@@ -438,8 +438,8 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 			try {
 				attribute = Characteristic.createInstance(LoginManager.getUserId(),
 						this.alarmedThicknessCharType,
-						"name",
-						"1",
+						LangModelMap.getString("NoName"), //$NON-NLS-1$
+						"1", //$NON-NLS-1$
 						String.valueOf(size),
 						mapElement,
 						true,

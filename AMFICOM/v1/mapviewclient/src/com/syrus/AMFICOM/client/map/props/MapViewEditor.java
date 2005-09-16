@@ -37,8 +37,8 @@ import com.syrus.AMFICOM.mapview.VoidElement;
 import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
- * @version $Revision: 1.17 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapViewEditor extends DefaultStorableObjectEditor {
@@ -86,21 +86,21 @@ public class MapViewEditor extends DefaultStorableObjectEditor {
 		this.schemesList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.mapLabel.setText(LangModelMap.getString("Map"));
-		this.domainLabel.setText(LangModelMap.getString("Domain"));
-		this.longLabel.setText(LangModelMap.getString("Longitude"));
-		this.latLabel.setText(LangModelMap.getString("Latitude"));
-		this.scaleLabel.setText(LangModelMap.getString("Scale"));
-		this.schemesLabel.setText(LangModelMap.getString("Schemes"));
+		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
+		this.mapLabel.setText(LangModelMap.getString("Map")); //$NON-NLS-1$
+		this.domainLabel.setText(LangModelMap.getString("Domain")); //$NON-NLS-1$
+		this.longLabel.setText(LangModelMap.getString("Longitude")); //$NON-NLS-1$
+		this.latLabel.setText(LangModelMap.getString("Latitude")); //$NON-NLS-1$
+		this.scaleLabel.setText(LangModelMap.getString("Scale")); //$NON-NLS-1$
+		this.schemesLabel.setText(LangModelMap.getString("Schemes")); //$NON-NLS-1$
 		this.schemesScrollPane.setPreferredSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.schemesScrollPane.setMinimumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.schemesScrollPane.setMaximumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.schemesScrollPane.getViewport().add(this.schemesList);
 
-		this.descLabel.setText(LangModelMap.getString("Description"));
+		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -375,17 +375,17 @@ public class MapViewEditor extends DefaultStorableObjectEditor {
 
 		if(this.mapView == null) {
 			this.nameTextField.setEnabled(false);
-			this.nameTextField.setText("");
+			this.nameTextField.setText(""); //$NON-NLS-1$
 			this.descTextArea.setEnabled(false);
-			this.descTextArea.setText("");
+			this.descTextArea.setText(""); //$NON-NLS-1$
 
 			this.longTextField.setEnabled(false);
-			this.longTextField.setText("");
+			this.longTextField.setText(""); //$NON-NLS-1$
 			this.latTextField.setEnabled(false);
-			this.latTextField.setText("");
+			this.latTextField.setText(""); //$NON-NLS-1$
 
 			this.scaleTextField.setEnabled(false);
-			this.scaleTextField.setText("");
+			this.scaleTextField.setText(""); //$NON-NLS-1$
 		}
 		else {
 			this.nameTextField.setEnabled(true);

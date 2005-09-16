@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorOpenMapCommand.java,v 1.23 2005/08/17 14:14:17 arseniy Exp $
+ * $Id: MapEditorOpenMapCommand.java,v 1.24 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -31,9 +32,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * пользователь выбрал MapContext, открываетс€ окно карты и сопутствующие окна
  * и MapContext передаетс€ в окно карты
  * 
- * @version $Revision: 1.23 $, $Date: 2005/08/17 14:14:17 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/16 14:53:33 $
  * @module map_v2
- * @author $Author: arseniy $
+ * @author $Author: krupenn $
  * @see MapOpenCommand
  */
 public class MapEditorOpenMapCommand extends AbstractCommand {
@@ -118,7 +119,7 @@ public class MapEditorOpenMapCommand extends AbstractCommand {
 				elementsCommand.execute();
 				this.treeFrame = elementsCommand.treeFrame;
 			} catch(MapException e) {
-				this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "ќшибка соединени€ с картографическими данными"));
+				this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
 				e.printStackTrace();
 			}
 		}

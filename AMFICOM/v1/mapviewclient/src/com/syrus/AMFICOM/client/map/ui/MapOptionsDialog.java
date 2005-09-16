@@ -21,6 +21,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.LineThicknessComboBox;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 public class MapOptionsDialog extends JDialog 
@@ -183,36 +184,36 @@ public class MapOptionsDialog extends JDialog
 		this.canBindColorComboBox.setPreferredSize(fieldDimension);
 		this.spareTextField.setPreferredSize(fieldDimension);
 
-		this.thicknessLanel.setText("Толщина линии");
-		this.colorLabel.setText("Цвет линии");
-		this.selectionThicknessLabel.setText("Толщина линии выделения");
-		this.selectionColorLabel.setText("Цвет линии выделения");
-		this.selectionStyleLabel.setText("Стиль линии выделения");
-		this.styleLabel.setText("Стиль линии");
-		this.alarmedThicknessLabel.setText("Толщина линии (тревога)");
-		this.alarmedColorLabel.setText("Цвет линии (тревога)");
-		this.alarmedStyleLabel.setText("Стиль линии (тревога)");
-		this.borderThicknessLanel.setText("Толщина рамки");
-		this.borderColorLabel.setText("Цвет рамки");
-		this.textColorLabel.setText("Цвет текста");
-		this.backgroundColorLabel.setText("Цвет под текстом");
-		this.fontLabel.setText("Шрифт");
-		this.firstSelectionColorLabel.setText("Первый цвет выделения линии");
-		this.secondSelectionColorLabel.setText("Второй цвет выделения линии");
-		this.metricLabel.setText("Метрика");
-		this.unboundThicknessLanel.setText("Толщина непроложенного кабеля");
-		this.unboundLinkColorLabel.setText("Цвет непроложенного кабеля");
-		this.unboundLinkPositionColorLabel.setText("Цвет линии с непривязанным кабелем");
-		this.unboundElementColorLabel.setText("Цвет непривязанного элемента");
-		this.canBindColorLabel.setText("Цвет режимя привязки элемента");
-		this.spareLabel.setText("Запас по умолчанию при привязке, м");
-		this.showLengthCheckBox.setText("Отображать длины");
-		this.showLinkNamesCheckBox.setText("Отображать названия линий");
-		this.showNodeNamesCheckBox.setText("Отображать названия узлов");
-		this.showNodeNamesCheckBox.setActionCommand("showNodeNamesCheckBox");
-		this.showPhysicalNodesCheckBox.setText("Отображать топологические узлы");
+		this.thicknessLanel.setText(LangModelMap.getString("MapOptionsDialog.LineThickness")); //$NON-NLS-1$
+		this.colorLabel.setText(LangModelMap.getString("MapOptionsDialog.LineColor")); //$NON-NLS-1$
+		this.selectionThicknessLabel.setText(LangModelMap.getString("MapOptionsDialog.SelectionLineThickness")); //$NON-NLS-1$
+		this.selectionColorLabel.setText(LangModelMap.getString("MapOptionsDialog.SelectionLineColor")); //$NON-NLS-1$
+		this.selectionStyleLabel.setText(LangModelMap.getString("MapOptionsDialog.SelectionLineStyle")); //$NON-NLS-1$
+		this.styleLabel.setText(LangModelMap.getString("MapOptionsDialog.LineStyle")); //$NON-NLS-1$
+		this.alarmedThicknessLabel.setText(LangModelMap.getString("MapOptionsDialog.AlarmedLineThickness")); //$NON-NLS-1$
+		this.alarmedColorLabel.setText(LangModelMap.getString("MapOptionsDialog.AlarmedLineColor")); //$NON-NLS-1$
+		this.alarmedStyleLabel.setText(LangModelMap.getString("MapOptionsDialog.AlarmedLineStyle")); //$NON-NLS-1$
+		this.borderThicknessLanel.setText(LangModelMap.getString("MapOptionsDialog.FrameThickness")); //$NON-NLS-1$
+		this.borderColorLabel.setText(LangModelMap.getString("MapOptionsDialog.FrameColor")); //$NON-NLS-1$
+		this.textColorLabel.setText(LangModelMap.getString("MapOptionsDialog.TextColor")); //$NON-NLS-1$
+		this.backgroundColorLabel.setText(LangModelMap.getString("MapOptionsDialog.TextBackground")); //$NON-NLS-1$
+		this.fontLabel.setText(LangModelMap.getString("MapOptionsDialog.Font")); //$NON-NLS-1$
+		this.firstSelectionColorLabel.setText(LangModelMap.getString("MapOptionsDialog.LineFirstSelectionColor")); //$NON-NLS-1$
+		this.secondSelectionColorLabel.setText(LangModelMap.getString("MapOptionsDialog.LineSecondSelectionColor")); //$NON-NLS-1$
+		this.metricLabel.setText(LangModelMap.getString("MapOptionsDialog.Metric")); //$NON-NLS-1$
+		this.unboundThicknessLanel.setText(LangModelMap.getString("MapOptionsDialog.UnboundCableThickness")); //$NON-NLS-1$
+		this.unboundLinkColorLabel.setText(LangModelMap.getString("MapOptionsDialog.UnboundCableColor")); //$NON-NLS-1$
+		this.unboundLinkPositionColorLabel.setText(LangModelMap.getString("MapOptionsDialog.UnboundLinkColor")); //$NON-NLS-1$
+		this.unboundElementColorLabel.setText(LangModelMap.getString("MapOptionsDialog.UnboundElementColor")); //$NON-NLS-1$
+		this.canBindColorLabel.setText(LangModelMap.getString("MapOptionsDialog.ElementBindingColor")); //$NON-NLS-1$
+		this.spareLabel.setText(LangModelMap.getString("MapOptionsDialog.DefaultSpare")); //$NON-NLS-1$
+		this.showLengthCheckBox.setText(LangModelMap.getString("MapOptionsDialog.ShowLength")); //$NON-NLS-1$
+		this.showLinkNamesCheckBox.setText(LangModelMap.getString("MapOptionsDialog.ShowLineNames")); //$NON-NLS-1$
+		this.showNodeNamesCheckBox.setText(LangModelMap.getString("MapOptionsDialog.ShowNodeNames")); //$NON-NLS-1$
+		this.showNodeNamesCheckBox.setActionCommand("showNodeNamesCheckBox"); //$NON-NLS-1$
+		this.showPhysicalNodesCheckBox.setText(LangModelMap.getString("MapOptionsDialog.ShowNodes")); //$NON-NLS-1$
 
-		this.okButton.setText("Применить");
+		this.okButton.setText(LangModelMap.getString("MapOptionsDialog.Button.Apply")); //$NON-NLS-1$
 		this.okButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -220,7 +221,7 @@ public class MapOptionsDialog extends JDialog
 					ok();
 				}
 			});
-		this.cancelButton.setText("Отменить");
+		this.cancelButton.setText(LangModelMap.getString("MapOptionsDialog.Button.Cancel")); //$NON-NLS-1$
 		this.cancelButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -1113,7 +1114,7 @@ public class MapOptionsDialog extends JDialog
 		}
 		catch(Exception e)
 		{
-			System.out.println("Wrong number format");
+			System.out.println(LangModelMap.getString("MapOptionsDialog.Error.NumberFormat")); //$NON-NLS-1$
 			// cannot parse
 		}
 

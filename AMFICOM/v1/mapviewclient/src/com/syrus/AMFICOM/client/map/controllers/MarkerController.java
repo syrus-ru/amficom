@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.35 2005/09/02 16:48:21 krupenn Exp $
+ * $Id: MarkerController.java,v 1.36 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  * Контроллер маркера.
  * @author $Author: krupenn $
- * @version $Revision: 1.35 $, $Date: 2005/09/02 16:48:21 $
+ * @version $Revision: 1.36 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  */
 public class MarkerController extends AbstractNodeController {
@@ -50,9 +50,9 @@ public class MarkerController extends AbstractNodeController {
 	public static final Rectangle MARKER_BOUNDS = new Rectangle(20, 20);
 
 	/** Имя пиктограммы. */
-	public static final String IMAGE_NAME = "marker";
+	public static final String IMAGE_NAME = "marker"; //$NON-NLS-1$
 	/** Пиктограмма. */
-	public static final String IMAGE_PATH = "images/marker.gif";
+	public static final String IMAGE_PATH = "images/marker.gif"; //$NON-NLS-1$
 
 	/**
 	 * Флаг необходимости инициализировать изображения маркеров. Инициализация
@@ -111,8 +111,8 @@ public class MarkerController extends AbstractNodeController {
 
 		final Marker marker = (Marker) mapElement;
 
-		final String s1 = marker.getName() + " (" + LangModelMap.getString("Path_lowercase") + " "
-				+ marker.getMeasurementPath().getName() + ")";
+		final String s1 = marker.getName() + " (" + LangModelMap.getString("Path_lowercase") + " " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
+				+ marker.getMeasurementPath().getName() + ")"; //$NON-NLS-1$
 
 		return s1;
 	}

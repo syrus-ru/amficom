@@ -1,5 +1,5 @@
 /**
- * $Id: MapSaveTest.java,v 1.7 2005/09/05 13:43:40 krupenn Exp $
+ * $Id: MapSaveTest.java,v 1.8 2005/09/16 14:53:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -53,8 +53,8 @@ public class MapSaveTest extends TestCase {
 		Map map = Map.createInstance(
 				userId, 
 				domainId, 
-				"test save", 
-				"");
+				"test save",  //$NON-NLS-1$
+				""); //$NON-NLS-1$
 
 		SiteNodeType nodetype = NodeTypeController.getSiteNodeType(SiteNodeType.DEFAULT_BUILDING);
 
@@ -118,7 +118,7 @@ public class MapSaveTest extends TestCase {
 				site3);
 		map.addNodeLink(nodeLink);
 
-		Collector collector = Collector.createInstance(userId, map, "coll", "desc");
+		Collector collector = Collector.createInstance(userId, map, "coll", "desc"); //$NON-NLS-1$ //$NON-NLS-2$
 		collector.addPhysicalLink(link);
 
 		Mark mark = Mark.createInstance(userId, link, 0.1D);
@@ -147,8 +147,8 @@ public class MapSaveTest extends TestCase {
 		Map map = Map.createInstance(
 				userId, 
 				domainId, 
-				"test save", 
-				"");
+				"test save",  //$NON-NLS-1$
+				""); //$NON-NLS-1$
 
 		SiteNodeType nodetype = NodeTypeController.getSiteNodeType(SiteNodeType.DEFAULT_BUILDING);
 

@@ -1,5 +1,5 @@
 /**
- * $Id: TristateCheckBox.java,v 1.5 2005/08/18 14:18:31 krupenn Exp $ 
+ * $Id: TristateCheckBox.java,v 1.6 2005/09/16 14:53:38 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ
@@ -69,13 +69,13 @@ public class TristateCheckBox extends JCheckBox {
 		});
 		// Reset the keyboard action map
 		ActionMap map = new ActionMapUIResource();
-		map.put("pressed", new AbstractAction() {
+		map.put("pressed", new AbstractAction() { //$NON-NLS-1$
 			public void actionPerformed(ActionEvent e) {
 				grabFocus();
 				TristateCheckBox.this.model.nextState();
 			}
 		});
-		map.put("released", null);
+		map.put("released", null); //$NON-NLS-1$
 		SwingUtilities.replaceUIActionMap(this, map);
 		// set the model to the adapted model
 		this.model = new TristateDecorator(getModel());

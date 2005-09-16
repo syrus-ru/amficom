@@ -1,5 +1,5 @@
 /**
- * $Id: WrapperedComboChooserDialog.java,v 1.4 2005/06/23 08:15:53 krupenn Exp $
+ * $Id: WrapperedComboChooserDialog.java,v 1.5 2005/09/16 14:53:32 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.util.Wrapper;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $
+ * @version $Revision: 1.5 $
  * @module commonclient_v1
  */
 public class WrapperedComboChooserDialog {
@@ -64,7 +64,7 @@ public class WrapperedComboChooserDialog {
 		Object returnObject = null;
 		
 		JPanel mainPanel = new JPanel(new BorderLayout());
-		JLabel jLabel = new JLabel(LangModelGeneral.getString("Element"));
+		JLabel jLabel = new JLabel(LangModelGeneral.getString("Element")); //$NON-NLS-1$
 		WrapperedComboBox comboBox = new WrapperedComboBox(
 				wrapper, 
 				new ArrayList(contents),
@@ -76,13 +76,13 @@ public class WrapperedComboChooserDialog {
 		mainPanel.add(jLabel, BorderLayout.WEST);
 		mainPanel.add(comboBox, BorderLayout.CENTER);
 
-		final String okButton = LangModelGeneral.getString("Choose");
-		final String cancelButton = LangModelGeneral.getString("Button.Cancel");
+		final String okButton = LangModelGeneral.getString("Choose"); //$NON-NLS-1$
+		final String cancelButton = LangModelGeneral.getString("Button.Cancel"); //$NON-NLS-1$
 
 		int result = JOptionPane.showOptionDialog(
 				Environment.getActiveWindow(), 
 				mainPanel,
-				LangModelGeneral.getString("SelectElement"),
+				LangModelGeneral.getString("SelectElement"), //$NON-NLS-1$
 				JOptionPane.OK_CANCEL_OPTION, 
 				JOptionPane.PLAIN_MESSAGE, 
 				null,

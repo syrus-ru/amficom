@@ -1,5 +1,5 @@
 /**
- * $Id: MapPropertiesManager.java,v 1.46 2005/09/14 10:21:53 krupenn Exp $
+ * $Id: MapPropertiesManager.java,v 1.47 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,102 +54,102 @@ import com.syrus.util.Log;
  * <li>zoom
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.46 $, $Date: 2005/09/14 10:21:53 $
+ * @version $Revision: 1.47 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  */
 public final class MapPropertiesManager 
 {
-	private static final String FONT_DELIMITER = " ";
+	private static final String FONT_DELIMITER = " "; //$NON-NLS-1$
 
 	/**
 	 * Фаил откуда загружаются данные.
 	 */
-	protected static String iniFileName = "Map.properties";
+	protected static String iniFileName = "Map.properties"; //$NON-NLS-1$
 	
-	public static final String MAP_CLONED_IDS = "mapclonedids";
+	public static final String MAP_CLONED_IDS = "mapclonedids"; //$NON-NLS-1$
 
 	/** Список полей, которые должны быть в файле настроек. */
 
- 	protected static final String KEY_CONNECTION_CLASS = "connectionClass";
- 	protected static final String KEY_VIEWER_CLASS = "viewerClass"; 	
- 	protected static final String KEY_RENDERER_CLASS = "rendererClass"; 	
-	protected static final String KEY_DATA_BASE_PATH = "dataBasePath";
-	protected static final String KEY_DATA_BASE_VIEW = "dataBaseView";
-	protected static final String KEY_DATA_BASE_URL = "dataBaseURL";
-	protected static final String KEY_LAST_LONGITUDE = "lastLong";
-	protected static final String KEY_LAST_LATITUDE = "lastLat";
-	protected static final String KEY_LAST_ZOOM = "lastZoom";
-	protected static final String KEY_LAST_VIEW = "lastView";
-	protected static final String KEY_LAST_DIRECTORY = "lastDirectory";
-	protected static final String KEY_DESCRETE_NAVIGATION = "descreteNavigation";
- 	protected static final String KEY_TOPOLOGICAL_IMAGE_CACHE = "useTopologicalImageCache";
- 	protected static final String KEY_OPTIMIZE_LINKS = "optimizeLinks";
- 	protected static final String KEY_TOPO_IMAGE_MAX_TIMEWAIT = "topoImageMaxTimeWait";
- 	protected static final String KEY_MOVE_MOUSE_NAVIGATING = "moveMouseNavigating";
-	protected static final String KEY_NAVIGATE_AREA_SIZE = "navigateAreaSize";
-	protected static final String KEY_USE_VIRTUAL_DISK = "useVirtualDisk";
-	protected static final String KEY_VIRTUAL_DISK_PATH = "virtualDiskPath";	
+ 	protected static final String KEY_CONNECTION_CLASS = "connectionClass"; //$NON-NLS-1$
+ 	protected static final String KEY_VIEWER_CLASS = "viewerClass"; 	 //$NON-NLS-1$
+ 	protected static final String KEY_RENDERER_CLASS = "rendererClass"; 	 //$NON-NLS-1$
+	protected static final String KEY_DATA_BASE_PATH = "dataBasePath"; //$NON-NLS-1$
+	protected static final String KEY_DATA_BASE_VIEW = "dataBaseView"; //$NON-NLS-1$
+	protected static final String KEY_DATA_BASE_URL = "dataBaseURL"; //$NON-NLS-1$
+	protected static final String KEY_LAST_LONGITUDE = "lastLong"; //$NON-NLS-1$
+	protected static final String KEY_LAST_LATITUDE = "lastLat"; //$NON-NLS-1$
+	protected static final String KEY_LAST_ZOOM = "lastZoom"; //$NON-NLS-1$
+	protected static final String KEY_LAST_VIEW = "lastView"; //$NON-NLS-1$
+	protected static final String KEY_LAST_DIRECTORY = "lastDirectory"; //$NON-NLS-1$
+	protected static final String KEY_DESCRETE_NAVIGATION = "descreteNavigation"; //$NON-NLS-1$
+ 	protected static final String KEY_TOPOLOGICAL_IMAGE_CACHE = "useTopologicalImageCache"; //$NON-NLS-1$
+ 	protected static final String KEY_OPTIMIZE_LINKS = "optimizeLinks"; //$NON-NLS-1$
+ 	protected static final String KEY_TOPO_IMAGE_MAX_TIMEWAIT = "topoImageMaxTimeWait"; //$NON-NLS-1$
+ 	protected static final String KEY_MOVE_MOUSE_NAVIGATING = "moveMouseNavigating"; //$NON-NLS-1$
+	protected static final String KEY_NAVIGATE_AREA_SIZE = "navigateAreaSize"; //$NON-NLS-1$
+	protected static final String KEY_USE_VIRTUAL_DISK = "useVirtualDisk"; //$NON-NLS-1$
+	protected static final String KEY_VIRTUAL_DISK_PATH = "virtualDiskPath";	 //$NON-NLS-1$
 
  	
 	public static final double DEFAULT_ZOOM = 1.0D;
 
-	private static final String DEFAULT_LAST_LONGITUDE = "0.0";
-	private static final String DEFAULT_LAST_LATITUDE = "0.0";
-	private static final String DEFAULT_LAST_ZOOM = "1";
-	private static final String DEFAULT_LAST_DIRECTORY = ".";
-	private static final String DEFAULT_DESCRETE_NAVIGATION = "true";
-	private static final String DEFAULT_TOPOLOGICAL_IMAGE_CACHE = "true";
-	private static final String DEFAULT_OPTIMIZE_LINKS = "true";
-	private static final String DEFAULT_TOPO_IMAGE_MAX_TIMEWAIT = "30000";
-	private static final String DEFAULT_MOVE_MOUSE_NAVIGATING = "false";
-	private static final String DEFAULT_NAVIGATE_AREA_SIZE = "0.03";
-	private static final String DEFAULT_USE_VIRTUAL_DISK = "false";
-	private static final String DEFAULT_VIRTUAL_DISK_PATH = "";
+	private static final String DEFAULT_LAST_LONGITUDE = "0.0"; //$NON-NLS-1$
+	private static final String DEFAULT_LAST_LATITUDE = "0.0"; //$NON-NLS-1$
+	private static final String DEFAULT_LAST_ZOOM = "1"; //$NON-NLS-1$
+	private static final String DEFAULT_LAST_DIRECTORY = "."; //$NON-NLS-1$
+	private static final String DEFAULT_DESCRETE_NAVIGATION = "true"; //$NON-NLS-1$
+	private static final String DEFAULT_TOPOLOGICAL_IMAGE_CACHE = "true"; //$NON-NLS-1$
+	private static final String DEFAULT_OPTIMIZE_LINKS = "true"; //$NON-NLS-1$
+	private static final String DEFAULT_TOPO_IMAGE_MAX_TIMEWAIT = "30000"; //$NON-NLS-1$
+	private static final String DEFAULT_MOVE_MOUSE_NAVIGATING = "false"; //$NON-NLS-1$
+	private static final String DEFAULT_NAVIGATE_AREA_SIZE = "0.03"; //$NON-NLS-1$
+	private static final String DEFAULT_USE_VIRTUAL_DISK = "false"; //$NON-NLS-1$
+	private static final String DEFAULT_VIRTUAL_DISK_PATH = ""; //$NON-NLS-1$
 	
 
 	/* values read from inifile. */
-	protected static String dataBasePath = "";
-	protected static String dataBaseView = "";
-	protected static String dataBaseURL = "";
+	protected static String dataBasePath = ""; //$NON-NLS-1$
+	protected static String dataBaseView = ""; //$NON-NLS-1$
+	protected static String dataBaseURL = ""; //$NON-NLS-1$
 	protected static double lastLong = 0.0D;
 	protected static double lastLat = 0.0D;
 	protected static double lastZoom = 1.0D;
-	protected static String lastView = "";
-	protected static String lastDirectory = ".";
+	protected static String lastView = ""; //$NON-NLS-1$
+	protected static String lastDirectory = "."; //$NON-NLS-1$
 	protected static boolean descreteNavigation = false;
 	protected static boolean useTopologicalImageCache = false;
 	protected static boolean optimizeLinks = false;
 	protected static long topoImageMaxTimeWait = 30000;
 	protected static boolean moveMouseNavigating = true;
 	protected static boolean useVirtualDisk = false;
-	protected static String virtualDiskPath = "";	
+	protected static String virtualDiskPath = "";	 //$NON-NLS-1$
 	/**
 	 * Величина габарита области границы (при входе в неё происходит смещение экрана)
 	 * в процентах от габарита окна карты
 	 */
 	protected static double navigateAreaSize = 0.03D;
 	
-	protected static String connectionClass = "";
-	protected static String viewerClass = "";
-	protected static String rendererClass = "";
+	protected static String connectionClass = ""; //$NON-NLS-1$
+	protected static String viewerClass = ""; //$NON-NLS-1$
+	protected static String rendererClass = ""; //$NON-NLS-1$
 
 	/* display constants. */
 	public static final String DEFAULT_TEXT_BACKGROUND = String.valueOf(Color.YELLOW.getRGB());
 	public static final String DEFAULT_TEXT_COLOR = String.valueOf(SystemColor.controlText.getRGB());
 	public static final String DEFAULT_BORDER_COLOR = String.valueOf(SystemColor.activeCaptionBorder.getRGB());
-	public static final String DEFAULT_METRIC = LangModelMap.getString("metric");
+	public static final String DEFAULT_METRIC = LangModelMap.getString("metric"); //$NON-NLS-1$
 	public static final String DEFAULT_THICKNESS = String.valueOf(1);
 	public static final String DEFAULT_BORDER_THICKNESS = String.valueOf(1);
-	public static final String DEFAULT_STYLE = "Solid line";
+	public static final String DEFAULT_STYLE = "Solid line"; //$NON-NLS-1$
 	public static final BasicStroke DEFAULT_STROKE = new BasicStroke(2);
 	public static final String DEFAULT_COLOR = String.valueOf(Color.BLUE.getRGB());
 	public static final String DEFAULT_ALARMED_THICKNESS = String.valueOf(3);
-	public static final String DEFAULT_ALARMED_STYLE = "Solid line";
+	public static final String DEFAULT_ALARMED_STYLE = "Solid line"; //$NON-NLS-1$
 	public static final BasicStroke DEFAULT_ALARMED_STROKE = new BasicStroke(3);
 	public static final String DEFAULT_ALARMED_COLOR = String.valueOf(Color.RED.getRGB());
-	public static final String DEFAULT_ALARMED_ANIMATION = "blink";
+	public static final String DEFAULT_ALARMED_ANIMATION = "blink"; //$NON-NLS-1$
 	public static final String DEFAULT_SELECTION_THICKNESS = String.valueOf(4);
-	public static final String DEFAULT_SELECTION_STYLE = "Solid line";
+	public static final String DEFAULT_SELECTION_STYLE = "Solid line"; //$NON-NLS-1$
 	public static final BasicStroke DEFAULT_SELECTION_STROKE = new BasicStroke( 
 			1,
 			BasicStroke.CAP_BUTT,
@@ -160,7 +160,7 @@ public final class MapPropertiesManager
 	public static final String DEFAULT_SELECTION_COLOR = String.valueOf(Color.GREEN.getRGB());
 	public static final String DEFAULT_SELECTION_FIRST_COLOR = String.valueOf(Color.BLACK.getRGB());
 	public static final String DEFAULT_SELECTION_SECOND_COLOR = String.valueOf(Color.RED.getRGB());
-	public static final Font DEFAULT_FONT = new Font ("Arial", 1, 12);
+	public static final Font DEFAULT_FONT = new Font ("Arial", 1, 12); //$NON-NLS-1$
 	public static final String DEFAULT_FONT_ID = DEFAULT_FONT.getName() + MapPropertiesManager.FONT_DELIMITER + DEFAULT_FONT.getStyle() + MapPropertiesManager.FONT_DELIMITER + DEFAULT_FONT.getSize();
 	public static final String DEFAULT_UNBOUND_THICKNESS = String.valueOf(4);
 	public static final String DEFAULT_UNBOUND_LINK_COLOR = String.valueOf(Color.PINK.getRGB());
@@ -170,31 +170,31 @@ public final class MapPropertiesManager
 	public static final String DEFAULT_SPARE_LENGTH = String.valueOf(1.5D);
 	public static final String DEFAULT_MOUSE_TOLERANCY = String.valueOf(3);
 
-	protected static final String KEY_TEXT_BACKGROUND = "textBackground";
-	protected static final String KEY_TEXT_COLOR = "textForeground";
-	protected static final String KEY_FONT = "font";
-	protected static final String KEY_METRIC = "metric";
-	protected static final String KEY_BORDER_THICKNESS = "borderThickness";
-	protected static final String KEY_BORDER_COLOR = "borderColor";
-	protected static final String KEY_THICKNESS = "thickness";
-	protected static final String KEY_STYLE = "style";
-	protected static final String KEY_COLOR = "color";
-	protected static final String KEY_ALARMED_THICKNESS = "alarmedThickness";
-	protected static final String KEY_ALARMED_STYLE = "alarmedStyle";
-	protected static final String KEY_ALARMED_COLOR = "alarmedColor";
-	protected static final String KEY_ALARMED_ANIMATION = "alarmedAnimation";
-	protected static final String KEY_SELECTION_THICKNESS = "selectionThickness";
-	protected static final String KEY_SELECTION_STYLE = "selectionStyle";
-	protected static final String KEY_SELECTION_COLOR = "selectionColor";
-	protected static final String KEY_SELECTION_FIRST_COLOR = "selectionFirstColor";
-	protected static final String KEY_SELECTION_SECOND_COLOR = "selectionSecondColor";
-	protected static final String KEY_UNBOUND_THICKNESS = "unboundThickness";
-	protected static final String KEY_UNBOUND_ELEMENT_COLOR = "unboundElementColor";
-	protected static final String KEY_UNBOUND_LINK_POSITION_COLOR = "linkPositionColor";
-	protected static final String KEY_UNBOUND_LINK_COLOR = "unboundLinkColor";
-	protected static final String KEY_CAN_BIND_COLOR = "canBindColor";
-	protected static final String KEY_SPARE_LENGTH = "spareLength";
-	protected static final String KEY_MOUSE_TOLERANCY = "mouseTolerancy";
+	protected static final String KEY_TEXT_BACKGROUND = "textBackground"; //$NON-NLS-1$
+	protected static final String KEY_TEXT_COLOR = "textForeground"; //$NON-NLS-1$
+	protected static final String KEY_FONT = "font"; //$NON-NLS-1$
+	protected static final String KEY_METRIC = "metric"; //$NON-NLS-1$
+	protected static final String KEY_BORDER_THICKNESS = "borderThickness"; //$NON-NLS-1$
+	protected static final String KEY_BORDER_COLOR = "borderColor"; //$NON-NLS-1$
+	protected static final String KEY_THICKNESS = "thickness"; //$NON-NLS-1$
+	protected static final String KEY_STYLE = "style"; //$NON-NLS-1$
+	protected static final String KEY_COLOR = "color"; //$NON-NLS-1$
+	protected static final String KEY_ALARMED_THICKNESS = "alarmedThickness"; //$NON-NLS-1$
+	protected static final String KEY_ALARMED_STYLE = "alarmedStyle"; //$NON-NLS-1$
+	protected static final String KEY_ALARMED_COLOR = "alarmedColor"; //$NON-NLS-1$
+	protected static final String KEY_ALARMED_ANIMATION = "alarmedAnimation"; //$NON-NLS-1$
+	protected static final String KEY_SELECTION_THICKNESS = "selectionThickness"; //$NON-NLS-1$
+	protected static final String KEY_SELECTION_STYLE = "selectionStyle"; //$NON-NLS-1$
+	protected static final String KEY_SELECTION_COLOR = "selectionColor"; //$NON-NLS-1$
+	protected static final String KEY_SELECTION_FIRST_COLOR = "selectionFirstColor"; //$NON-NLS-1$
+	protected static final String KEY_SELECTION_SECOND_COLOR = "selectionSecondColor"; //$NON-NLS-1$
+	protected static final String KEY_UNBOUND_THICKNESS = "unboundThickness"; //$NON-NLS-1$
+	protected static final String KEY_UNBOUND_ELEMENT_COLOR = "unboundElementColor"; //$NON-NLS-1$
+	protected static final String KEY_UNBOUND_LINK_POSITION_COLOR = "linkPositionColor"; //$NON-NLS-1$
+	protected static final String KEY_UNBOUND_LINK_COLOR = "unboundLinkColor"; //$NON-NLS-1$
+	protected static final String KEY_CAN_BIND_COLOR = "canBindColor"; //$NON-NLS-1$
+	protected static final String KEY_SPARE_LENGTH = "spareLength"; //$NON-NLS-1$
+	protected static final String KEY_MOUSE_TOLERANCY = "mouseTolerancy"; //$NON-NLS-1$
 
 	/* display variables. */
 	protected static Color textBackground = null;
@@ -307,16 +307,16 @@ public final class MapPropertiesManager
 	/**
 	 * Для вывода времени в отладочных сообщениях
 	 */
-	private static DateFormat logDateFormat = new SimpleDateFormat("E M d H:m:s:S");
+	private static DateFormat logDateFormat = new SimpleDateFormat("E M d H:m:s:S"); //$NON-NLS-1$
 
-	private static DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss");
+	private static DateFormat dateFormat = new SimpleDateFormat("dd.MM.yyyy HH:mm:ss"); //$NON-NLS-1$
 
 	private static Properties defaults = new Properties();
 
 	static {
-		defaults.put(KEY_DATA_BASE_PATH, "");
-		defaults.put(KEY_DATA_BASE_VIEW, "");
-		defaults.put(KEY_DATA_BASE_URL, "");
+		defaults.put(KEY_DATA_BASE_PATH, ""); //$NON-NLS-1$
+		defaults.put(KEY_DATA_BASE_VIEW, ""); //$NON-NLS-1$
+		defaults.put(KEY_DATA_BASE_URL, ""); //$NON-NLS-1$
 
 		defaults.put(KEY_TEXT_BACKGROUND, DEFAULT_TEXT_BACKGROUND);
 		defaults.put(KEY_TEXT_COLOR, DEFAULT_TEXT_COLOR);
@@ -600,7 +600,7 @@ public final class MapPropertiesManager
 
 		try {
 			String fontId = properties.getProperty(KEY_FONT);
-			StringTokenizer tokenizer = new StringTokenizer(fontId, "\n");
+			StringTokenizer tokenizer = new StringTokenizer(fontId, "\n"); //$NON-NLS-1$
 			String fontName = tokenizer.nextToken();
 			int fontStyle = Integer.parseInt(tokenizer.nextToken());
 			int fontSize = Integer.parseInt(tokenizer.nextToken());
@@ -756,19 +756,19 @@ public final class MapPropertiesManager
 	 */
 	protected static void setDefaults()
 	{
-		dataBasePath = "";
-		dataBaseView = "";
-		dataBaseURL = "";
-		lastDirectory = ".";
+		dataBasePath = ""; //$NON-NLS-1$
+		dataBaseView = ""; //$NON-NLS-1$
+		dataBaseURL = ""; //$NON-NLS-1$
+		lastDirectory = "."; //$NON-NLS-1$
 		descreteNavigation = false;
 		useTopologicalImageCache = false;
 		optimizeLinks = false;
 		moveMouseNavigating = true;
 		topoImageMaxTimeWait = 30000;
 		navigateAreaSize = 0.03;
-		viewerClass = "";
-		connectionClass = "";		
-		rendererClass = "";
+		viewerClass = ""; //$NON-NLS-1$
+		connectionClass = "";		 //$NON-NLS-1$
+		rendererClass = ""; //$NON-NLS-1$
 	}
 
 	/**
@@ -776,7 +776,7 @@ public final class MapPropertiesManager
 	 */
 	public static void saveIniFile()
 	{
-		Log.debugMessage("method call MapPropertiesManager.saveIniFile()", Level.FINE);
+		Log.debugMessage("method call MapPropertiesManager.saveIniFile()", Level.FINE); //$NON-NLS-1$
 
 		try
 		{
@@ -821,7 +821,7 @@ public final class MapPropertiesManager
 		}
 		catch(java.io.IOException e)
 		{
-			Log.debugMessage("Params not saved", Level.WARNING);
+			Log.debugMessage("Params not saved", Level.WARNING); //$NON-NLS-1$
 			Log.debugException(e, Level.WARNING);
 		}
 	}
@@ -921,7 +921,7 @@ public final class MapPropertiesManager
 			} 
 			catch (InterruptedException e) 
 			{
-				System.out.println("INTERRUPTED while loading Image");
+				System.out.println("INTERRUPTED while loading Image"); //$NON-NLS-1$
 			}
 			tracker.removeImage(image, id);
 		}

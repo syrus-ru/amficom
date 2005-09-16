@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewSiteTypeCommand.java,v 1.6 2005/09/14 10:29:31 krupenn Exp $
+ * $Id: MapEditorNewSiteTypeCommand.java,v 1.7 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,14 +46,14 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 						new StatusMessageEvent(
 								this, 
 								StatusMessageEvent.STATUS_MESSAGE, 
-								"Open map frame first!"));
+								LangModelMap.getString("StatusMessage.OpenMapFrameFirst"))); //$NON-NLS-1$
 				return;
 			}
 			SiteNodeType siteNodeType = SiteNodeType.createInstance(
 					LoginManager.getUserId(), 
 					SiteNodeTypeSort.BUILDING, 
 					"codename",
-					"Новый",
+					LangModelMap.getString("New"), //$NON-NLS-1$
 					"",
 					NodeTypeController.getDefaultImageId(),
 					true,

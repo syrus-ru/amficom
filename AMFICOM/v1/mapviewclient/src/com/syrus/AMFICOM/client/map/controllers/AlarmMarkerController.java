@@ -1,5 +1,5 @@
 /**
- * $Id: AlarmMarkerController.java,v 1.16 2005/09/02 09:33:50 krupenn Exp $
+ * $Id: AlarmMarkerController.java,v 1.17 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.AMFICOM.mapview.AlarmMarker;
 /**
  * Контроллер маркера сигнала тревоги.
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/09/02 09:33:50 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  */
 public final class AlarmMarkerController extends MarkerController {
@@ -34,17 +34,17 @@ public final class AlarmMarkerController extends MarkerController {
 	 * Имя первой пиктограммы. Пиктограммы маркера сигнала тревоги меняются с
 	 * заданным периодом для мигания на карте.
 	 */
-	public static final String ALARM_IMAGE_NAME = "alarmmarker";
+	public static final String ALARM_IMAGE_NAME = "alarmmarker"; //$NON-NLS-1$
 	/** Первая пиктограмма. */
-	public static final String ALARM_IMAGE_PATH = "images/alarm_bell_green.gif";
+	public static final String ALARM_IMAGE_PATH = "images/alarm_bell_green.gif"; //$NON-NLS-1$
 
 	/**
 	 * Имя второй пиктограммы. Пиктограммы маркера сигнала тревоги меняются с
 	 * заданным периодом для мигания на карте.
 	 */
-	public static final String ALARM_IMAGE2_NAME = "alarmmarker2";
+	public static final String ALARM_IMAGE2_NAME = "alarmmarker2"; //$NON-NLS-1$
 	/** Вторая пиктограмма. */
-	public static final String ALARM_IMAGE2_PATH = "images/alarm_bell_red.gif";
+	public static final String ALARM_IMAGE2_PATH = "images/alarm_bell_red.gif"; //$NON-NLS-1$
 
 	/**
 	 * Флаг необходимости инициализировать изображения маркеров сигнала тревоги.
@@ -94,9 +94,9 @@ public final class AlarmMarkerController extends MarkerController {
 
 		try {
 			double distance = super.getFromStartLengthLf(marker);
-			final String s1 = LangModelMap.getString("Alarm") + " " + marker.getName()
-					+ " (" + LangModelMap.getString("Path_lowercase") + " " + marker.getMeasurementPath().getName() + ") "
-					+ LangModelMap.getString("Distance_lowercase") + " - " + distance;
+			final String s1 = LangModelMap.getString("Alarm") + " " + marker.getName() //$NON-NLS-1$ //$NON-NLS-2$
+					+ " (" + LangModelMap.getString("Path_lowercase") + " " + marker.getMeasurementPath().getName() + ") " //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+					+ LangModelMap.getString("Distance_lowercase") + " - " + distance; //$NON-NLS-1$ //$NON-NLS-2$
 
 			return s1;
 		} catch(MapException e) {

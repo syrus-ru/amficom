@@ -127,7 +127,7 @@ public class TunnelLayout implements PropertyChangeListener {
 						(j + 1) * SPACE + 2 * j * RADIUS,
 						2 * RADIUS,
 						2 * RADIUS);
-				this.cells[i][j] = addCell(this.ugoTabbedPane.getGraph(), "", bounds);
+				this.cells[i][j] = addCell(this.ugoTabbedPane.getGraph(), "", bounds); //$NON-NLS-1$
 			}
 	}
 

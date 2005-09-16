@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.16 2005/09/14 10:41:04 krupenn Exp $ 
+ * $Id: MapTreeModel.java,v 1.17 2005/09/16 14:53:37 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный Интеллектуальный 
@@ -58,19 +58,19 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/14 10:41:04 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/16 14:53:37 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapTreeModel implements ChildrenFactory {
 
-	public static final String ALL_MAPS_BRANCH = "allmaps";
+	public static final String ALL_MAPS_BRANCH = "allmaps"; //$NON-NLS-1$
 
-	public static final String MAPS_BRANCH = "innermaps";
+	public static final String MAPS_BRANCH = "innermaps"; //$NON-NLS-1$
 
-	public static final String EXTERNAL_NODES_BRANCH = "externalnode";
+	public static final String EXTERNAL_NODES_BRANCH = "externalnode"; //$NON-NLS-1$
 
-	public static final String NONAME_BRANCH = "noname";
+	public static final String NONAME_BRANCH = "noname"; //$NON-NLS-1$
 
 	public static MapElementComparator mapElementComparator = new MapElementComparator();
 
@@ -81,31 +81,31 @@ public class MapTreeModel implements ChildrenFactory {
 	static final int IMG_SIZE = 16;
 
 	public static ImageIcon mapIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/map.gif").getScaledInstance(
+			.getImage("images/map.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
 	public static ImageIcon nodeIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/node_in_tree.gif").getScaledInstance(
+			.getImage("images/node_in_tree.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
 	public static ImageIcon externalNodeIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/externalnode.gif").getScaledInstance(
+			.getImage("images/externalnode.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
 	public static ImageIcon linkIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/linkmode.gif").getScaledInstance(
+			.getImage("images/linkmode.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
 	public static ImageIcon collIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/collector.gif").getScaledInstance(
+			.getImage("images/collector.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));

@@ -37,7 +37,7 @@ public final class MarkerPopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.setText(LangModelMap.getString("Delete")); //$NON-NLS-1$
 		this.removeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeMark();

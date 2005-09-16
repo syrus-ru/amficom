@@ -1,5 +1,5 @@
 /**
- * $Id: NamedObjectWrapper.java,v 1.3 2005/06/23 08:15:28 krupenn Exp $
+ * $Id: NamedObjectWrapper.java,v 1.4 2005/09/16 14:53:32 krupenn Exp $
  * Syrus Systems.
  * Научно-технический центр.
  * Проект: АМФИКОМ.
@@ -18,12 +18,12 @@ import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @author $Author: krupenn $
  * @module commonclient_v1
  */
 public class NamedObjectWrapper implements Wrapper {
-	public static final String KEY_NAME = "name";
+	public static final String KEY_NAME = "name"; //$NON-NLS-1$
 
 	private static NamedObjectWrapper instance;
 
@@ -55,7 +55,7 @@ public class NamedObjectWrapper implements Wrapper {
 	public String getName(final String key) {
 		String name = null;
 		if(key.equals(KEY_NAME))
-			name = LangModelGeneral.getString("Name");
+			name = LangModelGeneral.getString("Name"); //$NON-NLS-1$
 		return name;
 	}
 
@@ -64,8 +64,8 @@ public class NamedObjectWrapper implements Wrapper {
 
 		if(object != null && key.equals(KEY_NAME)) {
 			Class clazz = object.getClass();
-			String methodName = "getName";
-			String name = "";
+			String methodName = "getName"; //$NON-NLS-1$
+			String name = ""; //$NON-NLS-1$
 			try {
 				Method method = clazz.getMethod(methodName, new Class[0]);
 				name = (String )(method.invoke(object, new Object[0]));
@@ -79,7 +79,7 @@ public class NamedObjectWrapper implements Wrapper {
 			}
 
 			if(result == null) {
-				methodName = "name";
+				methodName = "name"; //$NON-NLS-1$
 				try {
 					Method method = clazz.getMethod(methodName, new Class[0]);
 					name = (String )(method.invoke(object, new Object[0]));
@@ -93,7 +93,7 @@ public class NamedObjectWrapper implements Wrapper {
 				}
 			}
 			if(result == null) {
-				String fieldName = "name";
+				String fieldName = "name"; //$NON-NLS-1$
 				try {
 					Field field = clazz.getField(fieldName);
 					name = (String )(field.get(object));
@@ -123,7 +123,7 @@ public class NamedObjectWrapper implements Wrapper {
 	}
 
 	public Object getPropertyValue(final String key) {
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	public void setPropertyValue(

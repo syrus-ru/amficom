@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.32 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.33 2005/09/16 14:53:33 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * вставить сетевой узел вместо топологического узла
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.33 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle {
@@ -69,10 +69,10 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | " 
-				+ "insert site of type "
-				+ this.type.getName() + " (" + this.type.getId() + ") " 
-				+ "instead of topological node " + this.node.getId(), 
+			getClass().getName() + "::execute() | "  //$NON-NLS-1$
+				+ "insert site of type " //$NON-NLS-1$
+				+ this.type.getName() + " (" + this.type.getId() + ") "  //$NON-NLS-1$ //$NON-NLS-2$
+				+ "instead of topological node " + this.node.getId(),  //$NON-NLS-1$
 			Level.FINEST);
 
 		if(!this.aContext.getApplicationModel().isEnabled(

@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.25 2005/09/14 14:07:49 krupenn Exp $ Syrus
+ * $Id: MapViewTreeModel.java,v 1.26 2005/09/16 14:53:37 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -40,26 +40,26 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/09/14 14:07:49 $
+ * @version $Revision: 1.26 $, $Date: 2005/09/16 14:53:37 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapViewTreeModel implements ChildrenFactory {
 
-	public static final String ALL_MAP_VIEWS_BRANCH = "allmapviews";
+	public static final String ALL_MAP_VIEWS_BRANCH = "allmapviews"; //$NON-NLS-1$
 
-	public static final String MAP_BRANCH = "Map";
+	public static final String MAP_BRANCH = "Map"; //$NON-NLS-1$
 
-	public static final String SCHEMES_BRANCH = "schemes";
+	public static final String SCHEMES_BRANCH = "schemes"; //$NON-NLS-1$
 
-	public static final String LIBRARIES_BRANCH = "libraries";
+	public static final String LIBRARIES_BRANCH = "libraries"; //$NON-NLS-1$
 
-	public static final String NONAME_BRANCH = "noname";
+	public static final String NONAME_BRANCH = "noname"; //$NON-NLS-1$
 
 	static final int IMG_SIZE = 16;
 
 	static ImageIcon mapViewIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/mapview.gif").getScaledInstance(
+			.getImage("images/mapview.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));

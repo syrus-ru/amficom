@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.57 2005/09/14 10:36:24 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.58 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -76,7 +76,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.57 $, $Date: 2005/09/14 10:36:24 $
+ * @version $Revision: 1.58 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -91,7 +91,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 	{
 		super(
 			aContext, 
-			LangModelMap.getString("Map"), 
+			LangModelMap.getString("Map"),  //$NON-NLS-1$
 			new MapEditorMenuBar(aContext.getApplicationModel()), 
 			new MapEditorToolBar());
 			
@@ -364,7 +364,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT_CREATE, true);
 
 				aModel.fireModelChanged();
-				setTitle(LangModelMap.getString("MapView") + ": " + ((MapView )pce.getNewValue()).getName());
+				setTitle(LangModelMap.getString("MapView") + ": " + ((MapView )pce.getNewValue()).getName()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
 			else
 			if(mapEventType.equals(MapEvent.MAP_VIEW_CLOSED))
@@ -414,7 +414,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_REPORT_CREATE, false);
 
 				aModel.fireModelChanged();
-				setTitle(LangModelMap.getString("MapView"));
+				setTitle(LangModelMap.getString("MapView")); //$NON-NLS-1$
 			}
 		}
 	}
@@ -543,7 +543,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				if (this.command == null) {
 					Object object = MapEditorMainFrame.this.frames.get(key);
 					if (object instanceof JInternalFrame) {
-						System.out.println("init getLazyCommand for " + key);
+						System.out.println("init getLazyCommand for " + key); //$NON-NLS-1$
 						this.command = new ShowWindowCommand((JInternalFrame)object);
 					}
 				}

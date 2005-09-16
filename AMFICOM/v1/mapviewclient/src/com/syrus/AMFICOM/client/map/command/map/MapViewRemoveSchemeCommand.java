@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewRemoveSchemeCommand.java,v 1.15 2005/08/19 15:43:32 krupenn Exp $
+ * $Id: MapViewRemoveSchemeCommand.java,v 1.16 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.scheme.Scheme;
 /**
  * убрать из вида выбранную схему 
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/08/19 15:43:32 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class MapViewRemoveSchemeCommand extends AbstractCommand {
@@ -63,13 +63,13 @@ public class MapViewRemoveSchemeCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapOpening")));
+						LangModelMap.getString("MapOpening"))); //$NON-NLS-1$
 
 		SchemeTableController schemeTableController = 
 			SchemeTableController.getInstance();
 
 		Scheme scheme = (Scheme )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("Scheme"),
+				LangModelMap.getString("Scheme"), //$NON-NLS-1$
 				mapView.getSchemes(),
 				schemeTableController,
 				schemeTableController.getKeysArray(),
@@ -80,7 +80,7 @@ public class MapViewRemoveSchemeCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted")));
+							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 			return;
 		}
@@ -97,7 +97,7 @@ public class MapViewRemoveSchemeCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelGeneral.getString("Finished")));
+						LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
 		setResult(Command.RESULT_OK);
 	}
 

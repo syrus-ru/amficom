@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.21 $
+ * @version $Revision: 1.22 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -117,7 +117,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 	// holds original list of cable path links
 	private List links = new LinkedList();
 	
-	private String stubObject = "";
+	private String stubObject = ""; //$NON-NLS-1$
 	private NetMapViewer netMapViewer;
 	
 	private static Dimension buttonSize = new Dimension(24, 24);
@@ -157,8 +157,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.endNodeToComboBox = new WrapperedComboBox(comboController, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelMap.getString("LinkBinding"));
-		this.titleLabel.setText(LangModelMap.getString("LinkBinding"));
+		this.jPanel.setName(LangModelMap.getString("LinkBinding")); //$NON-NLS-1$
+		this.titleLabel.setText(LangModelMap.getString("LinkBinding")); //$NON-NLS-1$
 		
 		ActionListener lcbal = new ActionListener()
 			{
@@ -244,8 +244,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 
-		this.bindButton.setToolTipText("Привязать");
-		this.bindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/bindcable.gif")));
+		this.bindButton.setToolTipText(LangModelMap.getString("Button.Bind")); //$NON-NLS-1$
+		this.bindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/bindcable.gif"))); //$NON-NLS-1$
 		this.bindButton.setPreferredSize(buttonSize);
 		this.bindButton.setMaximumSize(buttonSize);
 		this.bindButton.setMinimumSize(buttonSize);
@@ -261,8 +261,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					}
 				}
 			});
-		this.bindChainButton.setToolTipText("Привязать цепочку");
-		this.bindChainButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/bindchain.gif")));
+		this.bindChainButton.setToolTipText(LangModelMap.getString("Button.BindChain")); //$NON-NLS-1$
+		this.bindChainButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/bindchain.gif"))); //$NON-NLS-1$
 		this.bindChainButton.setPreferredSize(buttonSize);
 		this.bindChainButton.setMaximumSize(buttonSize);
 		this.bindChainButton.setMinimumSize(buttonSize);
@@ -278,8 +278,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					}
 				}
 			});
-		this.unbindButton.setToolTipText("Убрать связь");
-		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/unbindlink.gif")));
+		this.unbindButton.setToolTipText(LangModelMap.getString("Button.Unbind")); //$NON-NLS-1$
+		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/unbindlink.gif"))); //$NON-NLS-1$
 		this.unbindButton.setPreferredSize(buttonSize);
 		this.unbindButton.setMaximumSize(buttonSize);
 		this.unbindButton.setMinimumSize(buttonSize);
@@ -295,8 +295,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 					}
 				}
 			});
-		this.clearBindingButton.setToolTipText("Отвязать кабель");
-		this.clearBindingButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif")));
+		this.clearBindingButton.setToolTipText(LangModelMap.getString("Button.UnbindCable")); //$NON-NLS-1$
+		this.clearBindingButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif"))); //$NON-NLS-1$
 		this.clearBindingButton.setPreferredSize(buttonSize);
 		this.clearBindingButton.setMaximumSize(buttonSize);
 		this.clearBindingButton.setMinimumSize(buttonSize);
@@ -308,8 +308,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 				}
 			});
 
-		this.selectButton.setToolTipText("Выбрать связь");
-		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif")));
+		this.selectButton.setToolTipText(LangModelMap.getString("Button.SelectElement")); //$NON-NLS-1$
+		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif"))); //$NON-NLS-1$
 		this.selectButton.setPreferredSize(buttonSize);
 		this.selectButton.setMaximumSize(buttonSize);
 		this.selectButton.setMinimumSize(buttonSize);
@@ -322,16 +322,16 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			});
 
 		this.startPanel.setLayout(this.gridBagLayout3);
-		this.startNodeTitleLabel.setText(LangModelMap.getString("StartNodeTitle"));
-		this.startNodeLabel.setText(LangModelMap.getString("StartNode"));
-		this.startLinkLabel.setText(LangModelMap.getString("StartLink"));
-		this.startNodeToLabel.setText(LangModelMap.getString("To"));
+		this.startNodeTitleLabel.setText(LangModelMap.getString("StartNodeTitle")); //$NON-NLS-1$
+		this.startNodeLabel.setText(LangModelMap.getString("StartNode")); //$NON-NLS-1$
+		this.startLinkLabel.setText(LangModelMap.getString("StartLink")); //$NON-NLS-1$
+		this.startNodeToLabel.setText(LangModelMap.getString("To")); //$NON-NLS-1$
 
 		this.endPanel.setLayout(this.gridBagLayout2);
-		this.endNodeTitleLabel.setText(LangModelMap.getString("EndNodeTitle"));
-		this.endNodeLabel.setText(LangModelMap.getString("EndNode"));
-		this.endLinkLabel.setText(LangModelMap.getString("EndLink"));
-		this.endNodeToLabel.setText(LangModelMap.getString("To"));
+		this.endNodeTitleLabel.setText(LangModelMap.getString("EndNodeTitle")); //$NON-NLS-1$
+		this.endNodeLabel.setText(LangModelMap.getString("EndNode")); //$NON-NLS-1$
+		this.endLinkLabel.setText(LangModelMap.getString("EndLink")); //$NON-NLS-1$
+		this.endNodeToLabel.setText(LangModelMap.getString("To")); //$NON-NLS-1$
 
 		this.buttonsPanel.setLayout(new GridBagLayout());
 		this.buttonsPanel.add(this.bindButton);
@@ -612,8 +612,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 		this.table.removeAll();
 		this.links = new LinkedList();
 
-		this.startNodeTextField.setText("");
-		this.endNodeTextField.setText("");
+		this.startNodeTextField.setText(""); //$NON-NLS-1$
+		this.endNodeTextField.setText(""); //$NON-NLS-1$
 		this.startLinkComboBox.removeAllItems();
 		this.endLinkComboBox.removeAllItems();
 		this.startNodeToComboBox.removeAllItems();

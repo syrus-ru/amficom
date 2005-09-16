@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorApplicationModel.java,v 1.14 2005/09/14 10:41:41 krupenn Exp $
+ * $Id: MapEditorApplicationModel.java,v 1.15 2005/09/16 14:53:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,65 +22,65 @@ import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 /**
  * содержит список функциональных элементов, доступных пользователю 
  * 
- * @version $Revision: 1.14 $, $Date: 2005/09/14 10:41:41 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/16 14:53:38 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
 public class MapEditorApplicationModel extends ApplicationModel {
-	public static final String ITEM_VIEW_PROPERTIES = "mapActionViewProperties";
-	public static final String ITEM_EDIT_PROPERTIES = "mapActionEditProperties";
+	public static final String ITEM_VIEW_PROPERTIES = "mapActionViewProperties"; //$NON-NLS-1$
+	public static final String ITEM_EDIT_PROPERTIES = "mapActionEditProperties"; //$NON-NLS-1$
 
-	public static final String ITEM_MAP = "menuMap";
-	public static final String ITEM_MAP_NEW = "menuMapNew";
-	public static final String ITEM_MAP_OPEN = "menuMapOpen";
-	public static final String ITEM_MAP_CLOSE = "menuMapClose";
-	public static final String ITEM_MAP_SAVE = "menuMapSave";
-	public static final String ITEM_MAP_SAVE_AS = "menuMapSaveAs";
-	public static final String ITEM_MAP_ADD_MAP = "menuMapAddMap";
-	public static final String ITEM_MAP_REMOVE_MAP = "menuMapRemoveMap";
-	public static final String ITEM_MAP_ADD_EXTERNAL = "menuMapAddExternal";
-	public static final String ITEM_MAP_EXPORT = "menuMapExport";
-	public static final String ITEM_MAP_IMPORT = "menuMapImport";
+	public static final String ITEM_MAP = "menuMap"; //$NON-NLS-1$
+	public static final String ITEM_MAP_NEW = "menuMapNew"; //$NON-NLS-1$
+	public static final String ITEM_MAP_OPEN = "menuMapOpen"; //$NON-NLS-1$
+	public static final String ITEM_MAP_CLOSE = "menuMapClose"; //$NON-NLS-1$
+	public static final String ITEM_MAP_SAVE = "menuMapSave"; //$NON-NLS-1$
+	public static final String ITEM_MAP_SAVE_AS = "menuMapSaveAs"; //$NON-NLS-1$
+	public static final String ITEM_MAP_ADD_MAP = "menuMapAddMap"; //$NON-NLS-1$
+	public static final String ITEM_MAP_REMOVE_MAP = "menuMapRemoveMap"; //$NON-NLS-1$
+	public static final String ITEM_MAP_ADD_EXTERNAL = "menuMapAddExternal"; //$NON-NLS-1$
+	public static final String ITEM_MAP_EXPORT = "menuMapExport"; //$NON-NLS-1$
+	public static final String ITEM_MAP_IMPORT = "menuMapImport"; //$NON-NLS-1$
 
-	public static final String ITEM_MAP_VIEW = "menuMapView";
-	public static final String ITEM_MAP_VIEW_NEW = "menuMapViewNew";
-	public static final String ITEM_MAP_VIEW_OPEN = "menuMapViewOpen";
-	public static final String ITEM_MAP_VIEW_CLOSE = "menuMapViewClose";
-	public static final String ITEM_MAP_VIEW_SAVE = "menuMapViewSave";
-	public static final String ITEM_MAP_VIEW_SAVE_AS = "menuMapViewSaveAs";
-	public static final String ITEM_MAP_VIEW_ADD_SCHEME = "menuMapViewAddScheme";
-	public static final String ITEM_MAP_VIEW_REMOVE_SCHEME = "menuMapViewRemoveScheme";
+	public static final String ITEM_MAP_VIEW = "menuMapView"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_NEW = "menuMapViewNew"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_OPEN = "menuMapViewOpen"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_CLOSE = "menuMapViewClose"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_SAVE = "menuMapViewSave"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_SAVE_AS = "menuMapViewSaveAs"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_ADD_SCHEME = "menuMapViewAddScheme"; //$NON-NLS-1$
+	public static final String ITEM_MAP_VIEW_REMOVE_SCHEME = "menuMapViewRemoveScheme"; //$NON-NLS-1$
 
-	public static final String ITEM_MAP_LIBRARY = "menuMapLibrary";
-	public static final String ITEM_MAP_LIBRARY_NEW = "menuMapLibraryNew";
-	public static final String ITEM_MAP_LIBRARY_OPEN = "menuMapLibraryOpen";
-	public static final String ITEM_MAP_LIBRARY_SAVE = "menuMapLibrarySave";
-	public static final String ITEM_MAP_LIBRARY_SAVE_AS = "menuMapLibrarySaveAs";
-	public static final String ITEM_MAP_LIBRARY_REMOVE = "menuMapLibraryRemove";
-	public static final String ITEM_MAP_LIBRARY_IMPORT = "menuMapLibraryImport";
-	public static final String ITEM_MAP_LIBRARY_EXPORT = "menuMapLibraryExport";
-	public static final String ITEM_MAP_LIBRARY_NEW_SITE_TYPE = "menuMapLibraryNewSiteType";
-	public static final String ITEM_MAP_LIBRARY_NEW_LINK_TYPE = "menuMapLibraryNewLinkType";
-	public static final String ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE = "menuMapLibraryRemoveSiteType";
-	public static final String ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE = "menuMapLibraryRemoveLinkType";
+	public static final String ITEM_MAP_LIBRARY = "menuMapLibrary"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_NEW = "menuMapLibraryNew"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_OPEN = "menuMapLibraryOpen"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_SAVE = "menuMapLibrarySave"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_SAVE_AS = "menuMapLibrarySaveAs"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_REMOVE = "menuMapLibraryRemove"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_IMPORT = "menuMapLibraryImport"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_EXPORT = "menuMapLibraryExport"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_NEW_SITE_TYPE = "menuMapLibraryNewSiteType"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_NEW_LINK_TYPE = "menuMapLibraryNewLinkType"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_REMOVE_SITE_TYPE = "menuMapLibraryRemoveSiteType"; //$NON-NLS-1$
+	public static final String ITEM_MAP_LIBRARY_REMOVE_LINK_TYPE = "menuMapLibraryRemoveLinkType"; //$NON-NLS-1$
 
-	public static final String ITEM_VIEW = "menuView";
-	public static final String ITEM_VIEW_GENERAL = "menuViewGeneral";
-	public static final String ITEM_VIEW_ADDITIONAL = "menuViewAdditional";
-	public static final String ITEM_VIEW_CHARACTERISTICS = "menuViewCharacteristics";
-	public static final String ITEM_VIEW_MAP_CHOOSER = "menuViewMapChooser";
-	public static final String ITEM_VIEW_MAP_LAYERS = "menuViewMapLayers";
-	public static final String ITEM_VIEW_MAP = "menuViewMap";
-	public static final String ITEM_VIEW_NAVIGATOR = "menuViewNavigator";
-	public static final String ITEM_VIEW_ALL = "menuViewAll";
+	public static final String ITEM_VIEW = "menuView"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_GENERAL = "menuViewGeneral"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_ADDITIONAL = "menuViewAdditional"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_CHARACTERISTICS = "menuViewCharacteristics"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_MAP_CHOOSER = "menuViewMapChooser"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_MAP_LAYERS = "menuViewMapLayers"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_MAP = "menuViewMap"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_NAVIGATOR = "menuViewNavigator"; //$NON-NLS-1$
+	public static final String ITEM_VIEW_ALL = "menuViewAll"; //$NON-NLS-1$
 
-	public static final String ITEM_REPORT = "menuReport";
-	public static final String ITEM_REPORT_CREATE = "menuReportCreate";
+	public static final String ITEM_REPORT = "menuReport"; //$NON-NLS-1$
+	public static final String ITEM_REPORT_CREATE = "menuReportCreate"; //$NON-NLS-1$
 
 	public MapEditorApplicationModel() {
-		UIManager.put("images/main/map_mini.gif", Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif"));
+		UIManager.put("images/main/map_mini.gif", Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif")); //$NON-NLS-1$ //$NON-NLS-2$
 		UIManager.put(MapEditorResourceKeys.ICON_CATALOG, new ImageIcon(Toolkit
-				.getDefaultToolkit().getImage("images/folder.gif").getScaledInstance(
+				.getDefaultToolkit().getImage("images/folder.gif").getScaledInstance( //$NON-NLS-1$
 						16, 16, Image.SCALE_SMOOTH)));
 
 		add(ITEM_VIEW_PROPERTIES);

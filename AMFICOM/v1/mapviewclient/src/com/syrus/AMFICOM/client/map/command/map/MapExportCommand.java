@@ -1,5 +1,5 @@
 /*-
- * $Id: MapExportCommand.java,v 1.26 2005/09/14 19:51:10 bass Exp $
+ * $Id: MapExportCommand.java,v 1.27 2005/09/16 14:53:33 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.Log;
  * отображаетс€ информаци€ о том, что активной карты нет, и карта центрируетс€
  * по умолчанию
  * 
- * @author $Author: bass $
- * @version $Revision: 1.26 $, $Date: 2005/09/14 19:51:10 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class MapExportCommand extends ExportCommand {
@@ -68,7 +68,7 @@ public class MapExportCommand extends ExportCommand {
 		if(this.mapFrame == null)
 			return;
 
-		Log.debugMessage("Exporting map", INFO);
+		Log.debugMessage("Exporting map", INFO); //$NON-NLS-1$
 
 		Map map = this.mapFrame.getMap();
 
@@ -80,13 +80,13 @@ public class MapExportCommand extends ExportCommand {
 		MapPropertiesManager.setLastDirectory(file.getParent());
 
 		String ext = file.getAbsolutePath().substring(
-				file.getAbsolutePath().lastIndexOf("."));
+				file.getAbsolutePath().lastIndexOf(".")); //$NON-NLS-1$
 
 		if(ext == null) {
-			ext = ".xml";
+			ext = ".xml"; //$NON-NLS-1$
 		}
 
-		if(ext.equals(".xml")) {
+		if(ext.equals(".xml")) { //$NON-NLS-1$
 			saveXML(map, fileName);
 		}
 		setResult(Command.RESULT_OK);
@@ -98,15 +98,15 @@ public class MapExportCommand extends ExportCommand {
 			xmlOptions.setSavePrettyPrint();
 			xmlOptions.setSavePrettyPrintIndent(2);
 			java.util.Map<String, String> prefixes = new HashMap<String, String>();
-			prefixes.put("http://syrus.com/AMFICOM/map/xml", "map");
-			prefixes.put("http://syrus.com/AMFICOM/general/xml", "general");
+			prefixes.put("http://syrus.com/AMFICOM/map/xml", "map"); //$NON-NLS-1$ //$NON-NLS-2$
+			prefixes.put("http://syrus.com/AMFICOM/general/xml", "general"); //$NON-NLS-1$ //$NON-NLS-2$
 			xmlOptions.setSaveSuggestedPrefixes(prefixes);
 			xmlOptions.setSaveAggressiveNamespaces();
 	
 			MapsDocument doc = 
 				MapsDocument.Factory.newInstance(xmlOptions);
 
-			map.getXmlTransferable(doc.addNewMaps().addNewMap(), "amficom");
+			map.getXmlTransferable(doc.addNewMaps().addNewMap(), "amficom"); //$NON-NLS-1$
 
 			// Validate the new XML
 			if (validateXml(doc)) {
@@ -118,7 +118,7 @@ public class MapExportCommand extends ExportCommand {
 				} catch(IOException e) {
 					e.printStackTrace();
 				}
-				Log.debugMessage("\nXML Instance Document saved at : " + f.getPath(), INFO);
+				Log.debugMessage("\nXML Instance Document saved at : " + f.getPath(), INFO); //$NON-NLS-1$
 			}
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
@@ -136,7 +136,7 @@ public class MapExportCommand extends ExportCommand {
 				.setErrorListener(validationMessages));
 
 		if(!isXmlValid) {
-			Log.debugMessage("Invalid XML: ", WARNING);
+			Log.debugMessage("Invalid XML: ", WARNING); //$NON-NLS-1$
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
 				Log.debugMessage(error.getMessage(), WARNING);

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundNodeCommandAtomic.java,v 1.24 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: CreateUnboundNodeCommandAtomic.java,v 1.25 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.24 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclietn_v1
  */
 public class CreateUnboundNodeCommandAtomic extends MapActionCommand {
@@ -61,10 +61,10 @@ public class CreateUnboundNodeCommandAtomic extends MapActionCommand {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | "
-				+ "create unbound node for scheme element "
+			getClass().getName() + "::execute() | " //$NON-NLS-1$
+				+ "create unbound node for scheme element " //$NON-NLS-1$
 				+ this.schemeElement.getName() 
-				+ " (" + this.schemeElement.getId() + ")", 
+				+ " (" + this.schemeElement.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 
 		if(!getLogicalNetLayer().getContext().getApplicationModel().isEnabled(

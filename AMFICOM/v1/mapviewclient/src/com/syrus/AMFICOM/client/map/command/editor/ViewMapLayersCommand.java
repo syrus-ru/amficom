@@ -1,5 +1,5 @@
 /*
- * $Id: ViewMapLayersCommand.java,v 1.2 2005/08/29 08:17:24 krupenn Exp $
+ * $Id: ViewMapLayersCommand.java,v 1.3 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.2 $, $Date: 2005/08/29 08:17:24 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/16 14:53:33 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand
@@ -60,7 +60,7 @@ public class ViewMapLayersCommand extends AbstractCommand {
 
 		
 		if(this.mapFrame == null) {
-			Log.debugMessage("map frame is null! Cannot change map view.", Level.SEVERE);
+			Log.debugMessage("map frame is null! Cannot change map view.", Level.SEVERE); //$NON-NLS-1$
 			setResult(Command.RESULT_NO);
 			return;
 		}
@@ -70,12 +70,12 @@ public class ViewMapLayersCommand extends AbstractCommand {
 		else
 			this.layersPanel.setMapFrame(this.mapFrame);
 		
-		final String okButton = LangModelGeneral.getString("Button.OK");
-		final String cancelButton = LangModelGeneral.getString("Button.Cancel");
+		final String okButton = LangModelGeneral.getString("Button.OK"); //$NON-NLS-1$
+		final String cancelButton = LangModelGeneral.getString("Button.Cancel"); //$NON-NLS-1$
 		JOptionPane.showOptionDialog(
 				Environment.getActiveWindow(), 
 				this.layersPanel,
-				LangModelMap.getString("ConfigureTopologicalLayers"),
+				LangModelMap.getString("ConfigureTopologicalLayers"), //$NON-NLS-1$
 				JOptionPane.OK_OPTION, 
 				JOptionPane.PLAIN_MESSAGE, 
 				null,

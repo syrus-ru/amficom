@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.26 2005/09/14 10:32:12 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.27 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.Map;
  * Класс $RCSfile: MapSaveAsCommand.java,v $ используется для сохранения 
  * топологической схемы с новым именем
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/09/14 10:32:12 $
+ * @version $Revision: 1.27 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class MapSaveAsCommand extends AbstractCommand {
@@ -54,7 +54,7 @@ public class MapSaveAsCommand extends AbstractCommand {
 			this.newMap = Map.createInstance(
 					userId, 
 					domainId, 
-					this.map .getName() + "(Copy)", 
+					this.map .getName() + LangModelMap.getString("IsACopy"),  //$NON-NLS-1$
 					"");
 			this.newMap.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
 		} catch(CreateObjectException e) {

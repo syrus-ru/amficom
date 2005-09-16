@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorWindowArranger.java,v 1.20 2005/08/25 11:30:25 krupenn Exp $
+ * $Id: MapEditorWindowArranger.java,v 1.21 2005/09/16 14:53:35 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,14 +22,14 @@ import com.syrus.AMFICOM.client.map.ui.MapViewTreeFrame;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.20 $, $Date: 2005/08/25 11:30:25 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/16 14:53:35 $
  * @module mapviewclient
  */
 
 public class MapEditorWindowArranger extends WindowArranger
 		implements PropertyChangeListener
 {
-	public static final String EVENT_ARRANGE = "ev_me_arrange";
+	public static final String EVENT_ARRANGE = "ev_me_arrange"; //$NON-NLS-1$
 	
 	private JDesktopPane desktop = null;
 

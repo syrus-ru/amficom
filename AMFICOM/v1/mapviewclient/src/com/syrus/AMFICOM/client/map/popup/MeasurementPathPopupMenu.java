@@ -43,13 +43,13 @@ public final class MeasurementPathPopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.propertiesMenuItem.setText(LangModelMap.getString("Properties"));
+		this.propertiesMenuItem.setText(LangModelMap.getString("Properties")); //$NON-NLS-1$
 		this.propertiesMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showProperties();
 			}
 		});
-		this.addMarkerMenuItem.setText(LangModelMap.getString("AddMarker"));
+		this.addMarkerMenuItem.setText(LangModelMap.getString("AddMarker")); //$NON-NLS-1$
 		this.addMarkerMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addMarker();

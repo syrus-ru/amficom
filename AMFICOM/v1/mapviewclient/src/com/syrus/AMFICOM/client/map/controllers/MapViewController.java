@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.56 2005/09/12 02:52:18 bass Exp $
+ * $Id: MapViewController.java,v 1.57 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -59,23 +59,23 @@ import com.syrus.util.Log;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: bass $
- * @version $Revision: 1.56 $, $Date: 2005/09/12 02:52:18 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.57 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  */
 public final class MapViewController {
-	public static final String ELEMENT_SITENODE = "sitenode";
-	public static final String ELEMENT_WELL = "well";
-	public static final String ELEMENT_PIQUET = "piquet";
-	public static final String ELEMENT_PHYSICALLINK = "physicallink";
-	public static final String ELEMENT_COLLECTOR = "collector";
-	public static final String ELEMENT_CABLEPATH = "cablepath";
-	public static final String ELEMENT_TOPOLOGICALNODE = "topologicalnode";
-	public static final String ELEMENT_MARK = "mark";
-	public static final String ELEMENT_MEASUREMENTPATH = "measurementpath";
-	public static final String ELEMENT_MARKER = "marker";
-	public static final String ELEMENT_CABLEINLET = "cableinlet";
-	public static final String ELEMENT_NODELINK = "nodelink";
+	public static final String ELEMENT_SITENODE = "sitenode"; //$NON-NLS-1$
+	public static final String ELEMENT_WELL = "well"; //$NON-NLS-1$
+	public static final String ELEMENT_PIQUET = "piquet"; //$NON-NLS-1$
+	public static final String ELEMENT_PHYSICALLINK = "physicallink"; //$NON-NLS-1$
+	public static final String ELEMENT_COLLECTOR = "collector"; //$NON-NLS-1$
+	public static final String ELEMENT_CABLEPATH = "cablepath"; //$NON-NLS-1$
+	public static final String ELEMENT_TOPOLOGICALNODE = "topologicalnode"; //$NON-NLS-1$
+	public static final String ELEMENT_MARK = "mark"; //$NON-NLS-1$
+	public static final String ELEMENT_MEASUREMENTPATH = "measurementpath"; //$NON-NLS-1$
+	public static final String ELEMENT_MARKER = "marker"; //$NON-NLS-1$
+	public static final String ELEMENT_CABLEINLET = "cableinlet"; //$NON-NLS-1$
+	public static final String ELEMENT_NODELINK = "nodelink"; //$NON-NLS-1$
 
 	public static String getMapElementReadableType(MapElement mapElement) {
 		if(mapElement instanceof SiteNode) {
@@ -105,7 +105,7 @@ public final class MapViewController {
 			return MapViewController.ELEMENT_MARKER;
 		else if(mapElement instanceof NodeLink)
 			return MapViewController.ELEMENT_NODELINK;
-		return "";
+		return ""; //$NON-NLS-1$
 	}
 
 	/** Хэш-таблица контроллеров элементов карты. */
@@ -419,10 +419,10 @@ public final class MapViewController {
 			}
 		}
 		long t5 = System.currentTimeMillis();
-		Log.debugMessage("scanCable :: get start node for scl " + (t2 - t1) + " ms", Level.FINE);
-		Log.debugMessage("scanCable :: get end node for scl " + (t3 - t2) + " ms", Level.FINE);
-		Log.debugMessage("scanCable :: find cable path " + (t4 - t3) + " ms", Level.FINE);
-		Log.debugMessage("scanCable :: placeElement(scl) " + (t5 - t4) + " ms", Level.FINE);
+		Log.debugMessage("scanCable :: get start node for scl " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanCable :: get end node for scl " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanCable :: find cable path " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanCable :: placeElement(scl) " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 	
 	/**
@@ -442,9 +442,9 @@ public final class MapViewController {
 			long t3 = System.currentTimeMillis();
 			scanPaths(scheme);
 			long t4 = System.currentTimeMillis();
-			Log.debugMessage("scanCables :: SchemeUtils.getTopologicalCableLinks(scheme) " + (t2 - t1) + " ms", Level.FINE);
-			Log.debugMessage("scanCables :: scanCable(scl) : topologicalCableLinks " + (t3 - t2) + " ms", Level.FINE);
-			Log.debugMessage("scanCables :: scanPaths(scheme); " + (t4 - t3) + " ms", Level.FINE);
+			Log.debugMessage("scanCables :: SchemeUtils.getTopologicalCableLinks(scheme) " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("scanCables :: scanCable(scl) : topologicalCableLinks " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("scanCables :: scanPaths(scheme); " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch(ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
@@ -477,10 +477,10 @@ public final class MapViewController {
 		}
 		}
 		long t5 = System.currentTimeMillis();
-		Log.debugMessage("scanPath :: get start node for sp " + (t2 - t1) + " ms", Level.FINE);
-		Log.debugMessage("scanPath :: get end node for sp " + (t3 - t2) + " ms", Level.FINE);
-		Log.debugMessage("scanPath :: find measurement path " + (t4 - t3) + " ms", Level.FINE);
-		Log.debugMessage("scanPath :: placeElement(sp) " + (t5 - t4) + " ms", Level.FINE);
+		Log.debugMessage("scanPath :: get start node for sp " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanPath :: get end node for sp " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanPath :: find measurement path " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+		Log.debugMessage("scanPath :: placeElement(sp) " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	/**
@@ -497,8 +497,8 @@ public final class MapViewController {
 				this.scanPath(schemePath);
 			}
 			long t3 = System.currentTimeMillis();
-			Log.debugMessage("scanPaths :: scheme.getTopologicalPaths() " + (t2 - t1) + " ms", Level.FINE);
-			Log.debugMessage("scanPaths :: scanPath(schemePath) : topologicalPaths " + (t3 - t2) + " ms", Level.FINE);
+			Log.debugMessage("scanPaths :: scheme.getTopologicalPaths() " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("scanPaths :: scanPath(schemePath) : topologicalPaths " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch(ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();

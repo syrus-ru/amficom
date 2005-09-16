@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 
 /**
- * @version $Revision: 1.17 $
+ * @version $Revision: 1.18 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -77,12 +77,12 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		this.piquetsList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength"));
-		this.piquetsLabel.setText(LangModelMap.getString("piquet"));
-		this.descLabel.setText(LangModelMap.getString("Description"));
+		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
+		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength")); //$NON-NLS-1$
+		this.piquetsLabel.setText(LangModelMap.getString("piquet")); //$NON-NLS-1$
+		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
 
 		this.piquetsScrollPane.setPreferredSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.piquetsScrollPane.setMinimumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
@@ -258,10 +258,10 @@ public class CollectorEditor extends DefaultStorableObjectEditor {
 		if(this.collector == null)
 		{
 			this.nameTextField.setEnabled(false);
-			this.nameTextField.setText("");
-			this.topologicalLengthTextField.setText("");
+			this.nameTextField.setText(""); //$NON-NLS-1$
+			this.topologicalLengthTextField.setText(""); //$NON-NLS-1$
 			this.descTextArea.setEnabled(false);
-			this.descTextArea.setText("");
+			this.descTextArea.setText(""); //$NON-NLS-1$
 		}
 		else
 		{

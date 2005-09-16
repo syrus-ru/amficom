@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractNodeController.java,v 1.18 2005/09/16 08:19:17 krupenn Exp $
+ * $Id: AbstractNodeController.java,v 1.19 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.map.MapElement;
 /**
  * Контроллер узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/09/16 08:19:17 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  */
 public abstract class AbstractNodeController extends AbstractMapElementController {
@@ -276,7 +276,7 @@ public abstract class AbstractNodeController extends AbstractMapElementControlle
 
 		final String s1 = node.getName();
 
-		return s1 + " [" + MapViewController.getMapElementReadableType(node) + "]";
+		return s1 + " [" + MapViewController.getMapElementReadableType(node) + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

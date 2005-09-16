@@ -65,25 +65,25 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.setText(LangModelMap.getString("Delete")); //$NON-NLS-1$
 		this.removeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeSelection();
 			}
 		});
-		this.insertSiteMenuItem.setText(LangModelMap.getString("PlaceSite"));
+		this.insertSiteMenuItem.setText(LangModelMap.getString("PlaceSite")); //$NON-NLS-1$
 		this.insertSiteMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				insertSite();
 			}
 		});
-		this.generateMenuItem.setText(LangModelMap.getString("GenerateCabling"));
+		this.generateMenuItem.setText(LangModelMap.getString("GenerateCabling")); //$NON-NLS-1$
 		this.generateMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				generateCabling();
 			}
 		});
-		this.newCollectorMenuItem.setText(LangModelMap.getString("CreateCollector"));
+		this.newCollectorMenuItem.setText(LangModelMap.getString("CreateCollector")); //$NON-NLS-1$
 		this.newCollectorMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -100,7 +100,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				}
 			}
 		});
-		this.removeCollectorMenuItem.setText(LangModelMap.getString("RemoveCollector"));
+		this.removeCollectorMenuItem.setText(LangModelMap.getString("RemoveCollector")); //$NON-NLS-1$
 		this.removeCollectorMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -117,7 +117,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				}
 			}
 		});
-		this.addToCollectorMenuItem.setText(LangModelMap.getString("AddToCollector"));
+		this.addToCollectorMenuItem.setText(LangModelMap.getString("AddToCollector")); //$NON-NLS-1$
 		this.addToCollectorMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -134,7 +134,7 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 				}
 			}
 		});
-		this.removeFromCollectorMenuItem.setText(LangModelMap.getString("RemoveFromCollector"));
+		this.removeFromCollectorMenuItem.setText(LangModelMap.getString("RemoveFromCollector")); //$NON-NLS-1$
 		this.removeFromCollectorMenuItem
 				.addActionListener(new ActionListener() {
 					public void actionPerformed(ActionEvent e) {

@@ -1,5 +1,5 @@
 /**
- * $Id: MapAddExternalNodeCommand.java,v 1.15 2005/09/15 14:10:41 krupenn Exp $
+ * $Id: MapAddExternalNodeCommand.java,v 1.16 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * добавить в вид схему из списка
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/09/15 14:10:41 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class MapAddExternalNodeCommand extends AbstractCommand
@@ -80,7 +80,7 @@ public class MapAddExternalNodeCommand extends AbstractCommand
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapOpening")));
+						LangModelMap.getString("MapOpening"))); //$NON-NLS-1$
 
 		MapTableController mapTableController = MapTableController.getInstance();
 
@@ -100,7 +100,7 @@ public class MapAddExternalNodeCommand extends AbstractCommand
 		}
 
 		this.map = (Map )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("Map"),
+				LangModelMap.getString("Map"), //$NON-NLS-1$
 				availableMaps,
 				mapTableController,
 				mapTableController.getKeysArray());
@@ -110,14 +110,14 @@ public class MapAddExternalNodeCommand extends AbstractCommand
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted")));
+							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
 			return;
 		}
 
 		ExternalMapElementChooserDialog elemengChooserDialog = 
 			new ExternalMapElementChooserDialog(
 				this.map,
-				LangModelMap.getString("externalnode"));
+				LangModelMap.getString("externalnode")); //$NON-NLS-1$
 
 		elemengChooserDialog.setModal(true);
 		elemengChooserDialog.setVisible(true);
@@ -126,7 +126,7 @@ public class MapAddExternalNodeCommand extends AbstractCommand
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted")));
+							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
 			return;
 		}
 
@@ -149,7 +149,7 @@ public class MapAddExternalNodeCommand extends AbstractCommand
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelGeneral.getString("Finished")));
+						LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
 		setResult(Command.RESULT_OK);
 	}
 

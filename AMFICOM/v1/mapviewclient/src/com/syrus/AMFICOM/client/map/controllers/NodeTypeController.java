@@ -1,5 +1,5 @@
 /**
- * $Id: NodeTypeController.java,v 1.50 2005/09/16 08:19:17 krupenn Exp $
+ * $Id: NodeTypeController.java,v 1.51 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,14 +46,14 @@ import com.syrus.AMFICOM.resource.FileImageResource;
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.50 $, $Date: 2005/09/16 08:19:17 $
+ * @version $Revision: 1.51 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  */
 public class NodeTypeController extends AbstractNodeController {
 
-	private static final String DEFAULT_IMAGE_CODENAME = "defaultimageresource";
+	private static final String DEFAULT_IMAGE_CODENAME = "defaultimageresource"; //$NON-NLS-1$
 
-	private static final String DEFAULT_IMAGE_FILENAME = "images/defaultsite.gif";
+	private static final String DEFAULT_IMAGE_FILENAME = "images/defaultsite.gif"; //$NON-NLS-1$
 
 	/**
 	 * Instance.
@@ -66,13 +66,13 @@ public class NodeTypeController extends AbstractNodeController {
 	private static Identifier defaultImageId = null;
 
 	static {
-		imageFileNames.put(SiteNodeType.DEFAULT_UNBOUND, "images/unbound.gif");
-		imageFileNames.put(SiteNodeType.DEFAULT_ATS, "images/ats.gif");
-		imageFileNames.put(SiteNodeType.DEFAULT_BUILDING, "images/building.gif");
-		imageFileNames.put(SiteNodeType.DEFAULT_PIQUET, "images/piquet.gif");
-		imageFileNames.put(SiteNodeType.DEFAULT_WELL, "images/well.gif");
-		imageFileNames.put(SiteNodeType.DEFAULT_CABLE_INLET, "images/cableinlet.gif");
-		imageFileNames.put(SiteNodeType.DEFAULT_TOWER, "images/tower.gif");
+		imageFileNames.put(SiteNodeType.DEFAULT_UNBOUND, "images/unbound.gif"); //$NON-NLS-1$
+		imageFileNames.put(SiteNodeType.DEFAULT_ATS, "images/ats.gif"); //$NON-NLS-1$
+		imageFileNames.put(SiteNodeType.DEFAULT_BUILDING, "images/building.gif"); //$NON-NLS-1$
+		imageFileNames.put(SiteNodeType.DEFAULT_PIQUET, "images/piquet.gif"); //$NON-NLS-1$
+		imageFileNames.put(SiteNodeType.DEFAULT_WELL, "images/well.gif"); //$NON-NLS-1$
+		imageFileNames.put(SiteNodeType.DEFAULT_CABLE_INLET, "images/cableinlet.gif"); //$NON-NLS-1$
+		imageFileNames.put(SiteNodeType.DEFAULT_TOWER, "images/tower.gif"); //$NON-NLS-1$
 	}
 
 	/**
@@ -219,7 +219,7 @@ public class NodeTypeController extends AbstractNodeController {
 					sort,
 					codename,
 					LangModelMap.getString(codename),
-					"",
+					"", //$NON-NLS-1$
 					NodeTypeController.getImageId(userId, codename, NodeTypeController.getImageFileName(codename)),
 					isTopological,
 					mapLibrary.getId());

@@ -1,5 +1,5 @@
 /**
- * $Id: MapState.java,v 1.13 2005/09/08 18:22:41 bass Exp $
+ * $Id: MapState.java,v 1.14 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -22,8 +22,8 @@ import com.syrus.util.Log;
  * (mouseMode) - включенный режим (operationMode) - действие над элементами в
  * нулевом режиме (actionMode) -режим отображени€ линий (showMode)
  * 
- * @author $Author: bass $
- * @version $Revision: 1.13 $, $Date: 2005/09/08 18:22:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.14 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  */
 public final class MapState {
@@ -104,34 +104,34 @@ public final class MapState {
 	static Map<Integer, String> showModeNames = new HashMap<Integer, String>();
 
 	static {
-		actionModeNames.put(Integer.valueOf(NULL_ACTION_MODE), "NULL_ACTION_MODE");
-		actionModeNames.put(Integer.valueOf(ALT_LINK_ACTION_MODE), "ALT_LINK_ACTION_MODE");
-		actionModeNames.put(Integer.valueOf(MOVE_ACTION_MODE), "MOVE_ACTION_MODE");
-		actionModeNames.put(Integer.valueOf(DRAW_ACTION_MODE), "DRAW_ACTION_MODE");
-		actionModeNames.put(Integer.valueOf(SELECT_ACTION_MODE), "SELECT_ACTION_MODE");
-		actionModeNames.put(Integer.valueOf(SELECT_MARKER_ACTION_MODE), "SELECT_MARKER_ACTION_MODE");
-		actionModeNames.put(Integer.valueOf(DRAW_LINES_ACTION_MODE), "DRAW_LINES_ACTION_MODE");
+		actionModeNames.put(Integer.valueOf(NULL_ACTION_MODE), "NULL_ACTION_MODE"); //$NON-NLS-1$
+		actionModeNames.put(Integer.valueOf(ALT_LINK_ACTION_MODE), "ALT_LINK_ACTION_MODE"); //$NON-NLS-1$
+		actionModeNames.put(Integer.valueOf(MOVE_ACTION_MODE), "MOVE_ACTION_MODE"); //$NON-NLS-1$
+		actionModeNames.put(Integer.valueOf(DRAW_ACTION_MODE), "DRAW_ACTION_MODE"); //$NON-NLS-1$
+		actionModeNames.put(Integer.valueOf(SELECT_ACTION_MODE), "SELECT_ACTION_MODE"); //$NON-NLS-1$
+		actionModeNames.put(Integer.valueOf(SELECT_MARKER_ACTION_MODE), "SELECT_MARKER_ACTION_MODE"); //$NON-NLS-1$
+		actionModeNames.put(Integer.valueOf(DRAW_LINES_ACTION_MODE), "DRAW_LINES_ACTION_MODE"); //$NON-NLS-1$
 
-		operationModeNames.put(Integer.valueOf(NO_OPERATION), "NO_OPERATION");
-		operationModeNames.put(Integer.valueOf(ZOOM_TO_POINT), "ZOOM_TO_POINT");
-		operationModeNames.put(Integer.valueOf(ZOOM_TO_RECT), "ZOOM_TO_RECT");
-		operationModeNames.put(Integer.valueOf(MOVE_TO_CENTER), "MOVE_TO_CENTER");
-		operationModeNames.put(Integer.valueOf(MOVE_HAND), "MOVE_HAND");
-		operationModeNames.put(Integer.valueOf(NODELINK_SIZE_EDIT), "NODELINK_SIZE_EDIT");
-		operationModeNames.put(Integer.valueOf(MEASURE_DISTANCE), "MEASURE_DISTANCE");
-		operationModeNames.put(Integer.valueOf(MOVE_FIXDIST), "MOVE_FIXDIST");
-		operationModeNames.put(Integer.valueOf(NAVIGATE), "NAVIGATE");
+		operationModeNames.put(Integer.valueOf(NO_OPERATION), "NO_OPERATION"); //$NON-NLS-1$
+		operationModeNames.put(Integer.valueOf(ZOOM_TO_POINT), "ZOOM_TO_POINT"); //$NON-NLS-1$
+		operationModeNames.put(Integer.valueOf(ZOOM_TO_RECT), "ZOOM_TO_RECT"); //$NON-NLS-1$
+		operationModeNames.put(Integer.valueOf(MOVE_TO_CENTER), "MOVE_TO_CENTER"); //$NON-NLS-1$
+		operationModeNames.put(Integer.valueOf(MOVE_HAND), "MOVE_HAND"); //$NON-NLS-1$
+		operationModeNames.put(Integer.valueOf(NODELINK_SIZE_EDIT), "NODELINK_SIZE_EDIT"); //$NON-NLS-1$
+		operationModeNames.put(Integer.valueOf(MEASURE_DISTANCE), "MEASURE_DISTANCE"); //$NON-NLS-1$
+		operationModeNames.put(Integer.valueOf(MOVE_FIXDIST), "MOVE_FIXDIST"); //$NON-NLS-1$
+		operationModeNames.put(Integer.valueOf(NAVIGATE), "NAVIGATE"); //$NON-NLS-1$
 
-		mouseModeNames.put(Integer.valueOf(MOUSE_NONE), "MOUSE_NONE");
-		mouseModeNames.put(Integer.valueOf(MOUSE_PRESSED), "MOUSE_PRESSED");
-		mouseModeNames.put(Integer.valueOf(MOUSE_RELEASED), "MOUSE_RELEASED");
-		mouseModeNames.put(Integer.valueOf(MOUSE_MOVED), "MOUSE_MOVED");
-		mouseModeNames.put(Integer.valueOf(MOUSE_DRAGGED), "MOUSE_DRAGGED");
+		mouseModeNames.put(Integer.valueOf(MOUSE_NONE), "MOUSE_NONE"); //$NON-NLS-1$
+		mouseModeNames.put(Integer.valueOf(MOUSE_PRESSED), "MOUSE_PRESSED"); //$NON-NLS-1$
+		mouseModeNames.put(Integer.valueOf(MOUSE_RELEASED), "MOUSE_RELEASED"); //$NON-NLS-1$
+		mouseModeNames.put(Integer.valueOf(MOUSE_MOVED), "MOUSE_MOVED"); //$NON-NLS-1$
+		mouseModeNames.put(Integer.valueOf(MOUSE_DRAGGED), "MOUSE_DRAGGED"); //$NON-NLS-1$
 
-		showModeNames.put(Integer.valueOf(SHOW_NODE_LINK), "SHOW_NODE_LINK");
-		showModeNames.put(Integer.valueOf(SHOW_PHYSICAL_LINK), "SHOW_PHYSICAL_LINK");
-		showModeNames.put(Integer.valueOf(SHOW_CABLE_PATH), "SHOW_CABLE_PATH");
-		showModeNames.put(Integer.valueOf(SHOW_MEASUREMENT_PATH), "SHOW_MEASUREMENT_PATH");
+		showModeNames.put(Integer.valueOf(SHOW_NODE_LINK), "SHOW_NODE_LINK"); //$NON-NLS-1$
+		showModeNames.put(Integer.valueOf(SHOW_PHYSICAL_LINK), "SHOW_PHYSICAL_LINK"); //$NON-NLS-1$
+		showModeNames.put(Integer.valueOf(SHOW_CABLE_PATH), "SHOW_CABLE_PATH"); //$NON-NLS-1$
+		showModeNames.put(Integer.valueOf(SHOW_MEASUREMENT_PATH), "SHOW_MEASUREMENT_PATH"); //$NON-NLS-1$
 	}
 
 	/**
@@ -150,7 +150,7 @@ public final class MapState {
 	 */
 	public void setMouseMode(int mode) {
 		this.mouseMode = mode;
-		Log.debugMessage("Set mouse mode " + mouseModeToString(), Level.FINEST);
+		Log.debugMessage("Set mouse mode " + mouseModeToString(), Level.FINEST); //$NON-NLS-1$
 	}
 
 	/**
@@ -169,7 +169,7 @@ public final class MapState {
 	 */
 	public void setActionMode(int mode) {
 		this.actionMode = mode;
-		Log.debugMessage("Set action mode " + actionModeToString(), Level.FINEST);
+		Log.debugMessage("Set action mode " + actionModeToString(), Level.FINEST); //$NON-NLS-1$
 	}
 
 	/**
@@ -188,7 +188,7 @@ public final class MapState {
 	 */
 	public void setOperationMode(int mode) {
 		this.operationMode = mode;
-		Log.debugMessage("Set operation mode " + operationModeToString(), Level.FINEST);
+		Log.debugMessage("Set operation mode " + operationModeToString(), Level.FINEST); //$NON-NLS-1$
 	}
 
 	/**
@@ -207,7 +207,7 @@ public final class MapState {
 	 */
 	public void setShowMode(int mode) {
 		this.showMode = mode;
-		Log.debugMessage("Set show mode " + showModeToString(), Level.FINEST);
+		Log.debugMessage("Set show mode " + showModeToString(), Level.FINEST); //$NON-NLS-1$
 	}
 
 	public String actionModeToString() {
@@ -228,10 +228,10 @@ public final class MapState {
 
 	@Override
 	public String toString() {
-		return "MapState [action = " + actionModeToString() 
-				+ ", operation = " + operationModeToString() 
-				+ ", mouse = " + mouseModeToString()
-				+ ", show = " + showModeToString() + "]";
+		return "MapState [action = " + actionModeToString()  //$NON-NLS-1$
+				+ ", operation = " + operationModeToString()  //$NON-NLS-1$
+				+ ", mouse = " + mouseModeToString() //$NON-NLS-1$
+				+ ", show = " + showModeToString() + "]"; //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 }

@@ -5,7 +5,7 @@ import com.syrus.AMFICOM.client.UI.VisualManager;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 public class MapCharacteristicPropertiesFrame extends MapAbstractPropertiesFrame {
-	public static final String	NAME = "mapCharacteristicPropertiesFrame";
+	public static final String	NAME = "mapCharacteristicPropertiesFrame"; //$NON-NLS-1$
 
 	public MapCharacteristicPropertiesFrame(String title, ApplicationContext aContext) {
 		super(title, aContext);

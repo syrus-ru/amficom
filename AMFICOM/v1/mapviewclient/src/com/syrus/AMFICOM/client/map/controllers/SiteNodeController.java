@@ -1,5 +1,5 @@
 /**
- * $Id: SiteNodeController.java,v 1.17 2005/08/11 17:08:10 arseniy Exp $
+ * $Id: SiteNodeController.java,v 1.18 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,14 +26,14 @@ import com.syrus.AMFICOM.map.SiteNode;
 
 /**
  * Контроллер сетевого узла.
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/11 17:08:10 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.18 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  */
 public class SiteNodeController extends AbstractNodeController {
 	static final int IMG_SIZE = 16;
 
-	public static Image externalNodeImage = Toolkit.getDefaultToolkit().getImage("images/extlink2.gif").getScaledInstance(IMG_SIZE,
+	public static Image externalNodeImage = Toolkit.getDefaultToolkit().getImage("images/extlink2.gif").getScaledInstance(IMG_SIZE, //$NON-NLS-1$
 			IMG_SIZE,
 			Image.SCALE_SMOOTH);
 

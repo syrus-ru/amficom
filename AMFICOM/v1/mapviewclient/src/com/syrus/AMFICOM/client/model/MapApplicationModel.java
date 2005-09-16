@@ -1,5 +1,5 @@
 /**
- * $Id: MapApplicationModel.java,v 1.8 2005/08/18 14:18:56 krupenn Exp $
+ * $Id: MapApplicationModel.java,v 1.9 2005/09/16 14:53:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,37 +17,37 @@ package com.syrus.AMFICOM.client.model;
  *  
  * 
  * @author Andrei Kroupennikov
- * @version $Revision: 1.8 $, $Date: 2005/08/18 14:18:56 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/16 14:53:38 $
  * @module mapviewclient
  */
 public class MapApplicationModel extends ApplicationModel
 {
-	public static final String ACTION_SAVE_MAP = "savemap";
-	public static final String ACTION_SAVE_MAP_VIEW = "savemapview";
-	public static final String ACTION_EDIT_MAP = "editmap";
-	public static final String ACTION_EDIT_MAP_VIEW = "editmapview";
-	public static final String ACTION_EDIT_BINDING = "editbinding";
-	public static final String ACTION_USE_MARKER = "usemarker";
-	public static final String ACTION_INDICATION = "indication";
-	public static final String ACTION_EDIT_PROPERTIES = "editproperties";
+	public static final String ACTION_SAVE_MAP = "savemap"; //$NON-NLS-1$
+	public static final String ACTION_SAVE_MAP_VIEW = "savemapview"; //$NON-NLS-1$
+	public static final String ACTION_EDIT_MAP = "editmap"; //$NON-NLS-1$
+	public static final String ACTION_EDIT_MAP_VIEW = "editmapview"; //$NON-NLS-1$
+	public static final String ACTION_EDIT_BINDING = "editbinding"; //$NON-NLS-1$
+	public static final String ACTION_USE_MARKER = "usemarker"; //$NON-NLS-1$
+	public static final String ACTION_INDICATION = "indication"; //$NON-NLS-1$
+	public static final String ACTION_EDIT_PROPERTIES = "editproperties"; //$NON-NLS-1$
 
-	public static final String MODE_NODE_LINK = "mapModeNodeLink";
-	public static final String MODE_LINK = "mapModeLink";
-	public static final String MODE_CABLE_PATH = "mapModeCablePath";
-	public static final String MODE_PATH = "mapModePath";
+	public static final String MODE_NODE_LINK = "mapModeNodeLink"; //$NON-NLS-1$
+	public static final String MODE_LINK = "mapModeLink"; //$NON-NLS-1$
+	public static final String MODE_CABLE_PATH = "mapModeCablePath"; //$NON-NLS-1$
+	public static final String MODE_PATH = "mapModePath"; //$NON-NLS-1$
 
-	public static final String MODE_NODES = "mapModeViewNodes";
-	public static final String MODE_INDICATION = "mapModeViewIndication";
+	public static final String MODE_NODES = "mapModeViewNodes"; //$NON-NLS-1$
+	public static final String MODE_INDICATION = "mapModeViewIndication"; //$NON-NLS-1$
 
-	public static final String OPERATION_ZOOM_IN = "mapActionZoomIn";
-	public static final String OPERATION_ZOOM_OUT = "mapActionZoomOut";
-	public static final String OPERATION_ZOOM_TO_POINT = "mapActionZoomToPoint";
-	public static final String OPERATION_ZOOM_BOX = "mapActionZoomBox";
-	public static final String OPERATION_CENTER_SELECTION = "mapActionCenterSelection";
-	public static final String OPERATION_MOVE_TO_CENTER = "mapActionMoveToCenter";
-	public static final String OPERATION_HAND_PAN = "mapActionHandPan";
-	public static final String OPERATION_MEASURE_DISTANCE = "mapActionMeasureDistance";
-	public static final String OPERATION_MOVE_FIXED = "mapActionMoveFixed";
+	public static final String OPERATION_ZOOM_IN = "mapActionZoomIn"; //$NON-NLS-1$
+	public static final String OPERATION_ZOOM_OUT = "mapActionZoomOut"; //$NON-NLS-1$
+	public static final String OPERATION_ZOOM_TO_POINT = "mapActionZoomToPoint"; //$NON-NLS-1$
+	public static final String OPERATION_ZOOM_BOX = "mapActionZoomBox"; //$NON-NLS-1$
+	public static final String OPERATION_CENTER_SELECTION = "mapActionCenterSelection"; //$NON-NLS-1$
+	public static final String OPERATION_MOVE_TO_CENTER = "mapActionMoveToCenter"; //$NON-NLS-1$
+	public static final String OPERATION_HAND_PAN = "mapActionHandPan"; //$NON-NLS-1$
+	public static final String OPERATION_MEASURE_DISTANCE = "mapActionMeasureDistance"; //$NON-NLS-1$
+	public static final String OPERATION_MOVE_FIXED = "mapActionMoveFixed"; //$NON-NLS-1$
 
 	public MapApplicationModel()
 	{

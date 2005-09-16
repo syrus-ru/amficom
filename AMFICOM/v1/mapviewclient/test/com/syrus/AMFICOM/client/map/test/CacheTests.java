@@ -1,6 +1,6 @@
 package com.syrus.AMFICOM.client.map.test;
 /**
- * $Id: CacheTests.java,v 1.2 2005/07/01 16:07:19 krupenn Exp $
+ * $Id: CacheTests.java,v 1.3 2005/09/16 14:53:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ public class CacheTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
-				"Test for com.syrus.AMFICOM.client.map");
+				"Test for com.syrus.AMFICOM.client.map"); //$NON-NLS-1$
 		//$JUnit-BEGIN$
 		suite.addTestSuite(LoadingThreadTest.class);
 //		suite.addTestSuite(TopologicalImageCacheTest.class);

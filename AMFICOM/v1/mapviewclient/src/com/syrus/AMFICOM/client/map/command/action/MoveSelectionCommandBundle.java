@@ -1,5 +1,5 @@
 /**
- * $Id: MoveSelectionCommandBundle.java,v 1.21 2005/08/24 08:19:58 krupenn Exp $
+ * $Id: MoveSelectionCommandBundle.java,v 1.22 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -27,19 +27,19 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * Перемещение объектов по карте. Команда является пучком команд 
  * (CommandBundle), передвгающих отдельные элементы.
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class MoveSelectionCommandBundle extends MapActionCommandBundle
 {
 	/** конечная точка сдвига */
-	public static final String END_POINT = "endpoint";
+	public static final String END_POINT = "endpoint"; //$NON-NLS-1$
 	/** начальгая точка сдвига */
-	public static final String START_POINT = "startpoint";
+	public static final String START_POINT = "startpoint"; //$NON-NLS-1$
 	/** абсолютное смещение по оси абсцисс */
-	public static final String DELTA_X = "deltax";
+	public static final String DELTA_X = "deltax"; //$NON-NLS-1$
 	/** абсолютное смещение по оси ординат */
-	public static final String DELTA_Y = "deltay";
+	public static final String DELTA_Y = "deltay"; //$NON-NLS-1$
 
 	/**
 	 * начальная точка смещения

@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.mapview.CablePath;
 
 /**
- * @version $Revision: 1.12 $
+ * @version $Revision: 1.13 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -84,16 +84,16 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 				SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.cableLabel.setText(LangModelMap.getString("cable"));
-		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength"));
-		this.physicalLengthLabel.setText(LangModelMap.getString("PhysicalLength"));
-		this.opticalLengthLabel.setText(LangModelMap.getString("OpticalLength"));
-		this.startLabel.setText(LangModelMap.getString("StartNode"));
-		this.endLabel.setText(LangModelMap.getString("EndNode"));
-		this.descLabel.setText(LangModelMap.getString("Description"));
+		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
+		this.cableLabel.setText(LangModelMap.getString("cable")); //$NON-NLS-1$
+		this.topologicalLengthLabel.setText(LangModelMap.getString("TopologicalLength")); //$NON-NLS-1$
+		this.physicalLengthLabel.setText(LangModelMap.getString("PhysicalLength")); //$NON-NLS-1$
+		this.opticalLengthLabel.setText(LangModelMap.getString("OpticalLength")); //$NON-NLS-1$
+		this.startLabel.setText(LangModelMap.getString("StartNode")); //$NON-NLS-1$
+		this.endLabel.setText(LangModelMap.getString("EndNode")); //$NON-NLS-1$
+		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -352,14 +352,14 @@ public class CablePathEditor extends DefaultStorableObjectEditor {
 
 		if(this.cablePath == null) {
 			this.nameTextField.setEnabled(false);
-			this.nameTextField.setText("");
+			this.nameTextField.setText(""); //$NON-NLS-1$
 			this.cableComboBox.setEnabled(false);
 			this.descTextArea.setEnabled(false);
-			this.descTextArea.setText("");
+			this.descTextArea.setText(""); //$NON-NLS-1$
 
-			this.topologicalLengthTextField.setText("");
-			this.physicalLengthTextField.setText("");
-			this.opticalLengthTextField.setText("");
+			this.topologicalLengthTextField.setText(""); //$NON-NLS-1$
+			this.physicalLengthTextField.setText(""); //$NON-NLS-1$
+			this.opticalLengthTextField.setText(""); //$NON-NLS-1$
 		}
 		else {
 			this.nameTextField.setEnabled(true);

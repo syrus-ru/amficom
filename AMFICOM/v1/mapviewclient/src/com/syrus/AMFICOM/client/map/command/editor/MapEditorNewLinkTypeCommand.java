@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewLinkTypeCommand.java,v 1.9 2005/09/14 10:29:31 krupenn Exp $
+ * $Id: MapEditorNewLinkTypeCommand.java,v 1.10 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -46,14 +46,14 @@ public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 						new StatusMessageEvent(
 								this, 
 								StatusMessageEvent.STATUS_MESSAGE, 
-								"Open map frame first!"));
+								LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
 				return;
 			}
 			PhysicalLinkType physicalLinkType = PhysicalLinkType.createInstance(
 					LoginManager.getUserId(), 
 					PhysicalLinkTypeSort.TUNNEL, 
 					"codename",
-					"Новый",
+					LangModelMap.getString("New"), //$NON-NLS-1$
 					"",
 					new IntDimension(1, 1),
 					true,

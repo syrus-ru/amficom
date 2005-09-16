@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewVisualManagerFactory.java,v 1.5 2005/08/11 12:43:32 arseniy Exp $
+ * $Id: MapViewVisualManagerFactory.java,v 1.6 2005/09/16 14:53:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,8 +25,8 @@ import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
 import com.syrus.AMFICOM.mapview.MapView;
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/11 12:43:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/09/16 14:53:35 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapViewVisualManagerFactory
@@ -64,7 +64,7 @@ public class MapViewVisualManagerFactory
 		else if(object instanceof Collector)
 			return CollectorVisualManager.getInstance();
 
-		throw new UnsupportedOperationException("Unknown object " + object);
+		throw new UnsupportedOperationException("Unknown object " + object); //$NON-NLS-1$
 	}
 
 }

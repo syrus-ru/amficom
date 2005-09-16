@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewNewCommand.java,v 1.32 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: MapViewNewCommand.java,v 1.33 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 /**
  * создать новый вид 
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.33 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class MapViewNewCommand extends AbstractCommand {
@@ -48,12 +48,12 @@ public class MapViewNewCommand extends AbstractCommand {
 
 	@Override
 	public void execute() {
-		Log.debugMessage("Creating new map view", Level.INFO);
+		Log.debugMessage("Creating new map view", Level.INFO); //$NON-NLS-1$
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapViewNew")));
+						LangModelMap.getString("MapViewNew"))); //$NON-NLS-1$
 
 		Identifier userId = LoginManager.getUserId();
 		Identifier domainId = LoginManager.getDomainId();
@@ -65,8 +65,8 @@ public class MapViewNewCommand extends AbstractCommand {
 			this.mapView = MapView.createInstance(
 					userId,
 					domainId,
-					LangModelMap.getString("MapViewNew"),
-					"",
+					LangModelMap.getString("MapViewNew"), //$NON-NLS-1$
+					"", //$NON-NLS-1$
 					center.getX(),
 					center.getY(),
 					zoom,
@@ -100,7 +100,7 @@ public class MapViewNewCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelGeneral.getString("Finished")));
+						LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
 		setResult(Command.RESULT_OK);
 	}
 

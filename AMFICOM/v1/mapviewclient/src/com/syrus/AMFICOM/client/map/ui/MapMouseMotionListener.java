@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseMotionListener.java,v 1.33 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: MapMouseMotionListener.java,v 1.34 2005/09/16 14:53:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
  * 
- * @version $Revision: 1.33 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.34 $, $Date: 2005/09/16 14:53:36 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -123,12 +123,12 @@ public final class MapMouseMotionListener implements MouseMotionListener
 				default:
 					try
 					{
-						Log.debugMessage("unknown map operation: " + mapState.getOperationMode(), Level.SEVERE);
-						throw new Exception("dummy");
+						Log.debugMessage("unknown map operation: " + mapState.getOperationMode(), Level.SEVERE); //$NON-NLS-1$
+						throw new Exception("dummy"); //$NON-NLS-1$
 					}
 					catch(Exception e)
 					{
-						Log.debugMessage("MapMouseMotionListener::mouseDragged | current execution point with call stack:", Level.SEVERE);
+						Log.debugMessage("MapMouseMotionListener::mouseDragged | current execution point with call stack:", Level.SEVERE); //$NON-NLS-1$
 						Log.debugException(e, Level.SEVERE);
 					}
 					break;
@@ -233,49 +233,49 @@ public final class MapMouseMotionListener implements MouseMotionListener
 //			MapMouseMotionListener.IMG_SIZE,
 //			MapMouseMotionListener.IMG_SIZE,
 //			Image.SCALE_SMOOTH)
-	private static final String NORTH = "north";
-	private static final String NORTHWEST = "northwest";
-	private static final String WEST = "west";
-	private static final String SOUTHWEST = "southwest";
-	private static final String SOUTH = "south";
-	private static final String SOUTHEAST = "southeast";
-	private static final String EAST = "east";
-	private static final String NORTHEAST = "northeast";
+	private static final String NORTH = "north"; //$NON-NLS-1$
+	private static final String NORTHWEST = "northwest"; //$NON-NLS-1$
+	private static final String WEST = "west"; //$NON-NLS-1$
+	private static final String SOUTHWEST = "southwest"; //$NON-NLS-1$
+	private static final String SOUTH = "south"; //$NON-NLS-1$
+	private static final String SOUTHEAST = "southeast"; //$NON-NLS-1$
+	private static final String EAST = "east"; //$NON-NLS-1$
+	private static final String NORTHEAST = "northeast"; //$NON-NLS-1$
 	static {
 		Toolkit toolkit = Toolkit.getDefaultToolkit();
 		Dimension cursorSize = toolkit.getBestCursorSize(24, 24);
 		Point hotSpot = new Point(cursorSize.width / 2, cursorSize.height / 2);
 		cursors[0][0] = toolkit.createCustomCursor(
-				toolkit.createImage("images/cursors/gonorthwest.gif"),
+				toolkit.createImage("images/cursors/gonorthwest.gif"), //$NON-NLS-1$
 				hotSpot,
 				NORTHWEST);
 		cursors[0][1] = toolkit.createCustomCursor(
-				toolkit.createImage("images/cursors/gowest.gif"),
+				toolkit.createImage("images/cursors/gowest.gif"), //$NON-NLS-1$
 				hotSpot,
 				WEST);
 		cursors[0][2] = toolkit.createCustomCursor(
-				toolkit.createImage("images/cursors/gosouthwest.gif"),
+				toolkit.createImage("images/cursors/gosouthwest.gif"), //$NON-NLS-1$
 				hotSpot,
 				SOUTHWEST);
 		cursors[1][0] = toolkit.createCustomCursor(
-				toolkit.createImage("images/cursors/gonorth.gif"),
+				toolkit.createImage("images/cursors/gonorth.gif"), //$NON-NLS-1$
 				hotSpot,
 				NORTH);
 		cursors[1][1] = Cursor.getDefaultCursor();
 		cursors[1][2] = toolkit.createCustomCursor(
-				toolkit.createImage("images/cursors/gosouth.gif"),
+				toolkit.createImage("images/cursors/gosouth.gif"), //$NON-NLS-1$
 				hotSpot,
 				SOUTH);
 		cursors[2][0] = toolkit.createCustomCursor(
-				toolkit.createImage("images/cursors/gonortheast.gif"),
+				toolkit.createImage("images/cursors/gonortheast.gif"), //$NON-NLS-1$
 				hotSpot,
 				NORTHEAST);
 		cursors[2][1] = toolkit.createCustomCursor(
-				toolkit.createImage("images/cursors/goeast.gif"),
+				toolkit.createImage("images/cursors/goeast.gif"), //$NON-NLS-1$
 				hotSpot,
 				EAST);		
 		cursors[2][2] = toolkit.createCustomCursor(
-				toolkit.createImage("images/cursors/gosoutheast.gif"),
+				toolkit.createImage("images/cursors/gosoutheast.gif"), //$NON-NLS-1$
 				hotSpot,
 				SOUTHEAST);
 	}

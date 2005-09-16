@@ -76,22 +76,22 @@ public final class SiteNodeTypeEditor
 		this.libraryComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.nameLabel.setText(LangModelMap.getString("Name"));
+		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
 //		this.nameLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		this.libraryLabel.setText(LangModelMap.getString("InLibrary"));
+		this.libraryLabel.setText(LangModelMap.getString("InLibrary")); //$NON-NLS-1$
 
-		this.descLabel.setText(LangModelMap.getString("Description"));
+		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
 //		this.descLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
-		this.imageLabel.setText(LangModelMap.getString("Image"));
+		this.imageLabel.setText(LangModelMap.getString("Image")); //$NON-NLS-1$
 //		this.imageLabel.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 
 		this.imagePanel.setLayout(new BorderLayout());
 
-		this.imageButton.setText(LangModelMap.getString("Change"));
+		this.imageButton.setText(LangModelMap.getString("Change")); //$NON-NLS-1$
 //		this.imageButton.setPreferredSize(new Dimension(DEF_WIDTH, DEF_HEIGHT));
 		this.imageButton.addActionListener(new ActionListener()
 			{
@@ -242,10 +242,10 @@ public final class SiteNodeTypeEditor
 		this.libraryComboBox.removeAllItems();
 		if(this.type == null) {
 			this.nameTextField.setEnabled(false);
-			this.nameTextField.setText("");
+			this.nameTextField.setText(""); //$NON-NLS-1$
 			this.libraryComboBox.setEnabled(false);
 			this.descTextArea.setEnabled(false);
-			this.descTextArea.setText("");
+			this.descTextArea.setText(""); //$NON-NLS-1$
 
 			this.imageId = null;
 			this.imagePanel.removeAll();

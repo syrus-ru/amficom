@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.map.MapLibrary;
 
 /**
- * @version $Revision: 1.3 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.4 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapLibraryEditor extends DefaultStorableObjectEditor {
@@ -62,16 +62,16 @@ public class MapLibraryEditor extends DefaultStorableObjectEditor {
 		this.componentsList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.componentsLabel.setText(LangModelMap.getString("Components"));
+		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
+		this.componentsLabel.setText(LangModelMap.getString("Components")); //$NON-NLS-1$
 		this.componentsScrollPane.setPreferredSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.componentsScrollPane.setMinimumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.componentsScrollPane.setMaximumSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 		this.componentsScrollPane.getViewport().add(this.componentsList);
 
-		this.descLabel.setText(LangModelMap.getString("Description"));
+		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -204,9 +204,9 @@ public class MapLibraryEditor extends DefaultStorableObjectEditor {
 
 		if(this.mapLibrary == null) {
 			this.nameTextField.setEnabled(false);
-			this.nameTextField.setText("");
+			this.nameTextField.setText(""); //$NON-NLS-1$
 			this.descTextArea.setEnabled(false);
-			this.descTextArea.setText("");
+			this.descTextArea.setText(""); //$NON-NLS-1$
 		}
 		else {
 			this.nameTextField.setEnabled(true);

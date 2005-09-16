@@ -1,5 +1,5 @@
 /**
- * $Id: MapConnection.java,v 1.18 2005/09/08 18:22:41 bass Exp $
+ * $Id: MapConnection.java,v 1.19 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -16,8 +16,8 @@ import java.util.logging.Level;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/08 18:22:41 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/09/16 14:53:32 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public abstract class MapConnection {
@@ -26,26 +26,26 @@ public abstract class MapConnection {
 	
 	private static Map<String,Boolean> LAYER_SEARCHABILITIES = new HashMap<String,Boolean>();
 	static{
-		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_Cemetry_a", Boolean.valueOf(true));		
-		LAYER_SEARCHABILITIES.put("Msk_house_a", Boolean.valueOf(false));
-		LAYER_SEARCHABILITIES.put("Msk_house_p", Boolean.valueOf(false));
-		LAYER_SEARCHABILITIES.put("Msk_hydrography_la", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_metro_title_l", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_metro_title_p", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_municip_a", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_quarter_a", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_railway_l", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_railway_p", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_region_a", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_road_a", Boolean.valueOf(false));
-		LAYER_SEARCHABILITIES.put("Msk_square_a", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_Street_l", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_Street_l_1", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_vegetation_a", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true));
-		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true));
+		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_Cemetry_a", Boolean.valueOf(true));		 //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_house_a", Boolean.valueOf(false)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_house_p", Boolean.valueOf(false)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_hydrography_la", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_metro_title_l", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_metro_title_p", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_municip_a", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_quarter_a", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_railway_l", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_railway_p", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_region_a", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_road_a", Boolean.valueOf(false)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_square_a", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_Street_l", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_Street_l_1", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_vegetation_a", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true)); //$NON-NLS-1$
+		LAYER_SEARCHABILITIES.put("Msk_Bridges_a", Boolean.valueOf(true)); //$NON-NLS-1$
 	}
 
 	public abstract boolean connect() throws MapConnectionException;
@@ -114,20 +114,20 @@ public abstract class MapConnection {
 	}
 	
 	public static MapConnection create(final String connectionClass) throws MapConnectionException {
-		Log.debugMessage("method call MapConnection.create()", Level.FINE);
+		Log.debugMessage("method call MapConnection.create()", Level.FINE); //$NON-NLS-1$
 
 		MapConnection connection = null;
 		try {
 			connection = (MapConnection) Class.forName(connectionClass).newInstance();
 		} catch (ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
-			throw new MapConnectionException("MapConnection.create() throws ClassNotFoundException");
+			throw new MapConnectionException("MapConnection.create() throws ClassNotFoundException"); //$NON-NLS-1$
 		} catch (InstantiationException ie) {
 			ie.printStackTrace();
-			throw new MapConnectionException("MapConnection.create() throws InstantiationException");
+			throw new MapConnectionException("MapConnection.create() throws InstantiationException"); //$NON-NLS-1$
 		} catch (IllegalAccessException iae) {
 			iae.printStackTrace();
-			throw new MapConnectionException("MapConnection.create() throws IllegalAccessException");
+			throw new MapConnectionException("MapConnection.create() throws IllegalAccessException"); //$NON-NLS-1$
 		}
 
 		return connection;

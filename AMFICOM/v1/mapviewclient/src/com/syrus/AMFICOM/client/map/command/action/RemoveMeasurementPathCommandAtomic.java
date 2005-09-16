@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveMeasurementPathCommandAtomic.java,v 1.18 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: RemoveMeasurementPathCommandAtomic.java,v 1.19 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
  * удаление измерительного пути из карты - атомарное действие
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.18 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class RemoveMeasurementPathCommandAtomic extends MapActionCommand {
@@ -39,10 +39,10 @@ public class RemoveMeasurementPathCommandAtomic extends MapActionCommand {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-				getClass().getName() + "::execute() | "
-					+ "remove measurement path "
+				getClass().getName() + "::execute() | " //$NON-NLS-1$
+					+ "remove measurement path " //$NON-NLS-1$
 					+ this.measuremetnPath.getName()
-					+ " (" + this.measuremetnPath.getId() + ")", 
+					+ " (" + this.measuremetnPath.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 
 		this.logicalNetLayer.getMapView().removeMeasurementPath(

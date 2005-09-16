@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibraryExportCommand.java,v 1.9 2005/09/14 19:51:10 bass Exp $
+ * $Id: MapLibraryExportCommand.java,v 1.10 2005/09/16 14:53:33 krupenn Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,8 +50,8 @@ import com.syrus.util.Log;
  * отображаетс€ информаци€ о том, что активной карты нет, и карта центрируетс€
  * по умолчанию
  * 
- * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/09/14 19:51:10 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.10 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class MapLibraryExportCommand extends ExportCommand {
@@ -97,7 +97,7 @@ public class MapLibraryExportCommand extends ExportCommand {
 		}
 
 		MapLibrary mapLibrary = (MapLibrary )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("MapLibrary"),
+				LangModelMap.getString("MapLibrary"), //$NON-NLS-1$
 				allLibraries,
 				mapLibraryTableController,
 				mapLibraryTableController.getKeysArray(),
@@ -115,13 +115,13 @@ public class MapLibraryExportCommand extends ExportCommand {
 		MapPropertiesManager.setLastDirectory(file.getParent());
 
 		String ext = file.getAbsolutePath().substring(
-				file.getAbsolutePath().lastIndexOf("."));
+				file.getAbsolutePath().lastIndexOf(".")); //$NON-NLS-1$
 
 		if(ext == null) {
-			ext = ".xml";
+			ext = ".xml"; //$NON-NLS-1$
 		}
 
-		if(ext.equals(".xml")) {
+		if(ext.equals(".xml")) { //$NON-NLS-1$
 			saveXML(mapLibrary, fileName);
 		}
 		setResult(Command.RESULT_OK);
@@ -133,15 +133,15 @@ public class MapLibraryExportCommand extends ExportCommand {
 			xmlOptions.setSavePrettyPrint();
 			xmlOptions.setSavePrettyPrintIndent(2);
 			java.util.Map<String, String> prefixes = new HashMap<String, String>();
-			prefixes.put("http://syrus.com/AMFICOM/map/xml", "map");
-			prefixes.put("http://syrus.com/AMFICOM/general/xml", "general");
+			prefixes.put("http://syrus.com/AMFICOM/map/xml", "map"); //$NON-NLS-1$ //$NON-NLS-2$
+			prefixes.put("http://syrus.com/AMFICOM/general/xml", "general"); //$NON-NLS-1$ //$NON-NLS-2$
 			xmlOptions.setSaveSuggestedPrefixes(prefixes);
 			xmlOptions.setSaveAggressiveNamespaces();
 	
 			MapLibraryDocument doc = 
 				MapLibraryDocument.Factory.newInstance(xmlOptions);
 
-			mapLibrary.getXmlTransferable(doc.addNewMapLibrary(), "amficom");
+			mapLibrary.getXmlTransferable(doc.addNewMapLibrary(), "amficom"); //$NON-NLS-1$
 
 			// Validate the new XML
 			if (validateXml(doc)) {
@@ -153,7 +153,7 @@ public class MapLibraryExportCommand extends ExportCommand {
 				} catch(IOException e) {
 					e.printStackTrace();
 				}
-				Log.debugMessage("\nXML Instance Document saved at : "
+				Log.debugMessage("\nXML Instance Document saved at : " //$NON-NLS-1$
 						+ f.getPath(), INFO);
 			}
 		} catch (final ApplicationException ae) {
@@ -172,7 +172,7 @@ public class MapLibraryExportCommand extends ExportCommand {
 				.setErrorListener(validationMessages));
 
 		if(!isXmlValid) {
-			Log.debugMessage("Invalid XML: ", WARNING);
+			Log.debugMessage("Invalid XML: ", WARNING); //$NON-NLS-1$
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
 				Log.debugMessage(error.getMessage(), WARNING);

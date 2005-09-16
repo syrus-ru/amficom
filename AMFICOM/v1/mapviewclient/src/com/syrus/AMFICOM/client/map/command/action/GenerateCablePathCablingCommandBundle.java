@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.35 2005/09/05 13:54:00 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.36 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * сетевые узла и схемные элементы привязываются к ним.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.35 $, $Date: 2005/09/05 13:54:00 $
+ * @version $Revision: 1.36 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class GenerateCablePathCablingCommandBundle extends
@@ -69,12 +69,12 @@ public class GenerateCablePathCablingCommandBundle extends
 	@Override
 	public void execute() {
 		Log.debugMessage(
-				getClass().getName() + "::execute() | " 
-					+ "generate cabling for cable path "
+				getClass().getName() + "::execute() | "  //$NON-NLS-1$
+					+ "generate cabling for cable path " //$NON-NLS-1$
 					+ this.cablePath.getName() 
-					+ " (" + this.cablePath.getId() + ") "
-					+ "using site node type " + this.type.getName() 
-					+ " )" + this.type.getId() + ")", 
+					+ " (" + this.cablePath.getId() + ") " //$NON-NLS-1$ //$NON-NLS-2$
+					+ "using site node type " + this.type.getName()  //$NON-NLS-1$
+					+ " )" + this.type.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 
 		this.mapView = this.logicalNetLayer.getMapView();

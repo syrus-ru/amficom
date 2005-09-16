@@ -1,5 +1,5 @@
 /**
- * $Id: MapXMLTest.java,v 1.4 2005/08/28 19:17:53 bass Exp $
+ * $Id: MapXMLTest.java,v 1.5 2005/09/16 14:53:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -102,8 +102,8 @@ public class MapXMLTest {
 	           //For purpose of simplicity in output, only first occurrence is printed.
 	           if (i == 0){
 				   
-	               System.out.println("toString: " + nodes.item(i));
-	               System.out.println("\n\n");
+	               System.out.println("toString: " + nodes.item(i)); //$NON-NLS-1$
+	               System.out.println("\n\n"); //$NON-NLS-1$
 	           }
 	       }
 
@@ -119,8 +119,8 @@ public class MapXMLTest {
 	       XmlOptions xmlOptions = new XmlOptions();
 	       xmlOptions.setSavePrettyPrint();
 		   Map prefixes = new HashMap();
-		   prefixes.put("http://syrus.com/AMFICOM/map/xml", "map");
-		   prefixes.put("http://syrus.com/AMFICOM/general/xml", "gen");
+		   prefixes.put("http://syrus.com/AMFICOM/map/xml", "map"); //$NON-NLS-1$ //$NON-NLS-2$
+		   prefixes.put("http://syrus.com/AMFICOM/general/xml", "gen"); //$NON-NLS-1$ //$NON-NLS-2$
 		   xmlOptions.setSaveSuggestedPrefixes(prefixes);
 
 		   doc = MapLibraryDocument.Factory.newInstance(xmlOptions);
@@ -128,26 +128,26 @@ public class MapXMLTest {
 		   XmlSiteNodeTypeSeq types = lib.addNewSiteNodeTypes();
 		   XmlSiteNodeType node = types.addNewSiteNodeType();
 		   XmlIdentifier uid = node.addNewId();
-		   uid.setStringValue("test");
-		   node.setDescription("desc");
-		   node.setImage("img");
-		   node.setName("namma");
+		   uid.setStringValue("test"); //$NON-NLS-1$
+		   node.setDescription("desc"); //$NON-NLS-1$
+		   node.setImage("img"); //$NON-NLS-1$
+		   node.setName("namma"); //$NON-NLS-1$
 		   node.setSort(XmlSiteNodeTypeSort.BUILDING);
 		   node.setTopological(true);
 
 		   XmlPhysicalLinkTypeSeq ltypes = lib.addNewPhysicalLinkTypes();
 		   XmlPhysicalLinkType lnode = ltypes.addNewPhysicalLinkType();
 		   uid = lnode.addNewId();
-		   uid.setStringValue("test1");
-		   lnode.setDescription("desc2");
-		   lnode.setName("namma2");
+		   uid.setStringValue("test1"); //$NON-NLS-1$
+		   lnode.setDescription("desc2"); //$NON-NLS-1$
+		   lnode.setName("namma2"); //$NON-NLS-1$
 		   lnode.setSort(XmlPhysicalLinkTypeSort.INDOOR);
 		   lnode.setDimensionX(BigInteger.valueOf(1));
 		   lnode.setDimensionY(BigInteger.valueOf(1));
 		   XmlCharacteristicSeq chars = lnode.addNewCharacteristics();
 		   XmlCharacteristic char1 = chars.addNewCharacteristic();
 		   char1.setTypecodename(AbstractLinkController.ATTRIBUTE_STYLE);
-		   char1.setValue("dashed");
+		   char1.setValue("dashed"); //$NON-NLS-1$
 		   XmlCharacteristic char2 = chars.addNewCharacteristic();
 		   char2.setTypecodename(AbstractLinkController.ATTRIBUTE_COLOR);
 		   char2.setValue(String.valueOf(0xFF004000));
@@ -168,7 +168,7 @@ public class MapXMLTest {
 	           catch(IOException e){
 	               e.printStackTrace();
 	           }
-	           System.out.println("\nXML Instance Document saved at : " + f.getPath());
+	           System.out.println("\nXML Instance Document saved at : " + f.getPath()); //$NON-NLS-1$
 	       }
 	   }
 
@@ -197,7 +197,7 @@ public class MapXMLTest {
 
 	       if (!isXmlValid)
 	       {
-	           System.out.println("Invalid XML: ");
+	           System.out.println("Invalid XML: "); //$NON-NLS-1$
 	           for (int i = 0; i < validationMessages.size(); i++)
 	           {
 	               XmlError error = (XmlError) validationMessages.get(i);
@@ -206,7 +206,7 @@ public class MapXMLTest {
 	           }
 	       }
 	       else
-	           System.out.println("XML " + xml.documentProperties().getSourceName() + " is valid.\n");
+	           System.out.println("XML " + xml.documentProperties().getSourceName() + " is valid.\n"); //$NON-NLS-1$ //$NON-NLS-2$
 	       return isXmlValid;
 	   }
 }

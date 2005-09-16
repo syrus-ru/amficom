@@ -1,5 +1,5 @@
 /**
- * $Id: MapGeneralPropertiesFrame.java,v 1.11 2005/08/24 08:19:59 krupenn Exp $
+ * $Id: MapGeneralPropertiesFrame.java,v 1.12 2005/09/16 14:53:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -17,12 +17,12 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 
 /**
  *  Окно отображения свойств элемента карты
- * @version $Revision: 1.11 $, $Date: 2005/08/24 08:19:59 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/16 14:53:36 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
 public final class MapGeneralPropertiesFrame extends MapAbstractPropertiesFrame {
-	public static final String	NAME = "mapGeneralPropertiesFrame";
+	public static final String	NAME = "mapGeneralPropertiesFrame"; //$NON-NLS-1$
 
 	public MapGeneralPropertiesFrame(String title, ApplicationContext aContext) {
 		super(title, aContext);

@@ -73,14 +73,14 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 		this.pathComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.typeLabel.setText(LangModelMap.getString("Type"));
-		this.distanceLabel.setText(LangModelMap.getString("Distance"));
-		this.pathLabel.setText(LangModelMap.getString("measurementpath"));
-		this.longLabel.setText(LangModelMap.getString("Longitude"));
-		this.latLabel.setText(LangModelMap.getString("Latitude"));
+		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
+		this.typeLabel.setText(LangModelMap.getString("Type")); //$NON-NLS-1$
+		this.distanceLabel.setText(LangModelMap.getString("Distance")); //$NON-NLS-1$
+		this.pathLabel.setText(LangModelMap.getString("measurementpath")); //$NON-NLS-1$
+		this.longLabel.setText(LangModelMap.getString("Longitude")); //$NON-NLS-1$
+		this.latLabel.setText(LangModelMap.getString("Latitude")); //$NON-NLS-1$
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -270,16 +270,16 @@ public class MarkerEditor extends DefaultStorableObjectEditor {
 
 		if(this.marker == null) {
 			this.nameTextField.setEnabled(false);
-			this.nameTextField.setText("");
+			this.nameTextField.setText(""); //$NON-NLS-1$
 
 			this.longTextField.setEnabled(false);
-			this.longTextField.setText("");
+			this.longTextField.setText(""); //$NON-NLS-1$
 			this.latTextField.setEnabled(false);
-			this.latTextField.setText("");
+			this.latTextField.setText(""); //$NON-NLS-1$
 			this.typeTextField.setEnabled(false);
-			this.typeTextField.setText("");
+			this.typeTextField.setText(""); //$NON-NLS-1$
 			this.distanceTextField.setEnabled(false);
-			this.distanceTextField.setText("");
+			this.distanceTextField.setText(""); //$NON-NLS-1$
 		}
 		else {
 			MarkerController markerController = (MarkerController )this.logicalNetLayer.getMapViewController().getController(this.marker);

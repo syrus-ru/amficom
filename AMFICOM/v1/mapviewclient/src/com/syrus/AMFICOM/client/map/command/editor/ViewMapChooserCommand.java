@@ -1,5 +1,5 @@
 /*
- * $Id: ViewMapChooserCommand.java,v 1.6 2005/09/08 15:54:01 krupenn Exp $
+ * $Id: ViewMapChooserCommand.java,v 1.7 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
  * "Редактор топологических схем" с новым именем. Использует команду
  * MapSaveAsCommand
  * 
- * @version $Revision: 1.6 $, $Date: 2005/09/08 15:54:01 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/16 14:53:33 $
  * @module map_v2
  * @author $Author: krupenn $
  * @see MapSaveAsCommand
@@ -62,7 +62,7 @@ public class ViewMapChooserCommand extends AbstractCommand {
 
 		
 		if(this.mapFrame == null) {
-			Log.debugMessage("map frame is null! Cannot change map view.", Level.SEVERE);
+			Log.debugMessage("map frame is null! Cannot change map view.", Level.SEVERE); //$NON-NLS-1$
 			setResult(Command.RESULT_NO);
 			return;
 		}
@@ -85,12 +85,12 @@ public class ViewMapChooserCommand extends AbstractCommand {
 		else
 			mapChooserPanel.setMapConnection(connection);
 
-		final String okButton = LangModelGeneral.getString("Button.OK");
-		final String cancelButton = LangModelGeneral.getString("Button.Cancel");
+		final String okButton = LangModelGeneral.getString("Button.OK"); //$NON-NLS-1$
+		final String cancelButton = LangModelGeneral.getString("Button.Cancel"); //$NON-NLS-1$
 		int result = JOptionPane.showOptionDialog(
 				Environment.getActiveWindow(), 
 				mapChooserPanel,
-				LangModelMap.getString("ChooseMap"),
+				LangModelMap.getString("ChooseMap"), //$NON-NLS-1$
 				JOptionPane.OK_CANCEL_OPTION, 
 				JOptionPane.PLAIN_MESSAGE, 
 				null,

@@ -1,5 +1,5 @@
 /*
- * Название: $Id: AMFICOMSearchPanel.java,v 1.23 2005/08/29 12:27:24 krupenn Exp $
+ * Название: $Id: AMFICOMSearchPanel.java,v 1.24 2005/09/16 14:53:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * Панель поиска элементов карты АМФИКОМ
- * @version $Revision: 1.23 $, $Date: 2005/08/29 12:27:24 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/16 14:53:35 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -79,7 +79,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 	/**
 	 * строка поиска
 	 */
-	String searchText = "";
+	String searchText = ""; //$NON-NLS-1$
 	
 	/**
 	 * флаг поиска (осуществляется ли поиск в текущий момент)
@@ -115,12 +115,12 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 	private void jbInit()
 	{
-		this.setToolTipText(LangModelMap.getString("SearchObjects"));
+		this.setToolTipText(LangModelMap.getString("SearchObjects")); //$NON-NLS-1$
 
 		this.setLayout(this.gridBagLayout1);
 		this.setSize(new Dimension(370, 629));
 
-		this.searchButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/search.gif")));
+		this.searchButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/search.gif"))); //$NON-NLS-1$
 		this.searchButton.setPreferredSize(buttonSize);
 		this.searchButton.setMaximumSize(buttonSize);
 		this.searchButton.setMinimumSize(buttonSize);
@@ -132,7 +132,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 				}
 			});
 
-		this.centerButton.setText(LangModelMap.getString("DoCenter"));
+		this.centerButton.setText(LangModelMap.getString("DoCenter")); //$NON-NLS-1$
 		this.centerButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)

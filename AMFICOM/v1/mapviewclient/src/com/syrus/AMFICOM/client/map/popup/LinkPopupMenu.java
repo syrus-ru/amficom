@@ -63,21 +63,21 @@ public final class LinkPopupMenu extends MapPopupMenu
 		if(collector != null)
 		{
 			this.removeCollectorMenuItem.setText(
-					LangModelMap.getString("RemoveCollector")
-					+ " (" 
+					LangModelMap.getString("RemoveCollector") //$NON-NLS-1$
+					+ " ("  //$NON-NLS-1$
 					+ collector.getName()
-					+ ")");
+					+ ")"); //$NON-NLS-1$
 		this.removeFromCollectorMenuItem.setText(
-					LangModelMap.getString("RemoveFromCollector")
-					+ " (" 
+					LangModelMap.getString("RemoveFromCollector") //$NON-NLS-1$
+					+ " ("  //$NON-NLS-1$
 					+ collector.getName()
-					+ ")");
+					+ ")"); //$NON-NLS-1$
 		}
 	}
 
 	private void jbInit()
 	{
-		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.setText(LangModelMap.getString("Delete")); //$NON-NLS-1$
 		this.removeMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -85,7 +85,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 					removeLink();
 				}
 			});
-		this.propertiesMenuItem.setText(LangModelMap.getString("Properties"));
+		this.propertiesMenuItem.setText(LangModelMap.getString("Properties")); //$NON-NLS-1$
 		this.propertiesMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -93,7 +93,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 					showProperties();
 				}
 			});
-		this.addMarkMenuItem.setText(LangModelMap.getString("AddMark"));
+		this.addMarkMenuItem.setText(LangModelMap.getString("AddMark")); //$NON-NLS-1$
 		this.addMarkMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -101,7 +101,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 					addMark();
 				}
 			});
-		this.newCollectorMenuItem.setText(LangModelMap.getString("CreateCollector"));
+		this.newCollectorMenuItem.setText(LangModelMap.getString("CreateCollector")); //$NON-NLS-1$
 		this.newCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -113,7 +113,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 					}
 				}
 			});
-		this.removeCollectorMenuItem.setText(LangModelMap.getString("RemoveCollector"));
+		this.removeCollectorMenuItem.setText(LangModelMap.getString("RemoveCollector")); //$NON-NLS-1$
 		this.removeCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -126,7 +126,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 				}
 			});
 
-		this.addToCollectorMenuItem.setText(LangModelMap.getString("AddToCollector"));
+		this.addToCollectorMenuItem.setText(LangModelMap.getString("AddToCollector")); //$NON-NLS-1$
 		this.addToCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -138,7 +138,7 @@ public final class LinkPopupMenu extends MapPopupMenu
 					}
 				}
 			});
-		this.removeFromCollectorMenuItem.setText(LangModelMap.getString("RemoveFromCollector"));
+		this.removeFromCollectorMenuItem.setText(LangModelMap.getString("RemoveFromCollector")); //$NON-NLS-1$
 		this.removeFromCollectorMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)

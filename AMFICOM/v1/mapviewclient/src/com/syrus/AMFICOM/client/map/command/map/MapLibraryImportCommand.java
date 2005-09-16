@@ -1,5 +1,5 @@
 /*
- * $Id: MapLibraryImportCommand.java,v 1.12 2005/09/11 14:24:41 krupenn Exp $
+ * $Id: MapLibraryImportCommand.java,v 1.13 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.12 $, $Date: 2005/09/11 14:24:41 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class MapLibraryImportCommand extends ImportCommand {
@@ -82,7 +82,7 @@ public class MapLibraryImportCommand extends ImportCommand {
 
 		try {
 			MapLibrary mapLibrary = null;
-			Log.debugMessage("Import map library", INFO);
+			Log.debugMessage("Import map library", INFO); //$NON-NLS-1$
 
 			String fileName = ImportCommand
 					.openFileForReading(MapPropertiesManager.getLastDirectory());
@@ -93,13 +93,13 @@ public class MapLibraryImportCommand extends ImportCommand {
 			MapPropertiesManager.setLastDirectory(file.getParent());
 
 			String ext = file.getAbsolutePath().substring(
-					file.getAbsolutePath().lastIndexOf("."));
+					file.getAbsolutePath().lastIndexOf(".")); //$NON-NLS-1$
 
 			if(ext == null) {
-				ext = ".xml";
+				ext = ".xml"; //$NON-NLS-1$
 			}
 
-			if(ext.equals(".xml")) {
+			if(ext.equals(".xml")) { //$NON-NLS-1$
 				mapLibrary = loadXML(fileName);
 			}
 
@@ -151,13 +151,13 @@ public class MapLibraryImportCommand extends ImportCommand {
 			MapLibraryDocument.Factory.parse(xmlfile);
 
 		if(!validateXml(doc)) {
-			throw new XmlException("Invalid XML");
+			throw new XmlException("Invalid XML"); //$NON-NLS-1$
 		}
 
 		Identifier userId = LoginManager.getUserId();
 
-		String user_dir = System.getProperty("user.dir");
-		System.setProperty("user.dir",  xmlfile.getParent());
+		String user_dir = System.getProperty("user.dir"); //$NON-NLS-1$
+		System.setProperty("user.dir",  xmlfile.getParent()); //$NON-NLS-1$
 
 		XmlMapLibrary xmlLibrary = doc.getMapLibrary();
 		
@@ -173,7 +173,7 @@ public class MapLibraryImportCommand extends ImportCommand {
 			StorableObjectPool.flush(physicalLinkType, userId, true);
 		}
 		
-		System.setProperty("user.dir",  user_dir);
+		System.setProperty("user.dir",  user_dir); //$NON-NLS-1$
 
 		LocalXmlIdentifierPool.flush();
 
@@ -191,7 +191,7 @@ public class MapLibraryImportCommand extends ImportCommand {
 				.setErrorListener(validationMessages));
 
 		if(!isXmlValid) {
-			Log.debugMessage("Invalid XML: ", WARNING);
+			Log.debugMessage("Invalid XML: ", WARNING); //$NON-NLS-1$
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
 				Log.debugMessage(error.getMessage(), WARNING);

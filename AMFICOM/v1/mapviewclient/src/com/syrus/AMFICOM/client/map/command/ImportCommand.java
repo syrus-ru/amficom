@@ -1,5 +1,5 @@
 /*
- * $Id: ImportCommand.java,v 1.7 2005/08/29 16:22:37 arseniy Exp $
+ * $Id: ImportCommand.java,v 1.8 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -25,6 +25,7 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
@@ -32,8 +33,8 @@ import com.syrus.io.IntelStreamReader;
 
 /**
  * 
- * @version $Revision: 1.7 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.8 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public abstract class ImportCommand extends AbstractCommand {
@@ -173,7 +174,7 @@ public abstract class ImportCommand extends AbstractCommand {
 		if(fileName == null) {
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					"Ошибка чтения");
+					LangModelMap.getString("FileChooser.ReadError")); //$NON-NLS-1$
 		}
 		try {
 			this.fis = new FileInputStream(fileName);
@@ -200,16 +201,16 @@ public abstract class ImportCommand extends AbstractCommand {
 
 		ChoosableFileFilter esfFilter = new ChoosableFileFilter(
 				"esf",
-				"Export Save File");
+				LangModelMap.getString("FileChooser.ExportSaveFile")); //$NON-NLS-1$
 		fileChooser.addChoosableFileFilter(esfFilter);
 
 		ChoosableFileFilter xmlFilter = new ChoosableFileFilter(
 				"xml",
-				"Export Save File");
+				LangModelMap.getString("FileChooser.ExportSaveFile")); //$NON-NLS-1$
 		fileChooser.addChoosableFileFilter(xmlFilter);
 
 		fileChooser.setCurrentDirectory(new File(path));
-		fileChooser.setDialogTitle("Выберите файл для чтения");
+		fileChooser.setDialogTitle(LangModelMap.getString("FileChooser.SelectFileToOpen")); //$NON-NLS-1$
 		fileChooser.setMultiSelectionEnabled(false);
 
 		int option = fileChooser.showOpenDialog(Environment.getActiveWindow());

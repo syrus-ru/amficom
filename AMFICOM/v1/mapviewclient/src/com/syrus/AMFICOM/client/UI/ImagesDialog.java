@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesDialog.java,v 1.3 2005/08/08 10:11:20 krupenn Exp $
+ * $Id: ImagesDialog.java,v 1.4 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,12 +19,13 @@ import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.3 $
+ * @version $Revision: 1.4 $
  * @module commonclient_v1
  */
 public class ImagesDialog {
@@ -70,7 +71,7 @@ public class ImagesDialog {
 		});
 
 		final JDialog dialog = optionPane.createDialog(
-				Environment.getActiveWindow(), "Выбор изображения");
+				Environment.getActiveWindow(), LangModelMap.getString("ImagesDialog.ImageSelection")); //$NON-NLS-1$
 		Dimension screenDim = Toolkit.getDefaultToolkit().getScreenSize();
 		int width = Math.min(screenDim.width / 2, 590);
 		int height = Math.min(screenDim.height / 2, 400);

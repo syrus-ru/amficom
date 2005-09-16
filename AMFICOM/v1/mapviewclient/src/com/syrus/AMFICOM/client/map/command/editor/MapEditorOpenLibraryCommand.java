@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorOpenLibraryCommand.java,v 1.5 2005/09/14 10:29:31 krupenn Exp $
+ * $Id: MapEditorOpenLibraryCommand.java,v 1.6 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,7 +52,7 @@ public class MapEditorOpenLibraryCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this, 
 							StatusMessageEvent.STATUS_MESSAGE, 
-							"Open map frame first!"));
+							LangModelMap.getString("StatusMessage.OpenMapFrameFirst"))); //$NON-NLS-1$
 			return;
 		}
 

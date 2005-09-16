@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryTableController.java,v 1.2 2005/08/08 10:39:58 krupenn Exp $
+ * $Id: MapLibraryTableController.java,v 1.3 2005/09/16 14:53:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,13 +30,13 @@ public class MapLibraryTableController implements Wrapper {
 		return instance;
 	}
 
-	public static final String KEY_NAME = "Name";
+	public static final String KEY_NAME = "Name"; //$NON-NLS-1$
 
-	public static final String KEY_USER = "User_id";
+	public static final String KEY_USER = "User_id"; //$NON-NLS-1$
 
-	public static final String KEY_CREATED = "Created";
+	public static final String KEY_CREATED = "Created"; //$NON-NLS-1$
 
-	public static final String KEY_MODIFIED = "Modified";
+	public static final String KEY_MODIFIED = "Modified"; //$NON-NLS-1$
 
 	private List keys;
 
@@ -107,7 +107,7 @@ public class MapLibraryTableController implements Wrapper {
 	}
 
 	public Object getPropertyValue(final String key) {
-		Object result = "";
+		Object result = ""; //$NON-NLS-1$
 		return result;
 	}
 

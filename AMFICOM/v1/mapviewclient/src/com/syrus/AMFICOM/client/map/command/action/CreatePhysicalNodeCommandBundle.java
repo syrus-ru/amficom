@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandBundle.java,v 1.27 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandBundle.java,v 1.28 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * два других фрагмента, разделенные новывм топологичсеским узлом. Команда
  * состоит из последовательности атомарных действий
  * 
- * @version $Revision: 1.27 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.28 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -56,10 +56,10 @@ public class CreatePhysicalNodeCommandBundle extends MapActionCommandBundle {
 	public void execute() {
 		try {
 			Log.debugMessage(
-				getClass().getName() + "::execute() | "
-					+ "create topological node on node link "
+				getClass().getName() + "::execute() | " //$NON-NLS-1$
+					+ "create topological node on node link " //$NON-NLS-1$
 					+ this.nodeLink.getName() 
-					+ " (" + this.nodeLink.getId() + ")", 
+					+ " (" + this.nodeLink.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 			DoublePoint coordinatePoint = this.logicalNetLayer.getConverter()
 					.convertScreenToMap(this.point);

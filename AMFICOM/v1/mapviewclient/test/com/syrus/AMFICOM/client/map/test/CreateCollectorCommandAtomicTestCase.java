@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCollectorCommandAtomicTestCase.java,v 1.1 2005/07/01 07:52:53 krupenn Exp $
+ * $Id: CreateCollectorCommandAtomicTestCase.java,v 1.2 2005/09/16 14:53:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,18 +32,18 @@ public class CreateCollectorCommandAtomicTestCase extends TestCase {
 
 	public void testExecute() throws Exception {
 		Collector collector = null;
-		CreateCollectorCommandAtomic command = new CreateCollectorCommandAtomic("sample");
+		CreateCollectorCommandAtomic command = new CreateCollectorCommandAtomic("sample"); //$NON-NLS-1$
 		command.setLogicalNetLayer(METS.logicalNetLayer);
 		command.execute();
 		collector = command.getCollector();
 		
-		assertTrue("Map does not contain newly inserted Collector", METS.map.getCollectors().contains(collector));
+		assertTrue("Map does not contain newly inserted Collector", METS.map.getCollectors().contains(collector)); //$NON-NLS-1$
 
 		RemoveCollectorCommandAtomic command2 = new RemoveCollectorCommandAtomic(collector);
 		command2.setLogicalNetLayer(METS.logicalNetLayer);
 		command2.execute();
 		
-		assertFalse("Map contains removed Collector", METS.map.getCollectors().contains(collector));
+		assertFalse("Map contains removed Collector", METS.map.getCollectors().contains(collector)); //$NON-NLS-1$
 
 		collector = null;
 	}

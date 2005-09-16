@@ -1,5 +1,5 @@
 /**
- * $Id: LinkTypeController.java,v 1.56 2005/09/16 08:19:17 krupenn Exp $
+ * $Id: LinkTypeController.java,v 1.57 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер типа линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.56 $, $Date: 2005/09/16 08:19:17 $
+ * @version $Revision: 1.57 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  */
 public final class LinkTypeController extends AbstractLinkController {
@@ -237,8 +237,8 @@ public final class LinkTypeController extends AbstractLinkController {
 			try {
 				attribute = Characteristic.createInstance(userId,
 						this.thicknessCharType,
-						"name",
-						"1",
+						"name", //$NON-NLS-1$
+						"1", //$NON-NLS-1$
 						String.valueOf(size),
 						linkType,
 						true,
@@ -287,7 +287,7 @@ public final class LinkTypeController extends AbstractLinkController {
 		Characteristic attribute = getCharacteristic(linkType, this.styleCharType);
 		if (attribute == null) {
 			try {
-				attribute = Characteristic.createInstance(userId, this.styleCharType, "name", "1", style, linkType, true, true);
+				attribute = Characteristic.createInstance(userId, this.styleCharType, "name", "1", style, linkType, true, true); //$NON-NLS-1$ //$NON-NLS-2$
 				StorableObjectPool.flush(attribute, userId, true);
 				linkType.addCharacteristic(attribute);
 			} catch (CreateObjectException e) {
@@ -334,8 +334,8 @@ public final class LinkTypeController extends AbstractLinkController {
 			try {
 				attribute = Characteristic.createInstance(userId,
 						this.colorCharType,
-						"name",
-						"1",
+						"name", //$NON-NLS-1$
+						"1", //$NON-NLS-1$
 						String.valueOf(color.getRGB()),
 						linkType,
 						true,
@@ -407,8 +407,8 @@ public final class LinkTypeController extends AbstractLinkController {
 			try {
 				attribute = Characteristic.createInstance(userId,
 						this.alarmedColorCharType,
-						"name",
-						"1",
+						"name", //$NON-NLS-1$
+						"1", //$NON-NLS-1$
 						String.valueOf(color.getRGB()),
 						linkType,
 						true,
@@ -480,8 +480,8 @@ public final class LinkTypeController extends AbstractLinkController {
 			try {
 				attribute = Characteristic.createInstance(userId,
 						this.alarmedThicknessCharType,
-						"name",
-						"1",
+						"name", //$NON-NLS-1$
+						"1", //$NON-NLS-1$
 						String.valueOf(size),
 						linkType,
 						true,
@@ -568,7 +568,7 @@ public final class LinkTypeController extends AbstractLinkController {
 					sort,
 					codename,
 					LangModelMap.getString(codename),
-					"",
+					"", //$NON-NLS-1$
 					LinkTypeController.getBindDimension(codename),
 					topological,
 					mapLibrary.getId());

@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalLinkCommandAtomicTestCase.java,v 1.2 2005/07/01 16:07:19 krupenn Exp $
+ * $Id: CreatePhysicalLinkCommandAtomicTestCase.java,v 1.3 2005/09/16 14:53:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -59,15 +59,15 @@ public class CreatePhysicalLinkCommandAtomicTestCase extends TestCase {
 		command.execute();
 		link = command.getLink();
 		
-		assertTrue("Map does not contain newly inserted PhysicalLink", METS.map.getPhysicalLinks().contains(link));
-		assertSame("start node not correct", link.getStartNode(), startnode);
-		assertSame("end node not correct", link.getEndNode(), endnode);
+		assertTrue("Map does not contain newly inserted PhysicalLink", METS.map.getPhysicalLinks().contains(link)); //$NON-NLS-1$
+		assertSame("start node not correct", link.getStartNode(), startnode); //$NON-NLS-1$
+		assertSame("end node not correct", link.getEndNode(), endnode); //$NON-NLS-1$
 
 		RemovePhysicalLinkCommandAtomic command3 = new RemovePhysicalLinkCommandAtomic(link);
 		command3.setLogicalNetLayer(METS.logicalNetLayer);
 		command3.execute();
 
-		assertFalse("Map contains removed PhysicalLink", METS.map.getPhysicalLinks().contains(link));
+		assertFalse("Map contains removed PhysicalLink", METS.map.getPhysicalLinks().contains(link)); //$NON-NLS-1$
 
 		link = null;
 }

@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.73 2005/09/12 06:24:15 krupenn Exp $
+ * $Id: MapFrame.java,v 1.74 2005/09/16 14:53:36 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -135,7 +135,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
 				CommonUIUtilities.invokeAsynchronously(new Runnable() {
 				
 					public void run() {
-						System.out.print("waiting for SchemeSampleData...");
+						System.out.print("waiting for SchemeSampleData..."); //$NON-NLS-1$
 						while(!SchemeSampleData.loaded) {
 							try {
 								Thread.sleep(100);
@@ -143,7 +143,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
 								//nothing
 							}
 						}
-						System.out.print(" placing elements...");
+						System.out.print(" placing elements..."); //$NON-NLS-1$
 						TestSliderListener.this.notInitialized = false;
 						NetMapViewer netMapViewer = TestSliderListener.this.mapFrame.getMapViewer();
 
@@ -164,10 +164,10 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
 						PlaceSchemeElementCommand endcommand = new PlaceSchemeElementCommand(SchemeSampleData.scheme1element3, new Point(300, 250));
 						endcommand.setNetMapViewer(netMapViewer);
 						endcommand.execute();
-						System.out.println("OK!");
+						System.out.println("OK!"); //$NON-NLS-1$
 					}
 				
-				}, "ўа наху€рю ху€риков...");
+				}, "ўа наху€рю ху€риков..."); //$NON-NLS-1$
 			}
 		}
 		else if(evt.getPropertyName().equals(MarkerEvent.MARKER_EVENT_TYPE)) {
@@ -207,15 +207,15 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * 
  * 
  * 
- * @version $Revision: 1.73 $, $Date: 2005/09/12 06:24:15 $
+ * @version $Revision: 1.74 $, $Date: 2005/09/16 14:53:36 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 	private static final long serialVersionUID = 1313547389360194239L;
-	public static final String	NAME = "mapFrame";
+	public static final String	NAME = "mapFrame"; //$NON-NLS-1$
 
-	public static final String MAP_FRAME_SHOWN = "map_frame_shown";
+	public static final String MAP_FRAME_SHOWN = "map_frame_shown"; //$NON-NLS-1$
 
 	/**
 	 * ¬нутренний дл€ окна карты диспетчер сообщений
@@ -312,7 +312,7 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 	}
 
 	private void jbInit() {
-		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif").getScaledInstance(16,
+		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/main/map_mini.gif").getScaledInstance(16, //$NON-NLS-1$
 				16,
 				Image.SCALE_DEFAULT)));
 
@@ -321,7 +321,7 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 		this.setMaximizable(true);
 		this.setResizable(true);
 
-		this.setTitle(LangModelMap.getString("Map"));
+		this.setTitle(LangModelMap.getString("Map")); //$NON-NLS-1$
 
 		// визуальный компонент обозревател€ карты
 		// обозреватель карты сам по себе не €вл€етс€ компонентом, а содержит
@@ -543,7 +543,7 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 	}
 
 	public void closeMap() {
-		Log.debugMessage("Closing map", Level.INFO);
+		Log.debugMessage("Closing map", Level.INFO); //$NON-NLS-1$
 		this.setContext(null);
 	}
 
@@ -565,11 +565,11 @@ public class MapFrame extends JInternalFrame implements PropertyChangeListener {
 			}
 		}
 		if (changesPresent) {
-			final String message = "≈сть несохраненные измененные объекты. ѕродолжить?";
+			final String message = LangModelMap.getString("Message.UnsavedElementsPresent"); //$NON-NLS-1$
 
 			final int ret = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
 					message,
-					"ќбъект изменен",
+					LangModelMap.getString("Message.ObjectWasChanged"), //$NON-NLS-1$
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE);
 			if (ret == JOptionPane.YES_OPTION) {

@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandBundle.java,v 1.31 2005/09/07 12:24:59 krupenn Exp $
+ * $Id: CreateNodeLinkCommandBundle.java,v 1.32 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/09/07 12:24:59 $
+ * @version $Revision: 1.32 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  */
 public class CreateNodeLinkCommandBundle extends MapActionCommandBundle {
@@ -46,7 +46,7 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle {
 	 * константа используется для передачи в команду параметра (конечной
 	 * точки для фрагмента)
 	 */
-	public static final String END_POINT = "endpoint";
+	public static final String END_POINT = "endpoint"; //$NON-NLS-1$
 
 	/** Начальный узел фрагмента */
 	AbstractNode startNode;
@@ -192,9 +192,9 @@ public class CreateNodeLinkCommandBundle extends MapActionCommandBundle {
 	public void execute() {
 		try {
 			Log.debugMessage(
-				getClass().getName() + "::execute() | "
-					+ "create node link from node " + this.startNode.getName()
-					+ " (" + this.startNode.getId() + ")", 
+				getClass().getName() + "::execute() | " //$NON-NLS-1$
+					+ "create node link from node " + this.startNode.getName() //$NON-NLS-1$
+					+ " (" + this.startNode.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 			// анализируется элемент в точке, в которой отпущена мышка		
 			MapElement curElementAtPoint = this.logicalNetLayer.getMapElementAtPoint(this.endPoint, this.netMapViewer.getVisibleBounds());

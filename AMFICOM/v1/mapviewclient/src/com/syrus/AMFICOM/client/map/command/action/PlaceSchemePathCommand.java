@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.42 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.43 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
  * в точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.42 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.43 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle {
@@ -45,10 +45,10 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | "
-				+ "place scheme path "
+			getClass().getName() + "::execute() | " //$NON-NLS-1$
+				+ "place scheme path " //$NON-NLS-1$
 				+ this.schemePath.getName()
-				+ " (" + this.schemePath.getId() + ")", 
+				+ " (" + this.schemePath.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 
 		this.mapView = this.logicalNetLayer.getMapView();

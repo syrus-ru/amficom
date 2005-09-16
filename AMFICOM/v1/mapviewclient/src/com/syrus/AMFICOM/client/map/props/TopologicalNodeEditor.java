@@ -63,11 +63,11 @@ public class TopologicalNodeEditor extends DefaultStorableObjectEditor {
 				SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.linkLabel.setText(LangModelMap.getString("Physical_link_id"));
-		this.longLabel.setText(LangModelMap.getString("Longitude"));
-		this.latLabel.setText(LangModelMap.getString("Latitude"));
+		this.linkLabel.setText(LangModelMap.getString("Physical_link_id")); //$NON-NLS-1$
+		this.longLabel.setText(LangModelMap.getString("Longitude")); //$NON-NLS-1$
+		this.latLabel.setText(LangModelMap.getString("Latitude")); //$NON-NLS-1$
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -201,9 +201,9 @@ public class TopologicalNodeEditor extends DefaultStorableObjectEditor {
 
 		if(this.node == null) {
 			this.longTextField.setEnabled(false);
-			this.longTextField.setText("");
+			this.longTextField.setText(""); //$NON-NLS-1$
 			this.latTextField.setEnabled(false);
-			this.latTextField.setText("");
+			this.latTextField.setText(""); //$NON-NLS-1$
 		}
 		else {
 			this.linkComboBox.addItem(this.node.getPhysicalLink());

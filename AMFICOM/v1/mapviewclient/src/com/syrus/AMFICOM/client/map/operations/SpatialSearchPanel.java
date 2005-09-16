@@ -1,5 +1,5 @@
 /*
- * Название: $Id: SpatialSearchPanel.java,v 1.15 2005/08/24 08:19:58 krupenn Exp $
+ * Название: $Id: SpatialSearchPanel.java,v 1.16 2005/09/16 14:53:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * панель поиска географических объектов
- * @version $Revision: 1.15 $, $Date: 2005/08/24 08:19:58 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/16 14:53:35 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -56,7 +56,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 	JList foundList = new JList();
 	JButton centerButton = new JButton();
 
-	String searchText = "";
+	String searchText = ""; //$NON-NLS-1$
 	private boolean searching = false;
 	
 	private MapFrame mapFrame;
@@ -83,10 +83,10 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 	}
 
 	private void jbInit() {
-		this.setToolTipText(LangModelMap.getString("SearchTopologicalObjects"));
+		this.setToolTipText(LangModelMap.getString("SearchTopologicalObjects")); //$NON-NLS-1$
 		this.setLayout(this.gridBagLayout1);
 		this.setSize(new Dimension(370, 629));
-		this.searchButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_search.gif")));
+		this.searchButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_search.gif"))); //$NON-NLS-1$
 		this.searchButton.setPreferredSize(buttonSize);
 		this.searchButton.setMaximumSize(buttonSize);
 		this.searchButton.setMinimumSize(buttonSize);
@@ -97,7 +97,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 		});
 		this.jScrollPane.getViewport().add(this.foundList);
 		this.jScrollPane.setAutoscrolls(true);
-		this.centerButton.setText(LangModelMap.getString("DoCenter"));
+		this.centerButton.setText(LangModelMap.getString("DoCenter")); //$NON-NLS-1$
 		this.centerButton.addActionListener(new ActionListener() {
 			public void actionPerformed(final ActionEvent e) {
 				SpatialSearchPanel.this.doCenter();
@@ -242,7 +242,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 		} catch (MapException e) {
 			this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this,
 					StatusMessageEvent.STATUS_MESSAGE,
-					"Ошибка соединения с картографическими данными"));
+					LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}

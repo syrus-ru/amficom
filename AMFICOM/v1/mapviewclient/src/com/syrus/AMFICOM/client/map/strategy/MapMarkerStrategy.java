@@ -1,5 +1,5 @@
 /**
- * $Id: MapMarkerStrategy.java,v 1.31 2005/09/02 16:50:57 krupenn Exp $
+ * $Id: MapMarkerStrategy.java,v 1.32 2005/09/16 14:53:36 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.AMFICOM.mapview.Selection;
  * —тратеги€ управлени€ маркером.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/09/02 16:50:57 $
+ * @version $Revision: 1.32 $, $Date: 2005/09/16 14:53:36 $
  * @module mapviewclient
  */
 public final class MapMarkerStrategy extends AbstractMapStrategy 
@@ -106,11 +106,11 @@ public final class MapMarkerStrategy extends AbstractMapStrategy
 
 		MapCoordinatesConverter converter = super.logicalNetLayer.getConverter();
 
-		System.out.println("At distance " + this.marker.getPhysicalDistance() 
-				+ " " + this.marker.getNodeLink().getId()
-				+ " " + this.marker.getStartNode().getId()
-				+ " " + this.marker.getEndNode().getId()
-				+ " " + this.marker.getCablePath().getId());
+		System.out.println("At distance " + this.marker.getPhysicalDistance()  //$NON-NLS-1$
+				+ " " + this.marker.getNodeLink().getId() //$NON-NLS-1$
+				+ " " + this.marker.getStartNode().getId() //$NON-NLS-1$
+				+ " " + this.marker.getEndNode().getId() //$NON-NLS-1$
+				+ " " + this.marker.getCablePath().getId()); //$NON-NLS-1$
 		//ѕроверка того что маркер можно перемещать и его перемещение
 		if (super.logicalNetLayer.getContext().getApplicationModel().isEnabled(MapApplicationModel.ACTION_USE_MARKER))
 		{

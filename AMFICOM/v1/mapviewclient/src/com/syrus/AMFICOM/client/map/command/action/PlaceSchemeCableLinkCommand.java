@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.43 2005/09/14 10:27:35 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.44 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * Разместить кабель на карте.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.43 $, $Date: 2005/09/14 10:27:35 $
+ * @version $Revision: 1.44 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
@@ -66,10 +66,10 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | "
-				+ "place scheme cable link "
+			getClass().getName() + "::execute() | " //$NON-NLS-1$
+				+ "place scheme cable link " //$NON-NLS-1$
 				+ this.schemeCableLink.getName()
-				+ " (" + this.schemeCableLink.getId() + ")", 
+				+ " (" + this.schemeCableLink.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 
 		this.mapView = this.logicalNetLayer.getMapView();
@@ -187,12 +187,12 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 			setResult(Command.RESULT_OK);
 			// операция закончена - оповестить слушателей
 			this.logicalNetLayer.setCurrentMapElement(this.cablePath);
-			Log.debugMessage("PlaceSchemeCableLinkCommand :: get start node for scl " + (t2 - t1) + " ms", Level.FINE);
-			Log.debugMessage("PlaceSchemeCableLinkCommand :: get end node for scl " + (t3 - t2) + " ms", Level.FINE);
-			Log.debugMessage("PlaceSchemeCableLinkCommand :: find cable path " + (t4 - t3) + " ms", Level.FINE);
-			Log.debugMessage("PlaceSchemeCableLinkCommand :: create cable path " + (t5 - t4) + " ms", Level.FINE);
-			Log.debugMessage("PlaceSchemeCableLinkCommand :: walk through CCIs " + (t6 - t5) + " ms", Level.FINE);
-			Log.debugMessage("PlaceSchemeCableLinkCommand :: create final unbound node " + (t7 - t6) + " ms", Level.FINE);
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: get start node for scl " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: get end node for scl " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: find cable path " + (t4 - t3) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: create cable path " + (t5 - t4) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: walk through CCIs " + (t6 - t5) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
+			Log.debugMessage("PlaceSchemeCableLinkCommand :: create final unbound node " + (t7 - t6) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);
 			setException(e);

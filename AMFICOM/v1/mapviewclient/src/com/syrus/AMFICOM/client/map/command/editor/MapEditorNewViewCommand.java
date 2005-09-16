@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorNewViewCommand.java,v 1.21 2005/09/14 10:29:31 krupenn Exp $
+ * $Id: MapEditorNewViewCommand.java,v 1.22 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.MapMapEditorApplicationModelFactory;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -29,7 +30,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * модуле "Редактор топологических схем". При этом в модуле открываются все
  * окна (команда ViewMapAllCommand) и вызывается команда MapNewCommand
  * 
- * @version $Revision: 1.21 $, $Date: 2005/09/14 10:29:31 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/16 14:53:33 $
  * @module
  * @author $Author: krupenn $
  * @see MapNewCommand
@@ -63,7 +64,7 @@ public class MapEditorNewViewCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this, 
 							StatusMessageEvent.STATUS_MESSAGE, 
-							"Open map frame first!"));
+							LangModelMap.getString("StatusMessage.OpenMapFrameFirst"))); //$NON-NLS-1$
 			return;
 		}
 
@@ -88,7 +89,7 @@ public class MapEditorNewViewCommand extends AbstractCommand {
 			mapFrame.setMapView(mapView);
 			setResult(Command.RESULT_OK);
 		} catch(MapException e) {
-			mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
+			mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.55 2005/09/07 14:20:31 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.56 2005/09/16 14:53:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.map.props.MapVisualManager;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.Collector;
@@ -64,7 +65,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.55 $, $Date: 2005/09/07 14:20:31 $
+ * @version $Revision: 1.56 $, $Date: 2005/09/16 14:53:35 $
  * @module mapviewclient
  */
 public abstract class MapPopupMenu extends JPopupMenu {
@@ -90,7 +91,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 			return;
 //		MapElementState mes = me.getState();
 		if(EditorDialog.showEditorDialog(
-				LangModelGeneral.getString("Properties"), 
+				LangModelGeneral.getString("Properties"),  //$NON-NLS-1$
 				me,
 				prop)) {
 // MapElementState mes2 = me.getState();
@@ -171,8 +172,8 @@ public abstract class MapPopupMenu extends JPopupMenu {
 	protected Collector createCollector() {
 		String inputValue = JOptionPane.showInputDialog(
 				Environment.getActiveWindow(), 
-				"Введите имя коллектора", 
-				"Коллектор1");
+				LangModelMap.getString("Message.EnterCollectorName"),  //$NON-NLS-1$
+				LangModelMap.getString("DefaultCollectorName")); //$NON-NLS-1$
 		if(inputValue != null) {
 			CreateCollectorCommandAtomic command = new CreateCollectorCommandAtomic(inputValue);
 			LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();

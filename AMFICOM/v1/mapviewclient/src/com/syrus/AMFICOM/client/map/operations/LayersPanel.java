@@ -1,5 +1,5 @@
 /*
- * Название: $Id: LayersPanel.java,v 1.17 2005/09/04 13:46:26 krupenn Exp $
+ * Название: $Id: LayersPanel.java,v 1.18 2005/09/16 14:53:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -43,7 +43,7 @@ import com.syrus.util.Log;
 /**
  * панель управления отображением слоев
  * 
- * @version $Revision: 1.17 $, $Date: 2005/09/04 13:46:26 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/16 14:53:35 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -85,7 +85,7 @@ public class LayersPanel extends JPanel {
 					netMapViewer.repaint(true);
 				}
 			} catch (MapException e1) {
-				LayersPanel.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
+				LayersPanel.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
 				e1.printStackTrace();
 			}
 		}
@@ -100,7 +100,7 @@ public class LayersPanel extends JPanel {
 	}
 
 	private void jbInit() {
-		this.setToolTipText(LangModelMap.getString("ConfigureTopologicalLayers"));
+		this.setToolTipText(LangModelMap.getString("ConfigureTopologicalLayers")); //$NON-NLS-1$
 
 		this.setLayout(new BorderLayout());
 
@@ -112,7 +112,7 @@ public class LayersPanel extends JPanel {
 		GridBagConstraints gridbagconstraints = new GridBagConstraints();
 
 		ImageIcon ii = new ImageIcon(Toolkit.getDefaultToolkit().createImage(
-				"images/seesymbs.gif"));
+				"images/seesymbs.gif")); //$NON-NLS-1$
 		JLabel jlabel = new JLabel(ii);
 		gridbagconstraints.gridx = 0;
 		gridbagconstraints.gridy = 0;
@@ -134,7 +134,7 @@ public class LayersPanel extends JPanel {
 		gridbagconstraints.fill = 0;
 		this.titlePanel.add(box, gridbagconstraints);
 
-		JLabel jlabel2 = new JLabel(LangModelMap.getString("Layers"));
+		JLabel jlabel2 = new JLabel(LangModelMap.getString("Layers")); //$NON-NLS-1$
 		gridbagconstraints.gridx = 2;
 		gridbagconstraints.gridy = 0;
 		gridbagconstraints.weightx = 1.0D;
@@ -236,7 +236,7 @@ public class LayersPanel extends JPanel {
 					lvCheckBox.setImageLabel(imageLabel);
 				}
 
-				JLabel nameLabel = new JLabel(" " + sl.getName());
+				JLabel nameLabel = new JLabel(" " + sl.getName()); //$NON-NLS-1$
 				gridbagconstraints.gridx = 2;
 				gridbagconstraints.gridy = i;
 				gridbagconstraints.weightx = 1.0D;
@@ -249,7 +249,7 @@ public class LayersPanel extends JPanel {
 				i++;
 			}
 		} catch (MapException e) {
-			Log.debugMessage("cannot get layers", Level.WARNING);
+			Log.debugMessage("cannot get layers", Level.WARNING); //$NON-NLS-1$
 			Log.debugException(e, Level.WARNING);
 		}
 

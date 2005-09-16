@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.VoidElement;
 
 /**
- * @version $Revision: 1.15 $
+ * @version $Revision: 1.16 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -65,11 +65,11 @@ public class MapEditor extends DefaultStorableObjectEditor {
 		this.domainComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.domainLabel.setText(LangModelMap.getString("Domain"));
-		this.descLabel.setText(LangModelMap.getString("Description"));
+		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
+		this.domainLabel.setText(LangModelMap.getString("Domain")); //$NON-NLS-1$
+		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -195,9 +195,9 @@ public class MapEditor extends DefaultStorableObjectEditor {
 
 		if(this.map == null) {
 			this.nameTextField.setEnabled(false);
-			this.nameTextField.setText("");
+			this.nameTextField.setText(""); //$NON-NLS-1$
 			this.descTextArea.setEnabled(false);
-			this.descTextArea.setText("");
+			this.descTextArea.setText(""); //$NON-NLS-1$
 		}
 		else {
 			this.nameTextField.setEnabled(true);

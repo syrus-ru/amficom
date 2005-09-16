@@ -61,13 +61,13 @@ public class UnboundNodeEditor extends DefaultStorableObjectEditor {
 		this.elementComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.typeLabel.setText(LangModelMap.getString("Type"));
-		this.longLabel.setText(LangModelMap.getString("Longitude"));
-		this.latLabel.setText(LangModelMap.getString("Latitude"));
-		this.elementLabel.setText(LangModelMap.getString("SchemeElement"));
+		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
+		this.typeLabel.setText(LangModelMap.getString("Type")); //$NON-NLS-1$
+		this.longLabel.setText(LangModelMap.getString("Longitude")); //$NON-NLS-1$
+		this.latLabel.setText(LangModelMap.getString("Latitude")); //$NON-NLS-1$
+		this.elementLabel.setText(LangModelMap.getString("SchemeElement")); //$NON-NLS-1$
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -255,12 +255,12 @@ public class UnboundNodeEditor extends DefaultStorableObjectEditor {
 		this.elementComboBox.removeAllItems();
 
 		if(this.unbound == null) {
-			this.nameTextField.setText("");
+			this.nameTextField.setText(""); //$NON-NLS-1$
 
 			this.longTextField.setEnabled(false);
-			this.longTextField.setText("");
+			this.longTextField.setText(""); //$NON-NLS-1$
 			this.latTextField.setEnabled(false);
-			this.latTextField.setText("");
+			this.latTextField.setText(""); //$NON-NLS-1$
 		}
 		else {
 			this.nameTextField.setText(this.unbound.getName());

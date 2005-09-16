@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryController.java,v 1.9 2005/08/31 13:13:42 krupenn Exp $
+ * $Id: MapLibraryController.java,v 1.10 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,12 +31,12 @@ import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
 /**
  * контроллер типа сетевого узла.
  * @author $Author: krupenn $
- * @version $Revision: 1.9 $, $Date: 2005/08/31 13:13:42 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  */
 public class MapLibraryController {
 
-	public static final String DEFAULT_LIBRARY = "defaultLibrary";
+	public static final String DEFAULT_LIBRARY = "defaultLibrary"; //$NON-NLS-1$
 
 	/**
 	 * Instance.
@@ -80,7 +80,7 @@ public class MapLibraryController {
 				userId,
 				LangModelMap.getString(codename),
 				codename,
-				"",
+				"", //$NON-NLS-1$
 				null);
 				
 			StorableObjectPool.putStorableObject(library);

@@ -93,17 +93,17 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 				SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.typeLabel.setText(LangModelMap.getString("Type"));
-		this.longLabel.setText(LangModelMap.getString("Longitude"));
-		this.latLabel.setText(LangModelMap.getString("Latitude"));
-		this.descLabel.setText(LangModelMap.getString("Description"));
-		this.cityLabel.setText(LangModelMap.getString("CityKurz"));
-		this.streetLabel.setText(LangModelMap.getString("StreetKurz"));
-		this.buildingLabel.setText(LangModelMap.getString("BuildingKurz"));
-		this.addressLabel.setText(LangModelMap.getString("Address"));
+		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
+		this.typeLabel.setText(LangModelMap.getString("Type")); //$NON-NLS-1$
+		this.longLabel.setText(LangModelMap.getString("Longitude")); //$NON-NLS-1$
+		this.latLabel.setText(LangModelMap.getString("Latitude")); //$NON-NLS-1$
+		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
+		this.cityLabel.setText(LangModelMap.getString("CityKurz")); //$NON-NLS-1$
+		this.streetLabel.setText(LangModelMap.getString("StreetKurz")); //$NON-NLS-1$
+		this.buildingLabel.setText(LangModelMap.getString("BuildingKurz")); //$NON-NLS-1$
+		this.addressLabel.setText(LangModelMap.getString("Address")); //$NON-NLS-1$
 
 		this.streetPanel.setLayout(this.gridBagLayout3);
 
@@ -392,19 +392,19 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 
 		if(this.site == null) {
 			this.nameTextField.setEnabled(false);
-			this.nameTextField.setText("");
+			this.nameTextField.setText(""); //$NON-NLS-1$
 			this.typeComboBox.setEnabled(false);
 			this.descTextArea.setEnabled(false);
-			this.descTextArea.setText("");
+			this.descTextArea.setText(""); //$NON-NLS-1$
 
 			this.longTextField.setEnabled(false);
-			this.longTextField.setText("");
+			this.longTextField.setText(""); //$NON-NLS-1$
 			this.latTextField.setEnabled(false);
-			this.latTextField.setText("");
+			this.latTextField.setText(""); //$NON-NLS-1$
 
-			this.cityTextField.setText("");
-			this.streetTextField.setText("");
-			this.buildingTextField.setText("");
+			this.cityTextField.setText(""); //$NON-NLS-1$
+			this.streetTextField.setText(""); //$NON-NLS-1$
+			this.buildingTextField.setText(""); //$NON-NLS-1$
 		}
 		else {
 			this.nameTextField.setEnabled(true);
@@ -419,7 +419,7 @@ public class SiteNodeEditor extends DefaultStorableObjectEditor {
 				long d = System.currentTimeMillis();
 				Collection types = NodeTypeController.getTopologicalNodeTypes(this.logicalNetLayer.getMapView().getMap());
 				long f = System.currentTimeMillis();
-				Log.debugMessage("SiteNodeEditor::NodeTypeController.getTopologicalNodeTypes() -------- " + (f - d) + " ms ---------", Level.FINE);
+				Log.debugMessage("SiteNodeEditor::NodeTypeController.getTopologicalNodeTypes() -------- " + (f - d) + " ms ---------", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 
 				this.typeComboBox.setEnabled(true);
 				this.typeComboBox.addElements(types);

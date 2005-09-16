@@ -1,5 +1,5 @@
 /**
- * $Id: TopologicalNodeController.java,v 1.21 2005/08/11 17:08:10 arseniy Exp $
+ * $Id: TopologicalNodeController.java,v 1.22 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,8 +32,8 @@ import com.syrus.AMFICOM.map.TopologicalNode;
 
 /**
  * Контроллер топологического узла.
- * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/08/11 17:08:10 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.22 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  */
 public class TopologicalNodeController extends AbstractNodeController {
@@ -45,14 +45,14 @@ public class TopologicalNodeController extends AbstractNodeController {
 	public static final Rectangle MAX_NODE_BOUNDS = new Rectangle(15, 15);
 
 	/** Имя пиктограммы закрытого топологического узла. */
-	public static final String CLOSED_NODE = "node";
+	public static final String CLOSED_NODE = "node"; //$NON-NLS-1$
 	/** Имя пиктограммы открытоготопологического узла. */
-	public static final String OPEN_NODE = "void";
+	public static final String OPEN_NODE = "void"; //$NON-NLS-1$
 
 	/** Пиктограмма закрытого топологического узла. */
-	public static final String CLOSED_NODE_IMAGE = "images/node.gif";
+	public static final String CLOSED_NODE_IMAGE = "images/node.gif"; //$NON-NLS-1$
 	/** Пиктограмма открытого топологического узла. */
-	public static final String OPEN_NODE_IMAGE = "images/void.gif";
+	public static final String OPEN_NODE_IMAGE = "images/void.gif"; //$NON-NLS-1$
 
 	/**
 	 * Флаг необходимости инициализировать изображения маркеров событий.

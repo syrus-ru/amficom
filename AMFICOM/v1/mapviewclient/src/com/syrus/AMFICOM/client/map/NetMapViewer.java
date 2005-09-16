@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.50 2005/09/16 08:19:44 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.51 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -85,7 +85,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.50 $, $Date: 2005/09/16 08:19:44 $
+ * @version $Revision: 1.51 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
@@ -713,7 +713,7 @@ public abstract class NetMapViewer {
 					LoginManager.getUserId(), 
 					physicalLinkType.getSort(), 
 					"codename", 
-					"Copy of " + physicalLinkType.getName(), 
+					LangModelMap.getString("Element.CopyOf") + physicalLinkType.getName(),  //$NON-NLS-1$
 					physicalLinkType.getDescription(), 
 					physicalLinkType.getBindingDimension(), 
 					true, 

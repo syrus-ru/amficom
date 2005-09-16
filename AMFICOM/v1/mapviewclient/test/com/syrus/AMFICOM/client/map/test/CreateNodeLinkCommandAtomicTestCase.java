@@ -1,5 +1,5 @@
 /**
- * $Id: CreateNodeLinkCommandAtomicTestCase.java,v 1.2 2005/07/01 16:07:19 krupenn Exp $
+ * $Id: CreateNodeLinkCommandAtomicTestCase.java,v 1.3 2005/09/16 14:53:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -67,17 +67,17 @@ public class CreateNodeLinkCommandAtomicTestCase extends TestCase {
 		command.execute();
 		nodeLink = command.getNodeLink();
 		
-		assertTrue("Map does not contain newly inserted NodeLink", METS.map.getNodeLinks().contains(nodeLink));
-		assertSame("start node not correct", nodeLink.getStartNode(), startnode);
-		assertSame("end node not correct", nodeLink.getEndNode(), endnode);
-		assertSame("link not correct", nodeLink.getPhysicalLink(), link);
-		assertEquals("topological length not correct", nodeLink.getLengthLt(), link.getLengthLt(), 0.0001);
+		assertTrue("Map does not contain newly inserted NodeLink", METS.map.getNodeLinks().contains(nodeLink)); //$NON-NLS-1$
+		assertSame("start node not correct", nodeLink.getStartNode(), startnode); //$NON-NLS-1$
+		assertSame("end node not correct", nodeLink.getEndNode(), endnode); //$NON-NLS-1$
+		assertSame("link not correct", nodeLink.getPhysicalLink(), link); //$NON-NLS-1$
+		assertEquals("topological length not correct", nodeLink.getLengthLt(), link.getLengthLt(), 0.0001); //$NON-NLS-1$
 
 		RemoveNodeLinkCommandAtomic command4 = new RemoveNodeLinkCommandAtomic(nodeLink);
 		command4.setLogicalNetLayer(METS.logicalNetLayer);
 		command4.execute();
 
-		assertFalse("Map contains removed NodeLink", METS.map.getNodeLinks().contains(nodeLink));
+		assertFalse("Map contains removed NodeLink", METS.map.getNodeLinks().contains(nodeLink)); //$NON-NLS-1$
 		
 		nodeLink = null;
 	}

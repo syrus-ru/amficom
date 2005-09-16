@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomicTestCase.java,v 1.6 2005/09/05 13:43:04 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomicTestCase.java,v 1.7 2005/09/16 14:53:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -70,14 +70,14 @@ public class CreatePhysicalNodeCommandAtomicTestCase extends TestCase {
 		command.execute();
 		node = command.getNode();
 		
-		assertTrue("Map does not contain newly inserted TopologicalNode", METS.map.getTopologicalNodes().contains(node));
+		assertTrue("Map does not contain newly inserted TopologicalNode", METS.map.getTopologicalNodes().contains(node)); //$NON-NLS-1$
 //		assertSame("wrong physicallink", node.getPhysicalLink(), link);
 
 		RemoveNodeCommandAtomic command4 = new RemoveNodeCommandAtomic(node);
 		command4.setLogicalNetLayer(METS.logicalNetLayer);
 		command4.execute();
 
-		assertFalse("Map contains removed TopologicalNode", METS.map.getTopologicalNodes().contains(node));
+		assertFalse("Map contains removed TopologicalNode", METS.map.getTopologicalNodes().contains(node)); //$NON-NLS-1$
 
 		node = null;
 	}

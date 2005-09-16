@@ -1,5 +1,5 @@
 /*
- * $Id: LoadingThreadTest.java,v 1.4 2005/08/24 10:19:20 krupenn Exp $
+ * $Id: LoadingThreadTest.java,v 1.5 2005/09/16 14:53:38 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.AMFICOM.map.TopologicalImageQuery;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.4 $, $Date: 2005/08/24 10:19:20 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/16 14:53:38 $
  * @module mapviewclient_modifying
  */
 public class LoadingThreadTest extends TestCase {
@@ -148,9 +148,9 @@ public class LoadingThreadTest extends TestCase {
 				break;
 		}
 
-		assertTrue("The first request's image shouldn't be loaded!",tiq.getImage() == null);
-		assertTrue("The second request's image shouldn't be loaded!",tiq1.getImage() == null);
-		assertTrue("The last request's image shouldn't be loaded!",tiq2.getImage() == null);
+		assertTrue("The first request's image shouldn't be loaded!",tiq.getImage() == null); //$NON-NLS-1$
+		assertTrue("The second request's image shouldn't be loaded!",tiq1.getImage() == null); //$NON-NLS-1$
+		assertTrue("The last request's image shouldn't be loaded!",tiq2.getImage() == null); //$NON-NLS-1$
 	}	
 	
 	/**
@@ -216,8 +216,8 @@ public class LoadingThreadTest extends TestCase {
 				break;
 		}
 		
-		assertTrue("Image is not generated for the request!",tiq.getImage() != null);
-		assertTrue("Priority hasn't changed for the request!",tiq.getPriority() == TopologicalImageQuery.PRIORITY_ALREADY_LOADED);		
+		assertTrue("Image is not generated for the request!",tiq.getImage() != null); //$NON-NLS-1$
+		assertTrue("Priority hasn't changed for the request!",tiq.getPriority() == TopologicalImageQuery.PRIORITY_ALREADY_LOADED);		 //$NON-NLS-1$
 	}
 	
 	/**
@@ -313,7 +313,7 @@ public class LoadingThreadTest extends TestCase {
 				break;
 		}
 
-		assertTrue("Second request's image is not generated after the first one!",tiq1.getTimeCreated() > tiq.getTimeCreated());
+		assertTrue("Second request's image is not generated after the first one!",tiq1.getTimeCreated() > tiq.getTimeCreated()); //$NON-NLS-1$
 	}
 
 	/**
@@ -410,7 +410,7 @@ public class LoadingThreadTest extends TestCase {
 				break;
 		}
 
-		assertTrue("Second request's image is not generated after the first one!",tiq1.getTimeCreated() > tiq.getTimeCreated());	}
+		assertTrue("Second request's image is not generated after the first one!",tiq1.getTimeCreated() > tiq.getTimeCreated());	} //$NON-NLS-1$
 	
 	/**
 	 * <b>Название:</b> Добавление запроса в режиме подгрузки изображения при пустой очереди.<br>
@@ -505,9 +505,9 @@ public class LoadingThreadTest extends TestCase {
 			if (currentTime - startTime > MAXIMUM_TIMEOUT)
 				break;
 		}
-		assertTrue("First request's image is not generated!",tiq.getImage() != null);
-		assertTrue("Second request's image is not generated!",tiq1.getImage() != null);		
-		assertTrue("First request's image is not generated after the second one!",tiq1.getTimeCreated() < tiq.getTimeCreated());
+		assertTrue("First request's image is not generated!",tiq.getImage() != null); //$NON-NLS-1$
+		assertTrue("Second request's image is not generated!",tiq1.getImage() != null);		 //$NON-NLS-1$
+		assertTrue("First request's image is not generated after the second one!",tiq1.getTimeCreated() < tiq.getTimeCreated()); //$NON-NLS-1$
 	}
 	
 	/**
@@ -633,7 +633,7 @@ public class LoadingThreadTest extends TestCase {
 				break;
 		}
 
-		assertTrue("The queue of generating images is not last-first-second!",(tiq1.getTimeCreated() > tiq.getTimeCreated()) && (tiq.getTimeCreated() > tiq2.getTimeCreated()));		
+		assertTrue("The queue of generating images is not last-first-second!",(tiq1.getTimeCreated() > tiq.getTimeCreated()) && (tiq.getTimeCreated() > tiq2.getTimeCreated()));		 //$NON-NLS-1$
 	}
 
 	/**
@@ -760,9 +760,9 @@ public class LoadingThreadTest extends TestCase {
 		}
 
 		//Первый и последний запросы уже должны быть подгружены, а второй - нет.
-		assertTrue("Image is not generated for the last request!",tiq2.getImage() != null);		
-		assertTrue("Image is not generated for the first request!",tiq.getImage() != null);
-		assertTrue("Image is generated for the second request!",tiq1.getImage() == null);
+		assertTrue("Image is not generated for the last request!",tiq2.getImage() != null);		 //$NON-NLS-1$
+		assertTrue("Image is not generated for the first request!",tiq.getImage() != null); //$NON-NLS-1$
+		assertTrue("Image is generated for the second request!",tiq1.getImage() == null); //$NON-NLS-1$
 	}
 	
 	/**
@@ -904,7 +904,7 @@ public class LoadingThreadTest extends TestCase {
 				break;
 		}
 
-		assertTrue("The queue of generating images is not first-last-second!",(tiq1.getTimeCreated() > tiq2.getTimeCreated()) && (tiq2.getTimeCreated() > tiq.getTimeCreated()));
+		assertTrue("The queue of generating images is not first-last-second!",(tiq1.getTimeCreated() > tiq2.getTimeCreated()) && (tiq2.getTimeCreated() > tiq.getTimeCreated())); //$NON-NLS-1$
 	}
 
 	/**
@@ -1050,7 +1050,7 @@ public class LoadingThreadTest extends TestCase {
 				break;
 		}
 
-		assertTrue("The queue of generating images is not last-first-second!",(tiq1.getTimeCreated() > tiq.getTimeCreated()) && (tiq.getTimeCreated() > tiq2.getTimeCreated()));
+		assertTrue("The queue of generating images is not last-first-second!",(tiq1.getTimeCreated() > tiq.getTimeCreated()) && (tiq.getTimeCreated() > tiq2.getTimeCreated())); //$NON-NLS-1$
 	}
 	
 	/**
@@ -1194,7 +1194,7 @@ public class LoadingThreadTest extends TestCase {
 				break;
 		}
 
-		assertTrue("The queue of generating images is not second-first-last!",(tiq2.getTimeCreated() > tiq.getTimeCreated()) && (tiq.getTimeCreated() > tiq1.getTimeCreated()));
+		assertTrue("The queue of generating images is not second-first-last!",(tiq2.getTimeCreated() > tiq.getTimeCreated()) && (tiq.getTimeCreated() > tiq1.getTimeCreated())); //$NON-NLS-1$
 	}
 	/**
 	 * <b>Название:</b> Изменение приоритета запроса, находящегося в обработке на ещё
@@ -1335,7 +1335,7 @@ public class LoadingThreadTest extends TestCase {
 				break;
 		}
 
-		assertTrue("The queue of generating images is not first-second-last!",(tiq2.getTimeCreated() > tiq1.getTimeCreated()) && (tiq1.getTimeCreated() > tiq.getTimeCreated()));
+		assertTrue("The queue of generating images is not first-second-last!",(tiq2.getTimeCreated() > tiq1.getTimeCreated()) && (tiq1.getTimeCreated() > tiq.getTimeCreated())); //$NON-NLS-1$
 	}
 
 	/**
@@ -1449,8 +1449,8 @@ public class LoadingThreadTest extends TestCase {
 				break;
 		}
 
-		assertTrue("The first request's image shouldn't be loaded!",tiq.getImage() == null);
-		assertTrue("The second request's image should be loaded!",tiq1.getImage() != null);		
+		assertTrue("The first request's image shouldn't be loaded!",tiq.getImage() == null); //$NON-NLS-1$
+		assertTrue("The second request's image should be loaded!",tiq1.getImage() != null);		 //$NON-NLS-1$
 	}
 
 	/**
@@ -1591,8 +1591,8 @@ public class LoadingThreadTest extends TestCase {
 				break;
 		}
 
-		assertTrue("The first request's image should be loaded!",tiq.getImage() != null);
-		assertTrue("The second request's image shouldn't be loaded!",tiq1.getImage() == null);
-		assertTrue("The last request's image should be loaded!",tiq2.getImage() != null);
+		assertTrue("The first request's image should be loaded!",tiq.getImage() != null); //$NON-NLS-1$
+		assertTrue("The second request's image shouldn't be loaded!",tiq1.getImage() == null); //$NON-NLS-1$
+		assertTrue("The last request's image should be loaded!",tiq2.getImage() != null); //$NON-NLS-1$
 	}
 }

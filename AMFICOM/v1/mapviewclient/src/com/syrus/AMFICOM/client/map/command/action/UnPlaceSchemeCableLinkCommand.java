@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.27 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.28 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
  * убрать кабельный путь с привязкой из карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.28 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle {
@@ -34,10 +34,10 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-				getClass().getName() + "::execute() | "
-					+ "unplace cable path "
+				getClass().getName() + "::execute() | " //$NON-NLS-1$
+					+ "unplace cable path " //$NON-NLS-1$
 					+ this.cablePath.getName()
-					+ " (" + this.cablePath.getId() + ")", 
+					+ " (" + this.cablePath.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 
 		try {

@@ -1,5 +1,5 @@
 /**
- * $Id: MapLibraryTreeModel.java,v 1.6 2005/09/14 10:41:04 krupenn Exp $
+ * $Id: MapLibraryTreeModel.java,v 1.7 2005/09/16 14:53:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -38,21 +38,21 @@ public class MapLibraryTreeModel implements ChildrenFactory {
 
 	private static MapLibraryTreeModel instance = null;
 
-	private static final String SITENODETYPE_BRANCH = "sitenodetype";
-	private static final String PHYSICALLINKTYPE_BRANCH = "physicallinktype";
+	private static final String SITENODETYPE_BRANCH = "sitenodetype"; //$NON-NLS-1$
+	private static final String PHYSICALLINKTYPE_BRANCH = "physicallinktype"; //$NON-NLS-1$
 	static final int IMG_SIZE = 16;
 
 	public static NodeTypeComparator nodeTypeComparator = new NodeTypeComparator();
 	public static LinkTypeComparator linkTypeComparator = new LinkTypeComparator();
 
 	static final Icon linkTypeIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/linkmode.gif").getScaledInstance(
+			.getImage("images/linkmode.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
 	static ImageIcon libraryIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/maplibrary.gif").getScaledInstance(
+			.getImage("images/maplibrary.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));

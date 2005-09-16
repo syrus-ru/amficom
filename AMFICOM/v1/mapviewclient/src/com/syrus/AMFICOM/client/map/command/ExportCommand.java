@@ -1,5 +1,5 @@
 /*
- * $Id: ExportCommand.java,v 1.6 2005/08/11 12:43:29 arseniy Exp $
+ * $Id: ExportCommand.java,v 1.7 2005/09/16 14:53:32 krupenn Exp $
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
@@ -20,11 +20,12 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * 
- * @version $Revision: 1.6 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.7 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public abstract class ExportCommand extends AbstractCommand {
@@ -63,7 +64,7 @@ public abstract class ExportCommand extends AbstractCommand {
 		if(fileName == null) {
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					"Ошибка записи");
+					LangModelMap.getString("FileChooser.WriteError")); //$NON-NLS-1$
 		}
 		try {
 			this.fos = new FileOutputStream(fileName);
@@ -90,16 +91,16 @@ public abstract class ExportCommand extends AbstractCommand {
 
 		ChoosableFileFilter esfFilter = new ChoosableFileFilter(
 				"esf",
-				"Export Save File");
+				LangModelMap.getString("FileChooser.ExportSaveFile")); //$NON-NLS-1$
 		fileChooser.addChoosableFileFilter(esfFilter);
 
 		ChoosableFileFilter xmlFilter = new ChoosableFileFilter(
 				"xml",
-				"Export Save File");
+				LangModelMap.getString("FileChooser.ExportSaveFile")); //$NON-NLS-1$
 		fileChooser.addChoosableFileFilter(xmlFilter);
 
 		fileChooser.setCurrentDirectory(new File(path));
-		fileChooser.setDialogTitle("Выберите файл для записи");
+		fileChooser.setDialogTitle(LangModelMap.getString("FileChooser.SelectFileToSave")); //$NON-NLS-1$
 		fileChooser.setMultiSelectionEnabled(false);
 
 		int option = fileChooser.showSaveDialog(Environment.getActiveWindow());
@@ -114,7 +115,7 @@ public abstract class ExportCommand extends AbstractCommand {
 		if((new File(fileName)).exists()) {
 			if(JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(
 					Environment.getActiveWindow(),
-					"Файл существует. Перезаписать?",
+					LangModelMap.getString("FileChooser.FileExists.Overwrite"), //$NON-NLS-1$
 					"",
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE))

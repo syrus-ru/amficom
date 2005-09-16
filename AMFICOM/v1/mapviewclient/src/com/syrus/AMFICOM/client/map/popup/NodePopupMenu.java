@@ -38,14 +38,14 @@ public final class NodePopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.setText(LangModelMap.getString("Delete")); //$NON-NLS-1$
 		this.removeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeNode();
 			}
 		});
 
-		this.placeSiteMenuItem.setText(LangModelMap.getString("PlaceSite"));
+		this.placeSiteMenuItem.setText(LangModelMap.getString("PlaceSite")); //$NON-NLS-1$
 		this.placeSiteMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				placeSite();

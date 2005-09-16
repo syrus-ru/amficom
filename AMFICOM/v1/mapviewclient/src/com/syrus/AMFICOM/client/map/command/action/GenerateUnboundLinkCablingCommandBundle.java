@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.30 2005/09/05 13:54:00 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.31 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
  *  оманда генерации тоннел€ по неприв€занной линии.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.30 $, $Date: 2005/09/05 13:54:00 $
+ * @version $Revision: 1.31 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class GenerateUnboundLinkCablingCommandBundle extends
@@ -66,12 +66,12 @@ public class GenerateUnboundLinkCablingCommandBundle extends
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | "
-			+ "generate cabling for unbound link "
-			+ " (" + this.unbound.getId() + ") "
-			+ "in cable path "
+			getClass().getName() + "::execute() | " //$NON-NLS-1$
+			+ "generate cabling for unbound link " //$NON-NLS-1$
+			+ " (" + this.unbound.getId() + ") " //$NON-NLS-1$ //$NON-NLS-2$
+			+ "in cable path " //$NON-NLS-1$
 			+ this.cablePath.getName() 
-			+ " (" + this.cablePath.getId() + ")", 
+			+ " (" + this.cablePath.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 
 		this.mapView = this.logicalNetLayer.getMapView();

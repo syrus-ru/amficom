@@ -92,12 +92,12 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 	private static Dimension buttonSize = new Dimension(24, 24);
 
 	static {
-		horverticon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/horvert.gif"));
-		verthoricon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/verthor.gif"));
-		topdownicon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/topdown.gif"));
-		downtopicon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/downtop.gif"));
-		leftrighticon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/leftright.gif"));
-		rightlefticon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/rightleft.gif"));
+		horverticon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/horvert.gif")); //$NON-NLS-1$
+		verthoricon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/verthor.gif")); //$NON-NLS-1$
+		topdownicon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/topdown.gif")); //$NON-NLS-1$
+		downtopicon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/downtop.gif")); //$NON-NLS-1$
+		leftrighticon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/leftright.gif")); //$NON-NLS-1$
+		rightlefticon = new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/rightleft.gif")); //$NON-NLS-1$
 	}
 
 	public PhysicalLinkAddEditor() {
@@ -122,7 +122,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelMap.getString("LinkBinding"));
+		this.jPanel.setName(LangModelMap.getString("LinkBinding")); //$NON-NLS-1$
 		this.cableList.addListSelectionListener(new ListSelectionListener() {
 			public void valueChanged(ListSelectionEvent e) {
 				if(PhysicalLinkAddEditor.this.processSelection) {
@@ -137,8 +137,8 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 				}
 			}
 		});
-		this.bindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/bindcable.gif")));
-		this.bindButton.setToolTipText("Ввести кабель в трубу");
+		this.bindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/bindcable.gif"))); //$NON-NLS-1$
+		this.bindButton.setToolTipText(LangModelMap.getString("Button.BindCableToPipe")); //$NON-NLS-1$
 		this.bindButton.setPreferredSize(buttonSize);
 		this.bindButton.setMaximumSize(buttonSize);
 		this.bindButton.setMinimumSize(buttonSize);
@@ -149,8 +149,8 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 				// bind(or);
 			}
 		});
-		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif")));
-		this.unbindButton.setToolTipText("Убрать привязку к тоннелю");
+		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif"))); //$NON-NLS-1$
+		this.unbindButton.setToolTipText(LangModelMap.getString("Button.UnbindLinkBinding")); //$NON-NLS-1$
 		this.unbindButton.setPreferredSize(buttonSize);
 		this.unbindButton.setMaximumSize(buttonSize);
 		this.unbindButton.setMinimumSize(buttonSize);
@@ -167,8 +167,8 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 
-		this.selectButton.setToolTipText("Выбрать связь");
-		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif")));
+		this.selectButton.setToolTipText(LangModelMap.getString("Button.SelectElement")); //$NON-NLS-1$
+		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif"))); //$NON-NLS-1$
 		this.selectButton.setPreferredSize(buttonSize);
 		this.selectButton.setMaximumSize(buttonSize);
 		this.selectButton.setMinimumSize(buttonSize);
@@ -180,7 +180,7 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			}
 		});
 
-		this.dimensionLabel.setText(LangModelMap.getString("Dimension"));
+		this.dimensionLabel.setText(LangModelMap.getString("Dimension")); //$NON-NLS-1$
 
 		this.buttonsPanel.setLayout(new GridBagLayout());
 
@@ -226,16 +226,16 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		});
 
 		this.horvertLabel.setIcon(horverticon);
-		this.horvertLabel.setToolTipText("Выбор направления нумерации");
+		this.horvertLabel.setToolTipText(LangModelMap.getString("Button.NumberingDirection")); //$NON-NLS-1$
 		this.topDownLabel.setIcon(topdownicon);
-		this.topDownLabel.setToolTipText("Порядок нумерации по вертикали");
+		this.topDownLabel.setToolTipText(LangModelMap.getString("Button.VerticalOrder")); //$NON-NLS-1$
 		this.leftRightLabel.setIcon(leftrighticon);
-		this.leftRightLabel.setToolTipText("Порядок нумерации по горизонтали");
+		this.leftRightLabel.setToolTipText(LangModelMap.getString("Button.HorizontalOrder")); //$NON-NLS-1$
 		
 		this.tunnelsScrollPane.getViewport().add(this.tunnelLayout.getUgoPanel().getGraph());
 		this.cablesScrollPane.getViewport().add(this.cableList);
 
-		this.xLabel.setText("X");
+		this.xLabel.setText("X"); //$NON-NLS-1$
 		this.dimensionPanel.setLayout(this.gridBagLayout2);
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
@@ -451,8 +451,8 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 			this.cableList.setEnabled(false);
 			this.tunnelLayout.setBinding(null);
 
-			this.mTextField.setText("");
-			this.nTextField.setText("");
+			this.mTextField.setText(""); //$NON-NLS-1$
+			this.nTextField.setText(""); //$NON-NLS-1$
 		}
 		else {
 			this.cableList.setEnabled(true);

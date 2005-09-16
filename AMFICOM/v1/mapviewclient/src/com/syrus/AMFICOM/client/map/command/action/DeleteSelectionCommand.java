@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.31 2005/09/14 10:26:13 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.32 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
  * (CommandBundle), удаляющих отдельные элементы.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/09/14 10:26:13 $
+ * @version $Revision: 1.32 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class DeleteSelectionCommand extends MapActionCommandBundle {
@@ -137,7 +137,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | " + "method call", 
+			getClass().getName() + "::execute() | " + "method call",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 
 		// выполнить все команды в списке

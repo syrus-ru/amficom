@@ -1,5 +1,5 @@
 /**
- * $Id: NodeLinkController.java,v 1.23 2005/09/16 08:19:17 krupenn Exp $
+ * $Id: NodeLinkController.java,v 1.24 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Контроллер фрагмента линии.
  * @author $Author: krupenn $
- * @version $Revision: 1.23 $, $Date: 2005/09/16 08:19:17 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  */
 public final class NodeLinkController extends AbstractLinkController {
@@ -77,29 +77,29 @@ public final class NodeLinkController extends AbstractLinkController {
 		final NodeLink link = (NodeLink) mapElement;
 
 		final String s1 = link.getName();
-		String s2 = "";
-		String s3 = "";
+		String s2 = ""; //$NON-NLS-1$
+		String s3 = ""; //$NON-NLS-1$
 		try {
 			final AbstractNode smne = link.getStartNode();
-			s2 = ":\n"
-					+ "   "
-					+ LangModelMap.getString("From")
-					+ " "
+			s2 = ":\n" //$NON-NLS-1$
+					+ "   " //$NON-NLS-1$
+					+ LangModelMap.getString("From") //$NON-NLS-1$
+					+ " " //$NON-NLS-1$
 					+ smne.getName()
-					+ " ["
+					+ " [" //$NON-NLS-1$
 					+ MapViewController.getMapElementReadableType(smne)
-					+ "]";
+					+ "]"; //$NON-NLS-1$
 			final AbstractNode emne = link.getEndNode();
-			s3 = "\n"
-					+ "   "
-					+ LangModelMap.getString("To")
-					+ " "
+			s3 = "\n" //$NON-NLS-1$
+					+ "   " //$NON-NLS-1$
+					+ LangModelMap.getString("To") //$NON-NLS-1$
+					+ " " //$NON-NLS-1$
 					+ emne.getName()
-					+ " ["
+					+ " [" //$NON-NLS-1$
 					+ MapViewController.getMapElementReadableType(emne)
-					+ "]";
+					+ "]"; //$NON-NLS-1$
 		} catch (Exception e) {
-			Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getToolTipText()", e);
+			Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getToolTipText()", e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return s1 + s2 + s3;
 	}
@@ -180,7 +180,7 @@ public final class NodeLinkController extends AbstractLinkController {
 		if (MapPropertiesManager.isShowLength()) {
 			final int fontHeight = g.getFontMetrics().getHeight();
 			final String text = MapPropertiesManager.getDistanceFormat().format(nodeLink.getLengthLt())
-					+ " "
+					+ " " //$NON-NLS-1$
 					+ MapPropertiesManager.getMetric();
 			final int textWidth = g.getFontMetrics().stringWidth(text);
 			final int centerX = (from.x + to.x) / 2;

@@ -62,7 +62,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 
 	private void jbInit() 
 	{
-		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.setText(LangModelMap.getString("Delete")); //$NON-NLS-1$
 		this.removeMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -70,7 +70,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 					removeCablePath();
 				}
 			});
-		this.propertiesMenuItem.setText(LangModelMap.getString("Properties"));
+		this.propertiesMenuItem.setText(LangModelMap.getString("Properties")); //$NON-NLS-1$
 		this.propertiesMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -78,7 +78,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 					showProperties();
 				}
 			});
-		this.bindMenuItem.setText(LangModelMap.getString("Bind"));
+		this.bindMenuItem.setText(LangModelMap.getString("Bind")); //$NON-NLS-1$
 		this.bindMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -86,7 +86,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 					bind();
 				}
 			});
-		this.generateMenuItem.setText(LangModelMap.getString("GenerateCabling"));
+		this.generateMenuItem.setText(LangModelMap.getString("GenerateCabling")); //$NON-NLS-1$
 		this.generateMenuItem.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -116,7 +116,7 @@ public class CablePathPopupMenu extends MapPopupMenu
 	{
 		StorableObjectEditor prop = MapVisualManager.getVisualManager(this.path).getAdditionalPropertiesPanel();
 		if(EditorDialog.showEditorDialog(
-				LangModelGeneral.getString("Properties"), 
+				LangModelGeneral.getString("Properties"),  //$NON-NLS-1$
 				this.path,
 				prop))
 		{

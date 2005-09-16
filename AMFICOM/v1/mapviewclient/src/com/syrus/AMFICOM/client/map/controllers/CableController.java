@@ -1,5 +1,5 @@
 /**
- * $Id: CableController.java,v 1.33 2005/09/16 08:19:17 krupenn Exp $
+ * $Id: CableController.java,v 1.34 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
  * Контроллер кабеля.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/09/16 08:19:17 $
+ * @version $Revision: 1.34 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  */
 public final class CableController extends AbstractLinkController {
@@ -118,29 +118,29 @@ public final class CableController extends AbstractLinkController {
 		final CablePath cpath = (CablePath) me;
 
 		final String s1 = cpath.getName();
-		String s2 = "";
-		String s3 = "";
+		String s2 = ""; //$NON-NLS-1$
+		String s3 = ""; //$NON-NLS-1$
 		try {
 			final AbstractNode smne = cpath.getStartNode();
-			s2 = ":\n"
-					+ "   "
-					+ LangModelMap.getString("From")
-					+ " "
+			s2 = ":\n" //$NON-NLS-1$
+					+ "   " //$NON-NLS-1$
+					+ LangModelMap.getString("From") //$NON-NLS-1$
+					+ " " //$NON-NLS-1$
 					+ smne.getName()
-					+ " ["
+					+ " [" //$NON-NLS-1$
 					+ MapViewController.getMapElementReadableType(smne)
-					+ "]";
+					+ "]"; //$NON-NLS-1$
 			final AbstractNode emne = cpath.getEndNode();
-			s3 = "\n"
-					+ "   "
-					+ LangModelMap.getString("To")
-					+ " "
+			s3 = "\n" //$NON-NLS-1$
+					+ "   " //$NON-NLS-1$
+					+ LangModelMap.getString("To") //$NON-NLS-1$
+					+ " " //$NON-NLS-1$
 					+ emne.getName()
-					+ " ["
+					+ " [" //$NON-NLS-1$
 					+ MapViewController.getMapElementReadableType(emne)
-					+ "]";
+					+ "]"; //$NON-NLS-1$
 		} catch (Exception e) {
-			Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getToolTipText()", e);
+			Environment.log(Environment.LOG_LEVEL_FINER, "method call", getClass().getName(), "getToolTipText()", e); //$NON-NLS-1$ //$NON-NLS-2$
 		}
 		return s1 + s2 + s3;
 	}

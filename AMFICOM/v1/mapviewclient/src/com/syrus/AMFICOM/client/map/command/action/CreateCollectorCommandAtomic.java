@@ -1,5 +1,5 @@
 /**
- * $Id: CreateCollectorCommandAtomic.java,v 1.17 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: CreateCollectorCommandAtomic.java,v 1.18 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
  * создание коллектора, внесение его в пул и на карту - 
  * атомарное действие 
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  */
 public class CreateCollectorCommandAtomic extends MapActionCommand {
@@ -45,8 +45,8 @@ public class CreateCollectorCommandAtomic extends MapActionCommand {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | " 
-				+ "create collector " + this.name, 
+			getClass().getName() + "::execute() | "  //$NON-NLS-1$
+				+ "create collector " + this.name,  //$NON-NLS-1$
 			Level.FINEST);
 		
 		try {
@@ -54,7 +54,7 @@ public class CreateCollectorCommandAtomic extends MapActionCommand {
 					LoginManager.getUserId(),
 					this.logicalNetLayer.getMapView().getMap(),
 					this.name,
-					"");
+					""); //$NON-NLS-1$
 			this.logicalNetLayer.getMapView().getMap().addCollector(
 					this.collector);
 			setResult(Command.RESULT_OK);

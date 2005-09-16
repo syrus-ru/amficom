@@ -1,5 +1,5 @@
 /**
- * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.26 2005/09/05 13:45:57 krupenn Exp $
+ * $Id: CreatePhysicalNodeCommandAtomic.java,v 1.27 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
  * действие
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/09/05 13:45:57 $
+ * @version $Revision: 1.27 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  */
 public class CreatePhysicalNodeCommandAtomic extends MapActionCommand {
@@ -55,17 +55,17 @@ public class CreatePhysicalNodeCommandAtomic extends MapActionCommand {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | "
-				+ "create topological node on link "
+			getClass().getName() + "::execute() | " //$NON-NLS-1$
+				+ "create topological node on link " //$NON-NLS-1$
 				+ this.physicalLink.getName() 
-				+ " (" + this.physicalLink.getId() + ")", 
+				+ " (" + this.physicalLink.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 
 		try {
 			this.node = TopologicalNode.createInstance(
 					LoginManager.getUserId(),
-					LangModelMap.getString("noname"),
-					"",
+					LangModelMap.getString("noname"), //$NON-NLS-1$
+					"", //$NON-NLS-1$
 					this.point);
 
 			TopologicalNodeController tnc = (TopologicalNodeController) getLogicalNetLayer()

@@ -76,14 +76,14 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 		this.libraryComboBox = new WrapperedComboBox(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.nameLabel.setText(LangModelMap.getString("Name"));
-		this.libraryLabel.setText(LangModelMap.getString("InLibrary"));
-		this.descLabel.setText(LangModelMap.getString("Description"));
-		this.colorLabel.setText(LangModelMap.getString("Color"));
-		this.thicknessLabel.setText(LangModelMap.getString("Thickness"));
-		this.styleLabel.setText(LangModelMap.getString("Style"));
+		this.nameLabel.setText(LangModelMap.getString("Name")); //$NON-NLS-1$
+		this.libraryLabel.setText(LangModelMap.getString("InLibrary")); //$NON-NLS-1$
+		this.descLabel.setText(LangModelMap.getString("Description")); //$NON-NLS-1$
+		this.colorLabel.setText(LangModelMap.getString("Color")); //$NON-NLS-1$
+		this.thicknessLabel.setText(LangModelMap.getString("Thickness")); //$NON-NLS-1$
+		this.styleLabel.setText(LangModelMap.getString("Style")); //$NON-NLS-1$
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
 		this.commitButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_NULL));
@@ -285,10 +285,10 @@ public class PhysicalLinkTypeEditor extends DefaultStorableObjectEditor {
 
 		if(this.type == null) {
 			this.nameTextField.setEnabled(false);
-			this.nameTextField.setText("");
+			this.nameTextField.setText(""); //$NON-NLS-1$
 			this.libraryComboBox.setEnabled(false);
 			this.descTextArea.setEnabled(false);
-			this.descTextArea.setText("");
+			this.descTextArea.setText(""); //$NON-NLS-1$
 
 			this.colorComboBox.setEnabled(false);
 			this.thicknessComboBox.setEnabled(false);

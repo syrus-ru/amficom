@@ -1,5 +1,5 @@
 /**
- * $Id: MapRemoveMapCommand.java,v 1.10 2005/08/19 15:43:32 krupenn Exp $
+ * $Id: MapRemoveMapCommand.java,v 1.11 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * убрать из вида выбранную схему 
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/08/19 15:43:32 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class MapRemoveMapCommand extends AbstractCommand {
@@ -57,12 +57,12 @@ public class MapRemoveMapCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapOpening")));
+						LangModelMap.getString("MapOpening"))); //$NON-NLS-1$
 
 		MapTableController mapTableController = MapTableController.getInstance();
 
 		Map map = (Map )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("Map"),
+				LangModelMap.getString("Map"), //$NON-NLS-1$
 				mapView.getMap().getMaps(),
 				mapTableController,
 				mapTableController.getKeysArray(),
@@ -73,7 +73,7 @@ public class MapRemoveMapCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted")));
+							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 			return;
 		}
@@ -90,7 +90,7 @@ public class MapRemoveMapCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelGeneral.getString("Finished")));
+						LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
 		setResult(Command.RESULT_OK);
 	}
 

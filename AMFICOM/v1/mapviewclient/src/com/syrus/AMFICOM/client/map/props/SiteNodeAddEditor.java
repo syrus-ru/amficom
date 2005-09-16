@@ -70,9 +70,9 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 
 	private UgoTabbedPane schemePane = new UgoTabbedPane();
 
-	DefaultMutableTreeNode root = new DefaultMutableTreeNode("Объекты в узле");
-	DefaultMutableTreeNode elementsBranch = new DefaultMutableTreeNode("Элементы");
-	DefaultMutableTreeNode cablesBranch = new DefaultMutableTreeNode("Кабели");
+	DefaultMutableTreeNode root = new DefaultMutableTreeNode(LangModelMap.getString("SiteNodeTree.Elements")); //$NON-NLS-1$
+	DefaultMutableTreeNode elementsBranch = new DefaultMutableTreeNode(LangModelMap.getString("SiteNodeTree.SchemeElements")); //$NON-NLS-1$
+	DefaultMutableTreeNode cablesBranch = new DefaultMutableTreeNode(LangModelMap.getString("SiteNodeTree.Cables")); //$NON-NLS-1$
 	
 	private JButton commitButton = new JButton();
 
@@ -106,7 +106,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 
 	private void jbInit() {
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelMap.getString("SiteBinding"));
+		this.jPanel.setName(LangModelMap.getString("SiteBinding")); //$NON-NLS-1$
 
 		this.elementsTree = new JTree(createTree(null));
 		this.elementsTree.expandRow(0);
@@ -129,7 +129,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 				}
 			});
 
-		this.bindButton.setText("Привязать");
+		this.bindButton.setText(LangModelMap.getString("SiteNodeTree.Button.Bind")); //$NON-NLS-1$
 		this.bindButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -138,8 +138,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 //					bind(or);
 				}
 			});
-		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif")));
-		this.unbindButton.setToolTipText("Убрать привязку");
+		this.unbindButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/delete.gif"))); //$NON-NLS-1$
+		this.unbindButton.setToolTipText(LangModelMap.getString("SiteNodeTree.Button.Unbind")); //$NON-NLS-1$
 		this.unbindButton.setPreferredSize(buttonSize);
 		this.unbindButton.setMaximumSize(buttonSize);
 		this.unbindButton.setMinimumSize(buttonSize);
@@ -157,8 +157,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 					}
 				}
 			});
-		this.selectButton.setToolTipText("Выбрать элемент");
-		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif")));
+		this.selectButton.setToolTipText(LangModelMap.getString("SiteNodeTree.Button.SelectElement")); //$NON-NLS-1$
+		this.selectButton.setIcon(new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/selectlink.gif"))); //$NON-NLS-1$
 		this.selectButton.setPreferredSize(buttonSize);
 		this.selectButton.setMaximumSize(buttonSize);
 		this.selectButton.setMinimumSize(buttonSize);

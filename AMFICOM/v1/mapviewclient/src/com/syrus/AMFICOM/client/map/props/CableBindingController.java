@@ -14,16 +14,16 @@ import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.24 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.25 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public final class CableBindingController implements Wrapper {
-	public static final String KEY_START_NODE = "startnode";
-	public static final String KEY_START_SPARE = "startspare";
-	public static final String KEY_LINK = "link";
-	public static final String KEY_END_SPARE = "endspare";
-	public static final String KEY_END_NODE = "endnode";
+	public static final String KEY_START_NODE = "startnode"; //$NON-NLS-1$
+	public static final String KEY_START_SPARE = "startspare"; //$NON-NLS-1$
+	public static final String KEY_LINK = "link"; //$NON-NLS-1$
+	public static final String KEY_END_SPARE = "endspare"; //$NON-NLS-1$
+	public static final String KEY_END_NODE = "endnode"; //$NON-NLS-1$
 
 	private static CableBindingController instance;
 
@@ -61,19 +61,19 @@ public final class CableBindingController implements Wrapper {
 	public String getName(final String key) {
 		String name = null;
 		if (key.equals(KEY_START_NODE))
-			name = LangModelMap.getString("StartNode");
+			name = LangModelMap.getString("StartNode"); //$NON-NLS-1$
 		else
 		if (key.equals(KEY_START_SPARE))
-			name = LangModelMap.getString("StartSpare");
+			name = LangModelMap.getString("StartSpare"); //$NON-NLS-1$
 		else
 		if (key.equals(KEY_LINK))
-			name = LangModelMap.getString("tunnel");
+			name = LangModelMap.getString("tunnel"); //$NON-NLS-1$
 		else
 		if (key.equals(KEY_END_SPARE))
-			name = LangModelMap.getString("EndSpare");
+			name = LangModelMap.getString("EndSpare"); //$NON-NLS-1$
 		else
 		if (key.equals(KEY_END_NODE))
-			name = LangModelMap.getString("EndNode");
+			name = LangModelMap.getString("EndNode"); //$NON-NLS-1$
 		return name;
 	}
 
@@ -85,27 +85,27 @@ public final class CableBindingController implements Wrapper {
 			if (key.equals(KEY_START_NODE)) {
 //				result = link.getStartNode().getName();
 				AbstractNode mne = cci.getStartSiteNode();
-				result = (mne == null) ? "" : mne.getName();
+				result = (mne == null) ? "" : mne.getName(); //$NON-NLS-1$
 			}
 			else
 			if (key.equals(KEY_START_SPARE)) {
-				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getStartSpare());
+				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getStartSpare()); //$NON-NLS-1$
 			}
 			else
 			if (key.equals(KEY_LINK)) {
-				result = (link instanceof UnboundLink) ? "" : link.getName();
+				result = (link instanceof UnboundLink) ? "" : link.getName(); //$NON-NLS-1$
 //				MapPhysicalLinkElement mle = (MapPhysicalLinkElement )map.getPhysicalLink(cci.physicalLinkId);
 //				result = (mle == null) ? "" : mle.getName();
 			}
 			else
 			if (key.equals(KEY_END_SPARE)) {
-				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getEndSpare());
+				result = (link instanceof UnboundLink) ? "" : String.valueOf(cci.getEndSpare()); //$NON-NLS-1$
 			}
 			else
 			if (key.equals(KEY_END_NODE)) {
 //				result = link.getEndNode().getName();
 				AbstractNode mne = cci.getEndSiteNode();
-				result = (mne == null) ? "" : mne.getName();
+				result = (mne == null) ? "" : mne.getName(); //$NON-NLS-1$
 			}
 		}
 		return result;
@@ -140,7 +140,7 @@ public final class CableBindingController implements Wrapper {
 	}
 
 	public Object getPropertyValue(final String key) {
-		Object result = "";
+		Object result = ""; //$NON-NLS-1$
 		return result;
 	}
 

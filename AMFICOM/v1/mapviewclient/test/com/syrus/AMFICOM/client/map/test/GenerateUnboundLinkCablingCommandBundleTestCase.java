@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.5 2005/08/10 11:53:54 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundleTestCase.java,v 1.6 2005/09/16 14:53:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -422,11 +422,11 @@ public class GenerateUnboundLinkCablingCommandBundleTestCase extends SchemeBindi
 		assertSame(cablePath.getEndLastBoundLink(), cci);
 		assertSame(cablePath.getEndUnboundNode(), this.building1);
 		long t6 = System.currentTimeMillis();
-		System.out.println("place commands " + (t2 - t1) + " ms");
-		System.out.println("place assertions " + (t3 - t2) + " ms");
-		System.out.println("generate command " + (t4 - t3) + " ms");
-		System.out.println("map assertions " + (t5 - t4) + " ms");
-		System.out.println("cci assertions " + (t6 - t5) + " ms");
+		System.out.println("place commands " + (t2 - t1) + " ms"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.out.println("place assertions " + (t3 - t2) + " ms"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.out.println("generate command " + (t4 - t3) + " ms"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.out.println("map assertions " + (t5 - t4) + " ms"); //$NON-NLS-1$ //$NON-NLS-2$
+		System.out.println("cci assertions " + (t6 - t5) + " ms"); //$NON-NLS-1$ //$NON-NLS-2$
 	}
 
 	public void testUnboundBetweenTwoSites() throws Exception {

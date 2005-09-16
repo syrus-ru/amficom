@@ -1,5 +1,5 @@
 /**
- * $Id: MapKeyAdapter.java,v 1.15 2005/08/22 11:36:07 krupenn Exp $
+ * $Id: MapKeyAdapter.java,v 1.16 2005/09/16 14:53:36 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.map.NodeLink;
  * обработчик событий клавиатуры в окне карты. »спользуетс€ дл€ изменени€ 
  * режима обработки действий (SHIFT, ALT, CTRL) и дл€ удалени€ выбранных 
  * элементов (DEL)
- * @version $Revision: 1.15 $, $Date: 2005/08/22 11:36:07 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/16 14:53:36 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -95,7 +95,7 @@ public final class MapKeyAdapter extends KeyAdapter
 				f = System.currentTimeMillis();
 				java.util.Collection nodeLinks = logicalNetLayer.getMapView().getMap().getNodeLinks();
 				d = System.currentTimeMillis();
-				System.out.println("get node links in " + String.valueOf(d - f) + " ms");
+				System.out.println("get node links in " + String.valueOf(d - f) + " ms"); //$NON-NLS-1$ //$NON-NLS-2$
 				f = System.currentTimeMillis();
 
 				for(Iterator iter = nodeLinks.iterator(); iter.hasNext();) {
@@ -103,7 +103,7 @@ public final class MapKeyAdapter extends KeyAdapter
 					logicalNetLayer.getMapViewController().getController(nodeLink).isElementVisible(nodeLink, visibleBounds);
 				}
 				d = System.currentTimeMillis();
-				System.out.println("node links::isVisible performed in " + String.valueOf(d - f) + " ms (total) with average of " + String.valueOf((d - f) / nodeLinks.size() + " ms"));
+				System.out.println("node links::isVisible performed in " + String.valueOf(d - f) + " ms (total) with average of " + String.valueOf((d - f) / nodeLinks.size() + " ms")); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			}
 		} catch(MapConnectionException e) {
 			// TODO Auto-generated catch block

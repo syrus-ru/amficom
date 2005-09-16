@@ -1,5 +1,5 @@
 /**
- * $Id: ChangePhysicalNodeActivityCommandAtomic.java,v 1.14 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: ChangePhysicalNodeActivityCommandAtomic.java,v 1.15 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.util.Log;
 /**
  * »зменение активности топологического узла - атомарное действие
  * @author $Author: krupenn $
- * @version $Revision: 1.14 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  */
 public class ChangePhysicalNodeActivityCommandAtomic extends MapActionCommand {
@@ -59,8 +59,8 @@ public class ChangePhysicalNodeActivityCommandAtomic extends MapActionCommand {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | " 
-				+ " set " + this.node.getId() + " active(" + this.active + ")", 
+			getClass().getName() + "::execute() | "  //$NON-NLS-1$
+				+ " set " + this.node.getId() + " active(" + this.active + ")",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			Level.FINEST);
 
 		this.controller.setActive(this.node, this.active);

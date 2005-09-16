@@ -1,5 +1,5 @@
 /**
- * $Id: MapImageRendererFactory.java,v 1.5 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: MapImageRendererFactory.java,v 1.6 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,7 @@ import java.util.logging.Level;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/16 14:53:32 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -27,7 +27,7 @@ public final class MapImageRendererFactory {
 			MapCoordinatesConverter coordsConverter,
 			MapContext mapContext, 
 			MapImageLoader loader) throws MapDataException {
-		Log.debugMessage("method call MapImageRendererFactory.create()", Level.FINE);
+		Log.debugMessage("method call MapImageRendererFactory.create()", Level.FINE); //$NON-NLS-1$
 
 		try {
 			Class clazz = Class.forName(className);
@@ -52,26 +52,26 @@ public final class MapImageRendererFactory {
 		} catch (ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 			throw new MapDataException(
-					"MapImageRendererFactory.create() throws ClassNotFoundException");
+					"MapImageRendererFactory.create() throws ClassNotFoundException"); //$NON-NLS-1$
 		} catch (InstantiationException ie) {
 			ie.printStackTrace();
 			throw new MapDataException(
-					"MapImageRendererFactory.create() throws InstantiationException");
+					"MapImageRendererFactory.create() throws InstantiationException"); //$NON-NLS-1$
 		} catch (IllegalAccessException iae) {
 			iae.printStackTrace();
 			throw new MapDataException(
-					"MapImageRendererFactory.create() throws IllegalAccessException");
+					"MapImageRendererFactory.create() throws IllegalAccessException"); //$NON-NLS-1$
 		} catch (IllegalArgumentException iae) {
 			iae.printStackTrace();
 			throw new MapDataException(
-					"MapImageRendererFactory.create() throws IllegalArgumentException");
+					"MapImageRendererFactory.create() throws IllegalArgumentException"); //$NON-NLS-1$
 		} catch (InvocationTargetException ite) {
 			ite.printStackTrace();
 			throw new MapDataException(
-					"MapImageRendererFactory.create() throws InvocationTargetException");
+					"MapImageRendererFactory.create() throws InvocationTargetException"); //$NON-NLS-1$
 		}
 		throw new MapDataException(
-				"MapImageRendererFactory.create() cannot find constructor with arguments (MapImageLoader) for class "
+				"MapImageRendererFactory.create() cannot find constructor with arguments (MapImageLoader) for class " //$NON-NLS-1$
 						+ className);
 	}
 }

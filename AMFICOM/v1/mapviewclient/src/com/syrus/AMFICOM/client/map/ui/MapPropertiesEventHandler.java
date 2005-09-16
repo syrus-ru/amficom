@@ -1,5 +1,5 @@
 /*-
- * $Id: MapPropertiesEventHandler.java,v 1.6 2005/09/04 17:17:20 krupenn Exp $
+ * $Id: MapPropertiesEventHandler.java,v 1.7 2005/09/16 14:53:36 krupenn Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.6 $, $Date: 2005/09/04 17:17:20 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/16 14:53:36 $
  * @module schemeclient
  */
 
@@ -66,7 +66,7 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 			return;
 		if(this.frame.getParent() == null)
 			return;
-		String mesg2 = "";
+		String mesg2 = ""; //$NON-NLS-1$
 		if(pce.getPropertyName().equals(MapEvent.MAP_EVENT_TYPE)) {
 			MapEvent mapEvent = (MapEvent )pce;
 			String mapEventType = mapEvent.getMapEventType();
@@ -100,7 +100,7 @@ public class MapPropertiesEventHandler extends AbstractEventHandler implements C
 				long d4 = System.currentTimeMillis();
 				selectedObject = mapElement;
 				long d5 = System.currentTimeMillis();
-				mesg2 = "		 " + (d1 - d0) + " " + (d2 - d1) + " " + (d3 - d2) + " " + (d4 - d3) + " " + (d5 - d4) + " ms ---------";
+				mesg2 = "		 " + (d1 - d0) + " " + (d2 - d1) + " " + (d3 - d2) + " " + (d4 - d3) + " " + (d5 - d4) + " ms ---------"; //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$ //$NON-NLS-5$ //$NON-NLS-6$
 			}
 			else if(mapEventType.equals(MapEvent.MAP_SELECTED)) {
 				selectedObject = pce.getNewValue();

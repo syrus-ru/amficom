@@ -1,5 +1,5 @@
 /**
- * $Id: ExternalMapElementChooserDialog.java,v 1.7 2005/09/15 14:11:25 krupenn Exp $
+ * $Id: ExternalMapElementChooserDialog.java,v 1.8 2005/09/16 14:53:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -104,9 +104,9 @@ public class ExternalMapElementChooserDialog extends JDialog
 		this.getContentPane().setLayout(this.borderLayout2);
 		this.topPanel.setLayout(this.borderLayout3);
 		this.topPanel.setBorder(BorderFactory.createBevelBorder(BevelBorder.RAISED));
-		this.buttonHelp.setText(LangModelGeneral.getString("Help"));
+		this.buttonHelp.setText(LangModelGeneral.getString("Help")); //$NON-NLS-1$
 		this.buttonHelp.setEnabled(false);
-		this.buttonCancel.setText(LangModelGeneral.getString("Button.Cancel"));
+		this.buttonCancel.setText(LangModelGeneral.getString("Button.Cancel")); //$NON-NLS-1$
 		this.buttonCancel.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -114,7 +114,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 					buttonCancel_actionPerformed(e);
 				}
 			});
-		this.buttonOpen.setText(LangModelGeneral.getString("Choose"));
+		this.buttonOpen.setText(LangModelGeneral.getString("Choose")); //$NON-NLS-1$
 		this.buttonOpen.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -137,7 +137,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 
 		this.model = MapTreeModel.getInstance();
 
-		this.root = new IconedNode("root", LangModelMap.getString("Map"));
+		this.root = new IconedNode("root", LangModelMap.getString("Map")); //$NON-NLS-1$ //$NON-NLS-2$
 		this.treeUI = new LogicalTreeUI(this.root, false);
 		this.tree = this.treeUI.getTree();
 		this.treeModel = (ItemTreeModel )this.tree.getModel();

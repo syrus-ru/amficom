@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.46 2005/09/14 10:32:12 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.47 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.46 $, $Date: 2005/09/14 10:32:12 $
+ * @version $Revision: 1.47 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {
@@ -141,7 +141,7 @@ public class MapImportCommand extends ImportCommand {
 		
 					setResult(Command.RESULT_OK);
 				} catch(MapException e) {
-					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Ошибка соединения с картографическими данными"));
+					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
 					e.printStackTrace();
 					setResult(Command.RESULT_NO);
 				} catch(DatabaseException e) {
@@ -151,7 +151,7 @@ public class MapImportCommand extends ImportCommand {
 					e.printStackTrace();
 					setResult(Command.RESULT_NO);
 				} catch(XmlException e) {
-					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "Неверный формат файла"));
+					MapImportCommand.this.mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString("Exception.FileFormat"))); //$NON-NLS-1$
 					e.printStackTrace();
 					setResult(Command.RESULT_NO);
 				} catch(IOException e) {
@@ -198,10 +198,10 @@ public class MapImportCommand extends ImportCommand {
 						xmlMap.getImportType(),
 						xmlMap);
 				map.setName(map.getName()
-						+ "(imported "
+						+ LangModelMap.getString("ImportedWithOpeningParenthesis") //$NON-NLS-1$
 						+ MapPropertiesManager.getDateFormat()
 							.format(new Date(System.currentTimeMillis())) 
-						+ " from \'"
+						+ LangModelMap.getString("FromWithOpeningApostrophe") //$NON-NLS-1$
 						+ xmlfile.getName() + "\')");
 				
 				map.addMapLibrary(MapLibraryController.getDefaultMapLibrary());

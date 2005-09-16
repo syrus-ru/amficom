@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorCloseViewCommand.java,v 1.21 2005/08/17 14:14:17 arseniy Exp $
+ * $Id: MapEditorCloseViewCommand.java,v 1.22 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,6 +23,7 @@ import com.syrus.AMFICOM.client.map.command.map.MapViewNewCommand;
 import com.syrus.AMFICOM.client.map.ui.MapFrame;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.Command;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.mapview.MapView;
 
@@ -32,9 +33,9 @@ import com.syrus.AMFICOM.mapview.MapView;
  * класс использует команду MapCloseCommand дл€ закрыти€ карты, после чего
  * генерирует событие закрыти€
  * 
- * @version $Revision: 1.21 $, $Date: 2005/08/17 14:14:17 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/16 14:53:33 $
  * @module map_v2
- * @author $Author: arseniy $
+ * @author $Author: krupenn $
  * @see com.syrus.AMFICOM.client.map.command.map.MapCloseCommand
  */
 public class MapEditorCloseViewCommand extends AbstractCommand {
@@ -78,7 +79,7 @@ public class MapEditorCloseViewCommand extends AbstractCommand {
 					MapEvent.MAP_VIEW_CLOSED));
 			setResult(Command.RESULT_OK);
 		} catch(MapException e) {
-			mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, "ќшибка соединени€ с картографическими данными"));
+			mapFrame.getContext().getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
 			e.printStackTrace();
 		}
 	}

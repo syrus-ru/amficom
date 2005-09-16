@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeLinkCommandBundle.java,v 1.34 2005/09/05 13:46:30 krupenn Exp $
+ * $Id: DeleteNodeLinkCommandBundle.java,v 1.35 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -35,7 +35,7 @@ import com.syrus.util.Log;
  * фрагментов линий, линий, узлов  (и путей). Команда
  * состоит из последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.34 $, $Date: 2005/09/05 13:46:30 $
+ * @version $Revision: 1.35 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
@@ -235,9 +235,9 @@ public class DeleteNodeLinkCommandBundle extends MapActionCommandBundle
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | " 
-				+ "delete nodeLink " 
-				+ this.nodeLink.getName() + " (" + this.nodeLink.getId() + ")", 
+			getClass().getName() + "::execute() | "  //$NON-NLS-1$
+				+ "delete nodeLink "  //$NON-NLS-1$
+				+ this.nodeLink.getName() + " (" + this.nodeLink.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 		
 		// фрагмент может быть удален в результате атомарной команды в составе

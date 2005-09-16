@@ -18,8 +18,8 @@ import com.syrus.util.Wrapper;
 public final class SimpleMapElementController implements Wrapper 
 {
 
-	public static final String KEY_NAME = "name";
-	public static final String KEY_TYPE = "type";
+	public static final String KEY_NAME = "name"; //$NON-NLS-1$
+	public static final String KEY_TYPE = "type"; //$NON-NLS-1$
 
 	private static SimpleMapElementController instance;
 
@@ -50,10 +50,10 @@ public final class SimpleMapElementController implements Wrapper
 	public String getName(final String key) {
 		String name = null;
 		if (key.equals(KEY_NAME))
-			name = LangModelGeneral.getString("Name");
+			name = LangModelGeneral.getString("Name"); //$NON-NLS-1$
 		else
 		if (key.equals(KEY_TYPE))
-			name = LangModelGeneral.getString("Type");
+			name = LangModelGeneral.getString("Type"); //$NON-NLS-1$
 		return name;
 	}
 
@@ -61,26 +61,26 @@ public final class SimpleMapElementController implements Wrapper
 		Object result = null;
 
 		if(object == null) {
-			result = " ";
+			result = " "; //$NON-NLS-1$
 		}
 		else if(key.equals(KEY_NAME)) {
 			Class clazz = object.getClass();
-			String methodName = "getName";
-			String name = "";
+			String methodName = "getName"; //$NON-NLS-1$
+			String name = ""; //$NON-NLS-1$
 			try {
 				Method method = clazz.getMethod(methodName, new Class[0]);
 				name = (String )(method.invoke(object, new Object[0]));
 				result = name;
 			} catch(InvocationTargetException iae) {
-				result = " ";
+				result = " "; //$NON-NLS-1$
 			} catch(IllegalAccessException iae) {
-				result = " ";
+				result = " "; //$NON-NLS-1$
 			} catch(NoSuchMethodException nsme) {
-				result = " ";
+				result = " "; //$NON-NLS-1$
 			}
 
 			if(result == null) {
-				methodName = "name";
+				methodName = "name"; //$NON-NLS-1$
 				try {
 					Method method = clazz.getMethod(
 							methodName,
@@ -88,11 +88,11 @@ public final class SimpleMapElementController implements Wrapper
 					name = (String )(method.invoke(object, new Object[0]));
 					result = name;
 				} catch(InvocationTargetException iae) {
-					result = " ";
+					result = " "; //$NON-NLS-1$
 				} catch(IllegalAccessException iae) {
-					result = " ";
+					result = " "; //$NON-NLS-1$
 				} catch(NoSuchMethodException nsme) {
-					result = " ";
+					result = " "; //$NON-NLS-1$
 				}
 			}
 		}
@@ -110,9 +110,9 @@ public final class SimpleMapElementController implements Wrapper
 			}
 		}
 		else {
-			result = " ";
+			result = " "; //$NON-NLS-1$
 		}
-		return result + " ";
+		return result + " "; //$NON-NLS-1$
 	}
 
 	public boolean isEditable(final String key) {
@@ -128,7 +128,7 @@ public final class SimpleMapElementController implements Wrapper
 	}
 
 	public Object getPropertyValue(final String key) {
-		Object result = "";
+		Object result = ""; //$NON-NLS-1$
 		return result;
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolBar.java,v 1.35 2005/09/04 17:17:20 krupenn Exp $
+ * $Id: MapToolBar.java,v 1.36 2005/09/16 14:53:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * Панель инструментов окна карты
- * @version $Revision: 1.35 $, $Date: 2005/09/04 17:17:20 $
+ * @version $Revision: 1.36 $, $Date: 2005/09/16 14:53:37 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -100,97 +100,97 @@ public final class MapToolBar extends JPanel
 		MapToolBarActionAdapter actionAdapter =
 				new MapToolBarActionAdapter(this);
 
-		this.zoomInButton.setIcon(new ImageIcon("images/zoom_in.gif"));
+		this.zoomInButton.setIcon(new ImageIcon("images/zoom_in.gif")); //$NON-NLS-1$
 		this.zoomInButton.addActionListener(actionAdapter);
-		this.zoomInButton.setToolTipText(LangModelMap.getString("ZoomIn"));
+		this.zoomInButton.setToolTipText(LangModelMap.getString("ZoomIn")); //$NON-NLS-1$
 		this.zoomInButton.setPreferredSize(buttonSize);
 		this.zoomInButton.setMaximumSize(buttonSize);
 		this.zoomInButton.setMinimumSize(buttonSize);
 		this.zoomInButton.setName(MapApplicationModel.OPERATION_ZOOM_IN);
 	
-		this.zoomOutButton.setIcon(new ImageIcon("images/zoom_out.gif"));
+		this.zoomOutButton.setIcon(new ImageIcon("images/zoom_out.gif")); //$NON-NLS-1$
 		this.zoomOutButton.addActionListener(actionAdapter);
-		this.zoomOutButton.setToolTipText(LangModelMap.getString("ZoomOut"));
+		this.zoomOutButton.setToolTipText(LangModelMap.getString("ZoomOut")); //$NON-NLS-1$
 		this.zoomOutButton.setPreferredSize(buttonSize);
 		this.zoomOutButton.setMaximumSize(buttonSize);
 		this.zoomOutButton.setMinimumSize(buttonSize);
 		this.zoomOutButton.setName(MapApplicationModel.OPERATION_ZOOM_OUT);
 
-		this.zoomToPointButton.setIcon(new ImageIcon("images/zoom_to_point.gif"));
+		this.zoomToPointButton.setIcon(new ImageIcon("images/zoom_to_point.gif")); //$NON-NLS-1$
 		this.zoomToPointButton.addActionListener(actionAdapter);
-		this.zoomToPointButton.setToolTipText(LangModelMap.getString("ZoomToPoint"));
+		this.zoomToPointButton.setToolTipText(LangModelMap.getString("ZoomToPoint")); //$NON-NLS-1$
 		this.zoomToPointButton.setPreferredSize(buttonSize);
 		this.zoomToPointButton.setMaximumSize(buttonSize);
 		this.zoomToPointButton.setMinimumSize(buttonSize);
 		this.zoomToPointButton.setName(MapApplicationModel.OPERATION_ZOOM_TO_POINT);
 
-		this.zoomToRectButton.setIcon(new ImageIcon("images/zoom_area.gif"));
+		this.zoomToRectButton.setIcon(new ImageIcon("images/zoom_area.gif")); //$NON-NLS-1$
 		this.zoomToRectButton.addActionListener(actionAdapter);
-		this.zoomToRectButton.setToolTipText(LangModelMap.getString("ZoomBox"));
+		this.zoomToRectButton.setToolTipText(LangModelMap.getString("ZoomBox")); //$NON-NLS-1$
 		this.zoomToRectButton.setPreferredSize(buttonSize);
 		this.zoomToRectButton.setMaximumSize(buttonSize);
 		this.zoomToRectButton.setMinimumSize(buttonSize);
 		this.zoomToRectButton.setName(MapApplicationModel.OPERATION_ZOOM_BOX);
 
-		this.moveToCenterButton.setIcon(new ImageIcon("images/map_centr.gif"));
+		this.moveToCenterButton.setIcon(new ImageIcon("images/map_centr.gif")); //$NON-NLS-1$
 		this.moveToCenterButton.addActionListener(actionAdapter);
-		this.moveToCenterButton.setToolTipText(LangModelMap.getString("MoveToCenter"));
+		this.moveToCenterButton.setToolTipText(LangModelMap.getString("MoveToCenter")); //$NON-NLS-1$
 		this.moveToCenterButton.setPreferredSize(buttonSize);
 		this.moveToCenterButton.setMaximumSize(buttonSize);
 		this.moveToCenterButton.setMinimumSize(buttonSize);
 		this.moveToCenterButton.setName(MapApplicationModel.OPERATION_MOVE_TO_CENTER);
 
-		this.moveHandButton.setIcon(new ImageIcon("images/hand.gif"));
+		this.moveHandButton.setIcon(new ImageIcon("images/hand.gif")); //$NON-NLS-1$
 		this.moveHandButton.addActionListener(actionAdapter);
-		this.moveHandButton.setToolTipText(LangModelMap.getString("HandPan"));
+		this.moveHandButton.setToolTipText(LangModelMap.getString("HandPan")); //$NON-NLS-1$
 		this.moveHandButton.setPreferredSize(buttonSize);
 		this.moveHandButton.setMaximumSize(buttonSize);
 		this.moveHandButton.setMinimumSize(buttonSize);
 		this.moveHandButton.setName(MapApplicationModel.OPERATION_HAND_PAN);
 
-		this.measureDistanceButton.setIcon(new ImageIcon("images/distance.gif"));
+		this.measureDistanceButton.setIcon(new ImageIcon("images/distance.gif")); //$NON-NLS-1$
 		this.measureDistanceButton.addActionListener(actionAdapter);
-		this.measureDistanceButton.setToolTipText(LangModelMap.getString("MeasureDistance"));
+		this.measureDistanceButton.setToolTipText(LangModelMap.getString("MeasureDistance")); //$NON-NLS-1$
 		this.measureDistanceButton.setPreferredSize(buttonSize);
 		this.measureDistanceButton.setMaximumSize(buttonSize);
 		this.measureDistanceButton.setMinimumSize(buttonSize);
 		this.measureDistanceButton.setName(MapApplicationModel.OPERATION_MEASURE_DISTANCE);
 
-		this.moveFixedButton.setIcon(new ImageIcon("images/movefixed.gif"));
+		this.moveFixedButton.setIcon(new ImageIcon("images/movefixed.gif")); //$NON-NLS-1$
 		this.moveFixedButton.addActionListener(actionAdapter);
-		this.moveFixedButton.setToolTipText(LangModelMap.getString("MoveFixed"));
+		this.moveFixedButton.setToolTipText(LangModelMap.getString("MoveFixed")); //$NON-NLS-1$
 		this.moveFixedButton.setPreferredSize(buttonSize);
 		this.moveFixedButton.setMaximumSize(buttonSize);
 		this.moveFixedButton.setMinimumSize(buttonSize);
 		this.moveFixedButton.setName(MapApplicationModel.OPERATION_MOVE_FIXED);
 
-		this.showNodesButton.setIcon(new ImageIcon("images/nodes_visible.gif"));
+		this.showNodesButton.setIcon(new ImageIcon("images/nodes_visible.gif")); //$NON-NLS-1$
 		this.showNodesButton.addActionListener(actionAdapter);
-		this.showNodesButton.setToolTipText(LangModelMap.getString("ViewNodes"));
+		this.showNodesButton.setToolTipText(LangModelMap.getString("ViewNodes")); //$NON-NLS-1$
 		this.showNodesButton.setPreferredSize(buttonSize);
 		this.showNodesButton.setMaximumSize(buttonSize);
 		this.showNodesButton.setMinimumSize(buttonSize);
 		this.showNodesButton.setName(MapApplicationModel.MODE_NODES);
 
-		this.showIndicationButton.setIcon(new ImageIcon("images/indication_visible.gif"));
+		this.showIndicationButton.setIcon(new ImageIcon("images/indication_visible.gif")); //$NON-NLS-1$
 		this.showIndicationButton.addActionListener(actionAdapter);
-		this.showIndicationButton.setToolTipText(LangModelMap.getString("ViewIndication"));
+		this.showIndicationButton.setToolTipText(LangModelMap.getString("ViewIndication")); //$NON-NLS-1$
 		this.showIndicationButton.setPreferredSize(buttonSize);
 		this.showIndicationButton.setMaximumSize(buttonSize);
 		this.showIndicationButton.setMinimumSize(buttonSize);
 		this.showIndicationButton.setName(MapApplicationModel.MODE_INDICATION);
 
-		this.showNodeLinkToggleButton.setIcon(new ImageIcon("images/nodelinkmode.gif"));
+		this.showNodeLinkToggleButton.setIcon(new ImageIcon("images/nodelinkmode.gif")); //$NON-NLS-1$
 		this.showNodeLinkToggleButton.addActionListener(actionAdapter);
-		this.showNodeLinkToggleButton.setToolTipText(LangModelMap.getString("NodeLinkMode"));
+		this.showNodeLinkToggleButton.setToolTipText(LangModelMap.getString("NodeLinkMode")); //$NON-NLS-1$
 		this.showNodeLinkToggleButton.setPreferredSize(buttonSize);
 		this.showNodeLinkToggleButton.setMaximumSize(buttonSize);
 		this.showNodeLinkToggleButton.setMinimumSize(buttonSize);
 		this.showNodeLinkToggleButton.setName(MapApplicationModel.MODE_NODE_LINK);
 
-		this.showPhysicalToggleButton.setIcon(new ImageIcon("images/linkmode.gif"));
+		this.showPhysicalToggleButton.setIcon(new ImageIcon("images/linkmode.gif")); //$NON-NLS-1$
 		this.showPhysicalToggleButton.addActionListener(actionAdapter);
-		this.showPhysicalToggleButton.setToolTipText(LangModelMap.getString("LinkMode"));
+		this.showPhysicalToggleButton.setToolTipText(LangModelMap.getString("LinkMode")); //$NON-NLS-1$
 		this.showPhysicalToggleButton.setPreferredSize(buttonSize);
 		this.showPhysicalToggleButton.setMaximumSize(buttonSize);
 		this.showPhysicalToggleButton.setMinimumSize(buttonSize);
@@ -198,23 +198,23 @@ public final class MapToolBar extends JPanel
 
 //		this.showPhysicalToggleButton.setSelected(true);// режим по умолчанию
 
-		this.showCablePathToggleButton.setIcon(new ImageIcon("images/pathmode.gif"));
+		this.showCablePathToggleButton.setIcon(new ImageIcon("images/pathmode.gif")); //$NON-NLS-1$
 		this.showCablePathToggleButton.addActionListener(actionAdapter);
-		this.showCablePathToggleButton.setToolTipText(LangModelMap.getString("CableMode"));
+		this.showCablePathToggleButton.setToolTipText(LangModelMap.getString("CableMode")); //$NON-NLS-1$
 		this.showCablePathToggleButton.setPreferredSize(buttonSize);
 		this.showCablePathToggleButton.setMaximumSize(buttonSize);
 		this.showCablePathToggleButton.setMinimumSize(buttonSize);
 		this.showCablePathToggleButton.setName(MapApplicationModel.MODE_CABLE_PATH);
 
-		this.showTransPathToggleButton.setIcon(new ImageIcon("images/pathmode.gif"));
+		this.showTransPathToggleButton.setIcon(new ImageIcon("images/pathmode.gif")); //$NON-NLS-1$
 		this.showTransPathToggleButton.addActionListener(actionAdapter);
-		this.showTransPathToggleButton.setToolTipText(LangModelMap.getString("PathMode"));
+		this.showTransPathToggleButton.setToolTipText(LangModelMap.getString("PathMode")); //$NON-NLS-1$
 		this.showTransPathToggleButton.setPreferredSize(buttonSize);
 		this.showTransPathToggleButton.setMaximumSize(buttonSize);
 		this.showTransPathToggleButton.setMinimumSize(buttonSize);
 		this.showTransPathToggleButton.setName(MapApplicationModel.MODE_PATH);
 
-		this.undoButton.setIcon(new ImageIcon("images/undo.gif"));
+		this.undoButton.setIcon(new ImageIcon("images/undo.gif")); //$NON-NLS-1$
 		this.undoButton.addActionListener(new ActionListener() {
 		
 			public void actionPerformed(ActionEvent e) {
@@ -222,12 +222,12 @@ public final class MapToolBar extends JPanel
 			}
 		
 		});
-		this.undoButton.setToolTipText(LangModelMap.getString("Undo"));
+		this.undoButton.setToolTipText(LangModelMap.getString("Undo")); //$NON-NLS-1$
 		this.undoButton.setPreferredSize(buttonSize);
 		this.undoButton.setMaximumSize(buttonSize);
 		this.undoButton.setMinimumSize(buttonSize);
 
-		this.redoButton.setIcon(new ImageIcon("images/redo.gif"));
+		this.redoButton.setIcon(new ImageIcon("images/redo.gif")); //$NON-NLS-1$
 		this.redoButton.addActionListener(new ActionListener() {
 			
 				public void actionPerformed(ActionEvent e) {
@@ -235,20 +235,20 @@ public final class MapToolBar extends JPanel
 				}
 			
 			});
-		this.redoButton.setToolTipText(LangModelMap.getString("Redo"));
+		this.redoButton.setToolTipText(LangModelMap.getString("Redo")); //$NON-NLS-1$
 		this.redoButton.setPreferredSize(buttonSize);
 		this.redoButton.setMaximumSize(buttonSize);
 		this.redoButton.setMinimumSize(buttonSize);
 
-		this.centerObjectButton.setIcon(new ImageIcon("images/fit.gif"));
+		this.centerObjectButton.setIcon(new ImageIcon("images/fit.gif")); //$NON-NLS-1$
 		this.centerObjectButton.addActionListener(actionAdapter);
-		this.centerObjectButton.setToolTipText(LangModelMap.getString("CenterSelection"));
+		this.centerObjectButton.setToolTipText(LangModelMap.getString("CenterSelection")); //$NON-NLS-1$
 		this.centerObjectButton.setPreferredSize(buttonSize);
 		this.centerObjectButton.setMaximumSize(buttonSize);
 		this.centerObjectButton.setMinimumSize(buttonSize);
 		this.centerObjectButton.setName(MapApplicationModel.OPERATION_CENTER_SELECTION);
 
-		this.optionsButton.setIcon(new ImageIcon("images/options.gif"));
+		this.optionsButton.setIcon(new ImageIcon("images/options.gif")); //$NON-NLS-1$
 		this.optionsButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -262,13 +262,13 @@ public final class MapToolBar extends JPanel
 						MapToolBar.this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.NEED_REPAINT);
 				}
 			}); 
-		this.optionsButton.setToolTipText(LangModelMap.getString("Options"));
+		this.optionsButton.setToolTipText(LangModelMap.getString("Options")); //$NON-NLS-1$
 		this.optionsButton.setPreferredSize(buttonSize);
 		this.optionsButton.setMaximumSize(buttonSize);
 		this.optionsButton.setMinimumSize(buttonSize);
-		this.optionsButton.setName("mapViewOptions");
+		this.optionsButton.setName("mapViewOptions"); //$NON-NLS-1$
 
-		this.layersButton.setIcon(new ImageIcon("images/layers.gif"));
+		this.layersButton.setIcon(new ImageIcon("images/layers.gif")); //$NON-NLS-1$
 		this.layersButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -282,14 +282,14 @@ public final class MapToolBar extends JPanel
 						MapToolBar.this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.NEED_REPAINT);
 				}
 			}); 
-		this.layersButton.setToolTipText(LangModelMap.getString("Layers"));
+		this.layersButton.setToolTipText(LangModelMap.getString("Layers")); //$NON-NLS-1$
 		this.layersButton.setPreferredSize(buttonSize);
 		this.layersButton.setMaximumSize(buttonSize);
 		this.layersButton.setMinimumSize(buttonSize);
-		this.layersButton.setName("mapViewLayers");
+		this.layersButton.setName("mapViewLayers"); //$NON-NLS-1$
 
-		this.shotButton.setToolTipText("Снимок");
-		this.shotButton.setText("Снимок");
+		this.shotButton.setToolTipText(LangModelMap.getString("mapShot")); //$NON-NLS-1$
+		this.shotButton.setText(LangModelMap.getString("mapShot")); //$NON-NLS-1$
 		this.shotButton.setPreferredSize(buttonSize);
 		this.shotButton.setMaximumSize(buttonSize);
 		this.shotButton.setMinimumSize(buttonSize);
@@ -627,10 +627,10 @@ public final class MapToolBar extends JPanel
 		this.aModel = a;
 
 		Command command = this.aModel.getCommand(MapApplicationModel.MODE_NODES);
-		command.setParameter("button", this.showNodesButton);
+		command.setParameter("button", this.showNodesButton); //$NON-NLS-1$
 
 		command = this.aModel.getCommand(MapApplicationModel.MODE_INDICATION);
-		command.setParameter("button", this.showIndicationButton);
+		command.setParameter("button", this.showIndicationButton); //$NON-NLS-1$
 		
 		// OPERATION_HAND_PAN not accessible with descrete navigation
 //		this.aModel.setAccessible(MapApplicationModel.OPERATION_HAND_PAN, !MapPropertiesManager.isDescreteNavigation());

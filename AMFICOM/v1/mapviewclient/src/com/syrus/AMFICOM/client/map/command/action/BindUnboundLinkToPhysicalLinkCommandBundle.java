@@ -1,5 +1,5 @@
 /**
- * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.27 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: BindUnboundLinkToPhysicalLinkCommandBundle.java,v 1.28 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.28 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient 
  */
 public class BindUnboundLinkToPhysicalLinkCommandBundle extends
@@ -62,9 +62,9 @@ public class BindUnboundLinkToPhysicalLinkCommandBundle extends
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | " 
-				+ "bind " + this.unbound.getId() 
-				+ " to " + this.link.getName() + " (" + this.link.getId() + ")", 
+			getClass().getName() + "::execute() | "  //$NON-NLS-1$
+				+ "bind " + this.unbound.getId()  //$NON-NLS-1$
+				+ " to " + this.link.getName() + " (" + this.link.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$
 			Level.FINEST);
 
 		try {

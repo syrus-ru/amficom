@@ -41,14 +41,14 @@ public class UnboundLinkPopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.bindMenuItem.setText(LangModelMap.getString("Bind"));
+		this.bindMenuItem.setText(LangModelMap.getString("Bind")); //$NON-NLS-1$
 		this.bindMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				bind();
 			}
 		});
 		this.generateMenuItem
-				.setText(LangModelMap.getString("GenerateCabling"));
+				.setText(LangModelMap.getString("GenerateCabling")); //$NON-NLS-1$
 		this.generateMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				generateCabling();

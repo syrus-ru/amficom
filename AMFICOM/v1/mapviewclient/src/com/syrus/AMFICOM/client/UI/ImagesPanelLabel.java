@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanelLabel.java,v 1.3 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: ImagesPanelLabel.java,v 1.4 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,8 +22,8 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.resource.AbstractImageResource;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.3 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.4 $
  * @module commonclient_v1
  */
 public class ImagesPanelLabel extends JLabel
@@ -97,7 +97,7 @@ public class ImagesPanelLabel extends JLabel
 
 	@Override
 	public String getToolTipText() {
-		return "";//ir.description();
+		return "";//ir.description(); //$NON-NLS-1$
 	}
 
 }

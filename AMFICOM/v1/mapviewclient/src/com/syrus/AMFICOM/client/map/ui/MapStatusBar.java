@@ -1,5 +1,5 @@
 /*
- * $Id: MapStatusBar.java,v 1.19 2005/09/08 06:55:07 krupenn Exp $
+ * $Id: MapStatusBar.java,v 1.20 2005/09/16 14:53:36 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/09/08 06:55:07 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/16 14:53:36 $
  * @module mapviewclient
  */
 public final class MapStatusBar extends JPanel {
@@ -78,25 +78,25 @@ public final class MapStatusBar extends JPanel {
 		this.setBorder(BorderFactory.createEtchedBorder());
 		this.setLayout(new GridBagLayout());
 
-		this.latitudeLabel.setText(LangModelMap.getString("Latitude"));
+		this.latitudeLabel.setText(LangModelMap.getString("Latitude")); //$NON-NLS-1$
 
-		this.latitudeTextField.setText("0.0000");
+		this.latitudeTextField.setText("0.0000"); //$NON-NLS-1$
 		this.latitudeTextField.setSize(fieldSize);
 		this.latitudeTextField.setPreferredSize(fieldSize);
 		this.latitudeTextField.setMaximumSize(fieldSize);
 		this.latitudeTextField.setMinimumSize(fieldSize);
 
-		this.longitudeLabel.setText(LangModelMap.getString("Longitude"));
+		this.longitudeLabel.setText(LangModelMap.getString("Longitude")); //$NON-NLS-1$
 
-		this.longitudeField.setText("0.0000");
+		this.longitudeField.setText("0.0000"); //$NON-NLS-1$
 		this.longitudeField.setSize(fieldSize);
 		this.longitudeField.setPreferredSize(fieldSize);
 		this.longitudeField.setMaximumSize(fieldSize);
 		this.longitudeField.setMinimumSize(fieldSize);
 
-		this.scaleLabel.setText(LangModelMap.getString("Scale"));
+		this.scaleLabel.setText(LangModelMap.getString("Scale")); //$NON-NLS-1$
 
-		this.scaleField.setText("0.0");
+		this.scaleField.setText("0.0"); //$NON-NLS-1$
 		this.scaleField.setSize(fieldSize);
 		this.scaleField.setPreferredSize(fieldSize);
 		this.scaleField.setMaximumSize(fieldSize);
@@ -113,7 +113,7 @@ public final class MapStatusBar extends JPanel {
 							MapStatusBar.this.netMapViewer.setScale(scale);
 						}
 					} catch(Exception ex) {
-						System.out.println("Wrong number format");
+						System.out.println(LangModelMap.getString("Error.NumberFormat")); //$NON-NLS-1$
 					}
 				}
 			}

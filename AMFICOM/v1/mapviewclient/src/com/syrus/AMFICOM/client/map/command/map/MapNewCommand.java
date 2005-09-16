@@ -1,5 +1,5 @@
 /**
- * $Id: MapNewCommand.java,v 1.26 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: MapNewCommand.java,v 1.27 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 /**
  * создание новой карты (Map). включает в себ€ создание нового вида
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.27 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class MapNewCommand extends AbstractCommand {
@@ -42,12 +42,12 @@ public class MapNewCommand extends AbstractCommand {
 
 	@Override
 	public void execute() {
-		Log.debugMessage("Creating new map", Level.INFO);
+		Log.debugMessage("Creating new map", Level.INFO); //$NON-NLS-1$
 		this.aContext.getDispatcher().firePropertyChange(
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapNew")));
+						LangModelMap.getString("MapNew"))); //$NON-NLS-1$
 		try {
 			Identifier userId = LoginManager.getUserId();
 			Identifier domainId = LoginManager.getDomainId();
@@ -55,8 +55,8 @@ public class MapNewCommand extends AbstractCommand {
 			this.map = Map.createInstance(
 					userId, 
 					domainId, 
-					LangModelMap.getString("New"), 
-					"");
+					LangModelMap.getString("New"),  //$NON-NLS-1$
+					""); //$NON-NLS-1$
 			this.map.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
 		} catch(Exception e) {
 			e.printStackTrace();
@@ -94,7 +94,7 @@ public class MapNewCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelGeneral.getString("Finished")));
+						LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
 		setResult(Command.RESULT_OK);
 	}
 

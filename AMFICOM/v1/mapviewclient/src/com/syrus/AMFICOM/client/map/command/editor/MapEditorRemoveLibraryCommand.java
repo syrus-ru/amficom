@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveLibraryCommand.java,v 1.4 2005/09/14 10:30:44 krupenn Exp $
+ * $Id: MapEditorRemoveLibraryCommand.java,v 1.5 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -42,7 +42,7 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this, 
 							StatusMessageEvent.STATUS_MESSAGE, 
-							"Open map frame first!"));
+							LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
 			return;
 		}
 		MapLibraryTableController mapLibraryTableController = MapLibraryTableController.getInstance();

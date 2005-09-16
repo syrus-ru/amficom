@@ -1,5 +1,5 @@
 /**
- * $Id: MarkController.java,v 1.20 2005/08/12 14:49:41 arseniy Exp $
+ * $Id: MarkController.java,v 1.21 2005/09/16 14:53:34 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -34,15 +34,15 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 
 /**
  * Контроллер метки.
- * @author $Author: arseniy $
- * @version $Revision: 1.20 $, $Date: 2005/08/12 14:49:41 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.21 $, $Date: 2005/09/16 14:53:34 $
  * @module mapviewclient
  */
 public final class MarkController extends AbstractNodeController {
 	/** Имя пиктограммы. */
-	public static final String IMAGE_NAME = "mark";
+	public static final String IMAGE_NAME = "mark"; //$NON-NLS-1$
 	/** Пиктограмма. */
-	public static final String IMAGE_PATH = "images/mark.gif";
+	public static final String IMAGE_PATH = "images/mark.gif"; //$NON-NLS-1$
 
 	private static boolean needInit = true;
 	private static Identifier imageId;

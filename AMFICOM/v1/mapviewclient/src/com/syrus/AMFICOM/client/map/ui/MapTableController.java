@@ -14,15 +14,15 @@ import com.syrus.AMFICOM.map.Map;
 import com.syrus.util.Wrapper;
 
 public final class MapTableController implements Wrapper {
-	public static final String KEY_NAME = "Name";
+	public static final String KEY_NAME = "Name"; //$NON-NLS-1$
 
-	public static final String KEY_DOMAIN = "Domain";
+	public static final String KEY_DOMAIN = "Domain"; //$NON-NLS-1$
 
-	public static final String KEY_USER = "User_id";
+	public static final String KEY_USER = "User_id"; //$NON-NLS-1$
 
-	public static final String KEY_CREATED = "Created";
+	public static final String KEY_CREATED = "Created"; //$NON-NLS-1$
 
-	public static final String KEY_MODIFIED = "Modified";
+	public static final String KEY_MODIFIED = "Modified"; //$NON-NLS-1$
 
 	private List keys;
 
@@ -73,7 +73,7 @@ public final class MapTableController implements Wrapper {
 				Domain domain = StorableObjectPool.getStorableObject(map.getDomainId(), false);
 				result = domain.getName();
 			} catch(ApplicationException e) {
-				result = "";
+				result = ""; //$NON-NLS-1$
 			}
 		}
 		else
@@ -82,7 +82,7 @@ public final class MapTableController implements Wrapper {
 				SystemUser user = StorableObjectPool.getStorableObject(map.getCreatorId(), false);
 				result = user.getName();
 			} catch(ApplicationException e) {
-				result = "";
+				result = ""; //$NON-NLS-1$
 			}
 		}
 		else
@@ -109,7 +109,7 @@ public final class MapTableController implements Wrapper {
 	}
 
 	public Object getPropertyValue(final String key) {
-		Object result = "";
+		Object result = ""; //$NON-NLS-1$
 		return result;
 	}
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveLinkTypeCommand.java,v 1.6 2005/09/14 10:30:44 krupenn Exp $
+ * $Id: MapEditorRemoveLinkTypeCommand.java,v 1.7 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -44,7 +45,7 @@ public class MapEditorRemoveLinkTypeCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this, 
 							StatusMessageEvent.STATUS_MESSAGE, 
-							"Open map frame first!"));
+							LangModelMap.getString("StatusMessage.OpenMapFrameFirst"))); //$NON-NLS-1$
 			return;
 		}
 		Collection<PhysicalLinkType> topologicalLinkTypes = LinkTypeController.getTopologicalLinkTypes(mapFrame.getMap());

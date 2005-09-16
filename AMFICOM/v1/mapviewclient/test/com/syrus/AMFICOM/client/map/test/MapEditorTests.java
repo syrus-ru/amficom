@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorTests.java,v 1.8 2005/09/11 14:32:40 krupenn Exp $
+ * $Id: MapEditorTests.java,v 1.9 2005/09/16 14:53:38 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,7 +19,7 @@ public class MapEditorTests {
 
 	public static Test suite() {
 		TestSuite suite = new TestSuite(
-				"Test for com.syrus.AMFICOM.client.map.test");
+				"Test for com.syrus.AMFICOM.client.map.test"); //$NON-NLS-1$
 		//$JUnit-BEGIN$
 		suite.addTestSuite(LogicalNetLayerTestCase.class);
 

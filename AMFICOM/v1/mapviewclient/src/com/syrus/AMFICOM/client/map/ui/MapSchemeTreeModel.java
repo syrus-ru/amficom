@@ -1,5 +1,5 @@
 /**
- * $Id: MapSchemeTreeModel.java,v 1.34 2005/09/13 10:19:04 bass Exp $
+ * $Id: MapSchemeTreeModel.java,v 1.35 2005/09/16 14:53:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -86,19 +86,19 @@ import com.syrus.util.WrapperComparator;
  *             		|____ (*) "path1"
  *             		|____ (*) "path2"
  * </pre>
- * @version $Revision: 1.34 $, $Date: 2005/09/13 10:19:04 $
- * @author $Author: bass $
+ * @version $Revision: 1.35 $, $Date: 2005/09/16 14:53:36 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapSchemeTreeModel 
 		implements ChildrenFactory {
 
-	public static final String SCHEME_BRANCH = "innerschemes";
-	public static final String ELEMENT_BRANCH = "schemeelements";
-	public static final String LINK_BRANCH = "schemelinks";
-	public static final String CABLE_BRANCH = "schemecablelinks";
-	public static final String PATH_BRANCH = "schemepaths";
-	public static final String NONAME_BRANCH = "noname";
+	public static final String SCHEME_BRANCH = "innerschemes"; //$NON-NLS-1$
+	public static final String ELEMENT_BRANCH = "schemeelements"; //$NON-NLS-1$
+	public static final String LINK_BRANCH = "schemelinks"; //$NON-NLS-1$
+	public static final String CABLE_BRANCH = "schemecablelinks"; //$NON-NLS-1$
+	public static final String PATH_BRANCH = "schemepaths"; //$NON-NLS-1$
+	public static final String NONAME_BRANCH = "noname"; //$NON-NLS-1$
 
 	MapView mapView;
 
@@ -111,37 +111,37 @@ public class MapSchemeTreeModel
 	static final int IMG_SIZE = 16;
 
 	static ImageIcon placedSchemeIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/placedscheme.gif").getScaledInstance(
+			.getImage("images/placedscheme.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
 	static ImageIcon schemeIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/scheme.gif").getScaledInstance(
+			.getImage("images/scheme.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
 	static ImageIcon placedElementIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/placedelement.gif").getScaledInstance(
+			.getImage("images/placedelement.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
 	static ImageIcon elementIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/device.gif").getScaledInstance(
+			.getImage("images/device.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
 	static ImageIcon cableIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/linkmode.gif").getScaledInstance(
+			.getImage("images/linkmode.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
 	static ImageIcon pathIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/pathmode.gif").getScaledInstance(
+			.getImage("images/pathmode.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));

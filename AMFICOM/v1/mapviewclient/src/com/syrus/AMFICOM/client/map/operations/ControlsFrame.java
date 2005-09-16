@@ -1,5 +1,5 @@
 /*
- * Название: $Id: ControlsFrame.java,v 1.13 2005/08/24 08:19:58 krupenn Exp $
+ * Название: $Id: ControlsFrame.java,v 1.14 2005/09/16 14:53:35 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -31,13 +31,13 @@ import com.syrus.AMFICOM.mapview.MapView;
  * <li> Поиск элементов АМФИКОМ
  * <lI> Поиск географических объектов
  * <li> Управление отображением слоев
- * @version $Revision: 1.13 $
+ * @version $Revision: 1.14 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
  public class ControlsFrame extends JInternalFrame 
 		implements PropertyChangeListener {
-	public static final String	NAME = "controlsFrame";
+	public static final String	NAME = "controlsFrame"; //$NON-NLS-1$
 
 	BorderLayout borderLayout1 = new BorderLayout();
 
@@ -118,20 +118,20 @@ import com.syrus.AMFICOM.mapview.MapView;
 		setMaximizable(false);
 		setIconifiable(false);
 
-		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif")));
+		this.setFrameIcon(new ImageIcon(Toolkit.getDefaultToolkit().getImage("images/general.gif"))); //$NON-NLS-1$
 
-		this.setTitle("yf [th? yf [th!");
+		this.setTitle("yf [th? yf [th!"); //$NON-NLS-1$
 		this.getContentPane().setLayout(this.borderLayout1);
 		this.setSize(new Dimension(370, 629));
 		
 		this.tabbedPane.addTab(
-				"", 
-				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/search.gif")
+				"",  //$NON-NLS-1$
+				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/search.gif") //$NON-NLS-1$
 					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
 					this.searchPanel);
 		this.tabbedPane.addTab(
-				"", 
-				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_search.gif")
+				"",  //$NON-NLS-1$
+				new ImageIcon(Toolkit.getDefaultToolkit().createImage("images/map_search.gif") //$NON-NLS-1$
 					.getScaledInstance(16, 16, Image.SCALE_SMOOTH)),
 					this.mapSearchPanel);
 		

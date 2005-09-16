@@ -47,7 +47,7 @@ public final class SitePopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.attachCableInletMenuItem.setText(LangModelMap.getString("AttachCableInlet"));
+		this.attachCableInletMenuItem.setText(LangModelMap.getString("AttachCableInlet")); //$NON-NLS-1$
 		this.attachCableInletMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				try {
@@ -57,13 +57,13 @@ public final class SitePopupMenu extends MapPopupMenu {
 				}
 			}
 		});
-		this.removeMenuItem.setText(LangModelMap.getString("Delete"));
+		this.removeMenuItem.setText(LangModelMap.getString("Delete")); //$NON-NLS-1$
 		this.removeMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				removeSite();
 			}
 		});
-		this.propertiesMenuItem.setText(LangModelMap.getString("Properties"));
+		this.propertiesMenuItem.setText(LangModelMap.getString("Properties")); //$NON-NLS-1$
 		this.propertiesMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showProperties();

@@ -20,11 +20,11 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 public final class SchemeTableController extends StorableObjectWrapper<Scheme> {
-	public static final String KEY_NAME = "Name";
-	public static final String KEY_DOMAIN = "Domain";
-	public static final String KEY_USER = "User_id";
-	public static final String KEY_CREATED = "Created";
-	public static final String KEY_MODIFIED = "Modified";
+	public static final String KEY_NAME = "Name"; //$NON-NLS-1$
+	public static final String KEY_DOMAIN = "Domain"; //$NON-NLS-1$
+	public static final String KEY_USER = "User_id"; //$NON-NLS-1$
+	public static final String KEY_CREATED = "Created"; //$NON-NLS-1$
+	public static final String KEY_MODIFIED = "Modified"; //$NON-NLS-1$
 
 	private static SchemeTableController instance;
 
@@ -116,7 +116,7 @@ public final class SchemeTableController extends StorableObjectWrapper<Scheme> {
 	}
 
 	public Object getPropertyValue(final String key) {
-		Object result = "";
+		Object result = ""; //$NON-NLS-1$
 		return result;
 	}
 

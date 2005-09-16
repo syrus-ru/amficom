@@ -36,19 +36,19 @@ public class VoidElementPopupMenu extends MapPopupMenu {
 	}
 
 	private void jbInit() {
-		this.mapPropertiesMenuItem.setText(LangModelMap.getString("MapProperties"));
+		this.mapPropertiesMenuItem.setText(LangModelMap.getString("MapProperties")); //$NON-NLS-1$
 		this.mapPropertiesMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showMapProperties();
 			}
 		});
-		this.mapViewPropertiesMenuItem.setText(LangModelMap.getString("MapViewProperties"));
+		this.mapViewPropertiesMenuItem.setText(LangModelMap.getString("MapViewProperties")); //$NON-NLS-1$
 		this.mapViewPropertiesMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				showMapViewProperties();
 			}
 		});
-		this.addSiteMenuItem.setText(LangModelMap.getString("AddSite"));
+		this.addSiteMenuItem.setText(LangModelMap.getString("AddSite")); //$NON-NLS-1$
 		this.addSiteMenuItem.addActionListener(new ActionListener() {
 			public void actionPerformed(ActionEvent e) {
 				addSite();

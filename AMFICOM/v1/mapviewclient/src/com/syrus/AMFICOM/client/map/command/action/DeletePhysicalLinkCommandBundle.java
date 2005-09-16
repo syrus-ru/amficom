@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.27 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.28 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.28 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle {
@@ -59,9 +59,9 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | " 
-				+ "delete physical link " 
-				+ this.link.getName() + " (" + this.link.getId() + ")", 
+			getClass().getName() + "::execute() | "  //$NON-NLS-1$
+				+ "delete physical link "  //$NON-NLS-1$
+				+ this.link.getName() + " (" + this.link.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 		
 		// связь может быть удалена в результате атомарной команды в составе

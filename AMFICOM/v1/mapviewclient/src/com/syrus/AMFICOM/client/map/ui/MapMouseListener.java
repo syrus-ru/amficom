@@ -1,5 +1,5 @@
 /**
- * $Id: MapMouseListener.java,v 1.63 2005/09/05 13:50:18 krupenn Exp $
+ * $Id: MapMouseListener.java,v 1.64 2005/09/16 14:53:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * логического сетевого слоя operationMode. Если режим нулевой (NO_OPERATION),
  * то обработка события передается текущему активному элементу карты
  * (посредством объекта MapStrategy)
- * @version $Revision: 1.63 $, $Date: 2005/09/05 13:50:18 $
+ * @version $Revision: 1.64 $, $Date: 2005/09/16 14:53:36 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -87,7 +87,7 @@ public final class MapMouseListener implements MouseListener
 		{
 			// TODO Auto-generated catch block
 			e.printStackTrace();
-			throw new MapDataException("MapMouseListener - Constructor - Can't create robot");
+			throw new MapDataException("MapMouseListener - Constructor - Can't create robot"); //$NON-NLS-1$
 		}
 	}
 
@@ -161,7 +161,7 @@ public final class MapMouseListener implements MouseListener
 						long d = System.currentTimeMillis();
 						defaultAction(me);
 						long f = System.currentTimeMillis();
-						Log.debugMessage("defaultAction -------- " + (f - d) + " ms ---------", Level.FINE);
+						Log.debugMessage("defaultAction -------- " + (f - d) + " ms ---------", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 					} catch(MapConnectionException e2) {
 						// TODO Auto-generated catch block
 						e2.printStackTrace();
@@ -173,12 +173,12 @@ public final class MapMouseListener implements MouseListener
 				default:
 					try
 					{
-						Log.debugMessage("unknown map operation: " + mapState.getOperationMode(), Level.SEVERE);
-						throw new Exception("dummy");
+						Log.debugMessage("unknown map operation: " + mapState.getOperationMode(), Level.SEVERE); //$NON-NLS-1$
+						throw new Exception("dummy"); //$NON-NLS-1$
 					}
 					catch(Exception e)
 					{
-						Log.debugMessage("MapMouseListener::mousePressed | current execution point with call stack:", Level.SEVERE);
+						Log.debugMessage("MapMouseListener::mousePressed | current execution point with call stack:", Level.SEVERE); //$NON-NLS-1$
 						Log.debugException(e, Level.SEVERE);
 					}
 					break;
@@ -318,7 +318,7 @@ public final class MapMouseListener implements MouseListener
 			long d = System.currentTimeMillis();
 			this.netMapViewer.getLogicalNetLayer().sendSelectionChangeEvent();
 			long f = System.currentTimeMillis();
-			Log.debugMessage("sendSelectionChangeEvent -------- " + (d0 - d1) + " " + (d - d0) + " " + (f - d) + " ms ---------", Level.FINE);
+			Log.debugMessage("sendSelectionChangeEvent -------- " + (d0 - d1) + " " + (d - d0) + " " + (f - d) + " ms ---------", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
 		}
 		else
 		if (SwingUtilities.isRightMouseButton(me))
@@ -462,12 +462,12 @@ public final class MapMouseListener implements MouseListener
 					default:
 						try
 						{
-							Log.debugMessage("unknown map operation: " + mapState.getOperationMode(), Level.SEVERE);
-							throw new Exception("dummy");
+							Log.debugMessage("unknown map operation: " + mapState.getOperationMode(), Level.SEVERE); //$NON-NLS-1$
+							throw new Exception("dummy"); //$NON-NLS-1$
 						}
 						catch(Exception e)
 						{
-							Log.debugMessage("MapMouseListener::mouseReleased | current execution point with call stack:", Level.SEVERE);
+							Log.debugMessage("MapMouseListener::mouseReleased | current execution point with call stack:", Level.SEVERE); //$NON-NLS-1$
 							Log.debugException(e, Level.SEVERE);
 						}
 						break;
@@ -612,11 +612,11 @@ public final class MapMouseListener implements MouseListener
 		logicalNetLayer.getContext().getApplicationModel().fireModelChanged();
 		JOptionPane.showMessageDialog(
 				Environment.getActiveWindow(),
-				LangModelMap.getString("Distance") 
-					+ " = " 
+				LangModelMap.getString("Distance")  //$NON-NLS-1$
+					+ " = "  //$NON-NLS-1$
 					+ MapPropertiesManager.getDistanceFormat().format(distance)
 					+ MapPropertiesManager.getMetric(),
-				LangModelMap.getString("MeasureDistance"),
+				LangModelMap.getString("MeasureDistance"), //$NON-NLS-1$
 				JOptionPane.PLAIN_MESSAGE);
 		this.netMapViewer.repaint(false);
 	}

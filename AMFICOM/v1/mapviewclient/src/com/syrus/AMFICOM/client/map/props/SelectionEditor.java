@@ -64,12 +64,12 @@ public class SelectionEditor extends DefaultStorableObjectEditor {
 		this.elementsList = new WrapperedList(controller, SimpleMapElementController.KEY_NAME, SimpleMapElementController.KEY_NAME);
 
 		this.jPanel.setLayout(this.gridBagLayout1);
-		this.jPanel.setName(LangModelGeneral.getString("Properties"));
+		this.jPanel.setName(LangModelGeneral.getString("Properties")); //$NON-NLS-1$
 
-		this.countLabel.setText(LangModelMap.getString("SelectionCount"));
-		this.longLabel.setText(LangModelMap.getString("Longitude"));
-		this.latLabel.setText(LangModelMap.getString("Latitude"));
-		this.elementsLabel.setText(LangModelMap.getString("Elements"));
+		this.countLabel.setText(LangModelMap.getString("SelectionCount")); //$NON-NLS-1$
+		this.longLabel.setText(LangModelMap.getString("Longitude")); //$NON-NLS-1$
+		this.latLabel.setText(LangModelMap.getString("Latitude")); //$NON-NLS-1$
+		this.elementsLabel.setText(LangModelMap.getString("Elements")); //$NON-NLS-1$
 		this.elementsList.setPreferredSize(new Dimension(MapVisualManager.DEF_WIDTH, MapVisualManager.DEF_HEIGHT * 4));
 
 		this.commitButton.setToolTipText(LangModelGeneral.getString(ResourceKeys.I18N_COMMIT));
@@ -220,11 +220,11 @@ public class SelectionEditor extends DefaultStorableObjectEditor {
 
 		if(this.selection == null) {
 			this.longTextField.setEnabled(false);
-			this.longTextField.setText("");
+			this.longTextField.setText(""); //$NON-NLS-1$
 			this.latTextField.setEnabled(false);
-			this.latTextField.setText("");
+			this.latTextField.setText(""); //$NON-NLS-1$
 
-			this.countTextField.setText("");
+			this.countTextField.setText(""); //$NON-NLS-1$
 		}
 		else {
 			Set elements = this.selection.getElements();

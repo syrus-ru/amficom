@@ -1,5 +1,5 @@
 /**
- * $Id: CreateSiteCommandAtomic.java,v 1.29 2005/08/31 13:10:52 krupenn Exp $
+ * $Id: CreateSiteCommandAtomic.java,v 1.30 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/08/31 13:10:52 $
+ * @version $Revision: 1.30 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  */
 public class CreateSiteCommandAtomic extends MapActionCommand {
@@ -74,10 +74,10 @@ public class CreateSiteCommandAtomic extends MapActionCommand {
 	public void execute() {
 		try {
 			Log.debugMessage(
-				getClass().getName() + "::execute() | "
-					+ "create site node of type "
+				getClass().getName() + "::execute() | " //$NON-NLS-1$
+					+ "create site node of type " //$NON-NLS-1$
 					+ this.type.getName() 
-					+ " (" + this.type.getId() + ")", 
+					+ " (" + this.type.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 			if(!getLogicalNetLayer().getContext().getApplicationModel()
 					.isEnabled(MapApplicationModel.ACTION_EDIT_MAP))

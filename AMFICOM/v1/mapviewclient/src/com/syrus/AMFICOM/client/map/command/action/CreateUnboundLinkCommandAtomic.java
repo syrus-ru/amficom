@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandAtomic.java,v 1.21 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: CreateUnboundLinkCommandAtomic.java,v 1.22 2005/09/16 14:53:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  * действие
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/16 14:53:32 $
  * @module mapviewclient
  */
 public class CreateUnboundLinkCommandAtomic extends MapActionCommand {
@@ -52,11 +52,11 @@ public class CreateUnboundLinkCommandAtomic extends MapActionCommand {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-			getClass().getName() + "::execute() | "
-				+ "create UnboundLink with start at node " 
-				+ this.startNode.getName() + " (" + this.startNode.getId() 
-				+ ") and end at node " + this.endNode.getName() 
-				+ " (" + this.endNode.getId() + ")", 
+			getClass().getName() + "::execute() | " //$NON-NLS-1$
+				+ "create UnboundLink with start at node "  //$NON-NLS-1$
+				+ this.startNode.getName() + " (" + this.startNode.getId()  //$NON-NLS-1$
+				+ ") and end at node " + this.endNode.getName()  //$NON-NLS-1$
+				+ " (" + this.endNode.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 			Level.FINEST);
 
 		this.map = this.logicalNetLayer.getMapView().getMap();

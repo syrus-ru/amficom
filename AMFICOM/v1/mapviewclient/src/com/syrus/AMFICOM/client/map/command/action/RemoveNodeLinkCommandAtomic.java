@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveNodeLinkCommandAtomic.java,v 1.13 2005/08/26 15:39:54 krupenn Exp $
+ * $Id: RemoveNodeLinkCommandAtomic.java,v 1.14 2005/09/16 14:53:33 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
  * удаление фрагмента линии связи из карты - атомарное действие
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.13 $, $Date: 2005/08/26 15:39:54 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/16 14:53:33 $
  * @module mapviewclient
  */
 public class RemoveNodeLinkCommandAtomic extends MapActionCommand {
@@ -39,10 +39,10 @@ public class RemoveNodeLinkCommandAtomic extends MapActionCommand {
 	@Override
 	public void execute() {
 		Log.debugMessage(
-				getClass().getName() + "::execute() | "
-					+ "remove node link "
+				getClass().getName() + "::execute() | " //$NON-NLS-1$
+					+ "remove node link " //$NON-NLS-1$
 					+ this.nodeLink.getName()
-					+ " (" + this.nodeLink.getId() + ")", 
+					+ " (" + this.nodeLink.getId() + ")",  //$NON-NLS-1$ //$NON-NLS-2$
 				Level.FINEST);
 
 		this.logicalNetLayer.getMapView().getMap()
