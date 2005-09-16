@@ -21,6 +21,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.UI.ColorChooserComboBox;
 import com.syrus.AMFICOM.client.UI.LineThicknessComboBox;
 import com.syrus.AMFICOM.client.map.MapPropertiesManager;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
@@ -213,7 +214,7 @@ public class MapOptionsDialog extends JDialog
 		this.showNodeNamesCheckBox.setActionCommand("showNodeNamesCheckBox"); //$NON-NLS-1$
 		this.showPhysicalNodesCheckBox.setText(LangModelMap.getString("MapOptionsDialog.ShowNodes")); //$NON-NLS-1$
 
-		this.okButton.setText(LangModelMap.getString("MapOptionsDialog.Button.Apply")); //$NON-NLS-1$
+		this.okButton.setText(LangModelMap.getString("Button.Apply")); //$NON-NLS-1$
 		this.okButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
@@ -221,7 +222,7 @@ public class MapOptionsDialog extends JDialog
 					ok();
 				}
 			});
-		this.cancelButton.setText(LangModelMap.getString("MapOptionsDialog.Button.Cancel")); //$NON-NLS-1$
+		this.cancelButton.setText(LangModelGeneral.getString("Button.Cancel")); //$NON-NLS-1$
 		this.cancelButton.addActionListener(new ActionListener()
 			{
 				public void actionPerformed(ActionEvent e)
