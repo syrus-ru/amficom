@@ -10,7 +10,6 @@ import java.awt.event.ActionListener;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.util.Arrays;
-import java.util.Collection;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
@@ -30,18 +29,23 @@ import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JScrollPane;
+import javax.swing.SwingUtilities;
 import javax.swing.UIDefaults;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.Plugger;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -52,11 +56,10 @@ import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MeasurementSetupWrapper;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
-import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
-public class TestParametersPanel implements PropertyChangeListener {
+final class TestParametersPanel implements PropertyChangeListener {
 
 	ApplicationContext		aContext;
 	SchedulerModel			schedulerModel;
@@ -115,7 +118,8 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 				public Object createValue(UIDefaults table) {
 					return (ParametersTestPanel) Plugger.reflectClass(className,
-						new Class[] { ApplicationContext.class}, new Object[] { TestParametersPanel.this.aContext});
+						new Class[] { ApplicationContext.class, TestParametersPanel.class}, 
+						new Object[] { TestParametersPanel.this.aContext, TestParametersPanel.this});
 				}
 			});
 
@@ -126,7 +130,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 	private void createGUI() {
 		final AnalysisType[] analysisTypes = AnalysisType.values();
 
-		Comparator<AnalysisType> comparator = new Comparator<AnalysisType>() {
+		final Comparator<AnalysisType> comparator = new Comparator<AnalysisType>() {
 			public int compare(AnalysisType at1, AnalysisType at2) {
 				return at1.getDescription().compareTo(at2.getDescription());
 			}
@@ -179,21 +183,31 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 		this.useAnalysisSetupsCheckBox = new JCheckBox(LangModelSchedule.getString("Text.MeasurementParameter.WithAnalysisParameters"));
 		this.useAnalysisSetupsCheckBox.addActionListener(new ActionListener() {
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(final ActionEvent e) {
 				final JCheckBox checkBox = (JCheckBox) e.getSource();
 				WrapperedListModel<MeasurementSetup> wrapperedListModel = TestParametersPanel.this.testSetups.getModel();
-				Object selectedValue = TestParametersPanel.this.testSetups.getSelectedValue();
-				int selectedIndex = TestParametersPanel.this.testSetups.getSelectedIndex();
-				TestParametersPanel.this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);
+				Object selectedValue = null;
+				if (!TestParametersPanel.this.measurementSetupId.isVoid()) {
+					try {
+						assert Log.debugMessage(".actionPerformed | " + TestParametersPanel.this.measurementSetupId, Log.DEBUGLEVEL10);
+						selectedValue = StorableObjectPool.getStorableObject(TestParametersPanel.this.measurementSetupId, true);
+					} catch (final ApplicationException e1) {
+						AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+						return;
+					}
+				}
+				
+				TestParametersPanel.this.testSetups.clearSelection();
 
-				List<MeasurementSetup> list;
+				final List<MeasurementSetup> list;
 				final boolean selected = checkBox.isSelected();
 				if (selected) {
 					list = TestParametersPanel.this.msListAnalysisOnly;
 				} else {
 					list = TestParametersPanel.this.msList;
 				}
-
+				
+				assert Log.debugMessage(".actionPerformed | selectedValue " + selectedValue, Log.DEBUGLEVEL10);
 				wrapperedListModel.setElements(list);
 				if (selectedValue != null) {
 					TestParametersPanel.this.testSetups.setSelectedValue(selectedValue, true);
@@ -201,13 +215,13 @@ public class TestParametersPanel implements PropertyChangeListener {
 
 				TestParametersPanel.this.analysisComboBox.setEnabled(selected);
 				if (!selected) {
-					TestParametersPanel.this.selectAnalysisType(TestParametersPanel.this.analysisComboBox, null, false);
+					TestParametersPanel.this.selectAnalysisType(TestParametersPanel.this.analysisComboBox, 
+						AnalysisType.UNKNOWN, 
+						false);
 				}
 			}
 		});
 
-// this.patternPanel.add(new JLabel(LangModelSchedule.getString("Use setup") +
-// ':'), gbc);
 		this.patternPanel.add(this.useAnalysisSetupsCheckBox, gbc);
 
 		this.analysisLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Analysis")); //$NON-NLS-1$
@@ -227,7 +241,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 						final Set<Test> tests = StorableObjectPool.getStorableObjects(selectedTestIds, true);
 						for (final Test test : tests) {
 							if (test.isChanged()) {
-								test.setAnalysisType(analysisType != null ? analysisType : null);
+								test.setAnalysisType(analysisType);
 							}
 						}
 					} catch (final ApplicationException e1) {
@@ -237,32 +251,31 @@ public class TestParametersPanel implements PropertyChangeListener {
 			}
 		});
 
+		this.measurementSetupId = Identifier.VOID_IDENTIFIER;
 		this.testSetups = new WrapperedList<MeasurementSetup>(MeasurementSetupWrapper.getInstance(),
 				StorableObjectWrapper.COLUMN_DESCRIPTION,
 				StorableObjectWrapper.COLUMN_ID);
 		this.testSetups.setEnabled(false);
+		this.testSetups.setAutoscrolls(true);
 		this.testSetups.addListSelectionListener(new ListSelectionListener() {
 
 			public void valueChanged(final ListSelectionEvent e) {
-
-				final MeasurementSetup measurementSetup = (MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
-
+				
+				final MeasurementSetup measurementSetup = 
+					(MeasurementSetup) TestParametersPanel.this.testSetups.getSelectedValue();
+				
 				if (TestParametersPanel.this.parametersTestPanel != null) {
-					new Thread() {
-						@Override
+					SwingUtilities.invokeLater(new Runnable() {
+						
 						public void run() {
-							TestParametersPanel.this.parametersTestPanel.setSet(measurementSetup != null
-									? measurementSetup.getParameterSet()
-										: null);
+							TestParametersPanel.this.parametersTestPanel.setMeasurementSetup(measurementSetup);
 						}
-					}.start();
+					});
 				}
 
 				if (TestParametersPanel.this.propertyChangeEvent != null) {
 					return;
 				}
-
-				TestParametersPanel.this.measurementSetupId = measurementSetup != null ? measurementSetup.getId() : null;
 
 				if (measurementSetup != null) {
 					final Set<Identifier> selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
@@ -276,7 +289,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 									test.setMeasurementSetupIds(measurementSetupIdSet);
 								}
 							}
-						} catch (ApplicationException e1) {
+						} catch (final ApplicationException e1) {
 							AbstractMainFrame.showErrorMessage(TestParametersPanel.this.parametersTestPanel, e1);
 						}
 					}
@@ -284,6 +297,7 @@ public class TestParametersPanel implements PropertyChangeListener {
 			}
 		});
 		final JScrollPane scroll = new JScrollPane(this.testSetups);
+		scroll.setAutoscrolls(true);
 		gbc.weighty = 1.0;
 		this.patternPanel.add(scroll, gbc);
 
@@ -312,99 +326,85 @@ public class TestParametersPanel implements PropertyChangeListener {
 	}
 
 	public MeasurementSetup getMeasurementSetup() {
-		MeasurementSetup measurementSetup1 = null;
 		if (this.useSetupsCheckBox.isSelected()) {
-			measurementSetup1 = (MeasurementSetup) this.testSetups.getSelectedValue();
-			if (measurementSetup1 == null) {
+			final MeasurementSetup measurementSetup = (MeasurementSetup) this.testSetups.getSelectedValue();
+			if (measurementSetup == null) {
 				JOptionPane.showMessageDialog(this.patternPanel,
 						LangModelSchedule.getString("Error.HaveNotChoosenMeasurementPattern"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
 						JOptionPane.OK_OPTION);
+				this.schedulerModel.setBreakData();
 				return null;
 			}
+			return measurementSetup;
 		}
-		return measurementSetup1;
-	}
-
-	public ParameterSet getSet() {
-		ParameterSet set = null;
-		if (!this.useSetupsCheckBox.isSelected()) {
-			set = this.parametersTestPanel != null ? this.parametersTestPanel.getSet() : null;
-		}
-		return set;
-	}
-
-	public void setMeasurementSetup(final MeasurementSetup measurementSetup) {
-//		Log.debugMessage("TestParametersPanel.setMeasurementSetup | "
-//				+ (measurementSetup != null ? measurementSetup.getId() : null), Level.FINEST);		
-
-		this.testSetups.setSelectedValue(null, false);
 		
-		this.measurementSetupId = measurementSetup != null ? measurementSetup.getId() : null;
-//		System.out.println("TestParametersPanel.setMeasurementSetup() | " + this.testSetups.getSelectedIndex());
-		if (measurementSetup != null) {
-			this.testSetups.setSelectedValue(measurementSetup, true);
-//			this.setSet(measurementSetup.getParameterSet());
-		} else {
-			int selectedIndex = this.testSetups.getSelectedIndex();
-			this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);
-//			this.setSet(null);
+		// otherwise 
+		
+		try {
+			return this.parametersTestPanel != null ? this.parametersTestPanel.getMeasurementSetup() : null;
+		} catch (final CreateObjectException e) {
+			this.schedulerModel.setBreakData();
+			AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.CannotCreateMeasurementSetup"));
+			return null;
+		}
+	}
+
+	public void refreshMeasurementSetup(final MeasurementSetup measurementSetup) {
+		final WrapperedListModel<MeasurementSetup> wrapperedListModel = 
+			this.testSetups.getModel();
+		
+		wrapperedListModel.sort();
+		
+		this.setMeasurementSetup(measurementSetup);
+	}
+	
+	
+	public void setMeasurementSetup(final MeasurementSetup measurementSetup) {
+		this.testSetups.clearSelection();
+		this.measurementSetupId = measurementSetup != null ? measurementSetup.getId() : Identifier.VOID_IDENTIFIER;
+		if (measurementSetup == null || this.msList == null) {
 			return;
 		}
-//		System.out.println("TestParametersPanel.setMeasurementSetup() | " + this.testSetups.getSelectedIndex());
-		
-//		if (this.measurementSetupId != null && measurementSetup != null
-//				&& this.measurementSetupId.equals(measurementSetup.getId()) || this.msList == null) 
-		{
-//			 Log.debugMessage("TestParametersPanel.setMeasurementSetup | return ", Level.FINEST);
-			 if (this.msList == null) {
-				 return;
-			 }
-			
-		}
-		
-//		Log.debugMessage("TestParametersPanel.setMeasurementSetup | measurementSetupId " + measurementSetupId, Log.FINEST);
 
-		{
-			boolean exist = false;
-			for(MeasurementSetup ms : this.msList) {
-				if (ms.getId().equals(this.measurementSetupId)) {
-					exist = true;
-					break;
-				}
-			}
-			if (!exist) {
-				this.msList.add(measurementSetup);
-				// if total list doesn't contains ms, and ms with analysis - add to analysis ms list
-				if(measurementSetup.getCriteriaSet() != null &&
-						measurementSetup.getEtalon() != null &&
-						measurementSetup.getThresholdSet() != null) {
-					this.msListAnalysisOnly.add(measurementSetup);
-				}
-				
-				this.testSetups.setSelectedValue(measurementSetup, true);
-			}
-		}
-		
-		boolean params = this.useAnalysisSetupsCheckBox.isSelected() && 
-			this.testSetups.getSelectedIndex() < 0;
-		
-		if (params) {
-			if (this.useAnalysisSetupsCheckBox.isSelected()) {
-				this.useAnalysisSetupsCheckBox.doClick();
-			}
-			this.testSetups.setSelectedValue(measurementSetup, true);			
-		}
-		
 		if (!this.useSetupsCheckBox.isSelected()) {
 			this.useSetupsCheckBox.doClick();
 		}
+		
+		final boolean analysisSetupsSelected = this.useAnalysisSetupsCheckBox.isSelected();
+		final boolean measurementSetupWithAnalysis = 
+			measurementSetup.getCriteriaSet() != null &&
+			measurementSetup.getEtalon() != null &&
+			measurementSetup.getThresholdSet() != null;
+
+		if (analysisSetupsSelected && 
+			!measurementSetupWithAnalysis) {
+			this.useAnalysisSetupsCheckBox.doClick();
+		}
+		
+		final WrapperedListModel<MeasurementSetup> wrapperedListModel = 
+			this.testSetups.getModel();
+		
+		if (!this.msList.contains(measurementSetup)) {
+			this.msList.add(measurementSetup);
+			// if total list doesn't contains ms, and ms with analysis - add to analysis ms list
+			if(measurementSetupWithAnalysis) {
+				this.msListAnalysisOnly.add(measurementSetup);
+				if (analysisSetupsSelected) {
+					wrapperedListModel.addElement(measurementSetup);					
+				}
+			}
+
+			if (!analysisSetupsSelected) {
+				wrapperedListModel.addElement(measurementSetup);
+			}			
+		}		
+		
+		if (this.testSetups.getSelectedValue() == null) {
+			this.testSetups.setSelectedValue(measurementSetup, true);
+		}
 	}
 
-	public void setMeasurementSetups(Collection<MeasurementSetup> measurementSetups) {
-
-		// Log.debugMessage("TestParametersPanel.setMeasurementSetups | ",
-		// Level.FINEST);
-
+	void setMeasurementSetups(final Set<MeasurementSetup> measurementSetups) {
 		if (this.msList == null) {
 			this.msList = new LinkedList<MeasurementSetup>();
 		} else {
@@ -426,10 +426,10 @@ public class TestParametersPanel implements PropertyChangeListener {
 			}
 		}
 
-		final WrapperedListModel<MeasurementSetup> wrapperedListModel = this.testSetups.getModel();
+		final WrapperedListModel<MeasurementSetup> wrapperedListModel = 
+			this.testSetups.getModel();
 
-		int selectedIndex = this.testSetups.getSelectedIndex();
-		this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);
+		this.testSetups.clearSelection();
 
 		if (this.useAnalysisSetupsCheckBox.isSelected()) {
 			wrapperedListModel.setElements(this.msListAnalysisOnly);
@@ -440,91 +440,108 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.testSetups.setEnabled(true);
 		this.useAnalysisSetupsCheckBox.setEnabled(true);
 
-		if (this.measurementSetupId != null) {
+		this.selectAnalysisType(this.analysisComboBox, (AnalysisType) this.analysisComboBox.getSelectedItem(), true);
+		
+		if (!this.measurementSetupId.isVoid()) {
 			try {
 				this.setMeasurementSetup((MeasurementSetup) StorableObjectPool.getStorableObject(this.measurementSetupId, true));
-			} catch (ApplicationException e) {
+			} catch (final ApplicationException e) {
 				JOptionPane.showMessageDialog(this.patternPanel,
-						LangModelSchedule.getString("Error.Text.CannotGetObject"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
-						JOptionPane.OK_OPTION);
+					LangModelGeneral.getString("Error.CannotAcquireObject"), 
+					LangModelGeneral.getString("Error"),
+					JOptionPane.OK_OPTION);
+			}
+		}		
+	}
+
+	private void refreshMeasurementSetups() {
+		CommonUIUtilities.invokeAsynchronously(new Runnable() {
+
+			public void run() {
+				try {
+					TestParametersPanel.this.setMeasurementSetups(TestParametersPanel.this.schedulerModel.getMeasurementSetups());
+				} catch (final ApplicationException e) {
+					AbstractMainFrame.showErrorMessage(e.getMessage());
+				}
+			}
+			
+		}, LangModelGeneral.getString("Message.Information.PlsWait"));
+	}
+	
+	private void refreshMeasurementSetup() throws ApplicationException {
+		final Test selectedTest = this.schedulerModel.getSelectedTest();
+		final Set<Identifier> measurementSetupIds = selectedTest.getMeasurementSetupIds();
+		if (!measurementSetupIds.isEmpty()) {
+			final Identifier mainMeasurementSetupId = measurementSetupIds.iterator().next();
+			final MeasurementSetup measurementSetup = 
+				StorableObjectPool.getStorableObject(mainMeasurementSetupId, true);
+			if (measurementSetup != null) {
+				this.setMeasurementSetup(measurementSetup);
 			}
 		}
-
-		this.selectAnalysisType(this.analysisComboBox, (AnalysisType) this.analysisComboBox.getSelectedItem(), true);
 	}
+	
+	private void changeMonitoredElement(final Identifier monitoredElementId) 
+	throws ApplicationException {
+		final MonitoredElement me = StorableObjectPool.getStorableObject(monitoredElementId, true);
+		final MeasurementPort port = StorableObjectPool.getStorableObject(me.getMeasurementPortId(), true);
+		this.switchPanel.removeAll();
 
-	public void setSet(final ParameterSet set) {
+		this.parametersTestPanel = (ParametersTestPanel) this.panels.get(port.getType().getCodename());
 		if (this.parametersTestPanel != null) {
-			 this.parametersTestPanel.setSet(set);
+			this.parametersTestPanel.setMonitoredElement(me);
+			this.switchPanel.add(this.parametersTestPanel, "");
+			this.patternPanel.revalidate();
+			this.parametersTestPanel.setEnableEditing(!this.useSetupsCheckBox.isSelected());
 		}
 	}
 
-	public void propertyChange(PropertyChangeEvent evt) {
+	public void propertyChange(final PropertyChangeEvent evt) {
 		this.propertyChangeEvent = evt;
-		// String commandName = ae.getActionCommand();
-		String propertyName = evt.getPropertyName();
-		Object newValue = evt.getNewValue();
-		// Object obj = ae.getSource();
-		// Environment.log(Environment.LOG_LEVEL_INFO, "commandName:" +
-		// commandName, getClass().getName());
+		final String propertyName = evt.getPropertyName();
+		final Object newValue = evt.getNewValue();
 		if (propertyName.equals(SchedulerModel.COMMAND_CHANGE_ME_TYPE)) {
-			Identifier meId = (Identifier) evt.getNewValue();
 			try {
-				MonitoredElement me = (MonitoredElement) StorableObjectPool.getStorableObject(meId, true);
-				MeasurementPort port = (MeasurementPort) StorableObjectPool.getStorableObject(
-					me.getMeasurementPortId(), true);
-				this.switchPanel.removeAll();
-
-				this.parametersTestPanel = (ParametersTestPanel) this.panels.get(port.getType().getCodename());
-				if (this.parametersTestPanel != null) {
-					this.parametersTestPanel.setMonitoredElement(me);
-					this.switchPanel.add(this.parametersTestPanel, "");
-					this.patternPanel.revalidate();
-					this.parametersTestPanel.setEnableEditing(!this.useSetupsCheckBox.isSelected());
-				}
-			} catch (ApplicationException e) {
-				AbstractMainFrame.showErrorMessage(this.patternPanel, e);
+				this.changeMonitoredElement((Identifier) evt.getNewValue());
+			} catch (final ApplicationException e) {
+				AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 			}
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_ANALYSIS_TYPE)) {
 			this.selectAnalysisType(this.analysisComboBox, (AnalysisType) newValue, true);
+		} else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_MEASUREMENT_SETUP)){
+			try {
+				this.refreshMeasurementSetup();
+			} catch (final ApplicationException e) {
+				AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+			}					
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP)) {
 			this.setMeasurementSetup((MeasurementSetup) newValue);
 		} else if (propertyName.equals(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS)) {
-			this.setMeasurementSetups((Collection) newValue);
-		} 
-//		else if (propertyName.equals(SchedulerModel.COMMAND_SET_SET)) {
-//			this.setSet((ParameterSet) newValue);
-//		} 
-		else if (propertyName.equals(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE)) {
-			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_ANALYSIS_TYPE,
-																		null, this.getAnalysisType()));
+			this.refreshMeasurementSetups();
+		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE)) {
+			this.dispatcher.firePropertyChange(
+				new PropertyChangeEvent(this, 
+					SchedulerModel.COMMAND_SET_ANALYSIS_TYPE,
+					null, 
+					this.getAnalysisType()));
 		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP)) {
 			MeasurementSetup measurementSetup1 = getMeasurementSetup();
 			if (measurementSetup1 != null) {
-				this.dispatcher
-						.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP,
-																	null, measurementSetup1));
+				this.dispatcher.firePropertyChange(
+					new PropertyChangeEvent(this, 
+						SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP,
+						null, 
+						measurementSetup1));
 			}
 		} 
-//		else if (propertyName.equals(SchedulerModel.COMMAND_GET_SET)) {
-//			ParameterSet set = getSet();
-//			if (set != null) {
-//				this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_SET, null,
-//																			set));
-//			}
-//		}
-		else if (propertyName.equals(SchedulerModel.COMMAND_ADD_NEW_MEASUREMENT_SETUP)) {
-			int selectedIndex = this.testSetups.getSelectedIndex();
-			this.testSetups.removeSelectionInterval(selectedIndex, selectedIndex);
-			this.setMeasurementSetup((MeasurementSetup) evt.getNewValue());
-		} 
+
 		this.propertyChangeEvent = null;
 	}
 
 	public JComponent getComponent() {
 		return this.patternPanel;
 	}
-
+	
 	public void unregisterDispatcher() {
 		this.dispatcher.removePropertyChangeListener(SchedulerModel.COMMAND_CHANGE_ME_TYPE, this);
 	}
@@ -535,19 +552,17 @@ public class TestParametersPanel implements PropertyChangeListener {
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_ANALYSIS_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUP, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_MEASUREMENT_SETUPS, this);
-//		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_SET, this);
+		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_MEASUREMENT_SETUP, this);
 
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_ANALYSIS_TYPE, this);
 		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_MEASUREMENT_SETUP, this);
-//		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_SET, this);
-
-		this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_ADD_NEW_MEASUREMENT_SETUP, this);
 
 	}
 
-	synchronized void selectAnalysisType(	final JComboBox cb,
+	synchronized void selectAnalysisType(final JComboBox cb,
 	                                 	final AnalysisType analysisType,
 	                                 	final boolean changeStatus) {
+		assert analysisType != null : ErrorMessages.NON_NULL_EXPECTED;
 		cb.setSelectedItem(analysisType);
 		AnalysisType selectedItem = (AnalysisType) cb.getSelectedItem();		
 		if (changeStatus && selectedItem != AnalysisType.UNKNOWN

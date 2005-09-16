@@ -9,7 +9,9 @@ import java.awt.GridBagConstraints;
 import java.awt.GridBagLayout;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.beans.PropertyChangeEvent;
+import java.awt.event.FocusAdapter;
+import java.awt.event.FocusEvent;
+import java.awt.event.FocusListener;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
@@ -33,7 +35,6 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
@@ -61,7 +62,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/09/14 17:39:22 $
+ * @version $Revision: 1.76 $, $Date: 2005/09/16 15:00:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -127,6 +128,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	
 	// UI items begin
+	private JLabel			descriptionLabel;
 	private JLabel			refractLabel;
 	private JLabel			waveLengthLabel;
 	private JLabel			countOfAverageOutLabel;
@@ -134,6 +136,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	private JLabel			maxDistanceLabel;
 	private JLabel 			pulseWidthLabel;
 	
+	private JTextField		descriptionField;
 	private JTextField		refractTextField;
 	private JComboBox		waveLengthComboBox;
 	JComboBox				maxDistanceComboBox;
@@ -160,19 +163,23 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	Identifier				setId;
 
 	long					maxPoints;
-	private Map<Identifier, Identifier>				unchangedMeasurementSetupNewMap	= null;
+	
+	private String oldDescription;
 
 	private Map<ParameterType, String>				unchangedObjects;
-	private Dispatcher		dispatcher;
+	private final TestParametersPanel	testParametersPanel;
+	private MeasurementSetup	measurementSetup;
+	
 
-	public ReflectometryTestPanel(final ApplicationContext aContext) {
+	public ReflectometryTestPanel(final ApplicationContext aContext,
+	                              final TestParametersPanel testParametersPanel) {
 		super(aContext);
-		this.dispatcher = aContext.getDispatcher();
+		this.testParametersPanel = testParametersPanel;
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		this.createGUI();
 	}
 
-	public synchronized ParameterSet getSet() {
+	private synchronized ParameterSet getSet() {
 		ParameterSet parameterSet = null;
 			synchronized (this) {
 			if (this.setId != null) {
@@ -291,7 +298,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						parameterSet.setParameters(parameters);
 					
 					}
-				} catch (ApplicationException e) {
+				} catch (final ApplicationException e) {
 					AbstractMainFrame.showErrorMessage(this, e);
 					this.setId = null;
 				}
@@ -528,6 +535,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	
 	@Override
 	public void setEnableEditing(final boolean enable) {
+		this.descriptionLabel.setEnabled(enable);
 		this.refractLabel.setEnabled(enable);
 		this.waveLengthLabel.setEnabled(enable);
 		this.countOfAverageOutLabel.setEnabled(enable);
@@ -535,6 +543,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.maxDistanceLabel.setEnabled(enable);
 		this.pulseWidthLabel.setEnabled(enable);
 
+		this.descriptionField.setEnabled(enable);
 		this.refractTextField.setEnabled(enable);
 		this.waveLengthComboBox.setEnabled(enable);
 		this.maxDistanceComboBox.setEnabled(enable);
@@ -784,58 +793,77 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					System.err.println(LangModelSchedule.getString("Error.SelectedWaveLengthIsNull")); //$NON-NLS-1$
 				}
 
-			} catch (ApplicationException ae) {
+			} catch (final ApplicationException ae) {
 				AbstractMainFrame.showErrorMessage(this, ae);
 			}
 		}
 		this.skip = false;
 	}
 
+	public void setMeasurementSetup(final MeasurementSetup measurementSetup) {
+		this.measurementSetup = measurementSetup;
+		this.setSet(measurementSetup != null ? measurementSetup.getParameterSet() : null);
+		this.setDescription(measurementSetup != null ? measurementSetup.getDescription() : "");
+	}
+	
+	public MeasurementSetup getMeasurementSetup() throws CreateObjectException {
+		return this.schedulerModel.createMeasurementSetup(this.getSet(), 
+				getDescription());
+	}
+	
 	synchronized void refreshTestsSet() {
 		if (this.skip) {
 			return;
 		}
 		
-		final Set<Identifier> selectedTestIds = this.schedulerModel.getSelectedTestIds();
-		if (selectedTestIds != null && !selectedTestIds.isEmpty()) {
-			final ParameterSet parameterSet = this.getSet();
-			if (parameterSet != null && parameterSet.isChanged()) {
+		final ParameterSet parameterSet = this.getSet();
+		final String description = this.getDescription();
+		if (parameterSet != null && (parameterSet.isChanged()
+				|| !description.equals(this.oldDescription))) {
+				Log.debugMessage("ReflectometryTestPanel.refreshTestsSet | ",
+					Log.DEBUGLEVEL09);
+				this.oldDescription = description;
+				final Set<Identifier> selectedTestIds = this.schedulerModel.getSelectedTestIds();
+				if (selectedTestIds != null && !selectedTestIds.isEmpty()) { 
 				try {
-					final Set<Test> storableObjects = StorableObjectPool.getStorableObjects(selectedTestIds, true);
-					final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
-
-					MeasurementSetup measurementSetup1 = null;
-
-					for (final Test test : storableObjects) {
+					final Set<Test> tests = StorableObjectPool.getStorableObjects(selectedTestIds, true);
+	
+					final Map<Identifier, Identifier> unchangedMeasurementSetupNewMap = new HashMap<Identifier, Identifier>();
+					for (final Test test : tests) {
 						if (test.isChanged()) {
 							final Set<Identifier> measurementSetupIds = test.getMeasurementSetupIds();
 							if (measurementSetupIds.size() == 1) {
-								final MeasurementSetup measurementSetup = (MeasurementSetup) StorableObjectPool.getStorableObject(measurementSetupIds.iterator().next(),
+								final MeasurementSetup baseMeasurementSetup = 
+									StorableObjectPool.getStorableObject(
+										measurementSetupIds.iterator().next(),
 										true);
-								if (measurementSetup.isChanged()) {
-									measurementSetup.setParameterSet(parameterSet);
+								
+								if (baseMeasurementSetup.isChanged()) {
+									baseMeasurementSetup.setDescription(description);
+									baseMeasurementSetup.setParameterSet(parameterSet);
+									this.testParametersPanel.refreshMeasurementSetup(baseMeasurementSetup);
 								} else {
-									Identifier measurementSetupId = null;
-									if (this.unchangedMeasurementSetupNewMap == null) {
-										this.unchangedMeasurementSetupNewMap = new HashMap<Identifier, Identifier>();
-									} else {
-										measurementSetupId = this.unchangedMeasurementSetupNewMap.get(measurementSetup.getId());
-									}
-
-									if (measurementSetupId == null) {
-										measurementSetup1 = MeasurementSetup.createInstance(LoginManager.getUserId(),
+									Identifier measurementSetupId = 
+										unchangedMeasurementSetupNewMap.get(baseMeasurementSetup.getId());
+	
+									if (measurementSetupId == null) {										
+										final MeasurementSetup measurementSetup = 
+											MeasurementSetup.createInstance(LoginManager.getUserId(),
 												parameterSet,
-												measurementSetup.getCriteriaSet(),
-												measurementSetup.getThresholdSet(),
-												measurementSetup.getEtalon(),
-												LangModelSchedule.getString("Text.MeasurementParameter.MeasurementSetupCreatedByScheduler") + " /" + sdf.format(new Date()) + "/",
-												measurementSetup.getMeasurementDuration(),
-												measurementSetup.getMonitoredElementIds(),
-												measurementSetup.getMeasurementTypes());
-										measurementSetupId = measurementSetup1.getId();
-										this.unchangedMeasurementSetupNewMap.put(measurementSetup.getId(), measurementSetupId);
+												baseMeasurementSetup.getCriteriaSet(),
+												baseMeasurementSetup.getThresholdSet(),
+												baseMeasurementSetup.getEtalon(),
+												description,
+												baseMeasurementSetup.getMeasurementDuration(),
+												baseMeasurementSetup.getMonitoredElementIds(),
+												baseMeasurementSetup.getMeasurementTypes());
+										this.skip = true;
+										this.testParametersPanel.setMeasurementSetup(measurementSetup);
+										this.skip = false;
+										measurementSetupId = measurementSetup.getId();
+										unchangedMeasurementSetupNewMap.put(baseMeasurementSetup.getId(), measurementSetupId);
 									}
-
+	
 									test.setMeasurementSetupIds(Collections.singleton(measurementSetupId));
 								}
 							} else {
@@ -843,23 +871,60 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 							}
 						}
 					}
-
-					if (measurementSetup1 != null) {
-						this.skip = true;
-						this.dispatcher.firePropertyChange(new PropertyChangeEvent(this,
-								SchedulerModel.COMMAND_ADD_NEW_MEASUREMENT_SETUP,
-								null,
-								measurementSetup1));
-						this.skip = false;
-					}
-				} catch (ApplicationException e) {
+	
+				} catch (final ApplicationException e) {
 					AbstractMainFrame.showErrorMessage(this, e);
+				}
+			}
+		} else {
+			if (this.measurementSetup != null) {
+				if (this.measurementSetup.isChanged()) {
+					this.measurementSetup.setDescription(description);
+					this.measurementSetup.setParameterSet(parameterSet);
+					this.testParametersPanel.refreshMeasurementSetup(this.measurementSetup);
+				} else {
+					{										
+						final MeasurementSetup measurementSetup;
+						try {
+							measurementSetup = MeasurementSetup.createInstance(LoginManager.getUserId(),
+								parameterSet,
+								this.measurementSetup.getCriteriaSet(),
+								this.measurementSetup.getThresholdSet(),
+								this.measurementSetup.getEtalon(),
+								description,
+								this.measurementSetup.getMeasurementDuration(),
+								this.measurementSetup.getMonitoredElementIds(),
+								this.measurementSetup.getMeasurementTypes());
+								this.skip = true;
+								this.testParametersPanel.setMeasurementSetup(measurementSetup);
+								this.skip = false;
+							this.measurementSetup = measurementSetup;
+						} catch (final CreateObjectException e) {
+							AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.CannotCreateMeasurementSetup"));
+						}
+	
+					}
 				}
 			}
 		}
 	}
+	
+	private final String getDescription() {
+		final SimpleDateFormat sdf = (SimpleDateFormat) UIManager.get(ResourceKeys.SIMPLE_DATE_FORMAT);
 
-	public void setSet(ParameterSet set) {
+		final String description = this.descriptionField.getText();
+		return description.trim().length() == 0 ?
+				LangModelSchedule.getString("Text.Scheduler.CreatedByScheduler") + " /" + sdf.format(new Date()) + "/"
+				: description;
+	}
+	
+	private void setDescription(final String description) {
+		this.skip = true;
+		this.descriptionField.setText(description);
+		this.skip = false;
+	}
+
+	private void setSet(final ParameterSet set) {
 //		System.out.println("ReflectometryTestPanel.setSet() | 1 " + (set != null ? set.getId() : null));
 		if (this.skip) {
 			return;
@@ -903,7 +968,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					// TRACE_FLAG_GAIN_SPLICE " + b, Log.FINEST);
 					this.gsOptionBox.setSelected(b);
 
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					AbstractMainFrame.showErrorMessage(this, e);
 					return;
 				}
@@ -914,7 +979,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					// TRACE_FLAG_LIVE_FIBER_DETECT " + b, Log.FINEST);
 					this.lfdOptionBox.setSelected(b);
 
-				} catch (IOException e) {
+				} catch (final IOException e) {
 					AbstractMainFrame.showErrorMessage(this, e);
 					return;
 				}
@@ -953,6 +1018,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 	private void createUIItems() {
 		this.comparator = new ListNumberComparator();
+		this.descriptionField = new JTextField(128);
 		this.refractTextField = new JTextField(8);
 
 		this.waveLengthComboBox = new JComboBox();
@@ -965,6 +1031,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.resolutionComboBox = new JComboBox();
 		this.averageQuantityComboBox = new JComboBox();
 
+		this.descriptionLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.Description"));
 		this.refractLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.IndexOfRefraction")); //$NON-NLS-1$
 		this.waveLengthLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.WaveLength")); //$NON-NLS-1$
 		this.countOfAverageOutLabel = new JLabel(LangModelSchedule.getString("Text.MeasurementParameter.Reflectomety.AverageQuantity")); //$NON-NLS-1$
@@ -1068,15 +1135,27 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 			}
 		});
 
-		ActionListener changeActionListener = new ActionListener() {
+		final ActionListener changeActionListener = new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
 				if (!ReflectometryTestPanel.this.skip) {
+					Log.debugMessage("ReflectometryTestPanel.ActionListener.actionPerformed | ", Log.DEBUGLEVEL09);
 					ReflectometryTestPanel.this.refreshTestsSet();
 				}
 			}
 		};
+		
+		final FocusListener textFieldFocusListener = new FocusAdapter() {
+			@Override
+			public void focusLost(final FocusEvent e) {
+				changeActionListener.actionPerformed(null);
+			}
+		};
+		
+		this.descriptionField.addFocusListener(textFieldFocusListener);
+		this.refractTextField.addFocusListener(textFieldFocusListener);
 
+		this.descriptionField.addActionListener(changeActionListener);
 		this.refractTextField.addActionListener(changeActionListener);
 		this.waveLengthComboBox.addActionListener(changeActionListener);
 		this.averageQuantityComboBox.addActionListener(changeActionListener);
@@ -1101,6 +1180,11 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		gbc.weightx = 1.0;
 		gbc.weighty = 0.0;
 
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		this.add(this.descriptionLabel, gbc);
+		gbc.gridwidth = GridBagConstraints.REMAINDER;
+		this.add(this.descriptionField, gbc);
+		
 		gbc.gridwidth = GridBagConstraints.RELATIVE;
 		this.add(this.refractLabel, gbc);
 		gbc.weightx = 0.0;

@@ -39,6 +39,7 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
@@ -126,7 +127,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_DATE_OPERATION, this);
 			this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 			this.dispatcher = aContext.getDispatcher();
-			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS, this);
+			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEMPORAL_STAMPS, this);
 			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_GET_TEMPORAL_STAMPS, this);
 			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_SET_START_GROUP_TIME, this);
 			this.dispatcher.addPropertyChangeListener(SchedulerModel.COMMAND_REFRESH_TEST, this);
@@ -208,18 +209,27 @@ public class TimeParametersFrame extends JInternalFrame {
 																							waiting = false;
 
 																						} else {
-																							Test selectedTest = TimeParametersPanel.this.schedulerModel
+																							boolean canBeMoved;
+																							final Test selectedTest;
+																							try {
+																							selectedTest = TimeParametersPanel.this.schedulerModel
 																									.getSelectedTest();
-																							if (selectedTest
-																									.isChanged()
-																									&& TimeParametersPanel.this.schedulerModel
-																											.isValid(
-																												startDate,
-																												selectedTest
-																														.getEndTime(),
-																												selectedTest
-																														.getMonitoredElement()
-																														.getId())) {
+																								canBeMoved = selectedTest
+																										.isChanged()
+																										&& TimeParametersPanel.this.schedulerModel
+																												.isValid(
+																													startDate,
+																													selectedTest
+																															.getEndTime(),
+																													selectedTest
+																															.getMonitoredElement()
+																															.getId());
+																							} catch (final ApplicationException e) {
+																								waiting = false;
+																								AbstractMainFrame.showErrorMessage(e.getMessage());
+																								continue;
+																							}
+																							if (canBeMoved) {
 																								selectedTest
 																										.setStartTime(startDate);
 
@@ -243,12 +253,24 @@ public class TimeParametersFrame extends JInternalFrame {
 																							}
 																						}
 																					} else {
-																						TimeParametersPanel.this.schedulerModel
-																								.moveSelectedTests(startDate);
+																						try {
+																							TimeParametersPanel.this.schedulerModel
+																									.moveSelectedTests(startDate);
+																						} catch (final ApplicationException e) {
+																							waiting = false;
+																							AbstractMainFrame.showErrorMessage(e.getMessage());
+																							continue;
+																						}
 																					}
 																				} else {
-																					TimeParametersPanel.this.schedulerModel
-																							.moveSelectedTests(startDate);
+																					try {
+																						TimeParametersPanel.this.schedulerModel
+																								.moveSelectedTests(startDate);
+																					} catch (final ApplicationException e) {
+																						waiting = false;
+																						AbstractMainFrame.showErrorMessage(e.getMessage());
+																						continue;
+																					}
 																				}
 																			}
 
@@ -277,8 +299,15 @@ public class TimeParametersFrame extends JInternalFrame {
 									}
 								}
 							}
-							this.waiting = TimeParametersPanel.this.propertyChangeEvent == null && TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
-								.getSelectedTest());
+							final Test selectedTest;
+							try {
+								selectedTest = TimeParametersPanel.this.schedulerModel.getSelectedTest();
+							} catch (final ApplicationException e1) {
+								AbstractMainFrame.showErrorMessage(e1.getMessage());
+								return;
+							}
+							this.waiting = TimeParametersPanel.this.propertyChangeEvent == null && 
+							TimeParametersPanel.this.isTestAgree(selectedTest);
 						}
 						this.previousEventTime = System.currentTimeMillis();						
 					}
@@ -380,8 +409,15 @@ public class TimeParametersFrame extends JInternalFrame {
 																		if (waiting
 																				&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
 																			if (waiting) {
-																				Test selectedTest = TimeParametersPanel.this.schedulerModel
-																						.getSelectedTest();
+																				final Test selectedTest;
+																				try {
+																					selectedTest = TimeParametersPanel.this.schedulerModel
+																							.getSelectedTest();
+																				} catch (ApplicationException e1) {
+																					waiting = false;
+																					AbstractMainFrame.showErrorMessage(e1.getMessage());
+																					continue;
+																				}
 																				if (selectedTest != null
 																						&& selectedTest.isChanged()) {
 																					Identifier temporalPatternId = selectedTest
@@ -433,8 +469,14 @@ public class TimeParametersFrame extends JInternalFrame {
 										this.startedThread = true;
 									}
 								}
-								this.waiting = TimeParametersPanel.this.propertyChangeEvent == null &&  TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
-									.getSelectedTest());
+								try {
+									this.waiting = TimeParametersPanel.this.propertyChangeEvent == null &&  TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
+										.getSelectedTest());
+								} catch (ApplicationException e1) {
+									this.waiting = false;
+									AbstractMainFrame.showErrorMessage(e1.getMessage());
+									return;
+								}
 							}
 							this.previousEventTime = System.currentTimeMillis();						
 						}
@@ -505,8 +547,15 @@ public class TimeParametersFrame extends JInternalFrame {
 																	if (waiting
 																			&& (System.currentTimeMillis() - previousEventTime) > TIMEOUT) {
 //																		Log.debugMessage(".run | 1 ", Log.FINEST);
-																		Test selectedTest = TimeParametersPanel.this.schedulerModel
-																				.getSelectedTest();
+																		final Test selectedTest;
+																		try {
+																			selectedTest = TimeParametersPanel.this.schedulerModel
+																					.getSelectedTest();
+																		} catch (final ApplicationException e) {
+																			waiting = false;
+																			AbstractMainFrame.showErrorMessage(e.getMessage());
+																			continue;
+																		}
 																		if (selectedTest != null
 																				&& selectedTest.isChanged()) {
 //																			Log.debugMessage(".run | 2 ", Log.FINEST);
@@ -516,7 +565,15 @@ public class TimeParametersFrame extends JInternalFrame {
 																					.getEndDate();
 																			if (startDate.getTime() < endDate.getTime()) {
 //																				Log.debugMessage(".run | 3 ", Log.FINEST);
-																				if (TimeParametersPanel.this.schedulerModel.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId())){
+																				final boolean valid2;
+																				try {
+																					valid2 = TimeParametersPanel.this.schedulerModel.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId());
+																				} catch (ApplicationException e) {
+																					waiting = false;
+																					AbstractMainFrame.showErrorMessage(e.getMessage());
+																					continue;
+																				}
+																				if (valid2){
 //																					Log.debugMessage(".run | 4 ", Log.FINEST);
 																					selectedTest.setEndTime(endDate);
 																				} else {
@@ -569,8 +626,14 @@ public class TimeParametersFrame extends JInternalFrame {
 								this.thread.start();
 								this.startedThread = true;
 							}
-							this.waiting = TimeParametersPanel.this.propertyChangeEvent == null && TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
-								.getSelectedTest());
+							try {
+								this.waiting = TimeParametersPanel.this.propertyChangeEvent == null && TimeParametersPanel.this.isTestAgree(TimeParametersPanel.this.schedulerModel
+									.getSelectedTest());
+							} catch (ApplicationException e1) {
+								this.waiting = false;
+								AbstractMainFrame.showErrorMessage(e1.getMessage());
+								return;
+							}
 						}
 						this.previousEventTime = System.currentTimeMillis();						
 					}
@@ -664,17 +727,21 @@ public class TimeParametersFrame extends JInternalFrame {
 			
 			ActionListener actionListener = new ActionListener() {
 				
-				public void actionPerformed(ActionEvent e) {
-					TimeParametersPanel.this.choosedButton = (JButton)e.getSource();
-					if (!TimeParametersPanel.this.groupRadioButton.isSelected()) { 
-					TimeParametersPanel.this.schedulerModel.createTest();
-					} else {
-						TimeParametersPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_GET_MONITORED_ELEMENT, null, null));
-						if (TimeParametersPanel.this.choosedButton == TimeParametersPanel.this.startTimeButton) {
-							TimeParametersPanel.this.schedulerModel.addGroupTest(TimeParametersPanel.this.getStartDate());
-						} else if (TimeParametersPanel.this.choosedButton == TimeParametersPanel.this.pediodTimeButton) {
-							TimeParametersPanel.this.schedulerModel.addGroupTests(TimeParametersPanel.this.getStartDate(), TimeParametersPanel.this.getIntervalLength());
+				public void actionPerformed(final ActionEvent event) {
+					TimeParametersPanel.this.choosedButton = (JButton)event.getSource();
+					try {
+						if (!TimeParametersPanel.this.groupRadioButton.isSelected()) { 
+								TimeParametersPanel.this.schedulerModel.createTest();
+						} else {
+							TimeParametersPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_GET_MONITORED_ELEMENT, null, null));
+							if (TimeParametersPanel.this.choosedButton == TimeParametersPanel.this.startTimeButton) {
+								TimeParametersPanel.this.schedulerModel.addGroupTest(TimeParametersPanel.this.getStartDate());
+							} else if (TimeParametersPanel.this.choosedButton == TimeParametersPanel.this.pediodTimeButton) {
+								TimeParametersPanel.this.schedulerModel.addGroupTests(TimeParametersPanel.this.getStartDate(), TimeParametersPanel.this.getIntervalLength());
+							}
 						}
+					} catch (final ApplicationException e) {
+						AbstractMainFrame.showErrorMessage(e.getMessage());
 					}
 				}
 			};
@@ -685,12 +752,11 @@ public class TimeParametersFrame extends JInternalFrame {
 			
 		}
 		
-		boolean isTestAgree(Test test) {
+		boolean isTestAgree(final Test test) {
 			boolean result = false;
 			
 			if (test != null) {
 				TestTemporalType temporalType = test.getTemporalType();
-//				Log.debugMessage("TimeParametersPanel.isTestAgree | temporalType.value() " + temporalType.value(), Level.FINEST);
 				switch (temporalType.value()) {
 					case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 						result = this.oneRadioButton.isSelected();
@@ -703,11 +769,9 @@ public class TimeParametersFrame extends JInternalFrame {
 						break;
 				}
 				if (!test.getGroupTestId().isVoid()) {
-//					Log.debugMessage("TimeParametersPanel.isTestAgree | " + test.getGroupTestId(), Level.FINEST);
 					result = this.groupRadioButton.isSelected();
 				}
 			}
-//			Log.debugMessage("TimeParametersPanel.isTestAgree | test " + (test != null ? test.getId() : null) + " , result " + result, Level.FINEST);
 			return result;
 		}
 		
@@ -716,13 +780,47 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.propertyChangeEvent = propertyChangeEvent1;
 			String propertyName = propertyChangeEvent1.getPropertyName();
 			Object newValue = propertyChangeEvent1.getNewValue();
-			if (propertyName.equals(SchedulerModel.COMMAND_DATE_OPERATION)) {
+			if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEMPORAL_STAMPS)) {
+				try {
+					final Test test;
+					try {
+						test = this.schedulerModel.getSelectedTest();
+					} catch (final ApplicationException e) {
+						throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
+					}
+				
+					if (test != null) {
+						if (test.getGroupTestId().isVoid()) {
+							final Identifier temporalPatternId = test.getTemporalPatternId();
+							AbstractTemporalPattern temporalPattern = null;
+							if (temporalPatternId != null) {
+								try {
+									temporalPattern = 
+										StorableObjectPool.getStorableObject(temporalPatternId, true);
+								}catch (final ApplicationException e) {
+									throw new ApplicationException(LangModelGeneral.getString("Error.CannotAcquireObject"));
+								}
+							}
+							this.setTestTemporalStamps(test.getStartTime(),
+									test.getEndTime(),
+									temporalPattern,
+									test.getTemporalType());
+						} else {
+							this.setGroupTestSelected(test.getStartTime());
+						}
+					}
+				} catch (final ApplicationException e) {
+					AbstractMainFrame.showErrorMessage(e.getMessage());
+				}
+			} else if (propertyName.equals(SchedulerModel.COMMAND_DATE_OPERATION)) {
 				Date date = (Date) newValue;
 				this.startDateSpinner.getModel().setValue(date);
 				this.startTimeSpinner.getModel().setValue(date);
-			} else if (propertyName.equals(SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS)) {
-					this.setTestTemporalStamps((TestTemporalStamps) newValue);				
-			} else if (propertyName.equals(SchedulerModel.COMMAND_GET_TEMPORAL_STAMPS)){
+			} 
+//			else if (propertyName.equals(SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS)) {
+//					this.setTestTemporalStamps((TestTemporalStamps) newValue);				
+//			} 
+			else if (propertyName.equals(SchedulerModel.COMMAND_GET_TEMPORAL_STAMPS)){
 				TestTemporalStamps testTemporalStamps = getTestTemporalStamps();
 				if (testTemporalStamps != null) {
 					this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_TEMPORAL_STAMPS, null, testTemporalStamps));
@@ -731,14 +829,15 @@ public class TimeParametersFrame extends JInternalFrame {
 					}
 				}
 			} else if(propertyName.equals(SchedulerModel.COMMAND_SET_START_GROUP_TIME)){
-				if(!this.groupRadioButton.isSelected()) {
-					this.groupRadioButton.doClick();
-				}
-				Date date = (Date) newValue;
-				this.startDateSpinner.getModel().setValue(date);
-				this.startTimeSpinner.getModel().setValue(date);
+				this.setGroupTestSelected((Date) newValue);
 			} else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
-				final Test selectedTest = this.schedulerModel.getSelectedTest();
+				final Test selectedTest;
+				try {
+					selectedTest = this.schedulerModel.getSelectedTest();
+				} catch (final ApplicationException e) {
+					AbstractMainFrame.showErrorMessage(e.getMessage());
+					return;
+				}
 				boolean enable = selectedTest == null;
 				this.startTimeButton.setEnabled(enable);
 				this.endTimeButton.setEnabled(enable);				
@@ -746,6 +845,14 @@ public class TimeParametersFrame extends JInternalFrame {
 				this.pediodTimeButton.setEnabled(enable);				
 			}
 			this.propertyChangeEvent = null;
+		}
+		
+		void setGroupTestSelected(final Date date) {
+			if(!this.groupRadioButton.isSelected()) {
+				this.groupRadioButton.doClick();
+			}
+			this.startDateSpinner.getModel().setValue(date);
+			this.startTimeSpinner.getModel().setValue(date);
 		}
 		
 		void setOneDateEnable(boolean enable) {
@@ -770,6 +877,14 @@ public class TimeParametersFrame extends JInternalFrame {
 		}
 		
 		void setGroupEnabled(boolean enable) {
+			final Test selectedTest;
+			try {
+				selectedTest = this.schedulerModel.getSelectedTest();
+			} catch (final ApplicationException e) {
+				AbstractMainFrame.showErrorMessage(e.getMessage());
+				return;
+			}
+			
 			this.interavalLabel.setText(LangModelSchedule.getString("Text.TimePanel.Interval") + ':');
 			// this.endTimeButton.setEnabled(false);
 			this.endTimeButton.setVisible(false);
@@ -781,7 +896,6 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.dayIntervalLabel.setVisible(enable);
 			this.interavalLabel.setVisible(enable);
 
-			final Test selectedTest = this.schedulerModel.getSelectedTest();
 			if (selectedTest != null && !selectedTest.getGroupTestId().isVoid()) {
 				this.pediodTimeButton.setEnabled(true);
 			}
@@ -794,6 +908,13 @@ public class TimeParametersFrame extends JInternalFrame {
 
 		
 		void setPeriodEnabled(boolean enable) {		
+			final Test selectedTest;
+			try {
+				selectedTest = this.schedulerModel.getSelectedTest();
+			} catch (final ApplicationException e) {
+				AbstractMainFrame.showErrorMessage(e.getMessage());
+				return;
+			}
 			this.startTimeButton.setVisible(false);
 			this.endTimeButton.setVisible(false);
 			this.endingLabel.setVisible(true);
@@ -810,7 +931,7 @@ public class TimeParametersFrame extends JInternalFrame {
 			this.dayIntervalLabel.setVisible(enable);
 			this.interavalLabel.setVisible(enable);
 			
-			final Test selectedTest = this.schedulerModel.getSelectedTest();
+
 			this.pediodTimeButton.setEnabled(selectedTest == null);
 		}
 		
@@ -935,17 +1056,18 @@ public class TimeParametersFrame extends JInternalFrame {
 			
 		}
 		
-		private void setTestTemporalStamps(TestTemporalStamps testTemporalStamps) {		
-			Date startTime = testTemporalStamps.getStartTime();
+		private void setTestTemporalStamps(final Date startTime,
+		                                   final Date endTime,
+		                                   final AbstractTemporalPattern temporalPattern,
+		                                   final TestTemporalType testTemporalType) {		
 			this.startDateSpinner.getModel().setValue(startTime);
 			this.startTimeSpinner.getModel().setValue(startTime);
-			Date endTime = testTemporalStamps.getEndTime();
 			if (endTime != null) {
 				this.endDateSpinner.getModel().setValue(endTime);
 				this.endTimeSpinner.getModel().setValue(endTime);
 			}
 
-			switch (testTemporalStamps.getTestTemporalType().value()) {
+			switch (testTemporalType.value()) {
 				case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
 					if (!this.oneRadioButton.isSelected()) {
 						this.oneRadioButton.doClick();
@@ -955,7 +1077,6 @@ public class TimeParametersFrame extends JInternalFrame {
 					if (!this.periodicalRadioButton.isSelected()) {
 						this.periodicalRadioButton.doClick();
 					}
-					AbstractTemporalPattern temporalPattern = testTemporalStamps.getTemporalPattern();
 					if (temporalPattern instanceof PeriodicalTemporalPattern) {
 						PeriodicalTemporalPattern periodicalTemporalPattern = (PeriodicalTemporalPattern)temporalPattern;
 						long period = periodicalTemporalPattern.getPeriod();
@@ -969,7 +1090,6 @@ public class TimeParametersFrame extends JInternalFrame {
 						this.periodTimeSpinner.setValue(calendar.getTime());
 						
 					}
-//					this.timeStamps.setSelectedValue(testTemporalStamps.getTemporalPattern(), true);
 					break;
 				case TestTemporalType._TEST_TEMPORAL_TYPE_CONTINUOUS:
 					if (!this.continuosRadioButton.isSelected()) {
@@ -978,17 +1098,7 @@ public class TimeParametersFrame extends JInternalFrame {
 					break;
 
 			}
-		}		
-		
-		public void setTemporalPatterns(Collection temporalPatterns) {
-			this.temporalPatterns = temporalPatterns;
-//			ObjListModel model = (ObjListModel) this.timeStamps.getModel();
-//			for (Iterator it = this.temporalPatterns.iterator(); it.hasNext();) {
-//				TemporalPattern pattern = (TemporalPattern) it.next();
-//				model.addElement(pattern);
-//			}
-			
-		}		
+		}
 		
 		void showEndCalendar() {
 			Calendar cal = Calendar.getInstance();

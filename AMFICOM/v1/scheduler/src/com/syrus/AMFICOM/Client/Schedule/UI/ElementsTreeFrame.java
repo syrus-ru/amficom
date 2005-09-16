@@ -10,9 +10,7 @@ import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.Icon;
 import javax.swing.JInternalFrame;
-import javax.swing.JOptionPane;
 import javax.swing.JTree;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -21,8 +19,8 @@ import javax.swing.tree.TreePath;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -57,13 +55,10 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 
 	private Dispatcher dispatcher;
 
-	// public static final String ACCESSPORT_NAME_REFLECTOMETER =
-	// "MeasurementPortTypeReflectometry"; //$NON-NLS-1$
-
 	public ElementsTreeFrame(final ApplicationContext aContext) {
 		this.aContext = aContext;
 		super.setTitle(LangModelSchedule.getString("Text.ElementsTree.Title")); //$NON-NLS-1$
-		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
+		super.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
 		super.setResizable(true);
 		super.setClosable(false);
 		super.setIconifiable(true);
@@ -87,10 +82,8 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 				}
 			}
 		}
-		JOptionPane.showMessageDialog(this,
-				LangModelSchedule.getString("Error.HaveNotChoosenMeasurementElement"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
-				JOptionPane.OK_OPTION);
 		this.schedulerModel.setBreakData();
+		AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.HaveNotChoosenMeasurementElement"));		
 		return null;
 	}
 	
@@ -109,10 +102,8 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 				}
 			}
 		}
-		JOptionPane.showMessageDialog(this,
-				LangModelSchedule.getString("Error.HaveNotChoosenMeasurementElement"), LangModelSchedule.getString("Error"), //$NON-NLS-1$ //$NON-NLS-2$
-				JOptionPane.OK_OPTION);
 		this.schedulerModel.setBreakData();
+		AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.HaveNotChoosenMeasurementElement"));		
 		return MeasurementType.UNKNOWN;
 	}
 
@@ -120,10 +111,8 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 		try {
 			return (KIS) StorableObjectPool.getStorableObject(this.getObject(ObjectEntities.KIS_CODE), true);
 		} catch (final ApplicationException e) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-				LangModelGeneral.getString("Error.CannotAcquireObject"),
-				LangModelGeneral.getString("Error"),
-				JOptionPane.OK_OPTION);
+			this.schedulerModel.setBreakData();
+			AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 			return null;
 		}
 	}
@@ -138,10 +127,8 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 			}
 			return me;
 		} catch (final ApplicationException e) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-				LangModelGeneral.getString("Error.CannotAcquireObject"),
-				LangModelGeneral.getString("Error"),
-				JOptionPane.OK_OPTION);
+			this.schedulerModel.setBreakData();
+			AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 			return null;
 		}
 	}
@@ -278,10 +265,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 														true),
 														parent != null ? (MeasurementType) parent.getObject() : null);
 											} catch (final ApplicationException e) {
-												JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-													LangModelGeneral.getString("Error.CannotAcquireObject"),
-													LangModelGeneral.getString("Error"),
-													JOptionPane.OK_OPTION);
+												AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 												return;
 											}
 										}

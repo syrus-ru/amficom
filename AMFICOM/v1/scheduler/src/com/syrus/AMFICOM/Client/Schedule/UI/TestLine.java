@@ -32,6 +32,7 @@ import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -140,7 +141,7 @@ public class TestLine extends TimeLine {
 	Point				currentPoint;
 	Point				previousPoint;
 
-	protected boolean	skip					= false;
+	protected volatile boolean 	skip					= false;
 
 	public TestLine(ApplicationContext aContext, String title, Identifier monitoredElementId) {
 		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
@@ -157,18 +158,19 @@ public class TestLine extends TimeLine {
 
 	boolean selectTest(final int x, final SortedSet<TestTimeItem> testTimeItems) {
 		boolean selected = false;
-		List<TestTimeItem> list = new ArrayList<TestTimeItem>(testTimeItems); 
-		for (ListIterator it = list.listIterator(list.size()); it.hasPrevious();) {
-			TestTimeItem testTimeItem = (TestTimeItem) it.previous();
+		final List<TestTimeItem> list = new ArrayList<TestTimeItem>(testTimeItems); 
+		for (final ListIterator it = list.listIterator(list.size()); it.hasPrevious();) {
+			final TestTimeItem testTimeItem = (TestTimeItem) it.previous();
 			if (testTimeItem.x < x && x < testTimeItem.x + testTimeItem.getWidth()) {
-					if (this.selectedTestIds == null) {
-						this.selectedTestIds = new HashSet<Identifier>();
-					}
-					try {
-					final Test test = (Test) StorableObjectPool.getStorableObject((Identifier) testTimeItem.object,
-						true);
+				if (this.selectedTestIds == null) {
+					this.selectedTestIds = new HashSet<Identifier>();
+				}
+				try {
+					final Test test = 
+						StorableObjectPool.getStorableObject(
+							(Identifier) testTimeItem.object,
+							true);
 					this.selectedTestIds.add(test.getId());
-
 					CommonUIUtilities.invokeAsynchronously(new Runnable() {
 
 						public void run() {
@@ -177,10 +179,11 @@ public class TestLine extends TimeLine {
 							TestLine.this.skip = false;
 						}
 					}, LangModelGeneral.getString("Message.Information.PlsWait"));
-				} catch (ApplicationException e) {
-					AbstractMainFrame.showErrorMessage(TestLine.this, e);
+				} catch (final ApplicationException e) {
+					AbstractMainFrame.showErrorMessage(
+						LangModelSchedule.getString("Error.CannotSelectTest"));
+					return false;
 				}
-				
 				this.selectedItems.add(testTimeItem);
 				selected = true;
 				break;
@@ -377,9 +380,9 @@ public class TestLine extends TimeLine {
 							TestLine.this.dispatcher
 									.firePropertyChange(new PropertyChangeEvent(
 																				this,
-																				SchedulerModel.COMMAND_REFRESH_TIME_STAMPS,
+																				SchedulerModel.COMMAND_REFRESH_TEMPORAL_STAMPS,
 																				null, null));
-						} catch (ApplicationException e1) {
+						} catch (final ApplicationException e1) {
 							AbstractMainFrame.showErrorMessage(TestLine.this, e1);
 						}
 

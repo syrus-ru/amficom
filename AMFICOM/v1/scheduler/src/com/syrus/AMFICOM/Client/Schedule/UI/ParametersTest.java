@@ -5,7 +5,8 @@
  */
 package com.syrus.AMFICOM.Client.Schedule.UI;
 
-import com.syrus.AMFICOM.measurement.ParameterSet;
+import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
 
 /**
  * @author Vladimir Dolzhenko
@@ -13,8 +14,9 @@ import com.syrus.AMFICOM.measurement.ParameterSet;
  * provide interface for varius parameter test panel i.g. ReflectometryTestPanel
  */
 public interface ParametersTest {
-
-	ParameterSet getSet();
 	
-	void setSet(ParameterSet set);
+	MeasurementSetup getMeasurementSetup() throws CreateObjectException;
+	
+	void setMeasurementSetup(final MeasurementSetup measurementSetup); 
+	
 }

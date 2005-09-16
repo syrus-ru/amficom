@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
  */
 public abstract class ParametersTestPanel extends JPanel implements
 		ParametersTest {
-	protected final ApplicationContext		aContext;
+	protected final ApplicationContext	aContext;
 	
 	public ParametersTestPanel(final ApplicationContext aContext) {
 		this.aContext = aContext;

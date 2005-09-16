@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.MeasurementType;
@@ -62,8 +63,14 @@ public class TestRequestPanel extends JPanel implements PropertyChangeListener {
 		this.nameTextField.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				JTextField textField = (JTextField) e.getSource();
-				Test selectedTest = TestRequestPanel.this.schedulerModel.getSelectedTest();
+				final JTextField textField = (JTextField) e.getSource();
+				final Test selectedTest;
+				try {
+					selectedTest = TestRequestPanel.this.schedulerModel.getSelectedTest();
+				} catch (final ApplicationException e1) {
+					AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+					return; 
+				}
 				if (selectedTest != null && selectedTest.isChanged()) {
 					selectedTest.setDescription(textField.getText());
 					TestRequestPanel.this.dispatcher
@@ -89,12 +96,15 @@ public class TestRequestPanel extends JPanel implements PropertyChangeListener {
 
 	}
 
-	public void propertyChange(PropertyChangeEvent evt) {
-
-		String propertyName = evt.getPropertyName();
+	public void propertyChange(final PropertyChangeEvent evt) {
+		final String propertyName = evt.getPropertyName();
 		if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
-			Test test = this.schedulerModel.getSelectedTest();
-			this.setTest(test);
+			try {
+				this.setTest(this.schedulerModel.getSelectedTest());
+			} catch (final ApplicationException e) {
+				AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+				return;
+			}
 		} else if (propertyName.equals(SchedulerModel.COMMAND_GET_NAME)) {
 			this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, SchedulerModel.COMMAND_SET_NAME, null,
 																		TestRequestPanel.this.nameTextField.getText()));
@@ -109,7 +119,7 @@ public class TestRequestPanel extends JPanel implements PropertyChangeListener {
 		this.portTextField.setText("");
 	}
 
-	public void setTest(Test test) {
+	public void setTest(final Test test) {
 		if (test != null) {
 			try {
 				this.nameTextField.setText(test.getDescription());

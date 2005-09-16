@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.37 2005/09/14 17:39:22 bob Exp $
+ * $Id: TableFrame.java,v 1.38 2005/09/16 15:00:09 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.37 $, $Date: 2005/09/14 17:39:22 $
+ * @version $Revision: 1.38 $, $Date: 2005/09/16 15:00:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -85,20 +85,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 	private void updateTest() {
 		final Set<Identifier> selectedTestIds = this.schedulerModel.getSelectedTestIds();
 		if (selectedTestIds == null || selectedTestIds.isEmpty()) {
-
-			final int[] selectedRows = this.listTable.getSelectedRows();
-			if (selectedRows.length > 0) {
-				int maxRowIndex = Integer.MIN_VALUE;
-				int minRowIndex = Integer.MAX_VALUE;
-				for (int i = 0; i < selectedRows.length; i++) {
-					maxRowIndex = maxRowIndex > selectedRows[i] ? maxRowIndex : selectedRows[i];
-					minRowIndex = minRowIndex < selectedRows[i] ? minRowIndex : selectedRows[i];
-				}
-				if (maxRowIndex != Integer.MIN_VALUE && minRowIndex != Integer.MAX_VALUE) {
-					this.listTable.removeRowSelectionInterval(minRowIndex, maxRowIndex);
-				}
-			}
-
+			this.listTable.clearSelection();
 		} else {
 			// int[] selectedRows = new int[selectedTestIds.size()];
 			// int j = 0;
@@ -110,8 +97,9 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 					if (!groupTestId.isVoid()) {
 						identifier = groupTestId;
 					}
-				} catch (ApplicationException e) {
-					AbstractMainFrame.showErrorMessage(this, e);
+				} catch (final ApplicationException e) {
+					AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+					return;
 				}
 				for (int i = 0; i < tableModel.getRowCount(); i++) {
 					final Test test = tableModel.getObject(i);
@@ -270,7 +258,14 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 											TableFrame.this.rowToRemove.add(test);
 										}
 										for (final Test test : TableFrame.this.rowToRemove) {
-											TableFrame.this.schedulerModel.removeTest(test);
+											try {
+												TableFrame.this.schedulerModel.removeTest(test);
+											} catch (final ApplicationException e1) {
+												AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.CannotRemoveTest") 
+													+ " " 
+													+ test.getDescription());
+												return;
+											}
 											model.removeObject(test);
 										}
 										table.revalidate();

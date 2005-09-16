@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.44 2005/09/14 17:39:22 bob Exp $
+ * $Id: PlanPanel.java,v 1.45 2005/09/16 15:00:09 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,6 +40,7 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
@@ -51,7 +52,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/09/14 17:39:22 $
+ * @version $Revision: 1.45 $, $Date: 2005/09/16 15:00:09 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -329,7 +330,11 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 		if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TESTS)) {
 			updateTests();
 		} else if (propertyName.equals(SchedulerModel.COMMAND_REFRESH_TEST)) {
-			updateTest();
+			try {
+				updateTest();
+			} catch (final ApplicationException e) {
+				AbstractMainFrame.showErrorMessage(e.getMessage());
+			}
 		}
 	
 		
@@ -432,10 +437,7 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 			model.updateTests(this.scaleStart.getTime(), this.scaleEnd.getTime());
 			updateTestLines();
 		} catch (final ApplicationException e) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-				LangModelSchedule.getString("Error.CannotRefreshTests"),
-				LangModelGeneral.getString("Error"),
-				JOptionPane.OK_OPTION);
+			AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.CannotRefreshTests"));
 		}
 
 		this.setCursor(Cursor.getPredefinedCursor(Cursor.DEFAULT_CURSOR));
@@ -616,7 +618,7 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 		}
 	}
 
-	private void updateTest() {
+	private void updateTest() throws ApplicationException {
 		Test selectedTest = this.schedulerModel.getSelectedTest();
 		if (selectedTest != null) {
 			Date startTime = selectedTest.getStartTime();
@@ -672,16 +674,17 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 			}
 
 			super.setPreferredSize(new Dimension(getPreferredSize().width, 30 + 25 * this.testLines.values().size()));
-
 			this.updateTestLinesTimeRegion();
-			this.revalidate();
-		} catch (ApplicationException e) {
+		} catch (final ApplicationException e) {
+			
 			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
 				LangModelGeneral.getString("Error.CannotAcquireObject"),
 				LangModelGeneral.getString("Error"),
 				JOptionPane.OK_OPTION);
 			return;
 		}
+		
+		this.revalidate();
 	}
 
 }

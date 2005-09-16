@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.14 2005/09/14 17:39:22 bob Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.15 2005/09/16 15:00:09 bob Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,7 +8,6 @@
 
 package com.syrus.AMFICOM.Client.Schedule;
 
-import java.util.Collection;
 import java.util.EnumSet;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -16,11 +15,10 @@ import java.util.LinkedHashSet;
 import java.util.Map;
 import java.util.Set;
 
-import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
+import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
+import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -38,7 +36,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/14 17:39:22 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/16 15:00:09 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -56,7 +54,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 		this.domainId = domainId;
 	}
 	
-	public void populate(Item item) {
+	public void populate(final Item item) {
 		LinkedIdsCondition domainCondition = new LinkedIdsCondition(this.domainId,
 			ObjectEntities.KIS_CODE);
 		Set<Identifier> measurementPortTypeIds = new LinkedHashSet<Identifier>();
@@ -64,21 +62,20 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 		Map<KIS, Set<MeasurementPort>> kisMeasurementPorts = new HashMap<KIS, Set<MeasurementPort>>();
 		LinkedIdsCondition measurementPortCondition = null;
 		try {
-			Collection kiss = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true, true);
+			final Set<KIS> kiss = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true, true);
 			
 			domainCondition.setEntityCode(ObjectEntities.MONITOREDELEMENT_CODE);
-			Collection monitoredElements = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true, true);
+			final Set<MonitoredElement> monitoredElements = StorableObjectPool.getStorableObjectsByCondition(domainCondition, true, true);
 			
-			for (Iterator kisIterator = kiss.iterator(); kisIterator.hasNext();) {
-				KIS kis = (KIS) kisIterator.next();
+			for (final KIS kis : kiss) {
 				if (measurementPortCondition == null)
 					measurementPortCondition = new LinkedIdsCondition(kis.getId(),
 																		ObjectEntities.MEASUREMENTPORT_CODE);
 				else
 					measurementPortCondition.setLinkedId(kis.getId());
 
-				Set<MeasurementPort> measurementPorts = StorableObjectPool.getStorableObjectsByCondition(
-					measurementPortCondition, true, true);
+				final Set<MeasurementPort> measurementPorts = 
+					StorableObjectPool.getStorableObjectsByCondition(measurementPortCondition, true, true);
 				kisMeasurementPorts.put(kis, measurementPorts);
 				
 				EnumSet<MeasurementType> measurementTypes = EnumSet.noneOf(MeasurementType.class);
@@ -94,8 +91,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 				kisMeasurementTypes.put(kis, measurementTypes);
 			}	
 			
-			for (Iterator iterator = kisMeasurementTypes.keySet().iterator(); iterator.hasNext();) {
-				KIS kis = (KIS) iterator.next();
+			for (final KIS kis : kisMeasurementTypes.keySet()) {
 				EnumSet<MeasurementType> measurementTypesFormeasurementPortType = kisMeasurementTypes.get(kis);
 				if (measurementTypesFormeasurementPortType.contains(item.getObject())) {
 					IconPopulatableItem kisItem = new IconPopulatableItem();
@@ -112,9 +108,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 						measurementPortItem.setIcon(UIManager.getIcon(ResourceKeys.ICON_MINI_PORT));
 						measurementPortItem.setObject(measurementPort2.getId());
 						kisItem.addChild(measurementPortItem);
-						for (Iterator monitoredElementIterator = monitoredElements.iterator(); monitoredElementIterator
-								.hasNext();) {
-							MonitoredElement monitoredElement = (MonitoredElement) monitoredElementIterator.next();
+						for (final MonitoredElement monitoredElement : monitoredElements) {
 							if (monitoredElement.getMeasurementPortId().equals(measurementPort2.getId())) {
 								IconPopulatableItem monitoredElementItem = new IconPopulatableItem();
 								monitoredElementItem.setName(monitoredElement.getName());
@@ -128,10 +122,8 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 				}
 			}
 		} catch (final ApplicationException e) {
-			JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-				LangModelGeneral.getString("Error.CannotAcquireObject"),
-				LangModelGeneral.getString("Error"),
-				JOptionPane.OK_OPTION);
+			AbstractMainFrame.showErrorMessage(
+				LangModelSchedule.getString("Error.CannotCreateTreeItems"));
 			return;
 		}		
 	}
