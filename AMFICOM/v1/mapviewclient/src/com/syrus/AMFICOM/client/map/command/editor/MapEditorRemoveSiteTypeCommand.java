@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveSiteTypeCommand.java,v 1.7 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapEditorRemoveSiteTypeCommand.java,v 1.8 2005/09/16 15:10:45 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -45,7 +45,7 @@ public class MapEditorRemoveSiteTypeCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this, 
 							StatusMessageEvent.STATUS_MESSAGE, 
-							LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
+							LangModelMap.getString("StatusMessage.OpenMapFrameFirst"))); //$NON-NLS-1$
 			return;
 		}
 		Collection<SiteNodeType> topologicalNodeTypes = NodeTypeController.getTopologicalNodeTypes(mapFrame.getMapView().getMap());
