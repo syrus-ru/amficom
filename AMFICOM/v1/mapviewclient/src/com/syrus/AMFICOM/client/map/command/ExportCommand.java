@@ -1,5 +1,5 @@
 /*
- * $Id: ExportCommand.java,v 1.7 2005/09/16 14:53:32 krupenn Exp $
+ * $Id: ExportCommand.java,v 1.8 2005/09/16 15:10:02 krupenn Exp $
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
@@ -24,78 +24,23 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * 
- * @version $Revision: 1.7 $
+ * @version $Revision: 1.8 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
 public abstract class ExportCommand extends AbstractCommand {
-	private FileOutputStream fos;
-
-	private OutputStreamWriter osw;
-
-	private PrintWriter pw;
-
-	protected void startObject(String type) {
-		this.pw.println("@@" + type);
-	}
-
-	protected void put(Object field, Object value) {
-		if(value instanceof Collection) {
-			Collection objects = (Collection )value;
-			this.pw.println("@[" + field);
-			for(Iterator it = objects.iterator(); it.hasNext();) {
-				this.pw.println(it.next().toString());
-			}
-			this.pw.println("@]" + field);
-		}
-		else
-			this.pw.println("@" + field + " " + value);
-	}
-
-	protected void endObject() {
-		this.pw.println();
-	}
-
-	protected void breakLine() {
-		this.pw.println();
-	}
-
-	protected void open(String fileName) {
-		if(fileName == null) {
-			JOptionPane.showMessageDialog(
-					Environment.getActiveWindow(),
-					LangModelMap.getString("FileChooser.WriteError")); //$NON-NLS-1$
-		}
-		try {
-			this.fos = new FileOutputStream(fileName);
-			this.osw = new OutputStreamWriter(this.fos, "UTF-16");
-			this.pw = new PrintWriter(this.osw, true);
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
-
-	protected void close() {
-		try {
-			this.pw.close();
-			this.osw.close();
-			this.fos.close();
-		} catch(Exception e) {
-			e.printStackTrace();
-		}
-	}
 
 	protected static final String openFileForWriting(String path) {
 		String fileName = null;
 		JFileChooser fileChooser = new JFileChooser();
 
 		ChoosableFileFilter esfFilter = new ChoosableFileFilter(
-				"esf",
+				"esf", //$NON-NLS-1$
 				LangModelMap.getString("FileChooser.ExportSaveFile")); //$NON-NLS-1$
 		fileChooser.addChoosableFileFilter(esfFilter);
 
 		ChoosableFileFilter xmlFilter = new ChoosableFileFilter(
-				"xml",
+				"xml", //$NON-NLS-1$
 				LangModelMap.getString("FileChooser.ExportSaveFile")); //$NON-NLS-1$
 		fileChooser.addChoosableFileFilter(xmlFilter);
 
@@ -106,8 +51,8 @@ public abstract class ExportCommand extends AbstractCommand {
 		int option = fileChooser.showSaveDialog(Environment.getActiveWindow());
 		if(option == JFileChooser.APPROVE_OPTION) {
 			fileName = fileChooser.getSelectedFile().getPath();
-			if(!(fileName.endsWith(".xml") || fileName.endsWith(".esf")))
-				fileName = fileName + ".xml";
+			if(!(fileName.endsWith(".xml") || fileName.endsWith(".esf"))) //$NON-NLS-1$ //$NON-NLS-1$
+				fileName = fileName + ".xml"; //$NON-NLS-1$
 		}
 
 		if(fileName == null)
@@ -116,7 +61,7 @@ public abstract class ExportCommand extends AbstractCommand {
 			if(JOptionPane.NO_OPTION == JOptionPane.showConfirmDialog(
 					Environment.getActiveWindow(),
 					LangModelMap.getString("FileChooser.FileExists.Overwrite"), //$NON-NLS-1$
-					"",
+					"", //$NON-NLS-1$
 					JOptionPane.YES_NO_OPTION,
 					JOptionPane.QUESTION_MESSAGE))
 				return null;

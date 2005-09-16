@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommand.java,v 1.9 2005/08/17 14:14:16 arseniy Exp $
+ * $Id: MapActionCommand.java,v 1.10 2005/09/16 15:10:14 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -19,8 +19,8 @@ import com.syrus.AMFICOM.map.MapElementState;
 
 /**
  *  
- * @author $Author: arseniy $
- * @version $Revision: 1.9 $, $Date: 2005/08/17 14:14:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.10 $, $Date: 2005/09/16 15:10:14 $
  * @module mapviewclient
  */
 public class MapActionCommand extends AbstractCommand
@@ -61,15 +61,6 @@ public class MapActionCommand extends AbstractCommand
 	protected LogicalNetLayer getLogicalNetLayer()
 	{
 		return this.logicalNetLayer;
-	}
-
-	@Override
-	public void setParameter(String field, Object value)
-	{
-		if(field.equals("logicalNetLayer"))
-			this.logicalNetLayer = (LogicalNetLayer )value;
-		if(field.equals("applicationContext"))
-			this.aContext = (ApplicationContext )value;
 	}
 
 	public Throwable getException()
