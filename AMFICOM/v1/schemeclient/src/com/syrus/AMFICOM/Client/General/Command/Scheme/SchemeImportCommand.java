@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.14 2005/09/14 19:51:10 bass Exp $
+ * $Id: SchemeImportCommand.java,v 1.15 2005/09/16 09:14:13 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,6 +15,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
 
+import java.awt.Dimension;
 import java.awt.Point;
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +47,6 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.client_.scheme.graph.ElementsTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
@@ -123,6 +123,7 @@ public class SchemeImportCommand extends AbstractCommand {
 	private static boolean inited = false;
 	private Map<SchemeCablePort, Set<SchemeCableThread>> portThreadsCount = new HashMap<SchemeCablePort, Set<SchemeCableThread>>();
 	private Identifier userId;
+	private static final Dimension SCHEME_SIZE = new Dimension(6720, 9520);
 	
 	private static void init() {
 		XmlComplementorRegistry.registerComplementor(SCHEME_CODE, new XmlComplementor() {
@@ -131,7 +132,9 @@ public class SchemeImportCommand extends AbstractCommand {
 					final String importType)
 			throws CreateObjectException, UpdateObjectException {
 				final XmlScheme scheme = (XmlScheme) storableObject;
-				scheme.unsetDomainId();
+				if (scheme.isSetDomainId()) {
+					scheme.unsetDomainId();
+				}
 				LoginManager.getDomainId().getXmlTransferable(scheme.addNewDomainId(), importType);
 			}
 		});
@@ -142,7 +145,9 @@ public class SchemeImportCommand extends AbstractCommand {
 					final String importType)
 			throws CreateObjectException, UpdateObjectException {
 				final XmlEquipment equipment = (XmlEquipment) storableObject;
-				equipment.unsetDomainId();
+				if (equipment.isSetDomainId()) {
+					equipment.unsetDomainId();
+				}
 				LoginManager.getDomainId().getXmlTransferable(equipment.addNewDomainId(), importType);
 			}
 		});
@@ -162,7 +167,9 @@ public class SchemeImportCommand extends AbstractCommand {
 							final String importType)
 					throws CreateObjectException, UpdateObjectException {
 						final XmlSchemeCablePort schemeCablePort = (XmlSchemeCablePort) storableObject;
-						schemeCablePort.unsetCablePortTypeId();
+						if (schemeCablePort.isSetCablePortTypeId()) {
+							schemeCablePort.unsetCablePortTypeId();
+						}
 						portType.getId().getXmlTransferable(schemeCablePort.addNewCablePortTypeId(), importType);
 					}
 				});				
@@ -231,7 +238,7 @@ public class SchemeImportCommand extends AbstractCommand {
 						return;
 					}
 
-//					parseSchemeCableLinks(scheme);
+					parseSchemeCableLinks(scheme);
 					parseSchemeElements(scheme);
 					
 					//	fix connection - connect threads at scheme
@@ -610,7 +617,67 @@ public class SchemeImportCommand extends AbstractCommand {
 						
 						schemeElementMapping.put(schemeElement, newSchemeElement);
 					} else { // split muff
-						Log.debugMessage("Split muff with " + existingCablePorts.size() + " cable ports", Level.FINE);
+						// create muff like scheme
+						SchemeElement muff = SchemeElement.createInstance(this.userId, schemeElement.getName(), scheme);
+						muff.setDescription(schemeElement.getDescription());
+
+						// graph for schemeCell
+						ElementsTabbedPane schemePane = new ElementsTabbedPane(internalContext);
+						SchemeGraph schemeGraph = schemePane.getGraph();
+						schemePane.getCurrentPanel().getSchemeResource().setSchemeElement(muff);
+						int grid = schemeGraph.getGridSize();
+						schemeGraph.setMakeNotifications(false);
+						SchemeImageResource res = muff.getSchemeCell();
+						if (res == null) {
+							res = SchemeObjectsFactory.createSchemeImageResource();
+							muff.setSchemeCell(res);
+						}
+						
+						//	next create vrm for every cable port
+						int inCount = 0, outCount = 0;
+						for (SchemeCablePort cablePort : existingCablePorts) {
+//							SchemeCableLink cableLink = cablePort.getAbstractSchemeLink();
+							int fibers = 8;
+							Set<SchemeCableThread> threads = this.portThreadsCount.get(cablePort);
+							if (threads != null) {
+								fibers = threads.size();
+							}
+							boolean isInput = cablePort.getDirectionType() == IdlDirectionType._IN;
+							SchemeProtoElement suitableVrm = getSuitableProto(isInput ? this.inVrms : this.outVrms, Integer.valueOf(fibers));
+							
+							SchemeElement newSchemeElement = SchemeObjectsFactory.createSchemeElement(muff, suitableVrm);
+							// substitute existing cable ports
+							Map<Identifier, Identifier>clonedIds = newSchemeElement.getClonedIdMap();
+							substituteExistingPorts(clonedIds, cablePort);
+
+							// write it to cell
+							SchemeImageResource res1 = newSchemeElement.getSchemeCell();
+							Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, res1, true);
+							SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+							res1.setData((List)invisibleGraph.getArchiveableState());
+							GraphActions.clearGraph(invisibleGraph);
+							
+							// place to scheme cell
+							Point p = isInput 
+									?	new Point(grid * 15, grid * (10 + 20 * inCount))
+									: new Point(grid * 45, grid * (10 + 20 * outCount));
+							clonedObjects = SchemeActions.openSchemeImageResource(schemeGraph, res1, true, p, false);
+							// add top level port
+							CablePortCell portCell = SchemeActions.findCablePortCellById(schemeGraph, cablePort.getId());
+							CreateBlockPortAction.create(schemeGraph, portCell);
+
+							if (isInput) {
+								inCount++;
+							} else {
+								outCount++;
+							}
+						}
+						res.setData((List)schemeGraph.getArchiveableState());
+						// create UGO
+						if (existingCablePorts.size() > 0) {
+							new CreateTopLevelSchemeAction(schemePane).execute();
+						}
+						schemeElementMapping.put(schemeElement, muff);
 					} 
 				}
 			}
@@ -650,8 +717,8 @@ public class SchemeImportCommand extends AbstractCommand {
 			}
 		}
 		
-		double kx = (xmax - xmin == 0) ? 1 : Constants.A0.width / (xmax - xmin);
-		double ky = (ymax - ymin == 0) ? 1 : Constants.A0.height / (ymax - ymin);
+		double kx = (xmax - xmin == 0) ? 1 : (SCHEME_SIZE.width - grid * 20) / (xmax - xmin);
+		double ky = (ymax - ymin == 0) ? 1 : (SCHEME_SIZE.height - grid * 20) / (ymax - ymin);
 		
 		for (SchemeElement schemeElement : scheme.getSchemeElements()) {
 			Equipment equipment = schemeElement.getEquipment();
@@ -659,9 +726,10 @@ public class SchemeImportCommand extends AbstractCommand {
 			if (equipment != null) {
 				double x0 = equipment.getLatitude();
 				double y0 = equipment.getLongitude();
-				p = new Point((int)((x0 - xmin) * kx), Constants.A0.height - (int)((y0 - ymin) * ky)); 
+				p = new Point((int)(grid * 10 + (x0 - xmin) * kx), (grid * 5 + SCHEME_SIZE.height - (int)((y0 - ymin) * ky))); 
 			} else {
-				p = new Point((int)(Constants.A0.width * Math.random()), (int)(Constants.A0.height * Math.random()));
+				Log.errorMessage("No equipment for " + schemeElement.getName() + " (" + schemeElement.getId() + ")");
+				p = new Point((int)(SCHEME_SIZE.width * Math.random()), (int)(SCHEME_SIZE.height * Math.random()));
 			}
 			if (schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
 				// TODO schemeElement.getScheme(false)
@@ -672,7 +740,7 @@ public class SchemeImportCommand extends AbstractCommand {
 		}
 		
 		for (SchemeCableLink schemeCableLink : scheme.getSchemeCableLinks()) {
-			Point p;
+			Point p = null;
 			SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
 			SchemeCablePort targetPort = schemeCableLink.getSourceAbstractSchemePort();
 			if (sourcePort != null) {
@@ -687,10 +755,10 @@ public class SchemeImportCommand extends AbstractCommand {
 						return;
 					}
 				} else {
-					Log.debugMessage("Cell not found for " + sourcePort.getId(), Level.FINER);
-					p = new Point(0, 0);
+					Log.errorMessage("No source found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
 				}
-			} else if (targetPort != null) {
+			} 
+			if (p == null && targetPort != null) {
 				CablePortCell cell = SchemeActions.findCablePortCellById(schemeGraph, targetPort.getId());
 				if (cell != null) {
 					try {
@@ -702,11 +770,12 @@ public class SchemeImportCommand extends AbstractCommand {
 						return;
 					}
 				} else {
-					Log.debugMessage("Cell not found for " + targetPort.getId(), Level.FINER);
-					p = new Point(0, 0);
+					Log.errorMessage("No target found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
 				}
-			} else {
-				p = new Point(0, 0);	
+			} 
+			if (p == null) {
+				Log.errorMessage("Both source and target not found for " + schemeCableLink.getName() + " (" + schemeCableLink.getId() + ")");
+				p = new Point(10 * grid, 10 * grid); 
 			}
 			
 			internalDispatcher.firePropertyChange(new SchemeEvent(this, schemeCableLink.getId(), p, SchemeEvent.INSERT_SCHEME_CABLELINK));
