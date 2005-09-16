@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateDataRenderingComponent.java,v 1.4 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: ReportTemplateDataRenderingComponent.java,v 1.5 2005/09/16 13:26:30 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import java.awt.FontMetrics;
 import java.awt.Graphics;
 import java.awt.Point;
 
+import com.syrus.AMFICOM.client.report.CreateModelException;
 import com.syrus.AMFICOM.client.report.DataRenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.ReportModelPool;
@@ -33,7 +34,7 @@ public class ReportTemplateDataRenderingComponent extends
 	double modelNameWidth = 0;
 	double reportNameWidth = 0;
 	
-	public ReportTemplateDataRenderingComponent (DataStorableElement dre) {
+	public ReportTemplateDataRenderingComponent (DataStorableElement dre) throws CreateModelException {
 		super(dre);
 		
 		ReportModel reportModel = ReportModelPool.getModel(dre.getModelClassName());

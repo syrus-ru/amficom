@@ -1,5 +1,5 @@
 /*
- * $Id: SchemePortReport.java,v 1.1 2005/09/12 11:36:24 peskovsky Exp $
+ * $Id: SchemePortReport.java,v 1.2 2005/09/16 13:26:27 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
+import com.syrus.util.Log;
 
 public class SchemePortReport {
 	protected static final int COLUMNS_COUNT = 2;
@@ -43,8 +44,11 @@ public class SchemePortReport {
 				new AbstractPortTableModel(abstractPort,vertDivisionsCount),
 				createTableColumnModel(vertDivisionsCount));
 		} catch (ApplicationException e) {
+			Log.errorMessage("SchemePortReport.createReport | " + e.getMessage());
+			Log.errorException(e);			
 			throw new CreateReportException(
 					tableStorableElement.getReportName(),
+					tableStorableElement.getModelClassName(),
 					CreateReportException.ERROR_GETTING_FROM_POOL);
 		}
 		

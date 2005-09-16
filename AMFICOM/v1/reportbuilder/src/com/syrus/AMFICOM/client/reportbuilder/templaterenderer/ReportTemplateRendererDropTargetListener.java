@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRendererDropTargetListener.java,v 1.3 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: ReportTemplateRendererDropTargetListener.java,v 1.4 2005/09/16 13:26:30 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,12 +21,18 @@ import java.io.IOException;
 import java.util.Iterator;
 import java.util.List;
 
+import javax.swing.JOptionPane;
+
 import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
+import com.syrus.AMFICOM.client.report.CreateModelException;
+import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
@@ -34,6 +40,7 @@ import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.util.Log;
 
 public class ReportTemplateRendererDropTargetListener implements DropTargetListener {
 	private final ReportTemplateRenderer renderer;
@@ -83,14 +90,13 @@ public class ReportTemplateRendererDropTargetListener implements DropTargetListe
 					additionalData = ((StorableObject)objectTransferred).getId();
 				}
 				//Для сиюминутных отчётов по карте				
-				else if (	(objectTransferred instanceof com.syrus.AMFICOM.map.Map)
-						||	(objectTransferred instanceof PhysicalLink)
-						||	(objectTransferred instanceof SiteNode)) {
+				else if (	(objectTransferred instanceof PhysicalLink)
+						||	(objectTransferred instanceof SiteNode)
+						||	(objectTransferred instanceof Collector)) {
 					reportModelName = MapReportModel.class.getName();
-					reportName = SchemeReportModel.SELECTED_OBJECT_CHARS;
+					reportName = MapReportModel.SELECTED_OBJECT_CHARS;
 					additionalData = ((StorableObject)objectTransferred).getId();
 				}
-				
 				else {
 					dtde.rejectDrop();
 					return;
@@ -98,12 +104,23 @@ public class ReportTemplateRendererDropTargetListener implements DropTargetListe
 				dtde.acceptDrop(DnDConstants.ACTION_MOVE);
 				dtde.getDropTargetContext().dropComplete(true);
 			}
-			this.renderer.createDataComponentWithText(
-					reportName,
-					reportModelName,
-					additionalData,
-					point,
-					null);
+			try {
+				this.renderer.createDataComponentWithText(
+						reportName,
+						reportModelName,
+						additionalData,
+						point,
+						null);
+			} catch (CreateModelException e) {
+				Log.errorMessage("ReportTemplateRendererDropTargetListener.drop | " + e.getMessage());
+				Log.errorException(e);			
+				JOptionPane.showMessageDialog(
+						Environment.getActiveWindow(),
+						e.getMessage(),
+						LangModelReport.getString("report.Exception.error"),
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			
 			this.applicationContext.getDispatcher().firePropertyChange(
 					new ReportFlagEvent(this,ReportFlagEvent.REPAINT_RENDERER));

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderTreeMouseListener.java,v 1.1 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: ReportBuilderTreeMouseListener.java,v 1.2 2005/09/16 13:26:30 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,22 +13,9 @@ import java.awt.event.MouseListener;
 import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
-import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
+import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.report.ReportModel;
-import com.syrus.AMFICOM.client.report.ReportModelPool;
-import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportQuickViewEvent;
-import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTreeItem;
-import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
-import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
-import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
-import com.syrus.AMFICOM.scheme.AbstractSchemePort;
-import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemePath;
 
 public class ReportBuilderTreeMouseListener implements MouseListener{
 	private JTree tree = null;
@@ -51,14 +38,13 @@ public class ReportBuilderTreeMouseListener implements MouseListener{
 				//—хемных элементов зависит
 				return;
 			//—мотрим, что за ветка - элементы отчЄта или шаблона
-			PopulatableIconedNode secondLevelNode = 
-				(PopulatableIconedNode)treePath.getPathComponent(1);
+			IconedNode secondLevelNode = (IconedNode)treePath.getPathComponent(1);
 			if (!secondLevelNode.getObject().equals(
-					ReportTemplateElementsTreeModel.REPORT_ELEMENTS_ROOT))
+					ReportTemplateElementsTreeModel.REPORT_DATA_ROOT))
 				return;
 			
 			Object lastNodeObject =
-				((PopulatableIconedNode)(treePath.getLastPathComponent())).getObject();
+				((IconedNode)(treePath.getLastPathComponent())).getObject();
 
 			this.applicationContext.getDispatcher().firePropertyChange(
 				new ReportQuickViewEvent(this,lastNodeObject));

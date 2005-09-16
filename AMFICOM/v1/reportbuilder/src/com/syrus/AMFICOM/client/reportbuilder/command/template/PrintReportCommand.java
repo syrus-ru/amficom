@@ -1,12 +1,11 @@
 /*
- * $Id: PrintReportCommand.java,v 1.3 2005/09/13 14:19:21 peskovsky Exp $
+ * $Id: PrintReportCommand.java,v 1.4 2005/09/16 13:26:30 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.client.reportbuilder.command.template;
-import java.util.HashMap;
 import java.util.Map;
 
 import javax.swing.JOptionPane;
@@ -14,8 +13,8 @@ import javax.swing.JOptionPane;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
+import com.syrus.AMFICOM.client.report.ReportException;
 import com.syrus.AMFICOM.client.report.ReportPrinter;
 import com.syrus.AMFICOM.client.reportbuilder.ReportBuilderMainFrame;
 import com.syrus.AMFICOM.report.ReportTemplate;
@@ -38,7 +37,7 @@ public class PrintReportCommand extends AbstractCommand {
 		ApplicationContext aContext = this.mainFrame.getContext();
 		try {
 			ReportPrinter.printReport(reportTemplate,reportData,aContext);
-		} catch (CreateReportException e) {
+		} catch (ReportException e) {
 			Log.errorMessage("PrintReportCommand.execute | " + e.getMessage());
 			Log.errorException(e);			
 			JOptionPane.showMessageDialog(

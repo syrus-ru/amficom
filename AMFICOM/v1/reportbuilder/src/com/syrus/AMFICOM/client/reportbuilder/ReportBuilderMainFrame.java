@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.11 2005/09/13 14:19:21 peskovsky Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.12 2005/09/16 13:26:30 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,6 +38,7 @@ import com.syrus.AMFICOM.client.model.ShowWindowCommand;
 import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
+import com.syrus.AMFICOM.client.report.ReportException;
 import com.syrus.AMFICOM.client.report.ReportRenderer;
 import com.syrus.AMFICOM.client.reportbuilder.command.template.NewTemplateCommand;
 import com.syrus.AMFICOM.client.reportbuilder.command.template.OpenTemplateCommand;
@@ -418,7 +419,7 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 					this.reportPreviewRenderer.setReportTemplate(reportTemplate);
 					try {
 						this.reportPreviewRenderer.setData(reportData);
-					} catch (CreateReportException e) {
+					} catch (ReportException e) {
 						Log.errorMessage("ReportBuilderMainFrame.propertyChange | "
 								+ e.getMessage());
 						Log.errorException(e);

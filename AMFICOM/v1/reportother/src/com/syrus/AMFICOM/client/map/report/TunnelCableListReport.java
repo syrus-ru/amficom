@@ -3,6 +3,7 @@ package com.syrus.AMFICOM.client.map.report;
 import java.util.ArrayList;
 import java.util.Iterator;
 import java.util.List;
+import java.util.Set;
 
 import javax.swing.table.AbstractTableModel;
 import javax.swing.table.DefaultTableColumnModel;
@@ -14,13 +15,14 @@ import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.PhysicalLinkWrapper;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
-import com.syrus.AMFICOM.resource.IntPoint;
-import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.CableChannelingItem;
+import com.syrus.util.Log;
 
 public class TunnelCableListReport {
 	protected static final int COLUMNS_COUNT = 2;
@@ -41,8 +43,11 @@ public class TunnelCableListReport {
 						vertDivisionsCount),
 				createTableColumnModel(vertDivisionsCount));
 		} catch (ApplicationException e) {
+			Log.errorMessage("TunnelCableListReport.createReport | " + e.getMessage());
+			Log.errorException(e);			
 			throw new CreateReportException(
 					tableStorableElement.getReportName(),
+					tableStorableElement.getModelClassName(),
 					CreateReportException.ERROR_GETTING_FROM_POOL);
 		}
 		
@@ -74,13 +79,14 @@ class TunnelCableListTableModel extends AbstractTableModel {
 	private static final String BUILDING_KURZ = "BuildingKurz";
 	
 	private static final String TOPOLOGICAL_LENGTH = "TopologicalLength";
-	private static final String TUNNEL = "Tunnel";
-	private static final String COLLECTOR = "Collector";
+	private static final String TUNNEL = "tunnel";
+	private static final String COLLECTOR = "Collector_id";
 	private static final String CABLE = "cable";	
 	private static final String TUNNEL_CABLE_LIST = "tunnelCableList";
 	private static final String MAP_TUNNEL_POSIT = "maptunnelposit";
-	private static final String MAP_COLLECTOR_POSIT = "mapcollectorposit";	
-	
+	private static final String MAP_COLLECTOR_POSIT = "mapcollectorposit";
+	private static final String START_NODE = "Start_node_id";
+	private static final String END_NODE = "End_node_id";	
 	
 	private static final String ADDRESS = "report.Modules.Map.Common.address";
 	private static final String ADDRESS_SEPARATOR = ", ";	
@@ -100,17 +106,28 @@ class TunnelCableListTableModel extends AbstractTableModel {
 			int vertDivisionsCount) throws ApplicationException {
 		this.vertDivisionsCount = vertDivisionsCount;
 
-		//TODO Здесь объект com.syrus.AMFICOM.map.Map получаем по кондишену. 
-		Map mapObject = null;
+		//Получаем коллекторы для тоннеля
+		LinkedIdsCondition condition = new LinkedIdsCondition(
+				physicalLink.getId(),
+				ObjectEntities.COLLECTOR_CODE);
+		Set<Collector> collectorsSet =
+			StorableObjectPool.getStorableObjectsByCondition(condition,true);
+		Iterator<Collector> collectorsIterator = collectorsSet.iterator();
 		
-		Collector pipePath = mapObject.getCollector(physicalLink);
+		//Хотя коллекторов для physicalLink'а может быть больше одного,
+		//это неправильная ситуация((C)А.Крупенников). Отчёт учитывает
+		//один коллектор.
+		Collector collector = null;
+		if (collectorsIterator.hasNext())
+			collector = collectorsIterator.next();
+		
 		String nameString = null;		
 		String typeString = null;
 		String descriptionString = null;		
-		if(pipePath != null) {
-			nameString = pipePath.getName();
+		if(collector != null) {
+			nameString = collector.getName();
 			typeString = LangModelMap.getString(COLLECTOR);
-			descriptionString = pipePath.getDescription();
+			descriptionString = collector.getDescription();
 		}
 		else {
 			nameString = physicalLink.getName();
@@ -125,24 +142,36 @@ class TunnelCableListTableModel extends AbstractTableModel {
 		this.propertyNamesColumn.add(LangModelReport.getString(DESCRIPTION));
 		this.propertyValuesColumn.add(descriptionString);
 		
-		this.propertyNamesColumn.add(LangModelMap.getString(PhysicalLinkWrapper.COLUMN_START_NODE_ID));
+		this.propertyNamesColumn.add(LangModelMap.getString(START_NODE));
 		this.propertyValuesColumn.add(physicalLink.getStartNode().getName());
-		this.propertyNamesColumn.add(LangModelMap.getString(PhysicalLinkWrapper.COLUMN_END_NODE_ID));
+		this.propertyNamesColumn.add(LangModelMap.getString(END_NODE));
 		this.propertyValuesColumn.add(physicalLink.getEndNode().getName());
 		
-		this.propertyNamesColumn.add(LangModelReport.getString(TOPOLOGICAL_LENGTH));
+		this.propertyNamesColumn.add(LangModelMap.getString(TOPOLOGICAL_LENGTH));
 		this.propertyValuesColumn.add(Double.toString(physicalLink.getLengthLt()));
 
+		String cityString = physicalLink.getCity();
+		String streetString = physicalLink.getStreet();
+		String buildingString = physicalLink.getBuilding();
+		String addressString = "";
+		if (!cityString.equals(EMPTY_STRING))
+			addressString += 
+				(LangModelMap.getString(CITY_KURZ)
+				+ cityString
+				+ ADDRESS_SEPARATOR);		
+		if (!streetString.equals(EMPTY_STRING))
+			addressString += 
+				(LangModelMap.getString(STREET_KURZ)
+				+ streetString
+				+ ADDRESS_SEPARATOR);		
+		if (!buildingString.equals(EMPTY_STRING))
+			addressString += 
+				(LangModelMap.getString(BUILDING_KURZ)
+				+ buildingString
+				+ ADDRESS_SEPARATOR);		
+
 		this.propertyNamesColumn.add(LangModelReport.getString(ADDRESS));
-		this.propertyValuesColumn.add(
-				CITY_KURZ
-				+ physicalLink.getCity()
-				+ ADDRESS_SEPARATOR
-				+ STREET_KURZ
-				+ physicalLink.getStreet()
-				+ ADDRESS_SEPARATOR
-				+ BUILDING_KURZ
-				+ physicalLink.getBuilding());
+		this.propertyValuesColumn.add(addressString);
 		
 		this.originalRowCount += 7;
 		
@@ -153,7 +182,7 @@ class TunnelCableListTableModel extends AbstractTableModel {
 		
 		this.propertyNamesColumn.add(LangModelMap.getString(CABLE));
 		String subTableColumnHeader = null;
-		if(pipePath != null)
+		if(collector != null)
 			subTableColumnHeader = LangModelMap.getString(MAP_TUNNEL_POSIT);
 		else
 			subTableColumnHeader = LangModelMap.getString(MAP_COLLECTOR_POSIT);			
@@ -161,20 +190,22 @@ class TunnelCableListTableModel extends AbstractTableModel {
 
 		this.originalRowCount += 3;
 
-		//TODO Здесь тоже всё по кондишенам
-//		// Getting scheme cable link iterator
-//		Iterator sclIterator = physicalLink.getBinding().getBindObjects().iterator();
-//		for(; sclIterator.hasNext();) {
-//			SchemeCableLink cableLink = (SchemeCableLink)sclIterator.next();
-//			// Имя колодца/узла
-//			this.propertyNamesColumn.add(cableLink.getName());
-//			// Информация о тоннеле - строка типа Тоннель тон.1, место N, L =
-//			// xxx
-//			IntPoint binding = physicalLink.getBinding().getBinding(cableLink);
-//			this.propertyValuesColumn.add(Integer.toString(binding.x) + ":"
-//					+ Integer.toString(binding.y));
-//			this.originalRowCount++;
-//		}
+		//Получаем кабели для тоннеля
+		LinkedIdsCondition condition1 = new LinkedIdsCondition(
+				physicalLink.getId(),
+				ObjectEntities.CABLECHANNELINGITEM_CODE);
+		Set<CableChannelingItem> cableChannellingItemsSet =
+			StorableObjectPool.getStorableObjectsByCondition(condition1,true);
+
+		for(CableChannelingItem ccItem : cableChannellingItemsSet) {
+			// Имя колодца/узла
+			this.propertyNamesColumn.add(ccItem.getParentPathOwner().getName());
+			// Информация о тоннеле - строка типа Тоннель тон.1, место N, L =
+			// xxx
+			this.propertyValuesColumn.add(
+					ccItem.getRowX() + ":" + ccItem.getPlaceY());
+			this.originalRowCount++;
+		}
 		
 		//Вычисляем число строк и столбцов для таблицы
 		this.rowCount = this.originalRowCount / this.vertDivisionsCount;

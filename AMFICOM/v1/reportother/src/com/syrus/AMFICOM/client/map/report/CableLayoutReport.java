@@ -1,7 +1,6 @@
-package com.syrus.AMFICOM.client.scheme.report;
+package com.syrus.AMFICOM.client.map.report;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -11,24 +10,21 @@ import javax.swing.table.TableColumn;
 import javax.swing.table.TableColumnModel;
 
 import com.syrus.AMFICOM.client.report.CreateReportException;
-import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.TableDataRenderingComponent;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
-import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.PhysicalLinkWrapper;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.report.TableDataStorableElement;
-import com.syrus.AMFICOM.resource.IntPoint;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+
 /**
  * Отчёт "Прокладка кабеля"
  * @author $Author: peskovsky $
- * @version $Revision: 1.1 $, $Date: 2005/09/14 14:35:45 $
+ * @version $Revision: 1.3 $, $Date: 2005/09/16 13:26:27 $
  * @module reportother
  */
 public class CableLayoutReport {
@@ -44,18 +40,12 @@ public class CableLayoutReport {
 		int vertDivisionsCount = tableStorableElement.getVerticalDivisionsCount();
 		TableDataRenderingComponent renderingComponent = null;
 		
-		try {
-			renderingComponent = new TableDataRenderingComponent(
-				tableStorableElement,
-				new CableLayoutReportTableModel(
-						cableLink,
-						vertDivisionsCount),
-				createTableColumnModel(vertDivisionsCount));
-		} catch (ApplicationException e) {
-			throw new CreateReportException(
-					tableStorableElement.getReportName(),
-					CreateReportException.ERROR_GETTING_FROM_POOL);
-		}
+		renderingComponent = new TableDataRenderingComponent(
+			tableStorableElement,
+			new CableLayoutReportTableModel(
+					cableLink,
+					vertDivisionsCount),
+			createTableColumnModel(vertDivisionsCount));
 		
 		return renderingComponent;
 	}
@@ -105,7 +95,7 @@ class CableLayoutReportTableModel extends AbstractTableModel {
 	
 	protected CableLayoutReportTableModel (
 			SchemeCableLink cableLink,
-			int vertDivisionsCount) throws ApplicationException {
+			int vertDivisionsCount) {
 		this.vertDivisionsCount = vertDivisionsCount;
 
 		this.siteNodeNameColumn.add(LangModelMap.getString(START_NODE));

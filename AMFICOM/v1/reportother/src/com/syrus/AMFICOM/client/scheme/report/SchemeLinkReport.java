@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeLinkReport.java,v 1.1 2005/09/12 11:36:24 peskovsky Exp $
+ * $Id: SchemeLinkReport.java,v 1.2 2005/09/16 13:26:27 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
+import com.syrus.util.Log;
 
 public class SchemeLinkReport {
 	protected static final int COLUMNS_COUNT = 2;
@@ -46,8 +47,11 @@ public class SchemeLinkReport {
 				new AbstractLinkTableModel(abstractLink,vertDivisionsCount),
 				createTableColumnModel(vertDivisionsCount));
 		} catch (ApplicationException e) {
+			Log.errorMessage("SchemeLinkReport.createReport | " + e.getMessage());
+			Log.errorException(e);			
 			throw new CreateReportException(
 					tableStorableElement.getReportName(),
+					tableStorableElement.getModelClassName(),
 					CreateReportException.ERROR_GETTING_FROM_POOL);
 		}
 		

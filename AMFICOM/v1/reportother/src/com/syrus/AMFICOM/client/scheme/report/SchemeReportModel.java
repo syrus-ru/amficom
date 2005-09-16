@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeReportModel.java,v 1.3 2005/09/14 14:35:45 peskovsky Exp $
+ * $Id: SchemeReportModel.java,v 1.4 2005/09/16 13:26:27 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.util.Collection;
 import java.util.Collections;
 
 import com.syrus.AMFICOM.client.UI.VisualManager;
+import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
@@ -34,7 +35,6 @@ import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
 
@@ -53,11 +53,6 @@ public class SchemeReportModel extends ReportModel
 	 * Характеристики объекта
 	 */
 	public static String SELECTED_OBJECT_CHARS = "selectedObjectChars";
-	/**
-	 * Прокладка кабеля по тоннелям (список колодцев и тоннелей)
-	 */ 
-	public static String CABLE_LAYOUT = "cableLayout";
-
 	public SchemeReportModel(){
 	}
 
@@ -77,26 +72,22 @@ public class SchemeReportModel extends ReportModel
 			ApplicationContext aContext) throws CreateReportException{
 		RenderingComponent result = null;
 		
+		String reportName = element.getReportName();
+		String modelClassName = element.getModelClassName();
+		
 		if (!(data instanceof Identifier))
 			throw new CreateReportException(
-					element.getReportName(),
+					reportName,
+					modelClassName,
 					CreateReportException.WRONG_DATA_TO_INSTALL);
 		
 		Identifier objectId = (Identifier)data;
 		
 		try {
-			if (element.getReportName().equals(ON_SCREEN_SCHEME)) {
+			if (reportName.equals(ON_SCREEN_SCHEME)) {
 				if (objectId.getMajor() == ObjectEntities.SCHEME_CODE) {
 					Scheme scheme = StorableObjectPool.getStorableObject(objectId,true);
 					result = SchemeReport.createReport(scheme,element,aContext);
-				}
-			}
-			else if (element.getReportName().equals(CABLE_LAYOUT)) {
-				if (objectId.getMajor() == ObjectEntities.SCHEMECABLELINK_CODE) {
-					SchemeCableLink schemeCableLink = StorableObjectPool.getStorableObject(objectId,true);
-					result = CableLayoutReport.createReport(
-							(TableDataStorableElement)element,
-							schemeCableLink);
 				}
 			}
 			else if (element.getReportName().equals(SELECTED_OBJECT_UGO)) {
@@ -143,7 +134,7 @@ public class SchemeReportModel extends ReportModel
 							visualManager,
 							dataObject);
 			}
-			else if (element.getReportName().equals(SELECTED_OBJECT_CHARS)) {
+			else if (reportName.equals(SELECTED_OBJECT_CHARS)) {
 				if (objectId.getMajor() == ObjectEntities.SCHEME_CODE) {
 					Scheme scheme = StorableObjectPool.getStorableObject(objectId,true);
 					result = SchemeReport.createReport(scheme,element,aContext);
@@ -177,13 +168,15 @@ public class SchemeReportModel extends ReportModel
 			}
 		} catch (ApplicationException e) {
 			throw new CreateReportException(
-					element.getReportName(),
-					CreateReportException.ERROR_GETTING_FROM_POOL);
+				reportName,
+				modelClassName,
+				CreateReportException.ERROR_GETTING_FROM_POOL);
 		}
 		
 		if (result == null)
 			throw new CreateReportException(
-				element.getReportName(),
+				reportName,
+				modelClassName,
 				CreateReportException.WRONG_DATA_TO_INSTALL);
 		
 		return result;
@@ -197,16 +190,10 @@ public class SchemeReportModel extends ReportModel
 		String langReportName = null;
 		if (	reportName.equals(ON_SCREEN_SCHEME)
 			||	reportName.equals(SELECTED_OBJECT_UGO)
-			||	reportName.equals(CABLE_LAYOUT)			
 			||	reportName.equals(SELECTED_OBJECT_CHARS))
 			langReportName = LangModelReport.getString("report.Modules.SchemeEditor." + reportName);
 		
 		return langReportName;
-	}
-	
-	@Override
-	public Collection<String> getReportElementNames() {
-		return Collections.EMPTY_LIST;
 	}
 
 	@Override
@@ -221,7 +208,6 @@ public class SchemeReportModel extends ReportModel
 		result.add(ON_SCREEN_SCHEME);
 		result.add(SELECTED_OBJECT_UGO);
 		result.add(SELECTED_OBJECT_CHARS);
-		result.add(CABLE_LAYOUT);		
 		
 		return result;
 	}

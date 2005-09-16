@@ -1,5 +1,5 @@
 /*
- * $Id: ReportPrinter.java,v 1.3 2005/09/13 12:23:10 peskovsky Exp $
+ * $Id: ReportPrinter.java,v 1.4 2005/09/16 13:26:29 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,7 @@ public class ReportPrinter {
 	public static void printReport(
 			ReportTemplate reportTemplate,
 			Map<Object, Object> data,
-			ApplicationContext aContext) throws CreateReportException {
+			ApplicationContext aContext) throws CreateReportException, CreateModelException {
 		ReportRenderer reportPreviewRenderer = new ReportRenderer(aContext);
 		reportPreviewRenderer.setReportTemplate(reportTemplate);
 		reportPreviewRenderer.setData(data);

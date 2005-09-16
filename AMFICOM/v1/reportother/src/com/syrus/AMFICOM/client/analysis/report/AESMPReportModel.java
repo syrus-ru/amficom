@@ -113,9 +113,4 @@ public abstract class AESMPReportModel extends ReportModel
 			return LangModelReport.getString("report.Modules.AESMPCommon." + reportName);
 		return null;
 	}
-	
-	@Override
-	public Collection<String> getReportElementNames() {
-		return Collections.EMPTY_LIST;
-	}
 }

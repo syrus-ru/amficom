@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateElementsTreeModel.java,v 1.8 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeModel.java,v 1.9 2005/09/16 13:26:30 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client.reportbuilder;
 import java.util.Collection;
 
 import javax.swing.Icon;
+import javax.swing.JOptionPane;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
@@ -22,23 +23,29 @@ import com.syrus.AMFICOM.client.analysis.report.SurveyReportModel;
 import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.map.ui.MapTreeModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.modelling.report.ModelingReportModel;
 import com.syrus.AMFICOM.client.observe.report.ObserveReportModel;
 import com.syrus.AMFICOM.client.prediction.report.PredictionReportModel;
+import com.syrus.AMFICOM.client.report.CreateModelException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.ReportModelPool;
 import com.syrus.AMFICOM.client.report.ReportModel.ReportType;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTreeItem;
+import com.syrus.AMFICOM.client.scheduler.report.SchedulerReportModel;
 import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeTreeModel;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.AMFICOM.resource.SchemeResourceKeys;
+import com.syrus.util.Log;
 
 public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualManagerFactory {
-	private static final String TREE_ROOT = "report.Tree.availableElements";
-	protected static final String REPORT_ELEMENTS_ROOT = "report.Tree.reportElements";
+	private static final String TREE_ROOT = "report.Tree.rootTemplates";
+	protected static final String REPORT_DATA_ROOT = "report.Tree.reportData";
 	protected static final String TEMPLATE_ELEMENTS_ROOT = "report.Tree.templateElements";
+	protected static final String AVAILABLE_TEMPLATES = "report.Tree.availableTemplates";	
 	
 	private static final String ICON_CATALOG = "icon.catalog";
 
@@ -61,12 +68,24 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 			String s = (String) node.getObject();
 			if (s.equals(TREE_ROOT)) {
 				createRootItems(node, contents);
-			} 
-			else if (s.equals(REPORT_ELEMENTS_ROOT)) {
+			}
+			else if (s.equals(AVAILABLE_TEMPLATES)) {
+			}
+			else if (s.equals(REPORT_DATA_ROOT)) {
 				createReportElementsModels(node, contents);
 			}
 			else if (s.equals(TEMPLATE_ELEMENTS_ROOT)) {
-				createTemplateElementsModels(node, contents);
+				try {
+					createTemplateElementsModels(node, contents);
+				} catch (CreateModelException e) {
+					Log.errorMessage("ReportTemplateElementsTreeModel.populate | " + e.getMessage());
+					Log.errorException(e);			
+					JOptionPane.showMessageDialog(
+							Environment.getActiveWindow(),
+							e.getMessage(),
+							LangModelReport.getString("report.Exception.error"),
+							JOptionPane.ERROR_MESSAGE);
+				}
 			}
 		} 
 		else {
@@ -94,8 +113,8 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 	private void createRootItems(Item node, Collection contents) {
 		node.addChild(new PopulatableIconedNode(
 				this,
-				ReportTemplateElementsTreeModel.REPORT_ELEMENTS_ROOT,
-				LangModelReport.getString(ReportTemplateElementsTreeModel.REPORT_ELEMENTS_ROOT),
+				ReportTemplateElementsTreeModel.REPORT_DATA_ROOT,
+				LangModelReport.getString(ReportTemplateElementsTreeModel.REPORT_DATA_ROOT),
 				UIManager.getIcon(ICON_CATALOG)));
 				
 		node.addChild(new PopulatableIconedNode(
@@ -105,7 +124,7 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 				UIManager.getIcon(ICON_CATALOG)));
 	}
 	
-	private void createTemplateElementsModels(Item node, Collection contents) {
+	private void createTemplateElementsModels(Item node, Collection contents) throws CreateModelException {
 		//Модель для модуля "Карта"
 		ReportModel mapReportModel =
 			ReportModelPool.getModel(MapReportModel.class.getName());
@@ -159,6 +178,15 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 				observeReportModel,
 				observeReportModel.getLocalizedName(),
 				UIManager.getIcon(ICON_CATALOG)));
+
+		//Модель для модуля "Планирование тестов"
+		ReportModel schedulerReportModel =
+			ReportModelPool.getModel(SchedulerReportModel.class.getName());
+		node.addChild(new PopulatableIconedNode(
+				this,
+				schedulerReportModel,
+				schedulerReportModel.getLocalizedName(),
+				UIManager.getIcon(ICON_CATALOG)));
 		
 //		//Модель для модуля "Моделирование"
 //		ReportModel modellingReportModel =
@@ -180,8 +208,10 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 	}
 
 	private void createReportElementsModels(Item node, Collection contents) {
-		node.addChild((new SchemeTreeModel(this.aContext)).getRoot());
-		node.addChild(MapTreeModel.getInstance().createAllMapsRoot());
+		PopulatableIconedNode schemeRoot = (PopulatableIconedNode)(new SchemeTreeModel(this.aContext)).getRoot();
+		schemeRoot.setIcon(UIManager.getIcon(SchemeResourceKeys.ICON_SCHEME));
+		node.addChild(schemeRoot);
+		node.addChild(MapTreeModel.createAllMapsRoot());
 	}
 	
 	private void createReportModelItems(Item node, Collection contents) {
@@ -192,8 +222,6 @@ public class ReportTemplateElementsTreeModel implements ChildrenFactory, VisualM
 		
 		if (parentItem.equals(TEMPLATE_ELEMENTS_ROOT))
 			itemsToAdd = reportModel.getTemplateElementNames();
-		else if (parentItem.equals(REPORT_ELEMENTS_ROOT))
-			itemsToAdd = reportModel.getReportElementNames();
 				
 		if (itemsToAdd == null)
 			throw new AssertionError("Trying to create report element items in wrong branch!");

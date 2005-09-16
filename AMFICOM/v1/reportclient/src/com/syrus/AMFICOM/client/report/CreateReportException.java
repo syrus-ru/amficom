@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.client.report.LangModelReport;
  * @version 1.0
  */
 
-public final class CreateReportException extends Exception {
+public final class CreateReportException extends ReportException {
 	private static final long serialVersionUID = 4681271057954532209L;
 
 	public static final String REPORT_MODEL_IS_ABSENT = "reportModelIsAbsent";
@@ -20,18 +20,30 @@ public final class CreateReportException extends Exception {
 	public static final String WRONG_DATA_TO_INSTALL = "wrongDataToInstall";	
 	public static final String ERROR_GETTING_FROM_POOL = "errorGettingFromPool";	
 
-	private String templateElementName = "";
+	private String elementName = "";
+	private String modelName = "";	
 	private String reason = "";
 
-	public CreateReportException(String templateElementName, String reason) {
-		this.templateElementName = templateElementName;
+	public CreateReportException(
+			String elementName,
+			String modelName,
+			String reason) {
+		this.elementName = elementName;
+		this.modelName = modelName;
 		this.reason = reason;
 	}
 
 	public String getMessage() {
+		String fullReportName = null;
+		try {
+			fullReportName = ReportModelPool.getModel(this.modelName)
+				.getReportElementFullName(this.elementName);
+		} catch (CreateModelException e) {
+			return e.getMessage();
+		}
 		return LangModelReport.getString("report.reportTemplateElement")
 			+ " "
-			+ LangModelReport.getString(this.templateElementName)
+			+ fullReportName
 			+ " "
 			+ LangModelReport.getString("report.Exception.cantImplement")
 			+ " ("

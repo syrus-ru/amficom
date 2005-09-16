@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.6 2005/09/13 12:23:10 peskovsky Exp $
+ * $Id: ReportRenderer.java,v 1.7 2005/09/16 13:26:29 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
 /**
  * Реализует отчёт по шаблону
  * @author $Author: peskovsky $
- * @version $Revision: 1.6 $, $Date: 2005/09/13 12:23:10 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/16 13:26:29 $
  * @module reportclient_v1
  */
 public class ReportRenderer extends JPanel {
@@ -60,17 +60,14 @@ public class ReportRenderer extends JPanel {
 		refreshTemplateBounds();
 	}
 	
-	public void setData(Map<Object, Object> data) throws CreateReportException {
+	public void setData(Map<Object, Object> data)
+		throws CreateReportException, CreateModelException {
 		if (this.reportTemplate == null)
 			throw new AssertionError("Report template is not set!");
 		
 		for (DataStorableElement dataElement : this.reportTemplate.getDataStorableElements()) {
 			String modelName = dataElement.getModelClassName();
 			ReportModel model = ReportModelPool.getModel(modelName);
-			if (model == null)
-				throw new CreateReportException (
-						dataElement.getReportName(),
-						CreateReportException.REPORT_MODEL_IS_ABSENT);
 
 			//Для сиюминутных отчётов - где могут быть два элемента с одинаквым именем
 			//(например, "Характеристики схемного объекта") - пытаемся достать
@@ -84,8 +81,9 @@ public class ReportRenderer extends JPanel {
 			}
 			
 			if (dsElementData == null)
-				throw new CreateReportException (
+				throw new CreateReportException(
 						dataElement.getReportName(),
+						modelName,
 						CreateReportException.NO_DATA_TO_INSTALL);
 			
 			RenderingComponent component = model.createReport(

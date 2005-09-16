@@ -28,11 +28,13 @@ public abstract class ReportModel
 	 * @return Панель с реализованным отчётом
 	 * @throws CreateReportException в случае, если нет данных для
 	 * заполнения отчёта или данные заданы в неправильном формате
+	 * @throws CreateModelException 
 */
 	public abstract RenderingComponent createReport(
 		DataStorableElement element,
 		Object data,
-		ApplicationContext aContext) throws CreateReportException;
+		ApplicationContext aContext)
+		throws CreateReportException, CreateModelException;
 
 	/**
 	 * Название модели (список значений лежит в DestinationModules)
@@ -91,11 +93,6 @@ public abstract class ReportModel
 	 * @return возвращает тип элемента отчёта для элемента шаблона
 	 */
 	public abstract ReportType getReportKind(String reportName);
-
-	/**
-	 * Возвращает список элементов ОТЧЁТА, доступных для данного модуля
-	 */
-	public abstract Collection<String> getReportElementNames();
 
 	/**
 	 * Возвращает список элементов ШАБЛОНА ОТЧЁТА, доступных для данного модуля

@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.8 2005/09/14 14:37:29 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.9 2005/09/16 13:26:30 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,6 +34,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.report.AttachedTextComponent;
+import com.syrus.AMFICOM.client.report.CreateModelException;
 import com.syrus.AMFICOM.client.report.DataRenderingComponent;
 import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
 import com.syrus.AMFICOM.client.report.LangModelReport;
@@ -52,6 +53,7 @@ import com.syrus.AMFICOM.client.reportbuilder.event.ReportQuickViewEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.MODE;
 import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.general.StorableObject;
+import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
@@ -68,6 +70,7 @@ import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
+import com.syrus.util.Log;
 
 public class ReportTemplateRenderer extends JPanel implements PropertyChangeListener{
 	private final static int BORDER_MARGIN_SIZE = 2;
@@ -140,7 +143,18 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		else if (evt instanceof UseTemplateEvent){
 			this.removeAllComponents();
 			
-			this.setTemplate(((UseTemplateEvent)evt).getReportTemplate());
+			try {
+				this.setTemplate(((UseTemplateEvent)evt).getReportTemplate());
+			} catch (CreateModelException e) {
+				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e.getMessage());
+				Log.errorException(e);			
+				JOptionPane.showMessageDialog(
+						Environment.getActiveWindow(),
+						e.getMessage(),
+						LangModelReport.getString("report.Exception.error"),
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 			DRIComponentMouseMotionListener.createInstance(this.applicationContext,this.marginBounds);
 			DRIComponentMouseListener.createInstance(this.applicationContext);			
 			ATComponentMouseMotionListener.createInstance(this.applicationContext,this.marginBounds);
@@ -162,12 +176,12 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				reportName = SchemeReportModel.SELECTED_OBJECT_CHARS;
 				additionalData = ((StorableObject)reportObject).getId();
 			}
-			//Для сиюминутных отчётов по карте				
-			else if (	(reportObject instanceof com.syrus.AMFICOM.map.Map)
-					||	(reportObject instanceof PhysicalLink)
-					||	(reportObject instanceof SiteNode)) {
+			//Для сиюминутных отчётов по карте
+			else if (	(reportObject instanceof PhysicalLink)
+					||	(reportObject instanceof SiteNode)
+					||	(reportObject instanceof Collector)) {
 				reportModelName = MapReportModel.class.getName();
-				reportName = SchemeReportModel.SELECTED_OBJECT_CHARS;
+				reportName = MapReportModel.SELECTED_OBJECT_CHARS;
 				additionalData = ((StorableObject)reportObject).getId();
 			}
 			else
@@ -184,12 +198,23 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			
 			this.removeAllComponents();
 			
-			this.createDataComponentWithText(
-					reportName,
-					reportModelName,
-					additionalData,
-					new Point(this.marginBounds.x + 5,this.marginBounds.y + 50),
-					new Dimension(this.marginBounds.width - 10,300));
+			try {
+				this.createDataComponentWithText(
+						reportName,
+						reportModelName,
+						additionalData,
+						new Point(this.marginBounds.x + 5,this.marginBounds.y + 50),
+						new Dimension(this.marginBounds.width - 10,300));
+			} catch (CreateModelException e) {
+				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e.getMessage());
+				Log.errorException(e);			
+				JOptionPane.showMessageDialog(
+						Environment.getActiveWindow(),
+						e.getMessage(),
+						LangModelReport.getString("report.Exception.error"),
+						JOptionPane.ERROR_MESSAGE);
+				return;
+			}
 
 			this.applicationContext.getDispatcher().firePropertyChange(
 					new ReportFlagEvent(this,ReportFlagEvent.CHANGE_VIEW));
@@ -272,7 +297,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		return this.template;
 	}
 
-	public void setTemplate(ReportTemplate template) {
+	public void setTemplate(ReportTemplate template) throws CreateModelException {
 		this.template = template;
 		this.refreshTemplateBounds();
 		
@@ -452,7 +477,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			String reportName,
 			String reportModelName,			
 			Point location,
-			Dimension size) {
+			Dimension size) throws CreateModelException {
 		ReportModel reportModel = ReportModelPool.getModel(reportModelName);
 		ReportType reportType = reportModel.getReportKind(reportName);
 		
@@ -497,13 +522,14 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	 * @param additionalData Дополнительные данные
 	 * @param location Расположение
 	 * @param size Размер или null для размера по умолчанию
+	 * @throws CreateModelException 
 	 */
 	public void createDataComponentWithText(
 			String reportName,
 			String reportModelName,
 			Object additionalData,
 			Point location,
-			Dimension size) {
+			Dimension size) throws CreateModelException {
 		ReportTemplateDataRenderingComponent dataComponent = 
 			this.createReportTemplateDataRenderingComponent(
 				reportName,

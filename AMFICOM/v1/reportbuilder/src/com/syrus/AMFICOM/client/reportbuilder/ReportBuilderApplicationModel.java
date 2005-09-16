@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderApplicationModel.java,v 1.7 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: ReportBuilderApplicationModel.java,v 1.8 2005/09/16 13:26:30 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ public class ReportBuilderApplicationModel extends ApplicationModel
 	
 	public static final String	MENU_REPORT_TEMPLATE_NEW		= "menuReportTemplateNew";
 	public static final String	MENU_REPORT_TEMPLATE_SAVE		= "menuReportTemplateSave";
-	public static final String	MENU_REPORT_TEMPLATE_SAVE_AS		= "menuReportTemplateSaveAs";	
+	public static final String	MENU_REPORT_TEMPLATE_SAVE_AS	= "menuReportTemplateSaveAs";	
 	public static final String	MENU_REPORT_TEMPLATE_LOAD		= "menuReportTemplateLoad";
 	public static final String	MENU_REPORT_TEMPLATE_EXPORT		= "menuReportTemplateExport";
 	public static final String	MENU_REPORT_TEMPLATE_IMPORT		= "menuReportTemplateImport";	
