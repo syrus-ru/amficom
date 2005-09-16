@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.92 2005/09/15 13:35:46 krupenn Exp $
+ * $Id: NodeLink.java,v 1.93 2005/09/16 06:33:47 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: krupenn $
- * @version $Revision: 1.92 $, $Date: 2005/09/15 13:35:46 $
+ * @version $Revision: 1.93 $, $Date: 2005/09/16 06:33:47 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -71,7 +71,6 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 
 	private transient boolean selected = false;
 	private transient boolean removed = false;
-	private transient boolean alarmState = false;
 
 	public NodeLink(final IdlNodeLink nlt) throws CreateObjectException {
 		try {
@@ -347,7 +346,7 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 	 * {@inheritDoc}
 	 */
 	public void setAlarmState(final boolean alarmState) {
-		this.alarmState = alarmState;
+		throw new UnsupportedOperationException("Cannot set alarm state for a node link!");
 	}
 
 	/**
