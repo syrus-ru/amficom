@@ -1,5 +1,5 @@
 /**
- * $Id: MapToolTippedPanel.java,v 1.13 2005/09/05 13:51:28 krupenn Exp $
+ * $Id: MapToolTippedPanel.java,v 1.14 2005/09/16 11:31:59 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -18,6 +18,7 @@ import java.awt.event.MouseMotionListener;
 import javax.swing.JComponent;
 import javax.swing.JToolTip;
 
+import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.map.LogicalNetLayer;
 import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.map.MapElement;
  * NetMapViewer (прозрачно передавать сообщения мыши родительскому объекту 
  * NetMapViewer). Объект класса MapToolTippedPanel прозрачен и не видим для
  * пользователя
- * @version $Revision: 1.13 $, $Date: 2005/09/05 13:51:28 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/16 11:31:59 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -106,7 +107,7 @@ public class MapToolTippedPanel extends JComponent {
 					logicalNetLayer.getCurrentPoint(),
 					this.parent.getVisibleBounds());
 			String toolTipText = logicalNetLayer.getMapViewController().getController(me).getToolTipText(me);
-			return "<html>" + toolTipText.replaceAll("\n", "<br>") + "</html>";
+			return CommonUIUtilities.convertToHTMLString(toolTipText);
 		} 
 		catch (Exception ex) {
 			return null;
@@ -119,7 +120,7 @@ public class MapToolTippedPanel extends JComponent {
  * возникающих событий мыши родительскому объекту
  * 
  * 
- * @version $Revision: 1.13 $, $Date: 2005/09/05 13:51:28 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/16 11:31:59 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
