@@ -1,5 +1,5 @@
 /*
- * $Id: ImportCommand.java,v 1.9 2005/09/16 15:10:02 krupenn Exp $
+ * $Id: ImportCommand.java,v 1.10 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -21,7 +21,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * 
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -48,7 +48,7 @@ public abstract class ImportCommand extends AbstractCommand {
 		int option = fileChooser.showOpenDialog(Environment.getActiveWindow());
 		if(option == JFileChooser.APPROVE_OPTION) {
 			fileName = fileChooser.getSelectedFile().getPath();
-			if(!(fileName.endsWith(".xml") || fileName.endsWith(".esf"))) //$NON-NLS-1$ //$NON-NLS-1$
+			if(!(fileName.endsWith(".xml") || fileName.endsWith(".esf"))) //$NON-NLS-1$ //$NON-NLS-2$
 				return null;
 		}
 

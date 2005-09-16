@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveLibraryCommand.java,v 1.5 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapEditorRemoveLibraryCommand.java,v 1.6 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,7 +50,7 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 		Map map = mapFrame.getMapView().getMap();
 
 		MapLibrary mapLibrary = (MapLibrary )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("MapLibrary"),
+				LangModelMap.getString("MapLibrary"), //$NON-NLS-1$
 				map.getMapLibraries(),
 				mapLibraryTableController,
 				mapLibraryTableController.getKeysArray(),
@@ -61,7 +61,7 @@ public class MapEditorRemoveLibraryCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted")));
+							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 			return;
 		}

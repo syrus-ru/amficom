@@ -1,5 +1,5 @@
 /*
- * $Id: ImagesPanel.java,v 1.10 2005/09/16 14:53:32 krupenn Exp $
+ * $Id: ImagesPanel.java,v 1.11 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,14 +45,14 @@ import com.syrus.AMFICOM.resource.corba.IdlImageResourcePackage.IdlImageResource
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $
+ * @version $Revision: 1.11 $
  * @module commonclient_v1
  */
 public class ImagesPanel extends JPanel
 		implements PropertyChangeListener {
 
-	public static final String SELECT_IMAGE_RESOURCE = "selectir";
-	public static final String SELECT_IMAGE = "select";
+	public static final String SELECT_IMAGE_RESOURCE = "selectir"; //$NON-NLS-1$
+	public static final String SELECT_IMAGE = "select"; //$NON-NLS-1$
 
 	public BitmapImageResource ir = null;
 
@@ -139,7 +139,7 @@ public class ImagesPanel extends JPanel
 
 	public void showAddImageDialog() {
 		JFileChooser chooser = new JFileChooser();
-		chooser.addChoosableFileFilter(new ChoosableFileFilter("gif", LangModelMap.getString("FileFilter.Picture"))); //$NON-NLS-2$
+		chooser.addChoosableFileFilter(new ChoosableFileFilter("gif", LangModelMap.getString("FileFilter.Picture"))); //$NON-NLS-1$ //$NON-NLS-2$
 		if(chooser.showOpenDialog(null) == JFileChooser.APPROVE_OPTION) {
 			try {
 				File file = chooser.getSelectedFile();

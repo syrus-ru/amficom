@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorOpenLibraryCommand.java,v 1.6 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapEditorOpenLibraryCommand.java,v 1.7 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -75,7 +75,7 @@ public class MapEditorOpenLibraryCommand extends AbstractCommand {
 		}
 		
 		this.mapLibrary = (MapLibrary )WrapperedTableChooserDialog.showChooserDialog(
-				LangModelMap.getString("MapLibrary"),
+				LangModelMap.getString("MapLibrary"), //$NON-NLS-1$
 				allLibraries,
 				mapLibraryTableController,
 				mapLibraryTableController.getKeysArray(),
@@ -86,7 +86,7 @@ public class MapEditorOpenLibraryCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted")));
+							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 			return;
 		}

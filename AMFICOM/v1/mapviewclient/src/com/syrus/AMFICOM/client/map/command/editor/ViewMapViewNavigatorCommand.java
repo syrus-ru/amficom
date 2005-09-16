@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapViewNavigatorCommand.java,v 1.11 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: ViewMapViewNavigatorCommand.java,v 1.12 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 /**
  * отобразить окно привязки схем к карте 
  * @author $Author: krupenn $
- * @version $Revision: 1.11 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/16 15:45:54 $
  * @module mapviewclient
  */
 public class ViewMapViewNavigatorCommand extends AbstractCommand {
@@ -62,7 +62,7 @@ public class ViewMapViewNavigatorCommand extends AbstractCommand {
 			this.treeFrame.setIconifiable(false);
 			this.treeFrame.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
 			this.treeFrame.setFrameIcon(new ImageIcon(
-					Toolkit.getDefaultToolkit().getImage("images/general.gif")));
+					Toolkit.getDefaultToolkit().getImage("images/general.gif"))); //$NON-NLS-1$
 			this.treeFrame.getContentPane().setLayout(new BorderLayout());
 			this.treeFrame.getContentPane().add(panel, BorderLayout.CENTER);
 

@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.51 2005/09/16 14:53:32 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.52 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -85,7 +85,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.51 $, $Date: 2005/09/16 14:53:32 $
+ * @version $Revision: 1.52 $, $Date: 2005/09/16 15:45:54 $
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
@@ -522,7 +522,7 @@ public abstract class NetMapViewer {
 								mapView,
 								path,
 								mne.getMeId(),
-								LangModelMap.getString("Marker"));
+								LangModelMap.getString("Marker")); //$NON-NLS-1$
 						mapView.addMarker(marker);
 
 						MarkerController mc = (MarkerController) 
@@ -548,7 +548,7 @@ public abstract class NetMapViewer {
 								mapView,
 								path,
 								mne.getMeId(),
-								LangModelMap.getString("Event"));
+								LangModelMap.getString("Event")); //$NON-NLS-1$
 						mapView.addMarker(marker);
 
 						MarkerController mc = (MarkerController) 
@@ -584,7 +584,7 @@ public abstract class NetMapViewer {
 									mapView,
 									path,
 									mne.getMeId(),
-									LangModelMap.getString("Alarm"));
+									LangModelMap.getString("Alarm")); //$NON-NLS-1$
 							mapView.addMarker(marker);
 						}
 						else {
@@ -681,8 +681,8 @@ public abstract class NetMapViewer {
 			SiteNodeType newSiteNodeType = SiteNodeType.createInstance(
 					LoginManager.getUserId(), 
 					siteNodeType.getSort(), 
-					"codename", 
-					"Copy of " + siteNodeType.getName(), 
+					"codename",  //$NON-NLS-1$
+					"Copy of " + siteNodeType.getName(),  //$NON-NLS-1$
 					siteNodeType.getDescription(), 
 					siteNodeType.getImageId(), 
 					true, 
@@ -692,7 +692,7 @@ public abstract class NetMapViewer {
 
 			siteNodeTypeEditor.setNetMapViewer(this);
 			if(EditorDialog.showEditorDialog(
-					LangModelMap.getString("sitenodetype"),
+					LangModelMap.getString("sitenodetype"), //$NON-NLS-1$
 					newSiteNodeType,
 					siteNodeTypeEditor) ) {
 				StorableObjectPool.flush(newSiteNodeType, LoginManager.getUserId(), true);
@@ -712,7 +712,7 @@ public abstract class NetMapViewer {
 			PhysicalLinkType newPhysicalLinkType = PhysicalLinkType.createInstance(
 					LoginManager.getUserId(), 
 					physicalLinkType.getSort(), 
-					"codename", 
+					"codename",  //$NON-NLS-1$
 					LangModelMap.getString("Element.CopyOf") + physicalLinkType.getName(),  //$NON-NLS-1$
 					physicalLinkType.getDescription(), 
 					physicalLinkType.getBindingDimension(), 
@@ -722,7 +722,7 @@ public abstract class NetMapViewer {
 			PhysicalLinkTypeEditor physicalLinkTypeEditor = new PhysicalLinkTypeEditor();
 			physicalLinkTypeEditor.setNetMapViewer(this);
 			if(EditorDialog.showEditorDialog(
-					LangModelMap.getString("physicallinktype"),
+					LangModelMap.getString("physicallinktype"), //$NON-NLS-1$
 					newPhysicalLinkType,
 					physicalLinkTypeEditor)) {
 				StorableObjectPool.flush(newPhysicalLinkType, LoginManager.getUserId(), true);
@@ -780,7 +780,7 @@ public abstract class NetMapViewer {
 			MapContext mapContext,
 			MapImageRenderer renderer)
 				throws MapDataException {
-		Log.debugMessage("method call NetMapViewer.create()", Level.FINE);
+		Log.debugMessage("method call NetMapViewer.create()", Level.FINE); //$NON-NLS-1$
 
 		try {
 			Class clazz = Class.forName(viewerClass);
@@ -804,23 +804,23 @@ public abstract class NetMapViewer {
 		} catch(ClassNotFoundException cnfe) {
 			cnfe.printStackTrace();
 			throw new MapDataException(
-					"NetMapViewer.create() throws ClassNotFoundException");
+					"NetMapViewer.create() throws ClassNotFoundException"); //$NON-NLS-1$
 		} catch(InstantiationException ie) {
 			ie.printStackTrace();
 			throw new MapDataException(
-					"NetMapViewer.create() throws InstantiationException");
+					"NetMapViewer.create() throws InstantiationException"); //$NON-NLS-1$
 		} catch(IllegalAccessException iae) {
 			iae.printStackTrace();
 			throw new MapDataException(
-					"NetMapViewer.create() throws IllegalAccessException");
+					"NetMapViewer.create() throws IllegalAccessException"); //$NON-NLS-1$
 		} catch(IllegalArgumentException iae) {
 			iae.printStackTrace();
-			throw new MapDataException("NetMapViewer.create() throws IllegalArgumentException");
+			throw new MapDataException("NetMapViewer.create() throws IllegalArgumentException"); //$NON-NLS-1$
 		} catch(InvocationTargetException ite) {
 			ite.printStackTrace();
-			throw new MapDataException("NetMapViewer.create() throws InvocationTargetException");
+			throw new MapDataException("NetMapViewer.create() throws InvocationTargetException"); //$NON-NLS-1$
 		}
-		throw new MapDataException("NetMapViewer.create() cannot find constructor with arguments (LogicalNetLayer, MapContext, MapImageRenderer) for class " + viewerClass);
+		throw new MapDataException("NetMapViewer.create() cannot find constructor with arguments (LogicalNetLayer, MapContext, MapImageRenderer) for class " + viewerClass); //$NON-NLS-1$
 	}
 
 	/**

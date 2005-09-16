@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorRemoveSiteTypeCommand.java,v 1.8 2005/09/16 15:10:45 krupenn Exp $
+ * $Id: MapEditorRemoveSiteTypeCommand.java,v 1.9 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,7 +58,7 @@ public class MapEditorRemoveSiteTypeCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted")));
+							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 			return;
 		}

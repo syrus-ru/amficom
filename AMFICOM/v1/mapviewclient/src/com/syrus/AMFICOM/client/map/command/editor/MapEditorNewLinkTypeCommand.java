@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewLinkTypeCommand.java,v 1.10 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapEditorNewLinkTypeCommand.java,v 1.11 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,9 +52,9 @@ public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 			PhysicalLinkType physicalLinkType = PhysicalLinkType.createInstance(
 					LoginManager.getUserId(), 
 					PhysicalLinkTypeSort.TUNNEL, 
-					"codename",
+					"codename", //$NON-NLS-1$
 					LangModelMap.getString("New"), //$NON-NLS-1$
-					"",
+					"", //$NON-NLS-1$
 					new IntDimension(1, 1),
 					true,
 					MapLibraryController.getDefaultMapLibrary().getId());
@@ -62,7 +62,7 @@ public class MapEditorNewLinkTypeCommand extends AbstractCommand {
 			PhysicalLinkTypeEditor physicalLinkTypeEditor = new PhysicalLinkTypeEditor();
 			physicalLinkTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
 			if(EditorDialog.showEditorDialog(
-					LangModelMap.getString("physicallinktype"),
+					LangModelMap.getString("physicallinktype"), //$NON-NLS-1$
 					physicalLinkType,
 					physicalLinkTypeEditor) ) {
 				StorableObjectPool.flush(physicalLinkType, LoginManager.getUserId(), true);

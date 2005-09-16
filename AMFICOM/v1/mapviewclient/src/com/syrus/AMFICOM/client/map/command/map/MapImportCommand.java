@@ -1,5 +1,5 @@
 /*
- * $Id: MapImportCommand.java,v 1.47 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapImportCommand.java,v 1.48 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -58,7 +58,7 @@ import com.syrus.util.Log;
  * что активной карты нет, и карта центрируется по умолчанию
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.47 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.48 $, $Date: 2005/09/16 15:45:54 $
  * @module mapviewclient
  */
 public class MapImportCommand extends ImportCommand {
@@ -84,7 +84,7 @@ public class MapImportCommand extends ImportCommand {
 		if(this.mapFrame == null)
 			return;
 
-		Log.debugMessage("Importing map", INFO);
+		Log.debugMessage("Importing map", INFO); //$NON-NLS-1$
 
 		final String fileName = ImportCommand
 				.openFileForReading(MapPropertiesManager.getLastDirectory());
@@ -96,10 +96,10 @@ public class MapImportCommand extends ImportCommand {
 		MapPropertiesManager.setLastDirectory(file.getParent());
 
 		String ext = file.getAbsolutePath().substring(
-				file.getAbsolutePath().lastIndexOf("."));
+				file.getAbsolutePath().lastIndexOf(".")); //$NON-NLS-1$
 
 		if(ext == null) {
-			ext = ".xml";
+			ext = ".xml"; //$NON-NLS-1$
 		}
 		
 		final String extension = ext;
@@ -111,7 +111,7 @@ public class MapImportCommand extends ImportCommand {
 				try {
 					Map map = null;
 					MapImportCommand.this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
-					if(extension.equals(".xml")) {
+					if(extension.equals(".xml")) { //$NON-NLS-1$
 						map = loadXML(fileName);
 					}
 					MapImportCommand.this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
@@ -159,7 +159,7 @@ public class MapImportCommand extends ImportCommand {
 					setResult(Command.RESULT_NO);
 				}
 			}
-		}, LangModelMap.getString("Message.Information.ImportingPlsWait"));	
+		}, LangModelMap.getString("Message.Information.ImportingPlsWait"));	 //$NON-NLS-1$
 	}
 
 	protected Map loadXML(String fileName)
@@ -174,7 +174,7 @@ public class MapImportCommand extends ImportCommand {
 			MapsDocument.Factory.parse(xmlfile);
 
 		if(!validateXml(doc)) {
-			throw new XmlException("Invalid XML");
+			throw new XmlException("Invalid XML"); //$NON-NLS-1$
 		}
 
 		Identifier userId = LoginManager.getUserId();
@@ -184,9 +184,9 @@ public class MapImportCommand extends ImportCommand {
 //		LinkTypeController.getTopologicalLinkTypes();
 //		NodeTypeController.getTopologicalNodeTypes();
 
-		String user_dir = System.getProperty("user.dir");
+		String user_dir = System.getProperty("user.dir"); //$NON-NLS-1$
 		try {
-			System.setProperty("user.dir",  xmlfile.getParent());
+			System.setProperty("user.dir",  xmlfile.getParent()); //$NON-NLS-1$
 
 			XmlMapSeq xmlMaps = doc.getMaps();
 			XmlMap[] xmlMapsArray = xmlMaps.getMapArray();
@@ -202,7 +202,7 @@ public class MapImportCommand extends ImportCommand {
 						+ MapPropertiesManager.getDateFormat()
 							.format(new Date(System.currentTimeMillis())) 
 						+ LangModelMap.getString("FromWithOpeningApostrophe") //$NON-NLS-1$
-						+ xmlfile.getName() + "\')");
+						+ xmlfile.getName() + "\')"); //$NON-NLS-1$
 				
 				map.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
 				
@@ -212,7 +212,7 @@ public class MapImportCommand extends ImportCommand {
 		} catch(CreateObjectException e) {
 			throw e;
 		} finally {
-			System.setProperty("user.dir",  user_dir);
+			System.setProperty("user.dir",  user_dir); //$NON-NLS-1$
 		}
 		return map;
 	}
@@ -228,7 +228,7 @@ public class MapImportCommand extends ImportCommand {
 				.setErrorListener(validationMessages));
 
 		if(!isXmlValid) {
-			Log.debugMessage("Invalid XML: ", WARNING);
+			Log.debugMessage("Invalid XML: ", WARNING); //$NON-NLS-1$
 			for(int i = 0; i < validationMessages.size(); i++) {
 				XmlError error = (XmlError )validationMessages.get(i);
 				Log.debugMessage(error.getMessage(), WARNING);

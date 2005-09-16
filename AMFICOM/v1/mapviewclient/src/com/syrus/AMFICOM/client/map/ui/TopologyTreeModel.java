@@ -1,5 +1,5 @@
 /**
- * $Id: TopologyTreeModel.java,v 1.11 2005/09/16 15:11:12 krupenn Exp $
+ * $Id: TopologyTreeModel.java,v 1.12 2005/09/16 15:45:55 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,16 +41,16 @@ import com.syrus.util.Log;
 
 public class TopologyTreeModel implements ChildrenFactory {
 
-	public static final String TOPOLOGY_BRANCH = "topology";
+	public static final String TOPOLOGY_BRANCH = "topology"; //$NON-NLS-1$
 
-	private static final String NONAME_BRANCH = "noname";
+	private static final String NONAME_BRANCH = "noname"; //$NON-NLS-1$
 
 	static final int IMG_SIZE = 16;
 
-	public static final String UPDATE_STRUNG = "updating";
+	public static final String UPDATE_STRUNG = "updating"; //$NON-NLS-1$
 
 	static ImageIcon layerIcon = new ImageIcon(Toolkit.getDefaultToolkit()
-			.getImage("images/layers.gif").getScaledInstance(
+			.getImage("images/layers.gif").getScaledInstance( //$NON-NLS-1$
 					IMG_SIZE,
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
@@ -281,7 +281,7 @@ public class TopologyTreeModel implements ChildrenFactory {
 
 		private void initialAction() {
 			this.initialName = this.node.getName();
-			String updatingName = this.initialName + " " + LangModelMap.getString(UPDATE_STRUNG);
+			String updatingName = this.initialName + " " + LangModelMap.getString(UPDATE_STRUNG); //$NON-NLS-1$
 			this.node.setName(updatingName);
 //			System.out.println("Set temporal name \'" + updatingName + "\'");
 		}

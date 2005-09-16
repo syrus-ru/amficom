@@ -1,5 +1,5 @@
 /*
- * $Id: MapEditorSaveViewAsCommand.java,v 1.19 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapEditorSaveViewAsCommand.java,v 1.20 2005/09/16 15:45:54 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ
  */
 
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
  * команду MapSaveAsCommand
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.19 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/16 15:45:54 $
  * @module mapviewclient
  * @see MapViewSaveAsCommand
  */
@@ -55,7 +55,7 @@ public class MapEditorSaveViewAsCommand extends AbstractCommand {
 		MapFrame mapFrame = MapDesktopCommand.findMapFrame(this.desktop);
 
 		if(mapFrame == null) {
-			Log.debugMessage("MapView SaveAs: map frame is null! Cannot complete operation.", Level.SEVERE);
+			Log.debugMessage("MapView SaveAs: map frame is null! Cannot complete operation.", Level.SEVERE); //$NON-NLS-1$
 			setResult(Command.RESULT_NO);
 			return;
 		}
@@ -93,7 +93,7 @@ public class MapEditorSaveViewAsCommand extends AbstractCommand {
 					controller.addScheme((Scheme )it.next());
 				}
 
-				mapFrame.setTitle(LangModelMap.getString("MapView") + " - "
+				mapFrame.setTitle(LangModelMap.getString("MapView") + " - " //$NON-NLS-1$ //$NON-NLS-2$
 						+ newMapView.getName());
 				mapFrame.getMapViewer().getLogicalNetLayer().sendMapEvent(MapEvent.MAP_VIEW_CHANGED);
 			}

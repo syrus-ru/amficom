@@ -1,5 +1,5 @@
 /**
- * $Id: AbstractLinkController.java,v 1.40 2005/09/16 14:53:34 krupenn Exp $
+ * $Id: AbstractLinkController.java,v 1.41 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 /**
  * Контроллер линейного элемента карты.
  * @author $Author: krupenn $
- * @version $Revision: 1.40 $, $Date: 2005/09/16 14:53:34 $
+ * @version $Revision: 1.41 $, $Date: 2005/09/16 15:45:54 $
  * @module mapviewclient
  */
 public abstract class AbstractLinkController extends AbstractMapElementController {
@@ -59,13 +59,13 @@ public abstract class AbstractLinkController extends AbstractMapElementControlle
 	Map<String, BasicStroke> strokes = new HashMap<String, BasicStroke>();	
 
 	/** Кодовое имя атрибута "Толщина линии". */
-	public static final String ATTRIBUTE_THICKNESS = "thickness";
+	public static final String ATTRIBUTE_THICKNESS = "thickness"; //$NON-NLS-1$
 	/** Кодовое имя атрибута "Цвет". */
-	public static final String ATTRIBUTE_COLOR = "color";
+	public static final String ATTRIBUTE_COLOR = "color"; //$NON-NLS-1$
 	/** Кодовое имя атрибута "Стиль линии". */
-	public static final String ATTRIBUTE_STYLE = "style";
+	public static final String ATTRIBUTE_STYLE = "style"; //$NON-NLS-1$
 	/** Кодовое имя атрибута "Толщина линии при сигнале тревоги". */
-	public static final String ATTRIBUTE_ALARMED_THICKNESS = "alarmed_thickness";
+	public static final String ATTRIBUTE_ALARMED_THICKNESS = "alarmed_thickness"; //$NON-NLS-1$
 	/** Кодовое имя атрибута "Цвет при сигнале тревоги". */
 	public static final String ATTRIBUTE_ALARMED_COLOR = "alarmed_color"; //$NON-NLS-1$
 

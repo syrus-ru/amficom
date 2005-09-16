@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewLibraryCommand.java,v 1.6 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapEditorNewLibraryCommand.java,v 1.7 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -50,8 +50,8 @@ public class MapEditorNewLibraryCommand extends AbstractCommand {
 			MapLibrary mapLibrary = MapLibrary.createInstance(
 					LoginManager.getUserId(),
 					LangModelMap.getString("New"), //$NON-NLS-1$
-					"",
-					"",
+					"", //$NON-NLS-1$
+					"", //$NON-NLS-1$
 					null);
 			
 			Map map = mapFrame.getMapView().getMap();

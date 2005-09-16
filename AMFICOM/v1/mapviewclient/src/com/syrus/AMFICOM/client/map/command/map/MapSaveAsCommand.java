@@ -1,5 +1,5 @@
 /*
- * $Id: MapSaveAsCommand.java,v 1.27 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapSaveAsCommand.java,v 1.28 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.map.Map;
  * Класс $RCSfile: MapSaveAsCommand.java,v $ используется для сохранения 
  * топологической схемы с новым именем
  * @author $Author: krupenn $
- * @version $Revision: 1.27 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.28 $, $Date: 2005/09/16 15:45:54 $
  * @module mapviewclient
  */
 public class MapSaveAsCommand extends AbstractCommand {
@@ -55,7 +55,7 @@ public class MapSaveAsCommand extends AbstractCommand {
 					userId, 
 					domainId, 
 					this.map .getName() + LangModelMap.getString("IsACopy"),  //$NON-NLS-1$
-					"");
+					""); //$NON-NLS-1$
 			this.newMap.addMapLibrary(MapLibraryController.getDefaultMapLibrary());
 		} catch(CreateObjectException e) {
 			e.printStackTrace();
@@ -66,10 +66,10 @@ public class MapSaveAsCommand extends AbstractCommand {
 				new StatusMessageEvent(
 						this,
 						StatusMessageEvent.STATUS_MESSAGE,
-						LangModelMap.getString("MapSaving")));
+						LangModelMap.getString("MapSaving"))); //$NON-NLS-1$
 
 		if(EditorDialog.showEditorDialog(
-				LangModelMap.getString("MapProperties"),
+				LangModelMap.getString("MapProperties"), //$NON-NLS-1$
 				this.newMap,
 				MapVisualManager.getInstance().getGeneralPropertiesPanel())) {
 // try
@@ -97,7 +97,7 @@ public class MapSaveAsCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Finished")));
+							LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
 			setResult(Command.RESULT_OK);
 		}
 		else {
@@ -105,7 +105,7 @@ public class MapSaveAsCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted")));
+							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 		}
 	}

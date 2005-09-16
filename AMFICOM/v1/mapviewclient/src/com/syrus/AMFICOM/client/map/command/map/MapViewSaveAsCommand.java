@@ -1,5 +1,5 @@
 /*
- * $Id: MapViewSaveAsCommand.java,v 1.26 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapViewSaveAsCommand.java,v 1.27 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * Класс используется для сохранения топологической схемы с новым
  * именем
  * @author $Author: krupenn $
- * @version $Revision: 1.26 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.27 $, $Date: 2005/09/16 15:45:54 $
  * @module mapviewclient
  */
 public class MapViewSaveAsCommand extends AbstractCommand {
@@ -53,8 +53,8 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 			this.newMapView = com.syrus.AMFICOM.mapview.MapView.createInstance(
 					userId,
 					domainId,
-					LangModelMap.getString("New"),
-					"",
+					LangModelMap.getString("New"), //$NON-NLS-1$
+					"", //$NON-NLS-1$
 					0.0D,
 					0.0D,
 					1.0D,
@@ -74,7 +74,7 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 		}
 
 		if(EditorDialog.showEditorDialog(
-				LangModelMap.getString("MapViewProperties"),
+				LangModelMap.getString("MapViewProperties"), //$NON-NLS-1$
 				this.newMapView,
 				MapViewVisualManager.getInstance().getGeneralPropertiesPanel())) {
 // try
@@ -103,7 +103,7 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Finished")));
+							LangModelGeneral.getString("Finished"))); //$NON-NLS-1$
 			setResult(Command.RESULT_OK);
 		}
 		else {
@@ -111,7 +111,7 @@ public class MapViewSaveAsCommand extends AbstractCommand {
 					new StatusMessageEvent(
 							this,
 							StatusMessageEvent.STATUS_MESSAGE,
-							LangModelGeneral.getString("Aborted")));
+							LangModelGeneral.getString("Aborted"))); //$NON-NLS-1$
 			setResult(Command.RESULT_CANCEL);
 		}
 	}

@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorNewSiteTypeCommand.java,v 1.7 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: MapEditorNewSiteTypeCommand.java,v 1.8 2005/09/16 15:45:54 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,9 +52,9 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 			SiteNodeType siteNodeType = SiteNodeType.createInstance(
 					LoginManager.getUserId(), 
 					SiteNodeTypeSort.BUILDING, 
-					"codename",
+					"codename", //$NON-NLS-1$
 					LangModelMap.getString("New"), //$NON-NLS-1$
-					"",
+					"", //$NON-NLS-1$
 					NodeTypeController.getDefaultImageId(),
 					true,
 					MapLibraryController.getDefaultMapLibrary().getId());
@@ -62,7 +62,7 @@ public class MapEditorNewSiteTypeCommand extends AbstractCommand {
 			SiteNodeTypeEditor siteNodeTypeEditor = new SiteNodeTypeEditor();
 			siteNodeTypeEditor.setNetMapViewer(mapFrame.getMapViewer());
 			if(EditorDialog.showEditorDialog(
-					LangModelMap.getString("sitenodetype"),
+					LangModelMap.getString("sitenodetype"), //$NON-NLS-1$
 					siteNodeType,
 					siteNodeTypeEditor) ) {
 				StorableObjectPool.flush(siteNodeType, LoginManager.getUserId(), true);
