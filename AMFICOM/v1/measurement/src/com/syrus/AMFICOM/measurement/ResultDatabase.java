@@ -1,5 +1,5 @@
 /*
- * $Id: ResultDatabase.java,v 1.107 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: ResultDatabase.java,v 1.108 2005/09/18 18:19:01 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,6 +23,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -39,7 +40,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.107 $, $Date: 2005/09/14 18:35:57 $
+ * @version $Revision: 1.108 $, $Date: 2005/09/18 18:19:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -354,6 +355,65 @@ public final class ResultDatabase extends StorableObjectDatabase<Result> {
 		final Set<Result> objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveResultParametersByOneQuery(objects);
 		return objects;
+	}
+
+	public int retrieveNumberOf(final Identifier testId, final ResultSort resultSort) throws RetrieveObjectException {
+		assert testId != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert testId.getMajor() == ObjectEntities.TEST_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		assert resultSort != null : ErrorMessages.NON_NULL_EXPECTED;
+
+		final String testIdStr = DatabaseIdentifier.toSQLString(testId);
+		final String sql = SQL_SELECT + SQL_COUNT + " count "
+				+ SQL_FROM + this.getEntityName()
+				+ SQL_WHERE + ResultWrapper.COLUMN_SORT + EQUALS + Integer.toString(resultSort.value())
+						+ SQL_AND
+								+ ResultWrapper.COLUMN_MEASUREMENT_ID + SQL_IN + OPEN_BRACKET
+										+ SQL_SELECT + StorableObjectWrapper.COLUMN_ID
+										+ SQL_FROM + ObjectEntities.MEASUREMENT
+										+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
+								+ CLOSE_BRACKET;
+		Statement statement = null;
+		ResultSet resultSet = null;
+		Connection connection = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.createStatement();
+			Log.debugMessage("ResultDatabase.retrieveNumberOf | Trying: " + sql, Log.DEBUGLEVEL09);
+			resultSet = statement.executeQuery(sql);
+			if (resultSet.next()) {
+				return resultSet.getInt("count");
+			}
+			Log.errorMessage("ResultDatabase.retrieveNumberOf | ERROR: cannot select number of results for test '" + testIdStr
+					+ "' of result sort " + resultSort.value() + "; returning 0");
+			return 0;
+		} catch (SQLException sqle) {
+			final String mesg = "ResultDatabase.retrieveNumberOf | Cannot retrieve number of results for test '" + testIdStr
+				+ "' of result sort " + resultSort.value() + " -- " + sqle.getMessage();
+			throw new RetrieveObjectException(mesg, sqle);
+		} finally {
+			try {
+				try {
+					if (resultSet != null) {
+						resultSet.close();
+						resultSet = null;
+					}
+				} finally {
+					try {
+						if (statement != null) {
+							statement.close();
+							statement = null;
+						}
+					} finally {
+						if (connection != null) {
+							DatabaseConnection.releaseConnection(connection);
+							connection = null;
+						}
+					}
+				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
 	}
 
 }
