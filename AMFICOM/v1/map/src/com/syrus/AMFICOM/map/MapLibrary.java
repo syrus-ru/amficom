@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.26 2005/09/16 15:58:21 bass Exp $
+ * $Id: MapLibrary.java,v 1.27 2005/09/18 12:42:19 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,11 +53,11 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/09/16 15:58:21 $
+ * @version $Revision: 1.27 $, $Date: 2005/09/18 12:42:19 $
  * @author $Author: bass $
  * @module map
  */
-public class MapLibrary extends StorableObject implements Identifiable, Namable, Library, XmlBeansTransferable<XmlMapLibrary> {
+public final class MapLibrary extends StorableObject implements Namable, Library, XmlBeansTransferable<XmlMapLibrary> {
 	private static final long	serialVersionUID	= -8616969914711251336L;
 
 	private String name;
@@ -294,9 +294,15 @@ public class MapLibrary extends StorableObject implements Identifiable, Namable,
 	}
 	
 	protected void setParent0(final Item parent) {
-		assert parent instanceof MapLibrary : "must be instance of MapLibrary";
-		assert parent != this : CIRCULAR_DEPS_PROHIBITED;
-		this.parentMapLibraryId = Identifier.possiblyVoid((MapLibrary) parent);
+		/*
+		 * MapLibrary's and Item's hierarchies have nothing in common.
+		 * The code is erroneous. 
+		 */
+//		assert parent instanceof MapLibrary : "must be instance of MapLibrary";
+//		assert parent != this : CIRCULAR_DEPS_PROHIBITED;
+//		this.parentMapLibraryId = Identifier.possiblyVoid((MapLibrary) parent);
+		assert false;
+		System.exit(1);
 	}
 
 	public MapLibrary getParent() {
