@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.47 2005/09/18 14:20:46 bob Exp $
+ * $Id: PlanPanel.java,v 1.48 2005/09/18 14:24:42 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/09/18 14:20:46 $
+ * @version $Revision: 1.48 $, $Date: 2005/09/18 14:24:42 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -84,7 +84,7 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 			this.align = align;
 		}
 	}
-	private static final String[]	SCALES				= new String[] {
+	static final String[]	SCALES				= new String[] {
 			"Text.Plan.Toolbar.Scope.10Minutes", 
 			"Text.Plan.Toolbar.Scope.1Hour", 
 			"Text.Plan.Toolbar.Scope.6Hours", 
