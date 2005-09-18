@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.119 2005/09/18 18:18:09 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.120 2005/09/18 20:15:14 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,7 +36,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.119 $, $Date: 2005/09/18 18:18:09 $
+ * @version $Revision: 1.120 $, $Date: 2005/09/18 20:15:14 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -118,7 +118,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		String query = super.retrieveQuery(condition);
 		query = query.replaceFirst(TestWrapper.COLUMN_START_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_START_TIME));
 		query = query.replaceFirst(TestWrapper.COLUMN_END_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_END_TIME));
-		query = query.replaceFirst(TestWrapper.COLUMN_STOP_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_END_TIME));
+		query = query.replaceFirst(TestWrapper.COLUMN_STOP_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_STOP_TIME));
 		return query;
 	}
 
@@ -171,6 +171,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			throw new RetrieveObjectException(ae);
 		}
 		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
+		final Date stopTime = DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_STOP_TIME);
 		final String stopReason = DatabaseString.fromQuerySubString(resultSet.getString(TestWrapper.COLUMN_STOP_REASON));
 		test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
@@ -188,7 +189,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				monitoredElement,
 				(description != null) ? description : "",
 				resultSet.getInt(TestWrapper.COLUMN_NUMBER_OF_MEASUREMENTS),
-				DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_STOP_TIME),
+				(stopTime != null) ? stopTime : new Date(0),
 				(stopReason != null) ? stopReason : "");
 
 		return test;
