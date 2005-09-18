@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementDatabase.java,v 1.93 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: MeasurementDatabase.java,v 1.94 2005/09/18 18:21:43 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,15 +8,15 @@
 
 package com.syrus.AMFICOM.measurement;
 
-import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.sql.Timestamp;
+import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.ObjectEntities;
@@ -26,14 +26,12 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.util.Log;
-import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/09/14 18:35:57 $
+ * @version $Revision: 1.94 $, $Date: 2005/09/18 18:21:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -160,57 +158,28 @@ public final class MeasurementDatabase extends StorableObjectDatabase<Measuremen
 		return query;
 	}
 
-	public Result retrieveResult(final Measurement measurement, final ResultSort resultSort)
-			throws ObjectNotFoundException, RetrieveObjectException {
-		final String measurementIdStr = DatabaseIdentifier.toSQLString(measurement.getId());
-		final int resultSortNum = resultSort.value();
-		final String sql = SQL_SELECT
-			+ StorableObjectWrapper.COLUMN_ID
-			+ SQL_FROM + ObjectEntities.RESULT
-			+ SQL_WHERE + ResultWrapper.COLUMN_MEASUREMENT_ID + EQUALS + measurementIdStr
-			+ SQL_AND + ResultWrapper.COLUMN_SORT + EQUALS + Integer.toString(resultSortNum);
-		Statement statement = null;
-		ResultSet resultSet = null;
-		Connection connection = null;
+	public Measurement retrieveLast(final Identifier testId) throws RetrieveObjectException, ObjectNotFoundException {
+		assert testId != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert testId.getMajor() == ObjectEntities.TEST_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+
+		final String testIdStr = DatabaseIdentifier.toSQLString(testId);
+		final String condition = MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
+				+ SQL_AND
+						+ MeasurementWrapper.COLUMN_START_TIME + EQUALS + OPEN_BRACKET
+								+ SQL_SELECT + SQL_FUNCTION_MAX + OPEN_BRACKET + MeasurementWrapper.COLUMN_START_TIME + CLOSE_BRACKET
+								+ SQL_FROM + this.getEntityName()
+								+ SQL_WHERE + MeasurementWrapper.COLUMN_TEST_ID + EQUALS + testIdStr
+						+ CLOSE_BRACKET;
 		try {
-			connection = DatabaseConnection.getConnection();
-			statement = connection.createStatement();
-			Log.debugMessage("MeasurementDatabase.retrieveResult | Trying: " + sql, Log.DEBUGLEVEL09);
-			resultSet = statement.executeQuery(sql);
-			if (resultSet.next()) {				
-				try {
-					return (Result)StorableObjectPool.getStorableObject(DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_ID), true);
-				} catch (ApplicationException ae) {
-					throw new RetrieveObjectException(ae);
-				}
+			final Set<Measurement> measurements = this.retrieveByCondition(condition);
+			if (!measurements.isEmpty()) {
+				return measurements.iterator().next();
 			}
-			throw new ObjectNotFoundException("No result of sort: " + resultSortNum + " for measurement " + measurementIdStr);
-		} catch (SQLException sqle) {
-			final String mesg = "MeasurementDatabase.retrieveResult | Cannot retrieve result of sort " + resultSortNum + " for measurement '" + measurementIdStr + "' -- " + sqle.getMessage();
-			throw new RetrieveObjectException(mesg, sqle);
-		} finally {
-			try {
-				try {
-					if (resultSet != null) {
-						resultSet.close();
-						resultSet = null;
-					}
-				} finally {
-					try {
-						if (statement != null) {
-							statement.close();
-							statement = null;
-						}
-					} finally {
-						if (connection != null) {
-							DatabaseConnection.releaseConnection(connection);
-							connection = null;
-						}
-					}
-				}
-			} catch (SQLException sqle1) {
-				Log.errorException(sqle1);
-			}
+			throw new ObjectNotFoundException("Cannot find measurements for test '" + testId + "'");
+		} catch (IllegalDataException ide) {
+			//-Never
+			Log.errorException(ide);
+			throw new RetrieveObjectException(ide.getMessage(), ide);
 		}
 	}
 
