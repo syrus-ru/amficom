@@ -62,7 +62,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.77 $, $Date: 2005/09/16 16:01:20 $
+ * @version $Revision: 1.78 $, $Date: 2005/09/18 10:42:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -425,8 +425,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	//				System.out.println("ReflectometryTestPanel.getSet() | newSet: " + this.setId);
 					// Log.debugMessage("ReflectometryTestPanel.getSet | ",
 					// Log.FINEST);
-				} catch (IllegalArgumentException e) {
-					// Log.errorException(e);
+				} catch (final IllegalArgumentException e) {
+					Log.errorException(e);
 					AbstractMainFrame.showErrorMessage(this, e);
 				} catch (ApplicationException ae) {
 					AbstractMainFrame.showErrorMessage(this, ae);
@@ -561,243 +561,245 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	@Override
 	public void setMonitoredElement(final MonitoredElement me) {
 //		System.out.println("ReflectometryTestPanel.setMonitoredElement()");
-		this.skip = true;
-		this.meId = me.getId();
-		final Identifier measurementPortId1 = me.getMeasurementPortId();
-		if (this.measurementPortId == null || !this.measurementPortId.equals(measurementPortId1)) {
-			try {
-				this.measurementPortId = measurementPortId1;
-
-				this.refreshTitles();
-
-				final MeasurementPort port = (MeasurementPort) StorableObjectPool.getStorableObject(measurementPortId1, true);
-				final LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(port.getType().getId(),
-						ObjectEntities.CHARACTERISTIC_CODE);
-				final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
-
-				if (this.traceLength == null) {
-					this.traceLength = new HashMap<String, String>();
-				} else {
-					this.traceLength.clear();
-				}
-
-				if (this.indexOfRefraction == null) {
-					this.indexOfRefraction = new HashMap<String, String>();
-				} else {
-					this.indexOfRefraction.clear();
-				}
-
-				if (this.averageCount == null) {
-					this.averageCount = new HashMap<String, String>();
-				} else {
-					this.averageCount.clear();
-				}
-
-				if (this.resolutionList == null) {
-					this.resolutionList = new LinkedList<String>();
-				} else {
-					this.resolutionList.clear();
-				}
-
-				if (this.pulseWidthHiResMap == null) {
-					this.pulseWidthHiResMap = new HashMap<String, String>();
-				} else {
-					this.pulseWidthHiResMap.clear();
-				}
-
-				if (this.pulseWidthLowResMap == null) {
-					this.pulseWidthLowResMap = new HashMap<String, String>();
-				} else {
-					this.pulseWidthLowResMap.clear();
-				}
-
-				Pattern pattern = Pattern.compile(CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + "(\\d+)(" //$NON-NLS-1$
-						+ CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX + "|" //$NON-NLS-1$
-						+ CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES_SUFFIX + "|" //$NON-NLS-1$
-						+ CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES_SUFFIX + "|" //$NON-NLS-1$
-						+ CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX + "|" //$NON-NLS-1$
-						+ CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX + ")"); //$NON-NLS-1$
-
-//				 Log.debugMessage("ReflectometryTestPanel.setMonitoredElementId | characteristics.size() "
-//				 + characteristics.size(), Level.FINEST);
-
-				for (final Characteristic characteristic : characteristics) {
-					final StorableObjectType type = characteristic.getType();
-//					 System.out.println("characteristicType is " +					 type.getId());
-					final String codename = type.getCodename();
-					final String value = characteristic.getValue();
-//					 System.out.println("codename is '" + codename + "', valueis: " + value);
-
-					if (codename.equals(CharacteristicTypeCodenames.TRACE_WAVELENGTH)) {
-						final String[] values = value.split("\\s+"); //$NON-NLS-1$
-						Arrays.sort(values, this.comparator);
-						this.waveLengthComboBox.removeAllItems();
-						for (int i = 0; i < values.length; i++) {
-							this.waveLengthComboBox.addItem(values[i]);
-						}
-
-					} else if (codename.equals(CharacteristicTypeCodenames.TRACE_RESOLUTION)) {
-						final String[] values = value.split("\\s+"); //$NON-NLS-1$
-						Arrays.sort(values, this.comparator);
-						this.resolutionComboBox.removeAllItems();
-						for (int i = 0; i < values.length; i++) {
-							this.resolutionList.add(values[i]);
-							this.resolutionComboBox.addItem(values[i]);
-						}
-
-					} else if (codename.equals(CharacteristicTypeCodenames.TRACE_MAXPOINTS)) {
-						this.maxPoints = Long.parseLong(value);
+		synchronized (this) {
+			this.skip = true;
+			this.meId = me.getId();
+			final Identifier measurementPortId1 = me.getMeasurementPortId();
+			if (this.measurementPortId == null || !this.measurementPortId.equals(measurementPortId1)) {
+				try {
+					this.measurementPortId = measurementPortId1;
+	
+					this.refreshTitles();
+	
+					final MeasurementPort port = (MeasurementPort) StorableObjectPool.getStorableObject(measurementPortId1, true);
+					final LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(port.getType().getId(),
+							ObjectEntities.CHARACTERISTIC_CODE);
+					final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
+	
+					if (this.traceLength == null) {
+						this.traceLength = new HashMap<String, String>();
+					} else {
+						this.traceLength.clear();
 					}
-					// else if (codename.equals(CHARACTER_MAX_REFRACTION)) {
-					// try {
-					// this.maxIndexOfRefraction = Double.parseDouble(value);
-					// } catch (NumberFormatException nfe) {
-					// this.maxIndexOfRefraction = 0.0;
-					// }
-					//
-					// } else if (codename.equals(CHARACTER_MIN_REFRACTION)) {
-					// try {
-					// this.minIndexOfRefraction = Double.parseDouble(value);
-					// } catch (NumberFormatException nfe) {
-					// this.minIndexOfRefraction = 0.0;
-					// }
-					// }
-					else {
-						final Matcher matcher = pattern.matcher(codename);
-						if (matcher.find()) {
-							String waveLength = null;
-							String suffix = null;
-							for (int j = 0; j <= matcher.groupCount(); j++) {
-								final String substring = codename.substring(matcher.start(j), matcher.end(j));
-								// System.out.println("j:" + j + "\t" +
-								// substring);
-								switch (j) {
-									case 1:
-										waveLength = substring;
-										break;
-									case 2:
-										suffix = substring;
-										break;
+	
+					if (this.indexOfRefraction == null) {
+						this.indexOfRefraction = new HashMap<String, String>();
+					} else {
+						this.indexOfRefraction.clear();
+					}
+	
+					if (this.averageCount == null) {
+						this.averageCount = new HashMap<String, String>();
+					} else {
+						this.averageCount.clear();
+					}
+	
+					if (this.resolutionList == null) {
+						this.resolutionList = new LinkedList<String>();
+					} else {
+						this.resolutionList.clear();
+					}
+	
+					if (this.pulseWidthHiResMap == null) {
+						this.pulseWidthHiResMap = new HashMap<String, String>();
+					} else {
+						this.pulseWidthHiResMap.clear();
+					}
+	
+					if (this.pulseWidthLowResMap == null) {
+						this.pulseWidthLowResMap = new HashMap<String, String>();
+					} else {
+						this.pulseWidthLowResMap.clear();
+					}
+	
+					Pattern pattern = Pattern.compile(CharacteristicTypeCodenames.TRACE_WAVELENGTH_PREFIX + "(\\d+)(" //$NON-NLS-1$
+							+ CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX + "|" //$NON-NLS-1$
+							+ CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES_SUFFIX + "|" //$NON-NLS-1$
+							+ CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES_SUFFIX + "|" //$NON-NLS-1$
+							+ CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX + "|" //$NON-NLS-1$
+							+ CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX + ")"); //$NON-NLS-1$
+	
+	//				 Log.debugMessage("ReflectometryTestPanel.setMonitoredElementId | characteristics.size() "
+	//				 + characteristics.size(), Level.FINEST);
+	
+					for (final Characteristic characteristic : characteristics) {
+						final StorableObjectType type = characteristic.getType();
+	//					 System.out.println("characteristicType is " +					 type.getId());
+						final String codename = type.getCodename();
+						final String value = characteristic.getValue();
+	//					 System.out.println("codename is '" + codename + "', valueis: " + value);
+	
+						if (codename.equals(CharacteristicTypeCodenames.TRACE_WAVELENGTH)) {
+							final String[] values = value.split("\\s+"); //$NON-NLS-1$
+							Arrays.sort(values, this.comparator);
+							this.waveLengthComboBox.removeAllItems();
+							for (int i = 0; i < values.length; i++) {
+								this.waveLengthComboBox.addItem(values[i]);
+							}
+	
+						} else if (codename.equals(CharacteristicTypeCodenames.TRACE_RESOLUTION)) {
+							final String[] values = value.split("\\s+"); //$NON-NLS-1$
+							Arrays.sort(values, this.comparator);
+							this.resolutionComboBox.removeAllItems();
+							for (int i = 0; i < values.length; i++) {
+								this.resolutionList.add(values[i]);
+								this.resolutionComboBox.addItem(values[i]);
+							}
+	
+						} else if (codename.equals(CharacteristicTypeCodenames.TRACE_MAXPOINTS)) {
+							this.maxPoints = Long.parseLong(value);
+						}
+						// else if (codename.equals(CHARACTER_MAX_REFRACTION)) {
+						// try {
+						// this.maxIndexOfRefraction = Double.parseDouble(value);
+						// } catch (NumberFormatException nfe) {
+						// this.maxIndexOfRefraction = 0.0;
+						// }
+						//
+						// } else if (codename.equals(CHARACTER_MIN_REFRACTION)) {
+						// try {
+						// this.minIndexOfRefraction = Double.parseDouble(value);
+						// } catch (NumberFormatException nfe) {
+						// this.minIndexOfRefraction = 0.0;
+						// }
+						// }
+						else {
+							final Matcher matcher = pattern.matcher(codename);
+							if (matcher.find()) {
+								String waveLength = null;
+								String suffix = null;
+								for (int j = 0; j <= matcher.groupCount(); j++) {
+									final String substring = codename.substring(matcher.start(j), matcher.end(j));
+									// System.out.println("j:" + j + "\t" +
+									// substring);
+									switch (j) {
+										case 1:
+											waveLength = substring;
+											break;
+										case 2:
+											suffix = substring;
+											break;
+									}
+								}
+	
+								// Log.debugMessage("ReflectometryTestPanel.setMonitoredElement
+								// | waveLength: " + waveLength, Log.FINEST);
+								// Log.debugMessage("ReflectometryTestPanel.setMonitoredElement
+								// | suffix: " + suffix, Log.FINEST);
+								if ((waveLength != null) && (suffix != null)) {
+									Map<String, String> map = null;
+									if (suffix.equals(CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX)) {
+										map = this.traceLength;
+									} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES_SUFFIX)) {
+										map = this.pulseWidthHiResMap;
+									} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES_SUFFIX)) {
+										map = this.pulseWidthLowResMap;
+									} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX)) {
+										map = this.indexOfRefraction;
+									} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX)) {
+										map = this.averageCount;
+									}
+									if (map != null) {
+										map.put(waveLength, value);
+									}
 								}
 							}
-
+						}
+					}
+	
+					final Object selectedItem = this.waveLengthComboBox.getSelectedItem();
+					final String wavelength = selectedItem != null ? this.waveLengthComboBox.getSelectedItem().toString() : null;
+					if (wavelength != null) {
+						// System.out.println("wavelength is " + wavelength);
+						if (this.traceLength != null) {
+							final String value = this.traceLength.get(wavelength);
+							if (value == null) {
+								throw new ObjectNotFoundException(LangModelSchedule.getString("Error.TraceLengthValueNotFound")); //$NON-NLS-1$
+							}
+							final String[] values = value.split("\\s+"); //$NON-NLS-1$
+							Arrays.sort(values, this.comparator);
+							this.maxDistanceComboBox.removeAllItems();
+							for (int i = 0; i < values.length; i++) {
+								this.maxDistanceComboBox.addItem(values[i]);
+							}
+						} else {
+							// TODO throw exception
+						}
+	
+						if (this.pulseWidthHiResMap != null) {
+							final String value = this.pulseWidthHiResMap.get(wavelength);
+							if (value != null) {
+								final String[] values = value.split("\\s+"); //$NON-NLS-1$
+								Arrays.sort(values, this.comparator);
+								this.pulseWidthHiResComboBox.removeAllItems();
+								for (int i = 0; i < values.length; i++) {
+									this.pulseWidthHiResComboBox.addItem(values[i]);
+								}
+							} else {
+								// TODO throw exception
+							}
+						} else {
+							// TODO throw exception
+						}
+	
+						if (this.pulseWidthLowResMap != null) {
 							// Log.debugMessage("ReflectometryTestPanel.setMonitoredElement
-							// | waveLength: " + waveLength, Log.FINEST);
+							// | this.pulseWidthLowResMap != null ", Log.FINEST);
+							final String value = this.pulseWidthLowResMap.get(wavelength);
 							// Log.debugMessage("ReflectometryTestPanel.setMonitoredElement
-							// | suffix: " + suffix, Log.FINEST);
-							if ((waveLength != null) && (suffix != null)) {
-								Map<String, String> map = null;
-								if (suffix.equals(CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX)) {
-									map = this.traceLength;
-								} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES_SUFFIX)) {
-									map = this.pulseWidthHiResMap;
-								} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_LOW_RES_SUFFIX)) {
-									map = this.pulseWidthLowResMap;
-								} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_INDEX_OF_REFRACTION_SUFFIX)) {
-									map = this.indexOfRefraction;
-								} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_AVERAGE_COUNT_SUFFIX)) {
-									map = this.averageCount;
+							// | pulseWidthLowResMap value: " + value, Log.FINEST);
+							if (value != null) {
+								final String[] values = value.split("\\s+"); //$NON-NLS-1$
+								Arrays.sort(values, this.comparator);
+								this.pulseWidthLowResComboBox.removeAllItems();
+								for (int i = 0; i < values.length; i++) {
+									this.pulseWidthLowResComboBox.addItem(values[i]);
 								}
-								if (map != null) {
-									map.put(waveLength, value);
+							} else {
+								// TODO throw exception
+							}
+						} else {
+							// TODO throw exception
+						}
+	
+						if (this.indexOfRefraction != null) {
+							final String value = this.indexOfRefraction.get(wavelength);
+							if (value != null) {
+								final String[] values = value.split("\\s+"); //$NON-NLS-1$
+								Arrays.sort(values, this.comparator);
+								this.refractTextField.setText(values[0]);
+							} else {
+								// TODO throw exception
+							}
+						} else {
+							// TODO throw exception
+						}
+	
+						if (this.averageCount != null) {
+							final String value = this.averageCount.get(wavelength);
+							if (value != null) {
+								final String[] values = value.split("\\s+"); //$NON-NLS-1$
+								Arrays.sort(values, this.comparator);
+								this.averageQuantityComboBox.removeAllItems();
+								for (int i = 0; i < values.length; i++) {
+									this.averageQuantityComboBox.addItem(values[i]);
 								}
+							} else {
+								// TODO throw exception
 							}
+						} else {
+							// TODO throw exception
 						}
+					} else {
+						System.err.println(LangModelSchedule.getString("Error.SelectedWaveLengthIsNull")); //$NON-NLS-1$
 					}
+	
+				} catch (final ApplicationException ae) {
+					AbstractMainFrame.showErrorMessage(this, ae);
 				}
-
-				final Object selectedItem = this.waveLengthComboBox.getSelectedItem();
-				final String wavelength = selectedItem != null ? this.waveLengthComboBox.getSelectedItem().toString() : null;
-				if (wavelength != null) {
-					// System.out.println("wavelength is " + wavelength);
-					if (this.traceLength != null) {
-						final String value = this.traceLength.get(wavelength);
-						if (value == null) {
-							throw new ObjectNotFoundException(LangModelSchedule.getString("Error.TraceLengthValueNotFound")); //$NON-NLS-1$
-						}
-						final String[] values = value.split("\\s+"); //$NON-NLS-1$
-						Arrays.sort(values, this.comparator);
-						this.maxDistanceComboBox.removeAllItems();
-						for (int i = 0; i < values.length; i++) {
-							this.maxDistanceComboBox.addItem(values[i]);
-						}
-					} else {
-						// TODO throw exception
-					}
-
-					if (this.pulseWidthHiResMap != null) {
-						final String value = this.pulseWidthHiResMap.get(wavelength);
-						if (value != null) {
-							final String[] values = value.split("\\s+"); //$NON-NLS-1$
-							Arrays.sort(values, this.comparator);
-							this.pulseWidthHiResComboBox.removeAllItems();
-							for (int i = 0; i < values.length; i++) {
-								this.pulseWidthHiResComboBox.addItem(values[i]);
-							}
-						} else {
-							// TODO throw exception
-						}
-					} else {
-						// TODO throw exception
-					}
-
-					if (this.pulseWidthLowResMap != null) {
-						// Log.debugMessage("ReflectometryTestPanel.setMonitoredElement
-						// | this.pulseWidthLowResMap != null ", Log.FINEST);
-						final String value = this.pulseWidthLowResMap.get(wavelength);
-						// Log.debugMessage("ReflectometryTestPanel.setMonitoredElement
-						// | pulseWidthLowResMap value: " + value, Log.FINEST);
-						if (value != null) {
-							final String[] values = value.split("\\s+"); //$NON-NLS-1$
-							Arrays.sort(values, this.comparator);
-							this.pulseWidthLowResComboBox.removeAllItems();
-							for (int i = 0; i < values.length; i++) {
-								this.pulseWidthLowResComboBox.addItem(values[i]);
-							}
-						} else {
-							// TODO throw exception
-						}
-					} else {
-						// TODO throw exception
-					}
-
-					if (this.indexOfRefraction != null) {
-						final String value = this.indexOfRefraction.get(wavelength);
-						if (value != null) {
-							final String[] values = value.split("\\s+"); //$NON-NLS-1$
-							Arrays.sort(values, this.comparator);
-							this.refractTextField.setText(values[0]);
-						} else {
-							// TODO throw exception
-						}
-					} else {
-						// TODO throw exception
-					}
-
-					if (this.averageCount != null) {
-						final String value = this.averageCount.get(wavelength);
-						if (value != null) {
-							final String[] values = value.split("\\s+"); //$NON-NLS-1$
-							Arrays.sort(values, this.comparator);
-							this.averageQuantityComboBox.removeAllItems();
-							for (int i = 0; i < values.length; i++) {
-								this.averageQuantityComboBox.addItem(values[i]);
-							}
-						} else {
-							// TODO throw exception
-						}
-					} else {
-						// TODO throw exception
-					}
-				} else {
-					System.err.println(LangModelSchedule.getString("Error.SelectedWaveLengthIsNull")); //$NON-NLS-1$
-				}
-
-			} catch (final ApplicationException ae) {
-				AbstractMainFrame.showErrorMessage(this, ae);
 			}
+			this.skip = false;
 		}
-		this.skip = false;
 	}
 
 	public void setMeasurementSetup(final MeasurementSetup measurementSetup) {
@@ -821,7 +823,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		final boolean descriptionChanged = !description.equals(this.oldDescription);
 		if (parameterSet != null && (parameterSet.isChanged()
 				|| descriptionChanged)) {
-				Log.debugMessage("ReflectometryTestPanel.refreshTestsSet | ",
+				assert Log.debugMessage("ReflectometryTestPanel.refreshTestsSet | ",
 					Log.DEBUGLEVEL10);
 				this.oldDescription = description;
 				final Set<Identifier> selectedTestIds = this.schedulerModel.getSelectedTestIds();
@@ -1047,8 +1049,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		this.refractTextField.addActionListener(new ActionListener() {
 
 			public void actionPerformed(ActionEvent e) {
-				JTextField textField = (JTextField) e.getSource();
-				String value = textField.getText();
+				final JTextField textField = (JTextField) e.getSource();
+				final String value = textField.getText();
 				double refract = 0.0;
 				boolean isDouble = false;
 				try {
@@ -1077,8 +1079,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 			public void actionPerformed(ActionEvent e) {
 				synchronized (ReflectometryTestPanel.this) {
-					JComboBox comboBox = (JComboBox) e.getSource();
-					Object selectedItem = comboBox.getSelectedItem();
+					final JComboBox comboBox = (JComboBox) e.getSource();
+					final Object selectedItem = comboBox.getSelectedItem();
 					if (selectedItem == null) {
 						return;
 					}
@@ -1090,6 +1092,10 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 						boolean found = false;
 						boolean firstItem = true;
 						boolean firstItemGreater = false;
+						
+						final boolean previousSkipState = ReflectometryTestPanel.this.skip;
+						
+						ReflectometryTestPanel.this.skip = true;
 						ReflectometryTestPanel.this.resolutionComboBox.removeAllItems();
 						for (Iterator it = ReflectometryTestPanel.this.resolutionList.iterator(); it.hasNext();) {
 							String res = (String) it.next();
@@ -1120,6 +1126,8 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 								ReflectometryTestPanel.this.resolutionComboBox.setSelectedIndex(comboBox.getItemCount() - 1);
 							}
 						}
+						
+						ReflectometryTestPanel.this.skip = previousSkipState;
 					}
 				}
 			}
@@ -1138,10 +1146,12 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 
 		final ActionListener changeActionListener = new ActionListener() {
 
-			public void actionPerformed(ActionEvent e) {
+			public void actionPerformed(ActionEvent e) {				
 				if (!ReflectometryTestPanel.this.skip) {
-					Log.debugMessage("ReflectometryTestPanel.ActionListener.actionPerformed | ", Log.DEBUGLEVEL10);
-					ReflectometryTestPanel.this.refreshTestsSet();
+					synchronized(ReflectometryTestPanel.this) {
+						assert Log.debugMessage("ReflectometryTestPanel.ActionListener.actionPerformed | ", Log.DEBUGLEVEL10);
+						ReflectometryTestPanel.this.refreshTestsSet();
+					}
 				}
 			}
 		};
