@@ -10,7 +10,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
-import java.awt.Toolkit;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Iterator;
@@ -18,23 +17,18 @@ import java.util.LinkedList;
 import java.util.List;
 
 import javax.swing.JComponent;
-import javax.swing.JDialog;
-import javax.swing.JPanel;
 import javax.swing.JTable;
 import javax.swing.table.JTableHeader;
 import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import com.syrus.AMFICOM.client.launcher.Launcher;
-import com.syrus.AMFICOM.client.model.Environment;
-import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/18 13:11:34 $
- * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/09/18 13:14:40 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -138,68 +132,12 @@ public final class CommonUIUtilities {
 		return toRemove;
 	}
 
-	public static synchronized void invokeAsynchronously(final Runnable doRun,
+	/**
+	 * @deprecated use {@link ProcessingDialog} instead of this method
+	 */
+	@Deprecated
+	public static void invokeAsynchronously(final Runnable doRun,
 											final String dialogTitle) {
-		class AThread extends Thread {
-
-			// XXX very ugly workaround,
-			// we should not use the pair setVisible/dispose from concurrent threads
-			volatile boolean	flag;
-
-			@Override
-			public void run() {
-				/**
-				 * @todo Set dialog's parent depending on app context.
-				 */
-				this.flag = true;
-				final JDialog jDialog = new JDialog(Environment.getActiveWindow(), dialogTitle, true);
-				jDialog.setResizable(false);
-
-				((JPanel) (jDialog.getContentPane())).setPreferredSize(new Dimension(400, 0));
-				jDialog.pack();
-				Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
-				jDialog.setLocation((screenSize.width - jDialog.getWidth()) / 2,
-					(screenSize.height - jDialog.getHeight()) / 2);
-
-				Thread targetThread = new Thread() {
-
-					@Override
-					public void run() {
-						try {
-							doRun.run();
-						} catch(final Throwable throwable) {
-							// too unlikely 
-							new Launcher.DefaultThrowableHandler(LangModelGeneral.getString("Error")).handle(throwable);
-						}
-					}
-					
-				};
-				targetThread.start();
-
-				Thread dialogThread = new Thread() {
-
-					@Override
-					public void run() {
-						if (AThread.this.flag) {
-							jDialog.setVisible(true);
-							if (!AThread.this.flag) {
-								jDialog.dispose();
-							}
-						}
-					}
-				};
-				dialogThread.start();
-
-				try {
-					targetThread.join();
-				} catch (InterruptedException ie) {
-					ie.printStackTrace();
-				}
-				this.flag = false;
-				jDialog.dispose();				
-			}
-		}
-		
-		new AThread().start();
+		new ProcessingDialog(doRun, dialogTitle);
 	}
 }
