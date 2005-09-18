@@ -1,5 +1,5 @@
 /*-
-* $Id: LabelCheckBoxRenderer.java,v 1.5 2005/09/09 18:54:27 arseniy Exp $
+* $Id: LabelCheckBoxRenderer.java,v 1.6 2005/09/18 14:53:26 bob Exp $
 *
 * Copyright © 2004-2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -25,16 +25,18 @@ import com.syrus.util.Wrapper;
 
 /**
  * Renderer for JCheckBox items based on JLabel.
- * @version $Revision: 1.5 $, $Date: 2005/09/09 18:54:27 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/09/18 14:53:26 $
+ * @author $Author: bob $
  * @module commonclient
  */
-public class LabelCheckBoxRenderer<T> extends JLabel implements ListCellRenderer {
+public class LabelCheckBoxRenderer<T> implements ListCellRenderer {
 
 	private static final long serialVersionUID = 6735690924700450480L;
 
 	protected static Border noFocusBorder;
 
+	protected JLabel label;
+	
 	private static LabelCheckBoxRenderer instance;
 
 	private JComponent component;
@@ -54,8 +56,9 @@ public class LabelCheckBoxRenderer<T> extends JLabel implements ListCellRenderer
 		if (noFocusBorder == null) {
 			noFocusBorder = new EmptyBorder(1, 1, 1, 1);
 		}
-		super.setOpaque(true);
-		super.setBorder(noFocusBorder);
+		this.label = new JLabel();
+		this.label.setOpaque(true);
+		this.label.setBorder(noFocusBorder);
 	}
 
 	/**
@@ -75,8 +78,8 @@ public class LabelCheckBoxRenderer<T> extends JLabel implements ListCellRenderer
 			final int index,
 			final boolean isSelected,
 			final boolean cellHasFocus) {
-		super.setComponentOrientation(list.getComponentOrientation());
-		this.component = this;
+		this.label.setComponentOrientation(list.getComponentOrientation());
+		this.component = this.label;
 
 		Object object;
 		if (this.wrapper == null && this.key == null) {
@@ -98,15 +101,15 @@ public class LabelCheckBoxRenderer<T> extends JLabel implements ListCellRenderer
 		}
 
 		if (object instanceof Icon) {
-			super.setIcon((Icon) object);
-			super.setText(" ");
+			this.label.setIcon((Icon) object);
+			this.label.setText(" ");
 		} else {
 			if (object instanceof JComponent) {
 				this.component = (JComponent) object;
 			}
 			else {
-				super.setIcon(null);
-				super.setText((object == null) ? " " : object.toString());
+				this.label.setIcon(null);
+				this.label.setText((object == null) ? " " : object.toString());
 			}
 		}
 
@@ -122,7 +125,7 @@ public class LabelCheckBoxRenderer<T> extends JLabel implements ListCellRenderer
 		this.component.setFont(list.getFont());
 		this.component.setBorder((cellHasFocus) ? UIManager.getBorder("List.focusCellHighlightBorder") : noFocusBorder);
 
-		return (this.component == null) ? this : this.component;
+		return (this.component == null) ? this.label : this.component;
 	}
 
 }
