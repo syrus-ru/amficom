@@ -1,5 +1,5 @@
 /*
- * $Id: Domain.java,v 1.56 2005/09/14 19:01:23 arseniy Exp $
+ * $Id: Domain.java,v 1.57 2005/09/18 12:40:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -35,8 +35,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 
 /**
- * @version $Revision: 1.56 $, $Date: 2005/09/14 19:01:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.57 $, $Date: 2005/09/18 12:40:44 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -229,7 +229,7 @@ public final class Domain extends DomainMember implements Characterizable {
 		/**
 		 * calculate parent tree
 		 */
-		return this.id.equals(domain.getId());
+		return this.domainId.equals(domain);
 	}	
 
 	public Identifier getParentDomainId() {
