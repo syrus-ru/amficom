@@ -1,4 +1,4 @@
--- $Id: test.sql,v 1.15 2005/08/28 14:29:24 arseniy Exp $
+-- $Id: test.sql,v 1.16 2005/09/18 20:19:04 arseniy Exp $
 
 CREATE TABLE Test (
  id NUMBER(19),
@@ -21,6 +21,8 @@ CREATE TABLE Test (
  monitored_element_id NOT NULL,
  description VARCHAR2(256 CHAR),
  number_of_measurements NUMBER(10) NOT NULL,
+ stop_time DATE,
+ stop_reason VARCHAR2(256 CHAR),
 --
  CONSTRAINT test_pk PRIMARY KEY (id),
  CONSTRAINT test_creator_fk FOREIGN KEY (creator_id)
