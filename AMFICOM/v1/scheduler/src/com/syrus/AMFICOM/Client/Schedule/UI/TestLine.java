@@ -34,7 +34,7 @@ import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -171,7 +171,7 @@ public class TestLine extends TimeLine {
 							(Identifier) testTimeItem.object,
 							true);
 					this.selectedTestIds.add(test.getId());
-					CommonUIUtilities.invokeAsynchronously(new Runnable() {
+					new ProcessingDialog(new Runnable() {
 
 						public void run() {
 							TestLine.this.skip = true;

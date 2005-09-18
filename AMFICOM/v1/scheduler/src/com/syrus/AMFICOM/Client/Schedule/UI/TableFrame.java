@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.39 2005/09/18 13:11:45 bass Exp $
+ * $Id: TableFrame.java,v 1.40 2005/09/18 13:59:08 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import javax.swing.table.JTableHeader;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.UI.StubLabelCellRenderer;
 import com.syrus.AMFICOM.client.UI.WrapperedTable;
 import com.syrus.AMFICOM.client.UI.WrapperedTableModel;
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/09/18 13:11:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2005/09/18 13:59:08 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -175,7 +175,7 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 					final ListSelectionModel lsm = (ListSelectionModel) e.getSource();
 					if (!lsm.isSelectionEmpty()) {
 						final int selectedRow = lsm.getMinSelectionIndex();
-						CommonUIUtilities.invokeAsynchronously(new Runnable() {
+						new ProcessingDialog(new Runnable() {
 
 							public void run() {
 								TableFrame.this.schedulerModel.unselectTests();

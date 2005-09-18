@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
 import com.syrus.AMFICOM.Client.Scheduler.General.UIStorage;
 import com.syrus.AMFICOM.client.UI.AComboBox;
 import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
@@ -347,7 +348,7 @@ class PlanToolBar {
 			public void actionPerformed(ActionEvent e) {
 				final JButton button = (JButton) e.getSource();
 				button.setEnabled(false);
-				CommonUIUtilities.invokeAsynchronously(new Runnable() {
+				new ProcessingDialog(new Runnable() {
 
 					public void run() {
 						try {

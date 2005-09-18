@@ -36,7 +36,7 @@ import javax.swing.event.ListSelectionListener;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.UI.WrapperedList;
 import com.syrus.AMFICOM.client.UI.WrapperedListModel;
 import com.syrus.AMFICOM.client.event.Dispatcher;
@@ -460,7 +460,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 	}
 
 	private void refreshMeasurementSetups() {
-		CommonUIUtilities.invokeAsynchronously(new Runnable() {
+		new ProcessingDialog(new Runnable() {
 
 			public void run() {
 				try {
