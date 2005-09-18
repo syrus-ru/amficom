@@ -1,5 +1,5 @@
 /*
- * $Id: CompoundCondition.java,v 1.38 2005/09/09 17:16:57 arseniy Exp $
+ * $Id: CompoundCondition.java,v 1.39 2005/09/18 13:54:11 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlComp
  * Compound condition such as (A & B & C & ... etc), (A | B | C | ... etc) where A, B, C .. are
  * conditions (they can be also compound condition too)
  *
- * @version $Revision: 1.38 $, $Date: 2005/09/09 17:16:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.39 $, $Date: 2005/09/18 13:54:11 $
+ * @author $Author: bob $
  * @module general
  */
 public final class CompoundCondition implements StorableObjectCondition {
@@ -56,18 +56,18 @@ public final class CompoundCondition implements StorableObjectCondition {
 
 	public CompoundCondition(final StorableObjectCondition firstCondition,
 			final CompoundConditionSort operation,
-			final StorableObjectCondition secondCondition) throws CreateObjectException {
+			final StorableObjectCondition secondCondition){
 		this(new HashSet<StorableObjectCondition>(Arrays.asList(new StorableObjectCondition[] { firstCondition, secondCondition })),
 				operation);
 	}
 
-	public CompoundCondition(final Set<StorableObjectCondition> conditions, final CompoundConditionSort operation)
-			throws CreateObjectException {
+	public CompoundCondition(final Set<StorableObjectCondition> conditions, 
+	                         final CompoundConditionSort operation){
 		if (conditions == null)
-			throw new CreateObjectException("Unable to create CompoundCondition for null conditions");
+			throw new IllegalArgumentException("Unable to create CompoundCondition for null conditions");
 
 		if (conditions.size() <= 1)
-			throw new CreateObjectException("Unable to create CompoundCondition for alone condition, use condition itself");
+			throw new IllegalArgumentException("Unable to create CompoundCondition for alone condition, use condition itself");
 
 		short code = ObjectEntities.UNKNOWN_CODE;
 
@@ -75,26 +75,26 @@ public final class CompoundCondition implements StorableObjectCondition {
 			if (code == ObjectEntities.UNKNOWN_CODE) {
 				this.entityCode = condition.getEntityCode();
 				code = this.entityCode.shortValue();
-			} else
-				if (code != condition.getEntityCode().shortValue())
-					throw new CreateObjectException("Unable to create CompoundCondition for conditions for different entities");
+			} else if (code != condition.getEntityCode().shortValue()) {
+					throw new IllegalArgumentException("Unable to create CompoundCondition for conditions for different entities");
+				}
 		}
 
 		if (this.entityCode.shortValue() == ObjectEntities.UNKNOWN_CODE)
-			throw new CreateObjectException("Unable to create CompoundCondition unknown entities");
+			throw new IllegalArgumentException("Unable to create CompoundCondition unknown entities");
 
 		this.operation = operation.value();
 		this.conditions = conditions;
 	}
 
-	public void addCondition(final StorableObjectCondition condition) throws IllegalDataException {
+	public void addCondition(final StorableObjectCondition condition) {
 		assert (condition != null) : "NULL condition supplied";
 
 		final Short code = condition.getEntityCode();
 		if (code.equals(this.entityCode))
 			this.conditions.add(condition);
 		else
-			throw new IllegalDataException("Cannot add condition for entity '" + ObjectEntities.codeToString(code)
+			throw new IllegalArgumentException("Cannot add condition for entity '" + ObjectEntities.codeToString(code)
 					+ "' to set of condition for entity '" + ObjectEntities.codeToString(this.entityCode) + "'");
 	}
 
