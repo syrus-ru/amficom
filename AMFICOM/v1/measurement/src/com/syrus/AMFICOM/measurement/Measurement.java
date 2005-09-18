@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.93 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: Measurement.java,v 1.94 2005/09/18 18:20:30 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -31,10 +31,9 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.93 $, $Date: 2005/09/14 18:35:57 $
+ * @version $Revision: 1.94 $, $Date: 2005/09/18 18:20:30 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -287,14 +286,9 @@ public final class Measurement extends Action {
 		super.markAsChanged();
 	}
 
-	public Set<Result> getResults(final boolean breakOnLoadError) {
+	public Set<Result> getResults() throws ApplicationException {
 		final LinkedIdsCondition condition = new LinkedIdsCondition(this.id, ObjectEntities.RESULT_CODE);
-		try {
-			return StorableObjectPool.getStorableObjectsByCondition(condition, true, breakOnLoadError);
-		} catch (ApplicationException ae) {
-			Log.errorException(ae);
-			return null;
-		}
+		return StorableObjectPool.getStorableObjectsByCondition(condition, true);
 	}
 
 	/**
