@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.95 2005/09/15 17:05:29 bob Exp $
+ * $Id: StorableObject.java,v 1.96 2005/09/18 12:10:40 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,15 +27,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.util.Log;
 
 /**
- * {@link Object#equals(Object)}and {@link Object#hashCode()} methods are
- * intentionally unimplemented, as it seems reasonable to compare only object
- * identifiers (which serve just as object references in
- * <em>Storable Object Framework</em>). Since within a single VM instance
- * there can only be a single inctance of <code>StorableObject</code> with the
- * same identifier, comparison of object references (in Java terms) is enough.
- *
- * @version $Revision: 1.95 $, $Date: 2005/09/15 17:05:29 $
- * @author $Author: bob $
+ * @version $Revision: 1.96 $, $Date: 2005/09/18 12:10:40 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
