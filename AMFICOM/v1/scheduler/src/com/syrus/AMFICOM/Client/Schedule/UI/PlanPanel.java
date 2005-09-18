@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.46 2005/09/18 14:17:08 bob Exp $
+ * $Id: PlanPanel.java,v 1.47 2005/09/18 14:20:46 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.46 $, $Date: 2005/09/18 14:17:08 $
+ * @version $Revision: 1.47 $, $Date: 2005/09/18 14:20:46 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -84,7 +84,7 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 			this.align = align;
 		}
 	}
-	public static final String[]	SCALES				= new String[] {
+	private static final String[]	SCALES				= new String[] {
 			"Text.Plan.Toolbar.Scope.10Minutes", 
 			"Text.Plan.Toolbar.Scope.1Hour", 
 			"Text.Plan.Toolbar.Scope.6Hours", 
@@ -92,6 +92,13 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 			"Text.Plan.Toolbar.Scope.1Week", 
 			"Text.Plan.Toolbar.Scope.1Month"};
 
+	private static final  String[] SCALE_PATTERNS = new String[] {"HH:mm:ss", 
+			"HH:mm", 
+			"HH:mm", 
+			"HH:mm", 
+			"dd.MM", 
+			"dd.MM"};
+	
 	/**
 	 * SCALES in milliseconds
 	 */
@@ -554,25 +561,15 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 					/ ((double) (this.scaleEnd.getTime() - this.scaleStart.getTime()) / (double) diff);
 
 			// double sub_delta = delta / STEPS[actualScale].subscales;
-			if (delta >= 0 && delta < 35 && this.actualScale < STEPS.length - 1)
+			if (delta >= 0 && delta < 35 && this.actualScale < STEPS.length - 1) {
 				this.actualScale++;
-
-			switch (this.actualScale) {
-				case 1:
-					this.sdf.applyPattern("HH:mm"); //$NON-NLS-1$
-					break;
-				case 0:
-					this.sdf.applyPattern("HH:mm:ss"); //$NON-NLS-1$
-					break;
-				case 2:
-				case 3:
-					this.sdf.applyPattern("HH:mm"); //$NON-NLS-1$
-					break;
-				case 5:
-					STEPS[5].total = this.cal.getActualMaximum(STEPS[5].scale);
-				case 4:
-					this.sdf.applyPattern("dd.MM"); //$NON-NLS-1$
 			}
+
+			this.sdf.applyPattern(SCALE_PATTERNS[this.actualScale]);
+			if (this.actualScale == 5) {
+				STEPS[5].total = this.cal.getActualMaximum(STEPS[5].scale);
+			}
+			
 			this.cal.setTime(this.startDate);
 			if (this.actualScale > 3) {
 				this.cal.set(Calendar.HOUR_OF_DAY, 0);
