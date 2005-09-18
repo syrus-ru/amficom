@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.156 2005/09/18 12:43:15 bass Exp $
+ * $Id: Test.java,v 1.157 2005/09/18 18:18:09 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.156 $, $Date: 2005/09/18 12:43:15 $
- * @author $Author: bass $
+ * @version $Revision: 1.157 $, $Date: 2005/09/18 18:18:09 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -61,6 +61,8 @@ public final class Test extends StorableObject {
 	private MonitoredElement monitoredElement;
 	private String description;
 	private int numberOfMeasurements;
+	private Date stopTime;
+	private String stopReason;
 	private Set<Identifier> measurementSetupIds;
 
 	private MeasurementSetup mainMeasurementSetup;
@@ -126,8 +128,9 @@ public final class Test extends StorableObject {
 			version);
 
 		this.temporalType = temporalType;
-		if (startTime != null)
+		if (startTime != null) {
 			this.timeStamps = new TestTimeStamps(this.temporalType, startTime, endTime, temporalPatternId);
+		}
 		this.measurementType = measurementType;
 		this.analysisType = analysisType;
 		this.groupTestId = groupTestId;
@@ -137,6 +140,8 @@ public final class Test extends StorableObject {
 		this.setMeasurementSetupIds0(measurementSetupIds);
 		this.status = TestStatus._TEST_STATUS_NEW;
 		this.numberOfMeasurements = 0;
+		this.stopTime = new Date(0);
+		this.stopReason = "";
 	}
 
 	/**
@@ -220,6 +225,8 @@ public final class Test extends StorableObject {
 
 		this.description = tt.description;
 		this.numberOfMeasurements = tt.numberOfMeasurements;
+		this.stopTime = new Date(tt.stopTime);
+		this.stopReason = tt.stopReason;
 
 		this.measurementSetupIds = Identifier.fromTransferables(tt.measurementSetupIds);
 		if (!this.measurementSetupIds.isEmpty()) {
@@ -341,6 +348,8 @@ public final class Test extends StorableObject {
 				this.monitoredElement.getId().getTransferable(),
 				this.description,
 				this.numberOfMeasurements,
+				this.stopTime.getTime(),
+				this.stopReason,
 				msIdsT);
 	}
 
@@ -417,6 +426,20 @@ public final class Test extends StorableObject {
 		return this.numberOfMeasurements;
 	}
 
+	public void setStopped(final String stopReason) {
+		this.stopReason = stopReason;
+		this.stopTime = new Date(System.currentTimeMillis());
+		super.markAsChanged();
+	}
+
+	public Date getStopTime() {
+		return this.stopTime;
+	}
+
+	public String getStopReason() {
+		return this.stopReason;
+	}
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -435,7 +458,9 @@ public final class Test extends StorableObject {
 			final int status,
 			final MonitoredElement monitoredElement,
 			final String description,
-			final int numberOfMeasurements) {
+			final int numberOfMeasurements,
+			final Date stopTime,
+			final String stopReason) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -454,6 +479,8 @@ public final class Test extends StorableObject {
 		this.monitoredElement = monitoredElement;
 		this.description = description;
 		this.numberOfMeasurements = numberOfMeasurements;
+		this.stopTime = stopTime;
+		this.stopReason = stopReason;
 	}
 
 	/**
@@ -539,8 +566,8 @@ public final class Test extends StorableObject {
 	public final class TestTimeStamps implements TransferableObject {
 		private static final long serialVersionUID = -3560328752462377043L;
 
-		Date endTime;
 		Date startTime;
+		Date endTime;
 		Identifier temporalPatternId;
 
 		private int	discriminator;		

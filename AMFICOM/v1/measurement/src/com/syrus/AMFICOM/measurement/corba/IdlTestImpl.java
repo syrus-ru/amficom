@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlTestImpl.java,v 1.5 2005/08/25 20:13:57 arseniy Exp $
+ * $Id: IdlTestImpl.java,v 1.6 2005/09/18 18:18:09 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/08/25 20:13:57 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/18 18:18:09 $
  * @module measurement
  */
 final class IdlTestImpl extends IdlTest {
@@ -45,6 +45,8 @@ final class IdlTestImpl extends IdlTest {
 			final IdlIdentifier monitoredElementId,
 			final String description,
 			final int numberOfMeasurements,
+			final long stopTime,
+			final String stopReason,
 			final IdlIdentifier measurementSetupIds[]) {
 		this.id = id;
 		this.created = created;
@@ -60,6 +62,8 @@ final class IdlTestImpl extends IdlTest {
 		this.monitoredElementId = monitoredElementId;
 		this.description = description;
 		this.numberOfMeasurements = numberOfMeasurements;
+		this.stopTime = stopTime;
+		this.stopReason = stopReason;
 		this.measurementSetupIds = measurementSetupIds;
 	}
 
