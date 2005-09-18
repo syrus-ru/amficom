@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.96 2005/09/18 13:11:45 bass Exp $
+ * $Id: SchedulerModel.java,v 1.97 2005/09/18 13:57:44 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/09/18 13:11:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.97 $, $Date: 2005/09/18 13:57:44 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -545,22 +545,16 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		if (this.monitoredElement != null) {
 			LinkedIdsCondition monitoredElementCondition = new LinkedIdsCondition(this.monitoredElement.getId(),
 					ObjectEntities.MEASUREMENTSETUP_CODE);
-			try {
-				if (measurementTypeCondition != null) {
-					idSet = new HashSet<Identifier>(2);
-					idSet.add(identifier);
-					identifier = this.monitoredElement.getId();
-					idSet.add(identifier);
-					condition = new CompoundCondition(measurementTypeCondition, CompoundConditionSort.AND,
-														monitoredElementCondition);
-				} else {
-					idSet = Collections.singleton(identifier);
-					condition = monitoredElementCondition;
-				}
-			} catch (final CreateObjectException e) {
-				// never occur
-				assert false;
-				return Collections.emptySet();
+			if (measurementTypeCondition != null) {
+				idSet = new HashSet<Identifier>(2);
+				idSet.add(identifier);
+				identifier = this.monitoredElement.getId();
+				idSet.add(identifier);
+				condition = new CompoundCondition(measurementTypeCondition, CompoundConditionSort.AND,
+													monitoredElementCondition);
+			} else {
+				idSet = Collections.singleton(identifier);
+				condition = monitoredElementCondition;
 			}
 		} else {
 			if (identifier != null) {

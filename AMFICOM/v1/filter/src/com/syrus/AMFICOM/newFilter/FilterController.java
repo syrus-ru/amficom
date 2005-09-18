@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.21 2005/08/30 13:56:44 arseniy Exp $
+ * $Id: FilterController.java,v 1.22 2005/09/18 13:55:20 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,14 +20,12 @@ import java.util.Map;
 import java.util.Set;
 
 import javax.swing.event.ListSelectionEvent;
-
 import javax.swing.event.ListSelectionListener;
 import javax.swing.event.PopupMenuEvent;
 import javax.swing.event.PopupMenuListener;
 
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.ConditionWrapper;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -41,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/08/30 13:56:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.22 $, $Date: 2005/09/18 13:55:20 $
+ * @author $Author: bob $
  * @module filter_v1
  */
 public class FilterController implements ActionListener, PopupMenuListener, ListSelectionListener {
@@ -407,12 +405,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 			if (conditions.size() == 1)
 				this.model.addCondition0(conditions.iterator().next(), conditionKey);
 			else {
-				try {
-					this.model.addCondition0(new CompoundCondition(conditions, CompoundConditionSort.OR), conditionKey);
-				} catch (CreateObjectException e) {
-					//never will happen;
-					Log.errorMessage(e.getMessage());
-				}
+				this.model.addCondition0(new CompoundCondition(conditions, CompoundConditionSort.OR), conditionKey);
 			}
 			break;
 		case ConditionWrapper.LIST:
