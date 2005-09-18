@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.18 2005/09/18 13:11:44 bass Exp $
+ * $Id: OpenSessionCommand.java,v 1.19 2005/09/18 13:15:06 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,7 +28,7 @@ import javax.swing.JTextField;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.administration.Domain;
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.StatusMessageEvent;
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.18 $, $Date: 2005/09/18 13:11:44 $
+ * @author $Author: bob $
+ * @version $Revision: 1.19 $, $Date: 2005/09/18 13:15:06 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -152,7 +152,7 @@ public class OpenSessionCommand extends AbstractCommand {
 		this.disposeDialog();
 		this.logged = true;
 
-		CommonUIUtilities.invokeAsynchronously(new Runnable() {
+		new ProcessingDialog(new Runnable() {
 
 			public void run() {
 				dispatcher1.firePropertyChange(
