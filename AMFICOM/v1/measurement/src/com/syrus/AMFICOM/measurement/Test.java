@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.157 2005/09/18 18:18:09 arseniy Exp $
+ * $Id: Test.java,v 1.158 2005/09/18 20:16:01 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -44,7 +44,7 @@ import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.157 $, $Date: 2005/09/18 18:18:09 $
+ * @version $Revision: 1.158 $, $Date: 2005/09/18 20:16:01 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -348,7 +348,7 @@ public final class Test extends StorableObject {
 				this.monitoredElement.getId().getTransferable(),
 				this.description,
 				this.numberOfMeasurements,
-				this.stopTime.getTime(),
+				(this.stopTime != null) ? this.stopTime.getTime() : 0,
 				this.stopReason,
 				msIdsT);
 	}
