@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.45 2005/09/16 15:00:09 bob Exp $
+ * $Id: PlanPanel.java,v 1.46 2005/09/18 14:17:08 bob Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.45 $, $Date: 2005/09/16 15:00:09 $
+ * @version $Revision: 1.46 $, $Date: 2005/09/18 14:17:08 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -290,17 +290,10 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 		this.startDate = start;
 		if (start != null) {
 			this.cal.setTime(start);
-			switch (this.scale) {
-				case 4:
-				case 5:
-//					this.cal.set(Calendar.HOUR_OF_DAY, 0);
-				case 2:
-				case 3:
-					this.cal.set(Calendar.MINUTE, 0);
-				case 0:
-				case 1:
-					this.cal.set(Calendar.SECOND, 0);
+			if (this.scale > 1) {
+				this.cal.set(Calendar.MINUTE, 0);
 			}
+			this.cal.set(Calendar.SECOND, 0);
 
 			// округляем до шага
 			int num = this.cal.get(STEPS[this.scale].scale);
@@ -581,17 +574,13 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 					this.sdf.applyPattern("dd.MM"); //$NON-NLS-1$
 			}
 			this.cal.setTime(this.startDate);
-			switch (this.actualScale) {
-				case 4:
-				case 5:
-					this.cal.set(Calendar.HOUR_OF_DAY, 0);
-				case 3:
-					this.cal.set(Calendar.MINUTE, 0);
-				case 0:
-				case 1:
-				case 2:
-					this.cal.set(Calendar.SECOND, 0);
+			if (this.actualScale > 3) {
+				this.cal.set(Calendar.HOUR_OF_DAY, 0);
+			} 
+			if (this.actualScale > 2) {
+				this.cal.set(Calendar.MINUTE, 0);
 			}
+			this.cal.set(Calendar.SECOND, 0);
 		}
 		
 		for (int i = 0; i < this.getComponentCount(); i++) {
