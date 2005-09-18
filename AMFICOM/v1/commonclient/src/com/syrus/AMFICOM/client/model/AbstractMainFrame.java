@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractMainFrame.java,v 1.17 2005/09/16 14:56:04 bob Exp $
+ * $Id: AbstractMainFrame.java,v 1.18 2005/09/18 13:15:31 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,10 +46,9 @@ import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/16 14:56:04 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/18 13:15:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
