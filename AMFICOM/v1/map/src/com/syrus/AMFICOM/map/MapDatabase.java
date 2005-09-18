@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDatabase.java,v 1.48 2005/09/09 14:29:43 arseniy Exp $
+ * $Id: MapDatabase.java,v 1.49 2005/09/18 12:43:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.util.database.DatabaseString;
 
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/09/09 14:29:43 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.49 $, $Date: 2005/09/18 12:43:12 $
+ * @author $Author: bass $
  * @module map
  */
 public final class MapDatabase extends StorableObjectDatabase<Map> {
@@ -442,7 +442,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			for (final Identifier id : collectors.keySet()) {
 				final Map map = mapIds.get(id);
 				final Set<Identifier> collectorIds = collectors.get(id);				
-				if (id.equals(map.getId())) {
+				if (id.equals(map)) {
 					try {
 						final Set<Collector> loadedCollectors = StorableObjectPool.getStorableObjects(collectorIds, true);
 						map.setCollectors0(loadedCollectors);
@@ -458,7 +458,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			for (final Identifier id : marks.keySet()) {
 				final Map map = mapIds.get(id);
 				final Set<Identifier> markIds = marks.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(map)) {
 					try {
 						final Set<Mark> loadedMarks = StorableObjectPool.getStorableObjects(markIds, true);
 						map.setMarks0(loadedMarks);
@@ -474,7 +474,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			for (final Identifier id : nodeLinks.keySet()) {
 				final Map map = mapIds.get(id);
 				final Set<Identifier> nodeLinkIds = nodeLinks.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(map)) {
 					try {
 						final Set<NodeLink> loadedNodeLinkds = StorableObjectPool.getStorableObjects(nodeLinkIds, true);
 						map.setNodeLinks0(loadedNodeLinkds);
@@ -490,7 +490,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			for (final Identifier id :physicalLinks.keySet()) {
 				final Map map = mapIds.get(id);
 				final Set<Identifier> physicalLinkIds = physicalLinks.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(map)) {
 					try {
 						final Set<PhysicalLink> loadedPhysicalLinks = StorableObjectPool.getStorableObjects(physicalLinkIds, true);
 						map.setPhysicalLinks0(loadedPhysicalLinks);
@@ -506,7 +506,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			for (final Identifier id : siteNodes.keySet()) {
 				final Map map = mapIds.get(id);
 				final Set<Identifier> siteNodeIds = siteNodes.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(map)) {
 					try {
 						final Set<SiteNode> loadedSiteNodes = StorableObjectPool.getStorableObjects(siteNodeIds, true);
 						map.setSiteNodes0(loadedSiteNodes);
@@ -522,7 +522,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			for (final Identifier id : topologicalNodes.keySet()) {
 				final Map map = mapIds.get(id);
 				final Set<Identifier> topologicalNodeIds = topologicalNodes.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(map)) {
 					try {
 						final Set<TopologicalNode> loadedTopologicalNodes = StorableObjectPool.getStorableObjects(topologicalNodeIds, true);
 						map.setTopologicalNodes0(loadedTopologicalNodes);
@@ -538,7 +538,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			for (final Identifier id : childMaps.keySet()) {
 				final Map map = mapIds.get(id);
 				final Set<Identifier> childMapIds = childMaps.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(map)) {
 					try {
 						final Set<Map> loadedMaps = StorableObjectPool.getStorableObjects(childMapIds, true);
 						map.setMaps0(loadedMaps);
@@ -554,7 +554,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			for (final Identifier id : externalNodes.keySet()) {
 				final Map map = mapIds.get(id);
 				final Set<Identifier> externalNodeIds = externalNodes.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(map)) {
 					try {
 						final Set<SiteNode> loadedExternalNodes = StorableObjectPool.getStorableObjects(externalNodeIds, true);
 						map.setExternalNodes0(loadedExternalNodes);
@@ -570,7 +570,7 @@ public final class MapDatabase extends StorableObjectDatabase<Map> {
 			for (final Identifier id : mapLibraries.keySet()) {
 				final Map map = mapIds.get(id);
 				final Set<Identifier> mapLibraryIds = mapLibraries.get(id);
-				if (id.equals(map.getId())) {
+				if (id.equals(map)) {
 					try {
 						final Set<MapLibrary> loadedMapLibraries = StorableObjectPool.getStorableObjects(mapLibraryIds, true);
 						map.setMapLibraries0(loadedMapLibraries);

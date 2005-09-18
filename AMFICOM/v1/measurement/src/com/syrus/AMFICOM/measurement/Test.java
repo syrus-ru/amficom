@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.155 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: Test.java,v 1.156 2005/09/18 12:43:15 bass Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -44,8 +44,8 @@ import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.155 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.156 $, $Date: 2005/09/18 12:43:15 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -287,6 +287,12 @@ public final class Test extends StorableObject {
 
 	public MonitoredElement getMonitoredElement() {
 		return this.monitoredElement;
+	}
+
+	public Identifier getMonitoredElementId() {
+		return this.monitoredElement == null
+				? VOID_IDENTIFIER
+				: this.monitoredElement.getId();
 	}
 
 	public Identifier getTemporalPatternId() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.20 2005/09/12 02:52:17 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.21 2005/09/18 12:43:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/09/12 02:52:17 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/18 12:43:14 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -717,13 +717,13 @@ public final class SchemePathTestCase extends TestCase {
 		final SchemeLink schemeLink0prime = scheme0prime.getSchemeLinks().iterator().next();
 
 		assertNotSame(schemeLink0prime, schemeLink0);
-		assertFalse(schemeLink0prime.getId().equals(schemeLink0.getId()));
+		assertFalse(schemeLink0prime.equals(schemeLink0));
 		assertEquals(schemeLink0prime.getName(), schemeLink0.getName());
 		assertNull(schemeLink0prime.getTargetAbstractSchemePort());
 		
 		final SchemePort schemePort0prime = schemeLink0prime.getSourceAbstractSchemePort();
 		assertNotSame(schemePort0prime, schemePort0);
-		assertFalse(schemePort0prime.getId().equals(schemePort0.getId()));
+		assertFalse(schemePort0prime.equals(schemePort0));
 		assertEquals(schemePort0prime.getName(), schemePort0.getName());
 		assertEquals(schemeDevice0prime, schemePort0prime.getParentSchemeDevice());
 	}

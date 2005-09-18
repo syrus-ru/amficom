@@ -1,5 +1,5 @@
 /*-
- * $Id: Port.java,v 1.91 2005/09/14 18:42:07 arseniy Exp $
+ * $Id: Port.java,v 1.92 2005/09/18 12:43:12 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/09/14 18:42:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.92 $, $Date: 2005/09/18 12:43:12 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -216,7 +216,7 @@ public final class Port extends StorableObject
 		assert !typeId.isVoid() : NON_VOID_EXPECTED;
 		assert typeId.getMajor() == PORT_TYPE_CODE;
 
-		if (typeId.equals(this.type.getId())) {
+		if (typeId.equals(this.type)) {
 			return;
 		}
 		try {

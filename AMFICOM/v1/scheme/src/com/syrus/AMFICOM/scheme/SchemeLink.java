@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.76 2005/09/16 15:58:22 bass Exp $
+ * $Id: SchemeLink.java,v 1.77 2005/09/18 12:43:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.76 $, $Date: 2005/09/16 15:58:22 $
+ * @version $Revision: 1.77 $, $Date: 2005/09/18 12:43:14 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -714,7 +714,7 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @see AbstractSchemeLink#getSourceAbstractSchemePortId()
 	 */
 	@Override
-	Identifier getSourceAbstractSchemePortId() {
+	public Identifier getSourceAbstractSchemePortId() {
 		final Identifier sourceSchemePortId = super.getSourceAbstractSchemePortId();
 		assert sourceSchemePortId.isVoid() || sourceSchemePortId.getMajor() == SCHEMEPORT_CODE;
 		return sourceSchemePortId;
@@ -734,7 +734,7 @@ public final class SchemeLink extends AbstractSchemeLink
 	 * @see AbstractSchemeLink#getTargetAbstractSchemePortId()
 	 */
 	@Override
-	Identifier getTargetAbstractSchemePortId() {
+	public Identifier getTargetAbstractSchemePortId() {
 		final Identifier targetSchemePortId = super.getTargetAbstractSchemePortId();
 		assert targetSchemePortId.isVoid() || targetSchemePortId.getMajor() == SCHEMEPORT_CODE;
 		return targetSchemePortId;

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.77 2005/09/16 15:58:22 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.78 2005/09/18 12:43:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.77 $, $Date: 2005/09/16 15:58:22 $
+ * @version $Revision: 1.78 $, $Date: 2005/09/18 12:43:14 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -455,7 +455,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 //					"This scheme cable thread is in no way connected to the scheme device specified.");
 	}
 
-	Identifier getSourceSchemePortId() {
+	public Identifier getSourceSchemePortId() {
 		assert this.sourceSchemePortId != null
 				&& this.targetSchemePortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.sourceSchemePortId.isVoid()

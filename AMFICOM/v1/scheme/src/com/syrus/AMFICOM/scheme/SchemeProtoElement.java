@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.86 2005/09/16 15:58:22 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.87 2005/09/18 12:43:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.86 $, $Date: 2005/09/16 15:58:22 $
+ * @version $Revision: 1.87 $, $Date: 2005/09/18 12:43:13 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -1084,7 +1084,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void removeSchemeDevice(final SchemeDevice schemeDevice) {
 		assert schemeDevice != null: NON_NULL_EXPECTED;
-		assert schemeDevice.getParentSchemeProtoElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeDevice.getParentSchemeProtoElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeDevice.setParentSchemeProtoElement(null);
 	}
 
@@ -1096,7 +1096,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void removeSchemeLink(final SchemeLink schemeLink) {
 		assert schemeLink != null: NON_NULL_EXPECTED;
-		assert schemeLink.getParentSchemeProtoElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeLink.getParentSchemeProtoElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeLink.setParentSchemeProtoElement(null);
 	}
 
@@ -1108,7 +1108,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	public void removeSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
 		assert schemeProtoElement != null: NON_NULL_EXPECTED;
-		assert schemeProtoElement.getParentSchemeProtoElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeProtoElement.getParentSchemeProtoElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeProtoElement.setParentSchemeProtoElement(null);
 	}
 
@@ -1267,7 +1267,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 */
 	void setParentSchemeProtoElementId(final Identifier parentSchemeProtoElementId) {
 		assert this.assertParentSetNonStrict(): OBJECT_BADLY_INITIALIZED;
-		assert !parentSchemeProtoElementId.equals(super.id) : CIRCULAR_DEPS_PROHIBITED;
+		assert !parentSchemeProtoElementId.equals(this) : CIRCULAR_DEPS_PROHIBITED;
 		assert parentSchemeProtoElementId.isVoid() || parentSchemeProtoElementId.getMajor() == SCHEMEPROTOELEMENT_CODE;
 
 		if (this.parentSchemeProtoGroupId.isVoid()) {

@@ -1,5 +1,5 @@
 /*
- * $Id: EventParameter.java,v 1.25 2005/09/14 18:53:52 arseniy Exp $
+ * $Id: EventParameter.java,v 1.26 2005/09/18 12:43:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,11 +18,10 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.TransferableObject;
-import com.syrus.util.HashCodeGenerator;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/09/14 18:53:52 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/09/18 12:43:12 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module event
  */
@@ -82,26 +81,13 @@ public final class EventParameter implements Identifiable, TransferableObject {
 		return this.value;
 	}
 
-	public @Override int hashCode() {
-		HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
-		hashCodeGenerator.addObject(this.id);
-		hashCodeGenerator.addObject(this.type);
-		hashCodeGenerator.addObject(this.value);
-		int result = hashCodeGenerator.getResult();
-		hashCodeGenerator = null;
-		return result;
+	@Override
+	public int hashCode() {
+		return this.id.hashCode();
 	}
 
-	public @Override  boolean equals(Object obj) {
-		boolean equals = (obj == this);
-		if ((!equals) && (obj instanceof EventParameter)) {
-			EventParameter eventParameter = (EventParameter) obj;
-			if ((this.id.equals(eventParameter.id))
-					&& (this.type.equals(eventParameter.type))
-					&& (this.value.equals(eventParameter.value)))
-				equals = true;
-		}
-		return equals;
+	@Override
+	public boolean equals(final Object that) {
+		return this.id.equals(that);
 	}
-
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfo.java,v 1.63 2005/09/14 19:50:47 bass Exp $
+ * $Id: SchemeOptimizeInfo.java,v 1.64 2005/09/18 12:43:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -54,7 +54,7 @@ import com.syrus.util.Log;
  * #05 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2005/09/14 19:50:47 $
+ * @version $Revision: 1.64 $, $Date: 2005/09/18 12:43:13 $
  * @module scheme
  */
 public final class SchemeOptimizeInfo extends StorableObject
@@ -462,19 +462,19 @@ public final class SchemeOptimizeInfo extends StorableObject
 
 	public void removeSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
 		assert schemeMonitoringSolution != null: NON_NULL_EXPECTED;
-		assert schemeMonitoringSolution.getParentSchemeOptimizeInfoId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeMonitoringSolution.getParentSchemeOptimizeInfoId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeMonitoringSolution.setParentSchemeOptimizeInfo(null);
 	}
 
 	public void removeSchemeOptimizeInfoRtu(final SchemeOptimizeInfoRtu schemeOptimizeInfoRtu) {
 		assert schemeOptimizeInfoRtu != null: NON_NULL_EXPECTED;
-		assert schemeOptimizeInfoRtu.getParentSchemeOptimizeInfoId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeOptimizeInfoRtu.getParentSchemeOptimizeInfoId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeOptimizeInfoRtu.setParentSchemeOptimizeInfo(null);
 	}
 
 	public void removeSchemeOptimizeInfoSwitch(final SchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch) {
 		assert schemeOptimizeInfoSwitch != null: NON_NULL_EXPECTED;
-		assert schemeOptimizeInfoSwitch.getParentSchemeOptimizeInfoId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeOptimizeInfoSwitch.getParentSchemeOptimizeInfoId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeOptimizeInfoSwitch.setParentSchemeOptimizeInfo(null);
 	}
 

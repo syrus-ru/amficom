@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.87 2005/09/16 15:58:22 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.88 2005/09/18 12:43:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,7 +85,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2005/09/16 15:58:22 $
+ * @version $Revision: 1.88 $, $Date: 2005/09/18 12:43:14 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -368,7 +368,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 * @see AbstractSchemeLink#getAbstractLinkTypeId()
 	 */
 	@Override
-	Identifier getAbstractLinkTypeId() {
+	public Identifier getAbstractLinkTypeId() {
 		final Identifier cableLinkTypeId = super.getAbstractLinkTypeId();
 		assert cableLinkTypeId.isVoid() || cableLinkTypeId.getMajor() == CABLELINK_TYPE_CODE;
 		return cableLinkTypeId;
@@ -388,7 +388,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 * @see AbstractSchemeElement#getParentSchemeId()
 	 */
 	@Override
-	Identifier getParentSchemeId() {
+	public Identifier getParentSchemeId() {
 		final Identifier parentSchemeId1 = super.getParentSchemeId();
 		assert !parentSchemeId1.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 		return parentSchemeId1;
@@ -414,7 +414,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 * @see AbstractSchemeLink#getSourceAbstractSchemePortId()
 	 */
 	@Override
-	Identifier getSourceAbstractSchemePortId() {
+	public Identifier getSourceAbstractSchemePortId() {
 		final Identifier sourceSchemeCablePortId = super.getSourceAbstractSchemePortId();
 		assert sourceSchemeCablePortId.isVoid() || sourceSchemeCablePortId.getMajor() == SCHEMECABLEPORT_CODE;
 		return sourceSchemeCablePortId;
@@ -434,7 +434,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 * @see AbstractSchemeLink#getTargetAbstractSchemePortId()
 	 */
 	@Override
-	Identifier getTargetAbstractSchemePortId() {
+	public Identifier getTargetAbstractSchemePortId() {
 		final Identifier targetSchemeCablePortId = super.getTargetAbstractSchemePortId();
 		assert targetSchemeCablePortId.isVoid() || targetSchemeCablePortId.getMajor() == SCHEMECABLEPORT_CODE;
 		return targetSchemeCablePortId;
@@ -545,13 +545,13 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 */
 	public void removePathMember(final CableChannelingItem cableChannelingItem, final boolean processSubsequentSiblings) {
 		assert cableChannelingItem != null: NON_NULL_EXPECTED;
-		assert cableChannelingItem.getParentSchemeCableLinkId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert cableChannelingItem.getParentSchemeCableLinkId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		cableChannelingItem.setParentPathOwner(null, processSubsequentSiblings);
 	}
 
 	public void removeSchemeCableThread(final SchemeCableThread schemeCableThread) {
 		assert schemeCableThread != null: NON_NULL_EXPECTED;
-		assert schemeCableThread.getParentSchemeCableLinkId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeCableThread.getParentSchemeCableLinkId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeCableThread.setParentSchemeCableLink(null);
 	}
 
@@ -824,7 +824,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		 * Making a path member depend on its precursor (if any) may be
 		 * a solution, but it'll complicate the code too much.
 		 */
-		return cableChannelingItem.getParentSchemeCableLinkId().equals(super.id)
+		return cableChannelingItem.getParentSchemeCableLinkId().equals(this)
 				&& (true || this.getPathMembers().headSet(cableChannelingItem).size() == cableChannelingItem.sequentialNumber);
 	}
 

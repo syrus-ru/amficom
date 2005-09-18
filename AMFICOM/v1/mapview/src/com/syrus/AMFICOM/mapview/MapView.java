@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.63 2005/09/15 14:06:16 krupenn Exp $
+* $Id: MapView.java,v 1.64 2005/09/18 12:43:16 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -8,6 +8,9 @@
 
 package com.syrus.AMFICOM.mapview;
 
+
+import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBNETWORK;
+import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 
 import java.util.Collections;
 import java.util.Date;
@@ -21,12 +24,12 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
-import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -46,7 +49,6 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePath;
-import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBNETWORK;
 
 /**
  * Класс используется для хранения объектов, отображаемых на
@@ -55,11 +57,11 @@ import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBN
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: krupenn $
- * @version $Revision: 1.63 $, $Date: 2005/09/15 14:06:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.64 $, $Date: 2005/09/18 12:43:16 $
  * @module mapview
  */
-public final class MapView extends DomainMember implements Namable {
+public final class MapView extends DomainMember implements Describable {
 
 	/**
 	 * Comment for <code>serialVersionUID</code>
@@ -323,9 +325,19 @@ public final class MapView extends DomainMember implements Namable {
 	/**
 	 * Получить топологическую схему.
 	 * @return топологическая схема
+	 * @todo Should return value taken from pool
 	 */
 	public Map getMap() {
 		return this.map;
+	}
+
+	/**
+	 * @todo Should return the field named mapId
+	 */
+	public Identifier getMapId() {
+		return this.map == null
+				? VOID_IDENTIFIER
+				: this.map.getId();
 	}
 
 	/**
@@ -747,7 +759,7 @@ public final class MapView extends DomainMember implements Namable {
 	 */
 	public Marker getMarker(final Identifier markerId) {
 		for (final Marker marker : this.markers) {
-			if (marker.getId().equals(markerId)) {
+			if (marker.equals(markerId)) {
 				return marker;
 			}
 		}

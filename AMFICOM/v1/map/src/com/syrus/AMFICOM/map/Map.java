@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.96 2005/09/16 15:58:21 bass Exp $
+ * $Id: Map.java,v 1.97 2005/09/18 12:43:12 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,7 @@ import com.syrus.util.Log;
  * линиях, коллекторов (объединяющих в себе линии).
  *
  * @author $Author: bass $
- * @version $Revision: 1.96 $, $Date: 2005/09/16 15:58:21 $
+ * @version $Revision: 1.97 $, $Date: 2005/09/18 12:43:12 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -682,7 +682,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 */
 	public SiteNode getSiteNode(final Identifier siteId) {
 		for (final SiteNode siteNode : this.getAllSiteNodes()) {
-			if (siteNode.getId().equals(siteId)) {
+			if (siteNode.equals(siteId)) {
 				return siteNode;
 			}
 		}
@@ -698,7 +698,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 */
 	public TopologicalNode getTopologicalNode(final Identifier topologicalNodeId) {
 		for (final TopologicalNode topologicalNode : this.getAllTopologicalNodes()) {
-			if (topologicalNode.getId().equals(topologicalNodeId)) {
+			if (topologicalNode.equals(topologicalNodeId)) {
 				return topologicalNode;
 			}
 		}
@@ -714,7 +714,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 */
 	public Mark getMark(final Identifier markId) {
 		for (final Mark mark : this.getAllMarks()) {
-			if (mark.getId().equals(markId)) {
+			if (mark.equals(markId)) {
 				return mark;
 			}
 		}
@@ -881,7 +881,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 */
 	public PhysicalLink getPhysicalLink(final Identifier phisicalLinkId) {
 		for (final PhysicalLink physicalLink : this.getAllPhysicalLinks()) {
-			if (physicalLink.getId().equals(phisicalLinkId)) {
+			if (physicalLink.equals(phisicalLinkId)) {
 				return physicalLink;
 			}
 		}
@@ -946,7 +946,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 */
 //	public NodeLink getNodeLink(final Identifier nodeLinkId) {
 //		for (final NodeLink nodeLink : this.getAllNodeLinks()) {
-//			if (nodeLink.getId().equals(nodeLinkId)) {
+//			if (nodeLink.equals(nodeLinkId)) {
 //				return nodeLink;
 //			}
 //		}

@@ -1,5 +1,5 @@
 /*
- * $Id: Parameter.java,v 1.16 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: Parameter.java,v 1.17 2005/09/18 12:43:15 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,8 +29,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/09/18 12:43:15 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -113,7 +113,7 @@ public final class Parameter implements TransferableObject, Identifiable {
 //		boolean equals = (obj == this);
 //		if ((!equals) && (obj instanceof Parameter)) {
 //			Parameter setParameter = (Parameter) obj;
-//			if ((this.id.equals(setParameter.id))
+//			if ((this.equals(setParameter))
 //					&& (this.type.equals(setParameter.type))
 //					&& HashCodeGenerator.equalsArray(this.value, setParameter.value))
 //				equals = true;
@@ -230,5 +230,15 @@ public final class Parameter implements TransferableObject, Identifiable {
 		}
 		throw new ObjectNotFoundException("Parameter.getValueByTypeCodename | cannot find set parameter for type codename '"
 				+ keyCodename + '\'');
+	}
+
+	@Override
+	public int hashCode() {
+		return this.id.hashCode();
+	}
+
+	@Override
+	public boolean equals(final Object that) {
+		return this.id.equals(that);
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: PathElement.java,v 1.75 2005/09/15 20:11:42 bass Exp $
+ * $Id: PathElement.java,v 1.76 2005/09/18 12:43:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,7 +70,7 @@ import com.syrus.util.Log;
  * {@link PathElement#getAbstractSchemeElement() getAbstractSchemeElement()}<code>.</code>{@link AbstractSchemeElement#getName() getName()}.
  *
  * @author $Author: bass $
- * @version $Revision: 1.75 $, $Date: 2005/09/15 20:11:42 $
+ * @version $Revision: 1.76 $, $Date: 2005/09/18 12:43:14 $
  * @module scheme
  * @todo If Scheme(Cable|)Port ever happens to belong to more than one
  *       SchemeElement
@@ -605,7 +605,7 @@ public final class PathElement extends StorableObject
 			parentSchemeDevice = endAbstractSchemePort.getParentSchemeDevice();
 		} else {
 			parentSchemeDevice = startAbstractSchemePort.getParentSchemeDevice();
-			assert endAbstractSchemePort == null || endAbstractSchemePort.getParentSchemeDevice().getId().equals(parentSchemeDevice.getId()) : NO_COMMON_PARENT;
+			assert endAbstractSchemePort == null || endAbstractSchemePort.getParentSchemeDeviceId().equals(parentSchemeDevice) : NO_COMMON_PARENT;
 		}
 		assert parentSchemeDevice != null;
 		return parentSchemeDevice.getParentSchemeElement();
@@ -1139,12 +1139,12 @@ public final class PathElement extends StorableObject
 	public void insertSelfBefore(final PathElement that) throws ApplicationException {
 		assert that != null : NON_NULL_EXPECTED;
 
-		if (this == that || super.id.equals(that.id)) {
+		if (this == that || this.equals(that)) {
 			return;
 		}
 
 		final SchemePath parentSchemePath = this.getParentPathOwner();
-		assert parentSchemePath.getId().equals(that.getParentSchemePathId());
+		assert parentSchemePath.equals(that.getParentSchemePathId());
 
 		final int thatSequentialNumber = that.getSequentialNumber();
 		assert this.sequentialNumber != thatSequentialNumber;
@@ -1181,12 +1181,12 @@ public final class PathElement extends StorableObject
 	public void insertSelfAfter(final PathElement that) throws ApplicationException {
 		assert that != null : NON_NULL_EXPECTED;
 
-		if (this == that || super.id.equals(that.id)) {
+		if (this == that || this.equals(that)) {
 			return;
 		}
 
 		final SchemePath parentSchemePath = this.getParentPathOwner();
-		assert parentSchemePath.getId().equals(that.getParentSchemePathId());
+		assert parentSchemePath.equals(that.getParentSchemePathId());
 
 		final int thatSequentialNumber = that.getSequentialNumber();
 		assert this.sequentialNumber != thatSequentialNumber;

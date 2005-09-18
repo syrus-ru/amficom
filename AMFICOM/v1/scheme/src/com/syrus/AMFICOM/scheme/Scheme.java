@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.92 2005/09/16 15:58:22 bass Exp $
+ * $Id: Scheme.java,v 1.93 2005/09/18 12:43:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -81,7 +81,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.92 $, $Date: 2005/09/16 15:58:22 $
+ * @version $Revision: 1.93 $, $Date: 2005/09/18 12:43:13 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -933,7 +933,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 */
 	public void removeSchemeCableLink(final SchemeCableLink schemeCableLink) {
 		assert schemeCableLink != null: NON_NULL_EXPECTED;
-		assert schemeCableLink.getParentSchemeId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeCableLink.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeCableLink.setParentScheme(null);
 	}
 
@@ -945,7 +945,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 */
 	public void removeSchemeElement(final SchemeElement schemeElement) {
 		assert schemeElement != null: NON_NULL_EXPECTED;
-		assert schemeElement.getParentSchemeId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeElement.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeElement.setParentScheme(null);
 	}
 
@@ -957,7 +957,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 */
 	public void removeSchemeLink(final SchemeLink schemeLink) {
 		assert schemeLink != null: NON_NULL_EXPECTED;
-		assert schemeLink.getParentSchemeId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeLink.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeLink.setParentScheme(null);
 	}
 
@@ -969,7 +969,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 */
 	public void removeSchemeOptimizeInfo(final SchemeOptimizeInfo schemeOptimizeInfo) {
 		assert schemeOptimizeInfo != null: NON_NULL_EXPECTED;
-		assert schemeOptimizeInfo.getParentSchemeId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeOptimizeInfo.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeOptimizeInfo.setParentScheme(null);
 	}
 
@@ -981,7 +981,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 */
 	public void removeSchemeMonitoringSolution(final SchemeMonitoringSolution schemeMonitoringSolution) {
 		assert schemeMonitoringSolution != null : NON_NULL_EXPECTED;
-		assert schemeMonitoringSolution.getParentSchemeId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeMonitoringSolution.getParentSchemeId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeMonitoringSolution.setParentScheme(null);
 	}
 
@@ -1057,7 +1057,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 		 * will never return null, unless this object is deleted, which
 		 * is unlikely.
 		 */
-		assert currentSchemeMonitoringSolution.getParentScheme().getId().equals(super.id);
+		assert currentSchemeMonitoringSolution.getParentSchemeId().equals(this);
 		currentSchemeMonitoringSolution.setActive(true);
 	}
 

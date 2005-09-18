@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.103 2005/09/16 15:58:22 bass Exp $
+ * $Id: SchemeElement.java,v 1.104 2005/09/18 12:43:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.103 $, $Date: 2005/09/16 15:58:22 $
+ * @version $Revision: 1.104 $, $Date: 2005/09/18 12:43:13 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -795,7 +795,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	@Override
-	Identifier getParentSchemeId() {
+	public Identifier getParentSchemeId() {
 		final Identifier parentSchemeId1 = super.getParentSchemeId();
 		assert this.parentSchemeElementId != null : OBJECT_NOT_INITIALIZED;
 		final boolean parentSchemeIdVoid = parentSchemeId1.isVoid();
@@ -807,7 +807,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		return parentSchemeId1;
 	}
 
-	Identifier getParentSchemeElementId() {
+	public Identifier getParentSchemeElementId() {
 		assert super.parentSchemeId != null && this.parentSchemeElementId != null: OBJECT_NOT_INITIALIZED;
 		assert super.parentSchemeId.isVoid() ^ this.parentSchemeElementId.isVoid(): EXACTLY_ONE_PARENT_REQUIRED;
 		final boolean parentSchemeElementIdVoid = this.parentSchemeElementId.isVoid(); 
@@ -1157,7 +1157,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 */
 	public void removeScheme(final Scheme scheme) {
 		assert scheme != null: NON_NULL_EXPECTED;
-		assert scheme.getParentSchemeElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert scheme.getParentSchemeElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		scheme.setParentSchemeElement(null);
 	}
 
@@ -1169,7 +1169,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 */
 	public void removeSchemeDevice(final SchemeDevice schemeDevice) {
 		assert schemeDevice != null: NON_NULL_EXPECTED;
-		assert schemeDevice.getParentSchemeElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeDevice.getParentSchemeElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeDevice.setParentSchemeElement(null);
 	}
 
@@ -1181,7 +1181,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 */
 	public void removeSchemeElement(final SchemeElement schemeElement) {
 		assert schemeElement != null: NON_NULL_EXPECTED;
-		assert schemeElement.getParentSchemeElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeElement.getParentSchemeElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeElement.setParentSchemeElement(null);
 	}
 
@@ -1193,7 +1193,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 */
 	public void removeSchemeLink(final SchemeLink schemeLink) {
 		assert schemeLink != null: NON_NULL_EXPECTED;
-		assert schemeLink.getParentSchemeElementId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeLink.getParentSchemeElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeLink.setParentSchemeElement(null);
 	}
 

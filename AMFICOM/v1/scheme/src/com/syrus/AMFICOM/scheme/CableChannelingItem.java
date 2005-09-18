@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.66 2005/09/16 15:58:22 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.67 2005/09/18 12:43:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/09/16 15:58:22 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/18 12:43:14 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -379,7 +379,7 @@ public final class CableChannelingItem
 		super.markAsChanged();
 	}
 
-	Identifier getStartSiteNodeId() {
+	public Identifier getStartSiteNodeId() {
 		assert this.startSiteNodeId != null
 				&& !this.startSiteNodeId.isVoid()
 				&& this.endSiteNodeId != null
@@ -776,12 +776,12 @@ public final class CableChannelingItem
 	public void insertSelfBefore(final CableChannelingItem that) throws ApplicationException {
 		assert that != null : NON_NULL_EXPECTED;
 
-		if (this == that || super.id.equals(that.id)) {
+		if (this == that || this.equals(that)) {
 			return;
 		}
 
 		final SchemeCableLink parentSchemeCableLink = this.getParentPathOwner();
-		assert parentSchemeCableLink.getId().equals(that.getParentSchemeCableLinkId());
+		assert parentSchemeCableLink.equals(that.getParentSchemeCableLinkId());
 
 		final int thatSequentialNumber = that.getSequentialNumber();
 		assert this.sequentialNumber != thatSequentialNumber;
@@ -818,12 +818,12 @@ public final class CableChannelingItem
 	public void insertSelfAfter(final CableChannelingItem that) throws ApplicationException {
 		assert that != null : NON_NULL_EXPECTED;
 
-		if (this == that || super.id.equals(that.id)) {
+		if (this == that || this.equals(that)) {
 			return;
 		}
 
 		final SchemeCableLink parentSchemeCableLink = this.getParentPathOwner();
-		assert parentSchemeCableLink.getId().equals(that.getParentSchemeCableLinkId());
+		assert parentSchemeCableLink.equals(that.getParentSchemeCableLinkId());
 
 		final int thatSequentialNumber = that.getSequentialNumber();
 		assert this.sequentialNumber != thatSequentialNumber;

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.64 2005/09/16 15:58:22 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.65 2005/09/18 12:43:14 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,7 +67,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/09/16 15:58:22 $
+ * @version $Revision: 1.65 $, $Date: 2005/09/18 12:43:14 $
  * @module scheme
  * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
@@ -579,7 +579,7 @@ public final class SchemeProtoGroup extends StorableObject
 	 */
 	public void removeSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
 		assert schemeProtoElement != null: NON_NULL_EXPECTED;
-		assert schemeProtoElement.getParentSchemeProtoGroupId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeProtoElement.getParentSchemeProtoGroupId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeProtoElement.setParentSchemeProtoGroup(null);
 	}
 
@@ -593,7 +593,7 @@ public final class SchemeProtoGroup extends StorableObject
 	 */
 	public void removeSchemeProtoGroup(final SchemeProtoGroup schemeProtoGroup) {
 		assert schemeProtoGroup != null: NON_NULL_EXPECTED;
-		assert schemeProtoGroup.getParentSchemeProtoGroupId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert schemeProtoGroup.getParentSchemeProtoGroupId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeProtoGroup.setParentSchemeProtoGroup(null);
 	}
 
@@ -676,7 +676,7 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @param parentSchemeProtoGroupId
 	 */
 	void setParentSchemeProtoGroupId(final Identifier parentSchemeProtoGroupId) {
-		assert !parentSchemeProtoGroupId.equals(this.id) : CIRCULAR_DEPS_PROHIBITED;
+		assert !parentSchemeProtoGroupId.equals(this) : CIRCULAR_DEPS_PROHIBITED;
 		assert parentSchemeProtoGroupId.isVoid() || parentSchemeProtoGroupId.getMajor() == SCHEMEPROTOGROUP_CODE;
 		if (this.parentSchemeProtoGroupId.equals(parentSchemeProtoGroupId)) {
 			return;

@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.64 2005/09/13 08:35:41 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.65 2005/09/18 12:43:14 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/09/13 08:35:41 $
+ * @version $Revision: 1.65 $, $Date: 2005/09/18 12:43:14 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -219,7 +219,7 @@ public abstract class AbstractSchemePort
 		return this.description;
 	}
 
-	final Identifier getMeasurementPortId() {
+	public final Identifier getMeasurementPortId() {
 		assert this.measurementPortId != null: OBJECT_NOT_INITIALIZED;
 		assert this.measurementPortId.isVoid() || this.measurementPortId.getMajor() == MEASUREMENTPORT_CODE;
 		return this.measurementPortId;

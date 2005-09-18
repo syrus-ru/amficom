@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.86 2005/09/15 20:11:42 bass Exp $
+ * $Id: SchemePath.java,v 1.87 2005/09/18 12:43:13 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.86 $, $Date: 2005/09/15 20:11:42 $
+ * @version $Revision: 1.87 $, $Date: 2005/09/18 12:43:13 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -349,7 +349,7 @@ public final class SchemePath extends StorableObject
 	 */
 	public void removePathMember(final PathElement pathElement, final boolean processSubsequentSiblings) {
 		assert pathElement != null: NON_NULL_EXPECTED;
-		assert pathElement.getParentSchemePathId().equals(super.id) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		assert pathElement.getParentSchemePathId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		pathElement.setParentPathOwner(null, processSubsequentSiblings);
 	}
 
@@ -642,7 +642,7 @@ public final class SchemePath extends StorableObject
 		final SortedSet<PathElement> pathElements = getPathMembers();
 		for (final PathElement pathElement1 : pathElements) {
 //			if (pathElement1 == pathElement) {}
-			if (pathElement1.getId().equals(pathElement.getId())) {
+			if (pathElement1.equals(pathElement)) {
 				return new double[]{opticalDistanceFromStart, opticalDistanceFromStart + SchemeUtils.getOpticalLength(pathElement1)};
 			}
 			opticalDistanceFromStart += SchemeUtils.getOpticalLength(pathElement1);
@@ -732,7 +732,7 @@ public final class SchemePath extends StorableObject
 		final SortedSet<PathElement> pathElements = getPathMembers();
 		for (final PathElement pathElement1 : pathElements) {
 //			if (pathElement1 == pathElement) {}
-			if (pathElement1.getId().equals(pathElement.getId())) {
+			if (pathElement1.equals(pathElement)) {
 				return new double[]{physicalDistanceFromStart, physicalDistanceFromStart + SchemeUtils.getPhysicalLength(pathElement1)};
 			}
 			physicalDistanceFromStart += SchemeUtils.getPhysicalLength(pathElement1);
@@ -810,7 +810,7 @@ public final class SchemePath extends StorableObject
 		 * Making a path member depend on its precursor (if any) may be
 		 * a solution, but it'll complicate the code too much.
 		 */
-		return pathElement.getParentSchemePathId().equals(super.id)
+		return pathElement.getParentSchemePathId().equals(this)
 				&& (true || this.getPathMembers().headSet(pathElement).size() == pathElement.sequentialNumber);
 	}
 
@@ -827,7 +827,7 @@ public final class SchemePath extends StorableObject
 		for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
 			oldOpticalLength += SchemeUtils.getOpticalLength(pathElement);
 //			if (pathElement == endPathElement) {}
-			if (pathElement.getId().equals(endPathElement.getId())) {
+			if (pathElement.equals(endPathElement)) {
 				break;
 			}
 		}
@@ -849,7 +849,7 @@ public final class SchemePath extends StorableObject
 		}
 		for (final PathElement pathElement : pathElements.tailSet(startPathElement)) {
 			SchemeUtils.setOpticalLength(pathElement, SchemeUtils.getOpticalLength(pathElement) * coeff);
-			if (pathElement.getId().equals(endPathElement.getId())) {
+			if (pathElement.equals(endPathElement)) {
 				break;
 			}
 		}
