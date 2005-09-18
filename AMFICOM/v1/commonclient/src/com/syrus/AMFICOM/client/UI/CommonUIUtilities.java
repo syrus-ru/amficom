@@ -29,12 +29,12 @@ import javax.swing.table.TableModel;
 import com.syrus.AMFICOM.client.launcher.Launcher;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.Item;
+import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/14 09:08:07 $
- * @author $Author: bob $
+ * @version $Revision: 1.11 $, $Date: 2005/09/18 13:11:34 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -96,21 +96,20 @@ public final class CommonUIUtilities {
 		return childObjects;
 	}
 	
+	/**
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
 	public static List<Object> getObjectsToAdd(Collection newObjs, Collection existingObjs) {
 		List<Object> toAdd = new LinkedList<Object>();
-		for (Iterator it = newObjs.iterator(); it.hasNext();) {
-			Object itObj = it.next();
-			if (itObj instanceof StorableObject) {
-				if (!contains(existingObjs, (StorableObject) itObj))
-					toAdd.add(itObj);	
-			} else {
-				if (!existingObjs.contains(itObj))
-					toAdd.add(itObj);
-			}
+		for (final Object itObj : newObjs) {
+			if (!existingObjs.contains(itObj))
+				toAdd.add(itObj);	
 		}
 		return toAdd;
 	}
-	
+
 	/**
 	 * convert string into HTML
 	 * @param string input string 
@@ -124,31 +123,16 @@ public final class CommonUIUtilities {
 		return buffer.toString();
 	}
 
-	public static boolean contains(Collection collection, StorableObject obj) {
-		for (Iterator it = collection.iterator(); it.hasNext();) {
-			Object itObj = it.next();
-			if (itObj instanceof StorableObject) {
-				if (((StorableObject)itObj).getId().equals(obj.getId()))
-					return true;
-			}
-		}
-		return false;		
-	}
-	
+	/**
+	 * @deprecated
+	 */
+	@Shitlet
+	@Deprecated
 	public static List<Item> getItemsToRemove(Collection newObjs, Collection<Item> existingObjs) {
 		List<Item> toRemove = new LinkedList<Item>(existingObjs);
-		for (Iterator it = existingObjs.iterator(); it.hasNext();) {
-			Item childItem = (Item) it.next();
-			Object obj = childItem.getObject();
-			if (obj instanceof StorableObject) {
-				StorableObject so = (StorableObject)obj;
-				if (contains(newObjs, so)) {
-					toRemove.remove(childItem);
-				}
-			} else {
-				if (newObjs.contains(obj)) {
-					toRemove.remove(childItem);
-				}
+		for (final Item childItem : existingObjs) {
+			if (newObjs.contains(childItem.getObject())) {
+				toRemove.remove(childItem);
 			}
 		}
 		return toRemove;
