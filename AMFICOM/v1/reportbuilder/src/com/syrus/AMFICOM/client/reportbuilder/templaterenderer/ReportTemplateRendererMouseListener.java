@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRendererMouseListener.java,v 1.4 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: ReportTemplateRendererMouseListener.java,v 1.5 2005/09/18 13:13:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,7 +13,7 @@ import java.awt.event.MouseListener;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
-import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.MODE;
+import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.RENDERER_MODE;
 
 public class ReportTemplateRendererMouseListener implements MouseListener {
 
@@ -40,10 +40,10 @@ public class ReportTemplateRendererMouseListener implements MouseListener {
 	}
 
 	public void mouseReleased(MouseEvent e) {
-		if (RendererMode.getMode().equals(MODE.CREATE_IMAGE)){
+		if (RendererMode.getMode().equals(RENDERER_MODE.CREATE_IMAGE)){
 			this.renderer.createImageRenderingComponent(e.getPoint());
 		}
-		else if (RendererMode.getMode().equals(MODE.CREATE_LABEL)){
+		else if (RendererMode.getMode().equals(RENDERER_MODE.CREATE_LABEL)){
 			this.renderer.createTextRenderingComponent(e.getPoint());
 		}
 		this.applicationContext.getDispatcher().firePropertyChange(

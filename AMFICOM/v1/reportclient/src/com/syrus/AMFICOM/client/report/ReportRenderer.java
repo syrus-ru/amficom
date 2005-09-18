@@ -1,5 +1,5 @@
 /*
- * $Id: ReportRenderer.java,v 1.7 2005/09/16 13:26:29 peskovsky Exp $
+ * $Id: ReportRenderer.java,v 1.8 2005/09/18 13:13:18 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,7 +29,7 @@ import com.syrus.AMFICOM.resource.IntDimension;
 /**
  * Реализует отчёт по шаблону
  * @author $Author: peskovsky $
- * @version $Revision: 1.7 $, $Date: 2005/09/16 13:26:29 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/18 13:13:18 $
  * @module reportclient_v1
  */
 public class ReportRenderer extends JPanel {
@@ -69,10 +69,10 @@ public class ReportRenderer extends JPanel {
 			String modelName = dataElement.getModelClassName();
 			ReportModel model = ReportModelPool.getModel(modelName);
 
-			//Для сиюминутных отчётов - где могут быть два элемента с одинаквым именем
-			//(например, "Характеристики схемного объекта") - пытаемся достать
-			//данные по ID.
-			Object dsElementData = data.get(dataElement.getId());
+			//Для сиюминутных отчётов (например, "Характеристики схемного объекта")
+			//достаём данные (Id объекта) из самого элемента шаблона. Если нет -
+			//достаём их из таблицы.
+			Object dsElementData = dataElement.getReportObjectId();
 			if (dsElementData == null) {
 				//Иначе - при создании отчёта из другого модуля, где не может
 				//быть двух элементов с одинаковыми именами - достаём по имени

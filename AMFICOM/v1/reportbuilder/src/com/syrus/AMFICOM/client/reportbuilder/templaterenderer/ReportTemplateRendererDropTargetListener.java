@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRendererDropTargetListener.java,v 1.4 2005/09/16 13:26:30 peskovsky Exp $
+ * $Id: ReportTemplateRendererDropTargetListener.java,v 1.5 2005/09/18 13:13:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,6 +30,7 @@ import com.syrus.AMFICOM.client.report.CreateModelException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.logic.LogicalTreeUI;
 import com.syrus.AMFICOM.map.Collector;
@@ -69,7 +70,7 @@ public class ReportTemplateRendererDropTargetListener implements DropTargetListe
 			
 			String reportModelName = null;
 			String reportName = null;
-			Object additionalData = null;
+			Identifier additionalData = null;
 			
 			Iterator objectsIt = transferObjects.iterator();
 			if (objectsIt.hasNext()) {

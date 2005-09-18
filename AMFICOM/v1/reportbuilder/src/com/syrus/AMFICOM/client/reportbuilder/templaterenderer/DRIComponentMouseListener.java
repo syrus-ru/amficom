@@ -1,5 +1,5 @@
 /*
- * $Id: DRIComponentMouseListener.java,v 1.3 2005/09/07 08:43:25 peskovsky Exp $
+ * $Id: DRIComponentMouseListener.java,v 1.4 2005/09/18 13:13:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.client.report.DataRenderingComponent;
 import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
-import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.MODE;
+import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.RENDERER_MODE;
 
 public class DRIComponentMouseListener implements MouseListener{
 	ApplicationContext applicationContext;
@@ -46,8 +46,8 @@ public class DRIComponentMouseListener implements MouseListener{
 			(DataRenderingComponent) e.getSource();
 		component.setMousePressedLocation(e.getPoint());
 		
-		if (!	(	RendererMode.getMode().equals(MODE.NO_SPECIAL)
-				||	(	RendererMode.getMode().equals(MODE.ATTACH_LABEL)
+		if (!	(	RendererMode.getMode().equals(RENDERER_MODE.NO_SPECIAL)
+				||	(	RendererMode.getMode().equals(RENDERER_MODE.ATTACH_LABEL)
 					&&	!(component instanceof ImageRenderingComponent))))
 			return;
 

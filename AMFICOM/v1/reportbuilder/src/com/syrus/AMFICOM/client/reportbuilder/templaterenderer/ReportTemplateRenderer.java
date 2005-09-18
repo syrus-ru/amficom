@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.9 2005/09/16 13:26:30 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.10 2005/09/18 13:13:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,6 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
-import java.util.HashMap;
-import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
@@ -39,7 +37,6 @@ import com.syrus.AMFICOM.client.report.DataRenderingComponent;
 import com.syrus.AMFICOM.client.report.ImageRenderingComponent;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
-import com.syrus.AMFICOM.client.report.ReportLayout;
 import com.syrus.AMFICOM.client.report.ReportModel;
 import com.syrus.AMFICOM.client.report.ReportModelPool;
 import com.syrus.AMFICOM.client.report.ReportModel.ReportType;
@@ -50,8 +47,9 @@ import com.syrus.AMFICOM.client.reportbuilder.event.UseTemplateEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportQuickViewEvent;
-import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.MODE;
+import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.RENDERER_MODE;
 import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
@@ -83,7 +81,6 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	private ReportTemplateRendererDropTargetListener dropTargetListener = null;	
 	
 	private ReportTemplate template = null;
-	private Map<Object,Object> dataForReport = new HashMap<Object,Object>();
 	
 	private RenderingComponent selectedComponent = null;
 	
@@ -122,11 +119,11 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		if (evt instanceof ReportFlagEvent){
 			String eventType = ((ReportFlagEvent)evt).getEventType();
 			if (eventType.equals(ReportFlagEvent.LABEL_CREATION_STARTED))
-				RendererMode.setMode(MODE.CREATE_LABEL);
+				RendererMode.setMode(RENDERER_MODE.CREATE_LABEL);
 			else if (eventType.equals(ReportFlagEvent.IMAGE_CREATION_STARTED))
-				RendererMode.setMode(MODE.CREATE_IMAGE);
+				RendererMode.setMode(RENDERER_MODE.CREATE_IMAGE);
 			else if (eventType.equals(ReportFlagEvent.SPECIAL_MODE_CANCELED))
-				RendererMode.setMode(MODE.NO_SPECIAL);
+				RendererMode.setMode(RENDERER_MODE.NO_SPECIAL);
 			else if (eventType.equals(ReportFlagEvent.DELETE_OBJECT)) {
 				ReportTemplateRenderer.this.removeRenderingComponent(
 						this.selectedComponent);
@@ -166,7 +163,6 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			//Для сиюминутных отчётов по схеме
 			String reportModelName = null;
 			String reportName = null;
-			Object additionalData = null;			
 			if (	(reportObject instanceof Scheme)
 					||	(reportObject instanceof SchemeElement)
 					||	(reportObject instanceof AbstractSchemePort)
@@ -174,7 +170,6 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 					||	(reportObject instanceof SchemePath)) {
 				reportModelName = SchemeReportModel.class.getName();
 				reportName = SchemeReportModel.SELECTED_OBJECT_CHARS;
-				additionalData = ((StorableObject)reportObject).getId();
 			}
 			//Для сиюминутных отчётов по карте
 			else if (	(reportObject instanceof PhysicalLink)
@@ -182,11 +177,11 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 					||	(reportObject instanceof Collector)) {
 				reportModelName = MapReportModel.class.getName();
 				reportName = MapReportModel.SELECTED_OBJECT_CHARS;
-				additionalData = ((StorableObject)reportObject).getId();
 			}
 			else
 				return;
 			
+			Identifier reportObjectId = ((StorableObject)reportObject).getId();			
 			//Для быстрого просмотра содержимое рабочего поля стирается
 			//и вместо него лепится один элемент.
 			Command command =
@@ -202,7 +197,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 				this.createDataComponentWithText(
 						reportName,
 						reportModelName,
-						additionalData,
+						reportObjectId,
 						new Point(this.marginBounds.x + 5,this.marginBounds.y + 50),
 						new Dimension(this.marginBounds.width - 10,300));
 			} catch (CreateModelException e) {
@@ -221,7 +216,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		}
 		else if (evt instanceof ComponentSelectionChangeEvent){
 			RenderingComponent eventComponent = ((ComponentSelectionChangeEvent)evt).getRenderingComponent();
-			if (RendererMode.getMode().equals(MODE.ATTACH_LABEL)) {
+			if (RendererMode.getMode().equals(RENDERER_MODE.ATTACH_LABEL)) {
 				if (eventComponent instanceof DataRenderingComponent){
 					AttachedTextStorableElement textElement =
 						(AttachedTextStorableElement)this.labelToBeAttached.getElement();
@@ -237,14 +232,14 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 							new ReportFlagEvent(this,ReportFlagEvent.SPECIAL_MODE_CANCELED),true);			
 				}
 			}
-			else if (RendererMode.getMode().equals(MODE.NO_SPECIAL))
+			else if (RendererMode.getMode().equals(RENDERER_MODE.NO_SPECIAL))
 				this.selectedComponent = eventComponent;
 		}
 		else if (evt instanceof AttachLabelEvent) {
 			AttachLabelEvent alEvent = (AttachLabelEvent)evt;
 			this.labelToBeAttached = alEvent.getTextComponentToAttach();
 			this.labelAttachingType = alEvent.getTextAttachingType();
-			RendererMode.setMode(MODE.ATTACH_LABEL);
+			RendererMode.setMode(RENDERER_MODE.ATTACH_LABEL);
 		}
 	}
 
@@ -305,6 +300,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			this.createReportTemplateDataRenderingComponent(
 					dataElement.getReportName(),
 					dataElement.getModelClassName(),
+					dataElement.getReportObjectId(),
 					new Point(dataElement.getX(),dataElement.getY()),
 					new Dimension(dataElement.getWidth(),dataElement.getHeight()));
 		}
@@ -475,7 +471,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	
 	public ReportTemplateDataRenderingComponent createReportTemplateDataRenderingComponent(
 			String reportName,
-			String reportModelName,			
+			String reportModelName,
+			Identifier reportObjectId,
 			Point location,
 			Dimension size) throws CreateModelException {
 		ReportModel reportModel = ReportModelPool.getModel(reportModelName);
@@ -510,6 +507,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		
 		storableElement.setLocation(location.x,location.y);
 		storableElement.setSize(component.getWidth(),component.getHeight());
+		storableElement.setReportObjectId(reportObjectId);
 		this.template.addElement(storableElement);
 
 		return component;
@@ -519,7 +517,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	 * по центру.
 	 * @param reportName Имя элемента шаблона
 	 * @param reportModelName Имя класса модели отчётов для элемента
-	 * @param additionalData Дополнительные данные
+	 * @param reportObjectId Дополнительные данные
 	 * @param location Расположение
 	 * @param size Размер или null для размера по умолчанию
 	 * @throws CreateModelException 
@@ -527,21 +525,19 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	public void createDataComponentWithText(
 			String reportName,
 			String reportModelName,
-			Object additionalData,
+			Identifier reportObjectId,
 			Point location,
 			Dimension size) throws CreateModelException {
 		ReportTemplateDataRenderingComponent dataComponent = 
 			this.createReportTemplateDataRenderingComponent(
 				reportName,
 				reportModelName,
+				reportObjectId,
 				location,
 				size);
 		DataStorableElement dataElement =
 			(DataStorableElement)dataComponent.getElement();
-		
-		Map<Object,Object> reportData = this.getDataForReport();
-		reportData.put(dataElement.getId(),additionalData);
-		
+	
 		//Заголовок для элемента шаблона
 		AttachedTextComponent headerTextComponent =
 			this.createTextRenderingComponent(location);
@@ -597,9 +593,5 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			return null;
 
 		return fileName;
-	}
-
-	public Map<Object, Object> getDataForReport() {
-		return this.dataForReport;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: DestinationModules.java,v 1.4 2005/09/07 08:43:27 peskovsky Exp $
+ * $Id: DestinationModules.java,v 1.5 2005/09/18 13:13:18 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,7 @@ package com.syrus.AMFICOM.report;
 
 /**
  * @author $Author: peskovsky $
- * @version $Revision: 1.4 $, $Date: 2005/09/07 08:43:27 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/18 13:13:18 $
  * @module commonreport_v1
  */
 public class DestinationModules {
@@ -55,7 +55,11 @@ public class DestinationModules {
 	 * <p>Шаблон по планированию</p>
 	 */
 	public static final String SCHEDULER = "report.Modules.Scheduler.moduleName";
-
+	/**
+	 * <p>Комбинированный шаблон</p>
+	 */
+	public static final String COMBINED = "report.Modules.combinedTemplate";
+	
 	public static final String UNKNOWN_MODULE = "report.ReportTemplateType.unknownModule";
 	
 	private static final String SHORT_SUBSTRING = "shortModuleName";

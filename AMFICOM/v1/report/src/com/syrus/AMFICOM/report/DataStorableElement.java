@@ -36,6 +36,10 @@ public class DataStorableElement extends StorableElement implements Serializable
 	 * привязанные надписи
 	 */
 	protected Identifier id = Identifier.VOID_IDENTIFIER;
+	/**
+	 * Идентификаотр объекта, по которому строится отчёт.
+	 */
+	protected Identifier reportObjectId = null;
 
 	public String getReportName() {
 		return this.reportName;
@@ -64,6 +68,7 @@ public class DataStorableElement extends StorableElement implements Serializable
 		out.writeObject(this.getId());		
 		out.writeObject(this.getReportName());		
 		out.writeObject(this.getModelClassName());
+		out.writeObject(this.getReportObjectId());		
 	}
 
 	public void readObject(java.io.ObjectInputStream in) throws IOException, ClassNotFoundException {
@@ -73,6 +78,14 @@ public class DataStorableElement extends StorableElement implements Serializable
 		this.id = (Identifier)in.readObject();
 		this.reportName = (String)in.readObject();
 		this.modelClassName = (String)in.readObject();
+		this.reportObjectId = (Identifier)in.readObject();
+	}
 
+	public Identifier getReportObjectId() {
+		return this.reportObjectId;
+	}
+
+	public void setReportObjectId(Identifier reportObjectId) {
+		this.reportObjectId = reportObjectId;
 	}
 }

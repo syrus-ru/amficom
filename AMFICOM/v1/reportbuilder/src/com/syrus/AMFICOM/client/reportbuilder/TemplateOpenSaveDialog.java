@@ -56,6 +56,7 @@ public class TemplateOpenSaveDialog extends JDialog {
 		DestinationModules.SCHEDULER,
 		DestinationModules.SCHEME,
 		DestinationModules.SURVEY,
+		DestinationModules.COMBINED,		
 		ALL_TEMPLATES};		
 	
 	/**
@@ -242,8 +243,12 @@ public class TemplateOpenSaveDialog extends JDialog {
 		for (int i = 0; i < MODULES_ARRAY.length; i++)
 			this.moduleNamesComboBox.addItem(
 					LangModelReport.getString(MODULES_ARRAY[i]));
-		this.moduleNamesComboBox.setSelectedItem(
-				LangModelReport.getString(ALL_TEMPLATES));
+		if (this.mode == OPEN)
+			this.moduleNamesComboBox.setSelectedItem(
+					LangModelReport.getString(ALL_TEMPLATES));
+		else
+			this.moduleNamesComboBox.setSelectedItem(
+					LangModelReport.getString(DestinationModules.COMBINED));
 	}
 
 	protected void openSaveButton_actionPerformed(ActionEvent e) {

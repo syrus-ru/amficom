@@ -1,5 +1,5 @@
 /*
- * $Id: ATComponentMouseListener.java,v 1.2 2005/09/05 12:22:51 peskovsky Exp $
+ * $Id: ATComponentMouseListener.java,v 1.3 2005/09/18 13:13:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.AttachedTextComponent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ComponentSelectionChangeEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
-import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.MODE;
+import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.RENDERER_MODE;
 
 public class ATComponentMouseListener implements MouseListener{
 	ApplicationContext applicationContext = null;
@@ -44,7 +44,7 @@ public class ATComponentMouseListener implements MouseListener{
 	}
 
 	public void mousePressed(MouseEvent e) {
-		if (!RendererMode.getMode().equals(MODE.NO_SPECIAL))
+		if (!RendererMode.getMode().equals(RENDERER_MODE.NO_SPECIAL))
 			return;
 		
 		AttachedTextComponent component = (AttachedTextComponent)e.getSource();		

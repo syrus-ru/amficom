@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderTreeMouseListener.java,v 1.2 2005/09/16 13:26:30 peskovsky Exp $
+ * $Id: ReportTemplateElementsTreeMouseListener.java,v 1.1 2005/09/18 13:13:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,13 +14,25 @@ import javax.swing.JTree;
 import javax.swing.tree.TreePath;
 
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
+import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
+import com.syrus.AMFICOM.client.reportbuilder.ModuleMode.MODULE_MODE;
+import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportQuickViewEvent;
+import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
+import com.syrus.AMFICOM.map.Collector;
+import com.syrus.AMFICOM.map.PhysicalLink;
+import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
+import com.syrus.AMFICOM.scheme.AbstractSchemePort;
+import com.syrus.AMFICOM.scheme.Scheme;
+import com.syrus.AMFICOM.scheme.SchemeElement;
+import com.syrus.AMFICOM.scheme.SchemePath;
 
-public class ReportBuilderTreeMouseListener implements MouseListener{
+public class ReportTemplateElementsTreeMouseListener implements MouseListener{
 	private JTree tree = null;
 	private ApplicationContext applicationContext = null;
-	public ReportBuilderTreeMouseListener(JTree tree) {
+	public ReportTemplateElementsTreeMouseListener(JTree tree) {
 		this.tree = tree;
 	}
 	
@@ -33,7 +45,7 @@ public class ReportBuilderTreeMouseListener implements MouseListener{
 			TreePath treePath = 
 				this.tree.getPathForLocation(e.getX(),e.getY());
 			
-			if (treePath.getPathCount() < 4)
+			if (treePath.getPathCount() < 2)
 				//TODO Отслеживать значение pathCount - оно от дерева
 				//Схемных элементов зависит
 				return;
@@ -46,6 +58,20 @@ public class ReportBuilderTreeMouseListener implements MouseListener{
 			Object lastNodeObject =
 				((IconedNode)(treePath.getLastPathComponent())).getObject();
 
+			if (!(		(lastNodeObject instanceof Scheme)
+					||	(lastNodeObject instanceof SchemeElement)
+					||	(lastNodeObject instanceof AbstractSchemePort)
+					||	(lastNodeObject instanceof AbstractSchemeLink)
+					||	(lastNodeObject instanceof SchemePath)
+					||	(lastNodeObject instanceof PhysicalLink)
+					||	(lastNodeObject instanceof SiteNode)
+					||	(lastNodeObject instanceof Collector)))
+				return;
+			
+			if (ModuleMode.getMode().equals(MODULE_MODE.REPORT_PREVIEW))
+				this.applicationContext.getDispatcher().firePropertyChange(
+						new ReportFlagEvent(this,ReportFlagEvent.CHANGE_VIEW));
+			
 			this.applicationContext.getDispatcher().firePropertyChange(
 				new ReportQuickViewEvent(this,lastNodeObject));
 		}

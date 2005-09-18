@@ -1,13 +1,11 @@
 /*
- * $Id: PrintReportCommand.java,v 1.4 2005/09/16 13:26:30 peskovsky Exp $
+ * $Id: PrintReportCommand.java,v 1.5 2005/09/18 13:13:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
  * Project: AMFICOM.
  */
 package com.syrus.AMFICOM.client.reportbuilder.command.template;
-import java.util.Map;
-
 import javax.swing.JOptionPane;
 
 import com.syrus.AMFICOM.client.model.AbstractCommand;
@@ -33,10 +31,12 @@ public class PrintReportCommand extends AbstractCommand {
 	@Override
 	public void execute() {
 		ReportTemplate reportTemplate = this.mainFrame.getTemplateRenderer().getTemplate();
-		Map<Object,Object> reportData = this.mainFrame.getTemplateRenderer().getDataForReport();
 		ApplicationContext aContext = this.mainFrame.getContext();
 		try {
-			ReportPrinter.printReport(reportTemplate,reportData,aContext);
+			ReportPrinter.printReport(
+					reportTemplate,
+					ReportBuilderMainFrame.EMPTY_REPORT_DATA,
+					aContext);
 		} catch (ReportException e) {
 			Log.errorMessage("PrintReportCommand.execute | " + e.getMessage());
 			Log.errorException(e);			

@@ -1,5 +1,5 @@
 /*
- * $Id: OpenTemplateCommand.java,v 1.2 2005/09/13 12:23:11 peskovsky Exp $
+ * $Id: OpenTemplateCommand.java,v 1.3 2005/09/18 13:13:19 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,11 +39,13 @@ public class OpenTemplateCommand extends AbstractCommand {
 					Environment.getActiveWindow(),
 					LangModelReport.getString("report.Command.SaveTemplate.saveConfirmText"),
 					LangModelReport.getString("report.File.confirm"),
-					JOptionPane.OK_CANCEL_OPTION,
+					JOptionPane.YES_NO_CANCEL_OPTION,
 					JOptionPane.WARNING_MESSAGE);
-			if (saveChanges == JOptionPane.OK_OPTION)
+			if (saveChanges == JOptionPane.YES_OPTION)
 				this.aContext.getApplicationModel().getCommand(
-						ReportBuilderApplicationModel.MENU_SAVE_REPORT).execute();					
+						ReportBuilderApplicationModel.MENU_SAVE_REPORT).execute();
+			else if (saveChanges == JOptionPane.CANCEL_OPTION)
+				return;
 		}
 		
 		ReportTemplate templateToOpen = TemplateOpenSaveDialog.openTemplate();
