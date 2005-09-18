@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseDate.java,v 1.16 2005/09/14 19:05:23 arseniy Exp $
+ * $Id: DatabaseDate.java,v 1.17 2005/09/18 20:07:20 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.16 $, $Date: 2005/09/14 19:05:23 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/18 20:07:20 $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
  */
@@ -30,26 +30,27 @@ public class DatabaseDate {
 		assert false;
 	}
 
-	public static Date fromQuerySubString(ResultSet resultset, String column) throws SQLException {
+	public static Date fromQuerySubString(final ResultSet resultSet, final String column) throws SQLException {
 		Date date = null;
 		try {
-			String dateStr = resultset.getString(column);
-			if (dateStr != null)
+			final String dateStr = resultSet.getString(column);
+			if (dateStr != null) {
 				date = SDF.parse(dateStr);
+			}
 		} catch (ParseException pe) {
 			Log.errorMessage("DatabaseDate.fromQuerySubString | parse exception '" + pe.getMessage() + '\'');
 		}
 		return date;
 	}
 
-	public static String toQuerySubString(String column) {
-		String subString = "TO_CHAR(" + column + ", 'YYYYMMDD HH24MISS') " + column;
+	public static String toQuerySubString(final String column) {
+		final String subString = "TO_CHAR(" + column + ", 'YYYYMMDD HH24MISS') " + column;
 		return subString;
 	}
 
-	public static String toUpdateSubString(Date date) {
-		if(date != null) {
-			String subString = "TO_DATE('" + SDF.format(date) + "', 'YYYYMMDD HH24MISS')";
+	public static String toUpdateSubString(final Date date) {
+		if (date != null) {
+			final String subString = "TO_DATE('" + SDF.format(date) + "', 'YYYYMMDD HH24MISS')";
 			return subString;
 		}
 		return null;
