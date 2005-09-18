@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.95 2005/09/16 15:00:09 bob Exp $
+ * $Id: SchedulerModel.java,v 1.96 2005/09/18 13:11:45 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.95 $, $Date: 2005/09/16 15:00:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.96 $, $Date: 2005/09/18 13:11:45 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -496,7 +496,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 	public void setSelectedMonitoredElement(final MonitoredElement monitoredElement) {
 		if (this.monitoredElement == null || monitoredElement == null
-				|| !this.monitoredElement.getId().equals(monitoredElement.getId())) {
+				|| !this.monitoredElement.equals(monitoredElement)) {
 			this.monitoredElement = monitoredElement;
 			this.refreshMeasurementSetups();
 		}
@@ -506,7 +506,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		boolean changed = false;
 		if (this.monitoredElement == null
 				|| monitoredElement == null
-				|| !this.monitoredElement.getId().equals(monitoredElement.getId())) {
+				|| !this.monitoredElement.equals(monitoredElement)) {
 			changed = true;
 			this.monitoredElement = monitoredElement;
 		}
@@ -940,7 +940,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				Log.debugMessage("SchedulerModel.isValid | startTime " + startTime, Log.DEBUGLEVEL10);
 				Log.debugMessage("SchedulerModel.isValid | endTime " + endTime, Log.DEBUGLEVEL10);
 
-				if (test.getMonitoredElement().getId().equals(monitoredElementId)
+				if (test.getMonitoredElementId().equals(monitoredElementId)
 						&& ((endDate != null && 
 								endDate.after(startTime) && 
 								endDate.before(endTime)) || 

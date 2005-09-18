@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.17 2005/08/11 18:51:08 arseniy Exp $
+ * $Id: OpenSessionCommand.java,v 1.18 2005/09/18 13:11:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -41,8 +41,8 @@ import com.syrus.AMFICOM.general.LoginException;
 import com.syrus.AMFICOM.general.LoginManager;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.17 $, $Date: 2005/08/11 18:51:08 $
+ * @author $Author: bass $
+ * @version $Revision: 1.18 $, $Date: 2005/09/18 13:11:44 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -173,7 +173,7 @@ public class OpenSessionCommand extends AbstractCommand {
 
 				for (final Iterator iterator = availableDomains.iterator(); iterator.hasNext();) {
 					Domain domain = (Domain) iterator.next();
-					if (domain.getId().equals(domainId)) {
+					if (domain.equals(domainId)) {
 						try {
 							LoginManager.selectDomain(domainId);
 							dispatcher1.firePropertyChange(

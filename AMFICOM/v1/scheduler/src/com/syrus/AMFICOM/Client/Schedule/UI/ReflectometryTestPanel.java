@@ -62,8 +62,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.78 $, $Date: 2005/09/18 10:42:40 $
- * @author $Author: bob $
+ * @version $Revision: 1.79 $, $Date: 2005/09/18 13:11:45 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -934,7 +934,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 		}		
 		
 		
-		if (this.setId != null && set != null && this.setId.equals(set.getId())) {
+		if (this.setId != null && set != null && this.setId.equals(set)) {
 			this.skip = false;
 			return;
 		}

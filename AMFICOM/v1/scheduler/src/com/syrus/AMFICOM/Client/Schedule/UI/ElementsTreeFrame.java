@@ -164,7 +164,7 @@ public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeL
 		if (object instanceof Identifier) {
 			final Identifier identifier = (Identifier) object;
 			final StorableObject storableObject = this.paramMap.get(ObjectEntities.codeToString(identifier.getMajor()));
-			if (storableObject != null && storableObject.getId().equals(identifier)) {
+			if (storableObject != null && storableObject.equals(identifier)) {
 				list.add(parent);
 			}
 		}

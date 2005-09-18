@@ -462,7 +462,7 @@ public class TestLine extends TimeLine {
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.schedulerModel.getTestIds(), true);
 			for (final Test test : tests) {
-				if (test.getMonitoredElement().getId().equals(this.monitoredElementId)) {
+				if (test.getMonitoredElementId().equals(this.monitoredElementId)) {
 					this.testIds.add(test.getId());
 					if (this.isTestNewer(test)) {
 						this.unsavedTestIds.add(test.getId());

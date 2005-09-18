@@ -1,5 +1,5 @@
 /*-
-* $Id: MeasurementTypeChildrenFactory.java,v 1.15 2005/09/16 15:00:09 bob Exp $
+* $Id: MeasurementTypeChildrenFactory.java,v 1.16 2005/09/18 13:11:45 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -36,8 +36,8 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/16 15:00:09 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/09/18 13:11:45 $
+ * @author $Author: bass $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -109,7 +109,7 @@ public class MeasurementTypeChildrenFactory implements ChildrenFactory {
 						measurementPortItem.setObject(measurementPort2.getId());
 						kisItem.addChild(measurementPortItem);
 						for (final MonitoredElement monitoredElement : monitoredElements) {
-							if (monitoredElement.getMeasurementPortId().equals(measurementPort2.getId())) {
+							if (monitoredElement.getMeasurementPortId().equals(measurementPort2)) {
 								IconPopulatableItem monitoredElementItem = new IconPopulatableItem();
 								monitoredElementItem.setName(monitoredElement.getName());
 								monitoredElementItem.setObject(monitoredElement.getId());
