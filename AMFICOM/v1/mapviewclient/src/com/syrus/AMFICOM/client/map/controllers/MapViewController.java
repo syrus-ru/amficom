@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewController.java,v 1.57 2005/09/16 14:53:34 krupenn Exp $
+ * $Id: MapViewController.java,v 1.58 2005/09/18 13:54:43 bass Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -59,8 +59,8 @@ import com.syrus.util.Log;
 /**
  * Класс используется для управления информацией о канализационной
  * прокладке кабелей и положении узлов и других топологических объектов.
- * @author $Author: krupenn $
- * @version $Revision: 1.57 $, $Date: 2005/09/16 14:53:34 $
+ * @author $Author: bass $
+ * @version $Revision: 1.58 $, $Date: 2005/09/18 13:54:43 $
  * @module mapviewclient
  */
 public final class MapViewController {
@@ -301,7 +301,7 @@ public final class MapViewController {
 
 	public MeasurementPath getMeasurementPathBySchemePathId(Identifier schemePathId) {
 		for(MeasurementPath mp : this.mapView.getMeasurementPaths()) {
-			if(mp.getSchemePath().getId().equals(schemePathId)) {
+			if(mp.getSchemePath().equals(schemePathId)) {
 				return mp;
 			}
 		}

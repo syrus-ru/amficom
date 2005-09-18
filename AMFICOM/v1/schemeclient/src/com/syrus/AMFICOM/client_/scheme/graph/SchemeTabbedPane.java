@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.21 2005/09/14 10:20:04 stas Exp $
+ * $Id: SchemeTabbedPane.java,v 1.22 2005/09/18 13:54:44 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -73,8 +73,8 @@ import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.21 $, $Date: 2005/09/14 10:20:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.22 $, $Date: 2005/09/18 13:54:44 $
  * @module schemeclient
  */
 
@@ -257,7 +257,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							return;
 						}
 						
-						if (parent == null || parentScheme.equals(parent.getParentScheme())) {
+						if (parent == null || parentScheme.equals(parent.getParentSchemeId())) {
 							SchemeElement schemeElement = parent == null 
 									? SchemeObjectsFactory.createSchemeElement(parentScheme, scheme)
 							    : parent;
@@ -298,9 +298,9 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 
 					SchemeResource res = panel1.getSchemeResource();
 					if ((res.getCellContainerType() == SchemeResource.SCHEME &&
-							res.getScheme().getId().equals(schemeElement.getParentScheme().getId())) ||
+							res.getScheme().equals(schemeElement.getParentSchemeId())) ||
 							(res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT &&
-							res.getSchemeElement().getId().equals(schemeElement.getParentSchemeElement().getId()))) {
+							res.getSchemeElement().equals(schemeElement.getParentSchemeElementId()))) {
 						SchemeImageResource image = schemeElement.getUgoCell();
 						if (image == null) {
 							image = schemeElement.getSchemeCell();
@@ -357,7 +357,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-					if (res.getScheme().getId().equals(schemeCableLink.getParentScheme().getId())) {
+					if (res.getScheme().equals(schemeCableLink.getParentSchemeId())) {
 						SchemeGraph graph = panel1.getGraph();
 						
 						SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();

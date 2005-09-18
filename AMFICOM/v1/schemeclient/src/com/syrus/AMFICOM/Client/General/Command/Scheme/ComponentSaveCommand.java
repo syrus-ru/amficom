@@ -119,7 +119,7 @@ public class ComponentSaveCommand extends AbstractCommand {
 			else if (object instanceof DeviceGroup) {
 				SchemeProtoElement schemeProto = ((DeviceGroup)object).getProtoElement();
 				assert schemeProto != null;
-				if (!schemeProto.getId().equals(proto.getId()))
+				if (!schemeProto.equals(proto))
 					schemeProtoElements.add(schemeProto);
 			}
 		}

@@ -99,7 +99,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 				else if (object instanceof DeviceGroup) {
 					SchemeElement schemeElement = ((DeviceGroup)object).getSchemeElement();
 					assert schemeElement != null;
-					if (!schemeElement.getId().equals(se.getId()))
+					if (!schemeElement.equals(se))
 						schemeElements.add(schemeElement);
 				}
 			}
@@ -126,7 +126,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 				SchemeResource res1 = p.getSchemeResource();
 				if (res1.getCellContainerType() == SchemeResource.SCHEME) {
 					Scheme s = res1.getScheme();
-					if (s.equals(se.getParentScheme())) {
+					if (s.equals(se.getParentSchemeId())) {
 						// TODO refreshing view (ugo)
 						
 						this.schemeTab.setGraphChanged(true);

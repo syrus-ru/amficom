@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.15 2005/09/16 09:14:13 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.16 2005/09/18 13:54:43 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -865,7 +865,7 @@ public class SchemeImportCommand extends AbstractCommand {
 			if (id1.getMajor() == ObjectEntities.SCHEMECABLEPORT_CODE) {
 				SchemeCablePort cport = StorableObjectPool.getStorableObject(clonedIds.get(id1), false);
 				for (SchemeCablePort existingPort : existingCablePorts) {
-					if (cport.getDirectionType().equals(existingPort.getDirectionType())) {
+					if (cport.getDirectionType() == existingPort.getDirectionType()) {
 						existingPortsMapping.put(id1, existingPort);
 					}
 				}
@@ -889,7 +889,7 @@ public class SchemeImportCommand extends AbstractCommand {
 		for (Identifier id1 : clonedIds.keySet()) {
 			if (id1.getMajor() == ObjectEntities.SCHEMECABLEPORT_CODE) {
 				SchemeCablePort cport = StorableObjectPool.getStorableObject(clonedIds.get(id1), false);
-				if (cport.getDirectionType().equals(existingCablePort.getDirectionType())) {
+				if (cport.getDirectionType() == existingCablePort.getDirectionType()) {
 					existingPortsMapping.put(id1, existingCablePort);
 					break;
 				}

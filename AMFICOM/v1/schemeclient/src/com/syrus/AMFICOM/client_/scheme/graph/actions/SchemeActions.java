@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.31 2005/09/14 10:20:04 stas Exp $
+ * $Id: SchemeActions.java,v 1.32 2005/09/18 13:54:43 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -89,8 +89,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.31 $, $Date: 2005/09/14 10:20:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.32 $, $Date: 2005/09/18 13:54:43 $
  * @module schemeclient
  */
 
@@ -707,15 +707,18 @@ public class SchemeActions {
 		return null;
 	}
 
-	public static PortCell findAccessPortById(SchemeGraph graph, Identifier aportId) {
-		Object[] cells = graph.getAll();
-		for (int i = 0; i < cells.length; i++)
-			if (cells[i] instanceof PortCell)
-				if (!((PortCell) cells[i]).getSchemePortId().equals(EMPTY))
-					if (((PortCell) cells[i]).getSchemePort().getMeasurementPort() != null
-							&& ((PortCell) cells[i]).getSchemePort().getMeasurementPort()
-									.getId().equals(aportId))
-						return (PortCell) cells[i];
+	public static PortCell findAccessPortById(final SchemeGraph graph, final Identifier measurementPortId) {
+		for (final Object cell : graph.getAll()) {
+			if (cell instanceof PortCell) {
+				final PortCell portCell = (PortCell) cell;
+				if (!portCell.getSchemePortId().isVoid()) {
+					final Identifier measurementPortId1 = portCell.getSchemePort().getMeasurementPortId();
+					if (!measurementPortId1.isVoid() && measurementPortId1.equals(measurementPortId)) {
+						return portCell;
+					}
+				}
+			}
+		}
 		return null;
 	}
 

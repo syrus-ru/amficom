@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.22 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.23 $
+ * @author $Author: bass $
  * @module mapviewclient
  */
 public final class CablePathAddEditor extends DefaultStorableObjectEditor {
@@ -780,7 +780,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			CableChannelingItem previousCbleChannelingItem = this.cablePath.previousLink(cableChannelingItem);
 			PhysicalLink previous = this.cablePath.getBinding().get(previousCbleChannelingItem);
 
-			if(unbound.getStartNode().equals(unbound.getEndNode()))
+			if(unbound.getStartNode().equals(unbound.getEndNodeId()))
 			{
 				this.cablePath.removeLink(cableChannelingItem);
 				cableChannelingItem.setParentPathOwner(null, false);

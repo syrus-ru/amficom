@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDeviceGeneralPanel.java,v 1.11 2005/09/14 10:20:04 stas Exp $
+ * $Id: SchemeDeviceGeneralPanel.java,v 1.12 2005/09/18 13:54:44 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,8 +55,8 @@ import com.syrus.AMFICOM.scheme.SchemePortWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/09/14 10:20:04 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/09/18 13:54:44 $
  * @module schemeclient
  */
 
@@ -184,7 +184,7 @@ public class SchemeDeviceGeneralPanel extends DefaultStorableObjectEditor {
 				SchemePort port = thread.getSchemePort(this.schemeDevice);
 				if (port != null) {
 					this.data[i][1] = port;
-					if (port.equals(thread.getSourceSchemePort()))
+					if (port.equals(thread.getSourceSchemePortId()))
 						this.portDirection = IdlDirectionType.__OUT;
 					else
 						this.portDirection = IdlDirectionType.__IN;

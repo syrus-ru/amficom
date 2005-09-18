@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeResource.java,v 1.11 2005/09/06 12:45:57 stas Exp $
+ * $Id: SchemeResource.java,v 1.12 2005/09/18 13:54:44 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,8 +31,8 @@ import com.syrus.util.Log;
 
 /**
  * 
- * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/09/06 12:45:57 $
+ * @author $Author: bass $
+ * @version $Revision: 1.12 $, $Date: 2005/09/18 13:54:44 $
  * @module schemeclient
  */
 
@@ -96,13 +96,7 @@ public class SchemeResource {
 	}
 	
 	public Identifier getObjectId() {
-		if (this.objectType == SCHEME)
-			return ((Scheme)this.object).getId();
-		if (this.objectType == SCHEME_ELEMENT)
-			return ((SchemeElement)this.object).getId();
-		if (this.objectType == SCHEME_PROTO_ELEMENT)
-			return ((SchemeProtoElement)this.object).getId();
-		return null;
+		return this.object == null ? null : this.object.getId();
 	}
 	
 	public int getCellContainerType() {

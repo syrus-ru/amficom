@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.26 2005/09/16 14:53:37 krupenn Exp $ Syrus
+ * $Id: MapViewTreeModel.java,v 1.27 2005/09/18 13:54:43 bass Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -40,8 +40,8 @@ import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/09/16 14:53:37 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.27 $, $Date: 2005/09/18 13:54:43 $
+ * @author $Author: bass $
  * @module mapviewclient
  */
 public class MapViewTreeModel implements ChildrenFactory {
@@ -240,7 +240,7 @@ public class MapViewTreeModel implements ChildrenFactory {
 		PopulatableIconedNode childNode = null;
 		if(node.getChildren().size() != 0) {
 			childNode = (PopulatableIconedNode )node.getChildren().iterator().next();
-			if(childNode.getObject().equals(mapView.getMap())) {
+			if(childNode.getObject().equals(mapView.getMapId())) {
 				if(childNode.isPopulated())
 					childNode.populate();
 			}
