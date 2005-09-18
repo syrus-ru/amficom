@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.125 2005/09/14 18:13:47 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.126 2005/09/18 14:11:59 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,6 @@ import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -53,8 +52,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.125 $, $Date: 2005/09/14 18:13:47 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.126 $, $Date: 2005/09/18 14:11:59 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -269,7 +268,6 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	private static void prepareTestList() {
 		testList = Collections.synchronizedList(new ArrayList<Test>());
 		TypicalCondition tc;
-		CompoundCondition cc = null;
 
 		final LinkedIdsCondition lic = new LinkedIdsCondition(mcmId, ObjectEntities.TEST_CODE);
 
@@ -277,12 +275,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_STATUS);
-		try {
-			cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
-		} catch (CreateObjectException coe) {
-			// Never
-			Log.errorException(coe);
-		}
+		CompoundCondition cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
 
 		final Set<Identifier> scheduledTestIds = new HashSet<Identifier>();
 		try {
@@ -299,12 +292,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_STATUS);
-		try {
-			cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
-		} catch (CreateObjectException coe) {
-			// Never
-			Log.errorException(coe);
-		}
+		cc = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
 
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjectsButIdsByCondition(scheduledTestIds, cc, true, false);
