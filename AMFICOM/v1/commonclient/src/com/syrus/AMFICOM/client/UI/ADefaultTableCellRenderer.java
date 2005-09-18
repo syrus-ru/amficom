@@ -1,5 +1,5 @@
 /*
- * $Id: ADefaultTableCellRenderer.java,v 1.7 2005/09/14 10:58:18 bob Exp $
+ * $Id: ADefaultTableCellRenderer.java,v 1.8 2005/09/18 13:16:03 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,12 +30,12 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ErrorMessages;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/14 10:58:18 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/18 13:16:03 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
-public final class ADefaultTableCellRenderer extends JLabel implements TableCellRenderer {
+public final class ADefaultTableCellRenderer implements TableCellRenderer {
 
 	private static final long					serialVersionUID	= 3832622897947948339L;
 	/**
@@ -46,14 +46,12 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 	 * 1.0 - ALPHA constant. see {@link #ALPHA}
 	 */
 	public static final double					ONE_MINUS_ALPHA		= 1.0 - ALPHA;
-
+	
 	protected static Hashtable					renderers;
 
-	private static ADefaultTableCellRenderer	instance;
+	private static ADefaultTableCellRenderer	instance;	
 	
 	public ADefaultTableCellRenderer() {
-		super.setOpaque(true);
-		super.setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
 		this.initClassRenderers();
 	}
 
@@ -159,7 +157,7 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 	/**
 	 * Default Renderers
 	 */
-	public static class ObjectRenderer extends JLabel implements TableCellRenderer {
+	public static class ObjectRenderer implements TableCellRenderer {
 
 		private static final long	serialVersionUID	= 3257007670052335929L;
 		
@@ -167,9 +165,12 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 		
 		private static boolean usingItalic = false;
 
+		protected JLabel label;
+		
 		public ObjectRenderer() {
-			super.setOpaque(true);
-			super.setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
+			this.label = new JLabel();
+			this.label.setOpaque(true);
+			this.label.setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
 		}
 
 		/**
@@ -184,16 +185,16 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 														int vColIndex) {
 			this.setValue(value);
 
-			super.setBackground(table.getBackground());
+			this.label.setBackground(table.getBackground());
 
-			Color color = super.getBackground();
+			Color color = this.label.getBackground();
 
 			if (isSelected) {
 				this.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table
 						.getForeground());
 				final Font font = UIManager.getFont("Table.selectedFont");
 				if (usingItalic && font != null ) {
-					this.setFont(font);
+					this.label.setFont(font);
 				}
 				Color c = table.getSelectionBackground();
 				// calculate color with alpha-channel weight alpha
@@ -206,35 +207,33 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 			} else {
 				this.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table
 						.getForeground());
-				this.setFont(table.getFont());
+				this.label.setFont(table.getFont());
 				this.setBackground(color);
 			}
 
 			if (hasFocus) {
-				setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
+				this.label.setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
 				if (table.isCellEditable(rowIndex, vColIndex)) {
 					this.setForeground(UIManager.getColor("Table.focusCellForeground"));
 					setBackground(UIManager.getColor("Table.focusCellBackground"));
 				}
 			} else {
-				setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
+				this.label.setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
 			}
 
-			return this;
+			return this.label;
 		}
 
 		protected void setValue(Object value) {
-			setText((value == null) ? "" : value.toString());
+			this.label.setText((value == null) ? "" : value.toString());
 		}
 
-		@Override
 		public void setBackground(Color c) {
-			super.setBackground(c);
+			this.label.setBackground(c);
 		}
 
-		@Override
 		public void setForeground(Color c) {
-			super.setForeground(c);
+			this.label.setForeground(c);
 			this.unselectedForeground = c;
 		}
 		
@@ -252,8 +251,7 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 		private static final long	serialVersionUID	= 4122257333184640821L;
 
 		public NumberRenderer() {
-			super();
-			setHorizontalAlignment(SwingConstants.LEFT);
+			super.label.setHorizontalAlignment(SwingConstants.LEFT);
 		}
 	}
 
@@ -272,7 +270,7 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 			if (this.formatter == null) {
 				this.formatter = NumberFormat.getInstance();
 			}
-			setText((value == null) ? "" : this.formatter.format(value));
+			super.label.setText((value == null) ? "" : this.formatter.format(value));
 		}
 	}
 
@@ -290,7 +288,7 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 			if (this.formatter == null) {
 				this.formatter = DateFormat.getDateInstance();
 			} 
-			setText((value == null) ? "" : this.formatter.format(value));
+			super.label.setText((value == null) ? "" : this.formatter.format(value));
 		}
 	}
 
@@ -300,12 +298,12 @@ public final class ADefaultTableCellRenderer extends JLabel implements TableCell
 
 		public IconRenderer() {
 			super();
-			setHorizontalAlignment(SwingConstants.CENTER);
+			super.label.setHorizontalAlignment(SwingConstants.CENTER);
 		}
 
 		@Override
 		public void setValue(Object value) {
-			this.setIcon((value instanceof Icon) ? (Icon) value : null);
+			super.label.setIcon((value instanceof Icon) ? (Icon) value : null);
 		}
 	}
 

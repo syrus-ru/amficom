@@ -20,11 +20,11 @@ import com.syrus.util.Wrapper;
  * Abstract class for JLabel and simple Component (witch extends JLabel)
  * rendering at JTable
  * 
- * @version $Revision: 1.7 $, $Date: 2005/09/14 06:35:23 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/18 13:16:03 $
  * @author $Author: bob $
  * @module commonclient
  */
-public abstract class AbstractLabelCellRenderer extends JLabel implements TableCellRenderer {
+public abstract class AbstractLabelCellRenderer implements TableCellRenderer {
 
 	/**
 	 * Weight of color blending using alpha-channel
@@ -38,11 +38,14 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 	protected Map<Class, TableCellRenderer> renderers;
 
 	private Color unselectedForeground;
+	
+	protected JLabel label;
 
 	public AbstractLabelCellRenderer() {
-		super.setOpaque(true);
-		super.setVerticalAlignment(SwingConstants.CENTER);
-		super.setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
+		this.label = new JLabel();
+		this.label.setOpaque(true);
+		this.label.setVerticalAlignment(SwingConstants.CENTER);
+		this.label.setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
 		this.renderers = new HashMap<Class, TableCellRenderer>();
 		this.renderers.put(Color.class, ColorCellRenderer.getInstance());
 		this.renderers.put(Boolean.class, BooleanRenderer.getInstance());
@@ -54,7 +57,7 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 	 * @param clazz
 	 * @param cellRenderer
 	 */
-	public void addCustomRenderer(final Class clazz, final TableCellRenderer cellRenderer) {
+	public final void addCustomRenderer(final Class clazz, final TableCellRenderer cellRenderer) {
 		this.renderers.put(clazz, cellRenderer);
 	}
 
@@ -68,11 +71,11 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 			final boolean hasFocus,
 			final int rowIndex,
 			final int vColIndex) {
-		super.setBackground(table.getBackground());
+		this.label.setBackground(table.getBackground());
 		if (value instanceof JLabel) {
-			final JLabel label = ((JLabel) value);
-			this.setText(label.getText());
-			this.setBackground(label.getBackground());
+			final JLabel otherLabel = ((JLabel) value);
+			this.label.setText(otherLabel.getText());
+			this.setBackground(otherLabel.getBackground());
 		} else {
 			if (value != null) {
 				final TableCellRenderer cellRenderer = this.renderers.get(value.getClass());
@@ -81,9 +84,9 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 				}
 			}			
 			
-			this.setText((value == null) ? "" : value.toString());
+			this.label.setText((value == null) ? "" : value.toString());
 			
-			final int heightWanted = (int) this.getPreferredSize().getHeight();
+			final int heightWanted = (int) this.label.getPreferredSize().getHeight();
 			if (heightWanted > table.getRowHeight(rowIndex)) {
 				table.setRowHeight(rowIndex, heightWanted);
 			}			
@@ -111,12 +114,12 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 		}
 
 //		Color color = super.getBackground();
-		final Color color = this.getBackground();
+		final Color color = this.label.getBackground();
 
 		if (isSelected) {
 			final Font font = UIManager.getFont("Table.selectedFont");
 			if (font != null) {
-				this.setFont(font);
+				this.label.setFont(font);
 			}
 			this.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table.getForeground());
 			final Color c = table.getSelectionBackground();
@@ -126,32 +129,30 @@ public abstract class AbstractLabelCellRenderer extends JLabel implements TableC
 					(int) (c.getBlue() * ONE_MINUS_ALPHA + ALPHA * color.getBlue()) % 256));
 		} else {
 			this.setForeground((this.unselectedForeground != null) ? this.unselectedForeground : table.getForeground());
-			this.setFont(table.getFont());
+			this.label.setFont(table.getFont());
 			this.setBackground(color);
 		}
 
 		if (hasFocus) {
-			super.setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
+			this.label.setBorder(UIManager.getBorder("Table.focusCellHighlightBorder"));
 			// //$NON-NLS-1$
 			if (table.isCellEditable(rowIndex, vColIndex)) {
 				this.setForeground(UIManager.getColor("Table.focusCellForeground")); //$NON-NLS-1$
 				// setBackground(UIManager.getColor("Table.focusCellBackground"));
 			}
 		} else {
-			super.setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
+			this.label.setBorder(UIManager.getBorder(ResourceKeys.TABLE_NO_FOCUS_BORDER));
 		}
 
-		return this;
+		return this.label;
 	}
 
-	@Override
-	public void setBackground(final Color c) {
-		super.setBackground(c);
+	public final void setBackground(final Color c) {
+		this.label.setBackground(c);
 	}
 
-	@Override
-	public void setForeground(final Color c) {
-		super.setForeground(c);
+	public final void setForeground(final Color c) {
+		this.label.setForeground(c);
 		this.unselectedForeground = c;
 	}
 	
