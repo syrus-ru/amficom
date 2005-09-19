@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.64 2005/09/18 12:43:16 bass Exp $
+* $Id: MapView.java,v 1.65 2005/09/19 15:28:56 krupenn Exp $
 *
 * Copyright њ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/09/18 12:43:16 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.65 $, $Date: 2005/09/19 15:28:56 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Describable {
@@ -770,17 +770,17 @@ public final class MapView extends DomainMember implements Describable {
 	 * ѕолучить список всех олементов контекста карты.
 	 * @return список всех топологических элементов
 	 */
-	public List<MapElement> getAllElements() {
-		return this.getMap().getAllElements();
-//		this.allElements.clear();
-//
-//		this.allElements.addAll(this.getMap().getAllElements());
-//		this.allElements.addAll(this.getCablePaths());
-//		this.allElements.addAll(this.getMeasurementPaths());
-//		this.allElements.addAll(this.markers);
-//
-//		return Collections.unmodifiableList(this.allElements);
-	}
+//	public List<MapElement> getAllElements() {
+//		return this.getMap().getAllElements();
+////		this.allElements.clear();
+////
+////		this.allElements.addAll(this.getMap().getAllElements());
+////		this.allElements.addAll(this.getCablePaths());
+////		this.allElements.addAll(this.getMeasurementPaths());
+////		this.allElements.addAll(this.markers);
+////
+////		return Collections.unmodifiableList(this.allElements);
+//	}
 
 	/**
 	 * Remove all temporary objects on mapview when mapview was edited and closed
@@ -865,7 +865,7 @@ public final class MapView extends DomainMember implements Describable {
 	public static SchemeElement getTopLevelSchemeElement(SchemeElement schemeElement) {
 		SchemeElement top = schemeElement;
 		while (top.getParentSchemeElement() != null) {
-			top = getTopLevelSchemeElement(top.getParentSchemeElement());
+			top = top.getParentSchemeElement();
 		}
 		return top;
 	}
