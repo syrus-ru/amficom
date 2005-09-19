@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.16 2005/09/18 13:54:43 bass Exp $
+ * $Id: SchemeImportCommand.java,v 1.17 2005/09/19 13:08:53 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -118,6 +118,7 @@ public class SchemeImportCommand extends AbstractCommand {
 	private Map<Integer, SchemeProtoElement> straightMuffs;
 	private Map<Integer, SchemeProtoElement> inVrms;
 	private Map<Integer, SchemeProtoElement> outVrms;
+	private Set<EquipmentType> muffTypes;
 	static final String USER_DIR = "user.dir";
 	SchemeTabbedPane pane;
 	private static boolean inited = false;
@@ -619,6 +620,7 @@ public class SchemeImportCommand extends AbstractCommand {
 					} else { // split muff
 						// create muff like scheme
 						SchemeElement muff = SchemeElement.createInstance(this.userId, schemeElement.getName(), scheme);
+						muff.setEquipmentType(this.muffTypes.iterator().next()); // schemeElement.getEquipmentType()
 						muff.setDescription(schemeElement.getDescription());
 
 						// graph for schemeCell
@@ -688,7 +690,8 @@ public class SchemeImportCommand extends AbstractCommand {
 		for (SchemeElement schemeElement : schemeElementMapping.keySet()) {
 			SchemeElement newSchemeElement = schemeElementMapping.get(schemeElement);
 			newSchemeElement.setEquipment(schemeElement.getEquipment());
-			scheme.removeSchemeElement(schemeElement);
+			schemeElement.setEquipment(null);
+			StorableObjectPool.delete(schemeElement.getId());
 			StorableObjectPool.flush(schemeElement.getId(), this.userId, false);
 			scheme.addSchemeElement(newSchemeElement);
 		}
@@ -785,7 +788,7 @@ public class SchemeImportCommand extends AbstractCommand {
 
 	private void initMuffs() throws ApplicationException {
 		TypicalCondition condition1 = new TypicalCondition(EquipmentTypeCodename.MUFF.stringValue(), OperationSort.OPERATION_EQUALS, ObjectEntities.EQUIPMENT_TYPE_CODE, StorableObjectWrapper.COLUMN_CODENAME);
-		Set<EquipmentType> muffTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+		this.muffTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
 		Set<Identifier> muffTypeIds = new HashSet<Identifier>();
 		for (EquipmentType eqt : muffTypes) {
 			muffTypeIds.add(eqt.getId());
