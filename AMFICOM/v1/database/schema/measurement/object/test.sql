@@ -1,4 +1,4 @@
--- $Id: test.sql,v 1.16 2005/09/18 20:19:04 arseniy Exp $
+-- $Id: test.sql,v 1.17 2005/09/19 17:03:59 arseniy Exp $
 
 CREATE TABLE Test (
  id NUMBER(19),
@@ -21,8 +21,6 @@ CREATE TABLE Test (
  monitored_element_id NOT NULL,
  description VARCHAR2(256 CHAR),
  number_of_measurements NUMBER(10) NOT NULL,
- stop_time DATE,
- stop_reason VARCHAR2(256 CHAR),
 --
  CONSTRAINT test_pk PRIMARY KEY (id),
  CONSTRAINT test_creator_fk FOREIGN KEY (creator_id)
@@ -42,6 +40,15 @@ CREATE TABLE Test (
 --
  CONSTRAINT test_me_fk FOREIGN KEY (monitored_element_id)
   REFERENCES MonitoredElement (id) ON DELETE CASCADE
+);
+
+CREATE TABLE TestStoppingLink (
+ test_id NOT NULL,
+ stop_time DATE NOT NULL,
+ stop_reason VARCHAR2(256 CHAR),
+--
+ CONSTRAINT tslink_test_fk FOREIGN KEY (test_id)
+  REFERENCES Test (id) ON DELETE CASCADE
 );
 
 CREATE SEQUENCE Test_seq ORDER;
