@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.13 2005/09/11 16:17:22 stas Exp $
+ * $Id: SchemeGraph.java,v 1.14 2005/09/19 13:10:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.13 $, $Date: 2005/09/11 16:17:22 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/19 13:10:28 $
  * @module schemeclient
  */
 
@@ -111,7 +111,7 @@ public class SchemeGraph extends GPGraph {
 	@Override
 	protected VertexView createVertexView(Object v, CellMapper cm) {
 		if (v instanceof DeviceCell) 		// handle size
-			return new DeviceView(v, this, cm);
+			return ((DeviceCell)v).getView(this, cm);
 		if (v instanceof EllipseCell || v instanceof TopLevelElement)	//	round view 
 			return new SchemeEllipseView(v, this, cm);
 		return new SchemeVertexView(v, this, cm);	// square view

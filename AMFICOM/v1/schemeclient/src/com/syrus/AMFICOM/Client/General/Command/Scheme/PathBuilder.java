@@ -361,14 +361,14 @@ public class PathBuilder {
 				AbstractSchemePort lastEndPort = lastPE.getEndAbstractSchemePort();
 				//если у предыдущего эл-та проставлен endPortId, ищем по нему
 				if (lastEndPort != null) {
-					if (lastEndPort.equals(link.getSourceAbstractSchemePortId()) ||
-							lastEndPort.equals(link.getTargetAbstractSchemePortId())) {
+					if (lastEndPort.equals(link.getSourceAbstractSchemePort()) ||
+							lastEndPort.equals(link.getTargetAbstractSchemePort())) {
 						return addLink(path, link);
 					}
 				} else { //в противном случае ищем по общему порту предыдущего эл-та и линка
 					for (SchemePort port : se.getSchemePortsRecursively()) {
-						if (port.equals(link.getSourceAbstractSchemePortId()) ||
-								port.equals(link.getTargetAbstractSchemePortId())) {
+						if (port.equals(link.getSourceAbstractSchemePort()) ||
+								port.equals(link.getTargetAbstractSchemePort())) {
 							lastPE.setEndAbstractSchemePort(port);
 							return addLink(path, link);
 						}
@@ -398,14 +398,14 @@ public class PathBuilder {
 				SchemeCablePort newStartPort = null;
 				// если у предыдущего эл-та проставлен endPortId, ищем по нему
 				if (lastEndPort != null) {
-					if (lastEndPort.equals(link.getSourceAbstractSchemePortId()) ||
-							lastEndPort.equals(link.getTargetAbstractSchemePortId())) {
+					if (lastEndPort.equals(link.getSourceAbstractSchemePort()) ||
+							lastEndPort.equals(link.getTargetAbstractSchemePort())) {
 						newStartPort = (SchemeCablePort)lastEndPort; 
 					}
 				} else { //в противном случае ищем по общему порту предыдущего эл-та и линка
 					for (SchemeCablePort port : se.getSchemeCablePortsRecursively()) {
-						if (port.equals(link.getSourceAbstractSchemePortId()) ||
-								port.equals(link.getTargetAbstractSchemePortId())) {
+						if (port.equals(link.getSourceAbstractSchemePort()) ||
+								port.equals(link.getTargetAbstractSchemePort())) {
 							lastPE.setEndAbstractSchemePort(port);
 							newStartPort = port;
 							break;

@@ -1,5 +1,5 @@
 /*-
- * $Id: ProtoGroupTreeModel.java,v 1.6 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: ProtoGroupTreeModel.java,v 1.7 2005/09/19 13:10:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.resource.LangModelScheme;
@@ -36,12 +37,12 @@ import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.6 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.7 $, $Date: 2005/09/19 13:10:29 $
  * @module schemeclient
  */
 
-public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactory {
+public class ProtoGroupTreeModel extends AbstractChildrenFactory implements VisualManagerFactory {
 	ApplicationContext aContext;
 	private PopulatableIconedNode root;
 	
@@ -100,7 +101,7 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 	}
 
 	private void addToProtoGroup(Item node) {
-		Collection contents = CommonUIUtilities.getChildObjects(node);
+		Collection<Object> contents = super.getChildObjects(node);
 		try {
 			// first add ProtoGroups (always)
 			Identifier parentId = (node.equals(this.root) ? Identifier.VOID_IDENTIFIER : ((SchemeProtoGroup)node.getObject()).getId());
@@ -120,8 +121,8 @@ public class ProtoGroupTreeModel implements ChildrenFactory, VisualManagerFactor
 				children = groups;
 			}
 
-			Collection toAdd = CommonUIUtilities.getObjectsToAdd(children, contents);
-			Collection toRemove = CommonUIUtilities.getItemsToRemove(children, node.getChildren());
+			Collection toAdd = super.getObjectsToAdd(children, contents);
+			Collection toRemove = super.getItemsToRemove(children, node.getChildren());
 			for (Iterator it = toRemove.iterator(); it.hasNext();) {
 				Item child = (Item)it.next();
 				child.setParent(null);

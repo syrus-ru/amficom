@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.32 2005/09/18 13:54:43 bass Exp $
+ * $Id: SchemeActions.java,v 1.33 2005/09/19 13:10:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -89,8 +89,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.32 $, $Date: 2005/09/18 13:54:43 $
+ * @author $Author: stas $
+ * @version $Revision: 1.33 $, $Date: 2005/09/19 13:10:28 $
  * @module schemeclient
  */
 
@@ -352,25 +352,25 @@ public class SchemeActions {
 	}
 	
 	public static void insertSEbyS(SchemeGraph graph, SchemeElement schemeElement, Point p, boolean doClone) {
-		Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
-		SchemeImageResource res = schemeElement.getUgoCell();
-		res = schemeElement.getUgoCell();
-		if (res == null) {
-			Log.debugMessage("Can not insert scheme without ugo cell", Level.WARNING);
-			return;
-		}
-			
-		Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = openSchemeImageResource(graph, res, doClone, p, true);
-		SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
-		
 		try {
+			Scheme scheme = schemeElement.getScheme(true);
+			Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
+			SchemeImageResource res = scheme.getUgoCell();
+			if (res == null) {
+				Log.debugMessage("Can not insert scheme without ugo cell", Level.WARNING);
+				return;
+			}
+			
+			Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = openSchemeImageResource(graph, res, doClone, p, true);
+			SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+				
 			SchemeImageResource seRes = schemeElement.getUgoCell();
 			if (seRes == null) {
 				seRes = SchemeObjectsFactory.createSchemeImageResource();
 				schemeElement.setUgoCell(seRes);
 			}
 			seRes.setData((List<Object>)graph.getArchiveableState(clonedObjects.values().toArray()));
-		} catch (CreateObjectException e) {
+		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}
 	}
@@ -506,14 +506,14 @@ public class SchemeActions {
 		
 		int u = GraphConstants.PERCENT;
 		int distance = (direction == IdlDirectionType._OUT ?
-				(p.x - (dev_bounds.x + dev_bounds.width)) / graph.getGridSize() + 1 :
+				(p.x - (dev_bounds.x + dev_bounds.width) + 1) / graph.getGridSize() + 1 :
 				(dev_bounds.x - p.x) / graph.getGridSize());
 		Point labelPosition = (direction == IdlDirectionType._OUT ? 
-				new Point (-2 * u / distance, 0) : 
-				new Point (u + (int)(1.5 * u / distance), 0));
+				new Point ((int)(-1.6 * u / distance), 0) : 
+				new Point (u + (int)(0.9 * u / distance), 0));
 		Rectangle portCellBounds = (direction == IdlDirectionType._OUT ? 
-				new Rectangle(p.x - 6, p.y - 3, 7, 7) : 
-				new Rectangle(p.x, p.y - 3, 7, 7));
+				new Rectangle(p.x - 4, p.y - 2, 5, 5) : 
+				new Rectangle(p.x, p.y - 2, 5, 5));
 		Point devportPos = (direction == IdlDirectionType._OUT ?
 				new Point(u, (int)(u * ( (double)(p.y + 1 - dev_bounds.y) / (double)dev_bounds.height))) :		
 				new Point(0, (int)(u * ( (double)(p.y + 1 - dev_bounds.y) / (double)dev_bounds.height))));
@@ -712,7 +712,7 @@ public class SchemeActions {
 			if (cell instanceof PortCell) {
 				final PortCell portCell = (PortCell) cell;
 				if (!portCell.getSchemePortId().isVoid()) {
-					final Identifier measurementPortId1 = portCell.getSchemePort().getMeasurementPortId();
+					final Identifier measurementPortId1 = portCell.getSchemePort().getMeasurementPort().getId();
 					if (!measurementPortId1.isVoid() && measurementPortId1.equals(measurementPortId)) {
 						return portCell;
 					}
@@ -873,15 +873,9 @@ public class SchemeActions {
 			sl.setTargetAbstractSchemePort(sp);
 		}
 		
-		connect(graph, sp, sl.getSchemeCableThreads(), is_source);
-		
-		return true;
-	}
-	
-	public static void connect(SchemeGraph graph, SchemeCablePort sp, Set<SchemeCableThread> threads1, boolean is_source) {
-	IdlDirectionType direction = sp.getDirectionType() == IdlDirectionType._IN ? IdlDirectionType._OUT : IdlDirectionType._IN;
+		IdlDirectionType direction = sp.getDirectionType() == IdlDirectionType._IN ? IdlDirectionType._OUT : IdlDirectionType._IN;
 		List<SchemePort> ports = new ArrayList<SchemePort>(findPorts(sp.getParentSchemeDevice(), direction));
-		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(threads1);	
+		List<SchemeCableThread> threads = new ArrayList<SchemeCableThread>(sl.getSchemeCableThreads());	
 		
 		Collections.sort(ports, new NumberedComparator<SchemePort>(SchemePortWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
 		Collections.sort(threads, new NumberedComparator<SchemeCableThread>(SchemeCableThreadWrapper.getInstance(), StorableObjectWrapper.COLUMN_NAME));
@@ -894,11 +888,12 @@ public class SchemeActions {
 			} else {
 				thread.setTargetSchemePort(sport);
 			}
-			GraphActions.setObjectBackColor(graph, sport, determinePortColor(sport, thread));
 		}
+		GraphActions.setObjectBackColor(graph, sp, determinePortColor(sp, sl));
+		
+		return true;
 	}
-
-
+	
 	public static void disconnectSchemeCableLink(SchemeGraph graph,
 			DefaultCableLink link, CablePortCell port, boolean is_source) {
 		SchemeCableLink sl = link.getSchemeCableLink();

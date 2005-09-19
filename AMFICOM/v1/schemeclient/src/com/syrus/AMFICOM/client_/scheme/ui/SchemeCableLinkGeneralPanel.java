@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLinkGeneralPanel.java,v 1.20 2005/09/18 13:54:44 bass Exp $
+ * $Id: SchemeCableLinkGeneralPanel.java,v 1.21 2005/09/19 13:10:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/09/18 13:54:44 $
+ * @author $Author: stas $
+ * @version $Revision: 1.21 $, $Date: 2005/09/19 13:10:29 $
  * @module schemeclient
  */
 
@@ -505,7 +505,7 @@ public class SchemeCableLinkGeneralPanel extends DefaultStorableObjectEditor {
 			try {
 				final CableLinkType newType = (CableLinkType) this.cmbTypeCombo.getSelectedItem();
 				if (this.schemeCableLink.getAbstractLinkType() == null
-						|| (newType != null && !newType.equals(this.schemeCableLink.getAbstractLinkTypeId()))
+						|| (newType != null && !newType.equals(this.schemeCableLink.getAbstractLinkType()))
 						|| (newType != null && newType.getCableThreadTypes(false).size() != this.schemeCableLink.getSchemeCableThreads().size())) {
 					this.schemeCableLink.setAbstractLinkTypeExt(newType, LoginManager.getUserId());
 				}

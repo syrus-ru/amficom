@@ -1,5 +1,5 @@
 /*
- * $Id: CreateUgo.java,v 1.8 2005/09/14 10:20:04 stas Exp $
+ * $Id: CreateUgo.java,v 1.9 2005/09/19 13:10:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import java.util.Map;
 import javax.swing.ImageIcon;
 
 import com.jgraph.graph.DefaultGraphCell;
+import com.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
@@ -41,7 +42,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/09/14 10:20:04 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/19 13:10:28 $
  * @module schemeclient
  */
 
@@ -73,7 +74,92 @@ public class CreateUgo {
 			return;
 		CreateGroup.createGroup(graph, cells, scheme.getId(), DeviceGroup.SCHEME);
 	}
-	 
+	
+	public static void createMuffUgo(SchemeElement element, SchemeGraph graph, ImageIcon symbol, String label, List<BlockPortCell> blockports_in, List<BlockPortCell> blockports_out) {
+		createMuff(graph, blockports_in, blockports_out);
+		Object[] cells = CreateGroup.getCellsToAdd(graph);
+		if (cells.length == 0)
+			return;
+		CreateGroup.createGroup(graph, cells, element.getId(), DeviceGroup.SCHEME_ELEMENT);
+	}
+	
+	public static void createMuffUgo(SchemeProtoElement element, SchemeGraph graph, ImageIcon symbol, String label, List<BlockPortCell> blockports_in, List<BlockPortCell> blockports_out) {
+		createMuff(graph, blockports_in, blockports_out);
+		Object[] cells = CreateGroup.getCellsToAdd(graph);
+		if (cells.length == 0)
+			return;
+		CreateGroup.createGroup(graph, cells, element.getId(), DeviceGroup.SCHEME_ELEMENT);
+	}
+	
+	private static void createMuff(SchemeGraph graph, List<BlockPortCell> blockports_in, List<BlockPortCell> blockports_out) {
+		//remove old cells
+		graph.setSelectionCells(new Object[0]);
+		graph.getModel().remove(graph.getDescendants(graph.getAll()));
+
+		// create new element
+		int grid = graph.getGridSize();
+		int max = Math.max(1, Math.max(blockports_in.size(), blockports_out.size()));
+		Point p1 = graph.snap(new Point(grid*4, grid*2)); 
+		Rectangle deviceBounds = new Rectangle(
+				new Point(p1.x, p1.y - grid / 2),//oldrect.x, oldrect.y
+				graph.snap(new Dimension(grid * max, grid * max)));
+
+		SchemeDevice dev;
+		try {
+			dev = SchemeObjectsFactory.createSchemeDevice(Long.toString(System.currentTimeMillis()));
+		} catch (CreateObjectException e) {
+			Log.errorException(e);
+			return;
+		}	
+
+		Map viewMap = new HashMap();
+		DeviceCell cell = DeviceCell.createInstance("", deviceBounds, viewMap, Color.GRAY);
+		cell.setKind(DeviceCell.ROUNDED);
+		cell.setSchemeDeviceId(dev.getId());
+		graph.getGraphLayoutCache().insert(new Object[] { cell }, viewMap, null, null, null);
+		graph.setSelectionCell(cell);
+		
+		List<DefaultGraphCell> insertedObjects = new ArrayList<DefaultGraphCell>(2 * (blockports_in.size() + blockports_out.size()) + 1);
+		insertedObjects.add(cell);
+		
+		int counter = 0;
+		Collections.sort(blockports_out, new BPCComparator());
+		for (Iterator it = blockports_out.iterator(); it.hasNext();)
+		{
+			BlockPortCell b = (BlockPortCell)it.next();
+			Point p = graph.snap(new Point(deviceBounds.x + deviceBounds.width + grid, (int)(deviceBounds.y + grid*(0.5 + (max - blockports_out.size()) / 2 + counter++))));
+			
+			AbstractSchemePort port = b.getAbstractSchemePort();
+			Color color = SchemeActions.determinePortColor(port, port.getAbstractSchemeLink());
+			if (b.isCablePort()) {
+				CablePortCell portCell = SchemeActions.createCablePort(graph, cell, p, "", port.getDirectionType(), color, port.getId());
+				insertedObjects.add(portCell);
+			} else {
+				PortCell portCell = SchemeActions.createPort(graph, cell, p, "", port.getDirectionType(), color, port.getId());
+				insertedObjects.add(portCell);
+			}
+		}
+		counter = 0;
+		Collections.sort(blockports_in, new BPCComparator());
+		for (Iterator it = blockports_in.iterator(); it.hasNext();)
+		{
+			BlockPortCell b = (BlockPortCell)it.next();
+			Point p = graph.snap(new Point(deviceBounds.x - grid, (int)(deviceBounds.y + grid*(0.5 + (max - blockports_in.size()) / 2 + counter++))));
+			
+			AbstractSchemePort port = b.getAbstractSchemePort();
+			Color color = SchemeActions.determinePortColor(port, port.getAbstractSchemeLink());
+			if (b.isCablePort()) {
+				CablePortCell portCell = SchemeActions.createCablePort(graph, cell, p, "", port.getDirectionType(), color, port.getId());
+				insertedObjects.add(portCell);
+			} else {
+				PortCell portCell = SchemeActions.createPort(graph, cell, p, "", port.getDirectionType(), color, port.getId());
+				insertedObjects.add(portCell);
+			}
+		}
+		Object[] insertedCells = insertedObjects.toArray();
+//		GraphActions.setObjectsBackColor(graph, insertedCells, Color.WHITE);
+		graph.setSelectionCells(insertedCells);
+	}
 	
 	private static void create(SchemeGraph graph, ImageIcon symbol, String label, List<BlockPortCell> blockports_in, List<BlockPortCell> blockports_out) {
 		//remove old cells
@@ -83,13 +169,11 @@ public class CreateUgo {
 		// create new element
 		int grid = graph.getGridSize();
 		int max = Math.max(1, Math.max(blockports_in.size(), blockports_out.size()));
-		int stringWidth = grid * (((int)graph.getFont().getStringBounds(label, new FontRenderContext(null, false, false)).getWidth() / grid + 2));
+		int stringWidth = grid * (((int)graph.getFont().getStringBounds(label, new FontRenderContext(null, false, false)).getWidth() / grid + 1));
 		Rectangle deviceBounds = new Rectangle(
 				graph.snap(new Point(grid*4, grid*2)),//oldrect.x, oldrect.y
-				graph.snap(new Dimension(Math.max(stringWidth, grid*5), grid*(2 * max))));
+				graph.snap(new Dimension(Math.max(stringWidth, 2 * grid), grid*(1 + max))));
 
-		List<DefaultGraphCell> insertedObjects = new ArrayList<DefaultGraphCell>(2 * (blockports_in.size() + blockports_out.size()) + 1);
-		
 		SchemeDevice dev;
 		try {
 			dev = SchemeObjectsFactory.createSchemeDevice(Long.toString(System.currentTimeMillis()));
@@ -97,12 +181,14 @@ public class CreateUgo {
 			Log.errorException(e);
 			return;
 		}	
-		
+
 		Map viewMap = new HashMap();
 		DeviceCell cell = DeviceCell.createInstance(label, deviceBounds, viewMap);
 		cell.setSchemeDeviceId(dev.getId());
 		graph.getGraphLayoutCache().insert(new Object[] { cell }, viewMap, null, null, null);
 		graph.setSelectionCell(cell);
+		
+		List<DefaultGraphCell> insertedObjects = new ArrayList<DefaultGraphCell>(2 * (blockports_in.size() + blockports_out.size()) + 1);
 		insertedObjects.add(cell);
 		
 		int counter = 0;
@@ -111,7 +197,7 @@ public class CreateUgo {
 		{
 			BlockPortCell b = (BlockPortCell)it.next();
 			String name = (String)b.getUserObject();
-			Point p = graph.snap(new Point(deviceBounds.x + deviceBounds.width + grid*2, deviceBounds.y + grid*(1 + (max - blockports_out.size()) /*/ 2 + 1*/ + 2 * counter++)));
+			Point p = graph.snap(new Point(deviceBounds.x + deviceBounds.width + grid, deviceBounds.y + grid*(1 + (max - blockports_out.size()) / 2 + counter++)));
 			
 			AbstractSchemePort port = b.getAbstractSchemePort();
 			Color color = SchemeActions.determinePortColor(port, port.getAbstractSchemeLink());
@@ -130,7 +216,7 @@ public class CreateUgo {
 		{
 			BlockPortCell b = (BlockPortCell)it.next();
 			String name = (String)b.getUserObject();
-			Point p = graph.snap(new Point(deviceBounds.x - grid*2, deviceBounds.y + grid*(1 + (max - blockports_in.size()) /* / 2 + 1 */+ 2 *  counter++)));
+			Point p = graph.snap(new Point(deviceBounds.x - grid, deviceBounds.y + grid*(1 + (max - blockports_in.size()) / 2 + counter++)));
 			
 			AbstractSchemePort port = b.getAbstractSchemePort();
 			Color color = SchemeActions.determinePortColor(port, port.getAbstractSchemeLink());

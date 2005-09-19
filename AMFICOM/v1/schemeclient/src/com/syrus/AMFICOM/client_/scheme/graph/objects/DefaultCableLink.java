@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.10 2005/08/19 15:41:34 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.11 2005/09/19 13:10:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/19 15:41:34 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/19 13:10:28 $
  * @module schemeclient
  */
 
@@ -199,12 +199,20 @@ public class DefaultCableLink extends DefaultEdge {
 				} else {
 					if (DefaultCableLink.this.routed == null) {
 						int x2 = from.x + ((to.x - from.x) / 2);
+						int y2 = from.y + ((to.y - from.y) / 2);
 						DefaultCableLink.this.routed = new Point[4];
-						DefaultCableLink.this.routed[0] = graph.snap(new Point(x2, from.y));
-						DefaultCableLink.this.routed[1] = graph.snap(new Point(x2, from.y));
-						DefaultCableLink.this.routed[2] = graph.snap(new Point(x2, to.y));
-						DefaultCableLink.this.routed[3] = graph.snap(new Point(x2, to.y));
-
+						int grid = graph.getGridSize();
+						if (from.x <= to.x) {
+							DefaultCableLink.this.routed[0] = graph.snap(new Point(from.x + grid, from.y));
+							DefaultCableLink.this.routed[1] = graph.snap(new Point(x2, from.y));
+							DefaultCableLink.this.routed[2] = graph.snap(new Point(x2, to.y));
+							DefaultCableLink.this.routed[3] = graph.snap(new Point(to.x - grid, to.y));
+						} else {
+							DefaultCableLink.this.routed[0] = graph.snap(new Point(from.x + grid, from.y));
+							DefaultCableLink.this.routed[1] = graph.snap(new Point(from.x + grid, y2));
+							DefaultCableLink.this.routed[2] = graph.snap(new Point(to.x - grid, y2));
+							DefaultCableLink.this.routed[3] = graph.snap(new Point(to.x - grid, to.y));
+						}
 					}
 				}
 				// Set/Add Points

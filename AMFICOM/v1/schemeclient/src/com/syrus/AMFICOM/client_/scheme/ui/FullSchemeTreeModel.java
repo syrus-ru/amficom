@@ -1,5 +1,5 @@
 /*-
- * $Id: FullSchemeTreeModel.java,v 1.1 2005/09/14 10:15:00 stas Exp $
+ * $Id: FullSchemeTreeModel.java,v 1.2 2005/09/19 13:10:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,16 +12,15 @@ import java.util.Collection;
 
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.configuration.ui.ConfigurationTreeModel;
-import com.syrus.AMFICOM.logic.ChildrenFactory;
+import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeResourceKeys;
 
-public class FullSchemeTreeModel  implements ChildrenFactory {
+public class FullSchemeTreeModel extends AbstractChildrenFactory {
 
 	ApplicationContext aContext;
 	PopulatableIconedNode root;
@@ -31,7 +30,7 @@ public class FullSchemeTreeModel  implements ChildrenFactory {
 	}
 	
 	public void populate(Item node) {
-		Collection<Object> contents = CommonUIUtilities.getChildObjects(node);
+		Collection<Object> contents = super.getChildObjects(node);
 		
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();

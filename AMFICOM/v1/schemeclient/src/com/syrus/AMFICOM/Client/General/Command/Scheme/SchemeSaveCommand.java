@@ -126,7 +126,7 @@ public class SchemeSaveCommand extends AbstractCommand {
 				SchemeResource res1 = p.getSchemeResource();
 				if (res1.getCellContainerType() == SchemeResource.SCHEME) {
 					Scheme s = res1.getScheme();
-					if (s.equals(se.getParentSchemeId())) {
+					if (s.equals(se.getParentScheme())) {
 						// TODO refreshing view (ugo)
 						
 						this.schemeTab.setGraphChanged(true);
@@ -154,24 +154,24 @@ public class SchemeSaveCommand extends AbstractCommand {
 //			}
 			
 			// add internal objects - SL, SCL, SE
-			Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
-			Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
-			Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
-			Object[] objects = graph.getRoots();
-			for (Object object : objects) {
-				if (object instanceof DefaultLink)
-					schemeLinks.add(((DefaultLink)object).getSchemeLink());
-				if (object instanceof DefaultCableLink)
-					schemeCableLinks.add(((DefaultCableLink)object).getSchemeCableLink());
-				else if (object instanceof DeviceGroup) {
-					SchemeElement schemeElement = ((DeviceGroup)object).getSchemeElement();
-					schemeElements.add(schemeElement);
-				}
-			}
+//			Set<SchemeLink> schemeLinks = new HashSet<SchemeLink>();
+//			Set<SchemeCableLink> schemeCableLinks = new HashSet<SchemeCableLink>();
+//			Set<SchemeElement> schemeElements = new HashSet<SchemeElement>();
+//			Object[] objects = graph.getRoots();
+//			for (Object object : objects) {
+//				if (object instanceof DefaultLink)
+//					schemeLinks.add(((DefaultLink)object).getSchemeLink());
+//				if (object instanceof DefaultCableLink)
+//					schemeCableLinks.add(((DefaultCableLink)object).getSchemeCableLink());
+//				else if (object instanceof DeviceGroup) {
+//					SchemeElement schemeElement = ((DeviceGroup)object).getSchemeElement();
+//					schemeElements.add(schemeElement);
+//				}
+//			}
 			try {
-				scheme.setSchemeLinks(schemeLinks);
-				scheme.setSchemeCableLinks(schemeCableLinks);
-				scheme.setSchemeElements(schemeElements);
+//				scheme.setSchemeLinks(schemeLinks);
+//				scheme.setSchemeCableLinks(schemeCableLinks);
+//				scheme.setSchemeElements(schemeElements);
 			
 				//	create SchemeImageResource
 				SchemeImageResource schemeIr = scheme.getSchemeCell();

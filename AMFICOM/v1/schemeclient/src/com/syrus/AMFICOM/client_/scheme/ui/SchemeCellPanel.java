@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCellPanel.java,v 1.6 2005/08/19 15:41:35 stas Exp $
+ * $Id: SchemeCellPanel.java,v 1.7 2005/09/19 13:10:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/19 15:41:35 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/19 13:10:29 $
  * @module schemeclient
  */
 
@@ -108,6 +108,7 @@ public class SchemeCellPanel extends DefaultStorableObjectEditor {
 	/**
 	 * @see com.syrus.AMFICOM.client.UI.StorableObjectEditor#commitChanges()
 	 */
+	@Override
 	public void commitChanges() {
 		super.commitChanges();
 		SchemeImageResource image = this.schemeCellContainer.getUgoCell();

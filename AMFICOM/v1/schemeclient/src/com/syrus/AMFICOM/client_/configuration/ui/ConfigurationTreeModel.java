@@ -1,5 +1,5 @@
 /*-
- * $Id: ConfigurationTreeModel.java,v 1.10 2005/09/01 13:39:18 stas Exp $
+ * $Id: ConfigurationTreeModel.java,v 1.11 2005/09/19 13:10:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,7 @@ import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.MeasurementPortType;
@@ -41,11 +42,11 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/09/01 13:39:18 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/19 13:10:28 $
  * @module schemeclient
  */
 
-public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFactory {
+public class ConfigurationTreeModel extends AbstractChildrenFactory  implements VisualManagerFactory {
 	ApplicationContext aContext;
 	private PopulatableIconedNode root;
 	
@@ -106,7 +107,7 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 	
 
 	public void populate(Item node) {
-		Collection<Object> contents = CommonUIUtilities.getChildObjects(node);
+		Collection<Object> contents = super.getChildObjects(node);
 		
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
@@ -194,8 +195,8 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE);
 			Collection<StorableObject> linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		
-			Collection<Object> toAdd = CommonUIUtilities.getObjectsToAdd(linkTypes, contents);
-			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(linkTypes, node.getChildren());
+			Collection<StorableObject> toAdd = super.getObjectsToAdd(linkTypes, contents);
+			Collection<Item> toRemove = super.getItemsToRemove(linkTypes, node.getChildren());
 			for (Item child : toRemove) {
 				child.setParent(null);
 			}
@@ -214,8 +215,8 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.CABLELINK_TYPE_CODE);
 			Collection<StorableObject> linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			
-			Collection toAdd = CommonUIUtilities.getObjectsToAdd(linkTypes, contents);
-			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(linkTypes, node.getChildren());
+			Collection toAdd = super.getObjectsToAdd(linkTypes, contents);
+			Collection<Item> toRemove = super.getItemsToRemove(linkTypes, node.getChildren());
 			for (Item child : toRemove) {
 				child.setParent(null);
 			}
@@ -237,8 +238,8 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 
 			Collection<StorableObject> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			
-			Collection toAdd = CommonUIUtilities.getObjectsToAdd(portTypes, contents);
-			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(portTypes, node.getChildren());
+			Collection toAdd = super.getObjectsToAdd(portTypes, contents);
+			Collection<Item> toRemove = super.getItemsToRemove(portTypes, node.getChildren());
 			for (Item child : toRemove) {
 				child.setParent(null);
 			}
@@ -257,8 +258,8 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 			EquivalentCondition condition = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE);
 			Collection<StorableObject> equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			
-			Collection toAdd = CommonUIUtilities.getObjectsToAdd(equipmentTypes, contents);
-			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(equipmentTypes, node.getChildren());
+			Collection toAdd = super.getObjectsToAdd(equipmentTypes, contents);
+			Collection<Item> toRemove = super.getItemsToRemove(equipmentTypes, node.getChildren());
 			for (Item child : toRemove) {
 				child.setParent(null);
 			}
@@ -278,8 +279,8 @@ public class ConfigurationTreeModel implements ChildrenFactory, VisualManagerFac
 					ObjectEntities.MEASUREMENTPORT_TYPE_CODE);
 			Collection<StorableObject> mpTypes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			
-			Collection toAdd = CommonUIUtilities.getObjectsToAdd(mpTypes, contents);
-			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(mpTypes, node.getChildren());
+			Collection toAdd = super.getObjectsToAdd(mpTypes, contents);
+			Collection<Item> toRemove = super.getItemsToRemove(mpTypes, node.getChildren());
 			for (Item child : toRemove) {
 				child.setParent(null);
 			}

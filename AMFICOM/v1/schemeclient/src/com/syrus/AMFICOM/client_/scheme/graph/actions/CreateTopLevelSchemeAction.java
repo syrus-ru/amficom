@@ -1,5 +1,5 @@
 /*
- * $Id: CreateTopLevelSchemeAction.java,v 1.19 2005/09/13 10:19:05 bass Exp $
+ * $Id: CreateTopLevelSchemeAction.java,v 1.20 2005/09/19 13:10:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,10 +31,10 @@ import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeResource;
 import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.BlockPortCell;
-import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeElementPropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemePropertiesManager;
 import com.syrus.AMFICOM.client_.scheme.ui.SchemeProtoElementPropertiesManager;
+import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -48,8 +48,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.19 $, $Date: 2005/09/13 10:19:05 $
+ * @author $Author: stas $
+ * @version $Revision: 1.20 $, $Date: 2005/09/19 13:10:28 $
  * @module schemeclient
  */
 
@@ -117,15 +117,19 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		
 		if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
 			try {
-				SchemeProtoElement proto = null;
-				DeviceGroup[] groups = GraphActions.findTopLevelGroups(graph, cells);
-				if (groups.length == 1) {
-					proto = groups[0].getProtoElement();
-				}
-				if (proto == null)
+				SchemeProtoElement proto = res.getSchemeProtoElement();
+				if (proto == null) {
 					res.setSchemeProtoElement(SchemeObjectsFactory.createSchemeProtoElement());
-				else 
-					res.setSchemeProtoElement(proto);
+				}
+				
+//				DeviceGroup[] groups = GraphActions.findTopLevelGroups(graph, cells);
+//				if (groups.length == 1) {
+//					proto = groups[0].getProtoElement();
+//				}
+//				if (proto == null)
+//					res.setSchemeProtoElement(SchemeObjectsFactory.createSchemeProtoElement());
+//				else 
+//					res.setSchemeProtoElement(proto);
 			} catch (CreateObjectException e1) {
 				Log.errorException(e1);
 				return;
@@ -170,9 +174,19 @@ public class CreateTopLevelSchemeAction extends AbstractAction {
 		UgoTabbedPane pane = new UgoTabbedPane(internalContext);
 		SchemeGraph invisibleGraph = pane.getGraph();
 		if (res.getCellContainerType() == SchemeResource.SCHEME_PROTO_ELEMENT) {
-			CreateUgo.createProtoUgo((SchemeProtoElement)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);
+			SchemeProtoElement pe = (SchemeProtoElement)cellContainer;
+			if (pe.getEquipmentType().getCodename().equals(EquipmentTypeCodename.MUFF.stringValue())) {
+				CreateUgo.createMuffUgo(pe, invisibleGraph, icon, label, blockports_in, blockports_out);
+			} else {
+				CreateUgo.createProtoUgo((SchemeProtoElement)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);
+			}
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT) {
-			CreateUgo.createElementUgo((SchemeElement)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);
+			SchemeElement se = (SchemeElement)cellContainer;
+			if (se.getEquipmentType().getCodename().equals(EquipmentTypeCodename.MUFF.stringValue())) {
+				CreateUgo.createMuffUgo(se, invisibleGraph, icon, label, blockports_in, blockports_out);
+			} else {
+				CreateUgo.createElementUgo(se, invisibleGraph, icon, label, blockports_in, blockports_out);
+			}
 		} else if (res.getCellContainerType() == SchemeResource.SCHEME) {
 			//FIXME когда создается УГО для схемы SchemeDevice никуда не добавляется ибо SE не создается, поэтому после выхода он пропадает
 			CreateUgo.createSchemeUgo((Scheme)cellContainer, invisibleGraph, icon, label, blockports_in, blockports_out);

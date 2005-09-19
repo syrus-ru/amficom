@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.40 2005/09/14 10:15:00 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.41 2005/09/19 13:10:29 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.40 $, $Date: 2005/09/14 10:15:00 $
+ * @version $Revision: 1.41 $, $Date: 2005/09/19 13:10:29 $
  * @module schemeclient
  */
 
@@ -37,6 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.resource.LangModelScheme;
@@ -54,7 +55,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKi
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
-public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
+public class SchemeTreeModel extends AbstractChildrenFactory implements VisualManagerFactory {
 	ApplicationContext aContext;
 	
 	PopulatableIconedNode root;
@@ -112,7 +113,7 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 	}
 	
 	public void populate(Item node) {
-		Collection<Object> contents = CommonUIUtilities.getChildObjects(node);
+		Collection<Object> contents = super.getChildObjects(node);
 		
 		if (node.getObject() instanceof String) {
 			String s = (String) node.getObject();
@@ -124,8 +125,8 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 					Set<StorableObject> schemeElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
-					Collection toAdd = CommonUIUtilities.getObjectsToAdd(schemeElements, contents);
-					Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(schemeElements, node.getChildren());
+					Collection toAdd = super.getObjectsToAdd(schemeElements, contents);
+					Collection<Item> toRemove = super.getItemsToRemove(schemeElements, node.getChildren());
 									
 					for (Item child : toRemove) {
 						child.setParent(null);
@@ -147,8 +148,8 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 					Set<StorableObject> schemeElements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
-					Collection toAdd = CommonUIUtilities.getObjectsToAdd(schemeElements, contents);
-					Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(schemeElements, node.getChildren());
+					Collection toAdd = super.getObjectsToAdd(schemeElements, contents);
+					Collection<Item> toRemove = super.getItemsToRemove(schemeElements, node.getChildren());
 									
 					for (Item child : toRemove) {
 						child.setParent(null);
@@ -168,8 +169,8 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 					Set<StorableObject> schemeLinks = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
-					Collection toAdd = CommonUIUtilities.getObjectsToAdd(schemeLinks, contents);
-					Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(schemeLinks, node.getChildren());
+					Collection toAdd = super.getObjectsToAdd(schemeLinks, contents);
+					Collection<Item> toRemove = super.getItemsToRemove(schemeLinks, node.getChildren());
 									
 					for (Item child : toRemove) {
 						child.setParent(null);
@@ -187,8 +188,8 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 					Set<StorableObject> schemeMonitoringSolutions = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
-					Collection toAdd = CommonUIUtilities.getObjectsToAdd(schemeMonitoringSolutions, contents);
-					Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(schemeMonitoringSolutions, node.getChildren());
+					Collection toAdd = super.getObjectsToAdd(schemeMonitoringSolutions, contents);
+					Collection<Item> toRemove = super.getItemsToRemove(schemeMonitoringSolutions, node.getChildren());
 									
 					for (Item child : toRemove) {
 						child.setParent(null);
@@ -336,8 +337,8 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 					Set<StorableObject> schemePaths = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					
-					Collection toAdd = CommonUIUtilities.getObjectsToAdd(schemePaths, contents);
-					Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(schemePaths, node.getChildren());
+					Collection toAdd = super.getObjectsToAdd(schemePaths, contents);
+					Collection<Item> toRemove = super.getItemsToRemove(schemePaths, node.getChildren());
 									
 					for (Item child : toRemove) {
 						child.setParent(null);
@@ -381,8 +382,8 @@ public class SchemeTreeModel implements ChildrenFactory, VisualManagerFactory {
 					SchemeWrapper.COLUMN_KIND);
 			Set<StorableObject> schemes = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			
-			Collection toAdd = CommonUIUtilities.getObjectsToAdd(schemes, contents);
-			Collection<Item> toRemove = CommonUIUtilities.getItemsToRemove(schemes, node.getChildren());
+			Collection toAdd = super.getObjectsToAdd(schemes, contents);
+			Collection<Item> toRemove = super.getItemsToRemove(schemes, node.getChildren());
 
 			for (Item child : toRemove) {
 				child.setParent(null);

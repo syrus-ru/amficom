@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceView.java,v 1.6 2005/08/19 15:41:35 stas Exp $
+ * $Id: DeviceView.java,v 1.7 2005/09/19 13:10:29 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.6 $, $Date: 2005/08/19 15:41:35 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/19 13:10:29 $
  * @module schemeclient
  */
 
@@ -108,7 +108,7 @@ public class DeviceView extends VertexView {
 										Rectangle rect = GraphConstants.getBounds(visualPort.getAttributes());
 
 										Point newpos = new Point(pos.x,
-												(int) (u * ((double) (rect.y + 4 - bounds1.y) / (double) bounds1.height)));
+												(int) (u * ((double) (rect.y + 3 - bounds1.y) / (double) bounds1.height)));
 										GraphConstants.setOffset(port.getAttributes(), newpos);
 									}
 								}

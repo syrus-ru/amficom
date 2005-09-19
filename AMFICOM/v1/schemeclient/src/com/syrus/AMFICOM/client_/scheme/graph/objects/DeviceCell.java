@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceCell.java,v 1.7 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: DeviceCell.java,v 1.8 2005/09/19 13:10:29 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,10 +14,13 @@ import java.util.Map;
 
 import javax.swing.ImageIcon;
 
+import com.jgraph.graph.CellMapper;
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.GraphConstants;
+import com.jgraph.graph.VertexView;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
+import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -25,18 +28,26 @@ import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.8 $, $Date: 2005/09/19 13:10:29 $
  * @module schemeclient
  */
 
 public class DeviceCell extends DefaultGraphCell {
 	private static final long serialVersionUID = 3257008739499652403L;
+	public static final int SQUARED = 0;
+	public static final int ROUNDED = 1;
 
 	private Identifier schemeDeviceId;
+	private int kind = SQUARED;
 
 	public static DeviceCell createInstance(Object userObject, Rectangle bounds,
 			Map viewMap) {
+		return createInstance(userObject, bounds, viewMap, Color.WHITE);
+	}
+	
+	public static DeviceCell createInstance(Object userObject, Rectangle bounds,
+			Map viewMap, Color color) {
 
 		Object obj = (userObject instanceof String) ? userObject : ""; //$NON-NLS-1$
 		DeviceCell cell = new DeviceCell(obj);
@@ -46,7 +57,7 @@ public class DeviceCell extends DefaultGraphCell {
 			GraphConstants.setIcon(map, (ImageIcon) userObject);
 		GraphConstants.setBounds(map, bounds);
 		GraphConstants.setOpaque(map, true);
-		GraphConstants.setBackground(map, Color.WHITE);
+		GraphConstants.setBackground(map, color);
 		GraphConstants.setBorderColor(map, Constants.COLOR_BORDER);
 		viewMap.put(cell, map);
 
@@ -55,6 +66,18 @@ public class DeviceCell extends DefaultGraphCell {
 		cell.add(port);
 		
 		return cell;
+	}
+
+	public void setKind(int kind) {
+		this.kind = kind;
+	}
+
+	public VertexView getView(SchemeGraph graph, CellMapper cm) {
+		if (this.kind == SQUARED) {
+			return new DeviceView(this, graph, cm);	
+		}
+		return new SchemeEllipseView(this, graph, cm);
+		
 	}
 	
 	private DeviceCell(Object userObject) {

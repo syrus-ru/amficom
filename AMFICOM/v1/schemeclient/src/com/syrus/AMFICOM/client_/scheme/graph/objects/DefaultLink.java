@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.9 2005/08/19 15:41:35 stas Exp $
+ * $Id: DefaultLink.java,v 1.10 2005/09/19 13:10:28 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.9 $, $Date: 2005/08/19 15:41:35 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/19 13:10:28 $
  * @module schemeclient
  */
 
@@ -212,11 +212,20 @@ public class DefaultLink extends DefaultEdge {
 					boolean bendable = GraphConstants.isBendable(edge.getAllAttributes());
 					if (!bendable || DefaultLink.this.routed == null) {
 						int x2 = from.x + ((to.x - from.x) / 2);
+						int y2 = from.y + ((to.y - from.y) / 2);
 						DefaultLink.this.routed = new Point[4];
-						DefaultLink.this.routed[0] = graph.snap(new Point(x2, from.y));
-						DefaultLink.this.routed[1] = graph.snap(new Point(x2, from.y));
-						DefaultLink.this.routed[2] = graph.snap(new Point(x2, to.y));
-						DefaultLink.this.routed[3] = graph.snap(new Point(x2, to.y));
+						int grid = graph.getGridSize();
+						if (from.x <= to.x) {
+							DefaultLink.this.routed[0] = graph.snap(new Point(from.x + grid, from.y));
+							DefaultLink.this.routed[1] = graph.snap(new Point(x2, from.y));
+							DefaultLink.this.routed[2] = graph.snap(new Point(x2, to.y));
+							DefaultLink.this.routed[3] = graph.snap(new Point(to.x - grid, to.y));
+						} else {
+							DefaultLink.this.routed[0] = graph.snap(new Point(from.x + grid, from.y));
+							DefaultLink.this.routed[1] = graph.snap(new Point(from.x + grid, y2));
+							DefaultLink.this.routed[2] = graph.snap(new Point(to.x - grid, y2));
+							DefaultLink.this.routed[3] = graph.snap(new Point(to.x - grid, to.y));
+						}
 					}
 				}
 				// Set/Add Points

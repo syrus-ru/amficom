@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTabbedPane.java,v 1.22 2005/09/18 13:54:44 bass Exp $
+ * $Id: SchemeTabbedPane.java,v 1.23 2005/09/19 13:10:28 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,7 +20,6 @@ import java.util.Collections;
 import java.util.HashMap;
 import java.util.HashSet;
 import java.util.Iterator;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.logging.Level;
@@ -41,14 +40,12 @@ import javax.swing.event.ChangeListener;
 
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
-import com.jgraph.graph.Edge;
 import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
-import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
@@ -56,25 +53,19 @@ import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
-import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
-import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.general.StorableObjectWrapper;
-import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.22 $, $Date: 2005/09/18 13:54:44 $
+ * @author $Author: stas $
+ * @version $Revision: 1.23 $, $Date: 2005/09/19 13:10:28 $
  * @module schemeclient
  */
 
@@ -257,7 +248,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 							return;
 						}
 						
-						if (parent == null || parentScheme.equals(parent.getParentSchemeId())) {
+						if (parent == null || parentScheme.equals(parent.getParentScheme())) {
 							SchemeElement schemeElement = parent == null 
 									? SchemeObjectsFactory.createSchemeElement(parentScheme, scheme)
 							    : parent;
@@ -298,9 +289,9 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 
 					SchemeResource res = panel1.getSchemeResource();
 					if ((res.getCellContainerType() == SchemeResource.SCHEME &&
-							res.getScheme().equals(schemeElement.getParentSchemeId())) ||
+							res.getScheme().equals(schemeElement.getParentScheme())) ||
 							(res.getCellContainerType() == SchemeResource.SCHEME_ELEMENT &&
-							res.getSchemeElement().equals(schemeElement.getParentSchemeElementId()))) {
+							res.getSchemeElement().equals(schemeElement.getParentSchemeElement()))) {
 						SchemeImageResource image = schemeElement.getUgoCell();
 						if (image == null) {
 							image = schemeElement.getSchemeCell();
@@ -357,7 +348,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-					if (res.getScheme().equals(schemeCableLink.getParentSchemeId())) {
+					if (res.getScheme().equals(schemeCableLink.getParentScheme())) {
 						SchemeGraph graph = panel1.getGraph();
 						
 						SchemeCablePort sourcePort = schemeCableLink.getSourceAbstractSchemePort();
@@ -392,7 +383,7 @@ public class SchemeTabbedPane extends ElementsTabbedPane {
 						DefaultCableLink cell = SchemeActions.createCableLink(graph,
 								sourceView, targetView, graph.fromScreen(p1), 
 								graph.fromScreen(p2), schemeCableLink.getId());
-//						link.setName((String)cell.getUserObject());
+						cell.setUserObject(schemeCableLink.getName());
 					} else {
 						JOptionPane.showMessageDialog(Environment.getActiveWindow(), 
 								LangModelScheme.getString("Message.error.insert_cable_to_other_parent"),  //$NON-NLS-1$
