@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.158 2005/09/18 20:16:01 arseniy Exp $
+ * $Id: Test.java,v 1.159 2005/09/19 08:20:47 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -18,6 +18,9 @@ import java.util.Set;
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Characteristic;
+import com.syrus.AMFICOM.general.Characterizable;
+import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -40,17 +43,16 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.PeriodicalTestTimeStamps;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 import com.syrus.util.EasyDateFormatter;
-import com.syrus.util.HashCodeGenerator;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.158 $, $Date: 2005/09/18 20:16:01 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.159 $, $Date: 2005/09/19 08:20:47 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Test extends StorableObject {	
+public final class Test extends StorableObject implements Characterizable {	
 	private static final long	serialVersionUID	= 3688785890592241972L;
 
 	private int temporalType;
@@ -61,8 +63,6 @@ public final class Test extends StorableObject {
 	private MonitoredElement monitoredElement;
 	private String description;
 	private int numberOfMeasurements;
-	private Date stopTime;
-	private String stopReason;
 	private Set<Identifier> measurementSetupIds;
 
 	private MeasurementSetup mainMeasurementSetup;
@@ -71,6 +71,8 @@ public final class Test extends StorableObject {
 	private Identifier kisId;
 	private Identifier mcmId;
 
+	private transient CharacterizableDelegate characterizableDelegate;
+	
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -140,8 +142,6 @@ public final class Test extends StorableObject {
 		this.setMeasurementSetupIds0(measurementSetupIds);
 		this.status = TestStatus._TEST_STATUS_NEW;
 		this.numberOfMeasurements = 0;
-		this.stopTime = new Date(0);
-		this.stopReason = "";
 	}
 
 	/**
@@ -225,8 +225,6 @@ public final class Test extends StorableObject {
 
 		this.description = tt.description;
 		this.numberOfMeasurements = tt.numberOfMeasurements;
-		this.stopTime = new Date(tt.stopTime);
-		this.stopReason = tt.stopReason;
 
 		this.measurementSetupIds = Identifier.fromTransferables(tt.measurementSetupIds);
 		if (!this.measurementSetupIds.isEmpty()) {
@@ -257,6 +255,13 @@ public final class Test extends StorableObject {
 				&& this.groupTestId != null
 			//&& !this.measurementSetupIds.isEmpty() && this.mainMeasurementSetup != null
 			;
+	}
+	
+	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
+		if (this.characterizableDelegate == null) {
+			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		}
+		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 	
 	public short getEntityCode() {
@@ -348,8 +353,6 @@ public final class Test extends StorableObject {
 				this.monitoredElement.getId().getTransferable(),
 				this.description,
 				this.numberOfMeasurements,
-				(this.stopTime != null) ? this.stopTime.getTime() : 0,
-				this.stopReason,
 				msIdsT);
 	}
 
@@ -426,20 +429,6 @@ public final class Test extends StorableObject {
 		return this.numberOfMeasurements;
 	}
 
-	public void setStopped(final String stopReason) {
-		this.stopReason = stopReason;
-		this.stopTime = new Date(System.currentTimeMillis());
-		super.markAsChanged();
-	}
-
-	public Date getStopTime() {
-		return this.stopTime;
-	}
-
-	public String getStopReason() {
-		return this.stopReason;
-	}
-
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -458,9 +447,7 @@ public final class Test extends StorableObject {
 			final int status,
 			final MonitoredElement monitoredElement,
 			final String description,
-			final int numberOfMeasurements,
-			final Date stopTime,
-			final String stopReason) {
+			final int numberOfMeasurements) {
 		super.setAttributes(created,
 			modified,
 			creatorId,
@@ -479,8 +466,6 @@ public final class Test extends StorableObject {
 		this.monitoredElement = monitoredElement;
 		this.description = description;
 		this.numberOfMeasurements = numberOfMeasurements;
-		this.stopTime = stopTime;
-		this.stopReason = stopReason;
 	}
 
 	/**
@@ -682,27 +667,32 @@ public final class Test extends StorableObject {
 
 		@Override
 		public int hashCode() {
-			final HashCodeGenerator hashCodeGenerator = new HashCodeGenerator();
-			hashCodeGenerator.addInt(this.discriminator);
-			hashCodeGenerator.addObject(this.startTime);
-			hashCodeGenerator.addObject(this.endTime);
-			hashCodeGenerator.addObject(this.temporalPatternId);
-			int result = hashCodeGenerator.getResult();
+			int result = 17;
+			result = 37 * result + this.discriminator;
+			result = 37 * result + this.startTime.hashCode();
+			result = 37 * result + this.endTime.hashCode();
+			result = 37 * result + this.temporalPatternId.hashCode();
 			return result;
 		}
 
 		@Override
 		public boolean equals(final Object obj) {
-			boolean equals = (this == obj);
-			if ((!equals) && (obj instanceof TestTimeStamps)) {
-				TestTimeStamps stamps = (TestTimeStamps) obj;
-				if ((stamps.discriminator == this.discriminator)
-						&& (stamps.startTime == this.startTime)
-						&& (stamps.endTime == this.endTime)
-						&& (stamps.temporalPatternId.equals(this.temporalPatternId)))
-					equals = true;
+			if (this == obj) {
+				return true;
 			}
-			return equals;
+			if (obj instanceof TestTimeStamps) {
+				TestTimeStamps that = (TestTimeStamps) obj;
+				if (that.discriminator == this.discriminator
+						&& (this.startTime == that.startTime || 
+								this.startTime != null && this.startTime.equals(that.startTime))
+						&& (this.endTime == that.endTime || 
+							this.endTime != null && this.endTime.equals(that.endTime))
+						&& (this.temporalPatternId == that.temporalPatternId || 
+								this.temporalPatternId != null && this.temporalPatternId.equals(that.temporalPatternId))) {
+					return true;
+				}
+			}
+			return false;
 		}
 
 		public Date getEndTime() {
