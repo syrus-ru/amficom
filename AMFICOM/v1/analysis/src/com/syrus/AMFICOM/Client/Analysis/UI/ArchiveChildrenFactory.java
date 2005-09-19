@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.17 2005/08/20 19:55:44 arseniy Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.18 2005/09/19 13:11:25 stas Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
+import java.util.SortedSet;
 import java.util.logging.Level;
 
 import javax.swing.UIManager;
@@ -49,8 +50,8 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/08/20 19:55:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.18 $, $Date: 2005/09/19 13:11:25 $
+ * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module analysis
  */

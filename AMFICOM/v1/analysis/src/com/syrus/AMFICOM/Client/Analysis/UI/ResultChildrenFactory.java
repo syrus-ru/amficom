@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.10 2005/08/31 11:26:22 stas Exp $
+ * $Id: ResultChildrenFactory.java,v 1.11 2005/09/19 13:11:25 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.measurement.Measurement;
@@ -68,11 +69,11 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/08/31 11:26:22 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/19 13:11:25 $
  * @module analysis
  */
 
-public class ResultChildrenFactory implements ChildrenFactory {
+public class ResultChildrenFactory extends AbstractChildrenFactory {
 
 	private static final String	ROOT	= "result.root";
 	private static final String	MONITOREDELEMENTS	= "monitoredelements";
@@ -122,7 +123,7 @@ public class ResultChildrenFactory implements ChildrenFactory {
 	public void populate(Item item) {
 		Object nodeObject = item.getObject();
 		Collection<Item> items = item.getChildren();
-		Collection<Object> objects = CommonUIUtilities.getChildObjects(item);
+		Collection<Object> objects = super.getChildObjects(item);
 		
 		if (nodeObject instanceof String) {
 			String s = (String) nodeObject;
@@ -142,8 +143,8 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
 					Set<StorableObject> meSet = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 										
-					List<Item> toRemove = CommonUIUtilities.getItemsToRemove(meSet, items);
-					List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(meSet, objects);
+					List<Item> toRemove = super.getItemsToRemove(meSet, items);
+					List<StorableObject> toAdd = super.getObjectsToAdd(meSet, objects);
 					for (Item child : toRemove) {
 						child.setParent(null);
 					}
@@ -288,8 +289,8 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
 					Set<StorableObject> meSetups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 
-					List<Item> toRemove = CommonUIUtilities.getItemsToRemove(meSetups, items);
-					List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(meSetups, objects);
+					List<Item> toRemove = super.getItemsToRemove(meSetups, items);
+					List<StorableObject> toAdd = super.getObjectsToAdd(meSetups, objects);
 					for (Item child : toRemove) {
 						child.setParent(null);
 					}
@@ -344,8 +345,8 @@ public class ResultChildrenFactory implements ChildrenFactory {
 				StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
 				Set<StorableObject> testSet = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 									
-				List<Item> toRemove = CommonUIUtilities.getItemsToRemove(testSet, items);
-				List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(testSet, objects);
+				List<Item> toRemove = super.getItemsToRemove(testSet, items);
+				List<StorableObject> toAdd = super.getObjectsToAdd(testSet, objects);
 				for (Item child : toRemove) {
 					child.setParent(null);
 				}
@@ -383,8 +384,8 @@ public class ResultChildrenFactory implements ChildrenFactory {
 					StorableObjectCondition condition2 = new LinkedIdsCondition(measurementIds, ObjectEntities.RESULT_CODE);
 					Set<StorableObject> resultSet = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 					
-					List<Item> toRemove = CommonUIUtilities.getItemsToRemove(resultSet, items);
-					List<Object> toAdd = CommonUIUtilities.getObjectsToAdd(resultSet, objects);
+					List<Item> toRemove = super.getItemsToRemove(resultSet, items);
+					List<StorableObject> toAdd = super.getObjectsToAdd(resultSet, objects);
 					for (Item child : toRemove) {
 						child.setParent(null);
 					}
