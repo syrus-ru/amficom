@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.162 2005/09/19 18:14:10 arseniy Exp $
+ * $Id: Test.java,v 1.163 2005/09/19 18:17:16 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.162 $, $Date: 2005/09/19 18:14:10 $
+ * @version $Revision: 1.163 $, $Date: 2005/09/19 18:17:16 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -335,11 +335,11 @@ public final class Test extends StorableObject {
 
 		final IdlIdentifier[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
 
-		final TestStops[] stoppings = new TestStops[this.stoppingMap.size()];
+		final TestStops[] testStops = new TestStops[this.stoppingMap.size()];
 		
 		int index = 0;
 		for(final Date stopDate : this.stoppingMap.keySet()) {
-			stoppings[index++] = new TestStops(stopDate.getTime(), this.stoppingMap.get(stopDate));
+			testStops[index++] = new TestStops(stopDate.getTime(), this.stoppingMap.get(stopDate));
 		}
 		
 		return IdlTestHelper.init(orb,
@@ -357,7 +357,7 @@ public final class Test extends StorableObject {
 				this.monitoredElement.getId().getTransferable(),
 				this.description,
 				this.numberOfMeasurements,
-				stoppings,
+				testStops,
 				msIdsT);
 	}
 
