@@ -1,5 +1,5 @@
 /*
- * $Id: LRUMap.java,v 1.41 2005/09/14 18:28:26 arseniy Exp $
+ * $Id: LRUMap.java,v 1.42 2005/09/19 11:16:17 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,7 +14,7 @@ import java.util.Iterator;
 import java.util.NoSuchElementException;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/09/14 18:28:26 $
+ * @version $Revision: 1.42 $, $Date: 2005/09/19 11:16:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module util
@@ -155,6 +155,7 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 					for (int j = i; j < this.array.length - 1; j++) {
 						this.array[j] = this.array[j + 1];
 					}
+					this.array[this.array.length - 1] = null;
 					this.entityCount -= (this.entityCount == 0) ? 0 : 1;
 					break;
 				}
@@ -164,6 +165,40 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 		throw new IllegalArgumentException("Key is NULL");
 	}
 
+	@Override
+	public String toString() {
+		final StringBuffer stringBuffer = new StringBuffer();
+		stringBuffer.append("{");
+		for (int i = 0; i < this.entityCount; i++) {
+			final IEntry<K, V> entry = this.array[i];
+			final K key = entry.getKey();
+			final V value = entry.getValue();
+
+			stringBuffer.append(" ");
+
+			if (key == this) {
+				stringBuffer.append("This LRUMap");
+			} else {
+				stringBuffer.append(key);
+			}
+
+			stringBuffer.append(" : ");
+
+			if (value == this) {
+				stringBuffer.append("This LRUMap");
+			} else {
+				stringBuffer.append(value);
+			}
+
+			if (i < this.entityCount - 1) {
+				stringBuffer.append(",");
+			}
+		}
+		stringBuffer.append(" }");
+		
+		return stringBuffer.toString();
+	}
+
 
 	protected static interface IEntry<L, W> {
 		L getKey();
@@ -171,7 +206,7 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 		W getValue();
 	}
 
-	protected class Entry implements IEntry<K, V> /*implements Serializable */{
+	protected class Entry implements IEntry<K, V> {
 		private K key;
 		private V value;
 
@@ -228,14 +263,14 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 			this.checkForComodification();
 
 			try {
-				final int modCountPrev = LRUMap.this.modCount;
 				LRUMap.this.remove(LRUMap.this.array[this.lastRet].getKey());
-				LRUMap.this.modCount = modCountPrev;
-				if (this.lastRet < this.cursor)
+				if (this.lastRet < this.cursor) {
 					this.cursor--;
+				}
 				this.lastRet = -1;
 				this.expectedModCount = LRUMap.this.modCount;
 			} catch (IndexOutOfBoundsException e) {
+				Log.errorException(e);
 				throw new ConcurrentModificationException();
 			}
 		}
@@ -251,13 +286,13 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 		public V next() {
 			this.checkForComodification();
 			try {
-				V next = null;
-				while (next == null) {
-					next = LRUMap.this.array[this.cursor].getValue();
-					this.lastRet = this.cursor++;
-				}
-				return next;
-			} catch (IndexOutOfBoundsException e) {
+				final IEntry<K, V> nextEntry = LRUMap.this.array[this.cursor];
+				this.lastRet = this.cursor++;
+				return nextEntry.getValue();
+			} catch (NullPointerException npe) {
+				this.checkForComodification();
+				throw new NoSuchElementException();
+			} catch (IndexOutOfBoundsException ioobe) {
 				this.checkForComodification();
 				throw new NoSuchElementException();
 			}
@@ -268,13 +303,13 @@ public class LRUMap<K, V> implements Serializable, Iterable<V> {
 		public K next() {
 			this.checkForComodification();
 			try {
-				K next = null;
-				while (next == null) {
-					next = LRUMap.this.array[this.cursor].getKey();
-					this.lastRet = this.cursor++;
-				}
-				return next;
-			} catch (IndexOutOfBoundsException e) {
+				final IEntry<K, V> nextEntry = LRUMap.this.array[this.cursor];
+				this.lastRet = this.cursor++;
+				return nextEntry.getKey();
+			} catch (NullPointerException npe) {
+				this.checkForComodification();
+				throw new NoSuchElementException();
+			} catch (IndexOutOfBoundsException ioobe) {
 				this.checkForComodification();
 				throw new NoSuchElementException();
 			}
