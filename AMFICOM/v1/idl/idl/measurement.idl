@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.84 2005/09/19 08:17:31 bob Exp $
+ * $Id: measurement.idl,v 1.85 2005/09/19 14:02:46 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -268,6 +268,13 @@ module measurement {
 				TEST_STATUS_ABORTED		//Прерван
 			};
 
+			struct Stopping {
+				long long time;
+				general::corba::WString256 reason;
+			};
+			typedef sequence<Stopping> StoppingSeq;
+
+
 			public IdlTestTimeStamps timeStamps;
 			public IdlMeasurementType measurementType;
 			public IdlAnalysisType analysisType;
@@ -276,8 +283,7 @@ module measurement {
 			public general::corba::IdlIdentifier monitoredElementId;
 			public general::corba::WString256 description;
 			public long numberOfMeasurements;
-			public long long stopTime;
-			public general::corba::WString256 stopReason;
+			public StoppingSeq stoppings;
 			public general::corba::IdlIdentifierSeq measurementSetupIds;
 
 			factory init(in general::corba::IdlIdentifier id,
@@ -294,6 +300,7 @@ module measurement {
 					in general::corba::IdlIdentifier monitoredElementId,
 					in general::corba::WString256 description,
 					in long numberOfMeasurements,
+					in StoppingSeq stoppings,
 					in general::corba::IdlIdentifierSeq measurementSetupIds);
 		};
 
