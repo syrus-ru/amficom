@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorTreeModel.java,v 1.6 2005/09/19 15:34:47 krupenn Exp $ Syrus
+ * $Id: MapEditorTreeModel.java,v 1.7 2005/09/19 15:41:30 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -14,21 +14,20 @@ import java.util.List;
 
 import javax.swing.UIManager;
 
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
-import com.syrus.AMFICOM.logic.ChildrenFactory;
+import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.mapview.MapView;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/19 15:34:47 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/19 15:41:30 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
-public final class MapEditorTreeModel implements ChildrenFactory {
+public final class MapEditorTreeModel extends AbstractChildrenFactory {
 
 	public static final String MAP_EDITOR_TREE_ROOT = "mapeditorroot"; //$NON-NLS-1$
 
@@ -70,7 +69,7 @@ public final class MapEditorTreeModel implements ChildrenFactory {
 			return;
 		}
 
-		Collection contents = CommonUIUtilities.getChildObjects(node);
+		Collection contents = super.getChildObjects(node);
 		if (!contents.contains(this.mapView)) {
 			PopulatableIconedNode item = MapViewTreeModel.createSingleMapViewRoot(this.mapView);
 			item.getChildrenFactory().populate(item);
