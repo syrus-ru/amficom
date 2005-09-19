@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.124 2005/09/19 17:05:08 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.125 2005/09/19 17:51:29 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,7 +49,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.124 $, $Date: 2005/09/19 17:05:08 $
+ * @version $Revision: 1.125 $, $Date: 2005/09/19 17:51:29 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -290,7 +290,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
    				id = idIt.next();
    				final SortedMap<Date, String> stopping = idStoppingsMap.get(id);
    				for (final Date stoppingTime : stopping.keySet()) {
-   					final String reason = stopping.get(stopping); 
+   					final String reason = stopping.get(stoppingTime); 
    					DatabaseIdentifier.setIdentifier(preparedStatement, 1, id);
    					preparedStatement.setTimestamp(2, new Timestamp(stoppingTime.getTime()));
    					DatabaseString.setString(preparedStatement, 3, reason, StorableObjectDatabase.SIZE_DESCRIPTION_COLUMN);
