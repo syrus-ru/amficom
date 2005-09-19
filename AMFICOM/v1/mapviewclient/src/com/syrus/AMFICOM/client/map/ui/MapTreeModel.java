@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.17 2005/09/16 14:53:37 krupenn Exp $ 
+ * $Id: MapTreeModel.java,v 1.18 2005/09/19 15:35:34 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный Интеллектуальный 
@@ -36,8 +36,6 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.client.resource.MapEditorResourceKeys;
 import com.syrus.AMFICOM.filter.UI.FiltrableIconedNode;
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CommunicationException;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
@@ -53,12 +51,11 @@ import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.map.SiteNodeType;
 import com.syrus.AMFICOM.map.TopologicalNode;
-import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/16 14:53:37 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/19 15:35:34 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -415,6 +412,8 @@ public class MapTreeModel implements ChildrenFactory {
 		}
 
 		int i = 0;
+		long a = System.currentTimeMillis();
+		List<Item> toAdd = new LinkedList<Item>();
 		for(Iterator it = types.iterator(); it.hasNext();) {
 			SiteNodeType type = (SiteNodeType )it.next();
 			Item childNode = (Item )nodePresense.get(type);
@@ -430,13 +429,17 @@ public class MapTreeModel implements ChildrenFactory {
 										Image.SCALE_SMOOTH)),
 						true);
 
-				// if(node.getChildren().isEmpty())
-				node.addChild(newItem);
-				// else
-				// node.getChildren().add(i, newItem);
+				toAdd.add(newItem);
+//				node.addChild(newItem);
 			}
 			i++;
 		}
+		long b = System.currentTimeMillis();
+		for(Item item : toAdd) {
+			node.addChild(item);
+		}
+		long c = System.currentTimeMillis();
+		System.out.println("count " + toAdd.size() + ", create children " + (b - a) + " ms, add children " + (c - b) + " ms");
 	}
 
 	void populateTypeNode(PopulatableIconedNode node) {
@@ -477,23 +480,28 @@ public class MapTreeModel implements ChildrenFactory {
 		}
 
 		int i = 0;
+		long a = System.currentTimeMillis();
+		List<Item> toAdd = new LinkedList<Item>();
 		for(Iterator it = siteNodes.iterator(); it.hasNext();) {
 			SiteNode site = (SiteNode )it.next();
 			Item childNode = (Item )nodePresense.get(site);
 			if(childNode == null) {
-//				PopulatableIconedNode newItem = new PopulatableIconedNode(
 				Item newItem = new IconedNode(
 						site,
 						getObjectName(site),
 						((IconedNode )node).getIcon(),
 						false);
-				// if(node.getChildren().isEmpty())
-				node.addChild(newItem);
-				// else
-				// node.getChildren().add(i, newItem);
+				toAdd.add(newItem);
+//				node.addChild(newItem);
 			}
 			i++;
 		}
+		long b = System.currentTimeMillis();
+		for(Item item : toAdd) {
+			node.addChild(item);
+		}
+		long c = System.currentTimeMillis();
+		System.out.println("count " + toAdd.size() + ", create children " + (b - a) + " ms, add children " + (c - b) + " ms");
 	}
 
 	void populateExternalNodesNode(PopulatableIconedNode node) {
