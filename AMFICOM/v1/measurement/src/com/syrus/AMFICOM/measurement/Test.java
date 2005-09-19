@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.161 2005/09/19 17:44:28 bob Exp $
+ * $Id: Test.java,v 1.162 2005/09/19 18:14:10 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -37,7 +37,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.measurement.corba.IdlTestHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
-import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.Stopping;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStops;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.ContinuousTestTimeStamps;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.PeriodicalTestTimeStamps;
@@ -46,8 +46,8 @@ import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.161 $, $Date: 2005/09/19 17:44:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.162 $, $Date: 2005/09/19 18:14:10 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -335,11 +335,11 @@ public final class Test extends StorableObject {
 
 		final IdlIdentifier[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
 
-		final Stopping[] stoppings = new Stopping[this.stoppingMap.size()];
+		final TestStops[] stoppings = new TestStops[this.stoppingMap.size()];
 		
 		int index = 0;
 		for(final Date stopDate : this.stoppingMap.keySet()) {
-			stoppings[index++] = new Stopping(stopDate.getTime(), this.stoppingMap.get(stopDate));
+			stoppings[index++] = new TestStops(stopDate.getTime(), this.stoppingMap.get(stopDate));
 		}
 		
 		return IdlTestHelper.init(orb,
