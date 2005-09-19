@@ -1,5 +1,5 @@
 /*-
- * $Id: TableNames.java,v 1.2 2005/09/14 18:51:56 arseniy Exp $
+ * $Id: TableNames.java,v 1.3 2005/09/19 16:14:34 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,8 @@
 package com.syrus.AMFICOM.general;
 
 /**
- * @version $Revision: 1.2 $, $Date: 2005/09/14 18:51:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.3 $, $Date: 2005/09/19 16:14:34 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -31,6 +31,7 @@ public final class TableNames {
 	public static final String PARAMETERSETMELINK = "ParameterSetMELink";
 	public static final String MEASUREMENTSETUP_ME_LINK = "MeasurementSetupMELink";
 	public static final String MEASUREMENTSETUP_MT_LINK = "MeasurementSetupMTLink";
+	public static final String TEST_STOPPING_LINK = "TestStoppingLink";
 	public static final String MEASUREMENTSETUP_TEST_LINK = "MeasurementSetupTestLink";
 	public static final String EQUIPMENT_ME_LINK = "EquipmentMELink";
 	public static final String TRANSMISSIONPATH_ME_LINK = "TransmissionPathMELink";
