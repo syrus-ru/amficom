@@ -10,11 +10,6 @@ import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Rectangle;
-import java.util.ArrayList;
-import java.util.Collection;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
 
 import javax.swing.JComponent;
 import javax.swing.JTable;
@@ -23,11 +18,8 @@ import javax.swing.table.TableCellRenderer;
 import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
-import com.syrus.AMFICOM.logic.Item;
-import com.syrus.util.Shitlet;
-
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/18 13:14:40 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/19 11:22:40 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -82,28 +74,6 @@ public final class CommonUIUtilities {
 		}
 	}
 	
-	public static Collection<Object> getChildObjects(Item node) {
-		Collection<Object> childObjects = new ArrayList<Object>(node.getChildren().size());
-		for (Iterator it = node.getChildren().iterator(); it.hasNext();) {
-			childObjects.add(((Item)it.next()).getObject());
-		}
-		return childObjects;
-	}
-	
-	/**
-	 * @deprecated
-	 */
-	@Shitlet
-	@Deprecated
-	public static List<Object> getObjectsToAdd(Collection newObjs, Collection existingObjs) {
-		List<Object> toAdd = new LinkedList<Object>();
-		for (final Object itObj : newObjs) {
-			if (!existingObjs.contains(itObj))
-				toAdd.add(itObj);	
-		}
-		return toAdd;
-	}
-
 	/**
 	 * convert string into HTML
 	 * @param string input string 
@@ -115,21 +85,6 @@ public final class CommonUIUtilities {
 		buffer.append(s.replaceAll("\n", "<br>"));			
 		buffer.append("</html>");
 		return buffer.toString();
-	}
-
-	/**
-	 * @deprecated
-	 */
-	@Shitlet
-	@Deprecated
-	public static List<Item> getItemsToRemove(Collection newObjs, Collection<Item> existingObjs) {
-		List<Item> toRemove = new LinkedList<Item>(existingObjs);
-		for (final Item childItem : existingObjs) {
-			if (newObjs.contains(childItem.getObject())) {
-				toRemove.remove(childItem);
-			}
-		}
-		return toRemove;
 	}
 
 	/**
