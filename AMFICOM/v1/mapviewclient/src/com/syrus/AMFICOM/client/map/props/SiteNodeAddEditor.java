@@ -10,7 +10,6 @@ import java.util.Collection;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
-import java.util.Set;
 
 import javax.swing.Box;
 import javax.swing.ImageIcon;
@@ -49,6 +48,7 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 import com.syrus.AMFICOM.scheme.Scheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
+import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 
 public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
@@ -334,6 +334,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		
 		this.unboundElements.add(se);
 
+		this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
+
 		this.elementsTree.updateUI();
 	}
 
@@ -429,6 +431,8 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 
 			cablePath.addLink(unbound, unboundCableChannelingItem);
 		}
+
+		this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
 
 		this.elementsTree.updateUI();
 	}
@@ -530,52 +534,57 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 		this.elementsBranch.removeAllChildren();
 		this.cablesBranch.removeAllChildren();
 		if(siteNode != null) {
-			DefaultMutableTreeNode elementNode;
-			DefaultMutableTreeNode cableNode;
+			try {
+				DefaultMutableTreeNode elementNode;
+				DefaultMutableTreeNode cableNode;
 
-			MapView mapView = this.logicalNetLayer.getMapView();
+				MapView mapView = this.logicalNetLayer.getMapView();
 
-			List schemeElements = new LinkedList();
-			for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();) {
-				Scheme scheme = (Scheme )it.next();
-				schemeElements.addAll(scheme.getSchemeElements());
-			}
-			List cableElementsTransit = mapView.getCablePaths(siteNode);
-			List cableElementsDropped = new LinkedList();
-			for(Iterator it = cableElementsTransit.iterator(); it.hasNext();) {
-				CablePath cablePath = (CablePath )it.next();
-				if(cablePath.getStartNode().equals(siteNode)
-						|| cablePath.getEndNode().equals(siteNode)) {
-					cableElementsDropped.add(cablePath);
-					it.remove();
+				List schemeElements = new LinkedList();
+				for(Iterator it = mapView.getSchemes().iterator(); it.hasNext();) {
+					Scheme scheme = (Scheme )it.next();
+					schemeElements.addAll(scheme.getTopologicalSchemeElementsRecursively(true));
 				}
-			}
+				List cableElementsTransit = mapView.getCablePaths(siteNode);
+				List cableElementsDropped = new LinkedList();
+				for(Iterator it = cableElementsTransit.iterator(); it.hasNext();) {
+					CablePath cablePath = (CablePath )it.next();
+					if(cablePath.getStartNode().equals(siteNode)
+							|| cablePath.getEndNode().equals(siteNode)) {
+						cableElementsDropped.add(cablePath);
+						it.remove();
+					}
+				}
 
-			if(schemeElements != null) {
-				for(Iterator it = schemeElements.iterator(); it.hasNext();) {
-					SchemeElement se = (SchemeElement )it.next();
-					SiteNode elementSiteNode = se.getSiteNode();
-					if(elementSiteNode != null && elementSiteNode.equals(siteNode)) {
-						elementNode = new DefaultMutableTreeNode(se);
-						this.elementsBranch.add(elementNode);
-						for(Iterator it2 = cableElementsDropped.iterator(); it2.hasNext();) {
-							CablePath cablePath = (CablePath)it2.next();
-							if(startsAt(cablePath.getSchemeCableLink(), se)) {
-								cableNode = new DefaultMutableTreeNode(cablePath.getSchemeCableLink());
-								elementNode.add(cableNode);
+				if(schemeElements != null) {
+					for(Iterator it = schemeElements.iterator(); it.hasNext();) {
+						SchemeElement se = (SchemeElement )it.next();
+						SiteNode elementSiteNode = se.getSiteNode();
+						if(elementSiteNode != null && elementSiteNode.equals(siteNode)) {
+							elementNode = new DefaultMutableTreeNode(se);
+							this.elementsBranch.add(elementNode);
+							for(Iterator it2 = cableElementsDropped.iterator(); it2.hasNext();) {
+								CablePath cablePath = (CablePath)it2.next();
+								if(startsAt(cablePath.getSchemeCableLink(), se)) {
+									cableNode = new DefaultMutableTreeNode(cablePath.getSchemeCableLink());
+									elementNode.add(cableNode);
+								}
 							}
 						}
 					}
 				}
-			}
-			
-			if(cableElementsTransit != null) {
-				for(Iterator it = cableElementsTransit.iterator(); it.hasNext();) {
-					CablePath cablePath = (CablePath )it.next();
-					cableNode = new DefaultMutableTreeNode(cablePath
-							.getSchemeCableLink());
-					this.cablesBranch.add(cableNode);
+				
+				if(cableElementsTransit != null) {
+					for(Iterator it = cableElementsTransit.iterator(); it.hasNext();) {
+						CablePath cablePath = (CablePath )it.next();
+						cableNode = new DefaultMutableTreeNode(cablePath
+								.getSchemeCableLink());
+						this.cablesBranch.add(cableNode);
+					}
 				}
+			} catch(ApplicationException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
 			}
 		}
 
@@ -585,14 +594,31 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 	private boolean startsAt(
 			final SchemeCableLink schemeCableLink,
 			final SchemeElement schemeElement) {
-		try {
-			final Set schemeCablePorts = schemeElement.getSchemeCablePortsRecursively();
-			return schemeCablePorts.contains(schemeCableLink.getSourceAbstractSchemePort())
-				|| schemeCablePorts.contains(schemeCableLink.getTargetAbstractSchemePort());
-		} catch(ApplicationException e) {
-			e.printStackTrace();
+		SchemeCablePort sourceAbstractSchemePort = schemeCableLink.getSourceAbstractSchemePort();
+		if(sourceAbstractSchemePort == null) {
+			// SchemeCableLink has no start device
 			return false;
 		}
+		SchemeElement sourceSchemeElement = sourceAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement();
+		final SchemeElement startse =
+			MapView.getTopologicalSchemeElement(schemeCableLink.getParentScheme(), MapView.getTopLevelSchemeElement(sourceSchemeElement));
+		if(schemeElement.equals(startse)) {
+			return true;
+		}
+
+		SchemeCablePort targetAbstractSchemePort = schemeCableLink.getTargetAbstractSchemePort();
+		if(targetAbstractSchemePort == null) {
+			// SchemeCableLink has no end device
+			return false;
+		}
+		SchemeElement targetSchemeElement = targetAbstractSchemePort.getParentSchemeDevice().getParentSchemeElement();
+		final SchemeElement endse = 
+			MapView.getTopologicalSchemeElement(schemeCableLink.getParentScheme(), MapView.getTopLevelSchemeElement(targetSchemeElement));
+		if(schemeElement.equals(endse)) {
+			return true;
+		}
+
+		return false;
 	}
 
 	public JComponent getGUI() {
