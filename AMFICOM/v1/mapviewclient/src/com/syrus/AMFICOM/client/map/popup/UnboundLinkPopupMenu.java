@@ -68,6 +68,7 @@ public class UnboundLinkPopupMenu extends MapPopupMenu {
 			this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 			this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 			this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
+			this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
 		}
 	}
 

@@ -50,8 +50,8 @@ import com.syrus.AMFICOM.mapview.UnboundLink;
 import com.syrus.AMFICOM.scheme.CableChannelingItem;
 
 /**
- * @version $Revision: 1.23 $
- * @author $Author: bass $
+ * @version $Revision: 1.24 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public final class CablePathAddEditor extends DefaultStorableObjectEditor {
@@ -790,6 +790,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 								unbound);
 				command.setNetMapViewer(this.netMapViewer);
 				command.execute();
+				this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
 			}
 			else
 			if(previous != null
@@ -824,6 +825,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 								unbound);
 				command.setNetMapViewer(this.netMapViewer);
 				command.execute();
+				this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
 			}
 		}
 		else
@@ -851,6 +853,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 			this.cablePath.addLink(unbound, newCableChannelingItem);
 
 			link.getBinding().remove(this.cablePath);
+			this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
 		}
 		this.model.setValues(this.cablePath.getLinks());
 		this.model.fireTableDataChanged();
@@ -881,6 +884,8 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 				cableStart,
 				cableEnd);
 		this.cablePath.addLink(unbound, newCableChannelingItem);
+
+		this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
 
 		this.model.fireTableDataChanged();
 
@@ -923,6 +928,7 @@ public final class CablePathAddEditor extends DefaultStorableObjectEditor {
 
 			unboundCableChannelingItem.setParentPathOwner(null, false);
 			this.cablePath.removeLink(unboundCableChannelingItem);
+			this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
 		}
 		else {
 			if(insertBefore) {

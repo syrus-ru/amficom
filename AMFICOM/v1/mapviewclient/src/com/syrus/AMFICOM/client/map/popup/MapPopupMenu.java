@@ -1,5 +1,5 @@
 /**
- * $Id: MapPopupMenu.java,v 1.56 2005/09/16 14:53:35 krupenn Exp $
+ * $Id: MapPopupMenu.java,v 1.57 2005/09/19 15:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -65,7 +65,7 @@ import com.syrus.AMFICOM.resource.DoublePoint;
 /**
  * Контекстное меню элемента карты
  * @author $Author: krupenn $
- * @version $Revision: 1.56 $, $Date: 2005/09/16 14:53:35 $
+ * @version $Revision: 1.57 $, $Date: 2005/09/19 15:37:44 $
  * @module mapviewclient
  */
 public abstract class MapPopupMenu extends JPopupMenu {
@@ -257,6 +257,9 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		command.setNetMapViewer(this.netMapViewer);
 		logicalNetLayer.getCommandList().add(command);
 		logicalNetLayer.getCommandList().execute();
+		if(!command.isUndoable()) {
+			logicalNetLayer.getCommandList().flush();
+		}
 	}
 
 	protected void insertSiteInPlaceOfANode(TopologicalNode node, SiteNodeType proto) {
@@ -265,6 +268,9 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		logicalNetLayer.getCommandList().add(command);
 		logicalNetLayer.getCommandList().execute();
+		if(!command.isUndoable()) {
+			logicalNetLayer.getCommandList().flush();
+		}
 	}
 
 	protected void convertUnboundNodeToSite(UnboundNode unbound, SiteNodeType proto) {
@@ -283,6 +289,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		command2.setNetMapViewer(this.netMapViewer);
 		logicalNetLayer.getCommandList().add(command2);
 		logicalNetLayer.getCommandList().execute();
+		logicalNetLayer.getCommandList().flush();
 	}
 
 	protected void generatePathCabling(CablePath path, SiteNodeType proto) {
@@ -292,6 +299,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		logicalNetLayer.getCommandList().add(command);
 		logicalNetLayer.getCommandList().execute();
+		logicalNetLayer.getCommandList().flush();
 	}
 
 	protected void convertUnboundLinkToPhysicalLink(UnboundLink unbound) {
@@ -301,6 +309,7 @@ public abstract class MapPopupMenu extends JPopupMenu {
 		LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
 		logicalNetLayer.getCommandList().add(command);
 		logicalNetLayer.getCommandList().execute();
+		logicalNetLayer.getCommandList().flush();
 	}
 
 	protected void createAttachedSiteNode(SiteNode siteNode, SiteNodeType attachedSiteNodeType) throws MapConnectionException, MapDataException {

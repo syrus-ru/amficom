@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteSelectionCommand.java,v 1.32 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: DeleteSelectionCommand.java,v 1.33 2005/09/19 15:37:43 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -34,10 +34,11 @@ import com.syrus.util.Log;
  * (CommandBundle), удал€ющих отдельные элементы.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.33 $, $Date: 2005/09/19 15:37:43 $
  * @module mapviewclient
  */
 public class DeleteSelectionCommand extends MapActionCommandBundle {
+	List<Scheme> schemes;
 	/**
 	 * при установке логического сло€ сети создаютс€ команды на удаление
 	 * выбранных объектов. выполнение удалени€ осуществл€етс€ только при вызове
@@ -115,7 +116,7 @@ public class DeleteSelectionCommand extends MapActionCommandBundle {
 			}
 		}
 
-		List<Scheme> schemes = new LinkedList<Scheme>();
+		this.schemes = new LinkedList<Scheme>();
 
 		// создать список команд удалени€ узлов
 		for(CablePath cablePath : cablePathsToDelete) {
@@ -123,10 +124,8 @@ public class DeleteSelectionCommand extends MapActionCommandBundle {
 				new UnPlaceSchemeCableLinkCommand(cablePath);
 			command.setNetMapViewer(this.netMapViewer);
 			command.execute();
-			schemes.add(cablePath.getSchemeCableLink().getParentScheme());
-		}
-		for(Scheme scheme : schemes) {
-			this.logicalNetLayer.getMapViewController().scanPaths(scheme);
+			this.schemes.add(cablePath.getSchemeCableLink().getParentScheme());
+			setUndoable(false);
 		}
 	}
 
@@ -142,6 +141,10 @@ public class DeleteSelectionCommand extends MapActionCommandBundle {
 
 		// выполнить все команды в списке
 		super.execute();
+
+		for(Scheme scheme : this.schemes) {
+			this.logicalNetLayer.getMapViewController().scanPaths(scheme);
+		}
 
 		MapElement mapElement = VoidElement.getInstance(this.logicalNetLayer.getMapView());
 

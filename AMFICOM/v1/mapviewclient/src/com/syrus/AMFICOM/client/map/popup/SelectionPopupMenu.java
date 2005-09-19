@@ -169,6 +169,9 @@ public final class SelectionPopupMenu extends MapPopupMenu {
 		this.netMapViewer.getLogicalNetLayer().getCommandList().add(command);
 		this.netMapViewer.getLogicalNetLayer().getCommandList().execute();
 		this.netMapViewer.getLogicalNetLayer().sendMapEvent(MapEvent.MAP_CHANGED);
+		if(!command.isUndoable()) {
+			this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
+		}
 	}
 
 	void insertSite() {

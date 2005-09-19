@@ -1,5 +1,5 @@
 /**
- * $Id: InsertSiteCommandBundle.java,v 1.34 2005/09/18 13:54:43 bass Exp $
+ * $Id: InsertSiteCommandBundle.java,v 1.35 2005/09/19 15:37:44 krupenn Exp $
  * Syrus Systems Научно-технический центр Проект: АМФИКОМ Платформа: java 1.4.1
  */
 
@@ -29,8 +29,8 @@ import com.syrus.util.Log;
 /**
  * вставить сетевой узел вместо топологического узла
  * 
- * @author $Author: bass $
- * @version $Revision: 1.34 $, $Date: 2005/09/18 13:54:43 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.35 $, $Date: 2005/09/19 15:37:44 $
  * @module mapviewclient
  */
 public class InsertSiteCommandBundle extends MapActionCommandBundle {
@@ -141,6 +141,7 @@ public class InsertSiteCommandBundle extends MapActionCommandBundle {
 				// и добавить новую линию
 				for(Iterator it = mapView.getCablePaths(this.link).iterator(); it.hasNext();) {
 					CablePath cablePath = (CablePath )it.next();
+					super.setUndoable(false);
 
 //					CableChannelingItem cableChannelingItem = cablePath.getFirstCCI(this.link);
 					for(CableChannelingItem cableChannelingItem : cablePath.getSchemeCableLink().getPathMembers()) {

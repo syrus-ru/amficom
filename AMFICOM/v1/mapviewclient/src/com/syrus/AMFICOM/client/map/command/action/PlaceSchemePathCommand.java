@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemePathCommand.java,v 1.43 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: PlaceSchemePathCommand.java,v 1.44 2005/09/19 15:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -24,7 +24,7 @@ import com.syrus.util.Log;
  * в точке point (в экранных координатах)
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.43 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.44 $, $Date: 2005/09/19 15:37:44 $
  * @module mapviewclient
  */
 public class PlaceSchemePathCommand extends MapActionCommandBundle {
@@ -69,6 +69,7 @@ public class PlaceSchemePathCommand extends MapActionCommandBundle {
 			this.measurementPath.sortPathElements();
 			// операция закончена - оповестить слушателей
 			this.logicalNetLayer.setCurrentMapElement(this.measurementPath);
+			super.setUndoable(false);
 			setResult(Command.RESULT_OK);
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);

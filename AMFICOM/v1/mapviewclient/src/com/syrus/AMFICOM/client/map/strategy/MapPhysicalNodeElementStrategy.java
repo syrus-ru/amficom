@@ -1,5 +1,5 @@
 /**
- * $Id: MapPhysicalNodeElementStrategy.java,v 1.30 2005/08/17 14:14:20 arseniy Exp $
+ * $Id: MapPhysicalNodeElementStrategy.java,v 1.31 2005/09/19 15:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -21,6 +21,7 @@ import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.client.map.command.action.BindPhysicalNodeToSiteCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.CreateNodeLinkCommandBundle;
+import com.syrus.AMFICOM.client.map.command.action.MapActionCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.MoveFixedDistanceCommand;
 import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
@@ -36,8 +37,8 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 
 /**
  * —тратеги€ управлени€ топологическим узлом.
- * @author $Author: arseniy $
- * @version $Revision: 1.30 $, $Date: 2005/08/17 14:14:20 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.31 $, $Date: 2005/09/19 15:37:44 $
  * @module mapviewclient
  */
 public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy 
@@ -49,7 +50,7 @@ public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy
 	/**
 	 *  оманда, выполн€ема€ в соответствии со стратегией действий на узлом.
 	 */
-	Command command;
+	MapActionCommandBundle command;
 
 	/**
 	 * Instance.
@@ -205,6 +206,9 @@ public final class MapPhysicalNodeElementStrategy extends AbstractMapStrategy
 								((BindPhysicalNodeToSiteCommandBundle)this.command).setNetMapViewer(super.netMapViewer);
 								super.logicalNetLayer.getCommandList().add(this.command);
 								super.logicalNetLayer.getCommandList().execute();
+								if(!this.command.isUndoable()) {
+									super.logicalNetLayer.getCommandList().flush();
+								}
 								this.command = null;
 								this.logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 								break;

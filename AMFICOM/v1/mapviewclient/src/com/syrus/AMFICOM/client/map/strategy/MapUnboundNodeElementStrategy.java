@@ -1,5 +1,5 @@
 /**
- * $Id: MapUnboundNodeElementStrategy.java,v 1.29 2005/08/24 08:19:59 krupenn Exp $
+ * $Id: MapUnboundNodeElementStrategy.java,v 1.30 2005/09/19 15:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -18,6 +18,7 @@ import com.syrus.AMFICOM.client.map.MapConnectionException;
 import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapState;
 import com.syrus.AMFICOM.client.map.command.action.BindUnboundNodeToSiteCommandBundle;
+import com.syrus.AMFICOM.client.map.command.action.MapActionCommandBundle;
 import com.syrus.AMFICOM.client.map.command.action.MoveSelectionCommandBundle;
 import com.syrus.AMFICOM.client.map.controllers.SiteNodeController;
 import com.syrus.AMFICOM.client.model.Command;
@@ -30,7 +31,7 @@ import com.syrus.AMFICOM.mapview.UnboundNode;
 /**
  * —тратеги€ управлени€ неприв€занным узлом.
  * @author $Author: krupenn $
- * @version $Revision: 1.29 $, $Date: 2005/08/24 08:19:59 $
+ * @version $Revision: 1.30 $, $Date: 2005/09/19 15:37:44 $
  * @module mapviewclient
  */
 public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy 
@@ -42,7 +43,7 @@ public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy
 	/**
 	 *  оманда, выполн€ема€ в соответствии со стратегией действий на узлом.
 	 */
-	Command command;
+	MapActionCommandBundle command;
 
 	/**
 	 * Instance.
@@ -172,6 +173,9 @@ public final class MapUnboundNodeElementStrategy extends AbstractMapStrategy
 						((BindUnboundNodeToSiteCommandBundle)this.command).setNetMapViewer(super.netMapViewer);
 						super.logicalNetLayer.getCommandList().add(this.command);
 						super.logicalNetLayer.getCommandList().execute();
+						if(!this.command.isUndoable()) {
+							super.logicalNetLayer.getCommandList().flush();
+						}
 						this.command = null;
 						break;
 					}

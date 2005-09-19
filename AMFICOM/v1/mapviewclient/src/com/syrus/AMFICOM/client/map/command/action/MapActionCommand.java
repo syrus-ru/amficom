@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommand.java,v 1.10 2005/09/16 15:10:14 krupenn Exp $
+ * $Id: MapActionCommand.java,v 1.11 2005/09/19 15:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.map.MapElementState;
 /**
  *  
  * @author $Author: krupenn $
- * @version $Revision: 1.10 $, $Date: 2005/09/16 15:10:14 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/19 15:37:44 $
  * @module mapviewclient
  */
 public class MapActionCommand extends AbstractCommand
@@ -42,6 +42,8 @@ public class MapActionCommand extends AbstractCommand
 
 	protected Throwable exception = null;
 	
+	protected boolean undoable = true;
+
 	public MapActionCommand(int action)
 	{
 		this.action = action;
@@ -72,4 +74,13 @@ public class MapActionCommand extends AbstractCommand
 	{
 		this.exception = exception;
 	}
+
+	public boolean isUndoable() {
+		return this.undoable;
+	}
+
+	protected void setUndoable(boolean undoable) {
+		this.undoable = undoable;
+	}
+
 }

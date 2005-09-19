@@ -1,5 +1,5 @@
 /**
- * $Id: MapActionCommandBundle.java,v 1.33 2005/09/14 10:26:53 krupenn Exp $
+ * $Id: MapActionCommandBundle.java,v 1.34 2005/09/19 15:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.SchemePath;
 /**
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.33 $, $Date: 2005/09/14 10:26:53 $
+ * @version $Revision: 1.34 $, $Date: 2005/09/19 15:37:44 $
  * @module maviewclient_v1
  */
 public class MapActionCommandBundle extends CommandBundle
@@ -52,6 +52,8 @@ public class MapActionCommandBundle extends CommandBundle
 	ApplicationContext aContext = null;
 
 	protected NetMapViewer netMapViewer;
+	
+	protected boolean undoable = true;
 	
 	public void setNetMapViewer(NetMapViewer netMapViewer) {
 		this.netMapViewer = netMapViewer;
@@ -354,6 +356,7 @@ public class MapActionCommandBundle extends CommandBundle
 			}
 		}
 		cablePath.clearLinks();
+		setUndoable(false);
 	}
 
 	/**
@@ -435,6 +438,28 @@ public class MapActionCommandBundle extends CommandBundle
 	public void setException(Throwable exception)
 	{
 		this.exception = exception;
+	}
+
+	public boolean isUndoable() {
+		for(Command command : this.commands) {
+			if(command instanceof MapActionCommand) {
+				MapActionCommand mapActionCommand = (MapActionCommand) command;
+				if(!mapActionCommand.isUndoable()) {
+					this.undoable = false;
+				}
+			}
+			if(command instanceof MapActionCommandBundle) {
+				MapActionCommandBundle mapActionCommandBundle = (MapActionCommandBundle) command;
+				if(!mapActionCommandBundle.isUndoable()) {
+					this.undoable = false;
+				}
+			}
+		}
+		return this.undoable;
+	}
+
+	protected void setUndoable(boolean undoable) {
+		this.undoable = undoable;
 	}
 
 }

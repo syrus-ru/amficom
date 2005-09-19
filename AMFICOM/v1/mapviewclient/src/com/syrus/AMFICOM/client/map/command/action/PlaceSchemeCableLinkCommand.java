@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeCableLinkCommand.java,v 1.44 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: PlaceSchemeCableLinkCommand.java,v 1.45 2005/09/19 15:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
  * Разместить кабель на карте.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.44 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.45 $, $Date: 2005/09/19 15:37:44 $
  * @module mapviewclient
  */
 public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
@@ -184,6 +184,7 @@ public class PlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 				unbound.setCablePath(this.cablePath);
 			}
 			long t7 = System.currentTimeMillis();
+			super.setUndoable(false);
 			setResult(Command.RESULT_OK);
 			// операция закончена - оповестить слушателей
 			this.logicalNetLayer.setCurrentMapElement(this.cablePath);

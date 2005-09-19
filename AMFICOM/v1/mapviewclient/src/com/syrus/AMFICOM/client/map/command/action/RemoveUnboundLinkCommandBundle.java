@@ -1,5 +1,5 @@
 /**
- * $Id: RemoveUnboundLinkCommandBundle.java,v 1.16 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: RemoveUnboundLinkCommandBundle.java,v 1.17 2005/09/19 15:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -22,7 +22,7 @@ import com.syrus.util.Log;
  * состоит
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.16 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/19 15:37:44 $
  * @module mapviewclient
  */
 public class RemoveUnboundLinkCommandBundle extends MapActionCommandBundle {
@@ -47,6 +47,7 @@ public class RemoveUnboundLinkCommandBundle extends MapActionCommandBundle {
 
 		try {
 			super.removeUnboundLink(this.unbound);
+			super.setUndoable(false);
 			setResult(Command.RESULT_OK);
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);

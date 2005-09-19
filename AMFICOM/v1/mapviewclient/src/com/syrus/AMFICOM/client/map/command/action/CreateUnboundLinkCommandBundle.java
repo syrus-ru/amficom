@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandBundle.java,v 1.15 2005/09/16 14:53:32 krupenn Exp $
+ * $Id: CreateUnboundLinkCommandBundle.java,v 1.16 2005/09/19 15:37:43 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
  * пул и на карту
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.15 $, $Date: 2005/09/16 14:53:32 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/19 15:37:43 $
  * @module mapviewclient
  */
 public class CreateUnboundLinkCommandBundle extends MapActionCommandBundle {
@@ -57,6 +57,7 @@ public class CreateUnboundLinkCommandBundle extends MapActionCommandBundle {
 			this.unbound = super.createUnboundLinkWithNodeLink(
 					this.startNode,
 					this.endNode);
+			setUndoable(false);
 		} catch(Throwable e) {
 			setException(e);
 			setResult(Command.RESULT_NO);

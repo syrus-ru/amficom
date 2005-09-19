@@ -1,5 +1,5 @@
 /**
- * $Id: DeleteNodeCommandBundle.java,v 1.43 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: DeleteNodeCommandBundle.java,v 1.44 2005/09/19 15:37:43 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -41,7 +41,7 @@ import com.syrus.util.Log;
  *   оманда удалени€ элемента наследника класса MapNodeElement.  оманда
  * состоит из  последовательности атомарных действий
  * @author $Author: krupenn $
- * @version $Revision: 1.43 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.44 $, $Date: 2005/09/19 15:37:43 $
  * @module mapviewclient
  */
 public class DeleteNodeCommandBundle extends MapActionCommandBundle
@@ -86,6 +86,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 				|| measurementPath.getEndNode().equals(site))
 			{
 				super.removeMeasurementPath(measurementPath);
+				setUndoable(false);
 			}
 		}
 
@@ -96,6 +97,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 		{
 			CablePath cablePath = (CablePath)it.next();
 			
+			setUndoable(false);
 			// если удал€емый узел содержит прив€зку концевого элемента
 			// кабельного пути, кабельный путь убираетс€ с карты
 			if(cablePath.getStartNode().equals(site)
@@ -419,6 +421,7 @@ public class DeleteNodeCommandBundle extends MapActionCommandBundle
 			super.removeCablePathLinks(cpath);
 			super.removeCablePath(cpath);
 			schemes.add(cpath.getSchemeCableLink().getParentScheme());
+			setUndoable(false);
 		}
 		for(Scheme scheme : schemes) {
 			this.logicalNetLayer.getMapViewController().scanPaths(scheme);

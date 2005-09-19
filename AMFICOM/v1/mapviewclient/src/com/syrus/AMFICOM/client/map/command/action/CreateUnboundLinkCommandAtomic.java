@@ -1,5 +1,5 @@
 /**
- * $Id: CreateUnboundLinkCommandAtomic.java,v 1.22 2005/09/16 14:53:32 krupenn Exp $
+ * $Id: CreateUnboundLinkCommandAtomic.java,v 1.23 2005/09/19 15:37:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -26,7 +26,7 @@ import com.syrus.util.Log;
  * действие
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.22 $, $Date: 2005/09/16 14:53:32 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/19 15:37:43 $
  * @module mapviewclient
  */
 public class CreateUnboundLinkCommandAtomic extends MapActionCommand {
@@ -69,6 +69,7 @@ public class CreateUnboundLinkCommandAtomic extends MapActionCommand {
 					this.logicalNetLayer.getUnboundLinkType());
 
 			this.map.addPhysicalLink(this.link);
+			setUndoable(false);
 			setResult(Command.RESULT_OK);
 		} catch(ApplicationException e) {
 			setException(e);

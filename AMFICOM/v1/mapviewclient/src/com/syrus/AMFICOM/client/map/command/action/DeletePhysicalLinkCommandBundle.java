@@ -1,5 +1,5 @@
 /**
- * $Id: DeletePhysicalLinkCommandBundle.java,v 1.28 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: DeletePhysicalLinkCommandBundle.java,v 1.29 2005/09/19 15:37:43 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.29 $, $Date: 2005/09/19 15:37:43 $
  * @module mapviewclient
  */
 public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle {
@@ -96,6 +96,7 @@ public class DeletePhysicalLinkCommandBundle extends MapActionCommandBundle {
 			// и прохождение по ней замен€етс€ неприв€занной св€зью
 			for(Iterator it = cablePathsToScan.iterator(); it.hasNext();) {
 				CablePath cablePath = (CablePath)it.next();
+				setUndoable(false);
 				
 				UnboundLink unbound = super.createUnboundLinkWithNodeLink(
 						this.link.getStartNode(),

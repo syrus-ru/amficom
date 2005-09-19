@@ -571,6 +571,8 @@ public final class PhysicalLinkAddEditor extends DefaultStorableObjectEditor {
 		this.cableList.getModel().removeElement(cablePath);
 
 		this.tunnelLayout.updateElements();
+
+		this.netMapViewer.getLogicalNetLayer().getCommandList().flush();
 	}
 
 	public List getUnboundElements() {

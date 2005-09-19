@@ -1,5 +1,5 @@
 /**
- * $Id: MapDropTargetListener.java,v 1.39 2005/09/16 14:53:36 krupenn Exp $
+ * $Id: MapDropTargetListener.java,v 1.40 2005/09/19 15:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
  * 
  * 
  * 
- * @version $Revision: 1.39 $, $Date: 2005/09/16 14:53:36 $
+ * @version $Revision: 1.40 $, $Date: 2005/09/19 15:37:44 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -188,6 +188,7 @@ public final class MapDropTargetListener implements DropTargetListener
 			cmd.setNetMapViewer(this.netMapViewer);
 			logicalNetLayer.getCommandList().add(cmd);
 			logicalNetLayer.getCommandList().execute();
+			logicalNetLayer.getCommandList().flush();
 			logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 
 			logicalNetLayer.getMapViewController().scanCables(schemeElement.getParentScheme());
@@ -223,6 +224,7 @@ public final class MapDropTargetListener implements DropTargetListener
 			PlaceSchemeCableLinkCommand cmd = new PlaceSchemeCableLinkCommand(schemeCableLink);
 			cmd.setNetMapViewer(this.netMapViewer);
 			logicalNetLayer.getCommandList().add(cmd);
+			logicalNetLayer.getCommandList().execute();
 			logicalNetLayer.getCommandList().execute();
 			logicalNetLayer.sendMapEvent(MapEvent.MAP_CHANGED);
 

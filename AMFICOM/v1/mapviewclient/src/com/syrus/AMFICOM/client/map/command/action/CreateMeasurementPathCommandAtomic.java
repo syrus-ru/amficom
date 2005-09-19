@@ -1,5 +1,5 @@
 /**
- * $Id: CreateMeasurementPathCommandAtomic.java,v 1.21 2005/09/16 14:53:32 krupenn Exp $
+ * $Id: CreateMeasurementPathCommandAtomic.java,v 1.22 2005/09/19 15:37:43 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,7 +23,7 @@ import com.syrus.util.Log;
  * создание прокладки измерительного пути
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.21 $, $Date: 2005/09/16 14:53:32 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/19 15:37:43 $
  * @module mapviewclient
  */
 public class CreateMeasurementPathCommandAtomic extends MapActionCommand {
@@ -73,6 +73,7 @@ public class CreateMeasurementPathCommandAtomic extends MapActionCommand {
 				this.logicalNetLayer.getMapView());
 
 		this.logicalNetLayer.getMapView().addMeasurementPath(this.measurementPath);
+		setUndoable(false);
 		setResult(Command.RESULT_OK);
 	}
 }

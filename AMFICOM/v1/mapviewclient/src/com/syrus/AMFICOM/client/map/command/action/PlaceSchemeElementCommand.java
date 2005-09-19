@@ -1,5 +1,5 @@
 /**
- * $Id: PlaceSchemeElementCommand.java,v 1.34 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: PlaceSchemeElementCommand.java,v 1.35 2005/09/19 15:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,7 +29,7 @@ import com.syrus.util.Log;
  * координатам
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.34 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.35 $, $Date: 2005/09/19 15:37:44 $
  * @module mapviewclient
  */
 public class PlaceSchemeElementCommand extends MapActionCommandBundle {
@@ -118,6 +118,7 @@ public class PlaceSchemeElementCommand extends MapActionCommandBundle {
 			}
 			// операция закончена - оповестить слушателей
 			this.logicalNetLayer.setCurrentMapElement(this.site);
+			super.setUndoable(false);
 			long t6 = System.currentTimeMillis();
 			Log.debugMessage("PlaceSchemeElementCommand :: calculate coordinates " + (t2 - t1) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$
 			Log.debugMessage("PlaceSchemeElementCommand :: find scheme element " + (t3 - t2) + " ms", Level.FINE); //$NON-NLS-1$ //$NON-NLS-2$

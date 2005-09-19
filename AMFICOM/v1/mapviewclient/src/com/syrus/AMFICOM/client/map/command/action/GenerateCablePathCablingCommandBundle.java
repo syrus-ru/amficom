@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateCablePathCablingCommandBundle.java,v 1.36 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: GenerateCablePathCablingCommandBundle.java,v 1.37 2005/09/19 15:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -37,7 +37,7 @@ import com.syrus.util.Log;
  * сетевые узла и схемные элементы привязываются к ним.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.36 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/19 15:37:44 $
  * @module mapviewclient
  */
 public class GenerateCablePathCablingCommandBundle extends
@@ -136,6 +136,7 @@ public class GenerateCablePathCablingCommandBundle extends
 
 					super.removePhysicalLink(unbound);
 					link.getBinding().add(this.cablePath);
+					super.setUndoable(false);
 				}
 
 				startsite = endsite;

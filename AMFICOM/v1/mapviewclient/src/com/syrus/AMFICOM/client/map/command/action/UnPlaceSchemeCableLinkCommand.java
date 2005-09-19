@@ -1,5 +1,5 @@
 /**
- * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.28 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: UnPlaceSchemeCableLinkCommand.java,v 1.29 2005/09/19 15:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -20,7 +20,7 @@ import com.syrus.util.Log;
  * убрать кабельный путь с привязкой из карты
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.28 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.29 $, $Date: 2005/09/19 15:37:44 $
  * @module mapviewclient
  */
 public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle {
@@ -50,6 +50,7 @@ public class UnPlaceSchemeCableLinkCommand extends MapActionCommandBundle {
 
 			super.removeCablePathLinks(this.cablePath);
 			super.removeCablePath(this.cablePath);
+			super.setUndoable(false);
 			setResult(Command.RESULT_OK);
 		} catch(Throwable e) {
 			setResult(Command.RESULT_NO);

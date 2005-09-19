@@ -1,5 +1,5 @@
 /**
- * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.31 2005/09/16 14:53:33 krupenn Exp $
+ * $Id: GenerateUnboundLinkCablingCommandBundle.java,v 1.32 2005/09/19 15:37:44 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -31,7 +31,7 @@ import com.syrus.util.Log;
  *  оманда генерации тоннел€ по неприв€занной линии.
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.31 $, $Date: 2005/09/16 14:53:33 $
+ * @version $Revision: 1.32 $, $Date: 2005/09/19 15:37:44 $
  * @module mapviewclient
  */
 public class GenerateUnboundLinkCablingCommandBundle extends
@@ -109,6 +109,7 @@ public class GenerateUnboundLinkCablingCommandBundle extends
 
 			super.removePhysicalLink(this.unbound);
 			this.link.getBinding().add(this.cablePath);
+			super.setUndoable(false);
 			setResult(Command.RESULT_OK);
 		} catch(Throwable e) {
 			setException(e);
