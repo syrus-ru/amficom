@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeEventHandler.java,v 1.12 2005/09/14 14:07:49 krupenn Exp $
+ * $Id: MapViewTreeEventHandler.java,v 1.13 2005/09/19 15:36:42 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -176,7 +176,9 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 				}
 			}
 			else if(mapEventType.equals(MapEvent.MAP_CHANGED)) {
-				updateTree(this.mapView);
+				if(this.iconedTreeUI.isLinkObjects()) {
+					updateTree(this.mapView);
+				}
 			}
 			else if(mapEventType.equals(MapEvent.MAP_SELECTED)) {
 				updateTree(this.mapView);
@@ -190,15 +192,17 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 				updateTree(mapView);
 			}
 			else if(mapEventType.equals(MapEvent.SELECTION_CHANGED)) {
-				Collection selection = (Collection )pce.getNewValue();
-				Collection items = this.iconedTreeUI.findNodes(this.root, selection, false);
-				this.tree.getSelectionModel().clearSelection();
-				ItemTreeModel treeModel = (ItemTreeModel )this.tree.getModel();
-				for(Iterator iter = items.iterator(); iter.hasNext();) {
-					Item node = (Item )iter.next();
-					TreePath path = new TreePath(treeModel.getPathToRoot(node));
-					this.tree.getSelectionModel().addSelectionPath(path);
-					this.tree.scrollPathToVisible(path);
+				if(this.iconedTreeUI.isLinkObjects()) {
+					Collection selection = (Collection )pce.getNewValue();
+					Collection items = this.iconedTreeUI.findNodes(this.root, selection, false);
+					this.tree.getSelectionModel().clearSelection();
+					ItemTreeModel treeModel = (ItemTreeModel )this.tree.getModel();
+					for(Iterator iter = items.iterator(); iter.hasNext();) {
+						Item node = (Item )iter.next();
+						TreePath path = new TreePath(treeModel.getPathToRoot(node));
+						this.tree.getSelectionModel().addSelectionPath(path);
+						this.tree.scrollPathToVisible(path);
+					}
 				}
 			}
 			else if(mapEventType.equals(MapEvent.TOPOLOGY_CHANGED)) {
@@ -245,6 +249,7 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 		if(node != null) {
 			MapEditorTreeModel model = (MapEditorTreeModel) node.getChildrenFactory();
 			model.setMapView(mapView);
+			this.tree.updateUI();
 		}
 	}
 
