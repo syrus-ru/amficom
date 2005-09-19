@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.120 2005/09/18 20:15:14 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.121 2005/09/19 08:20:25 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -36,8 +36,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.120 $, $Date: 2005/09/18 20:15:14 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.121 $, $Date: 2005/09/19 08:20:25 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -66,9 +66,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				+ TestWrapper.COLUMN_STATUS + COMMA
 				+ TestWrapper.COLUMN_MONITORED_ELEMENT_ID + COMMA
 				+ StorableObjectWrapper.COLUMN_DESCRIPTION + COMMA
-				+ TestWrapper.COLUMN_NUMBER_OF_MEASUREMENTS + COMMA
-				+ TestWrapper.COLUMN_STOP_TIME + COMMA
-				+ TestWrapper.COLUMN_STOP_REASON;
+				+ TestWrapper.COLUMN_NUMBER_OF_MEASUREMENTS;
 		}
 		return columns;
 	}
@@ -77,8 +75,6 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 	protected String getUpdateMultipleSQLValuesTmpl() {
 		if (updateMultipleSQLValues == null) {
 			updateMultipleSQLValues =  QUESTION + COMMA
-				+ QUESTION + COMMA
-				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
 				+ QUESTION + COMMA
@@ -108,9 +104,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			+ test.getStatus().value() + COMMA
 			+ DatabaseIdentifier.toSQLString(test.getMonitoredElement().getId()) + COMMA
 			+ APOSTROPHE + DatabaseString.toQuerySubString(test.getDescription(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE + COMMA
-			+ test.getNumberOfMeasurements() + COMMA
-			+ DatabaseDate.toUpdateSubString(test.getStopTime()) + COMMA
-			+ APOSTROPHE + DatabaseString.toQuerySubString(test.getStopReason(), SIZE_DESCRIPTION_COLUMN) + APOSTROPHE;
+			+ test.getNumberOfMeasurements();
 	}
 
 	@Override
@@ -118,7 +112,6 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		String query = super.retrieveQuery(condition);
 		query = query.replaceFirst(TestWrapper.COLUMN_START_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_START_TIME));
 		query = query.replaceFirst(TestWrapper.COLUMN_END_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_END_TIME));
-		query = query.replaceFirst(TestWrapper.COLUMN_STOP_TIME, DatabaseDate.toQuerySubString(TestWrapper.COLUMN_STOP_TIME));
 		return query;
 	}
 
@@ -140,8 +133,6 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getMonitoredElement().getId());
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getDescription(), SIZE_DESCRIPTION_COLUMN);
 		preparedStatement.setInt(++startParameterNumber, storableObject.getNumberOfMeasurements());
-		preparedStatement.setTimestamp(++startParameterNumber, new Timestamp(storableObject.getStopTime().getTime()));
-		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getStopReason(), SIZE_DESCRIPTION_COLUMN);
 		return startParameterNumber;
 	}
 
@@ -171,8 +162,6 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			throw new RetrieveObjectException(ae);
 		}
 		final String description = DatabaseString.fromQuerySubString(resultSet.getString(StorableObjectWrapper.COLUMN_DESCRIPTION));
-		final Date stopTime = DatabaseDate.fromQuerySubString(resultSet, TestWrapper.COLUMN_STOP_TIME);
-		final String stopReason = DatabaseString.fromQuerySubString(resultSet.getString(TestWrapper.COLUMN_STOP_REASON));
 		test.setAttributes(DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_CREATED),
 				DatabaseDate.fromQuerySubString(resultSet, StorableObjectWrapper.COLUMN_MODIFIED),
 				DatabaseIdentifier.getIdentifier(resultSet, StorableObjectWrapper.COLUMN_CREATOR_ID),
@@ -188,9 +177,7 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				resultSet.getInt(TestWrapper.COLUMN_STATUS),
 				monitoredElement,
 				(description != null) ? description : "",
-				resultSet.getInt(TestWrapper.COLUMN_NUMBER_OF_MEASUREMENTS),
-				(stopTime != null) ? stopTime : new Date(0),
-				(stopReason != null) ? stopReason : "");
+				resultSet.getInt(TestWrapper.COLUMN_NUMBER_OF_MEASUREMENTS));
 
 		return test;
 	}

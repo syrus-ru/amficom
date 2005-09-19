@@ -1,5 +1,5 @@
 /*
- * $Id: TestWrapper.java,v 1.25 2005/09/18 18:18:09 arseniy Exp $
+ * $Id: TestWrapper.java,v 1.26 2005/09/19 08:20:25 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,8 +20,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/09/18 18:18:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.26 $, $Date: 2005/09/19 08:20:25 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -37,8 +37,7 @@ public class TestWrapper extends StorableObjectWrapper<Test> {
 	public static final String COLUMN_TEMPORAL_PATTERN_ID = "temporal_pattern_id";
 	public static final String COLUMN_TEMPORAL_TYPE = "temporal_type";
 	public static final String COLUMN_NUMBER_OF_MEASUREMENTS = "number_of_measurements";
-	public static final String COLUMN_STOP_TIME = "stop_time";
-	public static final String COLUMN_STOP_REASON = "stop_reason";
+
 	public static final String LINK_COLUMN_TEST_ID = "test_id";
 	public static final String LINK_COLUMN_MEASUREMENT_SETUP_ID = "measurement_setup_id";
 
@@ -59,8 +58,6 @@ public class TestWrapper extends StorableObjectWrapper<Test> {
 				COLUMN_MONITORED_ELEMENT_ID,
 				COLUMN_DESCRIPTION,
 				COLUMN_NUMBER_OF_MEASUREMENTS,
-				COLUMN_STOP_TIME,
-				COLUMN_STOP_REASON,
 				LINK_COLUMN_MEASUREMENT_SETUP_ID};
 
 		this.keys = Collections.unmodifiableList(Arrays.asList(keysArray));
@@ -119,12 +116,6 @@ public class TestWrapper extends StorableObjectWrapper<Test> {
 			}
 			if (key.equals(COLUMN_NUMBER_OF_MEASUREMENTS)) {
 				return new Integer(test.getNumberOfMeasurements());
-			}
-			if (key.equals(COLUMN_STOP_TIME)) {
-				return test.getStopTime();
-			}
-			if (key.equals(COLUMN_STOP_REASON)) {
-				return test.getStopReason();
 			}
 			if (key.equals(LINK_COLUMN_MEASUREMENT_SETUP_ID)) {
 				return test.getMeasurementSetupIds();
