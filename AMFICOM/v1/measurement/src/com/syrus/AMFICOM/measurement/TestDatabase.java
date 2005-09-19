@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.123 2005/09/19 16:13:38 bob Exp $
+ * $Id: TestDatabase.java,v 1.124 2005/09/19 17:05:08 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -49,8 +49,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.123 $, $Date: 2005/09/19 16:13:38 $
- * @author $Author: bob $
+ * @version $Revision: 1.124 $, $Date: 2005/09/19 17:05:08 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -58,8 +58,8 @@ import com.syrus.util.database.DatabaseString;
 public final class TestDatabase extends StorableObjectDatabase<Test> {
 	public static final String LINK_COLMN_TEST_ID = "test_id";
 	
-	public static final String LINK_COLMN_STOPPING_TIME = "st_time";
-	public static final String LINK_COLMN_STOPPING_REASON = "st_reason";
+	public static final String LINK_COLMN_STOPPING_TIME = "stop_time";
+	public static final String LINK_COLMN_STOPPING_REASON = "stop_reason";
 	
 	private static String columns;
 	private static String updateMultipleSQLValues;	
