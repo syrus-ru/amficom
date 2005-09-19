@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.64 2005/09/19 11:13:58 bass Exp $
+ * $Id: SchemePort.java,v 1.65 2005/09/19 13:52:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.64 $, $Date: 2005/09/19 11:13:58 $
+ * @version $Revision: 1.65 $, $Date: 2005/09/19 13:52:11 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
@@ -301,7 +301,20 @@ public final class SchemePort extends AbstractSchemePort
 	public XmlSchemePort getXmlTransferable(final XmlSchemePort schemePort,
 			final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		super.fromXmlTransferable(schemePort, importType);
+		if (schemePort.isSetPortTypeId()) {
+			schemePort.unsetPortTypeId();
+		}
+		if (!super.portTypeId.isVoid()) {
+			super.portTypeId.getXmlTransferable(schemePort.addNewPortTypeId(), importType);
+		}
+		if (schemePort.isSetPortId()) {
+			schemePort.unsetPortId();
+		}
+		if (!super.portId.isVoid()) {
+			super.portId.getXmlTransferable(schemePort.addNewPortId(), importType);
+		}
+		return schemePort;
 	}
 
 	/**

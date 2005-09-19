@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.65 2005/09/18 12:43:14 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.66 2005/09/19 13:52:11 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -48,6 +48,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
+import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
@@ -56,7 +57,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.65 $, $Date: 2005/09/18 12:43:14 $
+ * @version $Revision: 1.66 $, $Date: 2005/09/19 13:52:11 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -630,6 +631,42 @@ public abstract class AbstractSchemePort
 			final CloneNotSupportedException cnse = new CloneNotSupportedException();
 			cnse.initCause(ae);
 			throw cnse;
+		}
+	}
+
+	/**
+	 * @param abstractSchemePort
+	 * @param importType
+	 * @throws ApplicationException
+	 */
+	final void getXmlTransferable(final XmlAbstractSchemePort abstractSchemePort,
+			final String importType)
+	throws ApplicationException {
+		super.id.getXmlTransferable(abstractSchemePort.addNewId(), importType);
+		abstractSchemePort.setName(this.name);
+		if (abstractSchemePort.isSetDescription()) {
+			abstractSchemePort.unsetDescription();
+		}
+		if (this.description.length() != 0) {
+			abstractSchemePort.setDescription(this.description);
+		}
+		abstractSchemePort.setDirectionType(XmlAbstractSchemePort.DirectionType.Enum.forInt(this.getDirectionType().value() + 1));
+		if (abstractSchemePort.isSetMeasurementPortId()) {
+			abstractSchemePort.unsetMeasurementPortId();
+		}
+		if (!this.measurementPortId.isVoid()) {
+			this.measurementPortId.getXmlTransferable(abstractSchemePort.addNewMeasurementPortId(), importType);
+		}
+		this.parentSchemeDeviceId.getXmlTransferable(abstractSchemePort.addNewParentSchemeDeviceId(), importType);
+		if (abstractSchemePort.isSetCharacteristics()) {
+			abstractSchemePort.unsetCharacteristics();
+		}
+		final Set<Characteristic> characteristics = this.getCharacteristics(false);
+		if (!characteristics.isEmpty()) {
+			final XmlCharacteristicSeq characteristicSeq = abstractSchemePort.addNewCharacteristics();
+			for (final Characteristic characteristic : characteristics) {
+				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
+			}
 		}
 	}
 

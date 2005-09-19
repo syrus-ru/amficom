@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.63 2005/09/19 11:13:58 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.64 2005/09/19 13:52:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2005/09/19 11:13:58 $
+ * @version $Revision: 1.64 $, $Date: 2005/09/19 13:52:11 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort
@@ -288,7 +288,20 @@ public final class SchemeCablePort extends AbstractSchemePort
 			final XmlSchemeCablePort schemeCablePort,
 			final String importType)
 	throws ApplicationException {
-		throw new UnsupportedOperationException();
+		super.fromXmlTransferable(schemeCablePort, importType);
+		if (schemeCablePort.isSetCablePortTypeId()) {
+			schemeCablePort.unsetCablePortTypeId();
+		}
+		if (!super.portTypeId.isVoid()) {
+			super.portTypeId.getXmlTransferable(schemeCablePort.addNewCablePortTypeId(), importType);
+		}
+		if (schemeCablePort.isSetCablePortId()) {
+			schemeCablePort.unsetCablePortId();
+		}
+		if (!super.portId.isVoid()) {
+			super.portId.getXmlTransferable(schemeCablePort.addNewCablePortId(), importType);
+		}
+		return schemeCablePort;
 	}
 
 	/**
