@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.87 2005/09/19 18:15:21 arseniy Exp $
+ * $Id: measurement.idl,v 1.88 2005/09/19 18:16:14 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -283,7 +283,7 @@ module measurement {
 			public general::corba::IdlIdentifier monitoredElementId;
 			public general::corba::WString256 description;
 			public long numberOfMeasurements;
-			public StoppingSeq stoppings;
+			public TestStopsSeq stoppings;
 			public general::corba::IdlIdentifierSeq measurementSetupIds;
 
 			factory init(in general::corba::IdlIdentifier id,
