@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.160 2005/09/19 14:06:34 bob Exp $
+ * $Id: Test.java,v 1.161 2005/09/19 17:44:28 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -46,7 +46,7 @@ import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.160 $, $Date: 2005/09/19 14:06:34 $
+ * @version $Revision: 1.161 $, $Date: 2005/09/19 17:44:28 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -339,9 +339,7 @@ public final class Test extends StorableObject {
 		
 		int index = 0;
 		for(final Date stopDate : this.stoppingMap.keySet()) {
-			stoppings[index].time = stopDate.getTime();
-			stoppings[index].reason = this.stoppingMap.get(stopDate);
-			index++;
+			stoppings[index++] = new Stopping(stopDate.getTime(), this.stoppingMap.get(stopDate));
 		}
 		
 		return IdlTestHelper.init(orb,
