@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.121 2005/09/19 08:20:25 bob Exp $
+ * $Id: TestDatabase.java,v 1.122 2005/09/19 14:06:19 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -32,11 +32,12 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
+import com.syrus.util.Shitlet;
 import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.121 $, $Date: 2005/09/19 08:20:25 $
+ * @version $Revision: 1.122 $, $Date: 2005/09/19 14:06:19 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -196,11 +197,14 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			final Identifier testId = test.getId();
 			final Set<Identifier> msIds = msIdsMap.get(testId);
 
+			// XXX setting stopping map
+			
 			test.setMeasurementSetupIds0(msIds);
 		}
 	}
 
 	@Override
+	@Shitlet
 	public void insert(final Set<Test> storableObjects) throws IllegalDataException, CreateObjectException {
 		super.insertEntities(storableObjects);
 
@@ -209,9 +213,12 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				MEASUREMENTSETUP_TEST_LINK,
 				TestWrapper.LINK_COLUMN_TEST_ID,
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
+		
+		// XXX insert stopping map
 	}
 
 	@Override
+	@Shitlet
 	public void update(final Set<Test> storableObjects) throws UpdateObjectException {
 		super.update(storableObjects);
 
@@ -220,6 +227,8 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 				MEASUREMENTSETUP_TEST_LINK,
 				TestWrapper.LINK_COLUMN_TEST_ID,
 				TestWrapper.LINK_COLUMN_MEASUREMENT_SETUP_ID);
+		
+//		 XXX update stopping map
 	}
 
 	private static Map<Identifier, Set<Identifier>> createMeasurementSetupIdsMap(final Set<Test> tests) {
@@ -231,9 +240,12 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 	}
 
 	@Override
+	@Shitlet
 	protected Set<Test> retrieveByCondition(final String conditionQuery) throws RetrieveObjectException, IllegalDataException {
 		final Set<Test> objects = super.retrieveByCondition(conditionQuery);
 		this.retrieveMeasurementSetupTestLinksByOneQuery(objects);
+		// XXX retreive stopping map
+
 		return objects;
 	}
 
