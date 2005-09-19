@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.63 2005/09/14 19:50:48 bass Exp $
+ * $Id: SchemePort.java,v 1.64 2005/09/19 11:13:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.63 $, $Date: 2005/09/14 19:50:48 $
+ * @version $Revision: 1.64 $, $Date: 2005/09/19 11:13:58 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
@@ -236,7 +236,8 @@ public final class SchemePort extends AbstractSchemePort
 	public SchemeLink getAbstractSchemeLink() {
 		try {
 			final Set<SchemeLink> schemeLinks = StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(super.id, SCHEMELINK_CODE), true);
-			assert schemeLinks != null && schemeLinks.size() <= 1;
+			assert schemeLinks != null : NON_NULL_EXPECTED;
+			assert schemeLinks.size() <= 1;
 			return schemeLinks.isEmpty()
 					? null
 					: schemeLinks.iterator().next();
