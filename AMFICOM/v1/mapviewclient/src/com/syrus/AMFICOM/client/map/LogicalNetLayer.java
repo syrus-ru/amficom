@@ -1,5 +1,5 @@
 /**
- * $Id: LogicalNetLayer.java,v 1.124 2005/09/16 14:53:32 krupenn Exp $
+ * $Id: LogicalNetLayer.java,v 1.125 2005/09/19 15:31:15 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -81,7 +81,7 @@ import com.syrus.util.Log;
  * 
  * 
  * @author $Author: krupenn $
- * @version $Revision: 1.124 $, $Date: 2005/09/16 14:53:32 $
+ * @version $Revision: 1.125 $, $Date: 2005/09/19 15:31:15 $
  * @module mapviewclient_v2
  */
 public final class LogicalNetLayer {
@@ -703,7 +703,7 @@ public final class LogicalNetLayer {
 
 		// Здесь пробегаемся по всем элементам и если на каком-нибудь из них курсор
 		// то устанавливаем его текущим элементом
-		for (final MapElement mapElement : this.mapView.getAllElements()) {
+		for (final MapElement mapElement : this.mapView.getMap().getAllElements()) {
 			final MapElementController controller = this.getMapViewController().getController(mapElement);
 			if (controller.isElementVisible(mapElement, visibleBounds))
 				if (controller.isMouseOnElement(mapElement, point)) {
@@ -805,14 +805,14 @@ public final class LogicalNetLayer {
 	/**
 	 * Выбрать все элеметны.
 	 */
-	public void selectAll() {
-		Log.debugMessage(this.getClass().getName() + "::" + "selectAll()" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
-
-		Map map = this.mapView.getMap();
-		for (final MapElement curElement : this.mapView.getAllElements()) {
-			map.setSelected(curElement, true);
-		}
-	}
+//	public void selectAll() {
+//		Log.debugMessage(this.getClass().getName() + "::" + "selectAll()" + " | " + "method call", Level.FINEST); //$NON-NLS-1$ //$NON-NLS-2$ //$NON-NLS-3$ //$NON-NLS-4$
+//
+//		Map map = this.mapView.getMap();
+//		for (final MapElement curElement : this.mapView.getAllElements()) {
+//			map.setSelected(curElement, true);
+//		}
+//	}
 
 	/**
 	 * Получить список выбранных элементов.
@@ -983,7 +983,7 @@ public final class LogicalNetLayer {
 	 * Объект, замещающий при отображении несколько NodeLink'ов
 	 * 
 	 * @author $Author: krupenn $
-	 * @version $Revision: 1.124 $, $Date: 2005/09/16 14:53:32 $
+	 * @version $Revision: 1.125 $, $Date: 2005/09/19 15:31:15 $
 	 * @module mapviewclient_modifying
 	 */
 	private class VisualMapElement {
