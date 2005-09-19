@@ -1,5 +1,5 @@
 /*-
- * $Id: measurement.idl,v 1.85 2005/09/19 14:02:46 bob Exp $
+ * $Id: measurement.idl,v 1.86 2005/09/19 18:13:52 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -268,7 +268,7 @@ module measurement {
 				TEST_STATUS_ABORTED		//Прерван
 			};
 
-			struct Stopping {
+			struct TestStops {
 				long long time;
 				general::corba::WString256 reason;
 			};
