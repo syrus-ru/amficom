@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.159 2005/09/19 08:20:47 bob Exp $
+ * $Id: Test.java,v 1.160 2005/09/19 14:06:34 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -14,13 +14,12 @@ import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
 import java.util.Set;
+import java.util.SortedMap;
+import java.util.TreeMap;
 
 import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -38,6 +37,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.measurement.corba.IdlTest;
 import com.syrus.AMFICOM.measurement.corba.IdlTestHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.Stopping;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.ContinuousTestTimeStamps;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.PeriodicalTestTimeStamps;
@@ -46,13 +46,13 @@ import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.159 $, $Date: 2005/09/19 08:20:47 $
+ * @version $Revision: 1.160 $, $Date: 2005/09/19 14:06:34 $
  * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Test extends StorableObject implements Characterizable {	
+public final class Test extends StorableObject {	
 	private static final long	serialVersionUID	= 3688785890592241972L;
 
 	private int temporalType;
@@ -70,9 +70,9 @@ public final class Test extends StorableObject implements Characterizable {
 	private Identifier groupTestId;
 	private Identifier kisId;
 	private Identifier mcmId;
-
-	private transient CharacterizableDelegate characterizableDelegate;
 	
+	private SortedMap<Date, String> stoppingMap;  
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -142,6 +142,7 @@ public final class Test extends StorableObject implements Characterizable {
 		this.setMeasurementSetupIds0(measurementSetupIds);
 		this.status = TestStatus._TEST_STATUS_NEW;
 		this.numberOfMeasurements = 0;
+		this.stoppingMap = new TreeMap<Date, String>();
 	}
 
 	/**
@@ -234,12 +235,14 @@ public final class Test extends StorableObject implements Characterizable {
 			throw new IllegalDataException("Cannot find measurement setup for test '" + this.id + '\'');
 		}
 		
+		this.stoppingMap = new TreeMap<Date, String>();
+		for(int index = 0; index < tt.stoppings.length; index++) {
+			this.stoppingMap.put(new Date(tt.stoppings[index].time), tt.stoppings[index].reason);
+		}
+		
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 	}
 
-	/* (non-Javadoc)
-	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
-	 */
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -253,15 +256,9 @@ public final class Test extends StorableObject implements Characterizable {
 				&& this.description != null
 				&& this.measurementSetupIds != null
 				&& this.groupTestId != null
+				&& this.stoppingMap != null
 			//&& !this.measurementSetupIds.isEmpty() && this.mainMeasurementSetup != null
 			;
-	}
-	
-	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characterizableDelegate == null) {
-			this.characterizableDelegate = new CharacterizableDelegate(this.id);
-		}
-		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 	
 	public short getEntityCode() {
@@ -338,6 +335,15 @@ public final class Test extends StorableObject implements Characterizable {
 
 		final IdlIdentifier[] msIdsT = Identifier.createTransferables(this.measurementSetupIds);
 
+		final Stopping[] stoppings = new Stopping[this.stoppingMap.size()];
+		
+		int index = 0;
+		for(final Date stopDate : this.stoppingMap.keySet()) {
+			stoppings[index].time = stopDate.getTime();
+			stoppings[index].reason = this.stoppingMap.get(stopDate);
+			index++;
+		}
+		
 		return IdlTestHelper.init(orb,
 				this.id.getTransferable(),
 				this.created.getTime(),
@@ -353,6 +359,7 @@ public final class Test extends StorableObject implements Characterizable {
 				this.monitoredElement.getId().getTransferable(),
 				this.description,
 				this.numberOfMeasurements,
+				stoppings,
 				msIdsT);
 	}
 
@@ -471,7 +478,42 @@ public final class Test extends StorableObject implements Characterizable {
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
-	protected synchronized void setMeasurementSetupIds0(final Set<Identifier> measurementSetupIds) {
+	synchronized void setStoppingMap0(final SortedMap<Date, String> stoppingMap) {
+		this.stoppingMap.clear();
+		if (stoppingMap != null) {
+			this.stoppingMap.putAll(stoppingMap);
+		}
+	}
+	
+	/**
+	 * add test stopping 
+	 * @param stoppingTime time, when stop test
+	 * @param reason reason to stop test
+	 */
+	public void addStopping(final Date stoppingTime, final String reason) {
+		this.stoppingMap.put(new Date(stoppingTime.getTime()), reason);
+	}
+	
+	/**
+	 * stop test now. 
+	 * @param reason reason to stop test
+	 * @see #addStopping(Date, String)
+	 */
+	public void addStopping(final String reason) {
+		this.addStopping(new Date(), reason);
+	}
+	
+	/**
+	 * @return map of test stop time and reason to stop
+	 */
+	public SortedMap<Date, String> getStoppingMap() {
+		return Collections.unmodifiableSortedMap(this.stoppingMap);
+	}
+	
+	/**
+	 * <p><b>Clients must never explicitly call this method.</b></p>
+	 */
+	synchronized void setMeasurementSetupIds0(final Set<Identifier> measurementSetupIds) {
 		this.measurementSetupIds.clear();
 		if (measurementSetupIds != null) {
 			this.measurementSetupIds.addAll(measurementSetupIds);
