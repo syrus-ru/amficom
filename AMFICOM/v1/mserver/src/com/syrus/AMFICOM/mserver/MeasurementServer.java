@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.72 2005/09/14 18:15:00 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.73 2005/09/19 18:20:07 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,7 +26,6 @@ import com.syrus.AMFICOM.administration.SystemUser;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
-import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
@@ -57,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/09/14 18:15:00 $
+ * @version $Revision: 1.73 $, $Date: 2005/09/19 18:20:07 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -240,14 +239,9 @@ public class MeasurementServer extends SleepButWorkThread {
 				OperationSort.OPERATION_EQUALS,
 				ObjectEntities.TEST_CODE,
 				TestWrapper.COLUMN_STATUS);
-		try {
-			testLoadCondition = new CompoundCondition(lic,
-					CompoundConditionSort.AND,
-					new CompoundCondition(tc1, CompoundConditionSort.OR, tc2));
-		} catch (CreateObjectException coe) {
-			//Never
-			Log.errorException(coe);
-		}
+		testLoadCondition = new CompoundCondition(lic,
+				CompoundConditionSort.AND,
+				new CompoundCondition(tc1, CompoundConditionSort.OR, tc2));
 	}
 
 	@Override
