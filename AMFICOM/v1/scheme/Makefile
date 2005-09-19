@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.41 2005/09/12 20:53:45 arseniy Exp $
+# $Id: Makefile,v 1.42 2005/09/19 12:51:09 bass Exp $
 #
 # vim:set ft=make:
 #
@@ -28,7 +28,7 @@ DIRS_TO_SCRUB = \
 
 SRCDIRS_TO_SCRUB = $(foreach dir,$(DIRS_TO_SCRUB),$(SRCDIR)/$(dir))
 
-APPCLASSPATH = $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/map.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/filter.jar:$(LIBDIR)/util.jar
+APPCLASSPATH = $(LIBDIR)/general.jar:$(LIBDIR)/administration.jar:$(LIBDIR)/configuration.jar:$(LIBDIR)/measurement.jar:$(LIBDIR)/map.jar:$(LIBDIR)/resource.jar:$(LIBDIR)/util.jar
 EXTCLASSPATH := $(EXTLIBDIR)/trove.jar
 XMLCLASSPATH := $(LIBDIR)/$(LIBNAME_SCHEMEXML):$(LIBDIR)/$(LIBNAME_MAPXML):$(LIBDIR)/$(LIBNAME_GENERALXML)
 
