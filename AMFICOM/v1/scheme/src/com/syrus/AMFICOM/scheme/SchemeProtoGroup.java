@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.65 2005/09/18 12:43:14 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.66 2005/09/19 12:34:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,7 +15,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
-import static com.syrus.AMFICOM.general.ErrorMessages.UNSUPPORTED_CHILD_TYPE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
@@ -24,11 +23,9 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static java.util.logging.Level.SEVERE;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -50,13 +47,9 @@ import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.AMFICOM.logic.Item;
-import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoGroupHelper;
-import com.syrus.AMFICOM.scheme.logic.Library;
-import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElement;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoElementSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
@@ -67,12 +60,11 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.65 $, $Date: 2005/09/18 12:43:14 $
+ * @version $Revision: 1.66 $, $Date: 2005/09/19 12:34:35 $
  * @module scheme
- * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
 public final class SchemeProtoGroup extends StorableObject
-		implements Describable, SchemeSymbolContainer, Library,
+		implements Describable, SchemeSymbolContainer,
 		ReverseDependencyContainer,
 		XmlBeansTransferable<XmlSchemeProtoGroup> {
 	private static final long serialVersionUID = 3256721788422862901L;
@@ -87,8 +79,6 @@ public final class SchemeProtoGroup extends StorableObject
 	 * Used in a condition, so left package-visible.
 	 */
 	Identifier parentSchemeProtoGroupId;
-
-	private ArrayList<ItemListener> itemListeners = new ArrayList<ItemListener>();
 
 	/**
 	 * @param id
@@ -242,47 +232,6 @@ public final class SchemeProtoGroup extends StorableObject
 	}
 
 	/**
-	 * @param itemListener
-	 * @see Item#addChangeListener(ItemListener)
-	 */
-	public void addChangeListener(final ItemListener itemListener) {
-		assert !this.itemListeners.contains(itemListener);
-		this.itemListeners.add(0, itemListener);
-	}
-
-	/**
-	 * @param childItem
-	 * @throws UnsupportedOperationException if <code>childItem</code> is
-	 *         an instance of neither {@link Library}nor
-	 *         {@link LibraryEntry}.
-	 * @see Item#addChild(Item)
-	 */
-	public void addChild(final Item childItem) {
-		if (childItem instanceof Library)
-			addChild((Library) childItem);
-		else if (childItem instanceof LibraryEntry)
-			addChild((LibraryEntry) childItem);
-		else
-			throw new UnsupportedOperationException(UNSUPPORTED_CHILD_TYPE);
-	}
-
-	/**
-	 * @param library
-	 * @see Library#addChild(Library)
-	 */
-	public void addChild(final Library library) {
-		addSchemeProtoGroup((SchemeProtoGroup) library);
-	}
-
-	/**
-	 * @param libraryEntry
-	 * @see Library#addChild(LibraryEntry)
-	 */
-	public void addChild(final LibraryEntry libraryEntry) {
-		addSchemeProtoElement((SchemeProtoElement) libraryEntry);
-	}
-
-	/**
 	 * @param schemeProtoElement cannot be <code>null</code>.
 	 */
 	public void addSchemeProtoElement(final SchemeProtoElement schemeProtoElement) {
@@ -301,38 +250,6 @@ public final class SchemeProtoGroup extends StorableObject
 		assert schemeProtoGroup != null: NON_NULL_EXPECTED;
 		assert schemeProtoGroup != this: CIRCULAR_DEPS_PROHIBITED;
 		schemeProtoGroup.setParentSchemeProtoGroup(this);
-	}
-
-	/**
-	 * @see Item#canHaveChildren()
-	 */
-	public boolean canHaveChildren() {
-		return getMaxChildrenCount() != 0;
-	}
-
-	/**
-	 * @see Item#canHaveParent()
-	 */
-	public boolean canHaveParent() {
-		return true;
-	}
-
-	/**
-	 * @return a <em>mutable</em> <code>List</code> of
-	 *         <code>SchemeProtoGroup</code>s and
-	 *         <code>SchemeProtoElement</codes>s, which can be freely
-	 *         modified. One of the drawbacks of this approach is that a new
-	 *         object is created on every invocation. If you need an
-	 *         <em>immutable</em> shared instance, let me know.
-	 * @see Item#getChildren()
-	 */
-	public List<Item> getChildren() {
-		final Set<SchemeProtoGroup> schemeProtoGroups = getSchemeProtoGroups();
-		final Set<SchemeProtoElement> schemeProtoElements = getSchemeProtoElements();
-		final List<Item> children = new ArrayList<Item>(schemeProtoGroups.size() + schemeProtoElements.size());
-		children.addAll(schemeProtoGroups);
-		children.addAll(schemeProtoElements);
-		return children;
 	}
 
 	/**
@@ -376,33 +293,11 @@ public final class SchemeProtoGroup extends StorableObject
 	}
 
 	/**
-	 * @see Item#getMaxChildrenCount()
-	 */
-	public int getMaxChildrenCount() {
-		return Integer.MAX_VALUE;
-	}
-
-	/**
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
 		assert this.name != null && this.name.length() != 0 : OBJECT_NOT_INITIALIZED;
 		return this.name;
-	}
-
-	/**
-	 * @return <code>this</code>.
-	 * @see Item#getObject()
-	 */
-	public Object getObject() {
-		return this;
-	}
-
-	/**
-	 * @see Item#getParent()
-	 */
-	public SchemeProtoGroup getParent() {
-		return this.getParentSchemeProtoGroup();
 	}
 
 	Identifier getParentSchemeProtoGroupId() {
@@ -552,22 +447,6 @@ public final class SchemeProtoGroup extends StorableObject
 	}
 
 	/**
-	 * @see Item#isService()
-	 */
-	public boolean isService() {
-		return false;
-	}
-
-	/**
-	 * @param itemListener
-	 * @see Item#removeChangeListener(ItemListener)
-	 */
-	public void removeChangeListener(final ItemListener itemListener) {
-		assert this.itemListeners.contains(itemListener);
-		this.itemListeners.remove(itemListener);
-	}
-
-	/**
 	 * The <code>SchemeProtoElement</code> must belong to this
 	 * <code>SchemeProtoGroup</code>, or crap will meet the fan.
 	 *
@@ -654,22 +533,6 @@ public final class SchemeProtoGroup extends StorableObject
 			return;
 		this.name = name;
 		super.markAsChanged();
-	}
-
-	/**
-	 * @param library
-	 * @see Item#setParent(Item)
-	 */
-	public void setParent(final Item library) {
-		setParent((Library) library);
-	}
-
-	/**
-	 * @param library
-	 * @see Library#setParent(Library)
-	 */
-	public void setParent(final Library library) {
-		setParentSchemeProtoGroup((SchemeProtoGroup) library);
 	}
 
 	/**

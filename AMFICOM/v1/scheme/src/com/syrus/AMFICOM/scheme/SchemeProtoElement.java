@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.87 2005/09/18 12:43:13 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.88 2005/09/19 12:34:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,6 @@
 package com.syrus.AMFICOM.scheme;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.ACTION_WILL_RESULT_IN_NOTHING;
-import static com.syrus.AMFICOM.general.ErrorMessages.CHILDREN_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.CIRCULAR_DEPS_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.EXACTLY_ONE_PARENT_REQUIRED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_EMPTY_EXPECTED;
@@ -19,7 +18,6 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
-import static com.syrus.AMFICOM.general.ErrorMessages.OUT_OF_LIBRARY_HIERARCHY;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
@@ -36,12 +34,10 @@ import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
 
-import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Set;
 
 import org.omg.CORBA.ORB;
@@ -70,14 +66,10 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.AMFICOM.general.xml.XmlIdentifier;
-import com.syrus.AMFICOM.logic.Item;
-import com.syrus.AMFICOM.logic.ItemListener;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoElement;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeProtoElementHelper;
-import com.syrus.AMFICOM.scheme.logic.Library;
-import com.syrus.AMFICOM.scheme.logic.LibraryEntry;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeDevice;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeDeviceSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeLink;
@@ -90,13 +82,12 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2005/09/18 12:43:13 $
+ * @version $Revision: 1.88 $, $Date: 2005/09/19 12:34:34 $
  * @module scheme
- * @todo Implement fireParentChanged() and call it on any setParent*() invocation.
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		implements Describable, SchemeCellContainer, Characterizable,
-		LibraryEntry, ReverseDependencyContainer,
+		ReverseDependencyContainer,
 		XmlBeansTransferable<XmlSchemeProtoElement> {
 	private static final long serialVersionUID = 3689348806202569782L;
 
@@ -123,12 +114,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * drag&apos;n&apos;drop. 
 	 */
 	private boolean parentSet = false;
-
-	/**
-	 * Shouldn&apos;t be declared {@code transient} since the GUI often uses
-	 * drag&apos;n&apos;drop. 
-	 */
-	private final ArrayList<ItemListener> itemListeners = new ArrayList<ItemListener>();
 
 	private transient CharacterizableDelegate characterizableDelegate;
 
@@ -458,23 +443,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @param itemListener
-	 * @see Item#addChangeListener(ItemListener)
-	 */
-	public void addChangeListener(final ItemListener itemListener) {
-		assert !this.itemListeners.contains(itemListener);
-		this.itemListeners.add(0, itemListener);
-	}
-
-	/**
-	 * @param childItem
-	 * @see Item#addChild(Item)
-	 */
-	public void addChild(final Item childItem) {
-		throw new UnsupportedOperationException(CHILDREN_PROHIBITED);
-	}
-
-	/**
 	 * @param schemeDevice cannot be <code>null</code>.
 	 */
 	public void addSchemeDevice(final SchemeDevice schemeDevice) {
@@ -498,20 +466,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		assert schemeProtoElement != null: NON_NULL_EXPECTED;
 		assert schemeProtoElement != this: CIRCULAR_DEPS_PROHIBITED;
 		schemeProtoElement.setParentSchemeProtoElement(this);
-	}
-
-	/**
-	 * @see Item#canHaveChildren()
-	 */
-	public boolean canHaveChildren() {
-		return getMaxChildrenCount() != 0;
-	}
-
-	/**
-	 * @see Item#canHaveParent()
-	 */
-	public boolean canHaveParent() {
-		return true;
 	}
 
 	/**
@@ -592,13 +546,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			this.characterizableDelegate = new CharacterizableDelegate(this.id);
 		}
 		return this.characterizableDelegate.getCharacteristics(usePool);
-	}
-
-	/**
-	 * @see Item#getChildren()
-	 */
-	public List<Item> getChildren() {
-		throw new UnsupportedOperationException(CHILDREN_PROHIBITED);
 	}
 
 	/**
@@ -698,46 +645,11 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Item#getMaxChildrenCount()
-	 */
-	public int getMaxChildrenCount() {
-		return 0;
-	}
-
-	/**
 	 * @see com.syrus.AMFICOM.general.Namable#getName()
 	 */
 	public String getName() {
 		assert this.name != null && this.name.length() != 0: OBJECT_NOT_INITIALIZED;
 		return this.name;
-	}
-
-	/**
-	 * @return <code>this</code>.
-	 * @see Item#getObject()
-	 */
-	public Object getObject() {
-		return this;
-	}
-
-	/**
-	 * @throws UnsupportedOperationException if this
-	 *         <code>schemeProtoElement</code> has no parent
-	 *         <code>schemeProtoGroup</code> (i. e. is either orphan
-	 *         (which is invalid) or enclosed by another
-	 *         <code>schemeProtoElement</code> (which has no relation with
-	 *         library hierarchy)).
-	 * @see Item#getParent()
-	 */
-	public Item getParent() {
-		final SchemeProtoGroup parentSchemeProtoGroup = getParentSchemeProtoGroup();
-		if (parentSchemeProtoGroup == null) {
-			if (getParentSchemeProtoElement() == null) {
-				throw new UnsupportedOperationException(EXACTLY_ONE_PARENT_REQUIRED);
-			}
-			throw new UnsupportedOperationException(OUT_OF_LIBRARY_HIERARCHY);
-		}
-		return parentSchemeProtoGroup;
 	}
 
 	/**
@@ -1061,22 +973,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	}
 
 	/**
-	 * @see Item#isService()
-	 */
-	public boolean isService() {
-		return false;
-	}
-
-	/**
-	 * @param itemListener
-	 * @see Item#removeChangeListener(ItemListener)
-	 */
-	public void removeChangeListener(final ItemListener itemListener) {
-		assert this.itemListeners.contains(itemListener);
-		this.itemListeners.remove(itemListener);
-	}
-
-	/**
 	 * The <code>SchemeDevice</code> must belong to this
 	 * <code>SchemeElement</code>, or crap will meet the fan.
 	 *
@@ -1232,34 +1128,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 		}
 		this.name = name;
 		super.markAsChanged();
-	}
-
-	/**
-	 * @param library
-	 * @see Item#setParent(Item)
-	 */
-	public void setParent(final Item library) {
-		setParent((Library) library);
-	}
-
-	/**
-	 * @param library
-	 * @throws UnsupportedOperationException if this
-	 *         <code>schemeProtoElement</code> has no parent
-	 *         <code>schemeProtoGroup</code> (i. e. is either orphan
-	 *         (which is invalid) or enclosed by another
-	 *         <code>schemeProtoElement</code> (which has no relation with
-	 *         library hierarchy)).
-	 * @see LibraryEntry#setParent(Library)
-	 */
-	public void setParent(final Library library) {
-		if (getParentSchemeProtoGroup() == null) {
-			if (getParentSchemeProtoElement() == null) {
-				throw new UnsupportedOperationException(EXACTLY_ONE_PARENT_REQUIRED);
-			}
-			throw new UnsupportedOperationException(OUT_OF_LIBRARY_HIERARCHY);
-		}
-		setParentSchemeProtoGroup((SchemeProtoGroup) library);
 	}
 
 	/**
