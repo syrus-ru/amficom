@@ -1,5 +1,5 @@
 /*-
- * $Id: general.idl,v 1.111 2005/09/15 00:46:28 arseniy Exp $
+ * $Id: general.idl,v 1.112 2005/09/19 12:37:00 bob Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,6 +46,9 @@ module general {
 		typedef sequence<WString64> WString64Seq;
 		typedef wstring<128> WString128;
 		typedef wstring<256> WString256;
+		/*\u002a\u002f@SuppressWarnings("all")/**/
+		typedef sequence<WString256> WString256Seq;
+
 
 		/*\u002a\u002f@SuppressWarnings("all")/**/
 		enum IdlDataType {
