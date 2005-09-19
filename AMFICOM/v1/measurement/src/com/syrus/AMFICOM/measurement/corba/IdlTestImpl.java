@@ -1,5 +1,5 @@
 /*-
- * $Id: IdlTestImpl.java,v 1.7 2005/09/19 08:20:25 bob Exp $
+ * $Id: IdlTestImpl.java,v 1.8 2005/09/19 14:05:45 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,13 +15,14 @@ import com.syrus.AMFICOM.general.corba.IdlCreateObjectException;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStamps;
+import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.Stopping;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/09/19 08:20:25 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/19 14:05:45 $
  * @module measurement
  */
 final class IdlTestImpl extends IdlTest {
@@ -45,6 +46,7 @@ final class IdlTestImpl extends IdlTest {
 			final IdlIdentifier monitoredElementId,
 			final String description,
 			final int numberOfMeasurements,
+			final Stopping[] stoppings, 
 			final IdlIdentifier measurementSetupIds[]) {
 		this.id = id;
 		this.created = created;
@@ -60,6 +62,7 @@ final class IdlTestImpl extends IdlTest {
 		this.monitoredElementId = monitoredElementId;
 		this.description = description;
 		this.numberOfMeasurements = numberOfMeasurements;
+		this.stoppings = stoppings;
 		this.measurementSetupIds = measurementSetupIds;
 	}
 
