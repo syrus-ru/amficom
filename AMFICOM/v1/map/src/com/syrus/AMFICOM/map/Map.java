@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.97 2005/09/18 12:43:12 bass Exp $
+ * $Id: Map.java,v 1.98 2005/09/19 06:58:59 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: bass $
- * @version $Revision: 1.97 $, $Date: 2005/09/18 12:43:12 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.98 $, $Date: 2005/09/19 06:58:59 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -673,72 +673,6 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		super.markAsChanged();
 	}
 
-	/**
-	 * Получить элемент сетевого узла по идентификатору.
-	 *
-	 * @param siteId
-	 *          идентификатор сетевого узла
-	 * @return сетевой узел или null, если узел не найден
-	 */
-	public SiteNode getSiteNode(final Identifier siteId) {
-		for (final SiteNode siteNode : this.getAllSiteNodes()) {
-			if (siteNode.equals(siteId)) {
-				return siteNode;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Получить элемент топологического узла по идентификатору.
-	 *
-	 * @param topologicalNodeId
-	 *          идентификатор топологического узла
-	 * @return топологический узел или null, если узел не найден
-	 */
-	public TopologicalNode getTopologicalNode(final Identifier topologicalNodeId) {
-		for (final TopologicalNode topologicalNode : this.getAllTopologicalNodes()) {
-			if (topologicalNode.equals(topologicalNodeId)) {
-				return topologicalNode;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Получить метку по идентификатору.
-	 *
-	 * @param markId
-	 *          идентификатор метки
-	 * @return метка или null, если метка не найден
-	 */
-	public Mark getMark(final Identifier markId) {
-		for (final Mark mark : this.getAllMarks()) {
-			if (mark.equals(markId)) {
-				return mark;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Получить узел по идентификатору.
-	 *
-	 * @param nodeId
-	 *          идентификатор метки
-	 * @return узел или null, если узел не найден
-	 */
-	public AbstractNode getNode(final Identifier nodeId) {
-		AbstractNode node = this.getSiteNode(nodeId);
-		if (node == null) {
-			node = this.getTopologicalNode(nodeId);
-		}
-		if (node == null) {
-			node = this.getMark(nodeId);
-		}
-		return null;
-	}
-
 	public void addMapLibrary(final MapLibrary mapLibrary) {
 		this.initialize();
 		this.mapLibraryIds.add(mapLibrary.getId());
@@ -873,41 +807,6 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	}
 
 	/**
-	 * Получить линию по ее идентификатору.
-	 *
-	 * @param phisicalLinkId
-	 *          идентификатор линии
-	 * @return лниия
-	 */
-	public PhysicalLink getPhysicalLink(final Identifier phisicalLinkId) {
-		for (final PhysicalLink physicalLink : this.getAllPhysicalLinks()) {
-			if (physicalLink.equals(phisicalLinkId)) {
-				return physicalLink;
-			}
-		}
-		return null;
-	}
-
-	/**
-	 * Получить линию по концевым узлам.
-	 *
-	 * @param startNode
-	 *          один концевой узел
-	 * @param endNode
-	 *          другой концевой узел
-	 * @return линия
-	 */
-	public PhysicalLink getPhysicalLink(final AbstractNode startNode, final AbstractNode endNode) {
-		for (final PhysicalLink physicalLink : this.getAllPhysicalLinks()) {
-			if (((physicalLink.getStartNode().equals(startNode)) && (physicalLink.getEndNode().equals(endNode)))
-					|| ((physicalLink.getStartNode().equals(endNode)) && (physicalLink.getEndNode().equals(startNode)))) {
-				return physicalLink;
-			}
-		}
-		return null;
-	}
-
-	/**
 	 * добавить новый фрагмент линии.
 	 *
 	 * @param nodeLink
@@ -936,22 +835,6 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		nodeLink.setRemoved(true);
 		super.markAsChanged();
 	}
-
-	/**
-	 * Получить фрагмент линии по идентификатору.
-	 *
-	 * @param nodeLinkId
-	 *          идентификатор фрагмента линии
-	 * @return фрагмент линии
-	 */
-//	public NodeLink getNodeLink(final Identifier nodeLinkId) {
-//		for (final NodeLink nodeLink : this.getAllNodeLinks()) {
-//			if (nodeLink.equals(nodeLinkId)) {
-//				return nodeLink;
-//			}
-//		}
-//		return null;
-//	}
 
 	/**
 	 * Получить фрагмент линии по концевому узлу.
@@ -1111,22 +994,6 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		}
 
 		return returnNodes;
-	}
-
-	/**
-	 * Получить список линий, начинающихся или заканчивающихся на данном узле.
-	 * 
-	 * @return список линий
-	 */
-	public Set<PhysicalLink> getPhysicalLinks(final AbstractNode node) {
-		final Set<PhysicalLink> returnLinks = new HashSet<PhysicalLink>();
-		for (final PhysicalLink physicalLink : this.getPhysicalLinks()) {
-			if ((physicalLink.getEndNode().equals(node)) || (physicalLink.getStartNode().equals(node))) {
-				returnLinks.add(physicalLink);
-			}
-		}
-
-		return returnLinks;
 	}
 
 	/**

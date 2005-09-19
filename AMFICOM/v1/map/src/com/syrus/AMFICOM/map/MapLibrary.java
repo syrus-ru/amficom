@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.27 2005/09/18 12:42:19 bass Exp $
+ * $Id: MapLibrary.java,v 1.28 2005/09/19 06:58:31 krupenn Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,7 +41,6 @@ import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
-import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.map.corba.IdlMapLibrary;
 import com.syrus.AMFICOM.map.corba.IdlMapLibraryHelper;
 import com.syrus.AMFICOM.map.xml.XmlMapLibrary;
@@ -53,8 +52,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/09/18 12:42:19 $
- * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/09/19 06:58:31 $
+ * @author $Author: krupenn $
  * @module map
  */
 public final class MapLibrary extends StorableObject implements Namable, Library, XmlBeansTransferable<XmlMapLibrary> {
@@ -286,23 +285,6 @@ public final class MapLibrary extends StorableObject implements Namable, Library
 		children.addAll(physicalLinkTypes);
 		children.addAll(siteNodeTypes);
 		return children;
-	}
-
-	public void setParent(final Item parent) {
-		this.setParent0(parent);
-		super.markAsChanged();
-	}
-	
-	protected void setParent0(final Item parent) {
-		/*
-		 * MapLibrary's and Item's hierarchies have nothing in common.
-		 * The code is erroneous. 
-		 */
-//		assert parent instanceof MapLibrary : "must be instance of MapLibrary";
-//		assert parent != this : CIRCULAR_DEPS_PROHIBITED;
-//		this.parentMapLibraryId = Identifier.possiblyVoid((MapLibrary) parent);
-		assert false;
-		System.exit(1);
 	}
 
 	public MapLibrary getParent() {
