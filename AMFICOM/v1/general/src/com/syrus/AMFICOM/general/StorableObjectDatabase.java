@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.192 2005/09/14 18:51:56 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.193 2005/09/19 16:23:59 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.192 $, $Date: 2005/09/14 18:51:56 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.193 $, $Date: 2005/09/19 16:23:59 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -181,8 +181,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			buffer.append(SQL_FROM);
 			buffer.append(this.getEntityName());
 			this.retrieveQuery = buffer.toString();
-		} else
+		} else {
 			buffer = new StringBuffer(this.retrieveQuery);
+		}
 
 		if (condition != null && condition.trim().length() > 0) {
 			buffer.append(SQL_WHERE);
@@ -543,10 +544,13 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 		final Map<Identifier, StorableObjectVersion> versionsMap = new HashMap<Identifier, StorableObjectVersion>();
 
-		final StringBuffer sql = new StringBuffer(SQL_SELECT
-				+ StorableObjectWrapper.COLUMN_ID + COMMA
-				+ StorableObjectWrapper.COLUMN_VERSION
-				+ SQL_FROM + tableName + SQL_WHERE);
+		final StringBuffer sql = new StringBuffer(SQL_SELECT);
+		sql.append(StorableObjectWrapper.COLUMN_ID);
+		sql.append(COMMA);
+		sql.append(StorableObjectWrapper.COLUMN_VERSION);
+		sql.append(SQL_FROM);
+		sql.append(tableName);
+		sql.append(SQL_WHERE);
 		sql.append(idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true));
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -607,9 +611,11 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 		final Set<Identifier> presentInDatabaseIds = new HashSet<Identifier>();
 
-		final StringBuffer sql = new StringBuffer(SQL_SELECT
-				+ StorableObjectWrapper.COLUMN_ID
-				+ SQL_FROM + tableName + SQL_WHERE);
+		final StringBuffer sql = new StringBuffer(SQL_SELECT);
+		sql.append(StorableObjectWrapper.COLUMN_ID);
+		sql.append(SQL_FROM);
+		sql.append(tableName);
+		sql.append(SQL_WHERE);
 		sql.append(idsEnumerationString(ids, StorableObjectWrapper.COLUMN_ID, true));
 		Statement statement = null;
 		ResultSet resultSet = null;
@@ -921,7 +927,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		assert cols.length == values.length : this.getEntityName() + "Database.updateEntities | Count of columns ('" + cols.length
 				+ "') is not equals count of values ('" + values.length + "')";
 
-		final StringBuffer sql = new StringBuffer(SQL_UPDATE + this.getEntityName() + SQL_SET);
+		final StringBuffer sql = new StringBuffer(SQL_UPDATE);
+		sql.append(this.getEntityName());
+		sql.append(SQL_SET);
 		for (int i = 0; i < cols.length; i++) {
 			if (cols[i].equals(StorableObjectWrapper.COLUMN_ID)) {
 				continue;
@@ -1179,7 +1187,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			return;
 		}
 
-		final StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM + this.getEntityName() + SQL_WHERE);
+		final StringBuffer stringBuffer = new StringBuffer(SQL_DELETE_FROM);
+		stringBuffer.append(this.getEntityName());
+		stringBuffer.append(SQL_WHERE);
 		stringBuffer.append(idsEnumerationString(identifiables, StorableObjectWrapper.COLUMN_ID, true));
 
 		Statement statement = null;
@@ -1219,15 +1229,23 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			return;
 		}
 
-		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + tableName
-				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
+		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM);
+		sql.append(tableName);
+		sql.append(SQL_WHERE);
+		sql.append(DatabaseStorableObjectCondition.FALSE_CONDITION);
 
 		for (final Identifier id : idLinkedObjectIdsMap.keySet()) {
 			final Set<Identifier> linkedObjIds = idLinkedObjectIdsMap.get(id);
 
-			sql.append(SQL_OR + OPEN_BRACKET + idColumnName + EQUALS + DatabaseIdentifier.toSQLString(id) + SQL_AND + OPEN_BRACKET);
-			sql.append(idsEnumerationString(linkedObjIds, linkedIdColumnName, true));
-			sql.append(CLOSE_BRACKET);
+			sql.append(SQL_OR);
+			sql.append(OPEN_BRACKET);
+				sql.append(idColumnName);
+				sql.append(EQUALS);
+				sql.append(DatabaseIdentifier.toSQLString(id));
+				sql.append(SQL_AND);
+				sql.append(OPEN_BRACKET);
+					sql.append(idsEnumerationString(linkedObjIds, linkedIdColumnName, true));
+				sql.append(CLOSE_BRACKET);
 			sql.append(CLOSE_BRACKET);
 		}
 
@@ -1276,15 +1294,23 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			return;
 		}
 
-		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM + tableName
-				+ SQL_WHERE + DatabaseStorableObjectCondition.FALSE_CONDITION);
+		final StringBuffer sql = new StringBuffer(SQL_DELETE_FROM);
+		sql.append(tableName);
+		sql.append(SQL_WHERE);
+		sql.append(DatabaseStorableObjectCondition.FALSE_CONDITION);
 
 		for (final Identifier id : idLinkedCodeMap.keySet()) {
 			final EnumSet<E> linkedCodes = idLinkedCodeMap.get(id);
 
-			sql.append(SQL_OR + OPEN_BRACKET + idColumnName + EQUALS + DatabaseIdentifier.toSQLString(id) + SQL_AND + OPEN_BRACKET);
-			sql.append(enumsEnumerationString(linkedCodes, linkedCodeColumnName, true));
-			sql.append(CLOSE_BRACKET);
+			sql.append(SQL_OR);
+			sql.append(OPEN_BRACKET);
+				sql.append(idColumnName);
+				sql.append(EQUALS);
+				sql.append(DatabaseIdentifier.toSQLString(id));
+				sql.append(SQL_AND);
+				sql.append(OPEN_BRACKET);
+					sql.append(enumsEnumerationString(linkedCodes, linkedCodeColumnName, true));
+				sql.append(CLOSE_BRACKET);
 			sql.append(CLOSE_BRACKET);
 		}
 
@@ -1347,9 +1373,12 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			}
 		}
 
-		final StringBuffer voidSql = new StringBuffer(OPEN_BRACKET
-				+ idColumn + SQL_IS +  (inList ? "" : NOT)
-				+ SQL_NULL + CLOSE_BRACKET);
+		final StringBuffer voidSql = new StringBuffer(OPEN_BRACKET);
+		voidSql.append(idColumn);
+		voidSql.append(SQL_IS);
+		voidSql.append(inList ? "" : NOT);
+		voidSql.append(SQL_NULL);
+		voidSql.append(CLOSE_BRACKET);
 		if (nonVoidIdentifiers.isEmpty()) {
 			if (containsVoidIdentifier) {
 				return voidSql;
@@ -1359,7 +1388,11 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					: DatabaseStorableObjectCondition.TRUE_CONDITION);
 		}
 
-		final StringBuffer stringBuffer = new StringBuffer((containsVoidIdentifier ? OPEN_BRACKET : "") + OPEN_BRACKET + idColumn + (inList ? SQL_IN : SQL_NOT_IN) + OPEN_BRACKET);
+		final StringBuffer stringBuffer = new StringBuffer((containsVoidIdentifier ? OPEN_BRACKET : ""));
+		stringBuffer.append(OPEN_BRACKET);
+		stringBuffer.append(idColumn);
+		stringBuffer.append(inList ? SQL_IN : SQL_NOT_IN);
+		stringBuffer.append(OPEN_BRACKET);
 
 		int i = 0;
 		for (final Iterator<Identifier> it = nonVoidIdentifiers.iterator(); it.hasNext(); i++) {
@@ -1374,7 +1407,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 					stringBuffer.append(CLOSE_BRACKET);
 					stringBuffer.append(inList ? SQL_OR : SQL_AND);
 					stringBuffer.append(idColumn);
-					stringBuffer.append((inList ? SQL_IN : SQL_NOT_IN));
+					stringBuffer.append(inList ? SQL_IN : SQL_NOT_IN);
 					stringBuffer.append(OPEN_BRACKET);
 				}
 			}
@@ -1383,7 +1416,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 		stringBuffer.append(CLOSE_BRACKET);
 
 		if (containsVoidIdentifier) {
-			stringBuffer.append((inList ? SQL_OR : SQL_AND) + voidSql + CLOSE_BRACKET);
+			stringBuffer.append((inList ? SQL_OR : SQL_AND));
+			voidSql.append(voidSql);
+			voidSql.append(CLOSE_BRACKET);
 		}
 
 		return stringBuffer;
@@ -1399,7 +1434,10 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	protected final <E extends Enum<E>> StringBuffer enumsEnumerationString(final EnumSet<E> enums,
 			final String codeColumn,
 			final boolean inList) {
-		final StringBuffer stringBuffer = new StringBuffer(OPEN_BRACKET + codeColumn + (inList ? SQL_IN : SQL_NOT_IN) + OPEN_BRACKET);
+		final StringBuffer stringBuffer = new StringBuffer(OPEN_BRACKET);
+		stringBuffer.append(codeColumn);
+		stringBuffer.append(inList ? SQL_IN : SQL_NOT_IN);
+		stringBuffer.append(OPEN_BRACKET);
 		int i = 0;
 		for (final Iterator<E> it = enums.iterator(); it.hasNext(); i++) {
 			final E code = it.next();
