@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.17 2005/09/19 13:08:53 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.18 2005/09/20 10:06:40 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,6 +32,7 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
+import javax.xml.transform.dom.DOMSource;
 
 import org.apache.xmlbeans.XmlException;
 
@@ -56,6 +57,9 @@ import com.syrus.AMFICOM.client_.scheme.graph.actions.CreateTopLevelSchemeAction
 import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.CablePortCell;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultCableLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DefaultLink;
+import com.syrus.AMFICOM.client_.scheme.graph.objects.DeviceGroup;
 import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
 import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.CableThreadType;
@@ -67,6 +71,7 @@ import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
 import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.configuration.xml.XmlCableLinkType;
+import com.syrus.AMFICOM.configuration.xml.XmlCableLinkTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlConfigurationLibrary;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipment;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipmentSeq;
@@ -74,6 +79,8 @@ import com.syrus.AMFICOM.configuration.xml.XmlEquipmentType;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipmentTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkType;
 import com.syrus.AMFICOM.configuration.xml.XmlLinkTypeSeq;
+import com.syrus.AMFICOM.configuration.xml.XmlPortType;
+import com.syrus.AMFICOM.configuration.xml.XmlPortTypeSeq;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.CharacteristicType;
@@ -105,12 +112,16 @@ import com.syrus.AMFICOM.scheme.SchemeDevice;
 import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemePort;
 import com.syrus.AMFICOM.scheme.SchemeProtoElement;
+import com.syrus.AMFICOM.scheme.SchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionType;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
+import com.syrus.AMFICOM.scheme.xml.SchemeProtoGroupsDocument;
 import com.syrus.AMFICOM.scheme.xml.SchemesDocument;
 import com.syrus.AMFICOM.scheme.xml.XmlScheme;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCablePort;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
+import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroupSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeSeq;
 import com.syrus.util.Log;
 
@@ -238,7 +249,7 @@ public class SchemeImportCommand extends AbstractCommand {
 								JOptionPane.ERROR_MESSAGE);
 						return;
 					}
-
+					
 					parseSchemeCableLinks(scheme);
 					parseSchemeElements(scheme);
 					
@@ -283,11 +294,10 @@ public class SchemeImportCommand extends AbstractCommand {
 		
 		SchemesDocument doc = SchemesDocument.Factory.parse(xmlfile);
 		
-//		if(!validateXml(doc)) {
-//			throw new XmlException("Invalid XML");
-//		}
+		if(!ClientUtils.validateXml(doc)) {
+			throw new XmlException("Invalid XML");
+		}
 		
-//		make sure default types loaded
 		String user_dir = System.getProperty(USER_DIR);
 		System.setProperty(USER_DIR,  xmlfile.getParent());
 		
@@ -317,7 +327,8 @@ public class SchemeImportCommand extends AbstractCommand {
 				}
 			}
 			if (errorMessages.size() > 0) {
-//				if (!ClientUtils.showConfirmDialog(new JScrollPane(new JList(errorMessages.toArray())),
+				//TODO remove comment in final version
+				//				if (!ClientUtils.showConfirmDialog(new JScrollPane(new JList(errorMessages.toArray())),
 //						LangModelScheme.getString("Message.confirmation.continue_parse"))) { //$NON-NLS-1$
 //					throw new CreateObjectException("incorrect input data");
 //				}
@@ -333,22 +344,27 @@ public class SchemeImportCommand extends AbstractCommand {
 		File xmlfile = new File(fileName);
 		XmlConfigurationLibrary doc = XmlConfigurationLibrary.Factory.parse(xmlfile);
 		
-//		if(!validateXml(doc)) {
-//			throw new XmlException("Invalid XML");
-//		}
+		if(!ClientUtils.validateXml(doc)) {
+			throw new XmlException("Invalid XML");
+		}
 		
 //		make sure default types loaded
 		String user_dir = System.getProperty(USER_DIR);
 		System.setProperty(USER_DIR,  xmlfile.getParent());
 		String importType = doc.getImportType();
 		
-		XmlLinkTypeSeq xmlLinkTypes = doc.getLinkTypes();
-		XmlLinkType[] xmlLinkTypesArray = xmlLinkTypes.getLinkTypeArray();
-		for(int i = 0; i < xmlLinkTypesArray.length; i++) {
-			XmlLinkType xmlLinkType = xmlLinkTypesArray[i];
-			LinkType.createInstance(this.userId, importType, xmlLinkType);
+		XmlPortTypeSeq xmlPortTypes = doc.getPortTypes();
+		if (xmlPortTypes != null) {
+			for(XmlPortType xmlPortType : xmlPortTypes.getPortTypeArray()) {
+				PortType.createInstance(this.userId, importType, xmlPortType);
+			}
 		}
-
+		XmlLinkTypeSeq xmlLinkTypes = doc.getLinkTypes();
+		if (xmlLinkTypes != null) {
+			for(XmlLinkType xmlLinkType : xmlLinkTypes.getLinkTypeArray()) {
+				LinkType.createInstance(this.userId, importType, xmlLinkType);
+			}
+		}
 		List<String> errorMessages = new LinkedList<String>();
 		for (final XmlCableLinkType cableLinkType : doc.getCableLinkTypes().getCableLinkTypeArray()) {
 			CableLinkType cableLinkType2 = CableLinkType.createInstance(this.userId, cableLinkType, importType);
@@ -361,23 +377,45 @@ public class SchemeImportCommand extends AbstractCommand {
 					LangModelScheme.getString("Message.confirmation.continue_parse"))) { //$NON-NLS-1$
 				throw new CreateObjectException("incorrect input data");
 			}
-		}		
-
+		}
+		XmlCableLinkTypeSeq xmlCableLinkTypes = doc.getCableLinkTypes();
+		if (xmlCableLinkTypes != null) {
+			for(XmlCableLinkType xmlCableLinkType : xmlCableLinkTypes.getCableLinkTypeArray()) {
+				CableLinkType.createInstance(this.userId, xmlCableLinkType, importType);
+			}
+		}
 		XmlEquipmentTypeSeq xmlEquipmentTypes = doc.getEquipmentTypes();
 		if (xmlEquipmentTypes != null) {
-			XmlEquipmentType[] xmlEquipmentTypesArray = xmlEquipmentTypes.getEquipmentTypeArray();
-			for(int i = 0; i < xmlEquipmentTypesArray.length; i++) {
-				XmlEquipmentType xmlEquipmentType = xmlEquipmentTypesArray[i];
+			for(XmlEquipmentType xmlEquipmentType : xmlEquipmentTypes.getEquipmentTypeArray()) {
 				EquipmentType.createInstance(this.userId, importType, xmlEquipmentType);
 			}
 		}
 		XmlEquipmentSeq xmlEquipments = doc.getEquipments();
 		if (xmlEquipments != null) {
-			XmlEquipment[] xmlEquipmentsArray = xmlEquipments.getEquipmentArray();
-			for(int i = 0; i < xmlEquipmentsArray.length; i++) {
-				XmlEquipment xmlEquipment = xmlEquipmentsArray[i];
+			for(XmlEquipment xmlEquipment : xmlEquipments.getEquipmentArray()) {
 				Equipment.createInstance(this.userId, xmlEquipment, importType);
 			}
+		}
+		
+		System.setProperty(USER_DIR,  user_dir);
+	}
+	
+	protected void loadProtosXML(String fileName) throws CreateObjectException, XmlException, IOException {
+		File xmlfile = new File(fileName);
+		SchemeProtoGroupsDocument doc = SchemeProtoGroupsDocument.Factory.parse(xmlfile);
+		
+		if(!ClientUtils.validateXml(doc)) {
+			throw new XmlException("Invalid XML");
+		}
+		
+		String user_dir = System.getProperty(USER_DIR);
+		System.setProperty(USER_DIR,  xmlfile.getParent());
+		
+		XmlSchemeProtoGroupSeq xmlProtoGroups = doc.getSchemeProtoGroups();
+		XmlSchemeProtoGroup[] xmlProtoGroupsArray = xmlProtoGroups.getSchemeProtoGroupArray();
+		for(int i = 0; i < xmlProtoGroupsArray.length; i++) {
+			XmlSchemeProtoGroup xmlSchemeProtoGroup = xmlProtoGroupsArray[i];
+			SchemeProtoGroup.createInstance(this.userId, xmlSchemeProtoGroup);
 		}
 		System.setProperty(USER_DIR,  user_dir);
 	}
@@ -493,7 +531,7 @@ public class SchemeImportCommand extends AbstractCommand {
 			try{
 				if (schemeElement.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
 				// if no real Scheme associated create new scheme with internal VRM's
-				if (schemeElement.getScheme(true) == null) { // TODO schemeElement.getScheme(false)
+				if (schemeElement.getScheme(false) == null) {
 					Log.debugMessage("No real scheme for " + schemeElement.getName(), Level.FINEST);
 				
 					Scheme internalScheme = Scheme.createInstance(this.userId, schemeElement.getName(), IdlKind.BUILDING, domainId);
@@ -698,6 +736,8 @@ public class SchemeImportCommand extends AbstractCommand {
 	}
 
 	private void putToGraph(Scheme scheme) throws ApplicationException {
+		scheme.setWidth(SCHEME_SIZE.width);
+		scheme.setHeight(SCHEME_SIZE.height);
 		ApplicationContext aContext =  this.pane.getContext();
 		Dispatcher internalDispatcher = aContext.getDispatcher();
 		internalDispatcher.firePropertyChange(new SchemeEvent(this, scheme.getId(), SchemeEvent.OPEN_SCHEME));
@@ -705,6 +745,17 @@ public class SchemeImportCommand extends AbstractCommand {
 		SchemeGraph schemeGraph = this.pane.getGraph();
 		int grid = schemeGraph.getGridSize();
 		schemeGraph.setMakeNotifications(false);
+		
+		Set<Identifier> placedObjectIds = new HashSet<Identifier>();
+		for (Object cell : schemeGraph.getAll()) {
+			if (cell instanceof DeviceGroup) {
+				placedObjectIds.add(((DeviceGroup)cell).getElementId());
+			} else if (cell instanceof DefaultCableLink) {
+				placedObjectIds.add(((DefaultCableLink)cell).getSchemeCableLinkId());
+			} else if (cell instanceof DefaultLink) {
+				placedObjectIds.add(((DefaultLink)cell).getSchemeLinkId());
+			}
+		}
 		
 		// determine bounds
 		double xmin = 180, ymin = 90, xmax = -180, ymax = -90; 
@@ -724,21 +775,22 @@ public class SchemeImportCommand extends AbstractCommand {
 		double ky = (ymax - ymin == 0) ? 1 : (SCHEME_SIZE.height - grid * 20) / (ymax - ymin);
 		
 		for (SchemeElement schemeElement : scheme.getSchemeElements()) {
-			Equipment equipment = schemeElement.getEquipment();
-			Point p;
-			if (equipment != null) {
-				double x0 = equipment.getLatitude();
-				double y0 = equipment.getLongitude();
-				p = new Point((int)(grid * 10 + (x0 - xmin) * kx), (grid * 5 + SCHEME_SIZE.height - (int)((y0 - ymin) * ky))); 
-			} else {
-				Log.errorMessage("No equipment for " + schemeElement.getName() + " (" + schemeElement.getId() + ")");
-				p = new Point((int)(SCHEME_SIZE.width * Math.random()), (int)(SCHEME_SIZE.height * Math.random()));
-			}
-			if (schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
-				// TODO schemeElement.getScheme(false)
-				internalDispatcher.firePropertyChange(new SchemeEvent(this, schemeElement.getScheme(true).getId(), p, SchemeEvent.INSERT_SCHEME));	
-			} else {
-				internalDispatcher.firePropertyChange(new SchemeEvent(this, schemeElement.getId(), p, SchemeEvent.INSERT_SCHEMEELEMENT));
+			if (!placedObjectIds.contains(schemeElement.getId())) {
+				Equipment equipment = schemeElement.getEquipment();
+				Point p;
+				if (equipment != null) {
+					double x0 = equipment.getLatitude();
+					double y0 = equipment.getLongitude();
+					p = new Point((int)(grid * 10 + (x0 - xmin) * kx), (grid * 5 + SCHEME_SIZE.height - (int)((y0 - ymin) * ky))); 
+				} else {
+					Log.errorMessage("No equipment for " + schemeElement.getName() + " (" + schemeElement.getId() + ")");
+					p = new Point((int)(SCHEME_SIZE.width * Math.random()), (int)(SCHEME_SIZE.height * Math.random()));
+				}
+				if (schemeElement.getKind().value() == IdlSchemeElementKind._SCHEME_CONTAINER) {
+					internalDispatcher.firePropertyChange(new SchemeEvent(this, schemeElement.getScheme(false).getId(), p, SchemeEvent.INSERT_SCHEME));	
+				} else {
+					internalDispatcher.firePropertyChange(new SchemeEvent(this, schemeElement.getId(), p, SchemeEvent.INSERT_SCHEMEELEMENT));
+				}
 			}
 		}
 		
