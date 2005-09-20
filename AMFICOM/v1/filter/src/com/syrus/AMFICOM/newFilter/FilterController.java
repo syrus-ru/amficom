@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.23 2005/09/20 10:13:41 max Exp $
+ * $Id: FilterController.java,v 1.24 2005/09/20 15:57:22 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/09/20 10:13:41 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/20 15:57:22 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -263,9 +263,13 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 					break;
 				case TypicalSort._TYPE_STRING:
 					StringCondition stringCondition = (StringCondition) temporalCondition;
+					stringCondition.setString((String)typicalCondition.getValue());
 					switch (operationSort.value()) {
 					case OperationSort._OPERATION_EQUALS:
-						stringCondition.setString((String)typicalCondition.getValue());
+						stringCondition.setSubstring(false);
+						break;
+					case OperationSort._OPERATION_SUBSTRING:
+						stringCondition.setSubstring(true);
 						break;
 					default:
 						throw new UnsupportedOperationException();
