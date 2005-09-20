@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeModel.java,v 1.27 2005/09/18 13:54:43 bass Exp $ Syrus
+ * $Id: MapViewTreeModel.java,v 1.28 2005/09/20 08:26:32 krupenn Exp $ Syrus
  * Systems Научно-технический центр Проект: АМФИКОМ Автоматизированный
  * МногоФункциональный Интеллектуальный Комплекс Объектного Мониторинга
  * Платформа: java 1.4.1
@@ -34,14 +34,13 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.logic.ChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
-import com.syrus.AMFICOM.map.Map;
 import com.syrus.AMFICOM.map.MapLibrary;
 import com.syrus.AMFICOM.mapview.MapView;
 import com.syrus.AMFICOM.scheme.Scheme;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/09/18 13:54:43 $
- * @author $Author: bass $
+ * @version $Revision: 1.28 $, $Date: 2005/09/20 08:26:32 $
+ * @author $Author: krupenn $
  * @module mapviewclient
  */
 public class MapViewTreeModel implements ChildrenFactory {

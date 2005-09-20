@@ -1,5 +1,5 @@
 /*
- * $Id: ExportCommand.java,v 1.9 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: ExportCommand.java,v 1.10 2005/09/20 08:22:30 krupenn Exp $
  * Syrus Systems
  * Научно-технический центр
  * Проект: АМФИКОМ
@@ -8,11 +8,6 @@
 package com.syrus.AMFICOM.client.map.command;
 
 import java.io.File;
-import java.io.FileOutputStream;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
-import java.util.Collection;
-import java.util.Iterator;
 
 import javax.swing.JFileChooser;
 import javax.swing.JOptionPane;
@@ -24,7 +19,7 @@ import com.syrus.AMFICOM.client.resource.LangModelMap;
 
 /**
  * 
- * @version $Revision: 1.9 $
+ * @version $Revision: 1.10 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
