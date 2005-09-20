@@ -31,8 +31,8 @@ XMLCLASSPATH=$LIB/generalxml.jar:\
 $LIB/configurationxml.jar:\
 $LIB/mapxml.jar:\
 $LIB/schemexml.jar:\
-$XMLBEANS_HOME/build/lib/xbean.jar:\
-$XMLBEANS_HOME/build/lib/jsr173_api.jar
+$XMLBEANS_HOME/lib/xbean.jar:\
+$XMLBEANS_HOME/lib/jsr173_api.jar
 
 APPCLASSPATH=$LIB/mapviewclient.jar:\
 $LIB/general.jar:\

@@ -8,8 +8,16 @@ EXTLIB=../../extlib
 EXTCLASSPATH=$EXTLIB/kunststoff.jar:\
 $EXTLIB/trove.jar:\
 $EXTLIB/jgraphpad.jar
-XMLCLASSPATH=$XMLBEANS_HOME/build/lib/xbean.jar
+
+XMLCLASSPATH=$LIB/generalxml.jar:\
+$LIB/configurationxml.jar:\
+$LIB/mapxml.jar:\
+$LIB/schemexml.jar:\
+$XMLBEANS_HOME/lib/xbean.jar:\
+$XMLBEANS_HOME/lib/jsr173_api.jar
+
 DEPRECATEDCLASSPATH=$ORACLE_HOME/lib/jdev-rt.zip
+
 APPCLASSPATH=$LIB/schemeclient.jar:\
 $LIB/general.jar:\
 $LIB/administration.jar:\
