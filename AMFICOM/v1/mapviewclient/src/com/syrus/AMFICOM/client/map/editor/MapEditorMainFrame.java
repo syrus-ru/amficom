@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditorMainFrame.java,v 1.58 2005/09/16 14:53:34 krupenn Exp $
+ * $Id: MapEditorMainFrame.java,v 1.59 2005/09/20 08:25:17 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -76,7 +76,7 @@ import com.syrus.AMFICOM.mapview.MapView;
  * 
  * 
  * 
- * @version $Revision: 1.58 $, $Date: 2005/09/16 14:53:34 $
+ * @version $Revision: 1.59 $, $Date: 2005/09/20 08:25:17 $
  * @module mapviewclient
  * @author $Author: krupenn $
  */
@@ -87,8 +87,7 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 	
 	UIDefaults frames;
 
-	public MapEditorMainFrame(ApplicationContext aContext)
-	{
+	public MapEditorMainFrame(ApplicationContext aContext) {
 		super(
 			aContext, 
 			LangModelMap.getString("Map"),  //$NON-NLS-1$
@@ -99,11 +98,9 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 
 		enableEvents(AWTEvent.WINDOW_EVENT_MASK);
 
-		this.addComponentListener(new ComponentAdapter()
-			{
+		this.addComponentListener(new ComponentAdapter() {
 				@Override
-				public void componentShown(ComponentEvent e)
-				{
+				public void componentShown(ComponentEvent e) {
 					thisComponentShown(e);
 				}
 			});
@@ -292,32 +289,32 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 	}
 
 	@Override
-	public void setContext(ApplicationContext aContext)
-	{
+	public void setContext(ApplicationContext aContext) {
 		if(this.aContext != null)
-			if(this.aContext.getDispatcher() != null)
-			{
+			if(this.aContext.getDispatcher() != null) {
 				this.aContext.getDispatcher().removePropertyChangeListener(
-						MapEvent.MAP_EVENT_TYPE, this);
+						MapEvent.MAP_EVENT_TYPE,
+						this);
 				this.aContext.getDispatcher().removePropertyChangeListener(
-						MapEditorWindowArranger.EVENT_ARRANGE, this);				
+						MapEditorWindowArranger.EVENT_ARRANGE,
+						this);
 				this.statusBar.removeDispatcher(this.aContext.getDispatcher());
 			}
 
-		if(aContext != null)
-		{
+		if(aContext != null) {
 			super.setContext(aContext);
 
 			aContext.getDispatcher().addPropertyChangeListener(
-					MapEvent.MAP_EVENT_TYPE, this);
+					MapEvent.MAP_EVENT_TYPE,
+					this);
 			aContext.getDispatcher().addPropertyChangeListener(
-					MapEditorWindowArranger.EVENT_ARRANGE, this);			
+					MapEditorWindowArranger.EVENT_ARRANGE,
+					this);
 		}
 	}
 
 	@Override
-	public void propertyChange(PropertyChangeEvent pce)
-	{
+	public void propertyChange(PropertyChangeEvent pce) {
 		super.propertyChange(pce);
 		if ((pce.getPropertyName().equals(MapEditorWindowArranger.EVENT_ARRANGE))
 				&&	(pce.getSource().equals(this.desktopPane))) {
@@ -327,13 +324,10 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 			MapEvent mapEvent = (MapEvent )pce;
 			String mapEventType = mapEvent.getMapEventType();
 
-			if(mapEventType.equals(MapEvent.MAP_FRAME_SHOWN))
-			{
+			if(mapEventType.equals(MapEvent.MAP_FRAME_SHOWN)) {
 				this.mapFrame = (MapFrame)pce.getNewValue();
 			 }
-			else
-			if(mapEventType.equals(MapEvent.MAP_VIEW_SELECTED))
-			{
+			else if(mapEventType.equals(MapEvent.MAP_VIEW_SELECTED)) {
 				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE, true);
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE_AS, true);
@@ -366,23 +360,19 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 				aModel.fireModelChanged();
 				setTitle(LangModelMap.getString("MapView") + ": " + ((MapView )pce.getNewValue()).getName()); //$NON-NLS-1$ //$NON-NLS-2$
 			}
-			else
-			if(mapEventType.equals(MapEvent.MAP_VIEW_CLOSED))
-			{
-				for(int i = 0; i < this.desktopPane.getComponents().length; i++)
-				{
+			else if(mapEventType.equals(MapEvent.MAP_VIEW_CLOSED)) {
+				for(int i = 0; i < this.desktopPane.getComponents().length; i++) {
 					Component comp = this.desktopPane.getComponent(i);
-					if (comp instanceof MapFrame)
-					{
-						((MapFrame)comp).setVisible(false);
-						((MapFrame)comp).setContext(null);
+					if(comp instanceof MapFrame) {
+						((MapFrame) comp).setVisible(false);
+						((MapFrame) comp).setContext(null);
+					} else if(comp instanceof MapGeneralPropertiesFrame) {
+						((MapGeneralPropertiesFrame) comp).setVisible(false);
+					} else if(comp instanceof MapAdditionalPropertiesFrame) {
+						((MapAdditionalPropertiesFrame) comp).setVisible(false);
+					} else if(comp instanceof MapCharacteristicPropertiesFrame) {
+						((MapCharacteristicPropertiesFrame) comp).setVisible(false);
 					}
-					else if (comp instanceof MapGeneralPropertiesFrame)
-						((MapGeneralPropertiesFrame)comp).setVisible(false);
-					else if (comp instanceof MapAdditionalPropertiesFrame)
-						((MapAdditionalPropertiesFrame)comp).setVisible(false);
-					else if (comp instanceof MapCharacteristicPropertiesFrame)
-						((MapCharacteristicPropertiesFrame)comp).setVisible(false);
 				}
 				ApplicationModel aModel = this.aContext.getApplicationModel();
 				aModel.setEnabled(MapEditorApplicationModel.ITEM_MAP_SAVE, false);
@@ -517,11 +507,8 @@ public final class MapEditorMainFrame extends AbstractMainFrame {
 	@Override
 	public void setSessionClosed() {
 		ApplicationModel aModel = this.aContext.getApplicationModel();
-
 		setDefaultModel(aModel);
-
 		aModel.fireModelChanged();
-
 		new CloseAllInternalCommand(this.desktopPane).execute();
 	}
 
