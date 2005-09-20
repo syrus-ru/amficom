@@ -1,5 +1,5 @@
 /*-
- * $Id: ResultChildrenFactory.java,v 1.11 2005/09/19 13:11:25 stas Exp $
+ * $Id: ResultChildrenFactory.java,v 1.12 2005/09/20 09:40:55 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.WrapperComparator;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/09/19 13:11:25 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/20 09:40:55 $
  * @module analysis
  */
 
@@ -342,6 +342,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 		} else if (nodeObject instanceof Date || 
 				nodeObject instanceof MeasurementSetup) {
 			try {
+				StorableObjectPool.refresh();
 				StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
 				Set<StorableObject> testSet = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 									
@@ -374,6 +375,7 @@ public class ResultChildrenFactory extends AbstractChildrenFactory {
 		} 
 		else if (nodeObject instanceof Test) {
 			try {
+				StorableObjectPool.refresh(Collections.singleton(((Test)nodeObject).getId()));
 				StorableObjectCondition condition = ((FiltrableIconedNode)item).getResultingCondition();
 				Set measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				Set<Identifier> measurementIds = new HashSet<Identifier>();
