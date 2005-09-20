@@ -1,5 +1,5 @@
 /*
- * $Id: IconedTreeUI.java,v 1.7 2005/09/02 14:21:55 bob Exp $
+ * $Id: IconedTreeUI.java,v 1.8 2005/09/20 12:39:36 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,21 +32,21 @@ import com.syrus.AMFICOM.logic.Populatable;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.7 $, $Date: 2005/09/02 14:21:55 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/20 12:39:36 $
  * @module commonclient
  */
 
 public class IconedTreeUI {
 	protected LogicalTreeUI treeUI;
 	JScrollPane scrollPane;
-	IconedTreeToolBar toolBar;
+	private JToolBar toolBar;
 	protected boolean linkObjects = false;
 	
 	public IconedTreeUI(final Item rootItem) {
 		this.treeUI = new LogicalTreeUI(rootItem);
 		this.treeUI.setRenderer(IconedNode.class, IconedRenderer.getInstance());
 		this.treeUI.setRenderer(PopulatableIconedNode.class, IconedRenderer.getInstance());
-		this.treeUI.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);
+		this.treeUI.getTree().getSelectionModel().setSelectionMode(TreeSelectionModel.SINGLE_TREE_SELECTION);		
 		
 		if (rootItem instanceof Populatable) {
 			((Populatable)rootItem).populate();
@@ -73,7 +73,34 @@ public class IconedTreeUI {
 	
 	public JToolBar getToolBar() {
 		if (this.toolBar == null) {
-			this.toolBar = new IconedTreeToolBar();
+			this.toolBar = new JToolBar(SwingConstants.HORIZONTAL);
+			final JButton refreshButton = new JButton();
+			refreshButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_REFRESH));
+			refreshButton.setToolTipText(LangModelGeneral.getString("Refresh"));
+			refreshButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			refreshButton.addActionListener(new ActionListener() {
+				public void actionPerformed(final ActionEvent e) {
+					final JTree tree = IconedTreeUI.this.treeUI.getTree();
+					final TreePath selectedPath = 
+						tree.getSelectionModel().getSelectionPath();
+					final Item itemToRefresh = selectedPath != null 
+							? (Item)selectedPath.getLastPathComponent()
+							: (Item)IconedTreeUI.this.treeUI.getTreeModel().getRoot();
+					updateRecursively(itemToRefresh);
+				}
+			});
+			this.toolBar.add(refreshButton);
+			
+			final JToggleButton	syncButton = new JToggleButton();
+			syncButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_SYNCHRONIZE));
+			syncButton.setToolTipText(LangModelGeneral.getString("Button.Synchronize"));
+			syncButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			syncButton.addActionListener(new ActionListener() {
+				public void actionPerformed(final ActionEvent e) {
+					IconedTreeUI.this.linkObjects = ((JToggleButton)e.getSource()).isSelected();
+				}
+			});
+			this.toolBar.add(syncButton);
 		}
 		return this.toolBar;
 	}
@@ -139,35 +166,4 @@ public class IconedTreeUI {
 		return this.linkObjects;
 	}
 	
-	public class IconedTreeToolBar extends JToolBar {
-		
-		public IconedTreeToolBar() {
-			super(SwingConstants.HORIZONTAL);
-			final JButton refreshButton = new JButton();
-			refreshButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_REFRESH));
-			refreshButton.setToolTipText(LangModelGeneral.getString("Refresh"));
-			refreshButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-			refreshButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					TreePath selectedPath = IconedTreeUI.this.treeUI.getTree().getSelectionModel().getSelectionPath();
-					Item itemToRefresh = selectedPath != null 
-							? (Item)selectedPath.getLastPathComponent()
-							: (Item)IconedTreeUI.this.treeUI.getTreeModel().getRoot();
-					updateRecursively(itemToRefresh);
-				}
-			});
-			this.add(refreshButton);
-			
-			final JToggleButton	syncButton = new JToggleButton();
-			syncButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_SYNCHRONIZE));
-			syncButton.setToolTipText(LangModelGeneral.getString("Button.Synchronize"));
-			syncButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-			syncButton.addActionListener(new ActionListener() {
-				public void actionPerformed(ActionEvent e) {
-					IconedTreeUI.this.linkObjects = ((JToggleButton)e.getSource()).isSelected();
-				}
-			});
-			this.add(syncButton);
-		}
-	}
 }
