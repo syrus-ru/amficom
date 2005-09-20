@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultLink.java,v 1.10 2005/09/19 13:10:28 stas Exp $
+ * $Id: DefaultLink.java,v 1.11 2005/09/20 19:47:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,6 +23,7 @@ import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeLink;
@@ -30,11 +31,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.10 $, $Date: 2005/09/19 13:10:28 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/20 19:47:52 $
  * @module schemeclient
  */
 
-public class DefaultLink extends DefaultEdge {
+public class DefaultLink extends DefaultEdge implements IdentifiableCell {
 	private static final long serialVersionUID = 4050203024863737140L;
 
 	private Identifier scheme_link_id;
@@ -256,6 +257,17 @@ public class DefaultLink extends DefaultEdge {
 	}
 
 	public void setSchemeLinkId(Identifier id) {
+		assert id != null;
+		this.scheme_link_id = id;
+	}
+
+
+	public Identifier getId() {
+		return this.scheme_link_id;
+	}
+
+
+	public void setId(Identifier id) {
 		assert id != null;
 		this.scheme_link_id = id;
 	}

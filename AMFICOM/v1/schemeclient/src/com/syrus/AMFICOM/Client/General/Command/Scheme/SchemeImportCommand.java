@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.20 2005/09/20 13:00:12 bass Exp $
+ * $Id: SchemeImportCommand.java,v 1.21 2005/09/20 19:47:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,18 +32,15 @@ import javax.swing.JFileChooser;
 import javax.swing.JList;
 import javax.swing.JOptionPane;
 import javax.swing.JScrollPane;
-import javax.xml.transform.dom.DOMSource;
 
 import org.apache.xmlbeans.XmlException;
 
 import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.PortView;
-
 import com.syrus.AMFICOM.Client.General.Event.SchemeEvent;
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
 import com.syrus.AMFICOM.client.event.Dispatcher;
-import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.ApplicationModel;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -68,8 +65,6 @@ import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.EquipmentTypeCodename;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
-import com.syrus.AMFICOM.configuration.PortTypeWrapper;
-import com.syrus.AMFICOM.configuration.corba.IdlPortTypePackage.PortTypeKind;
 import com.syrus.AMFICOM.configuration.xml.XmlCableLinkType;
 import com.syrus.AMFICOM.configuration.xml.XmlCableLinkTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlConfigurationLibrary;
@@ -96,12 +91,8 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.general.TypicalCondition;
-import com.syrus.AMFICOM.general.UpdateObjectException;
-import com.syrus.AMFICOM.general.XmlComplementor;
-import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
-import com.syrus.AMFICOM.general.xml.XmlStorableObject;
 import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.resource.SchemeImageResource;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -125,104 +116,24 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroupSeq;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeSeq;
 import com.syrus.util.Log;
 
-public class SchemeImportCommand extends AbstractCommand {
+public class SchemeImportCommand extends ImportExportCommand {
 	private Map<Integer, SchemeProtoElement> straightMuffs;
 	private Map<Integer, SchemeProtoElement> inVrms;
 	private Map<Integer, SchemeProtoElement> outVrms;
 	private Set<EquipmentType> muffTypes;
-	static final String USER_DIR = "user.dir";
+
 	SchemeTabbedPane pane;
-	private static boolean inited = false;
+	
 	private Map<SchemeCablePort, Set<SchemeCableThread>> portThreadsCount = new HashMap<SchemeCablePort, Set<SchemeCableThread>>();
-	private Identifier userId;
 	private static final Dimension SCHEME_SIZE = new Dimension(6720, 9520);
 	
-	private static void init() {
-		XmlComplementorRegistry.registerComplementor(SCHEME_CODE, new XmlComplementor() {
-			public void complementStorableObject(
-					final XmlStorableObject storableObject,
-					final String importType,
-					final ComplementationMode mode)
-			throws CreateObjectException, UpdateObjectException {
-				switch (mode) {
-				case IMPORT:
-					final XmlScheme scheme = (XmlScheme) storableObject;
-					if (scheme.isSetDomainId()) {
-						scheme.unsetDomainId();
-					}
-					LoginManager.getDomainId().getXmlTransferable(scheme.addNewDomainId(), importType);
-					break;
-				case EXPORT:
-					break;
-				}
-			}
-		});
-
-		XmlComplementorRegistry.registerComplementor(EQUIPMENT_CODE, new XmlComplementor() {
-			public void complementStorableObject(
-					final XmlStorableObject storableObject,
-					final String importType,
-					final ComplementationMode mode)
-			throws CreateObjectException, UpdateObjectException {
-				switch (mode) {
-				case IMPORT:
-					final XmlEquipment equipment = (XmlEquipment) storableObject;
-					if (equipment.isSetDomainId()) {
-						equipment.unsetDomainId();
-					}
-					LoginManager.getDomainId().getXmlTransferable(equipment.addNewDomainId(), importType);
-					break;
-				case EXPORT:
-					break;
-				}
-			}
-		});
-		
-		final TypicalCondition condition1 = new TypicalCondition(PortTypeKind._PORT_KIND_CABLE,
-				0,
-				OperationSort.OPERATION_EQUALS,
-				ObjectEntities.PORT_TYPE_CODE,
-				PortTypeWrapper.COLUMN_KIND);
-		try {
-			final Set<PortType> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
-			if (!portTypes.isEmpty()) {
-				final PortType portType = portTypes.iterator().next(); 
-				XmlComplementorRegistry.registerComplementor(SCHEMECABLEPORT_CODE, new XmlComplementor() {
-					public void complementStorableObject(
-							final XmlStorableObject storableObject,
-							final String importType,
-							final ComplementationMode mode)
-					throws CreateObjectException, UpdateObjectException {
-						switch (mode) {
-						case IMPORT:
-							final XmlSchemeCablePort schemeCablePort = (XmlSchemeCablePort) storableObject;
-							if (schemeCablePort.isSetCablePortTypeId()) {
-								schemeCablePort.unsetCablePortTypeId();
-							}
-							portType.getId().getXmlTransferable(schemeCablePort.addNewCablePortTypeId(), importType);
-							break;
-						case EXPORT:
-							break;
-						}
-					}
-				});				
-			}
-		} catch (ApplicationException e) {
-			Log.errorException(e);
-		}
-	}
-
 	public SchemeImportCommand(SchemeTabbedPane pane) {
 		this.pane = pane;
 	}
 	
 	@Override
 	public void execute() {
-		this.userId = LoginManager.getUserId();
-		if (!inited) {
-			init();
-			inited = true;
-		}
+		super.execute();
 		
 		String user_dir = System.getProperty(USER_DIR);
 		
@@ -235,7 +146,21 @@ public class SchemeImportCommand extends AbstractCommand {
 
 		if(ext.equals(".xml")) {
 			try {
-				if (f.getName().startsWith("config")) {
+				if (f.getName().startsWith("proto")) {
+					try {
+						loadProtosXML(fileName);
+					} catch (CreateObjectException e) {
+						Log.errorMessage(e.getMessage());
+						JOptionPane.showMessageDialog(Environment.getActiveWindow(),
+								LangModelScheme.getString("Message.error.scheme_import"), //$NON-NLS-1$
+								LangModelScheme.getString("Message.error"),  //$NON-NLS-1$
+								JOptionPane.ERROR_MESSAGE);
+						return;
+					} 
+					ApplicationModel aModel = this.pane.getContext().getApplicationModel();
+					aModel.setEnabled("menuSchemeImportCommit", true);
+					aModel.fireModelChanged();
+				} else if (f.getName().startsWith("config")) {
 					try {
 						loadConfigXML(fileName);
 					} catch (CreateObjectException e) {
@@ -250,8 +175,7 @@ public class SchemeImportCommand extends AbstractCommand {
 					ApplicationModel aModel = this.pane.getContext().getApplicationModel();
 					aModel.setEnabled("menuSchemeImportCommit", true);
 					aModel.fireModelChanged();
-				}
-				else if (f.getName().startsWith("scheme")) {
+				} else if (f.getName().startsWith("scheme")) {
 					Scheme scheme;
 					try {
 						scheme = loadSchemeXML(fileName);
@@ -315,7 +239,7 @@ public class SchemeImportCommand extends AbstractCommand {
 		
 		SchemesDocument doc = SchemesDocument.Factory.parse(xmlfile);
 		
-		if(!ClientUtils.validateXml(doc)) {
+		if(!validateXml(doc)) {
 			throw new XmlException("Invalid XML");
 		}
 		
@@ -348,11 +272,10 @@ public class SchemeImportCommand extends AbstractCommand {
 				}
 			}
 			if (errorMessages.size() > 0) {
-				//TODO remove comment in final version
-				//				if (!ClientUtils.showConfirmDialog(new JScrollPane(new JList(errorMessages.toArray())),
-//						LangModelScheme.getString("Message.confirmation.continue_parse"))) { //$NON-NLS-1$
-//					throw new CreateObjectException("incorrect input data");
-//				}
+				if (!ClientUtils.showConfirmDialog(new JScrollPane(new JList(errorMessages.toArray())),
+						LangModelScheme.getString("Message.confirmation.continue_parse"))) { //$NON-NLS-1$
+					throw new CreateObjectException("incorrect input data");
+				}
 			}
 			
 			break;
@@ -365,7 +288,7 @@ public class SchemeImportCommand extends AbstractCommand {
 		File xmlfile = new File(fileName);
 		XmlConfigurationLibrary doc = XmlConfigurationLibrary.Factory.parse(xmlfile);
 		
-		if(!ClientUtils.validateXml(doc)) {
+		if(!validateXml(doc)) {
 			throw new XmlException("Invalid XML");
 		}
 		
@@ -387,22 +310,19 @@ public class SchemeImportCommand extends AbstractCommand {
 			}
 		}
 		List<String> errorMessages = new LinkedList<String>();
-		for (final XmlCableLinkType cableLinkType : doc.getCableLinkTypes().getCableLinkTypeArray()) {
-			CableLinkType cableLinkType2 = CableLinkType.createInstance(this.userId, cableLinkType, importType);
-			if (cableLinkType2.getCableThreadTypes(false).size() == 0) {
-				errorMessages.add(LangModelScheme.getString("Message.warning.cable_type_no_threads") + cableLinkType2.getName()); //$NON-NLS-1$
+		XmlCableLinkTypeSeq xmlCableLinkTypes = doc.getCableLinkTypes();
+		if (xmlCableLinkTypes != null) {
+			for (final XmlCableLinkType cableLinkType : xmlCableLinkTypes.getCableLinkTypeArray()) {
+				CableLinkType cableLinkType2 = CableLinkType.createInstance(this.userId, cableLinkType, importType);
+				if (cableLinkType2.getCableThreadTypes(false).size() == 0) {
+					errorMessages.add(LangModelScheme.getString("Message.warning.cable_type_no_threads") + cableLinkType2.getName()); //$NON-NLS-1$
+				}
 			}
 		}
 		if (errorMessages.size() > 0) {
 			if (!ClientUtils.showConfirmDialog(new JScrollPane(new JList(errorMessages.toArray())),
 					LangModelScheme.getString("Message.confirmation.continue_parse"))) { //$NON-NLS-1$
 				throw new CreateObjectException("incorrect input data");
-			}
-		}
-		XmlCableLinkTypeSeq xmlCableLinkTypes = doc.getCableLinkTypes();
-		if (xmlCableLinkTypes != null) {
-			for(XmlCableLinkType xmlCableLinkType : xmlCableLinkTypes.getCableLinkTypeArray()) {
-				CableLinkType.createInstance(this.userId, xmlCableLinkType, importType);
 			}
 		}
 		XmlEquipmentTypeSeq xmlEquipmentTypes = doc.getEquipmentTypes();
@@ -425,7 +345,7 @@ public class SchemeImportCommand extends AbstractCommand {
 		File xmlfile = new File(fileName);
 		SchemeProtoGroupsDocument doc = SchemeProtoGroupsDocument.Factory.parse(xmlfile);
 		
-		if(!ClientUtils.validateXml(doc)) {
+		if(!validateXml(doc)) {
 			throw new XmlException("Invalid XML");
 		}
 		
@@ -650,18 +570,17 @@ public class SchemeImportCommand extends AbstractCommand {
 						SchemeImageResource ugoCell = SchemeObjectsFactory.createSchemeImageResource();  
 						ugoCell.setImage(suitableMuff.getUgoCell().getImage().clone());
 						schemeElement.setUgoCell(ugoCell);
-						
-												
+
 						// next create SchemeElement from suitableMuff
 						SchemeElement newSchemeElement = SchemeObjectsFactory.createSchemeElement(scheme, suitableMuff);
 						newSchemeElement.setName(schemeElement.getName());
 						newSchemeElement.setDescription(schemeElement.getDescription());
 						newSchemeElement.setSiteNode(schemeElement.getSiteNode());
-						
+
 						// and substitute existing cable ports
 						Map<Identifier, Identifier>clonedIds = newSchemeElement.getClonedIdMap();
 						substituteExistingPorts(clonedIds, existingCablePorts);
-						
+
 						// write it to cell
 						SchemeImageResource res1 = newSchemeElement.getSchemeCell();
 						Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, res1, true);

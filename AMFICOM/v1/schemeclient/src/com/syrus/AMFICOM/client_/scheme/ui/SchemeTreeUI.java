@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.17 2005/09/20 13:04:29 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.18 2005/09/20 19:47:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.17 $, $Date: 2005/09/20 13:04:29 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/20 19:47:52 $
  * @module schemeclient
  */
 
@@ -54,6 +54,7 @@ public class SchemeTreeUI extends IconedTreeUI {
 		this.aContext = aContext;
 	}
 	
+	@Override
 	public JToolBar getToolBar() {
 		if (this.toolBar == null) {
 			this.toolBar = super.getToolBar();

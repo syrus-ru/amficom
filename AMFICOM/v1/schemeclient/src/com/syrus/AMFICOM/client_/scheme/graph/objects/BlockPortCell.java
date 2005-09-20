@@ -1,5 +1,5 @@
 /*
- * $Id: BlockPortCell.java,v 1.8 2005/08/08 11:58:07 arseniy Exp $
+ * $Id: BlockPortCell.java,v 1.9 2005/09/20 19:47:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,6 +20,7 @@ import com.jgraph.graph.DefaultGraphCell;
 import com.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
@@ -27,12 +28,12 @@ import com.syrus.AMFICOM.scheme.SchemeCablePort;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: arseniy $
- * @version $Revision: 1.8 $, $Date: 2005/08/08 11:58:07 $
+ * @author $Author: stas $
+ * @version $Revision: 1.9 $, $Date: 2005/09/20 19:47:52 $
  * @module schemeclient
  */
 
-public class BlockPortCell  extends DefaultGraphCell {
+public class BlockPortCell  extends DefaultGraphCell implements IdentifiableCell {
 	private static final long serialVersionUID = 4051325651938522933L;
 
 	private Identifier schemePortId;
@@ -93,5 +94,13 @@ public class BlockPortCell  extends DefaultGraphCell {
 		assert portId != null;
 		this.schemePortId = portId;
 	}
-}
 
+	public Identifier getId() {
+		return this.schemePortId;
+	}
+
+	public void setId(Identifier id) {
+		assert id != null;
+		this.schemePortId = id;
+	}
+}

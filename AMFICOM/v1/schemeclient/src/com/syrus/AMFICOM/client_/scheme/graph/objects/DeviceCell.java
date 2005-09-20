@@ -1,5 +1,5 @@
 /*
- * $Id: DeviceCell.java,v 1.8 2005/09/19 13:10:29 stas Exp $
+ * $Id: DeviceCell.java,v 1.9 2005/09/20 19:47:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,11 +29,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.8 $, $Date: 2005/09/19 13:10:29 $
+ * @version $Revision: 1.9 $, $Date: 2005/09/20 19:47:52 $
  * @module schemeclient
  */
 
-public class DeviceCell extends DefaultGraphCell {
+public class DeviceCell extends DefaultGraphCell implements IdentifiableCell {
 	private static final long serialVersionUID = 3257008739499652403L;
 	public static final int SQUARED = 0;
 	public static final int ROUNDED = 1;
@@ -100,5 +100,14 @@ public class DeviceCell extends DefaultGraphCell {
 	public void setSchemeDeviceId(Identifier id) {
 		assert id != null;
 		this.schemeDeviceId = id;
+	}
+
+	public void setId(Identifier id) {
+		assert id != null;
+		this.schemeDeviceId = id;
+	}
+
+	public Identifier getId() {
+		return this.schemeDeviceId;
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientUtils.java,v 1.2 2005/09/20 10:04:35 stas Exp $
+ * $Id: ClientUtils.java,v 1.3 2005/09/20 19:47:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,32 +80,6 @@ public class ClientUtils {
 		Collections.sort(threads, new NumberedComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
 				StorableObjectWrapper.COLUMN_CODENAME));
 		return threads;
-	}
-	
-	public static boolean validateXml(XmlObject xml) {
-		boolean isXmlValid = false;
-
-		// A collection instance to hold validation error messages.
-		ArrayList validationMessages = new ArrayList();
-
-		// Validate the XML, collecting messages.
-		isXmlValid = xml.validate(new XmlOptions().setErrorListener(validationMessages));
-
-		if(!isXmlValid) {
-			Log.errorMessage("Invalid XML: ");
-			for(int i = 0; i < validationMessages.size(); i++) {
-				XmlError error = (XmlError )validationMessages.get(i);
-//				System.out.println(xml);
-				Log.errorMessage(error.getMessage());
-				Log.errorMessage(String.valueOf(error.getObjectLocation()));
-				Log.errorMessage("Column " + error.getColumn());
-				Log.errorMessage("Line " + error.getLine());
-				Log.errorMessage("Offset " + error.getOffset());
-				Log.errorMessage("Object at cursor " + error.getCursorLocation().getObject());
-				Log.errorMessage("Source name " + error.getSourceName());
-			}
-		}
-		return isXmlValid;
 	}
 	
 	static JOptionPane optionPane;

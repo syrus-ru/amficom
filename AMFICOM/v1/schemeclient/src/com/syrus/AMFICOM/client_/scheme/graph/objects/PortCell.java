@@ -1,5 +1,5 @@
 /*
- * $Id: PortCell.java,v 1.11 2005/09/13 10:19:05 bass Exp $
+ * $Id: PortCell.java,v 1.12 2005/09/20 19:47:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,12 +25,12 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.11 $, $Date: 2005/09/13 10:19:05 $
+ * @author $Author: stas $
+ * @version $Revision: 1.12 $, $Date: 2005/09/20 19:47:52 $
  * @module schemeclient
  */
 
-public class PortCell extends EllipseCell {
+public class PortCell extends EllipseCell implements IdentifiableCell {
 	private static final long serialVersionUID = 3256438093014775864L;
 
 	private Identifier schemePortId;
@@ -79,5 +79,14 @@ public class PortCell extends EllipseCell {
 	public void setSchemePortId(Identifier portId) {
 		assert portId != null;
 		this.schemePortId = portId;
+	}
+
+	public void setId(Identifier id) {
+		assert id != null;
+		this.schemePortId = id;		
+	}
+
+	public Identifier getId() {
+		return this.schemePortId;
 	}
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeGraph.java,v 1.14 2005/09/19 13:10:28 stas Exp $
+ * $Id: SchemeGraph.java,v 1.15 2005/09/20 19:47:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -15,9 +15,14 @@ import java.awt.Rectangle;
 import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.HashSet;
 import java.util.List;
 import java.util.Map;
+import java.util.Set;
+import java.util.Stack;
 import java.util.logging.Level;
+
+import javax.swing.tree.TreeNode;
 
 import com.jgraph.graph.CellMapper;
 import com.jgraph.graph.ConnectionSet;
@@ -46,7 +51,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.14 $, $Date: 2005/09/19 13:10:28 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/20 19:47:52 $
  * @module schemeclient
  */
 
@@ -280,8 +285,52 @@ public class SchemeGraph extends GPGraph {
 		return getArchiveableState(getRoots());
 	}
 
+	public static Set getDescendants(GraphModel model, Object[] cells) {
+		if (cells != null) {
+			Set<Object> result = new HashSet<Object>();
+			for (Object cell : cells) {
+				addObject(result, model, cell);
+			}
+			return result;
+		}
+		return null;
+	}
+	
+	private static void addObject(Set<Object> objects, GraphModel model, Object cell) {
+		if (!objects.contains(cell)) {
+			objects.add(cell);
+			for (int i = 0; i < model.getChildCount(cell); i++) {
+				addObject(objects, model, model.getChild(cell, i));
+			}
+		}
+	}
+
+	public static Set getDescendants1(Object[] cells) {
+		if (cells != null) {
+			Set<Object> result = new HashSet<Object>();
+			for (Object cell : cells) {
+				addObject(result, cell);
+			}
+			return result;
+		}
+		return null;
+	}
+	
+	private static void addObject(Set<Object> objects, Object cell) {
+		if (!objects.contains(cell)) {
+			objects.add(cell);
+			if (cell instanceof TreeNode) {
+				TreeNode node = (TreeNode)cell;
+				for (int i = 0; i < node.getChildCount(); i++) {
+					addObject(objects, node.getChildAt(i)); 
+				}
+			}
+		}
+	}
+
+	
 	public Serializable getArchiveableState(Object[] cells) {
-		Object[] flat = DefaultGraphModel.getDescendants(getModel(), cells).toArray();
+		Object[] flat = getDescendants(getModel(), cells).toArray();
 		ConnectionSet cs = ConnectionSet.create(getModel(), flat, false);
 		Map viewAttributes = GraphConstants.createAttributes(cells, getGraphLayoutCache());
 		ArrayList<Object> v = new ArrayList<Object>(3);

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeExportCommand.java,v 1.2 2005/09/20 10:42:03 bass Exp $
+ * $Id: SchemeExportCommand.java,v 1.3 2005/09/20 19:47:52 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,16 +19,12 @@ import java.util.logging.Level;
 
 import org.apache.xmlbeans.XmlOptions;
 
-import com.syrus.AMFICOM.client.model.AbstractCommand;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeTabbedPane;
-import com.syrus.AMFICOM.client_.scheme.utils.ClientUtils;
-import com.syrus.AMFICOM.configuration.CableLinkType;
 import com.syrus.AMFICOM.configuration.Equipment;
 import com.syrus.AMFICOM.configuration.EquipmentType;
 import com.syrus.AMFICOM.configuration.LinkType;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.xml.XmlCableLinkType;
-import com.syrus.AMFICOM.configuration.xml.XmlCableLinkTypeSeq;
 import com.syrus.AMFICOM.configuration.xml.XmlConfigurationLibrary;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipment;
 import com.syrus.AMFICOM.configuration.xml.XmlEquipmentSeq;
@@ -52,11 +48,8 @@ import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroup;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeProtoGroupSeq;
 import com.syrus.util.Log;
 
-public class SchemeExportCommand extends AbstractCommand {
+public class SchemeExportCommand extends ImportExportCommand {
 	SchemeTabbedPane pane;
-	static final String importType = "AMFICOM";
-	static final String protosFileName = "/export/protos.xml";
-	static final String configFileName = "/export/config.xml";
 	
 	public SchemeExportCommand(SchemeTabbedPane pane) {
 		this.pane = pane;
@@ -64,23 +57,27 @@ public class SchemeExportCommand extends AbstractCommand {
 	
 	@Override
 	public void execute() {
+		super.execute();
+		
 		// get top level protoGroup
 		try {
-//			StorableObjectCondition condition1 = new LinkedIdsCondition(Identifier.VOID_IDENTIFIER, ObjectEntities.SCHEMEPROTOGROUP_CODE); 
-//			Collection<SchemeProtoGroup> groups = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
-//			Set<XmlSchemeProtoGroup> xmlProtoGroups = new HashSet<XmlSchemeProtoGroup>();
-//			for (SchemeProtoGroup protoGroup : groups) {
-//				XmlSchemeProtoGroup xmlProto = XmlSchemeProtoGroup.Factory.newInstance();
-//				xmlProtoGroups.add(protoGroup.getXmlTransferable(xmlProto, importType));
-//			}
-//			saveProtoGroupsXML(protosFileName, xmlProtoGroups);
+			StorableObjectCondition condition1 = new LinkedIdsCondition(Identifier.VOID_IDENTIFIER, ObjectEntities.SCHEMEPROTOGROUP_CODE); 
+			Collection<SchemeProtoGroup> groups = StorableObjectPool.getStorableObjectsByCondition(condition1, true);
+			Set<XmlSchemeProtoGroup> xmlProtoGroups = new HashSet<XmlSchemeProtoGroup>();
+			for (SchemeProtoGroup protoGroup : groups) {
+				XmlSchemeProtoGroup xmlProto = XmlSchemeProtoGroup.Factory.newInstance();
+				protoGroup.getXmlTransferable(xmlProto, AMFICOM_IMPORT);
+				xmlProtoGroups.add(xmlProto);
+			}
+			final File protoFile = new File(exportDirectory + separator + protoElementsFileName);
+			saveProtoGroupsXML(protoFile, xmlProtoGroups);
 
 			StorableObjectCondition condition2 = new EquivalentCondition(ObjectEntities.LINK_TYPE_CODE); 
 			Collection<LinkType> linkTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			Set<XmlLinkType> xmlLinkTypes = new HashSet<XmlLinkType>();
 			for (LinkType linkType : linkTypes) {
 				XmlLinkType xmlLinkType = XmlLinkType.Factory.newInstance();
-				linkType.getXmlTransferable(xmlLinkType, importType);
+				linkType.getXmlTransferable(xmlLinkType, AMFICOM_IMPORT);
 				xmlLinkTypes.add(xmlLinkType);
 			}
 			
@@ -99,7 +96,7 @@ public class SchemeExportCommand extends AbstractCommand {
 			Set<XmlPortType> xmlPortTypes = new HashSet<XmlPortType>();
 			for (PortType portType : portTypes) {
 				XmlPortType xmlPortType = XmlPortType.Factory.newInstance();
-				portType.getXmlTransferable(xmlPortType, importType);
+				portType.getXmlTransferable(xmlPortType, AMFICOM_IMPORT);
 				xmlPortTypes.add(xmlPortType);
 			}
 			condition2 = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE); 
@@ -107,7 +104,7 @@ public class SchemeExportCommand extends AbstractCommand {
 			Set<XmlEquipmentType> xmlEquipmentTypes = new HashSet<XmlEquipmentType>();
 			for (EquipmentType eqType : equipmentTypes) {
 				XmlEquipmentType xmlEquipmentType = XmlEquipmentType.Factory.newInstance();
-				eqType.getXmlTransferable(xmlEquipmentType, importType);
+				eqType.getXmlTransferable(xmlEquipmentType, AMFICOM_IMPORT);
 				xmlEquipmentTypes.add(xmlEquipmentType);
 			}
 			condition2 = new EquivalentCondition(ObjectEntities.EQUIPMENT_CODE); 
@@ -115,17 +112,17 @@ public class SchemeExportCommand extends AbstractCommand {
 			Set<XmlEquipment> xmlEquipments = new HashSet<XmlEquipment>();
 			for (Equipment eq : equipments) {
 				XmlEquipment xmlEquipment = XmlEquipment.Factory.newInstance();
-				eq.getXmlTransferable(xmlEquipment, importType);
+				eq.getXmlTransferable(xmlEquipment, AMFICOM_IMPORT);
 				xmlEquipments.add(xmlEquipment);
 			}
-			
-			saveConfigXML(protosFileName, xmlLinkTypes, xmlCableLinkTypes, xmlPortTypes, xmlEquipmentTypes, xmlEquipments);
+			File configFile = new File(exportDirectory + separator + configurationFileName);
+			saveConfigXML(configFile, xmlLinkTypes, xmlCableLinkTypes, xmlPortTypes, xmlEquipmentTypes, xmlEquipments);
 		} catch (ApplicationException e) {
 			Log.errorException(e);
 		}		
 	}
 	
-	private void saveProtoGroupsXML(String fileName, Set<XmlSchemeProtoGroup> xmlProtoGroups) {
+	private void saveProtoGroupsXML(File f, Set<XmlSchemeProtoGroup> xmlProtoGroups) {
 		XmlOptions xmlOptions = new XmlOptions();
 		xmlOptions.setSavePrettyPrint();
 		java.util.Map prefixes = new HashMap();
@@ -137,8 +134,6 @@ public class SchemeExportCommand extends AbstractCommand {
 		XmlSchemeProtoGroupSeq xmlProtoGroupSeq = doc.addNewSchemeProtoGroups();
 		xmlProtoGroupSeq.setSchemeProtoGroupArray(xmlProtoGroups.toArray(new XmlSchemeProtoGroup[xmlProtoGroups.size()]));
 		
-		File f = new File(fileName);
-
 		try {
 			// Writing the XML Instance to a file.
 			doc.save(f, xmlOptions);
@@ -148,7 +143,7 @@ public class SchemeExportCommand extends AbstractCommand {
 		}
 		
 		Log.debugMessage("Check if XML valid...", Level.FINER);
-		boolean isXmlValid = ClientUtils.validateXml(doc);
+		boolean isXmlValid = validateXml(doc);
 		if(isXmlValid) {
 			Log.debugMessage("Done successfully", Level.WARNING);
 		} else {
@@ -156,7 +151,7 @@ public class SchemeExportCommand extends AbstractCommand {
 		}
 	}
 
-	private void saveConfigXML(String fileName, 
+	private void saveConfigXML(File f, 
 			Set<XmlLinkType> xmlLinkTypes, 
 			Set<XmlCableLinkType> xmlCableLinkTypes,
 			Set<XmlPortType> xmlPortTypes,
@@ -172,10 +167,10 @@ public class SchemeExportCommand extends AbstractCommand {
 		
 		XmlConfigurationLibrary doc = XmlConfigurationLibrary.Factory.newInstance(xmlOptions);
 		XmlIdentifier uid = doc.addNewId();
-		uid.setStringValue(importType + "_config_library");
-		doc.setName(importType + " types");
-		doc.setCodename(importType + " types");
-		doc.setImportType(importType);
+		uid.setStringValue(AMFICOM_IMPORT + "_config_library");
+		doc.setName(AMFICOM_IMPORT + " types");
+		doc.setCodename(AMFICOM_IMPORT + " types");
+		doc.setImportType(AMFICOM_IMPORT);
 
 		XmlLinkTypeSeq xmlLinkTypeSeq = doc.addNewLinkTypes();
 		xmlLinkTypeSeq.setLinkTypeArray(xmlLinkTypes.toArray(new XmlLinkType[xmlLinkTypes.size()]));
@@ -193,21 +188,19 @@ public class SchemeExportCommand extends AbstractCommand {
 		XmlEquipmentSeq xmlEquipmentSeq = doc.addNewEquipments();
 		xmlEquipmentSeq.setEquipmentArray(xmlEquipments.toArray(new XmlEquipment[xmlEquipments.size()]));
 
-		try {
-			File f = new File(fileName);
-			// Writing the XML Instance to a file.
-			doc.save(f, xmlOptions);
-			Log.debugMessage("XML Instance Document saved at : " + f.getPath(), Level.FINER);
-		} catch(IOException e) {
-			e.printStackTrace();
-		}
-		
 		Log.debugMessage("Check if XML valid...", Level.FINER);
-		boolean isXmlValid = ClientUtils.validateXml(doc);
+		boolean isXmlValid = validateXml(doc);
 		if(isXmlValid) {
+			try {
+				// Writing the XML Instance to a file.
+				doc.save(f, xmlOptions);
+				Log.debugMessage("XML Instance Document saved at : " + f.getPath(), Level.FINER);
+			} catch(IOException e) {
+				Log.errorException(e);
+			}
 			Log.debugMessage("Done successfully", Level.WARNING);
 		} else {
 			Log.debugMessage("Done with errors (see logs/error for more)", Level.WARNING);
-		}
+		}		
 	}
 }

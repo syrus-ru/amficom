@@ -1,5 +1,5 @@
 /*
- * $Id: DefaultCableLink.java,v 1.11 2005/09/19 13:10:28 stas Exp $
+ * $Id: DefaultCableLink.java,v 1.12 2005/09/20 19:47:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import com.jgraph.graph.PortView;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
 import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
@@ -31,11 +32,11 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.11 $, $Date: 2005/09/19 13:10:28 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/20 19:47:52 $
  * @module schemeclient
  */
 
-public class DefaultCableLink extends DefaultEdge {
+public class DefaultCableLink extends DefaultEdge implements IdentifiableCell {
 	private static final long serialVersionUID = 3618420414867519024L;
 
 	private Identifier schemeCablelinkId;
@@ -243,6 +244,14 @@ public class DefaultCableLink extends DefaultEdge {
 	}
 
 	public void setSchemeCableLinkId(Identifier id) {
+		this.schemeCablelinkId = id;
+	}
+
+	public Identifier getId() {
+		return this.schemeCablelinkId;
+	}
+
+	public void setId(Identifier id) {
 		this.schemeCablelinkId = id;
 	}
 }

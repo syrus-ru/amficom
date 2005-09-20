@@ -1,5 +1,5 @@
 /*
- * $Id: CablePortCell.java,v 1.12 2005/09/13 10:19:05 bass Exp $
+ * $Id: CablePortCell.java,v 1.13 2005/09/20 19:47:52 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import com.jgraph.graph.DefaultPort;
 import com.jgraph.graph.GraphConstants;
 import com.syrus.AMFICOM.client_.scheme.graph.Constants;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.scheme.SchemeCablePort;
@@ -25,12 +26,12 @@ import com.syrus.AMFICOM.scheme.corba.IdlAbstractSchemePortPackage.IdlDirectionT
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.12 $, $Date: 2005/09/13 10:19:05 $
+ * @author $Author: stas $
+ * @version $Revision: 1.13 $, $Date: 2005/09/20 19:47:52 $
  * @module schemeclient
  */
 
-public class CablePortCell extends DefaultGraphCell {
+public class CablePortCell extends DefaultGraphCell implements IdentifiableCell {
 	private static final long serialVersionUID = 4049357521913722424L;
 
 	private Identifier schemeCableportId;
@@ -85,5 +86,14 @@ public class CablePortCell extends DefaultGraphCell {
 	public void setSchemeCablePortId(Identifier portId) {
 		assert portId != null;
 		this.schemeCableportId = portId;
+	}
+
+	public Identifier getId() {
+		return this.schemeCableportId;
+	}
+
+	public void setId(Identifier id) {
+		assert id != null;
+		this.schemeCableportId = id;
 	}
 }
