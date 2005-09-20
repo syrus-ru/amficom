@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.80 2005/09/20 13:00:11 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.81 2005/09/20 16:41:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -20,17 +20,18 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
-import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
-import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
 
 import java.util.Collections;
 import java.util.Date;
@@ -53,6 +54,7 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -62,6 +64,7 @@ import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThread;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableThreadHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlSchemeCableThread;
@@ -71,7 +74,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.80 $, $Date: 2005/09/20 13:00:11 $
+ * @version $Revision: 1.81 $, $Date: 2005/09/20 16:41:20 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -140,13 +143,17 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private SchemeCableThread(final Identifier id,
+	private SchemeCableThread(final XmlIdentifier id,
+			final String importType,
 			final Date created,
-			final Identifier creatorId) {
-		super(id,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, SCHEMECABLETHREAD_CODE),
 				created,
 				created,
 				creatorId,
@@ -240,10 +247,24 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeCableThread.getId(), importType, SCHEMECABLETHREAD_CODE);
-			SchemeCableThread schemeCableThread = StorableObjectPool.getStorableObject(id, true);
-			if (schemeCableThread == null) {
-				schemeCableThread = new SchemeCableThread(id, new Date(), creatorId);
+			final XmlIdentifier xmlId = xmlSchemeCableThread.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			SchemeCableThread schemeCableThread;
+			if (id.isVoid()) {
+				schemeCableThread = new SchemeCableThread(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				schemeCableThread = StorableObjectPool.getStorableObject(id, true);
+				if (schemeCableThread == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					schemeCableThread = new SchemeCableThread(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
 			}
 			schemeCableThread.fromXmlTransferable(xmlSchemeCableThread, importType);
 			assert schemeCableThread.isValid() : OBJECT_BADLY_INITIALIZED;

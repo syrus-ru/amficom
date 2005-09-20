@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.88 2005/09/20 10:42:01 bass Exp $
+ * $Id: SiteNodeType.java,v 1.89 2005/09/20 16:41:21 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.map;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -35,6 +36,7 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -47,6 +49,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeType;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypeHelper;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeTypePackage.SiteNodeTypeSort;
@@ -68,7 +71,7 @@ import com.syrus.util.Log;
  * узлу BUILDING или ATS и самостоятельно не живут
  *  
  * @author $Author: bass $
- * @version $Revision: 1.88 $, $Date: 2005/09/20 10:42:01 $
+ * @version $Revision: 1.89 $, $Date: 2005/09/20 16:41:21 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -326,17 +329,21 @@ public final class SiteNodeType extends StorableObjectType
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
 	 * @param codename
 	 * @param description
+	 * @throws IdentifierGenerationException
 	 */
-	private SiteNodeType(final Identifier id,
+	private SiteNodeType(final XmlIdentifier id,
+			String importType,
 			final Date created,
 			final Identifier creatorId,
-			final String codename,
-			final String description) {
-		super(id,
+			@Deprecated final String codename,
+			@Deprecated final String description)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, SITENODE_TYPE_CODE),
 				created,
 				created,
 				creatorId,
@@ -375,11 +382,31 @@ public final class SiteNodeType extends StorableObjectType
 			final String importType,
 			final XmlSiteNodeType xmlSiteNodeType) 
 	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlSiteNodeType.getId(), importType, SITENODE_TYPE_CODE);
-			SiteNodeType siteNodeType = StorableObjectPool.getStorableObject(id, true);
-			if (siteNodeType == null) {
-				siteNodeType = new SiteNodeType(id, new Date(), creatorId, xmlSiteNodeType.getCodename(), xmlSiteNodeType.getDescription());
+			final XmlIdentifier xmlId = xmlSiteNodeType.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			SiteNodeType siteNodeType;
+			if (id.isVoid()) {
+				siteNodeType = new SiteNodeType(xmlId,
+						importType,
+						created,
+						creatorId,
+						xmlSiteNodeType.getCodename(),
+						xmlSiteNodeType.getDescription());
+			} else {
+				siteNodeType = StorableObjectPool.getStorableObject(id, true);
+				if (siteNodeType == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					siteNodeType = new SiteNodeType(xmlId,
+							importType,
+							created,
+							creatorId,
+							xmlSiteNodeType.getCodename(),
+							xmlSiteNodeType.getDescription());
+				}
 			}
 			siteNodeType.fromXmlTransferable(xmlSiteNodeType, importType);
 			assert siteNodeType.isValid() : OBJECT_BADLY_INITIALIZED;

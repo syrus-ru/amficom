@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.83 2005/09/20 10:42:02 bass Exp $
+ * $Id: Collector.java,v 1.84 2005/09/20 16:41:21 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,9 @@
 
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -29,6 +31,7 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -49,7 +52,7 @@ import com.syrus.util.Log;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.83 $, $Date: 2005/09/20 10:42:02 $
+ * @version $Revision: 1.84 $, $Date: 2005/09/20 16:41:21 $
  * @module map
  */
 public final class Collector extends StorableObject implements Namable, Describable, MapElement, XmlBeansTransferable<XmlCollector> {
@@ -385,13 +388,17 @@ public final class Collector extends StorableObject implements Namable, Describa
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private Collector(final Identifier id,
+	private Collector(final XmlIdentifier id,
+			final String importType,
 			final Date created,
-			final Identifier creatorId) {
-		super(id,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, COLLECTOR_CODE),
 				created,
 				created,
 				creatorId,
@@ -420,11 +427,27 @@ public final class Collector extends StorableObject implements Namable, Describa
 			final String importType,
 			final XmlCollector xmlCollector)
 	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlCollector.getId(), importType, COLLECTOR_CODE);
-			Collector collector = StorableObjectPool.getStorableObject(id, true);
-			if (collector == null) {
-				collector = new Collector(id, new Date(), creatorId);
+			final XmlIdentifier xmlId = xmlCollector.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			Collector collector;
+			if (id.isVoid()) {
+				collector = new Collector(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				collector = StorableObjectPool.getStorableObject(id, true);
+				if (collector == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					collector = new Collector(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
 			}
 			collector.fromXmlTransferable(xmlCollector, importType);
 			assert collector.isValid() : OBJECT_BADLY_INITIALIZED;

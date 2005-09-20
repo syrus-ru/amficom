@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.69 2005/09/20 13:00:11 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.70 2005/09/20 16:41:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NO_COMMON_PARENT;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
@@ -40,6 +41,7 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -47,6 +49,7 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.scheme.corba.IdlCableChannelingItem;
@@ -58,7 +61,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/09/20 13:00:11 $
+ * @version $Revision: 1.70 $, $Date: 2005/09/20 16:41:20 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -136,13 +139,17 @@ public final class CableChannelingItem
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private CableChannelingItem(final Identifier id,
+	private CableChannelingItem(final XmlIdentifier id,
+			final String importType,
 			final Date created,
-			final Identifier creatorId) {
-		super(id,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, CABLECHANNELINGITEM_CODE),
 				created,
 				created,
 				creatorId,
@@ -244,10 +251,24 @@ public final class CableChannelingItem
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlCableChannelingItem.getId(), importType, CABLECHANNELINGITEM_CODE);
-			CableChannelingItem cableChannelingItem = StorableObjectPool.getStorableObject(id, true);
-			if (cableChannelingItem == null) {
-				cableChannelingItem = new CableChannelingItem(id, new Date(), creatorId);
+			final XmlIdentifier xmlId = xmlCableChannelingItem.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			CableChannelingItem cableChannelingItem;
+			if (id.isVoid()) {
+				cableChannelingItem = new CableChannelingItem(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				cableChannelingItem = StorableObjectPool.getStorableObject(id, true);
+				if (cableChannelingItem == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					cableChannelingItem = new CableChannelingItem(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
 			}
 			cableChannelingItem.fromXmlTransferable(xmlCableChannelingItem, importType);
 			assert cableChannelingItem.isValid() : OBJECT_BADLY_INITIALIZED;

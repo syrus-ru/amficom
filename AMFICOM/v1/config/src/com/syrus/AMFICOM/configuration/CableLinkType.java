@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.76 2005/09/20 11:03:01 bass Exp $
+ * $Id: CableLinkType.java,v 1.77 2005/09/20 16:41:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
@@ -45,7 +46,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.76 $, $Date: 2005/09/20 11:03:01 $
+ * @version $Revision: 1.77 $, $Date: 2005/09/20 16:41:21 $
  * @author $Author: bass $
  * @module config
  */
@@ -127,6 +128,8 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 			final XmlCableLinkType xmlCableLinkType,
 			final String importType)
 	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
 		try {
 			final XmlIdentifier xmlId = xmlCableLinkType.getId();
 			final Date created = new Date();

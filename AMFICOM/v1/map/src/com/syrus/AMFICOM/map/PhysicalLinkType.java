@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.88 2005/09/20 10:42:01 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.89 2005/09/20 16:41:21 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.map;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
 
@@ -30,6 +31,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -39,6 +41,7 @@ import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.logic.Library;
 import com.syrus.AMFICOM.general.logic.LibraryEntry;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkType;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypeHelper;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
@@ -53,7 +56,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.88 $, $Date: 2005/09/20 10:42:01 $
+ * @version $Revision: 1.89 $, $Date: 2005/09/20 16:41:21 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -359,17 +362,21 @@ public final class PhysicalLinkType extends StorableObjectType
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
 	 * @param codename
 	 * @param description
+	 * @throws IdentifierGenerationException
 	 */
-	private PhysicalLinkType(final Identifier id,
+	private PhysicalLinkType(final XmlIdentifier id,
+			final String importType,
 			final Date created,
 			final Identifier creatorId,
-			final String codename,
-			final String description) {
-		super(id,
+			@Deprecated final String codename,
+			@Deprecated final String description)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, PHYSICALLINK_TYPE_CODE),
 				created,
 				created,
 				creatorId,
@@ -403,11 +410,31 @@ public final class PhysicalLinkType extends StorableObjectType
 			final String importType,
 			final XmlPhysicalLinkType xmlPhysicalLinkType)
 	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlPhysicalLinkType.getId(), importType, PHYSICALLINK_TYPE_CODE);
-			PhysicalLinkType physicalLinkType = StorableObjectPool.getStorableObject(id, true);
-			if (physicalLinkType == null) {
-				physicalLinkType = new PhysicalLinkType(id, new Date(), creatorId, xmlPhysicalLinkType.getCodename(), xmlPhysicalLinkType.getDescription());
+			final XmlIdentifier xmlId = xmlPhysicalLinkType.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			PhysicalLinkType physicalLinkType;
+			if (id.isVoid()) {
+				physicalLinkType = new PhysicalLinkType(xmlId,
+						importType,
+						created,
+						creatorId,
+						xmlPhysicalLinkType.getCodename(),
+						xmlPhysicalLinkType.getDescription());
+			} else {
+				physicalLinkType = StorableObjectPool.getStorableObject(id, true);
+				if (physicalLinkType == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					physicalLinkType = new PhysicalLinkType(xmlId,
+							importType,
+							created,
+							creatorId,
+							xmlPhysicalLinkType.getCodename(),
+							xmlPhysicalLinkType.getDescription());
+				}
 			}
 			physicalLinkType.fromXmlTransferable(xmlPhysicalLinkType, importType);
 			assert physicalLinkType.isValid() : OBJECT_BADLY_INITIALIZED;

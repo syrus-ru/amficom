@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.94 2005/09/20 10:42:02 bass Exp $
+ * $Id: SiteNode.java,v 1.95 2005/09/20 16:41:21 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,11 @@
 
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -28,6 +31,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -36,6 +40,7 @@ import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlSiteNode;
 import com.syrus.AMFICOM.map.corba.IdlSiteNodeHelper;
 import com.syrus.AMFICOM.map.xml.XmlSiteNode;
@@ -55,7 +60,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.94 $, $Date: 2005/09/20 10:42:02 $
+ * @version $Revision: 1.95 $, $Date: 2005/09/20 16:41:21 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -354,21 +359,29 @@ public class SiteNode extends AbstractNode
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private SiteNode(final Identifier id,
+	private SiteNode(final XmlIdentifier id,
+			final String importType,
 			final Date created,
-			final Identifier creatorId) {
-		super(id,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, SITENODE_CODE),
 				created,
 				created,
 				creatorId,
 				creatorId,
 				StorableObjectVersion.createInitial(),
-				"",
-				"",
-				new DoublePoint(0, 0));
+				null,
+				null,
+				null);
+		/**
+		 * @todo Should go to #fromTransferable(...) or
+		 *       the corresponding complementor.
+		 */
 		this.selected = false;
 	}
 
@@ -382,7 +395,7 @@ public class SiteNode extends AbstractNode
 		this.building = xmlSiteNode.getBuilding();
 		super.location.setLocation(xmlSiteNode.getX(), xmlSiteNode.getY());
 		if (xmlSiteNode.isSetAttachmentSiteNodeId()) {
-			this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), importType, SITENODE_CODE); 
+			this.attachmentSiteNodeId = Identifier.fromXmlTransferable(xmlSiteNode.getAttachmentSiteNodeId(), importType, MODE_THROW_IF_ABSENT); 
 		} else {
 			this.attachmentSiteNodeId = VOID_IDENTIFIER;
 		}
@@ -420,11 +433,27 @@ public class SiteNode extends AbstractNode
 			final String importType,
 			final XmlSiteNode xmlSiteNode) 
 	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlSiteNode.getId(), importType, SITENODE_CODE);
-			SiteNode siteNode = StorableObjectPool.getStorableObject(id, true);
-			if (siteNode == null) {
-				siteNode = new SiteNode(id, new Date(), creatorId);
+			final XmlIdentifier xmlId = xmlSiteNode.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			SiteNode siteNode;
+			if (id.isVoid()) {
+				siteNode = new SiteNode(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				siteNode = StorableObjectPool.getStorableObject(id, true);
+				if (siteNode == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					siteNode = new SiteNode(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
 			}
 			siteNode.fromXmlTransferable(xmlSiteNode, importType);
 			assert siteNode.isValid() : OBJECT_BADLY_INITIALIZED;

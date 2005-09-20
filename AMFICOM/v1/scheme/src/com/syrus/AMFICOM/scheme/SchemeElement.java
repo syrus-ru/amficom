@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.108 2005/09/20 13:00:11 bass Exp $
+ * $Id: SchemeElement.java,v 1.109 2005/09/20 16:41:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_TYPE_CODE;
@@ -58,6 +59,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -65,6 +67,7 @@ import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.measurement.KIS;
 import com.syrus.AMFICOM.resource.BitmapImageResource;
@@ -87,7 +90,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.108 $, $Date: 2005/09/20 13:00:11 $
+ * @version $Revision: 1.109 $, $Date: 2005/09/20 16:41:20 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -186,13 +189,19 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private SchemeElement(final Identifier id,
+	private SchemeElement(final XmlIdentifier id,
+			final String importType,			
 			final Date created,
-			final Identifier creatorId) {
-		super(id, created, creatorId);
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, SCHEMEELEMENT_CODE),
+				created,
+				creatorId);
 	}
 
 	/**
@@ -546,10 +555,24 @@ public final class SchemeElement extends AbstractSchemeElement
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeElement.getId(), importType, SCHEMEELEMENT_CODE);
-			SchemeElement schemeElement = StorableObjectPool.getStorableObject(id, true);
-			if (schemeElement == null) {
-				schemeElement = new SchemeElement(id, new Date(), creatorId);
+			final XmlIdentifier xmlId = xmlSchemeElement.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			SchemeElement schemeElement;
+			if (id.isVoid()) {
+				schemeElement = new SchemeElement(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				schemeElement = StorableObjectPool.getStorableObject(id, true);
+				if (schemeElement == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					schemeElement = new SchemeElement(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
 			}
 			schemeElement.fromXmlTransferable(xmlSchemeElement, importType);
 			assert schemeElement.isValid() : OBJECT_BADLY_INITIALIZED;

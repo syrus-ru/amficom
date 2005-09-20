@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.51 2005/09/20 10:42:00 bass Exp $
+ * $Id: CharacteristicType.java,v 1.52 2005/09/20 16:41:20 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,12 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_TYPE_CODE;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -19,10 +25,11 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypeHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicType;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.51 $, $Date: 2005/09/20 10:42:00 $
+ * @version $Revision: 1.52 $, $Date: 2005/09/20 16:41:20 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -66,7 +73,31 @@ public final class CharacteristicType extends StorableObjectType
 		this.dataType = dataType;
 		this.sort = sort;
 	}
-	
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param importType
+	 * @param created
+	 * @param creatorId
+	 * @throws IdentifierGenerationException
+	 */
+	private CharacteristicType(final XmlIdentifier id,
+			final String importType,
+			final Date created,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, CHARACTERISTIC_TYPE_CODE),
+				created,
+				created,
+				creatorId,
+				creatorId,
+				StorableObjectVersion.createInitial(),
+				null,
+				null);
+	}
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -132,6 +163,51 @@ public final class CharacteristicType extends StorableObjectType
 			return characteristicType;
 		} catch (IdentifierGenerationException ige) {
 			throw new CreateObjectException("Cannot generate identifier ", ige);
+		}
+	}
+
+	/**
+	 * @param creatorId
+	 * @param xmlCharacteristicType
+	 * @param importType
+	 * @throws CreateObjectException
+	 */
+	public static CharacteristicType createInstance(
+			final Identifier creatorId,
+			final XmlCharacteristicType xmlCharacteristicType,
+			final String importType)
+	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
+		try {
+			final XmlIdentifier xmlId = xmlCharacteristicType.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			CharacteristicType characteristicType;
+			if (id.isVoid()) {
+				characteristicType = new CharacteristicType(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				characteristicType = StorableObjectPool.getStorableObject(id, true);
+				if (characteristicType == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					characteristicType = new CharacteristicType(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
+			}
+			characteristicType.fromXmlTransferable(xmlCharacteristicType, importType);
+			assert characteristicType.isValid() : OBJECT_BADLY_INITIALIZED;
+			characteristicType.markAsChanged();
+			return characteristicType;
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
 		}
 	}
 

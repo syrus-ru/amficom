@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.127 2005/09/20 13:00:12 bass Exp $
+ * $Id: Equipment.java,v 1.128 2005/09/20 16:41:21 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
@@ -42,6 +43,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
@@ -51,10 +53,11 @@ import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.127 $, $Date: 2005/09/20 13:00:12 $
+ * @version $Revision: 1.128 $, $Date: 2005/09/20 16:41:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -133,19 +136,23 @@ public final class Equipment extends DomainMember
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private Equipment(final Identifier id,
+	private Equipment(final XmlIdentifier id,
+			final String importType,
 			final Date created,
-			final Identifier creatorId) {
-		super(id,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, EQUIPMENT_CODE),
 				created,
 				created,
 				creatorId,
 				creatorId,
 				StorableObjectVersion.createInitial(),
-				VOID_IDENTIFIER);
+				null);
 	}
 
 	/**
@@ -231,10 +238,24 @@ public final class Equipment extends DomainMember
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlEquipment.getId(), importType, EQUIPMENT_CODE);
-			Equipment equipment = StorableObjectPool.getStorableObject(id, true);
-			if (equipment == null) {
-				equipment = new Equipment(id, new Date(), creatorId);
+			final XmlIdentifier xmlId = xmlEquipment.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			Equipment equipment;
+			if (id.isVoid()) {
+				equipment = new Equipment(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				equipment = StorableObjectPool.getStorableObject(id, true);
+				if (equipment == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					equipment = new Equipment(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
 			}
 			equipment.fromXmlTransferable(xmlEquipment, importType);
 			assert equipment.isValid() : OBJECT_BADLY_INITIALIZED;

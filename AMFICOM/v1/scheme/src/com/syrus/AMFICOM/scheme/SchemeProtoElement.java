@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.90 2005/09/20 13:00:11 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.91 2005/09/20 16:41:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -84,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2005/09/20 13:00:11 $
+ * @version $Revision: 1.91 $, $Date: 2005/09/20 16:41:20 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -412,6 +412,8 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final XmlSchemeProtoElement xmlSchemeProtoElement,
 			final String importType)
 	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
 		try {
 			final XmlIdentifier xmlId = xmlSchemeProtoElement.getId();
 			final Date created = new Date();

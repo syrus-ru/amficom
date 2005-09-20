@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.90 2005/09/20 13:00:11 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.91 2005/09/20 16:41:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.REMOVAL_OF_AN_ABSENT_PROHIBITED;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.CABLELINK_CODE;
@@ -60,6 +61,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -73,6 +75,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicTypePackage.CharacteristicTypeSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLink;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemeCableLinkHelper;
 import com.syrus.AMFICOM.scheme.xml.XmlCableChannelingItem;
@@ -87,7 +90,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.90 $, $Date: 2005/09/20 13:00:11 $
+ * @version $Revision: 1.91 $, $Date: 2005/09/20 16:41:20 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -139,13 +142,19 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private SchemeCableLink(final Identifier id,
+	private SchemeCableLink(final XmlIdentifier id,
+			final String importType,
 			final Date created,
-			final Identifier creatorId) {
-		super(id, created, creatorId);
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, SCHEMECABLELINK_CODE),
+				created,
+				creatorId);
 	}
 
 	/**
@@ -238,10 +247,24 @@ public final class SchemeCableLink extends AbstractSchemeLink
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlSchemeCableLink.getId(), importType, SCHEMECABLELINK_CODE);
-			SchemeCableLink schemeCableLink = StorableObjectPool.getStorableObject(id, true);
-			if (schemeCableLink == null) {
-				schemeCableLink = new SchemeCableLink(id, new Date(), creatorId);
+			final XmlIdentifier xmlId = xmlSchemeCableLink.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			SchemeCableLink schemeCableLink;
+			if (id.isVoid()) {
+				schemeCableLink = new SchemeCableLink(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				schemeCableLink = StorableObjectPool.getStorableObject(id, true);
+				if (schemeCableLink == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					schemeCableLink = new SchemeCableLink(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
 			}
 			schemeCableLink.fromXmlTransferable(xmlSchemeCableLink, importType);
 			assert schemeCableLink.isValid() : OBJECT_BADLY_INITIALIZED;

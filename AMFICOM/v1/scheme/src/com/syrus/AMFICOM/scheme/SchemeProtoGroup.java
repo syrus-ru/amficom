@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.69 2005/09/20 13:00:11 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.70 2005/09/20 16:41:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.69 $, $Date: 2005/09/20 13:00:11 $
+ * @version $Revision: 1.70 $, $Date: 2005/09/20 16:41:20 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -199,6 +199,8 @@ public final class SchemeProtoGroup extends StorableObject
 			final Identifier creatorId,
 			final XmlSchemeProtoGroup xmlSchemeProtoGroup)
 	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
 		try {
 			final String importType = xmlSchemeProtoGroup.getImportType();
 			final XmlIdentifier xmlId = xmlSchemeProtoGroup.getId();

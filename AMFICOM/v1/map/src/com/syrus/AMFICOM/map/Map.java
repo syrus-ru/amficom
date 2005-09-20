@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.100 2005/09/20 16:26:45 krupenn Exp $
+ * $Id: Map.java,v 1.101 2005/09/20 16:41:21 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,9 @@
 
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAPLIBRARY_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MAP_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -31,6 +33,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
@@ -42,6 +45,7 @@ import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlIdentifier;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlMap;
 import com.syrus.AMFICOM.map.corba.IdlMapHelper;
 import com.syrus.AMFICOM.map.xml.XmlCollector;
@@ -63,8 +67,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.100 $, $Date: 2005/09/20 16:26:45 $
+ * @author $Author: bass $
+ * @version $Revision: 1.101 $, $Date: 2005/09/20 16:41:21 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -1087,15 +1091,19 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
 	 * @param domainId
+	 * @throws IdentifierGenerationException
 	 */
-	private Map(final Identifier id,
+	private Map(final XmlIdentifier id,
+			final String importType,
 			final Date created,
 			final Identifier creatorId,
-			final Identifier domainId) {
-		super(id,
+			@Deprecated final Identifier domainId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, MAP_CODE),
 				created,
 				created,
 				creatorId,
@@ -1164,14 +1172,32 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 * @throws CreateObjectException
 	 */
 	public static Map createInstance(final Identifier creatorId,
-			final Identifier domainId,
+			@Deprecated final Identifier domainId,
 			final String importType,
 			final XmlMap xmlMap) throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlMap.getId(), importType, MAP_CODE);
-			Map map = StorableObjectPool.getStorableObject(id, true);
-			if (map == null) {
-				map = new Map(id, new Date(), creatorId, domainId);
+			final XmlIdentifier xmlId = xmlMap.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			Map map;
+			if (id.isVoid()) {
+				map = new Map(xmlId,
+						importType,
+						created,
+						creatorId,
+						domainId);
+			} else {
+				map = StorableObjectPool.getStorableObject(id, true);
+				if (map == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					map = new Map(xmlId,
+							importType,
+							created,
+							creatorId,
+							domainId);
+				}
 			}
 			map.fromXmlTransferable(xmlMap, importType);
 			assert map.isValid() : OBJECT_BADLY_INITIALIZED;

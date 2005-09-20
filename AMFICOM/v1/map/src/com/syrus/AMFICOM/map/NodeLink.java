@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.94 2005/09/20 10:42:01 bass Exp $
+ * $Id: NodeLink.java,v 1.95 2005/09/20 16:41:21 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,7 +9,9 @@
 package com.syrus.AMFICOM.map;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
 import static java.util.logging.Level.FINEST;
@@ -29,11 +31,13 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlNodeLink;
 import com.syrus.AMFICOM.map.corba.IdlNodeLinkHelper;
 import com.syrus.AMFICOM.map.corba.IdlPhysicalLinkTypePackage.PhysicalLinkTypeSort;
@@ -47,7 +51,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.94 $, $Date: 2005/09/20 10:42:01 $
+ * @version $Revision: 1.95 $, $Date: 2005/09/20 16:41:21 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -461,18 +465,26 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private NodeLink(final Identifier id,
+	private NodeLink(final XmlIdentifier id,
+			final String importType,
 			final Date created,
-			final Identifier creatorId) {
-		super(id,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, NODELINK_CODE),
 				created,
 				created,
 				creatorId,
 				creatorId,
 				StorableObjectVersion.createInitial());
+		/**
+		 * @todo Should go to #fromTransferable(...) or
+		 *       the corresponding complementor.
+		 */
 		this.selected = false;
 	}
 
@@ -500,11 +512,27 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 			final String importType, 
 			final XmlNodeLink xmlNodeLink)
 	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlNodeLink.getId(), importType, NODELINK_CODE);
-			NodeLink nodeLink = StorableObjectPool.getStorableObject(id, true);
-			if (nodeLink == null) {
-				nodeLink = new NodeLink(id, new Date(), creatorId);
+			final XmlIdentifier xmlId = xmlNodeLink.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			NodeLink nodeLink;
+			if (id.isVoid()) {
+				nodeLink = new NodeLink(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				nodeLink = StorableObjectPool.getStorableObject(id, true);
+				if (nodeLink == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					nodeLink = new NodeLink(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
 			}
 			nodeLink.fromXmlTransferable(xmlNodeLink, importType);
 			assert nodeLink.isValid() : OBJECT_BADLY_INITIALIZED;

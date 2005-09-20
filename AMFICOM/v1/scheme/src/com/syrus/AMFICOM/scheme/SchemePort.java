@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.68 2005/09/20 13:00:11 bass Exp $
+ * $Id: SchemePort.java,v 1.69 2005/09/20 16:41:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,6 +16,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
 import static com.syrus.AMFICOM.general.ErrorMessages.XML_BEAN_NOT_COMPLETE;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
@@ -38,12 +39,14 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.UpdateObjectException;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.XmlComplementorRegistry;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePort;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePortHelper;
@@ -55,7 +58,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/09/20 13:00:11 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/20 16:41:20 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
@@ -111,13 +114,19 @@ public final class SchemePort extends AbstractSchemePort
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private SchemePort(final Identifier id,
+	private SchemePort(final XmlIdentifier id,
+			final String importType,
 			final Date created,
-			final Identifier creatorId) {
-		super(id, created, creatorId);
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, SCHEMEPORT_CODE),
+				created,
+				creatorId);
 	}
 
 	/**
@@ -209,10 +218,24 @@ public final class SchemePort extends AbstractSchemePort
 		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
 
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlSchemePort.getId(), importType, SCHEMEPORT_CODE);
-			SchemePort schemePort = StorableObjectPool.getStorableObject(id, true);
-			if (schemePort == null) {
-				schemePort = new SchemePort(id, new Date(), creatorId);
+			final XmlIdentifier xmlId = xmlSchemePort.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			SchemePort schemePort;
+			if (id.isVoid()) {
+				schemePort = new SchemePort(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				schemePort = StorableObjectPool.getStorableObject(id, true);
+				if (schemePort == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					schemePort = new SchemePort(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
 			}
 			schemePort.fromXmlTransferable(xmlSchemePort, importType);
 			assert schemePort.isValid() : OBJECT_BADLY_INITIALIZED;

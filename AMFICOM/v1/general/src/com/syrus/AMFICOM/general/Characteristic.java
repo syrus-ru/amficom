@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.64 2005/09/20 10:42:00 bass Exp $
+ * $Id: Characteristic.java,v 1.65 2005/09/20 16:41:20 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,12 @@
  */
 
 package com.syrus.AMFICOM.general;
+
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
+import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -20,9 +26,11 @@ import com.syrus.AMFICOM.general.corba.IdlCharacteristic;
 import com.syrus.AMFICOM.general.corba.IdlCharacteristicHelper;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 import com.syrus.AMFICOM.general.xml.XmlCharacteristic;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
+import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/09/20 10:42:00 $
+ * @version $Revision: 1.65 $, $Date: 2005/09/20 16:41:20 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -82,7 +90,29 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		this.editable = editable;
 		this.visible = visible;
 	}
-	
+
+	/**
+	 * Minimalistic constructor used when importing from XML.
+	 *
+	 * @param id
+	 * @param importType
+	 * @param created
+	 * @param creatorId
+	 * @throws IdentifierGenerationException
+	 */
+	private Characteristic(final XmlIdentifier id,
+			final String importType,
+			final Date created,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, CHARACTERISTIC_CODE),
+				created,
+				created,
+				creatorId,
+				creatorId,
+				StorableObjectVersion.createInitial());
+	}
+
 	/* (non-Javadoc)
 	 * @see com.syrus.AMFICOM.general.StorableObject#isValid()
 	 */
@@ -147,16 +177,43 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	 * @param importType
 	 * @throws CreateObjectException
 	 */
-	@SuppressWarnings("unused")
 	public static Characteristic createInstance(
 			final Identifier creatorId,
 			final XmlCharacteristic xmlCharacteristic,
 			final String importType)
 	throws CreateObjectException {
-		/*
-		 * Empty so far. Do not change to throw an exception.
-		 */  
-		return null;
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
+		try {
+			final XmlIdentifier xmlId = xmlCharacteristic.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			Characteristic characteristic;
+			if (id.isVoid()) {
+				characteristic = new Characteristic(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				characteristic = StorableObjectPool.getStorableObject(id, true);
+				if (characteristic == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					characteristic = new Characteristic(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
+			}
+			characteristic.fromXmlTransferable(xmlCharacteristic, importType);
+			assert characteristic.isValid() : OBJECT_BADLY_INITIALIZED;
+			characteristic.markAsChanged();
+			return characteristic;
+		} catch (final CreateObjectException coe) {
+			throw coe;
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			throw new CreateObjectException(ae);
+		}
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.91 2005/09/20 11:03:01 bass Exp $
+ * $Id: PortType.java,v 1.92 2005/09/20 16:41:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,9 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
 
@@ -34,17 +36,19 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/09/20 11:03:01 $
+ * @version $Revision: 1.92 $, $Date: 2005/09/20 16:41:21 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -92,20 +96,24 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private PortType(final Identifier id,
+	private PortType(final XmlIdentifier id,
+			final String importType,
 			final Date created,
-			final Identifier creatorId) {
-		super(id,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, PORT_TYPE_CODE),
 				created,
 				created,
 				creatorId,
 				creatorId,
 				StorableObjectVersion.createInitial(),
-				"",
-				"");
+				null,
+				null);
 	}
 
 	/**
@@ -119,11 +127,27 @@ public final class PortType extends StorableObjectType implements Characterizabl
 			final String importType,
 			final XmlPortType xmlPortType)
 	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlPortType.getId(), importType, PORT_TYPE_CODE);
-			PortType portType = StorableObjectPool.getStorableObject(id, true);
-			if (portType == null) {
-				portType = new PortType(id, new Date(), creatorId);
+			final XmlIdentifier xmlId = xmlPortType.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			PortType portType;
+			if (id.isVoid()) {
+				portType = new PortType(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				portType = StorableObjectPool.getStorableObject(id, true);
+				if (portType == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					portType = new PortType(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
 			}
 			portType.fromXmlTransferable(xmlPortType, importType);
 			assert portType.isValid() : OBJECT_BADLY_INITIALIZED;

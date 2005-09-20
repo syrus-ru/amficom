@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.80 2005/09/20 10:42:01 bass Exp $
+ * $Id: TopologicalNode.java,v 1.81 2005/09/20 16:41:21 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,7 +8,9 @@
 
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
 import static java.util.logging.Level.SEVERE;
@@ -26,10 +28,12 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNode;
 import com.syrus.AMFICOM.map.corba.IdlTopologicalNodeHelper;
 import com.syrus.AMFICOM.map.xml.XmlTopologicalNode;
@@ -42,7 +46,7 @@ import com.syrus.util.Log;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.80 $, $Date: 2005/09/20 10:42:01 $
+ * @version $Revision: 1.81 $, $Date: 2005/09/20 16:41:21 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode implements XmlBeansTransferable<XmlTopologicalNode> {
@@ -276,21 +280,29 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private TopologicalNode(final Identifier id,
+	private TopologicalNode(final XmlIdentifier id,
+			final String importType,
 			final Date created,
-			final Identifier creatorId) {
-		super(id,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, TOPOLOGICALNODE_CODE),
 				created,
 				created,
 				creatorId,
 				creatorId,
 				StorableObjectVersion.createInitial(),
-				"",
-				"",
-				new DoublePoint(0, 0));
+				null,
+				null,
+				null);
+		/**
+		 * @todo Should go to #fromTransferable(...) or
+		 *       the corresponding complementor.
+		 */
 		this.selected = false;
 	}
 
@@ -313,11 +325,27 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 			final String importType,
 			final XmlTopologicalNode xmlTopologicalNode)
 	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlTopologicalNode.getId(), importType, TOPOLOGICALNODE_CODE);
-			TopologicalNode topologicalNode = StorableObjectPool.getStorableObject(id, true);
-			if (topologicalNode == null) {
-				topologicalNode = new TopologicalNode(id, new Date(), creatorId);
+			final XmlIdentifier xmlId = xmlTopologicalNode.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			TopologicalNode topologicalNode;
+			if (id.isVoid()) {
+				topologicalNode = new TopologicalNode(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				topologicalNode = StorableObjectPool.getStorableObject(id, true);
+				if (topologicalNode == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					topologicalNode = new TopologicalNode(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
 			}
 			topologicalNode.fromXmlTransferable(xmlTopologicalNode, importType);
 			assert topologicalNode.isValid() : OBJECT_BADLY_INITIALIZED;

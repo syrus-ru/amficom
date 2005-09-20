@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.81 2005/09/20 11:03:01 bass Exp $
+ * $Id: LinkType.java,v 1.82 2005/09/20 16:41:21 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,8 +8,10 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.LINK_TYPE_CODE;
 import static java.util.logging.Level.SEVERE;
 
@@ -30,15 +32,17 @@ import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IdentifierGenerationException;
 import com.syrus.AMFICOM.general.IdentifierPool;
+import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.XmlBeansTransferable;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
+import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/09/20 11:03:01 $
+ * @version $Revision: 1.82 $, $Date: 2005/09/20 16:41:21 $
  * @author $Author: bass $
  * @module config
  */
@@ -93,20 +97,24 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 	 * Minimalistic constructor used when importing from XML.
 	 *
 	 * @param id
+	 * @param importType
 	 * @param created
 	 * @param creatorId
+	 * @throws IdentifierGenerationException
 	 */
-	private LinkType(final Identifier id,
+	private LinkType(final XmlIdentifier id,
+			final String importType,
 			final Date created,
-			final Identifier creatorId) {
-		super(id,
+			final Identifier creatorId)
+	throws IdentifierGenerationException {
+		super(Identifier.fromXmlTransferable(id, importType, LINK_TYPE_CODE),
 				created,
 				created,
 				creatorId,
 				creatorId,
 				StorableObjectVersion.createInitial(),
-				"",
-				"");
+				null,
+				null);
 	}
 
 	/**
@@ -120,11 +128,27 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 			final String importType,
 			final XmlLinkType xmlLinkType)
 	throws CreateObjectException {
+		assert creatorId != null && !creatorId.isVoid() : NON_VOID_EXPECTED;
+
 		try {
-			final Identifier id = Identifier.fromXmlTransferable(xmlLinkType.getId(), importType, LINK_TYPE_CODE);
-			LinkType linkType = StorableObjectPool.getStorableObject(id, true);
-			if (linkType == null) {
-				linkType = new LinkType(id, new Date(), creatorId);
+			final XmlIdentifier xmlId = xmlLinkType.getId();
+			final Date created = new Date();
+			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
+			LinkType linkType;
+			if (id.isVoid()) {
+				linkType = new LinkType(xmlId,
+						importType,
+						created,
+						creatorId);
+			} else {
+				linkType = StorableObjectPool.getStorableObject(id, true);
+				if (linkType == null) {
+					LocalXmlIdentifierPool.remove(xmlId, importType);
+					linkType = new LinkType(xmlId,
+							importType,
+							created,
+							creatorId);
+				}
 			}
 			linkType.fromXmlTransferable(xmlLinkType, importType);
 			assert linkType.isValid() : OBJECT_BADLY_INITIALIZED;
