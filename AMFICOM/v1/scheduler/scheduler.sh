@@ -5,9 +5,10 @@ JAVA=$JAVA_HOME/bin/java
 LIB=../lib
 EXTLIB=../../extlib
 
-EXTCLASSPATH=$EXTLIB/kunststoff.jar:$EXTLIB/trove.jar
+EXTCLASSPATH=$EXTLIB/kunststoff.jar:$EXTLIB/trove.jar:$EXTLIB/xbean.jar
 APPCLASSPATH=$LIB/scheduler.jar:\
 $LIB/general.jar:\
+$LIB/generalxml.jar:\
 $LIB/administration.jar:\
 $LIB/configuration.jar:\
 $LIB/measurement.jar:\
