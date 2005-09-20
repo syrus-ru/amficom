@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.41 2005/09/20 07:34:47 bob Exp $
+ * $Id: TableFrame.java,v 1.42 2005/09/20 07:45:28 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 /**
- * @version $Revision: 1.41 $, $Date: 2005/09/20 07:34:47 $
+ * @version $Revision: 1.42 $, $Date: 2005/09/20 07:45:28 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -248,8 +248,8 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 							}
 						}
 						
-						// TODO bypass
-						enableDeleting = enableStopping = enableResuming = true;
+//						// TODO bypass
+//						enableDeleting = enableStopping = enableResuming = true;
 
 						if (enableDeleting) {
 							final JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString(rowIndices.length == 1
