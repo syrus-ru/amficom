@@ -1,5 +1,5 @@
 /**
- * $Id: ExternalMapElementChooserDialog.java,v 1.9 2005/09/20 08:26:32 krupenn Exp $
+ * $Id: ExternalMapElementChooserDialog.java,v 1.10 2005/09/20 16:30:19 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -84,7 +84,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 			e.printStackTrace();
 		}
 		this.map = map;
-		Item item = MapTreeModel.createSingleMapRoot(map);
+		Item item = model.createSingleMapRoot(map);
 		this.model.populate(item);
 		this.root.addChild(item);
 	}
@@ -134,7 +134,7 @@ public class ExternalMapElementChooserDialog extends JDialog
 		this.getContentPane().add(this.bottomPanel, BorderLayout.SOUTH);
 		this.getContentPane().add(this.topPanel, BorderLayout.CENTER);
 
-		this.model = MapTreeModel.getInstance();
+		this.model = new MapTreeModel();
 
 		this.root = new IconedNode("root", LangModelMap.getString("Map")); //$NON-NLS-1$ //$NON-NLS-2$
 		this.treeUI = new LogicalTreeUI(this.root, false);
