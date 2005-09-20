@@ -32,11 +32,11 @@ $(LIBNAME):	.mach .native
 	touch $@
 
 .native:
-	$(MAKE) -C native
+	$(MAKE) -C $(NATIVE_DIR)
 
 clean:	cleanmach
 	$(RM) $(LIBNAME)
-	$(MAKE) -C native $@
+	$(MAKE) -C $(NATIVE_DIR) $@
 
 cleanmach:
 	$(RM) \
@@ -53,5 +53,5 @@ arch:
 	tar -czvf $(ARCHFILE) \
 		Makefile \
 		$(foreach dir,$(PACKAGES),$(wildcard $(SRCDIR)/$(dir)/*.java)) \
-		native
+		$(NATIVE_DIR)
 
