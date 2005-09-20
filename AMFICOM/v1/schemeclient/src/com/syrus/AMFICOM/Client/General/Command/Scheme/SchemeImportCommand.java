@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.18 2005/09/20 10:06:40 stas Exp $
+ * $Id: SchemeImportCommand.java,v 1.19 2005/09/20 11:50:12 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -538,7 +538,7 @@ public class SchemeImportCommand extends AbstractCommand {
 					internalScheme.setDescription(schemeElement.getDescription());
 					internalScheme.setLabel(schemeElement.getLabel());
 					internalScheme.setSymbol(schemeElement.getSymbol());
-					schemeElement.setScheme(internalScheme);
+					schemeElement.setScheme(internalScheme, false);
 					// graph for schemeCell
 					ElementsTabbedPane schemePane = new ElementsTabbedPane(internalContext);
 					SchemeGraph schemeGraph = schemePane.getGraph();
@@ -597,7 +597,7 @@ public class SchemeImportCommand extends AbstractCommand {
 						new CreateTopLevelSchemeAction(schemePane).execute();
 					}
 					
-					internalScheme.setParentSchemeElement(null);
+					internalScheme.setParentSchemeElement(null, false);
 					// next create SchemeElement from Scheme
 					SchemeElement newSchemeElement = SchemeObjectsFactory.createSchemeElement(scheme, internalScheme);
 					newSchemeElement.setName(schemeElement.getName());
