@@ -1,5 +1,5 @@
 /*-
- * $Id: ItemTreeModel.java,v 1.19 2005/08/31 09:24:23 bob Exp $
+ * $Id: ItemTreeModel.java,v 1.20 2005/09/20 12:35:04 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,6 +8,7 @@
 
 package com.syrus.AMFICOM.logic;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.HashMap;
@@ -24,29 +25,34 @@ import javax.swing.tree.TreePath;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/08/31 09:24:23 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/20 12:35:04 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter
  */
-public class ItemTreeModel implements TreeModel, ItemListener {
+public final class ItemTreeModel implements TreeModel, ItemListener {
 
 	protected static class NameItemComparator implements Comparator<Item> {
 
-		public int compare(Item item1, Item item2) {
+		public int compare(final Item item1, 
+		                   final Item item2) {
 			final String string1 = item1.getName();
 			final String string2 = item2.getName();
+//			assert Log.debugMessage("NameItemComparator.compare | " + item1 + " to " + item2 
+//					+ " as '" + string1 + "' to '" + string2 + '\'',
+//				Log.DEBUGLEVEL10);
 			return (string1 == null ? "" : string1).compareTo((string2 == null ? "" : string2));
 		}
 	}
 
 	protected class SortList {
 
-		boolean sorted = false;
-		List<Item> list = null;
+		boolean sorted;
+		List<Item> list;
 
 		public SortList() {
-			this.list = new LinkedList<Item>();
+			this.list = new ArrayList<Item>();
+			this.sorted = false;
 		}
 	}
 
@@ -98,17 +104,20 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	protected synchronized List getChildren(final Item parent) {
 		SortList sortList = this.parentSortedChildren.get(parent);
 		if (sortList == null) {
-			sortList = new SortList();			
+			sortList = new SortList();		
 			this.parentSortedChildren.put(parent, sortList);
 		}
 		if (!sortList.sorted) {
-			sortList.list.clear();
-			sortList.list.addAll(parent.getChildren());
-			for (final Iterator<Item> it = sortList.list.iterator(); it.hasNext();) {
-				Item item = it.next();
-				Log.debugMessage("ItemTreeModel.getChildren | parent " + parent + ", child " + item, Log.DEBUGLEVEL10);
-				if (item.isService()) {
-					it.remove();
+			final List<Item> children = parent.getChildren();
+//			assert Log.debugMessage("ItemTreeModel.getChildren | " + parent + " > " + sortList.list, Log.DEBUGLEVEL10);
+			if (sortList.list.isEmpty() && !children.isEmpty()) {
+				sortList.list.addAll(children);
+				for (final Iterator<Item> it = sortList.list.iterator(); it.hasNext();) {
+					final Item item = it.next();
+					assert Log.debugMessage("ItemTreeModel.getChildren | parent " + parent + ", child " + item, Log.DEBUGLEVEL10);
+					if (item.isService()) {
+						it.remove();
+					}
 				}
 			}
 			if (this.allwaysSort) {
@@ -121,11 +130,14 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 
 	public Object getChild(final Object parent, final int index) {
 		final Object object = this.getChildren((Item) parent).get(index);
+//		assert Log.debugMessage("ItemTreeModel.getChild | parent:" + parent + ", index: " + index + ", child:" + object, Log.DEBUGLEVEL10);
 		return object;
 	}
 
 	public int getChildCount(final Object parent) {
-		return this.getChildren((Item) parent).size();
+		final int count = this.getChildren((Item) parent).size();
+//		assert Log.debugMessage("ItemTreeModel.getChildCount | parent:" + parent + ", count: " + count, Log.DEBUGLEVEL10);
+		return count;
 	}
 
 	public int getIndexOfChild(final Object parent, final Object child) {
@@ -143,7 +155,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 
 	//TODO: remove this method, if it's useless	
 	public void valueForPathChanged(final TreePath path, final Object newValue) {
-		//System.out.println("*** valueForPathChanged : " + path + " --> " + newValue);
+//		System.out.println("*** valueForPathChanged : " + path + " --> " + newValue);
 	}
 
 	/**
@@ -162,7 +174,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 				break;
 			}
 		}
-		Log.debugMessage("ItemTreeModel.InsertNodeInto | insert " + child.getName() + " to " + parent.getName() + " [ " + newIndexs[0] + " ] ", Log.DEBUGLEVEL10);
+//		assert Log.debugMessage("ItemTreeModel.InsertNodeInto | insert " + child.getName() + " to " + parent.getName() + " [ " + newIndexs[0] + " ] ", Log.DEBUGLEVEL10);
 		nodesWereInserted(parent, objects, newIndexs);
 	}
 
@@ -172,21 +184,27 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	 * to remove a node as it handles the event creation for you.
 	 */
 	protected void removeNodeFromParent(final Item parent, final Item child) {
-		final int[] childIndex = new int[1];
-		final int childCount = this.getChildCount(parent);
-		for (int i = 0; i < childCount; i++) {
-			if (this.getChild(parent, i).equals(child)) {
-				childIndex[0] = i;
-				break;
+		final SortList sortList = this.parentSortedChildren.get(parent);
+		final int[] childIndex;
+		if (sortList != null) {
+//			assert Log.debugMessage("ItemTreeModel.removeNodeFromParent | sortList:" + sortList.list, Log.DEBUGLEVEL10);
+			final int index = sortList.list.indexOf(child);
+			sortList.list.remove(index);
+			childIndex = new int[] {index};
+		} else {
+//			assert Log.debugMessage("ItemTreeModel.removeNodeFromParent | sortList == null", Log.DEBUGLEVEL10);
+			final int childCount = this.getChildCount(parent);
+			childIndex = new int[1];
+			for (int i = 0; i < childCount; i++) {
+				if (this.getChild(parent, i).equals(child)) {
+					childIndex[0] = i;
+					break;
+				}
 			}
 		}
-		final SortList sortList = this.parentSortedChildren.get(parent);
-		if (sortList != null) {
-			sortList.sorted = false;
-		}
 		Object[] removedArray = new Object[] { child };
-		Log.debugMessage("ItemTreeModel.removeNodeFromParent | delete " + child.getName() + " from " + parent.getName() + " [ " + childIndex[0] + " ] ", Log.DEBUGLEVEL10);
-		nodesWereRemoved(parent, childIndex, removedArray);
+//		assert Log.debugMessage("ItemTreeModel.removeNodeFromParent | delete " + child.getName() + " from " + parent.getName() + " [ " + childIndex[0] + " ] ", Log.DEBUGLEVEL10);
+		this.nodesWereRemoved(parent, childIndex, removedArray);
 	}
 
 	/**
@@ -270,6 +288,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	}
 	
 	protected void sortChildren(final Item parent) {
+		assert Log.debugMessage("ItemTreeModel.sortChildren | parent:" + parent, Log.DEBUGLEVEL10);
 		if (this.listeners != null && parent != null) {
 
 			final List<Item> children2 = parent.getChildren();
@@ -289,6 +308,8 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 
 			final SortList sortList = this.parentSortedChildren.get(parent);
 			if (sortList != null) {
+				sortList.list.clear();
+				sortList.list.addAll(parent.getChildren());
 				sortList.sorted = false;
 			}
 
@@ -332,6 +353,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	 * children objects that were removed.
 	 */
 	protected void nodesWereRemoved(final Item node, final int[] childIndices, final Object[] removedChildren) {
+//		assert Log.debugMessage("ItemTreeModel.nodesWereRemoved | node:" + node + ", childIndices[0]:" + childIndices[0], Log.DEBUGLEVEL10);
 		if (node != null && childIndices != null) {
 			fireTreeNodesRemoved(this, getPathToRoot(node), childIndices, removedChildren);
 		}
@@ -352,11 +374,13 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 	 *            the removed elements
 	 */
 	protected void fireTreeNodesRemoved(final Object source, final Object[] path, final int[] childIndices, final Object[] children) {
+//		assert Log.debugMessage("ItemTreeModel.fireTreeNodesRemoved | ", Log.DEBUGLEVEL10);
 		TreeModelEvent e = null;
 		for (final TreeModelListener listener : this.listeners) {
 			if (e == null) {
 				e = new TreeModelEvent(source, path, childIndices, children);
 			}
+//			assert Log.debugMessage("ItemTreeModel.fireTreeNodesRemoved | event " + e + " > listener " + listener, Log.DEBUGLEVEL10);
 			listener.treeNodesRemoved(e);
 		}
 	}
@@ -407,7 +431,7 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 		if (parent == null) {
 			parent = this.root;
 		}
-		Log.debugMessage("ItemTreeModel.getItemNode | parent is '" + parent.getName()
+		assert Log.debugMessage("ItemTreeModel.getItemNode | parent is '" + parent.getName()
 				+ "', item is '" + item.getName() + "'", Log.DEBUGLEVEL10);
 		final List<Item> children = parent.getChildren();
 		Item node = null;
@@ -440,20 +464,31 @@ public class ItemTreeModel implements TreeModel, ItemListener {
 //		});
 	}
 
-	public void setParentPerformed(final Item item, final Item oldParent, final Item newParent) {
-		Log.debugMessage("ItemTreeModel.setParentPerformed | " + this.getClass().getName()+ ".setParentPerformed | item:" + item + ", oldParent:" + oldParent + ", newParent:" + newParent, Log.DEBUGLEVEL10);
+	public void setParentPerformed(final Item item, 
+	                               final Item oldParent, 
+	                               final Item newParent) {
+		assert Log.debugMessage("ItemTreeModel.setParentPerformed | " 
+				+ this.getClass().getName() 
+				+ ".setParentPerformed | item:" 
+				+ item + ", oldParent:" 
+				+ oldParent + ", newParent:" 
+				+ newParent,
+			Log.DEBUGLEVEL10);
 		if (oldParent != null) {
-			removeNodeFromParent(oldParent, item);
+			this.removeNodeFromParent(oldParent, item);
 		}
 		if (newParent != null) {
 			if (newParent instanceof AbstractItem) {
 				AbstractItem abstractItem = (AbstractItem) newParent;
 				abstractItem.print(0);
 			}
-			addItem(newParent, item);
-		} else {
-			this.parentSortedChildren.remove(oldParent);
+			this.addItem(newParent, item);
 		}
+//		else {
+//			assert Log.debugMessage("ItemTreeModel.setParentPerformed | remove " + oldParent + " from parentSortedChildren",
+//				Log.DEBUGLEVEL10);
+//			this.parentSortedChildren.remove(oldParent);
+//		}
 	}	
 
 	public void setObjectNameChanged(final Item item, final String oldName, final String newName) {
