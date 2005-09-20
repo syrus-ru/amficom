@@ -8,8 +8,8 @@ EXTLIB=../../extlib
 EXTCLASSPATH=$EXTLIB/kunststoff.jar:$EXTLIB/trove.jar
 
 XMLCLASSPATH=$LIB/generalxml.jar:\
-$XMLBEANS_HOME/build/lib/xbean.jar:\
-$XMLBEANS_HOME/build/lib/jsr173_api.jar
+$XMLBEANS_HOME/lib/xbean.jar:\
+$XMLBEANS_HOME/lib/jsr173_api.jar
 
 APPCLASSPATH=$LIB/scheduler.jar:\
 $LIB/general.jar:\
