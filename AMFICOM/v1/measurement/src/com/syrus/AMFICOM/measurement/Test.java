@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.163 2005/09/19 18:17:16 arseniy Exp $
+ * $Id: Test.java,v 1.164 2005/09/20 11:38:06 bob Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -21,6 +21,7 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
+import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -46,13 +47,13 @@ import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.163 $, $Date: 2005/09/19 18:17:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.164 $, $Date: 2005/09/20 11:38:06 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
 
-public final class Test extends StorableObject {	
+public final class Test extends StorableObject implements Describable {	
 	private static final long	serialVersionUID	= 3688785890592241972L;
 
 	private int temporalType;
@@ -276,6 +277,13 @@ public final class Test extends StorableObject {
 	public String getDescription() {
 		return this.description;
 	}
+	
+	/* (non-Javadoc)
+	 * @see com.syrus.AMFICOM.general.Namable#getName()
+	 */
+	public String getName() {
+		return this.description;
+	}
 
 	public Date getEndTime() {
 		return this.timeStamps.endTime;
@@ -389,6 +397,14 @@ public final class Test extends StorableObject {
 		this.description = description;
 		super.markAsChanged();
 	}
+	
+	/**
+	 * <p>Never call this method ! </p>  
+	 * @throws UnsupportedOperationException
+	 */
+	public void setName(final String name) {
+		throw new UnsupportedOperationException("Test.setName() is unsupported");		
+	}	
 
 	/**
 	 * @param monitoredElement The monitoredElement to set.
