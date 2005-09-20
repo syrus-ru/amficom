@@ -1,5 +1,5 @@
 /**
- * $Id: MarkerController.java,v 1.36 2005/09/16 14:53:34 krupenn Exp $
+ * $Id: MarkerController.java,v 1.37 2005/09/20 08:24:37 krupenn Exp $
  *
  * Syrus Systems
  * Ќаучно-технический центр
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.scheme.SchemeUtils;
 /**
  *  онтроллер маркера.
  * @author $Author: krupenn $
- * @version $Revision: 1.36 $, $Date: 2005/09/16 14:53:34 $
+ * @version $Revision: 1.37 $, $Date: 2005/09/20 08:24:37 $
  * @module mapviewclient
  */
 public class MarkerController extends AbstractNodeController {
@@ -239,8 +239,9 @@ public class MarkerController extends AbstractNodeController {
 	 *        маркер
 	 * @param dist
 	 *        рассто€ние
+	 * @throws ApplicationException 
 	 */
-	public void moveToFromStartLo(final Marker marker, final double dist) throws MapConnectionException, MapDataException {
+	public void moveToFromStartLo(final Marker marker, final double dist) throws MapConnectionException, MapDataException, ApplicationException {
 		final SchemePath schemePath = marker.getMeasurementPath().getSchemePath();
 		if (schemePath == null) {
 			this.moveToFromStartLf(marker, dist);
@@ -258,10 +259,11 @@ public class MarkerController extends AbstractNodeController {
 	 *        маркер
 	 * @param physicalDistance
 	 *        рассто€ние
+	 * @throws ApplicationException 
 	 */
 	public void moveToFromStartLf(final Marker marker, final double physicalDistance)
 			throws MapConnectionException,
-				MapDataException {
+				MapDataException, ApplicationException {
 		marker.setPhysicalDistance(physicalDistance);
 
 		final MeasurementPath measurementPath = marker.getMeasurementPath();

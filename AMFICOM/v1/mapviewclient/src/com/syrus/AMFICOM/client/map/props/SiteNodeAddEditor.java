@@ -593,7 +593,7 @@ public final class SiteNodeAddEditor extends DefaultStorableObjectEditor {
 	
 	private boolean startsAt(
 			final SchemeCableLink schemeCableLink,
-			final SchemeElement schemeElement) {
+			final SchemeElement schemeElement) throws ApplicationException {
 		SchemeCablePort sourceAbstractSchemePort = schemeCableLink.getSourceAbstractSchemePort();
 		if(sourceAbstractSchemePort == null) {
 			// SchemeCableLink has no start device

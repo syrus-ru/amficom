@@ -1,5 +1,5 @@
 /**
- * $Id: MeasurementPathController.java,v 1.39 2005/09/16 14:53:34 krupenn Exp $
+ * $Id: MeasurementPathController.java,v 1.40 2005/09/20 08:24:37 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -23,10 +23,10 @@ import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
 import com.syrus.AMFICOM.configuration.TransmissionPath;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.map.AbstractNode;
 import com.syrus.AMFICOM.map.MapElement;
-import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.mapview.CablePath;
 import com.syrus.AMFICOM.mapview.MapView;
@@ -41,7 +41,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKi
 /**
  * Контроллер топологическиго пути.
  * @author $Author: krupenn $
- * @version $Revision: 1.39 $, $Date: 2005/09/16 14:53:34 $
+ * @version $Revision: 1.40 $, $Date: 2005/09/20 08:24:37 $
  * @module mapviewclient
  */
 public final class MeasurementPathController extends AbstractLinkController {
@@ -212,17 +212,15 @@ public final class MeasurementPathController extends AbstractLinkController {
 	 * @param path путь
 	 * @param pe элемент пути
 	 * @return элемент карты
+	 * @throws ApplicationException 
 	 */
-	public MapElement getMapElement(final MeasurementPath path, final PathElement pe) {
-		MapElement me = null;
+	public MapElement getMapElement(final MeasurementPath path, final PathElement pe) throws ApplicationException {
+		MapElement mapElement = null;
 		final MapView mapView = this.logicalNetLayer.getMapView();
 		switch (pe.getKind().value()) {
 			case IdlKind._SCHEME_ELEMENT:
 				final SchemeElement se = (SchemeElement) pe.getAbstractSchemeElement();
-				final SiteNode site = mapView.findElement(se);
-				if (site != null) {
-					me = site;
-				}
+				mapElement = mapView.findElement(se);
 				break;
 			case IdlKind._SCHEME_LINK:
 				final SchemeLink schemeLink = (SchemeLink) pe.getAbstractSchemeElement();
@@ -237,20 +235,17 @@ public final class MeasurementPathController extends AbstractLinkController {
 				final SiteNode ssite = mapView.findElement(startSchemeElement);
 				final SiteNode esite = mapView.findElement(endSchemeElement);
 				if (ssite != null && ssite.equals(esite)) {
-					me = ssite;
+					mapElement = ssite;
 				}
 				break;
 			case IdlKind._SCHEME_CABLE_LINK:
 				final SchemeCableLink clink = (SchemeCableLink) pe.getAbstractSchemeElement();
-				final CablePath cp = mapView.findCablePath(clink);
-				if (cp != null) {
-					me = cp;
-				}
+				mapElement = mapView.findCablePath(clink);
 				break;
 			default:
 				throw new UnsupportedOperationException();
 		}
-		return me;
+		return mapElement;
 	}
 
 	/**

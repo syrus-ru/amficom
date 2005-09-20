@@ -1,5 +1,5 @@
 /**
- * $Id: NetMapViewer.java,v 1.53 2005/09/19 15:37:43 krupenn Exp $
+ * $Id: NetMapViewer.java,v 1.54 2005/09/20 08:21:32 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -14,7 +14,6 @@ import java.awt.Cursor;
 import java.awt.Dimension;
 import java.awt.Image;
 import java.awt.Point;
-import java.awt.Rectangle;
 import java.awt.dnd.DropTargetListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
@@ -85,7 +84,7 @@ import com.syrus.util.Log;
  * <br> реализация com.syrus.AMFICOM.client.map.objectfx.OfxNetMapViewer 
  * <br> реализация com.syrus.AMFICOM.client.map.mapinfo.MapInfoNetMapViewer
  * @author $Author: krupenn $
- * @version $Revision: 1.53 $, $Date: 2005/09/19 15:37:43 $
+ * @version $Revision: 1.54 $, $Date: 2005/09/20 08:21:32 $
  * @module mapviewclient
  */
 public abstract class NetMapViewer {
@@ -674,6 +673,9 @@ public abstract class NetMapViewer {
 				repaint(false);
 			}
 		} catch(MapException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		} catch(ApplicationException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
