@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.18 2005/09/19 13:11:25 stas Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.19 2005/09/20 07:54:57 stas Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/19 13:11:25 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/20 07:54:57 $
  * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module analysis
@@ -116,6 +116,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			} else if (s.equals(MEASUREMENTS) || s.equals(PREDICTED)) {
 				LinkedIdsCondition condition = new LinkedIdsCondition(this.domainId, ObjectEntities.MONITOREDELEMENT_CODE);
 				try {
+					StorableObjectPool.refresh();
 					Set meSet = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					List list = new LinkedList(meSet);
 
@@ -169,6 +170,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				MonitoredElement me = (MonitoredElement) parent.getObject();
 				LinkedIdsCondition condition = new LinkedIdsCondition(me.getId(), ObjectEntities.MEASUREMENTSETUP_CODE);
 				try {
+					StorableObjectPool.refresh();
 					Collection mSetups = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					for (Iterator it = mSetups.iterator(); it.hasNext();) {
 						MeasurementSetup measurementSetup = (MeasurementSetup) it.next();
@@ -262,7 +264,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			MeasurementSetup setup = (MeasurementSetup) nodeObject;
 			LinkedIdsCondition condition = new LinkedIdsCondition(setup.getId(), ObjectEntities.TEST_CODE);
 			try {
-				condition.setEntityCode(ObjectEntities.TEST_CODE);
+				StorableObjectPool.refresh();
 				Collection tests = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				for (Iterator it = tests.iterator(); it.hasNext();) {
 					Test test = (Test) it.next();
@@ -279,6 +281,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			Test test = (Test) nodeObject;
 			LinkedIdsCondition condition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_CODE);
 			try {
+				StorableObjectPool.refresh();
 				Collection measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				Set measurementIds = new HashSet();
 				for (Iterator it = measurements.iterator(); it.hasNext();) {
@@ -355,6 +358,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 				 * cannot be occur throw new UnsupportedOperationException(); } //
 				 */
 				try {
+					StorableObjectPool.refresh();
 					Set tests = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 					List list = new LinkedList(tests);
 
