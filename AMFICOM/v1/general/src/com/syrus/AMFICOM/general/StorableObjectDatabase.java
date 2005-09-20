@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.194 2005/09/20 10:07:55 arseniy Exp $
+ * $Id: StorableObjectDatabase.java,v 1.195 2005/09/20 16:43:56 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.194 $, $Date: 2005/09/20 10:07:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.195 $, $Date: 2005/09/20 16:43:56 $
+ * @author $Author: max $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -66,6 +66,8 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 	public static final String SQL_FROM = " FROM ";
 
 	public static final String SQL_FUNCTION_MAX = " MAX ";
+	public static final String SQL_FUNCTION_UPPER = " UPPER ";
+	
 	public static final String SQL_IN = " IN ";
 	public static final String SQL_NOT_IN = " NOT IN ";
 	public static final String SQL_INSERT_INTO = " INSERT INTO ";
