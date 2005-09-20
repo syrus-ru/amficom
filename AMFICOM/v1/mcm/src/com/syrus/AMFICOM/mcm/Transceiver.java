@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.63 2005/09/20 09:54:05 arseniy Exp $
+ * $Id: Transceiver.java,v 1.64 2005/09/20 18:29:37 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.63 $, $Date: 2005/09/20 09:54:05 $
+ * @version $Revision: 1.64 $, $Date: 2005/09/20 18:29:37 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -75,7 +75,7 @@ final class Transceiver extends SleepButWorkThread {
 			this.scheduledMeasurements.add(measurement);
 			this.testProcessors.put(measurementId, testProcessor);
 		} else {
-			Log.errorMessage("Transceiver.transmitMeasurementToKIS | Status: " + measurement.getStatus().value()
+			Log.errorMessage("Transceiver.transmitMeasurementToKIS | ERROR: Status: " + measurement.getStatus().value()
 					+ " of measurement '" + measurementId + "' not SCHEDULED -- cannot add to queue");
 		}
 	}
@@ -86,7 +86,7 @@ final class Transceiver extends SleepButWorkThread {
 			Log.debugMessage("Transceiver.addAcquiringMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
 			this.testProcessors.put(measurementId, testProcessor);
 		} else {
-			Log.errorMessage("Transceiver.addAcquiringMeasurement | Status: " + measurement.getStatus().value()
+			Log.errorMessage("Transceiver.addAcquiringMeasurement | ERROR: Status: " + measurement.getStatus().value()
 					+ " of measurement '" + measurementId + "' not ACQUIRING -- cannot add to queue");
 		}
 	}
@@ -158,43 +158,49 @@ final class Transceiver extends SleepButWorkThread {
 							Log.errorException(ae);
 						}
 						if (measurement != null) {
-							final TestProcessor testProcessor = this.testProcessors.remove(measurementId);
-							if (testProcessor != null) {
-								 Result result = null;
+							Result result = null;
 
-								try {
-									result = this.kisReport.createResult();
-									measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
-									StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
-									super.clearFalls();
-								} catch (MeasurementException me) {
-									if (me.getCode() == MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE) {
-										Log.debugMessage("Transceiver.run | Cannot obtain identifier -- trying to wait", Log.DEBUGLEVEL05);
-										try {
-											MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-										} catch (CommunicationException ce) {
-											Log.errorException(ce);
-										}
-										super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
-										super.sleepCauseOfFall();
-									} else {
-										Log.errorException(me);
-										this.throwAwayKISReport();
+							try {
+								result = this.kisReport.createResult();
+								measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
+								StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
+								super.clearFalls();
+							} catch (MeasurementException me) {
+								if (me.getCode() == MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE) {
+									Log.debugMessage("Transceiver.run | Cannot obtain identifier -- trying to wait", Log.DEBUGLEVEL05);
+									try {
+										MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
+									} catch (CommunicationException ce) {
+										Log.errorException(ce);
 									}
-								} catch (ApplicationException ae) {
-									Log.errorException(ae);
+									super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
+									super.sleepCauseOfFall();
+								} else {
+									Log.errorException(me);
+									this.throwAwayKISReport();
 								}
+							} catch (ApplicationException ae) {
+								Log.errorException(ae);
+							}
 
+							TestProcessor testProcessor = this.testProcessors.remove(measurementId);
+							if (testProcessor == null) {
+								Log.errorMessage("Transceiver.run | WARNING: Cannot find test processor for measurement '" + measurementId
+										+ "'; searching in global MCM map");
+								testProcessor = MeasurementControlModule.testProcessors.get(measurement.getTestId());
+							}
+							if (testProcessor != null) {
 								if (result != null) {
 									testProcessor.addMeasurementResult(result);
 									this.kisReport = null;
 								}
 							} else {// if (testProcessor != null)
-								Log.errorMessage("Transceiver.run | Cannot find test processor for measurement '" + measurementId + "'");
+								Log.errorMessage("Transceiver.run | ERROR: Test processor for measurement '" + measurementId + "' + not found");
 								this.throwAwayKISReport();
 							}// else if (testProcessor != null)
+
 						} else {// if (measurement != null)
-							Log.errorMessage("Transceiver.run | Cannot find measurement for id '" + measurementId + "'");
+							Log.errorMessage("Transceiver.run | ERROR: Measurement for id '" + measurementId + "' + not found");
 							this.throwAwayKISReport();
 						}// else if (measurement != null)
 					}// else if (this.kisReport == null)
@@ -230,20 +236,20 @@ final class Transceiver extends SleepButWorkThread {
 			case FALL_CODE_NO_ERROR:
 				break;
 			case FALL_CODE_ESTABLISH_CONNECTION:
-				Log.errorMessage("Transceiver.processFall | Many errors while establishing connection");
+				Log.errorMessage("Transceiver.processFall | ERROR: Many errors while establishing connection");
 				break;
 			case FALL_CODE_TRANSMIT_MEASUREMENT:
 				this.removeMeasurement();
 				break;
 			case FALL_CODE_RECEIVE_KIS_REPORT:
-				Log.errorMessage("Transceiver.processFall | Many errors while readig KIS report");
+				Log.errorMessage("Transceiver.processFall | ERROR: Many errors while readig KIS report");
 				break;
 			case FALL_CODE_GENERATE_IDENTIFIER:
-				Log.errorMessage("Transceiver.processFall | Cannot generate identifier");
+				Log.errorMessage("Transceiver.processFall | ERROR: Cannot generate identifier");
 				this.throwAwayKISReport();
 				break;
 		default:
-				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
+				Log.errorMessage("processError | ERROR: Unknown error code: " + super.fallCode);
 		}
 	}
 
@@ -262,7 +268,7 @@ final class Transceiver extends SleepButWorkThread {
 
 			this.measurementToRemove = null;
 		} else {
-			Log.errorMessage("Transceiver.removeMeasurement | Measurement to remove is null -- nothing to remove");
+			Log.errorMessage("Transceiver.removeMeasurement | ERROR: Measurement to remove is null -- nothing to remove");
 		}
 	}
 
@@ -272,7 +278,7 @@ final class Transceiver extends SleepButWorkThread {
 					+ this.kisReport.getMeasurementId() + "' from KIS '" + this.kis.getId() + "'", Log.DEBUGLEVEL05);
 			this.kisReport = null;
 		} else {
-			Log.errorMessage("Transceiver.throwAwayKISReport | KIS report is null -- nothing to throw away");
+			Log.errorMessage("Transceiver.throwAwayKISReport | ERROR: KIS report is null -- nothing to throw away");
 		}
 	}
 
