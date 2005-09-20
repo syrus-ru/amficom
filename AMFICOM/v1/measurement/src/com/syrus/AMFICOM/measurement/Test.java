@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.164 2005/09/20 11:38:06 bob Exp $
+ * $Id: Test.java,v 1.165 2005/09/20 18:06:28 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -47,8 +47,8 @@ import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.164 $, $Date: 2005/09/20 11:38:06 $
- * @author $Author: bob $
+ * @version $Revision: 1.165 $, $Date: 2005/09/20 18:06:28 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -90,7 +90,7 @@ public final class Test extends StorableObject implements Describable {
 					this.monitoredElement.getId(),
 					LangModelMeasurement.getString("RR") + "-"
 							+ this.monitoredElement.getName() + "-"
-							+ EasyDateFormatter.formatDate(this.getStartTime()),
+							+ EasyDateFormatter.formatDate(startTime),
 					this.mainMeasurementSetup,
 					startTime,
 					this.monitoredElement.getLocalAddress(),
