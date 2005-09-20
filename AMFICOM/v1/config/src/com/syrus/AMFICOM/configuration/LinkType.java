@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.80 2005/09/20 10:42:01 bass Exp $
+ * $Id: LinkType.java,v 1.81 2005/09/20 11:03:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/09/20 10:42:01 $
+ * @version $Revision: 1.81 $, $Date: 2005/09/20 11:03:01 $
  * @author $Author: bass $
  * @module config
  */
@@ -254,10 +254,25 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 		this.id.getXmlTransferable(linkType.addNewId(), importType);
 		linkType.setName(this.name);
 		linkType.setCodename(this.codename);
-		linkType.setDescription(this.description);
+		if (linkType.isSetDescription()) {
+			linkType.unsetDescription();
+		}
+		if (this.description.length() != 0) {
+			linkType.setDescription(this.description);
+		}
 		linkType.setSort(XmlLinkTypeSort.Enum.forInt(this.getSort().value() + 1));
-		linkType.setManufacturer(this.manufacturer);
-		linkType.setManufacturerCode(this.manufacturerCode);
+		if (linkType.isSetManufacturer()) {
+			linkType.unsetManufacturer();
+		}
+		if (this.manufacturer.length() != 0) {
+			linkType.setManufacturer(this.manufacturer);
+		}
+		if (linkType.isSetManufacturerCode()) {
+			linkType.unsetManufacturerCode();
+		}
+		if (this.manufacturerCode.length() != 0) {
+			linkType.setManufacturerCode(this.manufacturerCode);
+		}
 		// TODO write image to file
 	}
 

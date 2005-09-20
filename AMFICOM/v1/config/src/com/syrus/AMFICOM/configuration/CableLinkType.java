@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.75 2005/09/20 10:42:01 bass Exp $
+ * $Id: CableLinkType.java,v 1.76 2005/09/20 11:03:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/09/20 10:42:01 $
+ * @version $Revision: 1.76 $, $Date: 2005/09/20 11:03:01 $
  * @author $Author: bass $
  * @module config
  */
@@ -281,10 +281,25 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 		super.id.getXmlTransferable(cableLinkType.addNewId(), importType);
 		cableLinkType.setName(this.name);
 		cableLinkType.setCodename(this.codename);
-		cableLinkType.setDescription(this.description);
+		if (cableLinkType.isSetDescription()) {
+			cableLinkType.unsetDescription();
+		}
+		if (this.description.length() != 0) {
+			cableLinkType.setDescription(this.description);
+		}
 		cableLinkType.setSort(XmlLinkTypeSort.Enum.forInt(this.sort));
-		cableLinkType.setManufacturer(this.manufacturer);
-		cableLinkType.setManufacturerCode(this.manufacturerCode);
+		if (cableLinkType.isSetManufacturer()) {
+			cableLinkType.unsetManufacturer();
+		}
+		if (this.manufacturer.length() != 0) {
+			cableLinkType.setManufacturer(this.manufacturer);
+		}
+		if (cableLinkType.isSetManufacturerCode()) {
+			cableLinkType.unsetManufacturerCode();
+		}
+		if (this.manufacturerCode.length() != 0) {
+			cableLinkType.setManufacturerCode(this.manufacturerCode);
+		}
 		// TODO write image to file
 
 		if (cableLinkType.isSetCableThreadTypes()) {

@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.90 2005/09/20 10:42:01 bass Exp $
+ * $Id: PortType.java,v 1.91 2005/09/20 11:03:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.90 $, $Date: 2005/09/20 10:42:01 $
+ * @version $Revision: 1.91 $, $Date: 2005/09/20 11:03:01 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -238,7 +238,12 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		this.id.getXmlTransferable(portType.addNewId(), importType);
 		portType.setName(this.name);
 		portType.setCodename(this.codename);
-		portType.setDescription(this.description);
+		if (portType.isSetDescription()) {
+			portType.unsetDescription();
+		}
+		if (this.description.length() != 0) {
+			portType.setDescription(this.description);
+		}
 		portType.setSort(XmlPortTypeSort.Enum.forInt(this.getSort().value() + 1));
 		portType.setKind(XmlPortTypeKind.Enum.forInt(this.getKind().value() + 1));
 	}
