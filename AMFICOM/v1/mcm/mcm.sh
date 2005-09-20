@@ -17,7 +17,9 @@ $ORACLE_HOME/jdbc/lib/nls_charset12.jar
 
 TROVECLASSPATH=$EXTLIB/trove.jar
 
-XMLCLASSPATH=$EXTLIB/xbean.jar
+XMLCLASSPATH=$EXTLIB/xbean.jar:\
+$LIB/generalxml.jar:\
+$LIB/configurationxml.jar
 
 APPCLASSPATH=\
 $LIB/mcm.jar:\
