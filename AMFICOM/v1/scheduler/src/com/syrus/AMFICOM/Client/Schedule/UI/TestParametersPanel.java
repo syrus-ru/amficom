@@ -476,13 +476,15 @@ final class TestParametersPanel implements PropertyChangeListener {
 	
 	private void refreshMeasurementSetup() throws ApplicationException {
 		final Test selectedTest = this.schedulerModel.getSelectedTest();
-		final Set<Identifier> measurementSetupIds = selectedTest.getMeasurementSetupIds();
-		if (!measurementSetupIds.isEmpty()) {
-			final Identifier mainMeasurementSetupId = measurementSetupIds.iterator().next();
-			final MeasurementSetup measurementSetup = 
-				StorableObjectPool.getStorableObject(mainMeasurementSetupId, true);
-			if (measurementSetup != null) {
-				this.setMeasurementSetup(measurementSetup, true);
+		if (selectedTest != null) {
+			final Set<Identifier> measurementSetupIds = selectedTest.getMeasurementSetupIds();
+			if (!measurementSetupIds.isEmpty()) {
+				final Identifier mainMeasurementSetupId = measurementSetupIds.iterator().next();
+				final MeasurementSetup measurementSetup = 
+					StorableObjectPool.getStorableObject(mainMeasurementSetupId, true);
+				if (measurementSetup != null) {
+					this.setMeasurementSetup(measurementSetup, true);
+				}
 			}
 		}
 	}
