@@ -1,5 +1,5 @@
 /*-
- * $Id: ImportExportCommand.java,v 1.1 2005/09/20 19:56:29 stas Exp $
+ * $Id: ImportExportCommand.java,v 1.2 2005/09/20 19:57:04 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,9 +32,15 @@ import org.apache.xmlbeans.XmlError;
 import org.apache.xmlbeans.XmlObject;
 import org.apache.xmlbeans.XmlOptions;
 
+import com.jgraph.graph.DefaultGraphCell;
+import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractCommand;
+import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client_.scheme.SchemeObjectsFactory;
 import com.syrus.AMFICOM.client_.scheme.graph.SchemeGraph;
+import com.syrus.AMFICOM.client_.scheme.graph.UgoTabbedPane;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.GraphActions;
+import com.syrus.AMFICOM.client_.scheme.graph.actions.SchemeActions;
 import com.syrus.AMFICOM.client_.scheme.graph.objects.IdentifiableCell;
 import com.syrus.AMFICOM.configuration.PortType;
 import com.syrus.AMFICOM.configuration.PortTypeWrapper;
@@ -130,6 +136,11 @@ public abstract class ImportExportCommand extends AbstractCommand {
 				= new HashMap<XmlSchemeProtoElement, Map<Identifier, XmlIdentifier>>();
 		final Map<XmlSchemeProtoElement, Map<Identifier, XmlIdentifier>> cashedUgoIdentifiers 
 				= new HashMap<XmlSchemeProtoElement, Map<Identifier, XmlIdentifier>>();
+		ApplicationContext internalContext =  new ApplicationContext();
+		internalContext.setDispatcher(new Dispatcher());
+		final SchemeGraph invisibleGraph = new UgoTabbedPane(internalContext).getGraph();
+		invisibleGraph.setMakeNotifications(false);
+		
 		XmlComplementorRegistry.registerComplementor(SCHEMEPROTOELEMENT_CODE, new XmlComplementor() {
 			public void complementStorableObject(
 					final XmlStorableObject storableObject,
@@ -179,6 +190,7 @@ public abstract class ImportExportCommand extends AbstractCommand {
 							final SchemeImageResource ugoCell1 = cashedUgoCells.get(proto);
 							final Map<Identifier, XmlIdentifier> ugoIdsSeq = cashedUgoIdentifiers.get(proto);
 							if (ugoCell1 != null && ugoIdsSeq != null) {
+								final Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
 								List<Object> oldSerializable = ugoCell1.getData();
 								Object[] cells = (Object[])oldSerializable.get(0);
 								for (Object cell : SchemeGraph.getDescendants1(cells)) {
@@ -188,22 +200,24 @@ public abstract class ImportExportCommand extends AbstractCommand {
 										XmlIdentifier xmlId = ugoIdsSeq.get(id);
 										try {
 											Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
-											identifiableCell.setId(newId);
+											clonedIds.put(id, newId);
 										} catch (ObjectNotFoundException e) {
 											Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
 										}
 									}
 								}
-								List newSerizlizable = new ArrayList<Object>(3);
-								newSerizlizable.add(cells);
-								newSerizlizable.add(oldSerializable.get(1));
-								newSerizlizable.add(oldSerializable.get(2));
-								ugoCell1.setData(newSerizlizable);
+								
+								Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, ugoCell1, true);
+								SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+								ugoCell1.setData((List)invisibleGraph.getArchiveableState());
+								GraphActions.clearGraph(invisibleGraph);
+								
 								cashedUgoIdentifiers.remove(proto);
 							}
 							final SchemeImageResource schemeCell1 = cashedSchemeCells.get(proto);
 							final Map<Identifier, XmlIdentifier> schemeIdsSeq = cashedSchemeIdentifiers.get(proto);
 							if (schemeCell1 != null && schemeIdsSeq != null) {
+								final Map<Identifier, Identifier> clonedIds = new HashMap<Identifier, Identifier>();
 								List<Object> oldSerializable = schemeCell1.getData();
 								Object[] cells = (Object[])schemeCell1.getData().get(0);
 								for (Object cell : cells) {
@@ -213,17 +227,17 @@ public abstract class ImportExportCommand extends AbstractCommand {
 										XmlIdentifier xmlId = schemeIdsSeq.get(id);
 										try {
 											Identifier newId = Identifier.fromXmlTransferable(xmlId, importType, XmlConversionMode.MODE_THROW_IF_ABSENT);
-											identifiableCell.setId(newId);
+											clonedIds.put(id, newId);
 										} catch (ObjectNotFoundException e) {
 											Log.debugMessage(e.getMessage() + " for " + id, Level.WARNING);
 										}
 									}
 								}
-								List newSerizlizable = new ArrayList<Object>(3);
-								newSerizlizable.add(cells);
-								newSerizlizable.add(oldSerializable.get(1));
-								newSerizlizable.add(oldSerializable.get(2));
-								schemeCell1.setData(newSerizlizable);
+								Map<DefaultGraphCell, DefaultGraphCell> clonedObjects = SchemeActions.openSchemeImageResource(invisibleGraph, schemeCell1, true);
+								SchemeObjectsFactory.assignClonedIds(clonedObjects, clonedIds);
+								schemeCell1.setData((List)invisibleGraph.getArchiveableState());
+								GraphActions.clearGraph(invisibleGraph);
+								
 								cashedSchemeIdentifiers.remove(proto);
 							}
 						} catch (Exception e) {
