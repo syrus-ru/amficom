@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.66 2005/09/19 12:34:35 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.67 2005/09/20 08:41:26 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/09/19 12:34:35 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/20 08:41:26 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -191,15 +191,14 @@ public final class SchemeProtoGroup extends StorableObject
 	/**
 	 * @param creatorId
 	 * @param xmlSchemeProtoGroup
-	 * @param importType
 	 * @throws CreateObjectException
 	 */
 	public static SchemeProtoGroup createInstance(
 			final Identifier creatorId,
-			final XmlSchemeProtoGroup xmlSchemeProtoGroup,
-			final String importType)
+			final XmlSchemeProtoGroup xmlSchemeProtoGroup)
 	throws CreateObjectException {
 		try {
+			final String importType = xmlSchemeProtoGroup.getImportType();
 			final XmlIdentifier xmlId = xmlSchemeProtoGroup.getId();
 			final Date created = new Date();
 			final Identifier id = Identifier.fromXmlTransferable(xmlId, importType, MODE_RETURN_VOID_IF_ABSENT);
@@ -443,6 +442,7 @@ public final class SchemeProtoGroup extends StorableObject
 				schemeProtoElement.getXmlTransferable(schemeProtoElementSeq.addNewSchemeProtoElement(), importType);
 			}
 		}
+		schemeProtoGroup.setImportType(importType);
 		return schemeProtoGroup;
 	}
 
@@ -682,7 +682,7 @@ public final class SchemeProtoGroup extends StorableObject
 				: VOID_IDENTIFIER;
 		if (schemeProtoGroup.isSetSchemeProtoGroups()) {
 			for (final XmlSchemeProtoGroup schemeProtoGroup2 : schemeProtoGroup.getSchemeProtoGroups().getSchemeProtoGroupArray()) {
-				createInstance(super.creatorId, schemeProtoGroup2, importType);
+				createInstance(super.creatorId, schemeProtoGroup2);
 			}
 		}
 		if (schemeProtoGroup.isSetSchemeProtoElements()) {

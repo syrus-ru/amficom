@@ -9,7 +9,7 @@
 
 	<xsd:annotation>
 		<xsd:documentation xml:lang = "en">
-			$Id: SchemeProtoGroup.xsd,v 1.5 2005/09/02 13:22:59 bass Exp $
+			$Id: SchemeProtoGroup.xsd,v 1.6 2005/09/20 08:41:26 bass Exp $
 
 			Copyright © 2004-2005 Syrus Systems.
 			Dept. of Science &amp; Technology.
@@ -65,6 +65,7 @@
 					<xsd:element ref = "scheme:schemeProtoElements"
 						minOccurs = "0"/>
 				</xsd:sequence>
+				<xsd:attribute name = "importType" type = "xsd:string" use = "required"/>
 			</xsd:extension>
 		</xsd:complexContent>
 	</xsd:complexType>
