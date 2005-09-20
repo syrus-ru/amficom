@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalSchemeUI.java,v 1.25 2005/09/08 06:28:32 max Exp $
+ * $Id: LogicalSchemeUI.java,v 1.26 2005/09/20 12:33:06 bob Exp $
  *
  * Copyright ? 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,8 +34,8 @@ import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
 
 /**
- * @version $Revision: 1.25 $, $Date: 2005/09/08 06:28:32 $
- * @author $Author: max $
+ * @version $Revision: 1.26 $, $Date: 2005/09/20 12:33:06 $
+ * @author $Author: bob $
  * @module filter
  */
 public class LogicalSchemeUI extends JComponent implements MouseListener, MouseMotionListener, SelectionListener, ItemListener {
@@ -151,7 +151,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 			}
 		}
 	}
-
+	
 	public void setObjectNameChanged(final Item item, final String oldName, final String newName) {
 		// ViewItem viewItem;
 		// if (item instanceof ViewItem) {
@@ -161,7 +161,7 @@ public class LogicalSchemeUI extends JComponent implements MouseListener, MouseM
 		// }
 		// viewItem.getName();
 		this.repaint();
-
+		this.revalidate();
 	}
 
 	private void initItems() {
