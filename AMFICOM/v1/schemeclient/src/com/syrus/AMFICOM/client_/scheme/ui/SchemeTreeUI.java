@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.16 2005/09/20 10:04:35 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.17 2005/09/20 13:04:29 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,13 +36,13 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.16 $, $Date: 2005/09/20 10:04:35 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/20 13:04:29 $
  * @module schemeclient
  */
 
 public class SchemeTreeUI extends IconedTreeUI {
 	ApplicationContext aContext;
-	SchemeTreeToolBar toolBar;
+	JToolBar toolBar;
 	
 	public SchemeTreeUI(Item rootItem, ApplicationContext aContext) {
 		super(rootItem);
@@ -55,18 +55,8 @@ public class SchemeTreeUI extends IconedTreeUI {
 	}
 	
 	public JToolBar getToolBar() {
-		if (this.toolBar == null)
-			this.toolBar = new SchemeTreeToolBar();
-		return this.toolBar;
-	}
-
-	public class SchemeTreeToolBar extends IconedTreeToolBar {
-		
-		private static final long serialVersionUID = 3546082449625987129L;
-		
-		public SchemeTreeToolBar() {
-			super();
-			
+		if (this.toolBar == null) {
+			this.toolBar = super.getToolBar();
 			final JButton deleteButton = new JButton();
 			deleteButton.setIcon(UIManager.getIcon(ResourceKeys.ICON_DELETE));
 			deleteButton.setToolTipText(LangModelGeneral.getString("Delete"));
@@ -139,7 +129,8 @@ public class SchemeTreeUI extends IconedTreeUI {
 					}
 				}
 			});
-			this.add(deleteButton);
+			this.toolBar.add(deleteButton);
 		}
+		return this.toolBar;
 	}
 }
