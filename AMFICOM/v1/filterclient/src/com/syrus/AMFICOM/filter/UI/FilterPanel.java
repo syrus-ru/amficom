@@ -1,5 +1,5 @@
 /*-
- * $Id: FilterPanel.java,v 1.9 2005/08/25 10:55:16 max Exp $
+ * $Id: FilterPanel.java,v 1.10 2005/09/20 10:11:38 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.newFilter.StringCondition;
 
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/25 10:55:16 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/20 10:11:38 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -69,13 +69,14 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	private static final String CHANGE_BUTTON 			= "Change";
 	private static final String REMOVE_BUTTON 			= "Remove";
 	private static final String	LOGIC_SCHEME_BUTTON		= ">>";
-	private static final String STRING_CONDITION_LABEL 	= "Please, inter a string";
-	private static final String NUMBER_LABEL 			= "Please, inter a number";
+	private static final String STRING_CONDITION_LABEL 	= "Please, enter a string";
+	private static final String NUMBER_LABEL 			= "Please, enter a number";
 	private static final String EQUALS_LABEL 			= "Equals";
 	private static final String OR_LABEL 				= "Or";
 	private static final String FROM_LABEL 				= "From";
 	private static final String TO_LABEL 				= "To";
 	private static final String INCLUDE_BOUNDS_LABEL 	= "Include boundary";
+	private static final String SUB_STRING_LABEL 		= "Sub string";
 	private static final String	CLEAR_DATE				= "Clear";
 	private static final String	SET_START_DATE			= "..";
 	private static final String	SET_END_DATE			= "..";
@@ -102,6 +103,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	
 	
 	private JCheckBox boundaryCheckBox = 			new JCheckBox();
+	private JCheckBox subStringCheckBox = 			new JCheckBox();
 	
 	private JButton addButton;
 	private JButton changeButton;
@@ -129,6 +131,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	}
 	
 	public FilterPanel() {
+		// TODO: wtf?
 		this.parentFrame = Environment.getActiveWindow();
 		createFrame();
 	}
@@ -149,6 +152,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		JLabel toLabel 		= 			new JLabel(TO_LABEL);
 		JLabel boundaryLabel = 			new JLabel(INCLUDE_BOUNDS_LABEL);
 		JLabel stringConditionLabel = 	new JLabel(STRING_CONDITION_LABEL);
+		JLabel subStringLabel = 		new JLabel(SUB_STRING_LABEL);
 		
 		this.addButton = 				new JButton(ADD_BUTTON);
 		this.changeButton = 			new JButton(CHANGE_BUTTON);
@@ -222,6 +226,8 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		typePanel.add(listRadioButton, null);
 		
 		this.boundaryCheckBox.setSelected(true);
+		this.subStringCheckBox.setSelected(true);
+		
 		radio = new ButtonGroup();
 		
 		radio.add(eqRadioButton);
@@ -327,11 +333,19 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		stringPanel.add(stringConditionLabel, gbc);
 		stringPanel.setPreferredSize(new Dimension(0,0));
 		
-		gbc.gridwidth = 1;
-		gbc.weighty = 1.0;
+		gbc.weighty = 0.0;
 		gbc.fill = GridBagConstraints.HORIZONTAL;
 		stringPanel.add(this.conditionTextField, gbc);
-				
+		
+		gbc.gridwidth = 1;
+		gbc.weightx = 0.0;
+		gbc.weighty = 1.0;
+		gbc.fill = GridBagConstraints.NONE;
+		stringPanel.add(this.subStringCheckBox, gbc);
+		
+		gbc.gridwidth = 1;
+		stringPanel.add(subStringLabel, gbc);
+		
 		gbc.fill = GridBagConstraints.BOTH;
 		gbc.weightx = 1.0;
 		gbc.weighty = 1.0;
@@ -401,7 +415,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	
 	public void drawStringCondition(StringCondition stringCondition) {
 		this.conditionTextField.setText(stringCondition.getString());
-		
+		this.subStringCheckBox.setSelected(stringCondition.isSubstring());
 		CardLayout cardLayout = (CardLayout) this.conditionPanel.getLayout();
 		cardLayout.show(this.conditionPanel, STRING_CARD);
 	}
@@ -492,7 +506,8 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	}
 
 	public void setStringCondition(StringCondition stringCondition) {
-		stringCondition.setString(this.conditionTextField.getText());		
+		stringCondition.setString(this.conditionTextField.getText());
+		stringCondition.setSubstring(this.subStringCheckBox.isSelected());
 	}
 
 	public void setListCondition(ListCondition listCondition) {
@@ -501,6 +516,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	
 	public void setDateCondition(DateCondition dateCondition) {
 		
+		// TODO: wtf?
 		Calendar startYearMonthDay = Calendar.getInstance();
 		startYearMonthDay.setTime((Date)this.startDateSpinner.getValue());
 		Calendar startTime = Calendar.getInstance();

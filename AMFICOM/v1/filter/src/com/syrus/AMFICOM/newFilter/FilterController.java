@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.22 2005/09/18 13:55:20 bob Exp $
+ * $Id: FilterController.java,v 1.23 2005/09/20 10:13:41 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,8 +39,8 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/18 13:55:20 $
- * @author $Author: bob $
+ * @version $Revision: 1.23 $, $Date: 2005/09/20 10:13:41 $
+ * @author $Author: max $
  * @module filter_v1
  */
 public class FilterController implements ActionListener, PopupMenuListener, ListSelectionListener {
@@ -388,7 +388,11 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 				this.view.showErrorMessage(Filter.WRONG_STRING_MESSAGE);
 				return;
 			}
-			this.model.addCondition0(new TypicalCondition(conditionString, OperationSort.OPERATION_EQUALS, entityCode, key), conditionKey);
+			if (stringCondition.isSubstring()) {
+				this.model.addCondition0(new TypicalCondition(conditionString, OperationSort.OPERATION_SUBSTRING, entityCode, key), conditionKey);
+			} else {
+				this.model.addCondition0(new TypicalCondition(conditionString, OperationSort.OPERATION_EQUALS, entityCode, key), conditionKey);
+			}
 			break;
 		case ConditionWrapper.CONSTRAINT:
 			ListCondition listCondition2 = (ListCondition) tempCondition;

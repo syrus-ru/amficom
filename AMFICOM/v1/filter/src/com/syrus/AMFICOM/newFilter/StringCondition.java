@@ -1,5 +1,5 @@
 /*
- * $Id: StringCondition.java,v 1.5 2005/08/25 10:30:33 max Exp $
+ * $Id: StringCondition.java,v 1.6 2005/09/20 10:13:41 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,20 +8,18 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/08/25 10:30:33 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/20 10:13:41 $
  * @author $Author: max $
  * @module filter
  */
 public class StringCondition implements TemporalCondition {
 	
 	private String string;
+	private boolean substring;
 	
 	public StringCondition() {
 		this.string = new String();
-	}
-	
-	public StringCondition(String string) {
-		this.string = string;
+		this.substring = true;
 	}
 	
 	public String getString() {
@@ -37,5 +35,13 @@ public class StringCondition implements TemporalCondition {
 			return true;
 		}
 		return false;
+	}
+
+	public boolean isSubstring() {
+		return this.substring;
+	}
+
+	public void setSubstring(boolean substring) {
+		this.substring = substring;
 	}
 }
