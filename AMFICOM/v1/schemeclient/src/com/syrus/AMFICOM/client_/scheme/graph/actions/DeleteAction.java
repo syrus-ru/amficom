@@ -1,5 +1,5 @@
 /*
- * $Id: DeleteAction.java,v 1.20 2005/09/13 10:19:05 bass Exp $
+ * $Id: DeleteAction.java,v 1.21 2005/09/20 09:42:54 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,8 +56,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKi
 import com.syrus.util.Log;
 
 /**
- * @author $Author: bass $
- * @version $Revision: 1.20 $, $Date: 2005/09/13 10:19:05 $
+ * @author $Author: stas $
+ * @version $Revision: 1.21 $, $Date: 2005/09/20 09:42:54 $
  * @module schemeclient
  */
 
@@ -215,9 +215,13 @@ public class DeleteAction extends AbstractAction {
 	}
 	
 	static void deleteScheme(Scheme scheme) {
-		SchemeElement se = scheme.getParentSchemeElement();
-		if (se != null) {
-			objectsToDelete.add(se.getId());
+		try {
+			SchemeElement se = scheme.getParentSchemeElement();
+			if (se != null) {
+				objectsToDelete.add(se.getId());
+			}
+		} catch (ApplicationException e) {
+			Log.errorException(e);
 		}
 	}
 		
