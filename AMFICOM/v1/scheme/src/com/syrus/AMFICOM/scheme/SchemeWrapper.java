@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeWrapper.java,v 1.9 2005/08/05 11:20:03 bass Exp $
+ * $Id: SchemeWrapper.java,v 1.10 2005/09/20 07:49:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,12 +12,14 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.List;
 
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
+import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/08/05 11:20:03 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/20 07:49:51 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -136,33 +138,38 @@ public final class SchemeWrapper extends StorableObjectWrapper<Scheme> {
 	}
 
 	@Override
-	public void setValue(final Scheme scheme, final String key, final Object value) {
-		if (scheme != null) {
-			if (key.equals(COLUMN_NAME)) {
-				scheme.setName((String) value);
-			} else if (key.equals(COLUMN_DESCRIPTION)) {
-				scheme.setDescription((String) value);
-			} else if (key.equals(COLUMN_LABEL)) {
-				scheme.setLabel((String) value);
-			} else if (key.equals(COLUMN_WIDTH)) {
-				scheme.setWidth(((Integer) value).intValue());
-			} else if (key.equals(COLUMN_HEIGHT)) {
-				scheme.setHeight(((Integer) value).intValue());
-			} else if (key.equals(COLUMN_DOMAIN_ID)) {
-				scheme.setDomainId((Identifier) value);
-			} else if (key.equals(COLUMN_MAP_ID)) {
-				scheme.setMapId((Identifier) value);
-			} else if (key.equals(COLUMN_SYMBOL_ID)) {
-				scheme.setSymbolId((Identifier) value);
-			} else if (key.equals(COLUMN_UGO_CELL_ID)) {
-				scheme.setUgoCellId((Identifier) value);
-			} else if (key.equals(COLUMN_SCHEME_CELL_ID)) {
-				scheme.setSchemeCellId((Identifier) value);
-			} else if (key.equals(COLUMN_KIND)) {
-				scheme.setKind(IdlKind.from_int(((Integer) value).intValue()));
-			} else if (key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
-				scheme.setParentSchemeElementId((Identifier) value);
+	public void setValue(final Scheme scheme, final String key, final Object value)
+	throws PropertyChangeException {
+		try {
+			if (scheme != null) {
+				if (key.equals(COLUMN_NAME)) {
+					scheme.setName((String) value);
+				} else if (key.equals(COLUMN_DESCRIPTION)) {
+					scheme.setDescription((String) value);
+				} else if (key.equals(COLUMN_LABEL)) {
+					scheme.setLabel((String) value);
+				} else if (key.equals(COLUMN_WIDTH)) {
+					scheme.setWidth(((Integer) value).intValue());
+				} else if (key.equals(COLUMN_HEIGHT)) {
+					scheme.setHeight(((Integer) value).intValue());
+				} else if (key.equals(COLUMN_DOMAIN_ID)) {
+					scheme.setDomainId((Identifier) value);
+				} else if (key.equals(COLUMN_MAP_ID)) {
+					scheme.setMapId((Identifier) value);
+				} else if (key.equals(COLUMN_SYMBOL_ID)) {
+					scheme.setSymbolId((Identifier) value);
+				} else if (key.equals(COLUMN_UGO_CELL_ID)) {
+					scheme.setUgoCellId((Identifier) value);
+				} else if (key.equals(COLUMN_SCHEME_CELL_ID)) {
+					scheme.setSchemeCellId((Identifier) value);
+				} else if (key.equals(COLUMN_KIND)) {
+					scheme.setKind(IdlKind.from_int(((Integer) value).intValue()));
+				} else if (key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
+					scheme.setParentSchemeElementId((Identifier) value);
+				}
 			}
+		} catch (final ApplicationException ae) {
+			throw new PropertyChangeException(ae);
 		}
 	}
 

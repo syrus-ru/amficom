@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.93 2005/09/18 12:43:13 bass Exp $
+ * $Id: Scheme.java,v 1.94 2005/09/20 07:49:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -81,7 +81,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.93 $, $Date: 2005/09/18 12:43:13 $
+ * @version $Revision: 1.94 $, $Date: 2005/09/20 07:49:51 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -615,13 +615,8 @@ public final class Scheme extends AbstractCloneableDomainMember
 	/**
 	 * A wrapper around {@link #getParentSchemeElementId()}.
 	 */
-	public SchemeElement getParentSchemeElement() {
-		try {
-			return StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return null;
-		}
+	public SchemeElement getParentSchemeElement() throws ApplicationException {
+		return StorableObjectPool.getStorableObject(this.getParentSchemeElementId(), true);
 	}
 
 	public Set<SchemeCableLink> getSchemeCableLinks() {
@@ -1131,24 +1126,45 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
+	 * A wrapper {@link #setParentSchemeElement(SchemeElement)}.
+	 *
 	 * @param parentSchemeElementId
+	 * @throws ApplicationException
 	 */
-	void setParentSchemeElementId(final Identifier parentSchemeElementId) {
+	@ParameterizationPending(value = {"final boolean usePool"})
+	void setParentSchemeElementId(final Identifier parentSchemeElementId) throws ApplicationException {
 		assert parentSchemeElementId.isVoid() || parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
+
 		if (this.parentSchemeElementId.equals(parentSchemeElementId)) {
 			return;
 		}
-		this.parentSchemeElementId = parentSchemeElementId;
-		super.markAsChanged();
+
+		this.setParentSchemeElement(StorableObjectPool.<SchemeElement>getStorableObject(parentSchemeElementId, true));
 	}
 
 	/**
-	 * A wrapper around {@link #setParentSchemeElementId(Identifier)}.
-	 * 
 	 * @param parentSchemeElement
+	 * @throws ApplicationException
 	 */
-	public void setParentSchemeElement(final SchemeElement parentSchemeElement) {
-		this.setParentSchemeElementId(Identifier.possiblyVoid(parentSchemeElement));
+	@ParameterizationPending(value = {"final boolean usePool"})
+	public void setParentSchemeElement(final SchemeElement parentSchemeElement) throws ApplicationException {
+		final boolean usePool = false;
+
+		final Identifier newParentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
+		if (this.parentSchemeElementId.equals(newParentSchemeElementId)) {
+			return;
+		}
+
+		final SchemeElement oldParentSchemeElement = this.getParentSchemeElement();
+		if (oldParentSchemeElement != null) {
+			oldParentSchemeElement.getSchemeContainerDelegate().removeFromCache(this, usePool);
+		}
+		if (parentSchemeElement != null) {
+			parentSchemeElement.getSchemeContainerDelegate().addToCache(this, usePool);
+		}
+
+		this.parentSchemeElementId = newParentSchemeElementId;
+		super.markAsChanged();
 	}
 
 	public void setSchemeCableLinks(final Set<SchemeCableLink> schemeCableLinks) throws ApplicationException {

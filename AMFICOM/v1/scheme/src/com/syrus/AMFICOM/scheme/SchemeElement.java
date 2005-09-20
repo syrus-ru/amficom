@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.104 2005/09/18 12:43:13 bass Exp $
+ * $Id: SchemeElement.java,v 1.105 2005/09/20 07:49:51 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,7 @@ import static com.syrus.AMFICOM.general.ObjectEntities.KIS_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
+import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind.SCHEME_CONTAINER;
 import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER;
@@ -84,13 +85,12 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.104 $, $Date: 2005/09/18 12:43:13 $
+ * @version $Revision: 1.105 $, $Date: 2005/09/20 07:49:51 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
 		implements SchemeCellContainer,
-		XmlBeansTransferable<XmlSchemeElement>,
-		SchemeContainer {
+		XmlBeansTransferable<XmlSchemeElement> {
 	private static final long serialVersionUID = 3618977875802797368L;
 
 	private int kind;
@@ -121,7 +121,7 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	private boolean equipmentTypeSet = false;
 
-	private transient SchemeContainerDelegate schemeContainerDelegate;
+	private transient StorableObjectContainerDelegate<Scheme> schemeContainerDelegate;
 		
 	/**
 	 * @param id
@@ -245,9 +245,12 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param parentScheme
 	 * @throws CreateObjectException
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public static SchemeElement createInstance(final Identifier creatorId,
 			final Scheme childScheme, final Scheme parentScheme)
 	throws CreateObjectException {
+		final boolean usePool = false;
+
 		try {
 			assert childScheme != null : NON_VOID_EXPECTED;
 			String name = childScheme.getName();
@@ -318,7 +321,7 @@ public final class SchemeElement extends AbstractSchemeElement
 				schemeElement.setSchemeCell(schemeCellClone);
 			}
 
-			schemeElement.addScheme(childScheme);
+			schemeElement.addScheme(childScheme, usePool);
 
 			return schemeElement;
 		} catch (final CloneNotSupportedException cnse) {
@@ -560,8 +563,11 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	/**
 	 * @param scheme cannot be <code>null</code>.
+	 * @param usePool
 	 */
-	public void addScheme(final Scheme scheme) {
+	public void addScheme(final Scheme scheme,
+			@SuppressWarnings("unused") final boolean usePool)
+	throws ApplicationException {
 		assert scheme != null: NON_NULL_EXPECTED;
 		scheme.setParentSchemeElement(this);
 	}
@@ -594,6 +600,8 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	@Override
 	public SchemeElement clone() throws CloneNotSupportedException {
+		final boolean usePool = false;
+
 		try {
 			final SchemeElement clone = (SchemeElement) super.clone();
 
@@ -634,10 +642,10 @@ public final class SchemeElement extends AbstractSchemeElement
 				clone.clonedIdMap.putAll(schemeLinkClone.getClonedIdMap());
 				clone.addSchemeLink(schemeLinkClone);
 			}
-			for (final Scheme scheme : this.getSchemes0(true)) {
+			for (final Scheme scheme : this.getSchemes0(usePool)) {
 				final Scheme schemeClone = scheme.clone();
 				clone.clonedIdMap.putAll(schemeClone.getClonedIdMap());
-				clone.addScheme(schemeClone);
+				clone.addScheme(schemeClone, usePool);
 			}
 			for (final SchemeElement schemeElement : this.getSchemeElements0()) {
 				final SchemeElement schemeElementClone =  schemeElement.clone();
@@ -930,13 +938,9 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	Set<Scheme> getSchemes0(final boolean usePool) throws ApplicationException {
-		if (this.getKind() == SCHEME_CONTAINER) {
-			if (this.schemeContainerDelegate == null) {
-				this.schemeContainerDelegate = new SchemeContainerDelegate(this);
-			}
-			return this.schemeContainerDelegate.getSchemes(usePool);
-		}
-		return Collections.emptySet();
+		return this.getKind() == SCHEME_CONTAINER
+				? this.getSchemeContainerDelegate().getStorableObjects(usePool)
+				: Collections.<Scheme>emptySet();
 	}
 
 	Identifier getSiteNodeId() {
@@ -1011,10 +1015,13 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public XmlSchemeElement getXmlTransferable(
 			final XmlSchemeElement schemeElement,
 			final String importType)
 	throws ApplicationException {
+		final boolean usePool = false;
+
 		super.getXmlTransferable(schemeElement, importType);
 		if (schemeElement.isSetLabel()) {
 			schemeElement.unsetLabel();
@@ -1090,7 +1097,7 @@ public final class SchemeElement extends AbstractSchemeElement
 		if (schemeElement.isSetSchemes()) {
 			schemeElement.unsetSchemes();
 		}
-		final Set<Scheme> schemes = this.getSchemes0(true);
+		final Set<Scheme> schemes = this.getSchemes0(usePool);
 		if (!schemes.isEmpty()) {
 			final XmlSchemeSeq schemeSeq = schemeElement.addNewSchemes();
 			for (final Scheme scheme : schemes) {
@@ -1154,8 +1161,11 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * <code>SchemeElement</code>, or crap will meet the fan.
 	 *
 	 * @param scheme
+	 * @param usePool
 	 */
-	public void removeScheme(final Scheme scheme) {
+	public void removeScheme(final Scheme scheme,
+			@SuppressWarnings("unused") final boolean usePool)
+	throws ApplicationException {
 		assert scheme != null: NON_NULL_EXPECTED;
 		assert scheme.getParentSchemeElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		scheme.setParentSchemeElement(null);
@@ -1403,10 +1413,14 @@ public final class SchemeElement extends AbstractSchemeElement
 		super.markAsChanged();
 	}
 
+	@ParameterizationPending(value = {"final boolean usePool"})
 	public void setScheme(final Scheme scheme) throws ApplicationException {
+		final boolean usePool = false;
+
 		this.setSchemes(scheme == null
-				? Collections.<Scheme>emptySet()
-				: Collections.singleton(scheme));
+						? Collections.<Scheme>emptySet()
+						: Collections.singleton(scheme),
+				usePool);
 	}
 
 	/**
@@ -1481,19 +1495,27 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	/**
 	 * @param schemes
+	 * @param usePool
 	 * @throws ApplicationException 
 	 * @see Scheme#setSchemeElements(Set)
 	 * @todo Check for circular dependencies.
 	 */
-	public void setSchemes(final Set<Scheme> schemes) throws ApplicationException {
+	public void setSchemes(final Set<Scheme> schemes, final boolean usePool)
+	throws ApplicationException {
 		assert schemes != null: NON_NULL_EXPECTED;
-		final Set<Scheme> oldSchemes = this.getSchemes0(true);
-		oldSchemes.removeAll(schemes);
-		for (final Scheme oldScheme : oldSchemes) {
-			this.removeScheme(oldScheme);
+
+		final Set<Scheme> oldSchemes = this.getSchemes0(usePool);
+
+		final Set<Scheme> toRemove = new HashSet<Scheme>(oldSchemes);
+		toRemove.removeAll(schemes);
+		for (final Scheme scheme : toRemove) {
+			this.removeScheme(scheme, usePool);
 		}
-		for (final Scheme scheme : schemes) {
-			this.addScheme(scheme);
+
+		final Set<Scheme> toAdd = new HashSet<Scheme>(schemes);
+		toAdd.removeAll(oldSchemes);
+		for (final Scheme scheme : toAdd) {
+			this.addScheme(scheme, usePool);
 		}
 	}
 
@@ -1672,6 +1694,13 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	public IdlSchemeElementKind getKind() {
 		return IdlSchemeElementKind.from_int(this.kind);
+	}
+
+	StorableObjectContainerDelegate<Scheme> getSchemeContainerDelegate() {
+		if (this.schemeContainerDelegate == null) {
+			this.schemeContainerDelegate = new StorableObjectContainerDelegate<Scheme>(this, SCHEME_CODE);
+		}
+		return this.schemeContainerDelegate;
 	}
 
 	/*-********************************************************************
