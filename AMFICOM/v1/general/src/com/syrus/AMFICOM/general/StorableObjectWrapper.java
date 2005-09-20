@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObjectWrapper.java,v 1.19 2005/08/28 15:20:16 arseniy Exp $
+ * $Id: StorableObjectWrapper.java,v 1.20 2005/09/20 07:49:21 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import java.lang.reflect.InvocationTargetException;
 import java.lang.reflect.Method;
 import java.util.Date;
 
+import com.syrus.util.PropertyChangeException;
 import com.syrus.util.Wrapper;
 
 /**
@@ -26,8 +27,8 @@ import com.syrus.util.Wrapper;
  * wrapper's constructor must be private and its instance must be obtained using
  * a static method <code>getInstance()</code>.
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.19 $, $Date: 2005/08/28 15:20:16 $
+ * @author $Author: bass $
+ * @version $Revision: 1.20 $, $Date: 2005/09/20 07:49:21 $
  * @see <a href =
  *      "http://bass.science.syrus.ru/java/Bitter%20Java.pdf">&laquo;Bitter
  *      Java&raquo; by Bruce A. Tate </a>
@@ -108,10 +109,18 @@ public abstract class StorableObjectWrapper<T extends StorableObject> implements
 		return null;
 	}
 	
-	public abstract void setValue(T object,
-							String key,
-							Object value);
-	
+	/**
+	 * @param storableObject
+	 * @param key
+	 * @param value
+	 * @throws PropertyChangeException
+	 * @see Wrapper#setValue(Object, String, Object)
+	 */
+	public abstract void setValue(final T storableObject,
+			final String key,
+			final Object value)
+	throws PropertyChangeException;
+
 	public Class getPropertyClass(String key) {
 		if (key.equals(COLUMN_ID) 
 				|| key.equals(COLUMN_CREATOR_ID)
