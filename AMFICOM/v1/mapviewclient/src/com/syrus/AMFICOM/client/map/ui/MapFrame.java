@@ -1,5 +1,5 @@
 /**
- * $Id: MapFrame.java,v 1.74 2005/09/16 14:53:36 krupenn Exp $
+ * $Id: MapFrame.java,v 1.75 2005/09/20 08:26:18 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -32,7 +32,7 @@ import javax.swing.event.ChangeListener;
 import javax.swing.event.InternalFrameEvent;
 
 import com.syrus.AMFICOM.Client.General.Event.ObjectSelectedEvent;
-import com.syrus.AMFICOM.client.UI.CommonUIUtilities;
+import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.event.ContextChangeEvent;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
@@ -132,7 +132,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
 			if(mapEvent.getMapEventType().equals(MapEvent.MAP_FRAME_SHOWN)
 					&& false
 					&& this.notInitialized) {
-				CommonUIUtilities.invokeAsynchronously(new Runnable() {
+				new ProcessingDialog(new Runnable() {
 				
 					public void run() {
 						System.out.print("waiting for SchemeSampleData..."); //$NON-NLS-1$
@@ -207,7 +207,7 @@ class TestSliderListener implements ChangeListener, PropertyChangeListener {
  * 
  * 
  * 
- * @version $Revision: 1.74 $, $Date: 2005/09/16 14:53:36 $
+ * @version $Revision: 1.75 $, $Date: 2005/09/20 08:26:18 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
