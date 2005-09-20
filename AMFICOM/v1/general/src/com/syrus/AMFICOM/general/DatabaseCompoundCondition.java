@@ -1,5 +1,5 @@
 /*
- * $Id: DatabaseCompoundCondition.java,v 1.10 2005/08/08 11:27:25 arseniy Exp $
+ * $Id: DatabaseCompoundCondition.java,v 1.11 2005/09/20 10:07:55 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,13 +10,12 @@ package com.syrus.AMFICOM.general;
 
 import java.lang.reflect.Constructor;
 import java.lang.reflect.InvocationTargetException;
-import java.util.Iterator;
 
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/08 11:27:25 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/20 10:07:55 $
  * @author $Author: arseniy $
  * @module general
  */
@@ -71,12 +70,13 @@ public final class DatabaseCompoundCondition implements DatabaseStorableObjectCo
 
 	public String getSQLQuery() throws IllegalObjectEntityException {
 		boolean firstStep = true;
-		StringBuffer buffer = new StringBuffer();
-		for (Iterator it = this.delegate.getConditions().iterator(); it.hasNext();) {
-			final StorableObjectCondition condition = (StorableObjectCondition) it.next();
+		final StringBuffer buffer = new StringBuffer();
+		for (final StorableObjectCondition condition : this.delegate.getConditions()) {
 			final DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
-			if (databaseStorableObjectCondition == null)
-				return TRUE_CONDITION;
+			if (databaseStorableObjectCondition == null) {
+				Log.errorMessage("DatabaseCompoundCondition.getSQLQuery | ERROR: Cannot reflect database condition -- returning default");
+				return FALSE_CONDITION;
+			}
 
 			final String query = databaseStorableObjectCondition.getSQLQuery();
 			if (firstStep) {

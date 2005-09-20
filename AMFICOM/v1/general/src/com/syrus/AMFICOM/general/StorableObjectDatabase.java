@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectDatabase.java,v 1.193 2005/09/19 16:23:59 bob Exp $
+ * $Id: StorableObjectDatabase.java,v 1.194 2005/09/20 10:07:55 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,8 +32,8 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseDate;
 
 /**
- * @version $Revision: 1.193 $, $Date: 2005/09/19 16:23:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.194 $, $Date: 2005/09/20 10:07:55 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -1461,8 +1461,9 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 
 	private String getConditionQuery(final StorableObjectCondition condition) {
 		final DatabaseStorableObjectCondition databaseStorableObjectCondition = this.reflectDatabaseCondition(condition);
-		if (databaseStorableObjectCondition == null)
-			return DatabaseStorableObjectCondition.TRUE_CONDITION;
+		if (databaseStorableObjectCondition == null) {
+			return DatabaseStorableObjectCondition.FALSE_CONDITION;
+		}
 
 		final short conditionCode = databaseStorableObjectCondition.getEntityCode().shortValue();
 		assert (this.checkEntity(conditionCode)) : this.getEntityName() + "Database.retrieveByCondition | Incompatible condition ("
@@ -1473,7 +1474,7 @@ public abstract class StorableObjectDatabase<T extends StorableObject> {
 			conditionQuery = databaseStorableObjectCondition.getSQLQuery();
 		} catch (IllegalObjectEntityException ioee) {
 			Log.errorException(ioee);
-			conditionQuery = DatabaseStorableObjectCondition.TRUE_CONDITION;
+			conditionQuery = DatabaseStorableObjectCondition.FALSE_CONDITION;
 		}
 		return conditionQuery;
 	}
