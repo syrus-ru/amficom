@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.98 2005/09/20 07:35:46 bob Exp $
+ * $Id: SchedulerModel.java,v 1.99 2005/09/20 15:19:35 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,7 @@ import java.util.HashSet;
 import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
+import java.util.SortedMap;
 import java.util.SortedSet;
 import java.util.TreeSet;
 import java.util.logging.Level;
@@ -68,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.98 $, $Date: 2005/09/20 07:35:46 $
+ * @version $Revision: 1.99 $, $Date: 2005/09/20 15:19:35 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -445,6 +446,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	public Set<Identifier> getSelectedTestIds() {
 		return this.selectedTestIds;
 	}
+	
+	
 
 	public Test getSelectedTest() throws ApplicationException {
 		try {
@@ -672,7 +675,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					}
 					this.testIds.add(test.getId());
 				} else {
-					throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest"));
+					throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest") 
+						+ ':'
+						+ LangModelSchedule.getString("Error.AddingTestIntersectWithOtherTest"));
 				} 
 				
 			} else {
@@ -694,7 +699,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 							this.name != null && this.name.trim().length() > 0 ? this.name : sdf.format(startTime),
 							test.getNumberOfMeasurements());
 				} else {
-					throw new ApplicationException(LangModelSchedule.getString(LangModelSchedule.getString("Error.CannotUpdateTest")));
+					throw new ApplicationException(LangModelSchedule.getString("Error.CannotUpdateTest") + ':'
+						+ LangModelSchedule.getString("Error.AddingTestIntersectWithOtherTest"));
 				}
 			}
 
@@ -818,7 +824,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 						throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest"));
 					}
 				} else {
-					throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest"));
+					throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest") + ':'
+						+ LangModelSchedule.getString("Error.AddingTestIntersectWithOtherTest"));
 				}
 			}
 			
@@ -867,7 +874,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				// new endDate " + endDate, Log.FINEST);
 				correct = this.isValid(startDate, endDate, selectedTest.getMonitoredElement().getId());
 				if (!correct) {
-					throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest"));
+					throw new ApplicationException(LangModelSchedule.getString("Error.CannotAddTest") + ':'
+						+ LangModelSchedule.getString("Error.AddingTestIntersectWithOtherTest"));
 				}
 			}
 
@@ -927,7 +935,8 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					continue;
 				}
 				final Date startTime = test.getStartTime();
-				Date endTime = test.getEndTime();
+				final SortedMap<Date, String> stoppingMap = test.getStoppingMap();
+				Date endTime = stoppingMap.isEmpty() ? test.getEndTime() : stoppingMap.lastKey();
 				if (endTime == null) {
 					endTime = startTime;
 				}
