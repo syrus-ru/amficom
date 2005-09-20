@@ -27,7 +27,6 @@ import java.util.SortedSet;
 import java.util.TreeMap;
 import java.util.TreeSet;
 
-import javax.swing.JOptionPane;
 import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
 import javax.swing.UIManager;
@@ -38,7 +37,6 @@ import com.syrus.AMFICOM.client.UI.ProcessingDialog;
 import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.model.AbstractMainFrame;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
-import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
@@ -46,6 +44,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.Measurement;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
@@ -230,7 +229,8 @@ public class TestLine extends TimeLine {
 	// }
 	
 	boolean isTestNewer(final Test test) {
-		return test.isChanged() && test.getStatus().value() == TestStatus._TEST_STATUS_NEW;
+		return test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION) 
+			&& test.getStatus().value() == TestStatus._TEST_STATUS_NEW;
 	}
 
 	private void paintFlash(Graphics g) {
@@ -383,7 +383,7 @@ public class TestLine extends TimeLine {
 																				SchedulerModel.COMMAND_REFRESH_TEMPORAL_STAMPS,
 																				null, null));
 						} catch (final ApplicationException e1) {
-							AbstractMainFrame.showErrorMessage(TestLine.this, e1);
+							AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 						}
 
 					}
@@ -442,7 +442,7 @@ public class TestLine extends TimeLine {
 								continue;
 							}
 						} catch (ApplicationException e1) {
-							AbstractMainFrame.showErrorMessage(TestLine.this, e1);
+							AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 						}
 						testTimeItem.x += dx;
 					}
@@ -487,7 +487,7 @@ public class TestLine extends TimeLine {
 							}
 
 						} catch (ApplicationException e) {
-							AbstractMainFrame.showErrorMessage(this, e);
+							AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 						}
 
 					}
@@ -518,7 +518,7 @@ public class TestLine extends TimeLine {
 				}
 			}
 		} catch (ApplicationException e) {
-			AbstractMainFrame.showErrorMessage(this, e);
+			AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 		}
 
 		this.updateScale();
@@ -595,11 +595,8 @@ public class TestLine extends TimeLine {
 						this.unsavedTestTimeItems.add(testTimeItem);
 					}
 				}
-			} catch (ApplicationException e) {
-				JOptionPane.showMessageDialog(Environment.getActiveWindow(),
-					LangModelGeneral.getString("Error.CannotAcquireObject"),
-					LangModelGeneral.getString("Error"),
-					JOptionPane.OK_OPTION);
+			} catch (final ApplicationException e) {
+				AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 			}
 		}
 		super.repaint();
@@ -635,7 +632,7 @@ public class TestLine extends TimeLine {
 									+ "<br>" + testController.getName(TestController.KEY_START_TIME) + " : " 
 									+ testController.getValue(test, TestController.KEY_START_TIME) + "</html>";
 						} catch (ApplicationException e) {
-							AbstractMainFrame.showErrorMessage(this, e);
+							AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 						}
 
 					}

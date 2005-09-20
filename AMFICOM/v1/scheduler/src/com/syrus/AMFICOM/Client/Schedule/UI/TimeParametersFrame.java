@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
@@ -214,8 +215,7 @@ public class TimeParametersFrame extends JInternalFrame {
 																							try {
 																							selectedTest = TimeParametersPanel.this.schedulerModel
 																									.getSelectedTest();
-																								canBeMoved = selectedTest
-																										.isChanged()
+																								canBeMoved = selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)
 																										&& TimeParametersPanel.this.schedulerModel
 																												.isValid(
 																													startDate,
@@ -419,7 +419,7 @@ public class TimeParametersFrame extends JInternalFrame {
 																					continue;
 																				}
 																				if (selectedTest != null
-																						&& selectedTest.isChanged()) {
+																						&& selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 																					Identifier temporalPatternId = selectedTest
 																							.getTemporalPatternId();
 																					if (temporalPatternId != null
@@ -557,7 +557,7 @@ public class TimeParametersFrame extends JInternalFrame {
 																			continue;
 																		}
 																		if (selectedTest != null
-																				&& selectedTest.isChanged()) {
+																				&& selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 //																			Log.debugMessage(".run | 2 ", Log.FINEST);
 																			Date startDate = TimeParametersPanel.this
 																					.getStartDate();

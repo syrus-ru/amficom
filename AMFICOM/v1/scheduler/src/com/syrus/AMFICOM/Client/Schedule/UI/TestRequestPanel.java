@@ -22,6 +22,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
@@ -71,7 +72,7 @@ public class TestRequestPanel extends JPanel implements PropertyChangeListener {
 					AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
 					return; 
 				}
-				if (selectedTest != null && selectedTest.isChanged()) {
+				if (selectedTest != null && selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 					selectedTest.setDescription(textField.getText());
 					TestRequestPanel.this.dispatcher
 							.firePropertyChange(new PropertyChangeEvent(TestRequestPanel.this,

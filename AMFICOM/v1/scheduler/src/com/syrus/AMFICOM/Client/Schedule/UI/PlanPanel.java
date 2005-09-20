@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.48 2005/09/18 14:24:42 bob Exp $
+ * $Id: PlanPanel.java,v 1.49 2005/09/20 07:35:46 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/09/18 14:24:42 $
+ * @version $Revision: 1.49 $, $Date: 2005/09/20 07:35:46 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -333,6 +333,7 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 			try {
 				updateTest();
 			} catch (final ApplicationException e) {
+				e.printStackTrace();
 				AbstractMainFrame.showErrorMessage(e.getMessage());
 			}
 		}
@@ -437,6 +438,7 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 			model.updateTests(this.scaleStart.getTime(), this.scaleEnd.getTime());
 			updateTestLines();
 		} catch (final ApplicationException e) {
+			e.printStackTrace();
 			AbstractMainFrame.showErrorMessage(LangModelSchedule.getString("Error.CannotRefreshTests"));
 		}
 

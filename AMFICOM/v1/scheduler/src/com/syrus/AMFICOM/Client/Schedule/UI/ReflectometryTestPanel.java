@@ -51,6 +51,7 @@ import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.ParameterType;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectType;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
 import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
@@ -62,8 +63,8 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/09/18 13:11:45 $
- * @author $Author: bass $
+ * @version $Revision: 1.80 $, $Date: 2005/09/20 07:35:46 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
@@ -833,7 +834,7 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 	
 					final Map<Identifier, Identifier> unchangedMeasurementSetupNewMap = new HashMap<Identifier, Identifier>();
 					for (final Test test : tests) {
-						if (test.isChanged()) {
+						if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 							final Set<Identifier> measurementSetupIds = test.getMeasurementSetupIds();
 							if (measurementSetupIds.size() == 1) {
 								final MeasurementSetup baseMeasurementSetup = 

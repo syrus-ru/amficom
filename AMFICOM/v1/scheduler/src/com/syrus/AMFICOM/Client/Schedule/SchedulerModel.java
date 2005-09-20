@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.97 2005/09/18 13:57:44 bob Exp $
+ * $Id: SchedulerModel.java,v 1.98 2005/09/20 07:35:46 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,6 +47,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
@@ -67,7 +68,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/09/18 13:57:44 $
+ * @version $Revision: 1.98 $, $Date: 2005/09/20 07:35:46 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -735,7 +736,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 
 			boolean correct = true;
 			for (final Test selectedTest : selectedTests) {
-				if (selectedTest.isChanged()) {
+				if (selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 					final Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
 					Date newEndDate = selectedTest.getEndTime();
 					if (newEndDate != null) {
@@ -751,7 +752,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 			if (correct) {
 				boolean moved = false;
 				for (final Test selectedTest : selectedTests) {
-					if (selectedTest.isChanged()) {
+					if (selectedTest.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 						final Date newStartDate = new Date(selectedTest.getStartTime().getTime() + offset);
 						Date newEndDate = selectedTest.getEndTime();
 						if (newEndDate != null) {

@@ -50,6 +50,7 @@ import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.Plugger;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
 import com.syrus.AMFICOM.measurement.AnalysisType;
 import com.syrus.AMFICOM.measurement.MeasurementPort;
@@ -240,7 +241,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 					try {
 						final Set<Test> tests = StorableObjectPool.getStorableObjects(selectedTestIds, true);
 						for (final Test test : tests) {
-							if (test.isChanged()) {
+							if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 								test.setAnalysisType(analysisType);
 							}
 						}
@@ -285,7 +286,7 @@ final class TestParametersPanel implements PropertyChangeListener {
 							final Set<StorableObject> storableObjects = StorableObjectPool.getStorableObjects(selectedTestIds, true);
 							for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
 								final Test test = (Test) iterator.next();
-								if (test.isChanged()) {
+								if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 									test.setMeasurementSetupIds(measurementSetupIdSet);
 								}
 							}
