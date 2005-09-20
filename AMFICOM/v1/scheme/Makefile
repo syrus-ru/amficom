@@ -1,5 +1,5 @@
 #
-# $Id: Makefile,v 1.42 2005/09/19 12:51:09 bass Exp $
+# $Id: Makefile,v 1.43 2005/09/20 19:51:38 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -7,7 +7,7 @@
 MODULE_NAME := scheme
 
 LIBNAME := $(MODULE_NAME).jar
-ARCHFILE := $(MODULE_NAME).tar.bz2
+ARCHFILE := $(MODULE_NAME).tar.gz
 
 IDL_SOURCES = $(IDLDIR)/scheme.idl
 
