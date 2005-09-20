@@ -1,5 +1,5 @@
 /*-
- * $Id: FilterPanel.java,v 1.10 2005/09/20 10:11:38 max Exp $
+ * $Id: FilterPanel.java,v 1.11 2005/09/20 10:19:51 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.AMFICOM.newFilter.StringCondition;
 
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/20 10:11:38 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/20 10:19:51 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -109,6 +109,7 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	private JButton changeButton;
 	private JButton removeButton;
 	private JButton createSchemeButton;
+	//TODO: clearning dates in time condition 
 	private JButton startClear;
 	private JButton startDayButton;
 	private JButton endClear;
