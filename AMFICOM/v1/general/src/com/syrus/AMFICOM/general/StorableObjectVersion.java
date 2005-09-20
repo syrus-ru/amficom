@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectVersion.java,v 1.6 2005/09/14 20:13:08 arseniy Exp $
+ * $Id: StorableObjectVersion.java,v 1.7 2005/09/20 06:48:27 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.general;
 import java.io.Serializable;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/14 20:13:08 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/20 06:48:27 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -18,6 +18,7 @@ import java.io.Serializable;
 public final class StorableObjectVersion implements Cloneable, Serializable {
 	private static final long serialVersionUID = -5642797178846561548L;
 
+	public static final StorableObjectVersion INITIAL_VERSION = new StorableObjectVersion(0L);
 	public static final StorableObjectVersion ILLEGAL_VERSION = new StorableObjectVersion(-1L);
 
 	private long version;
@@ -46,6 +47,9 @@ public final class StorableObjectVersion implements Cloneable, Serializable {
 			if (this.equals(ILLEGAL_VERSION)) {
 				this.version++;
 			}
+			if (this.equals((INITIAL_VERSION))) {
+				this.version++;
+			}
 		}
 		else {
 			this.version = Long.MIN_VALUE;
@@ -57,8 +61,8 @@ public final class StorableObjectVersion implements Cloneable, Serializable {
 	}
 
 	@Override
-	public boolean equals(final Object object) {
-		if (super.equals(object)) {
+	public final boolean equals(final Object object) {
+		if (this == object) {
 			return true;
 		}
 
@@ -67,6 +71,11 @@ public final class StorableObjectVersion implements Cloneable, Serializable {
 			return this.version == storableObjectVersion.version;
 		}
 		return false;
+	}
+
+	@Override
+	public final int hashCode() {
+		return (int) (this.version ^ (this.version >>> 32));
 	}
 
 	@Override
@@ -80,7 +89,7 @@ public final class StorableObjectVersion implements Cloneable, Serializable {
 	}
 
 	public static StorableObjectVersion createInitial() {
-		return new StorableObjectVersion(0L);
+		return INITIAL_VERSION.clone();
 	}
 
 }
