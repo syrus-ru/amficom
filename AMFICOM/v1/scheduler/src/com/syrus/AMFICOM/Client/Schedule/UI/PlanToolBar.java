@@ -15,6 +15,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.awt.event.ItemEvent;
 import java.awt.event.ItemListener;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import java.util.Calendar;
 import java.util.Date;
@@ -192,6 +193,8 @@ class PlanToolBar {
 				}
 			}
 		});
+		
+		this.zoomInButton.setMnemonic(Integer.valueOf(KeyEvent.VK_PLUS));
 		this.zoomInButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.zoomInButton.setFocusable(false);
 		this.zoomInButton.setIcon(UIStorage.ZOOMIN_ICON);
@@ -208,6 +211,7 @@ class PlanToolBar {
 		this.filterButton.setIcon(UIStorage.FILTER_ICON);
 		this.filterButton.setToolTipText(LangModelSchedule.getString("Text.Plan.Toolbar.Filtration")); //$NON-NLS-1$		
 
+		this.zoomOutButton.setMnemonic(Integer.valueOf(KeyEvent.VK_MINUS));
 		this.zoomOutButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.zoomOutButton.setFocusable(false);
 		this.zoomOutButton.setIcon(UIStorage.ZOOMOUT_ICON);
@@ -218,6 +222,8 @@ class PlanToolBar {
 				PlanToolBar.this.panel.updateScale(.8);
 			}
 		});
+		
+		this.zoomOutButton.setMnemonic(Integer.valueOf(KeyEvent.VK_ASTERISK));
 		this.zoomNoneButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.zoomNoneButton.setFocusable(false);
 		this.zoomNoneButton.setIcon(UIStorage.NOZOOM_ICON);
