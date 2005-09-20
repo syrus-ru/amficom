@@ -1,5 +1,5 @@
 /*-
- * $Id: PeriodicalTestProcessor.java,v 1.49 2005/09/20 09:54:05 arseniy Exp $
+ * $Id: PeriodicalTestProcessor.java,v 1.50 2005/09/20 10:02:41 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,7 +18,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/09/20 09:54:05 $
+ * @version $Revision: 1.50 $, $Date: 2005/09/20 10:02:41 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -72,8 +72,8 @@ final class PeriodicalTestProcessor extends TestProcessor {
 				//--------
 
 				if (!timeStamps.isEmpty()) {
-					final Date currentDate = new Date();
-					this.timeStampsList.addAll(timeStamps.tailSet(currentDate));
+					final Date pastExcludeDate = new Date(System.currentTimeMillis() - PAST_MEASUREMENT_TIMEOUT);
+					this.timeStampsList.addAll(timeStamps.tailSet(pastExcludeDate));
 				}
 
 			}
