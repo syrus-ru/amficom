@@ -1,5 +1,5 @@
 /**
- * $Id: MapViewTreeEventHandler.java,v 1.13 2005/09/19 15:36:42 krupenn Exp $
+ * $Id: MapViewTreeEventHandler.java,v 1.14 2005/09/20 16:38:16 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -29,6 +29,7 @@ import com.syrus.AMFICOM.client.event.Dispatcher;
 import com.syrus.AMFICOM.client.event.MapEvent;
 import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.SpatialLayer;
+import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.logic.ItemTreeModel;
@@ -173,6 +174,7 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 				if(this.mapView == null || !this.mapView.equals(mapView)) {
 					this.mapView = mapView;
 					updateTree(mapView);
+					updateLinkToNetMapViewer();
 				}
 			}
 			else if(mapEventType.equals(MapEvent.MAP_CHANGED)) {
@@ -190,6 +192,7 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 				MapView mapView = (MapView )pce.getNewValue();
 				this.mapView = mapView;
 				updateTree(mapView);
+				updateLinkToNetMapViewer();
 			}
 			else if(mapEventType.equals(MapEvent.SELECTION_CHANGED)) {
 				if(this.iconedTreeUI.isLinkObjects()) {
@@ -210,15 +213,7 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 			}
 			else if(mapEventType.equals(MapEvent.MAP_FRAME_SHOWN)) {
 				this.mapFrame = (MapFrame) mapEvent.getNewValue();
-				Collection items = this.iconedTreeUI.findNodes(
-						this.root, 
-						Collections.singletonList(TopologyTreeModel.TOPOLOGY_BRANCH), 
-						false);
-				for(Iterator it = items.iterator(); it.hasNext();) {
-					PopulatableIconedNode pin = (PopulatableIconedNode )it.next();
-					TopologyTreeModel model = (TopologyTreeModel)pin.getChildrenFactory();
-					model.setNetMapViewer(this.mapFrame.getMapViewer());
-				}
+				updateLinkToNetMapViewer();
 			}
 			else if(mapEventType.equals(MapEvent.MAP_REPAINTED)) {
 				if(this.iconedTreeUI.isLinkObjects()) {
@@ -232,6 +227,18 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 							pin.populate();
 						}
 					}
+					if(this.mapView != null) {
+						items = this.iconedTreeUI.findNodes(
+								this.root, 
+								Collections.singletonList(this.mapView.getMap()), 
+								false);
+						for(Iterator it = items.iterator(); it.hasNext();) {
+							PopulatableIconedNode pin = (PopulatableIconedNode )it.next();
+							if(pin.isPopulated()) {
+								pin.populate();
+							}
+						}
+					}
 				}
 			}
 		}
@@ -239,6 +246,35 @@ public class MapViewTreeEventHandler implements TreeSelectionListener, PropertyC
 		this.performProcessing = true;
 		long f = System.currentTimeMillis();
 //		Log.debugMessage("MapViewTreePanel::propertyChange(" + pce.getPropertyName() + ") -------- " + (f - d) + " ms ---------", Level.INFO);
+	}
+
+	/**
+	 * 
+	 */
+	private void updateLinkToNetMapViewer() {
+		if(this.mapFrame != null) {
+			Collection items = this.iconedTreeUI.findNodes(
+					this.root, 
+					Collections.singletonList(TopologyTreeModel.TOPOLOGY_BRANCH), 
+					false);
+			for(Iterator it = items.iterator(); it.hasNext();) {
+				PopulatableIconedNode pin = (PopulatableIconedNode )it.next();
+				TopologyTreeModel model = (TopologyTreeModel)pin.getChildrenFactory();
+				model.setNetMapViewer(this.mapFrame.getMapViewer());
+				pin.populate();
+			}
+			if(this.mapView != null) {
+				items = this.iconedTreeUI.findNodes(
+						this.root, 
+						Collections.singletonList(this.mapView.getMap()), 
+						false);
+				for(Iterator it = items.iterator(); it.hasNext();) {
+					PopulatableIconedNode pin = (PopulatableIconedNode )it.next();
+					MapTreeModel model = (MapTreeModel)pin.getChildrenFactory();
+					model.setNetMapViewer(this.mapFrame.getMapViewer());
+				}
+			}
+		}
 	}
 
 	public void updateTree(MapView mapView) {
