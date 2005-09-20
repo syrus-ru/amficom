@@ -223,7 +223,7 @@ class PlanToolBar {
 			}
 		});
 		
-		this.zoomOutButton.setMnemonic(Integer.valueOf(KeyEvent.VK_ASTERISK));
+		this.zoomNoneButton.setMnemonic(Integer.valueOf(KeyEvent.VK_ASTERISK));
 		this.zoomNoneButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		this.zoomNoneButton.setFocusable(false);
 		this.zoomNoneButton.setIcon(UIStorage.NOZOOM_ICON);
