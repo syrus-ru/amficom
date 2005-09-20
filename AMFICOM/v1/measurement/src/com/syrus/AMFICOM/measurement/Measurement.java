@@ -1,5 +1,5 @@
 /*
- * $Id: Measurement.java,v 1.94 2005/09/18 18:20:30 arseniy Exp $
+ * $Id: Measurement.java,v 1.95 2005/09/20 18:06:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStat
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/09/18 18:20:30 $
+ * @version $Revision: 1.95 $, $Date: 2005/09/20 18:06:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -240,7 +240,7 @@ public final class Measurement extends Action {
 	 * @return a newly generated instance
 	 * @throws CreateObjectException
 	 */
-	protected static Measurement createInstance(final Identifier creatorId,
+	static Measurement createInstance(final Identifier creatorId,
 			final MeasurementType type,
 			final Identifier monitoredElementId,
 			final String name,
