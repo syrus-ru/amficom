@@ -1,5 +1,5 @@
 /*
- * $Id: ReportBuilderMainFrame.java,v 1.13 2005/09/18 13:13:19 peskovsky Exp $
+ * $Id: ReportBuilderMainFrame.java,v 1.14 2005/09/20 09:25:54 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,9 +56,17 @@ import com.syrus.AMFICOM.client.reportbuilder.event.ReportEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.ReportTemplateRenderer;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.filter.UI.FilterPanel;
+import com.syrus.AMFICOM.filter.UI.TreeFilterUI;
 import com.syrus.AMFICOM.report.ReportTemplate;
 import com.syrus.util.Log;
-
+/**
+ * 
+ * @author $Author: peskovsky $
+ * @version $Revision: 1.14 $, $Date: 2005/09/20 09:25:54 $
+ * @author Peskovsky Peter
+ * @module reportbuilder_v1
+ */
 public class ReportBuilderMainFrame extends AbstractMainFrame implements PropertyChangeListener {
 	private static final long serialVersionUID = 8315696633544939499L;
 
@@ -142,12 +150,14 @@ public class ReportBuilderMainFrame extends AbstractMainFrame implements Propert
 				treeFrame.setFrameIcon(UIManager.getIcon(ResourceKeys.ICON_GENERAL));
 				treeFrame.setTitle(LangModelReport.getString(TREE_FRAME));
 				
-				ReportTemplateElementsTreeModel model = new ReportTemplateElementsTreeModel(ReportBuilderMainFrame.this.aContext);
-				IconedTreeUI tfUI = new IconedTreeUI(model.getRoot());
+				ReportTemplateElementsTreeModel model = new ReportTemplateElementsTreeModel(
+						ReportBuilderMainFrame.this.aContext);
+				IconedTreeUI iconedTreeUI = new IconedTreeUI(model.getRoot());
+				TreeFilterUI treeFilterUI = new TreeFilterUI(iconedTreeUI, new FilterPanel());				
 
 				treeFrame.getContentPane().setLayout(new BorderLayout());
-				treeFrame.getContentPane().add(tfUI.getPanel(), BorderLayout.CENTER);
-				JTree tree = tfUI.getTree();
+				treeFrame.getContentPane().add(treeFilterUI.getPanel(), BorderLayout.CENTER);
+				JTree tree = iconedTreeUI.getTree();
 				ReportBuilderMainFrame.this.reportBuilderTreeMouseListener =
 					new ReportTemplateElementsTreeMouseListener(tree);
 				ReportBuilderMainFrame.this.reportBuilderTreeMouseListener.setContext(

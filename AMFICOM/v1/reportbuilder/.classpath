@@ -17,5 +17,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/mapclient_v1"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mapinfo_v1_modifying"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mapviewclient_v1_modifying"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/filterclient_v1"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>

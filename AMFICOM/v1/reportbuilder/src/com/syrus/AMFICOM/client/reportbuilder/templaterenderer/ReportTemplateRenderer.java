@@ -1,5 +1,5 @@
 /*
- * $Id: ReportTemplateRenderer.java,v 1.10 2005/09/18 13:13:19 peskovsky Exp $
+ * $Id: ReportTemplateRenderer.java,v 1.11 2005/09/20 09:25:54 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,7 @@ import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
 import java.io.File;
 import java.io.IOException;
+import java.util.Map;
 
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
@@ -27,7 +28,6 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
 import com.syrus.AMFICOM.client.UI.ChoosableFileFilter;
-import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.model.Command;
 import com.syrus.AMFICOM.client.model.Environment;
@@ -48,12 +48,9 @@ import com.syrus.AMFICOM.client.reportbuilder.event.ReportEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportFlagEvent;
 import com.syrus.AMFICOM.client.reportbuilder.event.ReportQuickViewEvent;
 import com.syrus.AMFICOM.client.reportbuilder.templaterenderer.RendererMode.RENDERER_MODE;
-import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
-import com.syrus.AMFICOM.map.Collector;
-import com.syrus.AMFICOM.map.PhysicalLink;
-import com.syrus.AMFICOM.map.SiteNode;
 import com.syrus.AMFICOM.report.AttachedTextStorableElement;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.ImageStorableElement;
@@ -63,11 +60,6 @@ import com.syrus.AMFICOM.report.TableDataStorableElement;
 import com.syrus.AMFICOM.report.TextAttachingType;
 import com.syrus.AMFICOM.report.ReportTemplate.ORIENTATION;
 import com.syrus.AMFICOM.resource.IntDimension;
-import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
-import com.syrus.AMFICOM.scheme.AbstractSchemePort;
-import com.syrus.AMFICOM.scheme.Scheme;
-import com.syrus.AMFICOM.scheme.SchemeElement;
-import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.util.Log;
 
 public class ReportTemplateRenderer extends JPanel implements PropertyChangeListener{
@@ -102,13 +94,26 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		}
 		if (aContext != null) {
 			this.applicationContext = aContext;
-			this.applicationContext.getDispatcher().addPropertyChangeListener(ReportEvent.TYPE, this);
-			this.mouseListener = new ReportTemplateRendererMouseListener(this,this.applicationContext);
+			this.applicationContext.getDispatcher().addPropertyChangeListener(
+					ReportEvent.TYPE,
+					this);
+			this.mouseListener = new ReportTemplateRendererMouseListener(
+					this,
+					this.applicationContext);
 			this.addMouseListener(this.mouseListener);
 			
-			this.dropTargetListener = new ReportTemplateRendererDropTargetListener(this,this.applicationContext);
+			this.dropTargetListener = new ReportTemplateRendererDropTargetListener(
+					this,
+					this.applicationContext);
 			this.dropTarget = new DropTarget(this, this.dropTargetListener);
+			this.dropTarget.setActive(true);
 		}
+
+		for (Component object : this.getComponents())
+			if (object instanceof RTEDataRenderingComponent){
+				((RTEDataRenderingComponent)object).setContext(
+						this.applicationContext);
+			}
 	}
 	
 	private void jbInit(){
@@ -142,7 +147,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			
 			try {
 				this.setTemplate(((UseTemplateEvent)evt).getReportTemplate());
-			} catch (CreateModelException e) {
+			} catch (Exception e) {
 				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e.getMessage());
 				Log.errorException(e);			
 				JOptionPane.showMessageDialog(
@@ -160,25 +165,9 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		}
 		else if (evt instanceof ReportQuickViewEvent){
 			Object reportObject = ((ReportQuickViewEvent)evt).getReportObject();
-			//Для сиюминутных отчётов по схеме
-			String reportModelName = null;
-			String reportName = null;
-			if (	(reportObject instanceof Scheme)
-					||	(reportObject instanceof SchemeElement)
-					||	(reportObject instanceof AbstractSchemePort)
-					||	(reportObject instanceof AbstractSchemeLink)
-					||	(reportObject instanceof SchemePath)) {
-				reportModelName = SchemeReportModel.class.getName();
-				reportName = SchemeReportModel.SELECTED_OBJECT_CHARS;
-			}
-			//Для сиюминутных отчётов по карте
-			else if (	(reportObject instanceof PhysicalLink)
-					||	(reportObject instanceof SiteNode)
-					||	(reportObject instanceof Collector)) {
-				reportModelName = MapReportModel.class.getName();
-				reportName = MapReportModel.SELECTED_OBJECT_CHARS;
-			}
-			else
+			Map<String,String> reportObjectAttributes = 
+				ReportDataChecker.getObjectReportAttributes(reportObject);
+			if (reportObjectAttributes == null)
 				return;
 			
 			Identifier reportObjectId = ((StorableObject)reportObject).getId();			
@@ -195,12 +184,12 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			
 			try {
 				this.createDataComponentWithText(
-						reportName,
-						reportModelName,
+						reportObjectAttributes.get(ReportDataChecker.REPORT_NAME),
+						reportObjectAttributes.get(ReportDataChecker.MODEL_CLASS_NAME),
 						reportObjectId,
 						new Point(this.marginBounds.x + 5,this.marginBounds.y + 50),
 						new Dimension(this.marginBounds.width - 10,300));
-			} catch (CreateModelException e) {
+			} catch (Exception e) {
 				Log.errorMessage("ReportTemplateRenderer.propertyChange | " + e.getMessage());
 				Log.errorException(e);			
 				JOptionPane.showMessageDialog(
@@ -258,6 +247,8 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			
 			drComponent.removeMouseListener(DRIComponentMouseListener.getInstance());
 			drComponent.removeMouseMotionListener(DRIComponentMouseMotionListener.getInstance());
+			if (drComponent instanceof RTEDataRenderingComponent)
+				((RTEDataRenderingComponent)drComponent).removeDropTargetListener();
 			
 			for (Component object : this.getComponents()){
 				//Удаляем привязанные надписи
@@ -292,7 +283,7 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		return this.template;
 	}
 
-	public void setTemplate(ReportTemplate template) throws CreateModelException {
+	public void setTemplate(ReportTemplate template) throws CreateModelException, ApplicationException {
 		this.template = template;
 		this.refreshTemplateBounds();
 		
@@ -469,12 +460,12 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 		return component;
 	}
 	
-	public ReportTemplateDataRenderingComponent createReportTemplateDataRenderingComponent(
+	public RTEDataRenderingComponent createReportTemplateDataRenderingComponent(
 			String reportName,
 			String reportModelName,
 			Identifier reportObjectId,
 			Point location,
-			Dimension size) throws CreateModelException {
+			Dimension size) throws CreateModelException, ApplicationException {
 		ReportModel reportModel = ReportModelPool.getModel(reportModelName);
 		ReportType reportType = reportModel.getReportKind(reportName);
 		
@@ -488,26 +479,28 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 			storableElement = new DataStorableElement(
 					reportName,
 					reportModelName);
+		storableElement.setReportObjectId(reportObjectId);		
 
-		ReportTemplateDataRenderingComponent component =
-			new ReportTemplateDataRenderingComponent(storableElement);
+		RTEDataRenderingComponent component =
+			new RTEDataRenderingComponent(storableElement);
 		
 		component.addMouseListener(DRIComponentMouseListener.getInstance());
 		component.addMouseMotionListener(DRIComponentMouseMotionListener.getInstance());
-			
+		
 		this.add(component);
-		component.initMinimumSizes();
+		component.refreshLabels();
 		
 		component.setLocation(location.x,location.y);
 		if (size == null)
 			component.setSize(new Dimension(
-					ReportTemplateDataRenderingComponent.DEFAULT_SIZE));
+					RTEDataRenderingComponent.DEFAULT_SIZE));
 		else
 			component.setSize(size);
 		
+		component.setContext(this.applicationContext);
+		
 		storableElement.setLocation(location.x,location.y);
 		storableElement.setSize(component.getWidth(),component.getHeight());
-		storableElement.setReportObjectId(reportObjectId);
 		this.template.addElement(storableElement);
 
 		return component;
@@ -521,14 +514,15 @@ public class ReportTemplateRenderer extends JPanel implements PropertyChangeList
 	 * @param location Расположение
 	 * @param size Размер или null для размера по умолчанию
 	 * @throws CreateModelException 
+	 * @throws ApplicationException 
 	 */
 	public void createDataComponentWithText(
 			String reportName,
 			String reportModelName,
 			Identifier reportObjectId,
 			Point location,
-			Dimension size) throws CreateModelException {
-		ReportTemplateDataRenderingComponent dataComponent = 
+			Dimension size) throws CreateModelException, ApplicationException {
+		RTEDataRenderingComponent dataComponent = 
 			this.createReportTemplateDataRenderingComponent(
 				reportName,
 				reportModelName,
