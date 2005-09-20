@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.40 2005/09/18 13:59:08 bob Exp $
+ * $Id: TableFrame.java,v 1.41 2005/09/20 07:34:47 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -14,11 +14,11 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.beans.PropertyChangeEvent;
 import java.beans.PropertyChangeListener;
-import java.util.LinkedList;
-import java.util.List;
+import java.net.URL;
 import java.util.Set;
 
 import javax.swing.Icon;
+import javax.swing.ImageIcon;
 import javax.swing.JInternalFrame;
 import javax.swing.JMenuItem;
 import javax.swing.JOptionPane;
@@ -49,13 +49,13 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.40 $, $Date: 2005/09/18 13:59:08 $
+ * @version $Revision: 1.41 $, $Date: 2005/09/20 07:34:47 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -68,8 +68,13 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 	WrapperedTable<Test> listTable;
 	ApplicationContext aContext;
 	private JPanel panel;
-	List<Test> rowToRemove;
+	
+	
+
 	PropertyChangeEvent propertyChangeEvent;
+	Icon	deleteIcon;
+	Icon	resumeIcon;
+	Icon	pauseIcon;
 
 	public TableFrame(final ApplicationContext aContext) {
 		this.aContext = aContext;
@@ -207,10 +212,11 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 						for (final int index : rowIndices) {
 							final Test test = model.getObject(index);
 							final int status = test.getStatus().value();
-							if ((!test.isChanged() || 
+							if ((!test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION) || 
 									status != TestStatus._TEST_STATUS_NEW) &&
 								status != TestStatus._TEST_STATUS_PROCESSING &&
-								status != TestStatus._TEST_STATUS_SCHEDULED) {
+								status != TestStatus._TEST_STATUS_SCHEDULED &&
+								status != TestStatus._TEST_STATUS_STOPPED) {
 								return;
 							}
 						}
@@ -219,27 +225,40 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 
 						boolean enableDeleting = true;
 						boolean enableStopping = true;
+						boolean enableResuming = true;
 
 						for (int i = 0; i < rowIndices.length; i++) {
 							final Test test = model.getObject(rowIndices[i]);
 							final int status = test.getStatus().value();
-							if (!test.isChanged() || status != TestStatus._TEST_STATUS_NEW) {
+							if (!test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION) || status != TestStatus._TEST_STATUS_NEW) {
 								enableDeleting = false;
 							}
+							
 							if (status != TestStatus._TEST_STATUS_PROCESSING &&
 								status != TestStatus._TEST_STATUS_SCHEDULED) {
 								enableStopping = false;
 							}
+							
+							if (status != TestStatus._TEST_STATUS_STOPPED) {
+								enableResuming = false;
+							}
 
-							if (!enableDeleting && !enableStopping) {
+							if (!enableDeleting && !enableStopping && !enableResuming) {
 								break;
 							}
 						}
+						
+						// TODO bypass
+						enableDeleting = enableStopping = enableResuming = true;
 
 						if (enableDeleting) {
 							final JMenuItem deleteTestMenuItem = new JMenuItem(LangModelSchedule.getString(rowIndices.length == 1
 									? "Text.Table.DeleteTest"
 										: "Text.Table.DeleteTests"));
+							if (TableFrame.this.deleteIcon != null) {
+								deleteTestMenuItem.setIcon(TableFrame.this.deleteIcon);
+							}
+							
 							deleteTestMenuItem.addActionListener(new ActionListener() {
 
 								public void actionPerformed(final ActionEvent e) {
@@ -247,17 +266,9 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 											LangModelSchedule.getString("Text.Table.DeleteTest.ConfirmMessage"),
 											LangModelSchedule.getString("Text.Table.DeleteTest.ConfirmTitle"),
 											JOptionPane.YES_NO_OPTION);
-									if (temp == JOptionPane.YES_OPTION) {
-										if (TableFrame.this.rowToRemove == null) {
-											TableFrame.this.rowToRemove = new LinkedList<Test>();
-										} else {
-											TableFrame.this.rowToRemove.clear();
-										}
+									if (temp == JOptionPane.YES_OPTION) {										
 										for (int i = 0; i < rowIndices.length; i++) {
 											final Test test = model.getObject(rowIndices[i]);
-											TableFrame.this.rowToRemove.add(test);
-										}
-										for (final Test test : TableFrame.this.rowToRemove) {
 											try {
 												TableFrame.this.schedulerModel.removeTest(test);
 											} catch (final ApplicationException e1) {
@@ -274,21 +285,54 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 								}
 							});
 							popup.add(deleteTestMenuItem);
+							if (enableResuming || enableStopping) {
+								popup.addSeparator();
+							}
+						}
+						
+						if (enableResuming) {
+							final JMenuItem resumeTestingMenuItem = new JMenuItem(LangModelSchedule.getString("Text.Table.ResumeTesting"));
+							if (TableFrame.this.resumeIcon != null) {
+								resumeTestingMenuItem.setIcon(TableFrame.this.resumeIcon);
+							}
+							resumeTestingMenuItem.addActionListener(new ActionListener() {
+
+								public void actionPerformed(final ActionEvent e) {
+									for (int i = 0; i < rowIndices.length; i++) {
+										final Test test = model.getObject(rowIndices[i]);
+										test.setStatus(TestStatus.TEST_STATUS_NEW);
+									}
+									TableFrame.this.dispatcher.firePropertyChange(new PropertyChangeEvent(TableFrame.this,
+										SchedulerModel.COMMAND_REFRESH_TESTS,
+										null,
+										null));
+									table.revalidate();
+									table.repaint();
+								}
+							});
+							popup.add(resumeTestingMenuItem);
 						}
 
 						if (enableStopping) {
 							final JMenuItem stopTestMenuItem = new JMenuItem(LangModelSchedule.getString("Text.Table.StopTesting"));
+							if (TableFrame.this.pauseIcon != null) {
+								stopTestMenuItem.setIcon(TableFrame.this.pauseIcon);
+							}
 							stopTestMenuItem.addActionListener(new ActionListener() {
 
 								public void actionPerformed(final ActionEvent e) {
-									final int temp = JOptionPane.showConfirmDialog(Environment.getActiveWindow(),
-											LangModelSchedule.getString("Text.Table.StopTesting.ConfirmMessage"),
-											LangModelSchedule.getString("Text.Table.StopTesting.ConfirmTitle"),
-											JOptionPane.YES_NO_OPTION);
-									if (temp == JOptionPane.YES_OPTION) {
+									final Object reason = JOptionPane.showInputDialog(Environment.getActiveWindow(),
+											LangModelSchedule.getString("Text.Table.StopTesting.StoppingReason"),
+											LangModelSchedule.getString("Text.Table.StopTesting.Title"),
+											JOptionPane.PLAIN_MESSAGE,
+											null,
+											null,
+											null);
+									if (reason != null) {
 										for (int i = 0; i < rowIndices.length; i++) {
 											final Test test = model.getObject(rowIndices[i]);
 											test.setStatus(TestStatus.TEST_STATUS_STOPPING);
+											test.addStopping(reason.toString());
 										}
 										TableFrame.this.dispatcher.firePropertyChange(new PropertyChangeEvent(TableFrame.this,
 												SchedulerModel.COMMAND_REFRESH_TESTS,
@@ -300,10 +344,6 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 								}
 							});
 
-							if (enableDeleting) {
-								popup.addSeparator();
-							}
-							Log.debugMessage(".mouseClicked | stopTestMenuItem " + stopTestMenuItem, Log.DEBUGLEVEL09);
 							popup.add(stopTestMenuItem);
 						}
 						popup.show(table, evt.getX(), evt.getY());
@@ -326,6 +366,14 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 
 	}
 
+	private Icon createIcons(final String iconUrl) {
+		URL resource = TableFrame.class.getClassLoader().getResource(iconUrl);
+		if (resource != null) {
+			return new ImageIcon(resource);
+		}
+		return null;
+	}
+	
 	private void init() {
 		super.setTitle(LangModelSchedule.getString("Text.Table.Title")); //$NON-NLS-1$
 		super.setFrameIcon((Icon) UIManager.get(ResourceKeys.ICON_GENERAL));
@@ -334,6 +382,10 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 		super.setIconifiable(true);
 		this.panel = getPanel();
 		super.setContentPane(this.panel);
+		
+		this.deleteIcon = this.createIcons("com/syrus/AMFICOM/Client/Schedule/UI/delete.gif");
+		this.resumeIcon = this.createIcons("com/syrus/AMFICOM/Client/Schedule/UI/resume.gif");
+		this.pauseIcon = this.createIcons("com/syrus/AMFICOM/Client/Schedule/UI/pause.gif");
 	}
 
 }
