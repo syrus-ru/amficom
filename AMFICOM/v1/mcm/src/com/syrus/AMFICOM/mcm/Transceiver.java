@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.64 2005/09/20 18:29:37 arseniy Exp $
+ * $Id: Transceiver.java,v 1.65 2005/09/20 23:23:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.64 $, $Date: 2005/09/20 18:29:37 $
+ * @version $Revision: 1.65 $, $Date: 2005/09/20 23:23:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -37,10 +37,10 @@ import com.syrus.util.Log;
 
 final class Transceiver extends SleepButWorkThread {
 	/*	Error codes for method processFall()	*/
-	public static final int FALL_CODE_ESTABLISH_CONNECTION = 1;
-	public static final int FALL_CODE_TRANSMIT_MEASUREMENT = 2;
-	public static final int FALL_CODE_RECEIVE_KIS_REPORT = 3;
-	public static final int FALL_CODE_GENERATE_IDENTIFIER = 4;
+	private static final int FALL_CODE_ESTABLISH_CONNECTION = 1;
+	private static final int FALL_CODE_TRANSMIT_MEASUREMENT = 2;
+	private static final int FALL_CODE_RECEIVE_KIS_REPORT = 3;
+	private static final int FALL_CODE_CREATE_RESULT = 4;
 
 	private KIS kis;
 	private KISConnection kisConnection;
@@ -158,29 +158,34 @@ final class Transceiver extends SleepButWorkThread {
 							Log.errorException(ae);
 						}
 						if (measurement != null) {
-							Result result = null;
 
+							if (measurement.getStatus() != MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED) {
+								measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
+								try {
+									StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
+								} catch (ApplicationException ae) {
+									Log.errorException(ae);
+								}
+							}
+
+							Result result = null;
 							try {
 								result = this.kisReport.createResult();
-								measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ACQUIRED);
-								StorableObjectPool.flush(measurementId, LoginManager.getUserId(), false);
-								super.clearFalls();
 							} catch (MeasurementException me) {
-								if (me.getCode() == MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE) {
-									Log.debugMessage("Transceiver.run | Cannot obtain identifier -- trying to wait", Log.DEBUGLEVEL05);
-									try {
-										MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
-									} catch (CommunicationException ce) {
-										Log.errorException(ce);
-									}
-									super.fallCode = FALL_CODE_GENERATE_IDENTIFIER;
-									super.sleepCauseOfFall();
-								} else {
-									Log.errorException(me);
-									this.throwAwayKISReport();
+								final int code = me.getCode();
+								switch (code) {
+									case MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE:
+									case MeasurementException.COMMUNICATION_FAILED_CODE:
+										Log.debugMessage("Transceiver.run | Cannot create result -- trying to wait", Log.DEBUGLEVEL05);
+										try {
+											MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
+										} catch (CommunicationException ce) {
+											Log.errorException(ce);
+										}
+									default:
+										super.fallCode = FALL_CODE_CREATE_RESULT;
+										super.sleepCauseOfFall();
 								}
-							} catch (ApplicationException ae) {
-								Log.errorException(ae);
 							}
 
 							TestProcessor testProcessor = this.testProcessors.remove(measurementId);
@@ -244,8 +249,8 @@ final class Transceiver extends SleepButWorkThread {
 			case FALL_CODE_RECEIVE_KIS_REPORT:
 				Log.errorMessage("Transceiver.processFall | ERROR: Many errors while readig KIS report");
 				break;
-			case FALL_CODE_GENERATE_IDENTIFIER:
-				Log.errorMessage("Transceiver.processFall | ERROR: Cannot generate identifier");
+			case FALL_CODE_CREATE_RESULT:
+				Log.errorMessage("Transceiver.processFall | ERROR: Cannot create result");
 				this.throwAwayKISReport();
 				break;
 		default:
