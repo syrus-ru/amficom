@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.48 2005/09/20 07:50:22 bass Exp $
+ * $Id: MeasurementPath.java,v 1.49 2005/09/20 08:20:08 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
 /**
  * Элемент пути.
  *
- * @author $Author: bass $
- * @version $Revision: 1.48 $, $Date: 2005/09/20 07:50:22 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.49 $, $Date: 2005/09/20 08:20:08 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -213,25 +213,24 @@ public final class MeasurementPath implements MapElement {
 	 * {@inheritDoc}
 	 */
 	public DoublePoint getLocation() {
-		int count = 0;
 		double x = 0.0D; 
 		double y = 0.0D;
 
 		try {
-			for (final CablePath cablePath : this.getCablePaths()) {
-				final DoublePoint an = cablePath.getLocation();
-				x += an.getX();
-				y += an.getY();
-				count++;
+			List<CablePath> cablePaths = this.getCablePaths();
+			int count = cablePaths.size();
+			if(count > 0) {
+				for (final CablePath cablePath : cablePaths) {
+					final DoublePoint an = cablePath.getLocation();
+					x += an.getX();
+					y += an.getY();
+				}
+				this.location.setLocation(x /= count, y /= count);
 			}
-			
-			/**
-			 * @bug #120
-			 */
-			this.location.setLocation(x /= count, y /= count);
+			// else leave intact
 		} catch (final ApplicationException ae) {
 			Log.debugException(ae, SEVERE);
-			this.location.setLocation(0, 0);
+			// leave intact
 		}
 
 		return this.location;
