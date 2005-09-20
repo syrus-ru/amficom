@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractItem.java,v 1.20 2005/09/15 11:57:42 max Exp $
+ * $Id: AbstractItem.java,v 1.21 2005/09/20 12:31:07 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,8 +19,8 @@ import java.util.List;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/15 11:57:42 $
- * @author $Author: max $
+ * @version $Revision: 1.21 $, $Date: 2005/09/20 12:31:07 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter
  */
@@ -59,12 +59,12 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 	}
 
 	public void addChangeListener(final ItemListener itemListener) {
-		assert !this.itemListeners.contains(itemListener);
+		assert !this.itemListeners.contains(itemListener) : "Listener " + itemListener + " already subsribed to " + this;
 		this.itemListeners.add(0, itemListener);
 	}
 
 	public void removeChangeListener(final ItemListener itemListener) {
-		assert this.itemListeners.contains(itemListener);
+		assert this.itemListeners.contains(itemListener) : "Listener " + itemListener + " have not subsribed to " + this;
 		this.itemListeners.remove(itemListener);
 	}
 
@@ -78,7 +78,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 	}
 
 	public void addChild(Item childItem) {
-		Log.debugMessage("AbstractItem.addChild | this.name: " + this.toString() + " \n\t name: "
+		assert Log.debugMessage("AbstractItem.addChild | this.name: " + this.toString() + " \n\t name: "
 				+ childItem.toString(), Log.DEBUGLEVEL10);
 
 		if (!this.canHaveChildren())
@@ -112,13 +112,14 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 	}
 
 	public void setParent(Item parent) {
-		Log.debugMessage("AbstractItem.setParent | name:" + this.toString() + "\n\tparent:"
+		assert Log.debugMessage("AbstractItem.setParent | name:" + this.toString() + "\n\tparent:"
 				+ (parent == null ? "'null'" : parent.toString()), Log.DEBUGLEVEL10);
 
 		Item oldParent = this.parent;
 		/* yeah, really compare reference */
-		if (parent == oldParent)
+		if (parent == oldParent) {
 			return;
+		}
 
 		if (oldParent != null) {
 			List oldParentChildren = oldParent.getChildren();
@@ -146,7 +147,7 @@ public abstract class AbstractItem implements Item, PropertyChangeListener {
 			 */
 			final ItemListener itemListener = this.itemListeners.get(i);
 			itemListener.setParentPerformed(item, oldParent, newParent);
-			Log.debugMessage(this.toString() + " listener[" + i + "(" + itemListener.getClass().getName() + ")"
+			assert Log.debugMessage(this.toString() + " listener[" + i + "(" + itemListener.getClass().getName() + ")"
 					+ "].setParentPerformed | item:" + item.toString() + ", oldParent:"
 					+ (oldParent == null ? "'null'" : oldParent.toString()) + ", newParent:"
 					+ (newParent == null ? "'null'" : newParent.toString()), Log.DEBUGLEVEL10);
