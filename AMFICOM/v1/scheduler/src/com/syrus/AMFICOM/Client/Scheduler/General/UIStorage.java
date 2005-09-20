@@ -96,60 +96,25 @@ public final class UIStorage {
 	 *            rotation angle in degree
 	 * @return Icon
 	 */
-	public static Icon getStringIcon(	String s,
-										int angle) {
-		int w = 16;
-		int h = 16;
-		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g2d = (Graphics2D) img.getGraphics();
-		FontMetrics fm = g2d.getFontMetrics();
-		g2d.setBackground(UIManager.getColor("Button.background"));
-		g2d.clearRect(0, 0, w, h);
-		Font font = UIManager.getFont("Button.font");
+	public static Icon getStringIcon(	final String s,
+	                                 	final int angle) {
+		final int w = 16;
+		final int h = 16;
+		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB_PRE);
+		final Graphics2D g2d = (Graphics2D) img.getGraphics();
+		final FontMetrics fm = g2d.getFontMetrics();
+		final Font font = UIManager.getFont("Button.font");
 		g2d.setFont(font);
 		g2d.setColor(UIManager.getColor("Button.foreground"));
 		g2d.drawString(s, w / 4, (h / 2 + fm.getHeight()) / 2);
-		AffineTransform tx = new AffineTransform();
+		
+		final AffineTransform tx = new AffineTransform();
 		tx.rotate(angle * Math.PI / 180.0, img.getWidth() / 2, img.getHeight() / 2);
-		AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
+		
+		final AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		img = op.filter(img, null);
-		Icon icon = new ImageIcon(img);
-		return icon;
-	}
-
-//	/**
-//	 * set rigid dimenstion (min,max,preferred) size for component
-//	 * 
-//	 * @param component
-//	 * @param dimension
-//	 */
-//	public static void setRigidSize(JComponent component,
-//									Dimension dimension) {
-//		component.setPreferredSize(dimension);
-//		component.setMaximumSize(dimension);
-//		component.setMinimumSize(dimension);
-//	}
-
-	/**
-	 * create JRadioButton with title and Action
-	 * 
-	 * @param title
-	 *            title for button
-	 * @param action
-	 * @return (min,max,preferred)
-	 */
-	public static JRadioButton createRadioButton(	final String title,
-													final Action action) {
-		JRadioButton button = new JRadioButton(title);
-		button.addItemListener(new ItemListener() {
-
-			public void itemStateChanged(ItemEvent e) {
-				if (e.getStateChange() == ItemEvent.SELECTED) {
-					action.actionPerformed(new ActionEvent(e, e.getID(), title));
-				}
-			}
-		});
-		return button;
+		
+		return new ImageIcon(img);
 	}
 
 }

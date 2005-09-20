@@ -1,5 +1,5 @@
 /*
- * $Id: LogicalTreeUI.java,v 1.23 2005/09/02 13:13:20 bob Exp $
+ * $Id: LogicalTreeUI.java,v 1.24 2005/09/20 14:13:54 bob Exp $
  *
  * Copyright ? 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -62,7 +62,7 @@ import javax.swing.tree.TreePath;
 import javax.swing.tree.TreeSelectionModel;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/09/02 13:13:20 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/20 14:13:54 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module filter
@@ -318,24 +318,25 @@ public class LogicalTreeUI implements SelectionListener, AddDeleteItems, Seriali
 
 	private static final Insets	NULL_INSETS	= new Insets(0, 0, 0, 0);
 
-	private static Icon getStringIcon(final String s, final int angle) {
+	public static Icon getStringIcon(	final String s,
+	                                 	final int angle) {
 		final int w = 16;
 		final int h = 16;
-		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_RGB);
+		BufferedImage img = new BufferedImage(w, h, BufferedImage.TYPE_INT_ARGB_PRE);
 		final Graphics2D g2d = (Graphics2D) img.getGraphics();
 		final FontMetrics fm = g2d.getFontMetrics();
-		g2d.setBackground(UIManager.getColor("Button.background"));
-		g2d.clearRect(0, 0, w, h);
 		final Font font = UIManager.getFont("Button.font");
 		g2d.setFont(font);
 		g2d.setColor(UIManager.getColor("Button.foreground"));
 		g2d.drawString(s, w / 4, (h / 2 + fm.getHeight()) / 2);
+		
 		final AffineTransform tx = new AffineTransform();
 		tx.rotate(angle * Math.PI / 180.0, img.getWidth() / 2, img.getHeight() / 2);
+		
 		final AffineTransformOp op = new AffineTransformOp(tx, AffineTransformOp.TYPE_BILINEAR);
 		img = op.filter(img, null);
-		final Icon icon = new ImageIcon(img);
-		return icon;
+		
+		return new ImageIcon(img);
 	}
 
 	private JPanel		panel;
