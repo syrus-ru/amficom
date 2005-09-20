@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.38 2005/09/09 14:29:58 arseniy Exp $
+ * $Id: AbstractNode.java,v 1.39 2005/09/20 16:26:03 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,8 +26,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  *
- * @author $Author: arseniy $
- * @version $Revision: 1.38 $, $Date: 2005/09/09 14:29:58 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.39 $, $Date: 2005/09/20 16:26:03 $
  * @module map
  * @see SiteNode
  * @see TopologicalNode
@@ -104,22 +104,6 @@ public abstract class AbstractNode extends StorableObject implements MapElement 
 		return this.characterizableDelegate.getCharacteristics(usePool);
 	}
 
-	/**
-	 * @deprecated use {@link #location location}.{@link DoublePoint#getY() getY()}
-	 */
-	@Deprecated
-	public double getLatitude() {
-		return this.location.getY();
-	}
-
-	/**
-	 * @deprecated use {@link #location location}.{@link DoublePoint#getX() getX()}
-	 */
-	@Deprecated
-	public double getLongitude() {
-		return this.location.getX();
-	}
-	
 	protected void setLongitude(final double longitude) {
 		this.location.setLocation(longitude, this.location.getY());
 		super.markAsChanged();
