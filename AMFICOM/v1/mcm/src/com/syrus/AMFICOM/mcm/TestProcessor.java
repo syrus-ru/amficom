@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.71 2005/09/20 11:12:10 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.72 2005/09/20 18:26:17 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@ package com.syrus.AMFICOM.mcm;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -26,6 +27,7 @@ import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -44,7 +46,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.71 $, $Date: 2005/09/20 11:12:10 $
+ * @version $Revision: 1.72 $, $Date: 2005/09/20 18:26:17 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -171,7 +173,10 @@ abstract class TestProcessor extends SleepButWorkThread {
 				try {
 					final Set<Result> results = lastMeasurement.getResults();
 					if (!results.isEmpty()) {
+						//-Число результатов измерений уже вычислено, не нужно позволять методу addMeasurementResult его изменять
+						final int numberOfMResultsSave = this.numberOfMResults;
 						this.addMeasurementResult(results.iterator().next());
+						this.numberOfMResults = numberOfMResultsSave;
 					} else {
 						Log.errorMessage("TestProcessor.setup | ERROR: Cannot find result for acquired measurement '" + lastMeasurement.getId()
 								+ "'; setting measurement as ABORTED");
@@ -388,11 +393,19 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 		try {
 			final LinkedIdsCondition lic = new LinkedIdsCondition(this.test.getId(), ObjectEntities.MEASUREMENT_CODE);
-			final TypicalCondition tc = new TypicalCondition(MeasurementStatus._MEASUREMENT_STATUS_COMPLETED,
+			final TypicalCondition tc1 = new TypicalCondition(MeasurementStatus._MEASUREMENT_STATUS_COMPLETED,
 					OperationSort.OPERATION_NOT_EQUALS,
 					ObjectEntities.MEASUREMENT_CODE,
 					MeasurementWrapper.COLUMN_STATUS);
-			final CompoundCondition condition = new CompoundCondition(lic, CompoundConditionSort.AND, tc);
+			final TypicalCondition tc2 = new TypicalCondition(MeasurementStatus._MEASUREMENT_STATUS_ABORTED,
+					OperationSort.OPERATION_NOT_EQUALS,
+					ObjectEntities.MEASUREMENT_CODE,
+					MeasurementWrapper.COLUMN_STATUS);
+			final Set<StorableObjectCondition> conditions = new HashSet<StorableObjectCondition>();
+			conditions.add(lic);
+			conditions.add(tc1);
+			conditions.add(tc2);
+			final CompoundCondition condition = new CompoundCondition(conditions, CompoundConditionSort.AND);
 			final Set<Measurement> measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 			for (final Measurement measurement : measurements) {
 				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
