@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.68 2005/09/20 16:41:20 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.69 2005/09/20 18:13:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,7 +21,8 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
-import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Date;
@@ -57,7 +58,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/09/20 16:41:20 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/20 18:13:34 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort
@@ -364,7 +365,7 @@ public final class SchemeCablePort extends AbstractSchemePort
 	public void fromXmlTransferable(final XmlSchemeCablePort schemeCablePort,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeCablePort, SCHEMECABLEPORT_CODE, importType, IMPORT);
+		XmlComplementorRegistry.complementStorableObject(schemeCablePort, SCHEMECABLEPORT_CODE, importType, PRE_IMPORT);
 
 		super.fromXmlTransferable(schemeCablePort, importType);
 
@@ -385,5 +386,7 @@ public final class SchemeCablePort extends AbstractSchemePort
 					"SchemeCablePort.fromXmlTransferable() | "
 					+ XML_BEAN_NOT_COMPLETE);
 		}
+
+		XmlComplementorRegistry.complementStorableObject(schemeCablePort, SCHEMECABLEPORT_CODE, importType, POST_IMPORT);
 	}
 }

@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlComplementor.java,v 1.4 2005/09/20 13:00:11 bass Exp $
+ * $Id: XmlComplementor.java,v 1.5 2005/09/20 18:13:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,12 +13,13 @@ import com.syrus.AMFICOM.general.xml.XmlStorableObject;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.4 $, $Date: 2005/09/20 13:00:11 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/20 18:13:35 $
  * @module general
  */
 public interface XmlComplementor {
 	enum ComplementationMode {
-		IMPORT,
+		PRE_IMPORT,
+		POST_IMPORT,
 		EXPORT
 	}
 

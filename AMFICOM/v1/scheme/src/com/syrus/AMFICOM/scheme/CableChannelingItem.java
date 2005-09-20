@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.70 2005/09/20 16:41:20 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.71 2005/09/20 18:13:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -23,7 +23,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
-import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -61,7 +62,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/09/20 16:41:20 $
+ * @version $Revision: 1.71 $, $Date: 2005/09/20 18:13:35 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -769,7 +770,7 @@ public final class CableChannelingItem
 			final XmlCableChannelingItem cableChannelingItem,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(cableChannelingItem, CABLECHANNELINGITEM_CODE, importType, IMPORT);
+		XmlComplementorRegistry.complementStorableObject(cableChannelingItem, CABLECHANNELINGITEM_CODE, importType, PRE_IMPORT);
 
 		this.startSpare = cableChannelingItem.getStartSpare();
 		this.endSpare = cableChannelingItem.getEndSpare();
@@ -782,6 +783,8 @@ public final class CableChannelingItem
 		this.startSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getStartSiteNodeId(), importType, MODE_THROW_IF_ABSENT);
 		this.endSiteNodeId = Identifier.fromXmlTransferable(cableChannelingItem.getEndSiteNodeId(), importType, MODE_THROW_IF_ABSENT);
 		this.parentSchemeCableLinkId = Identifier.fromXmlTransferable(cableChannelingItem.getParentSchemeCableLinkId(), importType, MODE_THROW_IF_ABSENT);
+
+		XmlComplementorRegistry.complementStorableObject(cableChannelingItem, CABLECHANNELINGITEM_CODE, importType, POST_IMPORT);
 	}
 
 	/**

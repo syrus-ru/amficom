@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.109 2005/09/20 16:41:20 bass Exp $
+ * $Id: SchemeElement.java,v 1.110 2005/09/20 18:13:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -33,7 +33,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
-import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind.SCHEME_CONTAINER;
 import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER;
 import static java.util.logging.Level.FINE;
@@ -90,7 +91,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.109 $, $Date: 2005/09/20 16:41:20 $
+ * @version $Revision: 1.110 $, $Date: 2005/09/20 18:13:34 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1628,7 +1629,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final XmlSchemeElement schemeElement,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeElement, SCHEMEELEMENT_CODE, importType, IMPORT);
+		XmlComplementorRegistry.complementStorableObject(schemeElement, SCHEMEELEMENT_CODE, importType, PRE_IMPORT);
 
 		super.fromXmlTransferable(schemeElement, importType);
 
@@ -1711,6 +1712,8 @@ public final class SchemeElement extends AbstractSchemeElement
 		}
 
 		this.equipmentTypeSet = true;
+
+		XmlComplementorRegistry.complementStorableObject(schemeElement, SCHEMEELEMENT_CODE, importType, POST_IMPORT);
 	}
 
 	public IdlSchemeElementKind getKind() {

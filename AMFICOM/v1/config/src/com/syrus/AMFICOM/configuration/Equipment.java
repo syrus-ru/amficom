@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.128 2005/09/20 16:41:21 bass Exp $
+ * $Id: Equipment.java,v 1.129 2005/09/20 18:13:35 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -18,7 +18,8 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_
 import static com.syrus.AMFICOM.general.ObjectEntities.EQUIPMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
-import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -57,7 +58,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.128 $, $Date: 2005/09/20 16:41:21 $
+ * @version $Revision: 1.129 $, $Date: 2005/09/20 18:13:35 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -299,7 +300,7 @@ public final class Equipment extends DomainMember
 	public void fromXmlTransferable(final XmlEquipment equipment,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(equipment, EQUIPMENT_CODE, importType, IMPORT);
+		XmlComplementorRegistry.complementStorableObject(equipment, EQUIPMENT_CODE, importType, PRE_IMPORT);
 
 		this.name = equipment.getName();
 		this.description = equipment.isSetDescription()
@@ -345,6 +346,8 @@ public final class Equipment extends DomainMember
 				Characteristic.createInstance(super.creatorId, characteristic, importType);
 			}
 		}
+
+		XmlComplementorRegistry.complementStorableObject(equipment, EQUIPMENT_CODE, importType, POST_IMPORT);
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.98 2005/09/20 16:41:20 bass Exp $
+ * $Id: Scheme.java,v 1.99 2005/09/20 18:13:34 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
-import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBNETWORK;
 import static java.util.logging.Level.SEVERE;
 
@@ -86,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.98 $, $Date: 2005/09/20 16:41:20 $
+ * @version $Revision: 1.99 $, $Date: 2005/09/20 18:13:34 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1392,7 +1393,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	public void fromXmlTransferable(final XmlScheme scheme,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, IMPORT);
+		XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, PRE_IMPORT);
 
 		this.name = scheme.getName();
 		this.description = scheme.isSetDescription()
@@ -1450,6 +1451,8 @@ public final class Scheme extends AbstractCloneableDomainMember
 				// empty so far
 			}
 		}
+
+		XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, POST_IMPORT);
 	}
 
 	/*-********************************************************************

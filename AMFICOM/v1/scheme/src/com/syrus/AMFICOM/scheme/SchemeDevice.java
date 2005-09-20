@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.84 2005/09/20 16:41:20 bass Exp $
+ * $Id: SchemeDevice.java,v 1.85 2005/09/20 18:13:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
-import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -78,7 +79,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2005/09/20 16:41:20 $
+ * @version $Revision: 1.85 $, $Date: 2005/09/20 18:13:35 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -896,7 +897,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	public void fromXmlTransferable(final XmlSchemeDevice schemeDevice,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeDevice, SCHEMEDEVICE_CODE, importType, IMPORT);
+		XmlComplementorRegistry.complementStorableObject(schemeDevice, SCHEMEDEVICE_CODE, importType, PRE_IMPORT);
 
 		this.name = schemeDevice.getName();
 		this.description = schemeDevice.isSetDescription()
@@ -938,6 +939,8 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 		}
 
 		this.parentSet = true;
+
+		XmlComplementorRegistry.complementStorableObject(schemeDevice, SCHEMEDEVICE_CODE, importType, POST_IMPORT);
 	}
 
 	/*-********************************************************************

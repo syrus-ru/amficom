@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.70 2005/09/20 16:41:20 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.71 2005/09/20 18:13:35 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,7 +22,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
 import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
-import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.POST_IMPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.PRE_IMPORT;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -62,7 +63,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/09/20 16:41:20 $
+ * @version $Revision: 1.71 $, $Date: 2005/09/20 18:13:35 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -672,7 +673,7 @@ public final class SchemeProtoGroup extends StorableObject
 			final XmlSchemeProtoGroup schemeProtoGroup,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, IMPORT);
+		XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, PRE_IMPORT);
 
 		this.name = schemeProtoGroup.getName();
 		this.description = schemeProtoGroup.isSetDescription()
@@ -694,5 +695,7 @@ public final class SchemeProtoGroup extends StorableObject
 				SchemeProtoElement.createInstance(super.creatorId, schemeProtoElement, importType);
 			}
 		}
+
+		XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, POST_IMPORT);
 	}
 }
