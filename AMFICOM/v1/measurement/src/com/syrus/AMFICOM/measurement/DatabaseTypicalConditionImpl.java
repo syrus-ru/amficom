@@ -1,5 +1,5 @@
 /*
-* $Id: DatabaseTypicalConditionImpl.java,v 1.18 2005/09/14 18:35:57 arseniy Exp $
+* $Id: DatabaseTypicalConditionImpl.java,v 1.19 2005/09/20 10:00:48 arseniy Exp $
 *
 * Copyright ¿ 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/14 18:35:57 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/20 10:00:48 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -32,6 +32,11 @@ class DatabaseTypicalConditionImpl extends AbstractDatabaseTypicalCondition {
 	protected String getColumnName() throws IllegalObjectEntityException {
 		/* check key support */
 		switch (super.condition.getEntityCode().shortValue()) {
+			case ObjectEntities.MEASUREMENT_CODE:
+				if (this.condition.getKey().equals(MeasurementWrapper.COLUMN_STATUS)) {
+					return MeasurementWrapper.COLUMN_STATUS;
+				}
+				break;
 			case ObjectEntities.TEST_CODE:
 				if (this.condition.getKey().equals(TestWrapper.COLUMN_START_TIME)) {
 					return TestWrapper.COLUMN_START_TIME;
