@@ -17,7 +17,11 @@ TROVECLASSPATH=$EXTLIB/trove.jar
 
 XMLCLASSPATH=$EXTLIB/xbean.jar:\
 $EXTLIB/dom4j-1.6.jar:\
-$EXTLIB/jaxen-1.1-beta-6.jar
+$EXTLIB/jaxen-1.1-beta-6.jar:\
+$LIB/generalxml.jar:\
+$LIB/configurationxml.jar:\
+$LIB/mapxml.jar:\
+$LIB/schemexml.jar
 
 MAPINFOCLASSPATH=\
 $EXTLIB/jdom.jar:\
@@ -35,15 +39,12 @@ APPCLASSPATH=\
 $LIB/filter.jar:\
 $LIB/mscharserver.jar:\
 $LIB/general.jar:\
-$LIB/generalxml.jar:\
 $LIB/administration.jar:\
 $LIB/configuration.jar:\
-$LIe/configurationxml.jar:\
 $LIB/measurement.jar:\
 $LIB/csbridge.jar:\
 $LIB/leserver_interface.jar:\
 $LIB/map.jar:\
-$LIB/mapxml.jar:\
 $LIB/scheme.jar:\
 $LIB/util.jar:\
 $LIB/resource.jar:\
