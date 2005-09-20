@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.99 2005/09/20 10:42:01 bass Exp $
+ * $Id: Map.java,v 1.100 2005/09/20 16:26:45 krupenn Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: bass $
- * @version $Revision: 1.99 $, $Date: 2005/09/20 10:42:01 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.100 $, $Date: 2005/09/20 16:26:45 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -131,6 +131,8 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 			this.mapLibrarys = new HashSet<MapLibrary>();
 	
 			try {
+				preloadCharacteristics();
+				
 				this.siteNodes.addAll(StorableObjectPool.<SiteNode>getStorableObjects(this.siteNodeIds, true));
 				this.topologicalNodes.addAll(StorableObjectPool.<TopologicalNode>getStorableObjects(this.topologicalNodeIds, true));
 				this.physicalLinks.addAll(StorableObjectPool.<PhysicalLink>getStorableObjects(this.physicalLinkIds, true));
@@ -225,10 +227,11 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 		this.transientFieldsInitialized = false;
 	}
 	
-	public void open() throws ApplicationException {
-		LinkedIdsCondition condition = new LinkedIdsCondition(this.siteNodeIds, ObjectEntities.CHARACTERISTIC_CODE);
+	public void preloadCharacteristics() throws ApplicationException {
+		LinkedIdsCondition condition = null;
 
 		if(!this.siteNodeIds.isEmpty()) {
+			condition = new LinkedIdsCondition(this.siteNodeIds, ObjectEntities.CHARACTERISTIC_CODE);
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 
@@ -243,7 +246,12 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 //		}
 
 		if(!this.physicalLinkIds.isEmpty()) {
-			condition.setLinkedIds(this.physicalLinkIds);
+			if(condition == null) {
+				condition = new LinkedIdsCondition(this.physicalLinkIds, ObjectEntities.CHARACTERISTIC_CODE);
+			}
+			else {
+				condition.setLinkedIds(this.physicalLinkIds);
+			}
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 
@@ -253,15 +261,29 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 //		}
 
 		if(!this.collectorIds.isEmpty()) {
-			condition.setLinkedIds(this.collectorIds);
+			if(condition == null) {
+				condition = new LinkedIdsCondition(this.collectorIds, ObjectEntities.CHARACTERISTIC_CODE);
+			}
+			else {
+				condition.setLinkedIds(this.collectorIds);
+			}
+			
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
 
 		if(!this.externalNodeIds.isEmpty()) {
-			condition.setLinkedIds(this.externalNodeIds);
+			if(condition == null) {
+				condition = new LinkedIdsCondition(this.externalNodeIds, ObjectEntities.CHARACTERISTIC_CODE);
+			}
+			else {
+				condition.setLinkedIds(this.externalNodeIds);
+			}
+			
 			StorableObjectPool.getStorableObjectsByCondition(condition, true);
 		}
+	}
 
+	public void open() {
 		this.initialize();
 	}
 
