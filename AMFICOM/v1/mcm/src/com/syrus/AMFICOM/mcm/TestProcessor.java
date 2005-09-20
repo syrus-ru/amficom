@@ -1,15 +1,15 @@
-/*
- * $Id: TestProcessor.java,v 1.68 2005/09/14 18:13:47 arseniy Exp $
+/*-
+ * $Id: TestProcessor.java,v 1.69 2005/09/20 09:54:05 arseniy Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
-
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Collections;
 import java.util.Date;
+import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Set;
@@ -18,12 +18,13 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseContext;
-import com.syrus.AMFICOM.general.DatabaseException;
 import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.ObjectNotFoundException;
+import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
 import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.AMFICOM.general.StorableObjectPool;
@@ -31,10 +32,11 @@ import com.syrus.AMFICOM.general.TypicalCondition;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlCompoundConditionPackage.CompoundConditionSort;
 import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypicalConditionPackage.OperationSort;
 import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementDatabase;
 import com.syrus.AMFICOM.measurement.MeasurementWrapper;
 import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.ResultDatabase;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.AMFICOM.measurement.TestDatabase;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPackage.MeasurementStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlResultPackage.ResultSort;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
@@ -42,22 +44,33 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.68 $, $Date: 2005/09/14 18:13:47 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/20 09:54:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
-
 abstract class TestProcessor extends SleepButWorkThread {
-	Test test;
-	Transceiver transceiver;
-	private int numberOfReceivedMResults;
-	boolean lastMeasurementAcquisition;
-	private long currentMeasurementStartTime;
-	long forgetFrame;
-	private List<Result> measurementResultList;
-	boolean running;
+	private static final String ABORT_REASON_DATABASE_ERROR = "Database error";
+	private static final String ABORT_REASON_LONG_TIMEOUT = "Long timeout after last measurement creation";
 
+	/*	Error codes for method processFall()	*/
+	public static final int FALL_CODE_CREATE_IDENTIFIER = 1;
+	public static final int FALL_CODE_CREATE_MEASUREMENT = 2;
+
+	private Test test;
+
+	private Date lastMeasurementStartTime;
+	private Date nextMeasurementStartTime;
+	private int numberOfMResults;
+	private boolean lastMeasurementAcquisition;
+
+	private List<Result> measurementResults;
+
+	private Transceiver transceiver;
+
+	private long waitMResultTimeout;
+
+	private boolean running;
 
 	public TestProcessor(final Test test) {
 		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
@@ -65,151 +78,192 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 		this.test = test;
 
-		this.numberOfReceivedMResults = 0;
-		this.lastMeasurementAcquisition = false;
-		this.currentMeasurementStartTime = this.test.getStartTime().getTime();
-		this.forgetFrame = ApplicationProperties.getInt(MeasurementControlModule.KEY_FORGET_FRAME, MeasurementControlModule.FORGET_FRAME) * 1000;
-		this.measurementResultList = Collections.synchronizedList(new LinkedList<Result>());
+		MeasurementControlModule.putTestProcessor(this);
+
+		this.measurementResults = Collections.synchronizedList(new LinkedList<Result>());
+
 		this.running = true;
 
-		//	Проверить, не устарел ли этот тест
-		final long timePassed = System.currentTimeMillis() - this.test.getStartTime().getTime();
-		if (timePassed > this.forgetFrame) {
-			Log.debugMessage("Passed " + timePassed / 1000 + " sec (more than " + this.forgetFrame / 1000
-					+ " sec) from start time. Aborting test '" + this.test.getId() + "'", Log.DEBUGLEVEL03);
-			this.abort();
+		final Identifier kisId = test.getKISId();
+		this.transceiver = MeasurementControlModule.transceivers.get(kisId);
+		if (this.transceiver == null) {
+			Log.errorMessage("TestProcessor<init> | Cannot find transceiver for kis '" + kisId + "'");
+			this.shutdown();
+			return;
 		}
 
-		if (this.running) {
-			// Проверить правильность КИС. Найти приёмопередатчик.
-			final Identifier kisId = test.getKISId();
-			this.transceiver = MeasurementControlModule.transceivers.get(kisId);
-			if (this.transceiver == null) {
-				Log.errorMessage("TestProcessor<init> | Cannot find transceiver for kis '" + kisId + "'");
-				this.abort();
-			}
-		}
+		this.waitMResultTimeout = ApplicationProperties.getInt(MeasurementControlModule.KEY_WAIT_MRESULT_TIMEOUT,
+				MeasurementControlModule.WAIT_MRESULT_TIMEOUT) * 1000;
 
-		if (this.running) {
-			// Различные способы обработки теста в зависимости от его статуса
-			switch (this.test.getStatus().value()) {
-				case TestStatus._TEST_STATUS_SCHEDULED:
-					// Нормальная работа
-					this.startWithScheduledTest();
-					break;
-				case TestStatus._TEST_STATUS_PROCESSING:
-					// Перезапуск после сбоя
-					this.startWithProcessingTest();
-					break;
-				default:
-					Log.errorMessage("Unappropriate status " + this.test.getStatus().value() + " of test '" + this.test.getId() + "'");
-					this.abort();
+		this.setupMeasurements();
+
+		if (this.test.getStatus() != TestStatus.TEST_STATUS_PROCESSING) {
+			test.setStatus(TestStatus.TEST_STATUS_PROCESSING);
+			try {
+				StorableObjectPool.flush(test, LoginManager.getUserId(), false);
+			} catch (ApplicationException ae) {
+				Log.errorException(ae);
 			}
 		}
 	}
 
-	private void startWithScheduledTest() {
-		this.updateMyTestStatus(TestStatus.TEST_STATUS_PROCESSING);
-	}
+	private void setupMeasurements() {
+		final Identifier testId = this.test.getId();
 
-	private void startWithProcessingTest() {
-		final StorableObjectDatabase<Test> database = DatabaseContext.getDatabase(ObjectEntities.TEST_CODE);
-		final TestDatabase testDatabase = (TestDatabase) database;
+		final int testStatus = this.test.getStatus().value();
+		if (testStatus != TestStatus._TEST_STATUS_SCHEDULED && testStatus != TestStatus._TEST_STATUS_PROCESSING) {
+			Log.errorMessage("TestProcessor.setup | ERROR: Test '" + testId + "' has status " + testStatus
+					+ " -- not SCHEDULED or PROCESSING; shutting down");
+			this.shutdown();
+			return;
+		}
+
+		final int numberOfMeasurements = this.test.getNumberOfMeasurements();
+		Log.debugMessage("TestProcessor.setup | Test '" + testId + "' -- number of measurements: " + numberOfMeasurements,
+				Log.DEBUGLEVEL06);
+		if (numberOfMeasurements == 0) {
+			this.numberOfMResults = 0;
+			this.lastMeasurementStartTime = null;
+			return;
+		}
+
+		final StorableObjectDatabase<Measurement> mDatabase = DatabaseContext.getDatabase(ObjectEntities.MEASUREMENT_CODE);
+		final MeasurementDatabase measurementDatabase = (MeasurementDatabase) mDatabase;
+		final StorableObjectDatabase<Result> rDatabase = DatabaseContext.getDatabase(ObjectEntities.RESULT_CODE);
+		final ResultDatabase resultDatabase = (ResultDatabase) rDatabase;
+
 		Measurement lastMeasurement = null;
 		try {
-			lastMeasurement = testDatabase.retrieveLastMeasurement(this.test);
-			Log.debugMessage("TestProcessor.startWithProcessingTest | Last measurement for test '" + this.test.getId()
-					+ "' -- '" + lastMeasurement.getId() + "'", Log.DEBUGLEVEL08);
-		} catch (ApplicationException ae) {
-			if (ae instanceof ObjectNotFoundException) {
-				this.startWithScheduledTest();
-				return;
-			}
-			Log.errorException(ae);
-			this.abort();
+			lastMeasurement = measurementDatabase.retrieveLast(this.test.getId());
+		} catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			this.abort(ABORT_REASON_DATABASE_ERROR);
+		} catch (ObjectNotFoundException onfe) {
+			Log.debugMessage("TestProcessor.setup | Last measurement for test '" + testId
+					+ "' not found; assume test has none measurements", Log.DEBUGLEVEL06);
+			this.numberOfMResults = 0;
+			this.lastMeasurementStartTime = null;
+			return;
+		}
+		Log.debugMessage("TestProcessor.setup | Test '" + testId + "' -- last measurement: " + lastMeasurement.getId(),
+				Log.DEBUGLEVEL06);
+
+		try {
+			this.numberOfMResults = resultDatabase.retrieveNumberOf(testId, ResultSort.RESULT_SORT_MEASUREMENT);
+		} catch (RetrieveObjectException roe) {
+			Log.errorException(roe);
+			this.abort(ABORT_REASON_DATABASE_ERROR);
+		}
+		Log.debugMessage("TestProcessor.setup | Test '" + testId + "' -- number of measurement results: " + this.numberOfMResults,
+				Log.DEBUGLEVEL06);
+
+		this.lastMeasurementStartTime = lastMeasurement.getStartTime();
+		final int lastMeasurementStatus = lastMeasurement.getStatus().value();
+		switch (lastMeasurementStatus) {
+			case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
+				this.transceiver.addMeasurement(lastMeasurement, this);
+				break;
+			case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
+				this.transceiver.addAcquiringMeasurement(lastMeasurement, this);
+				break;
+			case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
+				try {
+					final Set<Result> results = lastMeasurement.getResults();
+					if (!results.isEmpty()) {
+						this.addMeasurementResult(results.iterator().next());
+					} else {
+						Log.errorMessage("TestProcessor.setup | ERROR: Cannot find result for acquired measurement '" + lastMeasurement.getId()
+								+ "'; setting measurement as ABORTED");
+						lastMeasurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+					}
+				} catch (ApplicationException ae) {
+					Log.errorMessage("TestProcessor.setup | ERROR: Cannot load results for acquired measurement '" + lastMeasurement.getId()
+							+ "'; setting measurement as ABORTED");
+					lastMeasurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ABORTED);
+				}
+				break;
+			default:
+				Log.debugMessage("TestProcessor.setupMeasurements | Test '" + testId + "' -- status of last measurement: "
+						+ lastMeasurementStatus, Log.DEBUGLEVEL06);
 		}
 
-		Set<Result> results;
-		Result measurementResult = null;
-		if (lastMeasurement != null) {
-			try{
-				this.numberOfReceivedMResults = testDatabase.retrieveNumberOfResults(this.test, ResultSort.RESULT_SORT_MEASUREMENT);
-				switch (lastMeasurement.getStatus().value()) {
-					case MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED:
-						this.transceiver.addMeasurement(lastMeasurement, this);
-						break;
-					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING:
-						this.transceiver.addAcquiringMeasurement(lastMeasurement, this);
-						break;
-					case MeasurementStatus._MEASUREMENT_STATUS_ACQUIRED:
-						results = lastMeasurement.getResults(true);
-						if (results != null && !results.isEmpty()) {
-							measurementResult = results.iterator().next();
-						}
-						if (measurementResult != null) {
-							this.addMeasurementResult(measurementResult);
-						} else {
-							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find result for measurement '"
-									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
-						}
-						break;
-					case MeasurementStatus._MEASUREMENT_STATUS_ANALYZED:
-						results = lastMeasurement.getResults(true);
-						Result analysisResult = null;
-						if (results != null && !results.isEmpty()) {
-							for (final Result result : results) {
-								switch (result.getSort().value()) {
-									case ResultSort._RESULT_SORT_MEASUREMENT:
-										measurementResult = result;
-										break;
-									case ResultSort._RESULT_SORT_ANALYSIS:
-										analysisResult = result;
-										break;
-								}
-							}
-						}
-						if (measurementResult != null) {
-							Log.debugMessage("TestProcessor.startWithProcessingTest | Found measurement result for measurement '"
-									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')", Log.DEBUGLEVEL08);
-						} else {
-							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find measurement result for measurement '"
-									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
-						}
-						if (analysisResult != null) {
-							Log.debugMessage("TestProcessor.startWithProcessingTest | Found analysis result for measurement '"
-									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')", Log.DEBUGLEVEL08);
-						} else {
-							Log.errorMessage("TestProcessor.startWithProcessingTest | Cannot find analysis result for measurement '"
-									+ lastMeasurement.getId() + "' (last of test '" + this.test.getId() + "')");
-						}
+		try {
+			StorableObjectPool.flush(lastMeasurement, LoginManager.getUserId(), false);
+		} catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+	}
 
-						lastMeasurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
+	final void addMeasurementResult(final Result measurementResult) {
+		final ResultSort resultSort = measurementResult.getSort();
+		if (resultSort.value() == ResultSort._RESULT_SORT_MEASUREMENT) {
+			if (!this.measurementResults.contains(measurementResult)) {
+				this.measurementResults.add(measurementResult);
+				this.numberOfMResults++;
+			}
+		} else {
+			Log.errorMessage("TestProcessor.addMeasurementResult | ERROR: Result '" + measurementResult.getId()
+					+ "' has sort " + resultSort.value() + " -- not MEASUREMENT; adding failed");
+		}
+	}
+
+	//-Return null if no more measurements to run 
+	abstract Date getNextMeasurementStartTime(final Date fromDate, final boolean includeFromDate);
+
+	@Override
+	public final void run() {
+		while (this.running) {
+
+			if (!this.lastMeasurementAcquisition) {
+				if (this.nextMeasurementStartTime == null) {
+					if (this.lastMeasurementStartTime == null) {
+						this.nextMeasurementStartTime = this.getNextMeasurementStartTime(this.test.getStartTime(), true);
+					} else {
+						this.nextMeasurementStartTime = this.getNextMeasurementStartTime(this.lastMeasurementStartTime, false);
+					}
+					if (this.nextMeasurementStartTime == null) {
+						this.lastMeasurementAcquisition = true;
+						Log.debugMessage("Test '" + this.test.getId() + "' | Last measurement acquisition", Log.DEBUGLEVEL06);
+					} else {
+						Log.debugMessage("Test '" + this.test.getId() + "' | Next measurement at: " + this.nextMeasurementStartTime,
+								Log.DEBUGLEVEL06);
+					}
+				} else {
+					if (this.nextMeasurementStartTime.getTime() <= System.currentTimeMillis()) {
 						try {
-							StorableObjectPool.flush(lastMeasurement, LoginManager.getUserId(), false);
-						} catch (ApplicationException ae) {
-							Log.errorException(ae);
+							this.newMeasurementCreation(this.nextMeasurementStartTime);
+							this.nextMeasurementStartTime = null;
+							super.clearFalls();
+						} catch (CreateObjectException coe) {
+							Log.errorException(coe);
+							if (coe.getCause() instanceof IllegalObjectEntityException) {
+								super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
+							}
+							else {
+								super.fallCode = FALL_CODE_CREATE_MEASUREMENT;
+							}
+							super.sleepCauseOfFall();
 						}
-
-						break;
+					}
 				}
 			}
-			catch (DatabaseException de) {
-				Log.errorException(de);
-				this.abort();
+
+			this.processMeasurementResults();
+			this.checkIfOver();
+
+			try {
+				sleep(super.initialTimeToSleep);
+			}
+			catch (InterruptedException ie) {
+				Log.errorException(ie);
 			}
 		}
 	}
 
-	protected final void addMeasurementResult(final Result result) {
-		if (!this.measurementResultList.contains(result)) {
-			this.measurementResultList.add(result);
-		}
-	}
-
-	final void newMeasurementCreation(final Date startTime) throws CreateObjectException {
+	private final void newMeasurementCreation(final Date startTime) throws CreateObjectException {
 		final Measurement measurement = this.test.createMeasurement(LoginManager.getUserId(), startTime);
 		this.transceiver.addMeasurement(measurement, this);
-		this.currentMeasurementStartTime = startTime.getTime();
+		this.lastMeasurementStartTime = startTime;
 		try {
 			StorableObjectPool.flush(measurement, LoginManager.getUserId(), false);
 		} catch (ApplicationException ae) {
@@ -217,73 +271,116 @@ abstract class TestProcessor extends SleepButWorkThread {
 		}
 	}
 
-	final void checkIfCompletedOrAborted() {
-		final int numberOfScheduledMeasurements = this.test.getNumberOfMeasurements();
-		Log.debugMessage('\'' + this.test.getId().getIdentifierString()
-				 + "' numberOfReceivedMResults: " + this.numberOfReceivedMResults
-				 + ", numberOfScheduledMeasurements: " + numberOfScheduledMeasurements
-				 + ", lastMeasurementAcquisition: " + this.lastMeasurementAcquisition, Log.DEBUGLEVEL07);
-		if (this.numberOfReceivedMResults == numberOfScheduledMeasurements && this.lastMeasurementAcquisition) {
-			this.complete();
-		} else if (System.currentTimeMillis() - this.currentMeasurementStartTime > this.forgetFrame) {
-				Log.debugMessage("Passed " + this.forgetFrame / 1000 + " sec from last measurement creation. Aborting test '"
-						+ this.test.getId() + "'", Log.DEBUGLEVEL03);
-				this.abort();
-		}
-	}
-
-	final void processMeasurementResult() {
-		if (!this.measurementResultList.isEmpty()) {
-			final Result measurementResult = this.measurementResultList.remove(0);
-			this.numberOfReceivedMResults++;
-			final Measurement measurement = (Measurement) measurementResult.getAction();
-
-			try {
-				final Result[] aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
-				for (int i = 0; i < aeResults.length; i++) {
-					if (aeResults[i] != null) {
-						Log.debugMessage("TestProcessor.processMeasurementResult | Result: '" + aeResults[i].getId()
-								+ "' of measurement '" + measurement.getId() + "'", Log.DEBUGLEVEL09);
-					}
-				}
-
-				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_ANALYZED);
-
+	private final void processMeasurementResults() {
+		synchronized (this.measurementResults) {
+			for (final Iterator<Result> it = this.measurementResults.iterator(); it.hasNext();) {
+				final Result measurementResult = it.next();
+				final Measurement measurement = (Measurement) measurementResult.getAction();
 				try {
-					StorableObjectPool.flush(ObjectEntities.RESULT_CODE, LoginManager.getUserId(), false);
-					// - Every action contains in dependencies of it's result
-				} catch (ApplicationException ae) {
+					final Result[] aeResults = AnalysisEvaluationProcessor.analyseEvaluate(measurementResult);
+					for (int i = 0; i < aeResults.length; i++) {
+						if (aeResults[i] != null) {
+							Log.debugMessage("TestProcessor.processMeasurementResult | Analysis result: '" + aeResults[i].getId()
+									+ "' of measurement '" + measurement.getId() + "'", Log.DEBUGLEVEL07);
+						}
+					}
+				} catch (AnalysisException ae) {
 					Log.errorException(ae);
 				}
-			}
-			catch (TestProcessingException tpe) {
-				Log.errorException(tpe);
-			}
 
-			measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
-			try {
-				StorableObjectPool.flush(measurement, LoginManager.getUserId(), false);
-			} catch (ApplicationException ae) {
-				Log.errorException(ae);
+				measurement.setStatus(MeasurementStatus.MEASUREMENT_STATUS_COMPLETED);
+
+				it.remove();
 			}
 		}
-	}
 
-	private final void updateMyTestStatus(final TestStatus status) {
-		this.test.setStatus(status);
 		try {
-			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
+			StorableObjectPool.flush(ObjectEntities.RESULT_CODE, LoginManager.getUserId(), false);
+			// - Every action contains in dependencies of it's result
 		} catch (ApplicationException ae) {
 			Log.errorException(ae);
 		}
 	}
 
-	protected void complete() {
-		this.updateMyTestStatus(TestStatus.TEST_STATUS_COMPLETED);
+	private void checkIfOver() {
+		final int numberOfMeasurements = this.test.getNumberOfMeasurements();
+
+		final StringBuffer mesg = new StringBuffer();
+		mesg.append("'");
+		mesg.append(this.test.getId());
+		mesg.append("' on '");
+		mesg.append(this.test.getMonitoredElementId());
+		mesg.append("':\n");
+		mesg.append("\t numberOfMeasurements: ");
+		mesg.append(numberOfMeasurements);
+		mesg.append("\n");
+		mesg.append("\t numberOfMResults: ");
+		mesg.append(this.numberOfMResults);
+		mesg.append("\n");
+		if (this.lastMeasurementAcquisition) {
+			mesg.append("\t last measurement acquisition");
+		} else {
+			mesg.append("\t nextMeasurementStartTime: ");
+			mesg.append(this.nextMeasurementStartTime);
+		}
+		Log.debugMessage(mesg.toString(), Log.DEBUGLEVEL07);
+
+		if (this.numberOfMResults == numberOfMeasurements && this.lastMeasurementAcquisition) {
+			this.complete();
+		} else if (this.lastMeasurementStartTime != null
+				&& System.currentTimeMillis() - this.lastMeasurementStartTime.getTime() > this.waitMResultTimeout) {
+			Log.debugMessage("Passed " + this.waitMResultTimeout / 1000 + " sec from last measurement creation. Aborting test '"
+					+ this.test.getId() + "'", Log.DEBUGLEVEL03);
+			this.abort(ABORT_REASON_LONG_TIMEOUT);
+		}
+	}
+
+	@Override
+	protected final void processFall() {
+		switch (super.fallCode) {
+			case FALL_CODE_NO_ERROR:
+				break;
+			case FALL_CODE_CREATE_IDENTIFIER:
+				this.continueWithNextMeasurement();
+				break;
+			case FALL_CODE_CREATE_MEASUREMENT:
+				this.continueWithNextMeasurement();
+				break;
+			default:
+				Log.errorMessage("TestProcessor.processFall | Unknown error code: " + super.fallCode);
+		}
+	}
+
+	private void continueWithNextMeasurement() {
+		this.nextMeasurementStartTime = null;
+	}
+
+	final Identifier getTestId() {
+		return this.test.getId();
+	}
+
+	void complete() {
+		this.test.setStatus(TestStatus.TEST_STATUS_COMPLETED);
+		try {
+			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
+		} catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
 		this.shutdown();
 	}
 
-	protected void stopTest() {
+	void abort(final String abortReason) {
+		this.test.addStopping(abortReason);
+		this.test.setStatus(TestStatus.TEST_STATUS_ABORTED);
+		try {
+			StorableObjectPool.flush(this.test, LoginManager.getUserId(), false);
+		} catch (ApplicationException ae) {
+			Log.errorException(ae);
+		}
+		this.stopTest();
+	}
+
+	void stopTest() {
 		if (this.transceiver != null) {
 			this.transceiver.removeMeasurementsOfTestProcessor(this);
 		}
@@ -307,24 +404,15 @@ abstract class TestProcessor extends SleepButWorkThread {
 		this.shutdown();
 	}
 
-	protected void abort() {
-		this.updateMyTestStatus(TestStatus.TEST_STATUS_ABORTED);
-		this.stopTest();
-	}
-
-	protected void shutdown() {
+	void shutdown() {
 		this.running = false;
 		this.cleanup();
 	}
 
-	void cleanup() {
-		this.measurementResultList.clear();
-		MeasurementControlModule.testProcessors.remove(this.test.getId());
+	private void cleanup() {
+		this.measurementResults.clear();
+		MeasurementControlModule.removeTestProcessor(this.test.getId());
 		this.test = null;
-	}
-
-	public Identifier getTestId() {
-		return this.test.getId();
 	}
 
 }

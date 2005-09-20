@@ -1,156 +1,90 @@
-/*
- * $Id: PeriodicalTestProcessor.java,v 1.48 2005/09/14 18:13:47 arseniy Exp $
+/*-
+ * $Id: PeriodicalTestProcessor.java,v 1.49 2005/09/20 09:54:05 arseniy Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
-
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Date;
-import java.util.Iterator;
-import java.util.LinkedList;
-import java.util.List;
-import java.util.Set;
+import java.util.SortedSet;
+import java.util.TreeSet;
 
 import com.syrus.AMFICOM.general.ApplicationException;
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.48 $, $Date: 2005/09/14 18:13:47 $
+ * @version $Revision: 1.49 $, $Date: 2005/09/20 09:54:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
-
 final class PeriodicalTestProcessor extends TestProcessor {
-	private static final long FRAME = 24*60*60*1000;//ms	
-	
-	/*	Error codes for method processFall()	*/
-	public static final int FALL_CODE_CREATE_IDENTIFIER = 1;
-	public static final int FALL_CODE_CREATE_MEASUREMENT = 2;
+	private static final long FRAME = 24*60*60*1000;//ms
 
-	private long endTime;
+	private static final String ABORT_REASON_TEMPORAL_PATTERN = "Failed to load temporal pattern";
+
+	private Date endTime;
 	private AbstractTemporalPattern temporalPattern;
+	private SortedSet<Date> timeStampsList;
 
-	private List<Date> timeStampsList;
-	private Date currentTimeStamp;
-
-	public PeriodicalTestProcessor(final Test test) {
+	public PeriodicalTestProcessor(Test test) {
 		super(test);
 
-		this.endTime = test.getEndTime().getTime();
+		this.endTime = test.getEndTime();
 		try {
 			this.temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
 		} catch (ApplicationException ae) {
 			Log.errorMessage("Cannot load temporal pattern '" + test.getTemporalPatternId() + "' for test '" + test.getId() + "'");
-			this.abort();
+			this.abort(ABORT_REASON_TEMPORAL_PATTERN);
 		}
-
-		this.timeStampsList = new LinkedList<Date>();
-		this.currentTimeStamp = null;
+		this.timeStampsList = new TreeSet<Date>();
 	}
 
-	private Date getCurrentTimeStamp() {
-		Date timeStamp = null;
-		if (!super.lastMeasurementAcquisition) {
-			if (!this.timeStampsList.isEmpty()) {
-				timeStamp = this.timeStampsList.remove(0);
-			} else {
-				final long start = System.currentTimeMillis();
-				if (start <= this.endTime) {
-					final Set<Date> times = this.temporalPattern.getTimes(start, Math.min(start + FRAME, this.endTime));
-//--------
-					Log.debugMessage("PeriodicalTestProcessor.getCurrentTimeStamp | From " + (new Date(start))
-							+ " to " + (new Date(Math.min(start + FRAME, this.endTime))), Log.DEBUGLEVEL09);
-					for (Iterator it = times.iterator(); it.hasNext();) {
-						Log.debugMessage("time: " + it.next(), Log.DEBUGLEVEL09);
-					}
-//--------
-					if (!times.isEmpty()) {
-						this.timeStampsList.addAll(times);
-						timeStamp = this.timeStampsList.remove(0);
+	@Override
+	Date getNextMeasurementStartTime(final Date fromDate, final boolean includeFromDate) {
+		if (this.timeStampsList.isEmpty()) {
+			if (fromDate.before(this.endTime)) {
+				final long fromDateLong = fromDate.getTime();
+				final long toDateLong = Math.min(fromDateLong + FRAME, this.endTime.getTime());
+				final SortedSet<Date> timeStamps = this.temporalPattern.getTimes(fromDateLong, toDateLong);
+				if (!includeFromDate) {
+					if (timeStamps.remove(fromDate)) {
+						Log.debugMessage("PeriodicalTestProcessor.getNextMeasurementStartTime | Removed from set of time stamps fromDate: " + fromDate,
+								Log.DEBUGLEVEL10);
 					} else {
-						super.lastMeasurementAcquisition = true;
+						Log.debugMessage("PeriodicalTestProcessor.getNextMeasurementStartTime | Date fromDate: " + fromDate + " not found in set of time stamps",
+								Log.DEBUGLEVEL10);
 					}
-				} else {
-					super.lastMeasurementAcquisition = true;
 				}
+
+				//--------
+				Log.debugMessage("PeriodicalTestProcessor.getCurrentTimeStamp | From " + fromDate
+						+ " to " + (new Date(toDateLong))
+						+ ", include fromDate: " + includeFromDate, Log.DEBUGLEVEL09);
+				for (final Date date : timeStamps) {
+					Log.debugMessage("date: " + date, Log.DEBUGLEVEL09);
+				}
+				//--------
+
+				if (!timeStamps.isEmpty()) {
+					final Date currentDate = new Date();
+					this.timeStampsList.addAll(timeStamps.tailSet(currentDate));
+				}
+
 			}
 		}
-		return timeStamp;
-	}
 
-	@Override
-	public void run() {
-		while (super.running) {
-			if (!super.lastMeasurementAcquisition) {
-				if (this.currentTimeStamp == null) {
-					this.currentTimeStamp = this.getCurrentTimeStamp();
-					Log.debugMessage("Next measurement at: " + this.currentTimeStamp, Log.DEBUGLEVEL07);
-				} else {
-					if (this.currentTimeStamp.getTime() <= System.currentTimeMillis()) {
-
-						try {
-							super.newMeasurementCreation(this.currentTimeStamp);
-							this.currentTimeStamp = null;
-							super.clearFalls();
-						} catch (CreateObjectException coe) {
-							Log.errorException(coe);
-							if (coe.getCause() instanceof IllegalObjectEntityException)
-								super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
-							else
-								super.fallCode = FALL_CODE_CREATE_MEASUREMENT;
-							super.sleepCauseOfFall();
-						}
-
-					}	//if (this.currentTimeStamp.getTime() <= System.currentTimeMillis())
-				}	//if (this.currentTimeStamp == null)
-			}	//if (! super.lastMeasurementAcquisition)
-
-			super.processMeasurementResult();
-			super.checkIfCompletedOrAborted();
-
-			try {
-				sleep(super.initialTimeToSleep);
-			}
-			catch (InterruptedException ie) {
-				Log.errorException(ie);
-			}
+		if (!this.timeStampsList.isEmpty()) {
+			final Date measurementStartTime = this.timeStampsList.first();
+			this.timeStampsList.remove(measurementStartTime);
+			return measurementStartTime;
 		}
+		return null;
 	}
 
-	@Override
-	protected void cleanup() {
-		super.cleanup();
-		if (this.timeStampsList != null) {
-			this.timeStampsList.clear();
-		}
-	}
-
-	@Override
-	protected void processFall() {
-		switch (super.fallCode) {
-			case FALL_CODE_NO_ERROR:
-				break;
-			case FALL_CODE_CREATE_IDENTIFIER:
-				this.continueWithNextMeasurement();
-				break;
-			case FALL_CODE_CREATE_MEASUREMENT:
-				this.continueWithNextMeasurement();
-				break;
-			default:
-				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
-		}
-	}
-
-	private void continueWithNextMeasurement() {
-		this.currentTimeStamp = null;
-	}
 }

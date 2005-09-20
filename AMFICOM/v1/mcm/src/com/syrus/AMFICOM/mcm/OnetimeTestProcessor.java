@@ -1,90 +1,38 @@
-/*
- * $Id: OnetimeTestProcessor.java,v 1.32 2005/09/14 18:13:47 arseniy Exp $
+/*-
+ * $Id: OnetimeTestProcessor.java,v 1.33 2005/09/20 09:54:05 arseniy Exp $
  *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
+ * Copyright © 2004-2005 Syrus Systems.
+ * Dept. of Science & Technology.
+ * Project: AMFICOM.
  */
-
 package com.syrus.AMFICOM.mcm;
 
 import java.util.Date;
 
-import com.syrus.AMFICOM.general.CreateObjectException;
-import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.measurement.Test;
-import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.32 $, $Date: 2005/09/14 18:13:47 $
+ * @version $Revision: 1.33 $, $Date: 2005/09/20 09:54:05 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
-
 final class OnetimeTestProcessor extends TestProcessor {
-	/*	Error codes for method processFall()	*/
-	public static final int FALL_CODE_CREATE_IDENTIFIER = 1;
-	public static final int FALL_CODE_CREATE_MEASUREMENT = 2;
-
-	private Date startTime;
+	private boolean first;
 
 	public OnetimeTestProcessor(final Test test) {
 		super(test);
-		super.lastMeasurementAcquisition = (test.getNumberOfMeasurements() > 0);
 
-		this.startTime = test.getStartTime();
-		Log.debugMessage("ParameterSet lastMeasurementAcquisition: " + this.lastMeasurementAcquisition + "; startTime: " + this.startTime + ", current: " + (new Date(System.currentTimeMillis())), Log.DEBUGLEVEL08);
+		this.first = true;
 	}
 
 	@Override
-	public void run() {
-		while (super.running) {
-			if (!super.lastMeasurementAcquisition) {
-				if (this.startTime.getTime() <= System.currentTimeMillis()) {
-
-					try {
-						super.newMeasurementCreation(this.startTime);
-						super.lastMeasurementAcquisition = true;
-						super.clearFalls();
-					} catch (CreateObjectException coe) {
-						Log.errorException(coe);
-						if (coe.getCause() instanceof IllegalObjectEntityException)
-							super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
-						else
-							super.fallCode = FALL_CODE_CREATE_MEASUREMENT;
-						super.sleepCauseOfFall();
-					}
-
-				}
-			}
-
-			super.processMeasurementResult();
-			super.checkIfCompletedOrAborted();
-
-			try {
-				sleep(super.initialTimeToSleep);
-			}
-			catch (InterruptedException ie) {
-				Log.errorException(ie);
-			}
-
-		}	//while
-	}
-
-	@Override
-	protected void processFall() {
-		switch (super.fallCode) {
-			case FALL_CODE_NO_ERROR:
-				break;
-			case FALL_CODE_CREATE_IDENTIFIER:
-				this.abort();
-				break;
-			case FALL_CODE_CREATE_MEASUREMENT:
-				this.abort();
-				break;
-			default:
-				Log.errorMessage("processError | Unknown error code: " + super.fallCode);
+	Date getNextMeasurementStartTime(final Date fromDate, final boolean includeFromDate) {
+		if (this.first) {
+			this.first = false;
+			return (includeFromDate && System.currentTimeMillis() - fromDate.getTime() >= 0) ? fromDate : null;
 		}
+		return null;
 	}
+
 }

@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.126 2005/09/18 14:11:59 bob Exp $
+ * $Id: MeasurementControlModule.java,v 1.127 2005/09/20 09:54:05 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -28,6 +28,7 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CORBAServer;
 import com.syrus.AMFICOM.general.CompoundCondition;
 import com.syrus.AMFICOM.general.DatabaseContext;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LoginException;
@@ -52,8 +53,8 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.126 $, $Date: 2005/09/18 14:11:59 $
- * @author $Author: bob $
+ * @version $Revision: 1.127 $, $Date: 2005/09/20 09:54:05 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
  */
@@ -74,7 +75,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	public static final String KEY_TICK_TIME = "TickTime";
 	public static final String KEY_MAX_FALLS = "MaxFalls";
 	public static final String KEY_FORWARD_PROCESSING = "ForwardProcessing";
-	public static final String KEY_FORGET_FRAME = "ForgetFrame";
+	public static final String KEY_WAIT_MRESULT_TIMEOUT = "WaitMResultTimeout";
 	public static final String KEY_MSERVER_SERVANT_NAME = "MServerServantName";
 	public static final String KEY_MSERVER_CHECK_TIMEOUT = "MServerCheckTimeout";
 	public static final String KEY_KIS_TICK_TIME = "KISTickTime";
@@ -100,7 +101,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 	 */
 	public static final int TICK_TIME = 5;	//sec
 	public static final int FORWARD_PROCESSING = 2;
-	public static final int FORGET_FRAME = 24 * 60 * 60;	//sec
+	public static final int WAIT_MRESULT_TIMEOUT = 24 * 60 * 60;	//sec
 	public static final String MSERVER_SERVANT_NAME = "MServer";
 	public static final int MSERVER_CHECK_TIMEOUT = 10;		//min
 	public static final int KIS_TICK_TIME = 1;	//sec
@@ -330,21 +331,27 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}//while
 	}
 
+	protected static void putTestProcessor(final TestProcessor testProcessor) {
+		assert testProcessor != null : ErrorMessages.NON_NULL_EXPECTED;
+		testProcessors.put(testProcessor.getTestId(), testProcessor);
+	}
+
+	protected static void removeTestProcessor(final Identifier testId) {
+		assert testId != null : ErrorMessages.NON_NULL_EXPECTED;
+		assert testId.getMajor() == ObjectEntities.TEST_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
+		testProcessors.remove(testId);
+	}
+
 	private static void startTestProcessor(final Test test) {
-		TestProcessor testProcessor = null;
 		switch (test.getTemporalType().value()) {
 			case TestTemporalType._TEST_TEMPORAL_TYPE_ONETIME:
-				testProcessor = new OnetimeTestProcessor(test);
+				(new OnetimeTestProcessor(test)).start();
 				break;
 			case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL:
-				testProcessor = new PeriodicalTestProcessor(test);
+				(new PeriodicalTestProcessor(test)).start();
 				break;
 			default:
 				Log.errorMessage("Incorrect temporal type " + test.getTemporalType().value() + " of test '" + test.getId().toString() + "'");
-		}
-		if (testProcessor != null) {
-			testProcessors.put(test.getId(), testProcessor);
-			testProcessor.start();
 		}
 	}
 
