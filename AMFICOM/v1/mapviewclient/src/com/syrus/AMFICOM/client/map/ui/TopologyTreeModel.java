@@ -1,5 +1,5 @@
 /**
- * $Id: TopologyTreeModel.java,v 1.12 2005/09/16 15:45:55 krupenn Exp $
+ * $Id: TopologyTreeModel.java,v 1.13 2005/09/20 16:39:22 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -65,6 +65,10 @@ public class TopologyTreeModel implements ChildrenFactory {
 		// empty
 	}
 	
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
+	}
+
 	public PopulatableIconedNode getRoot() {
 		if(this.root == null) {
 			this.root = new PopulatableIconedNode(
@@ -157,10 +161,6 @@ public class TopologyTreeModel implements ChildrenFactory {
 		populateThread = new SpatialLayerPopulateThread(node);
 		populateThread.start();
 		threads.put(node, populateThread);
-	}
-
-	public void setNetMapViewer(NetMapViewer netMapViewer) {
-		this.netMapViewer = netMapViewer;
 	}
 
 	class SpatialLayerPopulateThread extends Thread {
