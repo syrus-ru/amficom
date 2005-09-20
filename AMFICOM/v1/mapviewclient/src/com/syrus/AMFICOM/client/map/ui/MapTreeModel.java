@@ -1,5 +1,5 @@
 /**
- * $Id: MapTreeModel.java,v 1.18 2005/09/19 15:35:34 krupenn Exp $ 
+ * $Id: MapTreeModel.java,v 1.19 2005/09/20 16:33:33 krupenn Exp $ 
  * Syrus Systems 
  * Научно-технический центр 
  * Проект: АМФИКОМ Автоматизированный МногоФункциональный Интеллектуальный 
@@ -10,6 +10,7 @@ package com.syrus.AMFICOM.client.map.ui;
 
 import java.awt.Image;
 import java.awt.Toolkit;
+import java.awt.geom.Rectangle2D.Double;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Comparator;
@@ -27,9 +28,14 @@ import javax.swing.UIManager;
 import com.syrus.AMFICOM.client.UI.tree.IconedNode;
 import com.syrus.AMFICOM.client.UI.tree.PopulatableIconedNode;
 import com.syrus.AMFICOM.client.map.CollectorConditionWrapper;
+import com.syrus.AMFICOM.client.map.LogicalNetLayer;
+import com.syrus.AMFICOM.client.map.MapConnectionException;
+import com.syrus.AMFICOM.client.map.MapDataException;
 import com.syrus.AMFICOM.client.map.MapUtils;
+import com.syrus.AMFICOM.client.map.NetMapViewer;
 import com.syrus.AMFICOM.client.map.PhysicalLinkConditionWrapper;
 import com.syrus.AMFICOM.client.map.SiteNodeConditionWrapper;
+import com.syrus.AMFICOM.client.map.controllers.MapElementController;
 import com.syrus.AMFICOM.client.map.controllers.MapViewController;
 import com.syrus.AMFICOM.client.map.controllers.NodeTypeController;
 import com.syrus.AMFICOM.client.resource.LangModelMap;
@@ -42,7 +48,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
-import com.syrus.AMFICOM.logic.ChildrenFactory;
+import com.syrus.AMFICOM.logic.AbstractChildrenFactory;
 import com.syrus.AMFICOM.logic.Item;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.Map;
@@ -55,11 +61,11 @@ import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/19 15:35:34 $
+ * @version $Revision: 1.19 $, $Date: 2005/09/20 16:33:33 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
-public class MapTreeModel implements ChildrenFactory {
+public class MapTreeModel extends AbstractChildrenFactory {
 
 	public static final String ALL_MAPS_BRANCH = "allmaps"; //$NON-NLS-1$
 
@@ -107,31 +113,29 @@ public class MapTreeModel implements ChildrenFactory {
 					IMG_SIZE,
 					Image.SCALE_SMOOTH));
 
-	private static MapTreeModel instance;
+	NetMapViewer netMapViewer = null;
 
-	protected MapTreeModel() {
+	public MapTreeModel() {
 		// empty
 	}
 	
-	public static MapTreeModel getInstance() {
-		if(instance == null)
-			instance = new MapTreeModel();
-		return instance;
+	public void setNetMapViewer(NetMapViewer netMapViewer) {
+		this.netMapViewer = netMapViewer;
 	}
 
-	public static PopulatableIconedNode createAllMapsRoot() {
+	public PopulatableIconedNode createAllMapsRoot() {
 		PopulatableIconedNode root = new PopulatableIconedNode(
-				MapTreeModel.getInstance(),
+				this,
 				MapTreeModel.ALL_MAPS_BRANCH,
-				MapTreeModel.getInstance().getObjectName(MapTreeModel.ALL_MAPS_BRANCH),
+				this.getObjectName(MapTreeModel.ALL_MAPS_BRANCH),
 				mapIcon, 
 				true);
 		return root;
 	}
 	
-	public static PopulatableIconedNode createSingleMapRoot(Map map) {
+	public PopulatableIconedNode createSingleMapRoot(Map map) {
 		PopulatableIconedNode root = new PopulatableIconedNode(
-				MapTreeModel.getInstance(),
+				this,
 				map,
 				mapIcon, 
 				true);
@@ -301,6 +305,10 @@ public class MapTreeModel implements ChildrenFactory {
 
 		List toRemove = new LinkedList();
 
+//		Collection<Object> childObjects = super.getChildObjects(node);
+//		List<Item> toRemove = super.getItemsToRemove(mapsChildren, childObjects);
+//		List<Map> toAdd = super.getObjectsToAdd(mapsChildren, childObjects);
+
 		for(Iterator iter = node.getChildren().iterator(); iter.hasNext();) {
 			PopulatableIconedNode childNode = (PopulatableIconedNode )iter.next();
 			Map innerMap = (Map )childNode.getObject();
@@ -384,6 +392,20 @@ public class MapTreeModel implements ChildrenFactory {
 			StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 			if(condition != null) {
 				siteNodes = MapUtils.applyCondition(siteNodes, condition);
+			} else if(this.netMapViewer != null) {
+				Double visibleBounds = this.netMapViewer.getVisibleBounds();
+				LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+				Set<SiteNode> visibleSiteNodes = new HashSet<SiteNode>();
+				for(Iterator iter = siteNodes.iterator(); iter.hasNext();) {
+					SiteNode siteNode = (SiteNode) iter.next();
+					MapElementController controller = logicalNetLayer
+							.getMapViewController()
+								.getController(siteNode);
+					if(controller.isElementVisible(siteNode, visibleBounds)) {
+						visibleSiteNodes.add(siteNode);
+					}
+				}
+				siteNodes = visibleSiteNodes;
 			}
 		} catch (Exception e) {
 			Log.debugException(e, Level.SEVERE);
@@ -455,6 +477,20 @@ public class MapTreeModel implements ChildrenFactory {
 			StorableObjectCondition condition = ((FiltrableIconedNode)parentNode).getResultingCondition();
 			if(condition != null) {
 				siteNodesSet = MapUtils.applyCondition(siteNodesSet, condition);
+			} else if(this.netMapViewer != null) {
+				Double visibleBounds = this.netMapViewer.getVisibleBounds();
+				LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+				Set<SiteNode> visibleSiteNodes = new HashSet<SiteNode>();
+				for(Iterator iter = siteNodesSet.iterator(); iter.hasNext();) {
+					SiteNode siteNode = (SiteNode) iter.next();
+					MapElementController controller = logicalNetLayer
+							.getMapViewController()
+								.getController(siteNode);
+					if(controller.isElementVisible(siteNode, visibleBounds)) {
+						visibleSiteNodes.add(siteNode);
+					}
+				}
+				siteNodesSet = visibleSiteNodes;
 			}
 		} catch (Exception e) {
 			Log.debugException(e, Level.SEVERE);
@@ -514,6 +550,20 @@ public class MapTreeModel implements ChildrenFactory {
 			StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 			if(condition != null) {
 				siteNodes = MapUtils.applyCondition(siteNodes, condition);
+			} else if(this.netMapViewer != null) {
+				Double visibleBounds = this.netMapViewer.getVisibleBounds();
+				LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+				Set<SiteNode> visibleSiteNodes = new HashSet<SiteNode>();
+				for(Iterator iter = siteNodes.iterator(); iter.hasNext();) {
+					SiteNode siteNode = (SiteNode) iter.next();
+					MapElementController controller = logicalNetLayer
+							.getMapViewController()
+								.getController(siteNode);
+					if(controller.isElementVisible(siteNode, visibleBounds)) {
+						visibleSiteNodes.add(siteNode);
+					}
+				}
+				siteNodes = visibleSiteNodes;
 			}
 		} catch (Exception e) {
 			Log.debugException(e, Level.SEVERE);
@@ -564,7 +614,28 @@ public class MapTreeModel implements ChildrenFactory {
 		Item parentNode = node.getParent();
 		Map map = (Map )parentNode.getObject();
 
-		List nodes = new ArrayList(map.getTopologicalNodes());
+		Set<TopologicalNode> nodesSet = map.getTopologicalNodes();
+		try {
+			if(this.netMapViewer != null) {
+				Double visibleBounds = this.netMapViewer.getVisibleBounds();
+				LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+				Set<TopologicalNode> visibleTopologicalNodes = new HashSet<TopologicalNode>();
+				for(Iterator iter = nodesSet.iterator(); iter.hasNext();) {
+					TopologicalNode topologicalNode = (TopologicalNode) iter.next();
+					MapElementController controller = logicalNetLayer
+							.getMapViewController()
+								.getController(topologicalNode);
+					if(controller.isElementVisible(topologicalNode, visibleBounds)) {
+						visibleTopologicalNodes.add(topologicalNode);
+					}
+				}
+				nodesSet = visibleTopologicalNodes;
+			}
+		} catch (Exception e) {
+			Log.debugException(e, Level.SEVERE);
+		}
+
+		List nodes = new ArrayList(nodesSet);
 		Collections.sort(nodes, MapTreeModel.mapElementComparator);
 
 		java.util.Map nodePresense = new HashMap();
@@ -614,6 +685,20 @@ public class MapTreeModel implements ChildrenFactory {
 			StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 			if(condition != null) {
 				linksSet = MapUtils.applyCondition(linksSet, condition);
+			} else if(this.netMapViewer != null) {
+				Double visibleBounds = this.netMapViewer.getVisibleBounds();
+				LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+				Set<PhysicalLink> visibleLinks = new HashSet<PhysicalLink>();
+				for(Iterator iter = linksSet.iterator(); iter.hasNext();) {
+					PhysicalLink physicalLink = (PhysicalLink) iter.next();
+					MapElementController controller = logicalNetLayer
+							.getMapViewController()
+								.getController(physicalLink);
+					if(controller.isElementVisible(physicalLink, visibleBounds)) {
+						visibleLinks.add(physicalLink);
+					}
+				}
+				linksSet = visibleLinks;
 			}
 		} catch (Exception e) {
 			Log.debugException(e, Level.SEVERE);
@@ -668,6 +753,20 @@ public class MapTreeModel implements ChildrenFactory {
 			StorableObjectCondition condition = ((FiltrableIconedNode)node).getResultingCondition();
 			if(condition != null) {
 				collectorsSet = MapUtils.applyCondition(collectorsSet, condition);
+			} else if(this.netMapViewer != null) {
+				Double visibleBounds = this.netMapViewer.getVisibleBounds();
+				LogicalNetLayer logicalNetLayer = this.netMapViewer.getLogicalNetLayer();
+				Set<Collector> visibleCollectors = new HashSet<Collector>();
+				for(Iterator iter = collectorsSet.iterator(); iter.hasNext();) {
+					Collector collector = (Collector) iter.next();
+					MapElementController controller = logicalNetLayer
+							.getMapViewController()
+								.getController(collector);
+					if(controller.isElementVisible(collector, visibleBounds)) {
+						visibleCollectors.add(collector);
+					}
+				}
+				collectorsSet = visibleCollectors;
 			}
 		} catch (Exception e) {
 			Log.debugException(e, Level.SEVERE);
