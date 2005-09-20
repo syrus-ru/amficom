@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePathTestCase.java,v 1.21 2005/09/18 12:43:14 bass Exp $
+ * $Id: SchemePathTestCase.java,v 1.22 2005/09/20 11:49:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Logger;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/09/18 12:43:14 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/20 11:49:55 $
  * @module scheme
  */
 public final class SchemePathTestCase extends TestCase {
@@ -682,13 +682,15 @@ public final class SchemePathTestCase extends TestCase {
 	}
 
 	public void testSchemeClone() throws ApplicationException, CloneNotSupportedException {
+		final boolean usePool = false;
+
 		final Identifier userId = new Identifier("User_0");
 		final Identifier domainId = new Identifier("Domain_0");
 
 		final Scheme scheme0 = Scheme.createInstance(userId, "scheme0", IdlKind.BAY, domainId);
 		final SchemeElement schemeElement0 = SchemeElement.createInstance(userId, "schemeElement0", scheme0);
 		final Scheme scheme1 = Scheme.createInstance(userId, "scheme1", IdlKind.BAY, domainId);
-		scheme1.setParentSchemeElement(schemeElement0);
+		scheme1.setParentSchemeElement(schemeElement0, usePool);
 		final SchemeElement schemeElement1 = SchemeElement.createInstance(userId, "schemeElement1", scheme1);
 
 		final SchemeDevice schemeDevice0 = SchemeDevice.createInstance(userId, "schemeDevice0", schemeElement1);

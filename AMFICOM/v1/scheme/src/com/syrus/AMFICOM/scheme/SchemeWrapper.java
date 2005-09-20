@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeWrapper.java,v 1.10 2005/09/20 07:49:51 bass Exp $
+ * $Id: SchemeWrapper.java,v 1.11 2005/09/20 11:49:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.PropertyChangeException;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/20 07:49:51 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/20 11:49:55 $
  * @author $Author: bass $
  * @module scheme
  */
@@ -140,6 +140,8 @@ public final class SchemeWrapper extends StorableObjectWrapper<Scheme> {
 	@Override
 	public void setValue(final Scheme scheme, final String key, final Object value)
 	throws PropertyChangeException {
+		final boolean usePool = false;
+
 		try {
 			if (scheme != null) {
 				if (key.equals(COLUMN_NAME)) {
@@ -165,7 +167,7 @@ public final class SchemeWrapper extends StorableObjectWrapper<Scheme> {
 				} else if (key.equals(COLUMN_KIND)) {
 					scheme.setKind(IdlKind.from_int(((Integer) value).intValue()));
 				} else if (key.equals(COLUMN_PARENT_SCHEME_ELEMENT_ID)) {
-					scheme.setParentSchemeElementId((Identifier) value);
+					scheme.setParentSchemeElementId((Identifier) value, usePool);
 				}
 			}
 		} catch (final ApplicationException ae) {

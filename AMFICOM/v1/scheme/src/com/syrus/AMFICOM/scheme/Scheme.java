@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.95 2005/09/20 10:41:59 bass Exp $
+ * $Id: Scheme.java,v 1.96 2005/09/20 11:49:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -81,7 +81,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.95 $, $Date: 2005/09/20 10:41:59 $
+ * @version $Revision: 1.96 $, $Date: 2005/09/20 11:49:55 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1125,30 +1125,35 @@ public final class Scheme extends AbstractCloneableDomainMember
 	}
 
 	/**
-	 * A wrapper {@link #setParentSchemeElement(SchemeElement)}.
+	 * A wrapper {@link #setParentSchemeElement(SchemeElement, boolean)}.
 	 *
 	 * @param parentSchemeElementId
+	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
-	void setParentSchemeElementId(final Identifier parentSchemeElementId) throws ApplicationException {
+	void setParentSchemeElementId(final Identifier parentSchemeElementId,
+			final boolean usePool)
+	throws ApplicationException {
 		assert parentSchemeElementId.isVoid() || parentSchemeElementId.getMajor() == SCHEMEELEMENT_CODE;
 
 		if (this.parentSchemeElementId.equals(parentSchemeElementId)) {
 			return;
 		}
 
-		this.setParentSchemeElement(StorableObjectPool.<SchemeElement>getStorableObject(parentSchemeElementId, true));
+		this.setParentSchemeElement(
+				StorableObjectPool.<SchemeElement>getStorableObject(parentSchemeElementId, true),
+				usePool);
 	}
 
 	/**
 	 * @param parentSchemeElement
+	 * @param usePool
 	 * @throws ApplicationException
 	 */
-	@ParameterizationPending(value = {"final boolean usePool"})
-	public void setParentSchemeElement(final SchemeElement parentSchemeElement) throws ApplicationException {
-		final boolean usePool = false;
-
+	public void setParentSchemeElement(
+			final SchemeElement parentSchemeElement,
+			final boolean usePool)
+	throws ApplicationException {
 		final Identifier newParentSchemeElementId = Identifier.possiblyVoid(parentSchemeElement);
 		if (this.parentSchemeElementId.equals(newParentSchemeElementId)) {
 			return;

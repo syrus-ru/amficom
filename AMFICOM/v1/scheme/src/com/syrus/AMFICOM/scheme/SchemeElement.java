@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.106 2005/09/20 10:41:59 bass Exp $
+ * $Id: SchemeElement.java,v 1.107 2005/09/20 11:49:55 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,7 +85,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.106 $, $Date: 2005/09/20 10:41:59 $
+ * @version $Revision: 1.107 $, $Date: 2005/09/20 11:49:55 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -565,11 +565,10 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param scheme cannot be <code>null</code>.
 	 * @param usePool
 	 */
-	public void addScheme(final Scheme scheme,
-			@SuppressWarnings("unused") final boolean usePool)
+	public void addScheme(final Scheme scheme, final boolean usePool)
 	throws ApplicationException {
 		assert scheme != null: NON_NULL_EXPECTED;
-		scheme.setParentSchemeElement(this);
+		scheme.setParentSchemeElement(this, usePool);
 	}
 
 	/**
@@ -1162,12 +1161,11 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @param scheme
 	 * @param usePool
 	 */
-	public void removeScheme(final Scheme scheme,
-			@SuppressWarnings("unused") final boolean usePool)
+	public void removeScheme(final Scheme scheme, final boolean usePool)
 	throws ApplicationException {
 		assert scheme != null: NON_NULL_EXPECTED;
 		assert scheme.getParentSchemeElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		scheme.setParentSchemeElement(null);
+		scheme.setParentSchemeElement(null, usePool);
 	}
 
 	/**
@@ -1412,10 +1410,8 @@ public final class SchemeElement extends AbstractSchemeElement
 		super.markAsChanged();
 	}
 
-	@ParameterizationPending(value = {"final boolean usePool"})
-	public void setScheme(final Scheme scheme) throws ApplicationException {
-		final boolean usePool = false;
-
+	public void setScheme(final Scheme scheme, final boolean usePool)
+	throws ApplicationException {
 		this.setSchemes(scheme == null
 						? Collections.<Scheme>emptySet()
 						: Collections.singleton(scheme),
