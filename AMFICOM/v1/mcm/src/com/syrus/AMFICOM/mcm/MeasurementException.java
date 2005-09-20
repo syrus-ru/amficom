@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementException.java,v 1.6 2005/09/14 18:13:47 arseniy Exp $
+ * $Id: MeasurementException.java,v 1.7 2005/09/20 23:18:03 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.6 $, $Date: 2005/09/14 18:13:47 $
+ * @version $Revision: 1.7 $, $Date: 2005/09/20 23:18:03 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -20,7 +20,8 @@ final class MeasurementException extends TestProcessingException {
 
 	public static final int OTHER_CODE = 0;
 	public static final int IDENTIFIER_GENERATION_FAILED_CODE = 1;
-	public static final int DATABASE_CALL_FAILED_CODE = 2;
+	public static final int COMMUNICATION_FAILED_CODE = 2;
+	public static final int DATABASE_CALL_FAILED_CODE = 3;
 	
 	private int code;
 
