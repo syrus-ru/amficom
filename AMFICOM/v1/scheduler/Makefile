@@ -20,7 +20,7 @@ SOURCES := $(shell find . -name *java)
 
 $(LIBNAME): .mach
 	$(CP) \
-		$(SRCDIR)/com/syrus/AMFICOM/Client/Schedule/UI/parametersPanel.properties \
+		$(SRCDIR)/com/syrus/AMFICOM/Client/Schedule/UI/*.[gp][ir][fo]* \
 		$(CLASSDIR)/com/syrus/AMFICOM/Client/Schedule/UI
 	mkdir -p $(CLASSDIR)/com/syrus/AMFICOM/Client/General/lang
 	$(CP) \
