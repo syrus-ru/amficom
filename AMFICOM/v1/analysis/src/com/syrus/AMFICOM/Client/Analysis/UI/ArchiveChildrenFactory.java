@@ -1,5 +1,5 @@
 /*-
- * $Id: ArchiveChildrenFactory.java,v 1.19 2005/09/20 07:54:57 stas Exp $
+ * $Id: ArchiveChildrenFactory.java,v 1.20 2005/09/20 08:12:26 stas Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -50,7 +50,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/20 07:54:57 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/20 08:12:26 $
  * @author $Author: stas $
  * @author Vladimir Dolzhenko
  * @module analysis
@@ -281,7 +281,7 @@ public class ArchiveChildrenFactory implements ChildrenFactory {
 			Test test = (Test) nodeObject;
 			LinkedIdsCondition condition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_CODE);
 			try {
-				StorableObjectPool.refresh();
+				StorableObjectPool.refresh(Collections.singleton(test.getId()));
 				Collection measurements = StorableObjectPool.getStorableObjectsByCondition(condition, true);
 				Set measurementIds = new HashSet();
 				for (Iterator it = measurements.iterator(); it.hasNext();) {
