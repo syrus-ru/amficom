@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementPath.java,v 1.47 2005/09/15 14:06:35 krupenn Exp $
+ * $Id: MeasurementPath.java,v 1.48 2005/09/20 07:50:22 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.mapview;
+
+import static java.util.logging.Level.SEVERE;
 
 import java.util.ArrayList;
 import java.util.Collections;
@@ -31,12 +33,13 @@ import com.syrus.AMFICOM.scheme.SchemeLink;
 import com.syrus.AMFICOM.scheme.SchemePath;
 import com.syrus.AMFICOM.scheme.SchemeUtils;
 import com.syrus.AMFICOM.scheme.corba.IdlPathElementPackage.IdlDataPackage.IdlKind;
+import com.syrus.util.Log;
 
 /**
  * Элемент пути.
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.47 $, $Date: 2005/09/15 14:06:35 $
+ * @author $Author: bass $
+ * @version $Revision: 1.48 $, $Date: 2005/09/20 07:50:22 $
  * @module mapview
  */
 public final class MeasurementPath implements MapElement {
@@ -214,13 +217,22 @@ public final class MeasurementPath implements MapElement {
 		double x = 0.0D; 
 		double y = 0.0D;
 
-		for (final CablePath cablePath : this.getCablePaths()) {
-			final DoublePoint an = cablePath.getLocation();
-			x += an.getX();
-			y += an.getY();
-			count++;
+		try {
+			for (final CablePath cablePath : this.getCablePaths()) {
+				final DoublePoint an = cablePath.getLocation();
+				x += an.getX();
+				y += an.getY();
+				count++;
+			}
+			
+			/**
+			 * @bug #120
+			 */
+			this.location.setLocation(x /= count, y /= count);
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			this.location.setLocation(0, 0);
 		}
-		this.location.setLocation(x /= count, y /= count);
 
 		return this.location;
 	}
@@ -339,7 +351,7 @@ public final class MeasurementPath implements MapElement {
 	 * Список строится динамически.
 	 * @return список кабельных путей
 	 */
-	protected List<CablePath> getCablePaths() {
+	protected List<CablePath> getCablePaths() throws ApplicationException {
 		synchronized (this.unsortedCablePaths) {
 			final Scheme scheme = this.schemePath.getParentSchemeMonitoringSolution().getParentScheme();
 
@@ -418,7 +430,7 @@ public final class MeasurementPath implements MapElement {
 	 * Сортировать элементы пути. Включает сортировку кабельных путей, фрагментов
 	 * линий и узлов.
 	 */
-	public void sortPathElements() {
+	public void sortPathElements() throws ApplicationException {
 		this.sortedCablePaths.clear();
 		this.sortedNodeLinks.clear();
 		this.sortedNodes.clear();

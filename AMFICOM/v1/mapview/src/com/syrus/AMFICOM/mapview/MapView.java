@@ -1,5 +1,5 @@
 /*
-* $Id: MapView.java,v 1.65 2005/09/19 15:28:56 krupenn Exp $
+* $Id: MapView.java,v 1.66 2005/09/20 07:50:22 bass Exp $
 *
 * Copyright ї 2004 Syrus Systems.
 * Dept. of Science & Technology.
@@ -57,8 +57,8 @@ import com.syrus.AMFICOM.scheme.SchemePath;
  * канализационную
  * <br>&#9;- набор физических схем {@link Scheme}, которые проложены по данной
  * топологической схеме
- * @author $Author: krupenn $
- * @version $Revision: 1.65 $, $Date: 2005/09/19 15:28:56 $
+ * @author $Author: bass $
+ * @version $Revision: 1.66 $, $Date: 2005/09/20 07:50:22 $
  * @module mapview
  */
 public final class MapView extends DomainMember implements Describable {
@@ -790,7 +790,10 @@ public final class MapView extends DomainMember implements Describable {
 		this.removeMarkers();
 	}
 
-	public static SchemeElement getTopologicalSchemeElement(final Scheme scheme, final SchemeElement schemeElement) {
+	public static SchemeElement getTopologicalSchemeElement(
+			final Scheme scheme,
+			final SchemeElement schemeElement)
+	throws ApplicationException {
 		Scheme parentScheme = schemeElement.getParentScheme();
 		if(scheme.equals(parentScheme)) {
 			return schemeElement;
@@ -805,7 +808,9 @@ public final class MapView extends DomainMember implements Describable {
 		return getTopologicalSchemeElement(scheme, parentSchemeElement);
 	}
 
-	public static boolean isSchemeElementTopological(final Scheme scheme, final SchemeElement schemeElement) {
+	public static boolean isSchemeElementTopological(final Scheme scheme,
+			final SchemeElement schemeElement)
+	throws ApplicationException {
 		Scheme parentScheme = schemeElement.getParentScheme();
 		if(scheme.equals(parentScheme)) {
 			return true;
@@ -823,7 +828,9 @@ public final class MapView extends DomainMember implements Describable {
 		return false;
 	}
 
-	public static boolean isSchemeCableLinkTopological(final Scheme scheme, final SchemeCableLink schemeCableLink) {
+	public static boolean isSchemeCableLinkTopological(final Scheme scheme,
+			final SchemeCableLink schemeCableLink)
+	throws ApplicationException {
 		Scheme parentScheme = schemeCableLink.getParentScheme();
 		if(scheme.equals(parentScheme)) {
 			return true;
@@ -841,7 +848,9 @@ public final class MapView extends DomainMember implements Describable {
 		return false;
 	}
 
-	public static boolean isSchemePathTopological(final Scheme scheme, final SchemePath schemePath) {
+	public static boolean isSchemePathTopological(final Scheme scheme,
+			final SchemePath schemePath)
+	throws ApplicationException {
 		Scheme parentScheme = schemePath.getParentSchemeMonitoringSolution().getParentScheme();
 		if(parentScheme == null) {
 			return false;
