@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseIdentifier.java,v 1.16 2005/09/15 00:56:12 arseniy Exp $
+ * $Id: DatabaseIdentifier.java,v 1.17 2005/09/20 12:52:32 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,20 +12,17 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_NULL_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.NON_ZERO_EXPECTED;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.StorableObjectDatabase.SQL_NULL_TRIMMED;
-import static java.util.logging.Level.SEVERE;
 
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
 
-import com.syrus.util.Log;
-
 /**
  * DB Identifier wrapper.
  * Main purpose is to hide Identifier implementation and DB representation of it.
  *
- * @version $Revision: 1.16 $, $Date: 2005/09/15 00:56:12 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/09/20 12:52:32 $
+ * @author $Author: bass $
  * @module general
  */
 public final class DatabaseIdentifier {
