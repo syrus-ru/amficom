@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractChildrenFactory.java,v 1.1 2005/09/19 11:24:41 bob Exp $
+ * $Id: AbstractChildrenFactory.java,v 1.2 2005/09/20 11:46:01 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,14 +16,15 @@ import com.syrus.AMFICOM.general.StorableObject;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.1 $, $Date: 2005/09/19 11:24:41 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/20 11:46:01 $
  * @author Stanislav Kholshin
  * @module filter 
  */
 public abstract class AbstractChildrenFactory implements ChildrenFactory {
 
-	protected List<StorableObject> getObjectsToAdd(final Collection<StorableObject> newObjs, 
-			final Collection<Object> existingObjs) {
+	protected List<StorableObject> getObjectsToAdd(
+			final Collection<? extends StorableObject> newObjs, 
+			final Collection<? extends Object> existingObjs) {
 		final List<StorableObject> toAdd = new LinkedList<StorableObject>();
 		for (final StorableObject itObj : newObjs) {
 			if (!existingObjs.contains(itObj)) {
@@ -33,8 +34,9 @@ public abstract class AbstractChildrenFactory implements ChildrenFactory {
  		return toAdd;
  	}
 	
- 	protected List<Item> getItemsToRemove(final Collection<StorableObject> newObjs, 
- 			final Collection<Item> existingObjs) {
+ 	protected List<Item> getItemsToRemove(
+ 			final Collection<? extends StorableObject> newObjs, 
+ 			final Collection<? extends Item> existingObjs) {
  		final List<Item> toRemove = new LinkedList<Item>(existingObjs);
 		for (final Item childItem : existingObjs) {
 			if (newObjs.contains(childItem.getObject())) {
