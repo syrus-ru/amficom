@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.14 2005/09/14 06:35:09 bob Exp $
+ * $Id: AbstractApplication.java,v 1.15 2005/09/20 07:58:15 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/14 06:35:09 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/20 07:58:15 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -331,11 +331,12 @@ public abstract class AbstractApplication {
 
 		// Font font = new Font("Dialog", Font.PLAIN, 10);
 
-		{
-			Font font = defaults.getFont("TextField.font");
-			font = new Font(font.getFamily(), font.getStyle(), 12);
-			defaults.put("TextField.font", font);			
-		}
+		// switch off
+//		{
+//			Font font = defaults.getFont("TextField.font");
+//			font = new Font(font.getFamily(), font.getStyle(), 12);
+//			defaults.put("TextField.font", font);			
+//		}
 		
 		{
 			Font font = UIManager.getFont("Table.font");
