@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.96 2005/09/18 12:10:40 bass Exp $
+ * $Id: StorableObject.java,v 1.97 2005/09/20 16:24:18 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.96 $, $Date: 2005/09/18 12:10:40 $
+ * @version $Revision: 1.97 $, $Date: 2005/09/20 16:24:18 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -280,6 +280,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		 * objects.
 		 */
 		clone.version = StorableObjectVersion.createInitial();
+		clone.changed = false;
 		clone.markAsChanged();
 		return clone;
 	}
