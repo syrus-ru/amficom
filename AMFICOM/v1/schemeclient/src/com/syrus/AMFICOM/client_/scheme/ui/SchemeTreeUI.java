@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeTreeUI.java,v 1.15 2005/09/04 13:35:45 stas Exp $
+ * $Id: SchemeTreeUI.java,v 1.16 2005/09/20 10:04:35 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.15 $, $Date: 2005/09/04 13:35:45 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/20 10:04:35 $
  * @module schemeclient
  */
 
@@ -79,8 +79,8 @@ public class SchemeTreeUI extends IconedTreeUI {
 						Object object = item.getObject();
 						if (object instanceof Scheme) {
 							Scheme scheme = (Scheme)object;
-							if (scheme.getParentSchemeElement() == null) {
-								try {
+							try {
+								if (scheme.getParentSchemeElement() == null) {
 									// отцепляем линки
 									for (SchemeCableLink link : scheme.getSchemeCableLinks()) {
 										link.setSourceAbstractSchemePort(null);
@@ -101,10 +101,9 @@ public class SchemeTreeUI extends IconedTreeUI {
 									for (Identifiable id : ids) {
 										StorableObjectPool.flush(id, userId, false);
 									}
-									
-								} catch (ApplicationException e1) {
-									Log.errorException(e1);
 								}
+							} catch (ApplicationException e1) {
+								Log.errorException(e1);
 							}
 						}
 						else if (object instanceof SchemeProtoElement) {

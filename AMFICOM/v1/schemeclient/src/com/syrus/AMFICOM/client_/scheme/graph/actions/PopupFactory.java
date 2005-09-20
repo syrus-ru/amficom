@@ -1,5 +1,5 @@
 /*-
- * $Id: PopupFactory.java,v 1.10 2005/09/13 10:19:05 bass Exp $
+ * $Id: PopupFactory.java,v 1.11 2005/09/20 10:04:34 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -539,10 +539,15 @@ public class PopupFactory {
 			public void actionPerformed(ActionEvent ev) {
 				aContext.getDispatcher().firePropertyChange(new SchemeEvent(this, sc.getId(), SchemeEvent.OPEN_SCHEME));
 				
-				SchemeElement se = sc.getParentSchemeElement();
-				if (se != null && se.isAlarmed())
-					aContext.getDispatcher().firePropertyChange(
-							new SchemeEvent(this, se.getId(), SchemeEvent.CREATE_ALARMED_LINK));
+				try {
+					SchemeElement se = sc.getParentSchemeElement();
+					if (se != null && se.isAlarmed()) {
+						aContext.getDispatcher().firePropertyChange(
+								new SchemeEvent(this, se.getId(), SchemeEvent.CREATE_ALARMED_LINK));
+					}
+				} catch (ApplicationException e) {
+					Log.errorException(e);
+				}
 			}
 		});
 		menu.setText(LangModelGraph.getString("open_scheme")); //$NON-NLS-1$

@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientUtils.java,v 1.1 2005/09/14 10:19:06 stas Exp $
+ * $Id: ClientUtils.java,v 1.2 2005/09/20 10:04:35 stas Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,6 +24,10 @@ import javax.swing.JLabel;
 import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 
+import org.apache.xmlbeans.XmlError;
+import org.apache.xmlbeans.XmlObject;
+import org.apache.xmlbeans.XmlOptions;
+
 import com.syrus.AMFICOM.client.model.Environment;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.configuration.CableLinkType;
@@ -35,6 +39,7 @@ import com.syrus.AMFICOM.resource.LangModelScheme;
 import com.syrus.AMFICOM.scheme.SchemeCableLink;
 import com.syrus.AMFICOM.scheme.SchemeCableThread;
 import com.syrus.AMFICOM.scheme.SchemeCableThreadWrapper;
+import com.syrus.util.Log;
 
 public class ClientUtils {
 	private ClientUtils() {
@@ -75,6 +80,32 @@ public class ClientUtils {
 		Collections.sort(threads, new NumberedComparator<CableThreadType>(CableThreadTypeWrapper.getInstance(),
 				StorableObjectWrapper.COLUMN_CODENAME));
 		return threads;
+	}
+	
+	public static boolean validateXml(XmlObject xml) {
+		boolean isXmlValid = false;
+
+		// A collection instance to hold validation error messages.
+		ArrayList validationMessages = new ArrayList();
+
+		// Validate the XML, collecting messages.
+		isXmlValid = xml.validate(new XmlOptions().setErrorListener(validationMessages));
+
+		if(!isXmlValid) {
+			Log.errorMessage("Invalid XML: ");
+			for(int i = 0; i < validationMessages.size(); i++) {
+				XmlError error = (XmlError )validationMessages.get(i);
+//				System.out.println(xml);
+				Log.errorMessage(error.getMessage());
+				Log.errorMessage(String.valueOf(error.getObjectLocation()));
+				Log.errorMessage("Column " + error.getColumn());
+				Log.errorMessage("Line " + error.getLine());
+				Log.errorMessage("Offset " + error.getOffset());
+				Log.errorMessage("Object at cursor " + error.getCursorLocation().getObject());
+				Log.errorMessage("Source name " + error.getSourceName());
+			}
+		}
+		return isXmlValid;
 	}
 	
 	static JOptionPane optionPane;

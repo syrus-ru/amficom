@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeTreeModel.java,v 1.41 2005/09/19 13:10:29 stas Exp $
+ * $Id: SchemeTreeModel.java,v 1.42 2005/09/20 10:04:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme.ui;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.41 $, $Date: 2005/09/19 13:10:29 $
+ * @version $Revision: 1.42 $, $Date: 2005/09/20 10:04:34 $
  * @module schemeclient
  */
 
@@ -134,8 +134,7 @@ public class SchemeTreeModel extends AbstractChildrenFactory implements VisualMa
 					for (Iterator it = toAdd.iterator(); it.hasNext();) {
 						SchemeElement sc = (SchemeElement) it.next();
 						if (sc.getKind() == IdlSchemeElementKind.SCHEME_CONTAINER) {
-							// TODO Scheme scheme = sc.getScheme(false);
-							Scheme scheme = sc.getScheme(true);
+							Scheme scheme = sc.getScheme(false);
 							node.addChild(new PopulatableIconedNode(this, scheme, UIManager.getIcon(SchemeResourceKeys.ICON_SCHEME)));
 						}
 					}

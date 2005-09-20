@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeActions.java,v 1.33 2005/09/19 13:10:28 stas Exp $
+ * $Id: SchemeActions.java,v 1.34 2005/09/20 10:04:34 stas Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.33 $, $Date: 2005/09/19 13:10:28 $
+ * @version $Revision: 1.34 $, $Date: 2005/09/20 10:04:34 $
  * @module schemeclient
  */
 
@@ -353,7 +353,7 @@ public class SchemeActions {
 	
 	public static void insertSEbyS(SchemeGraph graph, SchemeElement schemeElement, Point p, boolean doClone) {
 		try {
-			Scheme scheme = schemeElement.getScheme(true);
+			Scheme scheme = schemeElement.getScheme(false);
 			Map<Identifier, Identifier>clonedIds = schemeElement.getClonedIdMap();
 			SchemeImageResource res = scheme.getUgoCell();
 			if (res == null) {

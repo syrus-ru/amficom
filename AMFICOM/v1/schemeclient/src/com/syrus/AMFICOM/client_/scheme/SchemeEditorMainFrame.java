@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeEditorMainFrame.java,v 1.24 2005/09/14 10:20:04 stas Exp $
+ * $Id: SchemeEditorMainFrame.java,v 1.25 2005/09/20 10:04:34 stas Exp $
  *
  * Copyright ї 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,7 +10,7 @@ package com.syrus.AMFICOM.client_.scheme;
 
 /**
  * @author $Author: stas $
- * @version $Revision: 1.24 $, $Date: 2005/09/14 10:20:04 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/20 10:04:34 $
  * @module schemeclient
  */
 
@@ -30,6 +30,7 @@ import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 
 import com.syrus.AMFICOM.Client.General.Command.Scheme.PathNewCommand;
+import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeExportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeImportCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeImportCommitCommand;
 import com.syrus.AMFICOM.Client.General.Command.Scheme.SchemeNewCommand;
@@ -224,10 +225,9 @@ public class SchemeEditorMainFrame extends AbstractMainFrame {
 		aModel.setCommand("menuSchemeSaveAs", new SchemeSaveAsCommand(this.aContext, this.schemeTab));
 
 		
-//		aModel.setCommand("menuSchemeExport", new SchemeToFileCommand(Environment
-//				.getDispatcher(), aContext));
-		 aModel.setCommand("menuSchemeImport", new SchemeImportCommand(this.schemeTab));
-		 aModel.setCommand("menuSchemeImportCommit", new SchemeImportCommitCommand(this.aContext));
+		aModel.setCommand("menuSchemeExport", new SchemeExportCommand(this.schemeTab));
+		aModel.setCommand("menuSchemeImport", new SchemeImportCommand(this.schemeTab));
+		aModel.setCommand("menuSchemeImportCommit", new SchemeImportCommitCommand(this.aContext));
 
 		// TODO разобраться с созданием пути
 		
