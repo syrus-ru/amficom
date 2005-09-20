@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.107 2005/09/20 11:49:55 bass Exp $
+ * $Id: SchemeElement.java,v 1.108 2005/09/20 13:00:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,6 +31,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
 import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind.SCHEME_CONTAINER;
 import static com.syrus.AMFICOM.scheme.corba.IdlSchemeElementPackage.IdlSchemeElementKind.SCHEME_ELEMENT_CONTAINER;
 import static java.util.logging.Level.FINE;
@@ -85,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.107 $, $Date: 2005/09/20 11:49:55 $
+ * @version $Revision: 1.108 $, $Date: 2005/09/20 13:00:11 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1123,6 +1125,7 @@ public final class SchemeElement extends AbstractSchemeElement
 				schemeLink.getXmlTransferable(schemeLinkSeq.addNewSchemeLink(), importType);
 			}
 		}
+		XmlComplementorRegistry.complementStorableObject(schemeElement, SCHEMEELEMENT_CODE, importType, EXPORT);
 	}
 
 	Identifier getUgoCellId() {
@@ -1602,7 +1605,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			final XmlSchemeElement schemeElement,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeElement, SCHEMEELEMENT_CODE, importType);
+		XmlComplementorRegistry.complementStorableObject(schemeElement, SCHEMEELEMENT_CODE, importType, IMPORT);
 
 		super.fromXmlTransferable(schemeElement, importType);
 

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.89 2005/09/20 10:41:59 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.90 2005/09/20 13:00:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -82,7 +84,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2005/09/20 10:41:59 $
+ * @version $Revision: 1.90 $, $Date: 2005/09/20 13:00:11 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -940,6 +942,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				schemeLink.getXmlTransferable(schemeLinkSeq.addNewSchemeLink(), importType);
 			}
 		}
+		XmlComplementorRegistry.complementStorableObject(schemeProtoElement, SCHEMEPROTOELEMENT_CODE, importType, EXPORT);
 	}
 
 	Identifier getUgoCellId() {
@@ -1408,7 +1411,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 			final XmlSchemeProtoElement schemeProtoElement,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeProtoElement, SCHEMEPROTOELEMENT_CODE, importType);
+		XmlComplementorRegistry.complementStorableObject(schemeProtoElement, SCHEMEPROTOELEMENT_CODE, importType, IMPORT);
 
 		this.name = schemeProtoElement.getName();
 		this.description = schemeProtoElement.isSetDescription()

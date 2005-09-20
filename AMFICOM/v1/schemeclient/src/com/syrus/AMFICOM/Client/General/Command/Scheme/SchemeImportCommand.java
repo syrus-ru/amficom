@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeImportCommand.java,v 1.19 2005/09/20 11:50:12 bass Exp $
+ * $Id: SchemeImportCommand.java,v 1.20 2005/09/20 13:00:12 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -141,26 +141,40 @@ public class SchemeImportCommand extends AbstractCommand {
 		XmlComplementorRegistry.registerComplementor(SCHEME_CODE, new XmlComplementor() {
 			public void complementStorableObject(
 					final XmlStorableObject storableObject,
-					final String importType)
+					final String importType,
+					final ComplementationMode mode)
 			throws CreateObjectException, UpdateObjectException {
-				final XmlScheme scheme = (XmlScheme) storableObject;
-				if (scheme.isSetDomainId()) {
-					scheme.unsetDomainId();
+				switch (mode) {
+				case IMPORT:
+					final XmlScheme scheme = (XmlScheme) storableObject;
+					if (scheme.isSetDomainId()) {
+						scheme.unsetDomainId();
+					}
+					LoginManager.getDomainId().getXmlTransferable(scheme.addNewDomainId(), importType);
+					break;
+				case EXPORT:
+					break;
 				}
-				LoginManager.getDomainId().getXmlTransferable(scheme.addNewDomainId(), importType);
 			}
 		});
 
 		XmlComplementorRegistry.registerComplementor(EQUIPMENT_CODE, new XmlComplementor() {
 			public void complementStorableObject(
 					final XmlStorableObject storableObject,
-					final String importType)
+					final String importType,
+					final ComplementationMode mode)
 			throws CreateObjectException, UpdateObjectException {
-				final XmlEquipment equipment = (XmlEquipment) storableObject;
-				if (equipment.isSetDomainId()) {
-					equipment.unsetDomainId();
+				switch (mode) {
+				case IMPORT:
+					final XmlEquipment equipment = (XmlEquipment) storableObject;
+					if (equipment.isSetDomainId()) {
+						equipment.unsetDomainId();
+					}
+					LoginManager.getDomainId().getXmlTransferable(equipment.addNewDomainId(), importType);
+					break;
+				case EXPORT:
+					break;
 				}
-				LoginManager.getDomainId().getXmlTransferable(equipment.addNewDomainId(), importType);
 			}
 		});
 		
@@ -176,13 +190,20 @@ public class SchemeImportCommand extends AbstractCommand {
 				XmlComplementorRegistry.registerComplementor(SCHEMECABLEPORT_CODE, new XmlComplementor() {
 					public void complementStorableObject(
 							final XmlStorableObject storableObject,
-							final String importType)
+							final String importType,
+							final ComplementationMode mode)
 					throws CreateObjectException, UpdateObjectException {
-						final XmlSchemeCablePort schemeCablePort = (XmlSchemeCablePort) storableObject;
-						if (schemeCablePort.isSetCablePortTypeId()) {
-							schemeCablePort.unsetCablePortTypeId();
+						switch (mode) {
+						case IMPORT:
+							final XmlSchemeCablePort schemeCablePort = (XmlSchemeCablePort) storableObject;
+							if (schemeCablePort.isSetCablePortTypeId()) {
+								schemeCablePort.unsetCablePortTypeId();
+							}
+							portType.getId().getXmlTransferable(schemeCablePort.addNewCablePortTypeId(), importType);
+							break;
+						case EXPORT:
+							break;
 						}
-						portType.getId().getXmlTransferable(schemeCablePort.addNewCablePortTypeId(), importType);
 					}
 				});				
 			}

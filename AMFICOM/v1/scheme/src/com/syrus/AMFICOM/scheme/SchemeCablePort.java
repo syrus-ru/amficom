@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCablePort.java,v 1.66 2005/09/20 10:42:00 bass Exp $
+ * $Id: SchemeCablePort.java,v 1.67 2005/09/20 13:00:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,6 +19,8 @@ import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Date;
@@ -52,7 +54,7 @@ import com.syrus.util.Log;
  * #11 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/09/20 10:42:00 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/20 13:00:11 $
  * @module scheme
  */
 public final class SchemeCablePort extends AbstractSchemePort
@@ -301,6 +303,7 @@ public final class SchemeCablePort extends AbstractSchemePort
 		if (!super.portId.isVoid()) {
 			super.portId.getXmlTransferable(schemeCablePort.addNewCablePortId(), importType);
 		}
+		XmlComplementorRegistry.complementStorableObject(schemeCablePort, SCHEMECABLEPORT_CODE, importType, EXPORT);
 	}
 
 	/**
@@ -338,7 +341,7 @@ public final class SchemeCablePort extends AbstractSchemePort
 	public void fromXmlTransferable(final XmlSchemeCablePort schemeCablePort,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeCablePort, SCHEMECABLEPORT_CODE, importType);
+		XmlComplementorRegistry.complementStorableObject(schemeCablePort, SCHEMECABLEPORT_CODE, importType, IMPORT);
 
 		super.fromXmlTransferable(schemeCablePort, importType);
 

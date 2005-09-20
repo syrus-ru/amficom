@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeDevice.java,v 1.82 2005/09/20 10:42:00 bass Exp $
+ * $Id: SchemeDevice.java,v 1.83 2005/09/20 13:00:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,6 +26,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEDEVICE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -73,7 +75,7 @@ import com.syrus.util.Log;
  * #09 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.82 $, $Date: 2005/09/20 10:42:00 $
+ * @version $Revision: 1.83 $, $Date: 2005/09/20 13:00:11 $
  * @module scheme
  */
 public final class SchemeDevice extends AbstractCloneableStorableObject
@@ -645,6 +647,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 				schemeCablePort.getXmlTransferable(schemeCablePortSeq.addNewSchemeCablePort(), importType);
 			}
 		}
+		XmlComplementorRegistry.complementStorableObject(schemeDevice, SCHEMEDEVICE_CODE, importType, EXPORT);
 	}
 
 	/**
@@ -872,7 +875,7 @@ public final class SchemeDevice extends AbstractCloneableStorableObject
 	public void fromXmlTransferable(final XmlSchemeDevice schemeDevice,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeDevice, SCHEMEDEVICE_CODE, importType);
+		XmlComplementorRegistry.complementStorableObject(schemeDevice, SCHEMEDEVICE_CODE, importType, IMPORT);
 
 		this.name = schemeDevice.getName();
 		this.description = schemeDevice.isSetDescription()

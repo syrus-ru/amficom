@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableThread.java,v 1.79 2005/09/20 10:42:00 bass Exp $
+ * $Id: SchemeCableThread.java,v 1.80 2005/09/20 13:00:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -29,6 +29,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
 import static java.util.logging.Level.WARNING;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
 
 import java.util.Collections;
 import java.util.Date;
@@ -69,7 +71,7 @@ import com.syrus.util.Log;
  * #14 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/09/20 10:42:00 $
+ * @version $Revision: 1.80 $, $Date: 2005/09/20 13:00:11 $
  * @module scheme
  */
 public final class SchemeCableThread extends AbstractCloneableStorableObject
@@ -571,6 +573,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
 			}
 		}
+		XmlComplementorRegistry.complementStorableObject(schemeCableThread, SCHEMECABLETHREAD_CODE, importType, EXPORT);
 	}
 
 	/**
@@ -803,7 +806,7 @@ public final class SchemeCableThread extends AbstractCloneableStorableObject
 			final XmlSchemeCableThread schemeCableThread,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeCableThread, SCHEMECABLETHREAD_CODE, importType);
+		XmlComplementorRegistry.complementStorableObject(schemeCableThread, SCHEMECABLETHREAD_CODE, importType, IMPORT);
 
 		this.name = schemeCableThread.getName();
 		this.description = schemeCableThread.isSetDescription()

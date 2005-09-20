@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.68 2005/09/20 10:42:00 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.69 2005/09/20 13:00:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.CABLECHANNELINGITEM_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PHYSICALLINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -56,7 +58,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/09/20 10:42:00 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/20 13:00:11 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -454,6 +456,7 @@ public final class CableChannelingItem
 		this.startSiteNodeId.getXmlTransferable(cableChannelingItem.addNewStartSiteNodeId(), importType);
 		this.endSiteNodeId.getXmlTransferable(cableChannelingItem.addNewEndSiteNodeId(), importType);
 		this.parentSchemeCableLinkId.getXmlTransferable(cableChannelingItem.addNewParentSchemeCableLinkId(), importType);
+		XmlComplementorRegistry.complementStorableObject(cableChannelingItem, CABLECHANNELINGITEM_CODE, importType, EXPORT);
 	}
 
 	/**
@@ -745,7 +748,7 @@ public final class CableChannelingItem
 			final XmlCableChannelingItem cableChannelingItem,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(cableChannelingItem, CABLECHANNELINGITEM_CODE, importType);
+		XmlComplementorRegistry.complementStorableObject(cableChannelingItem, CABLECHANNELINGITEM_CODE, importType, IMPORT);
 
 		this.startSpare = cableChannelingItem.getStartSpare();
 		this.endSpare = cableChannelingItem.getEndSpare();

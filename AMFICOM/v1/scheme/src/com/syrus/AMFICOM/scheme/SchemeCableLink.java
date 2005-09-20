@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.89 2005/09/20 10:42:00 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.90 2005/09/20 13:00:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMECABLETHREAD_CODE;
 import static com.syrus.AMFICOM.general.StorableObjectWrapper.COLUMN_CODENAME;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -85,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2005/09/20 10:42:00 $
+ * @version $Revision: 1.90 $, $Date: 2005/09/20 13:00:11 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -530,6 +532,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 				cableChannelingItem.getXmlTransferable(cableChannelingItemSeq.addNewCableChannelingItem(), importType);
 			}
 		}
+		XmlComplementorRegistry.complementStorableObject(schemeCableLink, SCHEMECABLELINK_CODE, importType, EXPORT);
 	}
 
 	/**
@@ -748,7 +751,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 			final XmlSchemeCableLink schemeCableLink,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeCableLink, SCHEMECABLELINK_CODE, importType);
+		XmlComplementorRegistry.complementStorableObject(schemeCableLink, SCHEMECABLELINK_CODE, importType, IMPORT);
 
 		super.fromXmlTransferable(schemeCableLink, importType);
 

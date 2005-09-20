@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlComplementorRegistry.java,v 1.9 2005/09/11 15:36:58 bass Exp $
+ * $Id: XmlComplementorRegistry.java,v 1.10 2005/09/20 13:00:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,13 +18,14 @@ import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode;
 import com.syrus.AMFICOM.general.xml.XmlStorableObject;
 import com.syrus.util.Log;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.9 $, $Date: 2005/09/11 15:36:58 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/20 13:00:11 $
  * @module general
  */
 public final class XmlComplementorRegistry {
@@ -68,31 +69,30 @@ public final class XmlComplementorRegistry {
 	 * @param storableObject
 	 * @param entityCode
 	 * @param importType
+	 * @param mode
 	 * @throws CreateObjectException
 	 * @throws UpdateObjectException
 	 */
 	public static void complementStorableObject(
 			final XmlStorableObject storableObject,
 			final short entityCode,
-			final String importType)
+			final String importType,
+			final ComplementationMode mode)
 	throws CreateObjectException, UpdateObjectException {
 		assert storableObject != null : NON_NULL_EXPECTED;
 		final List<XmlComplementor> complementors = REGISTRY.get(new Short(entityCode));
 		if (complementors == null || complementors.isEmpty()) {
-			final long timeMillis = System.currentTimeMillis();
 			final String className = storableObject.getClass().getName();
 			if (!QUIET_CLASS_NAMES.contains(className)) {
 				QUIET_CLASS_NAMES.add(className);
 				Log.debugMessage("XmlComplementorRegistry.complementStorableObject() | no complementor(s) found fot type: "
-						+ className + " ("
-						+ (System.currentTimeMillis() - timeMillis)
-						+ " ms)",
+						+ className,
 						INFO);
 			}
 			return;
 		}
 		for (final XmlComplementor complementor : complementors) {
-			complementor.complementStorableObject(storableObject, importType);
+			complementor.complementStorableObject(storableObject, importType, mode);
 		}
 	}
 }

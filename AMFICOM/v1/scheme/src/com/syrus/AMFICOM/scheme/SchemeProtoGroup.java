@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.68 2005/09/20 10:42:00 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.69 2005/09/20 13:00:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,6 +21,8 @@ import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_
 import static com.syrus.AMFICOM.general.ObjectEntities.IMAGERESOURCE_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOGROUP_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
 import static java.util.logging.Level.SEVERE;
 
 import java.util.Collections;
@@ -60,7 +62,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.68 $, $Date: 2005/09/20 10:42:00 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/20 13:00:11 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -443,6 +445,7 @@ public final class SchemeProtoGroup extends StorableObject
 			}
 		}
 		schemeProtoGroup.setImportType(importType);
+		XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, EXPORT);
 	}
 
 	/**
@@ -667,7 +670,7 @@ public final class SchemeProtoGroup extends StorableObject
 			final XmlSchemeProtoGroup schemeProtoGroup,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType);
+		XmlComplementorRegistry.complementStorableObject(schemeProtoGroup, SCHEMEPROTOGROUP_CODE, importType, IMPORT);
 
 		this.name = schemeProtoGroup.getName();
 		this.description = schemeProtoGroup.isSetDescription()

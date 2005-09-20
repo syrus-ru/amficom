@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.96 2005/09/20 11:49:55 bass Exp $
+ * $Id: Scheme.java,v 1.97 2005/09/20 13:00:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,6 +25,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEMONITORINGSOLUTION_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEOPTIMIZEINFO_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEME_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
 import static com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind.CABLE_SUBNETWORK;
 import static java.util.logging.Level.SEVERE;
 
@@ -81,7 +83,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.96 $, $Date: 2005/09/20 11:49:55 $
+ * @version $Revision: 1.97 $, $Date: 2005/09/20 13:00:11 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -884,6 +886,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 			}
 		}
 		scheme.setImportType(importType);
+		XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, EXPORT);
 	}
 
 	Identifier getUgoCellId() {
@@ -1368,7 +1371,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	public void fromXmlTransferable(final XmlScheme scheme,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType);
+		XmlComplementorRegistry.complementStorableObject(scheme, SCHEME_CODE, importType, IMPORT);
 
 		this.name = scheme.getName();
 		this.description = scheme.isSetDescription()

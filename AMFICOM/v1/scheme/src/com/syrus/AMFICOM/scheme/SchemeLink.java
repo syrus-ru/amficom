@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.78 2005/09/20 10:42:00 bass Exp $
+ * $Id: SchemeLink.java,v 1.79 2005/09/20 13:00:11 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,6 +28,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMELINK_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SCHEMEPROTOELEMENT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.SITENODE_CODE;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.EXPORT;
+import static com.syrus.AMFICOM.general.XmlComplementor.ComplementationMode.IMPORT;
 import static java.util.logging.Level.FINE;
 import static java.util.logging.Level.INFO;
 import static java.util.logging.Level.SEVERE;
@@ -69,7 +71,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.78 $, $Date: 2005/09/20 10:42:00 $
+ * @version $Revision: 1.79 $, $Date: 2005/09/20 13:00:11 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -836,6 +838,7 @@ public final class SchemeLink extends AbstractSchemeLink
 		if (!this.parentSchemeProtoElementId.isVoid()) {
 			this.parentSchemeProtoElementId.getXmlTransferable(schemeLink.addNewParentSchemeProtoElementId(), importType);
 		}
+		XmlComplementorRegistry.complementStorableObject(schemeLink, SCHEMELINK_CODE, importType, EXPORT);
 	}
 
 	void setAttributes(final Date created,
@@ -1143,7 +1146,7 @@ public final class SchemeLink extends AbstractSchemeLink
 	public void fromXmlTransferable(final XmlSchemeLink schemeLink,
 			final String importType)
 	throws ApplicationException {
-		XmlComplementorRegistry.complementStorableObject(schemeLink, SCHEMELINK_CODE, importType);
+		XmlComplementorRegistry.complementStorableObject(schemeLink, SCHEMELINK_CODE, importType, IMPORT);
 
 		super.fromXmlTransferable(schemeLink, importType);
 
