@@ -8,6 +8,7 @@ EXTLIB=../../extlib
 EXTCLASSPATH=$EXTLIB/kunststoff.jar:\
 $EXTLIB/trove.jar:\
 $EXTLIB/jgraphpad.jar
+XMLCLASSPATH=$XMLBEANS_HOME/build/lib/xbean.jar
 DEPRECATEDCLASSPATH=$ORACLE_HOME/lib/jdev-rt.zip
 APPCLASSPATH=$LIB/schemeclient.jar:\
 $LIB/general.jar:\
@@ -24,5 +25,5 @@ $LIB/filterclient.jar:\
 $LIB/leserver_interface.jar:\
 $LIB/util.jar
 
-$JAVA -Xmx256m -ea -client -classpath $APPCLASSPATH:$EXTCLASSPATH:$DEPRECATEDCLASSPATH com.syrus.AMFICOM.client_.scheme.SchemeEditor
+$JAVA -Xmx256m -ea -client -classpath $APPCLASSPATH:$EXTCLASSPATH:$XMLCLASSPATH:$DEPRECATEDCLASSPATH com.syrus.AMFICOM.client_.scheme.SchemeEditor
 

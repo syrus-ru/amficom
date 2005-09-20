@@ -5,10 +5,14 @@ JAVA=$JAVA_HOME/bin/java
 LIB=../lib
 EXTLIB=../../extlib
 
-EXTCLASSPATH=$EXTLIB/kunststoff.jar:$EXTLIB/trove.jar:$EXTLIB/xbean.jar
+EXTCLASSPATH=$EXTLIB/kunststoff.jar:$EXTLIB/trove.jar
+
+XMLCLASSPATH=$LIB/generalxml.jar:\
+$XMLBEANS_HOME/build/lib/xbean.jar:\
+$XMLBEANS_HOME/build/lib/jsr173_api.jar
+
 APPCLASSPATH=$LIB/scheduler.jar:\
 $LIB/general.jar:\
-$LIB/generalxml.jar:\
 $LIB/administration.jar:\
 $LIB/configuration.jar:\
 $LIB/measurement.jar:\
@@ -23,5 +27,5 @@ $LIB/filterclient.jar:\
 $LIB/leserver_interface.jar:\
 $LIB/util.jar
 
-$JAVA -Xmx256m -ea -client -classpath $APPCLASSPATH:$EXTCLASSPATH com.syrus.AMFICOM.Client.Schedule.Schedule
+$JAVA -Xmx256m -ea -client -classpath $APPCLASSPATH:${XMLCLASSPATH}:$EXTCLASSPATH com.syrus.AMFICOM.Client.Schedule.Schedule
 
