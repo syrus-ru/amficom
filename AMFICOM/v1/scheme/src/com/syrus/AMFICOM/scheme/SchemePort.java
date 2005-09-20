@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePort.java,v 1.66 2005/09/20 08:15:58 bass Exp $
+ * $Id: SchemePort.java,v 1.67 2005/09/20 10:41:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
  * #10 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/09/20 08:15:58 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/20 10:41:59 $
  * @module scheme
  */
 public final class SchemePort extends AbstractSchemePort
@@ -298,7 +298,7 @@ public final class SchemePort extends AbstractSchemePort
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemePort getXmlTransferable(final XmlSchemePort schemePort,
+	public void getXmlTransferable(final XmlSchemePort schemePort,
 			final String importType)
 	throws ApplicationException {
 		super.getXmlTransferable(schemePort, importType);
@@ -314,7 +314,6 @@ public final class SchemePort extends AbstractSchemePort
 		if (!super.portId.isVoid()) {
 			super.portId.getXmlTransferable(schemePort.addNewPortId(), importType);
 		}
-		return schemePort;
 	}
 
 	/**

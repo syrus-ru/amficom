@@ -1,5 +1,5 @@
 /*-
- * $Id: MapLibrary.java,v 1.28 2005/09/19 06:58:31 krupenn Exp $
+ * $Id: MapLibrary.java,v 1.29 2005/09/20 10:42:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.util.Log;
 
 
 /**
- * @version $Revision: 1.28 $, $Date: 2005/09/19 06:58:31 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.29 $, $Date: 2005/09/20 10:42:01 $
+ * @author $Author: bass $
  * @module map
  */
 public final class MapLibrary extends StorableObject implements Namable, Library, XmlBeansTransferable<XmlMapLibrary> {
@@ -302,7 +302,7 @@ public final class MapLibrary extends StorableObject implements Namable, Library
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlMapLibrary getXmlTransferable(final XmlMapLibrary mapLibrary,
+	public void getXmlTransferable(final XmlMapLibrary mapLibrary,
 			final String importType)
 	throws ApplicationException {
 		mapLibrary.setCodename(this.codename);
@@ -329,7 +329,6 @@ public final class MapLibrary extends StorableObject implements Namable, Library
 			}
 		}
 		mapLibrary.setImportType(importType);
-		return mapLibrary;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoRtu.java,v 1.21 2005/09/14 19:50:48 bass Exp $
+ * $Id: SchemeOptimizeInfoRtu.java,v 1.22 2005/09/20 10:41:59 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/09/14 19:50:48 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/20 10:41:59 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoRtu extends StorableObject
@@ -214,7 +214,7 @@ public final class SchemeOptimizeInfoRtu extends StorableObject
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeOptimizeInfoRtu getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlSchemeOptimizeInfoRtu schemeOptimizeInfoRtu,
 			final String importType)
 	throws ApplicationException {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.88 2005/09/18 12:43:14 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.89 2005/09/20 10:42:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,7 +85,7 @@ import com.syrus.util.Shitlet;
  * #13 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.88 $, $Date: 2005/09/18 12:43:14 $
+ * @version $Revision: 1.89 $, $Date: 2005/09/20 10:42:00 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -480,7 +480,7 @@ public final class SchemeCableLink extends AbstractSchemeLink
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeCableLink getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlSchemeCableLink schemeCableLink,
 			final String importType)
 	throws ApplicationException {
@@ -530,7 +530,6 @@ public final class SchemeCableLink extends AbstractSchemeLink
 				cableChannelingItem.getXmlTransferable(cableChannelingItemSeq.addNewCableChannelingItem(), importType);
 			}
 		}
-		return schemeCableLink;
 	}
 
 	/**

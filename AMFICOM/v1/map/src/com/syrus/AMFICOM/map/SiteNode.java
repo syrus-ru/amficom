@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNode.java,v 1.93 2005/09/14 19:50:47 bass Exp $
+ * $Id: SiteNode.java,v 1.94 2005/09/20 10:42:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.util.Log;
  * {@link #city}, {@link #street}, {@link #building} для поиска по
  * географическим параметрам.
  * @author $Author: bass $
- * @version $Revision: 1.93 $, $Date: 2005/09/14 19:50:47 $
+ * @version $Revision: 1.94 $, $Date: 2005/09/20 10:42:02 $
  * @module map
  */
 public class SiteNode extends AbstractNode
@@ -332,7 +332,7 @@ public class SiteNode extends AbstractNode
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public final XmlSiteNode getXmlTransferable(final XmlSiteNode siteNode,
+	public final void getXmlTransferable(final XmlSiteNode siteNode,
 			final String importType)
 	throws ApplicationException {
 		this.id.getXmlTransferable(siteNode.addNewId(), importType);
@@ -348,7 +348,6 @@ public class SiteNode extends AbstractNode
 				&& !this.attachmentSiteNodeId.isVoid()) {
 			this.attachmentSiteNodeId.getXmlTransferable(siteNode.addNewAttachmentSiteNodeId(), importType);
 		}
-		return siteNode;
 	}
 
 	/**

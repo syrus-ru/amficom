@@ -1,5 +1,5 @@
 /*-
- * $Id: CableChannelingItem.java,v 1.67 2005/09/18 12:43:14 bass Exp $
+ * $Id: CableChannelingItem.java,v 1.68 2005/09/20 10:42:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * #15 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.67 $, $Date: 2005/09/18 12:43:14 $
+ * @version $Revision: 1.68 $, $Date: 2005/09/20 10:42:00 $
  * @module scheme
  */
 public final class CableChannelingItem
@@ -435,7 +435,7 @@ public final class CableChannelingItem
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlCableChannelingItem getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlCableChannelingItem cableChannelingItem,
 			final String importType)
 	throws ApplicationException {
@@ -454,7 +454,6 @@ public final class CableChannelingItem
 		this.startSiteNodeId.getXmlTransferable(cableChannelingItem.addNewStartSiteNodeId(), importType);
 		this.endSiteNodeId.getXmlTransferable(cableChannelingItem.addNewEndSiteNodeId(), importType);
 		this.parentSchemeCableLinkId.getXmlTransferable(cableChannelingItem.addNewParentSchemeCableLinkId(), importType);
-		return cableChannelingItem;
 	}
 
 	/**

@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkType.java,v 1.79 2005/09/20 09:37:51 bass Exp $
+ * $Id: LinkType.java,v 1.80 2005/09/20 10:42:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -38,7 +38,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.79 $, $Date: 2005/09/20 09:37:51 $
+ * @version $Revision: 1.80 $, $Date: 2005/09/20 10:42:01 $
  * @author $Author: bass $
  * @module config
  */
@@ -248,7 +248,7 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
-	public XmlLinkType getXmlTransferable(final XmlLinkType linkType,
+	public void getXmlTransferable(final XmlLinkType linkType,
 			final String importType)
 	throws ApplicationException {
 		this.id.getXmlTransferable(linkType.addNewId(), importType);
@@ -259,7 +259,6 @@ public final class LinkType extends AbstractLinkType implements XmlBeansTransfer
 		linkType.setManufacturer(this.manufacturer);
 		linkType.setManufacturerCode(this.manufacturerCode);
 		// TODO write image to file
-		return linkType;
 	}
 
 	@Override

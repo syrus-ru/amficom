@@ -1,5 +1,5 @@
 /*-
- * $Id: PortType.java,v 1.89 2005/09/20 10:00:53 bass Exp $
+ * $Id: PortType.java,v 1.90 2005/09/20 10:42:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,7 +44,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.89 $, $Date: 2005/09/20 10:00:53 $
+ * @version $Revision: 1.90 $, $Date: 2005/09/20 10:42:01 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -232,7 +232,7 @@ public final class PortType extends StorableObjectType implements Characterizabl
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
-	public XmlPortType getXmlTransferable(final XmlPortType portType,
+	public void getXmlTransferable(final XmlPortType portType,
 			final String importType)
 	throws ApplicationException {
 		this.id.getXmlTransferable(portType.addNewId(), importType);
@@ -241,7 +241,6 @@ public final class PortType extends StorableObjectType implements Characterizabl
 		portType.setDescription(this.description);
 		portType.setSort(XmlPortTypeSort.Enum.forInt(this.getSort().value() + 1));
 		portType.setKind(XmlPortTypeKind.Enum.forInt(this.getKind().value() + 1));
-		return portType;
 	}
 
 	protected synchronized void setAttributes(final Date created,

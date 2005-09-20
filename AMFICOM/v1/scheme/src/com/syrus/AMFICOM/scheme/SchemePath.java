@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.87 2005/09/18 12:43:13 bass Exp $
+ * $Id: SchemePath.java,v 1.88 2005/09/20 10:41:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,7 +71,7 @@ import com.syrus.util.Shitlet;
  * #16 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.87 $, $Date: 2005/09/18 12:43:13 $
+ * @version $Revision: 1.88 $, $Date: 2005/09/20 10:41:59 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -314,7 +314,7 @@ public final class SchemePath extends StorableObject
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemePath getXmlTransferable(final XmlSchemePath schemePath,
+	public void getXmlTransferable(final XmlSchemePath schemePath,
 			final String importType)
 	throws ApplicationException {
 		throw new UnsupportedOperationException();

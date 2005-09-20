@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.105 2005/09/20 07:49:51 bass Exp $
+ * $Id: SchemeElement.java,v 1.106 2005/09/20 10:41:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -85,7 +85,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.105 $, $Date: 2005/09/20 07:49:51 $
+ * @version $Revision: 1.106 $, $Date: 2005/09/20 10:41:59 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1016,7 +1016,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@ParameterizationPending(value = {"final boolean usePool"})
-	public XmlSchemeElement getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlSchemeElement schemeElement,
 			final String importType)
 	throws ApplicationException {
@@ -1124,7 +1124,6 @@ public final class SchemeElement extends AbstractSchemeElement
 				schemeLink.getXmlTransferable(schemeLinkSeq.addNewSchemeLink(), importType);
 			}
 		}
-		return schemeElement;
 	}
 
 	Identifier getUgoCellId() {

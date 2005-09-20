@@ -1,5 +1,5 @@
 /*
- * $Id: Equipment.java,v 1.125 2005/09/16 15:58:21 bass Exp $
+ * $Id: Equipment.java,v 1.126 2005/09/20 10:42:01 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.general.xml.XmlCharacteristicSeq;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.125 $, $Date: 2005/09/16 15:58:21 $
+ * @version $Revision: 1.126 $, $Date: 2005/09/20 10:42:01 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -359,7 +359,7 @@ public final class Equipment extends DomainMember
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlEquipment getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlEquipment equipment,
 			final String importType)
 	throws ApplicationException {
@@ -439,7 +439,6 @@ public final class Equipment extends DomainMember
 				characteristic.getXmlTransferable(characteristicSeq.addNewCharacteristic(), importType);
 			}
 		}
-		return equipment;
 	}
 
 	public EquipmentType getType() {

@@ -1,5 +1,5 @@
 /*-
- * $Id: EquipmentType.java,v 1.91 2005/09/14 19:50:49 bass Exp $
+ * $Id: EquipmentType.java,v 1.92 2005/09/20 10:42:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -40,7 +40,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.91 $, $Date: 2005/09/14 19:50:49 $
+ * @version $Revision: 1.92 $, $Date: 2005/09/20 10:42:01 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
@@ -229,7 +229,7 @@ public final class EquipmentType extends StorableObjectType implements Character
 	 * @throws ApplicationException
 	 */
 	@Shitlet
-	public XmlEquipmentType getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlEquipmentType equipmentType,
 			final String importType)
 	throws ApplicationException {
@@ -239,7 +239,6 @@ public final class EquipmentType extends StorableObjectType implements Character
 		equipmentType.setDescription(this.description);
 		equipmentType.setManufacturer(this.manufacturer);
 		equipmentType.setManufacturerCode(this.manufacturerCode);
-		return equipmentType;
 	}
 
 	protected synchronized void setAttributes(final Date created,

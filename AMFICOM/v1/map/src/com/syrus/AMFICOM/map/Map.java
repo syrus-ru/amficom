@@ -1,5 +1,5 @@
 /*-
- * $Id: Map.java,v 1.98 2005/09/19 06:58:59 krupenn Exp $
+ * $Id: Map.java,v 1.99 2005/09/20 10:42:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,8 +63,8 @@ import com.syrus.util.Log;
  * узлов (сетевых и топологических), линий (состоящих из фрагментов), меток на
  * линиях, коллекторов (объединяющих в себе линии).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.98 $, $Date: 2005/09/19 06:58:59 $
+ * @author $Author: bass $
+ * @version $Revision: 1.99 $, $Date: 2005/09/20 10:42:01 $
  * @module map
  */
 public final class Map extends DomainMember implements Namable, XmlBeansTransferable<XmlMap> {
@@ -1002,7 +1002,7 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlMap getXmlTransferable(final XmlMap map,
+	public void getXmlTransferable(final XmlMap map,
 			final String importType)
 	throws ApplicationException {
 		this.id.getXmlTransferable(map.addNewId(), importType);
@@ -1059,7 +1059,6 @@ public final class Map extends DomainMember implements Namable, XmlBeansTransfer
 			}
 		}
 		map.setImportType(importType);
-		return map;
 	}
 
 	/**

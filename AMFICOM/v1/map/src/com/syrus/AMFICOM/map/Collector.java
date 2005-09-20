@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.82 2005/09/16 15:58:21 bass Exp $
+ * $Id: Collector.java,v 1.83 2005/09/20 10:42:02 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,7 +49,7 @@ import com.syrus.util.Log;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.82 $, $Date: 2005/09/16 15:58:21 $
+ * @version $Revision: 1.83 $, $Date: 2005/09/20 10:42:02 $
  * @module map
  */
 public final class Collector extends StorableObject implements Namable, Describable, MapElement, XmlBeansTransferable<XmlCollector> {
@@ -362,7 +362,7 @@ public final class Collector extends StorableObject implements Namable, Describa
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlCollector getXmlTransferable(final XmlCollector collector,
+	public void getXmlTransferable(final XmlCollector collector,
 			final String importType)
 	throws ApplicationException {
 		this.id.getXmlTransferable(collector.addNewId(), importType);
@@ -379,8 +379,6 @@ public final class Collector extends StorableObject implements Namable, Describa
 				 physicalLink.getId().getXmlTransferable(physicalLinkIdSeq.addNewId(), importType);
 			}
 		}
-
-		return collector;
 	}
 
 	/**

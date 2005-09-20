@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeMonitoringSolution.java,v 1.70 2005/09/18 12:43:14 bass Exp $
+ * $Id: SchemeMonitoringSolution.java,v 1.71 2005/09/20 10:42:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
  * #08 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.70 $, $Date: 2005/09/18 12:43:14 $
+ * @version $Revision: 1.71 $, $Date: 2005/09/20 10:42:00 $
  * @module scheme
  */
 public final class SchemeMonitoringSolution
@@ -385,7 +385,7 @@ public final class SchemeMonitoringSolution
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeMonitoringSolution getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlSchemeMonitoringSolution schemeMonitoringSolution,
 			final String importType)
 	throws ApplicationException {

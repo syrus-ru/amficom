@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeOptimizeInfoSwitch.java,v 1.21 2005/09/14 19:50:48 bass Exp $
+ * $Id: SchemeOptimizeInfoSwitch.java,v 1.22 2005/09/20 10:42:00 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -47,7 +47,7 @@ import com.syrus.util.Log;
  *
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: bass $
- * @version $Revision: 1.21 $, $Date: 2005/09/14 19:50:48 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/20 10:42:00 $
  * @module scheme
  */
 public final class SchemeOptimizeInfoSwitch extends StorableObject
@@ -214,7 +214,7 @@ public final class SchemeOptimizeInfoSwitch extends StorableObject
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeOptimizeInfoSwitch getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlSchemeOptimizeInfoSwitch schemeOptimizeInfoSwitch,
 			final String importType)
 	throws ApplicationException {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SiteNodeType.java,v 1.87 2005/09/15 07:11:31 krupenn Exp $
+ * $Id: SiteNodeType.java,v 1.88 2005/09/20 10:42:01 bass Exp $
  *
  * Copyright њ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -67,8 +67,8 @@ import com.syrus.util.Log;
  * ”злы специального типа CABLE_INLET должны быть прив€заны к какому-либо
  * узлу BUILDING или ATS и самосто€тельно не живут
  *  
- * @author $Author: krupenn $
- * @version $Revision: 1.87 $, $Date: 2005/09/15 07:11:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.88 $, $Date: 2005/09/20 10:42:01 $
  * @module map
  */
 public final class SiteNodeType extends StorableObjectType 
@@ -294,7 +294,7 @@ public final class SiteNodeType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSiteNodeType getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlSiteNodeType siteNodeType,
 			final String importType)
 	throws ApplicationException {
@@ -317,7 +317,6 @@ public final class SiteNodeType extends StorableObjectType
 				out.close();
 			}
 			siteNodeType.setImage(imageCodename);
-			return siteNodeType;
 		} catch (final IOException ioe) {
 			throw new ApplicationException(ioe);
 		}

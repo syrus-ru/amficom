@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicType.java,v 1.50 2005/09/14 19:50:50 bass Exp $
+ * $Id: CharacteristicType.java,v 1.51 2005/09/20 10:42:00 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -22,7 +22,7 @@ import com.syrus.AMFICOM.general.xml.XmlCharacteristicType;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/09/14 19:50:50 $
+ * @version $Revision: 1.51 $, $Date: 2005/09/20 10:42:00 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -161,7 +161,7 @@ public final class CharacteristicType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlCharacteristicType getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlCharacteristicType characteristicType,
 			final String importType)
 	throws ApplicationException {

@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeExportCommand.java,v 1.1 2005/09/20 10:06:40 stas Exp $
+ * $Id: SchemeExportCommand.java,v 1.2 2005/09/20 10:42:03 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -80,7 +80,8 @@ public class SchemeExportCommand extends AbstractCommand {
 			Set<XmlLinkType> xmlLinkTypes = new HashSet<XmlLinkType>();
 			for (LinkType linkType : linkTypes) {
 				XmlLinkType xmlLinkType = XmlLinkType.Factory.newInstance();
-				xmlLinkTypes.add(linkType.getXmlTransferable(xmlLinkType, importType));
+				linkType.getXmlTransferable(xmlLinkType, importType);
+				xmlLinkTypes.add(xmlLinkType);
 			}
 			
 //		 TODO remove comment
@@ -90,28 +91,32 @@ public class SchemeExportCommand extends AbstractCommand {
 //			Set<XmlCableLinkType> xmlCableLinkTypes = new HashSet<XmlCableLinkType>();
 //			for (CableLinkType linkType : cableLinkTypes) {
 //				XmlCableLinkType xmlCableLinkType = XmlCableLinkType.Factory.newInstance();
-//				xmlCableLinkTypes.add(linkType.getXmlTransferable(xmlCableLinkType, importType));
+//				linkType.getXmlTransferable(xmlCableLinkType, importType)
+//				xmlCableLinkTypes.add(xmlCableLinkType);
 //			}
 			condition2 = new EquivalentCondition(ObjectEntities.PORT_TYPE_CODE); 
 			Collection<PortType> portTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			Set<XmlPortType> xmlPortTypes = new HashSet<XmlPortType>();
 			for (PortType portType : portTypes) {
 				XmlPortType xmlPortType = XmlPortType.Factory.newInstance();
-				xmlPortTypes.add(portType.getXmlTransferable(xmlPortType, importType));
+				portType.getXmlTransferable(xmlPortType, importType);
+				xmlPortTypes.add(xmlPortType);
 			}
 			condition2 = new EquivalentCondition(ObjectEntities.EQUIPMENT_TYPE_CODE); 
 			Collection<EquipmentType> equipmentTypes = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			Set<XmlEquipmentType> xmlEquipmentTypes = new HashSet<XmlEquipmentType>();
 			for (EquipmentType eqType : equipmentTypes) {
 				XmlEquipmentType xmlEquipmentType = XmlEquipmentType.Factory.newInstance();
-				xmlEquipmentTypes.add(eqType.getXmlTransferable(xmlEquipmentType, importType));
+				eqType.getXmlTransferable(xmlEquipmentType, importType);
+				xmlEquipmentTypes.add(xmlEquipmentType);
 			}
 			condition2 = new EquivalentCondition(ObjectEntities.EQUIPMENT_CODE); 
 			Collection<Equipment> equipments = StorableObjectPool.getStorableObjectsByCondition(condition2, true);
 			Set<XmlEquipment> xmlEquipments = new HashSet<XmlEquipment>();
 			for (Equipment eq : equipments) {
 				XmlEquipment xmlEquipment = XmlEquipment.Factory.newInstance();
-				xmlEquipments.add(eq.getXmlTransferable(xmlEquipment, importType));
+				eq.getXmlTransferable(xmlEquipment, importType);
+				xmlEquipments.add(xmlEquipment);
 			}
 			
 			saveConfigXML(protosFileName, xmlLinkTypes, xmlCableLinkTypes, xmlPortTypes, xmlEquipmentTypes, xmlEquipments);

@@ -1,5 +1,5 @@
 /*-
- * $Id: CableLinkType.java,v 1.74 2005/09/16 15:58:21 bass Exp $
+ * $Id: CableLinkType.java,v 1.75 2005/09/20 10:42:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -45,7 +45,7 @@ import com.syrus.util.Log;
 import com.syrus.util.Shitlet;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/09/16 15:58:21 $
+ * @version $Revision: 1.75 $, $Date: 2005/09/20 10:42:01 $
  * @author $Author: bass $
  * @module config
  */
@@ -274,7 +274,7 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
-	public XmlCableLinkType getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlCableLinkType cableLinkType,
 			final String importType)
 	throws ApplicationException {
@@ -297,7 +297,6 @@ public final class CableLinkType extends AbstractLinkType implements XmlBeansTra
 				cableThreadType.getXmlTransferable(cableThreadTypeSeq.addNewCableThreadType(), importType);
 			}
 		}
-		return cableLinkType;
 	}
 
 	@Override

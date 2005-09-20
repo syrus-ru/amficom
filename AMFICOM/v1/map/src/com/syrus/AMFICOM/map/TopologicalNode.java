@@ -1,5 +1,5 @@
 /*-
- * $Id: TopologicalNode.java,v 1.79 2005/09/14 19:50:46 bass Exp $
+ * $Id: TopologicalNode.java,v 1.80 2005/09/20 10:42:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,7 +42,7 @@ import com.syrus.util.Log;
  * топологический узел соответствует точке изгиба линии и не требует
  * дополнительной описательной информации.
  * @author $Author: bass $
- * @version $Revision: 1.79 $, $Date: 2005/09/14 19:50:46 $
+ * @version $Revision: 1.80 $, $Date: 2005/09/20 10:42:01 $
  * @module map
  */
 public final class TopologicalNode extends AbstractNode implements XmlBeansTransferable<XmlTopologicalNode> {
@@ -262,7 +262,7 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlTopologicalNode getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlTopologicalNode topologicalNode,
 			final String importType)
 	throws ApplicationException {
@@ -270,7 +270,6 @@ public final class TopologicalNode extends AbstractNode implements XmlBeansTrans
 		topologicalNode.setX(this.location.getX());
 		topologicalNode.setY(this.location.getY());
 		topologicalNode.setActive(this.active);
-		return topologicalNode;
 	}
 
 	/**

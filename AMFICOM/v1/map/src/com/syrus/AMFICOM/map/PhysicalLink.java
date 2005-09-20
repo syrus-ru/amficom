@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLink.java,v 1.115 2005/09/15 13:35:46 krupenn Exp $
+ * $Id: PhysicalLink.java,v 1.116 2005/09/20 10:42:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,8 +64,8 @@ import com.syrus.util.Log;
  * Предуствновленными являются  два типа -
  * тоннель (<code>{@link PhysicalLinkType#DEFAULT_TUNNEL}</code>)
  * и коллектор (<code>{@link PhysicalLinkType#DEFAULT_COLLECTOR}</code>).
- * @author $Author: krupenn $
- * @version $Revision: 1.115 $, $Date: 2005/09/15 13:35:46 $
+ * @author $Author: bass $
+ * @version $Revision: 1.116 $, $Date: 2005/09/20 10:42:01 $
  * @module map
  */
 public class PhysicalLink extends StorableObject
@@ -927,7 +927,7 @@ public class PhysicalLink extends StorableObject
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlPhysicalLink getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlPhysicalLink physicalLink,
 			final String importType)
 	throws ApplicationException {
@@ -940,7 +940,6 @@ public class PhysicalLink extends StorableObject
 		physicalLink.setCity(this.city);
 		physicalLink.setStreet(this.street);
 		physicalLink.setBuilding(this.building);
-		return physicalLink;
 	}
 
 	/**

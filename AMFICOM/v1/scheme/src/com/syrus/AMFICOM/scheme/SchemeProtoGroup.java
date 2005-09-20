@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoGroup.java,v 1.67 2005/09/20 08:41:26 bass Exp $
+ * $Id: SchemeProtoGroup.java,v 1.68 2005/09/20 10:42:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -60,7 +60,7 @@ import com.syrus.util.Log;
  * #01 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.67 $, $Date: 2005/09/20 08:41:26 $
+ * @version $Revision: 1.68 $, $Date: 2005/09/20 10:42:00 $
  * @module scheme
  */
 public final class SchemeProtoGroup extends StorableObject
@@ -398,7 +398,7 @@ public final class SchemeProtoGroup extends StorableObject
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeProtoGroup getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlSchemeProtoGroup schemeProtoGroup,
 			final String importType)
 	throws ApplicationException {
@@ -443,7 +443,6 @@ public final class SchemeProtoGroup extends StorableObject
 			}
 		}
 		schemeProtoGroup.setImportType(importType);
-		return schemeProtoGroup;
 	}
 
 	/**

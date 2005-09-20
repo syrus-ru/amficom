@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.73 2005/09/15 10:38:01 bass Exp $
+ * $Id: Identifier.java,v 1.74 2005/09/20 10:42:00 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.73 $, $Date: 2005/09/15 10:38:01 $
+ * @version $Revision: 1.74 $, $Date: 2005/09/20 10:42:00 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -141,7 +141,7 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		return new IdlIdentifier(this.getIdentifierCode());
 	}
 
-	public XmlIdentifier getXmlTransferable(final XmlIdentifier xmlId, final String importType) {
+	public void getXmlTransferable(final XmlIdentifier xmlId, final String importType) {
 		assert !this.isVoid() : NON_VOID_EXPECTED;
 
 		if (LocalXmlIdentifierPool.contains(this, importType)) {
@@ -153,8 +153,6 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 		}
 
 		assert LocalXmlIdentifierPool.contains(xmlId, importType);
-
-		return xmlId;
 	}
 
 	@Override

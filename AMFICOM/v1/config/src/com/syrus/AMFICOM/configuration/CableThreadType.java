@@ -1,5 +1,5 @@
 /*-
- * $Id: CableThreadType.java,v 1.68 2005/09/14 19:50:49 bass Exp $
+ * $Id: CableThreadType.java,v 1.69 2005/09/20 10:42:01 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,7 +51,7 @@ import com.syrus.util.Shitlet;
  * optical fiber (or an <i>abstract </i> optical fiber), the latter is a type of
  * cable (or an <i>abstract </i> cable containing this thread).
  *
- * @version $Revision: 1.68 $, $Date: 2005/09/14 19:50:49 $
+ * @version $Revision: 1.69 $, $Date: 2005/09/20 10:42:01 $
  * @author $Author: bass $
  * @module config
  */
@@ -267,7 +267,7 @@ public final class CableThreadType extends StorableObjectType implements Namable
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
 	@Shitlet
-	public XmlCableThreadType getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlCableThreadType cableThreadType,
 			final String importType)
 	throws ApplicationException {

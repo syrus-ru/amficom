@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeProtoElement.java,v 1.88 2005/09/19 12:34:34 bass Exp $
+ * $Id: SchemeProtoElement.java,v 1.89 2005/09/20 10:41:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -82,7 +82,7 @@ import com.syrus.util.Log;
  * #02 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.88 $, $Date: 2005/09/19 12:34:34 $
+ * @version $Revision: 1.89 $, $Date: 2005/09/20 10:41:59 $
  * @module scheme
  */
 public final class SchemeProtoElement extends AbstractCloneableStorableObject
@@ -846,7 +846,7 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlSchemeProtoElement getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlSchemeProtoElement schemeProtoElement,
 			final String importType)
 	throws ApplicationException {
@@ -940,7 +940,6 @@ public final class SchemeProtoElement extends AbstractCloneableStorableObject
 				schemeLink.getXmlTransferable(schemeLinkSeq.addNewSchemeLink(), importType);
 			}
 		}
-		return schemeProtoElement;
 	}
 
 	Identifier getUgoCellId() {

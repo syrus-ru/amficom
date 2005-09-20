@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.87 2005/09/15 07:11:31 krupenn Exp $
+ * $Id: PhysicalLinkType.java,v 1.88 2005/09/20 10:42:01 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,8 +52,8 @@ import com.syrus.util.Log;
  * типов линий, которые определяются полем {@link #codename}, соответствующим
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
- * @author $Author: krupenn $
- * @version $Revision: 1.87 $, $Date: 2005/09/15 07:11:31 $
+ * @author $Author: bass $
+ * @version $Revision: 1.88 $, $Date: 2005/09/20 10:42:01 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -342,7 +342,7 @@ public final class PhysicalLinkType extends StorableObjectType
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlPhysicalLinkType getXmlTransferable(
+	public void getXmlTransferable(
 			final XmlPhysicalLinkType physicalLinkType,
 			final String importType)
 	throws ApplicationException {
@@ -353,7 +353,6 @@ public final class PhysicalLinkType extends StorableObjectType
 		
 		physicalLinkType.setDimensionX(BigInteger.valueOf(this.getBindingDimension().getWidth()));
 		physicalLinkType.setDimensionY(BigInteger.valueOf(this.getBindingDimension().getHeight()));
-		return physicalLinkType;
 	}
 
 	/**

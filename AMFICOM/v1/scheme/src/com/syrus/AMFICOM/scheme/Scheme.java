@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.94 2005/09/20 07:49:51 bass Exp $
+ * $Id: Scheme.java,v 1.95 2005/09/20 10:41:59 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -81,7 +81,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.94 $, $Date: 2005/09/20 07:49:51 $
+ * @version $Revision: 1.95 $, $Date: 2005/09/20 10:41:59 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -779,7 +779,7 @@ public final class Scheme extends AbstractCloneableDomainMember
 	 * @throws ApplicationException
 	 * @see XmlBeansTransferable#getXmlTransferable(com.syrus.AMFICOM.general.xml.XmlStorableObject, String)
 	 */
-	public XmlScheme getXmlTransferable(final XmlScheme scheme,
+	public void getXmlTransferable(final XmlScheme scheme,
 			final String importType)
 	throws ApplicationException {
 		super.id.getXmlTransferable(scheme.addNewId(), importType);
@@ -884,7 +884,6 @@ public final class Scheme extends AbstractCloneableDomainMember
 			}
 		}
 		scheme.setImportType(importType);
-		return scheme;
 	}
 
 	Identifier getUgoCellId() {
