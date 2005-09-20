@@ -1,5 +1,5 @@
 /*
- * $Id: TopologicalImageCache.java,v 1.17 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: TopologicalImageCache.java,v 1.18 2005/09/20 08:22:07 krupenn Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -34,7 +34,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: krupenn $
- * @version $Revision: 1.17 $, $Date: 2005/09/16 15:45:54 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/20 08:22:07 $
  * @module mapinfo_v1
  */
 public class TopologicalImageCache implements MapImageRenderer
@@ -161,7 +161,7 @@ public class TopologicalImageCache implements MapImageRenderer
 
 	private final MapCoordinatesConverter coordsConverter;
 
-	private final MapContext mapContext;
+	final MapContext mapContext;
 	
 	public TopologicalImageCache(MapCoordinatesConverter coordsConverter, MapContext mapContext, MapImageLoader loader)
 			throws MapConnectionException, MapDataException
