@@ -14,7 +14,6 @@ public class ReflectometryAnalyseApplicationModelFactory
 	{
 		ApplicationModel aModel = super.create();
 
-		aModel.setVisible("menuFileSaveAll", false);
 		aModel.setVisible("menuSessionSave", false);
 		aModel.setVisible("menuSessionUndo", false);
 		aModel.setVisible("menuSessionOptions", false);
@@ -23,6 +22,7 @@ public class ReflectometryAnalyseApplicationModelFactory
 		aModel.setVisible("menuTraceSavePES", false);
 				
 		aModel.setEnabled("menuFileSave", false);
+		aModel.setEnabled("menuFileSaveAll", false);
 		aModel.setEnabled("menuFileSaveAs", false);
 		aModel.setEnabled("menuFileSaveAsText", false);
 		aModel.setEnabled("menuFileClose", false);

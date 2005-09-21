@@ -300,6 +300,7 @@ public class AnalyseMainFrame extends AbstractMainFrame implements BsHashChangeL
 		aModel.setCommand("menuFileOpenAsBellcore", new FileOpenAsBellcoreCommand(this.dispatcher, this.aContext));
 		aModel.setCommand("menuFileOpenAsWavetek", new FileOpenAsWavetekCommand(this.dispatcher, this.aContext));
 		aModel.setCommand("menuFileSave", new FileSaveCommand(this.aContext));
+		aModel.setCommand("menuFileSaveAll", new FileSaveAllTracesCommand());
 		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(this.aContext));
 		aModel.setCommand("menuFileClose", new FileCloseCommand());
 		aModel.setCommand("menuFileAddCompare", new FileAddCommand(this.aContext));

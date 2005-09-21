@@ -19,6 +19,7 @@ import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsBellcoreComma
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenAsWavetekCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileOpenCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileRemoveCommand;
+import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAllTracesCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveAsTextCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.FileSaveCommand;
 import com.syrus.AMFICOM.Client.General.Command.Analysis.LoadEtalonCommand;
@@ -210,6 +211,7 @@ public class ThresholdsMainFrame extends AbstractMainFrame implements BsHashChan
 		aModel.setCommand("menuFileOpenAsBellcore", new FileOpenAsBellcoreCommand(this.dispatcher, this.aContext));
 		aModel.setCommand("menuFileOpenAsWavetek", new FileOpenAsWavetekCommand(this.dispatcher, this.aContext));
 		aModel.setCommand("menuFileSave", new FileSaveCommand(this.aContext));
+		aModel.setCommand("menuFileSaveAll", new FileSaveAllTracesCommand());
 		aModel.setCommand("menuFileSaveAsText", new FileSaveAsTextCommand(this.aContext));
 		aModel.setCommand("menuFileClose", new FileCloseCommand());
 		aModel.setCommand("menuFileAddCompare", new FileAddCommand(this.aContext));
