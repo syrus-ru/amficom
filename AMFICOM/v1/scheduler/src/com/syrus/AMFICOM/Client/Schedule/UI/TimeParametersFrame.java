@@ -194,7 +194,7 @@ public class TimeParametersFrame extends JInternalFrame {
 																				.getEndDate();
 
 																		if (waiting) {
-																			Set selectedTestIds = TimeParametersPanel.this.schedulerModel
+																			final Set<Identifier> selectedTestIds = TimeParametersPanel.this.schedulerModel
 																					.getSelectedTestIds();
 																			if (selectedTestIds != null
 																					&& !selectedTestIds.isEmpty()) {

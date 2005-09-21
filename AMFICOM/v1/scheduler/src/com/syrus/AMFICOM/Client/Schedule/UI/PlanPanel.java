@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.49 2005/09/20 07:35:46 bob Exp $
+ * $Id: PlanPanel.java,v 1.50 2005/09/21 12:11:48 bob Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,11 +52,11 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.49 $, $Date: 2005/09/20 07:35:46 $
+ * @version $Revision: 1.50 $, $Date: 2005/09/21 12:11:48 $
  * @author $Author: bob $
  * @module scheduler
  */
-public class PlanPanel extends JPanel implements ActionListener, PropertyChangeListener {
+final class PlanPanel extends JPanel implements ActionListener, PropertyChangeListener {
 
 	private static final long	serialVersionUID	= 3258417243925984817L;
 
@@ -64,7 +64,7 @@ public class PlanPanel extends JPanel implements ActionListener, PropertyChangeL
 
 	private Timer			timer		= new Timer(TIME_OUT, this);
 
-	private static class Step {
+	private final static class Step {
 
 		int	align;		// выравнивание по кратному
 

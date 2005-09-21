@@ -13,7 +13,6 @@ import java.util.Arrays;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.Enumeration;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.ResourceBundle;
@@ -48,7 +47,6 @@ import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.Plugger;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.StorableObjectWrapper;
@@ -236,10 +234,9 @@ final class TestParametersPanel implements PropertyChangeListener {
 			public void actionPerformed(final ActionEvent e) {
 				final JComboBox comboBox = (JComboBox) e.getSource();
 				final AnalysisType analysisType = (AnalysisType) comboBox.getSelectedItem();
-				final Set<Identifier> selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
-				if (selectedTestIds != null && !selectedTestIds.isEmpty() && TestParametersPanel.this.propertyChangeEvent == null) {
+				if (TestParametersPanel.this.propertyChangeEvent == null) {
 					try {
-						final Set<Test> tests = StorableObjectPool.getStorableObjects(selectedTestIds, true);
+						final Set<Test> tests = TestParametersPanel.this.schedulerModel.getSelectedTests();
 						for (final Test test : tests) {
 							if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 								test.setAnalysisType(analysisType);
@@ -279,13 +276,11 @@ final class TestParametersPanel implements PropertyChangeListener {
 				}
 
 				if (measurementSetup != null) {
-					final Set<Identifier> selectedTestIds = TestParametersPanel.this.schedulerModel.getSelectedTestIds();
-					if (selectedTestIds != null && !selectedTestIds.isEmpty() && TestParametersPanel.this.propertyChangeEvent == null) {
+					if (TestParametersPanel.this.propertyChangeEvent == null) {
 						try {
 							final Set<Identifier> measurementSetupIdSet = Collections.singleton(measurementSetup.getId());
-							final Set<StorableObject> storableObjects = StorableObjectPool.getStorableObjects(selectedTestIds, true);
-							for (Iterator iterator = storableObjects.iterator(); iterator.hasNext();) {
-								final Test test = (Test) iterator.next();
+							final Set<Test> tests = TestParametersPanel.this.schedulerModel.getSelectedTests();
+							for (final Test test : tests) {
 								if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
 									test.setMeasurementSetupIds(measurementSetupIdSet);
 								}

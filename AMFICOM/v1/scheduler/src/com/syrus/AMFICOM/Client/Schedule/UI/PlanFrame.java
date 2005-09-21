@@ -15,7 +15,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 @SuppressWarnings("serial")
-public class PlanFrame extends JInternalFrame {
+public final class PlanFrame extends JInternalFrame {
 
 	private JToolBar	toolBar;
 	private PlanPanel	mainPanel;

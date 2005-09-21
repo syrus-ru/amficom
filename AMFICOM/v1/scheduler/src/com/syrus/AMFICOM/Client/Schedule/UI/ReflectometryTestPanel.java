@@ -63,7 +63,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.80 $, $Date: 2005/09/20 07:35:46 $
+ * @version $Revision: 1.81 $, $Date: 2005/09/21 12:11:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -828,57 +828,56 @@ public class ReflectometryTestPanel extends ParametersTestPanel implements Param
 					Log.DEBUGLEVEL10);
 				this.oldDescription = description;
 				final Set<Identifier> selectedTestIds = this.schedulerModel.getSelectedTestIds();
-				if (selectedTestIds != null && !selectedTestIds.isEmpty()) { 
-				try {
-					final Set<Test> tests = StorableObjectPool.getStorableObjects(selectedTestIds, true);
-	
-					final Map<Identifier, Identifier> unchangedMeasurementSetupNewMap = new HashMap<Identifier, Identifier>();
-					for (final Test test : tests) {
-						if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
-							final Set<Identifier> measurementSetupIds = test.getMeasurementSetupIds();
-							if (measurementSetupIds.size() == 1) {
-								final MeasurementSetup baseMeasurementSetup = 
-									StorableObjectPool.getStorableObject(
-										measurementSetupIds.iterator().next(),
-										true);
-								
-								if (baseMeasurementSetup.isChanged()) {									
-									baseMeasurementSetup.setParameterSet(parameterSet);
-									baseMeasurementSetup.setDescription(description);
-									this.testParametersPanel.refreshMeasurementSetup(baseMeasurementSetup);
-								} else {
-									Identifier measurementSetupId = 
-										unchangedMeasurementSetupNewMap.get(baseMeasurementSetup.getId());
-	
-									if (measurementSetupId == null) {										
-										final MeasurementSetup measurementSetup = 
-											MeasurementSetup.createInstance(LoginManager.getUserId(),
-												parameterSet,
-												baseMeasurementSetup.getCriteriaSet(),
-												baseMeasurementSetup.getThresholdSet(),
-												baseMeasurementSetup.getEtalon(),
-												description,
-												baseMeasurementSetup.getMeasurementDuration(),
-												baseMeasurementSetup.getMonitoredElementIds(),
-												baseMeasurementSetup.getMeasurementTypes());
-										this.skip = true;
-										this.testParametersPanel.setMeasurementSetup(measurementSetup);
-										this.skip = false;
-										measurementSetupId = measurementSetup.getId();
-										unchangedMeasurementSetupNewMap.put(baseMeasurementSetup.getId(), measurementSetupId);
+				if (!selectedTestIds.isEmpty()) { 
+					try {
+						final Set<Test> tests = this.schedulerModel.getSelectedTests();
+						final Map<Identifier, Identifier> unchangedMeasurementSetupNewMap = new HashMap<Identifier, Identifier>();
+						for (final Test test : tests) {
+							if (test.getVersion().equals(StorableObjectVersion.INITIAL_VERSION)) {
+								final Set<Identifier> measurementSetupIds = test.getMeasurementSetupIds();
+								if (measurementSetupIds.size() == 1) {
+									final MeasurementSetup baseMeasurementSetup = 
+										StorableObjectPool.getStorableObject(
+											measurementSetupIds.iterator().next(),
+											true);
+									
+									if (baseMeasurementSetup.isChanged()) {									
+										baseMeasurementSetup.setParameterSet(parameterSet);
+										baseMeasurementSetup.setDescription(description);
+										this.testParametersPanel.refreshMeasurementSetup(baseMeasurementSetup);
+									} else {
+										Identifier measurementSetupId = 
+											unchangedMeasurementSetupNewMap.get(baseMeasurementSetup.getId());
+		
+										if (measurementSetupId == null) {										
+											final MeasurementSetup measurementSetup = 
+												MeasurementSetup.createInstance(LoginManager.getUserId(),
+													parameterSet,
+													baseMeasurementSetup.getCriteriaSet(),
+													baseMeasurementSetup.getThresholdSet(),
+													baseMeasurementSetup.getEtalon(),
+													description,
+													baseMeasurementSetup.getMeasurementDuration(),
+													baseMeasurementSetup.getMonitoredElementIds(),
+													baseMeasurementSetup.getMeasurementTypes());
+											this.skip = true;
+											this.testParametersPanel.setMeasurementSetup(measurementSetup);
+											this.skip = false;
+											measurementSetupId = measurementSetup.getId();
+											unchangedMeasurementSetupNewMap.put(baseMeasurementSetup.getId(), measurementSetupId);
+										}
+		
+										test.setMeasurementSetupIds(Collections.singleton(measurementSetupId));
 									}
-	
-									test.setMeasurementSetupIds(Collections.singleton(measurementSetupId));
+								} else {
+									// TODO PROBLEM ?
 								}
-							} else {
-								// TODO PROBLEM ?
 							}
 						}
+		
+					} catch (final ApplicationException e) {
+						AbstractMainFrame.showErrorMessage(this, e);
 					}
-	
-				} catch (final ApplicationException e) {
-					AbstractMainFrame.showErrorMessage(this, e);
-				}
 			} else {
 				if (this.measurementSetup != null) {
 					if (this.measurementSetup.isChanged()) {

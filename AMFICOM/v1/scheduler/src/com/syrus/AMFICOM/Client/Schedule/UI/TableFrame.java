@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.42 2005/09/20 07:45:28 bob Exp $
+ * $Id: TableFrame.java,v 1.43 2005/09/21 12:11:48 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 /**
- * @version $Revision: 1.42 $, $Date: 2005/09/20 07:45:28 $
+ * @version $Revision: 1.43 $, $Date: 2005/09/21 12:11:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -92,30 +92,29 @@ public class TableFrame extends JInternalFrame implements PropertyChangeListener
 		if (selectedTestIds == null || selectedTestIds.isEmpty()) {
 			this.listTable.clearSelection();
 		} else {
-			// int[] selectedRows = new int[selectedTestIds.size()];
-			// int j = 0;
-			final WrapperedTableModel<Test> tableModel = this.listTable.getModel();
-			for (Identifier identifier : selectedTestIds) {
-				try {
-					final Test test1 = (Test) StorableObjectPool.getStorableObject(identifier, true);
-					final Identifier groupTestId = test1.getGroupTestId();
+			try {
+				final WrapperedTableModel<Test> tableModel = this.listTable.getModel();
+				final Set<Test> tests = this.schedulerModel.getSelectedTests();
+				for (final Test selectedTest : tests) {
+					Identifier identifier = selectedTest.getId();
+					final Identifier groupTestId = selectedTest.getGroupTestId();
 					if (!groupTestId.isVoid()) {
 						identifier = groupTestId;
 					}
-				} catch (final ApplicationException e) {
-					AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
-					return;
-				}
-				for (int i = 0; i < tableModel.getRowCount(); i++) {
-					final Test test = tableModel.getObject(i);
-					Identifier testId = test.getGroupTestId();
-					testId = !testId.isVoid() ? testId : test.getId();
-					if (testId.equals(identifier)) {
-						// selectedRows[j++] = i;
-						this.listTable.setRowSelectionInterval(i, i);
-						break;
+					
+					for (int i = 0; i < tableModel.getRowCount(); i++) {
+						final Test testInTable = tableModel.getObject(i);
+						Identifier testId = testInTable.getGroupTestId();
+						testId = !testId.isVoid() ? testId : testInTable.getId();
+						if (testId.equals(identifier)) {
+							this.listTable.setRowSelectionInterval(i, i);
+							break;
+						}
 					}
 				}
+			} catch (final ApplicationException e) {
+				AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
+				return;
 			}
 		}
 	}

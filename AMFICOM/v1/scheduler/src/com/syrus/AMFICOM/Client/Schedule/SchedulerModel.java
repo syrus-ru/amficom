@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.99 2005/09/20 15:19:35 bob Exp $
+ * $Id: SchedulerModel.java,v 1.100 2005/09/21 12:11:48 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/09/20 15:19:35 $
+ * @version $Revision: 1.100 $, $Date: 2005/09/21 12:11:48 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -414,6 +414,9 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					OperationSort.OPERATION_GREAT_EQUALS,
 					ObjectEntities.TEST_CODE,
 					TestWrapper.COLUMN_END_TIME);
+			
+			// XXX rebuld using a <= d & c <= b
+			// [a,b] intersect [c,d]
 
 			final CompoundCondition compoundCondition1 = 
 				new CompoundCondition(startTypicalCondition,
@@ -447,7 +450,13 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		return this.selectedTestIds;
 	}
 	
-	
+	public Set<Test> getSelectedTests() throws ApplicationException{
+		final Set<Identifier> selectedTestIds = this.getSelectedTestIds();
+		if (selectedTestIds != null && !selectedTestIds.isEmpty()) { 
+			return StorableObjectPool.getStorableObjects(selectedTestIds, true);
+		}
+		return Collections.emptySet();
+	}
 
 	public Test getSelectedTest() throws ApplicationException {
 		try {

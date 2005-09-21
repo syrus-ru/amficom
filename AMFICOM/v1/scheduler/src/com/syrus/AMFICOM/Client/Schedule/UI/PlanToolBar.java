@@ -20,6 +20,8 @@ import java.awt.image.BufferedImage;
 import java.util.Calendar;
 import java.util.Date;
 
+import javax.swing.AbstractAction;
+import javax.swing.Action;
 import javax.swing.BorderFactory;
 import javax.swing.Box;
 import javax.swing.Icon;
@@ -31,7 +33,9 @@ import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.JSpinner;
 import javax.swing.JToolBar;
+import javax.swing.KeyStroke;
 import javax.swing.SwingConstants;
+import javax.swing.Timer;
 import javax.swing.UIManager;
 import javax.swing.WindowConstants;
 import javax.swing.event.ChangeEvent;
@@ -54,11 +58,11 @@ import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.newFilter.DateSpinner;
 import com.syrus.AMFICOM.newFilter.TimeSpinner;
 
-class PlanToolBar {
+final class PlanToolBar {
 
 	private static final long	serialVersionUID	= -1251916980092015668L;
 
-	private class FlashIcon implements Icon {
+	private final class FlashIcon implements Icon {
 
 		private boolean	flash	= false;
 
@@ -67,66 +71,51 @@ class PlanToolBar {
 		}
 
 		public int getIconHeight() {
-			return PlanToolBar.this.h + 1;
+			return PlanToolBar.this.w + 1;
 		}
 
 		public int getIconWidth() {
 			return PlanToolBar.this.w + 1;
 		}
 
-		public void paintIcon(	Component c,
-								Graphics g,
-								int x,
-								int y) {
-			Graphics2D g2d = (Graphics2D) g;
-			Color foregroundColor = g.getColor();
-			g2d.setBackground(Color.lightGray);
-			g2d.clearRect(x, y, PlanToolBar.this.w + 1, PlanToolBar.this.h + 1);
+		public void paintIcon(	final Component c,
+		                      	final Graphics g,
+		                      	final int x,
+		                      	final int y) {
+			final Graphics2D g2d = (Graphics2D) g;
+			final Color foregroundColor = g.getColor();
 			g2d.setColor(this.flash ? SchedulerModel.COLOR_SCHEDULED : SchedulerModel.COLOR_UNRECOGNIZED);
-			g2d.fillRect(x + 2, y + 2, PlanToolBar.this.w - 3, PlanToolBar.this.h - 3);
-			g2d.draw3DRect(x, y, PlanToolBar.this.w, PlanToolBar.this.h, true);
+			g2d.fillRect(x + 2, y + 2, PlanToolBar.this.w - 3, PlanToolBar.this.w - 3);
+			g2d.draw3DRect(x, y, PlanToolBar.this.w, PlanToolBar.this.w, true);
 			g.setColor(foregroundColor);
 		}
 	}
 
 	int				w;
-	int				h;
-	private JButton	applyButton		= new JButton();
 
-	private JButton	dateButton		= new JButton(UIStorage.CALENDAR_ICON);
 	JSpinner		dateSpinner		= new DateSpinner();
 
-	private JButton	nowButton		= new JButton(UIStorage.TIME_ICON);
-
 	PlanPanel		panel;
-	// private ApplicationContext aContext;
 	Dispatcher		dispatcher;
 	AComboBox		scaleComboBox;
 	JSpinner		timeSpinner		= new TimeSpinner();
 
-//	FilterDialog	filterDialog;
-
-	private JButton	filterButton	= new JButton();
-	private JButton	zoomInButton	= new JButton();
-	private JButton	zoomNoneButton	= new JButton();
-	private JButton	zoomOutButton	= new JButton();
-
 	JToolBar		toolBar;
+	SchedulerModel	schedulerModel;
 
 	public PlanToolBar(final ApplicationContext aContext, final PlanPanel panel) {
 		if (aContext != null) {
 			this.dispatcher = aContext.getDispatcher();
 		}
-		final SchedulerModel schedulerModel = (SchedulerModel) aContext.getApplicationModel();
+		this.schedulerModel = (SchedulerModel) aContext.getApplicationModel();
 		this.panel = panel;
 
 		this.toolBar = new JToolBar();
 		this.toolBar.setFloatable(false);
 
-		final Font font2 = this.toolBar.getFont();
-		final FontMetrics fontMetrics = this.toolBar.getFontMetrics(font2);
+		final Font font = this.toolBar.getFont();
+		final FontMetrics fontMetrics = this.toolBar.getFontMetrics(font);
 		this.w = fontMetrics.charWidth('W');
-		this.h = this.w;
 
 		final String[] scales = new String[PlanPanel.SCALES.length];
 		for (int i = 0; i < scales.length; i++) {
@@ -168,72 +157,7 @@ class PlanToolBar {
 		};
 		
 		this.dateSpinner.addChangeListener(timeListener);
-
 		this.timeSpinner.addChangeListener(timeListener);
-
-		this.dateButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		this.dateButton.setFocusable(false);
-		this.dateButton.setToolTipText(LangModelSchedule.getString("Text.Plan.Toolbar.Calendar")); //$NON-NLS-1$
-		this.dateButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				final Calendar cal = Calendar.getInstance();
-				final Date date = (Date) PlanToolBar.this.dateSpinner.getModel().getValue();
-				cal.setTime(date);
-
-				final JDialog calendarDialog = CalendarUI
-						.createDialogInstance(Environment.getActiveWindow(), cal, true, true);
-				calendarDialog.setLocation(new Point(PlanToolBar.this.dateSpinner.getLocationOnScreen().x - 35,
-														PlanToolBar.this.dateSpinner.getLocationOnScreen().y
-																+ PlanToolBar.this.h));
-				calendarDialog.setVisible(true);				
-				
-				if (((CalendarUI) calendarDialog.getContentPane()).getStatus() == CalendarUI.STATUS_OK) {
-					PlanToolBar.this.dateSpinner.getModel().setValue(cal.getTime());
-				}
-			}
-		});
-		
-		this.zoomInButton.setMnemonic(Integer.valueOf(KeyEvent.VK_PLUS));
-		this.zoomInButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		this.zoomInButton.setFocusable(false);
-		this.zoomInButton.setIcon(UIStorage.ZOOMIN_ICON);
-		this.zoomInButton.setToolTipText(LangModelSchedule.getString("Text.Plan.Toolbar.ZoomIn")); //$NON-NLS-1$
-		this.zoomInButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				PlanToolBar.this.panel.updateScale(1.25);
-			}
-		});
-
-		this.filterButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		this.filterButton.setFocusable(false);
-		this.filterButton.setIcon(UIStorage.FILTER_ICON);
-		this.filterButton.setToolTipText(LangModelSchedule.getString("Text.Plan.Toolbar.Filtration")); //$NON-NLS-1$		
-
-		this.zoomOutButton.setMnemonic(Integer.valueOf(KeyEvent.VK_MINUS));
-		this.zoomOutButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		this.zoomOutButton.setFocusable(false);
-		this.zoomOutButton.setIcon(UIStorage.ZOOMOUT_ICON);
-		this.zoomOutButton.setToolTipText(LangModelSchedule.getString("Text.Plan.Toolbar.ZoomOut")); //$NON-NLS-1$
-		this.zoomOutButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				PlanToolBar.this.panel.updateScale(.8);
-			}
-		});
-		
-		this.zoomNoneButton.setMnemonic(Integer.valueOf(KeyEvent.VK_ASTERISK));
-		this.zoomNoneButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		this.zoomNoneButton.setFocusable(false);
-		this.zoomNoneButton.setIcon(UIStorage.NOZOOM_ICON);
-		this.zoomNoneButton.setToolTipText(LangModelSchedule.getString("Text.Plan.Toolbar.ActualSize")); //$NON-NLS-1$
-		this.zoomNoneButton.addActionListener(new ActionListener() {
-
-			public void actionPerformed(ActionEvent e) {
-				PlanToolBar.this.panel.updateScale2Fit();
-			}
-		});
 
 		this.toolBar.add(new JLabel(LangModelSchedule.getString("Text.Plan.Toolbar.Scope") + ':')); //$NON-NLS-1$
 		CommonUIUtilities.fixHorizontalSize(this.scaleComboBox);
@@ -243,115 +167,90 @@ class PlanToolBar {
 		
 		CommonUIUtilities.fixHorizontalSize(this.dateSpinner);
 		this.toolBar.add(this.dateSpinner);
-		this.toolBar.add(this.dateButton);
+		{
+			
+			final JButton button = this.toolBar.add(this.createShowCalendarAction());
+			button.setFocusable(false);
+			button.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		}
 		this.toolBar.addSeparator();
 		this.toolBar.add(new JLabel(LangModelSchedule.getString("Text.Plan.Toolbar.Time") + ':')); //$NON-NLS-1$
 
 		CommonUIUtilities.fixHorizontalSize(this.timeSpinner);
 		this.toolBar.add(this.timeSpinner);
 
-		this.nowButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		this.toolBar.add(this.nowButton);
-		this.toolBar.addSeparator();
-		this.toolBar.add(this.applyButton);
-		JButton legendButton = new JButton(LangModelSchedule.getString("Text.Plan.Toolbar.Legend"));
-		legendButton.setToolTipText(LangModelSchedule.getString("Text.Plan.Toolbar.Legend"));
-		legendButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
-		this.toolBar.addSeparator();
-		this.toolBar.add(legendButton);
 		{
-
-			final JDialog dialog = new JDialog();
-			dialog.setTitle(LangModelSchedule.getString("Text.Plan.Toolbar.Legend"));
-			JPanel legendPanel = new JPanel(new GridLayout(0, 1));
-			legendPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
-			final FlashIcon flashIcon = new FlashIcon();
-			final JLabel flashLabel = new JLabel(LangModelSchedule.getString("Text.Test.Status.NotSaved"), flashIcon,
-													SwingConstants.LEFT);
-			javax.swing.Timer timer = new javax.swing.Timer(PlanPanel.TIME_OUT, new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					flashIcon.flash();
-					flashLabel.repaint();
-					flashLabel.revalidate();
-				}
-			});
-
-			timer.start();
-
-			legendPanel.add(flashLabel);
-			legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Scheduled"), this
-					.getColorIcon(SchedulerModel.COLOR_SCHEDULED), SwingConstants.LEFT));
-			legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Completed"), this
-					.getColorIcon(SchedulerModel.COLOR_COMPLETED), SwingConstants.LEFT));
-			legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Processing"), this
-					.getColorIcon(SchedulerModel.COLOR_PROCCESSING), SwingConstants.LEFT));
-			legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Aborted"), this
-					.getColorIcon(SchedulerModel.COLOR_ABORDED), SwingConstants.LEFT));
-			legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Stopped"), this
-				.getColorIcon(SchedulerModel.COLOR_STOPPED), SwingConstants.LEFT));
-			legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Alarm"), this
-					.getColorIcon(SchedulerModel.COLOR_ALARM), SwingConstants.LEFT));
-			legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Warning"), this
-					.getColorIcon(SchedulerModel.COLOR_WARNING), SwingConstants.LEFT));
-			legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Unrecognized"), this
-					.getColorIcon(SchedulerModel.COLOR_UNRECOGNIZED), SwingConstants.LEFT));
-			dialog.getContentPane().add(legendPanel);
-			dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
-			dialog.pack();
-			dialog.addFocusListener(new FocusListener() {
-
-				public void focusGained(FocusEvent e) {
-					// nothing
-
-				}
-
-				public void focusLost(FocusEvent e) {
-					dialog.setVisible(!dialog.isVisible());
-
-				}
-			});
-			legendButton.addActionListener(new ActionListener() {
-
-				public void actionPerformed(ActionEvent e) {
-					JButton button = (JButton) e.getSource();
-					dialog.setLocationRelativeTo(button);
-					Point l = dialog.getLocation();
-					dialog.setLocation(l.x + dialog.getWidth() / 2, l.y + dialog.getHeight() / 2);
-					dialog.setVisible(true);
-				}
-			});
+			final JButton button = this.toolBar.add(this.createCurrentDateAction());
+			button.setFocusable(false);
+			button.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
 		}
 
-		this.applyButton.setIcon(UIStorage.REFRESH_ICON);
-		this.applyButton.setToolTipText(LangModelSchedule.getString("Text.Plan.Toolbar.Apply")); //$NON-NLS-1$
-		this.applyButton.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		this.toolBar.addSeparator();
+		
+		{
+			final JButton button = this.toolBar.add(this.createApplyAction());
+			button.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			button.setFocusable(false);
+		}
+		
+		this.toolBar.addSeparator();
+		{
+			final JButton button = this.toolBar.add(this.createLegendAction());
+			button.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+		}
 
-		/**
-		 * @TODO add when TestFilter've been updated
-		 */
-		// box.add(this.filterButton);
+		
 		this.toolBar.add(Box.createHorizontalGlue());
-		this.toolBar.add(this.zoomInButton);
-		this.toolBar.add(this.zoomOutButton);
-		this.toolBar.add(this.zoomNoneButton);
+		for(final Action action : this.createZoomActions()) {
+			final JButton button = this.toolBar.add(action);
+			button.setMargin(UIManager.getInsets(ResourceKeys.INSETS_ICONED_BUTTON));
+			button.setFocusable(false);
+		}
+	}
 
-		this.nowButton.setFocusable(false);
-		this.nowButton.setToolTipText(LangModelSchedule.getString("Text.Plan.Toolbar.CurrentTime")); //$NON-NLS-1$
-		this.nowButton.addActionListener(new ActionListener() {
-
+	@SuppressWarnings("serial")
+	private Action createShowCalendarAction() {
+		final Action showCalendar = new AbstractAction("", UIStorage.CALENDAR_ICON) {
 			public void actionPerformed(ActionEvent e) {
-				Date date = new Date(System.currentTimeMillis());
-				PlanToolBar.this.dateSpinner.setValue(date);
-				PlanToolBar.this.timeSpinner.setValue(date);
+				final Calendar cal = Calendar.getInstance();
+				final Date date = (Date) PlanToolBar.this.dateSpinner.getModel().getValue();
+				cal.setTime(date);
+
+				final JDialog calendarDialog = CalendarUI
+						.createDialogInstance(Environment.getActiveWindow(), cal, true, true);
+				calendarDialog.setLocation(new Point(PlanToolBar.this.dateSpinner.getLocationOnScreen().x - 35,
+														PlanToolBar.this.dateSpinner.getLocationOnScreen().y
+																+ PlanToolBar.this.w));
+				calendarDialog.setVisible(true);				
+				
+				if (((CalendarUI) calendarDialog.getContentPane()).getStatus() == CalendarUI.STATUS_OK) {
+					PlanToolBar.this.dateSpinner.getModel().setValue(cal.getTime());
+				}		
 			}
-		});
+		};
+		showCalendar.putValue(Action.SHORT_DESCRIPTION, 
+			LangModelSchedule.getString("Text.Plan.Toolbar.Calendar"));
+		return showCalendar;
+	}	
 
-		this.applyButton.setFocusable(false);
-		this.applyButton.setToolTipText(LangModelSchedule.getString("Text.Plan.Toolbar.PerformAndAcquireTests")); //$NON-NLS-1$
-		this.applyButton.addActionListener(new ActionListener() {
-
+	@SuppressWarnings("serial")
+	private Action createCurrentDateAction() {
+		final Action currentDate = new AbstractAction("", UIStorage.TIME_ICON) {
 			public void actionPerformed(ActionEvent e) {
+				final Date date = new Date();
+				PlanToolBar.this.dateSpinner.setValue(date);
+				PlanToolBar.this.timeSpinner.setValue(date);				
+			}
+		};
+		currentDate.putValue(Action.SHORT_DESCRIPTION, 
+			LangModelSchedule.getString("Text.Plan.Toolbar.CurrentTime"));
+		return currentDate;
+	}
+
+	@SuppressWarnings("serial")
+	private Action createApplyAction() {
+		final Action apply = new AbstractAction("", UIStorage.REFRESH_ICON) {
+			public void actionPerformed(final ActionEvent e) {
 				final JButton button = (JButton) e.getSource();
 				button.setEnabled(false);
 				new ProcessingDialog(new Runnable() {
@@ -360,7 +259,7 @@ class PlanToolBar {
 						try {
 							PlanToolBar.this.dispatcher
 							.firePropertyChange(new StatusMessageEvent(PlanToolBar.this, StatusMessageEvent.STATUS_PROGRESS_BAR, true));
-							schedulerModel.commitChanges();
+							PlanToolBar.this.schedulerModel.commitChanges();
 							
 							Calendar date = Calendar.getInstance();
 							date.setTime((Date) PlanToolBar.this.dateSpinner.getValue());
@@ -370,7 +269,7 @@ class PlanToolBar {
 							date.set(Calendar.HOUR_OF_DAY, time.get(Calendar.HOUR_OF_DAY));
 							date.set(Calendar.MINUTE, time.get(Calendar.MINUTE));
 
-							panel.setDate(date.getTime(), PlanToolBar.this.scaleComboBox.getSelectedIndex());
+							PlanToolBar.this.panel.setDate(date.getTime(), PlanToolBar.this.scaleComboBox.getSelectedIndex());
 							PlanToolBar.this.dispatcher
 									.firePropertyChange(new StatusMessageEvent(PlanToolBar.this, StatusMessageEvent.STATUS_PROGRESS_BAR, false));
 
@@ -385,24 +284,133 @@ class PlanToolBar {
 					}
 				}, LangModelSchedule.getString("StatusMessage.UpdatingTests"));
 			}
-		});		
+		};
+		apply.putValue(Action.SHORT_DESCRIPTION, LangModelSchedule.getString("Text.Plan.Toolbar.Apply")); 
+		return apply;
+	}
+	
+	@SuppressWarnings("serial")
+	private Action[] createZoomActions() {
+		// Zoom actions 		
+		final Action[] zoomActions = new Action[3];
+		zoomActions[0] = new AbstractAction("", UIStorage.ZOOMIN_ICON){
+			public void actionPerformed(ActionEvent e) {
+				PlanToolBar.this.panel.updateScale(1.25);				
+			}
+		};
+		zoomActions[0].putValue(Action.SHORT_DESCRIPTION, 
+			LangModelSchedule.getString("Text.Plan.Toolbar.ZoomIn"));
+		zoomActions[0].putValue(Action.MNEMONIC_KEY, 
+			Integer.valueOf(KeyEvent.VK_PLUS));
+		zoomActions[0].putValue(Action.ACCELERATOR_KEY, 
+			KeyStroke.getKeyStroke(KeyEvent.VK_PLUS, ActionEvent.ALT_MASK));
+
+		zoomActions[1] = new AbstractAction("", UIStorage.ZOOMOUT_ICON){
+			public void actionPerformed(ActionEvent e) {
+				PlanToolBar.this.panel.updateScale(.8);				
+			}
+		};
+		zoomActions[1].putValue(Action.SHORT_DESCRIPTION, 
+			LangModelSchedule.getString("Text.Plan.Toolbar.ZoomOut"));
+		zoomActions[1].putValue(Action.MNEMONIC_KEY, 
+			Integer.valueOf(KeyEvent.VK_MINUS));
+		zoomActions[1].putValue(Action.ACCELERATOR_KEY, 
+			KeyStroke.getKeyStroke(KeyEvent.VK_MINUS, ActionEvent.ALT_MASK));
+		
+		zoomActions[2] = new AbstractAction("", UIStorage.NOZOOM_ICON){
+			public void actionPerformed(ActionEvent e) {
+				PlanToolBar.this.panel.updateScale2Fit();				
+			}
+		};
+		zoomActions[2].putValue(Action.SHORT_DESCRIPTION, 
+			LangModelSchedule.getString("Text.Plan.Toolbar.ActualSize"));
+		zoomActions[2].putValue(Action.MNEMONIC_KEY, 
+			Integer.valueOf(KeyEvent.VK_ASTERISK));
+		zoomActions[2].putValue(Action.ACCELERATOR_KEY, 
+			KeyStroke.getKeyStroke(KeyEvent.VK_ASTERISK, ActionEvent.ALT_MASK));
+
+		return zoomActions;
+	}
+	
+	private Icon getColorIcon(final Color color) {
+		final BufferedImage img = new BufferedImage(this.w + 1, this.w + 1, BufferedImage.TYPE_INT_ARGB_PRE);
+		final Graphics2D g2d = (Graphics2D) img.getGraphics();
+		g2d.setColor(color);
+		g2d.fillRect(2, 2, this.w - 3, this.w - 3);
+		g2d.draw3DRect(0, 0, this.w, this.w, true);
+		return new ImageIcon(img);
+	}
+	
+	@SuppressWarnings("serial")
+	private Action createLegendAction() {
+		final JDialog dialog = new JDialog();
+		
+		final Action apply = new AbstractAction(
+			LangModelSchedule.getString("Text.Plan.Toolbar.Legend")) {
+			public void actionPerformed(final ActionEvent e) {
+				final JButton button = (JButton) e.getSource();
+				dialog.setLocationRelativeTo(button);
+				dialog.setVisible(true);
+			}
+		};
+		
+		dialog.setTitle(LangModelSchedule.getString("Text.Plan.Toolbar.Legend"));
+		JPanel legendPanel = new JPanel(new GridLayout(0, 1));
+		legendPanel.setBorder(BorderFactory.createEmptyBorder(2, 2, 2, 2));
+		final FlashIcon flashIcon = new FlashIcon();
+		final JLabel flashLabel = new JLabel(LangModelSchedule.getString("Text.Test.Status.NotSaved"), flashIcon,
+												SwingConstants.LEFT);
+		final Timer timer = new Timer(PlanPanel.TIME_OUT, new ActionListener() {
+
+			public void actionPerformed(ActionEvent e) {
+				flashIcon.flash();
+				flashLabel.repaint();
+				flashLabel.revalidate();
+			}
+		});
+
+		timer.start();
+
+		legendPanel.add(flashLabel);
+		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Scheduled"), this
+				.getColorIcon(SchedulerModel.COLOR_SCHEDULED), SwingConstants.LEFT));
+		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Completed"), this
+				.getColorIcon(SchedulerModel.COLOR_COMPLETED), SwingConstants.LEFT));
+		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Processing"), this
+				.getColorIcon(SchedulerModel.COLOR_PROCCESSING), SwingConstants.LEFT));
+		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Aborted"), this
+				.getColorIcon(SchedulerModel.COLOR_ABORDED), SwingConstants.LEFT));
+		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Stopped"), this
+			.getColorIcon(SchedulerModel.COLOR_STOPPED), SwingConstants.LEFT));
+		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Alarm"), this
+				.getColorIcon(SchedulerModel.COLOR_ALARM), SwingConstants.LEFT));
+		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Warning"), this
+				.getColorIcon(SchedulerModel.COLOR_WARNING), SwingConstants.LEFT));
+		legendPanel.add(new JLabel(LangModelSchedule.getString("Text.Test.Status.Unrecognized"), this
+				.getColorIcon(SchedulerModel.COLOR_UNRECOGNIZED), SwingConstants.LEFT));
+		dialog.getContentPane().add(legendPanel);
+		dialog.setDefaultCloseOperation(WindowConstants.HIDE_ON_CLOSE);
+		dialog.pack();
+		dialog.addFocusListener(new FocusListener() {
+
+			public void focusGained(FocusEvent e) {
+				// nothing
+
+			}
+
+			public void focusLost(FocusEvent e) {
+				dialog.setVisible(!dialog.isVisible());
+
+			}
+		});
+
+		return apply;
+	
 	}
 
 	public JToolBar getToolBar() {
 		return this.toolBar;
 	}
 
-	public Icon getColorIcon(Color color) {
-		int x = 0;
-		int y = 0;
-		BufferedImage img = new BufferedImage(this.w + 1, this.h + 1, BufferedImage.TYPE_INT_RGB);
-		Graphics2D g2d = (Graphics2D) img.getGraphics();
-		g2d.setBackground(Color.lightGray);
-		g2d.clearRect(x, y, this.w + 1, this.h + 1);
-		g2d.setColor(color);
-		g2d.fillRect(x + 2, y + 2, this.w - 3, this.h - 3);
-		g2d.draw3DRect(x, y, this.w, this.h, true);
-		Icon icon = new ImageIcon(img);
-		return icon;
-	}
+
 }
