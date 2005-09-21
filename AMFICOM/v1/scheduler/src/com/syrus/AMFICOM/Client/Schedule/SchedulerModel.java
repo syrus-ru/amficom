@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.102 2005/09/21 16:18:31 bob Exp $
+ * $Id: SchedulerModel.java,v 1.103 2005/09/21 16:20:31 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.102 $, $Date: 2005/09/21 16:18:31 $
+ * @version $Revision: 1.103 $, $Date: 2005/09/21 16:20:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -945,25 +945,27 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 				if (!test.getMonitoredElementId().equals(monitoredElementId)) {
 					continue;
 				}	
+				final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
+				final long measurementDuration = measurementSetup.getMeasurementDuration();
 				
 				final TestTemporalType temporalType = test.getTemporalType();
 				final Date startTime = test.getStartTime();
 				final SortedMap<Date, String> stoppingMap = test.getStoppingMap();
-				Date endTime = stoppingMap.isEmpty() ? test.getEndTime() : stoppingMap.lastKey();
+				
+				Date endTime = stoppingMap.isEmpty() ? new Date(test.getEndTime().getTime() + measurementDuration) : stoppingMap.lastKey();
 				if (endTime == null) {
-					endTime = startTime;
+					endTime = new Date(startTime.getTime() + measurementDuration);
 				}
 
 				Log.debugMessage("SchedulerModel.isValid | startTime " + startTime, Log.DEBUGLEVEL10);
 				Log.debugMessage("SchedulerModel.isValid | endTime " + endTime, Log.DEBUGLEVEL10);
 				
 				if (temporalType == TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL) {
-					final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
 					final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
 					final SortedSet<Date> times = temporalPattern.getTimes(startTime, endTime);
 					for(final Date stDate : times) {
 						 if (stDate.before(endDate) && 
-									startDate.getTime() <= stDate.getTime() + measurementSetup.getMeasurementDuration()) {
+									startDate.getTime() <= stDate.getTime() + measurementDuration) {
 								result = false;
 								break;
 							}
