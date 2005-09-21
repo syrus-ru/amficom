@@ -1,5 +1,5 @@
 /*-
- * $Id: Characteristic.java,v 1.65 2005/09/20 16:41:20 bass Exp $
+ * $Id: Characteristic.java,v 1.66 2005/09/21 13:47:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/09/20 16:41:20 $
+ * @version $Revision: 1.66 $, $Date: 2005/09/21 13:47:58 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -45,7 +45,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 	private String name;
 	private String description;
 	private String value;
-	private Identifier characterizableId;
+	private Identifier parentCharacterizableId;
 	private boolean editable;
 	private boolean visible;
 
@@ -85,7 +85,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		this.name = name;
 		this.description = description;
 		this.value = value;
-		this.characterizableId = characterizableId;
+		this.parentCharacterizableId = characterizableId;
 
 		this.editable = editable;
 		this.visible = visible;
@@ -125,7 +125,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 				&& this.type != null
 				|| this.name != null
 				|| this.value != null
-				|| this.characterizableId != null;
+				|| this.parentCharacterizableId != null;
 	}
 
 	/**
@@ -229,7 +229,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		this.name = ct.name;
 		this.description = ct.description;
 		this.value = ct.value;
-		this.characterizableId = new Identifier(ct.characterizableId);
+		this.parentCharacterizableId = new Identifier(ct.characterizableId);
 		this.editable = ct.editable;
 		this.visible = ct.visible;
 		
@@ -266,7 +266,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 				this.name,
 				this.description,
 				(this.value == null) ? "" : this.value,
-				this.characterizableId.getTransferable(),
+				this.parentCharacterizableId.getTransferable(),
 				this.editable,
 				this.visible);
 	}
@@ -374,22 +374,15 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		this.value = value;
 	}
 
-	public Identifier getCharacterizableId() {
-		return this.characterizableId;
+	public Identifier getParentCharacterizableId() {
+		return this.parentCharacterizableId;
 	}
 
-	/**
-	 * <p><b>Clients must never explicitly call this method.</b></p>
-	 */
-	protected void setCharacterizableId0(final Identifier characterizableId) {
-		this.characterizableId = characterizableId;
-	}
-	
-	public void setCharacterizableId(final Identifier characterizableId) {
-		this.setCharacterizableId0(characterizableId);
+	public void setParentCharacterizableId(final Identifier parentCharacterizableId) {
+		this.parentCharacterizableId = parentCharacterizableId;
 		super.markAsChanged();
 	}
-	
+
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
 	 */
@@ -415,7 +408,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 			this.name = name;
 			this.description = description;
 			this.value = value;
-			this.characterizableId = characterizableId;
+			this.parentCharacterizableId = characterizableId;
 			this.editable = editable;
 			this.visible = visible;
 		}
@@ -429,7 +422,7 @@ public final class Characteristic extends AbstractCloneableStorableObject
 		assert this.isValid() : ErrorMessages.OBJECT_STATE_ILLEGAL;
 
 		final Set<Identifiable> dependencies = new HashSet<Identifiable>(2);
-		dependencies.add(this.characterizableId);
+		dependencies.add(this.parentCharacterizableId);
 		dependencies.add(this.type);
 		return dependencies;
 	}

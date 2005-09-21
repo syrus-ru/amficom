@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicDatabase.java,v 1.47 2005/09/14 18:51:55 arseniy Exp $
+ * $Id: CharacteristicDatabase.java,v 1.48 2005/09/21 13:47:58 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -16,8 +16,8 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.47 $, $Date: 2005/09/14 18:51:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.48 $, $Date: 2005/09/21 13:47:58 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -69,7 +69,7 @@ public final class CharacteristicDatabase extends StorableObjectDatabase<Charact
 			+ APOSTROPHE + DatabaseString.toQuerySubString(storableObject.getValue(), SIZE_VALUE_COLUMN) + APOSTROPHE + COMMA
 			+ (storableObject.isEditable()?"1":"0") + COMMA
 			+ (storableObject.isVisible()?"1":"0") + COMMA
-			+ DatabaseIdentifier.toSQLString(storableObject.getCharacterizableId());
+			+ DatabaseIdentifier.toSQLString(storableObject.getParentCharacterizableId());
 			/**
 			 * check sort support
 			 */
@@ -86,7 +86,7 @@ public final class CharacteristicDatabase extends StorableObjectDatabase<Charact
 		DatabaseString.setString(preparedStatement, ++startParameterNumber, storableObject.getValue(), SIZE_VALUE_COLUMN);
 		preparedStatement.setInt( ++startParameterNumber, storableObject.isEditable()? 1:0);
 		preparedStatement.setInt( ++startParameterNumber, storableObject.isVisible()? 1:0);
-		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getCharacterizableId());
+		DatabaseIdentifier.setIdentifier(preparedStatement, ++startParameterNumber, storableObject.getParentCharacterizableId());
 		return startParameterNumber;
 	}	
 

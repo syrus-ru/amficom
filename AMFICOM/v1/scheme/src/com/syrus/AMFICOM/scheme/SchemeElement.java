@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.112 2005/09/21 13:22:08 bass Exp $
+ * $Id: SchemeElement.java,v 1.113 2005/09/21 13:47:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,7 +91,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.112 $, $Date: 2005/09/21 13:22:08 $
+ * @version $Revision: 1.113 $, $Date: 2005/09/21 13:47:58 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -633,7 +633,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			for (final Characteristic characteristic : this.getCharacteristics(true)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
-				characteristicClone.setCharacterizableId(clone.id);
+				characteristicClone.setParentCharacterizableId(clone.id);
 			}
 			for (final SchemeDevice schemeDevice : this.getSchemeDevices0()) {
 				final SchemeDevice schemeDeviceClone = schemeDevice.clone();
@@ -1825,7 +1825,7 @@ public final class SchemeElement extends AbstractSchemeElement
 			for (final Characteristic characteristic : schemeProtoElement.getCharacteristics(true)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				super.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
-				characteristicClone.setCharacterizableId(super.id);
+				characteristicClone.setParentCharacterizableId(super.id);
 			}
 			for (final SchemeDevice schemeDevice : schemeProtoElement.getSchemeDevices0()) {
 				final SchemeDevice schemeDeviceClone = schemeDevice.clone();

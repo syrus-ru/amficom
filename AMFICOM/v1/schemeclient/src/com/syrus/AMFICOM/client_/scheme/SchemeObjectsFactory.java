@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeObjectsFactory.java,v 1.32 2005/09/07 12:20:14 stas Exp $
+ * $Id: SchemeObjectsFactory.java,v 1.33 2005/09/21 13:47:59 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -71,8 +71,8 @@ import com.syrus.AMFICOM.scheme.corba.IdlSchemePackage.IdlKind;
 import com.syrus.util.Log;
 
 /**
- * @author $Author: stas $
- * @version $Revision: 1.32 $, $Date: 2005/09/07 12:20:14 $
+ * @author $Author: bass $
+ * @version $Revision: 1.33 $, $Date: 2005/09/21 13:47:59 $
  * @module schemeclient
  */
 
@@ -142,7 +142,7 @@ public class SchemeObjectsFactory {
 		try {
 			for (Characteristic c : schemeElement.getEquipmentType().getCharacteristics(true)) {
 				Characteristic cloned = c.clone();
-				cloned.setCharacterizableId(eq.getId());
+				cloned.setParentCharacterizableId(eq.getId());
 			}
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e); 
@@ -191,7 +191,7 @@ public class SchemeObjectsFactory {
 		try {
 			for (Characteristic c : schemeLink.getAbstractLinkType().getCharacteristics(true)) {
 				Characteristic cloned = c.clone();
-				cloned.setCharacterizableId(link.getId());
+				cloned.setParentCharacterizableId(link.getId());
 			}
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e); 
@@ -211,7 +211,7 @@ public class SchemeObjectsFactory {
 		try {
 			for (Characteristic c : schemeLink.getAbstractLinkType().getCharacteristics(true)) {
 				Characteristic cloned = c.clone();
-				cloned.setCharacterizableId(cableLink.getId());
+				cloned.setParentCharacterizableId(cableLink.getId());
 			}
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e); 
@@ -230,7 +230,7 @@ public class SchemeObjectsFactory {
 		try {
 			for (Characteristic c : sp.getPortType().getCharacteristics(true)) {
 				Characteristic cloned = c.clone();
-				cloned.setCharacterizableId(port.getId());
+				cloned.setParentCharacterizableId(port.getId());
 			}
 		} catch (ApplicationException e) {
 			throw new CreateObjectException(e); 

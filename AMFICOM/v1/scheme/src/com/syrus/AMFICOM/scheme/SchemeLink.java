@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeLink.java,v 1.81 2005/09/20 18:13:35 bass Exp $
+ * $Id: SchemeLink.java,v 1.82 2005/09/21 13:47:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -75,7 +75,7 @@ import com.syrus.util.Log;
  * #12 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.81 $, $Date: 2005/09/20 18:13:35 $
+ * @version $Revision: 1.82 $, $Date: 2005/09/21 13:47:58 $
  * @module scheme
  */
 public final class SchemeLink extends AbstractSchemeLink
@@ -567,7 +567,7 @@ public final class SchemeLink extends AbstractSchemeLink
 			for (final Characteristic characteristic : this.getCharacteristics(true)) {
 				final Characteristic characteristicClone = characteristic.clone();
 				clone.clonedIdMap.putAll(characteristicClone.getClonedIdMap());
-				characteristicClone.setCharacterizableId(clone.id);
+				characteristicClone.setParentCharacterizableId(clone.id);
 			}
 			return clone;
 		} catch (final ApplicationException ae) {

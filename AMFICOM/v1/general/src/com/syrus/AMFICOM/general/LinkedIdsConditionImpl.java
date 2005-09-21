@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.20 2005/09/09 17:16:57 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.21 2005/09/21 13:47:58 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -51,8 +51,8 @@ import static com.syrus.AMFICOM.general.ObjectEntities.LAYOUT_ITEM_CODE;
 import java.util.Set;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/09 17:16:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.21 $, $Date: 2005/09/21 13:47:58 $
+ * @author $Author: bass $
  * @module general
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -129,7 +129,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 					/* Resource */
 					case LAYOUT_ITEM_CODE:
 
-						condition = super.conditionTest(characteristic.getCharacterizableId());
+						condition = super.conditionTest(characteristic.getParentCharacterizableId());
 						break;
 //					case ObjectEntities.CHARACTERISTIC_TYPE_CODE:
 //						condition = super.conditionTest(characteristic.getType().getId());

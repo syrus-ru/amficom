@@ -1,5 +1,5 @@
 /*
- * $Id: CharacteristicWrapper.java,v 1.22 2005/09/14 18:51:55 arseniy Exp $
+ * $Id: CharacteristicWrapper.java,v 1.23 2005/09/21 13:47:58 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,8 +13,8 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/14 18:51:55 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.23 $, $Date: 2005/09/21 13:47:58 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -104,7 +104,7 @@ public class CharacteristicWrapper extends StorableObjectWrapper<Characteristic>
 			else if (key.equals(COLUMN_DESCRIPTION))
 				return characteristic.getDescription();
 			else if (key.equals(COLUMN_CHARACTERIZABLE_ID))
-				return characteristic.getCharacterizableId();
+				return characteristic.getParentCharacterizableId();
 			else if (key.equals(COLUMN_EDITABLE))
 				return new Boolean(characteristic.isEditable());
 			else if (key.equals(COLUMN_VISIBLE))
@@ -129,7 +129,7 @@ public class CharacteristicWrapper extends StorableObjectWrapper<Characteristic>
 			else if (key.equals(COLUMN_DESCRIPTION))
 				characteristic.setDescription0((String) value);
 			else if (key.equals(COLUMN_CHARACTERIZABLE_ID))
-				characteristic.setCharacterizableId((Identifier) value);
+				characteristic.setParentCharacterizableId((Identifier) value);
 			else if (key.equals(COLUMN_EDITABLE))
 				characteristic.setEditable(((Boolean) value).booleanValue());
 			else if (key.equals(COLUMN_VISIBLE))
