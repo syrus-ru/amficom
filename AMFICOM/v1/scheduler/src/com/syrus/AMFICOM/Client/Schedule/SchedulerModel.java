@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.103 2005/09/21 16:20:31 bob Exp $
+ * $Id: SchedulerModel.java,v 1.104 2005/09/21 16:42:06 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.103 $, $Date: 2005/09/21 16:20:31 $
+ * @version $Revision: 1.104 $, $Date: 2005/09/21 16:42:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -929,10 +929,18 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		}
 		this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, COMMAND_REFRESH_TESTS, null, null));
 	}
-
+	
 	public boolean isValid(final Date startDate, 
-	                       final Date endDate, 
+	                       Date endDate, 
 	                       final Identifier monitoredElementId) throws ApplicationException {
+		
+		if (endDate == null) {
+			endDate = startDate;
+		}
+		
+		assert startDate != null;
+		assert endDate != null;
+		
 		Log.debugMessage("SchedulerModel.isValid | ", Log.DEBUGLEVEL10);
 
 		Log.debugMessage("SchedulerModel.isValid | startDate " + startDate, Log.DEBUGLEVEL10);
@@ -957,6 +965,10 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					endTime = new Date(startTime.getTime() + measurementDuration);
 				}
 
+				assert startTime != null;
+				assert endTime != null;
+
+				
 				Log.debugMessage("SchedulerModel.isValid | startTime " + startTime, Log.DEBUGLEVEL10);
 				Log.debugMessage("SchedulerModel.isValid | endTime " + endTime, Log.DEBUGLEVEL10);
 				
@@ -964,6 +976,7 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 					final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
 					final SortedSet<Date> times = temporalPattern.getTimes(startTime, endTime);
 					for(final Date stDate : times) {
+						assert stDate != null;
 						 if (stDate.before(endDate) && 
 									startDate.getTime() <= stDate.getTime() + measurementDuration) {
 								result = false;
