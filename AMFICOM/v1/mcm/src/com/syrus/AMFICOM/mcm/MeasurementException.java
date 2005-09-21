@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementException.java,v 1.7 2005/09/20 23:18:03 arseniy Exp $
+ * $Id: MeasurementException.java,v 1.8 2005/09/21 14:57:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.7 $, $Date: 2005/09/20 23:18:03 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/21 14:57:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -25,13 +25,13 @@ final class MeasurementException extends TestProcessingException {
 	
 	private int code;
 
-	public MeasurementException(String message, int code) {
+	public MeasurementException(final String message, final int code) {
 		super(message);
 		this.code = code;
 	}
 	
-	public MeasurementException(String message, int code, Exception e) {
-		super(message, e);
+	public MeasurementException(final String message, final int code, final Throwable cause) {
+		super(message, cause);
 		this.code = code;
 	}
 	

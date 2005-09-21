@@ -1,5 +1,5 @@
 /*
- * $Id: MCMSetup.java,v 1.10 2005/09/14 18:13:47 arseniy Exp $
+ * $Id: MCMSetup.java,v 1.11 2005/09/21 14:57:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -33,7 +33,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/14 18:13:47 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/21 14:57:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -120,9 +120,9 @@ final class MCMSetup {
 		final MServer mServerRef = MCMSessionEnvironment.getInstance().getMCMServantManager().getMServerReference();
 		final IdlStorableObject[] idlStorableObjects;
 		try {
-			idlStorableObjects = mServerRef.transmitStorableObjects(new IdlIdentifier[] {ID.getTransferable()}, LoginManager.getSessionKeyTransferable());
-		}
-		catch (AMFICOMRemoteException are) {
+			idlStorableObjects = mServerRef.transmitStorableObjects(new IdlIdentifier[] { ID.getTransferable() },
+					LoginManager.getSessionKeyTransferable());
+		} catch (AMFICOMRemoteException are) {
 			throw new RetrieveObjectException(are.message);
 		}
 		if (idlStorableObjects.length < 1) {

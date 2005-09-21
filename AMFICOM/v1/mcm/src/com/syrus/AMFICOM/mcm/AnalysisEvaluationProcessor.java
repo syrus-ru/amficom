@@ -1,5 +1,5 @@
 /*
- * $Id: AnalysisEvaluationProcessor.java,v 1.39 2005/09/14 18:13:47 arseniy Exp $
+ * $Id: AnalysisEvaluationProcessor.java,v 1.40 2005/09/21 14:57:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -27,7 +27,7 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.39 $, $Date: 2005/09/14 18:13:47 $
+ * @version $Revision: 1.40 $, $Date: 2005/09/21 14:57:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -52,14 +52,13 @@ final class AnalysisEvaluationProcessor {
 		Test test = null;
 		try {
 			test = (Test) StorableObjectPool.getStorableObject(measurement.getTestId(), true);
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new AnalysisException("Cannot find test -- " + ae.getMessage(), ae);
 		}
 		final Identifier monitoredElementId = test.getMonitoredElement().getId();
 		final MeasurementSetup measurementSetup = measurement.getSetup();
 
-		AnalysisType analysisType = test.getAnalysisType();
+		final AnalysisType analysisType = test.getAnalysisType();
 		if (!analysisType.equals(AnalysisType.UNKNOWN)) {
 			Analysis analysis = createAnalysis(analysisType, monitoredElementId, measurement, measurementSetup.getCriteriaSet());
 			return new Result[] { analyseAndEvaluate(measurementResult, analysis, measurementSetup.getEtalon()) };
@@ -84,8 +83,7 @@ final class AnalysisEvaluationProcessor {
 					criteriaSet);
 			StorableObjectPool.flush(analysis, LoginManager.getUserId(), false);
 			return analysis;
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			throw new AnalysisException("Cannot create analysis", ae);
 		}
 	}
@@ -100,37 +98,29 @@ final class AnalysisEvaluationProcessor {
 
 		if (analysisCodename.equals(CODENAME_ANALYSIS_TYPE_DADARA)) {
 			className = "com.syrus.AMFICOM.mcm." + CLASS_NAME_ANALYSIS_MANAGER_DADARA;
-		}
-		else {
+		} else {
 			throw new AnalysisException("Cannot find analysis manager for analysis of codename '" + analysisCodename + "'");
 		}
 
 		try {
-			constructor = Class.forName(className).getDeclaredConstructor(new Class[] {Result.class,
+			constructor = Class.forName(className).getDeclaredConstructor(new Class[] { Result.class,
 					Analysis.class,
-					ParameterSet.class});
+					ParameterSet.class });
 			constructor.setAccessible(true);
-			analysisManager = (AnalysisManager) constructor.newInstance(new Object[] {measurementResult, analysis, etalon});
-		}
-		catch (SecurityException e) {
+			analysisManager = (AnalysisManager) constructor.newInstance(new Object[] { measurementResult, analysis, etalon });
+		} catch (SecurityException e) {
 			throw new AnalysisException("Cannot get constructor -- " + e.getMessage(), e);
-		}
-		catch (NoSuchMethodException e) {
+		} catch (NoSuchMethodException e) {
 			throw new AnalysisException("Cannot get constructor -- " + e.getMessage(), e);
-		}
-		catch (ClassNotFoundException e) {
+		} catch (ClassNotFoundException e) {
 			throw new AnalysisException("Cannot get constructor -- " + e.getMessage(), e);
-		}
-		catch (IllegalArgumentException e) {
+		} catch (IllegalArgumentException e) {
 			throw new AnalysisException("Cannot get constructor -- " + e.getMessage(), e);
-		}
-		catch (InstantiationException e) {
+		} catch (InstantiationException e) {
 			throw new AnalysisException("Cannot get constructor -- " + e.getMessage(), e);
-		}
-		catch (IllegalAccessException e) {
+		} catch (IllegalAccessException e) {
 			throw new AnalysisException("Cannot get constructor -- " + e.getMessage(), e);
-		}
-		catch (InvocationTargetException ite) {
+		} catch (InvocationTargetException ite) {
 			final Throwable cause = ite.getCause();
 			if (cause instanceof AnalysisException) {
 				throw (AnalysisException) cause;
@@ -150,8 +140,7 @@ final class AnalysisEvaluationProcessor {
 		Result analysisResult;
 		try {
 			analysisResult = analysis.createResult(LoginManager.getUserId(), arParameters);
-		}
-		catch (CreateObjectException coe) {
+		} catch (CreateObjectException coe) {
 			Log.errorException(coe);
 			analysisResult = null;
 		}

@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.66 2005/09/21 14:17:25 arseniy Exp $
+ * $Id: Transceiver.java,v 1.67 2005/09/21 14:57:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.66 $, $Date: 2005/09/21 14:17:25 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/21 14:57:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -70,7 +70,7 @@ final class Transceiver extends SleepButWorkThread {
 		this.running = true;
 	}
 
-	protected void addMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
+	void addMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
 		final Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_SCHEDULED) {
 			Log.debugMessage("Transceiver.addMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
@@ -82,7 +82,7 @@ final class Transceiver extends SleepButWorkThread {
 		}
 	}
 
-	protected void addAcquiringMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
+	void addAcquiringMeasurement(final Measurement measurement, final TestProcessor testProcessor) {
 		final Identifier measurementId = measurement.getId();
 		if (measurement.getStatus().value() == MeasurementStatus._MEASUREMENT_STATUS_ACQUIRING) {
 			Log.debugMessage("Transceiver.addAcquiringMeasurement | Adding measurement '" + measurementId + "'", Log.DEBUGLEVEL07);
@@ -93,7 +93,7 @@ final class Transceiver extends SleepButWorkThread {
 		}
 	}
 
-	protected void removeMeasurementsOfTestProcessor(final TestProcessor testProcessor) {
+	void removeMeasurementsOfTestProcessor(final TestProcessor testProcessor) {
 		synchronized (this.testProcessors) {
 			for (final Iterator<Identifier> it = this.testProcessors.keySet().iterator(); it.hasNext();) {
 				final Identifier measurementId = it.next();
@@ -289,7 +289,7 @@ final class Transceiver extends SleepButWorkThread {
 		}
 	}
 
-	protected void shutdown() {
+	void shutdown() {
 		this.scheduledMeasurements.clear();
 		this.running = false;
 		this.kisConnection.drop();

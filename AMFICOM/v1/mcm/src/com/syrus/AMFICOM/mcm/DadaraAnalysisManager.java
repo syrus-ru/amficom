@@ -1,5 +1,5 @@
 /*
- * $Id: DadaraAnalysisManager.java,v 1.67 2005/09/14 18:13:47 arseniy Exp $
+ * $Id: DadaraAnalysisManager.java,v 1.68 2005/09/21 14:57:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,7 +9,7 @@
 package com.syrus.AMFICOM.mcm;
 
 /**
- * @version $Revision: 1.67 $, $Date: 2005/09/14 18:13:47 $
+ * @version $Revision: 1.68 $, $Date: 2005/09/21 14:57:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -72,14 +72,12 @@ final class DadaraAnalysisManager implements AnalysisManager {
 	private void addParameter(final Map<ParameterType, byte[]> parsMap, final Parameter parameter) throws AnalysisException {
 		final ParameterType parameterType = parameter.getType();
 		if (parameterType != null) {
-			if (! parsMap.containsKey(parameterType)) {
+			if (!parsMap.containsKey(parameterType)) {
 				parsMap.put(parameterType, parameter.getValue());
-			}
-			else {
+			} else {
 				throw new AnalysisException("Parameter of codename '" + parameterType + "' already loaded");
 			}
-		}
-		else {
+		} else {
 			throw new AnalysisException("Codename of parameter: '" + parameter.getId() + "' is NULL");
 		}
 	}
@@ -90,7 +88,7 @@ final class DadaraAnalysisManager implements AnalysisManager {
 
 	private byte[] getParameter(final Map<ParameterType, byte[]> parsMap, final ParameterType parameterType)
 			throws AnalysisException {
-		byte[] rawData = parsMap.get(parameterType);
+		final byte[] rawData = parsMap.get(parameterType);
 		if (rawData == null) {
 			throw new AnalysisException("Cannot get parameter of codename '" + parameterType + "'");
 		}
@@ -102,13 +100,11 @@ final class DadaraAnalysisManager implements AnalysisManager {
 		if (! this.hasParameter(this.etalonPars, ParameterType.DADARA_ETALON)) {
 			return null;
 		}
-		byte[] etalonData = this.getParameter(this.etalonPars, ParameterType.DADARA_ETALON);
+		final byte[] etalonData = this.getParameter(this.etalonPars, ParameterType.DADARA_ETALON);
 		try {
-			Etalon et = (Etalon) DataStreamableUtil.
-			readDataStreamableFromBA(etalonData, Etalon.getDSReader());
+			final Etalon et = (Etalon) DataStreamableUtil.readDataStreamableFromBA(etalonData, Etalon.getDSReader());
 			return et;
-		}
-		catch (DataFormatException e) {
+		} catch (DataFormatException e) {
 			throw new AnalysisException("DataFormatException: " + e.toString());
 		}
 	}

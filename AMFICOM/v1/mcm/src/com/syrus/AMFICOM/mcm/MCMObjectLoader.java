@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.23 2005/09/21 09:58:26 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.24 2005/09/21 14:57:06 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.23 $, $Date: 2005/09/21 09:58:26 $
+ * @version $Revision: 1.24 $, $Date: 2005/09/21 14:57:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -140,7 +140,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 		return objects;
 	}
 
-	final void loadStorableObjectsWithDependencies(final SortedMap<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap,
+	private final void loadStorableObjectsWithDependencies(final SortedMap<Integer, Map<Short, Set<StorableObject>>> loadObjectsMap,
 			final int dependencyLevel,
 			final Set<Identifier> ids) throws ApplicationException {
 		final Set<StorableObject> loadedObjects = super.loadStorableObjects(ids);

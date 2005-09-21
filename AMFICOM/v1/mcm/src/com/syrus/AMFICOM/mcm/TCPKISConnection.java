@@ -1,5 +1,5 @@
 /*-
- * $Id: TCPKISConnection.java,v 1.20 2005/09/14 18:13:47 arseniy Exp $
+ * $Id: TCPKISConnection.java,v 1.21 2005/09/21 14:57:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -16,7 +16,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/14 18:13:47 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/21 14:57:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -69,8 +69,7 @@ final class TCPKISConnection implements KISConnection {
 		if (this.isEstablished()) {
 			if (dropIfAlreadyEstablished) {
 				this.drop();
-			}
-			else {
+			} else {
 				Log.errorMessage("TCPKISConnection.establish | Connection with KIS '" + this.kisId
 						+ "' already established -- nothing to do!");
 				return;
@@ -88,8 +87,7 @@ final class TCPKISConnection implements KISConnection {
 					synchronized (obj) {
 						obj.wait(5 * 1000);
 					}
-				}
-				catch (InterruptedException ex) {
+				} catch (InterruptedException ex) {
 					Log.errorException(ex);
 				}
 			}
@@ -97,8 +95,7 @@ final class TCPKISConnection implements KISConnection {
 
 		if (this.isEstablished()) {
 			Log.debugMessage("TCPKISConnection.establish | Connected to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
-		}
-		else {
+		} else {
 			throw new CommunicationException("Cannot connect to KIS '" + this.kisId
 					+ "' on host '" + this.kisHostName + "', port " + this.kisTCPPort);
 		}
@@ -121,10 +118,10 @@ final class TCPKISConnection implements KISConnection {
 				measurement.getLocalAddress(),
 				measurement.getSetup().getParameterTypeCodenames(),
 				measurement.getSetup().getParameterValues(),
-				timewait))
+				timewait)) {
 			Log.debugMessage("TCPKISConnection.transmitMeasurement | Transmitted measurement '" + measurementId
 					+ "' to KIS '" + this.kisId + "'", Log.DEBUGLEVEL07);
-		else {
+		} else {
 			throw new CommunicationException("TCPKISConnection.transmitMeasurement | Cannot transmit measurement '"
 					+ measurementId + "' to KIS '" + this.kisId + "'");
 		}
@@ -170,15 +167,17 @@ final class TCPKISConnection implements KISConnection {
 	 * @return true on success, false on failure.
 	 */
 	public native boolean transmitMeasurementBySocket(String measurementId,
-														String measurementTypeCodename,
-														String localAddress,
-														String[] parameterTypeCodenames,
-														byte[][] parameterValues,
-														long timewait);
+			String measurementTypeCodename,
+			String localAddress,
+			String[] parameterTypeCodenames,
+			byte[][] parameterValues,
+			long timewait);
 
 	/**
 	 * Receive report from socket. On success save the report into field kisReport
-	 * NOTE: if nothing received, this method also returns true, but saves null into field kisReport
+	 * NOTE: if nothing received, this method also returns true, but saves null
+	 * into field kisReport
+	 * 
 	 * @param timewait
 	 * @return true on success, false on failure.
 	 */

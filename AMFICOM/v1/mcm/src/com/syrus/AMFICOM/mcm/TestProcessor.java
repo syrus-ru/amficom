@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.73 2005/09/21 14:18:10 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.74 2005/09/21 14:57:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/09/21 14:18:10 $
+ * @version $Revision: 1.74 $, $Date: 2005/09/21 14:57:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -245,8 +245,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 							Log.errorException(coe);
 							if (coe.getCause() instanceof IllegalObjectEntityException) {
 								super.fallCode = FALL_CODE_CREATE_IDENTIFIER;
-							}
-							else {
+							} else {
 								super.fallCode = FALL_CODE_CREATE_MEASUREMENT;
 							}
 							super.sleepCauseOfFall();
@@ -260,8 +259,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 
 			try {
 				sleep(super.initialTimeToSleep);
-			}
-			catch (InterruptedException ie) {
+			} catch (InterruptedException ie) {
 				Log.errorException(ie);
 			}
 		}

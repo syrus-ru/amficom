@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.128 2005/09/21 14:17:25 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.129 2005/09/21 14:57:06 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.128 $, $Date: 2005/09/21 14:17:25 $
+ * @version $Revision: 1.129 $, $Date: 2005/09/21 14:57:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -333,12 +333,12 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}//while
 	}
 
-	protected static void putTestProcessor(final TestProcessor testProcessor) {
+	static void putTestProcessor(final TestProcessor testProcessor) {
 		assert testProcessor != null : ErrorMessages.NON_NULL_EXPECTED;
 		testProcessors.put(testProcessor.getTestId(), testProcessor);
 	}
 
-	protected static void removeTestProcessor(final Identifier testId) {
+	static void removeTestProcessor(final Identifier testId) {
 		assert testId != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert testId.getMajor() == ObjectEntities.TEST_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
 		testProcessors.remove(testId);
@@ -374,7 +374,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		Collections.sort(testsL, new TestStartTimeComparator());
 	}
 
-	protected static void addTests(final List<Test> newTests) {
+	static void addTests(final List<Test> newTests) {
 		sortTestsByStartTime(newTests);
 
 		synchronized (testList) {
@@ -417,7 +417,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
-	protected static void stopTests(final Set<Identifier> testIds) {
+	static void stopTests(final Set<Identifier> testIds) {
 		for (final Iterator<Identifier> it = testIds.iterator(); it.hasNext();) {
 			final Identifier id = it.next();
 			try {
@@ -462,7 +462,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		}
 	}
 
-	protected void shutdown() {
+	void shutdown() {
 		this.running = false;
 		for (final Identifier kisId : transceivers.keySet()) {
 			transceivers.get(kisId).shutdown();
