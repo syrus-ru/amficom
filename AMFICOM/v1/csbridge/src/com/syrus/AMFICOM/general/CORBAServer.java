@@ -1,10 +1,11 @@
-/*
- * $Id: CORBAServer.java,v 1.16 2005/09/21 14:04:16 arseniy Exp $
- *
- * Copyright © 2004 Syrus Systems.
- * Научно-технический центр.
- * Проект: АМФИКОМ.
- */
+/*-
+* $Id: CORBAServer.java,v 1.17 2005/09/21 14:15:50 bob Exp $
+*
+* Copyright © 2004-2005 Syrus Systems.
+* Dept. of Science & Technology.
+* Project: AMFICOM.
+*/
+
 
 package com.syrus.AMFICOM.general;
 
@@ -16,6 +17,7 @@ import java.util.Set;
 
 import org.omg.CORBA.ORB;
 import org.omg.CORBA.Policy;
+import org.omg.CORBA.SystemException;
 import org.omg.CORBA.UserException;
 import org.omg.CosNaming.Binding;
 import org.omg.CosNaming.BindingIteratorHolder;
@@ -42,8 +44,8 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/21 14:04:16 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.17 $, $Date: 2005/09/21 14:15:50 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -157,8 +159,10 @@ public class CORBAServer {
 				Log.debugMessage("Naming context: '" + rootContextNameStr + "' already bound; trying to resolve", Log.DEBUGLEVEL08);
 				this.namingContext = NamingContextExtHelper.narrow(rootNamingContext.resolve_str(rootContextNameStr));
 			}
-		} catch (UserException ue) {
-			throw new CommunicationException("Cannot create context", ue);
+		} catch (final UserException ue) {
+			throw new CommunicationException(I18N.getString("Error.CannotCreateContext"), ue);
+		} catch (final SystemException se) {
+			throw new CommunicationException(I18N.getString("Error.CannotCreateContext"), se);
 		}
 	}
 
