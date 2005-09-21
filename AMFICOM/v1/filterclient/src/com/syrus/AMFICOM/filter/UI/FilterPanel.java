@@ -1,5 +1,5 @@
 /*-
- * $Id: FilterPanel.java,v 1.11 2005/09/20 10:19:51 max Exp $
+ * $Id: FilterPanel.java,v 1.12 2005/09/21 13:05:45 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -43,6 +43,7 @@ import com.syrus.AMFICOM.newFilter.DateCondition;
 import com.syrus.AMFICOM.newFilter.Filter;
 import com.syrus.AMFICOM.newFilter.FilterController;
 import com.syrus.AMFICOM.newFilter.FilterView;
+import com.syrus.AMFICOM.newFilter.LangModelFilter;
 import com.syrus.AMFICOM.newFilter.ListCondition;
 import com.syrus.AMFICOM.newFilter.LogicalScheme;
 import com.syrus.AMFICOM.newFilter.LogicalSchemeGUI;
@@ -53,7 +54,7 @@ import com.syrus.AMFICOM.newFilter.StringCondition;
 
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/20 10:19:51 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/21 13:05:45 $
  * @author $Author: max $
  * @module filter_v1
  */
@@ -63,23 +64,23 @@ public class FilterPanel extends JScrollPane implements FilterView {
 	private static final int HORISONTAL_GAP = 5;
 	private static final int VERTICAL_GAP = 5;
 	
-	private static final String	CREATED_CONDITON_LABEL	= "Result condition";
-	private static final String KEYS_LABEL 				= "Criterion";
-	private static final String ADD_BUTTON 				= "Add";
-	private static final String CHANGE_BUTTON 			= "Change";
-	private static final String REMOVE_BUTTON 			= "Remove";
-	private static final String	LOGIC_SCHEME_BUTTON		= ">>";
-	private static final String STRING_CONDITION_LABEL 	= "Please, enter a string";
-	private static final String NUMBER_LABEL 			= "Please, enter a number";
-	private static final String EQUALS_LABEL 			= "Equals";
-	private static final String OR_LABEL 				= "Or";
-	private static final String FROM_LABEL 				= "From";
-	private static final String TO_LABEL 				= "To";
-	private static final String INCLUDE_BOUNDS_LABEL 	= "Include boundary";
-	private static final String SUB_STRING_LABEL 		= "Sub string";
-	private static final String	CLEAR_DATE				= "Clear";
-	private static final String	SET_START_DATE			= "..";
-	private static final String	SET_END_DATE			= "..";
+	private static final String	CREATED_CONDITON_LABEL	= "filter.label.createdcondition";
+	private static final String KEYS_LABEL 				= "filter.label.criterion";
+	private static final String ADD_BUTTON 				= "filter.button.add";
+	private static final String CHANGE_BUTTON 			= "filter.button.change";
+	private static final String REMOVE_BUTTON 			= "filter.button.remove";
+	private static final String	SHOW_LOGIC_SCHEME_BUTTON= "filter.button.showlogicscheme";
+	private static final String STRING_CONDITION_LABEL 	= "filter.label.string";
+	private static final String NUMBER_LABEL 			= "filter.label.number";
+	private static final String EQUALS_LABEL 			= "filter.label.equals";
+	private static final String OR_LABEL 				= "filter.label.or";
+	private static final String FROM_LABEL 				= "filter.label.from";
+	private static final String TO_LABEL 				= "filter.label.to";
+	private static final String INCLUDE_BOUNDS_LABEL 	= "filter.label.includeboundary";
+	private static final String SUB_STRING_LABEL 		= "filter.label.substring";
+	private static final String	CLEAR_DATE_BUTTON		= "filter.button.clear";
+	private static final String	SET_START_DATE_BUTTON	= "filter.button.startdate";
+	private static final String	SET_END_DATE_BUTTON		= "filter.button.enddate";
 	
 	private static final String NUMBER_CARD	= "number";
 	private static final String STRING_CARD	= "string";
@@ -144,25 +145,25 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		CardLayout cardLayout = 		new CardLayout();
 		FlowLayout flowLayout = 		new FlowLayout(FlowLayout.LEFT, HORISONTAL_GAP, VERTICAL_GAP);
 		
-		JLabel resultConditionLabel = 	new JLabel(CREATED_CONDITON_LABEL);
-		JLabel keysLabel = 				new JLabel(KEYS_LABEL);
-		JLabel numberLabel 	= 			new JLabel(NUMBER_LABEL);
-		JLabel equalsLabel 	= 			new JLabel(EQUALS_LABEL);
-		JLabel orLabel 		= 			new JLabel(OR_LABEL);
-		JLabel fromLabel 	= 			new JLabel(FROM_LABEL);
-		JLabel toLabel 		= 			new JLabel(TO_LABEL);
-		JLabel boundaryLabel = 			new JLabel(INCLUDE_BOUNDS_LABEL);
-		JLabel stringConditionLabel = 	new JLabel(STRING_CONDITION_LABEL);
-		JLabel subStringLabel = 		new JLabel(SUB_STRING_LABEL);
+		JLabel resultConditionLabel = 	new JLabel(LangModelFilter.getString(CREATED_CONDITON_LABEL));
+		JLabel keysLabel = 				new JLabel(LangModelFilter.getString(KEYS_LABEL));
+		JLabel numberLabel 	= 			new JLabel(LangModelFilter.getString(NUMBER_LABEL));
+		JLabel equalsLabel 	= 			new JLabel(LangModelFilter.getString(EQUALS_LABEL));
+		JLabel orLabel 		= 			new JLabel(LangModelFilter.getString(OR_LABEL));
+		JLabel fromLabel 	= 			new JLabel(LangModelFilter.getString(FROM_LABEL));
+		JLabel toLabel 		= 			new JLabel(LangModelFilter.getString(TO_LABEL));
+		JLabel boundaryLabel = 			new JLabel(LangModelFilter.getString(INCLUDE_BOUNDS_LABEL));
+		JLabel stringConditionLabel = 	new JLabel(LangModelFilter.getString(STRING_CONDITION_LABEL));
+		JLabel subStringLabel = 		new JLabel(LangModelFilter.getString(SUB_STRING_LABEL));
 		
-		this.addButton = 				new JButton(ADD_BUTTON);
-		this.changeButton = 			new JButton(CHANGE_BUTTON);
-		this.removeButton = 			new JButton(REMOVE_BUTTON);
-		this.createSchemeButton = 		new JButton(LOGIC_SCHEME_BUTTON);
-		this.startClear = 				new JButton(CLEAR_DATE);
-		this.startDayButton = 			new JButton(SET_START_DATE);		
-		this.endClear = 				new JButton(CLEAR_DATE);
-		this.endDayButton =				new JButton(SET_END_DATE);
+		this.addButton = 				new JButton(LangModelFilter.getString(ADD_BUTTON));
+		this.changeButton = 			new JButton(LangModelFilter.getString(CHANGE_BUTTON));
+		this.removeButton = 			new JButton(LangModelFilter.getString(REMOVE_BUTTON));
+		this.createSchemeButton = 		new JButton(LangModelFilter.getString(SHOW_LOGIC_SCHEME_BUTTON));
+		this.startClear = 				new JButton(LangModelFilter.getString(CLEAR_DATE_BUTTON));
+		this.startDayButton = 			new JButton(LangModelFilter.getString(SET_START_DATE_BUTTON));		
+		this.endClear = 				new JButton(LangModelFilter.getString(CLEAR_DATE_BUTTON));
+		this.endDayButton =				new JButton(LangModelFilter.getString(SET_END_DATE_BUTTON));
 		
 		this.mainPanel = 				new JPanel(gbl);
 		this.conditionPanel = 			new JPanel(cardLayout);
@@ -684,10 +685,6 @@ public class FilterPanel extends JScrollPane implements FilterView {
 		} else {
 			this.conditions.setSelectedIndex(ceratedConditionIndex);
 		}
-	}
-	
-	public void removeConditionSelection(int ceratedConditionIndex) {
-		
 	}
 }
 

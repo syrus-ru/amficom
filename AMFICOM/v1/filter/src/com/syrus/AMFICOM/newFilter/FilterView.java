@@ -1,5 +1,5 @@
 /*
- * $Id: FilterView.java,v 1.10 2005/08/25 10:50:46 max Exp $
+ * $Id: FilterView.java,v 1.11 2005/09/21 13:07:14 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,19 +8,11 @@
 package com.syrus.AMFICOM.newFilter;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/25 10:50:46 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/21 13:07:14 $
  * @author $Author: max $
  * @module filter
  */
 public interface FilterView {
-
-	String	WRONG_NUMBER_MESSAGE	= "you have intered wrong number type in field ";
-	String	WRONG_STRING_MESSAGE	= "please, fill the field ";
-	String	WRONG_LIST_MESSAGE		= "Select, from list ";
-	String	EQUALS_AND_FROM_SIMULTENIOUSLY	= "Fill \"Equals\" or \"From\"";
-	String	EQUALS_AND_TO_SIMULTENIOUSLY	= "Fill \"Equals\" or \"To\"";
-	String	NO_CONDITIONS_CREATED	= "You have to create condition(s) first";
-	String	WRONG_DATE_MESSAGE	= "Please, set the date";
 
 	void showErrorMessage(String message);
 	void createLogicalSchemeView(LogicalScheme logicalScheme);

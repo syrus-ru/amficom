@@ -1,5 +1,5 @@
 /*
- * $Id: FilterController.java,v 1.24 2005/09/20 15:57:22 max Exp $
+ * $Id: FilterController.java,v 1.25 2005/09/21 13:07:41 max Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -39,12 +39,20 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/09/20 15:57:22 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/21 13:07:41 $
  * @author $Author: max $
  * @module filter_v1
  */
 public class FilterController implements ActionListener, PopupMenuListener, ListSelectionListener {
 	
+	public static final String	WRONG_NUMBER_MESSAGE			= "filter.error.message.wrongnumber";
+	public static final String	WRONG_STRING_MESSAGE			= "filter.error.message.wrongstring";
+	public static final String	WRONG_LIST_MESSAGE				= "filter.error.message.wronglist";
+	public static final String	WRONG_DATE_MESSAGE				= "filter.error.message.wrongdate";
+	public static final String	EQUALS_AND_FROM_SIMULTENIOUSLY	= "filter.error.message.equalsandfromsimultaneously";
+	public static final String	EQUALS_AND_TO_SIMULTENIOUSLY	= "filter.error.message.equalsandtosimultaneously";
+	public static final String	NO_CONDITIONS_CREATED			= "filter.error.message.noconditionscreated";
+			
 	private Filter model;
 	private FilterView view;
 		
@@ -314,7 +322,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 					equalsInt = Integer.parseInt(equals);
 				} catch (NumberFormatException e) {
 					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
-					this.view.showErrorMessage(Filter.WRONG_NUMBER_MESSAGE);
+					this.view.showErrorMessage(LangModelFilter.getString(WRONG_NUMBER_MESSAGE));
 					return;
 				}
 				this.model.addCondition0(new TypicalCondition(equalsInt, equalsInt, OperationSort.OPERATION_EQUALS, entityCode, key), conditionKey);
@@ -327,14 +335,14 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 					fromInt = Integer.parseInt(numberCondition.getFrom());
 				} catch (NumberFormatException e) {
 					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
-					this.view.showErrorMessage(Filter.WRONG_NUMBER_MESSAGE);
+					this.view.showErrorMessage(LangModelFilter.getString(WRONG_NUMBER_MESSAGE));
 					return;
 				}
 				try {
 					toInt = Integer.parseInt(numberCondition.getTo());
 				} catch (NumberFormatException e) {
 					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
-					this.view.showErrorMessage(Filter.WRONG_NUMBER_MESSAGE);
+					this.view.showErrorMessage(LangModelFilter.getString(WRONG_NUMBER_MESSAGE));
 					return;
 				}
 				this.model.addCondition0(new TypicalCondition(fromInt, toInt, OperationSort.OPERATION_IN_RANGE, entityCode, key), conditionKey);
@@ -346,7 +354,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 					fromInt = Integer.parseInt(numberCondition.getFrom());
 				} catch (NumberFormatException e) {
 					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
-					this.view.showErrorMessage(Filter.WRONG_NUMBER_MESSAGE);
+					this.view.showErrorMessage(LangModelFilter.getString(WRONG_NUMBER_MESSAGE));
 					return;
 				}
 				if (includeBounds)
@@ -362,7 +370,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 					toInt = Integer.parseInt(numberCondition.getTo());
 				} catch (NumberFormatException e) {
 					Log.debugMessage("Flter.addCondition | Warning, wrong data format",Log.DEBUGLEVEL07);
-					this.view.showErrorMessage(Filter.WRONG_NUMBER_MESSAGE);
+					this.view.showErrorMessage(LangModelFilter.getString(WRONG_NUMBER_MESSAGE));
 					return;
 				}
 				if (includeBounds)
@@ -373,11 +381,11 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 				return;
 			}			
 			if (!equals.equals("") && !to.equals("")) {
-				this.view.showErrorMessage(Filter.EQUALS_AND_TO_SIMULTENIOUSLY);
+				this.view.showErrorMessage(LangModelFilter.getString(EQUALS_AND_TO_SIMULTENIOUSLY));
 				return;
 			}
 			if (!equals.equals("") && !from.equals("")) {
-				this.view.showErrorMessage(Filter.EQUALS_AND_FROM_SIMULTENIOUSLY);
+				this.view.showErrorMessage(LangModelFilter.getString(EQUALS_AND_FROM_SIMULTENIOUSLY));
 				return;
 			}
 			break;
@@ -389,7 +397,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 			StringCondition stringCondition = (StringCondition) tempCondition;
 			String conditionString = stringCondition.getString();
 			if(conditionString == null || conditionString.equals("")) {
-				this.view.showErrorMessage(Filter.WRONG_STRING_MESSAGE);
+				this.view.showErrorMessage(LangModelFilter.getString(WRONG_STRING_MESSAGE));
 				return;
 			}
 			if (stringCondition.isSubstring()) {
@@ -403,7 +411,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 			Set<StorableObjectCondition> conditions = new HashSet<StorableObjectCondition>();
 			int[] selectedIndices = listCondition2.getSelectedIndices();
 			if(selectedIndices.length == 0) {
-				this.view.showErrorMessage(Filter.WRONG_LIST_MESSAGE);
+				this.view.showErrorMessage(LangModelFilter.getString(WRONG_LIST_MESSAGE));
 				return;
 			}
 			for (int i = 0; i < selectedIndices.length; i++) {
@@ -421,7 +429,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 			List<StorableObject> linkedObjects = conditionKey.getLinkedObjects();
 			int[] linkedIndex = listCondition.getSelectedIndices();
 			if(linkedIndex.length == 0) {
-				this.view.showErrorMessage(Filter.WRONG_LIST_MESSAGE);
+				this.view.showErrorMessage(LangModelFilter.getString(WRONG_LIST_MESSAGE));
 				return;
 			}
 			ArrayList<Identifier> selectedObjectIds = new ArrayList<Identifier>(linkedIndex.length);
@@ -463,7 +471,7 @@ public class FilterController implements ActionListener, PopupMenuListener, List
 	
 	public void createLogicalScheme() {
 		if (!this.model.hasCondition()) {
-			this.view.showErrorMessage(Filter.NO_CONDITIONS_CREATED);
+			this.view.showErrorMessage(LangModelFilter.getString(NO_CONDITIONS_CREATED));
 			return;
 		}
 		this.view.createLogicalSchemeView(this.model.getLogicalScheme());	

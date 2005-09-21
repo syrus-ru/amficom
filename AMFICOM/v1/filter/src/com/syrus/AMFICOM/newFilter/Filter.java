@@ -1,5 +1,5 @@
 /*-
- * $Id: Filter.java,v 1.18 2005/09/04 09:17:56 bass Exp $
+ * $Id: Filter.java,v 1.19 2005/09/21 13:06:55 max Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,22 +17,12 @@ import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.18 $, $Date: 2005/09/04 09:17:56 $
- * @author $Author: bass $
+ * @version $Revision: 1.19 $, $Date: 2005/09/21 13:06:55 $
+ * @author $Author: max $
  * @module filter
  */
 public class Filter {
 	
-	
-	//TODO: move it to controller or view
-	public static final String	WRONG_NUMBER_MESSAGE	= "you have intered wrong number type in field ";
-	public static final String	WRONG_STRING_MESSAGE	= "please, fill the field ";
-	public static final String	WRONG_LIST_MESSAGE		= "Select, from list ";
-	public static final String	EQUALS_AND_FROM_SIMULTENIOUSLY	= "Fill \"Equals\" or \"From\"";
-	public static final String	EQUALS_AND_TO_SIMULTENIOUSLY	= "Fill \"Equals\" or \"To\"";
-	public static final String	NO_CONDITIONS_CREATED	= "You have to create condition(s) first";
-	public static final String	WRONG_DATE_MESSAGE	= "Please, set the date";
-
 	private List<ConditionKey> createdConditionKeys = new LinkedList<ConditionKey>();
 	private LogicalScheme logicalScheme = new LogicalScheme();
 	private Collection<FilterView> filterViews = new LinkedList<FilterView>();
