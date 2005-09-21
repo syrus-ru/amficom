@@ -1,5 +1,5 @@
 /*-
- * $Id: CharacteristicsPanel.java,v 1.21 2005/09/09 18:54:27 arseniy Exp $
+ * $Id: CharacteristicsPanel.java,v 1.22 2005/09/21 10:46:03 arseniy Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -63,7 +63,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.21 $, $Date: 2005/09/09 18:54:27 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/21 10:46:03 $
  * @module commonclient
  */
 public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
@@ -100,6 +100,8 @@ public abstract class CharacteristicsPanel extends DefaultStorableObjectEditor {
 	}
 
 	private class CharacteristicTypeSortRenderer extends JLabel implements ListCellRenderer {
+		private static final long serialVersionUID = 1811178338069743526L;
+
 		public Component getListCellRendererComponent(final JList list,
 				final Object value,
 				final int index,
