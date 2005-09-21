@@ -1,5 +1,5 @@
 /*-
-* $Id: LayoutItem.java,v 1.4 2005/09/15 17:21:22 bob Exp $
+* $Id: LayoutItem.java,v 1.5 2005/09/21 13:22:13 bass Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -7,6 +7,8 @@
 */
 
 package com.syrus.AMFICOM.resource;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -17,7 +19,6 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -34,8 +35,8 @@ import com.syrus.AMFICOM.resource.corba.IdlLayoutItemHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.4 $
- * @author $Author: bob $
+ * @version $Revision: 1.5 $
+ * @author $Author: bass $
  * @module resource
  */
 
@@ -51,7 +52,7 @@ public final class LayoutItem extends StorableObject implements Characterizable,
 	private String								layoutName;
 	private String								name;
 
-	private transient CharacterizableDelegate characterizableDelegate;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -186,10 +187,10 @@ public final class LayoutItem extends StorableObject implements Characterizable,
 	}
 
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characterizableDelegate == null) {
-			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
-		return this.characterizableDelegate.getCharacteristics(usePool);
+		return this.characteristicContainerWrappee.getContainees(usePool);
 	}
 
 	/**

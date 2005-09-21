@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractSchemePort.java,v 1.66 2005/09/19 13:52:11 bass Exp $
+ * $Id: AbstractSchemePort.java,v 1.67 2005/09/21 13:22:08 bass Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,6 +18,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_NOT_INITIALIZED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_WILL_DELETE_ITSELF_FROM_POOL;
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.MEASUREMENTPORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.PORT_TYPE_CODE;
@@ -38,7 +39,6 @@ import com.syrus.AMFICOM.general.AbstractCloneableStorableObject;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -57,7 +57,7 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: bass $
- * @version $Revision: 1.66 $, $Date: 2005/09/19 13:52:11 $
+ * @version $Revision: 1.67 $, $Date: 2005/09/21 13:22:08 $
  * @module scheme
  */
 public abstract class AbstractSchemePort
@@ -93,7 +93,7 @@ public abstract class AbstractSchemePort
 	 */
 	boolean portTypeSet = false;
 
-	private transient CharacterizableDelegate characterizableDelegate;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * @param id
@@ -172,10 +172,10 @@ public abstract class AbstractSchemePort
 	 * @see Characterizable#getCharacteristics(boolean)
 	 */
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characterizableDelegate == null) {
-			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
-		return this.characterizableDelegate.getCharacteristics(usePool);
+		return this.characteristicContainerWrappee.getContainees(usePool);
 	}
 
 	/**

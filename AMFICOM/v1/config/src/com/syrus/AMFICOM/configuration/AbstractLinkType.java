@@ -1,5 +1,5 @@
 /*
- * $Id: AbstractLinkType.java,v 1.20 2005/09/08 18:26:27 bass Exp $
+ * $Id: AbstractLinkType.java,v 1.21 2005/09/21 13:22:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -8,6 +8,8 @@
 
 package com.syrus.AMFICOM.configuration;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+
 import java.util.Date;
 import java.util.Set;
 
@@ -15,21 +17,20 @@ import com.syrus.AMFICOM.configuration.corba.IdlAbstractLinkTypePackage.LinkType
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.Namable;
 import com.syrus.AMFICOM.general.StorableObjectType;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 
 /**
- * @version $Revision: 1.20 $, $Date: 2005/09/08 18:26:27 $
+ * @version $Revision: 1.21 $, $Date: 2005/09/21 13:22:09 $
  * @author $Author: bass $
  * @module config
  */
 public abstract class AbstractLinkType extends StorableObjectType implements Namable, Characterizable {
 	private static final long serialVersionUID = 6276017738364160981L;
 
-	private transient CharacterizableDelegate characterizableDelegate;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	public AbstractLinkType() {
 		super();
@@ -63,10 +64,10 @@ public abstract class AbstractLinkType extends StorableObjectType implements Nam
 	public abstract void setName(final String Name);
 
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characterizableDelegate == null) {
-			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
-		return this.characterizableDelegate.getCharacteristics(usePool);
+		return this.characteristicContainerWrappee.getContainees(usePool);
 	}
 
 }

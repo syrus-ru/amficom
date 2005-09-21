@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractLink.java,v 1.9 2005/09/11 15:27:42 bass Exp $
+ * $Id: AbstractLink.java,v 1.10 2005/09/21 13:22:09 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 
 import java.util.Collections;
 import java.util.Date;
@@ -18,7 +19,6 @@ import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -35,7 +35,7 @@ public abstract class AbstractLink extends DomainMember
 	String mark;
 	int color;
 
-	private transient CharacterizableDelegate characterizableDelegate;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	AbstractLink() {
 //		super();
@@ -122,10 +122,10 @@ public abstract class AbstractLink extends DomainMember
 	 * @see com.syrus.AMFICOM.general.Characterizable#getCharacteristics(boolean)
 	 */
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characterizableDelegate == null) {
-			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
-		return this.characterizableDelegate.getCharacteristics(usePool);
+		return this.characteristicContainerWrappee.getContainees(usePool);
 	}
 
 	public final String getDescription() {

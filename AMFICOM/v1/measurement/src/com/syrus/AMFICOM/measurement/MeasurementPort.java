@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementPort.java,v 1.5 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: MeasurementPort.java,v 1.6 2005/09/21 13:22:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.measurement;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -17,7 +19,6 @@ import org.omg.CORBA.ORB;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -34,8 +35,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPort;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementPortHelper;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/09/21 13:22:09 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -51,7 +52,7 @@ public final class MeasurementPort extends StorableObject
 	private Identifier kisId;
 	private Identifier portId;
 
-	private transient CharacterizableDelegate characterizableDelegate;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	public MeasurementPort(final IdlMeasurementPort mpt) throws CreateObjectException {
 		try {
@@ -225,10 +226,10 @@ public final class MeasurementPort extends StorableObject
 	}
 
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characterizableDelegate == null) {
-			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
-		return this.characterizableDelegate.getCharacteristics(usePool);
+		return this.characteristicContainerWrappee.getContainees(usePool);
 	}
 
 	/**

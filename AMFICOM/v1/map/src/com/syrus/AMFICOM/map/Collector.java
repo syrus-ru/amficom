@@ -1,5 +1,5 @@
 /*-
- * $Id: Collector.java,v 1.84 2005/09/20 16:41:21 bass Exp $
+ * $Id: Collector.java,v 1.85 2005/09/21 13:22:10 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -12,6 +12,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.COLLECTOR_CODE;
 import static java.util.logging.Level.SEVERE;
 
@@ -24,7 +25,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Describable;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -52,7 +52,7 @@ import com.syrus.util.Log;
  * в него линий. Линии не обязаны быть связными.
  *
  * @author $Author: bass $
- * @version $Revision: 1.84 $, $Date: 2005/09/20 16:41:21 $
+ * @version $Revision: 1.85 $, $Date: 2005/09/21 13:22:10 $
  * @module map
  */
 public final class Collector extends StorableObject implements Namable, Describable, MapElement, XmlBeansTransferable<XmlCollector> {
@@ -67,7 +67,7 @@ public final class Collector extends StorableObject implements Namable, Describa
 
 	private Set<Identifier> physicalLinkIds;
 
-	private transient CharacterizableDelegate characterizableDelegate;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	private transient boolean selected = false;
 	private transient boolean removed = false;
@@ -353,10 +353,10 @@ public final class Collector extends StorableObject implements Namable, Describa
 	}
 
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characterizableDelegate == null) {
-			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
-		return this.characterizableDelegate.getCharacteristics(usePool);
+		return this.characteristicContainerWrappee.getContainees(usePool);
 	}
 
 	/**

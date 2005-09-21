@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractNode.java,v 1.39 2005/09/20 16:26:03 krupenn Exp $
+ * $Id: AbstractNode.java,v 1.40 2005/09/21 13:22:09 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -8,12 +8,13 @@
 
 package com.syrus.AMFICOM.map;
 
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
+
 import java.util.Date;
 import java.util.Set;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObject;
@@ -26,8 +27,8 @@ import com.syrus.AMFICOM.resource.DoublePoint;
  * ({@link Map}). Узловой объект характеризуется наличием координат
  * ({@link #location}) и изображением ({@link #imageId}).
  *
- * @author $Author: krupenn $
- * @version $Revision: 1.39 $, $Date: 2005/09/20 16:26:03 $
+ * @author $Author: bass $
+ * @version $Revision: 1.40 $, $Date: 2005/09/21 13:22:09 $
  * @module map
  * @see SiteNode
  * @see TopologicalNode
@@ -58,7 +59,7 @@ public abstract class AbstractNode extends StorableObject implements MapElement 
 
 	protected transient boolean removed = false;
 
-	private transient CharacterizableDelegate characterizableDelegate;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	protected AbstractNode(final Identifier id,
 			final Date created,
@@ -98,10 +99,10 @@ public abstract class AbstractNode extends StorableObject implements MapElement 
 	}
 
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characterizableDelegate == null) {
-			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
-		return this.characterizableDelegate.getCharacteristics(usePool);
+		return this.characteristicContainerWrappee.getContainees(usePool);
 	}
 
 	protected void setLongitude(final double longitude) {

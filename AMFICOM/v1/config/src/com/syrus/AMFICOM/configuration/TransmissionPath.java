@@ -1,5 +1,5 @@
 /*
- * $Id: TransmissionPath.java,v 1.90 2005/09/14 18:42:07 arseniy Exp $
+ * $Id: TransmissionPath.java,v 1.91 2005/09/21 13:22:09 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.configuration;
 
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_STATE_ILLEGAL;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.TRANSMISSIONPATH_CODE;
 
 import java.util.Date;
@@ -23,7 +24,6 @@ import com.syrus.AMFICOM.configuration.corba.IdlTransmissionPathHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypedObject;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 /**
- * @version $Revision: 1.90 $, $Date: 2005/09/14 18:42:07 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.91 $, $Date: 2005/09/21 13:22:09 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module config
  */
@@ -52,7 +52,7 @@ public final class TransmissionPath extends DomainMember
 	private Identifier startPortId;
 	private Identifier finishPortId;
 
-	private transient CharacterizableDelegate characterizableDelegate;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	public TransmissionPath(final IdlTransmissionPath tpt) throws CreateObjectException {
 		try {
@@ -213,10 +213,10 @@ public final class TransmissionPath extends DomainMember
 	}
 
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characterizableDelegate == null) {
-			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
-		return this.characterizableDelegate.getCharacteristics(usePool);
+		return this.characteristicContainerWrappee.getContainees(usePool);
 	}
 	
 	/**

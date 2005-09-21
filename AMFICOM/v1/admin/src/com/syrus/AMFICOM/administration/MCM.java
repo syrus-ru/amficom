@@ -1,5 +1,5 @@
 /*
- * $Id: MCM.java,v 1.50 2005/09/14 19:01:23 arseniy Exp $
+ * $Id: MCM.java,v 1.51 2005/09/21 13:22:12 bass Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -7,6 +7,8 @@
  */
 
 package com.syrus.AMFICOM.administration;
+
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 
 import java.util.Date;
 import java.util.HashSet;
@@ -19,7 +21,6 @@ import com.syrus.AMFICOM.administration.corba.IdlMCMHelper;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
 import com.syrus.AMFICOM.general.Characterizable;
-import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
@@ -32,8 +33,8 @@ import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.corba.IdlStorableObject;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/09/14 19:01:23 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.51 $, $Date: 2005/09/21 13:22:12 $
+ * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module administration
  */
@@ -47,7 +48,7 @@ public final class MCM extends DomainMember implements Characterizable, Namable 
 	private Identifier userId;
 	private Identifier serverId;
 
-	private transient CharacterizableDelegate characterizableDelegate;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	/**
 	 * <p><b>Clients must never explicitly call this method.</b></p>
@@ -168,10 +169,10 @@ public final class MCM extends DomainMember implements Characterizable, Namable 
 	}
 
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characterizableDelegate == null) {
-			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
-		return this.characterizableDelegate.getCharacteristics(usePool);
+		return this.characteristicContainerWrappee.getContainees(usePool);
 	}
 
 	public static MCM createInstance(final Identifier creatorId,

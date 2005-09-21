@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.111 2005/09/21 11:41:04 bass Exp $
+ * $Id: SchemeElement.java,v 1.112 2005/09/21 13:22:08 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,7 +91,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.111 $, $Date: 2005/09/21 11:41:04 $
+ * @version $Revision: 1.112 $, $Date: 2005/09/21 13:22:08 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -1725,7 +1725,7 @@ public final class SchemeElement extends AbstractSchemeElement
 	Set<Scheme> getSchemes0(final boolean usePool)
 	throws ApplicationException {
 		return this.getKind() == SCHEME_CONTAINER
-				? this.getSchemeContainerWrappee().getStorableObjects(usePool)
+				? this.getSchemeContainerWrappee().getContainees(usePool)
 				: Collections.<Scheme>emptySet();
 	}
 

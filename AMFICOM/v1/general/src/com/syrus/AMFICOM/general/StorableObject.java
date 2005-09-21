@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObject.java,v 1.99 2005/09/21 12:08:32 bass Exp $
+ * $Id: StorableObject.java,v 1.100 2005/09/21 13:22:09 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.99 $, $Date: 2005/09/21 12:08:32 $
+ * @version $Revision: 1.100 $, $Date: 2005/09/21 13:22:09 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -529,7 +529,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 	/**
 	 * @author Andrew ``Bass'' Shcheglov
 	 * @author $Author: bass $
-	 * @version $Revision: 1.99 $, $Date: 2005/09/21 12:08:32 $
+	 * @version $Revision: 1.100 $, $Date: 2005/09/21 13:22:09 $
 	 * @module general
 	 */
 	protected final class StorableObjectContainerWrappee<T extends StorableObject> {
@@ -581,7 +581,7 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		 * @param usePool
 		 * @throws ApplicationException
 		 */
-		public Set<T> getStorableObjects(final boolean usePool)
+		public Set<T> getContainees(final boolean usePool)
 		throws ApplicationException {
 			this.ensureCacheBuilt(usePool);
 			return this.containees;

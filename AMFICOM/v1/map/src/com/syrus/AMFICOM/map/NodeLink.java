@@ -1,5 +1,5 @@
 /*-
- * $Id: NodeLink.java,v 1.95 2005/09/20 16:41:21 bass Exp $
+ * $Id: NodeLink.java,v 1.96 2005/09/21 13:22:10 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -13,6 +13,7 @@ import static com.syrus.AMFICOM.general.ErrorMessages.NON_VOID_EXPECTED;
 import static com.syrus.AMFICOM.general.ErrorMessages.OBJECT_BADLY_INITIALIZED;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_RETURN_VOID_IF_ABSENT;
 import static com.syrus.AMFICOM.general.Identifier.XmlConversionMode.MODE_THROW_IF_ABSENT;
+import static com.syrus.AMFICOM.general.ObjectEntities.CHARACTERISTIC_CODE;
 import static com.syrus.AMFICOM.general.ObjectEntities.NODELINK_CODE;
 import static java.util.logging.Level.FINEST;
 import static java.util.logging.Level.SEVERE;
@@ -25,7 +26,6 @@ import org.omg.CORBA.ORB;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Characteristic;
-import com.syrus.AMFICOM.general.CharacterizableDelegate;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
@@ -51,7 +51,7 @@ import com.syrus.util.Log;
  * не живут сами по себе, а входят в состав одной и только одной линии
  * ({@link PhysicalLink}).
  * @author $Author: bass $
- * @version $Revision: 1.95 $, $Date: 2005/09/20 16:41:21 $
+ * @version $Revision: 1.96 $, $Date: 2005/09/21 13:22:10 $
  * @module map
  */
 public final class NodeLink extends StorableObject implements MapElement, XmlBeansTransferable<XmlNodeLink> {
@@ -71,7 +71,7 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 	private AbstractNode endNode = null;
 	private PhysicalLink physicalLink = null;
 
-	private transient CharacterizableDelegate characterizableDelegate;
+	private transient StorableObjectContainerWrappee<Characteristic> characteristicContainerWrappee;
 
 	private transient boolean selected = false;
 	private transient boolean removed = false;
@@ -428,10 +428,10 @@ public final class NodeLink extends StorableObject implements MapElement, XmlBea
 	}
 
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
-		if (this.characterizableDelegate == null) {
-			this.characterizableDelegate = new CharacterizableDelegate(this.id);
+		if (this.characteristicContainerWrappee == null) {
+			this.characteristicContainerWrappee = new StorableObjectContainerWrappee<Characteristic>(this, CHARACTERISTIC_CODE);
 		}
-		return this.characterizableDelegate.getCharacteristics(usePool);
+		return this.characteristicContainerWrappee.getContainees(usePool);
 	}
 
 	@Override
