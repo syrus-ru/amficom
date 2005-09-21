@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.101 2005/09/21 15:20:43 bob Exp $
+ * $Id: SchedulerModel.java,v 1.102 2005/09/21 16:18:31 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.101 $, $Date: 2005/09/21 15:20:43 $
+ * @version $Revision: 1.102 $, $Date: 2005/09/21 16:18:31 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -942,27 +942,38 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 		try {
 			final Set<Test> tests = StorableObjectPool.getStorableObjects(this.testIds, true);
 			for (final Test test : tests) {
-				if (test.getStatus().value() == TestStatus._TEST_STATUS_STOPPED){
+				if (!test.getMonitoredElementId().equals(monitoredElementId)) {
 					continue;
-				}
+				}	
+				
+				final TestTemporalType temporalType = test.getTemporalType();
 				final Date startTime = test.getStartTime();
 				final SortedMap<Date, String> stoppingMap = test.getStoppingMap();
 				Date endTime = stoppingMap.isEmpty() ? test.getEndTime() : stoppingMap.lastKey();
 				if (endTime == null) {
 					endTime = startTime;
 				}
-				
+
 				Log.debugMessage("SchedulerModel.isValid | startTime " + startTime, Log.DEBUGLEVEL10);
 				Log.debugMessage("SchedulerModel.isValid | endTime " + endTime, Log.DEBUGLEVEL10);
-
-				if (test.getMonitoredElementId().equals(monitoredElementId)
-						&& ((endDate != null && 
-								endDate.after(startTime) && 
-								endDate.before(endTime)) || 
-									(startDate.after(startTime) && 
-											startDate.before(endTime)))) {
-					result = false;
-					break;
+				
+				if (temporalType == TestTemporalType.TEST_TEMPORAL_TYPE_PERIODICAL) {
+					final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
+					final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
+					final SortedSet<Date> times = temporalPattern.getTimes(startTime, endTime);
+					for(final Date stDate : times) {
+						 if (stDate.before(endDate) && 
+									startDate.getTime() <= stDate.getTime() + measurementSetup.getMeasurementDuration()) {
+								result = false;
+								break;
+							}
+					}
+				} else {
+					if (startTime.before(endDate) && 
+							startDate.before(endTime)) {
+						result = false;
+						break;
+					}
 				}
 			}
 		} catch (final ApplicationException e) {
