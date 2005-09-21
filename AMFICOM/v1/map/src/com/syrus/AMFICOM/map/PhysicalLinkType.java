@@ -1,5 +1,5 @@
 /*-
- * $Id: PhysicalLinkType.java,v 1.89 2005/09/20 16:41:21 bass Exp $
+ * $Id: PhysicalLinkType.java,v 1.90 2005/09/21 13:09:29 bass Exp $
  *
  * Copyright ї 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -49,6 +49,7 @@ import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkType;
 import com.syrus.AMFICOM.map.xml.XmlPhysicalLinkTypeSort;
 import com.syrus.AMFICOM.resource.IntDimension;
 import com.syrus.util.Log;
+import com.syrus.util.Shitlet;
 
 /**
  * Тип линии топологической схемы. Существует несколько предустановленных
@@ -56,7 +57,7 @@ import com.syrus.util.Log;
  * какому-либо значению {@link #DEFAULT_TUNNEL}, {@link #DEFAULT_COLLECTOR}, {@link #DEFAULT_INDOOR},
  * {@link #DEFAULT_SUBMARINE}, {@link #DEFAULT_OVERHEAD}, {@link #DEFAULT_UNBOUND}
  * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2005/09/20 16:41:21 $
+ * @version $Revision: 1.90 $, $Date: 2005/09/21 13:09:29 $
  * @module map
  */
 public final class PhysicalLinkType extends StorableObjectType 
@@ -94,6 +95,7 @@ public final class PhysicalLinkType extends StorableObjectType
 	
 	private boolean topological;
 
+	@Shitlet
 	private transient Set<Characteristic> characteristics;
 
 	public PhysicalLinkType(final IdlPhysicalLinkType pltt) throws CreateObjectException {
@@ -296,6 +298,7 @@ public final class PhysicalLinkType extends StorableObjectType
 		super.setCodename0(codename);
 	}
 
+	@Shitlet
 	public void addCharacteristic(Characteristic characteristic) {
 		if(this.characteristics == null) {
 			try {
@@ -311,6 +314,7 @@ public final class PhysicalLinkType extends StorableObjectType
 		this.characteristics.add(characteristic);
 	}
 	
+	@Shitlet
 	public Set<Characteristic> getCharacteristics(final boolean usePool) throws ApplicationException {
 		if(this.characteristics == null) {
 			try {
