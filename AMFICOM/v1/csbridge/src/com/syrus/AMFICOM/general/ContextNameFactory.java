@@ -1,5 +1,5 @@
 /*
- * $Id: ContextNameFactory.java,v 1.5 2005/09/14 18:21:32 arseniy Exp $
+ * $Id: ContextNameFactory.java,v 1.6 2005/09/21 13:25:12 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -11,8 +11,8 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * @version $Revision: 1.5 $, $Date: 2005/09/14 18:21:32 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.6 $, $Date: 2005/09/21 13:25:12 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module csbridge
  */
@@ -27,8 +27,8 @@ public final class ContextNameFactory {
 		try {
 			return InetAddress.getByName(hostName).getCanonicalHostName().replaceAll("\\.", "_");
 		}
-		catch (UnknownHostException uhe) {
-			throw new CommunicationException("Cannot get host '" + hostName + "'", uhe);
+		catch (final UnknownHostException uhe) {
+			throw new CommunicationException(I18N.getString("Error.CannotResolveHost") + ": '" + hostName + "'", uhe);
 		}
 	}
 
@@ -36,8 +36,9 @@ public final class ContextNameFactory {
 		try {
 			return InetAddress.getLocalHost().getCanonicalHostName().replaceAll("\\.", "_");
 		}
-		catch (UnknownHostException uhe) {
-			throw new CommunicationException("Cannot get local host", uhe);
+		catch (final UnknownHostException uhe) {
+			// Когда эта случиццо эта будит точна полный пиздец
+			throw new CommunicationException(I18N.getString("Error.CannotResolveHost") + ": 'localhost'", uhe);
 		}
 	}
 }
