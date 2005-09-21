@@ -1,5 +1,5 @@
 /*-
- * $Id: SchedulerModel.java,v 1.100 2005/09/21 12:11:48 bob Exp $
+ * $Id: SchedulerModel.java,v 1.101 2005/09/21 15:20:43 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
 import com.syrus.util.WrapperComparator;
 
 /**
- * @version $Revision: 1.100 $, $Date: 2005/09/21 12:11:48 $
+ * @version $Revision: 1.101 $, $Date: 2005/09/21 15:20:43 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -447,13 +447,15 @@ public final class SchedulerModel extends ApplicationModel implements PropertyCh
 	}
 
 	public Set<Identifier> getSelectedTestIds() {
-		return this.selectedTestIds;
+		if (this.selectedTestIds != null) {
+			return this.selectedTestIds;
+		}
+		return Collections.emptySet();
 	}
 	
 	public Set<Test> getSelectedTests() throws ApplicationException{
-		final Set<Identifier> selectedTestIds = this.getSelectedTestIds();
-		if (selectedTestIds != null && !selectedTestIds.isEmpty()) { 
-			return StorableObjectPool.getStorableObjects(selectedTestIds, true);
+		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) { 
+			return StorableObjectPool.getStorableObjects(this.selectedTestIds, true);
 		}
 		return Collections.emptySet();
 	}

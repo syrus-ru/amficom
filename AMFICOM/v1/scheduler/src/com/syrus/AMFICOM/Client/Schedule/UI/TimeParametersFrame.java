@@ -196,8 +196,7 @@ public class TimeParametersFrame extends JInternalFrame {
 																		if (waiting) {
 																			final Set<Identifier> selectedTestIds = TimeParametersPanel.this.schedulerModel
 																					.getSelectedTestIds();
-																			if (selectedTestIds != null
-																					&& !selectedTestIds.isEmpty()) {
+																			if (!selectedTestIds.isEmpty()) {
 																				int size = selectedTestIds.size();
 																				boolean b = !TimeParametersPanel.this.oneRadioButton
 																						.isSelected()

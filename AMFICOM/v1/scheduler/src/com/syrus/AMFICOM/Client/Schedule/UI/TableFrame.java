@@ -1,5 +1,5 @@
 /*-
- * $Id: TableFrame.java,v 1.44 2005/09/21 12:15:00 bob Exp $
+ * $Id: TableFrame.java,v 1.45 2005/09/21 15:20:43 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -55,7 +55,7 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 
 /**
- * @version $Revision: 1.44 $, $Date: 2005/09/21 12:15:00 $
+ * @version $Revision: 1.45 $, $Date: 2005/09/21 15:20:43 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -89,7 +89,7 @@ public final class TableFrame extends JInternalFrame implements PropertyChangeLi
 
 	private void updateTest() {
 		final Set<Identifier> selectedTestIds = this.schedulerModel.getSelectedTestIds();
-		if (selectedTestIds == null || selectedTestIds.isEmpty()) {
+		if (selectedTestIds.isEmpty()) {
 			this.listTable.clearSelection();
 		} else {
 			try {

@@ -262,43 +262,40 @@ final class TestLine extends TimeLine {
 			return; 
 		}
 
-		final Set<Identifier> selectedTestIds2 = this.schedulerModel.getSelectedTestIds();
 		this.selectedItems.clear();
 		if (this.selectedTestIds != null) {
 			this.selectedTestIds.clear();
 		}
-		if (selectedTestIds2 != null) {
-			for (final Identifier testId : selectedTestIds2) {
-				if (this.testIds.contains(testId)) {
-					if (this.selectedTestIds == null) {
-						this.selectedTestIds = new HashSet<Identifier>();
-					}
-					this.selectedTestIds.add(testId);
+		for (final Identifier testId : this.schedulerModel.getSelectedTestIds()) {
+			if (this.testIds.contains(testId)) {
+				if (this.selectedTestIds == null) {
+					this.selectedTestIds = new HashSet<Identifier>();
 				}
+				this.selectedTestIds.add(testId);
+			}
+		}
+
+		if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
+			for (final TestTimeItem testTimeItem : this.unsavedTestTimeItems) {
+				final Identifier testId = (Identifier) testTimeItem.object;
+				for (final Identifier identifier : this.selectedTestIds) {
+					if (testId.equals(identifier)) {
+						this.selectedItems.add(testTimeItem);
+						break;
+					}
+				}
+
 			}
 
-			if (this.selectedTestIds != null && !this.selectedTestIds.isEmpty()) {
-				for (final TestTimeItem testTimeItem : this.unsavedTestTimeItems) {
-					final Identifier testId = (Identifier) testTimeItem.object;
-					for (final Identifier identifier : this.selectedTestIds) {
-						if (testId.equals(identifier)) {
-							this.selectedItems.add(testTimeItem);
-							break;
-						}
+			for (final TestTimeItem testTimeItem : this.timeItems) {
+				final Identifier testId = (Identifier) testTimeItem.object;
+				for (final Identifier identifier : this.selectedTestIds) {
+					if (testId.equals(identifier)) {
+						this.selectedItems.add(testTimeItem);
+						break;
 					}
-
 				}
 
-				for (final TestTimeItem testTimeItem : this.timeItems) {
-					final Identifier testId = (Identifier) testTimeItem.object;
-					for (final Identifier identifier : this.selectedTestIds) {
-						if (testId.equals(identifier)) {
-							this.selectedItems.add(testTimeItem);
-							break;
-						}
-					}
-
-				}
 			}
 		}
 		super.repaint();
