@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementSetup.java,v 1.94 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: MeasurementSetup.java,v 1.95 2005/09/21 16:21:05 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,8 +34,8 @@ import com.syrus.AMFICOM.measurement.corba.IdlMeasurementSetupHelper;
 import com.syrus.AMFICOM.measurement.corba.IdlMeasurementType;
 
 /**
- * @version $Revision: 1.94 $, $Date: 2005/09/14 18:35:57 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.95 $, $Date: 2005/09/21 16:21:05 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
  */
@@ -52,6 +52,9 @@ public final class MeasurementSetup extends StorableObject {
 	private ParameterSet thresholdSet;
 	private ParameterSet etalon;
 	private String description;
+	/**
+	 * measurement duration in milliseconds
+	 */
 	private long measurementDuration;
 
 	private Set<Identifier> monitoredElementIds;
@@ -110,7 +113,7 @@ public final class MeasurementSetup extends StorableObject {
 	 * @param thresholdSet
 	 * @param etalon
 	 * @param description
-	 * @param measurementDuration
+	 * @param measurementDurationMS in milliseconds
 	 * @param monitoredElementIds
 	 * @throws CreateObjectException
 	 */
@@ -120,7 +123,7 @@ public final class MeasurementSetup extends StorableObject {
 			final ParameterSet thresholdSet,
 			final ParameterSet etalon,
 			final String description,
-			final long measurementDuration,
+			final long measurementDurationMS,
 			final Set<Identifier> monitoredElementIds,
 			final EnumSet<MeasurementType> measurementTypes) throws CreateObjectException {
 
@@ -133,7 +136,7 @@ public final class MeasurementSetup extends StorableObject {
 				thresholdSet,
 				etalon,
 				description,
-				measurementDuration,
+				measurementDurationMS,
 				monitoredElementIds,
 				measurementTypes);
 
