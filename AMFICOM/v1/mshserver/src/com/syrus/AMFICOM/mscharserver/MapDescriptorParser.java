@@ -1,5 +1,5 @@
 /*-
- * $Id: MapDescriptorParser.java,v 1.3 2005/08/22 08:30:25 max Exp $
+ * $Id: MapDescriptorParser.java,v 1.4 2005/09/21 15:14:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,16 +22,16 @@ import com.syrus.util.Log;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.3 $, $Date: 2005/08/22 08:30:25 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.4 $, $Date: 2005/09/21 15:14:28 $
  * @module mshserver_v1
  */
 
-public class MapDescriptorParser {
+final class MapDescriptorParser {
 	private static final String	MAP_DESCRIPTOR_FILE_KEY = "MapDescriptor";
 	private static final String	DEFAULT_MAP_DESCRIPTOR_FILE	= "map_descriptor.xml";
 
-	public List<MapDescriptor> getMapDescriptors() {
+	List<MapDescriptor> getMapDescriptors() {
 		final List<MapDescriptor> mapDescriptors = new LinkedList<MapDescriptor>();
 		final String mapDescriptorFile = ApplicationProperties.getString(MAP_DESCRIPTOR_FILE_KEY, DEFAULT_MAP_DESCRIPTOR_FILE);
 		final File descFile = new File(mapDescriptorFile);

@@ -1,5 +1,5 @@
 /*-
- * $Id: LayerDescriptorParser.java,v 1.6 2005/09/08 06:42:22 max Exp $
+ * $Id: LayerDescriptorParser.java,v 1.7 2005/09/21 15:14:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -22,14 +22,14 @@ import com.syrus.util.Log;
 
 /**
  * @author max
- * @author $Author: max $
- * @version $Revision: 1.6 $, $Date: 2005/09/08 06:42:22 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.7 $, $Date: 2005/09/21 15:14:28 $
  * @module mshserver_v1
  */
 
-public class LayerDescriptorParser {
+final class LayerDescriptorParser {
 
-	public List<LayerDescriptor> getLayerFiles(final MapDescriptor mapDescriptor) {
+	List<LayerDescriptor> getLayerFiles(final MapDescriptor mapDescriptor) {
 		final List<LayerDescriptor> layerFiles = new LinkedList<LayerDescriptor>();
 		final SAXReader reader = new SAXReader();
 		Document document;

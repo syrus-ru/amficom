@@ -1,5 +1,5 @@
 /*-
- * $Id: MapJLocalRenderer.java,v 1.7 2005/08/08 11:45:43 arseniy Exp $
+ * $Id: MapJLocalRenderer.java,v 1.8 2005/09/21 15:14:28 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -39,10 +39,10 @@ import com.syrus.util.Log;
 
 /**
  * @author $Author: arseniy $
- * @version $Revision: 1.7 $, $Date: 2005/08/08 11:45:43 $
+ * @version $Revision: 1.8 $, $Date: 2005/09/21 15:14:28 $
  * @module mscharserver
  */
-public class MapJLocalRenderer {
+final class MapJLocalRenderer {
 
 	// Render preferences
 	public static final int NUM_OF_COLORS = 256;
@@ -99,7 +99,7 @@ public class MapJLocalRenderer {
 		return returnValue;
 	}
 
-	public synchronized byte[] render(final TopologicalImageQuery query) throws Exception {
+	synchronized byte[] render(final TopologicalImageQuery query) throws Exception {
 		this.cancelEncoding = false;
 
 		final int miWidth = query.getMapImageWidth();
@@ -155,7 +155,7 @@ public class MapJLocalRenderer {
 		return result;
 	}
 
-	public void cancelRendering() throws Exception {
+	void cancelRendering() throws Exception {
 		Log.debugMessage("MapJLocalRenderer.cancelRendering | Stopping the rendering of map.", Log.DEBUGLEVEL07);
 
 		this.cancelEncoding = true;
@@ -164,7 +164,7 @@ public class MapJLocalRenderer {
 		Log.debugMessage("MapJLocalRenderer.cancelRendering | Rendering stopped.", Log.DEBUGLEVEL07);
 	}
 
-	public List<MapFeature> findFeature(final String searchName) throws IllegalDataException {
+	List<MapFeature> findFeature(final String searchName) throws IllegalDataException {
 		final List<MapFeature> featureList = new LinkedList<MapFeature>();
 		Log.debugMessage("Starting search procedure.", Level.INFO);
 		for (final Iterator layersIt = this.mapJObject.getLayers().iterator(LayerType.FEATURE); layersIt.hasNext();) {

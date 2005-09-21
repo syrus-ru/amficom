@@ -1,5 +1,5 @@
 /*-
- * $Id: MapInfoPool.java,v 1.3 2005/08/08 11:45:43 arseniy Exp $
+ * $Id: MapInfoPool.java,v 1.4 2005/09/21 15:14:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -18,12 +18,15 @@ import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.3 $, $Date: 2005/08/08 11:45:43 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/21 15:14:28 $
  * @author $Author: arseniy $
  * @module mscharserver
  */
 
-public class MapInfoPool {
+final class MapInfoPool {
+	private MapInfoPool() {
+		assert false : "Singleton";
+	}
 	
 	private static HashMap <SessionKey, MapJLocalRenderer> keyRendererHashMap;
 	private static final byte[] nullImageStub = {0};
@@ -33,7 +36,7 @@ public class MapInfoPool {
 		keyRendererHashMap = new HashMap <SessionKey, MapJLocalRenderer> ();
 	}
 	
-	public static byte[] getImage(TopologicalImageQuery tiq, SessionKey key) throws IllegalDataException {
+	static byte[] getImage(final TopologicalImageQuery tiq, final SessionKey key) throws IllegalDataException {
 		MapJLocalRenderer mapJLocalRenderer= keyRendererHashMap.get(key);
 		if (mapJLocalRenderer == null) {
 			mapJLocalRenderer = new MapJLocalRenderer();
@@ -45,13 +48,14 @@ public class MapInfoPool {
 		} catch (Exception e) {
 			throw new IllegalDataException(e.getMessage());
 		}
-		if (image == null)
+		if (image == null) {
 			image = nullImageStub;
+		}
 		return image;
 	}
 	
-	public static void cancelRendering(SessionKey key) throws IllegalDataException {
-		MapJLocalRenderer mapJLocalRenderer = keyRendererHashMap.get(key);
+	static void cancelRendering(final SessionKey key) throws IllegalDataException {
+		final MapJLocalRenderer mapJLocalRenderer = keyRendererHashMap.get(key);
 		if(mapJLocalRenderer == null) {
 			Log.errorMessage("MapInfoPool.cancelRendering | Wrong sessionKey" + key);
 			return;
@@ -64,8 +68,8 @@ public class MapInfoPool {
 		}
 	}
 
-	public static List<MapFeature> findFeature(String featureName, SessionKey key) throws IllegalDataException {
-		MapJLocalRenderer mapJLocalRenderer = keyRendererHashMap.get(key);
+	static List<MapFeature> findFeature(final String featureName, final SessionKey key) throws IllegalDataException {
+		final MapJLocalRenderer mapJLocalRenderer = keyRendererHashMap.get(key);
 		if(mapJLocalRenderer == null) {
 			Log.errorMessage("MapInfoPool.findFeature | Wrong sessionKey" + key);
 			return null;

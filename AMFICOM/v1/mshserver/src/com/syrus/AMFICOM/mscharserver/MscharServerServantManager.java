@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerServantManager.java,v 1.5 2005/09/21 14:14:20 arseniy Exp $
+ * $Id: MscharServerServantManager.java,v 1.6 2005/09/21 15:14:29 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,10 +30,10 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.5 $, $Date: 2005/09/21 14:14:20 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/21 15:14:29 $
  * @module mscharserver
  */
-public final class MscharServerServantManager extends RunnableVerifiedConnectionManager
+final class MscharServerServantManager extends RunnableVerifiedConnectionManager
 		implements BaseConnectionManager {
 	private String loginServerServantName;
 

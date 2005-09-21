@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.17 2005/09/21 14:14:20 arseniy Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.18 2005/09/21 15:14:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,11 +30,11 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.17 $, $Date: 2005/09/21 14:14:20 $
+ * @version $Revision: 1.18 $, $Date: 2005/09/21 15:14:28 $
  * @author $Author: arseniy $
  * @module mscharserver
  */
-public class MapSchemeAdministrationResourceServer {
+final class MapSchemeAdministrationResourceServer {
 	public static final String APPLICATION_NAME = "mscharserver";
 
 	/*-********************************************************************
@@ -167,7 +167,7 @@ public class MapSchemeAdministrationResourceServer {
 		}
 	}
 
-	protected static synchronized void shutdown() {
+	static synchronized void shutdown() {
 		Log.debugMessage("MapSchemeAdministrationResourceServer.shutdown | serializing StorableObjectPool" , Level.INFO);
 		DatabaseConnection.closeConnection();
 	}
