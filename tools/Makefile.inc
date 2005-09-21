@@ -1,5 +1,5 @@
 #
-# $Id: Makefile.inc,v 1.33 2005/08/28 11:34:06 bass Exp $
+# $Id: Makefile.inc,v 1.34 2005/09/21 10:26:08 arseniy Exp $
 #
 # vim:set ft=make:
 #
@@ -107,11 +107,8 @@ DEPRECATEDCLASSPATH = $(jdevrt)
 ifeq ($(XMLBEANS_HOME),)
 XMLBEANSCLASSPATH = $(EXTLIBDIR)/xbean.jar:$(EXTLIBDIR)/jsr173_api.jar
 else
-# XMLBEANS_HOME found. Find out whether this is an ant-build distribution
-XMLBEANSLIBDIR = $(firstword $(wildcard $(XMLBEANS_HOME)/build/lib))
-ifeq ($(XMLBEANSLIBDIR),)
+# XMLBEANS_HOME found.
 XMLBEANSLIBDIR = $(XMLBEANS_HOME)/lib
-endif
 XMLBEANSCLASSPATH = $(XMLBEANSLIBDIR)/xbean.jar:$(XMLBEANSLIBDIR)/jsr173_api.jar
 endif
 
@@ -136,7 +133,7 @@ JAVAC_WARNOFF_FLAG = -nowarn
 # User may specify either -source 1.3 or -source 1.4 as an initial value
 # of JAVACFLAGS
 JAVACFLAGS += \
-	-Xlint:unchecked \
+	-Xlint \
 	-source 1.5 \
 	-target 1.5 \
 	-O \
