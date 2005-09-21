@@ -1,5 +1,5 @@
 /*-
- * $Id: TestProcessor.java,v 1.72 2005/09/20 18:26:17 arseniy Exp $
+ * $Id: TestProcessor.java,v 1.73 2005/09/21 14:18:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -46,7 +46,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.72 $, $Date: 2005/09/20 18:26:17 $
+ * @version $Revision: 1.73 $, $Date: 2005/09/21 14:18:10 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -78,6 +78,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 	public TestProcessor(final Test test) {
 		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_TICK_TIME, MeasurementControlModule.TICK_TIME) * 1000,
 				ApplicationProperties.getInt(MeasurementControlModule.KEY_MAX_FALLS, SleepButWorkThread.MAX_FALLS));
+		super.setName("TestProcessor " + test.getId());
 
 		this.test = test;
 
@@ -315,6 +316,8 @@ abstract class TestProcessor extends SleepButWorkThread {
 		mesg.append("'");
 		mesg.append(this.test.getId());
 		mesg.append("' on '");
+		mesg.append(this.test.getKISId());
+		mesg.append("', '");
 		mesg.append(this.test.getMonitoredElementId());
 		mesg.append("':\n");
 		mesg.append("\t numberOfMeasurements: ");
@@ -331,7 +334,7 @@ abstract class TestProcessor extends SleepButWorkThread {
 		}
 		Log.debugMessage(mesg.toString(), Log.DEBUGLEVEL07);
 
-		if (this.numberOfMResults == numberOfMeasurements && this.lastMeasurementAcquisition) {
+		if (this.numberOfMResults >= numberOfMeasurements && this.lastMeasurementAcquisition) {
 			this.complete();
 		} else if (this.lastMeasurementStartTime != null
 				&& System.currentTimeMillis() - this.lastMeasurementStartTime.getTime() > this.waitMResultTimeout) {
