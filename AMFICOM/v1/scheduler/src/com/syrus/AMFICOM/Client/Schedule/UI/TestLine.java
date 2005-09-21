@@ -45,11 +45,14 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.ObjectEntities;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
+import com.syrus.AMFICOM.measurement.AbstractTemporalPattern;
 import com.syrus.AMFICOM.measurement.Measurement;
+import com.syrus.AMFICOM.measurement.MeasurementSetup;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
+import com.syrus.util.Log;
 
 final class TestLine extends TimeLine {
 
@@ -464,54 +467,91 @@ final class TestLine extends TimeLine {
 					if (this.isTestNewer(test)) {
 						this.unsavedTestIds.add(test.getId());
 					} else {
-						LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_CODE);
-						try {
-							final Set<Measurement> testMeasurements = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
-							final List<TestTimeLine> measurementTestList = new LinkedList<TestTimeLine>();
-							if (!testMeasurements.isEmpty()) {
-								for (Iterator iter = testMeasurements.iterator(); iter.hasNext();) {
-									Measurement measurement = (Measurement) iter.next();
-									TestTimeLine testTimeLine = new TestTimeLine();
-									testTimeLine.testId = test.getId();
-									testTimeLine.startTime = measurement.getStartTime().getTime();
-									testTimeLine.duration = measurement.getDuration();
-									testTimeLine.haveMeasurement = true;
-									measurementTestList.add(testTimeLine);
-								}
-								this.measurements.put(test.getId(), measurementTestList);
-							} else {
-								this.measurements.put(test.getId(), null);
-							}
+						final LinkedIdsCondition linkedIdsCondition = new LinkedIdsCondition(test.getId(), ObjectEntities.MEASUREMENT_CODE);
+						final MeasurementSetup measurementSetup = StorableObjectPool.getStorableObject(test.getMainMeasurementSetupId(), true);
+						final long measurementDuration = measurementSetup.getMeasurementDuration();
+						
+						final List<TestTimeLine> measurementTestList = new LinkedList<TestTimeLine>();
+						this.measurements.put(test.getId(), measurementTestList);
+						
+						
 
-						} catch (ApplicationException e) {
-							AbstractMainFrame.showErrorMessage(LangModelGeneral.getString("Error.CannotAcquireObject"));
-						}
-
-					}
-
-					// ///
-					List<TestTimeLine> measurementTestList = this.measurements.get(test.getId());
-					if (measurementTestList == null) {
-						measurementTestList = new LinkedList<TestTimeLine>();
-						TestTimeLine testTimeLine = new TestTimeLine();
-						testTimeLine.testId = test.getId();
-						testTimeLine.startTime = test.getStartTime().getTime();
-						testTimeLine.haveMeasurement = false;
+							
+						final Set<Measurement> testMeasurements = new HashSet(StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true));
+						
 						switch (test.getTemporalType().value()) {
 							case TestTemporalType._TEST_TEMPORAL_TYPE_PERIODICAL: {
-								testTimeLine.duration = test.getEndTime().getTime() - testTimeLine.startTime;
+								final AbstractTemporalPattern temporalPattern = StorableObjectPool.getStorableObject(test.getTemporalPatternId(), true);
+								final SortedSet<Date> times = temporalPattern.getTimes(test.getStartTime(), test.getEndTime());
+								final SortedMap<Date, String> stoppings = test.getStoppingMap();
+								
+								
+								for(final Date date : times) {
+									TestTimeLine testTimeLine = new TestTimeLine();
+									testTimeLine.testId = test.getId();
+									final long time = date.getTime();
+									boolean foundMeasurement = false;
+									for (final Measurement measurement : testMeasurements) {
+										final Date measurementTime = measurement.getStartTime();
+										final long time2 = measurementTime.getTime();
+										if (time <= time2 &&  time2 <= time + measurementDuration) {
+											testTimeLine.startTime = time2;
+											testTimeLine.duration = measurement.getDuration();
+											testTimeLine.haveMeasurement = true;
+											foundMeasurement = true;
+											testMeasurements.remove(measurement);
+											break;
+										}
+									}
+									
+									if (!foundMeasurement) {
+//										assert Log.debugMessage(
+//											"TestLine.acquireTests | add measurement at " + date,
+//											Log.DEBUGLEVEL09);
+//										assert Log.debugMessage(
+//											"TestLine.acquireTests | " + stoppings.tailMap(date),
+//											Log.DEBUGLEVEL09);
+										if (stoppings.tailMap(date).isEmpty()) {
+											testTimeLine.startTime = time;									
+											testTimeLine.duration = measurementDuration;
+											testTimeLine.haveMeasurement = false;
+										}
+									}
+									measurementTestList.add(testTimeLine);
+								}
 							}
 								break;
 							default:
-								testTimeLine.duration = 0;
+								TestTimeLine testTimeLine = new TestTimeLine();
+								testTimeLine.testId = test.getId();
+								
+								final long time = test.getStartTime().getTime();
+								boolean foundMeasurement = false;
+								for (final Measurement measurement : testMeasurements) {
+									final Date measurementTime = measurement.getStartTime();
+									final long time2 = measurementTime.getTime();
+									if (time <= time2 &&  time2 <= time + measurementDuration) {
+										testTimeLine.startTime = time2;
+										testTimeLine.duration = measurement.getDuration();
+										testTimeLine.haveMeasurement = true;
+										foundMeasurement = true;
+										testMeasurements.remove(measurement);
+										break;
+									}
+								}
+								
+								if (!foundMeasurement) {
+									testTimeLine.startTime = time;
+									testTimeLine.duration = measurementDuration;
+									testTimeLine.haveMeasurement = false;
+								}
+								measurementTestList.add(testTimeLine);
 								break;
 						}
 
-						measurementTestList.add(testTimeLine);
-						this.measurements.put(test.getId(), measurementTestList);
-					}
-					Collections.sort(measurementTestList);
 
+						Collections.sort(measurementTestList);
+					}
 				}
 			}
 		} catch (ApplicationException e) {
