@@ -1,5 +1,5 @@
 /*-
- * $Id: Heap.java,v 1.106 2005/08/18 12:57:56 saa Exp $
+ * $Id: Heap.java,v 1.107 2005/09/21 14:50:17 saa Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -90,7 +90,7 @@ import com.syrus.util.Log;
  * должен устанавливаться setBSEtalonTrace
  * 
  * @author $Author: saa $
- * @version $Revision: 1.106 $, $Date: 2005/08/18 12:57:56 $
+ * @version $Revision: 1.107 $, $Date: 2005/09/21 14:50:17 $
  * @module
  */
 public class Heap
@@ -486,10 +486,18 @@ public class Heap
 		Heap.contextMeasurementSetup = contextMeasurementSetup;
 	}
 
-	public static Collection getBSCollection() {
+	public static Collection<BellcoreStructure> getBSCollection() {
 		Collection<BellcoreStructure> coll = new ArrayList<BellcoreStructure>(traces.size());
 		for (Trace tr: traces.values()) {
 			coll.add(tr.getBS());
+		}
+		return coll;
+	}
+
+	public static Collection<Trace> getTraceCollection() {
+		Collection<Trace> coll = new ArrayList<Trace>(traces.size());
+		for (Trace tr: traces.values()) {
+			coll.add(tr);
 		}
 		return coll;
 	}
