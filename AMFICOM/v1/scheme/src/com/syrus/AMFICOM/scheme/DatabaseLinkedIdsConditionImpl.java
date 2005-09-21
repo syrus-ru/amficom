@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.37 2005/09/21 10:36:15 arseniy Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.38 2005/09/21 11:08:48 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -44,8 +44,8 @@ import com.syrus.AMFICOM.general.StorableObjectWrapper;
 
 /**
  * @author Andrew ``Bass'' Shcheglov
- * @author $Author: arseniy $
- * @version $Revision: 1.37 $, $Date: 2005/09/21 10:36:15 $
+ * @author $Author: bass $
+ * @version $Revision: 1.38 $, $Date: 2005/09/21 11:08:48 $
  * @module scheme
  */
 final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -61,281 +61,272 @@ final class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCond
 		switch (super.condition.getEntityCode().shortValue()) {
 			case SCHEMEPROTOGROUP_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEPROTOGROUP_CODE:
-						return super.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
-					case UPDIKE_CODE:
-						return super.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMEPROTOGROUP_CODE:
+					return super.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
+				case UPDIKE_CODE:
+					return super.getQuery(SchemeProtoGroupWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMEPROTOELEMENT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEPROTOELEMENT_CODE:
-						return super.getQuery(SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
-					case SCHEMEPROTOGROUP_CODE:
-						return super.getQuery(SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
-					case EQUIPMENT_TYPE_CODE:
-						return super.getQuery(SchemeProtoElementWrapper.COLUMN_EQUIPMENT_TYPE_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMEPROTOELEMENT_CODE:
+					return super.getQuery(SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
+				case SCHEMEPROTOGROUP_CODE:
+					return super.getQuery(SchemeProtoElementWrapper.COLUMN_PARENT_SCHEME_PROTO_GROUP_ID);
+				case EQUIPMENT_TYPE_CODE:
+					return super.getQuery(SchemeProtoElementWrapper.COLUMN_EQUIPMENT_TYPE_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEME_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case DOMAIN_CODE:
-						return super.getQuery(SchemeWrapper.COLUMN_DOMAIN_ID);
-					case SCHEMEELEMENT_CODE:
-						return super.getQuery(SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case DOMAIN_CODE:
+					return super.getQuery(SchemeWrapper.COLUMN_DOMAIN_ID);
+				case SCHEMEELEMENT_CODE:
+					return super.getQuery(SchemeWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();	
 				}
 			case SCHEMEELEMENT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEELEMENT_CODE:
-						return super.getQuery(SchemeElementWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
-					case SCHEME_CODE:
-						return super.getQuery(SchemeElementWrapper.COLUMN_PARENT_SCHEME_ID);
-					case SITENODE_CODE:
-						return super.getQuery(SchemeElementWrapper.COLUMN_SITE_NODE_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMEELEMENT_CODE:
+					return super.getQuery(SchemeElementWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
+				case SCHEME_CODE:
+					return super.getQuery(SchemeElementWrapper.COLUMN_PARENT_SCHEME_ID);
+				case SITENODE_CODE:
+					return super.getQuery(SchemeElementWrapper.COLUMN_SITE_NODE_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMEOPTIMIZEINFO_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEME_CODE:
-						return super.getQuery(SchemeOptimizeInfoWrapper.COLUMN_PARENT_SCHEME_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEME_CODE:
+					return super.getQuery(SchemeOptimizeInfoWrapper.COLUMN_PARENT_SCHEME_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMEOPTIMIZEINFOSWITCH_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEOPTIMIZEINFO_CODE:
-						return super.getQuery(SchemeOptimizeInfoSwitchWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMEOPTIMIZEINFO_CODE:
+					return super.getQuery(SchemeOptimizeInfoSwitchWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMEOPTIMIZEINFORTU_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEOPTIMIZEINFO_CODE:
-						return super.getQuery(SchemeOptimizeInfoRtuWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMEOPTIMIZEINFO_CODE:
+					return super.getQuery(SchemeOptimizeInfoRtuWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMEMONITORINGSOLUTION_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEME_CODE:
-						return super.getQuery(SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_ID);
-					case SCHEMEOPTIMIZEINFO_CODE:
-						return super.getQuery(SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEME_CODE:
+					return super.getQuery(SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_ID);
+				case SCHEMEOPTIMIZEINFO_CODE:
+					return super.getQuery(SchemeMonitoringSolutionWrapper.COLUMN_PARENT_SCHEME_OPTIMIZE_INFO_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMEDEVICE_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEELEMENT_CODE:
-						return super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
-					case SCHEMEPROTOELEMENT_CODE:
-						return super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMEELEMENT_CODE:
+					return super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
+				case SCHEMEPROTOELEMENT_CODE:
+					return super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMEPORT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEDEVICE_CODE:
-						return super.getQuery(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMEDEVICE_CODE:
+					return super.getQuery(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();	
 				}
 			case SCHEMECABLEPORT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEDEVICE_CODE:
-						return super.getQuery(SchemeCablePortWrapper.COLUMN_PARENT_DEVICE_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMEDEVICE_CODE:
+					return super.getQuery(SchemeCablePortWrapper.COLUMN_PARENT_DEVICE_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMELINK_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEPORT_CODE:
-						return OPEN_BRACKET
-								+ super.getQuery(SchemeLinkWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
-								+ SQL_OR
-								+ super.getQuery(SchemeLinkWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
-								+ CLOSE_BRACKET;
-					case SCHEMEPROTOELEMENT_CODE:
-						return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
-					case SCHEME_CODE:
-						return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ID);
-					case SCHEMEELEMENT_CODE:
-						return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMEPORT_CODE:
+					return OPEN_BRACKET
+							+ super.getQuery(SchemeLinkWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
+							+ SQL_OR
+							+ super.getQuery(SchemeLinkWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
+							+ CLOSE_BRACKET;
+				case SCHEMEPROTOELEMENT_CODE:
+					return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_PROTO_ELEMENT_ID);
+				case SCHEME_CODE:
+					return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ID);
+				case SCHEMEELEMENT_CODE:
+					return super.getQuery(SchemeLinkWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMECABLELINK_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMECABLEPORT_CODE:
-						return OPEN_BRACKET
-								+ super.getQuery(SchemeCableLinkWrapper.COLUMN_SOURCE_SCHEME_CABLE_PORT_ID)
-								+ SQL_OR
-								+ super.getQuery(SchemeCableLinkWrapper.COLUMN_TARGET_SCHEME_CABLE_PORT_ID)
-								+ CLOSE_BRACKET;
-					case SCHEME_CODE:
-						return super.getQuery(SchemeCableLinkWrapper.COLUMN_PARENT_SCHEME_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMECABLEPORT_CODE:
+					return OPEN_BRACKET
+							+ super.getQuery(SchemeCableLinkWrapper.COLUMN_SOURCE_SCHEME_CABLE_PORT_ID)
+							+ SQL_OR
+							+ super.getQuery(SchemeCableLinkWrapper.COLUMN_TARGET_SCHEME_CABLE_PORT_ID)
+							+ CLOSE_BRACKET;
+				case SCHEME_CODE:
+					return super.getQuery(SchemeCableLinkWrapper.COLUMN_PARENT_SCHEME_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMECABLETHREAD_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEPORT_CODE:
-						return OPEN_BRACKET
-								+ super.getQuery(SchemeCableThreadWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
-								+ SQL_OR
-								+ super.getQuery(SchemeCableThreadWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
-								+ CLOSE_BRACKET;
-					case SCHEMECABLELINK_CODE:
-						return super.getQuery(SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMEPORT_CODE:
+					return OPEN_BRACKET
+							+ super.getQuery(SchemeCableThreadWrapper.COLUMN_SOURCE_SCHEME_PORT_ID)
+							+ SQL_OR
+							+ super.getQuery(SchemeCableThreadWrapper.COLUMN_TARGET_SCHEME_PORT_ID)
+							+ CLOSE_BRACKET;
+				case SCHEMECABLELINK_CODE:
+					return super.getQuery(SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case CABLECHANNELINGITEM_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMECABLELINK_CODE:
-						return super.getQuery(CableChannelingItemWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
-					case SITENODE_CODE:
-						return OPEN_BRACKET
-								+ super.getQuery(CableChannelingItemWrapper.COLUMN_START_SITE_NODE_ID)
-								+ SQL_OR
-								+ super.getQuery(CableChannelingItemWrapper.COLUMN_END_SITE_NODE_ID)
-								+ CLOSE_BRACKET;
-					case PHYSICALLINK_CODE:
-						return super.getQuery(CableChannelingItemWrapper.COLUMN_PHYSICAL_LINK_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMECABLELINK_CODE:
+					return super.getQuery(CableChannelingItemWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID);
+				case SITENODE_CODE:
+					return OPEN_BRACKET
+							+ super.getQuery(CableChannelingItemWrapper.COLUMN_START_SITE_NODE_ID)
+							+ SQL_OR
+							+ super.getQuery(CableChannelingItemWrapper.COLUMN_END_SITE_NODE_ID)
+							+ CLOSE_BRACKET;
+				case PHYSICALLINK_CODE:
+					return super.getQuery(CableChannelingItemWrapper.COLUMN_PHYSICAL_LINK_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case SCHEMEPATH_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEMONITORINGSOLUTION_CODE:
-						return super.getQuery(SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID);
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMEMONITORINGSOLUTION_CODE:
+					return super.getQuery(SchemePathWrapper.COLUMN_PARENT_SCHEME_MONITORING_SOLUTION_ID);
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			case PATHELEMENT_CODE:
 				switch (super.condition.getLinkedEntityCode()) {
-					case SCHEMEPATH_CODE:
-						return super.getQuery(PathElementWrapper.COLUMN_PARENT_SCHEME_PATH_ID);
-					case SCHEMELINK_CODE:
-						return super.getQuery(PathElementWrapper.COLUMN_SCHEME_LINK_ID);
-					case SCHEMEELEMENT_CODE:
-						final StringBuffer buffer1 = new StringBuffer();
-						buffer1.append(PathElementWrapper.COLUMN_START_ABSTRACT_SCHEME_PORT_ID);
-						buffer1.append(StorableObjectDatabase.SQL_IN);
-						buffer1.append(StorableObjectDatabase.OPEN_BRACKET);
-						buffer1.append(StorableObjectDatabase.SQL_SELECT);
-						buffer1.append(StorableObjectWrapper.COLUMN_ID);
-						buffer1.append(StorableObjectDatabase.SQL_FROM);
-						buffer1.append(ObjectEntities.SCHEMEPORT);
-						buffer1.append(StorableObjectDatabase.SQL_WHERE);
-
-						buffer1.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-						buffer1.append(StorableObjectDatabase.SQL_IN);
-						buffer1.append(StorableObjectDatabase.OPEN_BRACKET);
-						buffer1.append(StorableObjectDatabase.SQL_SELECT);
-						buffer1.append(StorableObjectWrapper.COLUMN_ID);
-						buffer1.append(StorableObjectDatabase.SQL_FROM);
-						buffer1.append(ObjectEntities.SCHEMEDEVICE);
-						buffer1.append(StorableObjectDatabase.SQL_WHERE);
-
-						buffer1.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
-						buffer1.append(StorableObjectDatabase.CLOSE_BRACKET);
-						buffer1.append(StorableObjectDatabase.CLOSE_BRACKET);
-
-						buffer1.append(StorableObjectDatabase.SQL_OR);
-
-						buffer1.append(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID);
-						buffer1.append(StorableObjectDatabase.SQL_IN);
-						buffer1.append(StorableObjectDatabase.OPEN_BRACKET);
-						buffer1.append(StorableObjectDatabase.SQL_SELECT);
-						buffer1.append(StorableObjectWrapper.COLUMN_ID);
-						buffer1.append(StorableObjectDatabase.SQL_FROM);
-						buffer1.append(ObjectEntities.SCHEMEPORT);
-						buffer1.append(StorableObjectDatabase.SQL_WHERE);
-
-						buffer1.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-						buffer1.append(StorableObjectDatabase.SQL_IN);
-						buffer1.append(StorableObjectDatabase.OPEN_BRACKET);
-						buffer1.append(StorableObjectDatabase.SQL_SELECT);
-						buffer1.append(StorableObjectWrapper.COLUMN_ID);
-						buffer1.append(StorableObjectDatabase.SQL_FROM);
-						buffer1.append(ObjectEntities.SCHEMEDEVICE);
-						buffer1.append(StorableObjectDatabase.SQL_WHERE);
-						buffer1.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
-						buffer1.append(StorableObjectDatabase.CLOSE_BRACKET);
-						buffer1.append(StorableObjectDatabase.CLOSE_BRACKET);
-
-						buffer1.append(StorableObjectDatabase.SQL_OR);
-
-						buffer1.append(PathElementWrapper.COLUMN_START_ABSTRACT_SCHEME_PORT_ID);
-						buffer1.append(StorableObjectDatabase.SQL_IN);
-						buffer1.append(StorableObjectDatabase.OPEN_BRACKET);
-						buffer1.append(StorableObjectDatabase.SQL_SELECT);
-						buffer1.append(StorableObjectWrapper.COLUMN_ID);
-						buffer1.append(StorableObjectDatabase.SQL_FROM);
-						buffer1.append(ObjectEntities.SCHEMECABLEPORT);
-						buffer1.append(StorableObjectDatabase.SQL_WHERE);
-
-						buffer1.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-						buffer1.append(StorableObjectDatabase.SQL_IN);
-						buffer1.append(StorableObjectDatabase.OPEN_BRACKET);
-						buffer1.append(StorableObjectDatabase.SQL_SELECT);
-						buffer1.append(StorableObjectWrapper.COLUMN_ID);
-						buffer1.append(StorableObjectDatabase.SQL_FROM);
-						buffer1.append(ObjectEntities.SCHEMEDEVICE);
-						buffer1.append(StorableObjectDatabase.SQL_WHERE);
-
-						buffer1.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
-						buffer1.append(StorableObjectDatabase.CLOSE_BRACKET);
-						buffer1.append(StorableObjectDatabase.CLOSE_BRACKET);
-
-						buffer1.append(StorableObjectDatabase.SQL_OR);
-
-						buffer1.append(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID);
-						buffer1.append(StorableObjectDatabase.SQL_IN);
-						buffer1.append(StorableObjectDatabase.OPEN_BRACKET);
-						buffer1.append(StorableObjectDatabase.SQL_SELECT);
-						buffer1.append(StorableObjectWrapper.COLUMN_ID);
-						buffer1.append(StorableObjectDatabase.SQL_FROM);
-						buffer1.append(ObjectEntities.SCHEMECABLEPORT);
-						buffer1.append(StorableObjectDatabase.SQL_WHERE);
-
-						buffer1.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
-						buffer1.append(StorableObjectDatabase.SQL_IN);
-						buffer1.append(StorableObjectDatabase.OPEN_BRACKET);
-						buffer1.append(StorableObjectDatabase.SQL_SELECT);
-						buffer1.append(StorableObjectWrapper.COLUMN_ID);
-						buffer1.append(StorableObjectDatabase.SQL_FROM);
-						buffer1.append(ObjectEntities.SCHEMEDEVICE);
-						buffer1.append(StorableObjectDatabase.SQL_WHERE);
-						buffer1.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
-						buffer1.append(StorableObjectDatabase.CLOSE_BRACKET);
-						buffer1.append(StorableObjectDatabase.CLOSE_BRACKET);
-						return buffer1.toString();
-					case SCHEMECABLELINK_CODE:
-						return super.getLinkedQuery(PathElementWrapper.COLUMN_SCHEME_CABLE_THREAD_ID,
-								StorableObjectWrapper.COLUMN_ID,
-								SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID,
-								ObjectEntities.SCHEMECABLELINK);
-					case MEASUREMENTPORT_CODE:
-						final StringBuffer buffer2 = new StringBuffer();
-						buffer2.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID,
-								StorableObjectWrapper.COLUMN_ID,
-								SchemeCablePortWrapper.COLUMN_MEASUREMENT_PORT_ID,
-								ObjectEntities.SCHEMECABLEPORT));
-						buffer2.append(StorableObjectDatabase.SQL_OR);
-						buffer2.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID,
-								StorableObjectWrapper.COLUMN_ID,
-								SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID,
-								ObjectEntities.SCHEMEPORT));
-						return buffer2.toString();
-					default:
-						throw super.newExceptionLinkedEntityIllegal();
+				case SCHEMEPATH_CODE:
+					return super.getQuery(PathElementWrapper.COLUMN_PARENT_SCHEME_PATH_ID);
+				case SCHEMELINK_CODE:
+					return super.getQuery(PathElementWrapper.COLUMN_SCHEME_LINK_ID);
+				case SCHEMEELEMENT_CODE:
+					StringBuffer buffer = new StringBuffer();
+					buffer.append(PathElementWrapper.COLUMN_START_ABSTRACT_SCHEME_PORT_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemePortWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEPORT);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					
+					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemeDeviceWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEDEVICE);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					
+					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					
+					buffer.append(StorableObjectDatabase.SQL_OR);
+					
+					buffer.append(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemePortWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEPORT);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					
+					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemeDeviceWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEDEVICE);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					
+					buffer.append(StorableObjectDatabase.SQL_OR);
+					
+					buffer.append(PathElementWrapper.COLUMN_START_ABSTRACT_SCHEME_PORT_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemeCablePortWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMECABLEPORT);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					
+					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemeDeviceWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEDEVICE);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					
+					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					
+					buffer.append(StorableObjectDatabase.SQL_OR);
+					
+					buffer.append(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemeCablePortWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMECABLEPORT);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					
+					buffer.append(SchemePortWrapper.COLUMN_PARENT_DEVICE_ID);
+					buffer.append(StorableObjectDatabase.SQL_IN);
+					buffer.append(StorableObjectDatabase.OPEN_BRACKET);
+					buffer.append(StorableObjectDatabase.SQL_SELECT);
+					buffer.append(SchemeDeviceWrapper.COLUMN_ID);
+					buffer.append(StorableObjectDatabase.SQL_FROM);
+					buffer.append(ObjectEntities.SCHEMEDEVICE);
+					buffer.append(StorableObjectDatabase.SQL_WHERE);
+					buffer.append(super.getQuery(SchemeDeviceWrapper.COLUMN_PARENT_SCHEME_ELEMENT_ID));
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					buffer.append(StorableObjectDatabase.CLOSE_BRACKET);
+					return buffer.toString();
+				case SCHEMECABLELINK_CODE:
+					return super.getLinkedQuery(PathElementWrapper.COLUMN_SCHEME_CABLE_THREAD_ID, SchemeCableLinkWrapper.COLUMN_ID, SchemeCableThreadWrapper.COLUMN_PARENT_SCHEME_CABLE_LINK_ID,ObjectEntities.SCHEMECABLELINK);
+				case MEASUREMENTPORT_CODE:
+					StringBuffer buffer3 = new StringBuffer();
+					buffer3.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, StorableObjectWrapper.COLUMN_ID, SchemeCablePortWrapper.COLUMN_MEASUREMENT_PORT_ID, ObjectEntities.SCHEMECABLEPORT));
+					buffer3.append(StorableObjectDatabase.SQL_OR);
+					buffer3.append(super.getLinkedQuery(PathElementWrapper.COLUMN_END_ABSTRACT_SCHEME_PORT_ID, StorableObjectWrapper.COLUMN_ID, SchemePortWrapper.COLUMN_MEASUREMENT_PORT_ID, ObjectEntities.SCHEMEPORT));
+					return buffer3.toString();
+				default:
+					throw super.newExceptionLinkedEntityIllegal();
 				}
 			default:
 				throw super.newExceptionEntityIllegal();
