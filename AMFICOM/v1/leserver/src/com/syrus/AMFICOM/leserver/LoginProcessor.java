@@ -1,5 +1,5 @@
 /*
- * $Id: LoginProcessor.java,v 1.15 2005/09/14 18:18:39 arseniy Exp $
+ * $Id: LoginProcessor.java,v 1.16 2005/09/21 14:09:16 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -14,8 +14,12 @@ import java.util.Iterator;
 import java.util.Map;
 import java.util.Set;
 
+import com.syrus.AMFICOM.administration.SystemUser;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.RetrieveObjectException;
 import com.syrus.AMFICOM.general.SleepButWorkThread;
+import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.security.SessionKey;
 import com.syrus.AMFICOM.security.UserLogin;
 import com.syrus.AMFICOM.security.UserLoginDatabase;
@@ -23,7 +27,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/14 18:18:39 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/21 14:09:16 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -56,7 +60,7 @@ final class LoginProcessor extends SleepButWorkThread {
 		this.restoreState();
 		printUserLogins();
 
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("LoginProcessor -- shutdown hook") {
 			@Override
 			public void run() {
 				LoginProcessor.this.shutdown();
@@ -67,8 +71,7 @@ final class LoginProcessor extends SleepButWorkThread {
 	private void restoreState() {
 		try {
 			final Set<UserLogin> userLogins = this.userLoginDatabase.retrieveAll();
-			for (Iterator<UserLogin> it = userLogins.iterator(); it.hasNext();) {
-				final UserLogin userLogin = it.next();
+			for (final UserLogin userLogin : userLogins) {
 				loginMap.put(userLogin.getSessionKey(), userLogin);
 			}
 		}
@@ -82,7 +85,7 @@ final class LoginProcessor extends SleepButWorkThread {
 		while (this.running) {
 
 			synchronized (loginMap) {
-				for (Iterator<SessionKey> it = loginMap.keySet().iterator(); it.hasNext();) {
+				for (final Iterator<SessionKey> it = loginMap.keySet().iterator(); it.hasNext();) {
 					final SessionKey sessionKey = it.next();
 					final UserLogin userLogin = loginMap.get(sessionKey);
 					final Date lastActivityDate = userLogin.getLastActivityDate();
@@ -135,16 +138,44 @@ final class LoginProcessor extends SleepButWorkThread {
 	}
 
 	private static void printUserLogins() {
-		Log.debugMessage("#### LoginProcessor.printUserLogins | Logged in: ", Log.DEBUGLEVEL10);
+		final StringBuffer stringBuffer = new StringBuffer("\n\t\t LoginProcessor.printUserLogins | Logged in:\n");
+		int i = 0;
 		synchronized (loginMap) {
 			for (final SessionKey sessionKey : loginMap.keySet()) {
+				i++;
 				final UserLogin userLogin = loginMap.get(sessionKey);
-				Log.debugMessage("#### Session key: '" + sessionKey + "'", Log.DEBUGLEVEL10);
-				Log.debugMessage("#### '" + userLogin.getUserId()
-						+ "' from: " + userLogin.getLoginDate()
-						+ ", last: " + userLogin.getLastActivityDate(), Log.DEBUGLEVEL10);
+				final Identifier userId = userLogin.getUserId();
+				SystemUser systemUser = null;
+				try {
+					systemUser = StorableObjectPool.getStorableObject(userId, true);
+				} catch (ApplicationException ae) {
+					Log.errorException(ae);
+				}
+
+				stringBuffer.append("\n");
+				stringBuffer.append(i);
+				stringBuffer.append("\t Session key: '");
+				stringBuffer.append(sessionKey);
+				stringBuffer.append("'\n");
+				stringBuffer.append("\t Id: '");
+				stringBuffer.append(userId);
+				stringBuffer.append("'\n");
+				stringBuffer.append("\t Login: '");
+				stringBuffer.append((systemUser != null) ? systemUser.getLogin() : "NULL");
+				stringBuffer.append("'\n");
+				stringBuffer.append("\t Domain id: '");
+				stringBuffer.append(userLogin.getDomainId());
+				stringBuffer.append("'\n");
+				stringBuffer.append("\t From date: ");
+				stringBuffer.append(userLogin.getLoginDate());
+				stringBuffer.append("'\n");
+				stringBuffer.append("\t Last active at: ");
+				stringBuffer.append(userLogin.getLastActivityDate());
+				stringBuffer.append("'\n");
 			}
 		}
+		
+		Log.debugMessage(stringBuffer.toString(), Log.DEBUGLEVEL08);
 	}
 
 	protected void shutdown() {
