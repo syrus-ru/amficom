@@ -1,5 +1,5 @@
 /*-
- * $Id: ReflectometryMeasurementParameters.java,v 1.1 2005/09/01 16:48:31 saa Exp $
+ * $Id: ReflectometryMeasurementParameters.java,v 1.2 2005/09/21 16:21:34 bob Exp $
  * 
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -32,11 +32,11 @@ import com.syrus.util.Log;
  * На данный момент modifier-методы не поддерживаются.
  * </p>
  * @author saa
- * @author $Author: saa $
- * @version $Revision: 1.1 $, $Date: 2005/09/01 16:48:31 $
+ * @author $Author: bob $
+ * @version $Revision: 1.2 $, $Date: 2005/09/21 16:21:34 $
  * @module
  */
-public class ReflectometryMeasurementParameters {
+public final class ReflectometryMeasurementParameters {
 	private ParameterSet msPars;
 
 	private double traceLength;
@@ -51,7 +51,7 @@ public class ReflectometryMeasurementParameters {
 
 	/**
 	 * Этот конструктор предназначен для использования в
-	 * ReflectometryMeasurementSetup, а не для непосредственного вызова.
+	 * {@link ReflectometryMeasurementSetup}, а не для непосредственного вызова.
 	 * @param msPars Должен быть parameterSet'ом
 	 *   {@link com.syrus.AMFICOM.measurement.MeasurementSetup}
 	 * @throws DataFormatException Неправильный формат входных данных
