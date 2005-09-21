@@ -1,5 +1,5 @@
 /*
- * $Id: MCMObjectLoader.java,v 1.22 2005/09/14 18:13:47 arseniy Exp $
+ * $Id: MCMObjectLoader.java,v 1.23 2005/09/21 09:58:26 arseniy Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -34,7 +34,7 @@ import com.syrus.AMFICOM.general.StorableObjectDatabase;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.22 $, $Date: 2005/09/14 18:13:47 $
+ * @version $Revision: 1.23 $, $Date: 2005/09/21 09:58:26 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -231,6 +231,7 @@ final class MCMObjectLoader extends CORBAObjectLoader {
 			case TEST_CODE:
 				this.databaseObjectLoader.saveStorableObjects(storableObjects);
 				super.saveStorableObjects(storableObjects);
+				break;
 			default:
 				this.databaseObjectLoader.saveStorableObjects(storableObjects);
 		}
