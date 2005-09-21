@@ -1,5 +1,5 @@
 /*
- * $Id: UserLoginDatabase.java,v 1.10 2005/09/14 18:18:39 arseniy Exp $
+ * $Id: UserLoginDatabase.java,v 1.11 2005/09/21 14:07:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -26,7 +26,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/09/14 18:18:39 $
+ * @version $Revision: 1.11 $, $Date: 2005/09/21 14:07:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -97,12 +97,10 @@ public final class UserLoginDatabase {
 						DatabaseDate.fromQuerySubString(resultSet, COLUMN_LAST_ACTIVITY_DATE));
 				objects.add(userLogin);
 			}
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			final String mesg = "Cannot retrieve user login" + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				try {
 					if (resultSet != null) {
@@ -154,12 +152,10 @@ public final class UserLoginDatabase {
 			Log.debugMessage("UserLoginDatabase.insert | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			final String mesg = "Cannot insert user login" + sqle.getMessage();
 			throw new CreateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				try {
 					if (statement != null) {
@@ -197,26 +193,24 @@ public final class UserLoginDatabase {
 			Log.debugMessage("UserLoginDatabase.update | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			final String mesg = "Cannot update user login" + sqle.getMessage();
 			throw new UpdateObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
-				if (statement != null) {
-					statement.close();
-					statement = null;
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
 				}
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
-				if (connection != null) {
-					DatabaseConnection.releaseConnection(connection);
-					connection = null;
-				}
 			}
 		}
 	}
@@ -233,21 +227,17 @@ public final class UserLoginDatabase {
 			Log.debugMessage("UserLoginDatabase.delete | Trying: " + sql, Log.DEBUGLEVEL09);
 			statement.executeUpdate(sql.toString());
 			connection.commit();
-		}
-		catch (SQLException sqle) {
+		} catch (SQLException sqle) {
 			Log.errorException(sqle);
-		}
-		finally {
+		} finally {
 			try {
 				if (statement != null) {
 					statement.close();
 					statement = null;
 				}
-			}
-			catch (SQLException sqle1) {
+			} catch (SQLException sqle1) {
 				Log.errorException(sqle1);
-			}
-			finally {
+			} finally {
 				if (connection != null) {
 					DatabaseConnection.releaseConnection(connection);
 					connection = null;

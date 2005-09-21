@@ -1,5 +1,5 @@
 /*
- * $Id: ShadowDatabase.java,v 1.9 2005/09/14 18:18:39 arseniy Exp $
+ * $Id: ShadowDatabase.java,v 1.10 2005/09/21 14:07:00 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -23,7 +23,7 @@ import com.syrus.util.database.DatabaseConnection;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/14 18:18:39 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/21 14:07:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -66,13 +66,11 @@ public final class ShadowDatabase {
 			if (resultSet.next()) {
 				return DatabaseString.fromQuerySubString(resultSet.getString(COLUMN_PASSWORD));
 			}
-			throw new ObjectNotFoundException("Cannot find password for user '"+ userId + "'");
-		}
-		catch (SQLException sqle) {
+			throw new ObjectNotFoundException("Cannot find password for user '" + userId + "'");
+		} catch (SQLException sqle) {
 			final String mesg = "Cannot retrieve user password " + sqle.getMessage();
 			throw new RetrieveObjectException(mesg, sqle);
-		}
-		finally {
+		} finally {
 			try {
 				try {
 					if (resultSet != null) {
@@ -104,15 +102,12 @@ public final class ShadowDatabase {
 			final String oldPassword = this.retrieve(userId);
 			if (oldPassword != null && oldPassword.length() != 0) {
 				sql = this.updateQuery(userId, password);
-			}
-			else {
+			} else {
 				sql = this.insertQuery(userId, password);
 			}
-		}
-		catch (RetrieveObjectException roe) {
+		} catch (RetrieveObjectException roe) {
 			throw new UpdateObjectException(roe);
-		}
-		catch (ObjectNotFoundException onfe) {
+		} catch (ObjectNotFoundException onfe) {
 			sql = this.insertQuery(userId, password);
 		}
 
