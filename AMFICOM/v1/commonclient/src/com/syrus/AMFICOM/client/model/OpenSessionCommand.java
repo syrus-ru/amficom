@@ -1,5 +1,5 @@
 /*
- * $Id: OpenSessionCommand.java,v 1.19 2005/09/18 13:15:06 bob Exp $
+ * $Id: OpenSessionCommand.java,v 1.20 2005/09/21 13:55:40 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -42,7 +42,7 @@ import com.syrus.AMFICOM.general.LoginManager;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.19 $, $Date: 2005/09/18 13:15:06 $
+ * @version $Revision: 1.20 $, $Date: 2005/09/21 13:55:40 $
  * @module commonclient
  */
 public class OpenSessionCommand extends AbstractCommand {
@@ -141,6 +141,10 @@ public class OpenSessionCommand extends AbstractCommand {
 		final Dispatcher dispatcher1 = this.dispatcher;
 		final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
 
+		if (clientSessionEnvironment == null) {
+			throw new LoginException(LangModelGeneral.getString("Error.SessionHasNotEstablish"));
+		}
+		
 		this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 				StatusMessageEvent.STATUS_MESSAGE,
 				LangModelGeneral.getString("StatusBar.InitStartupData")));
