@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.75 2005/09/21 15:03:06 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.76 2005/09/21 15:16:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,13 +56,13 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.75 $, $Date: 2005/09/21 15:03:06 $
+ * @version $Revision: 1.76 $, $Date: 2005/09/21 15:16:12 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
  */
 
-public class MeasurementServer extends SleepButWorkThread {
+final class MeasurementServer extends SleepButWorkThread {
 	private static final String APPLICATION_NAME = "mserver";
 
 	/*-********************************************************************

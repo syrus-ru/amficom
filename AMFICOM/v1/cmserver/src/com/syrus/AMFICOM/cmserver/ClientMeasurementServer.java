@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.62 2005/09/21 14:59:22 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.63 2005/09/21 15:15:26 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,12 +28,12 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.62 $, $Date: 2005/09/21 14:59:22 $
+ * @version $Revision: 1.63 $, $Date: 2005/09/21 15:15:26 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
  */
-public class ClientMeasurementServer {
+final class ClientMeasurementServer {
 	private static final String APPLICATION_NAME = "cmserver";
 
 	/*-********************************************************************
