@@ -1,5 +1,5 @@
 /**
- * $Id: METS.java,v 1.12 2005/09/07 12:32:16 krupenn Exp $
+ * $Id: METS.java,v 1.13 2005/09/21 16:23:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -47,7 +47,7 @@ import com.syrus.AMFICOM.scheme.SchemeElement;
 import com.syrus.AMFICOM.scheme.SchemeSampleData;
  
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/07 12:32:16 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/21 16:23:13 $
  * @author $Author: krupenn $
  * @module mapviewclient
  */
@@ -235,5 +235,11 @@ class TestMapEditor extends AbstractApplication {
 	public TestMapEditor() {
         super(MapEditor.APPLICATION_NAME);
     }
+
+	@Override
+	protected void init() {
+		// TODO Auto-generated method stub
+		
+	}
 }
 

@@ -1,5 +1,5 @@
 /**
- * $Id: MapSaveTest.java,v 1.8 2005/09/16 14:53:38 krupenn Exp $
+ * $Id: MapSaveTest.java,v 1.9 2005/09/21 16:23:13 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -189,4 +189,9 @@ class Test1MapEditor extends AbstractApplication {
 	public Test1MapEditor() {
         super(MapEditor.APPLICATION_NAME);
     }
+
+	@Override
+	protected void init() {
+		// nothing
+	}
 }
