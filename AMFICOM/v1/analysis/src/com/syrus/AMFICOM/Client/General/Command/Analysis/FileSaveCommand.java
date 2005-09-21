@@ -17,7 +17,7 @@ import com.syrus.io.BellcoreWriter;
 public class FileSaveCommand extends AbstractCommand
 {
 	private ApplicationContext aContext;
-	private String propertiesFileName = "analysis.properties";
+	private String propertiesFileName = "analysis.properties"; // FIXME: вынести работу с этим файлом в отдельный метод
 
 	public FileSaveCommand(ApplicationContext aContext)
 	{
