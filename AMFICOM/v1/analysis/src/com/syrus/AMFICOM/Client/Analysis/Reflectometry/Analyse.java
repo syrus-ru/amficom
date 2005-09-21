@@ -19,7 +19,6 @@ public class Analyse extends AbstractApplication
 	
 	@Override
 	protected void init() {
-		super.init();		
 		super.aContext.setApplicationModel(new ReflectometryAnalyseApplicationModelFactory().create());
 		super.startMainFrame(new AnalyseMainFrameSimplified(this.aContext), (Image) UIManager.get(AnalysisResourceKeys.ICON_ANALYSIS_MINI));
 	}

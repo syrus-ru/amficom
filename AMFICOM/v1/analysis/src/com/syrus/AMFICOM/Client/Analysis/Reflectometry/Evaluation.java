@@ -18,7 +18,6 @@ public class Evaluation extends AbstractApplication {
 
 	@Override
 	protected void init() {
-		super.init();
 		super.aContext.setApplicationModel(new ReflectometryAnalyseApplicationModelFactory().create());
 		super.startMainFrame(new ThresholdsMainFrame(this.aContext), (Image) UIManager.get(AnalysisResourceKeys.ICON_EVALUATE_MINI));
 	}
