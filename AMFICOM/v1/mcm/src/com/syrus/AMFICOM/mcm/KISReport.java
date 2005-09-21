@@ -1,5 +1,5 @@
 /*
- * $Id: KISReport.java,v 1.54 2005/09/20 23:18:44 arseniy Exp $
+ * $Id: KISReport.java,v 1.55 2005/09/21 15:21:51 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -20,7 +20,7 @@ import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.Result;
 
 /**
- * @version $Revision: 1.54 $, $Date: 2005/09/20 23:18:44 $
+ * @version $Revision: 1.55 $, $Date: 2005/09/21 15:21:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -37,7 +37,7 @@ final class KISReport {
 		this.parameterValues = parameterValues;
 	}
 
-	public Result createResult() throws MeasurementException {
+	Result createResult() throws MeasurementException {
 		try {
 			final Measurement measurement = (Measurement) StorableObjectPool.getStorableObject(this.measurementId, true);
 
@@ -49,8 +49,7 @@ final class KISReport {
 			final Result result = measurement.createResult(LoginManager.getUserId(), parameters);
 			StorableObjectPool.flush(result, LoginManager.getUserId(), false);
 			return result;
-		}
-		catch (ApplicationException ae) {
+		} catch (ApplicationException ae) {
 			if (ae.getCause() instanceof IllegalObjectEntityException) {
 				throw new MeasurementException(ae.getMessage(), MeasurementException.IDENTIFIER_GENERATION_FAILED_CODE, ae);
 			}

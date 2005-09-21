@@ -1,5 +1,5 @@
 /*
- * $Id: PasswordVerifier.java,v 1.5 2005/08/08 11:42:21 arseniy Exp $
+ * $Id: PasswordVerifier.java,v 1.6 2005/09/21 15:18:02 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,13 +19,13 @@ import java.util.regex.Pattern;
  * This class brings the same functionality as the Linux crypt() function does.
  * See <b><tt>crypt(3)</tt></b> manual entry for details.
  *
- * @version $Revision: 1.5 $, $Date: 2005/08/08 11:42:21 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/21 15:18:02 $
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
  * @module leserver
  * @see "<b><tt>crypt(3)</tt></b> manual entry."
  */
-public final class PasswordVerifier {
+final class PasswordVerifier {
 	/**
 	 * Table of characters which can be used to BASE64-encode data.
 	 */	

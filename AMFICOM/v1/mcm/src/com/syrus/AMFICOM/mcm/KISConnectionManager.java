@@ -1,5 +1,5 @@
 /*-
- * $Id: KISConnectionManager.java,v 1.9 2005/09/14 18:13:47 arseniy Exp $
+ * $Id: KISConnectionManager.java,v 1.10 2005/09/21 15:21:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -17,7 +17,7 @@ import com.syrus.util.Log;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.9 $, $Date: 2005/09/14 18:13:47 $
+ * @version $Revision: 1.10 $, $Date: 2005/09/21 15:21:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -37,7 +37,7 @@ final class KISConnectionManager/* extends SleepButWorkThread*/ {
 				MeasurementControlModule.KIS_MAX_OPENED_CONNECTIONS));
 	}
 
-	public KISConnection getConnection(final KIS kis) throws CommunicationException {
+	KISConnection getConnection(final KIS kis) throws CommunicationException {
 		final Identifier kisId = kis.getId();
 		KISConnection kisConnection;
 
