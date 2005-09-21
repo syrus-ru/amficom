@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeElement.java,v 1.110 2005/09/20 18:13:34 bass Exp $
+ * $Id: SchemeElement.java,v 1.111 2005/09/21 11:41:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -91,7 +91,7 @@ import com.syrus.util.Shitlet;
  * #04 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.110 $, $Date: 2005/09/20 18:13:34 $
+ * @version $Revision: 1.111 $, $Date: 2005/09/21 11:41:04 $
  * @module scheme
  */
 public final class SchemeElement extends AbstractSchemeElement
@@ -127,8 +127,6 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	private boolean equipmentTypeSet = false;
 
-	private transient StorableObjectContainerDelegate<Scheme> schemeContainerDelegate;
-		
 	/**
 	 * @param id
 	 * @param created
@@ -588,31 +586,11 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	/**
-	 * @param scheme cannot be <code>null</code>.
-	 * @param usePool
-	 */
-	public void addScheme(final Scheme scheme, final boolean usePool)
-	throws ApplicationException {
-		assert scheme != null: NON_NULL_EXPECTED;
-		scheme.setParentSchemeElement(this, usePool);
-	}
-
-	/**
 	 * @param schemeDevice cannot be <code>null</code>.
 	 */
 	public void addSchemeDevice(final SchemeDevice schemeDevice) {
 		assert schemeDevice != null: NON_NULL_EXPECTED;
 		schemeDevice.setParentSchemeElement(this);
-	}
-
-	/**
-	 * @param schemeElement can be neither <code>null</code> nor
-	 *        <code>this</code>.
-	 */
-	public void addSchemeElement(final SchemeElement schemeElement) {
-		assert schemeElement != null: NON_NULL_EXPECTED;
-		assert schemeElement != this: CIRCULAR_DEPS_PROHIBITED;
-		schemeElement.setParentSchemeElement(this);
 	}
 
 	/**
@@ -924,24 +902,6 @@ public final class SchemeElement extends AbstractSchemeElement
 	/**
 	 * @return an immutable set.
 	 */
-	public Set<SchemeElement> getSchemeElements() {
-		try {
-			return Collections.unmodifiableSet(this.getSchemeElements0());
-		} catch (final ApplicationException ae) {
-			Log.debugException(ae, SEVERE);
-			return Collections.emptySet();
-		}
-	}
-
-	Set<SchemeElement> getSchemeElements0() throws ApplicationException {
-		return this.getKind() == SCHEME_ELEMENT_CONTAINER
-				? StorableObjectPool.<SchemeElement>getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true)
-				: Collections.<SchemeElement>emptySet();
-	}
-
-	/**
-	 * @return an immutable set.
-	 */
 	public Set<SchemeLink> getSchemeLinks() {
 		try {
 			return Collections.unmodifiableSet(this.getSchemeLinks0());
@@ -953,19 +913,6 @@ public final class SchemeElement extends AbstractSchemeElement
 
 	Set<SchemeLink> getSchemeLinks0() throws ApplicationException {
 		return StorableObjectPool.getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMELINK_CODE), true);
-	}
-
-	/**
-	 * @return an immutable set.
-	 */
-	public Set<Scheme> getSchemes(final boolean usePool) throws ApplicationException {
-		return Collections.unmodifiableSet(this.getSchemes0(usePool));
-	}
-
-	Set<Scheme> getSchemes0(final boolean usePool) throws ApplicationException {
-		return this.getKind() == SCHEME_CONTAINER
-				? this.getSchemeContainerDelegate().getStorableObjects(usePool)
-				: Collections.<Scheme>emptySet();
 	}
 
 	Identifier getSiteNodeId() {
@@ -1182,20 +1129,6 @@ public final class SchemeElement extends AbstractSchemeElement
 	}
 
 	/**
-	 * The <code>Scheme</code> must belong to this
-	 * <code>SchemeElement</code>, or crap will meet the fan.
-	 *
-	 * @param scheme
-	 * @param usePool
-	 */
-	public void removeScheme(final Scheme scheme, final boolean usePool)
-	throws ApplicationException {
-		assert scheme != null: NON_NULL_EXPECTED;
-		assert scheme.getParentSchemeElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		scheme.setParentSchemeElement(null, usePool);
-	}
-
-	/**
 	 * The <code>SchemeDevice</code> must belong to this
 	 * <code>SchemeElement</code>, or crap will meet the fan.
 	 *
@@ -1205,18 +1138,6 @@ public final class SchemeElement extends AbstractSchemeElement
 		assert schemeDevice != null: NON_NULL_EXPECTED;
 		assert schemeDevice.getParentSchemeElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
 		schemeDevice.setParentSchemeElement(null);
-	}
-
-	/**
-	 * The <code>SchemeElement</code> must belong to this
-	 * <code>SchemeElement</code>, or crap will meet the fan.
-	 *
-	 * @param schemeElement
-	 */
-	public void removeSchemeElement(final SchemeElement schemeElement) {
-		assert schemeElement != null: NON_NULL_EXPECTED;
-		assert schemeElement.getParentSchemeElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
-		schemeElement.setParentSchemeElement(null);
 	}
 
 	/**
@@ -1483,22 +1404,6 @@ public final class SchemeElement extends AbstractSchemeElement
 		}
 	}
 
-	public void setSchemeElements(final Set<SchemeElement> schemeElements) throws ApplicationException {
-		assert schemeElements != null: NON_NULL_EXPECTED;
-		final Set<SchemeElement> oldSchemeElements = this.getSchemeElements0();
-		/*
-		 * Check is made to prevent SchemeElements from
-		 * permanently losing their parents.
-		 */
-		oldSchemeElements.removeAll(schemeElements);
-		for (final SchemeElement oldSchemeElement : oldSchemeElements) {
-			this.removeSchemeElement(oldSchemeElement);
-		}
-		for (final SchemeElement schemeElement : schemeElements) {
-			this.addSchemeElement(schemeElement);
-		}
-	}
-
 	public void setSchemeLinks(final Set<SchemeLink> schemeLinks) throws ApplicationException {
 		assert schemeLinks != null: NON_NULL_EXPECTED;
 		final Set<SchemeLink> oldSchemeLinks = this.getSchemeLinks0();
@@ -1512,32 +1417,6 @@ public final class SchemeElement extends AbstractSchemeElement
 		}
 		for (final SchemeLink schemeLink : schemeLinks) {
 			this.addSchemeLink(schemeLink);
-		}
-	}
-
-	/**
-	 * @param schemes
-	 * @param usePool
-	 * @throws ApplicationException 
-	 * @see Scheme#setSchemeElements(Set)
-	 * @todo Check for circular dependencies.
-	 */
-	public void setSchemes(final Set<Scheme> schemes, final boolean usePool)
-	throws ApplicationException {
-		assert schemes != null: NON_NULL_EXPECTED;
-
-		final Set<Scheme> oldSchemes = this.getSchemes0(usePool);
-
-		final Set<Scheme> toRemove = new HashSet<Scheme>(oldSchemes);
-		toRemove.removeAll(schemes);
-		for (final Scheme scheme : toRemove) {
-			this.removeScheme(scheme, usePool);
-		}
-
-		final Set<Scheme> toAdd = new HashSet<Scheme>(schemes);
-		toAdd.removeAll(oldSchemes);
-		for (final Scheme scheme : toAdd) {
-			this.addScheme(scheme, usePool);
 		}
 	}
 
@@ -1720,11 +1599,160 @@ public final class SchemeElement extends AbstractSchemeElement
 		return IdlSchemeElementKind.from_int(this.kind);
 	}
 
-	StorableObjectContainerDelegate<Scheme> getSchemeContainerDelegate() {
-		if (this.schemeContainerDelegate == null) {
-			this.schemeContainerDelegate = new StorableObjectContainerDelegate<Scheme>(this, SCHEME_CODE);
+	/*-********************************************************************
+	 * Children manipulation: scheme elements                             *
+	 **********************************************************************/
+
+	private transient StorableObjectContainerWrappee<SchemeElement> schemeElementContainerWrappee;
+
+	StorableObjectContainerWrappee<SchemeElement> getSchemeElementContainerWrappee() {
+		if (this.schemeElementContainerWrappee == null) {
+			this.schemeElementContainerWrappee = new StorableObjectContainerWrappee<SchemeElement>(this, SCHEMEELEMENT_CODE);
 		}
-		return this.schemeContainerDelegate;
+		return this.schemeElementContainerWrappee;
+	}
+
+	/**
+	 * @param schemeElement can be neither <code>null</code> nor
+	 *        <code>this</code>.
+	 */
+	public void addSchemeElement(final SchemeElement schemeElement) {
+		assert schemeElement != null: NON_NULL_EXPECTED;
+		assert schemeElement != this: CIRCULAR_DEPS_PROHIBITED;
+		schemeElement.setParentSchemeElement(this);
+	}
+
+	/**
+	 * The <code>SchemeElement</code> must belong to this
+	 * <code>SchemeElement</code>, or crap will meet the fan.
+	 *
+	 * @param schemeElement
+	 */
+	public void removeSchemeElement(final SchemeElement schemeElement) {
+		assert schemeElement != null: NON_NULL_EXPECTED;
+		assert schemeElement.getParentSchemeElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		schemeElement.setParentSchemeElement(null);
+	}
+
+	/**
+	 * @return an immutable set.
+	 */
+	public Set<SchemeElement> getSchemeElements() {
+		try {
+			return Collections.unmodifiableSet(this.getSchemeElements0());
+		} catch (final ApplicationException ae) {
+			Log.debugException(ae, SEVERE);
+			return Collections.emptySet();
+		}
+	}
+
+	Set<SchemeElement> getSchemeElements0()
+	throws ApplicationException {
+		return this.getKind() == SCHEME_ELEMENT_CONTAINER
+				? StorableObjectPool.<SchemeElement>getStorableObjectsByCondition(new LinkedIdsCondition(this.id, SCHEMEELEMENT_CODE), true)
+				: Collections.<SchemeElement>emptySet();
+	}
+
+	public void setSchemeElements(final Set<SchemeElement> schemeElements)
+	throws ApplicationException {
+		assert schemeElements != null: NON_NULL_EXPECTED;
+		final Set<SchemeElement> oldSchemeElements = this.getSchemeElements0();
+		/*
+		 * Check is made to prevent SchemeElements from
+		 * permanently losing their parents.
+		 */
+		oldSchemeElements.removeAll(schemeElements);
+		for (final SchemeElement oldSchemeElement : oldSchemeElements) {
+			this.removeSchemeElement(oldSchemeElement);
+		}
+		for (final SchemeElement schemeElement : schemeElements) {
+			this.addSchemeElement(schemeElement);
+		}
+	}
+
+	/*-********************************************************************
+	 * Children manipulation: schemes                                     *
+	 **********************************************************************/
+
+	private transient StorableObjectContainerWrappee<Scheme> schemeContainerWrappee;
+
+	StorableObjectContainerWrappee<Scheme> getSchemeContainerWrappee() {
+		if (this.schemeContainerWrappee == null) {
+			this.schemeContainerWrappee = new StorableObjectContainerWrappee<Scheme>(this, SCHEME_CODE);
+		}
+		return this.schemeContainerWrappee;
+	}
+
+	/**
+	 * @param scheme cannot be <code>null</code>.
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	public void addScheme(final Scheme scheme, final boolean usePool)
+	throws ApplicationException {
+		assert scheme != null: NON_NULL_EXPECTED;
+		scheme.setParentSchemeElement(this, usePool);
+	}
+
+	/**
+	 * The <code>Scheme</code> must belong to this
+	 * <code>SchemeElement</code>, or crap will meet the fan.
+	 *
+	 * @param scheme
+	 * @param usePool
+	 */
+	public void removeScheme(final Scheme scheme, final boolean usePool)
+	throws ApplicationException {
+		assert scheme != null: NON_NULL_EXPECTED;
+		assert scheme.getParentSchemeElementId().equals(this) : REMOVAL_OF_AN_ABSENT_PROHIBITED;
+		scheme.setParentSchemeElement(null, usePool);
+	}
+
+	/**
+	 * @param usePool
+	 * @return an immutable set.
+	 * @throws ApplicationException
+	 */
+	public Set<Scheme> getSchemes(final boolean usePool)
+	throws ApplicationException {
+		return Collections.unmodifiableSet(this.getSchemes0(usePool));
+	}
+
+	/**
+	 * @param usePool
+	 * @throws ApplicationException
+	 */
+	Set<Scheme> getSchemes0(final boolean usePool)
+	throws ApplicationException {
+		return this.getKind() == SCHEME_CONTAINER
+				? this.getSchemeContainerWrappee().getStorableObjects(usePool)
+				: Collections.<Scheme>emptySet();
+	}
+
+	/**
+	 * @param schemes
+	 * @param usePool
+	 * @throws ApplicationException 
+	 * @see Scheme#setSchemeElements(Set)
+	 * @todo Check for circular dependencies.
+	 */
+	public void setSchemes(final Set<Scheme> schemes, final boolean usePool)
+	throws ApplicationException {
+		assert schemes != null: NON_NULL_EXPECTED;
+
+		final Set<Scheme> oldSchemes = this.getSchemes0(usePool);
+
+		final Set<Scheme> toRemove = new HashSet<Scheme>(oldSchemes);
+		toRemove.removeAll(schemes);
+		for (final Scheme scheme : toRemove) {
+			this.removeScheme(scheme, usePool);
+		}
+
+		final Set<Scheme> toAdd = new HashSet<Scheme>(schemes);
+		toAdd.removeAll(oldSchemes);
+		for (final Scheme scheme : toAdd) {
+			this.addScheme(scheme, usePool);
+		}
 	}
 
 	/*-********************************************************************

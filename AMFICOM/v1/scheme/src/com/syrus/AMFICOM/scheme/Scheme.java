@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.99 2005/09/20 18:13:34 bass Exp $
+ * $Id: Scheme.java,v 1.100 2005/09/21 11:41:04 bass Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -87,7 +87,7 @@ import com.syrus.util.Shitlet;
  * #03 in hierarchy.
  *
  * @author $Author: bass $
- * @version $Revision: 1.99 $, $Date: 2005/09/20 18:13:34 $
+ * @version $Revision: 1.100 $, $Date: 2005/09/21 11:41:04 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -1186,10 +1186,10 @@ public final class Scheme extends AbstractCloneableDomainMember
 
 		final SchemeElement oldParentSchemeElement = this.getParentSchemeElement();
 		if (oldParentSchemeElement != null) {
-			oldParentSchemeElement.getSchemeContainerDelegate().removeFromCache(this, usePool);
+			oldParentSchemeElement.getSchemeContainerWrappee().removeFromCache(this, usePool);
 		}
 		if (parentSchemeElement != null) {
-			parentSchemeElement.getSchemeContainerDelegate().addToCache(this, usePool);
+			parentSchemeElement.getSchemeContainerWrappee().addToCache(this, usePool);
 		}
 
 		this.parentSchemeElementId = newParentSchemeElementId;

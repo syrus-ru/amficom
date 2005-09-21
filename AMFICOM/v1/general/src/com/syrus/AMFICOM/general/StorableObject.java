@@ -1,5 +1,5 @@
 /*
- * $Id: StorableObject.java,v 1.97 2005/09/20 16:24:18 bass Exp $
+ * $Id: StorableObject.java,v 1.98 2005/09/21 11:41:04 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,6 +9,7 @@
 package com.syrus.AMFICOM.general;
 
 import static com.syrus.AMFICOM.general.Identifier.VOID_IDENTIFIER;
+import static java.util.logging.Level.INFO;
 
 import java.io.Serializable;
 import java.util.Date;
@@ -27,7 +28,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectHelper;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.97 $, $Date: 2005/09/20 16:24:18 $
+ * @version $Revision: 1.98 $, $Date: 2005/09/21 11:41:04 $
  * @author $Author: bass $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -513,4 +514,92 @@ public abstract class StorableObject implements Identifiable, TransferableObject
 		return ObjectGroupEntities.getGroupCode(identifiables.iterator().next().getId().getMajor());
 	}
 
+	/*-********************************************************************
+	 * Caching sub-framework.                                             *
+	 **********************************************************************/
+
+	private static final String KEY = "amficom.sof.cache.on.modification";
+
+	private static final String DEFAULT_VALUE = "false";
+
+	static {
+		Log.debugMessage(KEY + '=' + System.getProperty(KEY, DEFAULT_VALUE), INFO);
+	}
+
+	protected final class StorableObjectContainerWrappee<T extends StorableObject> {
+		private boolean cacheBuilt = false;
+
+		private StorableObjectCondition condition;
+
+		private Set<T> containees;
+
+		/**
+		 * @param wrapper
+		 * @param entityCode
+		 */
+		public StorableObjectContainerWrappee(final StorableObject wrapper,
+				final short entityCode) {
+			this.condition = new LinkedIdsCondition(wrapper.getId(), entityCode);
+		}
+
+		/**
+		 * @param containee
+		 * @throws ApplicationException
+		 */
+		public void addToCache(final T containee, final boolean usePool)
+		throws ApplicationException {
+			if (this.cacheBuilt) {
+				this.containees.add(containee);
+			} else if (buildCacheOnModification()) {
+				this.ensureCacheBuilt(usePool);
+				this.containees.add(containee);
+			}
+		}
+
+		/**
+		 * @param containee
+		 * @param usePool
+		 * @throws ApplicationException
+		 */
+		public void removeFromCache(final T containee, final boolean usePool)
+		throws ApplicationException {
+			if (this.cacheBuilt) {
+				this.containees.remove(containee);
+			} else if (buildCacheOnModification()) {
+				this.ensureCacheBuilt(usePool);
+				this.containees.remove(containee);
+			}
+		}
+
+		/**
+		 * @param usePool
+		 * @throws ApplicationException
+		 */
+		public Set<T> getStorableObjects(final boolean usePool)
+		throws ApplicationException {
+			this.ensureCacheBuilt(usePool);
+			return this.containees;
+		}
+
+		/**
+		 * @param usePool
+		 * @throws ApplicationException
+		 */
+		private void ensureCacheBuilt(final boolean usePool)
+		throws ApplicationException {
+			if (!this.cacheBuilt || usePool) {
+				if (this.containees == null) {
+					this.containees = new HashSet<T>();
+				} else {
+					this.containees.clear();
+				}
+				this.containees.addAll(StorableObjectPool.<T>getStorableObjectsByCondition(this.condition, true));
+				this.cacheBuilt = true;
+			}
+		}
+
+		private boolean buildCacheOnModification() {
+			return Boolean.parseBoolean(System.getProperty(KEY, DEFAULT_VALUE));
+		}
+	}
 }
