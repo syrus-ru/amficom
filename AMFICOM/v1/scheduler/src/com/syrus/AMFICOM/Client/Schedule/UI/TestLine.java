@@ -52,7 +52,6 @@ import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
-import com.syrus.util.Log;
 
 final class TestLine extends TimeLine {
 
@@ -505,12 +504,6 @@ final class TestLine extends TimeLine {
 									}
 									
 									if (!foundMeasurement) {
-//										assert Log.debugMessage(
-//											"TestLine.acquireTests | add measurement at " + date,
-//											Log.DEBUGLEVEL09);
-//										assert Log.debugMessage(
-//											"TestLine.acquireTests | " + stoppings.tailMap(date),
-//											Log.DEBUGLEVEL09);
 										if (stoppings.tailMap(date).isEmpty()) {
 											testTimeLine.startTime = time;									
 											testTimeLine.duration = measurementDuration;
