@@ -1,5 +1,5 @@
 /*-
- * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.10 2005/09/15 09:51:58 max Exp $
+ * $Id: DatabaseLinkedIdsConditionImpl.java,v 1.11 2005/09/21 10:35:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,8 +27,8 @@ import com.syrus.AMFICOM.general.LinkedIdsCondition;
 
 /**
  * @author Maxim Selivanov
- * @author $Author: max $
- * @version $Revision: 1.10 $, $Date: 2005/09/15 09:51:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/09/21 10:35:22 $
  * @module map
  */
 public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCondition {
@@ -40,73 +40,72 @@ public class DatabaseLinkedIdsConditionImpl extends AbstractDatabaseLinkedIdsCon
 	
 	public String getSQLQuery() throws IllegalObjectEntityException {
 		switch (super.condition.getEntityCode().shortValue()) {
-			
-		case COLLECTOR_CODE:
-			switch (super.condition.getLinkedEntityCode()) {
+
+			case COLLECTOR_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+					case PHYSICALLINK_CODE:
+						return super.getLinkedQuery(CollectorWrapper.LINK_COLUMN_COLLECTOR_ID,
+								CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID,
+								CollectorWrapper.COLLECTOR_PHYSICAL_LINK);
+					default:
+						throw newExceptionLinkedEntityIllegal();
+				}
 			case PHYSICALLINK_CODE:
-				return super.getLinkedQuery(CollectorWrapper.LINK_COLUMN_COLLECTOR_ID, CollectorWrapper.LINK_COLUMN_PHYSICAL_LINK_ID, CollectorWrapper.COLLECTOR_PHYSICAL_LINK);
-			default:
-				throw newExceptionLinkedEntityIllegal();
-			}
-		case PHYSICALLINK_CODE:
-			switch (super.condition.getLinkedEntityCode()) {
+				switch (super.condition.getLinkedEntityCode()) {
+					case SITENODE_CODE:
+					case TOPOLOGICALNODE_CODE:
+						return OPEN_BRACKET
+								+ super.getQuery(PhysicalLinkWrapper.COLUMN_START_NODE_ID)
+								+ SQL_OR
+								+ super.getQuery(PhysicalLinkWrapper.COLUMN_END_NODE_ID)
+								+ CLOSE_BRACKET;
+					default:
+						throw newExceptionLinkedEntityIllegal();
+				}
+			case NODELINK_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+					case PHYSICALLINK_CODE:
+						return super.getQuery(NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID);
+					case TOPOLOGICALNODE_CODE:
+					case SITENODE_CODE:
+						return OPEN_BRACKET
+								+ super.getQuery(NodeLinkWrapper.COLUMN_START_NODE_ID)
+								+ SQL_OR
+								+ super.getQuery(NodeLinkWrapper.COLUMN_END_NODE_ID)
+								+ CLOSE_BRACKET;
+					default:
+						throw newExceptionLinkedEntityIllegal();
+				}
+			case MAP_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+					case DOMAIN_CODE:
+						return super.getQuery(MapWrapper.COLUMN_DOMAIN_ID);
+					default:
+						throw newExceptionLinkedEntityIllegal();
+				}
+			case SITENODE_TYPE_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+					case MAPLIBRARY_CODE:
+						return super.getQuery(SiteNodeTypeWrapper.COLUMN_MAP_LIBRARY_ID);
+					default:
+						throw newExceptionLinkedEntityIllegal();
+				}
+			case PHYSICALLINK_TYPE_CODE:
+				switch (super.condition.getLinkedEntityCode()) {
+					case MAPLIBRARY_CODE:
+						return super.getQuery(PhysicalLinkTypeWrapper.COLUMN_MAP_LIBRARY_ID);
+					default:
+						throw newExceptionLinkedEntityIllegal();
+				}
 			case SITENODE_CODE:
-			case TOPOLOGICALNODE_CODE:
-				return OPEN_BRACKET 
-						+ super.getQuery(PhysicalLinkWrapper.COLUMN_START_NODE_ID)
-						+ SQL_OR
-						+ super.getQuery(PhysicalLinkWrapper.COLUMN_END_NODE_ID)
-						+ CLOSE_BRACKET;
+				switch (super.condition.getLinkedEntityCode()) {
+					case SITENODE_CODE:
+						return super.getQuery(SiteNodeWrapper.COLUMN_ATTACHMENT_SITE_NODE_ID);
+					default:
+						throw newExceptionLinkedEntityIllegal();
+				}
 			default:
-				break;
-			}
-		case NODELINK_CODE:
-			switch (super.condition.getLinkedEntityCode()) {
-			case PHYSICALLINK_CODE:
-				return super.getQuery(NodeLinkWrapper.COLUMN_PHYSICAL_LINK_ID);
-			case TOPOLOGICALNODE_CODE:
-			case SITENODE_CODE:
-				return OPEN_BRACKET
-						+ super.getQuery(NodeLinkWrapper.COLUMN_START_NODE_ID)
-						+ SQL_OR
-						+ super.getQuery(NodeLinkWrapper.COLUMN_END_NODE_ID)
-						+ CLOSE_BRACKET;
-			default:
-				throw newExceptionLinkedEntityIllegal();
-			}
-		case MAP_CODE:
-			switch (super.condition.getLinkedEntityCode()) {
-			case DOMAIN_CODE:
-				return super.getQuery(MapWrapper.COLUMN_DOMAIN_ID);
-			default:
-				throw newExceptionLinkedEntityIllegal();
-			}
-		case SITENODE_TYPE_CODE:
-			switch (super.condition.getLinkedEntityCode()) {
-			case MAPLIBRARY_CODE:
-				return super
-						.getQuery(SiteNodeTypeWrapper.COLUMN_MAP_LIBRARY_ID);
-			default:
-				throw newExceptionLinkedEntityIllegal();
-			}
-		case PHYSICALLINK_TYPE_CODE:
-			switch (super.condition.getLinkedEntityCode()) {
-			case MAPLIBRARY_CODE:
-				return super
-						.getQuery(PhysicalLinkTypeWrapper.COLUMN_MAP_LIBRARY_ID);
-			default:
-				throw newExceptionLinkedEntityIllegal();
-			}
-		case SITENODE_CODE:
-			switch (super.condition.getLinkedEntityCode()) {
-			case SITENODE_CODE:
-				return super
-						.getQuery(SiteNodeWrapper.COLUMN_ATTACHMENT_SITE_NODE_ID);
-			default:
-				throw newExceptionLinkedEntityIllegal();
-			}
-		default:
-			throw newExceptionEntityIllegal();
+				throw newExceptionEntityIllegal();
 		}
 	}
 }
