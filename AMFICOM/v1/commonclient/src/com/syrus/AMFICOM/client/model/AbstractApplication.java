@@ -1,5 +1,5 @@
 /*-
- * $Id: AbstractApplication.java,v 1.15 2005/09/20 07:58:15 bob Exp $
+ * $Id: AbstractApplication.java,v 1.16 2005/09/21 13:23:06 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -41,6 +41,7 @@ import com.syrus.AMFICOM.client.event.StatusMessageEvent;
 import com.syrus.AMFICOM.client.resource.LangModel;
 import com.syrus.AMFICOM.client.resource.LangModelGeneral;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
+import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.ClientSessionEnvironment;
 import com.syrus.AMFICOM.general.CommunicationException;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -52,7 +53,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/20 07:58:15 $
+ * @version $Revision: 1.16 $, $Date: 2005/09/21 13:23:06 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -102,7 +103,13 @@ public abstract class AbstractApplication {
 			this.aContext = new ApplicationContext();
 			this.dispatcher = new Dispatcher();
 			this.aContext.setDispatcher(this.dispatcher);
-			this.init();
+			try {
+				this.init0();
+				this.init();
+			} catch (final ApplicationException e) {
+				AbstractMainFrame.showErrorMessage(null, e);
+				Environment.checkForExit();
+			}
 		} else {
 			Environment.checkForExit();
 		}
@@ -351,7 +358,9 @@ public abstract class AbstractApplication {
 		defaults.put(ResourceKeys.COLOR_GRAPHICS_BACKGROUND, Color.WHITE);
 	}
 
-	protected void init() {
+	protected abstract void init();
+	
+	private final void init0() throws CommunicationException, IllegalDataException {
 
 		this.initResources();
 
@@ -370,16 +379,17 @@ public abstract class AbstractApplication {
 			final SessionKind sessionKind = SessionKind.fromInt(kind);
 			try {
 				ClientSessionEnvironment.createInstance(sessionKind, loginRestorer);				
-			} catch (CommunicationException ce) {
+			} catch (final CommunicationException ce) {
 				this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 						StatusMessageEvent.STATUS_SERVER,
-						LangModelGeneral.getString("StatusBar.ConnectionError")));
-				return;
-			} catch (IllegalDataException ide) {
+						LangModelGeneral.getString("StatusBar.ConnectionError")));				
+				throw ce;				
+			} catch (final IllegalDataException ide) {
 				this.dispatcher.firePropertyChange(new StatusMessageEvent(this,
 						StatusMessageEvent.STATUS_SERVER,
 						LangModelGeneral.getString("StatusBar.IllegalSessionKind")));
-				return;
+				
+				throw ide;
 			}
 
 			final ClientSessionEnvironment clientSessionEnvironment = ClientSessionEnvironment.getInstance();
