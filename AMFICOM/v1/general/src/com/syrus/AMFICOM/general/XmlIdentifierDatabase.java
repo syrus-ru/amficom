@@ -1,5 +1,5 @@
 /*-
- * $Id: XmlIdentifierDatabase.java,v 1.10 2005/09/12 07:26:52 bass Exp $
+ * $Id: XmlIdentifierDatabase.java,v 1.11 2005/09/21 13:49:29 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -42,8 +42,8 @@ import com.syrus.util.database.DatabaseConnection;
 
 /**
  * @author max
- * @author $Author: bass $
- * @version $Revision: 1.10 $, $Date: 2005/09/12 07:26:52 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/09/21 13:49:29 $
  * @module general
  */
 final class XmlIdentifierDatabase {
@@ -62,17 +62,17 @@ final class XmlIdentifierDatabase {
 	private static final String COLUMN_IMPORT_KIND = "import_kind";
 	private static final String COLUMN_FOREIGN_UID = "foreign_uid";
 	private static final String COLUMN_ID = "id";
-	
+
 	private static String columns;
 	private static String updateMultipleSQLValues;
-		
+
 	private XmlIdentifierDatabase() {
 		assert false;
 	}
-	
+
 	static {
 		establishDatabaseConnection();
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("XmlIdentifierDatabase -- shutdown hook") {
 			@Override
 			public void run() {
 				shutdown();
