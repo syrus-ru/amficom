@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.60 2005/09/14 18:16:05 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.61 2005/09/21 14:12:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/09/14 18:16:05 $
+ * @version $Revision: 1.61 $, $Date: 2005/09/21 14:12:28 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -85,7 +85,7 @@ public class ClientMeasurementServer {
 		/**
 		 * Add shutdown hook.
 		 */
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("ClientMeasurementServer -- shutdown hook") {
 			@Override
 			public void run() {
 				shutdown();
@@ -127,8 +127,7 @@ public class ClientMeasurementServer {
 			final CMServerSessionEnvironment sessionEnvironment = CMServerSessionEnvironment.getInstance();
 			try {
 				sessionEnvironment.login(login, PASSWORD);
-			}
-			catch (final LoginException le) {
+			} catch (final LoginException le) {
 				Log.errorException(le);
 			}
 	
@@ -136,22 +135,20 @@ public class ClientMeasurementServer {
 			final CORBAServer corbaServer = sessionEnvironment.getCMServerServantManager().getCORBAServer();
 			corbaServer.activateServant(new CMServerPOATie(new CMServerImpl(), corbaServer.getPoa()), processCodename);
 			corbaServer.printNamingContext();
-		}
-		catch (final Exception e) {
+		} catch (final Exception e) {
 			Log.errorException(e);
 			System.exit(0);
 		}
 	}
 
 	private static void establishDatabaseConnection() {
-		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
-		String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
-		long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT) * 1000;
-		String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
+		final String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
+		final String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
+		final long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT) * 1000;
+		final String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
 		try {
 			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
-		}
-		catch (Exception e) {
+		} catch (Exception e) {
 			Log.errorException(e);
 			System.exit(0);
 		}

@@ -1,5 +1,5 @@
 /*-
- * $Id: CMServerServantManager.java,v 1.12 2005/09/14 18:16:05 arseniy Exp $
+ * $Id: CMServerServantManager.java,v 1.13 2005/09/21 14:12:28 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/14 18:16:05 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/21 14:12:28 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -156,7 +156,7 @@ final class CMServerServantManager extends RunnableVerifiedConnectionManager imp
 				eventServerServantName,
 				mServerServantName,
 				timeout);
-		(new Thread(cmServerServantManager)).start();
+		(new Thread(cmServerServantManager, "CMServerServantManager")).start();
 		return cmServerServantManager;
 	}
 }
