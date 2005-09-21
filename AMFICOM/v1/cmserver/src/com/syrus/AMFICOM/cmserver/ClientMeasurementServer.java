@@ -1,5 +1,5 @@
 /*-
- * $Id: ClientMeasurementServer.java,v 1.61 2005/09/21 14:12:28 arseniy Exp $
+ * $Id: ClientMeasurementServer.java,v 1.62 2005/09/21 14:59:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -28,7 +28,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/09/21 14:12:28 $
+ * @version $Revision: 1.62 $, $Date: 2005/09/21 14:59:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module cmserver
@@ -154,7 +154,7 @@ public class ClientMeasurementServer {
 		}
 	}
 
-	protected static synchronized void shutdown() {
+	static synchronized void shutdown() {
 		DatabaseConnection.closeConnection();
 	}
 

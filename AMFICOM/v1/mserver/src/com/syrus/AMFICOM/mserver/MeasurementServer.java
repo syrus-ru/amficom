@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.74 2005/09/21 14:10:22 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.75 2005/09/21 15:03:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.74 $, $Date: 2005/09/21 14:10:22 $
+ * @version $Revision: 1.75 $, $Date: 2005/09/21 15:03:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -427,11 +427,11 @@ public class MeasurementServer extends SleepButWorkThread {
 		}
 	}
 
-	protected static Set<Identifier> getMCMIds() {
+	static Set<Identifier> getMCMIds() {
 		return Collections.unmodifiableSet(mcmTestQueueMap.keySet());
 	}
 
-	protected static void addMCMId(final Identifier mcmId) {
+	static void addMCMId(final Identifier mcmId) {
 		assert mcmId != null : ErrorMessages.NON_NULL_EXPECTED;
 		assert mcmId.getMajor() == ObjectEntities.MCM_CODE : ErrorMessages.ILLEGAL_ENTITY_CODE;
 
@@ -442,7 +442,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		createTestLoadCondition();
 	}
 
-	protected void shutdown() {
+	void shutdown() {
 		this.running = false;
 		DatabaseConnection.closeConnection();
 	}

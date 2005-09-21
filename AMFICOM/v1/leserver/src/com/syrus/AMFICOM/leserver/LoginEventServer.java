@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.27 2005/09/21 14:08:06 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.28 2005/09/21 15:01:42 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.27 $, $Date: 2005/09/21 14:08:06 $
+ * @version $Revision: 1.28 $, $Date: 2005/09/21 15:01:42 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -152,7 +152,7 @@ public final class LoginEventServer {
 		}
 	}
 
-	protected static void shutdown() {
+	static void shutdown() {
 		final LEServerSessionEnvironment leServerSessionEnvironment = LEServerSessionEnvironment.getInstance();
 		StorableObjectPool.serialize(leServerSessionEnvironment.getPoolContext().getLRUSaver());
 		DatabaseConnection.closeConnection();
