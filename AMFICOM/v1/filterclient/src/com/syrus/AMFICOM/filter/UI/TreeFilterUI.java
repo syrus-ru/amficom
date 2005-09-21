@@ -1,5 +1,5 @@
 /*-
- * $Id: TreeFilterUI.java,v 1.3 2005/09/05 10:25:41 max Exp $
+ * $Id: TreeFilterUI.java,v 1.4 2005/09/21 14:25:11 max Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -26,10 +26,11 @@ import javax.swing.tree.TreePath;
 import com.syrus.AMFICOM.client.UI.tree.IconedTreeUI;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.newFilter.Filter;
+import com.syrus.AMFICOM.newFilter.LangModelFilter;
 
 /**
  * @author $Author: max $
- * @version $Revision: 1.3 $, $Date: 2005/09/05 10:25:41 $
+ * @version $Revision: 1.4 $, $Date: 2005/09/21 14:25:11 $
  * @module filterclient
  */
 
@@ -69,7 +70,7 @@ public class TreeFilterUI {
 		if (this.mainPanel == null) {
 			ImageIcon icon = new ImageIcon(Toolkit.getDefaultToolkit()
 					.getImage("images/filter.gif"));
-			String title = "Фильтр";
+			String title = LangModelFilter.getString("filter");
 
 			final JToggleButton showFilterButton = new JToggleButton();
 			showFilterButton.setIcon(icon);
