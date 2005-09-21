@@ -13,13 +13,12 @@ import java.awt.event.FocusAdapter;
 import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 import java.io.IOException;
+import java.math.BigDecimal;
 import java.text.SimpleDateFormat;
 import java.util.Arrays;
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.Date;
 import java.util.HashMap;
-import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
@@ -63,7 +62,7 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.82 $, $Date: 2005/09/21 12:15:00 $
+ * @version $Revision: 1.83 $, $Date: 2005/09/21 15:19:36 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -72,60 +71,17 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 
 	private static final long	serialVersionUID	= 3257004354304553266L;
 
-	private class ListNumberComparator implements Comparator<String> {
-
-		private int	direction	= 1;
-
-		public ListNumberComparator() {
-			this.direction = 1;
-		}
-
-		public ListNumberComparator(final int direction) {
-			this.direction = direction;
-		}
-
-		public int compare(final String s1, final String s2) {
-			double d1 = 0;
-			double d2 = 0;
-			boolean isDoubleNumber = false;
-			int result = 0;
-
-			try {
-				d1 = Double.parseDouble(s1);
-				d2 = Double.parseDouble(s2);
-				isDoubleNumber = true;
-			} catch (NumberFormatException nfe) {
-				isDoubleNumber = false;
-			}
-
-			if (isDoubleNumber) {
-				if (d1 < d2) {
-					result = -this.direction;
-				}
-				else if (d1 == d2) {
-					result = 0;
-				}
-				else {
-					result = this.direction;
-				}
-			} else {
-				result = this.direction * s1.compareTo(s2);
-			}
-
-			return result;
-		}
-	}
-
-	ListNumberComparator	comparator;
+	static final BigDecimal ONE_THOUSAND = new BigDecimal("1000");
+	
 	double					maxIndexOfRefraction			= 1.46820;
 	double					minIndexOfRefraction			= 1.46820;
 
-	Map<String, String> pulseWidthHiResMap;
-	Map<String, String> pulseWidthLowResMap;
-	List<String> resolutionList;
-	Map<String, String> traceLength;
-	Map<String, String> indexOfRefraction;
-	Map<String, String> averageCount;
+	Map<BigDecimal, String> pulseWidthHiResMap;
+	Map<BigDecimal, String> pulseWidthLowResMap;
+	List<BigDecimal> resolutionList;
+	Map<BigDecimal, String> traceLength;
+	Map<BigDecimal, String> indexOfRefraction;
+	Map<BigDecimal, String> averageCount;
 
 	
 	// UI items begin
@@ -163,7 +119,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	
 	Identifier				setId;
 
-	long					maxPoints;
+	BigDecimal				maxPoints;
 	
 	private String oldDescription;
 
@@ -578,37 +534,37 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 					final Set<Characteristic> characteristics = StorableObjectPool.getStorableObjectsByCondition(linkedIdsCondition, true);
 	
 					if (this.traceLength == null) {
-						this.traceLength = new HashMap<String, String>();
+						this.traceLength = new HashMap<BigDecimal, String>();
 					} else {
 						this.traceLength.clear();
 					}
 	
 					if (this.indexOfRefraction == null) {
-						this.indexOfRefraction = new HashMap<String, String>();
+						this.indexOfRefraction = new HashMap<BigDecimal, String>();
 					} else {
 						this.indexOfRefraction.clear();
 					}
 	
 					if (this.averageCount == null) {
-						this.averageCount = new HashMap<String, String>();
+						this.averageCount = new HashMap<BigDecimal, String>();
 					} else {
 						this.averageCount.clear();
 					}
 	
 					if (this.resolutionList == null) {
-						this.resolutionList = new LinkedList<String>();
+						this.resolutionList = new LinkedList<BigDecimal>();
 					} else {
 						this.resolutionList.clear();
 					}
 	
 					if (this.pulseWidthHiResMap == null) {
-						this.pulseWidthHiResMap = new HashMap<String, String>();
+						this.pulseWidthHiResMap = new HashMap<BigDecimal, String>();
 					} else {
 						this.pulseWidthHiResMap.clear();
 					}
 	
 					if (this.pulseWidthLowResMap == null) {
-						this.pulseWidthLowResMap = new HashMap<String, String>();
+						this.pulseWidthLowResMap = new HashMap<BigDecimal, String>();
 					} else {
 						this.pulseWidthLowResMap.clear();
 					}
@@ -632,23 +588,31 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	
 						if (codename.equals(CharacteristicTypeCodenames.TRACE_WAVELENGTH)) {
 							final String[] values = value.split("\\s+"); //$NON-NLS-1$
-							Arrays.sort(values, this.comparator);
+							final BigDecimal[] bgValues = new BigDecimal[values.length];
+							for(int i = 0; i < values.length; i++) {
+								bgValues[i] = new BigDecimal(values[i]);
+							}
+							Arrays.sort(bgValues);
 							this.waveLengthComboBox.removeAllItems();
-							for (int i = 0; i < values.length; i++) {
-								this.waveLengthComboBox.addItem(values[i]);
+							for (int i = 0; i < bgValues.length; i++) {
+								this.waveLengthComboBox.addItem(bgValues[i]);
 							}
 	
 						} else if (codename.equals(CharacteristicTypeCodenames.TRACE_RESOLUTION)) {
-							final String[] values = value.split("\\s+"); //$NON-NLS-1$
-							Arrays.sort(values, this.comparator);
+							final String[] values = value.split("\\s+"); //$NON-NLS-1$							
+							final BigDecimal[] bgValues = new BigDecimal[values.length];
+							for(int i = 0; i < values.length; i++) {
+								bgValues[i] = new BigDecimal(values[i]);
+							}
+							Arrays.sort(bgValues);
 							this.resolutionComboBox.removeAllItems();
-							for (int i = 0; i < values.length; i++) {
-								this.resolutionList.add(values[i]);
-								this.resolutionComboBox.addItem(values[i]);
+							for (int i = 0; i < bgValues.length; i++) {
+								this.resolutionList.add(bgValues[i]);
+								this.resolutionComboBox.addItem(bgValues[i]);
 							}
 	
 						} else if (codename.equals(CharacteristicTypeCodenames.TRACE_MAXPOINTS)) {
-							this.maxPoints = Long.parseLong(value);
+							this.maxPoints = new BigDecimal(value);
 						}
 						// else if (codename.equals(CHARACTER_MAX_REFRACTION)) {
 						// try {
@@ -667,7 +631,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 						else {
 							final Matcher matcher = pattern.matcher(codename);
 							if (matcher.find()) {
-								String waveLength = null;
+								BigDecimal waveLength = null;
 								String suffix = null;
 								for (int j = 0; j <= matcher.groupCount(); j++) {
 									final String substring = codename.substring(matcher.start(j), matcher.end(j));
@@ -675,7 +639,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 									// substring);
 									switch (j) {
 										case 1:
-											waveLength = substring;
+											waveLength = new BigDecimal(substring);
 											break;
 										case 2:
 											suffix = substring;
@@ -688,7 +652,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 								// Log.debugMessage("ReflectometryTestPanel.setMonitoredElement
 								// | suffix: " + suffix, Log.FINEST);
 								if ((waveLength != null) && (suffix != null)) {
-									Map<String, String> map = null;
+									Map<BigDecimal, String> map = null;
 									if (suffix.equals(CharacteristicTypeCodenames.TRACE_LENGTH_SUFFIX)) {
 										map = this.traceLength;
 									} else if (suffix.equals(CharacteristicTypeCodenames.TRACE_PULSE_WIDTH_HIGH_RES_SUFFIX)) {
@@ -709,7 +673,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 					}
 	
 					final Object selectedItem = this.waveLengthComboBox.getSelectedItem();
-					final String wavelength = selectedItem != null ? this.waveLengthComboBox.getSelectedItem().toString() : null;
+					final BigDecimal wavelength = (BigDecimal) (selectedItem != null ? this.waveLengthComboBox.getSelectedItem() : null);
 					if (wavelength != null) {
 						// System.out.println("wavelength is " + wavelength);
 						if (this.traceLength != null) {
@@ -718,10 +682,14 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 								throw new ObjectNotFoundException(LangModelSchedule.getString("Error.TraceLengthValueNotFound")); //$NON-NLS-1$
 							}
 							final String[] values = value.split("\\s+"); //$NON-NLS-1$
-							Arrays.sort(values, this.comparator);
+							final BigDecimal[] bgValues = new BigDecimal[values.length];
+							for(int i = 0; i < values.length; i++) {
+								bgValues[i] = new BigDecimal(values[i]);
+							}
+							Arrays.sort(bgValues);
 							this.maxDistanceComboBox.removeAllItems();
-							for (int i = 0; i < values.length; i++) {
-								this.maxDistanceComboBox.addItem(values[i]);
+							for (int i = 0; i < bgValues.length; i++) {
+								this.maxDistanceComboBox.addItem(bgValues[i]);
 							}
 						} else {
 							// TODO throw exception
@@ -731,10 +699,14 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 							final String value = this.pulseWidthHiResMap.get(wavelength);
 							if (value != null) {
 								final String[] values = value.split("\\s+"); //$NON-NLS-1$
-								Arrays.sort(values, this.comparator);
+								final BigDecimal[] bgValues = new BigDecimal[values.length];
+								for(int i = 0; i < values.length; i++) {
+									bgValues[i] = new BigDecimal(values[i]);
+								}
+								Arrays.sort(bgValues);
 								this.pulseWidthHiResComboBox.removeAllItems();
-								for (int i = 0; i < values.length; i++) {
-									this.pulseWidthHiResComboBox.addItem(values[i]);
+								for (int i = 0; i < bgValues.length; i++) {
+									this.pulseWidthHiResComboBox.addItem(bgValues[i]);
 								}
 							} else {
 								// TODO throw exception
@@ -751,10 +723,14 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 							// | pulseWidthLowResMap value: " + value, Log.FINEST);
 							if (value != null) {
 								final String[] values = value.split("\\s+"); //$NON-NLS-1$
-								Arrays.sort(values, this.comparator);
+								final BigDecimal[] bgValues = new BigDecimal[values.length];
+								for(int i = 0; i < values.length; i++) {
+									bgValues[i] = new BigDecimal(values[i]);
+								}
+								Arrays.sort(bgValues);
 								this.pulseWidthLowResComboBox.removeAllItems();
-								for (int i = 0; i < values.length; i++) {
-									this.pulseWidthLowResComboBox.addItem(values[i]);
+								for (int i = 0; i < bgValues.length; i++) {
+									this.pulseWidthLowResComboBox.addItem(bgValues[i]);
 								}
 							} else {
 								// TODO throw exception
@@ -767,8 +743,12 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 							final String value = this.indexOfRefraction.get(wavelength);
 							if (value != null) {
 								final String[] values = value.split("\\s+"); //$NON-NLS-1$
-								Arrays.sort(values, this.comparator);
-								this.refractTextField.setText(values[0]);
+								final BigDecimal[] bgValues = new BigDecimal[values.length];
+								for(int i = 0; i < values.length; i++) {
+									bgValues[i] = new BigDecimal(values[i]);
+								}
+								Arrays.sort(bgValues);
+								this.refractTextField.setText(bgValues[0].toString());
 							} else {
 								// TODO throw exception
 							}
@@ -780,10 +760,14 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 							final String value = this.averageCount.get(wavelength);
 							if (value != null) {
 								final String[] values = value.split("\\s+"); //$NON-NLS-1$
-								Arrays.sort(values, this.comparator);
+								final BigDecimal[] bgValues = new BigDecimal[values.length];
+								for(int i = 0; i < values.length; i++) {
+									bgValues[i] = new BigDecimal(values[i]);
+								}
+								Arrays.sort(bgValues);
 								this.averageQuantityComboBox.removeAllItems();
-								for (int i = 0; i < values.length; i++) {
-									this.averageQuantityComboBox.addItem(values[i]);
+								for (int i = 0; i < bgValues.length; i++) {
+									this.averageQuantityComboBox.addItem(bgValues[i]);
 								}
 							} else {
 								// TODO throw exception
@@ -963,7 +947,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 			//				 Log.debugMessage("ReflectometryTestPanel.setSet | codename "
 //				 + codename , Level.FINE);
 			if (parameterType.equals(ParameterType.REF_TRACE_LENGTH)) {
-				this.selectCBValue(this.maxDistanceComboBox, setParameters[i].getStringValue());
+				this.selectCBValue(this.maxDistanceComboBox, new BigDecimal(setParameters[i].getStringValue()));
 			} else if (parameterType.equals(ParameterType.REF_FLAG_GAIN_SPLICE_ON)) {
 				try {
 					final boolean b = new ByteArray(setParameters[i].getValue()).toBoolean();
@@ -997,18 +981,18 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 			if (parameterType.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
 				this.refractTextField.setText(stringValue);
 			} else if (parameterType.equals(ParameterType.REF_WAVE_LENGTH)) {
-				this.selectCBValue(this.waveLengthComboBox, stringValue);
+				this.selectCBValue(this.waveLengthComboBox, new BigDecimal(stringValue));
 			} else if (parameterType.equals(ParameterType.REF_AVERAGE_COUNT)) {
-				this.selectCBValue(this.averageQuantityComboBox, stringValue);
+				this.selectCBValue(this.averageQuantityComboBox, new BigDecimal(stringValue));
 			} else if (parameterType.equals(ParameterType.REF_RESOLUTION)) {
-				this.selectCBValue(this.resolutionComboBox, stringValue);
+				this.selectCBValue(this.resolutionComboBox, new BigDecimal(stringValue));
 			} else if (parameterType.equals(ParameterType.REF_PULSE_WIDTH_HIGH_RES)) {
-				this.selectCBValue(this.pulseWidthHiResComboBox, stringValue);
+				this.selectCBValue(this.pulseWidthHiResComboBox, new BigDecimal(stringValue));
 				if (!this.highResolutionCheckBox.isSelected()) {
 					this.highResolutionCheckBox.doClick();
 				}
 			} else if (parameterType.equals(ParameterType.REF_PULSE_WIDTH_LOW_RES)) {
-				this.selectCBValue(this.pulseWidthLowResComboBox, stringValue);
+				this.selectCBValue(this.pulseWidthLowResComboBox, new BigDecimal(stringValue));
 				if (this.highResolutionCheckBox.isSelected()) {
 					this.highResolutionCheckBox.doClick();
 				}
@@ -1020,7 +1004,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	}
 
 	private void createUIItems() {
-		this.comparator = new ListNumberComparator();
 		this.descriptionField = new JTextField(128);
 		this.refractTextField = new JTextField(8);
 
@@ -1056,7 +1039,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 				try {
 					refract = Double.parseDouble(value);
 					isDouble = true;
-				} catch (NumberFormatException nfe) {
+				} catch (final NumberFormatException nfe) {
 					isDouble = false;
 				}
 
@@ -1086,9 +1069,9 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 					}
 					synchronized (ReflectometryTestPanel.this) {
 						/* 1000 m is 1 km */
-						double maxDistance = 1000.0 * Double.parseDouble(selectedItem.toString());
-						String resolutionItem = (String) ReflectometryTestPanel.this.resolutionComboBox.getSelectedItem();
-						double resolutionOld = Double.parseDouble(resolutionItem);
+//						double maxDistance = 1000.0 * Double.parseDouble(selectedItem.toString());						
+						final BigDecimal maxDistance = ((BigDecimal)selectedItem).multiply(ONE_THOUSAND);
+						final BigDecimal resolutionItem = (BigDecimal) ReflectometryTestPanel.this.resolutionComboBox.getSelectedItem();
 						boolean found = false;
 						boolean firstItem = true;
 						boolean firstItemGreater = false;
@@ -1097,15 +1080,14 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 						
 						ReflectometryTestPanel.this.skip = true;
 						ReflectometryTestPanel.this.resolutionComboBox.removeAllItems();
-						for (Iterator it = ReflectometryTestPanel.this.resolutionList.iterator(); it.hasNext();) {
-							String res = (String) it.next();
-							double resolution = Double.parseDouble(res);
-							if (maxDistance / resolution < ReflectometryTestPanel.this.maxPoints) {
-								if (res.equals(resolutionItem)) {
+						for (final BigDecimal resolution : ReflectometryTestPanel.this.resolutionList) {
+							final BigDecimal decimal = maxDistance.divide(resolution);
+							if (decimal.compareTo(ReflectometryTestPanel.this.maxPoints) < 0) {
+								if (resolution.equals(resolutionItem)) {
 									found = true;
 								} else {
 									if (firstItem) {
-										if (resolutionOld < resolution) {
+										if (resolutionItem.compareTo(resolution) < 0) {
 											firstItemGreater = true;
 										}
 									}
@@ -1113,7 +1095,7 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 								
 								firstItem = false;
 								
-								ReflectometryTestPanel.this.resolutionComboBox.addItem(res);
+								ReflectometryTestPanel.this.resolutionComboBox.addItem(resolution);
 							}
 						}
 						
@@ -1269,17 +1251,14 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		this.skip = false;
 	}
 
-	private void selectCBValue(final JComboBox cb, final String value) {
+	private void selectCBValue(final JComboBox cb, final BigDecimal value) {
 		for (int i = 0; i < cb.getItemCount(); i++) {
-			final Object obj = cb.getItemAt(i);
-			final String item = obj.toString();
-			final double d = Double.parseDouble(item);
-			final double e = Double.parseDouble(value);
+			final BigDecimal obj = (BigDecimal) cb.getItemAt(i);
 
 			// System.out.println("ReflectometryTestPanel.selectCBValue() | value:" +
 			// value + ", item:" + item + ", d:" + d + ", e:" + e);
 
-			if (Math.abs(d - e) < 0.000001) {
+			if (obj.compareTo(value) == 0) {
 				cb.setSelectedItem(obj);
 				break;
 			}
