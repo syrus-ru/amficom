@@ -1,5 +1,5 @@
 /*
- * $Id: ClientSessionEnvironment.java,v 1.19 2005/09/14 18:23:22 arseniy Exp $
+ * $Id: ClientSessionEnvironment.java,v 1.20 2005/09/21 13:23:32 bob Exp $
  * 
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -13,8 +13,8 @@ import java.beans.PropertyChangeListener;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.19 $, $Date: 2005/09/14 18:23:22 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.20 $, $Date: 2005/09/21 13:23:32 $
+ * @author $Author: bob $
  * @author Tashoyan Arseniy Feliksovich
  * @module commonclient
  */
@@ -67,7 +67,7 @@ public final class ClientSessionEnvironment extends BaseSessionEnvironment {
 				createMapSchemeSession(loginRestorer);
 				break;
 			default:
-				final String msg = "Unknown kind of session -- " + sessionKind;
+				final String msg = LangModelGeneral.getString("Error.UnknownSessionKind") + " -- " + sessionKind;
 				Log.errorMessage(msg);
 				throw new IllegalDataException(msg);
 		}
