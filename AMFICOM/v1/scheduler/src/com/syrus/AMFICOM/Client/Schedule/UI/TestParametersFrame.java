@@ -12,7 +12,7 @@ import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 @SuppressWarnings("serial")
-public class TestParametersFrame extends JInternalFrame {
+public final class TestParametersFrame extends JInternalFrame {
 	
 	private TestParametersPanel	panel;
 

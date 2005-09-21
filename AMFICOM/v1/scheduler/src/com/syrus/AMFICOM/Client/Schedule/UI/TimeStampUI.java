@@ -26,12 +26,12 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.measurement.CronTemporalPattern;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/08/08 11:51:00 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.12 $, $Date: 2005/09/21 12:15:00 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
-public class TimeStampUI {
+final class TimeStampUI {
 
 	public static final String[]		SHORT_DAY_OF_WEEK_NAMES	= new String[] { LangModelSchedule.getString("mon"),
 			LangModelSchedule.getString("tue"), LangModelSchedule.getString("wed"), LangModelSchedule.getString("thu"),

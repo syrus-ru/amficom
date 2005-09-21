@@ -39,7 +39,7 @@ import com.syrus.AMFICOM.measurement.MeasurementType;
 import com.syrus.AMFICOM.measurement.MonitoredElement;
 
 @SuppressWarnings("serial")
-public class ElementsTreeFrame extends JInternalFrame implements PropertyChangeListener {
+public final class ElementsTreeFrame extends JInternalFrame implements PropertyChangeListener {
 
 	SchedulerModel schedulerModel;
 

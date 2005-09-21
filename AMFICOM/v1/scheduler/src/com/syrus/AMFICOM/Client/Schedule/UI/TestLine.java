@@ -51,7 +51,7 @@ import com.syrus.AMFICOM.measurement.TestController;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.TestStatus;
 import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPackage.TestTemporalType;
 
-public class TestLine extends TimeLine {
+final class TestLine extends TimeLine {
 
 	private static final long	serialVersionUID	= 3978424736810416184L;
 

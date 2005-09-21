@@ -63,12 +63,12 @@ import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.81 $, $Date: 2005/09/21 12:11:48 $
+ * @version $Revision: 1.82 $, $Date: 2005/09/21 12:15:00 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
  */
-public class ReflectometryTestPanel extends ParametersTestPanel implements ParametersTest {
+public final class ReflectometryTestPanel extends ParametersTestPanel implements ParametersTest {
 
 	private static final long	serialVersionUID	= 3257004354304553266L;
 

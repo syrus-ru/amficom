@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.Test;
  * @author Vladimir Dolzhenko
  */
 
-public class TestRequestPanel extends JPanel implements PropertyChangeListener {
+final class TestRequestPanel extends JPanel implements PropertyChangeListener {
 
 	private static final long	serialVersionUID	= 3834032471820939824L;
 
