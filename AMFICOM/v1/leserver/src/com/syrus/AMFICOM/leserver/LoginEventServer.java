@@ -1,5 +1,5 @@
 /*-
- * $Id: LoginEventServer.java,v 1.26 2005/09/14 18:18:39 arseniy Exp $
+ * $Id: LoginEventServer.java,v 1.27 2005/09/21 14:08:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -25,7 +25,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.26 $, $Date: 2005/09/14 18:18:39 $
+ * @version $Revision: 1.27 $, $Date: 2005/09/21 14:08:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -80,7 +80,7 @@ public final class LoginEventServer {
 		/*
 		 * Add shutdown hook.
 		 */
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("LoginEventServer -- shutdown hook") {
 			@Override
 			public void run() {
 				shutdown();

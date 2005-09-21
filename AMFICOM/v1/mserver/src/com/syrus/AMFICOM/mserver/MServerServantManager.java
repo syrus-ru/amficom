@@ -1,5 +1,5 @@
 /*-
- * $Id: MServerServantManager.java,v 1.12 2005/09/14 18:15:00 arseniy Exp $
+ * $Id: MServerServantManager.java,v 1.13 2005/09/21 14:10:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -31,7 +31,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.12 $, $Date: 2005/09/14 18:15:00 $
+ * @version $Revision: 1.13 $, $Date: 2005/09/21 14:10:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -121,7 +121,7 @@ final class MServerServantManager extends RunnableVerifiedConnectionManager impl
 				eventServerServantName,
 				mcmIdStrings,
 				timeout);
-		(new Thread(mServerServantManager)).start();
+		(new Thread(mServerServantManager, "MServerServantManager")).start();
 		return mServerServantManager;
 	}
 }

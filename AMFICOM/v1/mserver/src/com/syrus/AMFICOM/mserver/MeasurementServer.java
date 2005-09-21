@@ -1,5 +1,5 @@
 /*-
- * $Id: MeasurementServer.java,v 1.73 2005/09/19 18:20:07 arseniy Exp $
+ * $Id: MeasurementServer.java,v 1.74 2005/09/21 14:10:22 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -56,7 +56,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.73 $, $Date: 2005/09/19 18:20:07 $
+ * @version $Revision: 1.74 $, $Date: 2005/09/21 14:10:22 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mserver
@@ -125,6 +125,8 @@ public class MeasurementServer extends SleepButWorkThread {
 
 	private MeasurementServer() {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
+		super.setName("MeasurementServer");
+
 		this.running = true;
 	}
 
@@ -139,7 +141,7 @@ public class MeasurementServer extends SleepButWorkThread {
 		measurementServer.start();
 
 		/*	Add shutdown hook	*/
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("MeasurementServer -- shutdown hook") {
 			@Override
 			public void run() {
 				measurementServer.shutdown();

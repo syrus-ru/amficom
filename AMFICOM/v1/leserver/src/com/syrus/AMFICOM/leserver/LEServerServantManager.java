@@ -1,5 +1,5 @@
 /*-
- * $Id: LEServerServantManager.java,v 1.11 2005/09/14 18:18:39 arseniy Exp $
+ * $Id: LEServerServantManager.java,v 1.12 2005/09/21 14:08:06 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -19,7 +19,7 @@ import com.syrus.AMFICOM.general.RunnableVerifiedConnectionManager;
 import com.syrus.util.ApplicationProperties;
 
 /**
- * @version $Revision: 1.11 $, $Date: 2005/09/14 18:18:39 $
+ * @version $Revision: 1.12 $, $Date: 2005/09/21 14:08:06 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module leserver
@@ -46,7 +46,7 @@ final class LEServerServantManager extends RunnableVerifiedConnectionManager {
 				BaseConnectionManager.SERVANT_CHECK_TIMEOUT) * 60 * 1000;
 
 		final LEServerServantManager leServerServantManager =  new LEServerServantManager(corbaServer, timeout);
-		(new Thread(leServerServantManager)).start();
+		(new Thread(leServerServantManager, "LEServerServantManager")).start();
 		return leServerServantManager;
 	}
 
