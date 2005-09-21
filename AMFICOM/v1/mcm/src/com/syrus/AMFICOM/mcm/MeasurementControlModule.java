@@ -1,5 +1,5 @@
 /*
- * $Id: MeasurementControlModule.java,v 1.127 2005/09/20 09:54:05 arseniy Exp $
+ * $Id: MeasurementControlModule.java,v 1.128 2005/09/21 14:17:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -53,7 +53,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.127 $, $Date: 2005/09/20 09:54:05 $
+ * @version $Revision: 1.128 $, $Date: 2005/09/21 14:17:25 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -141,6 +141,8 @@ final class MeasurementControlModule extends SleepButWorkThread {
 
 	private MeasurementControlModule() {
 		super(ApplicationProperties.getInt(KEY_TICK_TIME, TICK_TIME) * 1000, ApplicationProperties.getInt(KEY_MAX_FALLS, MAX_FALLS));
+		super.setName("MeasurementControlModule");
+
 		this.forwardProcessing = ApplicationProperties.getInt(KEY_FORWARD_PROCESSING, FORWARD_PROCESSING)*1000;
 		this.running = true;
 	}
@@ -167,7 +169,7 @@ final class MeasurementControlModule extends SleepButWorkThread {
 		measurementControlModule.start();
 
 		/*	Add shutdown hook	*/
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("MeasurementControlModule -- shutdown hook") {
 			@Override
 			public void run() {
 				measurementControlModule.shutdown();
@@ -258,8 +260,8 @@ final class MeasurementControlModule extends SleepButWorkThread {
 				final Identifier kisId = kis.getId();
 				final Transceiver transceiver = new Transceiver(kis);
 				transceiver.start();
-				transceivers.put(kisId, transceiver);
 				Log.debugMessage("Started transceiver for KIS '" + kisId + "'", Log.DEBUGLEVEL07);
+				transceivers.put(kisId, transceiver);
 			}
 		} catch (ApplicationException ae) {
 			Log.errorException(ae);

@@ -1,5 +1,5 @@
 /*-
- * $Id: MapSchemeAdministrationResourceServer.java,v 1.16 2005/09/09 18:04:04 arseniy Exp $
+ * $Id: MapSchemeAdministrationResourceServer.java,v 1.17 2005/09/21 14:14:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 import com.syrus.util.database.DatabaseConnection;
 
 /**
- * @version $Revision: 1.16 $, $Date: 2005/09/09 18:04:04 $
+ * @version $Revision: 1.17 $, $Date: 2005/09/21 14:14:20 $
  * @author $Author: arseniy $
  * @module mscharserver
  */
@@ -91,7 +91,7 @@ public class MapSchemeAdministrationResourceServer {
 		/**
 		 * Add shutdown hook.
 		 */
-		Runtime.getRuntime().addShutdownHook(new Thread() {
+		Runtime.getRuntime().addShutdownHook(new Thread("MapSchemeAdministrationResourceServer -- shutdown hook") {
 			@Override
 			public void run() {
 				shutdown();
@@ -100,16 +100,12 @@ public class MapSchemeAdministrationResourceServer {
 	}
 
 	private static void establishDatabaseConnection() {
-		String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME,
-				Application.getInternetAddress());
-		String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
-		long dbConnTimeout = ApplicationProperties.getInt(
-				KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT) * 1000;
-		String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME,
-				DB_LOGIN_NAME);
+		final String dbHostName = ApplicationProperties.getString(KEY_DB_HOST_NAME, Application.getInternetAddress());
+		final String dbSid = ApplicationProperties.getString(KEY_DB_SID, DB_SID);
+		final long dbConnTimeout = ApplicationProperties.getInt(KEY_DB_CONNECTION_TIMEOUT, DB_CONNECTION_TIMEOUT) * 1000;
+		final String dbLoginName = ApplicationProperties.getString(KEY_DB_LOGIN_NAME, DB_LOGIN_NAME);
 		try {
-			DatabaseConnection.establishConnection(dbHostName, dbSid,
-					dbConnTimeout, dbLoginName);
+			DatabaseConnection.establishConnection(dbHostName, dbSid, dbConnTimeout, dbLoginName);
 		} catch (Exception e) {
 			Log.errorException(e);
 			System.exit(-1);
@@ -124,8 +120,7 @@ public class MapSchemeAdministrationResourceServer {
 
 		DatabaseContextSetup.initDatabaseContext();
 		serverId = new Identifier(ApplicationProperties.getString(KEY_SERVER_ID, SERVER_ID));
-		processCodename = ApplicationProperties.getString(
-				ServerProcessWrapper.KEY_MSCHARSERVER_PROCESS_CODENAME,
+		processCodename = ApplicationProperties.getString(ServerProcessWrapper.KEY_MSCHARSERVER_PROCESS_CODENAME,
 				ServerProcessWrapper.MSCHARSERVER_PROCESS_CODENAME);
 		try {
 			final StorableObjectDatabase<Server> serverDatabase = DatabaseContext.getDatabase(ObjectEntities.SERVER_CODE);
@@ -164,9 +159,7 @@ public class MapSchemeAdministrationResourceServer {
 			 * Activate the servant.
 			 */
 			final CORBAServer corbaServer = sessionEnvironment.getMscharServerServantManager().getCORBAServer();
-			corbaServer.activateServant(
-					new MscharServerPOATie(new MscharServerImpl(), corbaServer.getPoa()),
-					processCodename);
+			corbaServer.activateServant(new MscharServerPOATie(new MscharServerImpl(), corbaServer.getPoa()), processCodename);
 			corbaServer.printNamingContext();
 		} catch (final Exception e) {
 			Log.debugException(e, Level.SEVERE);

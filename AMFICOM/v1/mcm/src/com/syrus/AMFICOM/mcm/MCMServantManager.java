@@ -1,5 +1,5 @@
 /*-
- * $Id: MCMServantManager.java,v 1.14 2005/09/14 18:13:47 arseniy Exp $
+ * $Id: MCMServantManager.java,v 1.15 2005/09/21 14:17:25 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.14 $, $Date: 2005/09/14 18:13:47 $
+ * @version $Revision: 1.15 $, $Date: 2005/09/21 14:17:25 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -133,7 +133,7 @@ final class MCMServantManager extends RunnableVerifiedConnectionManager implemen
 				eventServerServantName,
 				mServerServantName,
 				timeout);
-		(new Thread(mcmServantManager)).start();
+		(new Thread(mcmServantManager, "MCMServantManager")).start();
 		return mcmServantManager;
 	}
 }

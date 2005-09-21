@@ -1,5 +1,5 @@
 /*
- * $Id: Transceiver.java,v 1.65 2005/09/20 23:23:03 arseniy Exp $
+ * $Id: Transceiver.java,v 1.66 2005/09/21 14:17:25 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,7 +29,7 @@ import com.syrus.util.ApplicationProperties;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.65 $, $Date: 2005/09/20 23:23:03 $
+ * @version $Revision: 1.66 $, $Date: 2005/09/21 14:17:25 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module mcm
@@ -55,16 +55,18 @@ final class Transceiver extends SleepButWorkThread {
 	public Transceiver(final KIS kis) {
 		super(ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_TICK_TIME, MeasurementControlModule.KIS_TICK_TIME) * 1000,
 				ApplicationProperties.getInt(MeasurementControlModule.KEY_KIS_MAX_FALLS, MeasurementControlModule.KIS_MAX_FALLS));
+		super.setName("Transceiver " + kis.getId());
 
 		this.kis = kis;
-		try {
-			this.kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(kis);
-		} catch (CommunicationException ce) {
-			Log.errorException(ce);
-		}
+
 		this.scheduledMeasurements = Collections.synchronizedList(new ArrayList<Measurement>());
 		this.testProcessors = Collections.synchronizedMap(new HashMap<Identifier, TestProcessor>());
 
+		try {
+			this.kisConnection = MeasurementControlModule.kisConnectionManager.getConnection(this.kis);
+		} catch (CommunicationException ce) {
+			Log.errorException(ce);
+		}
 		this.running = true;
 	}
 

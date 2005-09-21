@@ -1,5 +1,5 @@
 /*-
- * $Id: MscharServerServantManager.java,v 1.4 2005/08/08 11:45:43 arseniy Exp $
+ * $Id: MscharServerServantManager.java,v 1.5 2005/09/21 14:14:20 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.Log;
 /**
  * @author Andrew ``Bass'' Shcheglov
  * @author $Author: arseniy $
- * @version $Revision: 1.4 $, $Date: 2005/08/08 11:45:43 $
+ * @version $Revision: 1.5 $, $Date: 2005/09/21 14:14:20 $
  * @module mscharserver
  */
 public final class MscharServerServantManager extends RunnableVerifiedConnectionManager
@@ -95,10 +95,7 @@ public final class MscharServerServantManager extends RunnableVerifiedConnection
 	 */
 	@Override
 	protected void onLoseConnection(final String servantName) {
-		Log.debugMessage("MscharServerServantManager.onLoseConnection | Connection with '"
-				+ servantName
-				+ "' lost",
-				Level.WARNING);
+		Log.debugMessage("MscharServerServantManager.onLoseConnection | Connection with '" + servantName + "' lost", Level.WARNING);
 	}
 
 	/**
@@ -108,26 +105,19 @@ public final class MscharServerServantManager extends RunnableVerifiedConnection
 	 */
 	@Override
 	protected void onRestoreConnection(final String servantName) {
-		Log.debugMessage("MscharServerServantManager.onRestoreConnection | Connection with '"
-				+ servantName
-				+ "' restored",
+		Log.debugMessage("MscharServerServantManager.onRestoreConnection | Connection with '" + servantName + "' restored",
 				Level.INFO);
-				
+
 	}
 
 	public static MscharServerServantManager createAndStart(final String serverHostName) throws CommunicationException {
-		final MscharServerServantManager mscharServerServantManager = new MscharServerServantManager(
-				new CORBAServer(ContextNameFactory.generateContextName(serverHostName)),
-				ApplicationProperties.getString(
-						ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME,
+		final MscharServerServantManager mscharServerServantManager = new MscharServerServantManager(new CORBAServer(ContextNameFactory.generateContextName(serverHostName)),
+				ApplicationProperties.getString(ServerProcessWrapper.KEY_LOGIN_PROCESS_CODENAME,
 						ServerProcessWrapper.LOGIN_PROCESS_CODENAME),
-				ApplicationProperties.getString(
-						ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
+				ApplicationProperties.getString(ServerProcessWrapper.KEY_EVENT_PROCESS_CODENAME,
 						ServerProcessWrapper.EVENT_PROCESS_CODENAME),
-				ApplicationProperties.getInt(
-						KEY_SERVANT_CHECK_TIMEOUT,
-						SERVANT_CHECK_TIMEOUT) * 60 * 1000);
-		(new Thread(mscharServerServantManager)).start();
+				ApplicationProperties.getInt(KEY_SERVANT_CHECK_TIMEOUT, SERVANT_CHECK_TIMEOUT) * 60 * 1000);
+		(new Thread(mscharServerServantManager, "MscharServerServantManager")).start();
 		return mscharServerServantManager;
 	}
 }
