@@ -14,7 +14,6 @@ public class Schedule extends AbstractApplication {
 	
 	@Override
 	protected void init() {
-		super.init();
 		super.aContext.setApplicationModel(new SchedulerModel(super.aContext));				
 		super.startMainFrame(new ScheduleMainFrame(super.aContext), UIStorage.SCHEDULING_ICON_MINI);
 	}
