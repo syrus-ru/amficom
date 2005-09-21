@@ -58,11 +58,15 @@ import com.syrus.AMFICOM.measurement.Parameter;
 import com.syrus.AMFICOM.measurement.ParameterSet;
 import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.measurement.corba.IdlParameterSetPackage.ParameterSetSort;
+import com.syrus.AMFICOM.reflectometry.ReflectometryMeasurementParameters;
+import com.syrus.AMFICOM.reflectometry.ReflectometryMeasurementSetup;
+import com.syrus.AMFICOM.reflectometry.ReflectometryUtil;
+import com.syrus.io.DataFormatException;
 import com.syrus.util.ByteArray;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.83 $, $Date: 2005/09/21 15:19:36 $
+ * @version $Revision: 1.84 $, $Date: 2005/09/21 16:18:49 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module scheduler
@@ -794,8 +798,17 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	}
 	
 	public MeasurementSetup getMeasurementSetup() throws CreateObjectException {
-		return this.schedulerModel.createMeasurementSetup(this.getSet(), 
+		final MeasurementSetup measurementSetup = this.schedulerModel.createMeasurementSetup(this.getSet(), 
 				getDescription());
+		try {
+			final ReflectometryMeasurementSetup setup = new ReflectometryMeasurementSetup(measurementSetup);
+			final ReflectometryMeasurementParameters measurementParameters = setup.getMeasurementParameters();
+			measurementSetup.setMeasurementDuration((long) ReflectometryUtil.getUpperEstimatedAgentTestTime(measurementParameters));
+		} catch (final DataFormatException e) {
+			// TODO
+			throw new CreateObjectException(e);
+		}
+		return measurementSetup;
 	}
 	
 	synchronized void refreshTestsSet() {
@@ -976,8 +989,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 		for (int i = 0; i < setParameters.length; i++) {
 			final ParameterType parameterType = setParameters[i].getType();
 			final String stringValue = setParameters[i].getStringValue();
-			// Log.debugMessage("ReflectometryTestPanel.setSet | codename: " +
-			// codename + ", stringValue:" + stringValue, Level.FINEST);
 			if (parameterType.equals(ParameterType.REF_INDEX_OF_REFRACTION)) {
 				this.refractTextField.setText(stringValue);
 			} else if (parameterType.equals(ParameterType.REF_WAVE_LENGTH)) {
@@ -1254,10 +1265,6 @@ public final class ReflectometryTestPanel extends ParametersTestPanel implements
 	private void selectCBValue(final JComboBox cb, final BigDecimal value) {
 		for (int i = 0; i < cb.getItemCount(); i++) {
 			final BigDecimal obj = (BigDecimal) cb.getItemAt(i);
-
-			// System.out.println("ReflectometryTestPanel.selectCBValue() | value:" +
-			// value + ", item:" + item + ", d:" + d + ", e:" + e);
-
 			if (obj.compareTo(value) == 0) {
 				cb.setSelectedItem(obj);
 				break;
