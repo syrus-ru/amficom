@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeUtils.java,v 1.39 2005/09/07 18:31:40 bass Exp $
+ * $Id: SchemeUtils.java,v 1.40 2005/09/21 10:36:26 arseniy Exp $
  *
  * Copyright ø 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,8 +21,8 @@ import com.syrus.util.Shitlet;
  * Functionality will be partially moved to appropriate model classes; partially
  * removed Œ¡»’ .
  *
- * @author $Author: bass $
- * @version $Revision: 1.39 $, $Date: 2005/09/07 18:31:40 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.40 $, $Date: 2005/09/21 10:36:26 $
  * @module scheme
  * @deprecated
  */
@@ -133,6 +133,7 @@ public class SchemeUtils {
 		case _SCHEME_CABLE_LINK:
 		case _SCHEME_LINK:
 			((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).setOpticalLength(d);
+			break;
 		default:
 			break;
 		}
@@ -165,6 +166,7 @@ public class SchemeUtils {
 		case _SCHEME_CABLE_LINK:
 		case _SCHEME_LINK:
 			((AbstractSchemeLink)pathElement.getAbstractSchemeElement()).setPhysicalLength(d);
+			break;
 		default:
 			break;
 		}
