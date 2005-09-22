@@ -1,5 +1,5 @@
 /*-
- * $Id: TestTest.java,v 1.1 2005/09/22 12:30:18 arseniy Exp $
+ * $Id: TestTest.java,v 1.2 2005/09/22 12:30:43 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -7,19 +7,16 @@
  */
 package com.syrus.AMFICOM.measurement;
 
-import java.util.Date;
-import java.util.SortedMap;
+import junit.framework.Test;
+import junit.framework.TestCase;
 
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.DatabaseCommonTest;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 
-import junit.framework.Test;
-import junit.framework.TestCase;
-
 /**
- * @version $Revision: 1.1 $, $Date: 2005/09/22 12:30:18 $
+ * @version $Revision: 1.2 $, $Date: 2005/09/22 12:30:43 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module test
