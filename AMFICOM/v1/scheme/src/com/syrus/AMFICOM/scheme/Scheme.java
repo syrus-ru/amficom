@@ -1,5 +1,5 @@
 /*-
- * $Id: Scheme.java,v 1.100 2005/09/21 11:41:04 bass Exp $
+ * $Id: Scheme.java,v 1.101 2005/09/22 15:27:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,6 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -86,8 +85,8 @@ import com.syrus.util.Shitlet;
 /**
  * #03 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.100 $, $Date: 2005/09/21 11:41:04 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.101 $, $Date: 2005/09/22 15:27:10 $
  * @module scheme
  * @todo Possibly join (add|remove)Scheme(Element|Link|CableLink).
  */
@@ -475,8 +474,8 @@ public final class Scheme extends AbstractCloneableDomainMember
 					private static final long serialVersionUID = -2174802384926550856L;
 
 					@Override
-					public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
-						return storableObjects.isEmpty();
+					public boolean isNeedMore(final Set<? extends Identifiable> identifiables) {
+						return identifiables.isEmpty();
 					}
 				};
 			}

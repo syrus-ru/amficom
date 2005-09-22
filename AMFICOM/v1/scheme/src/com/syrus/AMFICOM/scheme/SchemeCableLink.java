@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemeCableLink.java,v 1.93 2005/09/21 13:47:58 bass Exp $
+ * $Id: SchemeCableLink.java,v 1.94 2005/09/22 15:27:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -64,7 +64,6 @@ import com.syrus.AMFICOM.general.IdentifierPool;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.LocalXmlIdentifierPool;
 import com.syrus.AMFICOM.general.ReverseDependencyContainer;
-import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.StorableObjectCondition;
 import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.AMFICOM.general.StorableObjectVersion;
@@ -90,8 +89,8 @@ import com.syrus.util.Shitlet;
 /**
  * #13 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.93 $, $Date: 2005/09/21 13:47:58 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.94 $, $Date: 2005/09/22 15:27:10 $
  * @module scheme
  */
 public final class SchemeCableLink extends AbstractSchemeLink
@@ -874,8 +873,8 @@ public final class SchemeCableLink extends AbstractSchemeLink
 			private static final long serialVersionUID = -3614279715565428694L;
 
 			@Override
-			public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
-				return storableObjects.isEmpty();
+			public boolean isNeedMore(final Set<? extends Identifiable> identifiables) {
+				return identifiables.isEmpty();
 			}
 		};
 		final StorableObjectCondition linkedIdsCondition = new LinkedIdsCondition(

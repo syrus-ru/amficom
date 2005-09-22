@@ -1,5 +1,5 @@
 /*-
- * $Id: SchemePath.java,v 1.89 2005/09/21 13:22:08 bass Exp $
+ * $Id: SchemePath.java,v 1.90 2005/09/22 15:27:10 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -70,8 +70,8 @@ import com.syrus.util.Shitlet;
 /**
  * #16 in hierarchy.
  *
- * @author $Author: bass $
- * @version $Revision: 1.89 $, $Date: 2005/09/21 13:22:08 $
+ * @author $Author: arseniy $
+ * @version $Revision: 1.90 $, $Date: 2005/09/22 15:27:10 $
  * @module scheme
  */
 public final class SchemePath extends StorableObject
@@ -523,8 +523,8 @@ public final class SchemePath extends StorableObject
 			private static final long serialVersionUID = -9024929076725678350L;
 
 			@Override
-			public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
-				return storableObjects.isEmpty();
+			public boolean isNeedMore(final Set<? extends Identifiable> identifiables) {
+				return identifiables.isEmpty();
 			}
 		};
 		final StorableObjectCondition linkedIdsCondition = new LinkedIdsCondition(
