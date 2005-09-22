@@ -1,5 +1,5 @@
 /*
- * $Id: TestDatabase.java,v 1.127 2005/09/22 16:19:50 arseniy Exp $
+ * $Id: TestDatabase.java,v 1.128 2005/09/22 16:31:33 arseniy Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -29,6 +29,7 @@ import java.util.TreeMap;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.CreateObjectException;
 import com.syrus.AMFICOM.general.DatabaseIdentifier;
+import com.syrus.AMFICOM.general.ErrorMessages;
 import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalDataException;
@@ -46,7 +47,7 @@ import com.syrus.util.database.DatabaseDate;
 import com.syrus.util.database.DatabaseString;
 
 /**
- * @version $Revision: 1.127 $, $Date: 2005/09/22 16:19:50 $
+ * @version $Revision: 1.128 $, $Date: 2005/09/22 16:31:33 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -305,6 +306,8 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			return;
 		}
 
+		this.deleteStops(idStoppingsMap.keySet());
+
 		final String sql = SQL_INSERT_INTO + TEST_STOPPING_LINK + OPEN_BRACKET
 				+ LINK_COLMN_TEST_ID + COMMA
 				+ LINK_COLUMN_STOPPING_TIME + COMMA
@@ -396,6 +399,47 @@ public final class TestDatabase extends StorableObjectDatabase<Test> {
 			stopsMap.put(test.getId(), test.getStoppingMap());
 		}
 		return stopsMap;
+	}
+
+	private void deleteStops(final Set<? extends Identifiable> tests) {
+		assert tests != null : ErrorMessages.NON_NULL_EXPECTED;
+		if (tests.isEmpty()) {
+			return;
+		}
+
+		final StringBuffer sql = new StringBuffer();
+		sql.append(SQL_DELETE_FROM);
+		sql.append(LINK_COLMN_TEST_ID);
+		sql.append(SQL_WHERE);
+		sql.append(idsEnumerationString(tests, LINK_COLMN_TEST_ID, true));
+
+		Statement statement = null;
+		Connection connection = null;
+		try {
+			connection = DatabaseConnection.getConnection();
+			statement = connection.createStatement();
+			Log.debugMessage(this.getEntityName() + "Database.deleteStops | Trying: " + sql, Log.DEBUGLEVEL09);
+			statement.executeUpdate(sql.toString());
+			connection.commit();
+		} catch (SQLException sqle1) {
+			Log.errorException(sqle1);
+		} finally {
+			try {
+				try {
+					if (statement != null) {
+						statement.close();
+						statement = null;
+					}
+				} finally {
+					if (connection != null) {
+						DatabaseConnection.releaseConnection(connection);
+						connection = null;
+					}
+				}
+			} catch (SQLException sqle1) {
+				Log.errorException(sqle1);
+			}
+		}
 	}
 
 	@Override
