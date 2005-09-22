@@ -1,5 +1,5 @@
 /**
- * $Id: MapEditor.java,v 1.15 2005/09/21 17:38:48 arseniy Exp $
+ * $Id: MapEditor.java,v 1.16 2005/09/22 10:39:11 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -13,14 +13,15 @@ import java.awt.Image;
 
 import javax.swing.UIManager;
 
+import com.syrus.AMFICOM.client.launcher.Launcher;
 import com.syrus.AMFICOM.client.model.AbstractApplication;
 import com.syrus.AMFICOM.client.model.DefaultMapEditorApplicationModelFactory;
 
 /**
  * Запуск основного окна модуля "Редактор топологических схем".
  * 
- * @author $Author: arseniy $
- * @version $Revision: 1.15 $, $Date: 2005/09/21 17:38:48 $
+ * @author $Author: krupenn $
+ * @version $Revision: 1.16 $, $Date: 2005/09/22 10:39:11 $
  * @module mapviewclient
  */
 public class MapEditor extends AbstractApplication {
@@ -32,10 +33,6 @@ public class MapEditor extends AbstractApplication {
 
 	@Override
 	protected void init() {
-		/**
-		 * Vladimir Aleksandrovich prosil zakommentariti. Inache vse ravno ne sobiraetsya.
-		 */
-		//super.init();
 		super.aContext
 				.setApplicationModel(new DefaultMapEditorApplicationModelFactory()
 						.create());
@@ -45,6 +42,7 @@ public class MapEditor extends AbstractApplication {
 	}
 
 	public static void main(String[] args) {
-		new MapEditor();
+		Launcher.launchApplicationClass(MapEditor.class);
+//		new MapEditor();
 	}
 }
