@@ -1,5 +1,5 @@
 /*-
- * $Id: Test.java,v 1.165 2005/09/20 18:06:28 arseniy Exp $
+ * $Id: Test.java,v 1.166 2005/09/22 12:26:51 arseniy Exp $
  *
  * Copyright © 2004-2005 Syrus Systems.
  * Научно-технический центр.
@@ -47,7 +47,7 @@ import com.syrus.util.EasyDateFormatter;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.165 $, $Date: 2005/09/20 18:06:28 $
+ * @version $Revision: 1.166 $, $Date: 2005/09/22 12:26:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -506,6 +506,7 @@ public final class Test extends StorableObject implements Describable {
 	 */
 	public void addStopping(final Date stoppingTime, final String reason) {
 		this.stoppingMap.put(new Date(stoppingTime.getTime()), reason);
+		super.markAsChanged();
 	}
 	
 	/**
