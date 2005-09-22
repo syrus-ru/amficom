@@ -1,5 +1,5 @@
 /*-
- * $Id: ColorChooserComboBox.java,v 1.5 2005/09/08 14:25:57 bob Exp $
+ * $Id: ColorChooserComboBox.java,v 1.6 2005/09/22 10:54:17 bob Exp $
  *
  * Copyright ¿ 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -24,7 +24,7 @@ import com.syrus.AMFICOM.client.resource.ResourceKeys;
 
 /**
  * @author $Author: bob $
- * @version $Revision: 1.5 $, $Date: 2005/09/08 14:25:57 $
+ * @version $Revision: 1.6 $, $Date: 2005/09/22 10:54:17 $
  * @module commonclient
  */
 
@@ -47,7 +47,7 @@ public class ColorChooserComboBox extends AComboBox {
 	public ColorChooserComboBox(Color[] colors) {
 		this.model = new DefaultComboBoxModel(colors);
 
-		this.addColorButton = new JButton(LangModelGeneral.getString(ResourceKeys.I18N_CUSTOM));
+		this.addColorButton = new JButton(LangModelGeneral.getString(ResourceKeys.I18N_CHOOSE));
 		this.addColorButton.setHorizontalAlignment(SwingConstants.LEFT);
 		this.addColorButton.setBorder(BorderFactory.createEmptyBorder());
 		this.addColorButton.addActionListener(new ActionListener() {

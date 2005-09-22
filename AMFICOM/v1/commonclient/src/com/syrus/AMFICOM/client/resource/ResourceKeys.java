@@ -1,5 +1,5 @@
 /*
- * $Id: ResourceKeys.java,v 1.10 2005/08/11 18:51:09 arseniy Exp $
+ * $Id: ResourceKeys.java,v 1.11 2005/09/22 10:54:17 bob Exp $
  *
  * Copyright © 2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,8 +9,8 @@
 package com.syrus.AMFICOM.client.resource;
 
 /**
- * @version $Revision: 1.10 $, $Date: 2005/08/11 18:51:09 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.11 $, $Date: 2005/09/22 10:54:17 $
+ * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -59,26 +59,26 @@ public interface ResourceKeys {
 	/* Internationalization keys */
 	String	I18N_ROOT								= "root";													//$NON-NLS-1$
 
-	String	I18N_CHARACTERISTIC						= "characteristic";										//$NON-NLS-1$"
-	String	I18N_CHARACTERISTICTYPESORT_OPTICAL		= "optical_characteristics";								//$NON-NLS-1$
-	String	I18N_CHARACTERISTICTYPESORT_ELECTRICAL	= "electrical_characteristics";							//$NON-NLS-1$
-	String	I18N_CHARACTERISTICTYPESORT_OPERATIONAL	= "operational_characteristics";							//$NON-NLS-1$
-	String	I18N_CHARACTERISTICTYPESORT_INTERFACE	= "interface_characteristics";								//$NON-NLS-1$
-	String	I18N_CHARACTERISTICTYPESORT_VISUAL		= "visual_attributes";										//$NON-NLS-1$
+	String	I18N_CHARACTERISTIC						= "Characteristic.Text.Characteristic";										//$NON-NLS-1$"
+	String	I18N_CHARACTERISTICTYPESORT_OPTICAL		= "Characteristic.Text.OpticalCharacteristics";								//$NON-NLS-1$
+	String	I18N_CHARACTERISTICTYPESORT_ELECTRICAL	= "Characteristic.Text.ElectricalCharacteristics";							//$NON-NLS-1$
+	String	I18N_CHARACTERISTICTYPESORT_OPERATIONAL	= "Characteristic.Text.OperationalCharacteristics";							//$NON-NLS-1$
+	String	I18N_CHARACTERISTICTYPESORT_INTERFACE	= "Characteristic.Text.InterfaceCharacteristics";								//$NON-NLS-1$
+	String	I18N_CHARACTERISTICTYPESORT_VISUAL		= "Characteristic.Text.VisualAttributes";										//$NON-NLS-1$
 
-	String	I18N_ADD_CHARACTERISTIC					= "add_char";												//$NON-NLS-1$
-	String	I18N_REMOVE_CHARACTERISTIC				= "remove_char";											//$NON-NLS-1$
-	String	I18N_NEW_CHARACTERISTICTYPE				= "new_char_type";											//$NON-NLS-1$
-	String	I18N_EXISTING_CHARACTERISTICTYPE		= "existing_char_type";									//$NON-NLS-1$
+	String	I18N_ADD_CHARACTERISTIC					= "CharacteristicsPanel.Action.AddCharacteristic";												//$NON-NLS-1$
+	String	I18N_REMOVE_CHARACTERISTIC				= "CharacteristicsPanel.Action.RemoveCharacteristic";											//$NON-NLS-1$
+	String	I18N_NEW_CHARACTERISTICTYPE				= "CharacteristicAddDialog.Text.NewCharacteristicType";											//$NON-NLS-1$
+	String	I18N_EXISTING_CHARACTERISTICTYPE		= "CharacteristicAddDialog.Text.ExistingCharacteristicType";									//$NON-NLS-1$
 
-	String	I18N_ADD								= "add";													//$NON-NLS-1$
-	String	I18N_CANCEL								= "cancel";												//$NON-NLS-1$
+	String	I18N_ADD								= "Action.Text.Add";													//$NON-NLS-1$
+	String	I18N_CANCEL								= "Action.Text.Cancel";												//$NON-NLS-1$
 
-	String	I18N_NAME								= "name";													//$NON-NLS-1$
-	String	I18N_DESCRIPTION						= "description";											//$NON-NLS-1$
+	String	I18N_NAME								= "Text.Name";													//$NON-NLS-1$
+	String	I18N_DESCRIPTION						= "Text.Description";											//$NON-NLS-1$
 
-	String	I18N_CHOOSE_COLOR						= "choose_color";											//$NON-NLS-1$
-	String	I18N_CUSTOM								= "custom";												//$NON-NLS-1$
+	String	I18N_CHOOSE_COLOR						= "Action.Text.ChooseColor";											//$NON-NLS-1$
+	String	I18N_CHOOSE								= "Text.Choose";												//$NON-NLS-1$
 
-	String	I18N_COMMIT		= "commit";									//$NON-NLS-1$
+	String	I18N_COMMIT		= "Action.Text.Commit";									//$NON-NLS-1$
 }
