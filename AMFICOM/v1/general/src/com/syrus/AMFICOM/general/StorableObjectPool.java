@@ -1,5 +1,5 @@
 /*-
- * $Id: StorableObjectPool.java,v 1.176 2005/09/15 00:43:04 arseniy Exp $
+ * $Id: StorableObjectPool.java,v 1.177 2005/09/22 15:44:47 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,7 +30,7 @@ import com.syrus.util.LRUMap;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.176 $, $Date: 2005/09/15 00:43:04 $
+ * @version $Revision: 1.177 $, $Date: 2005/09/22 15:44:47 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
@@ -443,7 +443,7 @@ public final class StorableObjectPool {
 		Log.debugMessage("StorableObjectPool.getStorableObjectsButIdsByCondition | Found in pool " + storableObjects.size()
 				+ " objects: " + Identifier.createStrings(storableObjects), Log.DEBUGLEVEL10);
 
-		if (useLoader && condition.isNeedMore(storableObjects)) {
+		if (useLoader && condition.isNeedMore(Identifier.createSumIdentifiables(storableObjects, ids))) {
 			Identifier.addToIdentifiers(loadButIds, storableObjects);
 			Set<T> loadedObjects = null;
 			try {
