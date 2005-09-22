@@ -1,5 +1,5 @@
 /*
- * $Id: ReportDataChecker.java,v 1.1 2005/09/20 09:25:54 peskovsky Exp $
+ * $Id: ReportDataChecker.java,v 1.2 2005/09/22 14:48:33 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -10,11 +10,16 @@ package com.syrus.AMFICOM.client.reportbuilder.templaterenderer;
 import java.util.HashMap;
 import java.util.Map;
 
+import com.syrus.AMFICOM.client.analysis.report.AESMPReportModel;
+import com.syrus.AMFICOM.client.analysis.report.AnalysisReportModel;
 import com.syrus.AMFICOM.client.map.report.MapReportModel;
+import com.syrus.AMFICOM.client.scheduler.report.SchedulerReportModel;
 import com.syrus.AMFICOM.client.scheme.report.SchemeReportModel;
 import com.syrus.AMFICOM.map.Collector;
 import com.syrus.AMFICOM.map.PhysicalLink;
 import com.syrus.AMFICOM.map.SiteNode;
+import com.syrus.AMFICOM.measurement.Result;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.scheme.AbstractSchemeLink;
 import com.syrus.AMFICOM.scheme.AbstractSchemePort;
 import com.syrus.AMFICOM.scheme.Scheme;
@@ -41,6 +46,7 @@ public class ReportDataChecker {
 	public static Map<String,String> getObjectReportAttributes(
 			Object objectToInstall) {
 		Map<String,String> attributes = null;
+		//Для сиюминутных отчётов по схеме		
 		if (	(objectToInstall instanceof Scheme)
 				||	(objectToInstall instanceof SchemeElement)
 				||	(objectToInstall instanceof AbstractSchemePort)
@@ -66,7 +72,27 @@ public class ReportDataChecker {
 					REPORT_NAME,
 					MapReportModel.SELECTED_OBJECT_CHARS);
 		}
-
+		//Для сиюминутных отчётов по измерениям
+		else if (	(objectToInstall instanceof Test)) {
+			attributes = new HashMap<String,String>();			
+			attributes.put(
+					MODEL_CLASS_NAME,
+					SchedulerReportModel.class.getName());
+			attributes.put(
+					REPORT_NAME,
+					SchedulerReportModel.TEST_PARAMETERS);
+		}
+		//Для сиюминутных отчётов по анализу
+		else if (	(objectToInstall instanceof Result)) {
+			attributes = new HashMap<String,String>();			
+			attributes.put(
+					MODEL_CLASS_NAME,
+					AnalysisReportModel.class.getName());
+			attributes.put(
+					REPORT_NAME,
+					AESMPReportModel.REFLECTOGRAMM);
+		}
+		
 		return attributes;
 	}
 }
