@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.52 2005/09/14 17:46:44 arseniy Exp $
+ * $Id: TypicalCondition.java,v 1.53 2005/09/22 14:59:57 bass Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -127,8 +127,8 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.52 $, $Date: 2005/09/14 17:46:44 $
- * @author $Author: arseniy $
+ * @version $Revision: 1.53 $, $Date: 2005/09/22 14:59:57 $
+ * @author $Author: bass $
  * @module general
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -1054,6 +1054,7 @@ public class TypicalCondition implements StorableObjectCondition {
 
 	private static TypicalCondition createDummyCondition() {
 		return new TypicalCondition() {
+			private static final long serialVersionUID = 1584657894730340630L;
 
 			@Override
 			public boolean isConditionTrue(final StorableObject storableObject) {
