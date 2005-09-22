@@ -6,6 +6,7 @@
 
 package com.syrus.AMFICOM.client.UI;
 
+import java.awt.Color;
 import java.awt.Component;
 import java.awt.Dimension;
 import java.awt.Font;
@@ -19,7 +20,7 @@ import javax.swing.table.TableColumnModel;
 import javax.swing.table.TableModel;
 
 /**
- * @version $Revision: 1.13 $, $Date: 2005/09/19 11:22:40 $
+ * @version $Revision: 1.14 $, $Date: 2005/09/22 15:24:57 $
  * @author $Author: bob $
  * @author Vladimir Dolzhenko
  * @module commonclient
@@ -44,6 +45,18 @@ public final class CommonUIUtilities {
 		Dimension preferredSize = component.getPreferredSize();
 		preferredSize.width = (int) (SCALE_FACTOR * minimumSize.width);
 		component.setPreferredSize(preferredSize);
+	}
+	
+	public static String getHTMLColor(final Color color) {
+		final StringBuffer buffer = new StringBuffer('#');
+		final String[] colors = new String[] {Integer.toHexString(color.getRed()), Integer.toHexString(color.getGreen()), Integer.toHexString(color.getBlue())};
+		for(final String string : colors) {
+			if (string.length() < 2) {
+				buffer.append('0');
+			}
+			buffer.append(string);
+		}
+		return buffer.toString();
 	}
 	
 	public static void arrangeTableColumns(JTable table) {
