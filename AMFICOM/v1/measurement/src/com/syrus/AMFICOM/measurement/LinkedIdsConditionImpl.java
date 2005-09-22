@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.60 2005/09/14 18:35:57 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.61 2005/09/22 13:18:00 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.60 $, $Date: 2005/09/14 18:35:57 $
+ * @version $Revision: 1.61 $, $Date: 2005/09/22 13:18:00 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -269,7 +269,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 			case MEASUREMENT_CODE:
 				switch (this.linkedEntityCode) {
 					case TEST_CODE:
-						final Set<? extends StorableObject> measurements = new HashSet<StorableObject>(storableObjects);
+						final Set<StorableObject> measurements = new HashSet<StorableObject>(storableObjects);
 						for (final Identifier id : this.linkedIds) {
 							Test test;
 							try {
@@ -279,15 +279,16 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 								continue;
 							}
 							int testNumberOfMeasurements = 0;
-							for (final Iterator<? extends StorableObject> it = measurements.iterator(); it.hasNext();) {
+							for (final Iterator<StorableObject> it = measurements.iterator(); it.hasNext();) {
 								final Measurement measurement = (Measurement) it.next();
 								if (measurement.getTestId().equals(id)) {
 									it.remove();
 									testNumberOfMeasurements++;
 								}
 							}
-							if (test == null || testNumberOfMeasurements < test.getNumberOfMeasurements())
+							if (test == null || testNumberOfMeasurements < test.getNumberOfMeasurements()) {
 								return true;
+							}
 						}
 						return false;
 					default:
