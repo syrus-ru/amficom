@@ -1,5 +1,5 @@
 /*-
- * $Id: Identifier.java,v 1.75 2005/09/22 15:00:33 bass Exp $
+ * $Id: Identifier.java,v 1.76 2005/09/22 15:44:12 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -30,8 +30,8 @@ import com.syrus.AMFICOM.general.xml.XmlIdentifier;
  * its respective <code>creatorId</code> and <code>modifierId</code>. But
  * there&apos;s a particular task of <code>id</code> handling.
  *
- * @version $Revision: 1.75 $, $Date: 2005/09/22 15:00:33 $
- * @author $Author: bass $
+ * @version $Revision: 1.76 $, $Date: 2005/09/22 15:44:12 $
+ * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module general
  */
@@ -235,6 +235,27 @@ public final class Identifier implements Comparable<Identifier>, TransferableObj
 			}
 		}
 		return identifiers;
+	}
+
+	/**
+	 * Creates new set of identifiables, containing values from both supplied sets of identifiables
+	 * @param identifiables1
+	 * @param identifiables2
+	 * @return Set of identifiables
+	 */
+	public static Set<Identifiable> createSumIdentifiables(final Set<? extends Identifiable> identifiables1,
+			final Set<? extends Identifiable> identifiables2) {
+		assert identifiables1 != null : NON_NULL_EXPECTED;
+		assert identifiables2 != null : NON_NULL_EXPECTED;
+
+		final Set<Identifiable> identifiables = new HashSet<Identifiable>(identifiables1.size() + identifiables2.size());
+		synchronized (identifiables1) {
+			identifiables.addAll(identifiables1);
+		}
+		synchronized (identifiables2) {
+			identifiables.addAll(identifiables2);
+		}
+		return identifiables;
 	}
 
 	/**
