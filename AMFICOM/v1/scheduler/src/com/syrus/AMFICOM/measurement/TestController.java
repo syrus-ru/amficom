@@ -1,5 +1,5 @@
 /*
- * $Id: TestController.java,v 1.24 2005/09/13 12:09:08 bob Exp $
+ * $Id: TestController.java,v 1.25 2005/09/22 15:23:34 bob Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Научно-технический центр.
@@ -17,11 +17,11 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import javax.swing.JLabel;
 import javax.swing.UIManager;
 
 import com.syrus.AMFICOM.Client.General.lang.LangModelSchedule;
 import com.syrus.AMFICOM.Client.Schedule.SchedulerModel;
+import com.syrus.AMFICOM.client.UI.ComparableLabel;
 import com.syrus.AMFICOM.client.resource.ResourceKeys;
 import com.syrus.AMFICOM.general.ApplicationException;
 import com.syrus.AMFICOM.general.Identifier;
@@ -32,7 +32,7 @@ import com.syrus.AMFICOM.measurement.corba.IdlTestPackage.IdlTestTimeStampsPacka
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.24 $, $Date: 2005/09/13 12:09:08 $
+ * @version $Revision: 1.25 $, $Date: 2005/09/22 15:23:34 $
  * @author $Author: bob $
  * @module module
  */
@@ -56,19 +56,6 @@ public class TestController implements Wrapper<Test> {
 	private Map<Component, TestStatus> statusMap;
 
 	private Map<TestTemporalType, String> temporalTypeMap;
-
-	private class ComparableLabel extends JLabel implements Comparable {
-
-		private static final long	serialVersionUID	= 3546642105390084920L;
-
-		public ComparableLabel(String string) {
-			super(string);
-		}
-
-		public int compareTo(Object o) {
-			return ((ComparableLabel)o).getText().compareTo(this.getText());
-		}
-	}
 
 	private TestController() {
 
