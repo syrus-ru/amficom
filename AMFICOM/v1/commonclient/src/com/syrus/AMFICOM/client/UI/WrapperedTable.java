@@ -1,5 +1,5 @@
 /*-
-* $Id: WrapperedTable.java,v 1.15 2005/09/22 11:13:28 bob Exp $
+* $Id: WrapperedTable.java,v 1.16 2005/09/22 11:15:28 arseniy Exp $
 *
 * Copyright ¿ 2005 Syrus Systems.
 * Dept. of Science & Technology.
@@ -38,8 +38,8 @@ import com.syrus.util.Log;
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.15 $, $Date: 2005/09/22 11:13:28 $
- * @author $Author: bob $
+ * @version $Revision: 1.16 $, $Date: 2005/09/22 11:15:28 $
+ * @author $Author: arseniy $
  * @author Vladimir Dolzhenko
  * @module commonclient
  */
@@ -186,7 +186,7 @@ public final class WrapperedTable<T> extends ATable {
         if (tableHeader != null) {
             tableHeader.addMouseListener(this.mouseListener);
             tableHeader.setDefaultRenderer(
-                    new SortableHeaderRenderer(tableHeader.getDefaultRenderer()));
+                    new SortableHeaderRenderer<T>(tableHeader.getDefaultRenderer()));
         }
         
     }
