@@ -1,5 +1,5 @@
 /**
- * $Id: ViewMapWindowCommand.java,v 1.32 2005/09/16 15:45:54 krupenn Exp $
+ * $Id: ViewMapWindowCommand.java,v 1.33 2005/09/22 10:38:36 krupenn Exp $
  *
  * Syrus Systems
  * Научно-технический центр
@@ -36,7 +36,7 @@ import com.syrus.AMFICOM.mapview.MapView;
 /**
  * Команда отображает окно карты 
  * @author $Author: krupenn $
- * @version $Revision: 1.32 $, $Date: 2005/09/16 15:45:54 $
+ * @version $Revision: 1.33 $, $Date: 2005/09/22 10:38:36 $
  * @module mapviewclient
  */
 public class ViewMapWindowCommand extends AbstractCommand {
@@ -90,7 +90,7 @@ public class ViewMapWindowCommand extends AbstractCommand {
 			this.aContext.getDispatcher().firePropertyChange(new StatusMessageEvent(this, StatusMessageEvent.STATUS_MESSAGE, LangModelMap.getString("MapException.ServerConnection"))); //$NON-NLS-1$
 			JOptionPane.showMessageDialog(
 					Environment.getActiveWindow(),
-					LangModelMap.getString("MapException.ServerConnection1"), //$NON-NLS-1$
+					LangModelMap.getString("MapException.ServerConnection"), //$NON-NLS-1$
 					"", //$NON-NLS-1$
 					JOptionPane.ERROR_MESSAGE);
 		} catch(MapDataException e) {
