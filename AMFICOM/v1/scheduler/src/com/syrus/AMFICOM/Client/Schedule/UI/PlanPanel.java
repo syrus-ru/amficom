@@ -1,5 +1,5 @@
 /*-
- * $Id: PlanPanel.java,v 1.50 2005/09/21 12:11:48 bob Exp $
+ * $Id: PlanPanel.java,v 1.51 2005/09/22 16:21:24 bob Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -52,7 +52,7 @@ import com.syrus.AMFICOM.measurement.MonitoredElement;
 import com.syrus.AMFICOM.measurement.Test;
 
 /**
- * @version $Revision: 1.50 $, $Date: 2005/09/21 12:11:48 $
+ * @version $Revision: 1.51 $, $Date: 2005/09/22 16:21:24 $
  * @author $Author: bob $
  * @module scheduler
  */
@@ -134,7 +134,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	protected SimpleDateFormat		sdf					= new SimpleDateFormat();
 
 	// real start time including minutes and seconds
-	protected Date					startDate			= new Date(System.currentTimeMillis());
+	protected Date					startDate			= new Date();
 
 	protected Point					startPosition;
 	protected Point					currentPosition;
@@ -150,7 +150,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 
 	private Color selectionColor;
 
-	private Dispatcher	dispatcher;
+	Dispatcher	dispatcher;
 
 	SchedulerModel	schedulerModel;
 
@@ -202,6 +202,17 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 			@Override
 			public void mouseClicked(MouseEvent e) {
 				PlanPanel.this.schedulerModel.unselectTests();
+				
+				long start = PlanPanel.this.scaleStart.getTime();
+				long end = PlanPanel.this.scaleEnd.getTime();
+				
+				final Date date = new Date((start + ((e.getX() - PlanPanel.MARGIN / 2) *  (end - start) / ((PlanPanel.this.getWidth() - PlanPanel.MARGIN)))));
+				PlanPanel.this.dispatcher.firePropertyChange(new PropertyChangeEvent(this, 
+					SchedulerModel.COMMAND_DATE_OPERATION, 
+					null, 
+					date));
+				
+				
 			}
 			
 			@Override
@@ -609,14 +620,14 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 	private void updateTest() throws ApplicationException {
 		Test selectedTest = this.schedulerModel.getSelectedTest();
 		if (selectedTest != null) {
-			Date startTime = selectedTest.getStartTime();
+			final Date startTime = selectedTest.getStartTime();
 //			System.out.println("PlanPanel.updateTest() | startTime " + startTime);
 //			System.out.println("PlanPanel.updateTest() | this.scaleStart " + this.scaleStart);
 //			System.out.println("PlanPanel.updateTest() | this.scaleEnd " + this.scaleEnd);
-			if (!(startTime.after(this.scaleStart) && startTime.before(this.scaleEnd))) {
-				startTime = new Date(startTime.getTime() - 30L * 60L * 1000);
-				this.toolBar.dateSpinner.setValue(startTime);
-				this.toolBar.timeSpinner.setValue(startTime);
+			if (this.scaleStart.before(startTime) && startTime.before(this.scaleEnd)) {
+				final Date time = new Date(startTime.getTime() - 30L * 60L * 1000);
+				this.toolBar.dateSpinner.setValue(time);
+				this.toolBar.timeSpinner.setValue(time);
 				
 //				System.out.println("PlanPanel.updateTest() || set " + startTime);
 				
@@ -647,7 +658,7 @@ final class PlanPanel extends JPanel implements ActionListener, PropertyChangeLi
 				final MonitoredElement monitoredElement = test.getMonitoredElement();
 				final Identifier monitoredElementId = monitoredElement.getId();
 				if (!this.testLines.containsKey(monitoredElementId)) {
-					final TestLine testLine = new TestLine(this.aContext, monitoredElement.getName(), monitoredElementId);
+					final TestLine testLine = new TestLine(this.aContext, this, monitoredElement.getName(), monitoredElementId);
 					// testLine.setTestTemporalStamps((TestTemporalStamps)
 					// this.testTemporalLines.get(monitoredElement));
 					this.testLines.put(monitoredElementId, testLine);
