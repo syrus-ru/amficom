@@ -1,5 +1,5 @@
 /*-
- * $Id: TypicalConditionImpl.java,v 1.21 2005/09/14 17:50:05 arseniy Exp $
+ * $Id: TypicalConditionImpl.java,v 1.22 2005/09/22 15:16:45 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -11,6 +11,7 @@ package com.syrus.AMFICOM.configuration;
 import java.util.Date;
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.StorableObject;
 import com.syrus.AMFICOM.general.TypicalCondition;
@@ -19,7 +20,7 @@ import com.syrus.AMFICOM.general.corba.IdlStorableObjectConditionPackage.IdlTypi
 import com.syrus.util.Wrapper;
 
 /**
- * @version $Revision: 1.21 $, $Date: 2005/09/14 17:50:05 $
+ * @version $Revision: 1.22 $, $Date: 2005/09/22 15:16:45 $
  * @author $Author: arseniy $
  * @module config
  */
@@ -107,11 +108,11 @@ final class TypicalConditionImpl extends TypicalCondition {
 	}
 
 	@Override
-	public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+	public boolean isNeedMore(final Set<? extends Identifiable> identifiables) {
 		return !(this.type == TypicalSort._TYPE_STRING || this.type == TypicalSort._TYPE_BOOLEAN)
 				|| this.operation != OperationSort._OPERATION_EQUALS
-				|| storableObjects == null
-				|| storableObjects.isEmpty();
+				|| identifiables == null
+				|| identifiables.isEmpty();
 	}
 
 	@Override

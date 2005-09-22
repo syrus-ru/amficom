@@ -1,5 +1,5 @@
 /*
- * $Id: TypicalCondition.java,v 1.53 2005/09/22 14:59:57 bass Exp $
+ * $Id: TypicalCondition.java,v 1.54 2005/09/22 15:16:33 arseniy Exp $
  *
  * Copyright ¿ 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -127,8 +127,8 @@ import com.syrus.util.Log;
  *
  * </ul>
  *
- * @version $Revision: 1.53 $, $Date: 2005/09/22 14:59:57 $
- * @author $Author: bass $
+ * @version $Revision: 1.54 $, $Date: 2005/09/22 15:16:33 $
+ * @author $Author: arseniy $
  * @module general
  */
 public class TypicalCondition implements StorableObjectCondition {
@@ -1066,9 +1066,9 @@ public class TypicalCondition implements StorableObjectCondition {
 			}
 
 			@Override
-			public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+			public boolean isNeedMore(final Set<? extends Identifiable> identifiables) {
 				Log.debugMessage(TYPICAL_CONDITION_INNER_ONE_IS_NEED_MORE
-						+ "Object: " + storableObjects + "; "
+						+ "Object: " + identifiables + "; "
 						+ "This is a dummy condition; evaluation result is always false...",
 					Level.WARNING);
 				return false;
@@ -1088,11 +1088,11 @@ public class TypicalCondition implements StorableObjectCondition {
 	}
 
 	/**
-	 * @param storableObjects
+	 * @param identifiables
 	 * @see StorableObjectCondition#isNeedMore(Set)
 	 * @todo Write implementation of this method
 	 */
-	public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+	public boolean isNeedMore(final Set<? extends Identifiable> identifiables) {
 		//return this.delegate.isNeedMore(storableObjects);
 		return true;
 	}

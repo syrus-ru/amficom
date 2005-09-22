@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.22 2005/09/15 07:12:14 krupenn Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.23 2005/09/22 15:17:15 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -21,14 +21,15 @@ import static com.syrus.AMFICOM.general.ObjectEntities.TOPOLOGICALNODE_CODE;
 
 import java.util.Set;
 
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
 import com.syrus.AMFICOM.general.StorableObject;
 
 /**
- * @version $Revision: 1.22 $
- * @author $Author: krupenn $
+ * @version $Revision: 1.23 $
+ * @author $Author: arseniy $
  * @module map
  */
 final class LinkedIdsConditionImpl extends LinkedIdsCondition {
@@ -131,7 +132,7 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	}
 
 	@Override
-	public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+	public boolean isNeedMore(final Set<? extends Identifiable> identifiables) {
 		return true;
 	}
 }

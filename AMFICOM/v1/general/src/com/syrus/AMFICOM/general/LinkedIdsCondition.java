@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsCondition.java,v 1.53 2005/09/09 17:16:57 arseniy Exp $
+ * $Id: LinkedIdsCondition.java,v 1.54 2005/09/22 15:16:33 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -69,7 +69,7 @@ import com.syrus.util.Log;
  * </ul>
  *
  * @author $Author: arseniy $
- * @version $Revision: 1.53 $, $Date: 2005/09/09 17:16:57 $
+ * @version $Revision: 1.54 $, $Date: 2005/09/22 15:16:33 $
  * @module general
  */
 public class LinkedIdsCondition implements StorableObjectCondition {
@@ -317,9 +317,9 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 			}
 
 			@Override
-			public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+			public boolean isNeedMore(final Set<? extends Identifiable> identifiables) {
 				Log.debugMessage(LINKED_IDS_CONDITION_INNER_ONE_IS_NEED_MORE
-						+ "Objects: " + storableObjects + "; "
+						+ "Objects: " + identifiables + "; "
 						+ "This is a dummy condition; evaluation result is always false...",
 						Level.WARNING);
 				return false;
@@ -340,11 +340,11 @@ public class LinkedIdsCondition implements StorableObjectCondition {
 	}
 
 	/**
-	 * @param storableObjects
+	 * @param identifiables
 	 * @see StorableObjectCondition#isNeedMore(Set)
 	 */
-	public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
-		return this.delegate.isNeedMore(storableObjects);
+	public boolean isNeedMore(final Set<? extends Identifiable> identifiables) {
+		return this.delegate.isNeedMore(identifiables);
 	}
 
 	public final void setEntityCode(final short entityCode) throws IllegalObjectEntityException {

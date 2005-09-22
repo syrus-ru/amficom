@@ -1,5 +1,5 @@
 /*-
- * $Id: LinkedIdsConditionImpl.java,v 1.61 2005/09/22 13:18:00 arseniy Exp $
+ * $Id: LinkedIdsConditionImpl.java,v 1.62 2005/09/22 15:16:51 arseniy Exp $
  *
  * Copyright ¿ 2004-2005 Syrus Systems.
  * Dept. of Science & Technology.
@@ -27,6 +27,7 @@ import java.util.Set;
 import com.syrus.AMFICOM.administration.Domain;
 import com.syrus.AMFICOM.administration.DomainMember;
 import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifiable;
 import com.syrus.AMFICOM.general.Identifier;
 import com.syrus.AMFICOM.general.IllegalObjectEntityException;
 import com.syrus.AMFICOM.general.LinkedIdsCondition;
@@ -36,7 +37,7 @@ import com.syrus.AMFICOM.general.StorableObjectPool;
 import com.syrus.util.Log;
 
 /**
- * @version $Revision: 1.61 $, $Date: 2005/09/22 13:18:00 $
+ * @version $Revision: 1.62 $, $Date: 2005/09/22 15:16:51 $
  * @author $Author: arseniy $
  * @author Tashoyan Arseniy Feliksovich
  * @module measurement
@@ -263,34 +264,13 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 	}
 
 	@Override
-	public boolean isNeedMore(final Set<? extends StorableObject> storableObjects) {
+	public boolean isNeedMore(final Set<? extends Identifiable> identifiables) {
 		//Identifier id;
 		switch (this.entityCode.shortValue()) {
 			case MEASUREMENT_CODE:
 				switch (this.linkedEntityCode) {
 					case TEST_CODE:
-						final Set<StorableObject> measurements = new HashSet<StorableObject>(storableObjects);
-						for (final Identifier id : this.linkedIds) {
-							Test test;
-							try {
-								test = (Test) StorableObjectPool.getStorableObject(id, false);
-							} catch (ApplicationException ae) {
-								Log.errorException(ae);
-								continue;
-							}
-							int testNumberOfMeasurements = 0;
-							for (final Iterator<StorableObject> it = measurements.iterator(); it.hasNext();) {
-								final Measurement measurement = (Measurement) it.next();
-								if (measurement.getTestId().equals(id)) {
-									it.remove();
-									testNumberOfMeasurements++;
-								}
-							}
-							if (test == null || testNumberOfMeasurements < test.getNumberOfMeasurements()) {
-								return true;
-							}
-						}
-						return false;
+						return needMoreMeasurementsForTests(this.linkedIds, identifiables);
 					default:
 						return true;
 				}
@@ -298,4 +278,48 @@ final class LinkedIdsConditionImpl extends LinkedIdsCondition {
 				return true;
 		}
 	}
+
+	private static boolean needMoreMeasurementsForTests(final Set<Identifier> testIds,
+			final Set<? extends Identifiable> measurementIdentifiables) {
+		for (final Identifier testId : testIds) {
+			Test test = null;
+			try {
+				test = StorableObjectPool.getStorableObject(testId, false);
+			} catch (ApplicationException ae) {
+				Log.errorException(ae);
+			}
+			if (test == null) {
+				return true;
+			}
+
+			int numberOfTestMeasurements = 0;
+			for (final Identifiable measurementIdentifiable : measurementIdentifiables) {
+				Measurement measurement = null;
+				if (measurementIdentifiable instanceof Measurement) {
+					measurement = (Measurement) measurementIdentifiable;
+				} else if (measurementIdentifiable instanceof Identifier) {
+					try {
+						measurement = StorableObjectPool.getStorableObject((Identifier) measurementIdentifiable, false);
+					} catch (ApplicationException ae) {
+						Log.errorException(ae);
+					}
+				} else {
+					measurement = null;
+				}
+				if (measurement == null) {
+					continue;
+				}
+
+				if (measurement.getTestId().equals(testId)) {
+					numberOfTestMeasurements++;
+				}
+			}
+
+			if (numberOfTestMeasurements < test.getNumberOfMeasurements()) {
+				return true;
+			}
+		}
+		return false;
+	}
+
 }
