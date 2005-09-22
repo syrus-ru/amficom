@@ -1,5 +1,5 @@
 /*
- * $Id: SchedulerReportModel.java,v 1.1 2005/09/16 13:26:27 peskovsky Exp $
+ * $Id: SchedulerReportModel.java,v 1.2 2005/09/22 14:46:43 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,15 +9,20 @@ package com.syrus.AMFICOM.client.scheduler.report;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.LangModelReport;
 import com.syrus.AMFICOM.client.report.RenderingComponent;
 import com.syrus.AMFICOM.client.report.ReportModel;
+import com.syrus.AMFICOM.general.ApplicationException;
+import com.syrus.AMFICOM.general.Identifier;
+import com.syrus.AMFICOM.general.ObjectEntities;
+import com.syrus.AMFICOM.general.StorableObjectPool;
+import com.syrus.AMFICOM.measurement.Test;
 import com.syrus.AMFICOM.report.DataStorableElement;
 import com.syrus.AMFICOM.report.DestinationModules;
+import com.syrus.AMFICOM.report.TableDataStorableElement;
 
 public class SchedulerReportModel extends ReportModel {
 	// Названия отчётов для карты
@@ -29,6 +34,10 @@ public class SchedulerReportModel extends ReportModel {
 	 * Параметры теста
 	 */ 
 	public static String TEST_PARAMETERS = "testParameters";
+	/**
+	 * Список тестов
+	 */ 
+	public static String TESTS_LIST = "testsList";
 	
 	public SchedulerReportModel(){
 	}
@@ -48,6 +57,33 @@ public class SchedulerReportModel extends ReportModel {
 			ApplicationContext aContext) throws CreateReportException{
 		RenderingComponent result = null;
 		String reportName = element.getReportName();
+		String modelClassName = element.getModelClassName();		
+		
+		if (reportName.equals(TEST_PARAMETERS)) {
+			if (!(data instanceof Identifier))
+				throw new CreateReportException(
+						reportName,
+						modelClassName,
+						CreateReportException.WRONG_DATA_TO_INSTALL);
+			
+			Identifier testId = (Identifier)data;
+			if (testId.getMajor() == ObjectEntities.TEST_CODE){
+				try {
+					Test test = StorableObjectPool.getStorableObject(testId,true); 
+					result = TestReport.createReport(
+							test,
+							(TableDataStorableElement)element);
+				} catch (CreateReportException e) {
+				} catch (ApplicationException e) {
+				}
+			}
+		}
+		
+		if (result == null)
+			throw new CreateReportException(
+					reportName,
+					modelClassName,
+					CreateReportException.WRONG_DATA_TO_INSTALL);
 		
 		return result;
 	}
@@ -59,7 +95,8 @@ public class SchedulerReportModel extends ReportModel {
 		//быть в моделях отчётов - наследницах
 		String langReportName = null;
 		if (	reportName.equals(TESTS_GRAPHIC)
-			||	reportName.equals(TEST_PARAMETERS))
+			||	reportName.equals(TEST_PARAMETERS)
+			||	reportName.equals(TESTS_LIST))
 			langReportName = LangModelReport.getString("report.Modules.Scheduler." + reportName);
 			
 		return langReportName;
@@ -76,6 +113,7 @@ public class SchedulerReportModel extends ReportModel {
 
 		result.add(TESTS_GRAPHIC);
 		result.add(TEST_PARAMETERS);
+		result.add(TESTS_LIST);		
 		
 		return result;
 	}

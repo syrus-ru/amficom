@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeReport.java,v 1.1 2005/09/12 11:36:24 peskovsky Exp $
+ * $Id: SchemeReport.java,v 1.2 2005/09/22 14:46:43 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -76,7 +76,8 @@ public class SchemeReport {
 		ugoTabbedPane.setSize(new Dimension(imageWidth,imageHeight));
 		ugoTabbedPane.setPreferredSize(ugoTabbedPane.getSize());
 		ugoTabbedPane.setToolBarVisible(false);
-		
+
+		//TODO А как без JFrame?		
 		Dimension screenSize = Toolkit.getDefaultToolkit().getScreenSize();
 		JFrame frame = new JFrame();
 		frame.setLocation(screenSize.width,screenSize.height);

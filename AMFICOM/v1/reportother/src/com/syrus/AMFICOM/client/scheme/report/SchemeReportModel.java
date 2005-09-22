@@ -1,5 +1,5 @@
 /*
- * $Id: SchemeReportModel.java,v 1.4 2005/09/16 13:26:27 peskovsky Exp $
+ * $Id: SchemeReportModel.java,v 1.5 2005/09/22 14:46:43 peskovsky Exp $
  *
  * Copyright © 2004 Syrus Systems.
  * Dept. of Science & Technology.
@@ -9,10 +9,8 @@ package com.syrus.AMFICOM.client.scheme.report;
 
 import java.util.ArrayList;
 import java.util.Collection;
-import java.util.Collections;
 
 import com.syrus.AMFICOM.client.UI.VisualManager;
-import com.syrus.AMFICOM.client.map.report.MapReportModel;
 import com.syrus.AMFICOM.client.model.ApplicationContext;
 import com.syrus.AMFICOM.client.report.CreateReportException;
 import com.syrus.AMFICOM.client.report.LangModelReport;

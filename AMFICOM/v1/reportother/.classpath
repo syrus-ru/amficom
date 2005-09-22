@@ -31,5 +31,6 @@
 	<classpathentry combineaccessrules="false" kind="src" path="/leserver_interface"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/mscharserver_interface"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/event_v1"/>
+	<classpathentry combineaccessrules="false" kind="src" path="/scheduler"/>
 	<classpathentry kind="output" path="classes"/>
 </classpath>
